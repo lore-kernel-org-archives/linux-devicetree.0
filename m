@@ -1,1041 +1,735 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [PATCH v6 2/2] tty/serial: Add Spreadtrum sc9836-uart driver
- support
-Date: Thu, 22 Jan 2015 22:57:15 -0500
-Message-ID: <54C1C69B.6010100@hurleysoftware.com>
-References: <sprd-serial-v6> <1421933706-4277-1-git-send-email-chunyan.zhang@spreadtrum.com> <1421933706-4277-3-git-send-email-chunyan.zhang@spreadtrum.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421933706-4277-3-git-send-email-chunyan.zhang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, arnd@arndb.de, gnomes@lxorguk.ukuu.org.uk, shawn.guo@linaro.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jslaby@suse.cz, grant.likely@linaro.org, heiko@sntech.de, jason@lakedaemon.net, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, antonynpavlov@gmail.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
+From: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/6] mfd: max77843: Add max77843 MFD driver core driver
+Date: Fri, 23 Jan 2015 14:02:42 +0900
+Message-ID: <1421989367-32721-2-git-send-email-jaewon02.kim@samsung.com>
+References: <1421989367-32721-1-git-send-email-jaewon02.kim@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1421989367-32721-1-git-send-email-jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunyan,
-
-On 01/22/2015 08:35 AM, Chunyan Zhang wrote:
-> Add a full sc9836-uart driver for SC9836 SoC which is based on the
-> spreadtrum sharkl64 platform.
-> This driver also support earlycon.
-
-Looking good. Comments below.
-
-> This patch also replaced the spaces between the macros and their
-> values with the tabs in serial_core.h
-
-Notes about patch changes goes...
-
-> 
-> Originally-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
-> Signed-off-by: Orson Zhai <orson.zhai@spreadtrum.com>
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-> ---
-
-...here. For example,
-
-* Replaced spaces with tab for PORT_SPRD define in serial_core.h
-
->  drivers/tty/serial/Kconfig       |   18 +
->  drivers/tty/serial/Makefile      |    1 +
->  drivers/tty/serial/sprd_serial.c |  801 ++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/serial_core.h |    3 +
->  4 files changed, 823 insertions(+)
->  create mode 100644 drivers/tty/serial/sprd_serial.c
-> 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index c79b43c..13211f7 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1577,6 +1577,24 @@ config SERIAL_MEN_Z135
->  	  This driver can also be build as a module. If so, the module will be called
->  	  men_z135_uart.ko
->  
-> +config SERIAL_SPRD
-> +	tristate "Support for Spreadtrum serial"
-> +	depends on ARCH_SPRD
-> +	select SERIAL_CORE
-> +	help
-> +	  This enables the driver for the Spreadtrum's serial.
-> +
-> +config SERIAL_SPRD_CONSOLE
-> +	bool "Spreadtrum UART console support"
-> +	depends on SERIAL_SPRD=y
-> +	select SERIAL_CORE_CONSOLE
-> +	select SERIAL_EARLYCON
-> +	help
-> +	  Support for early debug console using Spreadtrum's serial. This enables
-> +	  the console before standard serial driver is probed. This is enabled
-> +	  with "earlycon" on the kernel command line. The console is
-> +	  enabled when early_param is processed.
-> +
->  endmenu
->  
->  config SERIAL_MCTRL_GPIO
-> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-> index 9a548ac..4801aca 100644
-> --- a/drivers/tty/serial/Makefile
-> +++ b/drivers/tty/serial/Makefile
-> @@ -93,6 +93,7 @@ obj-$(CONFIG_SERIAL_ARC)	+= arc_uart.o
->  obj-$(CONFIG_SERIAL_RP2)	+= rp2.o
->  obj-$(CONFIG_SERIAL_FSL_LPUART)	+= fsl_lpuart.o
->  obj-$(CONFIG_SERIAL_MEN_Z135)	+= men_z135_uart.o
-> +obj-$(CONFIG_SERIAL_SPRD) += sprd_serial.o
->  
->  # GPIOLIB helpers for modem control lines
->  obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+= serial_mctrl_gpio.o
-> diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
-> new file mode 100644
-> index 0000000..fd98541
-> --- /dev/null
-> +++ b/drivers/tty/serial/sprd_serial.c
-> @@ -0,0 +1,801 @@
-> +/*
-> + * Copyright (C) 2012-2015 Spreadtrum Communications Inc.
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/console.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/serial_core.h>
-> +#include <linux/serial.h>
-> +#include <linux/slab.h>
-> +#include <linux/tty.h>
-> +#include <linux/tty_flip.h>
-> +
-> +/* device name */
-> +#define UART_NR_MAX		8
-> +#define SPRD_TTY_NAME		"ttyS"
-> +#define SPRD_FIFO_SIZE		128
-> +#define SPRD_DEF_RATE		26000000
-> +#define SPRD_TIMEOUT		2048
-> +
-> +/* the offset of serial registers and BITs for them */
-> +/* data registers */
-> +#define SPRD_TXD		0x0000
-> +#define SPRD_RXD		0x0004
-> +
-> +/* line status register and its BITs  */
-> +#define SPRD_LSR		0x0008
-> +#define SPRD_LSR_OE		BIT(4)
-> +#define SPRD_LSR_FE		BIT(3)
-> +#define SPRD_LSR_PE		BIT(2)
-> +#define SPRD_LSR_BI		BIT(7)
-> +#define SPRD_LSR_TX_OVER	BIT(15)
-> +
-> +/* data number in TX and RX fifo */
-> +#define SPRD_STS1		0x000C
-> +
-> +/* interrupt enable register and its BITs */
-> +#define SPRD_IEN		0x0010
-> +#define SPRD_IEN_RX_FULL	BIT(0)
-> +#define SPRD_IEN_TX_EMPTY	BIT(1)
-> +#define SPRD_IEN_BREAK_DETECT	BIT(7)
-> +#define SPRD_IEN_TIMEOUT	BIT(13)
-> +
-> +/* interrupt clear register */
-> +#define SPRD_ICLR		0x0014
-> +
-> +/* line control register */
-> +#define SPRD_LCR		0x0018
-> +#define SPRD_LCR_STOP_1BIT	0x10
-> +#define SPRD_LCR_STOP_2BIT	0x30
-> +#define SPRD_LCR_DATA_LEN	(BIT(2) | BIT(3))
-> +#define SPRD_LCR_DATA_LEN5	0x0
-> +#define SPRD_LCR_DATA_LEN6	0x4
-> +#define SPRD_LCR_DATA_LEN7	0x8
-> +#define SPRD_LCR_DATA_LEN8	0xc
-> +#define SPRD_LCR_PARITY		(BIT(0) | BIT(1))
-> +#define SPRD_LCR_PARITY_EN	0x2
-> +#define SPRD_LCR_EVEN_PAR	0x0
-> +#define SPRD_LCR_ODD_PAR	0x1
-> +
-> +/* control register 1 */
-> +#define SPRD_CTL1		0x001C
-> +#define RX_HW_FLOW_CTL_THLD	BIT(6)
-> +#define RX_HW_FLOW_CTL_EN	BIT(7)
-> +#define TX_HW_FLOW_CTL_EN	BIT(8)
-> +
-> +/* fifo threshold register */
-> +#define SPRD_CTL2		0x0020
-> +#define THLD_TX_EMPTY		0x40
-> +#define THLD_RX_FULL		0x40
-> +
-> +/* config baud rate register */
-> +#define SPRD_CLKD0		0x0024
-> +#define SPRD_CLKD1		0x0028
-> +
-> +/* interrupt mask status register */
-> +#define SPRD_IMSR		0x002C
-> +#define SPRD_IMSR_RX_FIFO_FULL	BIT(0)
-> +#define SPRD_IMSR_TX_FIFO_EMPTY	BIT(1)
-> +#define SPRD_IMSR_BREAK_DETECT	BIT(7)
-> +#define SPRD_IMSR_TIMEOUT	BIT(13)
-> +
-> +struct reg_backup {
-> +	uint32_t ien;
-
-	u32	ien;
-
-same for others
-
-> +	uint32_t ctrl0;
-> +	uint32_t ctrl1;
-> +	uint32_t ctrl2;
-> +	uint32_t clkd0;
-> +	uint32_t clkd1;
-> +	uint32_t dspwait;
-> +};
-> +
-> +struct sprd_uart_port {
-> +	struct uart_port port;
-> +	struct reg_backup reg_bak;
-> +	char name[16];
-> +};
-> +
-> +static struct sprd_uart_port *sprd_port[UART_NR_MAX] = { NULL };
-                                                        ^^^^^^^^^^
-Don't need the initializer.
-
-> +
-> +static inline unsigned int serial_in(struct uart_port *port, int offset)
-> +{
-> +	return readl_relaxed(port->membase + offset);
-> +}
-> +
-> +static inline void serial_out(struct uart_port *port, int offset, int value)
-> +{
-> +	writel_relaxed(value, port->membase + offset);
-> +}
-> +
-> +static unsigned int sprd_tx_empty(struct uart_port *port)
-> +{
-> +	if (serial_in(port, SPRD_STS1) & 0xff00)
-> +		return 0;
-> +	else
-> +		return TIOCSER_TEMT;
-> +}
-> +
-> +static unsigned int sprd_get_mctrl(struct uart_port *port)
-> +{
-> +	return TIOCM_DSR | TIOCM_CTS;
-> +}
-> +
-> +static void sprd_set_mctrl(struct uart_port *port, unsigned int mctrl)
-> +{
-> +	/* nothing to do */
-> +}
-> +
-> +static void sprd_stop_tx(struct uart_port *port)
-> +{
-> +	unsigned int ien, iclr;
-> +
-> +	iclr = serial_in(port, SPRD_ICLR);
-> +	ien = serial_in(port, SPRD_IEN);
-> +
-> +	iclr |= SPRD_IEN_TX_EMPTY;
-> +	ien &= ~SPRD_IEN_TX_EMPTY;
-> +
-> +	serial_out(port, SPRD_ICLR, iclr);
-> +	serial_out(port, SPRD_IEN, ien);
-> +}
-> +
-> +static void sprd_start_tx(struct uart_port *port)
-> +{
-> +	unsigned int ien;
-> +
-> +	ien = serial_in(port, SPRD_IEN);
-> +	if (!(ien & SPRD_IEN_TX_EMPTY)) {
-> +		ien |= SPRD_IEN_TX_EMPTY;
-> +		serial_out(port, SPRD_IEN, ien);
-> +	}
-> +}
-> +
-> +static void sprd_stop_rx(struct uart_port *port)
-> +{
-> +	unsigned int ien, iclr;
-> +
-> +	iclr = serial_in(port, SPRD_ICLR);
-> +	ien = serial_in(port, SPRD_IEN);
-> +
-> +	ien &= ~(SPRD_IEN_RX_FULL | SPRD_IEN_BREAK_DETECT);
-> +	iclr |= SPRD_IEN_RX_FULL | SPRD_IEN_BREAK_DETECT;
-> +
-> +	serial_out(port, SPRD_IEN, ien);
-> +	serial_out(port, SPRD_ICLR, iclr);
-> +}
-> +
-> +/* The Sprd serial does not support this function. */
-> +static void sprd_break_ctl(struct uart_port *port, int break_state)
-> +{
-> +	/* nothing to do */
-> +}
-> +
-> +static inline int handle_lsr_errors(struct uart_port *port,
-> +				    unsigned int *flag,
-> +				    unsigned int *lsr)
-
-Don't declare this inline. gcc will inline single call site
-functions.
-
-> +{
-> +	int ret = 0;
-> +
-> +	/* statistics */
-> +	if (*lsr & SPRD_LSR_BI) {
-> +		*lsr &= ~(SPRD_LSR_FE | SPRD_LSR_PE);
-> +		port->icount.brk++;
-> +		ret = uart_handle_break(port);
-> +		if (ret)
-> +			return ret;
-> +	} else if (*lsr & SPRD_LSR_PE)
-> +		port->icount.parity++;
-> +	else if (*lsr & SPRD_LSR_FE)
-> +		port->icount.frame++;
-> +	if (*lsr & SPRD_LSR_OE)
-> +		port->icount.overrun++;
-> +
-> +	/* mask off conditions which should be ignored */
-> +	*lsr &= port->read_status_mask;
-> +	if (*lsr & SPRD_LSR_BI)
-> +		*flag = TTY_BREAK;
-> +	else if (*lsr & SPRD_LSR_PE)
-> +		*flag = TTY_PARITY;
-> +	else if (*lsr & SPRD_LSR_FE)
-> +		*flag = TTY_FRAME;
-> +
-> +	return ret;
-> +}
-> +
-> +static inline void sprd_rx(int irq, void *dev_id)
-                                       ^^^^^^^^^^^^
-                                       struct uart_port *port
-
-The 'irq' parameter is unused, remove it.
-Don't declare inline.
-
-> +{
-> +	struct uart_port *port = dev_id;
-        ^^^^^^^^^
-delete this line.
-
-> +	struct tty_port *tty = &port->state->port;
-> +	unsigned int ch, flag, lsr, max_count = SPRD_TIMEOUT;
-                                                ^^^^^^^^^
-                                                == 2048?
-
-That's a lot. Most (all?) other drivers use 256.
-
-> +
-> +	while ((serial_in(port, SPRD_STS1) & 0x00ff) && max_count--) {
-> +		lsr = serial_in(port, SPRD_LSR);
-> +		ch = serial_in(port, SPRD_RXD);
-> +		flag = TTY_NORMAL;
-> +		port->icount.rx++;
-> +
-> +		if (lsr & (SPRD_LSR_BI | SPRD_LSR_PE
-> +			| SPRD_LSR_FE | SPRD_LSR_OE))
-
-operators should trail on the previous line, like
-
-		if (lsr & (SPRD_LSR_BI | SPRD_LSR_PE |
-			   SPRD_LSR_FE | SPRD_LSR_OE))
-
-
-> +			if (handle_lsr_errors(port, &lsr, &flag))
-> +				continue;
-> +		if (uart_handle_sysrq_char(port, ch))
-> +			continue;
-> +
-> +		uart_insert_char(port, lsr, SPRD_LSR_OE, ch, flag);
-> +	}
-> +
-> +	tty_flip_buffer_push(tty);
-> +}
-> +
-> +static inline void sprd_tx(int irq, void *dev_id)
-                                       ^^^^^^^^^^^^^
-                                       struct uart_port *port
-
-The 'irq' parameter is unused, remove it.
-Don't declare inline.
-
-> +{
-> +	struct uart_port *port = dev_id;
-         ^^^^^^^^^
-delete this line.
-
-> +	struct circ_buf *xmit = &port->state->xmit;
-> +	int count;
-> +
-> +	if (port->x_char) {
-> +		serial_out(port, SPRD_TXD, port->x_char);
-> +		port->icount.tx++;
-> +		port->x_char = 0;
-> +		return;
-> +	}
-> +
-> +	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
-> +		sprd_stop_tx(port);
-> +		return;
-> +	}
-> +
-> +	count = THLD_TX_EMPTY;
-> +	do {
-> +		serial_out(port, SPRD_TXD, xmit->buf[xmit->tail]);
-> +		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-> +		port->icount.tx++;
-> +		if (uart_circ_empty(xmit))
-> +			break;
-> +	} while (--count > 0);
-> +
-> +	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-> +		uart_write_wakeup(port);
-> +
-> +	if (uart_circ_empty(xmit))
-> +		sprd_stop_tx(port);
-> +}
-> +
-> +/* this handles the interrupt from one port */
-> +static irqreturn_t sprd_handle_irq(int irq, void *dev_id)
-> +{
-> +	struct uart_port *port = (struct uart_port *)dev_id;
-                                    ^^^^^^^^^^^
-Don't need the type cast.
-
-> +	unsigned int ims;
-> +
-> +	spin_lock(&port->lock);
-> +
-> +	ims = serial_in(port, SPRD_IMSR);
-> +
-> +	if (!ims)
-> +		return IRQ_NONE;
-> +
-> +	serial_out(port, SPRD_ICLR, ~0);
-> +
-> +	if (ims & (SPRD_IMSR_RX_FIFO_FULL |
-> +		SPRD_IMSR_BREAK_DETECT | SPRD_IMSR_TIMEOUT))
-> +		sprd_rx(irq, port);
-> +
-> +	if (ims & SPRD_IMSR_TX_FIFO_EMPTY)
-> +		sprd_tx(irq, port);
-> +
-> +	spin_unlock(&port->lock);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int sprd_startup(struct uart_port *port)
-> +{
-> +	int ret = 0;
-> +	unsigned int ien, ctrl1;
-> +	unsigned int timeout;
-> +	struct sprd_uart_port *sp;
-
-	unsigned long flags;
-
-> +
-> +	serial_out(port, SPRD_CTL2, ((THLD_TX_EMPTY << 8) | THLD_RX_FULL));
-> +
-> +	/* clear rx fifo */
-> +	timeout = SPRD_TIMEOUT;
-> +	while (timeout-- && serial_in(port, SPRD_STS1) & 0x00ff)
-> +		serial_in(port, SPRD_RXD);
-> +
-> +	/* clear tx fifo */
-> +	timeout = SPRD_TIMEOUT;
-> +	while (timeout-- && serial_in(port, SPRD_STS1) & 0xff00)
-> +		cpu_relax();
-> +
-> +	/* clear interrupt */
-> +	serial_out(port, SPRD_IEN, 0x0);
-                                   ^^^
-                                 just 0
-
-> +	serial_out(port, SPRD_ICLR, ~0);
-> +
-> +	/* allocate irq */
-> +	sp = container_of(port, struct sprd_uart_port, port);
-> +	snprintf(sp->name, sizeof(sp->name), "sprd_serial%d", port->line);
-> +	ret = devm_request_irq(port->dev, port->irq, sprd_handle_irq,
-> +				IRQF_SHARED, sp->name, port);
-> +	if (ret) {
-> +		dev_err(port->dev, "fail to request serial irq %d, ret=%d\n",
-> +			port->irq, ret);
-> +		return ret;
-> +	}
-> +	ctrl1 = serial_in(port, SPRD_CTL1);
-> +	ctrl1 |= 0x3e00 | THLD_RX_FULL;
-                 ^^^^^
-What is this magic number?
-
-> +	serial_out(port, SPRD_CTL1, ctrl1);
-> +
-> +	/* enable interrupt */
-> +	spin_lock(&port->lock);
-
-	spin_lock_irqsave(&port->lock, flags);
-
-> +	ien = serial_in(port, SPRD_IEN);
-> +	ien |= SPRD_IEN_RX_FULL | SPRD_IEN_BREAK_DETECT | SPRD_IEN_TIMEOUT;
-> +	serial_out(port, SPRD_IEN, ien);
-> +	spin_unlock(&port->lock);
-
-	spin_unlock_irqrestore(&port->lock, flags);
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void sprd_shutdown(struct uart_port *port)
-> +{
-> +	serial_out(port, SPRD_IEN, 0x0);
-                                   ^^^
-                                 just 0
-
-> +	serial_out(port, SPRD_ICLR, ~0);
-> +	devm_free_irq(port->dev, port->irq, port);
-> +}
-> +
-> +static void sprd_set_termios(struct uart_port *port,
-> +				    struct ktermios *termios,
-> +				    struct ktermios *old)
-> +{
-> +	unsigned int baud, quot;
-> +	unsigned int lcr, fc;
-> +	unsigned long flags;
-> +
-> +	/* ask the core to calculate the divisor for us */
-> +	baud = uart_get_baud_rate(port, termios, old, 1200, 3000000);
-                                                      ^^^^   ^^^^^^
-                                           mabye derive these from uartclk?
-
-> +
-> +	quot = (unsigned int)((port->uartclk + baud / 2) / baud);
-> +
-> +	/* set data length */
-> +	lcr = serial_in(port, SPRD_LCR);
-> +	lcr &= ~SPRD_LCR_DATA_LEN;
-
-What bits are being preserved in SPRD_LCR that you need to read the
-current value? IOW, why can't SPRD_LCR be defined only by the termios
-c_cflag? Like,
-
-	lcr = 0;
-
-> +	switch (termios->c_cflag & CSIZE) {
-> +	case CS5:
-> +		lcr |= SPRD_LCR_DATA_LEN5;
-> +		break;
-> +	case CS6:
-> +		lcr |= SPRD_LCR_DATA_LEN6;
-> +		break;
-> +	case CS7:
-> +		lcr |= SPRD_LCR_DATA_LEN7;
-> +		break;
-> +	case CS8:
-> +	default:
-> +		lcr |= SPRD_LCR_DATA_LEN8;
-> +		break;
-> +	}
-> +
-> +	/* calculate stop bits */
-> +	lcr &= ~(SPRD_LCR_STOP_1BIT | SPRD_LCR_STOP_2BIT);
-> +	if (termios->c_cflag & CSTOPB)
-> +		lcr |= SPRD_LCR_STOP_2BIT;
-> +	else
-> +		lcr |= SPRD_LCR_STOP_1BIT;
-> +
-> +	/* calculate parity */
-> +	lcr &= ~SPRD_LCR_PARITY;
-> +	termios->c_cflag &= ~CMSPAR;	/* no support mark/space */
-> +	if (termios->c_cflag & PARENB) {
-> +		lcr |= SPRD_LCR_PARITY_EN;
-> +		if (termios->c_cflag & PARODD)
-> +			lcr |= SPRD_LCR_ODD_PAR;
-> +		else
-> +			lcr |= SPRD_LCR_EVEN_PAR;
-> +	}
-> +
-> +	spin_lock_irqsave(&port->lock, flags);
-> +
-> +	/* update the per-port timeout */
-> +	uart_update_timeout(port, termios->c_cflag, baud);
-> +
-> +	port->read_status_mask = SPRD_LSR_OE;
-> +	if (termios->c_iflag & INPCK)
-> +		port->read_status_mask |= SPRD_LSR_FE | SPRD_LSR_PE;
-> +	if (termios->c_iflag & (BRKINT | PARMRK))
-
-	if (termios->c_iflag & (IGNBRK | BRKINT | PARMRK))
-
-Because if IGNBRK is set and a BRK is received, sprd_rx() should operate
-like this:
-	                                         /*    - RESULT -     */
-	lsr = serial_in(SPRD_LSR)                /* lsr = SPRD_LSR_BI */
-        ch  = serial_in(SPRD_RXD)                /* ch  = 0           */
-
-	lsr & SPRD_LSR_BI ?  yes
-        handle_lsr_errors(lsr, flag)
-
-            lsr &= read_status_mask              /* lsr = SPRD_LSR_BI */
-            flag = TTY_BREAK
-
-        uart_insert_char(lsr, ch, flag)
-	    lsr & ignore_status_mask == 0? no    /* ch _not_ inserted */
-
-
-> +		port->read_status_mask |= SPRD_LSR_BI;
-> +
-> +	/* characters to ignore */
-> +	port->ignore_status_mask = 0;
-> +	if (termios->c_iflag & IGNPAR)
-> +		port->ignore_status_mask |= SPRD_LSR_PE | SPRD_LSR_FE;
-> +	if (termios->c_iflag & IGNBRK) {
-> +		port->ignore_status_mask |= SPRD_LSR_BI;
-> +		/*
-> +		 * If we're ignoring parity and break indicators,
-> +		 * ignore overruns too (for real raw support).
-> +		 */
-> +		if (termios->c_iflag & IGNPAR)
-> +			port->ignore_status_mask |= SPRD_LSR_OE;
-> +	}
-> +
-> +	/* flow control */
-> +	fc = serial_in(port, SPRD_CTL1);
-> +	fc &= ~(RX_HW_FLOW_CTL_THLD | RX_HW_FLOW_CTL_EN | TX_HW_FLOW_CTL_EN);
-> +	if (termios->c_cflag & CRTSCTS) {
-> +		fc |= RX_HW_FLOW_CTL_THLD;
-> +		fc |= RX_HW_FLOW_CTL_EN;
-> +		fc |= TX_HW_FLOW_CTL_EN;
-> +	}
-> +
-> +	/* clock divider bit0~bit15 */
-> +	serial_out(port, SPRD_CLKD0, quot & 0xffff);
-> +
-> +	/* clock divider bit16~bit20 */
-> +	serial_out(port, SPRD_CLKD1, (quot & 0x1f0000) >> 16);
-> +	serial_out(port, SPRD_LCR, lcr);
-> +	fc |= 0x3e00 | THLD_RX_FULL;
-> +	serial_out(port, SPRD_CTL1, fc);
-> +
-> +	spin_unlock_irqrestore(&port->lock, flags);
-> +
-> +	/* Don't rewrite B0 */
-> +	if (tty_termios_baud_rate(termios))
-> +		tty_termios_encode_baud_rate(termios, baud, baud);
-> +}
-> +
-> +static const char *sprd_type(struct uart_port *port)
-> +{
-> +	return "SPX";
-> +}
-> +
-> +static void sprd_release_port(struct uart_port *port)
-> +{
-> +	/* nothing to do */
-> +}
-> +
-> +static int sprd_request_port(struct uart_port *port)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void sprd_config_port(struct uart_port *port, int flags)
-> +{
-> +	if (flags & UART_CONFIG_TYPE)
-> +		port->type = PORT_SPRD;
-> +}
-> +
-> +static int sprd_verify_port(struct uart_port *port,
-> +				   struct serial_struct *ser)
-> +{
-> +	if (ser->type != PORT_SPRD)
-> +		return -EINVAL;
-> +	if (port->irq != ser->irq)
-> +		return -EINVAL;
-> +	return 0;
-> +}
-> +
-> +static struct uart_ops serial_sprd_ops = {
-> +	.tx_empty = sprd_tx_empty,
-> +	.get_mctrl = sprd_get_mctrl,
-> +	.set_mctrl = sprd_set_mctrl,
-> +	.stop_tx = sprd_stop_tx,
-> +	.start_tx = sprd_start_tx,
-> +	.stop_rx = sprd_stop_rx,
-> +	.break_ctl = sprd_break_ctl,
-> +	.startup = sprd_startup,
-> +	.shutdown = sprd_shutdown,
-> +	.set_termios = sprd_set_termios,
-> +	.type = sprd_type,
-> +	.release_port = sprd_release_port,
-> +	.request_port = sprd_request_port,
-> +	.config_port = sprd_config_port,
-> +	.verify_port = sprd_verify_port,
-> +};
-> +
-> +#ifdef CONFIG_SERIAL_SPRD_CONSOLE
-> +static inline void wait_for_xmitr(struct uart_port *port)
-> +{
-> +	unsigned int status, tmout = 10000;
-> +
-> +	/* wait up to 10ms for the character(s) to be sent */
-> +	do {
-> +		status = serial_in(port, SPRD_STS1);
-> +		if (--tmout == 0)
-> +			break;
-> +		udelay(1);
-> +	} while (status & 0xff00);
-> +}
-> +
-> +static void sprd_console_putchar(struct uart_port *port, int ch)
-> +{
-> +	wait_for_xmitr(port);
-> +	serial_out(port, SPRD_TXD, ch);
-> +}
-> +
-> +static void sprd_console_write(struct console *co, const char *s,
-> +				      unsigned int count)
-> +{
-> +	struct uart_port *port = &sprd_port[co->index]->port;
-> +	int locked = 1;
-> +	unsigned long flags;
-> +
-> +	if (oops_in_progress)
-> +		locked = spin_trylock(&port->lock);
-
-	if (port->sysrq)
-		locked = 0;
-	else if (oops_in_progress)
-		locked = spin_trylock_irqsave(&port->lock, flags);
-
-> +	else
-> +		spin_lock_irqsave(&port->lock, flags);
-> +
-> +	uart_console_write(port, s, count, sprd_console_putchar);
-> +
-> +	/* wait for transmitter to become empty */
-> +	wait_for_xmitr(port);
-> +
-> +	if (locked)
-> +		spin_unlock_irqrestore(&port->lock, flags);
-> +}
-> +
-> +static int __init sprd_console_setup(struct console *co, char *options)
-> +{
-> +	struct uart_port *port;
-> +	int baud = 115200;
-> +	int bits = 8;
-> +	int parity = 'n';
-> +	int flow = 'n';
-> +
-> +	if (co->index >= UART_NR_MAX || co->index < 0)
-> +		co->index = 0;
-> +
-> +	port = &sprd_port[co->index]->port;
-> +	if (port == NULL) {
-> +		pr_info("serial port %d not yet initialized\n", co->index);
-> +		return -ENODEV;
-> +	}
-> +	if (options)
-> +		uart_parse_options(options, &baud, &parity, &bits, &flow);
-> +
-> +	return uart_set_options(port, co, baud, parity, bits, flow);
-> +}
-> +
-> +static struct uart_driver sprd_uart_driver;
-> +static struct console sprd_console = {
-> +	.name = SPRD_TTY_NAME,
-> +	.write = sprd_console_write,
-> +	.device = uart_console_device,
-> +	.setup = sprd_console_setup,
-> +	.flags = CON_PRINTBUFFER,
-> +	.index = -1,
-> +	.data = &sprd_uart_driver,
-> +};
-> +
-> +#define SPRD_CONSOLE	(&sprd_console)
-> +
-> +/* Support for earlycon */
-> +static void sprd_putc(struct uart_port *port, int c)
-> +{
-> +	unsigned int timeout = SPRD_TIMEOUT;
-> +
-> +	while (timeout-- &&
-> +		   !(readl(port->membase + SPRD_LSR) & SPRD_LSR_TX_OVER))
-> +		cpu_relax();
-> +
-> +	writeb(c, port->membase + SPRD_TXD);
-> +}
-> +
-> +static void sprd_early_write(struct console *con, const char *s,
-> +				    unsigned n)
-> +{
-> +	struct earlycon_device *dev = con->data;
-> +
-> +	uart_console_write(&dev->port, s, n, sprd_putc);
-> +}
-> +
-> +static int __init sprd_early_console_setup(
-> +				struct earlycon_device *device,
-> +				const char *opt)
-> +{
-> +	if (!device->port.membase)
-> +		return -ENODEV;
-> +
-> +	device->con->write = sprd_early_write;
-> +	return 0;
-> +}
-> +
-> +EARLYCON_DECLARE(sprd_serial, sprd_early_console_setup);
-> +OF_EARLYCON_DECLARE(sprd_serial, "sprd,sc9836-uart",
-> +		    sprd_early_console_setup);
-> +
-> +#else /* !CONFIG_SERIAL_SPRD_CONSOLE */
-> +#define SPRD_CONSOLE		NULL
-> +#endif
-> +
-> +static struct uart_driver sprd_uart_driver = {
-> +	.owner = THIS_MODULE,
-> +	.driver_name = "sprd_serial",
-> +	.dev_name = SPRD_TTY_NAME,
-> +	.major = 0,
-> +	.minor = 0,
-> +	.nr = UART_NR_MAX,
-> +	.cons = SPRD_CONSOLE,
-> +};
-> +
-> +static int sprd_probe_dt_alias(int index, struct device *dev)
-> +{
-> +	struct device_node *np;
-> +	static bool seen_dev_with_alias;
-> +	static bool seen_dev_without_alias;
-> +	int ret = index;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF))
-> +		return ret;
-> +
-> +	np = dev->of_node;
-> +	if (!np)
-> +		return ret;
-> +
-> +	ret = of_alias_get_id(np, "serial");
-> +	if (IS_ERR_VALUE(ret)) {
-> +		seen_dev_without_alias = true;
-> +		ret = index;
-> +	} else {
-> +		seen_dev_with_alias = true;
-> +		if (ret >= ARRAY_SIZE(sprd_port) || sprd_port[ret] != NULL) {
-> +			dev_warn(dev, "requested serial port %d  not available.\n", ret);
-> +			ret = index;
-> +		}
-> +	}
-> +
-> +	if (seen_dev_with_alias && seen_dev_without_alias)
-> +		dev_warn(dev, "aliased and non-aliased serial devices found in device tree. Serial port enumeration may be unpredictable.\n");
-
-Is this necessary? Why does a user want to know this?
-
-> +
-> +	return ret;
-> +}
-> +
-> +static int sprd_remove(struct platform_device *dev)
-> +{
-> +	struct sprd_uart_port *sup = platform_get_drvdata(dev);
-> +	bool busy = false;
-> +	int i;
-> +
-> +	if (sup)
-> +		uart_remove_one_port(&sprd_uart_driver, &sup->port);
-
-see comment in sprd_probe()
-
-	if (sup) {
-		uart_remove_one_port();
-		sprd_port[sup->line] = NULL;
-		sprd_ports--;
-	}
-
-	if (!sprd_ports)
-		uart_unregister_driver();
-
-> +
-> +	for (i = 0; i < ARRAY_SIZE(sprd_port); i++)
-> +		if (sprd_port[i] == sup)
-> +			sprd_port[i] = NULL;
-> +		else if (sprd_port[i])
-> +			busy = true;
-> +
-> +	if (!busy)
-> +		uart_unregister_driver(&sprd_uart_driver);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sprd_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	struct uart_port *up;
-> +	struct clk *clk;
-> +	int irq;
-> +	int index;
-> +	int ret;
-> +
-> +	for (index = 0; index < ARRAY_SIZE(sprd_port); index++)
-> +		if (sprd_port[index] == NULL)
-> +			break;
-> +
-> +	if (index == ARRAY_SIZE(sprd_port))
-> +		return -EBUSY;
-> +
-> +	index = sprd_probe_dt_alias(index, &pdev->dev);
-> +
-> +	sprd_port[index] = devm_kzalloc(&pdev->dev,
-> +		sizeof(*sprd_port[index]), GFP_KERNEL);
-> +	if (!sprd_port[index])
-> +		return -ENOMEM;
-> +
-> +	up = &sprd_port[index]->port;
-> +	up->dev = &pdev->dev;
-> +	up->line = index;
-> +	up->type = PORT_SPRD;
-> +	up->iotype = SERIAL_IO_PORT;
-> +	up->uartclk = SPRD_DEF_RATE;
-> +	up->fifosize = SPRD_FIFO_SIZE;
-> +	up->ops = &serial_sprd_ops;
-> +	up->flags = ASYNC_BOOT_AUTOCONF;
-                    ^^^^^^^^^
-                    UPF_BOOT_AUTOCONF
-
-sparse will catch errors like this. See Documentation/sparse.txt
-
-> +
-> +	clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (!IS_ERR(clk))
-> +		up->uartclk = clk_get_rate(clk);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "not provide mem resource\n");
-> +		return -ENODEV;
-> +	}
-> +	up->mapbase = res->start;
-> +	up->membase = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(up->membase))
-> +		return PTR_ERR(up->membase);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "not provide irq resource\n");
-> +		return -ENODEV;
-> +	}
-> +	up->irq = irq;
-> +
-> +	if (!sprd_uart_driver.state) {
-             ^^^^^^^^^^^^^^^^^^^^^^
-I know Rob said this was ok, but it's not.
-
-Just use a global counter.
-
-	if (!sprd_ports) {
-
-> +		ret = uart_register_driver(&sprd_uart_driver);
-> +		if (ret < 0) {
-> +			pr_err("Failed to register SPRD-UART driver\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-
-	sprd_ports++;
-
-> +	ret = uart_add_one_port(&sprd_uart_driver, up);
-> +	if (ret) {
-> +		sprd_port[index] = NULL;
-> +		sprd_remove(pdev);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, up);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sprd_suspend(struct device *dev)
-> +{
-> +	int id = to_platform_device(dev)->id;
-> +	struct uart_port *port = &sprd_port[id]->port;
-
-I'm a little confused regarding the port indexing;
-is platform_device->id == line ?  Where did that happen?
-
-
-> +
-> +	uart_suspend_port(&sprd_uart_driver, port);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sprd_resume(struct device *dev)
-> +{
-> +	int id = to_platform_device(dev)->id;
-> +	struct uart_port *port = &sprd_port[id]->port;
-> +
-> +	uart_resume_port(&sprd_uart_driver, port);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(sprd_pm_ops, sprd_suspend, sprd_resume);
-> +
-> +static const struct of_device_id serial_ids[] = {
-> +	{.compatible = "sprd,sc9836-uart",},
-> +	{}
-> +};
-> +
-> +static struct platform_driver sprd_platform_driver = {
-> +	.probe		= sprd_probe,
-> +	.remove		= sprd_remove,
-> +	.driver		= {
-> +		.name	= "sprd_serial",
-> +		.of_match_table = of_match_ptr(serial_ids),
-> +		.pm	= &sprd_pm_ops,
-> +	},
-> +};
-> +
-> +module_platform_driver(sprd_platform_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Spreadtrum SoC serial driver series");
-> diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
-> index c172180..7e6eb39 100644
-> --- a/include/uapi/linux/serial_core.h
-> +++ b/include/uapi/linux/serial_core.h
-> @@ -248,4 +248,7 @@
->  /* MESON */
->  #define PORT_MESON	109
->  
-> +/* SPRD SERIAL  */
-> +#define PORT_SPRD	110
-> +
->  #endif /* _UAPILINUX_SERIAL_CORE_H */
-> 
+This patch adds MAX77843 core/irq driver to support PMIC,
+MUIC(Micro USB Interface Controller), Charger, Fuel Gauge,
+LED and Haptic device.
+
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/mfd/Kconfig                  |   14 ++
+ drivers/mfd/Makefile                 |    1 +
+ drivers/mfd/max77843.c               |  241 ++++++++++++++++++++
+ include/linux/mfd/max77843-private.h |  410 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 666 insertions(+)
+ create mode 100644 drivers/mfd/max77843.c
+ create mode 100644 include/linux/mfd/max77843-private.h
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 2e6b731..0c67c79 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -442,6 +442,20 @@ config MFD_MAX77693
+ 	  additional drivers must be enabled in order to use the functionality
+ 	  of the device.
+ 
++config MFD_MAX77843
++	bool "Maxim Semiconductor MAX77843 PMIC Support"
++	depends on I2C=y
++	select MFD_CORE
++	select REGMAP_I2C
++	select REGMAP_IRQ
++	help
++	  Say yes here to add support for Maxim Semiconductor MAX77843.
++	  This is companion Power Management IC with LEDs, Haptic, Charger,
++	  Fuel Gauge, MUIC(Micro USB Interface Controller) controls on chip.
++	  This driver provides common support for accessing the device;
++	  additional drivers must be enabled in order to use the functionality
++	  of the device.
++
+ config MFD_MAX8907
+ 	tristate "Maxim Semiconductor MAX8907 PMIC Support"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 53467e2..fe4f75c 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -117,6 +117,7 @@ obj-$(CONFIG_MFD_DA9063)	+= da9063.o
+ obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
+ obj-$(CONFIG_MFD_MAX77686)	+= max77686.o
+ obj-$(CONFIG_MFD_MAX77693)	+= max77693.o
++obj-$(CONFIG_MFD_MAX77843)	+= max77843.o
+ obj-$(CONFIG_MFD_MAX8907)	+= max8907.o
+ max8925-objs			:= max8925-core.o max8925-i2c.o
+ obj-$(CONFIG_MFD_MAX8925)	+= max8925.o
+diff --git a/drivers/mfd/max77843.c b/drivers/mfd/max77843.c
+new file mode 100644
+index 0000000..d7f8b76
+--- /dev/null
++++ b/drivers/mfd/max77843.c
+@@ -0,0 +1,241 @@
++/*
++ * max77843.c - MFD core driver for the Maxim MAX77843
++ *
++ * Copyright (C) 2014 Samsung Electrnoics
++ * Author: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/mfd/core.h>
++#include <linux/mfd/max77843-private.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++
++static const struct mfd_cell max77843_devs[] = {
++	{
++		.name = "max77843-muic",
++		.of_compatible = "maxim,max77843-muic",
++	}, {
++		.name = "max77843-regulator",
++		.of_compatible = "maxim,max77843-regulator",
++	}, {
++		.name = "max77843-charger",
++		.of_compatible = "maxim,max77843-charger"
++	}, {
++		.name = "max77843-fuelgauge",
++		.of_compatible = "maxim,max77843-fuelgauge",
++	},
++};
++
++static const struct regmap_config max77843_charger_regmap_config = {
++	.reg_bits	= 8,
++	.val_bits	= 8,
++	.max_register	= MAX77843_CHG_REG_END,
++};
++
++static const struct regmap_config max77843_regmap_config = {
++	.reg_bits	= 8,
++	.val_bits	= 8,
++	.max_register	= MAX77843_SYS_REG_END,
++};
++
++static const struct regmap_irq max77843_irqs[] = {
++	/* TOPSYS interrupts */
++	{ .reg_offset = 0, .mask = MAX77843_SYS_IRQ_SYSUVLO_INT, },
++	{ .reg_offset = 0, .mask = MAX77843_SYS_IRQ_SYSOVLO_INT, },
++	{ .reg_offset = 0, .mask = MAX77843_SYS_IRQ_TSHDN_INT, },
++	{ .reg_offset = 0, .mask = MAX77843_SYS_IRQ_TM_INT, },
++};
++
++static const struct regmap_irq_chip max77843_irq_chip = {
++	.name		= "max77843",
++	.status_base	= MAX77843_SYS_REG_SYSINTSRC,
++	.mask_base	= MAX77843_SYS_REG_SYSINTMASK,
++	.mask_invert	= false,
++	.num_regs	= 1,
++	.irqs		= max77843_irqs,
++	.num_irqs	= ARRAY_SIZE(max77843_irqs),
++};
++
++static int max77843_chg_init(struct max77843 *max77843)
++{
++	int ret;
++
++	max77843->i2c_chg = i2c_new_dummy(max77843->i2c->adapter, I2C_ADDR_CHG);
++	if (!max77843->i2c_chg) {
++		dev_err(&max77843->i2c->dev,
++				"Cannot allocate I2C device for Charger\n");
++		return PTR_ERR(max77843->i2c_chg);
++	}
++	i2c_set_clientdata(max77843->i2c_chg, max77843);
++
++	max77843->regmap_chg = devm_regmap_init_i2c(max77843->i2c_chg,
++			&max77843_charger_regmap_config);
++	if (IS_ERR(max77843->regmap_chg)) {
++		ret = PTR_ERR(max77843->regmap_chg);
++		goto err_chg_i2c;
++	}
++
++	return 0;
++
++err_chg_i2c:
++	i2c_unregister_device(max77843->i2c_chg);
++
++	return ret;
++}
++
++static int max77843_probe(struct i2c_client *i2c,
++					const struct i2c_device_id *id)
++{
++	struct max77843 *max77843;
++	int ret;
++	unsigned int reg_data;
++
++	max77843 = devm_kzalloc(&i2c->dev, sizeof(*max77843), GFP_KERNEL);
++	if (!max77843)
++		return -ENOMEM;
++
++	i2c_set_clientdata(i2c, max77843);
++	max77843->dev = &i2c->dev;
++	max77843->i2c = i2c;
++	max77843->irq = i2c->irq;
++
++	max77843->regmap = devm_regmap_init_i2c(i2c,
++			&max77843_regmap_config);
++	if (IS_ERR(max77843->regmap)) {
++		dev_err(&i2c->dev, "Failed to allocate topsys register map\n");
++		return PTR_ERR(max77843->regmap);
++	}
++
++	ret = regmap_add_irq_chip(max77843->regmap, max77843->irq,
++			IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED,
++			0, &max77843_irq_chip, &max77843->irq_data);
++	if (ret) {
++		dev_err(&i2c->dev, "Failed to add TOPSYS IRQ chip\n");
++		return ret;
++	}
++
++	ret = regmap_read(max77843->regmap,
++			MAX77843_SYS_REG_PMICID, &reg_data);
++	if (ret < 0) {
++		dev_err(&i2c->dev, "Failed to read PMIC ID\n");
++		goto err_pmic_id;
++	}
++	dev_info(&i2c->dev, "device ID: 0x%x\n", reg_data);
++
++	ret = max77843_chg_init(max77843);
++	if (ret) {
++		dev_err(&i2c->dev, "Failed to init Charger\n");
++		goto err_pmic_id;
++	}
++
++	ret = regmap_update_bits(max77843->regmap,
++			MAX77843_SYS_REG_INTSRCMASK,
++			MAX77843_INTSRC_MASK_MASK,
++			(unsigned int)~MAX77843_INTSRC_MASK_MASK);
++	if (ret < 0) {
++		dev_err(&i2c->dev, "Failed to unmask interrupt sourece\n");
++		goto err_pmic_id;
++	}
++
++	ret = mfd_add_devices(max77843->dev, -1, max77843_devs,
++			ARRAY_SIZE(max77843_devs), NULL, 0, NULL);
++	if (ret < 0) {
++		dev_err(&i2c->dev, "Failed to add mfd device\n");
++		goto err_pmic_id;
++	}
++
++	device_init_wakeup(max77843->dev, 1);
++
++	return 0;
++
++err_pmic_id:
++	regmap_del_irq_chip(max77843->irq, max77843->irq_data);
++
++	return ret;
++}
++
++static int max77843_remove(struct i2c_client *i2c)
++{
++	struct max77843 *max77843 = i2c_get_clientdata(i2c);
++
++	mfd_remove_devices(max77843->dev);
++
++	regmap_del_irq_chip(max77843->irq, max77843->irq_data);
++
++	i2c_unregister_device(max77843->i2c);
++
++	return 0;
++}
++
++static const struct of_device_id max77843_dt_match[] = {
++	{ .compatible = "maxim,max77843", },
++	{ /* sentinel */ },
++};
++
++static const struct i2c_device_id max77843_id[] = {
++	{ "max77843", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(i2c, max77843_id);
++
++static int __maybe_unused max77843_suspend(struct device *dev)
++{
++	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
++	struct max77843 *max77843 = i2c_get_clientdata(i2c);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(max77843->irq);
++	disable_irq(max77843->irq);
++
++	return 0;
++}
++
++static int __maybe_unused max77843_resume(struct device *dev)
++{
++	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
++	struct max77843 *max77843 = i2c_get_clientdata(i2c);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(max77843->irq);
++	enable_irq(max77843->irq);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(max77843_pm, max77843_suspend, max77843_resume);
++
++static struct i2c_driver max77843_i2c_driver = {
++	.driver		= {
++		.name		= "max77843",
++		.pm		= &max77843_pm,
++		.of_match_table = max77843_dt_match,
++	},
++	.probe		= max77843_probe,
++	.remove		= max77843_remove,
++	.id_table	= max77843_id,
++};
++static int __init max77843_i2c_init(void)
++{
++	return i2c_add_driver(&max77843_i2c_driver);
++}
++subsys_initcall(max77843_i2c_init);
++
++static void __exit max77843_i2c_exit(void)
++{
++	i2c_del_driver(&max77843_i2c_driver);
++}
++module_exit(max77843_i2c_exit);
++
++MODULE_AUTHOR("Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
++MODULE_DESCRIPTION("Maxim MAX77843 multi-function core driver");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/max77843-private.h b/include/linux/mfd/max77843-private.h
+new file mode 100644
+index 0000000..560ed73
+--- /dev/null
++++ b/include/linux/mfd/max77843-private.h
+@@ -0,0 +1,410 @@
++/*
++ * max77843-private.h - Common API for the Maxim MAX77843 internal sub chip
++ *
++ * Copyright (C) 2014 Samsung Electrnoics
++ * Author: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#ifndef __MAX77843_PRIVATE_H_
++#define __MAX77843_PRIVATE_H_
++
++#include <linux/i2c.h>
++#include <linux/regmap.h>
++
++#define I2C_ADDR_TOPSYS	(0xCC >> 1)
++#define I2C_ADDR_CHG	(0xD2 >> 1)
++#define I2C_ADDR_FG	(0x6C >> 1)
++#define I2C_ADDR_MUIC	(0x4A >> 1)
++
++/* Topsys, Haptic and LED registers */
++enum max77843_sys_reg {
++	MAX77843_SYS_REG_PMICID		= 0x00,
++	MAX77843_SYS_REG_PMICREV	= 0x01,
++	MAX77843_SYS_REG_MAINCTRL1	= 0x02,
++	MAX77843_SYS_REG_INTSRC		= 0x22,
++	MAX77843_SYS_REG_INTSRCMASK	= 0x23,
++	MAX77843_SYS_REG_SYSINTSRC	= 0x24,
++	MAX77843_SYS_REG_SYSINTMASK	= 0x26,
++	MAX77843_SYS_REG_TOPSYS_STAT	= 0x28,
++	MAX77843_SYS_REG_SAFEOUTCTRL	= 0xC6,
++
++	MAX77843_SYS_REG_END,
++};
++
++enum max77843_led_reg {
++	MAX77843_LED_REG_LEDEN		= 0x30,
++	MAX77843_LED_REG_LED0BRT	= 0x31,
++	MAX77843_LED_REG_LED1BRT	= 0x32,
++	MAX77843_LED_REG_LED2BRT	= 0x33,
++	MAX77843_LED_REG_LED3BRT	= 0x34,
++	MAX77843_LED_REG_LEDBLNK	= 0x38,
++	MAX77843_LED_REG_LEDRAMP	= 0x36,
++
++	MAX77843_LED_REG_END,
++};
++
++/* Charger registers */
++enum max77843_charger_reg {
++	MAX77843_CHG_REG_CHG_INT	= 0xB0,
++	MAX77843_CHG_REG_CHG_INT_MASK	= 0xB1,
++	MAX77843_CHG_REG_CHG_INT_OK	= 0xB2,
++	MAX77843_CHG_REG_CHG_DTLS_00	= 0xB3,
++	MAX77843_CHG_REG_CHG_DTLS_01	= 0xB4,
++	MAX77843_CHG_REG_CHG_DTLS_02	= 0xB5,
++	MAX77843_CHG_REG_CHG_CNFG_00	= 0xB7,
++	MAX77843_CHG_REG_CHG_CNFG_01	= 0xB8,
++	MAX77843_CHG_REG_CHG_CNFG_02	= 0xB9,
++	MAX77843_CHG_REG_CHG_CNFG_03	= 0xBA,
++	MAX77843_CHG_REG_CHG_CNFG_04	= 0xBB,
++	MAX77843_CHG_REG_CHG_CNFG_06	= 0xBD,
++	MAX77843_CHG_REG_CHG_CNFG_07	= 0xBE,
++	MAX77843_CHG_REG_CHG_CNFG_09	= 0xC0,
++	MAX77843_CHG_REG_CHG_CNFG_10	= 0xC1,
++	MAX77843_CHG_REG_CHG_CNFG_11	= 0xC2,
++	MAX77843_CHG_REG_CHG_CNFG_12	= 0xC3,
++
++	MAX77843_CHG_REG_END,
++};
++
++/* Fuel gauge registers */
++enum max77843_fuelgauge {
++	MAX77843_FG_REG_STATUS		= 0x00,
++	MAX77843_FG_REG_VALRT_TH	= 0x01,
++	MAX77843_FG_REG_TALRT_TH	= 0x02,
++	MAX77843_FG_REG_SALRT_TH	= 0x03,
++	MAX77843_FG_RATE_AT_RATE	= 0x04,
++	MAX77843_FG_REG_REMCAP_REP	= 0x05,
++	MAX77843_FG_REG_SOCREP		= 0x06,
++	MAX77843_FG_REG_AGE		= 0x07,
++	MAX77843_FG_REG_TEMP		= 0x08,
++	MAX77843_FG_REG_VCELL		= 0x09,
++	MAX77843_FG_REG_CURRENT		= 0x0A,
++	MAX77843_FG_REG_AVG_CURRENT	= 0x0B,
++	MAX77843_FG_REG_SOCMIX		= 0x0D,
++	MAX77843_FG_REG_SOCAV		= 0x0E,
++	MAX77843_FG_REG_REMCAP_MIX	= 0x0F,
++	MAX77843_FG_REG_FULLCAP		= 0x10,
++	MAX77843_FG_REG_AVG_TEMP	= 0x16,
++	MAX77843_FG_REG_CYCLES		= 0x17,
++	MAX77843_FG_REG_AVG_VCELL	= 0x19,
++	MAX77843_FG_REG_CONFIG		= 0x1D,
++	MAX77843_FG_REG_REMCAP_AV	= 0x1F,
++	MAX77843_FG_REG_FULLCAP_NOM	= 0x23,
++	MAX77843_FG_REG_MISCCFG		= 0x2B,
++	MAX77843_FG_REG_RCOMP		= 0x38,
++	MAX77843_FG_REG_FSTAT		= 0x3D,
++	MAX77843_FG_REG_DQACC		= 0x45,
++	MAX77843_FG_REG_DPACC		= 0x46,
++	MAX77843_FG_REG_OCV		= 0xEE,
++	MAX77843_FG_REG_VFOCV		= 0xFB,
++	MAX77843_FG_SOCVF		= 0xFF,
++
++	MAX77843_FG_END,
++};
++
++/* Muic registers */
++enum max77843_muic_reg {
++	MAX77843_MUIC_REG_ID		= 0x00,
++	MAX77843_MUIC_REG_INT1		= 0x01,
++	MAX77843_MUIC_REG_INT2		= 0x02,
++	MAX77843_MUIC_REG_INT3		= 0x03,
++	MAX77843_MUIC_REG_STATUS1	= 0x04,
++	MAX77843_MUIC_REG_STATUS2	= 0x05,
++	MAX77843_MUIC_REG_STATUS3	= 0x06,
++	MAX77843_MUIC_REG_INTMASK1	= 0x07,
++	MAX77843_MUIC_REG_INTMASK2	= 0x08,
++	MAX77843_MUIC_REG_INTMASK3	= 0x09,
++	MAX77843_MUIC_REG_CDETCTRL1	= 0x0A,
++	MAX77843_MUIC_REG_CDETCTRL2	= 0x0B,
++	MAX77843_MUIC_REG_CONTROL1	= 0x0C,
++	MAX77843_MUIC_REG_CONTROL2	= 0x0D,
++	MAX77843_MUIC_REG_CONTROL3	= 0x0E,
++	MAX77843_MUIC_REG_CONTROL4	= 0x16,
++	MAX77843_MUIC_REG_HVCONTROL1	= 0x17,
++	MAX77843_MUIC_REG_HVCONTROL2	= 0x18,
++
++	MAX77843_MUIC_REG_END,
++};
++
++enum max77843_irq {
++	/* Topsys: SYSTEM */
++	MAX77843_SYS_IRQ_SYSINTSRC_SYSUVLO_INT,
++	MAX77843_SYS_IRQ_SYSINTSRC_SYSOVLO_INT,
++	MAX77843_SYS_IRQ_SYSINTSRC_TSHDN_INT,
++	MAX77843_SYS_IRQ_SYSINTSRC_TM_INT,
++
++	/* Charger: CHG_INT */
++	MAX77843_CHG_IRQ_CHG_INT_BYP_I,
++	MAX77843_CHG_IRQ_CHG_INT_BATP_I,
++	MAX77843_CHG_IRQ_CHG_INT_BAT_I,
++	MAX77843_CHG_IRQ_CHG_INT_CHG_I,
++	MAX77843_CHG_IRQ_CHG_INT_WCIN_I,
++	MAX77843_CHG_IRQ_CHG_INT_CHGIN_I,
++	MAX77843_CHG_IRQ_CHG_INT_AICL_I,
++
++	MAX77843_IRQ_NUM,
++};
++
++enum max77843_irq_muic {
++	/* MUIC: INT1 */
++	MAX77843_MUIC_IRQ_INT1_ADC,
++	MAX77843_MUIC_IRQ_INT1_ADCERROR,
++	MAX77843_MUIC_IRQ_INT1_ADC1K,
++
++	/* MUIC: INT2 */
++	MAX77843_MUIC_IRQ_INT2_CHGTYP,
++	MAX77843_MUIC_IRQ_INT2_CHGDETRUN,
++	MAX77843_MUIC_IRQ_INT2_DCDTMR,
++	MAX77843_MUIC_IRQ_INT2_DXOVP,
++	MAX77843_MUIC_IRQ_INT2_VBVOLT,
++
++	/* MUIC: INT3 */
++	MAX77843_MUIC_IRQ_INT3_VBADC,
++	MAX77843_MUIC_IRQ_INT3_VDNMON,
++	MAX77843_MUIC_IRQ_INT3_DNRES,
++	MAX77843_MUIC_IRQ_INT3_MPNACK,
++	MAX77843_MUIC_IRQ_INT3_MRXBUFOW,
++	MAX77843_MUIC_IRQ_INT3_MRXTRF,
++	MAX77843_MUIC_IRQ_INT3_MRXPERR,
++	MAX77843_MUIC_IRQ_INT3_MRXRDY,
++
++	MAX77843_MUIC_IRQ_NUM,
++};
++
++/* MAX77843 interrupts */
++#define MAX77843_SYS_IRQ_SYSUVLO_INT		BIT(0)
++#define MAX77843_SYS_IRQ_SYSOVLO_INT		BIT(1)
++#define MAX77843_SYS_IRQ_TSHDN_INT		BIT(2)
++#define MAX77843_SYS_IRQ_TM_INT			BIT(3)
++
++/* Max77843 charger insterrupts */
++#define MAX77843_CHG_BYP_I			BIT(0)
++#define MAX77843_CHG_BATP_I			BIT(2)
++#define MAX77843_CHG_BAT_I			BIT(3)
++#define MAX77843_CHG_CHG_I			BIT(4)
++#define MAX77843_CHG_WCIN_I			BIT(5)
++#define MAX77843_CHG_CHGIN_I			BIT(6)
++#define MAX77843_CHG_AICL_I			BIT(7)
++
++/* MAX77843 CHG_INT_OK register */
++#define MAX77843_CHG_BYP_OK			BIT(0)
++#define MAX77843_CHG_BATP_OK			BIT(2)
++#define MAX77843_CHG_BAT_OK			BIT(3)
++#define MAX77843_CHG_CHG_OK			BIT(4)
++#define MAX77843_CHG_WCIN_OK			BIT(5)
++#define MAX77843_CHG_CHGIN_OK			BIT(6)
++#define MAX77843_CHG_AICL_OK			BIT(7)
++
++/* MAX77843 CHG_DETAILS_00 register */
++#define MAX77843_CHG_BAT_DTLS			BIT(0)
++
++/* MAX77843 CHG_DETAILS_01 register */
++#define MAX77843_CHG_DTLS_MASK			0x0f
++#define MAX77843_CHG_PQ_MODE			0x00
++#define MAX77843_CHG_CC_MODE			0x01
++#define MAX77843_CHG_CV_MODE			0x02
++#define MAX77843_CHG_TO_MODE			0x03
++#define MAX77843_CHG_DO_MODE			0x04
++#define MAX77843_CHG_HT_MODE			0x05
++#define MAX77843_CHG_TF_MODE			0x06
++#define MAX77843_CHG_TS_MODE			0x07
++#define MAX77843_CHG_OFF_MODE			0x08
++
++#define MAX77843_CHG_BAT_DTLS_MASK		0xf0
++#define MAX77843_CHG_NO_BAT			(0x00 << 4)
++#define MAX77843_CHG_LOW_VOLT_BAT		(0x01 << 4)
++#define MAX77843_CHG_LONG_BAT_TIME		(0x02 << 4)
++#define MAX77843_CHG_OK_BAT			(0x03 << 4)
++#define MAX77843_CHG_OK_LOW_VOLT_BAT		(0x04 << 4)
++#define MAX77843_CHG_OVER_VOLT_BAT		(0x05 << 4)
++#define MAX77843_CHG_OVER_CURRENT_BAT		(0x06 << 4)
++
++/* MAX77843 CHG_CNFG_00 register */
++#define MAX77843_CHG_DISABLE			0x00
++#define MAX77843_CHG_ENABLE			0x05
++#define MAX77843_CHG_MASK			0x01
++#define MAX77843_CHG_BUCK_MASK			0x04
++
++/* MAX77843 CHG_CNFG_01 register */
++#define MAX77843_CHG_RESTART_THRESHOLD_100	0x00
++#define MAX77843_CHG_RESTART_THRESHOLD_150	0x10
++#define MAX77843_CHG_RESTART_THRESHOLD_200	0x20
++#define MAX77843_CHG_RESTART_THRESHOLD_DISABLE	0x30
++
++/* MAX77843 CHG_CNFG_02 register */
++#define MAX77843_CHG_FAST_CHG_CURRENT_MIN	100000
++#define MAX77843_CHG_FAST_CHG_CURRENT_MAX	3150000
++#define MAX77843_CHG_FAST_CHG_CURRENT_STEP	50000
++#define MAX77843_CHG_FAST_CHG_CURRENT_MASK	0x3f
++#define MAX77843_CHG_OTG_ILIMIT_500		(0x00 << 6)
++#define MAX77843_CHG_OTG_ILIMIT_900		(0x01 << 6)
++#define MAX77843_CHG_OTG_ILIMIT_1200		(0x02 << 6)
++#define MAX77843_CHG_OTG_ILIMIT_1500		(0x03 << 6)
++#define MAX77843_CHG_OTG_ILIMIT_MASK		0xc0
++
++/* MAX77843 CHG_CNFG_03 register */
++#define MAX77843_CHG_TOP_OFF_CURRENT_MIN	125000
++#define MAX77843_CHG_TOP_OFF_CURRENT_MAX	650000
++#define MAX77843_CHG_TOP_OFF_CURRENT_STEP	75000
++#define MAX77843_CHG_TOP_OFF_CURRENT_MASK	0x07
++
++/* MAX77843 CHG_CNFG_06 register */
++#define MAX77843_CHG_WRITE_CAP_BLOCK		0x10
++#define MAX77843_CHG_WRITE_CAP_UNBLOCK		0x0C
++
++/* MAX77843_CHG_CNFG_09_register */
++#define MAX77843_CHG_INPUT_CURRENT_LIMIT_MIN	100000
++#define MAX77843_CHG_INPUT_CURRENT_LIMIT_MAX	4000000
++#define MAX77843_CHG_INPUT_CURRENT_LIMIT_REF	3367000
++#define MAX77843_CHG_INPUT_CURRENT_LIMIT_STEP	33000
++
++#define MAX77843_MUIC_ADC			BIT(0)
++#define MAX77843_MUIC_ADCERROR			BIT(2)
++#define MAX77843_MUIC_ADC1K			BIT(3)
++
++#define MAX77843_MUIC_CHGTYP			BIT(0)
++#define MAX77843_MUIC_CHGDETRUN			BIT(1)
++#define MAX77843_MUIC_DCDTMR			BIT(2)
++#define MAX77843_MUIC_DXOVP			BIT(3)
++#define MAX77843_MUIC_VBVOLT			BIT(4)
++
++#define MAX77843_MUIC_VBADC			BIT(0)
++#define MAX77843_MUIC_VDNMON			BIT(1)
++#define MAX77843_MUIC_DNRES			BIT(2)
++#define MAX77843_MUIC_MPNACK			BIT(3)
++#define MAX77843_MUIC_MRXBUFOW			BIT(4)
++#define MAX77843_MUIC_MRXTRF			BIT(5)
++#define MAX77843_MUIC_MRXPERR			BIT(6)
++#define MAX77843_MUIC_MRXRDY			BIT(7)
++
++/* MAX77843 INTSRCMASK register */
++#define MAX77843_INTSRCMASK_CHGR		0
++#define MAX77843_INTSRCMASK_SYS			1
++#define MAX77843_INTSRCMASK_FG			2
++#define MAX77843_INTSRCMASK_MUIC		3
++
++#define MAX77843_INTSRCMASK_CHGR_MASK          BIT(MAX77843_INTSRCMASK_CHGR)
++#define MAX77843_INTSRCMASK_SYS_MASK           BIT(MAX77843_INTSRCMASK_SYS)
++#define MAX77843_INTSRCMASK_FG_MASK            BIT(MAX77843_INTSRCMASK_FG)
++#define MAX77843_INTSRCMASK_MUIC_MASK          BIT(MAX77843_INTSRCMASK_MUIC)
++
++#define MAX77843_INTSRC_MASK_MASK \
++		(MAX77843_INTSRCMASK_MUIC_MASK | MAX77843_INTSRCMASK_FG_MASK | \
++		MAX77843_INTSRCMASK_SYS_MASK | MAX77843_INTSRCMASK_CHGR_MASK)
++
++/* MAX77843 STATUS register*/
++#define STATUS1_ADC_SHIFT			0
++#define STATUS1_ADCERROR_SHIFT			6
++#define STATUS1_ADC1K_SHIFT			7
++#define STATUS2_CHGTYP_SHIFT			0
++#define STATUS2_CHGDETRUN_SHIFT			3
++#define STATUS2_DCDTMR_SHIFT			4
++#define STATUS2_DXOVP_SHIFT			5
++#define STATUS2_VBVOLT_SHIFT			6
++#define STATUS3_VBADC_SHIFT			0
++#define STATUS3_VDNMON_SHIFT			4
++#define STATUS3_DNRES_SHIFT			5
++#define STATUS3_MPNACK_SHIFT			6
++
++#define MAX77843_MUIC_STATUS1_ADC_MASK		(0x1f << STATUS1_ADC_SHIFT)
++#define MAX77843_MUIC_STATUS1_ADCERROR_MASK	BIT(STATUS1_ADCERROR_SHIFT)
++#define MAX77843_MUIC_STATUS1_ADC1K_MASK	BIT(STATUS1_ADC1K_SHIFT)
++#define MAX77843_MUIC_STATUS2_CHGTYP_MASK	(0x7 << STATUS2_CHGTYP_SHIFT)
++#define MAX77843_MUIC_STATUS2_CHGDETRUN_MASK	BIT(STATUS2_CHGDETRUN_SHIFT)
++#define MAX77843_MUIC_STATUS2_DCDTMR_MASK	BIT(STATUS2_DCDTMR_SHIFT)
++#define MAX77843_MUIC_STATUS2_DXOVP_MASK	BIT(STATUS2_DXOVP_SHIFT)
++#define MAX77843_MUIC_STATUS2_VBVOLT_MASK	BIT(STATUS2_VBVOLT_SHIFT)
++#define MAX77843_MUIC_STATUS3_VBADC_MASK	(0xf << STATUS3_VBADC_SHIFT)
++#define MAX77843_MUIC_STATUS3_VDNMON_MASK	BIT(STATUS3_VDNMON_SHIFT)
++#define MAX77843_MUIC_STATUS3_DNRES_MASK	BIT(STATUS3_DNRES_SHIFT)
++#define MAX77843_MUIC_STATUS3_MPNACK_MASK	BIT(STATUS3_MPNACK_SHIFT)
++
++/* MAX77843 CONTROL register */
++#define CONTROL1_COMP1SW_SHIFT			0
++#define CONTROL1_COMP2SW_SHIFT			3
++#define CONTROL1_IDBEN_SHIFT			7
++#define CONTROL2_LOWPWR_SHIFT			0
++#define CONTROL2_ADCEN_SHIFT			1
++#define CONTROL2_CPEN_SHIFT			2
++#define CONTROL2_ACC_DET_SHIFT			5
++#define CONTROL2_USBCPINT_SHIFT			6
++#define CONTROL2_RCPS_SHIFT			7
++#define CONTROL3_JIGSET_SHIFT			0
++#define CONTROL4_ADCDBSET_SHIFT			0
++#define CONTROL4_USBAUTO_SHIFT			4
++#define CONTROL4_FCTAUTO_SHIFT			5
++#define CONTROL4_ADCMODE_SHIFT			6
++
++#define MAX77843_MUIC_CONTROL1_COMP1SW_MASK	(0x7 << CONTROL1_COMP1SW_SHIFT)
++#define MAX77843_MUIC_CONTROL1_COMP2SW_MASK	(0x7 << CONTROL1_COMP2SW_SHIFT)
++#define MAX77843_MUIC_CONTROL1_IDBEN_MASK	BIT(CONTROL1_IDBEN_SHIFT)
++#define MAX77843_MUIC_CONTROL2_LOWPWR_MASK	BIT(CONTROL2_LOWPWR_SHIFT)
++#define MAX77843_MUIC_CONTROL2_ADCEN_MASK	BIT(CONTROL2_ADCEN_SHIFT)
++#define MAX77843_MUIC_CONTROL2_CPEN_MASK	BIT(CONTROL2_CPEN_SHIFT)
++#define MAX77843_MUIC_CONTROL2_ACC_DET_MASK	BIT(CONTROL2_ACC_DET_SHIFT)
++#define MAX77843_MUIC_CONTROL2_USBCPINT_MASK	BIT(CONTROL2_USBCPINT_SHIFT)
++#define MAX77843_MUIC_CONTROL2_RCPS_MASK	BIT(CONTROL2_RCPS_SHIFT)
++#define MAX77843_MUIC_CONTROL3_JIGSET_MASK	(0x3 << CONTROL3_JIGSET_SHIFT)
++#define MAX77843_MUIC_CONTROL4_ADCDBSET_MASK	(0x3 << CONTROL4_ADCDBSET_SHIFT)
++#define MAX77843_MUIC_CONTROL4_USBAUTO_MASK	BIT(CONTROL4_USBAUTO_SHIFT)
++#define MAX77843_MUIC_CONTROL4_FCTAUTO_MASK	BIT(CONTROL4_FCTAUTO_SHIFT)
++#define MAX77843_MUIC_CONTROL4_ADCMODE_MASK	(0x3 << CONTROL4_ADCMODE_SHIFT)
++
++/* MAX77843 switch port */
++#define MAX77843_SIWTH_PORT \
++(MAX77843_MUIC_CONTROL1_COMP1SW_MASK | MAX77843_MUIC_CONTROL1_COMP2SW_MASK)
++
++#define MAX77843_SWITCH_OPEN \
++		(0 << CONTROL1_COMP1SW_SHIFT | 0 << CONTROL1_COMP2SW_SHIFT)
++#define MAX77843_SWITCH_USB \
++		(1 << CONTROL1_COMP1SW_SHIFT | 1 << CONTROL1_COMP2SW_SHIFT)
++#define MAX77843_SWITCH_AUDIO \
++		(2 << CONTROL1_COMP1SW_SHIFT | 2 << CONTROL1_COMP2SW_SHIFT)
++#define MAX77843_SWITCH_UART \
++		(3 << CONTROL1_COMP1SW_SHIFT | 3 << CONTROL1_COMP2SW_SHIFT)
++#define MAX77843_SWITCH_AUX_USB \
++		(4 << CONTROL1_COMP1SW_SHIFT | 4 << CONTROL1_COMP2SW_SHIFT)
++#define MAX77843_SWITCH_AUX_UART \
++		(5 << CONTROL1_COMP1SW_SHIFT | 5 << CONTROL1_COMP2SW_SHIFT)
++
++/* MAX77843 SAFEOUT LDO Control register */
++#define SAFEOUTCTRL_SAFEOUT1_SHIFT		0
++#define SAFEOUTCTRL_SAFEOUT2_SHIFT		2
++#define SAFEOUTCTRL_ENSAFEOUT1_SHIFT		6
++#define SAFEOUTCTRL_ENSAFEOUT2_SHIFT		7
++
++#define MAX77843_REG_SAFEOUTCTRL_ENSAFEOUT1 \
++		BIT(SAFEOUTCTRL_ENSAFEOUT1_SHIFT)
++#define MAX77843_REG_SAFEOUTCTRL_ENSAFEOUT2 \
++		BIT(SAFEOUTCTRL_ENSAFEOUT2_SHIFT)
++#define MAX77843_REG_SAFEOUTCTRL_SAFEOUT1_MASK \
++		(0x3 << SAFEOUTCTRL_SAFEOUT1_SHIFT)
++#define MAX77843_REG_SAFEOUTCTRL_SAFEOUT2_MASK \
++		(0x3 << SAFEOUTCTRL_SAFEOUT2_SHIFT)
++
++struct max77843 {
++	struct device *dev;
++
++	struct i2c_client *i2c;
++	struct i2c_client *i2c_chg;
++	struct i2c_client *i2c_fuel;
++	struct i2c_client *i2c_muic;
++
++	struct regmap *regmap;
++	struct regmap *regmap_chg;
++	struct regmap *regmap_fuel;
++	struct regmap *regmap_muic;
++
++	struct regmap_irq_chip_data *irq_data;
++	struct regmap_irq_chip_data *irq_data_chg;
++	struct regmap_irq_chip_data *irq_data_fuel;
++	struct regmap_irq_chip_data *irq_data_muic;
++
++	int irq;
++};
++#endif /* __MAX77843_H__ */
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
