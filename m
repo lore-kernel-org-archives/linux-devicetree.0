@@ -1,106 +1,68 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Add initial device tree support for Tegra132
-Date: Fri, 23 Jan 2015 17:34:50 +0000
-Message-ID: <20150123173449.GB10424@leverpostej>
-References: <alpine.DEB.2.02.1501161139180.9776@utopia.booyaka.com>
- <20150121161313.GI5044@leverpostej>
- <alpine.DEB.2.02.1501231038130.5450@utopia.booyaka.com>
- <54C27D6F.9000006@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: add generic dt-card support
+Date: Fri, 23 Jan 2015 17:40:13 +0000
+Message-ID: <20150123174013.GV21293@sirena.org.uk>
+References: <cover.1421868426.git.moinejf@free.fr>
+ <d0c66c2e2f200119f9990fa52a503b1a4af6238f.1421868426.git.moinejf@free.fr>
+ <54C0088F.9070609@metafoo.de>
+ <20150122090723.50ac0156@armhf>
+ <54C14EB3.8080305@metafoo.de>
+ <20150123131554.623003f9@armhf>
+ <54C252F4.9000504@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="R9dSeJxMIUBTi9Do"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54C27D6F.9000006-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54C252F4.9000504@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 23, 2015 at 04:57:19PM +0000, Stephen Warren wrote:
-> On 01/23/2015 04:31 AM, Paul Walmsley wrote:
-> > + Arto, Terje for comments on the host1x section
-> > + Stephen Warren for comments on the serial DT data
-> 
-> > On Wed, 21 Jan 2015, Mark Rutland wrote:
-> >
-> >> As mentioned in my reply to the DT list patch [1], there are a couple of
-> >> bits I'd like to see cleaned up first, but in the meantime I have some
-> >> comments from my first pass of the dtsi below. Some of these may equally
-> >> apply to existing dts(i) files.
-> >>
-> >> I see a few undocumented compatible strings (at least when comparing
-> >> against mainline). If there are other series or trees I should be
-> >> looking at, any pointers would be appreciated. If not, documentation
-> >> updates would be nice (checkpatch should complain otherwise).
-> 
-> >> On Fri, Jan 16, 2015 at 11:45:29AM +0000, Paul Walmsley wrote:
-> >>>
-> >>> Add an initial device tree file for the Tegra132 SoC.  The DT file is
-> >>> based on arch/arm/boot/dts/tegra124.dtsi and
-> >>> arch/arm/boot/dts/tegra114.dtsi, with the following significant
-> >>> changes:
-> >>>
-> >>> - Tegra132 uses a Denver CPU cluster rather than an ARMv7 CPU cluster
-> >>> - Devices are arranged by bus, rather than in a flat topology
-> >>> - No polling delays have been defined for the thermal zones.  I don't
-> >>>    believe that this is a property of the SoC hardware, but rather of a
-> >>>    given use-case.
-> 
-> >>> diff --git a/arch/arm64/boot/dts/tegra/tegra132.dtsi b/arch/arm64/boot/dts/tegra/tegra132.dtsi
-> >>> +               /*
-> >>> +                * There are two serial drivers: an 8250 based simple
-> >>> +                * serial driver and an APB DMA based serial driver
-> >>> +                * for higher baudrate and performance. To enable the
-> >>> +                * 8250 based driver, the compatible string is
-> >>> +                * "nvidia,tegra132-uart", "nvidia,tegra124-uart",
-> >>> +                * "nvidia,tegra20-uart" and to enable the APB DMA
-> >>> +                * based serial driver, the compatible string is
-> >>> +                * "nvidia,tegra132-hsuart", "nvidia,tegra124-hsuart",
-> >>> +                * "nvidia,tegra30-hsuart".
-> >>> +                */
-> >>
-> >> Is there any reason to continue with this split?
-> >>
-> >> Surely if the only difference is DMA, the presence of dmas and dma-names
-> >> should be sufficient to get the driver to do the right thing, and if you
-> >> need to disable DMA for debugging that could be a command-line option.
-> 
-> I vaguely recall asking for the DMA support to be integrated into the 
-> regular 8250 driver instead when the separate DMA-capable driver was 
-> first added. I /think/ there was resistance to this because adding lots 
-> of different SoC-specific ways to do DMA into the existing 8250 driver 
-> would complicate it even more, and hence be unmaintainable.
-> 
-> I assume that reasoning is still valid.
-> 
-> Perhaps what we need is more fine-grained driver selection, not just 
-> based on compatible value. Something like:
-> 
-> if compatible == nvidia,tegra20-uart:
->    if node.has_prop("enable-dma"):
->      driver = Tegra-specfic DMA capable UART driver
->    else:
->      driver = Common 8250 driver
 
-Surely we should assume that if the DMAs are listed (and not disabled)
-they are usable? I'm not sure I see the point in an additional property
-to force Linux-internal driver selection in this way.
+--R9dSeJxMIUBTi9Do
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What happens if we have a driver for a particular string, but fail to
-probe? Can we fall back to a more generic driver?
+On Fri, Jan 23, 2015 at 02:56:04PM +0100, Lars-Peter Clausen wrote:
+> On 01/23/2015 01:15 PM, Jean-Francois Moine wrote:
 
-> Is that something that of_serial.c could/should be enhanced to do? That 
-> said, the whole reasoning behind separate compatible properties before 
-> was that compatible is supposed to "drive" driver selection. At least, 
-> that's what I was told then.
+> >>Your example is a relative simple one where you do not have any additio=
+nal
+> >>audio fabric on the board itself.
 
-The compatible string is meant to describe the programming interface the
-device is compatible with. The kernel should then choose the most
-appropriate driver it knows can handle that HW programming interface.
+> >Right, and that's why I'd be glad to have quickly something in the
+> >kernel. More properties could be added later as there would be requests.
 
-Considering it as a way to choose the driver is backwards. I'd expect
-the device node to have both strings (with the DMA capable string first)
-unless it really doesn't have any DMAs.
+> I'd agree if this was some kind of kernel internal stuff, but this is
+> creating ABI and we have to maintain it forever. Rushing this in without
+> proper discussion and consideration of the more complex use-cases is in my
+> opinion not a good idea.
 
-Thanks,
-Mark.
+Just to repeat myself again: *please* try to provide more explanation
+for your commits, the concerns Lars is raising above are among the
+things that I'd have expected to be covered in a high quality changelog. =
+=20
+There is no explanation at all in the changelog regarding the goal here,
+just statements that this is a graph based card without an actual card
+node.
+
+--R9dSeJxMIUBTi9Do
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUwod8AAoJECTWi3JdVIfQ1MMH+gMkwDNLlNqCI+AGUfu7VHU4
+grl3CdjfAwThmj7dLL5ciTzfspxh/fB8+xxSexmeC522wF1QmNtSrnr5h+tSETYY
+bTIuu39riAuuwmN7jdowIipaQdo3gp21xnbBxPLO1PnZUxj5CKt0gj46xNkTAkFH
+sjOtF8JBJN1hdIQh6LYHqz7nnweWZDMR667TTw/45VmozrILzOPENrWLQo7/0B+y
+SvvlNLsCJMUcnYeJP9+psXZnYul8bn5bWtSDhlo12BffsLVu43lztQxfkiokfSHs
+PW76D+XNw+FMC+XPObMY532DaBNvFISQL53bKQghHgA1JMpbuh5MozX7RSkWNL4=
+=8/iP
+-----END PGP SIGNATURE-----
+
+--R9dSeJxMIUBTi9Do--
