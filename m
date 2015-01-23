@@ -1,41 +1,58 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH v6 0/2] Add Spreadtrum Sharkl64 Platform support
-Date: Fri, 23 Jan 2015 18:21:29 +0800
-Message-ID: <1422008491-16452-1-git-send-email-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH v6 2/2] arm64: Add support for Spreadtrum's Sharkl64 Platform in Kconfig and defconfig
+Date: Fri, 23 Jan 2015 18:21:31 +0800
+Message-ID: <1422008491-16452-3-git-send-email-chunyan.zhang@spreadtrum.com>
 References: <sprd-dt-v6>
+ <1422008491-16452-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <sprd-dt-v6>
+In-Reply-To: <1422008491-16452-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mark.rutland@arm.com, arnd@arndb.de, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 Cc: Joel.Schopp@amd.com, Thomas.Lendacky@amd.com, Suravee.Suthikulpanit@amd.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, orsonzhai@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch-set split the last version, and addressed the review comments from
-last version on serial driver code.
+From: Zhizhou Zhang <zhizhou.zhang@spreadtrum.com>
 
-Changes from v5:
-	- Added maintenance interrupt for gic
-	- Removed reg property from 'soc' and 'apb' nodes
+Adds support for Spreadtrum's SoC Platform in the arm64 Kconfig and
+defconfig files.
 
-Zhizhou Zhang (2):
-  arm64: dts: Add support for Spreadtrum SC9836 SoC in dts and Makefile
-  arm64: Add support for Spreadtrum's Sharkl64 Platform in Kconfig and
-    defconfig
+Signed-off-by: Zhizhou Zhang <zhizhou.zhang@spreadtrum.com>
+Signed-off-by: Orson Zhai <orson.zhai@spreadtrum.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+---
+ arch/arm64/Kconfig           |    5 +++++
+ arch/arm64/configs/defconfig |    1 +
+ 2 files changed, 6 insertions(+)
 
- arch/arm64/Kconfig                            |    5 ++
- arch/arm64/boot/dts/Makefile                  |    1 +
- arch/arm64/boot/dts/sprd/Makefile             |    5 ++
- arch/arm64/boot/dts/sprd/sc9836-openphone.dts |   49 ++++++++++++++++
- arch/arm64/boot/dts/sprd/sc9836.dtsi          |   74 +++++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/sharkl64.dtsi        |   65 ++++++++++++++++++++++
- arch/arm64/configs/defconfig                  |    1 +
- 7 files changed, 200 insertions(+)
- create mode 100644 arch/arm64/boot/dts/sprd/Makefile
- create mode 100644 arch/arm64/boot/dts/sprd/sc9836-openphone.dts
- create mode 100644 arch/arm64/boot/dts/sprd/sc9836.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl64.dtsi
-
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index b1f9a20..885c1f4 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -153,6 +153,11 @@ config ARCH_SEATTLE
+ 	help
+ 	  This enables support for AMD Seattle SOC Family
+ 
++config ARCH_SPRD
++	bool "Spreadtrum SoC platform"
++	help
++	  Support for Spreadtrum ARM based SoCs
++
+ config ARCH_THUNDER
+ 	bool "Cavium Inc. Thunder SoC Family"
+ 	help
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index dd301be..c1677ca 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -33,6 +33,7 @@ CONFIG_MODULE_UNLOAD=y
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ CONFIG_ARCH_THUNDER=y
++CONFIG_ARCH_SPRD=y
+ CONFIG_ARCH_VEXPRESS=y
+ CONFIG_ARCH_XGENE=y
+ CONFIG_PCI=y
 -- 
 1.7.9.5
