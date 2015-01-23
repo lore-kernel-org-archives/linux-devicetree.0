@@ -1,73 +1,103 @@
-From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: Associating nodes with phandles for pci devices
-Date: Fri, 23 Jan 2015 14:40:38 -0800
-Message-ID: <54C2CDE6.8090400@openwrt.org>
-References: <9bcf67ede60f4567a396c05578cfceb7@svr-chch-ex1.atlnz.lc> <2275507.PY4WZcxUrf@wuerfel> <alpine.DEB.2.10.1501240828280.14228@chrisp-dl.ws.atlnz.lc>
+From: Felipe Balbi <balbi@ti.com>
+Subject: [PATCH 1/4] arm: omap: hwmod: 43xx: add DebugSS hwmod data
+Date: Fri, 23 Jan 2015 17:11:41 -0600
+Message-ID: <1422054704-14915-2-git-send-email-balbi@ti.com>
+References: <1422054704-14915-1-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.10.1501240828280.14228-VJzQ50X1/JKjhWACt5bsBotlCAj8ZROq@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <chrisp-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1422054704-14915-1-git-send-email-balbi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>
+Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 23/01/15 11:38, Chris Packham wrote:
-> 
-> Hi Arnd,
-> 
-> Thanks for the quick response (and sorry for the horribly formatted
-> message, travelling with only a webmail interface at the moment).
-> 
-> On Fri, 23 Jan 2015, Arnd Bergmann wrote:
-> 
->> On Friday 23 January 2015 19:02:33 Chris Packham wrote:
->>> Hi,
->>>
->>> I'm working on a new board that has a marvell,dsa switch. Similar to
->>> the kirkwood-mv88f6281gtw-ge board. However the major difference is
->>> that instead of being connected to an integrated Ethernet port it is
->>> connected via a PCI-e Ethernet port (basically a NIC hardwired onto
->>> the board).
->>>
->>> Generally you don't need to define PCI devices in the .dts because
->>> the bus is scanned at run time and the method for identifying devices
->>> is well defined. But to satisfy the marvell,dsa binding[1] I need to
->>> tell it the Ethernet port it is connected to. The answer might be in
->>> the PCI bindings but the urls in the documentation[2] don't appear to
->>> be valid anymore.
->>>
->>> Is it possible to enumerate PCI devices in the .dts? Or is there a
->>> way of satisfying the dsa requirements without knowing the Ethernet
->>> device?
->>>
->>
->> In general, it is possible, and we do that on PowerPC, but it may be that
->> there are parts missing on ARM and you have to try it out.
->>
->> In particular, you need to know the address of the PCI device and then
->> create a device node that will be associated with the
->> pci_dev->dev.of_node
->> pointer.
-> 
-> Encouraging to know. I think I can figure out the relevant addresses for
-> my device based on the run-time scan.
+Without hwmod data for DebugSS, performance monitors
+have no chance of running on AM43xx devices.
 
-BTW, one thing that is high in my TODO list regarding DSA is to stop
-using this platform device/driver architecture and use the actual device
-driver model. Your switch driver entry point would be a pci_drive
-probe's function where you end-up registering a switch the DSA. This
-should solve portions of your problem although this is a long shot as we
-need to convert existing drivers as well.
+Signed-off-by: Felipe Balbi <balbi@ti.com>
+---
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 40 ++++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/prcm43xx.h             |  1 +
+ 2 files changed, 41 insertions(+)
 
-> 
-> Can you think of a good example. I found a few ppc boards that have an
-> PCI-ISA bridge that get's enumerated in the .dts. I think I can make sense
-> of them but because they are bridges there's a lot of extra stuff for
-> the down stream devices.
+diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+index 5c6c8410160e..6709704dd5b5 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+@@ -19,6 +19,7 @@
+ #include "omap_hwmod.h"
+ #include "omap_hwmod_33xx_43xx_common_data.h"
+ #include "prcm43xx.h"
++#include "prm44xx.h"
+ #include "omap_hwmod_common_data.h"
+ 
+ 
+@@ -60,6 +61,44 @@ static struct omap_hwmod am43xx_wkup_m3_hwmod = {
+ 	.rst_lines_cnt	= ARRAY_SIZE(am33xx_wkup_m3_resets),
+ };
+ 
++/*
++ * 'debugss' class
++ * debug and emulation sub system
++ */
++static struct omap_hwmod_opt_clk am43xx_debugss_opt_clks[] = {
++	{ .role = "dbg_sysclk", .clk = "dbg_sysclk_ck" },
++	{ .role = "dbg_clka", .clk = "dbg_clka_ck", },
++	{ .role = "dbg_clkb", .clk = "dbg_clkb_ck", },
++	{ .role = "dbg_clkc", .clk = "dbg_clkc_ck", },
++};
++
++static struct omap_hwmod_class am43xx_debugss_hwmod_class = {
++	.name	= "debugss",
++};
++
++/* debugss */
++static struct omap_hwmod am43xx_debugss_hwmod = {
++	.name		= "debugss",
++	.class		= &am43xx_debugss_hwmod_class,
++	.clkdm_name	= "l3_aon_clkdm",
++	.main_clk	= "trace_clk_div_ck",
++	.prcm = {
++		.omap4 = {
++			.clkctrl_offs = AM43XX_CM_WKUP_DBGSS_CLKCTRL_OFFSET,
++		},
++	},
++	.opt_clks	= am43xx_debugss_opt_clks,
++	.opt_clks_cnt	= ARRAY_SIZE(am43xx_debugss_opt_clks),
++};
++
++/* debugss -> l3_main_2 */
++static struct omap_hwmod_ocp_if am43xx_debugss__l3_main = {
++	.master		= &am43xx_debugss_hwmod,
++	.slave		= &am33xx_l3_main_hwmod,
++	.clk		= "sys_clkin_ck",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
+ static struct omap_hwmod am43xx_control_hwmod = {
+ 	.name		= "control",
+ 	.class		= &am33xx_control_hwmod_class,
+@@ -875,6 +914,7 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am33xx_l3_main__tptc1,
+ 	&am33xx_l3_main__tptc2,
+ 	&am33xx_l3_main__ocmc,
++	&am43xx_debugss__l3_main,
+ 	&am43xx_l4_hs__cpgmac0,
+ 	&am33xx_cpgmac0__mdio,
+ 	&am33xx_l3_main__sha0,
+diff --git a/arch/arm/mach-omap2/prcm43xx.h b/arch/arm/mach-omap2/prcm43xx.h
+index ad7b3e9977f8..bb42cd80526d 100644
+--- a/arch/arm/mach-omap2/prcm43xx.h
++++ b/arch/arm/mach-omap2/prcm43xx.h
+@@ -93,6 +93,7 @@
+ #define AM43XX_CM_PER_TIMER5_CLKCTRL_OFFSET		0x0548
+ #define AM43XX_CM_PER_TIMER6_CLKCTRL_OFFSET		0x0550
+ #define AM43XX_CM_PER_TIMER7_CLKCTRL_OFFSET		0x0558
++#define AM43XX_CM_WKUP_DBGSS_CLKCTRL_OFFSET		0x0020
+ #define AM43XX_CM_WKUP_WKUP_M3_CLKCTRL_OFFSET		0x0228
+ #define AM43XX_CM_WKUP_CONTROL_CLKCTRL_OFFSET		0x0360
+ #define AM43XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET	0x0350
+-- 
+2.3.0-rc1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
