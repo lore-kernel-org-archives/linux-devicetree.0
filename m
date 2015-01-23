@@ -1,167 +1,50 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2 v3 RESEND] mtd: fsl_upm: Support NAND ECC DTS
- properties
-Date: Thu, 22 Jan 2015 23:43:10 -0800
-Message-ID: <20150123074310.GD3268@brian-ubuntu>
-References: <1136776275.110939.1421109367310.JavaMail.zimbra@xes-inc.com>
- <447095612.147126.1421278909058.JavaMail.zimbra@xes-inc.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 2/2] remoteproc: microblaze: Add support for microblaze
+ on Zynq
+Date: Fri, 23 Jan 2015 09:23:39 +0100
+Message-ID: <9958fd0fb61347558d33ca92dcc02a88@BN1BFFO11FD005.protection.gbl>
+References: <a458462d2dc6901440bded015608f7a9df9e7942.1421662385.git.michal.simek@xilinx.com>
+ <10276362c737fc9da863f1a07737fd91f7340242.1421662385.git.michal.simek@xilinx.com>
+ <54C12AF9.40200@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <447095612.147126.1421278909058.JavaMail.zimbra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C12AF9.40200@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nathan Lynch <Nathan_Lynch@mentor.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, Ohad Ben-Cohen <ohad@wizery.com>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, =?windows-1252?Q?S=F6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jordan,
-
-On Wed, Jan 14, 2015 at 05:41:49PM -0600, Aaron Sierra wrote:
-> From: Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+On 01/22/2015 05:53 PM, Nathan Lynch wrote:
+> On 01/19/2015 04:30 AM, Michal Simek wrote:
+>> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>> index 5e343bab9458..3955f42e9e9c 100644
+>> --- a/drivers/remoteproc/Kconfig
+>> +++ b/drivers/remoteproc/Kconfig
+>> @@ -64,4 +64,15 @@ config DA8XX_REMOTEPROC
+>>  	  It's safe to say n here if you're not interested in multimedia
+>>  	  offloading.
+>>
+>> +config MB_REMOTEPROC
+>> +	tristate "Support Microblaze remoteproc"
+>> +	depends on ARCH_ZYNQ && !DEBUG_SG
+>> +	select GPIO_XILINX
+>> +	select REMOTEPROC
+>> +	select RPMSG
+>> +	default m
+>> +	help
+>> +	  Say y here to support Xilinx Microblaze remote processors
+>> +	  on the Xilinx Zynq.
+>> +
+>>  endmenu
 > 
-> Support the generic nand-ecc-mode, nand-ecc-strength, and
-> nand-ecc-step-size device-tree properties with the Freescale UPM NAND
-> driver.
-> 
-> This patch preserves the default software ECC mode while adding the
-> ability to use BCH ECC for larger NAND devices.
-> 
-> Signed-off-by: Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v2:
->     * Now using ECC mode and strength helpers from of_mtd.h
->     * ECC mode and strength checking is more robust
-> v3 (resent due to [PATCH 1/2] v2 update):
->     * Require nand-ecc-step-size for soft_bch.
->     * Simplify mode/strength/step parameter checking.
+> The dependency on !DEBUG_SG seems unusual, and worth a comment if it's
+> truly needed.  And the module should be disabled by default, no?
 
-This mostly looks pretty good.
+Right - I will remove this dependency. It is not needed now.
 
->  .../devicetree/bindings/mtd/fsl-upm-nand.txt       | 32 +++++++++++
->  drivers/mtd/nand/Kconfig                           |  1 +
->  drivers/mtd/nand/fsl_upm.c                         | 66 ++++++++++++++++++++--
->  3 files changed, 94 insertions(+), 5 deletions(-)
-> 
+Using is like a module is good usecase because you can reload SW on remote cpu.
 
-...
-
-> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-> index e5e3343..4c85daf 100644
-> --- a/drivers/mtd/nand/Kconfig
-> +++ b/drivers/mtd/nand/Kconfig
-> @@ -444,6 +444,7 @@ config MTD_NAND_FSL_UPM
->  	tristate "Support for NAND on Freescale UPM"
->  	depends on PPC_83xx || PPC_85xx
->  	select FSL_LBC
-> +	select MTD_NAND_ECC_BCH
-
-Hmm, do you really need to 'select' here? I think your driver compiles
-just fine without it, and nand_base gives you a BUG() if you try to use
-its soft BCH without building in the driver. It's normally bad form to
-'select' an option that is normally user-configurable, unless you
-absolutely require it.
-
->  	help
->  	  Enables support for NAND Flash chips wired onto Freescale PowerPC
->  	  processor localbus with User-Programmable Machine support.
-> diff --git a/drivers/mtd/nand/fsl_upm.c b/drivers/mtd/nand/fsl_upm.c
-> index 72755d7..053d8bf 100644
-> --- a/drivers/mtd/nand/fsl_upm.c
-> +++ b/drivers/mtd/nand/fsl_upm.c
-
-...
-
-> @@ -168,7 +174,61 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
->  	fun->chip.read_byte = fun_read_byte;
->  	fun->chip.read_buf = fun_read_buf;
->  	fun->chip.write_buf = fun_write_buf;
-> -	fun->chip.ecc.mode = NAND_ECC_SOFT;
-> +
-> +	/*
-> +	 * Support NAND_ECC_SOFT and NAND_ECC_SOFT_BCH, error otherwise.
-> +	 */
-> +	mode = of_get_nand_ecc_mode(flash_np);
-> +	strength = of_get_nand_ecc_strength(flash_np);
-> +	step_size = of_get_nand_ecc_step_size(flash_np);
-> +	if (mode < 0) {
-> +		dev_info(fun->dev, "ECC mode defaulting to 'soft'");
-> +		mode = NAND_ECC_SOFT;
-> +	} else if (mode != NAND_ECC_SOFT && mode != NAND_ECC_SOFT_BCH) {
-> +		dev_err(fun->dev, "ECC mode in device tree is unsupported");
-> +		ret = -EINVAL;
-> +		goto err;
-> +	}
-> +
-> +	/*
-> +	 * In NAND_ECC_SOFT_BCH, require strength >= 1 and step >= 1.
-> +	 * In NAND_ECC_SOFT:
-> +	 *     a. ignore strength (1 implied)
-> +	 *     b. step < 0, step = 256, or step = 512.
-
-(I'm getting nitpicky here, but if you're going to change the Kconfig
-above, you might as well address this.)
-
-This comment is nice, but it's still slightly confusing, as it doesn't
-have very good parallel structure. There needs to be a verb in bullet
-point (b). Perhaps the following?
-
-	 *     b. require step < 0 (default to 256), step = 256, or step = 512.
-
-> +	 */
-> +	if (mode == NAND_ECC_SOFT_BCH) {
-> +		if (strength < 1)
-> +			dev_err(fun->dev, "invalid nand-ecc-strength for BCH");
-> +
-> +		if (step_size < 1)
-> +			dev_err(fun->dev, "invalid nand-ecc-step-size for BCH");
-> +
-> +		if (strength < 1 || step_size < 1) {
-> +			ret = -EINVAL;
-> +			goto err;
-> +		}
-> +
-> +		fun->chip.ecc.mode = mode;
-> +		fun->chip.ecc.strength = strength;
-> +		fun->chip.ecc.size = step_size;
-> +	} else {
-> +		if (strength >= 0)
-
-I don't see why we should complain about strength == 1. It's a perfectly
-descriptive value from DT. Maybe:
-
-		if (strength != 1 && strength >= 0)
-
-> +			dev_warn(fun->dev, "soft ECC implies 1-bit strength");
-> +
-> +		if (step_size < 0) {
-> +			step_size = 256;
-> +		} else if (step_size != 256 && step_size != 512) {
-> +			dev_err(fun->dev,
-> +				"soft ECC needs 256 or 512 byte step");
-> +			ret = -EINVAL;
-> +			goto err;
-> +		}
-> +
-> +		fun->chip.ecc.mode = mode;
-> +		fun->chip.ecc.strength = 1;
-> +		fun->chip.ecc.size = step_size;
-> +	}
-> +
->  	if (fun->mchip_count > 1)
->  		fun->chip.select_chip = fun_select_chip;
->  
-
-...
-
-Now that I think about it, I can just apply all these changes and apply
-the patch myself, if you agree. Or send a new version yourself. Either
-way.
-
-Regards,
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Michal
