@@ -1,72 +1,197 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: henninger: rename board to Porter
-Date: Fri, 23 Jan 2015 23:37:05 +0300
-Message-ID: <2481726.lh33apx2TG@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun4i: Add initial dts for Gemei G9 tablet
+Date: Fri, 23 Jan 2015 22:36:49 +0200
+Message-ID: <1422045409-1251-1-git-send-email-plaes@plaes.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Renesas has made some changes to the Henninger low cost board hardware and at
-the same time decided to  rename the board  to Porter.
+Gemei G9 is an A10 based tablet, with 1G RAM, 16G NAND, 1024x768
+IPS LCD display, stereo speakers, 1.3MP front camera and 5 MP
+rear camera, 8000mAh battery, GT901 2+1 touchscreen, Bosch BMA250
+accelerometer and RTL8188CUS USB wifi. It also has MicroSD slot,
+miniHDMI, 1 x MicroUSB OTG port and 1 x MicroUSB host port and
+3.5mm headphone jack.
+More details are available at: http://linux-sunxi.org/Gemei_G9
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
+Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 ---
-This patch is against 'renesas-devel-20150123-v3.19-rc5' tag of Simon Horman's
-'renesas.git' repo.
-
- arch/arm/boot/dts/Makefile                                     |  2 +-
- .../arm/boot/dts/{r8a7791-henninger.dts => r8a7791-porter.dts} | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
- rename arch/arm/boot/dts/{r8a7791-henninger.dts => r8a7791-porter.dts} (96%)
+ arch/arm/boot/dts/Makefile               |   6 +-
+ arch/arm/boot/dts/sun4i-a10-gemei-g9.dts | 138 +++++++++++++++++++++++++++++++
+ 2 files changed, 142 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 59e79e9..3cc8ba5 100644
+index 7df26a2..a2e05fc 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -419,8 +419,8 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += eme
- 	r8a7740-armadillo800eva.dtb \
- 	r8a7779-marzen.dtb \
- 	r8a7790-lager.dtb \
--	r8a7791-henninger.dtb \
- 	r8a7791-koelsch.dtb \
-+	r8a7791-porter.dtb \
- 	r8a7794-alt.dtb \
- 	sh73a0-kzm9g.dtb
- dtb-$(CONFIG_ARCH_SOCFPGA) += socfpga_arria5_socdk.dtb \
-diff --git a/arch/arm/boot/dts/r8a7791-henninger.dts b/arch/arm/boot/dts/r8a7791-porter.dts
-similarity index 96%
-rename from arch/arm/boot/dts/r8a7791-henninger.dts
-rename to arch/arm/boot/dts/r8a7791-porter.dts
-index d2ebf11..4a616dc 100644
---- a/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ b/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -1,8 +1,8 @@
- /*
-- * Device Tree Source for the Henninger board
-+ * Device Tree Source for the Porter board
-  *
-- * Copyright (C) 2014 Renesas Solutions Corp.
-- * Copyright (C) 2014 Cogent Embedded, Inc.
-+ * Copyright (C) 2014-2015 Renesas Solutions Corp.
-+ * Copyright (C) 2014-2015 Cogent Embedded, Inc.
-  *
-  * This file is licensed under the terms of the GNU General Public License
-  * version 2.  This program is licensed "as is" without any warranty of any
-@@ -14,8 +14,8 @@
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
--	model = "Henninger";
--	compatible = "renesas,henninger", "renesas,r8a7791";
-+	model = "Porter";
-+	compatible = "renesas,porter", "renesas,r8a7791";
- 
- 	aliases {
- 		serial0 = &scif0;
+@@ -447,12 +447,14 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-ba10-tvbox.dtb \
+ 	sun4i-a10-chuwi-v7-cw0825.dtb \
+ 	sun4i-a10-cubieboard.dtb \
++	sun4i-a10-gemei-g9.dtb \
++	sun4i-a10-hackberry.dtb \
++	sun4i-a10-inet97fv2.dtb \
+ 	sun4i-a10-marsboard.dtb \
+ 	sun4i-a10-mini-xplus.dtb \
+ 	sun4i-a10-mk802.dtb \
+ 	sun4i-a10-mk802ii.dtb \
+-	sun4i-a10-hackberry.dtb \
+-	sun4i-a10-inet97fv2.dtb \
++	sun4i-a10-mini-xplus.dtb \
+ 	sun4i-a10-olinuxino-lime.dtb \
+ 	sun4i-a10-pcduino.dtb
+ dtb-$(CONFIG_MACH_SUN5I) += \
+diff --git a/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
+new file mode 100644
+index 0000000..46700b8
+--- /dev/null
++++ b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
+@@ -0,0 +1,138 @@
++/*
++ * Copyright 2015 Priit Laes
++ *
++ * Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun4i-a10.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++    model = "Gemei G9 Tablet";
++    compatible = "gemei,g9", "allwinner,sun4i-a10";
++};
++
++/*
++ * http://linux-sunxi.org/Gemei_G9
++ *
++ * TODO:
++ *   2x cameras via CSI
++ *   AXP battery management
++ *   AXP power enable key
++ *   Keys (LRADC)
++ *   NAND
++ *   OTG
++ *   Touchscreen - gt801_2plus1 @ i2c adapter 2 @ 0x48
++ */
++
++
++&ehci0 {
++    status = "okay";
++};
++
++&ehci1 {
++    status = "okay";
++};
++
++&i2c0 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&i2c0_pins_a>;
++    status = "okay";
++
++    axp209: pmic@34 {
++        compatible = "x-powers,axp209";
++        reg = <0x34>;
++        interrupts = <0>;
++
++        interrupt-controller;
++        #interrupt-cells = <1>;
++    };
++};
++
++&i2c1 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&i2c1_pins_a>;
++    status = "okay";
++
++    /* Accelerometer */
++    bma250@18 {
++        compatible = "bosch,bma250";
++        reg = <0x18>;
++    };
++};
++
++&reg_usb1_vbus {
++    status = "okay";
++};
++
++&reg_usb2_vbus {
++    status = "okay";
++};
++
++&mmc0 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++    vmmc-supply = <&reg_vcc3v3>;
++    bus-width = <4>;
++    cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH01 */
++    cd-inverted;
++    status = "okay";
++};
++
++
++&uart0  {
++    pinctrl-names = "default";
++    pinctrl-0 = <&uart0_pins_a>;
++    status = "okay";
++};
++
++&usbphy {
++    usb1_vbus-supply = <&reg_usb1_vbus>;
++    usb2_vbus-supply = <&reg_usb2_vbus>;
++    status = "okay";
++};
+-- 
+2.2.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
