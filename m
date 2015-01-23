@@ -1,383 +1,167 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
-Date: Fri, 23 Jan 2015 16:16:29 +0530
-Message-ID: <CAKohpomANNiX2KU42F_Qbzv5OK9+-xhNjy1Kp0WskE_Dv_BTeA@mail.gmail.com>
-References: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
+Date: Fri, 23 Jan 2015 10:51:14 +0000
+Message-ID: <20150123105114.GB23493@leverpostej>
+References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422007621-13567-1-git-send-email-stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Stathis Voukelatos <stathisv70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixing Olof's email address ..
+On Fri, Jan 23, 2015 at 10:07:01AM +0000, Stathis Voukelatos wrote:
+> This patch adds support the Ethernet Packet Sniffer H/W module
+> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
+> The module allows Ethernet packets to be parsed, matched against
+> a user-defined pattern and timestamped. It sits between a 100M
+> Ethernet MAC and PHY and is completely passive with respect to
+> Ethernet frames.
+>
+> Matched packet bytes and timestamp values are returned through a
+> FIFO. Timestamps are provided to the module through an externally
+> generated Gray-encoded counter.
+>
+> The command pattern for packet matching is stored in module RAM
+> and consists of a sequence of 16-bit entries. Each entry includes
+> an 8-bit command code and and 8-bit data value. Valid command
+> codes are:
+> 0 - Don't care
+> 1 - Match: packet data must match command string byte
+> 2 - Copy: packet data will be copied to FIFO
+> 3 - Match/Stamp: if packet data matches string byte, a timestamp
+>                  is copied into the FIFO
+> 4 - Copy/Done: packet data will be copied into the FIFO.
+>                This command terminates the command string.
+>
+> The driver consists of two modules:
+> - Core: it provides an API to user space using the Generic Netlink
+>         framework. Specific backend implementations, like the
+>         Ethernet Packet Sniffer, register one or more channels
+>         with the Core. For each channel a Genl family is created.
+>         User space can access a channel by sending Genl messages
+>         to the Genl family associated with the channel. Packet
+>         matching events are multicast.
+>
+> - Ethernet Packet Sniffer backend: provides the driver for the
+>         Linn Ethernet Packet Sniffer H/W modules.
 
-On 23 January 2015 at 16:14, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Rob et al,
+It sounds like the framework and particular driver need to be split into
+separate patches.
+
+Also, please split the binding patch as per
+Documentation/devicetree/bindings/submitting-patches.txt.
+
 >
-> This is another attempt to redefine OPP bindings which we concluded to after
-> first round of reviews.
+> The split between a core and backend modules allows software-only
+> implementations to be added for platforms where no H/W support
+> is available.
 >
-> Current OPP (Operating performance point) DT bindings are proven to be
-> insufficient at multiple instances.
+> Based on 3.19-rc5
 >
-> There had been multiple band-aid approaches to get them fixed (The latest one
-> being: http://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg53398.html).
-> For obvious reasons Rob rejected them and shown the right path forward.
->
-> The shortcomings we are trying to solve here:
->
-> - How to select which driver to probe for a platform, when multiple drivers are
->   available. For example: how to choose between cpufreq-dt and arm_big_little
->   drivers.
->
-> - Getting clock sharing information between CPUs. Single shared clock vs
->   independent clock per core vs shared clock per cluster.
->
-> - Support for turbo modes
->
-> - Support for intermediate frequencies
->
-> - Other per OPP settings: transition latencies, disabled status, etc.?
->
-> Please see the below bindings for further details.
->
-> I haven't incorporated the comments given by Mark Brown as I had some doubts.
-> @broonie: Is this what you wanted to mention earlier ? : http://pastebin.com/1RZTccmm
->
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
 > ---
+>  .../bindings/net/linn-ether-packet-sniffer.txt     |  27 ++
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  MAINTAINERS                                        |   7 +
+>  drivers/net/Kconfig                                |   2 +
+>  drivers/net/Makefile                               |   1 +
+>  drivers/net/pkt-sniffer/Kconfig                    |  23 ++
+>  drivers/net/pkt-sniffer/Makefile                   |   8 +
+>  drivers/net/pkt-sniffer/backends/ether/channel.c   | 366 ++++++++++++++++++
+>  drivers/net/pkt-sniffer/backends/ether/channel.h   |  76 ++++
+>  drivers/net/pkt-sniffer/backends/ether/hw.h        |  46 +++
+>  drivers/net/pkt-sniffer/backends/ether/platform.c  | 231 +++++++++++
+>  drivers/net/pkt-sniffer/core/dev_table.c           | 124 ++++++
+>  drivers/net/pkt-sniffer/core/module.c              |  37 ++
+>  drivers/net/pkt-sniffer/core/nl.c                  | 427 +++++++++++++++++++++
+>  drivers/net/pkt-sniffer/core/nl.h                  |  34 ++
+>  drivers/net/pkt-sniffer/core/snf_core.h            |  64 +++
+>  include/linux/pkt_sniffer.h                        |  89 +++++
+>  17 files changed, 1563 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
+>  create mode 100644 drivers/net/pkt-sniffer/Kconfig
+>  create mode 100644 drivers/net/pkt-sniffer/Makefile
+>  create mode 100644 drivers/net/pkt-sniffer/backends/ether/channel.c
+>  create mode 100644 drivers/net/pkt-sniffer/backends/ether/channel.h
+>  create mode 100644 drivers/net/pkt-sniffer/backends/ether/hw.h
+>  create mode 100644 drivers/net/pkt-sniffer/backends/ether/platform.c
+>  create mode 100644 drivers/net/pkt-sniffer/core/dev_table.c
+>  create mode 100644 drivers/net/pkt-sniffer/core/module.c
+>  create mode 100644 drivers/net/pkt-sniffer/core/nl.c
+>  create mode 100644 drivers/net/pkt-sniffer/core/nl.h
+>  create mode 100644 drivers/net/pkt-sniffer/core/snf_core.h
+>  create mode 100644 include/linux/pkt_sniffer.h
 >
->  Documentation/devicetree/bindings/power/opp.txt | 309 +++++++++++++++++++++++-
->  1 file changed, 308 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
-> index 74499e5033fc..9cdc0c9b09af 100644
-> --- a/Documentation/devicetree/bindings/power/opp.txt
-> +++ b/Documentation/devicetree/bindings/power/opp.txt
-> @@ -1,9 +1,316 @@
-> -* Generic OPP Interface
-> +Generic OPP (Operating Performance Points) Interface
-> +----------------------------------------------------
->
->  SoCs have a standard set of tuples consisting of frequency and
->  voltage pairs that the device will support per voltage domain. These
->  are called Operating Performance Points or OPPs.
->
-> +This documents defines OPP bindings with its required/optional properties. OPPs
-> +can be defined for any device, this file uses CPU as an example to illustrate
-> +how to define OPPs.
+> diff --git a/Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt b/Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
+> new file mode 100644
+> index 0000000..6b6e105
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
+> @@ -0,0 +1,27 @@
+> +* Linn Products Ethernet Packet Sniffer
 > +
-> +opp nodes and opp-lists
+> +Required properties:
+> +- compatible : must be "linn,eth-sniffer"
+> +- reg : physical addresses and sizes of registers. Must contain 3 entries:
+> +          first entry: registers memory space
+> +          second entry: TX command memory
+> +          third entry: RX command memory
+
+Just to check: are those memories are part of the packet sniffer device,
+or are carveouts from other memory?
+
+> +- reg-names : must contain the following 3 entries:
+> +                  "regs", "tx-ram", "rx-ram"
+
+If you use reg-names, please define reg in terms of reg-names. It's a
+little pointless to have redundant name and index requirements.
+
+> +- interrupts : sniffer interrupt specifier
+> +- clocks : specify the system clock for the peripheral
+> +- clock-names : must contain the "sys" entry
+
+Likewise with clocks and clock-names.
+
+> +- fifo-block-words : number of words in one data FIFO entry
 > +
-> +- opp-listN:
-> +  List of nodes defining performance points. Following belong to the nodes
-> +  within the opp-lists.
+> +Example:
 > +
-> +  Required properties:
-> +  - opp-khz: Frequency in kHz
-> +  - opp-microvolt: voltage in micro Volts
-> +
-> +  Optional properties:
-> +  - turbo-mode: Marks the volt-freq pair as turbo pair.
-> +  - status: Marks the node enabled/disabled.
-> +  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
-> +  - clock-latency-ns: Specify the possible maximum transition latency (in
-> +    nanoseconds) for switching to this opp from any other opp.
-> +
-> +- oppN:
-> +  Operating performance point node per device. Devices using it should have its
-> +  phandle in their "operating-points-v2" property.
-> +
-> +  Required properties:
-> +  - compatible: allow OPPs to express their compatibility.
-> +  - opp-list: phandle to opp-list defined above.
-> +
-> +  Optional properties:
-> +  - opp-intermediate: Stable opp we *must* switch to, before switching to the
-> +    target opp. Contains phandle of one of the opp-node present in opp-list.
-> +
-> +Example 1: Simple case of dual-core cortex A9-single cluster, sharing clock line.
-> +
-> +/ {
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       compatible = "arm,cortex-a9";
-> +                       reg = <0>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 0>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply0>;
-> +                       operating-points-v2 = <&cpu0_opp>;
-> +               };
-> +
-> +               cpu@1 {
-> +                       compatible = "arm,cortex-a9";
-> +                       reg = <1>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 0>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply0>;
-> +                       operating-points-v2 = <&cpu0_opp>;
-> +               };
-> +       };
-> +
-> +       cpu0_opp: opp0 {
-> +               compatible = "linux,cpu-dvfs";
-> +               opp-list = <&cpu0_opplist>;
-> +               opp-intermediate = <&cpu0_intermediate>;
-> +
-> +               cpu0_opplist: opp-list0 {
-> +                       entry00 {
-> +                               opp-khz = <1000000>;
-> +                               opp-microvolt = <975000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <300000>;
-> +                               status = "okay";
-> +                       };
-> +                       cpu0_intermediate: entry01 {
-> +                               opp-khz = <1100000>;
-> +                               opp-microvolt = <1000000>;
-> +                               voltage-tolerance = <3>;
-> +                               clock-latency-ns = <310000>;
-> +                               status = "okay";
-> +                       };
-> +                       entry02 {
-> +                               opp-khz = <1200000>;
-> +                               opp-microvolt = <1025000>;
-> +                               voltage-tolerance = <1>;
-> +                               clock-latency-ns = <290000>;
-> +                               status = "okay";
-> +                               turbo-mode;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +Example 2: Quad-core krait (All CPUs have independent clock lines but have same set of OPPs)
-> +
-> +/ {
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       compatible = "qcom,krait";
-> +                       reg = <0>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 0>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply0>;
-> +                       operating-points-v2 = <&cpu0_opp>;
-> +               };
-> +
-> +               cpu@1 {
-> +                       compatible = "qcom,krait";
-> +                       reg = <1>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 1>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply1>;
-> +                       operating-points-v2 = <&cpu1_opp>;
-> +               };
-> +
-> +               cpu@2 {
-> +                       compatible = "qcom,krait";
-> +                       reg = <2>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 2>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply2>;
-> +                       operating-points-v2 = <&cpu2_opp>;
-> +               };
-> +
-> +               cpu@3 {
-> +                       compatible = "qcom,krait";
-> +                       reg = <3>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 3>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply3>;
-> +                       operating-points-v2 = <&cpu3_opp>;
-> +               };
-> +       };
-> +
-> +       cpu0_opp: opp0 {
-> +               compatible = "linux,cpu-dvfs";
-> +               opp-list = <&cpu0_opplist>;
-> +               opp-intermediate = <&cpu0_intermediate>;
-> +
-> +               cpu0_opplist: opp-list0 {
-> +                       entry00 {
-> +                               opp-khz = <1000000>;
-> +                               opp-microvolt = <975000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <300000>;
-> +                               status = "okay";
-> +                       };
-> +                       cpu0_intermediate: entry01 {
-> +                               opp-khz = <1100000>;
-> +                               opp-microvolt = <1000000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <300000>;
-> +                               status = "okay";
-> +                       };
-> +                       entry02 {
-> +                               opp-khz = <1200000>;
-> +                               opp-microvolt = <1025000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <300000>;
-> +                               status = "okay";
-> +                               turbo-mode;
-> +                       };
-> +               };
-> +       };
-> +
-> +       cpu1_opp: opp1 {
-> +               compatible = "linux,cpu-dvfs";
-> +               opp-list = <&cpu0_opplist>;
-> +               opp-intermediate = <&cpu0_intermediate>;
-> +       };
-> +
-> +       cpu2_opp: opp2 {
-> +               compatible = "linux,cpu-dvfs";
-> +               opp-list = <&cpu0_opplist>;
-> +       };
-> +
-> +       cpu3_opp: opp3 {
-> +               compatible = "linux,cpu-dvfs";
-> +               opp-list = <&cpu0_opplist>;
-> +               opp-intermediate = <&cpu0_intermediate>;
-> +       };
-> +};
-> +
-> +Example 3: Multi-cluster system with separate clock line per cluster.
-> +
-> +/ {
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 0>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply0>;
-> +                       operating-points-v2 = <&cpu0_opp>;
-> +               };
-> +
-> +               cpu@1 {
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <1>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 0>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply0>;
-> +                       operating-points-v2 = <&cpu0_opp>;
-> +               };
-> +
-> +               cpu@100 {
-> +                       compatible = "arm,cortex-a15";
-> +                       reg = <100>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 1>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply1>;
-> +                       operating-points-v2 = <&cpu100_opp>;
-> +               };
-> +
-> +               cpu@101 {
-> +                       compatible = "arm,cortex-a15";
-> +                       reg = <101>;
-> +                       next-level-cache = <&L2>;
-> +                       clocks = <&clk_controller 1>;
-> +                       clock-names = "cpu";
-> +                       opp-supply = <&cpu_supply1>;
-> +                       operating-points-v2 = <&cpu100_opp>;
-> +               };
-> +       };
-> +
-> +       cpu0_opp: opp0 {
-> +               compatible = "linux,cpu-dvfs";
-> +               opp-list = <&cpu0_opplist>;
-> +               opp-intermediate = <&cpu0_intermediate>;
-> +
-> +               cpu0_opplist: opp-list0 {
-> +                       entry00 {
-> +                               opp-khz = <1000000>;
-> +                               opp-microvolt = <975000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <300000>;
-> +                               status = "okay";
-> +                       };
-> +                       cpu0_intermediate: entry01 {
-> +                               opp-khz = <1100000>;
-> +                               opp-microvolt = <1000000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <300000>;
-> +                               status = "okay";
-> +                       };
-> +                       entry02 {
-> +                               opp-khz = <1200000>;
-> +                               opp-microvolt = <1025000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <300000>;
-> +                               status = "okay";
-> +                               turbo-mode;
-> +                       };
-> +               };
-> +       };
-> +
-> +       cpu100_opp: opp1 {
-> +               compatible = "linux,cpu-dvfs";
-> +               opp-list = <&cpu100_opplist>;
-> +               opp-intermediate = <&cpu100_intermediate>;
-> +
-> +               cpu100_opplist: opp-list1 {
-> +                       entry10 {
-> +                               opp-khz = <1300000>;
-> +                               opp-microvolt = <1050000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <400000>;
-> +                               status = "okay";
-> +                       };
-> +                       cpu100_intermediate: entry11 {
-> +                               opp-khz = <1400000>;
-> +                               opp-microvolt = <1075000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <400000>;
-> +                               status = "okay";
-> +                       };
-> +                       entry12 {
-> +                               opp-khz = <1500000>;
-> +                               opp-microvolt = <1100000>;
-> +                               voltage-tolerance = <2>;
-> +                               clock-latency-ns = <400000>;
-> +                               status = "okay";
-> +                               turbo-mode;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +
-> +
-> +Deprecated Bindings
-> +-------------------
-> +
->  Properties:
->  - operating-points: An array of 2-tuples items, and each item consists
->    of frequency and voltage like <freq-kHz vol-uV>.
-> --
-> 2.3.0.rc0.44.ga94655d
->
+> +sniffer@1814a000 {
+> +        compatible = "linn,eth-sniffer";
+> +        reg = <0x1814a000 0x100>, <0x1814a400 0x400>, <0x1814a800 0x400>;
+> +        reg-names = "regs", "tx-ram", "rx-ram";
+> +        interrupts = <GIC_SHARED 58 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "eth-sniffer-irq";
+> +        clocks = <&system_clk>;
+> +        clock-names = "sys";
+> +        fifo-block-words = <4>;
+> +    };
+
+Surely the relationship between the sniffer, MAC, and PHY should be
+described, so we know which interface the sniffer is related to?
+
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index b1df0ad..2c96f35 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -90,6 +90,7 @@ lacie LaCie
+>  lantiq Lantiq Semiconductor
+>  lenovo Lenovo Group Ltd.
+>  lg     LG Corporation
+> +linn   Linn Products Ltd.
+>  linux  Linux-specific binding
+>  lsi    LSI Corp. (LSI Logic)
+>  lltc   Linear Technology Corporation
+
+This addition looks fine to me.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
