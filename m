@@ -1,170 +1,166 @@
-From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] Documentation: Add device tree bindings document for
- max77843
-Date: Fri, 23 Jan 2015 16:40:35 +0900
-Message-ID: <54C1FAF3.9090701@samsung.com>
-References: <1421989367-32721-1-git-send-email-jaewon02.kim@samsung.com>
- <1421989367-32721-7-git-send-email-jaewon02.kim@samsung.com>
- <54C1E943.2020800@samsung.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2 v3 RESEND] mtd: fsl_upm: Support NAND ECC DTS
+ properties
+Date: Thu, 22 Jan 2015 23:43:10 -0800
+Message-ID: <20150123074310.GD3268@brian-ubuntu>
+References: <1136776275.110939.1421109367310.JavaMail.zimbra@xes-inc.com>
+ <447095612.147126.1421278909058.JavaMail.zimbra@xes-inc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <54C1E943.2020800-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <447095612.147126.1421278909058.JavaMail.zimbra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/23/2015 03:25 PM, Chanwoo Choi wrote:
-> Hi Jaewon,
+Hi Jordan,
+
+On Wed, Jan 14, 2015 at 05:41:49PM -0600, Aaron Sierra wrote:
+> From: Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
 > 
-> On 01/23/2015 02:02 PM, Jaewon Kim wrote:
->> Add document describing device tree bindings for max77843 MFD.
->> Drivers: MFD core, regulator, extcon, charger and fuelgauge.
->>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mfd/max77843.txt |   87 ++++++++++++++++++++
->>  1 file changed, 87 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/max77843.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/max77843.txt b/Documentation/devicetree/bindings/mfd/max77843.txt
->> new file mode 100644
->> index 0000000..6895604
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/max77843.txt
->> @@ -0,0 +1,87 @@
->> +Maxim MAX77843 multi-function device
->> +
->> +MAX77843 is a Multi-Function Device with the following submodules:
->> +- PMIC	  : 2 SAFEOUT LDOs for USB device
->> +- CHARGER : Li+ battery charger with Fuel Gauge
->> +- MUIC	  : Micro USB Interface Circuit
->> +- HAPTIC  : motor control driver for haptics
+> Support the generic nand-ecc-mode, nand-ecc-strength, and
+> nand-ecc-step-size device-tree properties with the Freescale UPM NAND
+> driver.
 > 
-> HAPTIC ?
+> This patch preserves the default software ECC mode while adding the
+> ability to use BCH ECC for larger NAND devices.
 > 
->> +- LED	  : 4 channel RGBW LED
-> 
-> LED ?
-> 
-> This patchset don't include andy haptic/led drivers.
-> I think it is un-necessary information.
-> 
-> When you implement the haptic/led driver, you will add the information
-> for haptic/led driver.
+> Signed-off-by: Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v2:
+>     * Now using ECC mode and strength helpers from of_mtd.h
+>     * ECC mode and strength checking is more robust
+> v3 (resent due to [PATCH 1/2] v2 update):
+>     * Require nand-ecc-step-size for soft_bch.
+>     * Simplify mode/strength/step parameter checking.
+
+This mostly looks pretty good.
+
+>  .../devicetree/bindings/mtd/fsl-upm-nand.txt       | 32 +++++++++++
+>  drivers/mtd/nand/Kconfig                           |  1 +
+>  drivers/mtd/nand/fsl_upm.c                         | 66 ++++++++++++++++++++--
+>  3 files changed, 94 insertions(+), 5 deletions(-)
 > 
 
-OK. I will remove them.
+...
 
->> +
->> +It is interfaced to host controller using I2C.
->> +
->> +Required properties:
->> +- compatible : Must be "maxim,max77843".
->> +- reg : I2C slave address of PMIC block.
->> +- interrupts : I2C line for main SoCs.
->> +- interrupt-parent : The parent of interrupt controller.
->> +
->> +Optional properties:
->> +- regulators : The regulators of max77843 have to be instantiated under subnode
->> +	named "regulators" using the following format.
->> +
->> +	[*]refer : Documentation/devicetree/bindings/regulator/regulator.txt
->> +
->> +	regulators {
->> +		SAFEOUT {
->> +			regulator-name = "SAFEOUT";
->> +		};
->> +	}
->> +
->> +	List of valid regulator names:
->> +	- SAFEOUT1, SAFEOUT2, CHARGER.
->> +
->> +- max77843-muic : This properties used by extcon consumers.
->> +	Required properties:
->> +		- compatible : Must be "maxim,max77842-muic".
->> +
->> +- max77843-charger : There battery charger of MAX77843 have to be instantiated
->> +	under sub-node named "max77843-charger" using the following format.
->> +	Required properties:
->> +		- compatible : Must be "maxim,max77842-charger".
->> +		- maxim,fast-charge-uamp : Fast charge current levels are
->> +			100 mA to 3150 mA programmed by I2C per 100 mA.
->> +		- maxim,top-off-uamp : Top off current threshold levels are
->> +			125 mA to 650 mA programmed by I2C per 75 mA.
->> +		- maxim,input-uamp-limit : Input current limit levels are
->> +			100 mA to 3533 mA programmed by I2C per 33 mA.
->> +- max77843-fuelgauge : There fuelgauge of MAX77843 have to be instantiated
->> +	under sub-node named "max77843-fuelgauge" using the following format.
->> +	Required properties:
->> +		- compatible : Must be "maxim,max77842-fuelgauge".
->> +
->> +Example:
->> +	max77843@66 {
->> +		compatible = "samsung,max77843";
->> +		reg = <0x66>;
->> +		interrupt-parent = <&gpa1>;
->> +		interrupts = <5 2>;
->> +
->> +		regulators {
->> +			SAFEOUT1 {
->> +				regulator-name = "SAFEOUT1";
->> +				regulator-min-microvolt = <3300000>;
->> +				regulator-max-microvolt = <4950000>;
->> +			};
->> +			SAFEOUT2 {
->> +				regulator-name = "SAFEOUT2";
->> +				regulator-min-microvolt = <3300000>;
->> +				regulator-max-microvolt = <4950000>;
->> +			};
-> 
-> As I knew, max77843 regulator driver supprot 'CHARGER' regulator.
-> I think you have to add the 'CHARGER' dt node for regulators.
-> 
-> 
+> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+> index e5e3343..4c85daf 100644
+> --- a/drivers/mtd/nand/Kconfig
+> +++ b/drivers/mtd/nand/Kconfig
+> @@ -444,6 +444,7 @@ config MTD_NAND_FSL_UPM
+>  	tristate "Support for NAND on Freescale UPM"
+>  	depends on PPC_83xx || PPC_85xx
+>  	select FSL_LBC
+> +	select MTD_NAND_ECC_BCH
 
-Right, I will include charger regulator.
+Hmm, do you really need to 'select' here? I think your driver compiles
+just fine without it, and nand_base gives you a BUG() if you try to use
+its soft BCH without building in the driver. It's normally bad form to
+'select' an option that is normally user-configurable, unless you
+absolutely require it.
 
->> +		};
->> +
->> +		max77843-muic {
->> +			compatible = "maxim,max77843-muic";
->> +		};
->> +
->> +		max77843-charger {
->> +			compatible = "maxim,max77843-charger";
->> +			maxim,fast-charge-uamp = <450000>;
->> +			maxim,top-off-uamp = <125000>;
->> +			maxim,input-uamp-limit = <500000>;
->> +		};
->> +
->> +		max77843-fuelgauge {
->> +			compatible = "maxim,max77843-fuelgauge";
->> +		};
->> +
->> +	};
->>
-> 
-> Thanks,
-> Chanwoo Choi
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+>  	help
+>  	  Enables support for NAND Flash chips wired onto Freescale PowerPC
+>  	  processor localbus with User-Programmable Machine support.
+> diff --git a/drivers/mtd/nand/fsl_upm.c b/drivers/mtd/nand/fsl_upm.c
+> index 72755d7..053d8bf 100644
+> --- a/drivers/mtd/nand/fsl_upm.c
+> +++ b/drivers/mtd/nand/fsl_upm.c
 
+...
+
+> @@ -168,7 +174,61 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
+>  	fun->chip.read_byte = fun_read_byte;
+>  	fun->chip.read_buf = fun_read_buf;
+>  	fun->chip.write_buf = fun_write_buf;
+> -	fun->chip.ecc.mode = NAND_ECC_SOFT;
+> +
+> +	/*
+> +	 * Support NAND_ECC_SOFT and NAND_ECC_SOFT_BCH, error otherwise.
+> +	 */
+> +	mode = of_get_nand_ecc_mode(flash_np);
+> +	strength = of_get_nand_ecc_strength(flash_np);
+> +	step_size = of_get_nand_ecc_step_size(flash_np);
+> +	if (mode < 0) {
+> +		dev_info(fun->dev, "ECC mode defaulting to 'soft'");
+> +		mode = NAND_ECC_SOFT;
+> +	} else if (mode != NAND_ECC_SOFT && mode != NAND_ECC_SOFT_BCH) {
+> +		dev_err(fun->dev, "ECC mode in device tree is unsupported");
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	/*
+> +	 * In NAND_ECC_SOFT_BCH, require strength >= 1 and step >= 1.
+> +	 * In NAND_ECC_SOFT:
+> +	 *     a. ignore strength (1 implied)
+> +	 *     b. step < 0, step = 256, or step = 512.
+
+(I'm getting nitpicky here, but if you're going to change the Kconfig
+above, you might as well address this.)
+
+This comment is nice, but it's still slightly confusing, as it doesn't
+have very good parallel structure. There needs to be a verb in bullet
+point (b). Perhaps the following?
+
+	 *     b. require step < 0 (default to 256), step = 256, or step = 512.
+
+> +	 */
+> +	if (mode == NAND_ECC_SOFT_BCH) {
+> +		if (strength < 1)
+> +			dev_err(fun->dev, "invalid nand-ecc-strength for BCH");
+> +
+> +		if (step_size < 1)
+> +			dev_err(fun->dev, "invalid nand-ecc-step-size for BCH");
+> +
+> +		if (strength < 1 || step_size < 1) {
+> +			ret = -EINVAL;
+> +			goto err;
+> +		}
+> +
+> +		fun->chip.ecc.mode = mode;
+> +		fun->chip.ecc.strength = strength;
+> +		fun->chip.ecc.size = step_size;
+> +	} else {
+> +		if (strength >= 0)
+
+I don't see why we should complain about strength == 1. It's a perfectly
+descriptive value from DT. Maybe:
+
+		if (strength != 1 && strength >= 0)
+
+> +			dev_warn(fun->dev, "soft ECC implies 1-bit strength");
+> +
+> +		if (step_size < 0) {
+> +			step_size = 256;
+> +		} else if (step_size != 256 && step_size != 512) {
+> +			dev_err(fun->dev,
+> +				"soft ECC needs 256 or 512 byte step");
+> +			ret = -EINVAL;
+> +			goto err;
+> +		}
+> +
+> +		fun->chip.ecc.mode = mode;
+> +		fun->chip.ecc.strength = 1;
+> +		fun->chip.ecc.size = step_size;
+> +	}
+> +
+>  	if (fun->mchip_count > 1)
+>  		fun->chip.select_chip = fun_select_chip;
+>  
+
+...
+
+Now that I think about it, I can just apply all these changes and apply
+the patch myself, if you agree. Or send a new version yourself. Either
+way.
+
+Regards,
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
