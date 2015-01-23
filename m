@@ -1,72 +1,52 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v1 2/4] gpio: add parameter to allow the use named gpios
-Date: Fri, 23 Jan 2015 18:16:02 +0900
-Message-ID: <CAAVeFu+26pFFHyEfd=cwuCdtMurLWriaHKSixb-EMd_yWb0B1A@mail.gmail.com>
-References: <1420621722-7428-1-git-send-email-oliver+list@schinagl.nl>
- <1420621722-7428-3-git-send-email-oliver+list@schinagl.nl>
- <CAAVeFuLwTsX8HByCVyEucYJ_DhhCOP=tEDprmi9pBwx+a7zzJg@mail.gmail.com> <54C01DD1.8040704@schinagl.nl>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ARM: at91/dt: sama5d4: add pioD controller
+Date: Fri, 23 Jan 2015 10:33:23 +0100
+Message-ID: <54C21563.2020801@atmel.com>
+References: <1421422267-2934-1-git-send-email-ludovic.desroches@atmel.com>	<1421422267-2934-3-git-send-email-ludovic.desroches@atmel.com>	<54BCE07C.8060601@atmel.com> <CACRpkdb3DoqsrqjaRptn=yUTRxy6fYLiPDWhViEe3Xf6jkT8Mg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <54C01DD1.8040704@schinagl.nl>
-Sender: linux-leds-owner@vger.kernel.org
-To: Olliver Schinagl <oliver@schinagl.nl>
-Cc: Olliver Schinagl <oliver+list@schinagl.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Robin Gong <b38343@freescale.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Aaron Lu <aaron.lu@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Alexander Shiyan <shc_work@mail.ru>, Jingoo Han <jg1.han@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>Linu
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdb3DoqsrqjaRptn=yUTRxy6fYLiPDWhViEe3Xf6jkT8Mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 22, 2015 at 6:44 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
-> Hey Alexandre,
->
-> On 01/19/2015 05:04 AM, Alexandre Courbot wrote:
->>
->> On Wed, Jan 7, 2015 at 6:08 PM, Olliver Schinagl
->> <oliver+list@schinagl.nl> wrote:
+Le 21/01/2015 10:49, Linus Walleij a =C3=A9crit :
+> On Mon, Jan 19, 2015 at 11:46 AM, Nicolas Ferre <nicolas.ferre@atmel.=
+com> wrote:
+>> Le 16/01/2015 16:31, Ludovic Desroches a =C3=A9crit :
+>>> PioD controller was not described in the device tree since we don't=
+ use
+>>> it. As pinctrl-at91 allows disabled gpio controllers in the device
+>>> tree, we can add it to complete the device description.
 >>>
->>> From: Olliver Schinagl <oliver@schinagl.nl>
->>>
->>> The gpio binding document says that new code should always use named
->>> gpios. Patch 40b73183 added support to parse a list of gpios from child
->>> nodes, but does not make it possible to use named gpios. This patch adds
->>> the con_id property and implements it is done in gpiolib.c, where the
->>> old-style of using unnamed gpios still works.
+>>> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 >>
->> This is absolutely correct - thanks for spotting this.
+>> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 >>
->> <snip>
->> ... since it looks like this part has been mostly copy/pasted from
->> of_find_gpio(), can you add another patch that fixes it there as well?
->
-> Yeah, since it has the same functionality, i copy pasted it. Wasn't sure if
-> it was worth to macro it or anything. I've sent a v2 with that patch added
-> to the mix :)
+>> Linus,
 >>
->>
->> Also in the case of ACPI this will prove to be an incomplete lookup
->> since acpi_find_gpio() has an additional fallback if the named lookup
->> fails.
->
-> I'm not very familiar (or at all) how ACPI falls into all of this, I'm just
-> starting to get a hang of the DT, but since this is how the dts is being
-> parsed, where is the relation here? Or did I misunderstand?
+>> As there is no dependency with the other patches in the series, I ca=
+n
+>> take this patch or you can keep it together with the other ones. Jus=
+t
+>> tell me once we agree all on a solution.
+>=20
+> Please take this patch along with other AT91 stuff upstream
+> through ARM SoC.
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-GPIO mappings can be provided by DT or by ACPI. In the latter case
-there is a fallback method if the name does not match (see
-acpi_find_gpio()). fwnode_get_named_gpiod() does not check it though,
-so maybe we can just ignore that.
+Ok, it is now stacked on top of our at91-3.20-dt branch and I'll send i=
+t
+to arm-soc soon.
 
->> In that respect, I wonder if it would not be better for
->> devm_get_gpiod_from_child() to call of_find_gpio() and
->> acpi_find_gpio() (after making them non-static) followed by
->> gpiod_request() instead of calling fwnode_get_named_gpiod(). But in
->> that case it will have to do the OF/ACPI handling by itself.
->>
->> I'm not really sure about which way is better. I'd appreciate if you
->> could give a thought to a possible refactoring that would improve the
->> situation ; otherwise feel free to ignore what I have written above
->> and to duplicate the property name building code.
->
-> I'm afraid I'm a little too inexperienced to follow exactly what you say ;)
-
-Don't worry about it then, this patch is already an improvement. GPIO
-mappings lookup from firmware has become kind of messy, and I'm just
-trying to enroll people to clean it instead of doing it myself. ;)
+Thanks, bye.
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
