@@ -1,145 +1,72 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] using dt overlays: how to? today?
-Date: Fri, 23 Jan 2015 10:07:39 +0100
-Message-ID: <20150123090739.GD26928@odux.rfo.atmel.com>
-References: <20150122150219.GB26928@odux.rfo.atmel.com>
- <2F10D177-6F27-4019-8D2D-8F77361BB310@konsulko.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH v1 2/4] gpio: add parameter to allow the use named gpios
+Date: Fri, 23 Jan 2015 18:16:02 +0900
+Message-ID: <CAAVeFu+26pFFHyEfd=cwuCdtMurLWriaHKSixb-EMd_yWb0B1A@mail.gmail.com>
+References: <1420621722-7428-1-git-send-email-oliver+list@schinagl.nl>
+ <1420621722-7428-3-git-send-email-oliver+list@schinagl.nl>
+ <CAAVeFuLwTsX8HByCVyEucYJ_DhhCOP=tEDprmi9pBwx+a7zzJg@mail.gmail.com> <54C01DD1.8040704@schinagl.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2F10D177-6F27-4019-8D2D-8F77361BB310-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <54C01DD1.8040704@schinagl.nl>
+Sender: linux-leds-owner@vger.kernel.org
+To: Olliver Schinagl <oliver@schinagl.nl>
+Cc: Olliver Schinagl <oliver+list@schinagl.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Robin Gong <b38343@freescale.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Aaron Lu <aaron.lu@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Alexander Shiyan <shc_work@mail.ru>, Jingoo Han <jg1.han@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>Linu
 List-Id: devicetree@vger.kernel.org
 
-Hi Pantelis,
+On Thu, Jan 22, 2015 at 6:44 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
+> Hey Alexandre,
+>
+> On 01/19/2015 05:04 AM, Alexandre Courbot wrote:
+>>
+>> On Wed, Jan 7, 2015 at 6:08 PM, Olliver Schinagl
+>> <oliver+list@schinagl.nl> wrote:
+>>>
+>>> From: Olliver Schinagl <oliver@schinagl.nl>
+>>>
+>>> The gpio binding document says that new code should always use named
+>>> gpios. Patch 40b73183 added support to parse a list of gpios from child
+>>> nodes, but does not make it possible to use named gpios. This patch adds
+>>> the con_id property and implements it is done in gpiolib.c, where the
+>>> old-style of using unnamed gpios still works.
+>>
+>> This is absolutely correct - thanks for spotting this.
+>>
+>> <snip>
+>> ... since it looks like this part has been mostly copy/pasted from
+>> of_find_gpio(), can you add another patch that fixes it there as well?
+>
+> Yeah, since it has the same functionality, i copy pasted it. Wasn't sure if
+> it was worth to macro it or anything. I've sent a v2 with that patch added
+> to the mix :)
+>>
+>>
+>> Also in the case of ACPI this will prove to be an incomplete lookup
+>> since acpi_find_gpio() has an additional fallback if the named lookup
+>> fails.
+>
+> I'm not very familiar (or at all) how ACPI falls into all of this, I'm just
+> starting to get a hang of the DT, but since this is how the dts is being
+> parsed, where is the relation here? Or did I misunderstand?
 
-On Thu, Jan 22, 2015 at 10:54:42PM +0200, Pantelis Antoniou wrote:
-> Hi Ludovic,
->=20
-> > On Jan 22, 2015, at 17:02 , Ludovic Desroches <ludovic.desroches@at=
-mel.com> wrote:
-> >=20
-> > Hi,
-> >=20
-> > I have assisted to Pantelis' talk about device tree and overlays at=
- ELCE
-> > 2014. Since the patch 'Introduce DT overlay support' is now part of=
- the
-> > mainline, I wanted to have a look about it and to use it for our bo=
-ards.
-> >=20
->=20
-> Excellent.
->=20
-> > Firstly, this is what I want to achieve by using this feature:
-> > - manage several revisions of our boards
-> > - manage modules we can plug on the board, mainly display modules
-> >  (resistive or capacitive one)
-> > - manage cpu modules plug on the motherboard
-> > - I would like to have all this stuff in the kernel. I don't want a
-> >  dependency on the bootloader or the user space.
-> >=20
->=20
-> That=E2=80=99s awesome; that=E2=80=99s exactly what I want to use it =
-for. Maybe this thing
-> can be used by others as well ;)
->=20
+GPIO mappings can be provided by DT or by ACPI. In the latter case
+there is a fallback method if the name does not match (see
+acpi_find_gpio()). fwnode_get_named_gpiod() does not check it though,
+so maybe we can just ignore that.
 
-It seems quite close from what you want to achieve with cape manager.
+>> In that respect, I wonder if it would not be better for
+>> devm_get_gpiod_from_child() to call of_find_gpio() and
+>> acpi_find_gpio() (after making them non-static) followed by
+>> gpiod_request() instead of calling fwnode_get_named_gpiod(). But in
+>> that case it will have to do the OF/ACPI handling by itself.
+>>
+>> I'm not really sure about which way is better. I'd appreciate if you
+>> could give a thought to a possible refactoring that would improve the
+>> situation ; otherwise feel free to ignore what I have written above
+>> and to duplicate the property name building code.
+>
+> I'm afraid I'm a little too inexperienced to follow exactly what you say ;)
 
-> > At the moment, we have many dts files to manage these cases (not al=
-l are
-> > in mainline). It is becoming a pain.
-> >=20
->=20
-> Tell me about it.
-
-You can have a look here:
-https://github.com/linux4sam/linux-at91/tree/master/arch/arm/boot/dts
-
-=46or example, we have up to 6 dts files for a single device:
-sama5d36ek.dts, sama5d36ek_hdmi.dts, sama5d36ek_pda4.dts,
-sama5d36ek_pda7.dts, sama5d36ek_revc.dts, sama5d36ek_revc_pda4.dts,
-sama5d36ek_revc_pda7.dts
-
-Our goal is that customers don't have to care about all this stuff. The=
-y
-load a single dtb file which can manage all these cases.
-The change between revison c and revison d is the i2c device to which
-the audio codec is connected. Difference between pda4 and pda7 (which
-are display modules with a capacitive touchscreen) can be the irq used
-the touch keyboard or the touchscreen.
-
-Information we need are stored in an EEPROM which is accessible through
-a one wire bus. As I said, we would like that the customers have no
-dependency on other components if possible: bootloader, userspace,
-firmware.
-
->=20
-> > I wanted to see if we can use device tree fragments as it seems to =
-be
-> > closed to be achieved when I had assisted to the talk. I have found=
- a
-> > thread about 'DT-Overlay configfs interface'
-> > (http://thread.gmane.org/gmane.linux.drivers.devicetree/101871), th=
-ere
-> > are still discussions about security concerns, so it may not be inc=
-luded
-> > quickly. I have also found an interesting thread about cape manager=
- for
-> > Beaglebone (http://thread.gmane.org/gmane.linux.documentation/8279)=
- but
-> > there is no more activity on it, is it canceled or is there a new t=
-opic
-> > I have missed?
-> >=20
-> > Here are my questions:
-> > - Is it acceptable to manage device tree fragments with a driver su=
-ch as
-> >  the cape manager? Or at an other place in the kernel such as
-> > arch/arm/mach-at91/board-dt-sama5.c for example?
-> > - Is it possible to get access to eeprom from the kernel? Pantelis =
-did
-> >  an interface to access it through i2c but it seems it was not
-> > accepted. In my case, it will be through the one wire interface.
-> >=20
-> > Thanks for sharing your opinion about this or redirecting me to a
-> > similar thread.
-> >=20
->=20
-> I=E2=80=99m waiting for 3.19 to go out and I=E2=80=99ll address every=
-thing you described
-> above.
-
-Do you think it's too early to use it? We are currently trying to
-release a new kernel (based on 3.18) with some patches which have not b=
-een
-sent or accepted yet. Since I could merge easily your patches from Gran=
-t
-branch, I thought we could try to use it but spending time on a oneshoo=
-t
-solution is useless. That's why I would like to know what is the status
-since it seems only the sysfs part is still in development.
-
->=20
-> Feel free to post specific requirement about your use cases, and I=E2=
-=80=99ll try
-> to address them.
-
-Thanks so what is the next step? Posting a new patch series or the cape
-manager? I mean if you plan to do it, I could have a look on how to
-access the EEPROM through one wire.
-
-
-Regards
-
-Ludovic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Don't worry about it then, this patch is already an improvement. GPIO
+mappings lookup from firmware has become kind of messy, and I'm just
+trying to enroll people to clean it instead of doing it myself. ;)
