@@ -1,60 +1,72 @@
-From: Chris Packham <chrisp-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Re: Associating nodes with phandles for pci devices
-Date: Sat, 24 Jan 2015 08:38:12 +1300 (NZDT)
-Message-ID: <alpine.DEB.2.10.1501240828280.14228@chrisp-dl.ws.atlnz.lc>
-References: <9bcf67ede60f4567a396c05578cfceb7@svr-chch-ex1.atlnz.lc> <2275507.PY4WZcxUrf@wuerfel>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: henninger: rename board to Porter
+Date: Fri, 23 Jan 2015 23:37:05 +0300
+Message-ID: <2481726.lh33apx2TG@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2275507.PY4WZcxUrf@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org" <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Renesas has made some changes to the Henninger low cost board hardware and at
+the same time decided to  rename the board  to Porter.
 
-Hi Arnd,
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks for the quick response (and sorry for the horribly formatted 
-message, travelling with only a webmail interface at the moment).
+---
+This patch is against 'renesas-devel-20150123-v3.19-rc5' tag of Simon Horman's
+'renesas.git' repo.
 
-On Fri, 23 Jan 2015, Arnd Bergmann wrote:
+ arch/arm/boot/dts/Makefile                                     |  2 +-
+ .../arm/boot/dts/{r8a7791-henninger.dts => r8a7791-porter.dts} | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+ rename arch/arm/boot/dts/{r8a7791-henninger.dts => r8a7791-porter.dts} (96%)
 
-> On Friday 23 January 2015 19:02:33 Chris Packham wrote:
->> Hi,
->>
->> I'm working on a new board that has a marvell,dsa switch. Similar to 
->> the kirkwood-mv88f6281gtw-ge board. However the major difference is 
->> that instead of being connected to an integrated Ethernet port it is 
->> connected via a PCI-e Ethernet port (basically a NIC hardwired onto the 
->> board).
->>
->> Generally you don't need to define PCI devices in the .dts because the 
->> bus is scanned at run time and the method for identifying devices is 
->> well defined. But to satisfy the marvell,dsa binding[1] I need to tell 
->> it the Ethernet port it is connected to. The answer might be in the PCI 
->> bindings but the urls in the documentation[2] don't appear to be valid 
->> anymore.
->>
->> Is it possible to enumerate PCI devices in the .dts? Or is there a way 
->> of satisfying the dsa requirements without knowing the Ethernet device?
->>
->
-> In general, it is possible, and we do that on PowerPC, but it may be that
-> there are parts missing on ARM and you have to try it out.
->
-> In particular, you need to know the address of the PCI device and then
-> create a device node that will be associated with the pci_dev->dev.of_node
-> pointer.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 59e79e9..3cc8ba5 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -419,8 +419,8 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += eme
+ 	r8a7740-armadillo800eva.dtb \
+ 	r8a7779-marzen.dtb \
+ 	r8a7790-lager.dtb \
+-	r8a7791-henninger.dtb \
+ 	r8a7791-koelsch.dtb \
++	r8a7791-porter.dtb \
+ 	r8a7794-alt.dtb \
+ 	sh73a0-kzm9g.dtb
+ dtb-$(CONFIG_ARCH_SOCFPGA) += socfpga_arria5_socdk.dtb \
+diff --git a/arch/arm/boot/dts/r8a7791-henninger.dts b/arch/arm/boot/dts/r8a7791-porter.dts
+similarity index 96%
+rename from arch/arm/boot/dts/r8a7791-henninger.dts
+rename to arch/arm/boot/dts/r8a7791-porter.dts
+index d2ebf11..4a616dc 100644
+--- a/arch/arm/boot/dts/r8a7791-henninger.dts
++++ b/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -1,8 +1,8 @@
+ /*
+- * Device Tree Source for the Henninger board
++ * Device Tree Source for the Porter board
+  *
+- * Copyright (C) 2014 Renesas Solutions Corp.
+- * Copyright (C) 2014 Cogent Embedded, Inc.
++ * Copyright (C) 2014-2015 Renesas Solutions Corp.
++ * Copyright (C) 2014-2015 Cogent Embedded, Inc.
+  *
+  * This file is licensed under the terms of the GNU General Public License
+  * version 2.  This program is licensed "as is" without any warranty of any
+@@ -14,8 +14,8 @@
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+-	model = "Henninger";
+-	compatible = "renesas,henninger", "renesas,r8a7791";
++	model = "Porter";
++	compatible = "renesas,porter", "renesas,r8a7791";
+ 
+ 	aliases {
+ 		serial0 = &scif0;
 
-Encouraging to know. I think I can figure out the relevant addresses for 
-my device based on the run-time scan.
-
-Can you think of a good example. I found a few ppc boards that have an 
-PCI-ISA bridge that get's enumerated in the .dts. I think I can make sense
-of them but because they are bridges there's a lot of extra stuff for the 
-down stream devices.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
