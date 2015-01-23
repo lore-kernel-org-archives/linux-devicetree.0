@@ -1,38 +1,78 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
-Date: Fri, 23 Jan 2015 18:25:05 +0530
-Message-ID: <CAKohponBQkhoSDi1RT5nW=TfKO7rgjbz1DjVHpUS+nYKs4RYjA@mail.gmail.com>
-References: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar@linaro.org>
-	<1422013154.29475.11.camel@pengutronix.de>
-	<20150123115206.GT21293@sirena.org.uk>
+From: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH v7 1/2] Documentation: DT: Add bindings for Spreadtrum SoC Platform
+Date: Fri, 23 Jan 2015 21:01:05 +0800
+Message-ID: <1422018066-24997-2-git-send-email-chunyan.zhang@spreadtrum.com>
+References: <sprd-serial-v7>
+ <1422018066-24997-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150123115206.GT21293@sirena.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Mike Turquette <mike.turquette@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Thomas Abraham <ta.omasab@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422018066-24997-1-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: jslaby-AlSwsSmVLrQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23 January 2015 at 17:22, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Jan 23, 2015 at 12:39:14PM +0100, Lucas Stach wrote:
+Adds Spreadtrum's prefix "sprd" to vendor-prefixes file.
+Adds the devicetree binding documentations for Spreadtrum's sc9836-uart
+and SC9836 SoC based on the Sharkl64 Platform which is a 64-bit SoC
+Platform of Spreadtrum.
 
-> I tend to agree that this is clearer.  It might be nice to have variants
-> for specifying directly as a percentage but I don't think it's really
-> worth the complexity.
+Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/sprd.txt     |   11 +++++++++++
+ .../devicetree/bindings/serial/sprd-uart.txt       |    7 +++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 3 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.txt
 
-> If we change the binding to be typ/min/max rather than min/typ/max then
-> we could also do this by allowing either one or three values to be
-> specified.  That might be more worth the complexity especially given...
+diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
+new file mode 100644
+index 0000000..31a629d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/sprd.txt
+@@ -0,0 +1,11 @@
++Spreadtrum SoC Platforms Device Tree Bindings
++----------------------------------------------------
++
++Sharkl64 is a Spreadtrum's SoC Platform which is based
++on ARM 64-bit processor.
++
++SC9836 openphone board with SC9836 SoC based on the
++Sharkl64 Platform shall have the following properties.
++
++Required root node properties:
++        - compatible = "sprd,sc9836-openphone", "sprd,sc9836";
+diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+new file mode 100644
+index 0000000..2aff0f2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+@@ -0,0 +1,7 @@
++* Spreadtrum serial UART
++
++Required properties:
++- compatible: must be "sprd,sc9836-uart"
++- reg: offset and length of the register set for the device
++- interrupts: exactly one interrupt specifier
++- clocks: phandles to input clocks.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b1df0ad..0a8384f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -153,6 +153,7 @@ snps	Synopsys, Inc.
+ solidrun	SolidRun
+ sony	Sony Corporation
+ spansion	Spansion Inc.
++sprd	Spreadtrum Communications Inc.
+ st	STMicroelectronics
+ ste	ST-Ericsson
+ stericsson	ST-Ericsson
+-- 
+1.7.9.5
 
-+1
-
->> > +  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
->
->> Please let's drop this.
->
-> DT bindings are supposed to be stable, this means the code should accept
-> old bindings and they should be documented as deprecated.
-
-Yes, I have marked the earlier OPP bindings as deprecated. Will mark
-this one too separately.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
