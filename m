@@ -1,58 +1,158 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2] Removes OF_UNITTEST dependency on OF_DYNAMIC config symbol
-Date: Fri, 23 Jan 2015 14:03:58 +0100
-Message-ID: <CAMuHMdUzO5E-+BrxQPnbd4w-MAU_hGctAg+1_dOM-hV7dM+SDw@mail.gmail.com>
-References: <1420960791-26761-1-git-send-email-gaurav.minocha.os@gmail.com>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH v6 2/2] tty/serial: Add Spreadtrum sc9836-uart driver
+ support
+Date: Fri, 23 Jan 2015 08:12:55 -0500
+Message-ID: <54C248D7.6040901@hurleysoftware.com>
+References: <1421933706-4277-1-git-send-email-chunyan.zhang@spreadtrum.com>	<1421933706-4277-3-git-send-email-chunyan.zhang@spreadtrum.com>	<54C1C69B.6010100@hurleysoftware.com> <CAAfSe-s2Y_JSiR+HX4OOF_62q3JYN5k81JZuNe9CP9=shBpZzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420960791-26761-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAfSe-s2Y_JSiR+HX4OOF_62q3JYN5k81JZuNe9CP9=shBpZzA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lyra Zhang <zhang.lyra@gmail.com>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "jslaby@suse.cz" <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "andrew@lunn.ch" <andrew@lunn.ch>, Hayato Suzuki <hytszk@gmail.com>, "antonynpavlov@gmail.com" <antonynpavlov@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 11, 2015 at 8:19 AM, Gaurav Minocha
-<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patch intends to remove the unittests dependency on
-> the functions defined in dynamic.c. So, rather than calling
-> of_attach_node defined in dynamic.c, minimal functionality
-> required to attach a new node is re-defined in unittest.c.
-> Also, now after executing the tests the test data is not
-> removed from the device tree so there is no need to call
-> of_detach_node.
+On 01/23/2015 02:23 AM, Lyra Zhang wrote:
+> Hi, Peter
+> 
+> Many thanks to you for reviewing so carefully and giving us so many
+> suggestions and so clear explanations.
 
-Could there be unwanted side effects of not removing the test data?
+:)
 
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
+> I'll address all of your comments and send an updated patch soon.
+> 
+> On Fri, Jan 23, 2015 at 11:57 AM, Peter Hurley <peter@hurleysoftware.com> wrote:
 
-> @@ -1475,9 +1432,6 @@ static int __init of_selftest(void)
->         of_selftest_platform_populate();
->         of_selftest_overlay();
->
-> -       /* removing selftest data from live tree */
-> -       selftest_data_remove();
-> -
->         /* Double check linkage after removing testcase data */
+[...]
 
-You forgot to remove the comment above.
+>>> +static void sprd_set_termios(struct uart_port *port,
+>>> +                                 struct ktermios *termios,
+>>> +                                 struct ktermios *old)
+>>> +{
+>>> +     unsigned int baud, quot;
+>>> +     unsigned int lcr, fc;
+>>> +     unsigned long flags;
+>>> +
+>>> +     /* ask the core to calculate the divisor for us */
+>>> +     baud = uart_get_baud_rate(port, termios, old, 1200, 3000000);
+>>                                                       ^^^^   ^^^^^^
+>>                                            mabye derive these from uartclk?
+> 
+> I'm afraid I can't understand very clearly, Could you explain more
+> details please?
 
->         of_selftest_check_tree_linkage();
+Is the fixed clock divider == 8 and the uartclk == 26000000 ?
+If so,
+	baud = uartclk / 8 = 3250000
 
-Is this test still relevant now the testcase data has been removed?
+I see now this is clamping baud inside the maximum, so this is fine.
+Please disregard my comment.
 
-Gr{oetje,eeting}s,
+[...]
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>>> +static int sprd_probe(struct platform_device *pdev)
+>>> +{
+>>> +     struct resource *res;
+>>> +     struct uart_port *up;
+>>> +     struct clk *clk;
+>>> +     int irq;
+>>> +     int index;
+>>> +     int ret;
+>>> +
+>>> +     for (index = 0; index < ARRAY_SIZE(sprd_port); index++)
+>>> +             if (sprd_port[index] == NULL)
+>>> +                     break;
+>>> +
+>>> +     if (index == ARRAY_SIZE(sprd_port))
+>>> +             return -EBUSY;
+>>> +
+>>> +     index = sprd_probe_dt_alias(index, &pdev->dev);
+>>> +
+>>> +     sprd_port[index] = devm_kzalloc(&pdev->dev,
+>>> +             sizeof(*sprd_port[index]), GFP_KERNEL);
+>>> +     if (!sprd_port[index])
+>>> +             return -ENOMEM;
+>>> +
+>>> +     up = &sprd_port[index]->port;
+>>> +     up->dev = &pdev->dev;
+>>> +     up->line = index;
+>>> +     up->type = PORT_SPRD;
+>>> +     up->iotype = SERIAL_IO_PORT;
+>>> +     up->uartclk = SPRD_DEF_RATE;
+>>> +     up->fifosize = SPRD_FIFO_SIZE;
+>>> +     up->ops = &serial_sprd_ops;
+>>> +     up->flags = ASYNC_BOOT_AUTOCONF;
+>>                     ^^^^^^^^^
+>>                     UPF_BOOT_AUTOCONF
+>>
+>> sparse will catch errors like this. See Documentation/sparse.txt
+> 
+> you mean we should use UPF_BOOT_AUTOCONF, right?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes. Only UPF_* flag definitions should be used with the uart_port.flags
+field.
+
+My comment regarding the sparse tool and documentation is because the
+flags field and UPF_* definitions use a type mechanism to generate
+warnings using the sparse tool if regular integer values are used
+with the flags field.
+
+The type mechanism was specifically introduced to catch using ASYNC_*
+definitions with the uart_port.flags field.
+
+[...]
+
+>>> +static int sprd_suspend(struct device *dev)
+>>> +{
+>>> +     int id = to_platform_device(dev)->id;
+>>> +     struct uart_port *port = &sprd_port[id]->port;
+>>
+>> I'm a little confused regarding the port indexing;
+>> is platform_device->id == line ?  Where did that happen?
+>>
+> 
+> Oh, I'll change to assign platform_device->id with port->line in probe()
+
+I apologize; I should have made my comment clearer.
+
+The ->id should not be assigned.
+
+Replace
+
+	int id = to_platform_device(dev)->id;
+	struct uart_port *port = &sprd_port[id]->port;
+
+	uart_suspend_port(&sprd_uart_driver, port);
+
+with
+
+	struct sprd_uart_port *sup = dev_get_drvdata(dev);
+
+	uart_suspend_port(&sprd_uart_driver, &sup->port);
+
+
+I know it's not obvious but platform_get/set_drvdata() is really
+dev_get/set_drvdata() using the embedded struct device dev.
+
+> 
+>>
+>>> +
+>>> +     uart_suspend_port(&sprd_uart_driver, port);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int sprd_resume(struct device *dev)
+>>> +{
+>>> +     int id = to_platform_device(dev)->id;
+>>> +     struct uart_port *port = &sprd_port[id]->port;
+>>> +
+>>> +     uart_resume_port(&sprd_uart_driver, port);
+
+same here
+
+>>> +     return 0;
