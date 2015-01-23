@@ -1,167 +1,78 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
-Date: Fri, 23 Jan 2015 10:51:14 +0000
-Message-ID: <20150123105114.GB23493@leverpostej>
-References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 1/7] mmc: sdhci-pxav3: Fix SDR50 and DDR50 capabilities for the Armada 38x flavor
+Date: Fri, 23 Jan 2015 11:56:28 +0100
+Message-ID: <1422010594-1735-2-git-send-email-gregory.clement@free-electrons.com>
+References: <1422010594-1735-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1422007621-13567-1-git-send-email-stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1422010594-1735-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stathis Voukelatos <stathisv70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 23, 2015 at 10:07:01AM +0000, Stathis Voukelatos wrote:
-> This patch adds support the Ethernet Packet Sniffer H/W module
-> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
-> The module allows Ethernet packets to be parsed, matched against
-> a user-defined pattern and timestamped. It sits between a 100M
-> Ethernet MAC and PHY and is completely passive with respect to
-> Ethernet frames.
->
-> Matched packet bytes and timestamp values are returned through a
-> FIFO. Timestamps are provided to the module through an externally
-> generated Gray-encoded counter.
->
-> The command pattern for packet matching is stored in module RAM
-> and consists of a sequence of 16-bit entries. Each entry includes
-> an 8-bit command code and and 8-bit data value. Valid command
-> codes are:
-> 0 - Don't care
-> 1 - Match: packet data must match command string byte
-> 2 - Copy: packet data will be copied to FIFO
-> 3 - Match/Stamp: if packet data matches string byte, a timestamp
->                  is copied into the FIFO
-> 4 - Copy/Done: packet data will be copied into the FIFO.
->                This command terminates the command string.
->
-> The driver consists of two modules:
-> - Core: it provides an API to user space using the Generic Netlink
->         framework. Specific backend implementations, like the
->         Ethernet Packet Sniffer, register one or more channels
->         with the Core. For each channel a Genl family is created.
->         User space can access a channel by sending Genl messages
->         to the Genl family associated with the channel. Packet
->         matching events are multicast.
->
-> - Ethernet Packet Sniffer backend: provides the driver for the
->         Linn Ethernet Packet Sniffer H/W modules.
+According to erratum 'FE-2946959' both SDR50 and DDR50 modes require
+specific clock adjustments in SDIO3 Configuration register. However,
+this register was not part of the device tree binding. Even if the
+binding can (and will) be extended we still need handling the case
+where this register was not available. In this case we use the
+SDHCI_QUIRK_MISSING_CAPS quirk remove them from the capabilities.
 
-It sounds like the framework and particular driver need to be split into
-separate patches.
+This commit is based on the work done by Marcin Wojtas<mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 
-Also, please split the binding patch as per
-Documentation/devicetree/bindings/submitting-patches.txt.
+Fixes: 5491ce3f79ee ("mmc: sdhci-pxav3: add support for the Armada 38x SDHCI controller")
+Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # v3.15+
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+---
+ drivers/mmc/host/sdhci-pxav3.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
->
-> The split between a core and backend modules allows software-only
-> implementations to be added for platforms where no H/W support
-> is available.
->
-> Based on 3.19-rc5
->
-> Signed-off-by: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
-> ---
->  .../bindings/net/linn-ether-packet-sniffer.txt     |  27 ++
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  MAINTAINERS                                        |   7 +
->  drivers/net/Kconfig                                |   2 +
->  drivers/net/Makefile                               |   1 +
->  drivers/net/pkt-sniffer/Kconfig                    |  23 ++
->  drivers/net/pkt-sniffer/Makefile                   |   8 +
->  drivers/net/pkt-sniffer/backends/ether/channel.c   | 366 ++++++++++++++++++
->  drivers/net/pkt-sniffer/backends/ether/channel.h   |  76 ++++
->  drivers/net/pkt-sniffer/backends/ether/hw.h        |  46 +++
->  drivers/net/pkt-sniffer/backends/ether/platform.c  | 231 +++++++++++
->  drivers/net/pkt-sniffer/core/dev_table.c           | 124 ++++++
->  drivers/net/pkt-sniffer/core/module.c              |  37 ++
->  drivers/net/pkt-sniffer/core/nl.c                  | 427 +++++++++++++++++++++
->  drivers/net/pkt-sniffer/core/nl.h                  |  34 ++
->  drivers/net/pkt-sniffer/core/snf_core.h            |  64 +++
->  include/linux/pkt_sniffer.h                        |  89 +++++
->  17 files changed, 1563 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
->  create mode 100644 drivers/net/pkt-sniffer/Kconfig
->  create mode 100644 drivers/net/pkt-sniffer/Makefile
->  create mode 100644 drivers/net/pkt-sniffer/backends/ether/channel.c
->  create mode 100644 drivers/net/pkt-sniffer/backends/ether/channel.h
->  create mode 100644 drivers/net/pkt-sniffer/backends/ether/hw.h
->  create mode 100644 drivers/net/pkt-sniffer/backends/ether/platform.c
->  create mode 100644 drivers/net/pkt-sniffer/core/dev_table.c
->  create mode 100644 drivers/net/pkt-sniffer/core/module.c
->  create mode 100644 drivers/net/pkt-sniffer/core/nl.c
->  create mode 100644 drivers/net/pkt-sniffer/core/nl.h
->  create mode 100644 drivers/net/pkt-sniffer/core/snf_core.h
->  create mode 100644 include/linux/pkt_sniffer.h
->
-> diff --git a/Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt b/Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
-> new file mode 100644
-> index 0000000..6b6e105
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
-> @@ -0,0 +1,27 @@
-> +* Linn Products Ethernet Packet Sniffer
-> +
-> +Required properties:
-> +- compatible : must be "linn,eth-sniffer"
-> +- reg : physical addresses and sizes of registers. Must contain 3 entries:
-> +          first entry: registers memory space
-> +          second entry: TX command memory
-> +          third entry: RX command memory
+diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+index ca3424e7ef71..7b07325b4fba 100644
+--- a/drivers/mmc/host/sdhci-pxav3.c
++++ b/drivers/mmc/host/sdhci-pxav3.c
+@@ -118,6 +118,20 @@ static int mv_conf_mbus_windows(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++static int armada_38x_quirks(struct sdhci_host *host)
++{
++	host->quirks |= SDHCI_QUIRK_MISSING_CAPS;
++	/*
++	 * According to erratum 'FE-2946959' both SDR50 and DDR50
++	 * modes require specific clock adjustments in SDIO3
++	 * Configuration register, if the adjustment is not done,
++	 * remove them from the capabilities.
++	 */
++	host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
++	host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_DDR50);
++	return 0;
++}
++
+ static void pxav3_reset(struct sdhci_host *host, u8 mask)
+ {
+ 	struct platform_device *pdev = to_platform_device(mmc_dev(host->mmc));
+@@ -319,6 +333,9 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
+ 		clk_prepare_enable(pxa->clk_core);
+ 
+ 	if (of_device_is_compatible(np, "marvell,armada-380-sdhci")) {
++		ret = armada_38x_quirks(host);
++		if (ret < 0)
++			goto err_quirks;
+ 		ret = mv_conf_mbus_windows(pdev, mv_mbus_dram_info());
+ 		if (ret < 0)
+ 			goto err_mbus_win;
+@@ -400,6 +417,7 @@ err_mbus_win:
+ 	if (!IS_ERR(pxa->clk_core))
+ 		clk_disable_unprepare(pxa->clk_core);
+ err_clk_get:
++err_quirks:
+ 	sdhci_pltfm_free(pdev);
+ 	return ret;
+ }
+-- 
+2.1.0
 
-Just to check: are those memories are part of the packet sniffer device,
-or are carveouts from other memory?
-
-> +- reg-names : must contain the following 3 entries:
-> +                  "regs", "tx-ram", "rx-ram"
-
-If you use reg-names, please define reg in terms of reg-names. It's a
-little pointless to have redundant name and index requirements.
-
-> +- interrupts : sniffer interrupt specifier
-> +- clocks : specify the system clock for the peripheral
-> +- clock-names : must contain the "sys" entry
-
-Likewise with clocks and clock-names.
-
-> +- fifo-block-words : number of words in one data FIFO entry
-> +
-> +Example:
-> +
-> +sniffer@1814a000 {
-> +        compatible = "linn,eth-sniffer";
-> +        reg = <0x1814a000 0x100>, <0x1814a400 0x400>, <0x1814a800 0x400>;
-> +        reg-names = "regs", "tx-ram", "rx-ram";
-> +        interrupts = <GIC_SHARED 58 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-names = "eth-sniffer-irq";
-> +        clocks = <&system_clk>;
-> +        clock-names = "sys";
-> +        fifo-block-words = <4>;
-> +    };
-
-Surely the relationship between the sniffer, MAC, and PHY should be
-described, so we know which interface the sniffer is related to?
-
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index b1df0ad..2c96f35 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -90,6 +90,7 @@ lacie LaCie
->  lantiq Lantiq Semiconductor
->  lenovo Lenovo Group Ltd.
->  lg     LG Corporation
-> +linn   Linn Products Ltd.
->  linux  Linux-specific binding
->  lsi    LSI Corp. (LSI Logic)
->  lltc   Linear Technology Corporation
-
-This addition looks fine to me.
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
