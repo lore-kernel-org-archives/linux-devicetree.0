@@ -1,261 +1,671 @@
-From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/6] mfd: max77843: Add max77843 MFD driver core driver
-Date: Fri, 23 Jan 2015 20:26:46 +0900
-Message-ID: <54C22FF6.5060606@samsung.com>
-References: <1421989367-32721-1-git-send-email-jaewon02.kim@samsung.com>
- <1421989367-32721-2-git-send-email-jaewon02.kim@samsung.com>
- <CAJKOXPfRYhJNUAE=W3zPWvyza9k_YA=hu4KjLRuLh7kie3guQA@mail.gmail.com>
- <54C1ED09.1080607@samsung.com> <1421997364.27149.5.camel@AMDC1943>
- <54C22C3B.8040403@samsung.com> <1422011884.18205.4.camel@AMDC1943>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Add initial device tree support for
+ Tegra132
+Date: Fri, 23 Jan 2015 11:31:24 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1501231038130.5450@utopia.booyaka.com>
+References: <alpine.DEB.2.02.1501161139180.9776@utopia.booyaka.com> <20150121161313.GI5044@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1422011884.18205.4.camel@AMDC1943>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150121161313.GI5044@leverpostej>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/23/2015 08:18 PM, Krzysztof Kozlowski wrote:
-> On pi=C4=85, 2015-01-23 at 20:10 +0900, Beomho Seo wrote:
->> On 01/23/2015 04:16 PM, Krzysztof Kozlowski wrote:
->>> On pi=C4=85, 2015-01-23 at 15:41 +0900, Beomho Seo wrote:
->>>> On 01/23/2015 03:32 PM, Krzysztof Kozlowski wrote:
->>>>> 2015-01-23 6:02 GMT+01:00 Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
->>>>>> This patch adds MAX77843 core/irq driver to support PMIC,
->>>>>> MUIC(Micro USB Interface Controller), Charger, Fuel Gauge,
->>>>>> LED and Haptic device.
->>>>>>
->>>>>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>>> Signed-off-by: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>>> ---
->>>>>>  drivers/mfd/Kconfig                  |   14 ++
->>>>>>  drivers/mfd/Makefile                 |    1 +
->>>>>>  drivers/mfd/max77843.c               |  241 +++++++++++++++++++=
-+
->>>>>>  include/linux/mfd/max77843-private.h |  410 +++++++++++++++++++=
-+++++++++++++++
->>>>>>  4 files changed, 666 insertions(+)
->>>>>>  create mode 100644 drivers/mfd/max77843.c
->>>>>>  create mode 100644 include/linux/mfd/max77843-private.h
->>>>>>
->>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>>>>> index 2e6b731..0c67c79 100644
->>>>>> --- a/drivers/mfd/Kconfig
->>>>>> +++ b/drivers/mfd/Kconfig
->>>>>> @@ -442,6 +442,20 @@ config MFD_MAX77693
->>>>>>           additional drivers must be enabled in order to use the=
- functionality
->>>>>>           of the device.
->>>>>>
->>>>>> +config MFD_MAX77843
->>>>>> +       bool "Maxim Semiconductor MAX77843 PMIC Support"
->>>>>> +       depends on I2C=3Dy
->>>>>> +       select MFD_CORE
->>>>>> +       select REGMAP_I2C
->>>>>> +       select REGMAP_IRQ
->>>>>> +       help
->>>>>> +         Say yes here to add support for Maxim Semiconductor MA=
-X77843.
->>>>>> +         This is companion Power Management IC with LEDs, Hapti=
-c, Charger,
->>>>>> +         Fuel Gauge, MUIC(Micro USB Interface Controller) contr=
-ols on chip.
->>>>>> +         This driver provides common support for accessing the =
-device;
->>>>>> +         additional drivers must be enabled in order to use the=
- functionality
->>>>>> +         of the device.
->>>>>> +
->>>>>>  config MFD_MAX8907
->>>>>>         tristate "Maxim Semiconductor MAX8907 PMIC Support"
->>>>>>         select MFD_CORE
->>>>>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->>>>>> index 53467e2..fe4f75c 100644
->>>>>> --- a/drivers/mfd/Makefile
->>>>>> +++ b/drivers/mfd/Makefile
->>>>>> @@ -117,6 +117,7 @@ obj-$(CONFIG_MFD_DA9063)    +=3D da9063.o
->>>>>>  obj-$(CONFIG_MFD_MAX14577)     +=3D max14577.o
->>>>>>  obj-$(CONFIG_MFD_MAX77686)     +=3D max77686.o
->>>>>>  obj-$(CONFIG_MFD_MAX77693)     +=3D max77693.o
->>>>>> +obj-$(CONFIG_MFD_MAX77843)     +=3D max77843.o
->>>>>>  obj-$(CONFIG_MFD_MAX8907)      +=3D max8907.o
->>>>>>  max8925-objs                   :=3D max8925-core.o max8925-i2c.=
-o
->>>>>>  obj-$(CONFIG_MFD_MAX8925)      +=3D max8925.o
->>>>>> diff --git a/drivers/mfd/max77843.c b/drivers/mfd/max77843.c
->>>>>> new file mode 100644
->>>>>> index 0000000..d7f8b76
->>>>>> --- /dev/null
->>>>>> +++ b/drivers/mfd/max77843.c
->>>>>> @@ -0,0 +1,241 @@
->>>>>> +/*
->>>>>> + * max77843.c - MFD core driver for the Maxim MAX77843
->>>>>> + *
->>>>>> + * Copyright (C) 2014 Samsung Electrnoics
->>>>>> + * Author: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>>> + *
->>>>>> + * This program is free software; you can redistribute it and/o=
-r modify
->>>>>> + * it under the terms of the GNU General Public License as publ=
-ished by
->>>>>> + * the Free Software Foundation; either version 2 of the Licens=
-e, or
->>>>>> + * (at your option) any later version.
->>>>>> + */
->>>>>> +
->>>>>> +#include <linux/err.h>
->>>>>> +#include <linux/i2c.h>
->>>>>> +#include <linux/init.h>
->>>>>> +#include <linux/interrupt.h>
->>>>>> +#include <linux/module.h>
->>>>>> +#include <linux/mfd/core.h>
->>>>>> +#include <linux/mfd/max77843-private.h>
->>>>>> +#include <linux/of_device.h>
->>>>>> +#include <linux/platform_device.h>
->>>>>> +
->>>>>> +static const struct mfd_cell max77843_devs[] =3D {
->>>>>> +       {
->>>>>> +               .name =3D "max77843-muic",
->>>>>> +               .of_compatible =3D "maxim,max77843-muic",
->>>>>> +       }, {
->>>>>> +               .name =3D "max77843-regulator",
->>>>>> +               .of_compatible =3D "maxim,max77843-regulator",
->>>>>> +       }, {
->>>>>> +               .name =3D "max77843-charger",
->>>>>> +               .of_compatible =3D "maxim,max77843-charger"
->>>>>> +       }, {
->>>>>> +               .name =3D "max77843-fuelgauge",
->>>>>> +               .of_compatible =3D "maxim,max77843-fuelgauge",
->>>>>> +       },
->>>>>> +};
->>>>>> +
->>>>>> +static const struct regmap_config max77843_charger_regmap_confi=
-g =3D {
->>>>>> +       .reg_bits       =3D 8,
->>>>>> +       .val_bits       =3D 8,
->>>>>> +       .max_register   =3D MAX77843_CHG_REG_END,
->>>>>> +};
->>>>>> +
->>>>>> +static const struct regmap_config max77843_regmap_config =3D {
->>>>>> +       .reg_bits       =3D 8,
->>>>>> +       .val_bits       =3D 8,
->>>>>> +       .max_register   =3D MAX77843_SYS_REG_END,
->>>>>> +};
->>>>>> +
->>>>>> +static const struct regmap_irq max77843_irqs[] =3D {
->>>>>> +       /* TOPSYS interrupts */
->>>>>> +       { .reg_offset =3D 0, .mask =3D MAX77843_SYS_IRQ_SYSUVLO_=
-INT, },
->>>>>> +       { .reg_offset =3D 0, .mask =3D MAX77843_SYS_IRQ_SYSOVLO_=
-INT, },
->>>>>> +       { .reg_offset =3D 0, .mask =3D MAX77843_SYS_IRQ_TSHDN_IN=
-T, },
->>>>>> +       { .reg_offset =3D 0, .mask =3D MAX77843_SYS_IRQ_TM_INT, =
-},
->>>>>> +};
->>>>>> +
->>>>>> +static const struct regmap_irq_chip max77843_irq_chip =3D {
->>>>>> +       .name           =3D "max77843",
->>>>>> +       .status_base    =3D MAX77843_SYS_REG_SYSINTSRC,
->>>>>> +       .mask_base      =3D MAX77843_SYS_REG_SYSINTMASK,
->>>>>> +       .mask_invert    =3D false,
->>>>>> +       .num_regs       =3D 1,
->>>>>> +       .irqs           =3D max77843_irqs,
->>>>>> +       .num_irqs       =3D ARRAY_SIZE(max77843_irqs),
->>>>>> +};
->>>>>> +
->>>>>> +static int max77843_chg_init(struct max77843 *max77843)
->>>>>> +{
->>>>>
->>>>> Could this function be moved to the charger driver? This way the
->>>>> driver will manage its own resources instead of depending on pare=
-nt
->>>>> MFD driver.
->>>>>
->>>>
->>>> Charger regulator and Charger share same resources.
->>>> So I include this function core driver.
->>>
->>> OK, I see... Could you describe it in comments somewhere? For examp=
-le in
->>> comment above the function. Currently this looks like only as regma=
-p for
->>> charger.
->>>
->>
->> Charger regulator and Charger use same regmap.
->=20
-> OK, just put it in a comment around that function.
->
++ Arto, Terje for comments on the host1x section
++ Stephen Warren for comments on the serial DT data
 
-OK, I add comment above max77843_chg_init function.
+Hi Mark,
 
->>
->>> Unfortunately current solution imposes problem with releasing resou=
-rces.
->>> Who is the owner of i2c dummy device?
->>>
->>
->> Core driver owner of i2c dummy device.
->=20
-> OK, good idea. So the core driver should be the only place to unregis=
-ter
-> it. So needed changes are:
-> 1. Remove the i2c_unregister_device() call from
-> max77843_charger_probe().
-> 2. Add i2c_unregister_device(max77843->i2c_chg) in max77843_remove().
->=20
-> The MFD core driver will handle it.
->=20
+thanks for the review.
 
-It will be fixed comply with your advice.
+On Wed, 21 Jan 2015, Mark Rutland wrote:
 
->>
->>> 1. The charger driver will unregister it if max77843_charger_probe(=
-)
->>> fails. What will happen with regulator driver in such case?
->>>
->>
->> Charger is enabled/disabled by Charger regulator.
->> Currently, If charger probe fails, charger regulator failed to read =
-regmap and occur panic(It have to fix.)
->>
->>
->>> 2. Who will release this i2c dummy device in normal unbind? Current=
-ly it
->>> leaks.
->>>
->>
->> I think core driver release i2c dummy device in normal unbind.
->> We need to more discussion about this problem.
->> If you have any idea, I hope tell me. Again, Thank you for your advi=
-ce.
->=20
-> I think handling the ownership in core driver could solve this.
->=20
-> Best regards,
-> Krzysztof
->=20
+> As mentioned in my reply to the DT list patch [1], there are a couple of
+> bits I'd like to see cleaned up first, but in the meantime I have some
+> comments from my first pass of the dtsi below. Some of these may equally
+> apply to existing dts(i) files.
+> 
+> I see a few undocumented compatible strings (at least when comparing 
+> against mainline). If there are other series or trees I should be 
+> looking at, any pointers would be appreciated. If not, documentation 
+> updates would be nice (checkpatch should complain otherwise).
 
-OK. I will fix it.
+(discussed in the tegra132-pcie comments below)
 
-Thanks,
-Beomho
+> 
+> On Fri, Jan 16, 2015 at 11:45:29AM +0000, Paul Walmsley wrote:
+> > 
+> > Add an initial device tree file for the Tegra132 SoC.  The DT file is
+> > based on arch/arm/boot/dts/tegra124.dtsi and
+> > arch/arm/boot/dts/tegra114.dtsi, with the following significant
+> > changes:
+> > 
+> > - Tegra132 uses a Denver CPU cluster rather than an ARMv7 CPU cluster
+> > - Devices are arranged by bus, rather than in a flat topology
+> > - No polling delays have been defined for the thermal zones.  I don't
+> >   believe that this is a property of the SoC hardware, but rather of a
+> >   given use-case.
+> > 
+> > DT nodes representing IP blocks have generally been labeled according
+> > to the names used in Section 2.1 "System Address Map" of the _Tegra K1
+> > 64-Bit Mobile Processor Technical Reference Manual_
+> > (DP-07148-001_ALPHA), with a few exceptions for disambiguation or
+> > abbreviated naming.  Some of the known IP block aliases used by PCB
+> > designers (e.g., "GEN2_I2C" for "I2C2") have been noted in DT node
+> > comments.
+> > 
+> > Known future work:
+> > 
+> > - Add support for the Denver CLUSTER_clocks IP block
+> > - Add support for the CPU thermal zone; now handled by a CCPLEX IP block
+> > - The CPU spin_table enable-method may change to PSCI at some point
+> 
+> That sounds nice. Any idea if/when that would be likely to happen?
 
->=20
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" i=
-n
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+The PSCI aspect?  Unfortunately not at the moment due to the secure 
+firmware dependency.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > - Add support for several missing IP blocks
+> > - Some drivers use unusual address spaces for devices which don't match
+> >   the TRM and/or hardware decode.  At some point these should be
+> >   reconciled.
+> > 
+> > This patch was originally based on a patch by Allen Martin
+> > <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> and the Tegra124 and Tegra114 DTS files.
+> > 
+> > Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > Cc: Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> > Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > ---
+> >  arch/arm64/boot/dts/Makefile            |   1 +
+> >  arch/arm64/boot/dts/tegra/Makefile      |   3 +
+> >  arch/arm64/boot/dts/tegra/tegra132.dtsi | 997 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 1001 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/tegra/Makefile
+> >  create mode 100644 arch/arm64/boot/dts/tegra/tegra132.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> > index b411251..90f6284 100644
+> > --- a/arch/arm64/boot/dts/Makefile
+> > +++ b/arch/arm64/boot/dts/Makefile
+> > @@ -3,6 +3,7 @@ dts-dirs += apm
+> >  dts-dirs += arm
+> >  dts-dirs += cavium
+> >  dts-dirs += exynos
+> > +dts-dirs += tegra
+> 
+> This should probably be 'nvidia' (and 'exynos' probably should have been
+> 'samsung', given all the other directories are vendor names rather than
+> SoC family names.
+
+OK, will change.
+
+> > 
+> >  always         := $(dtb-y)
+> >  subdir-y       := $(dts-dirs)
+> > diff --git a/arch/arm64/boot/dts/tegra/Makefile b/arch/arm64/boot/dts/tegra/Makefile
+> > new file mode 100644
+> > index 0000000..15dbaa0
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/tegra/Makefile
+> > @@ -0,0 +1,3 @@
+> > +always          := $(dtb-y)
+> > +subdir-y        := $(dts-dirs)
+> > +clean-files     := *.dtb
+> > diff --git a/arch/arm64/boot/dts/tegra/tegra132.dtsi b/arch/arm64/boot/dts/tegra/tegra132.dtsi
+> > new file mode 100644
+> > index 0000000..4b93bfe
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/tegra/tegra132.dtsi
+> > @@ -0,0 +1,997 @@
+> > +#include <dt-bindings/clock/tegra124-car.h>
+> > +#include <dt-bindings/gpio/tegra-gpio.h>
+> > +#include <dt-bindings/memory/tegra124-mc.h>
+> > +#include <dt-bindings/pinctrl/pinctrl-tegra.h>
+> > +#include <dt-bindings/pinctrl/pinctrl-tegra-xusb.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/thermal/tegra124-soctherm.h>
+> > +
+> > +#include "skeleton.dtsi"
+> 
+> I'd recommend against including skeleton.dtsi, it attempts to be helpful
+> but IMO it's more problematic than it's worth. Especially given it
+> expects #size-cells = <1> (which you override below), and therefore
+> creates a memory node for which the reg entry is too small.
+
+OK, will drop.
+
+> 
+> > +
+> > +/ {
+> > +       compatible = "nvidia,tegra132";
+> > +       interrupt-parent = <&gic>;
+> > +       #address-cells = <2>;
+> > +       #size-cells = <2>;
+> > +
+> > +       pcie-controller@0,01003000 {
+> > +               compatible = "nvidia,tegra132-pcie", "nvidia,tegra124-pcie";
+> 
+> I couldn't spot "nvidia,tegra132-pcie" in mainline anywhere. Does it
+> differ significantly from "nvidia,tegra124-pcie"?
+
+I'm not sure if the T132 PCIe driver will need any T132-specific 
+workarounds.  I just followed what seems to be at least one DT practice 
+discussed in the past of adding SoC-specific variants for the IP blocks in 
+the event that a SoC-specific driver change is needed in the future.  I'm 
+probably out-of-date on the current doctrine here, though.  
+
+Anyway, I have no problem with dropping the tegra132- variants, except in 
+cases where changes are specifically known to be needed, although this 
+seems likely to strengthen the binding between DT data and kernel 
+versions.  Let me know.
+
+> > +               device_type = "pci";
+> > +               reg = <0x0 0x01003000 0x0 0x00000800   /* PADS registers */
+> > +                      0x0 0x01003800 0x0 0x00000800   /* AFI registers */
+> > +                      0x0 0x02000000 0x0 0x10000000>; /* configuration space */
+> 
+> Nit: for properties which are lists, please bracket each entry, e.g.
+> 
+> reg = <0x0 0x01003000 0x0 0x00000800>,   /* PADS registers */
+>       <0x0 0x01003800 0x0 0x00000800>,
+>       <0x0 0x02000000 0x0 0x10000000>;
+> 
+> I appreciate the newlines serve as an obvious delimiter here, but in
+> single-line cases it really helps, and it would be nice to be
+> consistent. It looks like most instances in this file already do this
+> anyway.
+
+OK will do.
+
+> 
+> > +               reg-names = "pads", "afi", "cs";
+> > +               interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>, /* controller interrupt */
+> > +                            <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>; /* MSI interrupt */
+> > +               interrupt-names = "intr", "msi";
+> > +
+> > +               #interrupt-cells = <1>;
+> > +               interrupt-map-mask = <0 0 0 0>;
+> > +               interrupt-map = <0 0 0 0 &gic GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +               bus-range = <0x00 0xff>;
+> > +               #address-cells = <3>;
+> > +               #size-cells = <2>;
+> > +
+> > +               ranges = <0x82000000 0 0x01000000 0x0 0x01000000 0 0x00001000   /* port 0 configuration space */
+> > +                         0x82000000 0 0x01001000 0x0 0x01001000 0 0x00001000   /* port 1 configuration space */
+> > +                         0x81000000 0 0x0        0x0 0x12000000 0 0x00010000   /* downstream I/O (64 KiB) */
+> > +                         0x82000000 0 0x13000000 0x0 0x13000000 0 0x0d000000   /* non-prefetchable memory (208 MiB) */
+> > +                         0xc2000000 0 0x20000000 0x0 0x20000000 0 0x20000000>; /* prefetchable memory (512 MiB) */
+> 
+> Same here w.r.t. list bracketing.
+
+OK
+
+> 
+> > +
+> > +               clocks = <&tegra_car TEGRA124_CLK_PCIE>,
+> > +                        <&tegra_car TEGRA124_CLK_AFI>,
+> > +                        <&tegra_car TEGRA124_CLK_PLL_E>,
+> > +                        <&tegra_car TEGRA124_CLK_CML0>;
+> > +               clock-names = "pex", "afi", "pll_e", "cml";
+> > +               resets = <&tegra_car 70>,
+> > +                        <&tegra_car 72>,
+> > +                        <&tegra_car 74>;
+> > +               reset-names = "pex", "afi", "pcie_x";
+> > +               status = "disabled";
+> > +
+> > +               phys = <&xusb_padctl TEGRA_XUSB_PADCTL_PCIE>;
+> > +               phy-names = "pcie";
+> > +
+> > +               pci@1,0 {
+> > +                       device_type = "pci";
+> > +                       assigned-addresses = <0x82000800 0 0x01000000 0 0x1000>;
+> > +                       reg = <0x000800 0 0 0 0>;
+> > +                       status = "disabled";
+> > +
+> > +                       #address-cells = <3>;
+> > +                       #size-cells = <2>;
+> > +                       ranges;
+> 
+> I'm not sure why these three properties are here. Surely this is a
+> separate address space (so isn't ranges invalid?), and do we define any
+> sub-nodes anywhere?
+
+Hmm not sure.  This was originally copied from 
+arch/arm/boot/dts/tegra124.dtsi.  Will plan to drop them for now, and then 
+if the properties (or ones like them) turn out to be needed in the future, 
+someone else can deal with it :-)
+
+> 
+> > +
+> > +                       nvidia,num-lanes = <2>;
+> > +               };
+> > +
+> > +               pci@2,0 {
+> > +                       device_type = "pci";
+> > +                       assigned-addresses = <0x82001000 0 0x01001000 0 0x1000>;
+> > +                       reg = <0x001000 0 0 0 0>;
+> > +                       status = "disabled";
+> > +
+> > +                       #address-cells = <3>;
+> > +                       #size-cells = <2>;
+> > +                       ranges;
+> > +
+> 
+> Likewise.
+
+OK
+
+> 
+> > +                       nvidia,num-lanes = <1>;
+> > +               };
+> > +       };
+> 
+> [...]
+> 
+> > +       host1x@0,50000000 {
+> > +               compatible = "nvidia,tegra132-host1x", "nvidia,tegra124-host1x", "simple-bus";
+> 
+> Regarding simple-bus, are the sub-nodes usable if this didn't probe as
+> "nvidia,tegra124-host1x" or "nvidia,tegra132-host1x"?
+> Do the subnodes require anything from this node?
+> 
+> It looks like we expect/require the host1x node to be probed and
+> initialised before we probe the children. Which would imply the
+> simple-bus annotation is wrong.
+
+Haven't tried booting with just simple-bus here.  I believe these devices 
+are accessible without the involvement of host1x.  In other words, host1x 
+is not a bus; I believe it might be most accurately described as a type of 
+DMA controller.  So in theory it should be possible for the CPU complex to 
+read and write to these devices directly without the involvement of 
+host1x, although I believe NVIDIA discourages this.
+
+Under the theory that DT data should be hardware-specific, not 
+software-specific, in an ideal world I think we would list these devices 
+outside the embrace of the host1x node.  However the existing Tegra124 DT 
+file listed them together, and I am unsure whether that is required for 
+the host1x code to function correctly.
+
+Arto may be able to comment further.
+
+> 
+> > +               reg = <0x0 0x50000000 0x0 0x00034000>;
+> > +               interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>, /* syncpt */
+> > +                            <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>; /* general */
+> > +               clocks = <&tegra_car TEGRA124_CLK_HOST1X>;
+> > +               resets = <&tegra_car 28>;
+> > +               reset-names = "host1x";
+> > +
+> > +               #address-cells = <2>;
+> > +               #size-cells = <2>;
+> > +
+> > +               ranges = <0 0x54000000 0 0x54000000 0 0x01000000>;
+> > +
+> > +               dc@0,54200000 {
+> > +                       compatible = "nvidia,tegra132-dc", "nvidia,tegra124-dc";
+> > +                       reg = <0x0 0x54200000 0x0 0x00040000>;
+> > +                       interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&tegra_car TEGRA124_CLK_DISP1>,
+> > +                                <&tegra_car TEGRA124_CLK_PLL_P>;
+> > +                       clock-names = "dc", "parent";
+> > +                       resets = <&tegra_car 27>;
+> > +                       reset-names = "dc";
+> > +
+> > +                       iommus = <&mc TEGRA_SWGROUP_DC>;
+> > +
+> > +                       nvidia,head = <0>;
+> > +               };
+> > +
+> > +               dc@0,54240000 {
+> > +                       compatible = "nvidia,tegra132-dc", "nvidia,tegra124-dc";
+> > +                       reg = <0x0 0x54240000 0x0 0x00040000>;
+> > +                       interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&tegra_car TEGRA124_CLK_DISP2>,
+> > +                                <&tegra_car TEGRA124_CLK_PLL_P>;
+> > +                       clock-names = "dc", "parent";
+> > +                       resets = <&tegra_car 26>;
+> > +                       reset-names = "dc";
+> > +
+> > +                       iommus = <&mc TEGRA_SWGROUP_DCB>;
+> > +
+> > +                       nvidia,head = <1>;
+> > +               };
+> > +
+> > +               hdmi@0,54280000 {
+> > +                       compatible = "nvidia,tegra132-hdmi", "nvidia,tegra124-hdmi";
+> > +                       reg = <0x0 0x54280000 0x0 0x00040000>;
+> > +                       interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&tegra_car TEGRA124_CLK_HDMI>,
+> > +                                <&tegra_car TEGRA124_CLK_PLL_D2_OUT0>;
+> > +                       clock-names = "hdmi", "parent";
+> > +                       resets = <&tegra_car 51>;
+> > +                       reset-names = "hdmi";
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               sor@0,54540000 {
+> > +                       compatible = "nvidia,tegra132-sor", "nvidia,tegra124-sor";
+> > +                       reg = <0x0 0x54540000 0x0 0x00040000>;
+> > +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&tegra_car TEGRA124_CLK_SOR0>,
+> > +                                <&tegra_car TEGRA124_CLK_PLL_D_OUT0>,
+> > +                                <&tegra_car TEGRA124_CLK_PLL_DP>,
+> > +                                <&tegra_car TEGRA124_CLK_CLK_M>;
+> > +                       clock-names = "sor", "parent", "dp", "safe";
+> > +                       resets = <&tegra_car 182>;
+> > +                       reset-names = "sor";
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               dpaux: dpaux@0,545c0000 {
+> > +                       compatible = "nvidia,tegra132-dpaux", "nvidia,tegra124-dpaux";
+> > +                       reg = <0x0 0x545c0000 0x0 0x00040000>;
+> > +                       interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&tegra_car TEGRA124_CLK_DPAUX>,
+> > +                                <&tegra_car TEGRA124_CLK_PLL_DP>;
+> > +                       clock-names = "dpaux", "parent";
+> > +                       resets = <&tegra_car 181>;
+> > +                       reset-names = "dpaux";
+> > +                       status = "disabled";
+> > +               };
+> > +       };
+> > +
+> 
+> [...]
+> 
+> > +       gic: interrupt-controller@0,50041000 {
+> > +               compatible = "arm,cortex-a15-gic";
+> > +               #interrupt-cells = <3>;
+> > +               interrupt-controller;
+> > +               reg = <0x0 0x50041000 0x0 0x1000>,
+> > +                     <0x0 0x50042000 0x0 0x1000>,
+> > +                     <0x0 0x50044000 0x0 0x2000>,
+> > +                     <0x0 0x50046000 0x0 0x2000>;
+> > +               interrupts = <GIC_PPI 9
+> > +                       (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> > +       };
+> 
+> /cpus (below) only has two CPUs listed, so that mask doensn't look
+> right.
+
+OK will fix
+
+> 
+> [...]
+> 
+> > +       ppsb: ppsb@0,60000000 {
+> > +               compatible = "simple-bus";
+> > +               reg = <0x0 0x60000000 0x0 0x01000000>;
+> > +               #address-cells = <2>;
+> > +               #size-cells = <2>;
+> > +               ranges;
+> 
+> This reg overlaps the devices described below, and this node is only
+> described as a simple-bus (for whch reg is not a valid property). That
+> doesn't look right to me.
+> 
+> If you want to describe that the bus covers a particular range, you can
+> encode that in the ranges property.
+
+OK will fix.
+
+> 
+> [...]
+> 
+> > +               ahb_gizmo: ahb-gizmo@0,6000c004 {
+> > +                       compatible = "nvidia,tegra132-ahb", "nvidia,tegra124-ahb", "nvidia,tegra30-ahb";
+> > +                       /*
+> > +                        * This IP block actually starts at 0x6000c000,
+> > +                        * but all of the register offsets in the driver
+> > +                        * have 0x4 subtracted from them.  So handle
+> > +                        * it this way until the driver is fixed.
+> > +                        */
+> > +                       reg = <0x0 0x6000c004 0x0 0x14d>;
+> > +               };
+> 
+> That doesn't sound great. Can we not fix the driver and limit that
+> mistake to existing DTBs?
+
+We can do it that way if you think it's important to fix now.  Have been 
+trying to avoid gating our initial ARM64 support on fixing all of our 
+hardware misalignment problems accumulated over the years, but if you 
+think it's a blocker, it can be done.  
+
+> 
+> [...]
+> 
+> > +       apb: apb@0,70000000 {
+> > +               compatible = "simple-bus";
+> > +               reg = <0x0 0x70000000 0x0 0x01000000>;
+> 
+> As with previously, a reg property doesn't make sense for a block that's
+> only a "simple-bus"
+
+OK will fix.
+
+> 
+> > +               #address-cells = <2>;
+> > +               #size-cells = <2>;
+> > +               ranges;
+> > +
+> > +               apbmisc: apbmisc@0,70000800 {
+> > +                       compatible = "nvidia,tegra132-apbmisc", "nvidia,tegra124-apbmisc", "nvidia,tegra20-apbmisc";
+> > +                       reg = <0x0 0x70000800 0x0 0x64>,   /* Chip revision */
+> > +                             <0x0 0x7000E864 0x0 0x04>;   /* Strapping options */
+> > +               };
+> > +
+> > +               pinmux: pinmux@0,70000868 {
+> > +                       compatible = "nvidia,tegra132-pinmux", "nvidia,tegra124-pinmux";
+> > +                       reg = <0x0 0x70000868 0x0 0x164>,  /* Pad control registers */
+> > +                             <0x0 0x70003000 0x0 0x434>;  /* Mux registers */
+> > +               };
+> > +
+> > +               /*
+> > +                * There are two serial drivers: an 8250 based simple
+> > +                * serial driver and an APB DMA based serial driver
+> > +                * for higher baudrate and performance. To enable the
+> > +                * 8250 based driver, the compatible string is
+> > +                * "nvidia,tegra132-uart", "nvidia,tegra124-uart",
+> > +                * "nvidia,tegra20-uart" and to enable the APB DMA
+> > +                * based serial driver, the compatible string is
+> > +                * "nvidia,tegra132-hsuart", "nvidia,tegra124-hsuart",
+> > +                * "nvidia,tegra30-hsuart".
+> > +                */
+> 
+> Is there any reason to continue with this split?
+> 
+> Surely if the only difference is DMA, the presence of dmas and dma-names
+> should be sufficient to get the driver to do the right thing, and if you
+> need to disable DMA for debugging that could be a command-line option.
+> 
+> Does the binding and/or driver support aliases so you can get consistent
+> numbering? It would be nice to have.
+> 
+> Do these UARTs work with earlycon?
+> 
+> It would be nice to have a /chosen/stdout-path (ideally with rate) so as
+> to get output consistently without command line options being required.
+
+Stephen Warren might be the best person to directly respond to these 
+issues.  This is all legacy DT data from previous Tegra SoCs.
+
+> 
+> > +               uarta: serial@0,70006000 {
+> > +                       compatible = "nvidia,tegra132-uart", "nvidia,tegra124-uart", "nvidia,tegra20-uart";
+> > +                       reg = <0x0 0x70006000 0x0 0x40>;
+> > +                       reg-shift = <2>;
+> > +                       interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&tegra_car TEGRA124_CLK_UARTA>;
+> > +                       resets = <&tegra_car 6>;
+> > +                       reset-names = "serial";
+> > +                       dmas = <&apbdma 8>, <&apbdma 8>;
+> > +                       dma-names = "rx", "tx";
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               uartb: serial@0,70006040 {
+> > +                       compatible = "nvidia,tegra132-uart", "nvidia,tegra124-uart", "nvidia,tegra20-uart";
+> > +                       reg = <0x0 0x70006040 0x0 0x40>;
+> > +                       reg-shift = <2>;
+> > +                       interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&tegra_car TEGRA124_CLK_UARTB>;
+> > +                       resets = <&tegra_car 7>;
+> > +                       reset-names = "serial";
+> > +                       dmas = <&apbdma 9>, <&apbdma 9>;
+> > +                       dma-names = "rx", "tx";
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               uartc: serial@0,70006200 {
+> > +                       compatible = "nvidia,tegra132-uart", "nvidia,tegra124-uart", "nvidia,tegra20-uart";
+> > +                       reg = <0x0 0x70006200 0x0 0x40>;
+> > +                       reg-shift = <2>;
+> > +                       interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&tegra_car TEGRA124_CLK_UARTC>;
+> > +                       resets = <&tegra_car 55>;
+> > +                       reset-names = "serial";
+> > +                       dmas = <&apbdma 10>, <&apbdma 10>;
+> > +                       dma-names = "rx", "tx";
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               uartd: serial@0,70006300 {
+> > +                       compatible = "nvidia,tegra132-uart", "nvidia,tegra124-uart", "nvidia,tegra20-uart";
+> > +                       reg = <0x0 0x70006300 0x0 0x40>;
+> > +                       reg-shift = <2>;
+> > +                       interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&tegra_car TEGRA124_CLK_UARTD>;
+> > +                       resets = <&tegra_car 65>;
+> > +                       reset-names = "serial";
+> > +                       dmas = <&apbdma 19>, <&apbdma 19>;
+> > +                       dma-names = "rx", "tx";
+> > +                       status = "disabled";
+> > +               };
+> 
+> [...]
+> 
+> > +       ahb_a2: ahb@0,7c000000 {
+> > +               compatible = "simple-bus";
+> > +               reg = <0x0 0x7c000000 0x0 0x02000000>;
+> > +               #address-cells = <2>;
+> > +               #size-cells = <2>;
+> > +               ranges;
+> 
+> Again, this doesn't look right for a plain simple-bus.
+
+OK will fix.
+
+> 
+> [...]
+> 
+> > +       cpus {
+> > +               #address-cells = <2>;
+> > +               #size-cells = <0>;
+> > +
+> > +               cpu@0 {
+> > +                       device_type = "cpu";
+> > +                       compatible = "nvidia,denver", "arm,armv8";
+> > +                       reg = <0x0 0x0>;
+> > +                       enable-method = "spin-table";
+> > +                       cpu-release-addr = <0x0 0x80000008>;
+> > +               };
+> > +
+> > +               cpu@1 {
+> > +                       device_type = "cpu";
+> > +                       compatible = "nvidia,denver", "arm,armv8";
+> > +                       reg = <0x0 0x1>;
+> > +                       enable-method = "spin-table";
+> > +                       cpu-release-addr = <0x0 0x80000008>;
+> > +               };
+> > +       };
+> 
+> It would be nice if this were near the top, as in other dts files.
+
+OK will move.
+
+> 
+> It's a shame these share the same release address, though I guess that
+> doesn't matter too much if PSCI is forthcoming.
+> 
+> I didn't spot a memory node or /memreserve/ entries. Is the memory used
+> here for the spin-table guaranteed to be protected?
+> 
+> If the enable-method might change, it's probably best to leave this to
+> the bootloader to fill in, or to have it in the board files if the boot
+> loader isn't that clever (perhaps via a dtsi).
+
+OK will drop the enable-method for the time being.
+
+> 
+> > +
+> > +       thermal-zones {
+> > +               /* XXX T132 CPU thermal zone - still TBD */
+> > +
+> 
+> What is still TBD here?
+
+The T132 CPU thermal zone thermal sensor data.  Specifically (and I hope 
+this comes as no surprise), there's some power/thermal management data 
+missing from this file that is intended to be added later.  The 
+placeholder is simply to indicate that.
+
+> 
+> > +               mem {
+> > +                       thermal-sensors =
+> > +                               <&soc_therm TEGRA124_SOCTHERM_SENSOR_MEM>;
+> > +               };
+> > +
+> > +               gpu {
+> > +                       thermal-sensors =
+> > +                               <&soc_therm TEGRA124_SOCTHERM_SENSOR_GPU>;
+> > +               };
+> > +
+> > +               pllx {
+> > +                       thermal-sensors =
+> > +                               <&soc_therm TEGRA124_SOCTHERM_SENSOR_PLLX>;
+> > +               };
+> > +       };
+> > +
+> > +       timer {
+> > +               compatible = "arm,armv8-timer";
+> > +               interrupts = <GIC_PPI 13
+> > +                               (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> > +                            <GIC_PPI 14
+> > +                               (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> > +                            <GIC_PPI 11
+> > +                               (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> > +                            <GIC_PPI 10
+> > +                               (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> 
+> Those masks look wrong given there were two CPUs described above.
+
+OK will fix.
+
+> 
+> Thanks,
+> Mark.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/317010.html
+> 
+
+
+- Paul
