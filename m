@@ -1,68 +1,135 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v4] of: i2c: Add i2c-mux-idle-disconnect DT property to
- PCA954x mux driver
-Date: Fri, 23 Jan 2015 17:13:50 +0100
-Message-ID: <20150123161350.GF9592@katana>
-References: <5494599A.8050803@nsn.com>
- <20150115123237.GC2549@katana>
- <54B7BBF5.4010001@nsn.com>
- <20150115131935.GE2549@katana>
- <54B7C206.8030809@nsn.com>
- <54C26BA9.4050405@nsn.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 0/5] extcon: usb: Introduce USB GPIO extcon driver. Fix
+ DRA7 USB.
+Date: Fri, 23 Jan 2015 10:19:09 -0600
+Message-ID: <20150123161909.GF8585@saruman.tx.rr.com>
+References: <1421689942-10201-1-git-send-email-rogerq@ti.com>
+ <20150120190237.GG15169@saruman>
+ <54C0FBDC.6040803@ti.com>
+ <54C10FF4.5030503@ti.com>
+ <20150122202907.GC22288@saruman.tx.rr.com>
+ <54C1F7C0.4020505@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UBnjLfzoMQYIXCvq"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="RE3pQJLXZi4fr8Xo"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54C26BA9.4050405-OYasijW0DpE@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <54C1F7C0.4020505@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: balbi@ti.com, tony@atomide.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---UBnjLfzoMQYIXCvq
+--RE3pQJLXZi4fr8Xo
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 23, 2015 at 04:41:29PM +0100, Alexander Sverdlin wrote:
-> of: i2c: Add i2c-mux-idle-disconnect DT property to PCA954x mux driver
+On Fri, Jan 23, 2015 at 09:26:56AM +0200, Roger Quadros wrote:
+> Felipe,
 >=20
-> Add i2c-mux-idle-disconnect device tree property to PCA954x mux driver. T=
-he new
-> property forces the multiplexer to disconnect child buses in idle state. =
-This is
-> used, for example, when there are several multiplexers on the same bus an=
-d the
-> devices on the underlying buses might have same I2C addresses.
->=20
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+> On 22/01/15 22:29, Felipe Balbi wrote:
+> > On Thu, Jan 22, 2015 at 04:57:56PM +0200, Roger Quadros wrote:
+> >>
+> >> On 22/01/15 15:32, Roger Quadros wrote:
+> >>> Felipe,
+> >>>
+> >>> On 20/01/15 21:02, Felipe Balbi wrote:
+> >>>> On Mon, Jan 19, 2015 at 07:52:17PM +0200, Roger Quadros wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> On DRA7 EVMs the USB ID pin is connected to a GPIO line. The USB dr=
+ivers
+> >>>>> (dwc3 + dwc3-omap) depend on extcon framework to get the USB cable =
+state
+> >>>>> (USB or USB-Host) to put the controller in the right mode.
+> >>>>>
+> >>>>> There were earlier attempts [1] to get this working by trying to pa=
+tch up
+> >>>>> the existing GPIO extcon driver.
+> >>>>>
+> >>>>> This series attemts to take a different approach by introducing a n=
+ew
+> >>>>> USB specific extcon driver to handle the USB ID GPIO pin and
+> >>>>> interpret a right USB cable state.
+> >>>>>
+> >>>>> The reasoning to introduce this new driver is:
+> >>>>> 1) The existing GPIO extcon driver doesn't understand USB cable sta=
+tes
+> >>>>> and it can't handle more than one cable per instance.
+> >>>>>   =20
+> >>>>> For the USB case we need to handle at least 2 cable states.
+> >>>>>     a) USB (attach/detach)
+> >>>>>     b) USB-Host (attach/detach)
+> >>>>> and could possible include more states like
+> >>>>>     c) Fast-charger (attach/detach)
+> >>>>>     d) Slow-charger (attach/detach)
+> >>>>>    =20
+> >>>>> 2) This USB specific driver can be easily updated in the future to
+> >>>>> handle VBUS events, or charger detect events, in case it happens
+> >>>>> to be available on GPIO for any platform.
+> >>>>>
+> >>>>> 3) The DT implementation is very easy. You just need one extcon nod=
+e per USB
+> >>>>> instead of one extcon node per cable state as in case of [1].
+> >>>>>
+> >>>>> 4) The cable state string doesn't need to be encoded in the device =
+tree
+> >>>>> as in case of [1].
+> >>>>>
+> >>>>> 5) With only ID event available, you can simulate a USB-peripheral =
+attach
+> >>>>> when USB-Host is detacted instead of hacking the USB driver to do t=
+he same.
+> >>>>>
+> >>>>> Tested on DRA7-evm and DRA72-evm.
+> >>>>
+> >>>> while at that, you might want to patch X15 too.
+> >>>>
+> >>> USB2 port is meant for peripheral use only. ID pin from USB port is n=
+ot connected to GPIO.
+> >>>
+> >>
+> >> OK answering myself here :).
+> >> Peripheral mode doesn't work on x15-bb as the USB driver (dwc3-omap)
+> >> doesn't set the mailbox correctly even when dwc3 node is set as otg =
+=3D "peripheral".
+> >>
+> >> Looks like we need to implement usb-gpio-extcon for x15 even though ID=
+ is hard coded.
+> >=20
+> > right, another option is to have dwc3-omap read the child's DTS to check
+> > dr_mode and hardcode things based on that.
+> >=20
+> I think that option is better as it doesn't require a GPIO line to be
+> reserved for ID when USB is not meant for dual-role use.
 
-Applied to for-next, thanks! Added a newline after declaring
-idle_disconnect_pd.
+yeah, let's implement that for 3.21.
 
+--=20
+balbi
 
---UBnjLfzoMQYIXCvq
+--RE3pQJLXZi4fr8Xo
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUwnM+AAoJEBQN5MwUoCm2neUP/RTavF6pw+x+kSTBTlYPOI/y
-RT0P1xmxvXjOkj/21e+2F6FsUHdgDWWvtyYvPr+60P6m123jxsaMLplSk3xDqv57
-FfiIdSr83Z3ja1kbR1U24WeiDN1j+/O8L9o0IRWxuwJjAz3rK+uLZU/bPF08kBMx
-FfUU1kNxZsL1Dag5DzTTrCw6dAQTAVl/SuhGddEPS2fG3YKQa+YOxmCDZejjs/Mj
-tTMz/gEnBzw5CcAN1+0IUPKFexCn3VqcIZnbQkcs9F6RB8vZKDtwRT1QEB5iGaj9
-dXW+AfAi5EuAtGRbLNw+GdCJkCfimqbNT4xLnSfajlPXenoExeiAq63bexuskS9Z
-GffuTsTTJQTdIH+SJIBJCEVYOgHWRv/xCneoF7neMhHQNqwfIbaswIrd3qWeB47O
-o5tz37PZsoGsov/qYeU6quYli15QQqf+SvuFV0t5oA9uxWI5rKcbRFZHox074EP5
-LUZh+4xxnySKLvZCAeCPt38Nl/OIB4zfyL4iZXpEyLpVnvMX/moPpbW/j8ZLmGma
-+Bnt9MN3MZ70MY7UR1vWvcIBH7bM9+gOvEfS4Z2sFp9LGVkpohGMChOH5tbwaKv1
-5JQyXFesn5ebUqB1i03S1oz33Gj6DqYdCst/F1qrFaOx8cLXyl6PQ5nEa8aC+Cxs
-6bXCJc3mZYWigI2x47SK
-=p2VC
+iQIcBAEBAgAGBQJUwnR9AAoJEIaOsuA1yqREP8IP/0hI6aYpSTIVwCTQpyuqueKx
+8EownKqdtaKISUfkkFv6BSLYXcuFBXi7UTCcFq9RCWmrWOxIt2uenWwnWOyh8KJA
+Xq4PSpap/xTafR6vcWn3f9WHFFkTXNlkp1mImDAF4+7MC+NZkhSPtUWDjbkWNyHE
+A9NwGz2KUXfxIHq1KixgFtQll6RIyh0NMzN2cYOXl8ZlTuN4gkzGOCX0+5hv8sk7
+qiL+LbqQ/T1GA4849Cdlb42glkt5l9MJkUMO0MVYqhR3BPnPRKrv0K+FQ7C8B4zi
+OdXCL+Uj8Cx7+TNSyVBZj+c6GRG+tq3h7FoE4bhKVP1Mu86SVMCS7FByVyNlbQCe
+ES6XlnRvgs+XACqRvbYxsjm8BrZwzUQ9XqdxTPiQdAOkuigsMZwZmdIQCaJgFGbQ
+UUqtSVJCj9jU+6030aiQjLQuLFjzH2iq7WOCPRW2QDmjYJ/oYtsttrgAk2i7dunp
+Na2/O2QETwDGBiU4Vyr7jmdAKwW04BFBmI4qBmxPSCsQ3AfSbYeGxIKCQz1iw6t5
+t1Ve9XZkoDBC3JexjLFvt0zdtmQCdyofIT95rj5o9Q3mRGqKrySWeIp1+qPnY0r3
+6egqwcGT1mNJ4golT2J3rwIjHkCbWz2JAWsCuF1u/1ooVVCy5Rcd18OiYGAV7a1+
+5ZktkvLmy8poYrixJM60
+=/1ku
 -----END PGP SIGNATURE-----
 
---UBnjLfzoMQYIXCvq--
+--RE3pQJLXZi4fr8Xo--
