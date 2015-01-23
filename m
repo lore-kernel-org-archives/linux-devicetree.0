@@ -1,65 +1,56 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v4 3/4] arm64:thunder: Add initial dts for Cavium's
- Thunder SoC in 2 Node topology.
-Date: Fri, 23 Jan 2015 18:07:15 +0530
-Message-ID: <CAFpQJXUvux+b9hYx_ZY-1hor0HRFFgh=e4vCYyJiDHrDC9Y=tQ@mail.gmail.com>
-References: <1421924755-26029-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1421924755-26029-4-git-send-email-gkulkarni@caviumnetworks.com>
-	<2882934.brFyhkGPyE@wuerfel>
-	<1885509.Z0Gm3e3FlX@wuerfel>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
+Date: Fri, 23 Jan 2015 18:23:03 +0530
+Message-ID: <CAKohpokdKby1_aUDTUDkNkYj3C9F83Hn--w7TS=Y-UE1ZdnW6w@mail.gmail.com>
+References: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar@linaro.org>
+	<1422013154.29475.11.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1885509.Z0Gm3e3FlX@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1422013154.29475.11.camel@pengutronix.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Mike Turquette <mike.turquette@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Thomas Abraham <ta.omasab@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 23 January 2015 at 17:09, Lucas Stach <l.stach@pengutronix.de> wrote:
+> Am Freitag, den 23.01.2015, 16:14 +0530 schrieb Viresh Kumar:
+>> I haven't incorporated the comments given by Mark Brown as I had some doubts.
+>> @broonie: Is this what you wanted to mention earlier ? : http://pastebin.com/1RZTccmm
+>>
+>
+> I think we should work this out for the new bindings, as
+> voltage-tolerance is a completely bogus value.
 
-On Thu, Jan 22, 2015 at 11:56 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 22 January 2015 17:47:13 Arnd Bergmann wrote:
->>
->> This seems wrong still: The clusters and cores do not have unique
->> numbers. I believe the code will not work correctly, and it won't
->> be compliant with the binding from patch 2.
->>
->> I think the right way here would be to use
->>
->>         arm,associativity = <0 2 47>;
->>
->> for cpu@20f, and
->>
->>         arm,associativity = <1 3 48>;
->>
->> for cpu@10000. Your previous version used the numbers from
->> the reg property, which should be fine as well if that helps:
->>
->>
->>         arm,associativity = <0x0 0x200 0x20f>;
->>
->>         arm,associativity = <0x10000 0x10000 0x10000>;
->>
->> which should have the same effect as above, as long as the code
->> can handle the numbers not being consecutive.
->>
->>
+Yeah, that's what I was saying. I just wanted to confirm that I understood
+it clearly. And so didn't made the changes here.
+
+>> +  - opp-microvolt: voltage in micro Volts
 >
-> Upon further consideration, I think your patch is correct after
-> all, but let me check again on PowerPC machines.
-i have removed, board id which was in previous patch, to keep the
-associativity aligned to mpidr, ie. socket,cluster id and core id.
-both previous and current mappings holds good for our design.
-our topology is 2 sockets(aff2=0and 1) , each having 3
-clusters(aff1=0to2)and each cluster having 16 cores(aff0:0to15)
-in associativity property, for our case, only first id(socket id) is
-mapped to numa, others are mentioned only to describe the topology.
+> Each OPP voltage should be defined by the triplet of minimum,
+> nominal/typical, maximum. This lets you specify exact tolerances in each
+> direction and should cover most use-cases.
 >
->         Arnd
-thanks
-Ganapat
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> IMHO it would make sense to just define opp-microvolt as an array of
+> those 3 values, so the DT doesn't get bloated with a lot more
+> properties.
+>
+> A typical value for a CPU could then look like this:
+> opp-microvolt = <800000 850000 1100000>
+>
+> For devices without any tolerance you can just specify the same value
+> three times and be done with it:
+> opp-microvolt = <900000 900000 900000>
+
+Ok.
+
+>> +  Optional properties:
+>> +  - turbo-mode: Marks the volt-freq pair as turbo pair.
+>> +  - status: Marks the node enabled/disabled.
+>> +  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
+>
+> Please let's drop this.
+
+Yes, I did dropped it in the pastebin link I gave above.
+
+Thanks again for your feedback.
