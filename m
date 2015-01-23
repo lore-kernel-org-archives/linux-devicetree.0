@@ -1,82 +1,177 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
-Date: Fri, 23 Jan 2015 11:52:06 +0000
-Message-ID: <20150123115206.GT21293@sirena.org.uk>
-References: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar@linaro.org>
- <1422013154.29475.11.camel@pengutronix.de>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Add initial device tree support for Tegra132
+Date: Fri, 23 Jan 2015 13:03:57 +0100
+Message-ID: <20150123120355.GA15126@ulmo.nvidia.com>
+References: <alpine.DEB.2.02.1501161139180.9776@utopia.booyaka.com>
+ <20150121161313.GI5044@leverpostej>
+ <alpine.DEB.2.02.1501231038130.5450@utopia.booyaka.com>
+ <20150123114423.GG23493@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GGxZz/e2pmGePzrA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1422013154.29475.11.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, Sudeep.Holla-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+In-Reply-To: <20150123114423.GG23493@leverpostej>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---GGxZz/e2pmGePzrA
+--dDRMvlgZJXvWKvBx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 23, 2015 at 12:39:14PM +0100, Lucas Stach wrote:
+On Fri, Jan 23, 2015 at 11:44:24AM +0000, Mark Rutland wrote:
+> On Fri, Jan 23, 2015 at 11:31:24AM +0000, Paul Walmsley wrote:
+> > On Wed, 21 Jan 2015, Mark Rutland wrote:
+> > > On Fri, Jan 16, 2015 at 11:45:29AM +0000, Paul Walmsley wrote:
+[...]
+> > > > +
+> > > > +               clocks =3D <&tegra_car TEGRA124_CLK_PCIE>,
+> > > > +                        <&tegra_car TEGRA124_CLK_AFI>,
+> > > > +                        <&tegra_car TEGRA124_CLK_PLL_E>,
+> > > > +                        <&tegra_car TEGRA124_CLK_CML0>;
+> > > > +               clock-names =3D "pex", "afi", "pll_e", "cml";
+> > > > +               resets =3D <&tegra_car 70>,
+> > > > +                        <&tegra_car 72>,
+> > > > +                        <&tegra_car 74>;
+> > > > +               reset-names =3D "pex", "afi", "pcie_x";
+> > > > +               status =3D "disabled";
+> > > > +
+> > > > +               phys =3D <&xusb_padctl TEGRA_XUSB_PADCTL_PCIE>;
+> > > > +               phy-names =3D "pcie";
+> > > > +
+> > > > +               pci@1,0 {
+> > > > +                       device_type =3D "pci";
+> > > > +                       assigned-addresses =3D <0x82000800 0 0x0100=
+0000 0 0x1000>;
+> > > > +                       reg =3D <0x000800 0 0 0 0>;
+> > > > +                       status =3D "disabled";
+> > > > +
+> > > > +                       #address-cells =3D <3>;
+> > > > +                       #size-cells =3D <2>;
+> > > > +                       ranges;
+> > >
+> > > I'm not sure why these three properties are here. Surely this is a
+> > > separate address space (so isn't ranges invalid?), and do we define a=
+ny
+> > > sub-nodes anywhere?
+> >=20
+> > Hmm not sure.  This was originally copied from
+> > arch/arm/boot/dts/tegra124.dtsi.  Will plan to drop them for now, and t=
+hen
+> > if the properties (or ones like them) turn out to be needed in the futu=
+re,
+> > someone else can deal with it :-)
+>=20
+> That sounds sane to me.
 
-> > +  Required properties:
-> > +  - opp-khz: Frequency in kHz
-> > +  - opp-microvolt: voltage in micro Volts
+This follows the bindings defined almost two years ago. There was a lot
+of discussion back then and this is what we agreed upon. #address-cells
+and #size-cells are needed as per the PCI device tree bindings and the
+ranges property needed because the PCIe root ports translate addresses
+between the host bridge and the PCI endpoint devices.
 
-> Each OPP voltage should be defined by the triplet of minimum,
-> nominal/typical, maximum. This lets you specify exact tolerances in each
-> direction and should cover most use-cases.
+> > > > +       host1x@0,50000000 {
+> > > > +               compatible =3D "nvidia,tegra132-host1x", "nvidia,te=
+gra124-host1x", "simple-bus";
+> > >
+> > > Regarding simple-bus, are the sub-nodes usable if this didn't probe as
+> > > "nvidia,tegra124-host1x" or "nvidia,tegra132-host1x"?
+> > > Do the subnodes require anything from this node?
+> > >
+> > > It looks like we expect/require the host1x node to be probed and
+> > > initialised before we probe the children. Which would imply the
+> > > simple-bus annotation is wrong.
+> >=20
+> > Haven't tried booting with just simple-bus here.  I believe these devic=
+es
+> > are accessible without the involvement of host1x.  In other words, host=
+1x
+> > is not a bus; I believe it might be most accurately described as a type=
+ of
+> > DMA controller.  So in theory it should be possible for the CPU complex=
+ to
+> > read and write to these devices directly without the involvement of
+> > host1x, although I believe NVIDIA discourages this.
+> >=20
+> > Under the theory that DT data should be hardware-specific, not
+> > software-specific, in an ideal world I think we would list these devices
+> > outside the embrace of the host1x node.  However the existing Tegra124 =
+DT
+> > file listed them together, and I am unsure whether that is required for
+> > the host1x code to function correctly.
+> >
+> > Arto may be able to comment further.
+>=20
+> Hmm, It would be good to hear from someone familar with that then. I'll
+> wait for Arto.
 
-> IMHO it would make sense to just define opp-microvolt as an array of
-> those 3 values, so the DT doesn't get bloated with a lot more
-> properties.
+We actually rely on the parent-child relationship in drivers, so we
+can't just go and reorganize things at will. This is documented in the
+existing binding for host1x, which again, was agreed upon a long time
+ago.
 
-> A typical value for a CPU could then look like this:
-> opp-microvolt = <800000 850000 1100000>
+As for the simple-bus compatible, I think that was used way back to make
+sure of_platform_populate() gets called. I suppose we could drop it and
+call of_platform_populate() from the driver if its not there. The reason
+why we never considered cases where it would probe as simple-bus is that
+it was deemed unreasonable for a driver to bind to simple-bus.
 
-I tend to agree that this is clearer.  It might be nice to have variants
-for specifying directly as a percentage but I don't think it's really
-worth the complexity.
+> > > > +       cpus {
+> > > > +               #address-cells =3D <2>;
+> > > > +               #size-cells =3D <0>;
+> > > > +
+> > > > +               cpu@0 {
+> > > > +                       device_type =3D "cpu";
+> > > > +                       compatible =3D "nvidia,denver", "arm,armv8";
+> > > > +                       reg =3D <0x0 0x0>;
+> > > > +                       enable-method =3D "spin-table";
+> > > > +                       cpu-release-addr =3D <0x0 0x80000008>;
+> > > > +               };
+> > > > +
+> > > > +               cpu@1 {
+> > > > +                       device_type =3D "cpu";
+> > > > +                       compatible =3D "nvidia,denver", "arm,armv8";
+> > > > +                       reg =3D <0x0 0x1>;
+> > > > +                       enable-method =3D "spin-table";
+> > > > +                       cpu-release-addr =3D <0x0 0x80000008>;
+> > > > +               };
+> > > > +       };
+> > >
+> > > It would be nice if this were near the top, as in other dts files.
+> >=20
+> > OK will move.
 
-> For devices without any tolerance you can just specify the same value
-> three times and be done with it:
-> opp-microvolt = <900000 900000 900000>
+Actually this follows the rules that we've been following with every DTS
+so far. Nodes with a unit address go first, sorted by unit address. They
+are followed by nodes without a unit address, sorted alphabetically.
 
-If we change the binding to be typ/min/max rather than min/typ/max then
-we could also do this by allowing either one or three values to be
-specified.  That might be more worth the complexity especially given...
+I'd prefer keeping it this way for consistency across Tegra DTS files.
 
-> > +  Optional properties:
-> > +  - turbo-mode: Marks the volt-freq pair as turbo pair.
-> > +  - status: Marks the node enabled/disabled.
-> > +  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
+Thierry
 
-> Please let's drop this.
-
-DT bindings are supposed to be stable, this means the code should accept
-old bindings and they should be documented as deprecated.
-
---GGxZz/e2pmGePzrA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJUwjXlAAoJECTWi3JdVIfQzVUH/39T4b5ZKuAE1Z45bJIZjXCz
-8cbvKWEmF903edzvxMGsy+5ygUKM5ACfvt7CJ6ZQ3t5qlwy3KNqUgKUgGGWaVDmw
-n4gFaS/1QBu3328Qbd3+jZTtQuIaAZJEhF6ocZ/cfAZbg9VXEPxFVF0gh4hDstN2
-cyoI6hbdjU7yZCCkM9ML5EFOohplymN0dFF3quOQ3MtVPP0B2b88qtp6SdYDC9HL
-l2eM2e/GTCOR/xK/32HTCasyhgmSlXyDJ/rk0eqRoVceNsZ0aZwSO6SK1ZxABU8Z
-Qi0XtfHkWVt17NMxVc2XlUEUTcl3PkO+wKBrNA4awBkDzERnJCTm/dqVWB6YpnU=
-=NY1Q
+iQIcBAEBAgAGBQJUwjirAAoJEN0jrNd/PrOhEkAQAJNIPfQQg7PMdFwYB9HDc4f1
+Kjlxp8XOBRAiJ9FRqq7cXDjHMIEriidrGFEPcUUn5P2DV17rMdZecXyI6XgyEary
+7NX8koYlg4AmVwk7ZBa6QMhRO91gjgVi55m1MVIm9R5kETt1ltyjhmLgjcH8TD+B
+QqFY9aTyVmKmglqkFdKPmFIOyc3LXTi74m/J4QO8YbPfpNuLnrWhuJVd0xPmQuaH
+u1YDxLbFcG9ZDk05O3fvvCea2X26j8JJbJhhs1f2dFMLxbrCitUUT24/tCHAQiWT
+Zn4U3+ylCmZPzpC/b+SCcPf0TMbb4WVjbfySVwok/GESv9rU9BrIDrpVOmRIcGrV
+pwLFcVjVsHU6erW97OMpg3fdAH1Yimm80AKyclx4S0VsB/Ox8CfmbkuQT1iHMNar
+hoqQgrCJf/j+K+RmHahShtFfzhaY8Bposm7aELAYnfuYcbS3UkFRmqi7jJ/o56EU
+o7fKhBWZqZk3tRniiUy6on+9T5424Kehv5oh8/2073lxZVq29XaNC3BubTNWVFr0
+QIYKLRrUUI6A7NjTmoEHP6U+b9o5kd9YwTJpURCCq/3741QB93wOFyKExnr8IF4G
+dJqJxneFiMKGos+nw08T11CAkVsCAnH16ZK2wEvqYmF41HFIQ/Dtt6dU6aPO7HM9
+dU6DNqVFIrka1xR4hB38
+=M8mX
 -----END PGP SIGNATURE-----
 
---GGxZz/e2pmGePzrA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--dDRMvlgZJXvWKvBx--
