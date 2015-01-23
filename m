@@ -1,86 +1,70 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Empty node & property flag accessors when !OF
-Date: Thu, 22 Jan 2015 17:13:51 -0600
-Message-ID: <CAL_JsqKxtJH=JyruyuMLXSFfTLdswOLa=AfGEbROsSSOhLLDkg@mail.gmail.com>
-References: <1421859957-24457-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Inha Song <ideal.song@samsung.com>
+Subject: Re: [alsa-devel] [PATCH v3 3/4] ARM: dts: set clock out parent to
+ XUSBXTI
+Date: Fri, 23 Jan 2015 09:49:16 +0900
+Message-ID: <20150123094916.32beb50f@songinha-Samsung-DeskTop-System>
+References: <1421925482-15861-1-git-send-email-ideal.song@samsung.com>
+ <1421925482-15861-4-git-send-email-ideal.song@samsung.com>
+ <54C0EC23.9070209@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421859957-24457-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <54C0EC23.9070209@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: alsa-devel@alsa-project.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sbkim73@samsung.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com, tiwai@suse.de, broonie@kernel.org, kgene@kernel.org, galak@codeaurora.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-+Wolfram
+Hi,
+Thanks for your comment.
 
-On Wed, Jan 21, 2015 at 11:05 AM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Introduce empty node and property flag accessors when CONFIG_OF is not
-> defined.
-> This allows us to use them without ifdef'ing them in places where it
-> makes sense to do so.
->
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+On Thu, 22 Jan 2015 13:25:07 +0100
+Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> On 22/01/15 12:18, Inha Song wrote:
+> > This patch set clock out parent to XUSBXTI.
+> > 
+> > Signed-off-by: Inha Song <ideal.song@samsung.com>
+> > ---
+> >  arch/arm/boot/dts/exynos4.dtsi | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> > index b8168f1..020bbaf 100644
+> > --- a/arch/arm/boot/dts/exynos4.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4.dtsi
+> > @@ -141,6 +141,8 @@
+> >  	pmu_system_controller: system-controller@10020000 {
+> >  		compatible = "samsung,exynos4210-pmu", "syscon";
+> >  		reg = <0x10020000 0x4000>;
+> > +		assigned-clocks = <&pmu_system_controller 0>;
+> > +		assigned-clock-parents =  <&clock CLK_XUSBXTI>;
+> >  	};
+> 
+> Looks good, except it needs to be done only for the Trats2 board, i.e.
+> the PMU device node including these properties should be added to
+> exynos4412-trats2.dts.  I think it's fine to make it a one patch including
+> all dts changes.
 
-I've asked Wolfram to apply. While not a fix itself, this is needed
-for an I2C related fix for 3.19.
+Opps! I understand. I will move this node to exynos4412-trats2.dts.
 
-Rob
+&pmu_system_controller {
+   assigned-clocks = <&pmu_system_controller 0>;
+   assigned-clock-parents =  <&clock CLK_XUSBXTI>;
+};
 
-> ---
->  include/linux/of.h | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index dfde07e..7ede449 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -616,6 +616,38 @@ static inline const char *of_prop_next_string(struct property *prop,
->         return NULL;
->  }
->
-> +static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int of_node_test_and_set_flag(struct device_node *n,
-> +                                           unsigned long flag)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline void of_node_set_flag(struct device_node *n, unsigned long flag)
-> +{
-> +}
-> +
-> +static inline void of_node_clear_flag(struct device_node *n, unsigned long flag)
-> +{
-> +}
-> +
-> +static inline int of_property_check_flag(struct property *p, unsigned long flag)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline void of_property_set_flag(struct property *p, unsigned long flag)
-> +{
-> +}
-> +
-> +static inline void of_property_clear_flag(struct property *p, unsigned long flag)
-> +{
-> +}
-> +
->  #define of_match_ptr(_ptr)     NULL
->  #define of_match_node(_matches, _node) NULL
->  #endif /* CONFIG_OF */
-> --
-> 1.7.12
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+
+Best Regards,
+Inha Song.
+
+> 
+> 
+> -- 
+> Regards,
+> Sylwester
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
