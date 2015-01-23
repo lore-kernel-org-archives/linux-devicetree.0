@@ -1,156 +1,99 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] Documentation: Add device tree bindings document for
- max77843
-Date: Fri, 23 Jan 2015 15:25:07 +0900
-Message-ID: <54C1E943.2020800@samsung.com>
-References: <1421989367-32721-1-git-send-email-jaewon02.kim@samsung.com>
- <1421989367-32721-7-git-send-email-jaewon02.kim@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v10 0/6] Add Skyworks SKY81452 device drivers
+Date: Fri, 23 Jan 2015 15:28:29 +0900
+Message-ID: <1421994515-3070-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1421989367-32721-7-git-send-email-jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, matti.vaittinen-OYasijW0DpE@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaewon,
+From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 
-On 01/23/2015 02:02 PM, Jaewon Kim wrote:
-> Add document describing device tree bindings for max77843 MFD.
-> Drivers: MFD core, regulator, extcon, charger and fuelgauge.
-> 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/max77843.txt |   87 ++++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77843.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77843.txt b/Documentation/devicetree/bindings/mfd/max77843.txt
-> new file mode 100644
-> index 0000000..6895604
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/max77843.txt
-> @@ -0,0 +1,87 @@
-> +Maxim MAX77843 multi-function device
-> +
-> +MAX77843 is a Multi-Function Device with the following submodules:
-> +- PMIC	  : 2 SAFEOUT LDOs for USB device
-> +- CHARGER : Li+ battery charger with Fuel Gauge
-> +- MUIC	  : Micro USB Interface Circuit
-> +- HAPTIC  : motor control driver for haptics
+This patch set includes regulator and backlight driver for SKY81452.
+Also it includes documents for device tree and module.
+sky81452-regulator was already applied. So this series doesn't
+include it.
 
-HAPTIC ?
+v10:
+Removed trivial get_brightness implementations for sky81452-backlight
 
-> +- LED	  : 4 channel RGBW LED
+v9:
+Removed the change to remove MODULE_VERSION() for sky81452-regulator
 
-LED ?
+v8:
+Renamed property names for backlight with vendor prefix
+Modified gpio-enable property to generic property for GPIO
+Made up the example for backlight DT
+Changed the DT parsing of regulator using regulator_node and of_match
 
-This patchset don't include andy haptic/led drivers.
-I think it is un-necessary information.
+v7:
+Modified licensing text to GPLv2
+Splitted Kconfig renaming from DT patch
 
-When you implement the haptic/led driver, you will add the information
-for haptic/led driver.
+v6:
+Added new line character at the end of line of dev_err()
 
-> +
-> +It is interfaced to host controller using I2C.
-> +
-> +Required properties:
-> +- compatible : Must be "maxim,max77843".
-> +- reg : I2C slave address of PMIC block.
-> +- interrupts : I2C line for main SoCs.
-> +- interrupt-parent : The parent of interrupt controller.
-> +
-> +Optional properties:
-> +- regulators : The regulators of max77843 have to be instantiated under subnode
-> +	named "regulators" using the following format.
-> +
-> +	[*]refer : Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +	regulators {
-> +		SAFEOUT {
-> +			regulator-name = "SAFEOUT";
-> +		};
-> +	}
-> +
-> +	List of valid regulator names:
-> +	- SAFEOUT1, SAFEOUT2, CHARGER.
-> +
-> +- max77843-muic : This properties used by extcon consumers.
-> +	Required properties:
-> +		- compatible : Must be "maxim,max77842-muic".
-> +
-> +- max77843-charger : There battery charger of MAX77843 have to be instantiated
-> +	under sub-node named "max77843-charger" using the following format.
-> +	Required properties:
-> +		- compatible : Must be "maxim,max77842-charger".
-> +		- maxim,fast-charge-uamp : Fast charge current levels are
-> +			100 mA to 3150 mA programmed by I2C per 100 mA.
-> +		- maxim,top-off-uamp : Top off current threshold levels are
-> +			125 mA to 650 mA programmed by I2C per 75 mA.
-> +		- maxim,input-uamp-limit : Input current limit levels are
-> +			100 mA to 3533 mA programmed by I2C per 33 mA.
-> +- max77843-fuelgauge : There fuelgauge of MAX77843 have to be instantiated
-> +	under sub-node named "max77843-fuelgauge" using the following format.
-> +	Required properties:
-> +		- compatible : Must be "maxim,max77842-fuelgauge".
-> +
-> +Example:
-> +	max77843@66 {
-> +		compatible = "samsung,max77843";
-> +		reg = <0x66>;
-> +		interrupt-parent = <&gpa1>;
-> +		interrupts = <5 2>;
-> +
-> +		regulators {
-> +			SAFEOUT1 {
-> +				regulator-name = "SAFEOUT1";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <4950000>;
-> +			};
-> +			SAFEOUT2 {
-> +				regulator-name = "SAFEOUT2";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <4950000>;
-> +			};
+v5:
+Changed DT for regulator : 'lout' node should be defined under 'regulator'
+Removed compatible string from sky81452-regulator driver
+Modified sky81452-regulator to return EINVAL when of_node is NULL
+Move sky81452-backlight.h to include/linux/platform_data
 
-As I knew, max77843 regulator driver supprot 'CHARGER' regulator.
-I think you have to add the 'CHARGER' dt node for regulators.
+v4:
+Removed MODULE_VERSION()
+Modified license to GPLv2
+Removed calling to backlight_device_unregister() in sky81452-backlight
 
+v3:
+Cleaned-up DBG messages
+Cleaned-up DT
+Fixed the backlight name from 'sky81452-bl' to 'sky81452-backlight'
+Assigned mfd_cell.of_compatible for binding device node
+Modified error messages
+Modified sky81452-regulator to return ENODATA when of_node is NULL
 
-> +		};
-> +
-> +		max77843-muic {
-> +			compatible = "maxim,max77843-muic";
-> +		};
-> +
-> +		max77843-charger {
-> +			compatible = "maxim,max77843-charger";
-> +			maxim,fast-charge-uamp = <450000>;
-> +			maxim,top-off-uamp = <125000>;
-> +			maxim,input-uamp-limit = <500000>;
-> +		};
-> +
-> +		max77843-fuelgauge {
-> +			compatible = "maxim,max77843-fuelgauge";
-> +		};
-> +
-> +	};
-> 
+v2:
+Split the patches for each sub-system
+Added 'reg' attribute for I2C address in device tree documents
+Added 'compatible' attribute in child drivers
+Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
+Changed the dependency from I2C=y to I2C, for CONFIG_MFD_SKY81452
+Added message for exception or errors.
+Added vendor prefix for Skyworks Solutions, Inc.
+Add SKY81452 to the Trivial Devices list
 
-Thanks,
-Chanwoo Choi
+Gyungoh Yoo (6):
+  mfd: Add support for Skyworks SKY81452 driver
+  backlight: Add support Skyworks SKY81452 backlight driver
+  devicetree: mfd: Add new SKY81452 mfd binding
+  devicetree: backlight: Add new SKY81452 backlight binding
+  devicetree: Add vendor prefix for Skyworks Solutions, Inc.
+  devicetree: i2c: Add SKY81452 to the Trivial Devices list
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ Documentation/devicetree/bindings/mfd/sky81452.txt |  36 +++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ .../video/backlight/sky81452-backlight.txt         |  29 ++
+ drivers/mfd/Kconfig                                |  12 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/sky81452.c                             | 108 +++++++
+ drivers/video/backlight/Kconfig                    |  10 +
+ drivers/video/backlight/Makefile                   |   1 +
+ drivers/video/backlight/sky81452-backlight.c       | 334 +++++++++++++++++++++
+ include/linux/mfd/sky81452.h                       |  31 ++
+ include/linux/platform_data/sky81452-backlight.h   |  46 +++
+ 12 files changed, 610 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.txt
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+ create mode 100644 drivers/mfd/sky81452.c
+ create mode 100644 drivers/video/backlight/sky81452-backlight.c
+ create mode 100644 include/linux/mfd/sky81452.h
+ create mode 100644 include/linux/platform_data/sky81452-backlight.h
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
