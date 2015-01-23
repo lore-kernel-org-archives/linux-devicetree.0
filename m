@@ -1,129 +1,116 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Add initial device tree support for Tegra132
-Date: Fri, 23 Jan 2015 10:47:03 -0700
-Message-ID: <54C28917.1070809@wwwdotorg.org>
-References: <alpine.DEB.2.02.1501161139180.9776@utopia.booyaka.com> <20150121161313.GI5044@leverpostej> <alpine.DEB.2.02.1501231038130.5450@utopia.booyaka.com> <54C27D6F.9000006@wwwdotorg.org> <20150123173449.GB10424@leverpostej>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v3 2/4] of: move of_dma_configure() to device,c to help
+ re-use
+Date: Fri, 23 Jan 2015 13:19:08 -0500
+Message-ID: <54C2909C.2070705@ti.com>
+References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com> <3861625.CJ6m15sZMh@wuerfel> <54AED9EC.1020703@ti.com> <2083932.v1GzgAfexK@wuerfel> <CAL_JsqLG2OQL2TMMrXi4U0PU1vNzgodUehoZwpds5z8JKsB1jQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150123173449.GB10424@leverpostej>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLG2OQL2TMMrXi4U0PU1vNzgodUehoZwpds5z8JKsB1jQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 01/23/2015 10:34 AM, Mark Rutland wrote:
-> On Fri, Jan 23, 2015 at 04:57:19PM +0000, Stephen Warren wrote:
->> On 01/23/2015 04:31 AM, Paul Walmsley wrote:
->>> + Arto, Terje for comments on the host1x section
->>> + Stephen Warren for comments on the serial DT data
->>
->>> On Wed, 21 Jan 2015, Mark Rutland wrote:
+On 01/09/2015 10:34 AM, Rob Herring wrote:
+> On Thu, Jan 8, 2015 at 4:24 PM, Arnd Bergmann<arnd@arndb.de>  wrote:
+>> On Thursday 08 January 2015 14:26:36 Murali Karicheri wrote:
+>>> On 01/08/2015 03:40 AM, Arnd Bergmann wrote:
+>>>> On Wednesday 07 January 2015 17:37:56 Rob Herring wrote:
+>>>>> On Wed, Jan 7, 2015 at 12:49 PM, Murali Karicheri<m-karicheri2@ti.com>   wrote:
+>>>>>
+>>>>>> +       ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
+>>>>>> +       if (ret<   0) {
+>>>>>> +               dma_addr = offset = 0;
+>>>>>> +               size = dev->coherent_dma_mask + 1;
+>>>>>
+>>>>> If coherent_dma_mask is DMA_BIT_MASK(64), then you will overflow and
+>>>>> have a size of 0. There may also be a problem when the mask is only
+>>>>> 32-bit type.
+>>>>
+>>>> The mask is always a 64-bit type, it's not optional. But you are right,
+>>>> the 64-bit mask case is broken, so I guess we have to fix it differently
+>>>> by always passing the smaller value into arch_setup_dma_ops and
+>>>> adapting that function instead.
+>>> Arnd,
 >>>
->>>> As mentioned in my reply to the DT list patch [1], there are a couple of
->>>> bits I'd like to see cleaned up first, but in the meantime I have some
->>>> comments from my first pass of the dtsi below. Some of these may equally
->>>> apply to existing dts(i) files.
->>>>
->>>> I see a few undocumented compatible strings (at least when comparing
->>>> against mainline). If there are other series or trees I should be
->>>> looking at, any pointers would be appreciated. If not, documentation
->>>> updates would be nice (checkpatch should complain otherwise).
+>>> What is the smaller value you are referring to in the below code?
+>>> between *dev->dma_mask and size from DT? But overflow can still happen
+>>> when size is to be calculated in arch_setup_dma_ops() for Non DT case or
+>>> when DT size is configured to be equivalent of DMA_BIT_MASK(64) + 1. Can
+>>> we discuss the code change you have in mind when you get a chance?
 >>
->>>> On Fri, Jan 16, 2015 at 11:45:29AM +0000, Paul Walmsley wrote:
->>>>>
->>>>> Add an initial device tree file for the Tegra132 SoC.  The DT file is
->>>>> based on arch/arm/boot/dts/tegra124.dtsi and
->>>>> arch/arm/boot/dts/tegra114.dtsi, with the following significant
->>>>> changes:
->>>>>
->>>>> - Tegra132 uses a Denver CPU cluster rather than an ARMv7 CPU cluster
->>>>> - Devices are arranged by bus, rather than in a flat topology
->>>>> - No polling delays have been defined for the thermal zones.  I don't
->>>>>     believe that this is a property of the SoC hardware, but rather of a
->>>>>     given use-case.
->>
->>>>> diff --git a/arch/arm64/boot/dts/tegra/tegra132.dtsi b/arch/arm64/boot/dts/tegra/tegra132.dtsi
->>>>> +               /*
->>>>> +                * There are two serial drivers: an 8250 based simple
->>>>> +                * serial driver and an APB DMA based serial driver
->>>>> +                * for higher baudrate and performance. To enable the
->>>>> +                * 8250 based driver, the compatible string is
->>>>> +                * "nvidia,tegra132-uart", "nvidia,tegra124-uart",
->>>>> +                * "nvidia,tegra20-uart" and to enable the APB DMA
->>>>> +                * based serial driver, the compatible string is
->>>>> +                * "nvidia,tegra132-hsuart", "nvidia,tegra124-hsuart",
->>>>> +                * "nvidia,tegra30-hsuart".
->>>>> +                */
->>>>
->>>> Is there any reason to continue with this split?
->>>>
->>>> Surely if the only difference is DMA, the presence of dmas and dma-names
->>>> should be sufficient to get the driver to do the right thing, and if you
->>>> need to disable DMA for debugging that could be a command-line option.
->>
->> I vaguely recall asking for the DMA support to be integrated into the
->> regular 8250 driver instead when the separate DMA-capable driver was
->> first added. I /think/ there was resistance to this because adding lots
->> of different SoC-specific ways to do DMA into the existing 8250 driver
->> would complicate it even more, and hence be unmaintainable.
->>
->> I assume that reasoning is still valid.
->>
->> Perhaps what we need is more fine-grained driver selection, not just
->> based on compatible value. Something like:
->>
->> if compatible == nvidia,tegra20-uart:
->>     if node.has_prop("enable-dma"):
->>       driver = Tegra-specfic DMA capable UART driver
->>     else:
->>       driver = Common 8250 driver
+>> I meant changing every function that the size values gets passed into
+>> to take a mask like 0xffffffff instead of a size like 0x100000000, so
+>> we can represent a 64-bit capable bus correctly.
 >
-> Surely we should assume that if the DMAs are listed (and not disabled)
-> they are usable?
-
-I would assume so, yes.
-
- > I'm not sure I see the point in an additional property
-> to force Linux-internal driver selection in this way.
-
-I think it comes down to whether you want to use DMA for that UART or 
-not. I don't recall the exact reason why this might be important. 
-Perhaps it's one/more of:
-
-- The Tegra-specific DMA-capable driver can't be used for early debug 
-but the core 8250 driver can. I don't know if this is true though.
-
-- There are a limited number of DMA channels on Tegra. If all ports 
-blindly used DMA simply because the dmas property was included, then 
-we'd risk running out of DMA channels for cases where it absolutely had 
-to be used; e.g. a low-volume debug console might prevent a high-volume 
-MODEM or BT UART from using DMA if they probed in the "wrong" order.
-
-Laxman might be able to shed more light on this.
-
-> What happens if we have a driver for a particular string, but fail to
-> probe? Can we fall back to a more generic driver?
-
-At least in this case, I'd assume so, yes.
-
->> Is that something that of_serial.c could/should be enhanced to do? That
->> said, the whole reasoning behind separate compatible properties before
->> was that compatible is supposed to "drive" driver selection. At least,
->> that's what I was told then.
+> Or you could special case a size of 0 to mean all/max? I'm not sure if
+> we need to handle size=0 for other reasons beyond just wrong DT data.
 >
-> The compatible string is meant to describe the programming interface the
-> device is compatible with. The kernel should then choose the most
-> appropriate driver it knows can handle that HW programming interface.
+>> This means we also need to adapt the value returned from of_dma_get_range.
+>> A minor complication here is that the DT properties sometimes already
+>> contain the mask value, in particular when we want to represent a
+>> full mapping like
+>>
+>>          bus {
+>>                  #address-cells =<1>;
+>>                  #size-cells =<1>;
+>>                  dma-ranges =<0 0 0xffffffff>; /* all 4 GB, DMA_BIT_MASK(32) */
 >
-> Considering it as a way to choose the driver is backwards. I'd expect
-> the device node to have both strings (with the DMA capable string first)
-> unless it really doesn't have any DMAs.
+> This is wrong though, right? The DT should be size. Certainly, this
+> could be a valid size, but that would not make the mask 0xfffffffe. We
+> would still want it to be 0xffffffff.
+>
+> We could do a fixup for these cases adding 1 if bit 0 is set (or not
+> subtracting 1 if we want the mask).
+>
+> Rob
+Arnd, Rob, et all,
 
-That's a subtly different interpretation of DT compatible usage than was 
-given (I think it was by Mitch Bradley???) when this driver was 
-introduced. In the conversation then, it was asserted that using 
-different compatible values to describe that SW should use a different 
-interface to the HW (non-DMA vs. DMA) was exactly in line with the 
-semantic concept of compatible.
+Do we have preference one way or other for the size format? If we need 
+to follow the mask format, all of the calling functions below and the 
+arm_iommu_create_mapping() has to change as well to use this changed format.
+
+drivers/gpu/drm/rockchip/rockchip_drm_drv.c:	mapping = 
+arm_iommu_create_mapping(&platform_bus_type, 0x00000000,
+drivers/gpu/drm/exynos/exynos_drm_iommu.c:	mapping = 
+arm_iommu_create_mapping(&platform_bus_type, priv->da_start,
+drivers/media/platform/omap3isp/isp.c:	mapping = 
+arm_iommu_create_mapping(&platform_bus_type, SZ_1G, SZ_2G);
+drivers/iommu/shmobile-iommu.c:		mapping = 
+arm_iommu_create_mapping(&platform_bus_type, 0,
+drivers/iommu/ipmmu-vmsa.c:		mapping = 
+arm_iommu_create_mapping(&platform_bus_type,
+
+So IMO, keeping current convention of size and taking care of exception 
+in DT handling is the right thing to do instead of changing all of the 
+above functions. i.e in of_dma_configure(), if DT provide a mask for 
+size (lsb set), we  will check that and add 1 to it. Only case in DTS 
+that I can see this usage is
+
+arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi:		dma-ranges = <0x80 0x0 
+0x80 0x0 0x7f 0xffffffff>;
+arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi:			dma-ranges = <0x43000000 
+0x80 0x0 0x80 0x0 0x7f 0xffffffff>;
+
+This logic should take care of setting the size to ox80_00000000 for 
+these cases. if dma_coherent_mask is set to max of u64, then this will 
+result in a zero size (both DT case and non DT case). So treat a size of 
+zero as error being overflow.
+
+Also arm_iommu_create_mapping() currently accept a size of type size_t 
+which means, this function expect the size to be max of 0xffffffff. So 
+in arm_setup_iommu_dma_ops(), we need to check if size if >0xffffffff 
+and return an error. If in future this function support u64 for size, 
+this check can be removed.
+
+I will update the series with this change and post it if we have an 
+agreement on this. Please repond.
+
+Thanks
+
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
