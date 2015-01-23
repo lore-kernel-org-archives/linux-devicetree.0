@@ -1,117 +1,104 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3/resend 3/4] drivers: bus: Add Simple Power-Managed Bus
- DT Bindings
-Date: Fri, 23 Jan 2015 15:18:11 +0100
-Message-ID: <CAMuHMdVC_BoKgSXytYtc9CnGdTPezc8BcJ_ZrDP=3ZN1Kf6bJA@mail.gmail.com>
-References: <1421919253-4784-1-git-send-email-geert+renesas@glider.be>
-	<7hvbjy30an.fsf@deeprootsystems.com>
-	<CAMuHMdUMcyXdgv+xdd8Zo67rYnfh6JaSWfr1H3c6NrQs=JsNLg@mail.gmail.com>
-	<2160255.41m7rrCYxI@wuerfel>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 2/7] mmc: sdhci-pxav3: Fix Armada 38x controller's
+ caps according to erratum ERR-7878951
+Date: Fri, 23 Jan 2015 15:18:47 +0100
+Message-ID: <54C25847.8030701@free-electrons.com>
+References: <1422010594-1735-1-git-send-email-gregory.clement@free-electrons.com>	<1422010594-1735-3-git-send-email-gregory.clement@free-electrons.com> <CAPv3WKe3BNLv1ODA1ZZ2ALWeEr2LrO0vZxi=mG3G+ObxSakeSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <2160255.41m7rrCYxI@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Olof Johansson <olof@lixom.net>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPv3WKe3BNLv1ODA1ZZ2ALWeEr2LrO0vZxi=mG3G+ObxSakeSA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Marcin Wojtas <mw@semihalf.com>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Marcin,
 
-On Fri, Jan 23, 2015 at 2:46 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 23 January 2015 09:56:51 Geert Uytterhoeven wrote:
->> >> diff --git a/Documentation/devicetree/bindings/bus/simple-pm-bus.txt b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
->> >> new file mode 100644
->> >> index 0000000000000000..d03abf7fd8e3997a
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
->> >> @@ -0,0 +1,52 @@
->> >> +Simple Power-Managed Bus
->> >> +========================
->> >> +
->> >> +A Simple Power-Managed Bus is a transparent bus that doesn't need a real
->> >> +driver, as it's typically initialized by the boot loader.
->> >> +
->> >> +However, its bus controller is part of a PM domain, or under the control of a
->> >> +functional clock.  Hence, the bus controller's PM domain and/or clock must be
->> >> +enabled for child devices connected to the bus (either on-SoC or externally)
->> >> +to function.
->> >> +
->> >> +
->> >> +Generic compatible values and properties
->> >> +----------------------------------------
->> >> +
->> >> +Required properties:
->> >> +  - compatible: Must be at least one of the vendor-specific compatible values
->> >> +             from a vendor-specific section below, and "simple-bus" as a
->> >> +             fallback.
->> >
->> > What happened to the idea of using something like "simple-pm-bus"?
+On 23/01/2015 12:33, Marcin Wojtas wrote:
+> Dear Gregory,
+> 
+> 
+>> @@ -118,8 +118,11 @@ static int mv_conf_mbus_windows(struct platform_device *pdev,
+>>         return 0;
+>>  }
 >>
->> I think that's a decision to make by the (successor of the) ePAPR committee.
->> At least it would be nice to get some feedback from the DT review team
->> about this.
+>> -static int armada_38x_quirks(struct sdhci_host *host)
+>> +static int armada_38x_quirks(struct platform_device *pdev,
+>> +                            struct sdhci_host *host)
+>>  {
+>> +       struct device_node *np = pdev->dev.of_node;
+>> +
+>>         host->quirks |= SDHCI_QUIRK_MISSING_CAPS;
+>>         /*
+>>          * According to erratum 'FE-2946959' both SDR50 and DDR50
+>> @@ -129,6 +132,20 @@ static int armada_38x_quirks(struct sdhci_host *host)
+>>          */
+>>         host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
+>>         host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_DDR50);
+>> +
+>> +       /*
+>> +        * According to erratum 'ERR-7878951' Armada 38x SDHCI
+>> +        * controller has different capabilities than the ones shown
+>> +        * in its registers
+>> +        */
+>> +       host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
+>> +       if (of_get_property(np, "no-1-8-v", NULL)) {
+>> +               host->caps &= ~SDHCI_CAN_VDD_180;
+>> +               host->mmc->caps &= ~MMC_CAP_1_8V_DDR;
+>> +       } else
+>> +               host->caps &= ~SDHCI_CAN_VDD_330;
+> 
+> In this "else" there is one thing missing
+> host->mmc->caps |= MMC_CAP_1_8V_DDR;
+> because it's not set by default, however it's not a must - please see
+> my remark below.
+> 
+>> +       host->caps1 &= ~(SDHCI_SUPPORT_SDR104 | SDHCI_USE_SDR50_TUNING);
+>> +
+>>         return 0;
+>>  }
 >>
->> If we go that road, the vendor-specific compatible value should still be
->> documented, else checkpatch will complain when encountering it in a DTS.
->> Then, should it become
+>> @@ -333,7 +350,7 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
+>>                 clk_prepare_enable(pxa->clk_core);
 >>
->>     compatible = "renesas,bsc-sh73a0", "renesas,bsc", "simple-pm-bus",
->> "simple-bus";
+>>         if (of_device_is_compatible(np, "marvell,armada-380-sdhci")) {
+>> -               ret = armada_38x_quirks(host);
+>> +               ret = armada_38x_quirks(pdev, host);
+>>                 if (ret < 0)
+>>                         goto err_quirks;
+>>                 ret = mv_conf_mbus_windows(pdev, mv_mbus_dram_info());
+>> @@ -341,9 +358,6 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
+>>                         goto err_mbus_win;
+>>         }
 >>
->> or should "simple-bus" just be added to of_default_bus_match_table[], so we
+>> -       /* enable 1/8V DDR capable */
+>> -       host->mmc->caps |= MMC_CAP_1_8V_DDR;
+>> -
+> 
+> Now, with this change MMC_CAP_1_8V_DDR is disabled for devices other
+> than Armada 38x, that use sdhci-pxav3. There are two options:
+> 1. Move those lines above the place where armada_38x_quirks is called
+> (IMO the easiest option - 'else' in this function would not need to be
+> supplemented, as I pointed above)
+> 2. Leave it "as is" here, but a condition below is needed (+
+> supplementation of 'else' in armada_38x_quirks)
+>  if (!of_device_is_compatible(np, "marvell,armada-380-sdhci"))
+> 
 
-Sorry, FTR, I meant "simple-pm-bus" here.
+I will take the first option.
 
->> can drop "simple-bus" from the list in the DTS:
->>
->>     compatible = "renesas,bsc-sh73a0", "renesas,bsc", "simple-pm-bus";
->
-> I was thinking of the reverse: drop "simple-bus" bus from the list here,
-> but not add "simple-pm-bus" to of_default_bus_match_table. This will
-> cause child devices to no longer be probed automatically, and you will
-> have to call of_platform_populate() from simple_pm_bus_probe(), after
-> pm_runtime_enable(). This seems like a cleaner model to me, for two
-> reasons:
->
-> - In the binding, claiming compatibility with "simple-bus" feels
->   wrong to me, because you have a bus that is not as simple as others
->
-> - The ordering between pm_runtime_enable() and the probing of the
->   child devices is guaranteed, which I think it is not with your
->   current code.
+A third version is coming soon addressing also Mark's comments.
 
-The ordering is indeed a good argument. Will update.
+Thanks,
 
-Hence:
-  - The DTS will claim a compatibility with
-    "renesas,bsc-sh73a0", "renesas,bsc", "simple-pm-bus".
-  - The driver will match against "simple-pm-bus".
+Gregory
 
-Note that if we ever have a real driver for "renesas,bsc", we'll have to
-be careful about binding ordering. "simple-bus" is handled by core code,
- and doesn't prevent a more specific driver to take precedence.
-"simple-pm-bus" is handled by a driver, so if it binds first, a more specific
-driver cannot take over.
 
-> Does this make sense, or am I missing an important reason why there
-> has to be a "simple-bus" compatible string here?
 
-Yes, it makes sense. I had the "simple-bus" compatible entry there because of
-the "most generic first", "least generic last" rule. If you don't use the
-extra features (i.e. don't touch the clocks or PM domains in the SoC), it is
-compatible with "simple-bus". That's more or less how it was in
-r8a73a4-ape6evm-reference.dts before the advent of CCF and PM domains.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
