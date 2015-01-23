@@ -1,66 +1,79 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 4/4] arm: dts: am4372: add pmu DT data
-Date: Fri, 23 Jan 2015 17:11:44 -0600
-Message-ID: <1422054704-14915-5-git-send-email-balbi@ti.com>
-References: <1422054704-14915-1-git-send-email-balbi@ti.com>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] PCI: update dma configuration from DT
+Date: Fri, 23 Jan 2015 17:27:25 -0600
+Message-ID: <20150123232725.GV29776@google.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
+	<1422052359-12384-6-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422054704-14915-1-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422052359-12384-6-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-with this patch, performance monitors work
-and show sensible data on AM43xx devices:
+On Fri, Jan 23, 2015 at 05:32:38PM -0500, Murali Karicheri wrote:
+> If there is a DT node available for the root bridge's parent device,
+> use the dma configuration from that device node. For example, keystone
+> PCI devices would require dma_pfn_offset to be set correctly in the
+> device structure of the pci device in order to have the correct dma mask.
+> The DT node will have dma-ranges defined for this. Also support using
+> the DT property dma-coherent to allow coherent DMA operation by the
+> PCI device.
+> 
+> This patch use the new helper function of_pci_dma_configure() to update
+> the device dma configuration.
+> 
+> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+> 
+> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 
-~# perf stat sleep 5
+I assume this series will be merged via some non-PCI tree, so:
 
- Performance counter stats for 'sleep 5':
+Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 
-          6.079585      task-clock (msec)         #    0.001 CPUs utilized
-                 3      context-switches          #    0.493 K/sec
-                 0      cpu-migrations            #    0.000 K/sec
-                35      page-faults               #    0.006 M/sec
-           5888256      cycles                    #    0.969 GHz
-           1458715      stalled-cycles-frontend   #   24.77% frontend cycles idle
-           4632019      stalled-cycles-backend    #   78.67% backend  cycles idle
-           1892556      instructions              #    0.32  insns per cycle
-                                                  #    2.45  stalled cycles per insn
-            141832      branches                  #   23.329 M/sec
-             56093      branch-misses             #   39.55% of all branches
-
-       5.018813000 seconds time elapsed
-
-Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am4372.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 861f127dfead..ea103aa970f1 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -51,6 +51,14 @@
- 		};
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a9-pmu";
-+		reg = <0x4b000000 0x800000>;
-+		interrutps = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+		ti,hwmods = "debugss";
-+	};
-+
- 	gic: interrupt-controller@48241000 {
- 		compatible = "arm,cortex-a9-gic";
- 		interrupt-controller;
--- 
-2.3.0-rc1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/pci/probe.c |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 23212f8..d7dcd6c 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/init.h>
+>  #include <linux/pci.h>
+> +#include <linux/of_pci.h>
+>  #include <linux/pci_hotplug.h>
+>  #include <linux/slab.h>
+>  #include <linux/module.h>
+> @@ -1520,6 +1521,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  	dev->dev.dma_mask = &dev->dma_mask;
+>  	dev->dev.dma_parms = &dev->dma_parms;
+>  	dev->dev.coherent_dma_mask = 0xffffffffull;
+> +	of_pci_dma_configure(dev);
+>  
+>  	pci_set_dma_max_seg_size(dev, 65536);
+>  	pci_set_dma_seg_boundary(dev, 0xffffffff);
+> -- 
+> 1.7.9.5
+> 
