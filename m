@@ -1,99 +1,65 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Add initial device tree support for Tegra132
-Date: Fri, 23 Jan 2015 12:22:44 +0000
-Message-ID: <20150123122244.GJ23493@leverpostej>
-References: <alpine.DEB.2.02.1501161139180.9776@utopia.booyaka.com>
- <20150121161313.GI5044@leverpostej>
- <alpine.DEB.2.02.1501231038130.5450@utopia.booyaka.com>
- <54C23B08.6070503@nvidia.com>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v4 3/4] arm64:thunder: Add initial dts for Cavium's
+ Thunder SoC in 2 Node topology.
+Date: Fri, 23 Jan 2015 18:07:15 +0530
+Message-ID: <CAFpQJXUvux+b9hYx_ZY-1hor0HRFFgh=e4vCYyJiDHrDC9Y=tQ@mail.gmail.com>
+References: <1421924755-26029-1-git-send-email-gkulkarni@caviumnetworks.com>
+	<1421924755-26029-4-git-send-email-gkulkarni@caviumnetworks.com>
+	<2882934.brFyhkGPyE@wuerfel>
+	<1885509.Z0Gm3e3FlX@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54C23B08.6070503-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arto Merilainen <amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1885509.Z0Gm3e3FlX@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 23, 2015 at 12:14:00PM +0000, Arto Merilainen wrote:
-> Hi all,
-> 
-> On 01/23/2015 01:31 PM, Paul Walmsley wrote:
-> > + Arto, Terje for comments on the host1x section
-> > + Stephen Warren for comments on the serial DT data
-> >
-> > Hi Mark,
-> >
-> > thanks for the review.
-> >
-> > On Wed, 21 Jan 2015, Mark Rutland wrote:
-> >
-> >> As mentioned in my reply to the DT list patch [1], there are a couple of
-> >> bits I'd like to see cleaned up first, but in the meantime I have some
-> >> comments from my first pass of the dtsi below. Some of these may equally
-> >> apply to existing dts(i) files.
-> >>
-> >> I see a few undocumented compatible strings (at least when comparing
-> >> against mainline). If there are other series or trees I should be
-> >> looking at, any pointers would be appreciated. If not, documentation
-> >> updates would be nice (checkpatch should complain otherwise).
-> >
-> > (discussed in the tegra132-pcie comments below)
-> >
-> >>
-> >> On Fri, Jan 16, 2015 at 11:45:29AM +0000, Paul Walmsley wrote:
-> >>> +       host1x@0,50000000 {
-> >>> +               compatible = "nvidia,tegra132-host1x", "nvidia,tegra124-host1x", "simple-bus";
-> >>
-> >> Regarding simple-bus, are the sub-nodes usable if this didn't probe as
-> >> "nvidia,tegra124-host1x" or "nvidia,tegra132-host1x"?
-> >> Do the subnodes require anything from this node?
-> >>
-> >> It looks like we expect/require the host1x node to be probed and
-> >> initialised before we probe the children. Which would imply the
-> >> simple-bus annotation is wrong.
-> >
-> > Haven't tried booting with just simple-bus here.  I believe these devices
-> > are accessible without the involvement of host1x.  In other words, host1x
-> > is not a bus; I believe it might be most accurately described as a type of
-> > DMA controller.  So in theory it should be possible for the CPU complex to
-> > read and write to these devices directly without the involvement of
-> > host1x, although I believe NVIDIA discourages this.
-> >
-> > Under the theory that DT data should be hardware-specific, not
-> > software-specific, in an ideal world I think we would list these devices
-> > outside the embrace of the host1x node.  However the existing Tegra124 DT
-> > file listed them together, and I am unsure whether that is required for
-> > the host1x code to function correctly.
-> >
-> > Arto may be able to comment further.
-> 
-> Placing the devices behind host1x is an accurate description of 
-> hardware: Despite the direct register access path (writel/readl 
-> targeting a host1x client device) is transparent to the CPU, the host1x 
-> hardware is internally handling the requests and passing them forward to 
-> the host1x client in interest.
-> 
-> Above implies also a strict parent-child dependency on hardware level: 
-> If the CPU tries to access a register in a host1x client before the 
-> host1x clock has been enabled, host1x will not be able to forward the 
-> requests and the access will fail. This also defines the importance of 
-> probe order (i.e. host1x must be initialized before client devices).
+Hi Arnd,
 
-In that case, it sounds like the "simple-bus" string is bogus unless the
-host1x is at minimum pre-initialised by some firmware and/or bootloader
-into a state where the child devices could theoretically be used on
-their own.
-
-So I think "simple-bus" should be dropped here.
-
-> In addition, the host1x indirect register programming path ("channel 
-> path") is operational only for the host1x client devices and our current 
-> host1x driver relies on parent-child relationship in device tree.
-
-So I guess this is more Linux-specific, but still adds to the fuel for
-removing "simple-bus" here.
-
-Thanks,
-Mark.
+On Thu, Jan 22, 2015 at 11:56 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 22 January 2015 17:47:13 Arnd Bergmann wrote:
+>>
+>> This seems wrong still: The clusters and cores do not have unique
+>> numbers. I believe the code will not work correctly, and it won't
+>> be compliant with the binding from patch 2.
+>>
+>> I think the right way here would be to use
+>>
+>>         arm,associativity = <0 2 47>;
+>>
+>> for cpu@20f, and
+>>
+>>         arm,associativity = <1 3 48>;
+>>
+>> for cpu@10000. Your previous version used the numbers from
+>> the reg property, which should be fine as well if that helps:
+>>
+>>
+>>         arm,associativity = <0x0 0x200 0x20f>;
+>>
+>>         arm,associativity = <0x10000 0x10000 0x10000>;
+>>
+>> which should have the same effect as above, as long as the code
+>> can handle the numbers not being consecutive.
+>>
+>>
+>
+> Upon further consideration, I think your patch is correct after
+> all, but let me check again on PowerPC machines.
+i have removed, board id which was in previous patch, to keep the
+associativity aligned to mpidr, ie. socket,cluster id and core id.
+both previous and current mappings holds good for our design.
+our topology is 2 sockets(aff2=0and 1) , each having 3
+clusters(aff1=0to2)and each cluster having 16 cores(aff0:0to15)
+in associativity property, for our case, only first id(socket id) is
+mapped to numa, others are mentioned only to describe the topology.
+>
+>         Arnd
+thanks
+Ganapat
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
