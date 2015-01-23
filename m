@@ -1,72 +1,324 @@
-From: Daniel Borkmann <dborkman-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
-Date: Fri, 23 Jan 2015 12:20:08 +0100
-Message-ID: <54C22E68.1080601@redhat.com>
-References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk>
+From: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] arm64: dts: Add support for Spreadtrum SC9836 SoC
+ in dts and Makefile
+Date: Fri, 23 Jan 2015 19:22:46 +0800
+Message-ID: <CAAfSe-vUBtE5H_j+hY9wEV1fja8FYU4kw5fTU4Ht4tH4VL1Ung@mail.gmail.com>
+References: <1422008491-16452-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<1422008491-16452-2-git-send-email-chunyan.zhang@spreadtrum.com>
+	<20150123103636.GA23493@leverpostej>
+	<CAAfSe-vQL8gXzNui1wD9_=vp6yGHrEUGQgJOtdNxvt2=AH1Xsg@mail.gmail.com>
+	<20150123111723.GE23493@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422007621-13567-1-git-send-email-stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
+In-Reply-To: <20150123111723.GE23493@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stathis Voukelatos <stathisv70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Joel.Schopp-5C7GfCeVMHo@public.gmane.org" <Joel.Schopp-5C7GfCeVMHo@public.gmane.org>, "Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org" <Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org>, "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, wei.qiao
 List-Id: devicetree@vger.kernel.org
 
-On 01/23/2015 11:07 AM, Stathis Voukelatos wrote:
-> This patch adds support the Ethernet Packet Sniffer H/W module
-> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
-> The module allows Ethernet packets to be parsed, matched against
-> a user-defined pattern and timestamped. It sits between a 100M
-> Ethernet MAC and PHY and is completely passive with respect to
-> Ethernet frames.
+On Fri, Jan 23, 2015 at 7:17 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Fri, Jan 23, 2015 at 11:13:29AM +0000, Lyra Zhang wrote:
+>> On Fri, Jan 23, 2015 at 6:36 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > On Fri, Jan 23, 2015 at 10:21:30AM +0000, Chunyan Zhang wrote:
+>> >> From: Zhizhou Zhang <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> >>
+>> >> Adds the device tree support for Spreadtrum SC9836 SoC which is based on
+>> >> Sharkl64 platform.
+>> >>
+>> >> Sharkl64 platform contains the common nodes of Spreadtrum's arm64-based SoCs.
+>> >>
+>> >> Signed-off-by: Zhizhou Zhang <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> >> Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> >> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> >> ---
+>> >>  arch/arm64/boot/dts/Makefile                  |    1 +
+>> >>  arch/arm64/boot/dts/sprd/Makefile             |    5 ++
+>> >>  arch/arm64/boot/dts/sprd/sc9836-openphone.dts |   49 ++++++++++++++++
+>> >>  arch/arm64/boot/dts/sprd/sc9836.dtsi          |   74 +++++++++++++++++++++++++
+>> >>  arch/arm64/boot/dts/sprd/sharkl64.dtsi        |   65 ++++++++++++++++++++++
+>> >>  5 files changed, 194 insertions(+)
+>> >>  create mode 100644 arch/arm64/boot/dts/sprd/Makefile
+>> >>  create mode 100644 arch/arm64/boot/dts/sprd/sc9836-openphone.dts
+>> >>  create mode 100644 arch/arm64/boot/dts/sprd/sc9836.dtsi
+>> >>  create mode 100644 arch/arm64/boot/dts/sprd/sharkl64.dtsi
+>> >>
+>> >> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+>> >> index 3b8d427..806a717 100644
+>> >> --- a/arch/arm64/boot/dts/Makefile
+>> >> +++ b/arch/arm64/boot/dts/Makefile
+>> >> @@ -2,6 +2,7 @@ dts-dirs += amd
+>> >>  dts-dirs += apm
+>> >>  dts-dirs += arm
+>> >>  dts-dirs += cavium
+>> >> +dts-dirs += sprd
+>> >>
+>> >>  always               := $(dtb-y)
+>> >>  subdir-y     := $(dts-dirs)
+>> >> diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boot/dts/sprd/Makefile
+>> >> new file mode 100644
+>> >> index 0000000..b658c5e
+>> >> --- /dev/null
+>> >> +++ b/arch/arm64/boot/dts/sprd/Makefile
+>> >> @@ -0,0 +1,5 @@
+>> >> +dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb
+>> >> +
+>> >> +always               := $(dtb-y)
+>> >> +subdir-y     := $(dts-dirs)
+>> >> +clean-files  := *.dtb
+>> >> diff --git a/arch/arm64/boot/dts/sprd/sc9836-openphone.dts b/arch/arm64/boot/dts/sprd/sc9836-openphone.dts
+>> >> new file mode 100644
+>> >> index 0000000..b8a69b2
+>> >> --- /dev/null
+>> >> +++ b/arch/arm64/boot/dts/sprd/sc9836-openphone.dts
+>> >> @@ -0,0 +1,49 @@
+>> >> +/*
+>> >> + * Spreadtrum SC9836 openphone board DTS file
+>> >> + *
+>> >> + * Copyright (C) 2014, Spreadtrum Communications Inc.
+>> >> + *
+>> >> + * This file is licensed under a dual GPLv2 or X11 license.
+>> >> + */
+>> >> +
+>> >> +/dts-v1/;
+>> >> +
+>> >> +#include "sc9836.dtsi"
+>> >> +
+>> >> +/ {
+>> >> +     model = "Spreadtrum SC9836 Openphone Board";
+>> >> +
+>> >> +     compatible = "sprd,sc9836-openphone", "sprd,sc9836";
+>> >> +
+>> >> +     aliases {
+>> >> +             serial0 = &uart0;
+>> >> +             serial1 = &uart1;
+>> >> +             serial2 = &uart2;
+>> >> +             serial3 = &uart3;
+>> >> +     };
+>> >> +
+>> >> +     memory@80000000 {
+>> >> +             device_type = "memory";
+>> >> +             reg = <0 0x80000000 0 0x20000000>;
+>> >> +     };
+>> >> +
+>> >> +     chosen {
+>> >> +             stdout-path = &uart0;
+>> >> +     };
+>> >
+>> > It would be good to use an explicit configuration here. e.g. have:
+>> >
+>> >         chosen {
+>> >                 stdout-path = "serial0:115200n8";
+>> >         };
+>> >
+>> > Where '115200n8' is replaced by whatever the bootloader leaves the UART
+>> > configured as on this board.
+>> >
+>> > That means you won't need a 'console=' to get nice consistent serial
+>> > output at boot, and won't be relying on implicit defaults all over the
+>> > place.
+>> >
+>>
+>> ok, I've changed and tested pass.
+>>
+>> >> +};
+>> >> +
+>> >> +&uart0 {
+>> >> +     status = "okay";
+>> >> +};
+>> >> +
+>> >> +&uart1 {
+>> >> +     status = "okay";
+>> >> +};
+>> >> +
+>> >> +&uart2 {
+>> >> +     status = "okay";
+>> >> +};
+>> >> +
+>> >> +&uart3 {
+>> >> +     status = "okay";
+>> >> +};
+>> >> diff --git a/arch/arm64/boot/dts/sprd/sc9836.dtsi b/arch/arm64/boot/dts/sprd/sc9836.dtsi
+>> >> new file mode 100644
+>> >> index 0000000..c646123
+>> >> --- /dev/null
+>> >> +++ b/arch/arm64/boot/dts/sprd/sc9836.dtsi
+>> >> @@ -0,0 +1,74 @@
+>> >> +/*
+>> >> + * Spreadtrum SC9836 SoC DTS file
+>> >> + *
+>> >> + * Copyright (C) 2014, Spreadtrum Communications Inc.
+>> >> + *
+>> >> + * This file is licensed under a dual GPLv2 or X11 license.
+>> >> + */
+>> >> +
+>> >> +#include "sharkl64.dtsi"
+>> >> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> >> +
+>> >> +/ {
+>> >> +     compatible = "sprd,sc9836";
+>> >> +
+>> >> +     cpus {
+>> >> +             #address-cells = <2>;
+>> >> +             #size-cells = <0>;
+>> >> +
+>> >> +             cpu@0 {
+>> >> +                     device_type = "cpu";
+>> >> +                     compatible = "arm,cortex-a53", "arm,armv8";
+>> >> +                     reg = <0x0 0x0>;
+>> >> +                     enable-method = "psci";
+>> >> +             };
+>> >> +
+>> >> +             cpu@1 {
+>> >> +                     device_type = "cpu";
+>> >> +                     compatible = "arm,cortex-a53", "arm,armv8";
+>> >> +                     reg = <0x0 0x1>;
+>> >> +                     enable-method = "psci";
+>> >> +             };
+>> >> +
+>> >> +             cpu@2 {
+>> >> +                     device_type = "cpu";
+>> >> +                     compatible = "arm,cortex-a53", "arm,armv8";
+>> >> +                     reg = <0x0 0x2>;
+>> >> +                     enable-method = "psci";
+>> >> +             };
+>> >> +
+>> >> +             cpu@3 {
+>> >> +                     device_type = "cpu";
+>> >> +                     compatible = "arm,cortex-a53", "arm,armv8";
+>> >> +                     reg = <0x0 0x3>;
+>> >> +                     enable-method = "psci";
+>> >> +             };
+>> >> +     };
+>> >> +
+>> >> +     gic: interrupt-controller@12001000 {
+>> >> +             compatible = "arm,gic-400";
+>> >> +             reg = <0 0x12001000 0 0x1000>,
+>> >> +                   <0 0x12002000 0 0x2000>,
+>> >> +                   <0 0x12004000 0 0x2000>,
+>> >> +                   <0 0x12006000 0 0x2000>;
+>> >> +             #interrupt-cells = <3>;
+>> >> +             interrupt-controller;
+>> >> +             interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>> >> +     };
+>> >> +
+>> >> +     psci {
+>> >> +             compatible      = "arm,psci";
+>> >> +             method          = "smc";
+>> >> +             cpu_on          = <0xc4000003>;
+>> >> +             cpu_off         = <0x84000002>;
+>> >> +             cpu_suspend     = <0xc4000001>;
+>> >> +     };
+>> >
+>> > Given that there are no suspend states in this dts, the cpu_suspend
+>> > property here could be omitted for now (though I guess it doesn't matter
+>> > either way).
+>> >
+>> >> +
+>> >> +     timer {
+>> >> +             compatible = "arm,armv8-timer";
+>> >> +             interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> >> +                          <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> >> +                          <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> >> +                          <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>> >> +     };
+>> >> +};
+>> >> diff --git a/arch/arm64/boot/dts/sprd/sharkl64.dtsi b/arch/arm64/boot/dts/sprd/sharkl64.dtsi
+>> >> new file mode 100644
+>> >> index 0000000..6b4bdc5
+>> >> --- /dev/null
+>> >> +++ b/arch/arm64/boot/dts/sprd/sharkl64.dtsi
+>> >> @@ -0,0 +1,65 @@
+>> >> +/*
+>> >> + * Spreadtrum Sharkl64 platform DTS file
+>> >> + *
+>> >> + * Copyright (C) 2014, Spreadtrum Communications Inc.
+>> >> + *
+>> >> + * This file is licensed under a dual GPLv2 or X11 license.
+>> >> + */
+>> >> +
+>> >> +/ {
+>> >> +     interrupt-parent = <&gic>;
+>> >> +     #address-cells = <2>;
+>> >> +     #size-cells = <2>;
+>> >> +
+>> >> +     soc {
+>> >> +             compatible = "simple-bus";
+>> >> +             #address-cells = <2>;
+>> >> +             #size-cells = <2>;
+>> >> +             ranges;
+>> >> +
+>> >> +             ap-apb {
+>> >> +                     compatible = "simple-bus";
+>> >> +                     #address-cells = <2>;
+>> >> +                     #size-cells = <2>;
+>> >> +                     ranges;
+>> >> +
+>> >> +                     uart0: serial@70000000 {
+>> >> +                             compatible = "sprd,sc9836-uart";
+>> >> +                             reg = <0 0x70000000 0 0x100>;
+>> >> +                             interrupts = <0 2 0xf04>;
+>> >> +                             clocks = <&clk26mhz>;
+>> >> +                             status = "disabled";
+>> >> +                     };
+>> >> +
+>> >> +                     uart1: serial@70100000 {
+>> >> +                             compatible = "sprd,sc9836-uart";
+>> >> +                             reg = <0 0x70100000 0 0x100>;
+>> >> +                             interrupts = <0 3 0xf04>;
+>> >> +                             clocks = <&clk26mhz>;
+>> >> +                             status = "disabled";
+>> >> +                     };
+>> >> +
+>> >> +                     uart2: serial@70200000 {
+>> >> +                             compatible = "sprd,sc9836-uart";
+>> >> +                             reg = <0 0x70200000 0 0x100>;
+>> >> +                             interrupts = <0 2 0xf04>;
+>> >> +                             clocks = <&clk26mhz>;
+>> >> +                             status = "disabled";
+>> >> +                     };
+>> >> +
+>> >> +                     uart3: serial@70300000 {
+>> >> +                             compatible = "sprd,sc9836-uart";
+>> >> +                             reg = <0 0x70300000 0 0x100>;
+>> >> +                             interrupts = <0 3 0xf04>;
+>> >> +                             clocks = <&clk26mhz>;
+>> >> +                             status = "disabled";
+>> >> +                     };
+>> >> +             };
+>> >> +     };
+>> >> +
+>> >> +     clk26mhz: clk26mhz {
+>> >> +             compatible = "fixed-clock";
+>> >> +             #clock-cells = <0>;
+>> >> +             clock-frequency = <26000000>;
+>> >> +     };
+>> >> +};
+>> >
+>> > Other than my comments above, this looks fine to me. I assume the UART
+>> > binding and driver are already queued somewhere else?
+>> >
+>>
+>> Since the last version patch series must be split for applying.
+>> I'll send the UART bindings with UART driver soon.
+>>
+>> For this case, can I still add your Acked-by and send these two patch
+>> to Greg right now?
 >
-> Matched packet bytes and timestamp values are returned through a
-> FIFO. Timestamps are provided to the module through an externally
-> generated Gray-encoded counter.
+> If the UART patches aren't queued yet then I'd like to take a look at
+> their next posting first.
 >
-> The command pattern for packet matching is stored in module RAM
-> and consists of a sequence of 16-bit entries. Each entry includes
-> an 8-bit command code and and 8-bit data value. Valid command
-> codes are:
-> 0 - Don't care
-> 1 - Match: packet data must match command string byte
-> 2 - Copy: packet data will be copied to FIFO
-> 3 - Match/Stamp: if packet data matches string byte, a timestamp
->                   is copied into the FIFO
-> 4 - Copy/Done: packet data will be copied into the FIFO.
->                 This command terminates the command string.
->
-> The driver consists of two modules:
-> - Core: it provides an API to user space using the Generic Netlink
->          framework. Specific backend implementations, like the
->          Ethernet Packet Sniffer, register one or more channels
->          with the Core. For each channel a Genl family is created.
->          User space can access a channel by sending Genl messages
->          to the Genl family associated with the channel. Packet
->          matching events are multicast.
->
-> - Ethernet Packet Sniffer backend: provides the driver for the
->          Linn Ethernet Packet Sniffer H/W modules.
->
-> The split between a core and backend modules allows software-only
-> implementations to be added for platforms where no H/W support
-> is available.
->
-> Based on 3.19-rc5
->
-> Signed-off-by: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
 
-Please have a look at packet sockets, they offer already all the
-functionality (if not more) your driver interface to the user space
-resembles, are transparent to the underlying hardware, and easily
-can cope with 100Mbit.
+ok, they have been ready, I'll send them right now.
 
-If I understand this correctly, you are effectively introducing a
-parallel API *next* to packet sockets to user space that we have to
-maintain forever ...
+> Surely these 2 patches (with parts under arch/arm64) should go via
+> arm-soc?
+>
 
-Thanks !
+yes, should be 'arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org', right?
+
+> Thanks,
+> Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
