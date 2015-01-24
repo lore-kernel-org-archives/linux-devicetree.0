@@ -1,38 +1,55 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v4 4/4] MAINTAINERS: add entry for lubbock-cplds
-Date: Sat, 24 Jan 2015 16:05:03 +0100
-Message-ID: <1422111903-22176-4-git-send-email-robert.jarzmik@free.fr>
-References: <1422111903-22176-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422111903-22176-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v4 1/4] dt-bindings: mfd: add lubbock-cplds binding
+Date: Sat, 24 Jan 2015 16:05:00 +0100
+Message-ID: <1422111903-22176-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add entry Lubbock cplds driver into the pxa platform scope.
+Add a binding for lubbock motherboard IO board.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Since v3: name change to lubbock-cplds,
+          Lee's comments taken into account.
+---
+ .../devicetree/bindings/mfd/lubbock-cplds.txt      | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/lubbock-cplds.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ddb9ac8..8c6a49d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7681,6 +7681,7 @@ T:	git git://github.com/hzhuang1/linux.git
- T:	git git://github.com/rjarzmik/linux.git
- S:	Maintained
- F:	arch/arm/mach-pxa/
-+F:	drivers/mfd/lubbock.c
- F:	drivers/pcmcia/pxa2xx*
- F:	drivers/spi/spi-pxa2xx*
- F:	drivers/usb/gadget/udc/pxa2*
+diff --git a/Documentation/devicetree/bindings/mfd/lubbock-cplds.txt b/Documentation/devicetree/bindings/mfd/lubbock-cplds.txt
+new file mode 100644
+index 0000000..211ed9a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/lubbock-cplds.txt
+@@ -0,0 +1,26 @@
++Intel XScale PXA255 development platform (Lubbock).
++
++This regroups all the CPLDs on the Lubbock motherboard, providing interrupt
++muxing, leds handling, ...
++
++Required properties:
++  - compatible : should be "intel,lubbock-cplds"
++
++  - interrupts : The first interrupt is the SoC input interrupt connected to the
++                 lubbock IO board interrupt multiplexer output. The only known
++                 working conifguration is GPIO0 on the PXA25X SoC.
++
++Optional properties:
++  - interrupts : The second optional interrupt is the base of the interrupts
++                 multiplexed by the lubbock motherboard. If unspecified, the
++                 range is fully dynamic, and the irqdomain will generate its
++                 interrupt base on the fly.
++
++Example:
++
++mb: lubbock-mb@0 {
++	compatible = "intel,lubbock-cplds";
++	interrupts = <0 IRQ_TYPE_EDGE_FALLING 400 IRQ_TYPE_NONE>;
++	#interrupt-cells = <2>;
++	interrupt-parent = <&pxairq>;
++};
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
