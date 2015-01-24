@@ -1,61 +1,75 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 4/9] pci: add DT based ARM Versatile PCI host driver
-Date: Fri, 23 Jan 2015 18:54:04 -0600
-Message-ID: <20150124005404.GZ29776@google.com>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
- <1419967718-26909-5-git-send-email-robherring2@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v2 1/2] leds: add DT binding for Qualcomm PM8941 WLED block
+Date: Fri, 23 Jan 2015 16:54:12 -0800
+Message-ID: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1419967718-26909-5-git-send-email-robherring2@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Peter Maydell <peter.maydell@linaro.org>, arm@kernel.org, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>
+Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry for the late reply; maybe this has already been queued up somewhere,
-so this might be moot.
+From: Courtney Cavin <courtney.cavin@sonymobile.com>
 
-I usually capitalize the "PCI" and first letter of the subject, like:
+This adds device tree binding documentation for the WLED ('White' LED)
+block on Qualcomm's PM8941 PMICs.
 
-  PCI: Add DT based ARM Versatile PCI host driver
+Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+ .../devicetree/bindings/leds/leds-pm8941-wled.txt  | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
 
-And I try to ask for MAINTAINER updates since these drivers are under
-drivers/pci, but I can't maintain them all myself.
-
-On Tue, Dec 30, 2014 at 01:28:33PM -0600, Rob Herring wrote:
-> From: Rob Herring <robh@kernel.org>
-> 
-> This converts the Versatile PCI host code to a platform driver using
-> the commom DT parsing and setup. The driver uses only an empty ARM
-> pci_sys_data struct and does not use pci_common_init_dev init function.
-> The old host code will be removed in a subsequent commit when Versatile
-> is completely converted to DT.
-> 
-> I've tested this on QEMU with the sym53c8xx driver in both i/o and
-> memory mapped modes.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Peter Maydell <peter.maydell@linaro.org>
-
-Looks fine to me.
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> +++ b/drivers/pci/host/pci-versatile.c
-> ...
-
-> +	/*
-> +	 *  We need to discover the PCI core first to configure itself
-> +	 *  before the main PCI probing is performed
-
-Unusual to have two spaces between the "*" and the comments here.
-
-> +MODULE_LICENSE("GPLv2");
-
-This needs to be "GPL v2" per license_is_gpl_compatible().
+diff --git a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+new file mode 100644
+index 0000000..a85a964
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+@@ -0,0 +1,43 @@
++Binding for Qualcomm PM8941 WLED driver
++
++Required properties:
++- compatible: should be "qcom,pm8941-wled"
++- reg: slave address
++
++Optional properties:
++- label: The label for this led
++  See Documentation/devicetree/bindings/leds/common.txt
++- linux,default-trigger: Default trigger assigned to the LED
++  See Documentation/devicetree/bindings/leds/common.txt
++- qcom,cs-out: bool; enable current sink output
++- qcom,cabc: bool; enable content adaptive backlight control
++- qcom,ext-gen: bool; use externally generated modulator signal to dim
++- qcom,current-limit: mA; per-string current limit; value from 0 to 25
++	default: 20mA
++- qcom,current-boost-limit: mA; boost current limit; one of:
++	105, 385, 525, 805, 980, 1260, 1400, 1680
++	default: 805mA
++- qcom,switching-freq: kHz; switching frequency; one of:
++	600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371,
++	1600, 1920, 2400, 3200, 4800, 9600,
++	default: 1600kHz
++- qcom,ovp: V; Over-voltage protection limit; one of:
++	27, 29, 32, 35
++	default: 29V
++- qcom,num-strings: #; number of led strings attached; value from 1 to 3
++	default: 2
++
++Example:
++
++pm8941-wled@d800 {
++	compatible = "qcom,pm8941-wled";
++	reg = <0xd800>;
++	label = "backlight";
++
++	qcom,cs-out;
++	qcom,current-limit = <20>;
++	qcom,current-boost-limit = <805>;
++	qcom,switching-freq = <1600>;
++	qcom,ovp = <29>;
++	qcom,num-strings = <2>;
++};
+-- 
+1.9.1
