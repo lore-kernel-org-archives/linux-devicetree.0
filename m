@@ -1,74 +1,61 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 3/4] clk: ti: 43xx: add debugss clocks to DT_CLK() table
-Date: Fri, 23 Jan 2015 20:25:57 -0600
-Message-ID: <20150124022557.GA16649@saruman.tx.rr.com>
-References: <1422054704-14915-1-git-send-email-balbi@ti.com>
- <1422054704-14915-4-git-send-email-balbi@ti.com>
-Reply-To: <balbi@ti.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
+Date: Sat, 24 Jan 2015 05:26:24 +0100
+Message-ID: <20150124042623.GB1190@katana>
+References: <1421346798-17148-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <20150122144818.GG3413@katana>
+ <CAL_JsqKEBYwX=5zgWbdVRxm-H-sFiDa9rAp26BvuKNECoNW=uQ@mail.gmail.com>
+ <20150122150243.GI3413@katana>
+ <CAL_JsqKYvcec=xWQM7_Dgrr5zmkefXqGCQvHwJ+uxNgfiv7fcw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
-Return-path: <linux-omap-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1422054704-14915-4-git-send-email-balbi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+In-Reply-To: <CAL_JsqKYvcec=xWQM7_Dgrr5zmkefXqGCQvHwJ+uxNgfiv7fcw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---6c2NcOVqGQ03X4Wi
+
+--H+4ONPRPur6+Ovig
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 23, 2015 at 05:11:43PM -0600, Felipe Balbi wrote:
-> without these entries, omap_hwmod will not be
-> able to find debugss clocks.
->=20
-> Signed-off-by: Felipe Balbi <balbi@ti.com>
-> ---
->  drivers/clk/ti/clk-43xx.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
-> index 3795fce8a830..46a597c815c9 100644
-> --- a/drivers/clk/ti/clk-43xx.c
-> +++ b/drivers/clk/ti/clk-43xx.c
-> @@ -83,6 +83,12 @@ static struct ti_dt_clk am43xx_clks[] =3D {
->  	DT_CLK(NULL, "gfx_fck_div_ck", "gfx_fck_div_ck"),
->  	DT_CLK(NULL, "timer_32k_ck", "clkdiv32k_ick"),
->  	DT_CLK(NULL, "timer_sys_ck", "sys_clkin_ck"),
-> +	DT_CLK(NULL, "trace_clk_div_ck", "trace_clk_div_ck"),
-> +	DT_CLK(NULL, "trace_pm_clk_mux_ck", "trace_pm_clk_mux_ck"),
 
-hmmm, this should be trace_pmd_clk_mux_ck. How did this even work ? I'll
-fix and retest.
+> Feel free to apply it for 3.19 with my ack. You then want to pick up
+> v1 of this patch.
 
-Won't resend until tomorrow though.
+Sigh, I give up, this is too confusing. I don't know which one is V1,
+they are not numbered in any way. And I have been holding back my pull
+request for too long already.
 
---=20
-balbi
+I'll drop this patch. Whatever should be applied should be resent,
+mentioning the release it is aimed for and how the planning/dependency
+on the DT patch is.
 
---6c2NcOVqGQ03X4Wi
+
+--H+4ONPRPur6+Ovig
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUwwK1AAoJEIaOsuA1yqREzVYP/3WPRP+rLBTPwwd4fAlWouXQ
-+HzTlSsA2xuXONWs1t8hR75cEI9qGZsip9CMdDeahSPsY3IioFvC4RMHYYPxWG3a
-pCHXfZbpaoPl9vMGpNojiWvhDbT+czZUaToRrgm0qAL4sibjqGCPrJqoOpqjVoj8
-5aURdm55UO3beAECDELSH1OKm1EeImD3oIcZLAHUkTEnjKwIPFkLlTDQ2Vzufdvi
-0G8fAzOyvkUgsG5kfFk3wax9/LzR76Fy00PVbEyjITvCBKHZJkkCcCJKH+EgCd6R
-3T51KSTGSYP2gNp7ijpfgSsvOWTpxrX94XJLJvgCYXIwYU5Mb6es1HY8i9w5eEgF
-yrKuxq3UVQBdsUV03U5ainqqeToabs/Q7BHsXq4nocJRvuHT5z/YS8E6GFyfkqAK
-rV41slCPLdAZM74uWG5uyPll/3fnlT/B6Pc9j3FEt9RRJOI/JrmEJRfe49Xgm76F
-7Cmt5ierAQNSImq/nXAPqkYgIrMgDwuEnOX95ehd+87FYhrkAfdylllW/B8fcYQz
-E6d5bn/QmKuz/65Syl4+Rwioc8BNYU0IBpFsKmEOx0VJbZlB9OYHc4hRUHqz/wri
-g6Ytm+pKtknS88BGWATGxJcQPkudizPUPn0COBiR8EvElBlteMlafImE302FDU5m
-+beobOS+HYGNyBAJuRlH
-=Yq4v
+iQIcBAEBAgAGBQJUwx7vAAoJEBQN5MwUoCm2J40QAJqSvd5pdpfXt34uOKHpTlBU
+m1z3PMy8Q48hB0nraQ8jEprnKZUH5cAHhb+t8p1Ii4D5sVnnFbi9lq1GO78Ved44
+4IGNDjBbfYaR/sdGz7tTuaM3/oSlStfJ4z2W43m11vGM3kqQjP77tlS/8FITkWLC
+80Bmc7LrOU6NTaL1nMz14kPwAXpL3kRsfqa9uabUpL7jsaZKIOd7VE7KRaalYkz2
+kJ6GLbHk1id0Ta/q6KQONamQTz3cTsem20HxrWtEOuH136gw4tUoY+KKV75xsHfN
+VGAIlAC8p6Jtb4zvb/DQD5/SdkhLDlpB2RMxzrcbiw5rbuOulUmstkFwv7ZsYm03
+4CdCX+RuJbLwFvtAShhX02FEvwCaXAa5EcrxhWZiUjaeySGWVkiiv0/f6hwQ1HVS
+uVBKRkDYGsAw5kvSS1okc8Odvio8QxCz1KFJe5abjvKG8HChbf3+pQn4y1puwiZG
+W8GK0rgFeCtevonrDiODm3yJjPAkA0ktYBKMEh5p/GSLgQxlUaEVgb9hV9PLBK40
+yKLNx7CZacN1UfJ9XluQEJzkQeFJQQnpio45P0/rxwq4PSeEaVKbximX6S05pw/X
+/QMcPqrhiPd4z+L7a3vvCiGx8aiAv/v1acU4lGlN8ILGu2P8yy9FaxKNUl1B9wfM
+wKWeQfBLuPwd50JyDA+4
+=QYDW
 -----END PGP SIGNATURE-----
 
---6c2NcOVqGQ03X4Wi--
+--H+4ONPRPur6+Ovig--
