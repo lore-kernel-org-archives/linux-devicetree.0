@@ -1,702 +1,114 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH v5 4/6] input: touchscreen: imx25 tcq driver
-Date: Sat, 24 Jan 2015 15:01:41 +0100
-Message-ID: <1422108103-15052-5-git-send-email-mpa@pengutronix.de>
-References: <1422108103-15052-1-git-send-email-mpa@pengutronix.de>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1422108103-15052-1-git-send-email-mpa@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Fabio Estevam <festevam@gmail.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>
-Cc: Denis Carikli <denis@eukrea.com>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Markus Pargmann <mpa@pengutronix.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun4i: Add initial dts for Gemei G9 tablet
+Date: Sat, 24 Jan 2015 15:39:45 +0100
+Message-ID: <20150124143945.GD8470@lukather>
+References: <1422045409-1251-1-git-send-email-plaes@plaes.org>
+ <20150123212203.GB8470@lukather>
+ <1422050375.1799.9.camel@plaes.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="C+ts3FVlLX8+P6JN"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422050375.1799.9.camel-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a driver for the imx25 ADC/TSC module. It controls the
-touchscreen conversion queue and creates a touchscreen input device.
-The driver currently only supports 4 wire touchscreens. The driver uses
-a simple conversion queue of precharge, touch detection, X measurement,
-Y measurement, precharge and another touch detection.
 
-This driver uses the regmap from the parent to setup some touch specific
-settings in the core driver and setup a idle configuration with touch
-detection.
+--C+ts3FVlLX8+P6JN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-Signed-off-by: Denis Carikli <denis@eukrea.com>
-Acked-by: Dmitry Torokhov <dtor@vmware.com>
----
+Hi,
 
-Notes:
-    Changes in v5:
-     - Fix signed/unsigned comparison
-     - Fix unused variable settling_time by putting it in the correct argument list
-     - Use continous conversion queue with the repeat feature and a proper
-       repeat-wait. Previously the touchscreen caused massive number of interrupts.
+On Fri, Jan 23, 2015 at 11:59:35PM +0200, Priit Laes wrote:
+>=20
+> On Fri, 2015-01-23 at 22:22 +0100, Maxime Ripard wrote:
+> > On Fri, Jan 23, 2015 at 10:36:49PM +0200, Priit Laes wrote:
+> > > Gemei G9 is an A10 based tablet, with 1G RAM, 16G NAND, 1024x768=20
+> > > IPS LCD display, stereo speakers, 1.3MP front camera and 5 MP
+> > > rear camera, 8000mAh battery, GT901 2+1 touchscreen, Bosch BMA250=20
+> > > accelerometer and RTL8188CUS USB wifi. It also has MicroSD slot,=20
+> > > miniHDMI, 1 x MicroUSB OTG port and 1 x MicroUSB host port and=20
+> > > 3.5mm headphone jack.
+> > > More details are available at: http://linux-sunxi.org/Gemei_G9
+> > >=20
+> [..]
+> > >=20
+> > > +/ {
+> > > +    model =3D "Gemei G9 Tablet";
+> > > +    compatible =3D "gemei,g9", "allwinner,sun4i-a10";
+> > > +};
+> > > +
+> > > +/*
+> > > + * http://linux-sunxi.org/Gemei_G9
+> >=20
+> > Please don't put URL in the DT. This is very likely to change in the=20
+> > future, and won't be valid anymore.
+>=20
+> OK! The URL in commit message is ok to stay?
 
- .../bindings/input/touchscreen/fsl-mx25-tcq.txt    |  29 +
- drivers/input/touchscreen/Kconfig                  |   6 +
- drivers/input/touchscreen/Makefile                 |   1 +
- drivers/input/touchscreen/fsl-imx25-tcq.c          | 587 +++++++++++++++++++++
- 4 files changed, 623 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
- create mode 100644 drivers/input/touchscreen/fsl-imx25-tcq.c
+Yeah, I'm not that fond of it, but it's not that important either.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
-new file mode 100644
-index 000000000000..4214a99d197a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
-@@ -0,0 +1,29 @@
-+Freescale mx25 TS conversion queue module
-+
-+mx25 touchscreen conversion queue module which controls the ADC unit of the
-+mx25 for attached touchscreens.
-+
-+Required properties:
-+ - compatible: Should be "fsl,imx25-tcq".
-+ - reg: Memory range of the device.
-+ - interrupts: Should be the interrupt number associated with this module within
-+   the tscadc unit (<0>).
-+ - interrupt-parent: Should be a phandle to the tscadc unit.
-+ - fsl,wires: Should be '<4>' or '<5>'
-+
-+Optional properties:
-+ - fsl,pen-debounce: Pen debounce time.
-+ - fsl,pen-threshold: Pen-down threshold for the touchscreen.
-+ - fsl,settling-time: Settling time in nanoseconds.
-+
-+This device includes two conversion queues which can be added as subnodes.
-+The first queue is for the touchscreen, the second for general purpose ADC.
-+
-+Example:
-+	tsc: tcq@50030400 {
-+		compatible = "fsl,imx25-tcq";
-+		reg = <0x50030400 0x60>;
-+		interrupt-parent = <&tscadc>;
-+		interrupts = <0>;
-+		fsl,wires = <4>;
-+	};
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index 58917525126e..f1534a0cd23f 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -748,6 +748,12 @@ config TOUCHSCREEN_USB_COMPOSITE
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called usbtouchscreen.
- 
-+config TOUCHSCREEN_MX25
-+	tristate "Freescale i.MX25 touchscreen input driver"
-+	depends on MFD_MX25_TSADC
-+	help
-+	  Enable support for touchscreen connected to your i.MX25.
-+
- config TOUCHSCREEN_MC13783
- 	tristate "Freescale MC13783 touchscreen input driver"
- 	depends on MFD_MC13XXX
-diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
-index 0242fea2102a..bbb55a69c33c 100644
---- a/drivers/input/touchscreen/Makefile
-+++ b/drivers/input/touchscreen/Makefile
-@@ -41,6 +41,7 @@ obj-$(CONFIG_TOUCHSCREEN_INEXIO)	+= inexio.o
- obj-$(CONFIG_TOUCHSCREEN_INTEL_MID)	+= intel-mid-touch.o
- obj-$(CONFIG_TOUCHSCREEN_LPC32XX)	+= lpc32xx_ts.o
- obj-$(CONFIG_TOUCHSCREEN_MAX11801)	+= max11801_ts.o
-+obj-$(CONFIG_TOUCHSCREEN_MX25)		+= fsl-imx25-tcq.o
- obj-$(CONFIG_TOUCHSCREEN_MC13783)	+= mc13783_ts.o
- obj-$(CONFIG_TOUCHSCREEN_MCS5000)	+= mcs5000_ts.o
- obj-$(CONFIG_TOUCHSCREEN_MIGOR)		+= migor_ts.o
-diff --git a/drivers/input/touchscreen/fsl-imx25-tcq.c b/drivers/input/touchscreen/fsl-imx25-tcq.c
-new file mode 100644
-index 000000000000..2eb3bd00d56c
---- /dev/null
-+++ b/drivers/input/touchscreen/fsl-imx25-tcq.c
-@@ -0,0 +1,587 @@
-+/*
-+ * Copyright 2014 Markus Pargmann, Pengutronix <mpa@pengutronix.de>
-+ * Based on driver from 2011:
-+ *   Juergen Beisert, Pengutronix <kernel@pengutronix.de>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ *
-+ * This is the driver for the imx25 TCQ (Touchscreen Conversion Queue)
-+ * connected to the imx25 ADC.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/imx25-tsadc.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+static const char mx25_tcq_name[] = "mx25-tcq";
-+
-+enum mx25_tcq_mode {
-+	MX25_TS_4WIRE,
-+};
-+
-+struct mx25_tcq_priv {
-+	struct regmap *regs;
-+	struct regmap *core_regs;
-+	struct input_dev *idev;
-+	enum mx25_tcq_mode mode;
-+	unsigned int pen_threshold;
-+	unsigned int sample_count;
-+	unsigned int expected_samples;
-+	unsigned int pen_debounce;
-+	unsigned int settling_time;
-+	struct clk *clk;
-+	int irq;
-+};
-+
-+static struct regmap_config mx25_tcq_regconfig = {
-+	.fast_io = true,
-+	.max_register = 0x5c,
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static struct of_device_id mx25_tcq_ids[] = {
-+	{ .compatible = "fsl,imx25-tcq", },
-+	{ /* Sentinel */ }
-+};
-+
-+#define TSC_4WIRE_PRE_INDEX 0
-+#define TSC_4WIRE_X_INDEX 1
-+#define TSC_4WIRE_Y_INDEX 2
-+#define TSC_4WIRE_POST_INDEX 3
-+#define TSC_4WIRE_LEAVE 4
-+
-+#define MX25_TSC_DEF_THRESHOLD 80
-+#define TSC_MAX_SAMPLES 16
-+
-+#define MX25_TSC_REPEAT_WAIT 14
-+
-+enum mx25_adc_configurations {
-+	MX25_CFG_PRECHARGE = 0,
-+	MX25_CFG_TOUCH_DETECT,
-+	MX25_CFG_X_MEASUREMENT,
-+	MX25_CFG_Y_MEASUREMENT,
-+};
-+
-+#define MX25_PRECHARGE_VALUE (\
-+			MX25_ADCQ_CFG_YPLL_OFF | \
-+			MX25_ADCQ_CFG_XNUR_OFF | \
-+			MX25_ADCQ_CFG_XPUL_HIGH | \
-+			MX25_ADCQ_CFG_REFP_INT | \
-+			MX25_ADCQ_CFG_IN_XP | \
-+			MX25_ADCQ_CFG_REFN_NGND2 | \
-+			MX25_ADCQ_CFG_IGS)
-+
-+#define MX25_TOUCH_DETECT_VALUE (\
-+			MX25_ADCQ_CFG_YNLR | \
-+			MX25_ADCQ_CFG_YPLL_OFF | \
-+			MX25_ADCQ_CFG_XNUR_OFF | \
-+			MX25_ADCQ_CFG_XPUL_OFF | \
-+			MX25_ADCQ_CFG_REFP_INT | \
-+			MX25_ADCQ_CFG_IN_XP | \
-+			MX25_ADCQ_CFG_REFN_NGND2 | \
-+			MX25_ADCQ_CFG_PENIACK)
-+
-+static void imx25_setup_queue_cfgs(struct mx25_tcq_priv *priv,
-+				   unsigned int settling_time)
-+{
-+	u32 precharge_cfg =
-+			MX25_PRECHARGE_VALUE |
-+			MX25_ADCQ_CFG_SETTLING_TIME(settling_time);
-+	u32 touch_detect_cfg =
-+			MX25_TOUCH_DETECT_VALUE |
-+			MX25_ADCQ_CFG_NOS(1) |
-+			MX25_ADCQ_CFG_SETTLING_TIME(settling_time);
-+
-+	regmap_write(priv->core_regs, MX25_TSC_TICR, precharge_cfg);
-+
-+	/* PRECHARGE */
-+	regmap_write(priv->regs, MX25_ADCQ_CFG(MX25_CFG_PRECHARGE),
-+		     precharge_cfg);
-+
-+	/* TOUCH_DETECT */
-+	regmap_write(priv->regs, MX25_ADCQ_CFG(MX25_CFG_TOUCH_DETECT),
-+		     touch_detect_cfg);
-+
-+	/* X Measurement */
-+	regmap_write(priv->regs, MX25_ADCQ_CFG(MX25_CFG_X_MEASUREMENT),
-+		     MX25_ADCQ_CFG_YPLL_OFF |
-+		     MX25_ADCQ_CFG_XNUR_LOW |
-+		     MX25_ADCQ_CFG_XPUL_HIGH |
-+		     MX25_ADCQ_CFG_REFP_XP |
-+		     MX25_ADCQ_CFG_IN_YP |
-+		     MX25_ADCQ_CFG_REFN_XN |
-+		     MX25_ADCQ_CFG_NOS(priv->sample_count) |
-+		     MX25_ADCQ_CFG_SETTLING_TIME(settling_time));
-+
-+	/* Y Measurement */
-+	regmap_write(priv->regs, MX25_ADCQ_CFG(MX25_CFG_Y_MEASUREMENT),
-+		     MX25_ADCQ_CFG_YNLR |
-+		     MX25_ADCQ_CFG_YPLL_HIGH |
-+		     MX25_ADCQ_CFG_XNUR_OFF |
-+		     MX25_ADCQ_CFG_XPUL_OFF |
-+		     MX25_ADCQ_CFG_REFP_YP |
-+		     MX25_ADCQ_CFG_IN_XP |
-+		     MX25_ADCQ_CFG_REFN_YN |
-+		     MX25_ADCQ_CFG_NOS(priv->sample_count) |
-+		     MX25_ADCQ_CFG_SETTLING_TIME(settling_time));
-+
-+	/* Enable the touch detection right now */
-+	regmap_write(priv->core_regs, MX25_TSC_TICR, touch_detect_cfg |
-+		     MX25_ADCQ_CFG_IGS);
-+}
-+
-+static int imx25_setup_queue_4wire(struct mx25_tcq_priv *priv,
-+				   unsigned settling_time, int *items)
-+{
-+	imx25_setup_queue_cfgs(priv, settling_time);
-+
-+	/* Setup the conversion queue */
-+	regmap_write(priv->regs, MX25_ADCQ_ITEM_7_0,
-+		     MX25_ADCQ_ITEM(0, MX25_CFG_PRECHARGE) |
-+		     MX25_ADCQ_ITEM(1, MX25_CFG_TOUCH_DETECT) |
-+		     MX25_ADCQ_ITEM(2, MX25_CFG_X_MEASUREMENT) |
-+		     MX25_ADCQ_ITEM(3, MX25_CFG_Y_MEASUREMENT) |
-+		     MX25_ADCQ_ITEM(4, MX25_CFG_PRECHARGE) |
-+		     MX25_ADCQ_ITEM(5, MX25_CFG_TOUCH_DETECT));
-+
-+	/* We measure X/Y with 'sample_count' number of samples and execute a
-+	 * touch detection twice, with 1 sample each */
-+	priv->expected_samples = priv->sample_count * 2 + 2;
-+	*items = 6;
-+
-+	return 0;
-+}
-+
-+static void mx25_tcq_disable_touch_irq(struct mx25_tcq_priv *priv)
-+{
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR, MX25_ADCQ_CR_PDMSK,
-+			   MX25_ADCQ_CR_PDMSK);
-+}
-+
-+static void mx25_tcq_enable_touch_irq(struct mx25_tcq_priv *priv)
-+{
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR, MX25_ADCQ_CR_PDMSK, 0);
-+}
-+
-+static void mx25_tcq_disable_fifo_irq(struct mx25_tcq_priv *priv)
-+{
-+	regmap_update_bits(priv->regs, MX25_ADCQ_MR, MX25_ADCQ_MR_FDRY_IRQ,
-+			   MX25_ADCQ_MR_FDRY_IRQ);
-+}
-+
-+static void mx25_tcq_enable_fifo_irq(struct mx25_tcq_priv *priv)
-+{
-+	regmap_update_bits(priv->regs, MX25_ADCQ_MR, MX25_ADCQ_MR_FDRY_IRQ, 0);
-+}
-+
-+static void mx25_tcq_force_queue_start(struct mx25_tcq_priv *priv)
-+{
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR,
-+			   MX25_ADCQ_CR_FQS,
-+			   MX25_ADCQ_CR_FQS);
-+}
-+
-+static void mx25_tcq_force_queue_stop(struct mx25_tcq_priv *priv)
-+{
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR,
-+			   MX25_ADCQ_CR_FQS, 0);
-+}
-+
-+static void mx25_tcq_fifo_reset(struct mx25_tcq_priv *priv)
-+{
-+	u32 tcqcr;
-+
-+	regmap_read(priv->regs, MX25_ADCQ_CR, &tcqcr);
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR, MX25_ADCQ_CR_FRST,
-+			   MX25_ADCQ_CR_FRST);
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR, MX25_ADCQ_CR_FRST, 0);
-+	regmap_write(priv->regs, MX25_ADCQ_CR, tcqcr);
-+}
-+
-+static void mx25_tcq_re_enable_touch_detection(struct mx25_tcq_priv *priv)
-+{
-+	/* stop the queue from looping */
-+	mx25_tcq_force_queue_stop(priv);
-+
-+	/* for a clean touch detection, preload the X plane */
-+	regmap_write(priv->core_regs, MX25_TSC_TICR, MX25_PRECHARGE_VALUE);
-+
-+	/* waste some time now to pre-load the X plate to high voltage */
-+	mx25_tcq_fifo_reset(priv);
-+
-+	/* re-enable the detection right now */
-+	regmap_write(priv->core_regs, MX25_TSC_TICR,
-+		     MX25_TOUCH_DETECT_VALUE | MX25_ADCQ_CFG_IGS);
-+
-+	regmap_update_bits(priv->regs, MX25_ADCQ_SR, MX25_ADCQ_SR_PD,
-+			   MX25_ADCQ_SR_PD);
-+
-+	/* enable the pen down event to be a source for the interrupt */
-+	regmap_update_bits(priv->regs, MX25_ADCQ_MR, MX25_ADCQ_MR_PD_IRQ, 0);
-+
-+	/* lets fire the next IRQ if someone touches the touchscreen */
-+	mx25_tcq_enable_touch_irq(priv);
-+}
-+
-+static int mx25_tcq_create_event_for_4wire(struct mx25_tcq_priv *priv,
-+					   u32 *sample_buf,
-+					   unsigned int samples)
-+{
-+	unsigned int x_pos = 0;
-+	unsigned int y_pos = 0;
-+	unsigned int touch_pre = 0;
-+	unsigned int touch_post = 0;
-+	unsigned int i;
-+	int ret = 0;
-+
-+	for (i = 0; i < samples; i++) {
-+		unsigned int index = MX25_ADCQ_FIFO_ID(sample_buf[i]);
-+		unsigned int val = MX25_ADCQ_FIFO_DATA(sample_buf[i]);
-+
-+		switch (index) {
-+		case 1:
-+			touch_pre = val;
-+			break;
-+		case 2:
-+			x_pos = val;
-+			break;
-+		case 3:
-+			y_pos = val;
-+			break;
-+		case 5:
-+			touch_post = val;
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+	}
-+
-+	if (ret == 0 && samples != 0) {
-+		/*
-+		 * only if both touch measures are below a threshold,
-+		 * the position is valid
-+		 */
-+		if (touch_pre < priv->pen_threshold &&
-+		    touch_post < priv->pen_threshold) {
-+			/* valid samples, generate a report */
-+			x_pos /= priv->sample_count;
-+			y_pos /= priv->sample_count;
-+			input_report_abs(priv->idev, ABS_X, x_pos);
-+			input_report_abs(priv->idev, ABS_Y, y_pos);
-+			input_report_key(priv->idev, BTN_TOUCH, 1);
-+			input_sync(priv->idev);
-+
-+			/* get next sample */
-+			mx25_tcq_enable_fifo_irq(priv);
-+		} else if (touch_pre >= priv->pen_threshold &&
-+			   touch_post >= priv->pen_threshold) {
-+			/*
-+			 * if both samples are invalid,
-+			 * generate a release report
-+			 */
-+			input_report_key(priv->idev, BTN_TOUCH, 0);
-+			input_sync(priv->idev);
-+			mx25_tcq_re_enable_touch_detection(priv);
-+		} else {
-+			/*
-+			 * if only one of both touch measurements are
-+			 * below the threshold, still some bouncing
-+			 * happens. Take additional samples in this
-+			 * case to be sure
-+			 */
-+			mx25_tcq_enable_fifo_irq(priv);
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static irqreturn_t mx25_tcq_irq_thread(int irq, void *dev_id)
-+{
-+	struct mx25_tcq_priv *priv = dev_id;
-+	u32 sample_buf[TSC_MAX_SAMPLES];
-+	unsigned int samples = 0;
-+
-+	/* read all samples */
-+	while (1) {
-+		u32 stats;
-+
-+		regmap_read(priv->regs, MX25_ADCQ_SR, &stats);
-+		if (stats & MX25_ADCQ_SR_EMPT)
-+			break;
-+
-+		if (samples < TSC_MAX_SAMPLES) {
-+			regmap_read(priv->regs, MX25_ADCQ_FIFO,
-+				    &sample_buf[samples]);
-+			++samples;
-+		} else {
-+			u32 discarded;
-+			/* discard samples */
-+			regmap_read(priv->regs, MX25_ADCQ_FIFO, &discarded);
-+		}
-+	}
-+
-+	mx25_tcq_create_event_for_4wire(priv, sample_buf, samples);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t mx25_tcq_irq(int irq, void *dev_id)
-+{
-+	struct mx25_tcq_priv *priv = dev_id;
-+	u32 stat;
-+	int ret = IRQ_HANDLED;
-+
-+	regmap_read(priv->regs, MX25_ADCQ_SR, &stat);
-+
-+	if (stat & (MX25_ADCQ_SR_FRR | MX25_ADCQ_SR_FUR | MX25_ADCQ_SR_FOR))
-+		mx25_tcq_fifo_reset(priv);
-+
-+	if (stat & MX25_ADCQ_SR_PD) {
-+		mx25_tcq_disable_touch_irq(priv);
-+		mx25_tcq_force_queue_start(priv);
-+		mx25_tcq_enable_fifo_irq(priv);
-+	}
-+
-+	if (stat & MX25_ADCQ_SR_FDRY) {
-+		mx25_tcq_disable_fifo_irq(priv);
-+		ret = IRQ_WAKE_THREAD;
-+	}
-+
-+	regmap_update_bits(priv->regs, MX25_ADCQ_SR, MX25_ADCQ_SR_FRR |
-+			   MX25_ADCQ_SR_FUR | MX25_ADCQ_SR_FOR |
-+			   MX25_ADCQ_SR_PD | MX25_ADCQ_SR_EOQ,
-+			   MX25_ADCQ_SR_FRR | MX25_ADCQ_SR_FUR |
-+			   MX25_ADCQ_SR_FOR | MX25_ADCQ_SR_PD |
-+			   MX25_ADCQ_SR_EOQ);
-+
-+	return ret;
-+}
-+
-+/* configure the statemachine for a 4-wire touchscreen */
-+static int mx25_tcq_init(struct mx25_tcq_priv *priv)
-+{
-+	u32 tgcr;
-+	unsigned int ipg_div;
-+	unsigned int adc_period;
-+	unsigned int debounce_cnt;
-+	unsigned int settling_time;
-+	int itemct;
-+	int ret;
-+
-+	regmap_read(priv->core_regs, MX25_TSC_TGCR, &tgcr);
-+	ipg_div = max_t(unsigned int, 4, MX25_TGCR_GET_ADCCLK(tgcr));
-+	adc_period = clk_get_rate(priv->clk) / (ipg_div * 2 + 2);
-+	debounce_cnt = DIV_ROUND_UP(priv->pen_debounce, adc_period * 8) - 1;
-+	settling_time = DIV_ROUND_UP(priv->settling_time, adc_period);
-+
-+	/* Reset */
-+	regmap_write(priv->regs, MX25_ADCQ_CR,
-+		     MX25_ADCQ_CR_QRST | MX25_ADCQ_CR_FRST);
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR,
-+			   MX25_ADCQ_CR_QRST | MX25_ADCQ_CR_FRST, 0);
-+
-+	/* up to 128 * 8 ADC clocks are possible */
-+	if (debounce_cnt > 127)
-+		debounce_cnt = 127;
-+
-+	ret = imx25_setup_queue_4wire(priv, settling_time, &itemct);
-+	if (ret)
-+		return ret;
-+
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR,
-+			   MX25_ADCQ_CR_LITEMID_MASK | MX25_ADCQ_CR_WMRK_MASK,
-+			   MX25_ADCQ_CR_LITEMID(itemct - 1) |
-+			   MX25_ADCQ_CR_WMRK(priv->expected_samples - 1));
-+
-+	/* setup debounce count */
-+	regmap_update_bits(priv->core_regs, MX25_TSC_TGCR,
-+			   MX25_TGCR_PDBTIME_MASK,
-+			   MX25_TGCR_PDBTIME(debounce_cnt));
-+
-+	/* enable debounce */
-+	regmap_update_bits(priv->core_regs, MX25_TSC_TGCR, MX25_TGCR_PDBEN,
-+			   MX25_TGCR_PDBEN);
-+	regmap_update_bits(priv->core_regs, MX25_TSC_TGCR, MX25_TGCR_PDEN,
-+			   MX25_TGCR_PDEN);
-+
-+	/* enable the engine on demand */
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR, MX25_ADCQ_CR_QSM_MASK,
-+			   MX25_ADCQ_CR_QSM_FQS);
-+
-+	/* Enable repeat and repeat wait */
-+	regmap_update_bits(priv->regs, MX25_ADCQ_CR,
-+			   MX25_ADCQ_CR_RPT | MX25_ADCQ_CR_RWAIT_MASK,
-+			   MX25_ADCQ_CR_RPT |
-+			   MX25_ADCQ_CR_RWAIT(MX25_TSC_REPEAT_WAIT));
-+
-+	mx25_tcq_re_enable_touch_detection(priv);
-+
-+	return 0;
-+}
-+
-+static int mx25_tcq_parse_dt(struct platform_device *pdev,
-+			     struct mx25_tcq_priv *priv)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	u32 wires;
-+	int ret;
-+
-+	/* Setup defaults */
-+	priv->pen_threshold = 500;
-+	priv->sample_count = 3;
-+	priv->pen_debounce = 1000000;
-+	priv->settling_time = 250000;
-+
-+	ret = of_property_read_u32(np, "fsl,wires", &wires);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to find fsl,wires properties\n");
-+		return ret;
-+	}
-+
-+	if (wires == 4) {
-+		priv->mode = MX25_TS_4WIRE;
-+	} else {
-+		dev_err(&pdev->dev, "%u-wire mode not supported\n", wires);
-+		return -EINVAL;
-+	}
-+
-+	/* These are optional, we don't care about the return values */
-+	of_property_read_u32(np, "fsl,pen-threshold", &priv->pen_threshold);
-+	of_property_read_u32(np, "fsl,settling-time", &priv->settling_time);
-+	of_property_read_u32(np, "fsl,pen-debounce", &priv->pen_debounce);
-+
-+	return 0;
-+}
-+
-+static int mx25_tcq_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct input_dev *idev;
-+	struct mx25_tcq_priv *priv;
-+	struct mx25_tsadc *tsadc = dev_get_drvdata(pdev->dev.parent);
-+	struct resource *res;
-+	void __iomem *mem;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mem = devm_ioremap_resource(dev, res);
-+	if (!mem)
-+		return -ENOMEM;
-+
-+	ret = mx25_tcq_parse_dt(pdev, priv);
-+	if (ret)
-+		return ret;
-+
-+	priv->regs = devm_regmap_init_mmio(dev, mem, &mx25_tcq_regconfig);
-+	if (IS_ERR(priv->regs)) {
-+		dev_err(dev, "Failed to initialize regmap\n");
-+		return PTR_ERR(priv->regs);
-+	}
-+
-+	priv->irq = platform_get_irq(pdev, 0);
-+	if (priv->irq <= 0) {
-+		dev_err(dev, "Failed to get IRQ\n");
-+		return priv->irq;
-+	}
-+
-+	idev = devm_input_allocate_device(dev);
-+	if (!idev) {
-+		dev_err(dev, "Failed to allocate input device\n");
-+		return -ENOMEM;
-+	}
-+
-+	idev->name = mx25_tcq_name;
-+	idev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
-+	idev->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
-+	input_set_abs_params(idev, ABS_X, 0, 0xfff, 0, 0);
-+	input_set_abs_params(idev, ABS_Y, 0, 0xfff, 0, 0);
-+
-+	idev->id.bustype = BUS_HOST;
-+
-+	ret = input_register_device(idev);
-+	if (ret) {
-+		dev_err(dev, "Failed to register input device\n");
-+		return ret;
-+	}
-+
-+	priv->idev = idev;
-+
-+	priv->core_regs = tsadc->regs;
-+	if (!priv->core_regs)
-+		return -EINVAL;
-+
-+	priv->clk = tsadc->clk;
-+	if (!priv->clk)
-+		return -EINVAL;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable ipg clock\n");
-+		return ret;
-+	}
-+
-+	ret = request_threaded_irq(priv->irq, mx25_tcq_irq, mx25_tcq_irq_thread,
-+				   IRQF_ONESHOT, pdev->name, priv);
-+	if (ret) {
-+		dev_err(dev, "Failed requesting IRQ\n");
-+		goto err_clk_unprepare;
-+	}
-+
-+	ret = mx25_tcq_init(priv);
-+	if (ret) {
-+		dev_err(dev, "Failed to init tcq\n");
-+		goto error_free_irq;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+
-+error_free_irq:
-+	free_irq(priv->irq, priv);
-+err_clk_unprepare:
-+	clk_disable_unprepare(priv->clk);
-+	return ret;
-+}
-+
-+static int mx25_tcq_remove(struct platform_device *pdev)
-+{
-+	struct mx25_tcq_priv *priv = platform_get_drvdata(pdev);
-+
-+	free_irq(priv->irq, priv);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver mx25_tcq_driver = {
-+	.driver		= {
-+		.name	= "mx25-tcq",
-+		.of_match_table = mx25_tcq_ids,
-+	},
-+	.probe		= mx25_tcq_probe,
-+	.remove		= mx25_tcq_remove,
-+};
-+module_platform_driver(mx25_tcq_driver);
-+
-+MODULE_DESCRIPTION("TS input driver for Freescale mx25");
-+MODULE_AUTHOR("Markus Pargmann <mpa@pengutronix.de>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.4
+> > > +&i2c1 {
+> > > +    pinctrl-names =3D "default";
+> > > +    pinctrl-0 =3D <&i2c1_pins_a>;
+> > > +    status =3D "okay";
+> > > +
+> > > +    /* Accelerometer */
+> > > +    bma250@18 {
+> > > +        compatible =3D "bosch,bma250";
+> > > +        reg =3D <0x18>;
+> >=20
+> > Is there a driver for this? It looks weird that it doesn't need more=20
+> > properties than that.
+>=20
+> Yes, it's supported by drivers/iio/accel/bma180.c though I have to=20
+> admit that this name is a bit misleading. (bosch-bma.c would=20
+> better, I guess).
+>=20
+> And I was a bit surprised that it worked out of the box too, but the=20
+> device was present under /sys and I was able to read x, y, z and=20
+> temperature values.
 
+Cool :)
+
+There's no interrupt wired to it then?
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--C+ts3FVlLX8+P6JN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUw66xAAoJEBx+YmzsjxAgIYgP/0hzJ56oAv4Ha9skO9oxWF0u
+ZQUPtG1W9D9U5B48cAQlE8wM7GCQZzLywE3VOXl8lO+GYKxlSW+2iGHgb8gKUjJj
+65tB0meD+I2tJFlQ+tdV7/dHKgICf+QPZaPM7NfCB/lhv4SYuLHOI1m0KLUgmEVx
+n481k6GgEd9pNPHbY0P6oSmFcOHkifqofhzLdqM552Mz79iRU3oVM3l6Vl49wxoa
+ZxdM5sHgVptkYru9S2xfAGq1reAPe2KOouW74iMEtkFsTGNFLEgw7ACIrzqLohbE
+V26EQ5UXraIBZrUr6LLd2rOBrkG+8EjxPs71f/NAGPChQ5KaSllB+sWDP6IvJpD2
+gvySfeJyxRPuxHnHhC/5T+bByskBa5LNjxf7r0fHhTyK/VMOiVIGXMmWVsw0gwhs
+lfbU3FCj4gpAyqpg6KMaY835S6yyEjCBi33yzKAgdknemWLNkw96Ms854YR6K534
+oj1rDn83e+rY2+SPQalzglj/bG01C/fXCc3tDFKbVu/bUGKsDeLhHUUBe5ipcFlf
+D8MTh0AVYVntn7+NH2jHooldUTfaJq6rn04Gc4FmsX0rtHKMLtH2k5F6sigwRhcM
+5aPkDBCv/zQPAlCRV0nc3UrjL/kwb05COtlYqVQ3TciqboyFxi9KrYo2E0uw5U7V
+8vdXV1HhiaMYHj4JRAlS
+=jt2T
+-----END PGP SIGNATURE-----
+
+--C+ts3FVlLX8+P6JN--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
