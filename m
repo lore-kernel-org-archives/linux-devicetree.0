@@ -1,28 +1,38 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] ARM: at91: fix irq_pm_install_action WARNING
-Date: Sat, 24 Jan 2015 17:37:48 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1501241735530.5526@nanos>
-References: <1422032971-14139-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4] irqchip: gic: Allow interrupt level to be set for
+ PPIs.
+Date: Sat, 24 Jan 2015 18:15:23 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1501241814430.5526@nanos>
+References: <1421772779-25764-1-git-send-email-Liviu.Dudau@arm.com> <87mw5bf256.fsf@approximate.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422032971-14139-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87mw5bf256.fsf@approximate.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Haojian Zhuang <haojian.zhuang@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Jan 2015, Boris Brezillon wrote:
->  - change the compatible string to clearly show that this chip is purely
->    virtual
+On Thu, 22 Jan 2015, Marc Zyngier wrote:
 
-So we probably want to do : s/dumb/virt/ for both DT and code to make
-it clear from the names as well.
+> On Tue, Jan 20 2015 at  4:52:59 pm GMT, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> > During a recent cleanup of the arm64 DTs it has become clear that
+> > the handling of PPIs in xxxx_set_type() is incorrect. The ARM TRMs
+> > for GICv2 and later allow for "implementation defined" support for
+> > setting the edge or level type of the PPI interrupts and don't restrict
+> > the activation level of the signal. Current ARM implementations
+> > do restrict the PPI level type to IRQ_TYPE_LEVEL_LOW, but licensees
+> > of the IP can decide to shoot themselves in the foot at any time.
+> >
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> 
+> For the GIC and GICv3 parts:
+> 
+> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+
+So I queue that if there are no further objections from Russell or the
+DT folks.
 
 Thanks,
 
 	tglx
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
