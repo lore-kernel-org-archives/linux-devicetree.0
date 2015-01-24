@@ -1,33 +1,32 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v2 RESEND 1/8] dt: bindings: Supply shared ST IRQ
- defines
-Date: Sat, 24 Jan 2015 12:46:19 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1501241244430.5526@nanos>
-References: <1421920133-7914-1-git-send-email-lee.jones@linaro.org> <1421920133-7914-2-git-send-email-lee.jones@linaro.org> <alpine.DEB.2.11.1501231656310.5526@nanos> <20150123163938.GC11745@x1>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 RESEND 2/8] irqchip: Supply new driver for STi based
+ devices
+Date: Sat, 24 Jan 2015 12:48:51 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1501241246240.5526@nanos>
+References: <1421920133-7914-1-git-send-email-lee.jones@linaro.org> <1421920133-7914-3-git-send-email-lee.jones@linaro.org> <alpine.DEB.2.11.1501231702280.5526@nanos> <20150123163231.GB11745@x1>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150123163938.GC11745@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150123163231.GB11745@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, jason@lakedaemon.net, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Fri, 23 Jan 2015, Lee Jones wrote:
 > On Fri, 23 Jan 2015, Thomas Gleixner wrote:
-> > Can we please stop adding these pointless filenames all over the
-> > place? They are useless and wrong in a lot of cases.
+> > The only technical comment I have is: shouldn't all the stuff except
+> > the resume function be marked __init or is any of this required post
+> > init?
 > 
-> Less of a copy and paste and more and a `mv` without fixing up the
-> file names.  I guess they are silly, but they are rife, so someone must
-> think they're a good idea. :)
+> It's not common to mark functions invoked at and affter *_probe() as
+> __init.  At least, not as far as I'm aware.
 
-I'd rather say they are ripe for being banned :)
+Right, if the probe stuff is supposed to be functional post init, then
+we of course need to keep it around. But I guess we have no mechanism
+to distinguish the 'boot only' and 'keep post init' case. Might be
+worthwhile to investigate.
 
 Thanks,
 
 	tglx
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
