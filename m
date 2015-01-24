@@ -1,32 +1,45 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 RESEND 2/8] irqchip: Supply new driver for STi based
- devices
-Date: Sat, 24 Jan 2015 12:48:51 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1501241246240.5526@nanos>
-References: <1421920133-7914-1-git-send-email-lee.jones@linaro.org> <1421920133-7914-3-git-send-email-lee.jones@linaro.org> <alpine.DEB.2.11.1501231702280.5526@nanos> <20150123163231.GB11745@x1>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] sunxi: clk: Set sun6i-pll1 n_start = 1
+Date: Sat, 24 Jan 2015 12:56:32 +0100
+Message-ID: <1422100592-19981-2-git-send-email-hdegoede@redhat.com>
+References: <1422100592-19981-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150123163231.GB11745@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, jason@lakedaemon.net, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB64QR2TAKGQEZSQTGWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1422100592-19981-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Jan 2015, Lee Jones wrote:
-> On Fri, 23 Jan 2015, Thomas Gleixner wrote:
-> > The only technical comment I have is: shouldn't all the stuff except
-> > the resume function be marked __init or is any of this required post
-> > init?
-> 
-> It's not common to mark functions invoked at and affter *_probe() as
-> __init.  At least, not as far as I'm aware.
+For all pll-s on sun6i n == 0 means use a multiplier of 1, rather then 0 as
+it means on sun4i / sun5i / sun7i. n_start = 1 is already correctly set
+for sun6i pll6, but was missing for pll1, this commit fixes this.
 
-Right, if the probe stuff is supposed to be functional post init, then
-we of course need to keep it around. But I guess we have no mechanism
-to distinguish the 'boot only' and 'keep post init' case. Might be
-worthwhile to investigate.
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/clk/sunxi/clk-sunxi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-
-	tglx
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 24c7cc1..699458e 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -584,6 +584,7 @@ static struct clk_factors_config sun6i_a31_pll1_config = {
+ 	.kwidth = 2,
+ 	.mshift = 0,
+ 	.mwidth = 2,
++	.n_start = 1,
+ };
+ 
+ static struct clk_factors_config sun8i_a23_pll1_config = {
+-- 
+2.1.0
