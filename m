@@ -1,86 +1,84 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 4/9] pci: add DT based ARM Versatile PCI host driver
-Date: Fri, 23 Jan 2015 19:01:27 -0600
-Message-ID: <20150124010127.GA29776@google.com>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
- <1419967718-26909-5-git-send-email-robherring2@gmail.com>
- <2308474.mrIrUSfiTv@wuerfel>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 12/13] ARM: dts: omap3-gta04: uart4 is not connected, so
+ mark it "disabled"
+Date: Fri, 23 Jan 2015 17:03:41 -0800
+Message-ID: <20150124010340.GB28663@atomide.com>
+References: <1421959099-28319-1-git-send-email-marek@goldelico.com>
+ <1421959099-28319-13-git-send-email-marek@goldelico.com>
+ <20150122214052.GY7718@atomide.com>
+ <20150124092842.2441d3c6@notabene.brown>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2308474.mrIrUSfiTv@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robherring2@gmail.com>, devicetree@vger.kernel.org, Peter Maydell <peter.maydell@linaro.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, arm@kernel.org
+In-Reply-To: <20150124092842.2441d3c6@notabene.brown>
+Sender: linux-omap-owner@vger.kernel.org
+To: NeilBrown <neilb@suse.de>
+Cc: Marek Belisko <marek@goldelico.com>, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hns@goldelico.com, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 30, 2014 at 10:58:00PM +0100, Arnd Bergmann wrote:
-> On Tuesday 30 December 2014 13:28:33 Rob Herring wrote:
-> > +	list_for_each_entry(win, res, list) {
-> > +		struct resource *parent, *res = win->res;
-> > +
-> > +		switch (resource_type(res)) {
-> > +		case IORESOURCE_IO:
-> > +			parent = &ioport_resource;
-> > +			err = pci_remap_iospace(res, iobase);
-> > +			if (err) {
-> > +				dev_warn(dev, "error %d: failed to map resource %pR\n",
-> > +					 err, res);
-> > +				continue;
-> > +			}
-> > +			break;
-> > +		case IORESOURCE_MEM:
-> > +			parent = &iomem_resource;
-> > +			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-> > +
-> > +			writel(res->start >> 28, PCI_IMAP(mem));
-> > +			writel(PHYS_OFFSET >> 28, PCI_SMAP(mem));
-> > +			mem++;
-> > +
-> > +			break;
-> > +		case IORESOURCE_BUS:
-> > +		default:
-> > +			continue;
-> > +		}
-> > +
-> > +		err = devm_request_resource(dev, parent, res);
-> > +		if (err)
-> > +			goto out_release_res;
-> > +	}
+* NeilBrown <neilb@suse.de> [150123 14:31]:
+> On Thu, 22 Jan 2015 13:40:53 -0800 Tony Lindgren <tony@atomide.com> wrote:
+> > >  
+> > > +&uart4 {
+> > > +	status = "disabled";
+> > > +};
+> > > +
+> > 
+> > This you probably want to avoid from PM point of view. Depending on
+> > bootloader state of uart4, Linux may or may not be able to hit any
+> > deeper power states.
+> > 
+> > Marking something with status = "disabled" in dts causes the device
+> > entry not even to be created. That means hwmod won't be able to reset
+> > and idle this device during boot.
+> > 
+> > The uart4 device is there for sure even if not muxed and in incomplete
+> > state. You may want to also check other places where you're using
+> > status = "disabled" for the same reasons.
 > 
-> I wonder if we should also request the physical resource for the I/O space
-> window to have it show up in /proc/iomem. We are rather inconsistent in this
-> regard between drivers.
+> That's ... unfortunate.  Would that apply to the MCBSPs too?  They are
+> disabled by default so you would need to explicitly enable them all for
+> sensible behaviour....
 
-I'd like that.  We are inconsistent, but I think it's useful to have this
-information in /proc/iomem.  After all, it is physical address space that
-we can't use for anything else, so I guess you could argue that it's
-actually a bug to omit it.
+Yeah that applies to all the SoC integrated devices that the bus code
+(hwmod) is supposed to reset and idle if unused. Basically anything
+that depends on the dev entry being created.
+ 
+> Hopefully there is some way to mark as device as "this is not used, make sure
+> it is turned off and stays off" ???
 
-> > +	pci_add_flags(PCI_ENABLE_PROC_DOMAINS);
-> > +	pci_add_flags(PCI_REASSIGN_ALL_BUS | PCI_REASSIGN_ALL_RSRC);
-> > +
-> > +	bus = pci_scan_root_bus(&pdev->dev, 0, &pci_versatile_ops, &sys, &pci_res);
-> > +	if (!bus)
-> > +		return -ENOMEM;
-> > +
-> > +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> > +	pci_assign_unassigned_bus_resources(bus);
-> > +
-> > +	return 0;
+Not currently that I know of :) To do that, we should add something
+like status = "incomplete" where the dev entry gets created but the
+driver is never probed. And incomplete here meaning that the device
+is missing some parts like pins that would make it work properly.
+ 
+> Thanks for the heads-up.  I'll have a look and see exactly what is happening.
+
+OK
+ 
+> BTW, on the topic of OMAP UARTs and power saving...
+>  I note that there are now two drivers for the OMAP3 UART - omap-serial and
+>  8250_omap.
+>  I also note that your commit:
 > 
-> One general question, mainly for Bjorn: pci_scan_root_bus adds all the devices
-> at the Linux driver level by calling pci_bus_add_devices(), but then we call
-> pci_fixup_irqs and pci_assign_unassigned_bus_resources after that, which will
-> change the devices again. Is this how it's meant to work? How do we ensure
-> that we have the correct irq number and resources by the time we enter the
-> probe() function of the PCI device driver that gets bound to a device here?
+> commit a2fc36613ac1af2e92cbed7af80bc72d8114dd50
+>     ARM: OMAP3: Use manual idle for UARTs because of DMA errata
+> 
+>  is incompatible with omap-serial.  In particular, if I enable runtime
+>  suspend of the serial port by setting the autosuspend_timeout, then incoming
+>  characters will no longer wake the port (if I revert your patch incoming
+>  chars do wake the port).
+>  This could (I think) be fixed by enabling the RX/CTS interrupt.  However if
+>  omap-serial is being deprecated, then there probably isn't any point.
+> 
+>  So: what is the longer term expectation for these drivers?  Should we be
+>  switching over to 8250?
 
-Nope, that isn't how it's meant to work.  After pci_bus_add_devices()
-completes, drivers can be already bound to the device, and the PCI core
-should keep its mitts off things the driver could be using.  But I think
-we've had this problem for a long time, and I haven't looked at it recently
-to see how hard it would be to fix.
+Yeah you should alredy be able to do it. Hopefully we'll have some
+translation layer and the old omap-serial.c can be mostly removed
+now that we have 8250 support with runtime PM :)
 
-Bjorn
+Regards,
+
+Tony
