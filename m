@@ -1,84 +1,35 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 12/13] ARM: dts: omap3-gta04: uart4 is not connected, so
- mark it "disabled"
-Date: Fri, 23 Jan 2015 17:03:41 -0800
-Message-ID: <20150124010340.GB28663@atomide.com>
-References: <1421959099-28319-1-git-send-email-marek@goldelico.com>
- <1421959099-28319-13-git-send-email-marek@goldelico.com>
- <20150122214052.GY7718@atomide.com>
- <20150124092842.2441d3c6@notabene.brown>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
+Date: Fri, 23 Jan 2015 17:22:29 -0800
+Message-ID: <CAJAp7OgpF2-b5zWJ-_z_yPejPO8LFZpT7dD7h0Wo3X5wV5xBjw@mail.gmail.com>
+References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150124092842.2441d3c6@notabene.brown>
-Sender: linux-omap-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>
-Cc: Marek Belisko <marek@goldelico.com>, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hns@goldelico.com, NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* NeilBrown <neilb@suse.de> [150123 14:31]:
-> On Thu, 22 Jan 2015 13:40:53 -0800 Tony Lindgren <tony@atomide.com> wrote:
-> > >  
-> > > +&uart4 {
-> > > +	status = "disabled";
-> > > +};
-> > > +
-> > 
-> > This you probably want to avoid from PM point of view. Depending on
-> > bootloader state of uart4, Linux may or may not be able to hit any
-> > deeper power states.
-> > 
-> > Marking something with status = "disabled" in dts causes the device
-> > entry not even to be created. That means hwmod won't be able to reset
-> > and idle this device during boot.
-> > 
-> > The uart4 device is there for sure even if not muxed and in incomplete
-> > state. You may want to also check other places where you're using
-> > status = "disabled" for the same reasons.
-> 
-> That's ... unfortunate.  Would that apply to the MCBSPs too?  They are
-> disabled by default so you would need to explicitly enable them all for
-> sensible behaviour....
+On Fri, Jan 23, 2015 at 4:54 PM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
+> From: Courtney Cavin <courtney.cavin@sonymobile.com>
+>
+> This adds support for the WLED ('White' LED) block on Qualcomm's
+> PM8941 PMICs.
+>
+> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
 
-Yeah that applies to all the SoC integrated devices that the bus code
-(hwmod) is supposed to reset and idle if unused. Basically anything
-that depends on the dev entry being created.
- 
-> Hopefully there is some way to mark as device as "this is not used, make sure
-> it is turned off and stays off" ???
+Sorry, I missed the change log.
 
-Not currently that I know of :) To do that, we should add something
-like status = "incomplete" where the dev entry gets created but the
-driver is never probed. And incomplete here meaning that the device
-is missing some parts like pins that would make it work properly.
- 
-> Thanks for the heads-up.  I'll have a look and see exactly what is happening.
-
-OK
- 
-> BTW, on the topic of OMAP UARTs and power saving...
->  I note that there are now two drivers for the OMAP3 UART - omap-serial and
->  8250_omap.
->  I also note that your commit:
-> 
-> commit a2fc36613ac1af2e92cbed7af80bc72d8114dd50
->     ARM: OMAP3: Use manual idle for UARTs because of DMA errata
-> 
->  is incompatible with omap-serial.  In particular, if I enable runtime
->  suspend of the serial port by setting the autosuspend_timeout, then incoming
->  characters will no longer wake the port (if I revert your patch incoming
->  chars do wake the port).
->  This could (I think) be fixed by enabling the RX/CTS interrupt.  However if
->  omap-serial is being deprecated, then there probably isn't any point.
-> 
->  So: what is the longer term expectation for these drivers?  Should we be
->  switching over to 8250?
-
-Yeah you should alredy be able to do it. Hopefully we'll have some
-translation layer and the old omap-serial.c can be mostly removed
-now that we have 8250 support with runtime PM :)
+Changed since v1:
+* Replace enum blob with defines
+* Merged wled_context and wled structs
+* Some style updates
 
 Regards,
-
-Tony
+Bjorn
