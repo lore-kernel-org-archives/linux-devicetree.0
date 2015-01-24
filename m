@@ -1,162 +1,125 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH V2] clockevents: rockchip: Add rockchip timer for rk3288
-Date: Sun, 25 Jan 2015 21:52:39 +0100
-Message-ID: <2285293.ZBcGIuxxDo@diego>
-References: <1422178979-12382-1-git-send-email-daniel.lezcano@linaro.org>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
+Date: Sat, 24 Jan 2015 13:37:12 -0800
+Message-ID: <1422135432.18650.2.camel@perches.com>
+References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422178979-12382-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk>
+Sender: netdev-owner@vger.kernel.org
+To: Stathis Voukelatos <stathisv70@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stathis Voukelatos <stathis.voukelatos@linn.co.uk>, abrestic@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+On Fri, 2015-01-23 at 10:07 +0000, Stathis Voukelatos wrote:
+> This patch adds support the Ethernet Packet Sniffer H/W module
+> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
+> The module allows Ethernet packets to be parsed, matched against
+> a user-defined pattern and timestamped. It sits between a 100M
+> Ethernet MAC and PHY and is completely passive with respect to
+> Ethernet frames.
+[]
+>  include/linux/pkt_sniffer.h                        |  89 +++++
 
-one big request and some more style nitpicks :-)
+Why should this file be here?
+Why not in the drivers/net/pkt-sniffer directory?
 
-With the nitpicks fixed
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> diff --git a/drivers/net/pkt-sniffer/backends/ether/channel.c b/drivers/net/pkt-sniffer/backends/ether/channel.c
+[]
+> +static int esnf_start(struct snf_chan *dev);
 
+Be nice to rearrange the code to avoid the forward declarations.
 
-Before applying this patch could you drop the rk3288.dtsi change please?
-Instead I'd like to add the following patch separately to _my_ devicetree
-branch for 3.20.
+> +static int esnf_stop(struct snf_chan *dev);
+> +static int esnf_set_pattern(struct snf_chan *dev, const u8 *pattern, int count);
+> +static int esnf_num_recs_avail(struct snf_chan *dev);
+> +static int esnf_max_ptn_entries(struct snf_chan *dev);
+> +static int esnf_max_match_bytes(struct snf_chan *dev);
+> +static int validate_pattern(
+> +			struct ether_snf_chan *ch,
+> +			const u8 *buf,
+> +			int count);
 
-I already wasn't fast enough to prevent the ethernet controller changes
-going through the network tree and would like to prevent a third tree sending
-changes for the same dts area to Linus - merge conflicts and all.
+[]
 
-
-I don't think that neither the nitpicks nor dropping the dtsi segment need
-another submission though.
-
-
-Heiko
-
-
------ 8< -----------
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Sun, 25 Jan 2015 10:42:59 +0100
-Subject: [PATCH] ARM: dts: rockchip: Add rockchip timer node for rk3288
-
-The rk3288 board uses the architected timers and these ones are shutdown when
-the cpu is powered down. There is a need of a broadcast timer in this case to
-ensure proper wakeup when the cpus are in sleep mode and a timer expires.
-
-Add the timer node for the broadcast timer.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/rk3288.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index c7235fa..37847c1 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -149,6 +149,14 @@
- 		clock-frequency = <24000000>;
- 	};
- 
-+	timer: timer@ff810000 {
-+		compatible = "rockchip,rk3288-timer";
-+		reg = <0xff810000 0x20>;
-+		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&xin24m>, <&cru PCLK_TIMER>;
-+		clock-names = "timer", "pclk";
-+	};
-+
- 	display-subsystem {
- 		compatible = "rockchip,display-subsystem";
- 		ports = <&vopl_out>, <&vopb_out>;
--- 
-2.1.1
-
-------- 8< -----------
-
-Am Sonntag, 25. Januar 2015, 10:42:59 schrieb Daniel Lezcano:
-
-[...]
-
-> diff --git a/drivers/clocksource/rockchip_timer.c
-> b/drivers/clocksource/rockchip_timer.c new file mode 100644
-> index 0000000..5ea290d
-> --- /dev/null
-> +++ b/drivers/clocksource/rockchip_timer.c
-> @@ -0,0 +1,180 @@
-> +/*
-> + * Rockchip timer support
-> + *
-> + * Copyright (C) Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/clockchips.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +
-> +#define TIMER_NAME "rk_timer"
-> +
-> +#define TIMER_LOAD_COUNT0               0x00
-> +#define TIMER_LOAD_COUNT1               0x04
-> +#define TIMER_CONTROL_REG               0x10
-> +#define TIMER_INT_STATUS                0x18
-> +
-> +#define TIMER_DISABLE                   0x0
-> +#define TIMER_ENABLE                    0x1
-> +#define TIMER_MODE_FREE_RUNNING         (0 << 1)
-> +#define TIMER_MODE_USER_DEFINED_COUNT   (1 << 1)
-> +#define TIMER_INT_UNMASK                (1 << 2)
-
-the above constants are aligned using spaces
-I guess either simply use 1 space, or align using tabs?
-
-[...]
-
-> +static void __init rk_timer_init(struct device_node *np)
+> +static int validate_pattern(struct ether_snf_chan *ch, const u8 *buf, int count)
 > +{
-> +	struct clock_event_device *ce = &bc_timer.ce;
-> +	struct clk *timer_clk;
-> +	struct clk *pclk;
-> +	int ret, irq;
+
+Maybe better as bool
+
+> +	int i, complete, max_copy_bytes;
+[]
+> +	/* Check if the string was properly terminated
+> +	 * and contained valid number of commands
+> +	 */
+> +	if (complete) {
+> +		max_copy_bytes = ch->fifo_blk_words * 4;
+> +		if (ts)
+> +			max_copy_bytes -= 4;
+> +		if ((copy_before + copy_after) > max_copy_bytes)
+> +			return 0;
+> +		ch->ts_present = ts;
+> +		ch->nfb_before = copy_before;
+> +		ch->nfb_after = copy_after;
+> +		return 1;
+> +	} else {
+> +		return 0;
+> +	}
+
+	return complete;
+
+[]
+
+> +/* Interrupt thread function */
+> +static irqreturn_t esnf_irq_thread(int irq, void *dev_id)
+> +{
+> +	struct platform_device *pdev = (struct platform_device *)dev_id;
+> +	struct ether_snf *esnf = (struct ether_snf *)platform_get_drvdata(pdev);
+> +	u32 irq_status;
 > +
-> +	bc_timer.base = of_iomap(np, 0);
-> +	if (!bc_timer.base) {
-> +		pr_err("Failed to get base address for '%s'\n", TIMER_NAME);
-> +		return;
+> +	if (unlikely(esnf->irq != irq))
+> +		return IRQ_NONE;
+> +
+> +	irq_status = ioread32(esnf->regs + INTERRUPT_STATUS) &
+> +				 ioread32(esnf->regs + INTERRUPT_ENABLE);
+> +
+> +	dev_dbg(&pdev->dev, "irq: 0x%08x\n", irq_status);
+> +
+> +	/* TX FIFO full */
+> +	if (unlikely(irq_status & TX_FULL_IRQ_BIT))
+> +		dev_notice(&pdev->dev, "TX FIFO full");
+
+Missing terminating newlines
+> +
+> +	/* RX FIFO full */
+> +	if (unlikely(irq_status & RX_FULL_IRQ_BIT))
+> +		dev_notice(&pdev->dev, "RX FIFO full");
+> +
+> +	/* TX match data available */
+> +	if (irq_status & TX_DATA_IRQ_BIT) {
+> +		dev_dbg(&pdev->dev, "TX data");
+> +		channel_data_available(&esnf->txc);
 > +	}
 > +
-> +        pclk = of_clk_get_by_name(np, "pclk");
-> +        if (IS_ERR(pclk)) {
-
-the above 2 lines are indented using spaces instead of tabs
-
-> +		pr_err("Failed to get pclk for '%s'\n", TIMER_NAME);
-> +		return;
+> +	/* RX match data available */
+> +	if (irq_status & RX_DATA_IRQ_BIT) {
+> +		dev_dbg(&pdev->dev, "RX data");
+> +		channel_data_available(&esnf->rxc);
 > +	}
-> +
-> +	if (clk_prepare_enable(pclk)) {
-> +		pr_err("Failed to enable pclk for '%s'\n", TIMER_NAME);
-> +		return;
+
+> diff --git a/drivers/net/pkt-sniffer/core/nl.c b/drivers/net/pkt-sniffer/core/nl.c
+[]
+> +int snf_netlink_init(int id, struct snf_chan *dev, const char *name)
+> +{
+[]
+> +	/* Allocate ops array and copy template data */
+> +	nl->ops = kmalloc(sizeof(snf_ops_tmpl), GFP_KERNEL);
+> +	if (!nl->ops) {
+> +		ret = -ENOMEM;
+> +		goto fail2;
 > +	}
-> +
-> +        timer_clk = of_clk_get_by_name(np, "timer");
-> +        if (IS_ERR(timer_clk)) {
+> +	memcpy(nl->ops, snf_ops_tmpl, sizeof(snf_ops_tmpl));
 
-same here
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+kmemdup
