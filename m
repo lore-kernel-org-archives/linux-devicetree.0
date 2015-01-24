@@ -1,308 +1,109 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
-Date: Sat, 24 Jan 2015 16:05:01 +0100
-Message-ID: <1422111903-22176-2-git-send-email-robert.jarzmik@free.fr>
-References: <1422111903-22176-1-git-send-email-robert.jarzmik@free.fr>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun4i: Add initial dts for Gemei G9 tablet
+Date: Sat, 24 Jan 2015 17:53:41 +0200
+Message-ID: <1422114821.3851.25.camel@plaes.org>
+References: <1422045409-1251-1-git-send-email-plaes@plaes.org>
+	 <20150123212203.GB8470@lukather> <1422050375.1799.9.camel@plaes.org>
+	 <20150124143945.GD8470@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422111903-22176-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+In-Reply-To: <20150124143945.GD8470@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Lubbock () board is the IO motherboard of the Intel PXA25x Development
-Platform, which supports the Lubbock pxa25x soc board.
 
-Historically, this support was in arch/arm/mach-pxa/lubbock.c. When
-gpio-pxa was moved to drivers/pxa, it became a driver, and its
-initialization and probing happened at postcore initcall. The lubbock
-code used to install the chained lubbock interrupt handler at init_irq()
-time.
+On Sat, 2015-01-24 at 15:39 +0100, Maxime Ripard wrote:
+> Hi,
+>=20
+> On Fri, Jan 23, 2015 at 11:59:35PM +0200, Priit Laes wrote:
+> >=20
+> > On Fri, 2015-01-23 at 22:22 +0100, Maxime Ripard wrote:
+> > > On Fri, Jan 23, 2015 at 10:36:49PM +0200, Priit Laes wrote:
+> > > > Gemei G9 is an A10 based tablet, with 1G RAM, 16G NAND,=20
+> > > > 1024x768 IPS LCD display, stereo speakers, 1.3MP front camera=20
+> > > > and 5 MP
+> > > > rear camera, 8000mAh battery, GT901 2+1 touchscreen, Bosch=20
+> > > > BMA250 accelerometer and RTL8188CUS USB wifi. It also has=20
+> > > > MicroSD slot, miniHDMI, 1 x MicroUSB OTG port and 1 x MicroUSB=20
+> > > > host port and 3.5mm headphone jack.
+> > > > More details are available at: http://linux-sunxi.org/Gemei_G9
+> > > >=20
+> > [..]
+> > > >=20
+> > > > +/ {
+> > > > +    model =3D "Gemei G9 Tablet";
+> > > > +    compatible =3D "gemei,g9", "allwinner,sun4i-a10";
+> > > > +};
+> > > > +
+> > > > +/*
+> > > > + * http://linux-sunxi.org/Gemei_G9
+> > >=20
+> > > Please don't put URL in the DT. This is very likely to change in=20
+> > > the future, and won't be valid anymore.
+> >=20
+> > OK! The URL in commit message is ok to stay?
+>=20
+> Yeah, I'm not that fond of it, but it's not that important either.
+>=20
+> > > > +&i2c1 {
+> > > > +    pinctrl-names =3D "default";
+> > > > +    pinctrl-0 =3D <&i2c1_pins_a>;
+> > > > +    status =3D "okay";
+> > > > +
+> > > > +    /* Accelerometer */
+> > > > +    bma250@18 {
+> > > > +        compatible =3D "bosch,bma250";
+> > > > +        reg =3D <0x18>;
+> > >=20
+> > > Is there a driver for this? It looks weird that it doesn't need=20
+> > > more properties than that.
+> >=20
+> > Yes, it's supported by drivers/iio/accel/bma180.c though I have to=20
+> > admit that this name is a bit misleading. (bosch-bma.c would
+> > better, I guess).
+> >=20
+> > And I was a bit surprised that it worked out of the box too, but=20
+> > the device was present under /sys and I was able to read x, y, z=20
+> > and temperature values.
+>=20
+> Cool :)
+>=20
+> There's no interrupt wired to it then?
 
-The consequence of the gpio-pxa change is that the installed chained irq
-handler lubbock_irq_handler() was overwritten in pxa_gpio_probe(_dt)(),
-removing :
- - the handler
- - the falling edge detection setting of GPIO0, which revealed the
-   interrupt request from the lubbock IO board.
+Well, FEX file contained this:
 
-As a fix, move the gpio0 chained handler setup to a place where we have
-the guarantee that pxa_gpio_probe() was called before, so that lubbock
-handler becomes the true IRQ chained handler of GPIO0, demuxing the
-lubbock IO board interrupts.
+[gsensor_para]
+gsensor_used =3D 1
+gsensor_name =3D "bma250"
+gsensor_twi_addr =3D 0x18
+gsensor_twi_id =3D 1
+gsensor_int1 =3D port:PH00<6><1><default><default>
+gsensor_int2 =3D port:PI10<6><1><default><default>
 
-This patch moves all that handling to a mfd driver. It's only purpose
-for the time being is the interrupt handling, but in the future it
-should encompass all the motherboard CPLDs handling :
- - leds
- - switches
- - hexleds
+And according to the datasheet, this chip (bma250) has two interrupt=20
+pins.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
----
-Since v1: change the name from cottula to lubbock_io
-            Dmitry pointed out the Cottula was the pxa25x family name,
-	    lubbock was the pxa25x development board name. Therefore the
-	    name was changed to lubbock_io (lubbock IO board)
-	  change the resources to bi-irq ioresource
-	    Discussion between Arnd and Robert to change the gpio
-	    request by a irq request.
-Since v2: take into account Mark's review
-      	    Use irq flags from resources (DT case and pdata case).
-	    Change of name from lubbock_io to lubbock-io
-Since v3: take into account Lee's review + Russell's advice
-            whitespace errors fixes
-	    debug/info messages formatting
-	    return X; empty lines
----
- drivers/mfd/Kconfig   |  10 +++
- drivers/mfd/Makefile  |   1 +
- drivers/mfd/lubbock.c | 199 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 210 insertions(+)
- create mode 100644 drivers/mfd/lubbock.c
+Now, the bma180/250 driver works without IRQ-s, but it currently only=20
+supports single interrupt pin. Therefore I should at least add a=20
+comment about these pins and revisit this issue later.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 2e6b731..4d8939f 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -91,6 +91,16 @@ config MFD_AXP20X
- 	  components like regulators or the PEK (Power Enable Key) under the
- 	  corresponding menus.
- 
-+config MFD_LUBBOCK
-+	bool "Lubbock Motherboard"
-+	def_bool ARCH_LUBBOCK
-+	select MFD_CORE
-+	help
-+	  This driver supports the Lubbock multifunction chip found on the
-+	  pxa25x development platform system (named Lubbock). This IO board
-+	  supports the interrupts handling, ethernet controller, flash chips,
-+	  etc ...
-+
- config MFD_CROS_EC
- 	tristate "ChromeOS Embedded Controller"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 53467e2..aff1f4f 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
- obj-$(CONFIG_MFD_SM501)		+= sm501.o
- obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
- obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
-+obj-$(CONFIG_MFD_LUBBOCK)	+= lubbock.o
- obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec.o
- obj-$(CONFIG_MFD_CROS_EC_I2C)	+= cros_ec_i2c.o
- obj-$(CONFIG_MFD_CROS_EC_SPI)	+= cros_ec_spi.o
-diff --git a/drivers/mfd/lubbock.c b/drivers/mfd/lubbock.c
-new file mode 100644
-index 0000000..4077fc5
---- /dev/null
-+++ b/drivers/mfd/lubbock.c
-@@ -0,0 +1,199 @@
-+/*
-+ * Intel Cotulla MFD - lubbock motherboard
-+ *
-+ * Copyright (C) 2014 Robert Jarzmik
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * Lubbock motherboard driver, supporting Lubbock (aka. PXA25X) SoC board.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/mfd/core.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+
-+#define COT_IRQ_MASK_EN 0xc0
-+#define COT_IRQ_SET_CLR 0xd0
-+
-+#define LUBBOCK_NB_IRQ	8
-+
-+struct lubbock {
-+	void __iomem *base;
-+	int irq;
-+	unsigned int irq_mask;
-+	struct gpio_desc *gpio0;
-+	struct irq_domain *irqdomain;
-+};
-+
-+static irqreturn_t lubbock_irq_handler(int in_irq, void *d)
-+{
-+	struct lubbock *cot = d;
-+	unsigned long pending;
-+	unsigned int bit;
-+
-+	pending = readl(cot->base + COT_IRQ_SET_CLR) & cot->irq_mask;
-+	for_each_set_bit(bit, &pending, LUBBOCK_NB_IRQ)
-+		generic_handle_irq(irq_find_mapping(cot->irqdomain, bit));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void lubbock_irq_mask_ack(struct irq_data *d)
-+{
-+	struct lubbock *cot = irq_data_get_irq_chip_data(d);
-+	unsigned int lubbock_irq = irqd_to_hwirq(d);
-+	unsigned int set, bit = BIT(lubbock_irq);
-+
-+	cot->irq_mask &= ~bit;
-+	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
-+	set = readl(cot->base + COT_IRQ_SET_CLR);
-+	writel(set & ~bit, cot->base + COT_IRQ_SET_CLR);
-+}
-+
-+static void lubbock_irq_unmask(struct irq_data *d)
-+{
-+	struct lubbock *cot = irq_data_get_irq_chip_data(d);
-+	unsigned int lubbock_irq = irqd_to_hwirq(d);
-+	unsigned int bit = BIT(lubbock_irq);
-+
-+	cot->irq_mask |= bit;
-+	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
-+}
-+
-+static struct irq_chip lubbock_irq_chip = {
-+	.name		= "lubbock",
-+	.irq_mask_ack	= lubbock_irq_mask_ack,
-+	.irq_unmask	= lubbock_irq_unmask,
-+	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE,
-+};
-+
-+static int lubbock_irq_domain_map(struct irq_domain *d, unsigned int irq,
-+				   irq_hw_number_t hwirq)
-+{
-+	struct lubbock *cot = d->host_data;
-+
-+	irq_set_chip_and_handler(irq, &lubbock_irq_chip, handle_level_irq);
-+	irq_set_chip_data(irq, cot);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops lubbock_irq_domain_ops = {
-+	.xlate = irq_domain_xlate_twocell,
-+	.map = lubbock_irq_domain_map,
-+};
-+
-+static int lubbock_resume(struct platform_device *pdev)
-+{
-+	struct lubbock *cot = platform_get_drvdata(pdev);
-+
-+	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
-+
-+	return 0;
-+}
-+
-+static int lubbock_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct lubbock *cot;
-+	int ret;
-+	unsigned int base_irq = 0;
-+	unsigned long irqflags;
-+
-+	cot = devm_kzalloc(&pdev->dev, sizeof(*cot), GFP_KERNEL);
-+	if (!cot)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	if (res) {
-+		cot->irq = (unsigned int)res->start;
-+		irqflags = res->flags;
-+	}
-+	if (!cot->irq)
-+		return -ENODEV;
-+
-+	base_irq = platform_get_irq(pdev, 1);
-+	if (base_irq < 0)
-+		base_irq = 0;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	cot->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(cot->base))
-+		return PTR_ERR(cot->base);
-+
-+	platform_set_drvdata(pdev, cot);
-+
-+	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
-+	writel(0, cot->base + COT_IRQ_SET_CLR);
-+
-+	ret = devm_request_irq(&pdev->dev, cot->irq, lubbock_irq_handler,
-+			       irqflags, dev_name(&pdev->dev), cot);
-+	if (ret == -ENOSYS)
-+		return -EPROBE_DEFER;
-+
-+	if (ret) {
-+		dev_err(&pdev->dev, "couldn't request main irq%d: %d\n",
-+			cot->irq, ret);
-+		return ret;
-+	}
-+
-+	irq_set_irq_wake(cot->irq, 1);
-+	cot->irqdomain = irq_domain_add_linear(pdev->dev.of_node,
-+					       LUBBOCK_NB_IRQ,
-+					       &lubbock_irq_domain_ops, cot);
-+	if (!cot->irqdomain)
-+		return -ENODEV;
-+
-+	if (base_irq) {
-+		ret = irq_create_strict_mappings(cot->irqdomain, base_irq, 0,
-+						 LUBBOCK_NB_IRQ);
-+		if (ret) {
-+			dev_err(&pdev->dev, "couldn't create the irq mapping %d..%d\n",
-+				base_irq, base_irq + LUBBOCK_NB_IRQ);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int lubbock_remove(struct platform_device *pdev)
-+{
-+	struct lubbock *cot = platform_get_drvdata(pdev);
-+
-+	irq_set_chip_and_handler(cot->irq, NULL, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lubbock_id_table[] = {
-+	{ .compatible = "intel,lubbock-cplds", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lubbock_id_table);
-+
-+static struct platform_driver lubbock_driver = {
-+	.driver		= {
-+		.name	= "lubbock_cplds",
-+		.of_match_table = of_match_ptr(lubbock_id_table),
-+	},
-+	.probe		= lubbock_probe,
-+	.remove		= lubbock_remove,
-+	.resume		= lubbock_resume,
-+};
-+
-+module_platform_driver(lubbock_driver);
-+
-+MODULE_DESCRIPTION("Lubbock MFD driver");
-+MODULE_AUTHOR("Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>");
-+MODULE_LICENSE("GPL");
--- 
-2.1.0
+/* TODO: check whether following interrupt pins are connected:
+ *   - int1 - PH00
+ *   - int2 - PI10
+ */
+
+
+P=C3=A4ikest,
+Priit Laes :)
+
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
