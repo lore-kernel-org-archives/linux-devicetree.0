@@ -1,113 +1,37 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun4i: Add initial dts for Gemei G9 tablet
-Date: Sat, 24 Jan 2015 15:39:45 +0100
-Message-ID: <20150124143945.GD8470@lukather>
-References: <1422045409-1251-1-git-send-email-plaes@plaes.org>
- <20150123212203.GB8470@lukather>
- <1422050375.1799.9.camel@plaes.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="C+ts3FVlLX8+P6JN"
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v4 4/4] MAINTAINERS: add entry for lubbock-cplds
+Date: Sat, 24 Jan 2015 16:05:03 +0100
+Message-ID: <1422111903-22176-4-git-send-email-robert.jarzmik@free.fr>
+References: <1422111903-22176-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1422050375.1799.9.camel-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+In-Reply-To: <1422111903-22176-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add entry Lubbock cplds driver into the pxa platform scope.
 
---C+ts3FVlLX8+P6JN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Hi,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ddb9ac8..8c6a49d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7681,6 +7681,7 @@ T:	git git://github.com/hzhuang1/linux.git
+ T:	git git://github.com/rjarzmik/linux.git
+ S:	Maintained
+ F:	arch/arm/mach-pxa/
++F:	drivers/mfd/lubbock.c
+ F:	drivers/pcmcia/pxa2xx*
+ F:	drivers/spi/spi-pxa2xx*
+ F:	drivers/usb/gadget/udc/pxa2*
+-- 
+2.1.0
 
-On Fri, Jan 23, 2015 at 11:59:35PM +0200, Priit Laes wrote:
->=20
-> On Fri, 2015-01-23 at 22:22 +0100, Maxime Ripard wrote:
-> > On Fri, Jan 23, 2015 at 10:36:49PM +0200, Priit Laes wrote:
-> > > Gemei G9 is an A10 based tablet, with 1G RAM, 16G NAND, 1024x768=20
-> > > IPS LCD display, stereo speakers, 1.3MP front camera and 5 MP
-> > > rear camera, 8000mAh battery, GT901 2+1 touchscreen, Bosch BMA250=20
-> > > accelerometer and RTL8188CUS USB wifi. It also has MicroSD slot,=20
-> > > miniHDMI, 1 x MicroUSB OTG port and 1 x MicroUSB host port and=20
-> > > 3.5mm headphone jack.
-> > > More details are available at: http://linux-sunxi.org/Gemei_G9
-> > >=20
-> [..]
-> > >=20
-> > > +/ {
-> > > +    model =3D "Gemei G9 Tablet";
-> > > +    compatible =3D "gemei,g9", "allwinner,sun4i-a10";
-> > > +};
-> > > +
-> > > +/*
-> > > + * http://linux-sunxi.org/Gemei_G9
-> >=20
-> > Please don't put URL in the DT. This is very likely to change in the=20
-> > future, and won't be valid anymore.
->=20
-> OK! The URL in commit message is ok to stay?
-
-Yeah, I'm not that fond of it, but it's not that important either.
-
-> > > +&i2c1 {
-> > > +    pinctrl-names =3D "default";
-> > > +    pinctrl-0 =3D <&i2c1_pins_a>;
-> > > +    status =3D "okay";
-> > > +
-> > > +    /* Accelerometer */
-> > > +    bma250@18 {
-> > > +        compatible =3D "bosch,bma250";
-> > > +        reg =3D <0x18>;
-> >=20
-> > Is there a driver for this? It looks weird that it doesn't need more=20
-> > properties than that.
->=20
-> Yes, it's supported by drivers/iio/accel/bma180.c though I have to=20
-> admit that this name is a bit misleading. (bosch-bma.c would=20
-> better, I guess).
->=20
-> And I was a bit surprised that it worked out of the box too, but the=20
-> device was present under /sys and I was able to read x, y, z and=20
-> temperature values.
-
-Cool :)
-
-There's no interrupt wired to it then?
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---C+ts3FVlLX8+P6JN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUw66xAAoJEBx+YmzsjxAgIYgP/0hzJ56oAv4Ha9skO9oxWF0u
-ZQUPtG1W9D9U5B48cAQlE8wM7GCQZzLywE3VOXl8lO+GYKxlSW+2iGHgb8gKUjJj
-65tB0meD+I2tJFlQ+tdV7/dHKgICf+QPZaPM7NfCB/lhv4SYuLHOI1m0KLUgmEVx
-n481k6GgEd9pNPHbY0P6oSmFcOHkifqofhzLdqM552Mz79iRU3oVM3l6Vl49wxoa
-ZxdM5sHgVptkYru9S2xfAGq1reAPe2KOouW74iMEtkFsTGNFLEgw7ACIrzqLohbE
-V26EQ5UXraIBZrUr6LLd2rOBrkG+8EjxPs71f/NAGPChQ5KaSllB+sWDP6IvJpD2
-gvySfeJyxRPuxHnHhC/5T+bByskBa5LNjxf7r0fHhTyK/VMOiVIGXMmWVsw0gwhs
-lfbU3FCj4gpAyqpg6KMaY835S6yyEjCBi33yzKAgdknemWLNkw96Ms854YR6K534
-oj1rDn83e+rY2+SPQalzglj/bG01C/fXCc3tDFKbVu/bUGKsDeLhHUUBe5ipcFlf
-D8MTh0AVYVntn7+NH2jHooldUTfaJq6rn04Gc4FmsX0rtHKMLtH2k5F6sigwRhcM
-5aPkDBCv/zQPAlCRV0nc3UrjL/kwb05COtlYqVQ3TciqboyFxi9KrYo2E0uw5U7V
-8vdXV1HhiaMYHj4JRAlS
-=jt2T
------END PGP SIGNATURE-----
-
---C+ts3FVlLX8+P6JN--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
