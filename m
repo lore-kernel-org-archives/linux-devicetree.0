@@ -1,12 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 0/9] ARM: sun9i: Add USB host controller
- support for A80
-Date: Sun, 25 Jan 2015 20:22:01 +0800
-Message-ID: <1422188530-1794-1-git-send-email-wens@csie.org>
+Subject: [PATCH v2 8/9] ARM: sunxi_defconfig: Enable CONFIG_PHY_SUN9I_USB
+Date: Sun, 25 Jan 2015 20:22:09 +0800
+Message-ID: <1422188530-1794-9-git-send-email-wens@csie.org>
+References: <1422188530-1794-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sunxi+bncBCMILY6JWQBBB7F7SOTAKGQENA6E4OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1422188530-1794-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -18,92 +19,24 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+On sun9i we have a new PHY driver for USB.
 
-This is v2 of the sun9i A80 USB host support series.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/configs/sunxi_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-This series adds USB host controller (EHCI/OHCI) support for the Allwinner
-A80 SoC. The A80 has 3 pairs of host controllers and USB PHYs. The PHYs,
-unlike in previous SoCs, do not have low level control registers anymore.
-
-As such, this series forgoes the original phy-sun4i-usb driver, and adds
-a new, simpler driver for the USB PHYs. It may be possible to merge the
-two, but given that work is being done on the OTG front for the earlier
-SoCs, it may be better to merge them after support is complete.
-
-EHCI/OHCI0 corresponds to USB1 DP/DM pins; EHCI1 only has HSIC support;
-EHCI2/OHCI/2 is USB2 DP/DM externally. External pins labeled USB0 are
-for the USB 3.0 OTG controller.
-
-Changes since v1:
-
-  - Rework usb clock/reset driver to only enable ahb gate when child
-    clock gates are enabled.
-
-  - Add AHB_INCR16_BURST flag and HSIC specific bits to phy driver.
-
-  - Renumber USB PHYs according to sunxi tradition, usbphy0 for OTG,
-    usbphy1 and later for xHCI.
-
-  - Add VBUS regulator for usb3 to sunxi common regulators.
-
-  - Use common regulators for usb vbus regulators.
-
-  - Adapt to label references in board dts file.
-
-  - Use gpio and pinctrl macros in dts.
-
-
-Patch 1 adds a80 specific support for usb-related clocks and resets.
-
-Patch 2 adds the device tree nodes for the usb clocks.
-
-Patch 3 adds a new generic phy driver for a80 usb phys. This has some
-code that is the same as the original phy-sun4i-usb driver, but is simpler.
-
-Patch 4 adds the 3 USB PHY nodes to the a80 dtsi.
-
-Patch 5 adds the USB host controller nodes to the a80 dtsi.
-
-Patch 6 adds a VBUS regulator for usb3 to sunxi common regulators.
-
-Patch 7 enables USB on the A80 Optimus board.
-
-Patch 8 enables sun9i USB PHY in sunxi_defconfig.
-
-Patch 9 enables sun9i USB PHY in multi_v7_defconfig.
-
-Regards,
-ChenYu
-
-
-Chen-Yu Tsai (9):
-  clk: sunxi: Add support for sun9i a80 usb clocks and resets
-  ARM: dts: sun9i: Add usb clock nodes to a80 dtsi
-  phy: Add driver to support individual USB PHYs on sun9i
-  ARM: dts: sun9i: Add usb phy nodes to a80 dtsi
-  ARM: dts: sun9i: Add USB host controller nodes to a80 dtsi
-  ARM: dts: sunxi: Add usb3_vbus regulator to common regulators dtsi
-  ARM: dts: sun9i: Enable USB support on A80 Optimus board
-  ARM: sunxi_defconfig: Enable CONFIG_PHY_SUN9I_USB
-  ARM: multi_v7_defconfig: Enable CONFIG_PHY_SUN9I_USB
-
- Documentation/devicetree/bindings/clock/sunxi.txt  |   2 +
- .../devicetree/bindings/phy/sun9i-usb-phy.txt      |  34 +++
- arch/arm/boot/dts/sun9i-a80-optimus.dts            |  60 ++++++
- arch/arm/boot/dts/sun9i-a80.dtsi                   | 129 +++++++++++
- arch/arm/boot/dts/sunxi-common-regulators.dtsi     |  10 +
- arch/arm/configs/multi_v7_defconfig                |   1 +
- arch/arm/configs/sunxi_defconfig                   |   1 +
- drivers/clk/sunxi/Makefile                         |   1 +
- drivers/clk/sunxi/clk-usb.c                        | 193 +++++++++++++++++
- drivers/phy/Kconfig                                |  12 ++
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-sun9i-usb.c                        | 238 +++++++++++++++++++++
- 12 files changed, 682 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
- create mode 100644 drivers/clk/sunxi/clk-usb.c
- create mode 100644 drivers/phy/phy-sun9i-usb.c
-
+diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
+index 38840a812924..6b271645eb43 100644
+--- a/arch/arm/configs/sunxi_defconfig
++++ b/arch/arm/configs/sunxi_defconfig
+@@ -106,6 +106,7 @@ CONFIG_RTC_DRV_SUN6I=y
+ CONFIG_RTC_DRV_SUNXI=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_PHY_SUN4I_USB=y
++CONFIG_PHY_SUN9I_USB=y
+ CONFIG_EXT4_FS=y
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
 -- 
 2.1.4
