@@ -1,34 +1,37 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 06/13] NFC: nfc_enable_se Remove useless blank line at beginning of function
-Date: Sun, 25 Jan 2015 23:33:24 +0100
-Message-ID: <1422225211-27510-7-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH 05/13] NFC: st21nfcb: Avoid use of skb after free
+Date: Sun, 25 Jan 2015 23:33:23 +0100
+Message-ID: <1422225211-27510-6-git-send-email-christophe-h.ricard@st.com>
 References: <1422225211-27510-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1422225211-27510-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove one useless blank line at beginning of nfc_enable_se function.
+Do not insert in send queue the skb that contains unknown Packet Control
+Byte
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Acked-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 ---
- net/nfc/core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/nfc/st21nfcb/ndlc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/nfc/core.c b/net/nfc/core.c
-index 819b877..81fabed 100644
---- a/net/nfc/core.c
-+++ b/net/nfc/core.c
-@@ -555,7 +555,6 @@ EXPORT_SYMBOL(nfc_find_se);
- 
- int nfc_enable_se(struct nfc_dev *dev, u32 se_idx)
- {
--
- 	struct nfc_se *se;
- 	int rc;
- 
+diff --git a/drivers/nfc/st21nfcb/ndlc.c b/drivers/nfc/st21nfcb/ndlc.c
+index ef0f997..5fbf59d 100644
+--- a/drivers/nfc/st21nfcb/ndlc.c
++++ b/drivers/nfc/st21nfcb/ndlc.c
+@@ -138,7 +138,7 @@ static void llt_ndlc_requeue_data_pending(struct llt_ndlc *ndlc)
+ 		default:
+ 			pr_err("UNKNOWN Packet Control Byte=%d\n", pcb);
+ 			kfree_skb(skb);
+-			break;
++			continue;
+ 		}
+ 		skb_queue_head(&ndlc->send_q, skb);
+ 	}
 -- 
 2.1.0
 
