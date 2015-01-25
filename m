@@ -1,146 +1,162 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v2 3/6] power/reset: Remove sun6i reboot driver
-Date: Sun, 25 Jan 2015 12:30:42 -0800
-Message-ID: <1422217845-18901-4-git-send-email-linux@roeck-us.net>
-References: <1422217845-18901-1-git-send-email-linux@roeck-us.net>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1422217845-18901-1-git-send-email-linux@roeck-us.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH V2] clockevents: rockchip: Add rockchip timer for rk3288
+Date: Sun, 25 Jan 2015 21:52:39 +0100
+Message-ID: <2285293.ZBcGIuxxDo@diego>
+References: <1422178979-12382-1-git-send-email-daniel.lezcano@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422178979-12382-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-sun6i restart is now handled by its watchdog driver directly,
-so this driver is no longer needed.
+Hi Daniel,
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+one big request and some more style nitpicks :-)
+
+With the nitpicks fixed
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+
+
+Before applying this patch could you drop the rk3288.dtsi change please?
+Instead I'd like to add the following patch separately to _my_ devicetree
+branch for 3.20.
+
+I already wasn't fast enough to prevent the ethernet controller changes
+going through the network tree and would like to prevent a third tree sending
+changes for the same dts area to Linus - merge conflicts and all.
+
+
+I don't think that neither the nitpicks nor dropping the dtsi segment need
+another submission though.
+
+
+Heiko
+
+
+----- 8< -----------
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Sun, 25 Jan 2015 10:42:59 +0100
+Subject: [PATCH] ARM: dts: rockchip: Add rockchip timer node for rk3288
+
+The rk3288 board uses the architected timers and these ones are shutdown when
+the cpu is powered down. There is a need of a broadcast timer in this case to
+ensure proper wakeup when the cpus are in sleep mode and a timer expires.
+
+Add the timer node for the broadcast timer.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- drivers/power/reset/Kconfig        |  6 ---
- drivers/power/reset/Makefile       |  1 -
- drivers/power/reset/sun6i-reboot.c | 85 --------------------------------------
- 3 files changed, 92 deletions(-)
- delete mode 100644 drivers/power/reset/sun6i-reboot.c
+ arch/arm/boot/dts/rk3288.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index bf5acb3..4cb5744 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -109,12 +109,6 @@ config POWER_RESET_RESTART
- 	  Instead they restart, and u-boot holds the SoC until the
- 	  user presses a key. u-boot then boots into Linux.
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index c7235fa..37847c1 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -149,6 +149,14 @@
+ 		clock-frequency = <24000000>;
+ 	};
  
--config POWER_RESET_SUN6I
--	bool "Allwinner A31 SoC reset driver"
--	depends on ARCH_SUNXI
--	help
--	  Reboot support for the Allwinner A31 SoCs.
--
- config POWER_RESET_ST
- 	bool "ST restart power-off driver"
- 	depends on ARCH_STI
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 1631652..11de15b 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -11,7 +11,6 @@ obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
- obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
- obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
- obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
--obj-$(CONFIG_POWER_RESET_SUN6I) += sun6i-reboot.o
- obj-$(CONFIG_POWER_RESET_ST) += st-poweroff.o
- obj-$(CONFIG_POWER_RESET_VERSATILE) += arm-versatile-reboot.o
- obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
-diff --git a/drivers/power/reset/sun6i-reboot.c b/drivers/power/reset/sun6i-reboot.c
-deleted file mode 100644
-index af2cd7f..0000000
---- a/drivers/power/reset/sun6i-reboot.c
-+++ /dev/null
-@@ -1,85 +0,0 @@
--/*
-- * Allwinner A31 SoCs reset code
-- *
-- * Copyright (C) 2012-2014 Maxime Ripard
-- *
-- * Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is licensed under the terms of the GNU General Public
-- * License version 2.  This program is licensed "as is" without any
-- * warranty of any kind, whether express or implied.
-- */
--
--#include <linux/delay.h>
--#include <linux/io.h>
--#include <linux/module.h>
--#include <linux/of_address.h>
--#include <linux/platform_device.h>
--#include <linux/reboot.h>
--
--#include <asm/system_misc.h>
--
--#define SUN6I_WATCHDOG1_IRQ_REG		0x00
--#define SUN6I_WATCHDOG1_CTRL_REG	0x10
--#define SUN6I_WATCHDOG1_CTRL_RESTART		BIT(0)
--#define SUN6I_WATCHDOG1_CONFIG_REG	0x14
--#define SUN6I_WATCHDOG1_CONFIG_RESTART		BIT(0)
--#define SUN6I_WATCHDOG1_CONFIG_IRQ		BIT(1)
--#define SUN6I_WATCHDOG1_MODE_REG	0x18
--#define SUN6I_WATCHDOG1_MODE_ENABLE		BIT(0)
--
--static void __iomem *wdt_base;
--
--static void sun6i_wdt_restart(enum reboot_mode mode, const char *cmd)
--{
--	if (!wdt_base)
--		return;
--
--	/* Disable interrupts */
--	writel(0, wdt_base + SUN6I_WATCHDOG1_IRQ_REG);
--
--	/* We want to disable the IRQ and just reset the whole system */
--	writel(SUN6I_WATCHDOG1_CONFIG_RESTART,
--		wdt_base + SUN6I_WATCHDOG1_CONFIG_REG);
--
--	/* Enable timer. The default and lowest interval value is 0.5s */
--	writel(SUN6I_WATCHDOG1_MODE_ENABLE,
--		wdt_base + SUN6I_WATCHDOG1_MODE_REG);
--
--	/* Restart the watchdog. */
--	writel(SUN6I_WATCHDOG1_CTRL_RESTART,
--		wdt_base + SUN6I_WATCHDOG1_CTRL_REG);
--
--	while (1) {
--		mdelay(5);
--		writel(SUN6I_WATCHDOG1_MODE_ENABLE,
--			wdt_base + SUN6I_WATCHDOG1_MODE_REG);
--	}
--}
--
--static int sun6i_reboot_probe(struct platform_device *pdev)
--{
--	wdt_base = of_iomap(pdev->dev.of_node, 0);
--	if (!wdt_base) {
--		WARN(1, "failed to map watchdog base address");
--		return -ENODEV;
--	}
--
--	arm_pm_restart = sun6i_wdt_restart;
--
--	return 0;
--}
--
--static struct of_device_id sun6i_reboot_of_match[] = {
--	{ .compatible = "allwinner,sun6i-a31-wdt" },
--	{}
--};
--
--static struct platform_driver sun6i_reboot_driver = {
--	.probe = sun6i_reboot_probe,
--	.driver = {
--		.name = "sun6i-reboot",
--		.of_match_table = sun6i_reboot_of_match,
--	},
--};
--module_platform_driver(sun6i_reboot_driver);
++	timer: timer@ff810000 {
++		compatible = "rockchip,rk3288-timer";
++		reg = <0xff810000 0x20>;
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&xin24m>, <&cru PCLK_TIMER>;
++		clock-names = "timer", "pclk";
++	};
++
+ 	display-subsystem {
+ 		compatible = "rockchip,display-subsystem";
+ 		ports = <&vopl_out>, <&vopb_out>;
 -- 
-2.1.0
+2.1.1
 
+------- 8< -----------
+
+Am Sonntag, 25. Januar 2015, 10:42:59 schrieb Daniel Lezcano:
+
+[...]
+
+> diff --git a/drivers/clocksource/rockchip_timer.c
+> b/drivers/clocksource/rockchip_timer.c new file mode 100644
+> index 0000000..5ea290d
+> --- /dev/null
+> +++ b/drivers/clocksource/rockchip_timer.c
+> @@ -0,0 +1,180 @@
+> +/*
+> + * Rockchip timer support
+> + *
+> + * Copyright (C) Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +
+> +#define TIMER_NAME "rk_timer"
+> +
+> +#define TIMER_LOAD_COUNT0               0x00
+> +#define TIMER_LOAD_COUNT1               0x04
+> +#define TIMER_CONTROL_REG               0x10
+> +#define TIMER_INT_STATUS                0x18
+> +
+> +#define TIMER_DISABLE                   0x0
+> +#define TIMER_ENABLE                    0x1
+> +#define TIMER_MODE_FREE_RUNNING         (0 << 1)
+> +#define TIMER_MODE_USER_DEFINED_COUNT   (1 << 1)
+> +#define TIMER_INT_UNMASK                (1 << 2)
+
+the above constants are aligned using spaces
+I guess either simply use 1 space, or align using tabs?
+
+[...]
+
+> +static void __init rk_timer_init(struct device_node *np)
+> +{
+> +	struct clock_event_device *ce = &bc_timer.ce;
+> +	struct clk *timer_clk;
+> +	struct clk *pclk;
+> +	int ret, irq;
+> +
+> +	bc_timer.base = of_iomap(np, 0);
+> +	if (!bc_timer.base) {
+> +		pr_err("Failed to get base address for '%s'\n", TIMER_NAME);
+> +		return;
+> +	}
+> +
+> +        pclk = of_clk_get_by_name(np, "pclk");
+> +        if (IS_ERR(pclk)) {
+
+the above 2 lines are indented using spaces instead of tabs
+
+> +		pr_err("Failed to get pclk for '%s'\n", TIMER_NAME);
+> +		return;
+> +	}
+> +
+> +	if (clk_prepare_enable(pclk)) {
+> +		pr_err("Failed to enable pclk for '%s'\n", TIMER_NAME);
+> +		return;
+> +	}
+> +
+> +        timer_clk = of_clk_get_by_name(np, "timer");
+> +        if (IS_ERR(timer_clk)) {
+
+same here
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
