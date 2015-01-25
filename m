@@ -1,80 +1,296 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 4/4] ARM: sunxi: dts: Add A10/A20 PS2 pin
- muxing options
-Date: Sun, 25 Jan 2015 19:10:09 +0530
-Message-ID: <1422193209-17787-5-git-send-email-vishnupatekar0510@gmail.com>
-References: <1422193209-17787-1-git-send-email-vishnupatekar0510@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niso@kth.se>
+Subject: Re: [PATCH v2 2/4] sh-pfc: Add emev2 pinmux support
+Date: Sun, 25 Jan 2015 14:48:23 +0100
+Message-ID: <20150125134823.GA26657@bigcity.berto.se>
+References: <1421583604-27256-1-git-send-email-niso@kth.se>
+ <1421583604-27256-3-git-send-email-niso@kth.se>
+ <1564701.sT8vso17XV@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBGPFSOTAKGQEVZ46GNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1422193209-17787-1-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1564701.sT8vso17XV@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10.dtsi |   14 ++++++++++++++
- arch/arm/boot/dts/sun7i-a20.dtsi |   14 ++++++++++++++
- 2 files changed, 28 insertions(+)
+Hi Laurent,
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 134100b..5536b01 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -769,6 +769,20 @@
- 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
-+
-+			ps20_pins_a: ps20@0 {
-+				allwinner,pins = "PI20", "PI21";
-+				allwinner,function = "ps2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			ps21_pins_a: ps21@0 {
-+				allwinner,pins = "PH12", "PH13";
-+				allwinner,function = "ps2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
- 		};
- 
- 		timer@01c20c00 {
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index d7fc31f..f011203 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -973,6 +973,20 @@
- 				    allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 				    allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
-+
-+			ps20_pins_a: ps20@0 {
-+				allwinner,pins = "PI20", "PI21";
-+				allwinner,function = "ps2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			ps21_pins_a: ps21@0 {
-+				allwinner,pins = "PH12", "PH13";
-+				allwinner,function = "ps2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
- 		};
- 
- 		timer@01c20c00 {
--- 
-1.7.9.5
+Thanks for your comments.
+
+As note in your comments I have not grouped pins in groups where I have
+been uncertain if they can be used independently or not. I have read
+your input and made a v3 of the patch which address better grouping.
+
+I am a bit uncertain on how to best submit the updated patch. I will
+send just v3 of 2/4 to this thread. If you wish for me to send the
+complete series fresh let me. If I am to send the complete series once
+more do I add the 'Acked-by' to 1/4 and 3/4 or not?
+
+--
+Regards
+// Niklas
+
+* Laurent Pinchart <laurent.pinchart@ideasonboard.com> [2015-01-23 00:3=
+7:33 +0200]:
+
+> Hi Niklas,
+>
+> Thank you for the patch.
+>
+> I see that you've quickly taken my remarks into account, great work. =
+Please
+> see below for a couple more comments.
+>
+> On Sunday 18 January 2015 13:20:02 Niklas S=F6derlund wrote:
+> > Add PFC support for the EMMA Mobile EV2 SoC including pin groups fo=
+r
+> > on-chip devices.
+> >
+> > Signed-off-by: Niklas S=F6derlund <niso@kth.se>
+> > ---
+> >  .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
+> >  drivers/pinctrl/sh-pfc/Kconfig                     |    5 +
+> >  drivers/pinctrl/sh-pfc/Makefile                    |    1 +
+> >  drivers/pinctrl/sh-pfc/core.c                      |    9 +
+> >  drivers/pinctrl/sh-pfc/core.h                      |    1 +
+> >  drivers/pinctrl/sh-pfc/pfc-emev2.c                 | 1774 ++++++++=
++++++++++
+> >  6 files changed, 1791 insertions(+)
+> >  create mode 100644 drivers/pinctrl/sh-pfc/pfc-emev2.c
+>
+> [snip]
+>
+> > diff --git a/drivers/pinctrl/sh-pfc/pfc-emev2.c
+> > b/drivers/pinctrl/sh-pfc/pfc-emev2.c new file mode 100644
+> > index 0000000..2d2ac21
+> > --- /dev/null
+> > +++ b/drivers/pinctrl/sh-pfc/pfc-emev2.c
+> > @@ -0,0 +1,1774 @@
+> > +/*
+> > + * Pin Function Controller Support
+> > + *
+> > + * Copyright (C) 2014 Niklas S=F6derlund
+>
+> Happy new year ;-)
+>
+> [snip]
+>
+> > +#define EMEV_MUX_PIN(name, pin, mark) \
+> > +	static const unsigned int name##_pins[] =3D { pin }; \
+> > +	static const unsigned int name##_mux[] =3D { mark##_MARK }
+> > +
+> > +/* =3D [ System ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> > +EMEV_MUX_PIN(err_rst_reqb, 3, ERR_RST_REQB);
+> > +EMEV_MUX_PIN(ref_clko, 4, REF_CLKO);
+> > +EMEV_MUX_PIN(ext_clki, 5, EXT_CLKI);
+> > +EMEV_MUX_PIN(lowpwr, 154, LOWPWR);
+> > +
+> > +/* =3D [ External Memory] =3D=3D=3D */
+>
+> I don't have much information on the external memory bus, would it ma=
+ke sense
+> to group some of the pins ? I expect that at AB_AD[15:0] will always =
+be
+> needed. Maybe AB_RDB and AB_WRB too, unless someone want to interface=
+ with
+> read-only or write-only memory maybe ?
+>
+> > +EMEV_MUX_PIN(ab_clk, 68, AB_CLK);
+> > +EMEV_MUX_PIN(ab_csb0, 69, AB_CSB0);
+> > +EMEV_MUX_PIN(ab_csb1, 70, AB_CSB1);
+> > +EMEV_MUX_PIN(ab_csb2, 71, AB_CSB2);
+> > +EMEV_MUX_PIN(ab_csb3, 72, AB_CSB3);
+> > +EMEV_MUX_PIN(ab_rdb, 73, AB_RDB);
+> > +EMEV_MUX_PIN(ab_wrb, 74, AB_WRB);
+> > +EMEV_MUX_PIN(ab_wait, 75, AB_WAIT);
+> > +EMEV_MUX_PIN(ab_adv, 76, AB_ADV);
+> > +EMEV_MUX_PIN(ab_ad0, 77, AB_AD0);
+> > +EMEV_MUX_PIN(ab_ad1, 78, AB_AD1);
+> > +EMEV_MUX_PIN(ab_ad2, 79, AB_AD2);
+> > +EMEV_MUX_PIN(ab_ad3, 80, AB_AD3);
+> > +EMEV_MUX_PIN(ab_ad4, 81, AB_AD4);
+> > +EMEV_MUX_PIN(ab_ad5, 82, AB_AD5);
+> > +EMEV_MUX_PIN(ab_ad6, 83, AB_AD6);
+> > +EMEV_MUX_PIN(ab_ad7, 84, AB_AD7);
+> > +EMEV_MUX_PIN(ab_ad8, 85, AB_AD8);
+> > +EMEV_MUX_PIN(ab_ad9, 86, AB_AD9);
+> > +EMEV_MUX_PIN(ab_ad10, 87, AB_AD10);
+> > +EMEV_MUX_PIN(ab_ad11, 88, AB_AD11);
+> > +EMEV_MUX_PIN(ab_ad12, 89, AB_AD12);
+> > +EMEV_MUX_PIN(ab_ad13, 90, AB_AD13);
+> > +EMEV_MUX_PIN(ab_ad14, 91, AB_AD14);
+> > +EMEV_MUX_PIN(ab_ad15, 92, AB_AD15);
+> > +EMEV_MUX_PIN(ab_a17, 93, AB_A17);
+> > +EMEV_MUX_PIN(ab_a18, 94, AB_A18);
+> > +EMEV_MUX_PIN(ab_a19, 95, AB_A19);
+> > +EMEV_MUX_PIN(ab_a20, 96, AB_A20);
+> > +EMEV_MUX_PIN(ab_a21, 97, AB_A21);
+> > +EMEV_MUX_PIN(ab_a22, 98, AB_A22);
+> > +EMEV_MUX_PIN(ab_a23, 99, AB_A23);
+> > +EMEV_MUX_PIN(ab_a24, 100, AB_A24);
+> > +EMEV_MUX_PIN(ab_a25, 101, AB_A25);
+> > +EMEV_MUX_PIN(ab_a26, 102, AB_A26);
+> > +EMEV_MUX_PIN(ab_a27, 103, AB_A27);
+> > +EMEV_MUX_PIN(ab_a28, 104, AB_A28);
+> > +EMEV_MUX_PIN(ab_ben0, 103, AB_BEN0);
+> > +EMEV_MUX_PIN(ab_ben1, 104, AB_BEN1);
+> > +
+> > +/* =3D [ CAM ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> > +static const unsigned int cam_ctrl_pins[] =3D {
+> > +	/* CLKO, CLKI, VS, HS */
+>
+> The datasheet mentions the CLKO signal but doesn't document it furthe=
+r. I
+> believe it's optional, in which case it should be moved to a separate=
+ group.
+> All the other signals (control and data) can be grouped together, as =
+they
+> can't be used separately.
+>
+> > +	131, 132, 133, 134,
+> > +};
+> > +static const unsigned int cam_ctrl_mux[] =3D {
+> > +	CAM_CLKO_MARK, CAM_CLKI_MARK, CAM_VS_MARK, CAM_HS_MARK,
+> > +};
+> > +
+> > +static const unsigned int cam_data_pins[] =3D {
+> > +	/* CAM_YUV[0:7] */
+> > +	135, 136, 137, 138,
+> > +	139, 140, 141, 142,
+> > +};
+> > +static const unsigned int cam_data_mux[] =3D {
+> > +	CAM_YUV0_MARK, CAM_YUV1_MARK, CAM_YUV2_MARK, CAM_YUV3_MARK,
+> > +	CAM_YUV4_MARK, CAM_YUV5_MARK, CAM_YUV6_MARK, CAM_YUV7_MARK,
+> > +};
+>
+> [snip]
+>
+> > +/* =3D [ JTAG ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> > +EMEV_MUX_PIN(jt_sel, 2, JT_SEL);
+> > +EMEV_MUX_PIN(jt_tdo, 151, JT_TDO);
+> > +EMEV_MUX_PIN(jt_tdoen, 152, JT_TDOEN);
+>
+> Can the JTAG port signals be used independently ? If they always need=
+ to be
+> used together you can combine the pins into a single group.
+>
+> [snip]
+>
+> > +/* =3D [ TP33 ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+>
+> Can the trace port control and data signals be used independently ? I=
+f they
+> always need to be used together you can combine the pins into a singl=
+e group.
+>
+> > +static const unsigned int tp33_ctrl_pins[] =3D {
+> > +	/* CLK, CTRL */
+> > +	38, 39,
+> > +};
+> > +static const unsigned int tp33_ctrl_mux[] =3D {
+> > +	TP33_CLK_MARK, TP33_CTRL_MARK,
+> > +};
+> > +
+> > +static const unsigned int tp33_data_pins[] =3D {
+> > +	/* TP33_DATA[0:15] */
+> > +	40, 41, PIN_NUMBER(2, 17), PIN_NUMBER(3, 17),
+> > +	PIN_NUMBER(4, 17), PIN_NUMBER(2, 16), PIN_NUMBER(3, 16),
+> > +	PIN_NUMBER(4, 16),
+> > +	42, 43, PIN_NUMBER(2, 15), PIN_NUMBER(3, 15),
+> > +	PIN_NUMBER(4, 15), PIN_NUMBER(2, 14), PIN_NUMBER(3, 14),
+> > +	PIN_NUMBER(4, 14),
+> > +};
+> > +static const unsigned int tp33_data_mux[] =3D {
+> > +	TP33_DATA0_MARK, TP33_DATA1_MARK, TP33_DATA2_MARK, TP33_DATA3_MAR=
+K,
+> > +	TP33_DATA4_MARK, TP33_DATA5_MARK, TP33_DATA6_MARK, TP33_DATA7_MAR=
+K,
+> > +	TP33_DATA8_MARK, TP33_DATA9_MARK, TP33_DATA10_MARK, TP33_DATA11_M=
+ARK,
+> > +	TP33_DATA12_MARK, TP33_DATA13_MARK, TP33_DATA14_MARK, TP33_DATA15=
+_MARK,
+> > +};
+>
+> [snip]
+>
+> > +/* =3D [ USI0 ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> > +EMEV_MUX_PIN(usi0_cs1, 105, USI0_CS1);
+> > +EMEV_MUX_PIN(usi0_cs2, 106, USI0_CS2);
+> > +EMEV_MUX_PIN(usi0_cs3, 115, USI0_CS3);
+> > +EMEV_MUX_PIN(usi0_cs4, 116, USI0_CS4);
+> > +EMEV_MUX_PIN(usi0_cs5, 117, USI0_CS5);
+> > +EMEV_MUX_PIN(usi0_cs6, 118, USI0_CS6);
+> > +
+> > +/* =3D [ USI1 ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> > +static const unsigned int usi1_ctrl_pins[] =3D {
+>
+> Those are data pins, shouldn't the group be named usi1_data ?
+>
+> > +	/* DI, DO*/
+> > +	107, 108,
+> > +};
+> > +static const unsigned int usi1_ctrl_mux[] =3D {
+> > +	USI1_DI_MARK, USI1_DO_MARK,
+> > +};
+> > +
+> > +/* =3D [ USI2 ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> > +static const unsigned int usi2_ctrl_pins[] =3D {
+>
+> Same here, although there's also a clock pin.
+>
+> Same comment for usi[345]_ctrl* below.
+>
+> > +	/* CLK, DI, DO*/
+> > +	109, 110, 111,
+> > +};
+> > +static const unsigned int usi2_ctrl_mux[] =3D {
+> > +	USI2_CLK_MARK, USI2_DI_MARK, USI2_DO_MARK,
+> > +};
+>
+> [snip]
+>
+> > +/* =3D [ YUV ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+>
+> I believe the clock input is optional, but I think the clock output, =
+data and
+> synchronization signals should be part of the same group as they can'=
+t be used
+> separately. You could also declare those groups as part of the LCD fu=
+nction,
+> as the pins are used for LCD output.
+>
+> > +EMEV_MUX_PIN(yuv3_clk_o, 18, YUV3_CLK_O);
+> > +EMEV_MUX_PIN(yuv3_clk_i, 20, YUV3_CLK_I);
+> > +
+> > +static const unsigned int yuv3_sync_pins[] =3D {
+> > +	/* HS, VS, DE */
+> > +	21, 22, 23,
+> > +};
+> > +static const unsigned int yuv3_sync_mux[] =3D {
+> > +	YUV3_HS_MARK, YUV3_VS_MARK, YUV3_DE_MARK,
+> > +};
+> > +
+> > +static const unsigned int yuv3_data_pins[] =3D {
+> > +	/* YUV3_D[0:15] */
+> > +	40, 41, PIN_NUMBER(2, 17), PIN_NUMBER(3, 17),
+> > +	PIN_NUMBER(4, 17), PIN_NUMBER(2, 16), PIN_NUMBER(3, 16),
+> > +	PIN_NUMBER(4, 16),
+> > +	42, 43, PIN_NUMBER(2, 15), PIN_NUMBER(3, 15),
+> > +	PIN_NUMBER(4, 15), PIN_NUMBER(2, 14), PIN_NUMBER(3, 14),
+> > +	PIN_NUMBER(4, 14),
+> > +};
+> > +static const unsigned int yuv3_data_mux[] =3D {
+> > +	YUV3_D0_MARK, YUV3_D1_MARK, YUV3_D2_MARK, YUV3_D3_MARK,
+> > +	YUV3_D4_MARK, YUV3_D5_MARK, YUV3_D6_MARK, YUV3_D7_MARK,
+> > +	YUV3_D8_MARK, YUV3_D9_MARK, YUV3_D10_MARK, YUV3_D11_MARK,
+> > +	YUV3_D12_MARK, YUV3_D13_MARK, YUV3_D14_MARK, YUV3_D15_MARK,
+> > +};
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
