@@ -1,261 +1,76 @@
-From: Adam Sampson <ats@offog.org>
-Subject: [PATCH] ARM: dts: sun7i: Add dts file for pcDuino 3 Nano board
-Date: Sun, 25 Jan 2015 15:32:01 +0000
-Message-ID: <1422199921-325-1-git-send-email-ats@offog.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@free-electrons.com
-Cc: devicetree@vger.kernel.org, Adam Sampson <ats@offog.org>, linux-arm-kernel@lists.infradead.org
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/4] st33zp24 new architecture proposal and st33zp24 spi driver
+Date: Sun, 25 Jan 2015 16:34:53 +0100
+Message-ID: <1422200097-9869-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: PeterHuewe-Mmb7MZpHnFY@public.gmane.org
+Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the LinkSprite pcDuino 3 Nano board. This is a low-cost
-Allwinner A20 board with Arduino-style GPIO headers; it features 1G RAM,
-4G NAND flash, 1 micro-SD, 2 USB sockets, 1 micro USB socket for OTG and
-another for power in, HDMI, SATA, 5V power for SATA devices, gigabit
-Ethernet, an IR receiver, 3.5mm audio out and a MIPI camera connector.
+Hi,
 
-For more details, see: http://linux-sunxi.org/LinkSprite_pcDuino3_Nano
+The following patchset:
+- propose a new architecture allowing to share a core st33zp24 data management
+layer with different phy (i2c & spi). For st33zp24 both phy have a proprietary transport
+protocol. Both are relying on the TCG TIS protocol. At the end, it simplifies the maintenance.
+- Add an spi phy allowing to support st33zp24 using with an SPI bus.
 
-Signed-off-by: Adam Sampson <ats@offog.org>
----
- arch/arm/boot/dts/Makefile                    |    3 +-
- arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts |  203 +++++++++++++++++++++++++
- 2 files changed, 205 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+The complete solution got tested in polling and interrupt mode successfully with i2c & spi phy.
+This patchset applies on top of Peter's tree https://github.com/PeterHuewe/linux-tpmdd.git for-james branch
+on top of:
+d4989d9f693b9502f9288da5db279c2f8c2e50be tpm/tpm_tis: Add missing ifdef CONFIG_ACPI for pnp_acpi_device
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7df26a2..c025724 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -479,7 +479,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
- 	sun7i-a20-olinuxino-micro.dtb \
--	sun7i-a20-pcduino3.dtb
-+	sun7i-a20-pcduino3.dtb \
-+	sun7i-a20-pcduino3-nano.dtb
- dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a23-ippo-q8h-v5.dtb \
- 	sun8i-a23-ippo-q8h-v1.2.dtb
-diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-new file mode 100644
-index 0000000..a2b18de
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-@@ -0,0 +1,203 @@
-+/*
-+ * Copyright 2015 Adam Sampson <ats@offog.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun7i-a20.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	model = "LinkSprite pcDuino3 Nano";
-+	compatible = "linksprite,pcduino3-nano", "allwinner,sun7i-a20";
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_pcduino3_nano>;
-+
-+		led3 {
-+			label = "pcduino3-nano:green:led3";
-+			gpios = <&pio 7 16 GPIO_ACTIVE_LOW>; /* PH16 */
-+		};
-+
-+		led4 {
-+			label = "pcduino3-nano:green:led4";
-+			gpios = <&pio 7 15 GPIO_ACTIVE_LOW>; /* PH15 */
-+		};
-+	};
-+};
-+
-+&ahci {
-+	target-supply = <&reg_ahci_5v>;
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_pins_rgmii_a>;
-+	phy = <&phy1>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		compatible = "x-powers,axp209";
-+		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
-+&ir0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ir0_pins_a>;
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	ahci_pwr_pin_a: ahci_pwr_pin@0 {
-+		allwinner,pins = "PH2";
-+	};
-+
-+	led_pins_pcduino3_nano: led_pins@0 {
-+		allwinner,pins = "PH16", "PH15";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	usb1_vbus_pin_pcduino3_nano: usb1_vbus_pin@0 {
-+		allwinner,pins = "PH11";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&reg_ahci_5v {
-+	gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	pinctrl-0 = <&usb1_vbus_pin_pcduino3_nano>;
-+	gpio = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
+I confirm also Jarkko Sakkinen's changes are working with this product with both phy's.
+
+- v2 takes into account feedbacks from Jason Gunthorpe.
+- v3 is reduced to 4 patches as 6 out of 10 got accepted for 3.20. Also compare to v2:
+	* Fix build issue with patch v2 04/10 "Replace access to io_lpcpd from struct st33zp24_platform_data to tpm_stm_dev"
+	* Fix link issue with patch v2 08/10 "Split tpm_i2c_tpm_st33 in 2 layers (core + phy)" when building as a module.
+	The symbols wasn't exported in st33zp24.c.
+	* Add missing MODULE_LICENSE in patch v2 09/10 "Add st33zp24 spi phy"
+	* Fix node example in dts spi documentation in patch v2 10/10 "Add dts documentation for st33zp24 spi phy"
+	* Fix typo on Jason Gunthorpe first name. Sorry for that :(...
+
+Best Regards
+Christophe
+
+Christophe Ricard (4):
+  tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct
+    st33zp24_platform_data to tpm_stm_dev
+  tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in 2 layers (core + phy)
+  tpm/st33zp24/spi: Add st33zp24 spi phy
+  tpm/st33zp24/dts/st33zp24-spi: Add dts documentation for st33zp24 spi
+    phy
+
+ .../bindings/security/tpm/st33zp24-spi.txt         |  34 +
+ drivers/char/tpm/Kconfig                           |  11 +-
+ drivers/char/tpm/Makefile                          |   2 +-
+ drivers/char/tpm/st33zp24/Kconfig                  |  30 +
+ drivers/char/tpm/st33zp24/Makefile                 |  12 +
+ drivers/char/tpm/st33zp24/i2c.c                    | 278 +++++++
+ drivers/char/tpm/st33zp24/spi.c                    | 386 +++++++++
+ drivers/char/tpm/st33zp24/st33zp24.c               | 686 ++++++++++++++++
+ drivers/char/tpm/st33zp24/st33zp24.h               |  34 +
+ drivers/char/tpm/tpm_i2c_stm_st33.c                | 911 ---------------------
+ include/linux/platform_data/st33zp24.h             |  28 +
+ include/linux/platform_data/tpm_stm_st33.h         |  39 -
+ 12 files changed, 1490 insertions(+), 961 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
+ create mode 100644 drivers/char/tpm/st33zp24/Kconfig
+ create mode 100644 drivers/char/tpm/st33zp24/Makefile
+ create mode 100644 drivers/char/tpm/st33zp24/i2c.c
+ create mode 100644 drivers/char/tpm/st33zp24/spi.c
+ create mode 100644 drivers/char/tpm/st33zp24/st33zp24.c
+ create mode 100644 drivers/char/tpm/st33zp24/st33zp24.h
+ delete mode 100644 drivers/char/tpm/tpm_i2c_stm_st33.c
+ create mode 100644 include/linux/platform_data/st33zp24.h
+ delete mode 100644 include/linux/platform_data/tpm_stm_st33.h
+
 -- 
-1.7.10.4
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
