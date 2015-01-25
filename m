@@ -1,69 +1,107 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 1/4] tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct st33zp24_platform_data to tpm_stm_dev
-Date: Sun, 25 Jan 2015 22:11:30 +0100
-Message-ID: <1422220293-21005-2-git-send-email-christophe-h.ricard@st.com>
-References: <1422220293-21005-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422220293-21005-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: PeterHuewe-Mmb7MZpHnFY@public.gmane.org
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V2] clockevents: rockchip: Add rockchip timer for rk3288
+Date: Sun, 25 Jan 2015 22:16:10 +0100
+Message-ID: <54C55D1A.9010706@linaro.org>
+References: <1422178979-12382-1-git-send-email-daniel.lezcano@linaro.org> <2285293.ZBcGIuxxDo@diego>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2285293.ZBcGIuxxDo@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-io_lpcpd is accessible from struct tpm_stm_dev.
-struct st33zp24_platform_data is only valid when using static platform
-configuration data, not when using dts.
+On 01/25/2015 09:52 PM, Heiko St=C3=BCbner wrote:
+> Hi Daniel,
+>
+> one big request and some more style nitpicks :-)
+>
+> With the nitpicks fixed
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+>
+>
+> Before applying this patch could you drop the rk3288.dtsi change plea=
+se?
+> Instead I'd like to add the following patch separately to _my_ device=
+tree
+> branch for 3.20.
+>
+> I already wasn't fast enough to prevent the ethernet controller chang=
+es
+> going through the network tree and would like to prevent a third tree=
+ sending
+> changes for the same dts area to Linus - merge conflicts and all.
+>
+>
+> I don't think that neither the nitpicks nor dropping the dtsi segment=
+ need
+> another submission though.
 
-Reviewed-by: Jason Gunthorpe <jason.gunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/char/tpm/tpm_i2c_stm_st33.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+Hi Heiko,
 
-diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index 612845b..882c60a 100644
---- a/drivers/char/tpm/tpm_i2c_stm_st33.c
-+++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -837,11 +837,14 @@ static int tpm_stm_i2c_remove(struct i2c_client *client)
-  */
- static int tpm_stm_i2c_pm_suspend(struct device *dev)
- {
--	struct st33zp24_platform_data *pin_infos = dev->platform_data;
-+	struct tpm_chip *chip = dev_get_drvdata(dev);
-+	struct tpm_stm_dev *tpm_dev;
- 	int ret = 0;
- 
--	if (gpio_is_valid(pin_infos->io_lpcpd))
--		gpio_set_value(pin_infos->io_lpcpd, 0);
-+	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
-+
-+	if (gpio_is_valid(tpm_dev->io_lpcpd))
-+		gpio_set_value(tpm_dev->io_lpcpd, 0);
- 	else
- 		ret = tpm_pm_suspend(dev);
- 
-@@ -856,12 +859,13 @@ static int tpm_stm_i2c_pm_suspend(struct device *dev)
- static int tpm_stm_i2c_pm_resume(struct device *dev)
- {
- 	struct tpm_chip *chip = dev_get_drvdata(dev);
--	struct st33zp24_platform_data *pin_infos = dev->platform_data;
--
-+	struct tpm_stm_dev *tpm_dev;
- 	int ret = 0;
- 
--	if (gpio_is_valid(pin_infos->io_lpcpd)) {
--		gpio_set_value(pin_infos->io_lpcpd, 1);
-+	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
-+
-+	if (gpio_is_valid(tpm_dev->io_lpcpd)) {
-+		gpio_set_value(tpm_dev->io_lpcpd, 1);
- 		ret = wait_for_stat(chip,
- 				TPM_STS_VALID, chip->vendor.timeout_b,
- 				&chip->vendor.read_queue, false);
--- 
-2.1.0
+I removed the dtsi change, fixed the spaces indentation and pushed in m=
+y=20
+tree the driver [1]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks the review
+
+   -- Daniel
+
+[1] http://git.linaro.org/people/daniel.lezcano/linux.git clockevents/3=
+=2E20
+
+
+> ----- 8< -----------
+> From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Date: Sun, 25 Jan 2015 10:42:59 +0100
+> Subject: [PATCH] ARM: dts: rockchip: Add rockchip timer node for rk32=
+88
+>
+> The rk3288 board uses the architected timers and these ones are shutd=
+own when
+> the cpu is powered down. There is a need of a broadcast timer in this=
+ case to
+> ensure proper wakeup when the cpus are in sleep mode and a timer expi=
+res.
+>
+> Add the timer node for the broadcast timer.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>   arch/arm/boot/dts/rk3288.dtsi | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288=
+=2Edtsi
+> index c7235fa..37847c1 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -149,6 +149,14 @@
+>   		clock-frequency =3D <24000000>;
+>   	};
+>
+> +	timer: timer@ff810000 {
+> +		compatible =3D "rockchip,rk3288-timer";
+> +		reg =3D <0xff810000 0x20>;
+> +		interrupts =3D <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks =3D <&xin24m>, <&cru PCLK_TIMER>;
+> +		clock-names =3D "timer", "pclk";
+> +	};
+> +
+>   	display-subsystem {
+>   		compatible =3D "rockchip,display-subsystem";
+>   		ports =3D <&vopl_out>, <&vopb_out>;
+>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
