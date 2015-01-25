@@ -1,7 +1,7 @@
 From: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 3/3] ARM: dts: rockchip: add dts for ChipSPARK Rayeager PX2 board
-Date: Sun, 25 Jan 2015 21:39:36 +0900
-Message-ID: <1422189576-19478-4-git-send-email-naobsd@gmail.com>
+Subject: [PATCH v4 2/3] ARM: dts: rockchip: add dts for Firefly Firefly-RK3288 boards
+Date: Sun, 25 Jan 2015 21:39:35 +0900
+Message-ID: <1422189576-19478-3-git-send-email-naobsd@gmail.com>
 References: <1422189576-19478-1-git-send-email-naobsd@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1422189576-19478-1-git-send-email-naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,45 +10,63 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@publ
 Cc: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This add support for Rayeager PX2, Rockchip PX2 based development board
-made by ChipSPARK.
+This adds support for Firefly-RK3288, Rockchip RK3288 based development
+boards made by Firefly.
+
+There are 2 dts for 2 versions of the board. rk3288-firefly-beta.dts is
+for the beta version, rk3288-firefly.dts is for the mass production version.
 
 Signed-off-by: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
 
-Changes in v4: none
+Changes in v4:
+- revert wrong clock-* fixes in v3
+- remove non-working tsadc
+- remove spi2 which uses only clk and cs0 pins
+- remove vqmmc-supply from sdmmc and keep vccio_sd 3.3V to make SD card works
+- update gmac regulator properties to match with recent Romain Perier's change
+
 Changes in v3:
 - fix ordering more
+- fix clock-* properties
+- enable tsadc with clock-* properties
 
 Changes in v2:
-- add missing vin-supply
-- use two chars for i2c address
-- fix ordering for nodes without address element
+- use own compatible property for Firefly-RK3288 beta version
+- remove disabled tsadc node
+- fix ordering for the nodes without address element
 - add commit messages
 
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/rk3066a-rayeager.dts | 468 +++++++++++++++++++++++++++++++++
- 2 files changed, 469 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3066a-rayeager.dts
+ arch/arm/boot/dts/Makefile                |   4 +-
+ arch/arm/boot/dts/rk3288-firefly-beta.dts |  71 +++++
+ arch/arm/boot/dts/rk3288-firefly.dts      |  71 +++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi     | 483 ++++++++++++++++++++++++++++++
+ 4 files changed, 628 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/rk3288-firefly-beta.dts
+ create mode 100644 arch/arm/boot/dts/rk3288-firefly.dts
+ create mode 100644 arch/arm/boot/dts/rk3288-firefly.dtsi
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f586bd5..edd6157 100644
+index add823d..f586bd5 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -451,6 +451,7 @@ dtb-$(CONFIG_ARCH_REALVIEW) += \
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3066a-bqcurie2.dtb \
+@@ -453,7 +453,9 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
  	rk3066a-marsboard.dtb \
-+	rk3066a-rayeager.dtb \
  	rk3188-radxarock.dtb \
  	rk3288-evb-act8846.dtb \
- 	rk3288-evb-rk808.dtb \
-diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts b/arch/arm/boot/dts/rk3066a-rayeager.dts
+-	rk3288-evb-rk808.dtb
++	rk3288-evb-rk808.dtb \
++	rk3288-firefly-beta.dtb \
++	rk3288-firefly.dtb
+ dtb-$(CONFIG_ARCH_S3C24XX) += \
+ 	s3c2416-smdk2416.dtb
+ dtb-$(CONFIG_ARCH_S3C64XX) += \
+diff --git a/arch/arm/boot/dts/rk3288-firefly-beta.dts b/arch/arm/boot/dts/rk3288-firefly-beta.dts
 new file mode 100644
-index 0000000..839153b
+index 0000000..75d77e3
 --- /dev/null
-+++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
-@@ -0,0 +1,468 @@
++++ b/arch/arm/boot/dts/rk3288-firefly-beta.dts
+@@ -0,0 +1,71 @@
 +/*
 + * Copyright (c) 2014, 2015 FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
@@ -92,19 +110,175 @@ index 0000000..839153b
 + */
 +
 +/dts-v1/;
-+#include "rk3066a.dtsi"
++#include "rk3288-firefly.dtsi"
 +
 +/ {
-+	model = "Rayeager PX2";
-+	compatible = "chipspark,rayeager-px2", "rockchip,rk3066a";
++	model = "Firefly-RK3288 Beta";
++	compatible = "firefly,firefly-rk3288-beta", "rockchip,rk3288";
++};
 +
++&ir {
++	gpios = <&gpio7 5 GPIO_ACTIVE_LOW>;
++};
++
++&pinctrl {
++	act8846 {
++		pmic_vsel: pmic-vsel {
++			rockchip,pins = <7 1 RK_FUNC_GPIO &pcfg_output_low>;
++		};
++	};
++
++	ir {
++		ir_int: ir-int {
++			rockchip,pins = <7 5 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++};
++
++&pwm0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dts b/arch/arm/boot/dts/rk3288-firefly.dts
+new file mode 100644
+index 0000000..c07fe92
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3288-firefly.dts
+@@ -0,0 +1,71 @@
++/*
++ * Copyright (c) 2014, 2015 FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "rk3288-firefly.dtsi"
++
++/ {
++	model = "Firefly-RK3288";
++	compatible = "firefly,firefly-rk3288", "rockchip,rk3288";
++};
++
++&ir {
++	gpios = <&gpio7 0 GPIO_ACTIVE_LOW>;
++};
++
++&pinctrl {
++	act8846 {
++		pmic_vsel: pmic-vsel {
++			rockchip,pins = <7 14 RK_FUNC_GPIO &pcfg_output_low>;
++		};
++	};
++
++	ir {
++		ir_int: ir-int {
++			rockchip,pins = <7 0 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++};
++
++&pwm1 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+new file mode 100644
+index 0000000..ef6729b
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+@@ -0,0 +1,483 @@
++/*
++ * Copyright (c) 2014, 2015 FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "rk3288.dtsi"
++
++/ {
 +	memory {
-+		reg = <0x60000000 0x40000000>;
++		reg = <0 0x80000000>;
++	};
++
++	ext_gmac: external-gmac-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <125000000>;
++		clock-output-names = "ext_gmac";
 +	};
 +
 +	ir: ir-receiver {
 +		compatible = "gpio-ir-receiver";
-+		gpios = <&gpio6 1 GPIO_ACTIVE_LOW>;
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&ir_int>;
 +	};
@@ -116,7 +290,7 @@ index 0000000..839153b
 +
 +		button@0 {
 +			gpio-key,wakeup = <1>;
-+			gpios = <&gpio6 2 GPIO_ACTIVE_LOW>;
++			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
 +			label = "GPIO Power";
 +			linux,code = <116>;
 +			pinctrl-names = "default";
@@ -124,67 +298,38 @@ index 0000000..839153b
 +		};
 +	};
 +
-+	vsys: vsys-regulator {
++	leds {
++		compatible = "gpio-leds";
++
++		work {
++			gpios = <&gpio8 1 GPIO_ACTIVE_LOW>;
++			label = "firefly:blue:user";
++			linux,default-trigger = "rc-feedback";
++			pinctrl-names = "default";
++			pinctrl-0 = <&work_led>;
++		};
++
++		power {
++			gpios = <&gpio8 2 GPIO_ACTIVE_LOW>;
++			label = "firefly:green:power";
++			linux,default-trigger = "default-on";
++			pinctrl-names = "default";
++			pinctrl-0 = <&power_led>;
++		};
++	};
++
++	vcc_sys: vsys-regulator {
 +		compatible = "regulator-fixed";
-+		regulator-name = "vsys";
++		regulator-name = "vcc_sys";
 +		regulator-min-microvolt = <5000000>;
 +		regulator-max-microvolt = <5000000>;
 +		regulator-always-on;
 +		regulator-boot-on;
-+	};
-+
-+	/* input for 5V_STDBY is VSYS or DC5V, selectable by jumper J4 */
-+	vcc_stdby: 5v-stdby-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5v_stdby";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vcc_otg: usb-otg-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 5 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&otg_drv>;
-+		regulator-name = "vcc_otg";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_stdby>;
-+	};
-+
-+	vcc_host: usb-host-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host_drv>;
-+		regulator-name = "host-pwr";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_stdby>;
-+	};
-+
-+	vcc_sata: sata-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sata_pwr>;
-+		regulator-name = "usb_5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_stdby>;
 +	};
 +
 +	vcc_sd: sdmmc-regulator {
 +		compatible = "regulator-fixed";
-+		gpio = <&gpio3 7 GPIO_ACTIVE_LOW>;
++		gpio = <&gpio7 11 GPIO_ACTIVE_LOW>;
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&sdmmc_pwr>;
 +		regulator-name = "vcc_sd";
@@ -194,29 +339,53 @@ index 0000000..839153b
 +		vin-supply = <&vcc_io>;
 +	};
 +
-+	vcc_emmc: emmc-regulator {
++	vcc_flash: flash-regulator {
 +		compatible = "regulator-fixed";
-+		regulator-name = "emmc_vccq";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		vin-supply = <&vsys>;
++		regulator-name = "vcc_flash";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc_io>;
++	};
++
++	vcc_5v: usb-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++	vcc_host_5v: usb-host-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio0 14 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&host_vbus_drv>;
++		regulator-name = "vcc_host_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		vin-supply = <&vcc_5v>;
++	};
++
++	vcc_otg_5v: usb-otg-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio0 12 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&otg_vbus_drv>;
++		regulator-name = "vcc_otg_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		vin-supply = <&vcc_5v>;
 +	};
 +};
 +
 +&cpu0 {
-+	cpu0-supply = <&vdd_arm>;
-+};
-+
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-+	phy = <&phy0>;
-+	phy-supply = <&vcc_rmii>;
-+	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
++	cpu0-supply = <&vdd_cpu>;
 +};
 +
 +&emmc {
@@ -227,145 +396,162 @@ index 0000000..839153b
 +	non-removable;
 +	num-slots = <1>;
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_rst>;
-+	vmmc-supply = <&vcc_emmc>;
-+	vqmmc-supply = <&vcc_emmc>;
++	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_pwr>, <&emmc_bus8>;
++	vmmc-supply = <&vcc_io>;
++	vqmmc-supply = <&vcc_flash>;
 +	status = "okay";
++};
++
++&gmac {
++	assigned-clocks = <&cru SCLK_MAC>;
++	assigned-clock-parents = <&ext_gmac>;
++	clock_in_out = "input";
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins>, <&phy_rst>, <&phy_pmeb>, <&phy_int>;
++	phy-supply = <&vcc_lan>;
++	phy-mode = "rgmii";
++	snps,reset-active-low;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-gpio = <&gpio4 8 GPIO_ACTIVE_LOW>;
++	tx_delay = <0x30>;
++	rx_delay = <0x10>;
++	status = "ok";
 +};
 +
 +&i2c0 {
 +	clock-frequency = <400000>;
 +	status = "okay";
 +
-+	ak8963: ak8963@0d {
-+		compatible = "asahi-kasei,ak8975";
-+		reg = <0x0d>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <17 IRQ_TYPE_EDGE_RISING>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&comp_int>;
++	vdd_cpu: syr827@40 {
++		compatible = "silergy,syr827";
++		fcs,suspend-voltage-selector = <1>;
++		reg = <0x40>;
++		regulator-name = "vdd_cpu";
++		regulator-min-microvolt = <850000>;
++		regulator-max-microvolt = <1350000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
 +	};
 +
-+	mma8452: mma8452@1d {
-+		compatible = "fsl,mma8452";
-+		reg = <0x1d>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <16 IRQ_TYPE_EDGE_RISING>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gsensor_int>;
++	vdd_gpu: syr828@41 {
++		compatible = "silergy,syr828";
++		fcs,suspend-voltage-selector = <1>;
++		reg = <0x41>;
++		regulator-name = "vdd_gpu";
++		regulator-min-microvolt = <850000>;
++		regulator-max-microvolt = <1350000>;
++		regulator-always-on;
++		vin-supply = <&vcc_sys>;
 +	};
-+};
 +
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	tps: tps@2d {
-+		reg = <0x2d>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <4 IRQ_TYPE_EDGE_RISING>;
++	hym8563: hym8563@51 {
++		compatible = "haoyu,hym8563";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		clock-output-names = "xin32k";
++		interrupt-parent = <&gpio7>;
++		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_int>, <&pwr_hold>;
++		pinctrl-0 = <&rtc_int>;
++	};
 +
-+		vcc1-supply = <&vsys>;
-+		vcc2-supply = <&vsys>;
-+		vcc3-supply = <&vsys>;
-+		vcc4-supply = <&vsys>;
-+		vcc5-supply = <&vcc_io>;
-+		vcc6-supply = <&vcc_io>;
-+		vcc7-supply = <&vsys>;
-+		vccio-supply = <&vsys>;
++	act8846: act8846@5a {
++		compatible = "active-semi,act8846";
++		reg = <0x5a>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_vsel>, <&pwr_hold>;
++		system-power-controller;
 +
 +		regulators {
-+			vcc_rtc: regulator@0 {
-+				regulator-name = "vcc_rtc";
++			vcc_ddr: REG1 {
++				regulator-name = "vcc_ddr";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
 +				regulator-always-on;
 +			};
 +
-+			vcc_io: regulator@1 {
++			vcc_io: REG2 {
 +				regulator-name = "vcc_io";
 +				regulator-min-microvolt = <3300000>;
 +				regulator-max-microvolt = <3300000>;
 +				regulator-always-on;
 +			};
 +
-+			vdd_arm: regulator@2 {
-+				regulator-name = "vdd_arm";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			vcc_ddr: regulator@3 {
-+				regulator-name = "vcc_ddr";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			vcc18: regulator@5 {
-+				regulator-name = "vcc18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_11: regulator@6 {
-+				regulator-name = "vdd_11";
++			vdd_log: REG3 {
++				regulator-name = "vdd_log";
 +				regulator-min-microvolt = <1100000>;
 +				regulator-max-microvolt = <1100000>;
 +				regulator-always-on;
 +			};
 +
-+			vcc_25: regulator@7 {
-+				regulator-name = "vcc_25";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
++			vcc_20: REG4 {
++				regulator-name = "vcc_20";
++				regulator-min-microvolt = <2000000>;
++				regulator-max-microvolt = <2000000>;
 +				regulator-always-on;
 +			};
 +
-+			vccio_wl: regulator@8 {
-+				regulator-name = "vccio_wl";
++			vccio_sd: REG5 {
++				regulator-name = "vccio_sd";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vdd10_lcd: REG6 {
++				regulator-name = "vdd10_lcd";
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++			};
++
++			vcca_18: REG7 {
++				regulator-name = "vcca_18";
 +				regulator-min-microvolt = <1800000>;
 +				regulator-max-microvolt = <1800000>;
 +			};
 +
-+			vcc25_hdmi: regulator@9 {
-+				regulator-name = "vcc25_hdmi";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+			};
-+
-+			vcca_33: regulator@10 {
++			vcca_33: REG8 {
 +				regulator-name = "vcca_33";
 +				regulator-min-microvolt = <3300000>;
 +				regulator-max-microvolt = <3300000>;
 +			};
 +
-+			vcc_rmii: regulator@11 {
-+				regulator-name = "vcc_rmii";
++			vcc_lan: REG9 {
++				regulator-name = "vcc_lan";
 +				regulator-min-microvolt = <3300000>;
 +				regulator-max-microvolt = <3300000>;
 +			};
 +
-+			vcc28_cif: regulator@12 {
-+				regulator-name = "vcc28_cif";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
++			vdd_10: REG10 {
++				regulator-name = "vdd_10";
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-always-on;
++			};
++
++			vcc_18: REG11 {
++				regulator-name = "vcc_18";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			vcc18_lcd: REG12 {
++				regulator-name = "vcc18_lcd";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
 +			};
 +		};
 +	};
 +};
 +
-+#include "tps65910.dtsi"
-+
-+&i2c2 {
++&i2c1 {
 +	status = "okay";
 +};
 +
-+&i2c3 {
++&i2c2 {
 +	status = "okay";
 +};
 +
@@ -373,25 +559,7 @@ index 0000000..839153b
 +	status = "okay";
 +};
 +
-+&mmc0 {
-+	bus-width = <4>;
-+	disable-wp;
-+	num-slots = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
-+	vmmc-supply = <&vcc_sd>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	broken-cd;
-+	bus-width = <4>;
-+	disable-wp;
-+	non-removable;
-+	num-slots = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
-+	vmmc-supply = <&vccio_wl>;
++&i2c5 {
 +	status = "okay";
 +};
 +
@@ -400,91 +568,108 @@ index 0000000..839153b
 +		output-high;
 +	};
 +
-+	ak8963 {
-+		comp_int: comp-int {
-+			rockchip,pins = <4 17 RK_FUNC_GPIO &pcfg_pull_default>;
++	pcfg_output_low: pcfg-output-low {
++		output-low;
++	};
++
++	act8846 {
++		pwr_hold: pwr-hold {
++			rockchip,pins = <0 1 RK_FUNC_GPIO &pcfg_output_high>;
 +		};
 +	};
 +
-+	emac {
-+		rmii_rst: rmii-rst {
-+			rockchip,pins = <1 30 RK_FUNC_GPIO &pcfg_output_high>;
++	gmac {
++		phy_int: phy-int {
++			rockchip,pins = <0 9 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++
++		phy_pmeb: phy-pmeb {
++			rockchip,pins = <0 8 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++
++		phy_rst: phy-rst {
++			rockchip,pins = <4 8 RK_FUNC_GPIO &pcfg_output_high>;
 +		};
 +	};
 +
-+	ir {
-+		ir_int: ir-int {
-+			rockchip,pins = <6 1 RK_FUNC_GPIO &pcfg_pull_default>;
++	hym8563 {
++		rtc_int: rtc-int {
++			rockchip,pins = <7 4 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +	};
 +
 +	keys {
 +		pwr_key: pwr-key {
-+			rockchip,pins = <6 2 RK_FUNC_GPIO &pcfg_pull_default>;
++			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +	};
 +
-+	mma8452 {
-+		gsensor_int: gsensor-int {
-+			rockchip,pins = <4 16 RK_FUNC_GPIO &pcfg_pull_default>;
++	leds {
++		power_led: power-led {
++			rockchip,pins = <8 2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		work_led: work-led {
++			rockchip,pins = <8 1 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
 +
-+	mmc {
++	sdmmc {
 +		sdmmc_pwr: sdmmc-pwr {
-+			rockchip,pins = <3 7 RK_FUNC_GPIO &pcfg_pull_default>;
++			rockchip,pins = <7 11 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
 +
 +	usb_host {
-+		host_drv: host-drv {
-+			rockchip,pins = <0 6 RK_FUNC_GPIO &pcfg_pull_default>;
++		host_vbus_drv: host-vbus-drv {
++			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +
-+		hub_rst: hub-rst {
-+			rockchip,pins = <1 31 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+
-+		sata_pwr: sata-pwr {
-+			rockchip,pins = <4 22 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+
-+		sata_reset: sata-reset {
-+			rockchip,pins = <0 13 RK_FUNC_GPIO &pcfg_output_high>;
++		usbhub_rst: usbhub-rst {
++			rockchip,pins = <8 3 RK_FUNC_GPIO &pcfg_output_high>;
 +		};
 +	};
 +
 +	usb_otg {
-+		otg_drv: otg-drv {
-+			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_default>;
++		otg_vbus_drv: otg-vbus-drv {
++			rockchip,pins = <0 12 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
-+
-+	tps {
-+		pmic_int: pmic-int {
-+			rockchip,pins = <6 4 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+
-+		pwr_hold: pwr-hold {
-+			rockchip,pins = <6 8 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	status = "okay";
 +};
 +
 +&saradc {
-+	vref-supply = <&vcc_25>;
++	vref-supply = <&vcc_18>;
++	status = "okay";
++};
++
++&sdio0 {
++	broken-cd;
++	bus-width = <4>;
++	disable-wp;
++	non-removable;
++	num-slots = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdio0_bus4>, <&sdio0_cmd>, <&sdio0_clk>;
++	vmmc-supply = <&vcc_18>;
++	status = "okay";
++};
++
++&sdmmc {
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	card-detect-delay = <200>;
++	disable-wp;
++	num-slots = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc_clk>, <&sdmmc_cmd>, <&sdmmc_cd>, <&sdmmc_bus4>;
++	vmmc-supply = <&vcc_sd>;
 +	status = "okay";
 +};
 +
 +&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_clk>, <&spi0_cs0>, <&spi0_tx>, <&spi0_rx>, <&spi0_cs1>;
 +	status = "okay";
 +};
 +
@@ -494,19 +679,21 @@ index 0000000..839153b
 +	status = "okay";
 +};
 +
++&uart1 {
++	status = "okay";
++};
++
 +&uart2 {
 +	status = "okay";
 +};
 +
 +&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_xfer>, <&uart3_cts>, <&uart3_rts>;
 +	status = "okay";
 +};
 +
-+&usb_host {
++&usb_host1 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&hub_rst>, <&sata_reset>;
++	pinctrl-0 = <&usbhub_rst>;
 +	status = "okay";
 +};
 +
