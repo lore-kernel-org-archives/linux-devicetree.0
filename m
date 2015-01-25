@@ -1,125 +1,78 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
-Date: Sat, 24 Jan 2015 13:37:12 -0800
-Message-ID: <1422135432.18650.2.camel@perches.com>
-References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Stathis Voukelatos <stathisv70@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stathis Voukelatos <stathis.voukelatos@linn.co.uk>, abrestic@chromium.org
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/4] st33zp24 new architecture proposal and st33zp24 spi driver
+Date: Sun, 25 Jan 2015 22:11:29 +0100
+Message-ID: <1422220293-21005-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: PeterHuewe-Mmb7MZpHnFY@public.gmane.org
+Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-01-23 at 10:07 +0000, Stathis Voukelatos wrote:
-> This patch adds support the Ethernet Packet Sniffer H/W module
-> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
-> The module allows Ethernet packets to be parsed, matched against
-> a user-defined pattern and timestamped. It sits between a 100M
-> Ethernet MAC and PHY and is completely passive with respect to
-> Ethernet frames.
-[]
->  include/linux/pkt_sniffer.h                        |  89 +++++
+Hi,
 
-Why should this file be here?
-Why not in the drivers/net/pkt-sniffer directory?
+The following patchset:
+- propose a new architecture allowing to share a core st33zp24 data management
+layer with different phy (i2c & spi). For st33zp24 both phy have a proprietary transport
+protocol. Both are relying on the TCG TIS protocol. At the end, it simplifies the maintenance.
+- Add an spi phy allowing to support st33zp24 using with an SPI bus.
 
-> diff --git a/drivers/net/pkt-sniffer/backends/ether/channel.c b/drivers/net/pkt-sniffer/backends/ether/channel.c
-[]
-> +static int esnf_start(struct snf_chan *dev);
+The complete solution got tested in polling and interrupt mode successfully with i2c & spi phy.
+This patchset applies on top of Peter's tree https://github.com/PeterHuewe/linux-tpmdd.git for-james branch
+on top of:
+d4989d9f693b9502f9288da5db279c2f8c2e50be tpm/tpm_tis: Add missing ifdef CONFIG_ACPI for pnp_acpi_device
 
-Be nice to rearrange the code to avoid the forward declarations.
+I confirm also Jarkko Sakkinen's changes are working with this product with both phy's.
 
-> +static int esnf_stop(struct snf_chan *dev);
-> +static int esnf_set_pattern(struct snf_chan *dev, const u8 *pattern, int count);
-> +static int esnf_num_recs_avail(struct snf_chan *dev);
-> +static int esnf_max_ptn_entries(struct snf_chan *dev);
-> +static int esnf_max_match_bytes(struct snf_chan *dev);
-> +static int validate_pattern(
-> +			struct ether_snf_chan *ch,
-> +			const u8 *buf,
-> +			int count);
+- v2 takes into account feedbacks from Jason Gunthorpe.
+- v3 is reduced to 4 patches as 6 out of 10 got accepted for 3.20. Also compare to v2:
+        * Fix build issue with patch v2 04/10 "Replace access to io_lpcpd from struct st33zp24_platform_data to tpm_stm_dev"
+        * Fix link issue with patch v2 08/10 "Split tpm_i2c_tpm_st33 in 2 layers (core + phy)" when building as a module.
+        The symbols wasn't exported in st33zp24.c.
+        * Add missing MODULE_LICENSE in patch v2 09/10 "Add st33zp24 spi phy"
+        * Fix node example in dts spi documentation in patch v2 10/10 "Add dts documentation for st33zp24 spi phy"
+        * Fix typo on Jason Gunthorpe first name. Sorry for that :(...
+	* Change contact email address as tpmsupport-qxv4g6HH51o@public.gmane.org is no more valid
+- v4 adds missing module_license in st33zp24
 
-[]
+Best Regards
+Christophe
 
-> +static int validate_pattern(struct ether_snf_chan *ch, const u8 *buf, int count)
-> +{
+Christophe Ricard (4):
+  tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct
+    st33zp24_platform_data to tpm_stm_dev
+  tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in 2 layers (core + phy)
+  tpm/st33zp24/spi: Add st33zp24 spi phy
+  tpm/st33zp24/dts/st33zp24-spi: Add dts documentation for st33zp24 spi
+    phy
 
-Maybe better as bool
+ .../bindings/security/tpm/st33zp24-spi.txt         |  34 +
+ drivers/char/tpm/Kconfig                           |  11 +-
+ drivers/char/tpm/Makefile                          |   2 +-
+ drivers/char/tpm/st33zp24/Kconfig                  |  30 +
+ drivers/char/tpm/st33zp24/Makefile                 |  12 +
+ drivers/char/tpm/st33zp24/i2c.c                    | 278 +++++++
+ drivers/char/tpm/st33zp24/spi.c                    | 386 +++++++++
+ drivers/char/tpm/st33zp24/st33zp24.c               | 691 ++++++++++++++++
+ drivers/char/tpm/st33zp24/st33zp24.h               |  34 +
+ drivers/char/tpm/tpm_i2c_stm_st33.c                | 911 ---------------------
+ include/linux/platform_data/st33zp24.h             |  28 +
+ include/linux/platform_data/tpm_stm_st33.h         |  39 -
+ 12 files changed, 1495 insertions(+), 961 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
+ create mode 100644 drivers/char/tpm/st33zp24/Kconfig
+ create mode 100644 drivers/char/tpm/st33zp24/Makefile
+ create mode 100644 drivers/char/tpm/st33zp24/i2c.c
+ create mode 100644 drivers/char/tpm/st33zp24/spi.c
+ create mode 100644 drivers/char/tpm/st33zp24/st33zp24.c
+ create mode 100644 drivers/char/tpm/st33zp24/st33zp24.h
+ delete mode 100644 drivers/char/tpm/tpm_i2c_stm_st33.c
+ create mode 100644 include/linux/platform_data/st33zp24.h
+ delete mode 100644 include/linux/platform_data/tpm_stm_st33.h
 
-> +	int i, complete, max_copy_bytes;
-[]
-> +	/* Check if the string was properly terminated
-> +	 * and contained valid number of commands
-> +	 */
-> +	if (complete) {
-> +		max_copy_bytes = ch->fifo_blk_words * 4;
-> +		if (ts)
-> +			max_copy_bytes -= 4;
-> +		if ((copy_before + copy_after) > max_copy_bytes)
-> +			return 0;
-> +		ch->ts_present = ts;
-> +		ch->nfb_before = copy_before;
-> +		ch->nfb_after = copy_after;
-> +		return 1;
-> +	} else {
-> +		return 0;
-> +	}
+-- 
+2.1.0
 
-	return complete;
-
-[]
-
-> +/* Interrupt thread function */
-> +static irqreturn_t esnf_irq_thread(int irq, void *dev_id)
-> +{
-> +	struct platform_device *pdev = (struct platform_device *)dev_id;
-> +	struct ether_snf *esnf = (struct ether_snf *)platform_get_drvdata(pdev);
-> +	u32 irq_status;
-> +
-> +	if (unlikely(esnf->irq != irq))
-> +		return IRQ_NONE;
-> +
-> +	irq_status = ioread32(esnf->regs + INTERRUPT_STATUS) &
-> +				 ioread32(esnf->regs + INTERRUPT_ENABLE);
-> +
-> +	dev_dbg(&pdev->dev, "irq: 0x%08x\n", irq_status);
-> +
-> +	/* TX FIFO full */
-> +	if (unlikely(irq_status & TX_FULL_IRQ_BIT))
-> +		dev_notice(&pdev->dev, "TX FIFO full");
-
-Missing terminating newlines
-> +
-> +	/* RX FIFO full */
-> +	if (unlikely(irq_status & RX_FULL_IRQ_BIT))
-> +		dev_notice(&pdev->dev, "RX FIFO full");
-> +
-> +	/* TX match data available */
-> +	if (irq_status & TX_DATA_IRQ_BIT) {
-> +		dev_dbg(&pdev->dev, "TX data");
-> +		channel_data_available(&esnf->txc);
-> +	}
-> +
-> +	/* RX match data available */
-> +	if (irq_status & RX_DATA_IRQ_BIT) {
-> +		dev_dbg(&pdev->dev, "RX data");
-> +		channel_data_available(&esnf->rxc);
-> +	}
-
-> diff --git a/drivers/net/pkt-sniffer/core/nl.c b/drivers/net/pkt-sniffer/core/nl.c
-[]
-> +int snf_netlink_init(int id, struct snf_chan *dev, const char *name)
-> +{
-[]
-> +	/* Allocate ops array and copy template data */
-> +	nl->ops = kmalloc(sizeof(snf_ops_tmpl), GFP_KERNEL);
-> +	if (!nl->ops) {
-> +		ret = -ENOMEM;
-> +		goto fail2;
-> +	}
-> +	memcpy(nl->ops, snf_ops_tmpl, sizeof(snf_ops_tmpl));
-
-kmemdup
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
