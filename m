@@ -1,88 +1,103 @@
-From: "christophe.ricard" <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] st33zp24 new architecture proposal and st33zp24
- spi driver
-Date: Sun, 25 Jan 2015 16:44:22 +0100
-Message-ID: <54C50F56.8040405@gmail.com>
-References: <1422200097-9869-1-git-send-email-christophe-h.ricard@st.com>
+From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: sunxi: Add syscon node for
+ controlling SRAM mapping
+Date: Sun, 25 Jan 2015 16:49:17 +0100
+Message-ID: <1422200959-1717-2-git-send-email-jenskuske@gmail.com>
+References: <1422200959-1717-1-git-send-email-jenskuske@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422200097-9869-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: PeterHuewe-Mmb7MZpHnFY@public.gmane.org
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBBNBSSTAKGQEM3P4YDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1422200959-1717-1-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Just to let you know that i have also updated the MODULE_AUTHOR to "TPM 
-support TPMsupport-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org"
-as the previous address (tpmsupport-qxv4g6HH51o@public.gmane.org) is now no more available.
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Best Regards
-Christophe
+Allwinner SoCs have a system controller module that controls whether
+SRAM blocks are mapped to the CPU memory or specific peripherals.
 
-On 25/01/2015 16:34, Christophe Ricard wrote:
-> Hi,
->
-> The following patchset:
-> - propose a new architecture allowing to share a core st33zp24 data management
-> layer with different phy (i2c & spi). For st33zp24 both phy have a proprietary transport
-> protocol. Both are relying on the TCG TIS protocol. At the end, it simplifies the maintenance.
-> - Add an spi phy allowing to support st33zp24 using with an SPI bus.
->
-> The complete solution got tested in polling and interrupt mode successfully with i2c & spi phy.
-> This patchset applies on top of Peter's tree https://github.com/PeterHuewe/linux-tpmdd.git for-james branch
-> on top of:
-> d4989d9f693b9502f9288da5db279c2f8c2e50be tpm/tpm_tis: Add missing ifdef CONFIG_ACPI for pnp_acpi_device
->
-> I confirm also Jarkko Sakkinen's changes are working with this product with both phy's.
->
-> - v2 takes into account feedbacks from Jason Gunthorpe.
-> - v3 is reduced to 4 patches as 6 out of 10 got accepted for 3.20. Also compare to v2:
-> 	* Fix build issue with patch v2 04/10 "Replace access to io_lpcpd from struct st33zp24_platform_data to tpm_stm_dev"
-> 	* Fix link issue with patch v2 08/10 "Split tpm_i2c_tpm_st33 in 2 layers (core + phy)" when building as a module.
-> 	The symbols wasn't exported in st33zp24.c.
-> 	* Add missing MODULE_LICENSE in patch v2 09/10 "Add st33zp24 spi phy"
-> 	* Fix node example in dts spi documentation in patch v2 10/10 "Add dts documentation for st33zp24 spi phy"
-> 	* Fix typo on Jason Gunthorpe first name. Sorry for that :(...
->
-> Best Regards
-> Christophe
->
-> Christophe Ricard (4):
->    tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct
->      st33zp24_platform_data to tpm_stm_dev
->    tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in 2 layers (core + phy)
->    tpm/st33zp24/spi: Add st33zp24 spi phy
->    tpm/st33zp24/dts/st33zp24-spi: Add dts documentation for st33zp24 spi
->      phy
->
->   .../bindings/security/tpm/st33zp24-spi.txt         |  34 +
->   drivers/char/tpm/Kconfig                           |  11 +-
->   drivers/char/tpm/Makefile                          |   2 +-
->   drivers/char/tpm/st33zp24/Kconfig                  |  30 +
->   drivers/char/tpm/st33zp24/Makefile                 |  12 +
->   drivers/char/tpm/st33zp24/i2c.c                    | 278 +++++++
->   drivers/char/tpm/st33zp24/spi.c                    | 386 +++++++++
->   drivers/char/tpm/st33zp24/st33zp24.c               | 686 ++++++++++++++++
->   drivers/char/tpm/st33zp24/st33zp24.h               |  34 +
->   drivers/char/tpm/tpm_i2c_stm_st33.c                | 911 ---------------------
->   include/linux/platform_data/st33zp24.h             |  28 +
->   include/linux/platform_data/tpm_stm_st33.h         |  39 -
->   12 files changed, 1490 insertions(+), 961 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
->   create mode 100644 drivers/char/tpm/st33zp24/Kconfig
->   create mode 100644 drivers/char/tpm/st33zp24/Makefile
->   create mode 100644 drivers/char/tpm/st33zp24/i2c.c
->   create mode 100644 drivers/char/tpm/st33zp24/spi.c
->   create mode 100644 drivers/char/tpm/st33zp24/st33zp24.c
->   create mode 100644 drivers/char/tpm/st33zp24/st33zp24.h
->   delete mode 100644 drivers/char/tpm/tpm_i2c_stm_st33.c
->   create mode 100644 include/linux/platform_data/st33zp24.h
->   delete mode 100644 include/linux/platform_data/tpm_stm_st33.h
->
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+[jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: duplicate syscon node to sun4i and sun5i]
+Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi  | 5 +++++
+ arch/arm/boot/dts/sun5i-a10s.dtsi | 5 +++++
+ arch/arm/boot/dts/sun5i-a13.dtsi  | 5 +++++
+ arch/arm/boot/dts/sun7i-a20.dtsi  | 5 +++++
+ 4 files changed, 20 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 380f914..8a90e48 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -339,6 +339,11 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
++		syscon: syscon@01c00000 {
++			compatible = "allwinner,sun4i-a10-syscon", "syscon";
++			reg = <0x01c00000 0x8>;
++		};
++
+ 		dma: dma-controller@01c02000 {
+ 			compatible = "allwinner,sun4i-a10-dma";
+ 			reg = <0x01c02000 0x1000>;
+diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
+index 531272c..21df7b4 100644
+--- a/arch/arm/boot/dts/sun5i-a10s.dtsi
++++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
+@@ -300,6 +300,11 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
++		syscon: syscon@01c00000 {
++			compatible = "allwinner,sun4i-a10-syscon", "syscon";
++			reg = <0x01c00000 0x8>;
++		};
++
+ 		dma: dma-controller@01c02000 {
+ 			compatible = "allwinner,sun4i-a10-dma";
+ 			reg = <0x01c02000 0x1000>;
+diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
+index b131068..b69b7b1 100644
+--- a/arch/arm/boot/dts/sun5i-a13.dtsi
++++ b/arch/arm/boot/dts/sun5i-a13.dtsi
+@@ -298,6 +298,11 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
++		syscon: syscon@01c00000 {
++			compatible = "allwinner,sun4i-a10-syscon", "syscon";
++			reg = <0x01c00000 0x8>;
++		};
++
+ 		dma: dma-controller@01c02000 {
+ 			compatible = "allwinner,sun4i-a10-dma";
+ 			reg = <0x01c02000 0x1000>;
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 82097c9..af9c7e6 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -451,6 +451,11 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
++		syscon: syscon@01c00000 {
++			compatible = "allwinner,sun4i-a10-syscon", "syscon";
++			reg = <0x01c00000 0x8>;
++		};
++
+ 		nmi_intc: interrupt-controller@01c00030 {
+ 			compatible = "allwinner,sun7i-a20-sc-nmi";
+ 			interrupt-controller;
+-- 
+2.2.2
