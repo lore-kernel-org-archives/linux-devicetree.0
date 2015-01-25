@@ -1,108 +1,109 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v8 0/2] mtd: hisilicon: add a new driver for NAND controller of hisilicon hip04 Soc
-Date: Sun, 25 Jan 2015 18:53:12 +0800
-Message-ID: <1422183194-10148-1-git-send-email-wangzhou1@hisilicon.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 0/9] ARM: sun9i: Add USB host controller
+ support for A80
+Date: Sun, 25 Jan 2015 20:22:01 +0800
+Message-ID: <1422188530-1794-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB7F7SOTAKGQENA6E4OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds the support for NAND controller of hisilicon hip04 Soc.
-The NAND controller IP was developed by hisilicon and needs a new driver to
-support it. This patchset is based on l2-mtd/master.
+Hi everyone,
 
-I have tested this NAND flash controller driver in Hip04 D01 board using MTD
-test modules. All testes passed except mtd_nandbiterrs. The reason is that this
-NAND controller doesn't support to write raw page in ECC mode. In the test of
-mtd_nandbiterrs, when rewriting raw page(with some bits changed) back, this NAND
-controller will also produce ECC codes and write into NAND flash OOB area. As
-ECC codes in OOB area have been broken, read error comes out as follow.
+This is v2 of the sun9i A80 USB host support series.
 
-Hi Brian,
+This series adds USB host controller (EHCI/OHCI) support for the Allwinner
+A80 SoC. The A80 has 3 pairs of host controllers and USB PHYs. The PHYs,
+unlike in previous SoCs, do not have low level control registers anymore.
 
-As the patch have been reviewed for some time, could you consider to take this
-driver for v3.20? If there is something still not good, please let me know.
+As such, this series forgoes the original phy-sun4i-usb driver, and adds
+a new, simpler driver for the USB PHYs. It may be possible to merge the
+two, but given that work is being done on the OTG front for the earlier
+SoCs, it may be better to merge them after support is complete.
 
-Thanks,
-Zhou Wang
+EHCI/OHCI0 corresponds to USB1 DP/DM pins; EHCI1 only has HSIC support;
+EHCI2/OHCI/2 is USB2 DP/DM externally. External pins labeled USB0 are
+for the USB 3.0 OTG controller.
 
-Changes in v8:
-- Remove 1bit ECC support for hardware problem.
+Changes since v1:
 
-Changes in v7:
-- Add error check for dmam_alloc_coherent,
-  delete error print after devm_ioremap_resource.
-- Directly get value in memory instead of using readb/w.
-- Use a private pointer stored in host to access hardware buffer instead
-  of using IO_ADDR_R/W.
-- Use cond_resched to replace _cond_resched.
-- Initialize stat_max in hisi_nand_read_page_hwecc to avoid WARNING when compiling.
-- Remove of_match_ptr macro in struct platform_driver hisi_nfc_driver.
+  - Rework usb clock/reset driver to only enable ahb gate when child
+    clock gates are enabled.
 
-Changes in v6:
-- Change E-mail address in signed-off-by to "wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org"
+  - Add AHB_INCR16_BURST flag and HSIC specific bits to phy driver.
 
-Changes in v5:
-- Make modifications according to the comments from Brian, thanks a lot.
-- Add hisi_nand_read_oob callback function.
+  - Renumber USB PHYs according to sunxi tradition, usbphy0 for OTG,
+    usbphy1 and later for xHCI.
 
-Changes in v4:
-- Add mtd->dev.parent = &pdev->dev, thanks Frans Klaver.  
+  - Add VBUS regulator for usb3 to sunxi common regulators.
 
-Changes in v3:
-- Modify code to eliminate some code style warnings.
-- Add ecc-bits input check.
-- Avoid using waterfall style in hisi_nfc_cmdfunc().
+  - Use common regulators for usb vbus regulators.
 
-Changes in v2:
-- Remove the patch for device tree, now patchset only has the driver and its
-  device tree binding documentation.
-- Change the file name: hisi_nand.c to hisi504_nand.c.
+  - Adapt to label references in board dts file.
 
-Changes in v1:
-- Remove callback functions out of struct hinfc_host, and call them directly
-  in relative functions.
-- Change hinfc_read and hinfc_write from macros to inline functions.
-- Instead of putting pointers, embed struct nand_chip and struct mtd_info
-  in struct hinfc_host directly.
-- rewrite some unclear lines in device tree binding document, correct
-  some code style error.
-
-Link on v7:
-- http://www.spinics.net/lists/devicetree/msg65380.html
-Link on v6:
-- http://spinics.net/lists/arm-kernel/msg390124.html
-Link on v5:
-- http://spinics.net/lists/arm-kernel/msg387244.html
-Link on v4:
-- https://lkml.org/lkml/2014/11/4/377
-Link on v3:
-- https://lkml.org/lkml/2014/10/28/386
-Link on v2:
-- https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg750071.html
-Link on v1:
-- https://lkml.org/lkml/2014/7/15/198
+  - Use gpio and pinctrl macros in dts.
 
 
-Zhou Wang (2):
-  mtd: hisilicon: add a new NAND controller driver for hisilicon hip04 Soc
-  mtd: hisilicon: add device tree binding documentation
+Patch 1 adds a80 specific support for usb-related clocks and resets.
 
- .../devicetree/bindings/mtd/hisi504-nand.txt       |  47 ++
- drivers/mtd/nand/Kconfig                           |   5 +
- drivers/mtd/nand/Makefile                          |   1 +
- drivers/mtd/nand/hisi504_nand.c                    | 891 +++++++++++++++++++++
- 4 files changed, 944 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/hisi504-nand.txt
- create mode 100644 drivers/mtd/nand/hisi504_nand.c
+Patch 2 adds the device tree nodes for the usb clocks.
+
+Patch 3 adds a new generic phy driver for a80 usb phys. This has some
+code that is the same as the original phy-sun4i-usb driver, but is simpler.
+
+Patch 4 adds the 3 USB PHY nodes to the a80 dtsi.
+
+Patch 5 adds the USB host controller nodes to the a80 dtsi.
+
+Patch 6 adds a VBUS regulator for usb3 to sunxi common regulators.
+
+Patch 7 enables USB on the A80 Optimus board.
+
+Patch 8 enables sun9i USB PHY in sunxi_defconfig.
+
+Patch 9 enables sun9i USB PHY in multi_v7_defconfig.
+
+Regards,
+ChenYu
+
+
+Chen-Yu Tsai (9):
+  clk: sunxi: Add support for sun9i a80 usb clocks and resets
+  ARM: dts: sun9i: Add usb clock nodes to a80 dtsi
+  phy: Add driver to support individual USB PHYs on sun9i
+  ARM: dts: sun9i: Add usb phy nodes to a80 dtsi
+  ARM: dts: sun9i: Add USB host controller nodes to a80 dtsi
+  ARM: dts: sunxi: Add usb3_vbus regulator to common regulators dtsi
+  ARM: dts: sun9i: Enable USB support on A80 Optimus board
+  ARM: sunxi_defconfig: Enable CONFIG_PHY_SUN9I_USB
+  ARM: multi_v7_defconfig: Enable CONFIG_PHY_SUN9I_USB
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   2 +
+ .../devicetree/bindings/phy/sun9i-usb-phy.txt      |  34 +++
+ arch/arm/boot/dts/sun9i-a80-optimus.dts            |  60 ++++++
+ arch/arm/boot/dts/sun9i-a80.dtsi                   | 129 +++++++++++
+ arch/arm/boot/dts/sunxi-common-regulators.dtsi     |  10 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/configs/sunxi_defconfig                   |   1 +
+ drivers/clk/sunxi/Makefile                         |   1 +
+ drivers/clk/sunxi/clk-usb.c                        | 193 +++++++++++++++++
+ drivers/phy/Kconfig                                |  12 ++
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-sun9i-usb.c                        | 238 +++++++++++++++++++++
+ 12 files changed, 682 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
+ create mode 100644 drivers/clk/sunxi/clk-usb.c
+ create mode 100644 drivers/phy/phy-sun9i-usb.c
 
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
