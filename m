@@ -1,91 +1,119 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 6/9] ARM: dts: sunxi: Add usb3_vbus regulator to
- common regulators dtsi
-Date: Sun, 25 Jan 2015 17:06:25 +0100
-Message-ID: <20150125160625.GH8470@lukather>
-References: <1422188530-1794-1-git-send-email-wens@csie.org>
- <1422188530-1794-7-git-send-email-wens@csie.org>
+Subject: Re: [PATCH 3/3] net: allwinner: sun4i-emac: fix emac
+ SRAM mapping
+Date: Sun, 25 Jan 2015 17:25:11 +0100
+Message-ID: <20150125162510.GK8470@lukather>
+References: <1422200959-1717-1-git-send-email-jenskuske@gmail.com>
+ <1422200959-1717-4-git-send-email-jenskuske@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2oox5VnwalALFvA7"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="rwbb4r/vLufKlfJs"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBC5USSTAKGQE7BWZ33I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1422188530-1794-7-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1422200959-1717-4-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---2oox5VnwalALFvA7
-Content-Type: text/plain; charset=us-ascii
+--rwbb4r/vLufKlfJs
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 25, 2015 at 08:22:07PM +0800, Chen-Yu Tsai wrote:
-> Some SoCs have a total of 4 possible USB controllers. One such example
-> is the A80, which has one USB3 dual role device and 3 EHCI/OHCI pairs.
->=20
-> Add a common VBUS regulator for the last host controller.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Hi Jens,
+
+On Sun, Jan 25, 2015 at 04:49:19PM +0100, Jens Kuske wrote:
+> The EMAC needs SRAM block A3_A4 being mapped to EMAC peripheral to
+> work. This is done by the bootloader most of the time, but U-Boot
+> Falcon Mode, for example, skips emac initialization and SRAM would
+> stay mapped to the CPU.
+
+Thanks for reviving this.
+
+> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sunxi-common-regulators.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sunxi-common-regulators.dtsi b/arch/arm/bo=
-ot/dts/sunxi-common-regulators.dtsi
-> index e02baa66b33c..97fe8d73c4f7 100644
-> --- a/arch/arm/boot/dts/sunxi-common-regulators.dtsi
-> +++ b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
-> @@ -130,6 +130,16 @@
->  		status =3D "disabled";
->  	};
-> =20
-> +	reg_usb3_vbus: usb3-vbus {
-> +		compatible =3D "regulator-fixed";
-> +		pinctrl-names =3D "default";
-> +		regulator-name =3D "usb3-vbus";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		enable-active-high;
-> +		status =3D "disabled";
-> +	};
+>  drivers/net/ethernet/allwinner/Kconfig      |  1 +
+>  drivers/net/ethernet/allwinner/sun4i-emac.c | 18 ++++++++++++++++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/allwinner/Kconfig b/drivers/net/ethernet/allwinner/Kconfig
+> index d8d95d4..508a288 100644
+> --- a/drivers/net/ethernet/allwinner/Kconfig
+> +++ b/drivers/net/ethernet/allwinner/Kconfig
+> @@ -28,6 +28,7 @@ config SUN4I_EMAC
+>  	select MII
+>  	select PHYLIB
+>  	select MDIO_SUN4I
+> +	select MFD_SYSCON
+>          ---help---
+>            Support for Allwinner A10 EMAC ethernet driver.
+>  
+> diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
+> index 1fcd556..86c891d 100644
+> --- a/drivers/net/ethernet/allwinner/sun4i-emac.c
+> +++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
+> @@ -18,6 +18,8 @@
+>  #include <linux/gpio.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/mfd/syscon/sun4i-sc.h>
+>  #include <linux/mii.h>
+>  #include <linux/module.h>
+>  #include <linux/netdevice.h>
+> @@ -28,6 +30,7 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/phy.h>
+> +#include <linux/regmap.h>
+>  
+>  #include "sun4i-emac.h"
+>  
+> @@ -78,6 +81,7 @@ struct emac_board_info {
+>  
+>  	struct phy_device	*phy_dev;
+>  	struct device_node	*phy_node;
+> +	struct regmap		*sc;
+>  	unsigned int		link;
+>  	unsigned int		speed;
+>  	unsigned int		duplex;
+> @@ -862,6 +866,18 @@ static int emac_probe(struct platform_device *pdev)
+>  		goto out;
+>  	}
+>  
+> +	/* Map SRAM_A3_A4 to EMAC */
+> +	db->sc = syscon_regmap_lookup_by_compatible(
+> +						"allwinner,sun4i-a10-syscon");
+> +	if (IS_ERR(db->sc)) {
+> +		dev_err(&pdev->dev, "failed to find syscon regmap\n");
+> +		ret = PTR_ERR(db->sc);
+> +		goto out;
+> +	}
+> +
+> +	regmap_update_bits(db->sc, SUN4I_SC1, SUN4I_SC1_SRAM_A3_A4_MAP_MASK,
+> +						SUN4I_SC1_SRAM_A3_A4_MAP_EMAC);
 > +
 
-If the A80 is the only user so far, maybe that would make more sense
-to have it in the A80 dtsi? Especially since this regulator doesn't
-really do anything else than reg_vcc5v0.
+I don't think that using a syscon is the right solution here.
 
---=20
+All this SRAM mapping thing is mutually exclusive, and will possibly
+impact other drivers as well.
+
+I think this is a more a case for a small driver in drivers/soc that
+would take care of this, and make sure that client drivers don't step
+on each other's toe.
+
+Maxime
+
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---2oox5VnwalALFvA7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUxRSBAAoJEBx+YmzsjxAgIhsP/3al6+9rvBl+KBN1vuxlFCQo
-dH84folpyRVRxongNZM5gvnYWELlf8+Nup70BSSwJvGYvHGHLYk1uP8kiPLkJWku
-vlnB/uliy0Taywf/H/hf8l+UajSBXwtmRIYY9QRB6y4xt3J5El85UpS7TxcJtljF
-mqTo0p6PHX/4PPgf3RTDWYsOtY7jL9M9vycPUWXkZQNOSYD30au9I/2wfeFsQEZ/
-yXFzUwFsgqBrEU75hXyfUKqo8RQn3rHiiw/FNZzEYzexHya4oCICeNDNAr7Et9WY
-KJFNQ6w9860qq6lkv1W4w4/uMjloMwnSNSC/lHBdGKaJVLS0cMbfNqnR5Q4N18of
-9v+2bJ2a3lNWyFY9+xDWI+996e3+Sk1mjC6Gzhv6jGj9XlJgXyknHCxzFzwatKHk
-O6+g8K529V4W4O2wdDcHRgGmc9H3N3mEz4qxArFBNzjri6Tcz9DH6OuwP133LiqZ
-MOFD4ytuMyhT/Y6JQbtqjKoRY8nJIR2scQ1atbmnqPY++TRtjhz3oMSRg8AtxYS6
-l1rfIkLlRjNtUgJCtAd6Nigg6Vmjo6eUdgx+RH8Y+QgE0eXPy+egPC7LmXMp3PXp
-oF/PZLcgrzBthCBIwhPjVxo7RWwMBV4Af7RSqikiiAPfx26XOJV/nAuQUZdi0HLH
-Gp5JhU6MVCLvgkSi+UJr
-=PrD2
------END PGP SIGNATURE-----
-
---2oox5VnwalALFvA7--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--rwbb4r/vLufKlfJs--
