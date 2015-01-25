@@ -1,20 +1,33 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH V4 01/14] sh: Eliminate unused irq_reg_{readl,writel}
- accessors
-Date: Sat, 24 Jan 2015 18:51:56 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1501241851090.5526@nanos>
-References: <1415342669-30640-1-git-send-email-cernekee@gmail.com> <1415342669-30640-2-git-send-email-cernekee@gmail.com> <CAMuHMdW+L8YbE8Z8jrtnm8xWk63sRGaFdM7TPM6MmrDg9XwHuQ@mail.gmail.com> <20141114163843.GH29662@linux-mips.org> <20141114170525.GL3698@titan.lakedaemon.net>
- <CAMuHMdXMsxhcD9C079YPc6Toxdo0e23oqM_9KeSG=NrFa4auRQ@mail.gmail.com> <CAMuHMdUpxURV4ztpa3x0TORsSWtxiKxe6_EDO5QsO_vhedip0A@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/4] net: stmmac: dwmac-rk: Fix phy regulator issues
+Date: Sat, 24 Jan 2015 17:17:39 -0800 (PST)
+Message-ID: <20150124.171739.2001690287677703044.davem@davemloft.net>
+References: <1421737780-1533-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUpxURV4ztpa3x0TORsSWtxiKxe6_EDO5QsO_vhedip0A@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Kevin Cernekee <cernekee@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1421737780-1533-1-git-send-email-romain.perier@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: romain.perier@gmail.com
+Cc: peppe.cavallaro@st.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, roger.chen@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Jan 2015, Geert Uytterhoeven wrote:
-> Will you still do so, or shall I forward the patch to Andrew Morton?
+From: Romain Perier <romain.perier@gmail.com>
+Date: Tue, 20 Jan 2015 07:09:36 +0000
 
-akpm please.
+> This series fixes few issues in dwmac-rk:
+> 
+> 1. Voltage settings was hardcoded into the driver for the phy regulator.
+>    The driver now uses the default voltage settings found in the devicetree,
+>    which are applied throught the regulator framework.
+> 2. The regulator name used to power on or power off the phy was put in the devicetree
+>    variable "phy_regulator", which is not standard and added a lot of code for nothing.
+>    The driver now uses the devicetree property "phy-supply" and the corresponding functions
+>    to manipulate this regulator.
+> 
+> The corresponding devicetree files are also updated. As this new binding for
+> rk3288 has not been released with any official kernel yet (not until 3.20),
+> I don't need to care about keeping compatibility with the old non standard property.
+
+Series applied to net-next, thanks.
