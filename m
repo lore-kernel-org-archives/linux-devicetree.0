@@ -1,100 +1,261 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power
- subsystem
-Date: Sun, 25 Jan 2015 16:04:31 +0100
-Message-ID: <20150125150431.GE2719@earth.universe>
-References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
- <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com>
- <20150121230148.GJ13715@earth.universe>
- <54C0AFE4.3020701@i2se.com>
+From: Adam Sampson <ats@offog.org>
+Subject: [PATCH] ARM: dts: sun7i: Add dts file for pcDuino 3 Nano board
+Date: Sun, 25 Jan 2015 15:32:01 +0000
+Message-ID: <1422199921-325-1-git-send-email-ats@offog.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="FN+gV9K+162wdwwF"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54C0AFE4.3020701-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: maxime.ripard@free-electrons.com
+Cc: devicetree@vger.kernel.org, Adam Sampson <ats@offog.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add support for the LinkSprite pcDuino 3 Nano board. This is a low-cost
+Allwinner A20 board with Arduino-style GPIO headers; it features 1G RAM,
+4G NAND flash, 1 micro-SD, 2 USB sockets, 1 micro USB socket for OTG and
+another for power in, HDMI, SATA, 5V power for SATA devices, gigabit
+Ethernet, an IR receiver, 3.5mm audio out and a MIPI camera connector.
 
---FN+gV9K+162wdwwF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For more details, see: http://linux-sunxi.org/LinkSprite_pcDuino3_Nano
 
-Hi,
+Signed-off-by: Adam Sampson <ats@offog.org>
+---
+ arch/arm/boot/dts/Makefile                    |    3 +-
+ arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts |  203 +++++++++++++++++++++++++
+ 2 files changed, 205 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
 
-[add maintainers from regulator framework]
-
-On Thu, Jan 22, 2015 at 09:08:04AM +0100, Stefan Wahren wrote:
-> Am 22.01.2015 um 00:01 schrieb Sebastian Reichel:
-> > On Thu, Nov 20, 2014 at 08:14:36PM +0000, Stefan Wahren wrote:
-> >> This patch adds a minimal driver for the Freescale i.MX23, i.MX28
-> >> power subsystem. It's required to trigger the probing of the underlying
-> >> drivers like on-chip regulators. Additionally the drivers supports
-> >> the configuration of the DC-DC clock frequency to avoid possible
-> >> interferences.
-> > I would expect PLL to be board specific and part of DT. Why is it
-> > specified as parameter?
->=20
-> I think the switching frequency of the DC-DC belongs to the
-> configuration and don't describe how the hardware is connected. But i
-> don't have a problem to change it into a DT property.
->=20
-> Does a common property name exists for the switching frequency or would
-> it be vendor specific?
-
-As far as I know most regulators have fixed switching frequencies,
-so there is no common property name so far. I added regulator
-framework people, since this property should be regulator specific.
-
-Apart from introducing a custom/common switching-frequency property
-the dts could also expose the PLL like this and use the common
-clock-frequency property:
-
-power: power@80044000 {
-    compatible =3D "fsl,imx28-power";
-    #address-cells =3D <1>;
-    #size-cells =3D <1>;
-    reg =3D <0x80044000 0x2000>;
-    interrupts =3D <6>;
-    ranges;
-
-    powerpll {
-        compatible =3D "fsl,imx28-power-pll"
-        #clock-cells =3D <0>;
-        clock-frequency =3D <12345>;
-    }
-}
-
--- Sebastian
-
---FN+gV9K+162wdwwF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUxQX4AAoJENju1/PIO/qaVucP/3vSrSghX73NcAfK6PxifImL
-Wbf3yrEHLhjRkvPzB+GPJ/ylTRl53YeH3TtI26tGsfnvjCMGTexaEJdQd14S2v4p
-KE5af9xx4r7cZn6j7ql7TqE1tvvIJ1CuGKVvl8qh+3lbrArmlezId7qMNu717GXk
-XIYlfaSNGupTBgdqCJ7kBNrkxd2vkrGnQTKPJ6RPWqg/6CK0oBgmrRACFWRDedsh
-61oKkr2LPRKq2k/04/WL+JflwhNMv+dJaXWMH+KO2wOWP+Uerky6Md7fUsNL3Trn
-wWA2uCB9k3CdoKPHFGvsI/ypbe0dHNR2pOtFG05tQkx2wFpl16GJrUoAUh2e7Xuu
-C2ZopESsPvbpheO7ARn4iI6YsLDTN/t51vJREsJgerSStZ1wiMYhJlVxFFWiiLki
-h8X0RFITq1XlpB5DnCuN+HUM6ag/qHlE3Am2A1GJyoTzeXq4cvaw1pOY3Vld40m8
-pznXJdJ5pLtFuYKbWHjUaqRobVMRmka9l2D+0e3SqHd51+tCEypvEXJaK7eepb//
-V7xG91dfvr8Mh7jhiAF74RJBNK4M2EObOwp8fuuaKMurwlXfqHVkSrXpwU6+N6fo
-irvtySipFfTFCIhoiQNeO5nenE3cofbad1ZyxeEsk2u5EWEsHA8Ur+5YnpzJf29m
-7ZP0ZpdOASZ+oWnAGhoo
-=Rbpm
------END PGP SIGNATURE-----
-
---FN+gV9K+162wdwwF--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 7df26a2..c025724 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -479,7 +479,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-olinuxino-lime.dtb \
+ 	sun7i-a20-olinuxino-lime2.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb \
+-	sun7i-a20-pcduino3.dtb
++	sun7i-a20-pcduino3.dtb \
++	sun7i-a20-pcduino3-nano.dtb
+ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a23-ippo-q8h-v5.dtb \
+ 	sun8i-a23-ippo-q8h-v1.2.dtb
+diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+new file mode 100644
+index 0000000..a2b18de
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+@@ -0,0 +1,203 @@
++/*
++ * Copyright 2015 Adam Sampson <ats@offog.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	model = "LinkSprite pcDuino3 Nano";
++	compatible = "linksprite,pcduino3-nano", "allwinner,sun7i-a20";
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_pcduino3_nano>;
++
++		led3 {
++			label = "pcduino3-nano:green:led3";
++			gpios = <&pio 7 16 GPIO_ACTIVE_LOW>; /* PH16 */
++		};
++
++		led4 {
++			label = "pcduino3-nano:green:led4";
++			gpios = <&pio 7 15 GPIO_ACTIVE_LOW>; /* PH15 */
++		};
++	};
++};
++
++&ahci {
++	target-supply = <&reg_ahci_5v>;
++	status = "okay";
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_pins_rgmii_a>;
++	phy = <&phy1>;
++	phy-mode = "rgmii";
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		compatible = "x-powers,axp209";
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
++&ir0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir0_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&pio {
++	ahci_pwr_pin_a: ahci_pwr_pin@0 {
++		allwinner,pins = "PH2";
++	};
++
++	led_pins_pcduino3_nano: led_pins@0 {
++		allwinner,pins = "PH16", "PH15";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	usb1_vbus_pin_pcduino3_nano: usb1_vbus_pin@0 {
++		allwinner,pins = "PH11";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_ahci_5v {
++	gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
++	status = "okay";
++};
++
++&reg_usb1_vbus {
++	pinctrl-0 = <&usb1_vbus_pin_pcduino3_nano>;
++	gpio = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins_a>;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
+-- 
+1.7.10.4
