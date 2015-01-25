@@ -1,129 +1,86 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] of: iommu: add ptr to OF node arg to of_iommu_configure()
-Date: Sun, 25 Jan 2015 15:32:42 +0200
-Message-ID: <4711364.TTK5TCBdiy@avalon>
-References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com> <1422052359-12384-2-git-send-email-m-karicheri2@ti.com>
+From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/4] ARM:sunxi:ps2 Added support for A10/A20
+ ps2 controller
+Date: Sun, 25 Jan 2015 19:10:05 +0530
+Message-ID: <1422193209-17787-1-git-send-email-vishnupatekar0510@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422052359-12384-2-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD64TFVR3YIBB5PESOTAKGQEVTRMEXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Murali,
+This adds  PS2 controller support for Allwinner A10, A20 SOCs. 
 
-Thank you for the patch.
+I've tested PS2 keyboard on A20 Olimex-Lime2 board. 
+Hans had tested previous patch on A10 as well.
 
-On Friday 23 January 2015 17:32:34 Murali Karicheri wrote:
-> Function of_iommu_configure() is called from of_dma_configure() to
-> setup iommu ops using DT property. This API is currently used for
-> platform devices for which DMA configuration (including iommu ops)
-> may come from device's parent. To extend this functionality for PCI
-> devices, this API need to take a parent node ptr as an argument
-> instead of assuming device's parent. This is needed since for PCI, the
-> dma configuration may be defined in the DT node of the root bus bridge's
-> parent device. Currently only dma-range is used for PCI and iommu is not
-> supported. So return error if the device is PCI.
-> 
-> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/iommu/of_iommu.c |   10 ++++++++--
->  drivers/of/platform.c    |    2 +-
->  include/linux/of_iommu.h |    6 ++++--
->  3 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index af1dc6a..439235b 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -133,19 +133,25 @@ struct iommu_ops *of_iommu_get_ops(struct device_node
-> *np) return ops;
->  }
-> 
-> -struct iommu_ops *of_iommu_configure(struct device *dev)
-> +struct iommu_ops *of_iommu_configure(struct device *dev,
-> +				     struct device_node *iommu_np)
->  {
->  	struct of_phandle_args iommu_spec;
->  	struct device_node *np;
->  	struct iommu_ops *ops = NULL;
->  	int idx = 0;
-> 
-> +	if (dev_is_pci(dev)) {
-> +		dev_err(dev, "iommu is currently not supported for PCI\n");
-> +		return NULL;
-> +	}
-> +
->  	/*
->  	 * We don't currently walk up the tree looking for a parent IOMMU.
->  	 * See the `Notes:' section of
->  	 * Documentation/devicetree/bindings/iommu/iommu.txt
->  	 */
+v4 --> v5
+1. used legagy calls instead of devm* interfaces to avoid mixing of managed
+ and manually freed resources.
+2. shutoff interrupts before requesting irq and before synchronize_irq.
+3. removed freeing serio in sun4i_ps2_remove, as it is refcounted.
+4. added defines in dtsi file instead of hardcoded constants.
+5. dropped the default enabled ps2 nodes from Lime2 dts, as there is no 
+ dedicated ps2 connector on lime2 board.
 
-Wouldn't it be better to fix this rather than passing the device node pointer 
-to the function ? The solution would be more generic.
+v3 --> v4
+1. Reported errors(SERIO_FRAME,SERIO_TIMEOUT, SERIO_PARITY) to consumer.
+2. Handled the transmit timeout in sun4i_ps2_write.
+3. Removed the resetting the ps2 controller in case of errors.
+4. Added synchronize_irq() in sun4i_ps2_close to make sure pending interrupts are handled.
+5. Explicitly disabled interrupt in probe to avoid spurious interrupts.
+6. Removed disable_irq from sun4i_ps2_remove as serio_close will take care of it.
+7. Removed the obvious comments.
+3. Corrected the style errors.
+4. As there is not conflict with ps2 pins, enabled ps2 pins in lime2 dts by default.
 
-> -	while (!of_parse_phandle_with_args(dev->of_node, "iommus",
-> +	while (!of_parse_phandle_with_args(iommu_np, "iommus",
->  					   "#iommu-cells", idx,
->  					   &iommu_spec)) {
->  		np = iommu_spec.np;
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index a54ec10..7675b79 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -196,7 +196,7 @@ static void of_dma_configure(struct device *dev)
->  	dev_dbg(dev, "device is%sdma coherent\n",
->  		coherent ? " " : " not ");
-> 
-> -	iommu = of_iommu_configure(dev);
-> +	iommu = of_iommu_configure(dev, dev->of_node);
->  	dev_dbg(dev, "device is%sbehind an iommu\n",
->  		iommu ? " " : " not ");
-> 
-> diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
-> index 16c7554..a97e5bd 100644
-> --- a/include/linux/of_iommu.h
-> +++ b/include/linux/of_iommu.h
-> @@ -12,7 +12,8 @@ extern int of_get_dma_window(struct device_node *dn, const
-> char *prefix, size_t *size);
-> 
->  extern void of_iommu_init(void);
-> -extern struct iommu_ops *of_iommu_configure(struct device *dev);
-> +extern struct iommu_ops *of_iommu_configure(struct device *dev,
-> +					struct device_node *iommu_np);
-> 
->  #else
-> 
-> @@ -24,7 +25,8 @@ static inline int of_get_dma_window(struct device_node
-> *dn, const char *prefix, }
-> 
->  static inline void of_iommu_init(void) { }
-> -static inline struct iommu_ops *of_iommu_configure(struct device *dev)
-> +static inline struct iommu_ops *of_iommu_configure(struct device *dev,
-> +					 struct device_node *iommu_np)
->  {
->  	return NULL;
->  }
+v2 --> v3
+1. changed config to SERIO_SUN4I_PS2 from SERIO_SUNXI_PS2
+2. changed driver name to sun4i-ps2 from sunxi-ps2.
+3. changed the function names to sun4i_ps2_*.
+4. added locking in sun4i_ps2_open.
+5. kept compatible "sun4i-a10-ps2" for A10 and A20, as A10 is earlier SOC.
+6. corrected the style errors.
+7. separated the dts patches.
+8. removed commented ps2 notes from lime2 dts.
+9. added note that ps2 pins confilt with hdmi.
+10. corrected the interrupt property for A10.
+11. moved dt-bindings to Documentation/devicetree/bindings/serio
+
+v1 --> v2:
+1. added default n depends on ARCH_SUNXI || COMPILE_TEST in Kconfig.
+2. handled errors and free resources on errors.
+3. used BIT(x), DIV_ROUND_UP macros.
+4. corrected style errors.
+5. added support for A10 also, A10 and A2 have same properties of PS2 controller.
+6. by default commented ps20 and ps21 nodes,as ps20 pins conflict with HDMI.
+7. added compatible as allwinner,sun4i-a10-ps2.
+8. corrected the possible race condition.
+
+Vishnu Patekar (4):
+  sunxi:dts-bindings:input: bindings for A10/A20 ps2
+  ARM:sunxi:drivers:input Add support for A10/A20 PS2
+  ARM: sunxi: dts: Add PS2 nodes to dtsi for A10,A20
+  ARM: sunxi: dts: Add A10/A20 PS2 pin muxing options
+
+ .../bindings/serio/allwinner,sun4i-ps2.txt         |   23 ++
+ arch/arm/boot/dts/sun4i-a10.dtsi                   |   30 ++
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   30 ++
+ drivers/input/serio/Kconfig                        |   11 +
+ drivers/input/serio/Makefile                       |    1 +
+ drivers/input/serio/sun4i-ps2.c                    |  347 ++++++++++++++++++++
+ 6 files changed, 442 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt
+ create mode 100644 drivers/input/serio/sun4i-ps2.c
 
 -- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
