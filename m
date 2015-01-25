@@ -1,8 +1,12 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 1/4] tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct st33zp24_platform_data to tpm_stm_dev
-Date: Sun, 25 Jan 2015 16:34:54 +0100
-Message-ID: <1422200097-9869-2-git-send-email-christophe-h.ricard@st.com>
+From: "christophe.ricard" <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] st33zp24 new architecture proposal and st33zp24
+ spi driver
+Date: Sun, 25 Jan 2015 16:44:22 +0100
+Message-ID: <54C50F56.8040405@gmail.com>
 References: <1422200097-9869-1-git-send-email-christophe-h.ricard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1422200097-9869-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -10,58 +14,73 @@ To: PeterHuewe-Mmb7MZpHnFY@public.gmane.org
 Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-io_lpcpd is accessible from struct tpm_stm_dev.
-struct st33zp24_platform_data is only valid when using static platform
-configuration data, not when using dts.
+Just to let you know that i have also updated the MODULE_AUTHOR to "TPM 
+support TPMsupport-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org"
+as the previous address (tpmsupport-qxv4g6HH51o@public.gmane.org) is now no more available.
 
-Reviewed-by: Jason Gunthorpe <jason.gunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/char/tpm/tpm_i2c_stm_st33.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+Best Regards
+Christophe
 
-diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index 612845b..882c60a 100644
---- a/drivers/char/tpm/tpm_i2c_stm_st33.c
-+++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -837,11 +837,14 @@ static int tpm_stm_i2c_remove(struct i2c_client *client)
-  */
- static int tpm_stm_i2c_pm_suspend(struct device *dev)
- {
--	struct st33zp24_platform_data *pin_infos = dev->platform_data;
-+	struct tpm_chip *chip = dev_get_drvdata(dev);
-+	struct tpm_stm_dev *tpm_dev;
- 	int ret = 0;
- 
--	if (gpio_is_valid(pin_infos->io_lpcpd))
--		gpio_set_value(pin_infos->io_lpcpd, 0);
-+	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
-+
-+	if (gpio_is_valid(tpm_dev->io_lpcpd))
-+		gpio_set_value(tpm_dev->io_lpcpd, 0);
- 	else
- 		ret = tpm_pm_suspend(dev);
- 
-@@ -856,12 +859,13 @@ static int tpm_stm_i2c_pm_suspend(struct device *dev)
- static int tpm_stm_i2c_pm_resume(struct device *dev)
- {
- 	struct tpm_chip *chip = dev_get_drvdata(dev);
--	struct st33zp24_platform_data *pin_infos = dev->platform_data;
--
-+	struct tpm_stm_dev *tpm_dev;
- 	int ret = 0;
- 
--	if (gpio_is_valid(pin_infos->io_lpcpd)) {
--		gpio_set_value(pin_infos->io_lpcpd, 1);
-+	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
-+
-+	if (gpio_is_valid(tpm_dev->io_lpcpd)) {
-+		gpio_set_value(tpm_dev->io_lpcpd, 1);
- 		ret = wait_for_stat(chip,
- 				TPM_STS_VALID, chip->vendor.timeout_b,
- 				&chip->vendor.read_queue, false);
--- 
-2.1.0
+On 25/01/2015 16:34, Christophe Ricard wrote:
+> Hi,
+>
+> The following patchset:
+> - propose a new architecture allowing to share a core st33zp24 data management
+> layer with different phy (i2c & spi). For st33zp24 both phy have a proprietary transport
+> protocol. Both are relying on the TCG TIS protocol. At the end, it simplifies the maintenance.
+> - Add an spi phy allowing to support st33zp24 using with an SPI bus.
+>
+> The complete solution got tested in polling and interrupt mode successfully with i2c & spi phy.
+> This patchset applies on top of Peter's tree https://github.com/PeterHuewe/linux-tpmdd.git for-james branch
+> on top of:
+> d4989d9f693b9502f9288da5db279c2f8c2e50be tpm/tpm_tis: Add missing ifdef CONFIG_ACPI for pnp_acpi_device
+>
+> I confirm also Jarkko Sakkinen's changes are working with this product with both phy's.
+>
+> - v2 takes into account feedbacks from Jason Gunthorpe.
+> - v3 is reduced to 4 patches as 6 out of 10 got accepted for 3.20. Also compare to v2:
+> 	* Fix build issue with patch v2 04/10 "Replace access to io_lpcpd from struct st33zp24_platform_data to tpm_stm_dev"
+> 	* Fix link issue with patch v2 08/10 "Split tpm_i2c_tpm_st33 in 2 layers (core + phy)" when building as a module.
+> 	The symbols wasn't exported in st33zp24.c.
+> 	* Add missing MODULE_LICENSE in patch v2 09/10 "Add st33zp24 spi phy"
+> 	* Fix node example in dts spi documentation in patch v2 10/10 "Add dts documentation for st33zp24 spi phy"
+> 	* Fix typo on Jason Gunthorpe first name. Sorry for that :(...
+>
+> Best Regards
+> Christophe
+>
+> Christophe Ricard (4):
+>    tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct
+>      st33zp24_platform_data to tpm_stm_dev
+>    tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in 2 layers (core + phy)
+>    tpm/st33zp24/spi: Add st33zp24 spi phy
+>    tpm/st33zp24/dts/st33zp24-spi: Add dts documentation for st33zp24 spi
+>      phy
+>
+>   .../bindings/security/tpm/st33zp24-spi.txt         |  34 +
+>   drivers/char/tpm/Kconfig                           |  11 +-
+>   drivers/char/tpm/Makefile                          |   2 +-
+>   drivers/char/tpm/st33zp24/Kconfig                  |  30 +
+>   drivers/char/tpm/st33zp24/Makefile                 |  12 +
+>   drivers/char/tpm/st33zp24/i2c.c                    | 278 +++++++
+>   drivers/char/tpm/st33zp24/spi.c                    | 386 +++++++++
+>   drivers/char/tpm/st33zp24/st33zp24.c               | 686 ++++++++++++++++
+>   drivers/char/tpm/st33zp24/st33zp24.h               |  34 +
+>   drivers/char/tpm/tpm_i2c_stm_st33.c                | 911 ---------------------
+>   include/linux/platform_data/st33zp24.h             |  28 +
+>   include/linux/platform_data/tpm_stm_st33.h         |  39 -
+>   12 files changed, 1490 insertions(+), 961 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
+>   create mode 100644 drivers/char/tpm/st33zp24/Kconfig
+>   create mode 100644 drivers/char/tpm/st33zp24/Makefile
+>   create mode 100644 drivers/char/tpm/st33zp24/i2c.c
+>   create mode 100644 drivers/char/tpm/st33zp24/spi.c
+>   create mode 100644 drivers/char/tpm/st33zp24/st33zp24.c
+>   create mode 100644 drivers/char/tpm/st33zp24/st33zp24.h
+>   delete mode 100644 drivers/char/tpm/tpm_i2c_stm_st33.c
+>   create mode 100644 include/linux/platform_data/st33zp24.h
+>   delete mode 100644 include/linux/platform_data/tpm_stm_st33.h
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
