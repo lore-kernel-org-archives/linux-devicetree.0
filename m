@@ -1,80 +1,136 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
-Date: Mon, 26 Jan 2015 16:55:50 +0100
-Message-ID: <20150126155550.GB13494@katana>
-References: <1421346798-17148-1-git-send-email-pantelis.antoniou@konsulko.com>
- <20150122144818.GG3413@katana>
- <CAL_JsqKEBYwX=5zgWbdVRxm-H-sFiDa9rAp26BvuKNECoNW=uQ@mail.gmail.com>
- <20150122150243.GI3413@katana>
- <CAL_JsqKYvcec=xWQM7_Dgrr5zmkefXqGCQvHwJ+uxNgfiv7fcw@mail.gmail.com>
- <20150124042623.GB1190@katana>
- <DEFFB75F-347B-43F9-98E5-BBD019276A37@konsulko.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add pinctrl bindings for
+ mt65xx/mt81xx.
+Date: Mon, 26 Jan 2015 16:57:33 +0100
+Message-ID: <20150126155733.GQ12209@pengutronix.de>
+References: <20141127101830.GP30369@pengutronix.de>
+ <CACRpkdbMdJT6y-NL36RgQe0-CAFAVGqKiwY9+yFcwA7JDLmA+Q@mail.gmail.com>
+ <20141202135527.GM30369@pengutronix.de>
+ <CACRpkdZeRd+j7d_iRphruHRg8p3XjqWK8_HQzLH2PTZ_pqOrYA@mail.gmail.com>
+ <20150112122200.GC18908@pengutronix.de>
+ <CACRpkdYXrdiRWMV8YpxrSLe2rLEV-ZnX7=36w21zGquh==6WgA@mail.gmail.com>
+ <20150113161614.GF23940@pengutronix.de>
+ <CACRpkdYRrs2=gNM1XGSh1cSo5Pvx6iNLt4HjL6gdTqGPWYSRDw@mail.gmail.com>
+ <1421403805.11671.58.camel@mtksdaap41>
+ <CACRpkdYmjrEtds4wLr0cOmCPOLhS9xisfrY-cNZ3r0oh8n489Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7iMSBzlTiPOCCT2k"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <DEFFB75F-347B-43F9-98E5-BBD019276A37-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYmjrEtds4wLr0cOmCPOLhS9xisfrY-cNZ3r0oh8n489Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko =?iso-8859-15?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, dandan.he@mediatek.
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
---7iMSBzlTiPOCCT2k
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 20, 2015 at 10:45:09AM +0100, Linus Walleij wrote:
+> On Fri, Jan 16, 2015 at 11:23 AM, Yingjoe Chen
+> <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > On Fri, 2015-01-16 at 10:53 +0100, Linus Walleij wrote:
+> >> On Tue, Jan 13, 2015 at 5:16 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> >> > On Tue, Jan 13, 2015 at 11:05:22AM +0100, Linus Walleij wrote:
+> >>
+> >> >> > You often talk about ambiguities. Could you give an example what
+> >> >> > ambiguities you mean?
+> >> >>
+> >> >> What happened was this pins = ; arguments were sometimes
+> >> >> strings and sometimes integers, that becomes strange to handle
+> >> >> in code, ambiguous.
+> >> >
+> >> > I see. I like naming it 'pinmux' because that's what it is: pins and
+> >> > mux settings. A plain 'pinno' suggests that it contains only pin mubers,
+> >> > without mux setting. How about 'pin-no-mux'? We also could add an
+> >> > explicit "pins-are-numbered" property instead of distinguishing this
+> >> > by property names.
+> >>
+> >> I kind of like this "pins-are-numbered" thing.
+> >>
+> >> The other property for the pin, whether pinmux or pin-no-mux or
+> >> pin-num-and-mux etc is no such big deal, as long as it's
+> >> consistent and documented with the generic bindings.
+> >
+> > Hi Linus,
+> >
+> > To make sure I understand it correct, you think something like this is
+> > OK?
+> >
+> >         pinctrl@01c20800 {
+> >                 compatible = "mediatek,mt8135-pinctrl";
+> > [...]
+> >                 pins-are-numbered;
+> >
+> >                 i2c0_pins_a: i2c0@0 {
+> >                         pins1 {
+> >                                 pins = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
+> >                                         <MT8135_PIN_101_SCL0__FUNC_SCL0>;
+> >                                 bias-disable;
+> >                         };
+> >                 };
+> 
+> As discussed with Sascha Hauer it is ambigous to use "pins" for
+> a numerical value indicating both a mux setting and a pin. Sascha
+> suggests using "pinmux" and adding this as a secondary generic
+> binding for this type of pin controllers that use numbers and #defines
+> to set up bindings.
+> 
+> We should still move these parsing functions to the core.
 
-On Sat, Jan 24, 2015 at 09:16:16AM +0200, Pantelis Antoniou wrote:
-> Hi Wolfram,
->=20
-> > On Jan 24, 2015, at 06:26 , Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> >=20
-> >=20
-> >> Feel free to apply it for 3.19 with my ack. You then want to pick up
-> >> v1 of this patch.
-> >=20
-> > Sigh, I give up, this is too confusing. I don't know which one is V1,
-> > they are not numbered in any way. And I have been holding back my pull
-> > request for too long already.
-> >=20
-> > I'll drop this patch. Whatever should be applied should be resent,
-> > mentioning the release it is aimed for and how the planning/dependency
-> > on the DT patch is.
-> >=20
->=20
-> Nooooo! This is a bugfix for 3.19 :)
->=20
-> I=E2=80=99m resending the original patch; the dependency is on=20
->=20
-> 	"of: Empty node & property flag accessors when !OF=E2=80=9D
->=20
-> https://lkml.org/lkml/2015/1/21/602
+I tried that for the last few days and failed.
 
-Which is going in when?
+Part of the problem is that the core lacks the data structures to put
+the information in. There is
+
+struct pinctrl_map_mux {
+	const char *group;
+	const char *function;
+};
+
+but its meaning is SoC specific. Some SoCs combine the pins found in a
+dt subnode to one group (i.MX, rockchip, at91) while others make an
+individual group from each single pin (Tegra, others?). Also the
+function string is SoC specific. Some SoCs just define functions like
+"alt1".."altn" which are valid for all groups, others define different
+function names for each group.
+
+Another thing is that the binding gives us numbers, but struct
+pinctrl_map_mux expects strings, so the numbers would have to be
+converted to strings. This is crude since the contents of struct
+pinctrl_map_mux are converted from strings back to numbers later from
+the pinctrl core with the help of the driver. So we would have to
+translate the numbers from the bindings to strings just to convert them
+back to numbers before passing them to the driver later.
+
+Given that the best I can come up with is something like:
+
+int pinctrl_parse_pinmux(struct device_node *np, int index,
+			 unsigned int *pinno, unsigned int *funcno)
+{
+	u32 val;
+	int ret;
+
+	ret = of_property_read_u32_index(np, "pinmux", index, &val);
+	if (ret)
+		return ret;
+
+	*pinno = val >> 8
+	*funcno = val & 0xff;
+
+	return 0;
+}
+
+Is that what you expect from a common parser?
+
+Sascha
 
 
---7iMSBzlTiPOCCT2k
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUxmOGAAoJEBQN5MwUoCm2L+YP/1ezLdiB0KEY5nizdqYvLjk4
-3JbnofJ/3lOpTNKQj9j+ReBwEoX1/GbHmocZplSAOKTBMLbesJYqpTbzNugsct5p
-0n0J5LN1qbsWRvhhGpz58RY/Ud7eGQ82oW3OLtBFiGmyaWkXZfJIDstCjDDjlBNu
-kAEy0IDBEjC1Gz2p60bgKAjr6u91ScoRmbSTDzPKtuI7Wcr697t2x8xzuRv0AOIY
-76TuSQ2CoW+ziQYPD5k5iIJE60KwhW7wrYLbFpyDSoEcsUCx3vot9WjoeWExYVO4
-8dAzfc+dXoXPk5kRYsi0Z5yn7bFB46Lg79aiVjomfK+Z5ocHbf15zSePuLQIF3ue
-llGMaH3zFuIs1EyAG6Q1ls3+qjhpjGePoEw6snyfO3d3z3Vqkzi25FjKT3KkFLKW
-cVjcFprgJM0SCJBo1gchHGvESSVRPMXOjwxKASN2x6AXKkrM15knxdovMhW+ZEdB
-eiUgUkH9rEVQbiIObQe4m/3gac45ERJPzMzuKbMeUGjoYGwTOBaphL8wBXXbNayJ
-WbKTjEzcOAJ/2uC/qWuCsAu/iCIVNorS/7So6vu3TKZ1oYE58G65zPsRxlLDQabl
-ZhYMJZdZXhggeZphe1Px5I485tVqqMw04mt/o1yF8B4eUxRp5eEg8bV9kanfoZSE
-W9ZQMlONPcyYwk2aj9Kw
-=jMAw
------END PGP SIGNATURE-----
-
---7iMSBzlTiPOCCT2k--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
