@@ -1,62 +1,238 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 1/4] arm64: dts: fix PMU IRQ ordering for Juno
-Date: Mon, 26 Jan 2015 17:54:15 +0000
-Message-ID: <1422294858-28100-1-git-send-email-will.deacon@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH v3] ARM: dts: sun4i: Add initial dts for Gemei
+ G9 tablet
+Date: Mon, 26 Jan 2015 20:00:06 +0200
+Message-ID: <1422295208-11016-1-git-send-email-plaes@plaes.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJLTBEBXENBBLMBTKTAKGQEZECUVBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For better or worse, perf expects the per-cpu SPI PMU interrupts to be
-listed in order of logical CPU. This patch fixes the Juno .dts to
-satisfy that requirement.
+Gemei G9 is an A10 based tablet, with 1G RAM, 16G NAND, 1024x768
+IPS LCD display, stereo speakers, 1.3MP front camera and 5 MP
+rear camera, 8000mAh battery, GT901 2+1 touchscreen, Bosch BMA250
+accelerometer and RTL8188CUS USB wifi. It also has MicroSD slot,
+miniHDMI, 1 x MicroUSB OTG port and 1 x MicroUSB host port and
+3.5mm headphone jack.
 
-Without this patch, I see unhandled IRQs in mainline:
+Changes since v2:
+ * Fix syntax error (brown paper bag release)
 
-  irq 9: nobody cared (try booting with the "irqpoll" option)
-  CPU: 3 PID: 2830 Comm: cc1 Not tainted 3.19.0-rc6+ #1
-  Hardware name: ARM Juno development board (r0) (DT)
+Changes since v1:
+ * Added sun4i-lradc keymap
+ * Added TODO note about missing IRQ pins for bma250
+ * Fixed formatting issues and removed external URLs
 
-  [...]
-
-  handlers:
-  [<ffffffc00009447c>] armv8pmu_handle_irq
-  Disabling IRQ #9
-
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 ---
+ arch/arm/boot/dts/Makefile               |   6 +-
+ arch/arm/boot/dts/sun4i-a10-gemei-g9.dts | 168 +++++++++++++++++++++++++++++++
+ 2 files changed, 172 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
 
-This is an immediate fix for mainline, with the remaining patches in the
-series solving this by extending the binding.
-
- arch/arm64/boot/dts/arm/juno.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index cb3073e4e7a8..4ed9287aaef1 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -107,11 +107,11 @@
- 	pmu {
- 		compatible = "arm,armv8-pmuv3";
- 		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>;
-+			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
- 	/include/ "juno-clocks.dtsi"
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 7df26a2..a2e05fc 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -447,12 +447,14 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-ba10-tvbox.dtb \
+ 	sun4i-a10-chuwi-v7-cw0825.dtb \
+ 	sun4i-a10-cubieboard.dtb \
++	sun4i-a10-gemei-g9.dtb \
++	sun4i-a10-hackberry.dtb \
++	sun4i-a10-inet97fv2.dtb \
+ 	sun4i-a10-marsboard.dtb \
+ 	sun4i-a10-mini-xplus.dtb \
+ 	sun4i-a10-mk802.dtb \
+ 	sun4i-a10-mk802ii.dtb \
+-	sun4i-a10-hackberry.dtb \
+-	sun4i-a10-inet97fv2.dtb \
++	sun4i-a10-mini-xplus.dtb \
+ 	sun4i-a10-olinuxino-lime.dtb \
+ 	sun4i-a10-pcduino.dtb
+ dtb-$(CONFIG_MACH_SUN5I) += \
+diff --git a/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
+new file mode 100644
+index 0000000..0c73453
+--- /dev/null
++++ b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
+@@ -0,0 +1,168 @@
++/*
++ * Copyright 2015 Priit Laes
++ *
++ * Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun4i-a10.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "Gemei G9 Tablet";
++	compatible = "gemei,g9", "allwinner,sun4i-a10";
++};
++
++/*
++ * TODO:
++ *   2x cameras via CSI
++ *   bma250 IRQs
++ *   AXP battery management
++ *   NAND
++ *   OTG
++ *   Touchscreen - gt801_2plus1 @ i2c adapter 2 @ 0x48
++ */
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		compatible = "x-powers,axp209";
++		reg = <0x34>;
++		interrupts = <0>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
++
++	/* Accelerometer */
++	bma250@18 {
++		compatible = "bosch,bma250";
++		reg = <0x18>;
++
++		/*
++		 * TODO: interrupt pins:
++		 * int1 - PH00
++		 * int2 - PI10
++		 */
++	};
++};
++
++&lradc {
++	vref-supply = <&reg_vcc3v0>;
++
++	status = "okay";
++
++	button@158 {
++		label = "Volume Down";
++		linux,code = <KEY_VOLUMEDOWN>;
++		channel = <0>;
++		voltage = <158730>;
++	};
++
++	button@349 {
++		label = "Volume Up";
++		linux,code = <KEY_VOLUMEUP>;
++		channel = <0>;
++		voltage = <349206>;
++	};
++
++	button@1142 {
++		label = "Esc";
++		linux,code = <KEY_ESC>;
++		channel = <0>;
++		voltage = <1142856>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH01 */
++	cd-inverted;
++	status = "okay";
++};
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++
++&uart0  {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.2.2
