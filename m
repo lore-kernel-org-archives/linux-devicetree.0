@@ -1,379 +1,73 @@
-From: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Mon, 26 Jan 2015 22:56:46 +0900
-Message-ID: <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
-	<1422274532-9488-2-git-send-email-rogerq@ti.com>
-Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add dts file for pcDuino 3
+ Nano board
+Date: Mon, 26 Jan 2015 13:59:31 +0000
+Message-ID: <20150126135931.GB871@cartman.at.offog.org>
+References: <1422199921-325-1-git-send-email-ats@offog.org>
+ <20150125164846.GL8470@lukather>
+ <20150126003520.GA871@cartman.at.offog.org>
+ <20150126100921.GQ8470@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422274532-9488-2-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBCQPXGGUXQGBBSMQTGTAKGQEHNGR27I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150126100921.GQ8470@lukather>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+Hi Maxime,
 
-This patch looks good to me. But I add some comment.
-If you modify some comment, I'll apply this patch on 3.21 queue.
+On Mon, Jan 26, 2015 at 11:09:21AM +0100, Maxime Ripard wrote:
+> If you read Documentation/leds/leds-class.txt, the pattern to follow is:
+> "devicename:colour:function"
+> so it should rather be pcduino3-nano:green:usr1 and usr2, or some
+> other thing.
 
-On Mon, Jan 26, 2015 at 9:15 PM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
-> This driver observes the USB ID pin connected over a GPIO and
-> updates the USB cable extcon states accordingly.
->
-> The existing GPIO extcon driver is not suitable for this purpose
-> as it needs to be taught to understand USB cable states and it
-> can't handle more than one cable per instance.
->
-> For the USB case we need to handle 2 cable states.
-> 1) USB (attach/detach)
-> 2) USB-Host (attach/detach)
->
-> This driver can be easily updated in the future to handle VBUS
-> events in case it happens to be available on GPIO for any platform.
->
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  20 ++
->  drivers/extcon/Kconfig                             |   7 +
->  drivers/extcon/Makefile                            |   1 +
->  drivers/extcon/extcon-usb-gpio.c                   | 214 +++++++++++++++++++++
->  4 files changed, 242 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->  create mode 100644 drivers/extcon/extcon-usb-gpio.c
->
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> new file mode 100644
-> index 0000000..ab52a85
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> @@ -0,0 +1,20 @@
-> +USB GPIO Extcon device
-> +
-> +This is a virtual device used to generate USB cable states from the USB ID pin
-> +connected to a GPIO pin.
-> +
-> +Required properties:
-> +- compatible: Should be "linux,extcon-usb-gpio"
-> +- id-gpio: gpio for USB ID pin. See gpio binding.
-> +
-> +Example:
-> +       extcon_usb1 {
-> +               compatible = "linux,extcon-usb-gpio";
-> +               id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-> +       }
-> +
-> +       usb@1 {
-> +               ...
-> +               extcon = <&extcon_usb1>;
-> +               ...
+How about pcduino3-nano:green:usr-led3/4? Or ...:usr1/2, and a comment
+in the .dts explaining how they're labelled on the board?
 
-I don' want to use '...' for example.
-How about using omap usecase in your patch4[1] as following?
-[1] ARM: dts: dra72-evm: Add extcon nodes for USB
+There are a couple of other sunxi boards that have the same problem
+(multiple user-controllable LEDs of the same colour):
 
-            &omap_dwc3_1 {
-                        extcon = <&extcon_usb1>;
-            };
+sun4i-a10-marsboard.dts: label = "marsboard:red1:usr";
+sun4i-a10-marsboard.dts: label = "marsboard:red2:usr";
+sun4i-a10-marsboard.dts: label = "marsboard:red3:usr";
+sun4i-a10-marsboard.dts: label = "marsboard:red4:usr";
+sun9i-a80-optimus.dts: label = "optimus:led2:usr";
+sun9i-a80-optimus.dts: label = "optimus:led4:usr";
 
-> +       };
-> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-> index 6a1f7de..e4c01ab 100644
-> --- a/drivers/extcon/Kconfig
-> +++ b/drivers/extcon/Kconfig
-> @@ -93,4 +93,11 @@ config EXTCON_SM5502
->           Silicon Mitus SM5502. The SM5502 is a USB port accessory
->           detector and switch.
->
-> +config EXTCON_USB_GPIO
-> +       tristate "USB GPIO extcon support"
-> +       depends on GPIOLIB
+I can send a patch for those if you'd like as well?
 
-How about use 'select' keyword instead of 'depends on'?
-- depends on GPIOLIB -> select GPIOLIB
+> > Should there be aliases for I2C as well, since the same situation
+> > applies (i2c0 and i2c2)?
+> Yep.
 
-> +       help
-> +         Say Y here to enable GPIO based USB cable detection extcon support.
-> +         Used typically if GPIO is used for USB ID pin detection.
-> +
->  endif # MULTISTATE_SWITCH
-> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-> index 0370b42..6a08a98 100644
-> --- a/drivers/extcon/Makefile
-> +++ b/drivers/extcon/Makefile
-> @@ -12,3 +12,4 @@ obj-$(CONFIG_EXTCON_MAX8997)  += extcon-max8997.o
->  obj-$(CONFIG_EXTCON_PALMAS)    += extcon-palmas.o
->  obj-$(CONFIG_EXTCON_RT8973A)   += extcon-rt8973a.o
->  obj-$(CONFIG_EXTCON_SM5502)    += extcon-sm5502.o
-> +obj-$(CONFIG_EXTCON_USB_GPIO)  += extcon-usb-gpio.o
-> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
-> new file mode 100644
-> index 0000000..a20aa39
-> --- /dev/null
-> +++ b/drivers/extcon/extcon-usb-gpio.c
-> @@ -0,0 +1,214 @@
-> +/**
-> + * drivers/extcon/extcon_usb_gpio.c - USB GPIO extcon driver
+Added.
 
-You should use the '-' instead of '_'.
-- s/extcon_usb_gpio.c/extcon-usb-gpio.c
+> > More generally, is it correct to add nodes like these (uart2, spi0,
+> > i2c2) for features that appear on the Arduino GPIO headers?
+> If those pins are specifically dedicated to this feature, then yes.
 
-> + *
-> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
-> + * Author: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/extcon.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define USB_GPIO_DEBOUNCE_MS   20      /* ms */
-> +
-> +struct usb_extcon_info {
-> +       struct device *dev;
-> +       struct extcon_dev *edev;
-> +
-> +       struct gpio_desc *id_gpiod;
-> +       int id_irq;
-> +
-> +       unsigned long debounce_jiffies;
-> +       struct delayed_work wq_detcable;
-> +};
-> +
-> +/* List of detectable cables */
-> +enum {
-> +       EXTCON_CABLE_USB = 0,
-> +       EXTCON_CABLE_USB_HOST,
-> +
-> +       EXTCON_CABLE_END,
-> +};
-> +
-> +static const char *usb_extcon_cable[] = {
-> +       [EXTCON_CABLE_USB] = "USB",
-> +       [EXTCON_CABLE_USB_HOST] = "USB-Host",
-> +       NULL,
-> +};
-> +
-> +static void usb_extcon_detect_cable(struct work_struct *work)
-> +{
-> +       int id;
-> +       struct usb_extcon_info *info;
-> +
-> +       info  = container_of(to_delayed_work(work), struct usb_extcon_info,
-> +                            wq_detcable);
+They're multipurpose pins on Arduino-compatible headers:
+http://learn.linksprite.com/wp-content/uploads/2014/10/pcDuino3-Nano_header-Model.jpg
 
-Simplify container_of statement as following:
-            struct usb_extcon_info *info  = container_of(to_delayed_work(work),
-                                                                struct
-usb_extcon_info, wq_detcable);
+How you want them to be configured will depend on what you have plugged
+in; for example, some Arduino add-on boards will expect J11 P1/2 to be
+serial RX/TX and some will expect them to be GPIOs. So should we
+configure i2c2 etc. by default (and let the user turn them into GPIOs
+if required), or just provide the GPIOs (and require the user to adjust
+the .dts)?
 
-> +
-> +       /* check ID and update cable state */
-> +       id = gpiod_get_value_cansleep(info->id_gpiod);
-> +       if (id) {
-> +               /*
-> +                * ID = 1 means USB HOST cable detached.
-> +                * As we don't have event for USB peripheral cable attached,
-> +                * we simulate USB peripheral attach here.
-> +                */
-> +               extcon_set_cable_state(info->edev,
-> +                                      usb_extcon_cable[EXTCON_CABLE_USB_HOST],
-> +                                      false);
-> +               extcon_set_cable_state(info->edev,
-> +                                      usb_extcon_cable[EXTCON_CABLE_USB],
-> +                                      true);
-> +       } else {
-> +               /*
-> +                * ID = 0 means USB HOST cable attached.
-> +                * As we don't have event for USB peripheral cable detached,
-> +                * we simulate USB peripheral detach here.
-> +                */
-> +               extcon_set_cable_state(info->edev,
-> +                                      usb_extcon_cable[EXTCON_CABLE_USB],
-> +                                      false);
-> +               extcon_set_cable_state(info->edev,
-> +                                      usb_extcon_cable[EXTCON_CABLE_USB_HOST],
-> +                                      true);
-> +       }
-> +}
-> +
-> +static irqreturn_t usb_irq_handler(int irq, void *dev_id)
-> +{
-> +       struct usb_extcon_info *info = dev_id;
-> +
-> +       queue_delayed_work(system_power_efficient_wq, &info->wq_detcable,
-> +                          info->debounce_jiffies);
+Cheers,
 
-Need to add blank line.
-
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int usb_extcon_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct usb_extcon_info *info;
-> +       int ret;
-> +
-> +       if (!np)
-> +               return -EINVAL;
-> +
-> +       info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-> +       if (!info)
-> +               return -ENOMEM;
-> +
-> +       info->dev = dev;
-> +       info->id_gpiod = devm_gpiod_get(&pdev->dev, "id");
-> +       if (IS_ERR(info->id_gpiod)) {
-> +               dev_err(dev, "failed to get ID GPIO\n");
-> +               return PTR_ERR(info->id_gpiod);
-> +       }
-> +
-> +       ret = gpiod_set_debounce(info->id_gpiod,
-> +                                USB_GPIO_DEBOUNCE_MS * 1000);
-> +       if (ret < 0)
-> +               info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
-> +
-> +       INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
-> +
-> +       info->id_irq = gpiod_to_irq(info->id_gpiod);
-> +       if (info->id_irq < 0) {
-> +               dev_err(dev, "failed to get ID IRQ\n");
-> +               return info->id_irq;
-> +       }
-> +
-> +       ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
-> +                                       usb_irq_handler,
-> +                                       IRQF_SHARED | IRQF_ONESHOT |
-> +                                       IRQF_NO_SUSPEND,
-> +                                       pdev->name, info);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to request handler for ID IRQ\n");
-> +               return ret;
-> +       }
-> +
-> +       info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
-> +       if (IS_ERR(info->edev)) {
-> +               dev_err(dev, "failed to allocate extcon device\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       ret = devm_extcon_dev_register(dev, info->edev);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to register extcon device\n");
-> +               return ret;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, info);
-
-I prefer to execute the device_init_wakeup() function as following
-for suspend/resume function:
-            device_init_wakeup(&pdev->dev, 1);
-
-> +
-> +       /* Perform initial detection */
-> +       usb_extcon_detect_cable(&info->wq_detcable.work);
-> +
-> +       return 0;
-> +}
-> +
-> +static int usb_extcon_remove(struct platform_device *pdev)
-> +{
-> +       struct usb_extcon_info *info = platform_get_drvdata(pdev);
-> +
-> +       cancel_delayed_work_sync(&info->wq_detcable);
-
-Need to add blank line.
-
-> +       return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int usb_extcon_suspend(struct device *dev)
-> +{
-> +       struct usb_extcon_info *info = dev_get_drvdata(dev);
-> +
-> +       enable_irq_wake(info->id_irq);
-
-I prefer to use device_may_wakeup() function for whether
-executing enable_irq_wake() or not. Also, The disable_irq()
-in the suspend function would prevent us from discarding interrupt
-before wakeup from suspend completely.
-
-            if (device_may_wakeup(dev))
-                     enable_irq_wake(info->id_irq);
-            disable_irq(info->id_irq);
-
-
-> +       return 0;
-> +}
-> +
-> +static int usb_extcon_resume(struct device *dev)
-> +{
-> +       struct usb_extcon_info *info = dev_get_drvdata(dev);
-> +
-> +       disable_irq_wake(info->id_irq);
-
-ditto as following:
-
-            if (device_may_wakeup(dev))
-                     disable_irq_wake(info->id_irq);
-            enable_irq(info->id_irq);
-
-> +       return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(usb_extcon_pm_ops,
-> +                        usb_extcon_suspend, usb_extcon_resume);
-> +
-> +static struct of_device_id usb_extcon_dt_match[] = {
-> +       { .compatible = "linux,extcon-usb-gpio", },
-> +       { /* end */ }
-
-I prefer to use 'sentinel' word instead of 'end'
-
-> +};
-> +MODULE_DEVICE_TABLE(of, usb_extcon_dt_match);
-> +
-> +static struct platform_driver usb_extcon_driver = {
-> +       .probe          = usb_extcon_probe,
-> +       .remove         = usb_extcon_remove,
-> +       .driver         = {
-> +               .name   = "extcon-usb-gpio",
-> +               .pm     = &usb_extcon_pm_ops,
-> +               .of_match_table = usb_extcon_dt_match,
-> +       },
-> +};
-> +
-> +module_platform_driver(usb_extcon_driver);
-> +
-> +MODULE_AUTHOR("Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>");
-> +MODULE_DESCRIPTION("USB GPIO extcon driver");
-> +MODULE_LICENSE("GPL v2");
-
-Thanks,
-Chanwoo Choi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>                         <http://offog.org/>
