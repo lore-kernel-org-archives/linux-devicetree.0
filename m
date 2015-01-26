@@ -1,471 +1,93 @@
-From: Peter =?iso-8859-15?q?H=FCwe?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] tpm/st33zp24/spi: Add st33zp24 spi phy
-Date: Tue, 27 Jan 2015 00:28:48 +0100
-Message-ID: <201501270028.50731.PeterHuewe@gmx.de>
-References: <1422220293-21005-1-git-send-email-christophe-h.ricard@st.com> <1422220293-21005-4-git-send-email-christophe-h.ricard@st.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] PCI: update dma configuration from DT
+Date: Mon, 26 Jan 2015 18:28:54 -0500
+Message-ID: <54C6CDB6.2080207@ti.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
+	<1422052359-12384-6-git-send-email-m-karicheri2@ti.com>
+	<20150123232725.GV29776@google.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422220293-21005-4-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20150123232725.GV29776-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, 25. Januar 2015, 22:11:32 schrieb Christophe Ricard:
-> st33zp24 TIS 1.2 support also SPI. It is using a proprietary protocol to
-> transport TIS data.
-> 
-> Reviewed-by: Jason Gunthorpe <jason.gunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/char/tpm/st33zp24/Kconfig  |  10 +
->  drivers/char/tpm/st33zp24/Makefile |   3 +
->  drivers/char/tpm/st33zp24/spi.c    | 386
-> +++++++++++++++++++++++++++++++++++++ 3 files changed, 399 insertions(+)
->  create mode 100644 drivers/char/tpm/st33zp24/spi.c
-> 
-> diff --git a/drivers/char/tpm/st33zp24/Kconfig
-> b/drivers/char/tpm/st33zp24/Kconfig index 51dcef5..09cb7278 100644
-> --- a/drivers/char/tpm/st33zp24/Kconfig
-> +++ b/drivers/char/tpm/st33zp24/Kconfig
-> @@ -18,3 +18,13 @@ config TCG_TIS_ST33ZP24_I2C
->  	  ST33ZP24 with i2c interface.
->  	  To compile this driver as a module, choose M here; the module will be
->  	  called tpm_st33zp24_i2c.
-> +
-> +config TCG_TIS_ST33ZP24_SPI
-> +	tristate "TPM 1.2 ST33ZP24 SPI support"
-> +	depends on TCG_TIS_ST33ZP24
-> +	depends on SPI
-> +	---help---
-> +	  This module adds support for the STMicroelectronics TPM security chip
-> +	  ST33ZP24 with spi interface.
-> +	  To compile this driver as a module, choose M here; the module will be
-> +	  called tpm_st33zp24_spi.
-> diff --git a/drivers/char/tpm/st33zp24/Makefile
-> b/drivers/char/tpm/st33zp24/Makefile index 414497f..74a722e 100644
-> --- a/drivers/char/tpm/st33zp24/Makefile
-> +++ b/drivers/char/tpm/st33zp24/Makefile
-> @@ -7,3 +7,6 @@ obj-$(CONFIG_TCG_TIS_ST33ZP24) += tpm_st33zp24.o
-> 
->  tpm_st33zp24_i2c-objs = i2c.o
->  obj-$(CONFIG_TCG_TIS_ST33ZP24_I2C) += tpm_st33zp24_i2c.o
-> +
-> +tpm_st33zp24_spi-objs = spi.o
-> +obj-$(CONFIG_TCG_TIS_ST33ZP24_SPI) += tpm_st33zp24_spi.o
-> diff --git a/drivers/char/tpm/st33zp24/spi.c
-> b/drivers/char/tpm/st33zp24/spi.c new file mode 100644
-> index 0000000..d481478
-> --- /dev/null
-> +++ b/drivers/char/tpm/st33zp24/spi.c
-> @@ -0,0 +1,386 @@
-> +/*
-> + * STMicroelectronics TPM SPI Linux driver for TPM ST33ZP24
-> + * Copyright (C) 2009 - 2015  STMicroelectronics
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/gpio.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/tpm.h>
-> +#include <linux/platform_data/st33zp24.h>
-> +
-> +#include "st33zp24.h"
-> +
-> +#define TPM_DATA_FIFO           0x24
-> +#define TPM_INTF_CAPABILITY     0x14
-> +
-> +#define TPM_DUMMY_BYTE		0x00
-> +#define TPM_WRITE_DIRECTION	0x80
-> +#define TPM_BUFSIZE		2048
-see previous email :)
-> +
-> +#define MAX_SPI_LATENCY		15
-> +#define LOCALITY0		0
-> +
-> +#define ST33ZP24_OK					0x5A
-> +#define ST33ZP24_UNDEFINED_ERR				0x80
-> +#define ST33ZP24_BADLOCALITY				0x81
-> +#define ST33ZP24_TISREGISTER_UKNOWN			0x82
-> +#define ST33ZP24_LOCALITY_NOT_ACTIVATED			0x83
-> +#define ST33ZP24_HASH_END_BEFORE_HASH_START		0x84
-> +#define ST33ZP24_BAD_COMMAND_ORDER			0x85
-> +#define ST33ZP24_INCORECT_RECEIVED_LENGTH		0x86
-> +#define ST33ZP24_TPM_FIFO_OVERFLOW			0x89
-> +#define ST33ZP24_UNEXPECTED_READ_FIFO			0x8A
-> +#define ST33ZP24_UNEXPECTED_WRITE_FIFO			0x8B
-> +#define ST33ZP24_CMDRDY_SET_WHEN_PROCESSING_HASH_END	0x90
-> +#define ST33ZP24_DUMMY_BYTES				0x00
-> +
-> +struct st33zp24_spi_phy {
-> +	struct spi_device *spi_device;
-> +	struct spi_transfer spi_xfer;
-> +	int io_lpcpd;
-> +	int latency;
-> +};
-> +
-> +static int st33zp24_status_to_errno(u8 code)
-> +{
-> +	switch (code) {
-> +	case ST33ZP24_OK:
-> +		return 0;
-> +	case ST33ZP24_UNDEFINED_ERR:
-> +	case ST33ZP24_BADLOCALITY:
-> +	case ST33ZP24_TISREGISTER_UKNOWN:
-> +	case ST33ZP24_LOCALITY_NOT_ACTIVATED:
-> +	case ST33ZP24_HASH_END_BEFORE_HASH_START:
-> +	case ST33ZP24_BAD_COMMAND_ORDER:
-> +	case ST33ZP24_UNEXPECTED_READ_FIFO:
-> +	case ST33ZP24_UNEXPECTED_WRITE_FIFO:
-> +	case ST33ZP24_CMDRDY_SET_WHEN_PROCESSING_HASH_END:
-> +		return -EPROTO;
-> +	case ST33ZP24_INCORECT_RECEIVED_LENGTH:
-> +	case ST33ZP24_TPM_FIFO_OVERFLOW:
-> +		return -EMSGSIZE;
-> +	case ST33ZP24_DUMMY_BYTES:
-> +	default:
-> +		return -ENOSYS;
-> +	}
-> +}
-> +
-> +/*
-> + * st33zp24_spi_send
-> + * Send byte to the TIS register according to the ST33ZP24 SPI protocol.
-> + * @param: tpm, the chip description
-no such parameter :) 
-> + * @param: tpm_register, the tpm tis register where the data should be
-> written + * @param: tpm_data, the tpm_data to write inside the
-> tpm_register + * @param: tpm_size, The length of the data
-> + * @return: should be zero if success else a negative error code.
-> + */
-> +static int st33zp24_spi_send(void *phy_id, u8 tpm_register, u8 *tpm_data,
-> +			     int tpm_size)
-> +{
-> +	u8 data = 0;
-> +	int total_length = 0, nbr_dummy_bytes = 0, ret = 0;
-> +	struct st33zp24_spi_phy *phy = phy_id;
-> +	struct spi_device *dev = phy->spi_device;
-> +	u8 *tx_buf = (u8 *)phy->spi_xfer.tx_buf;
-> +	u8 *rx_buf = phy->spi_xfer.rx_buf;
-> +
-> +	/* Pre-Header */
-> +	data = TPM_WRITE_DIRECTION | LOCALITY0;
-> +	memcpy(tx_buf + total_length, &data, sizeof(data));
-> +	total_length++;
-> +	data = tpm_register;
-> +	memcpy(tx_buf + total_length, &data, sizeof(data));
-> +	total_length++;
-> +
-> +	if (tpm_size > 0 && tpm_register == TPM_DATA_FIFO) {
-> +		tx_buf[total_length++] = tpm_size >> 8;
-> +		tx_buf[total_length++] = tpm_size;
-> +	}
-> +
-> +	memcpy(&tx_buf[total_length], tpm_data, tpm_size);
-> +	total_length += tpm_size;
-> +
-> +	nbr_dummy_bytes = phy->latency;
-> +	memset(&tx_buf[total_length], TPM_DUMMY_BYTE, nbr_dummy_bytes);
-> +
-> +	phy->spi_xfer.len = total_length + nbr_dummy_bytes;
-> +
-> +	ret = spi_sync_transfer(dev, &phy->spi_xfer, 1);
-> +
-> +	if (ret == 0)
-> +		ret = rx_buf[total_length + nbr_dummy_bytes - 1];
-> +
-> +	return st33zp24_status_to_errno(ret);
-> +} /* st33zp24_spi_send() */
-> +
-> +/*
-> + * read8_recv
-> + * Recv byte from the TIS register according to the ST33ZP24 SPI protocol.
-> + * @param: tpm, the chip description
-no such parameter :) 
-> + * @param: tpm_register, the tpm tis register where the data should be
-> read + * @param: tpm_data, the TPM response
-> + * @param: tpm_size, tpm TPM response size to read.
-> + * @return: should be zero if success else a negative error code.
-> + */
-> +static int read8_reg(void *phy_id, u8 tpm_register, u8 *tpm_data, int
-> tpm_size) +{
-> +	u8 data = 0;
-> +	int total_length = 0, nbr_dummy_bytes, ret;
-> +	struct st33zp24_spi_phy *phy = phy_id;
-> +	struct spi_device *dev = phy->spi_device;
-> +	u8 *tx_buf = (u8 *)phy->spi_xfer.tx_buf;
-> +	u8 *rx_buf = phy->spi_xfer.rx_buf;
-> +
-> +	/* Pre-Header */
-> +	data = LOCALITY0;
-> +	memcpy(tx_buf + total_length, &data, sizeof(data));
-> +	total_length++;
-> +	data = tpm_register;
-> +	memcpy(tx_buf + total_length, &data, sizeof(data));
-> +	total_length++;
-> +
-> +	nbr_dummy_bytes = phy->latency;
-> +	memset(&tx_buf[total_length], TPM_DUMMY_BYTE,
-> +	       nbr_dummy_bytes + tpm_size);
-> +
-> +	phy->spi_xfer.len = total_length + nbr_dummy_bytes + tpm_size;
-> +
-> +	/* header + status byte + size of the data + status byte */
-> +	ret = spi_sync_transfer(dev, &phy->spi_xfer, 1);
-> +	if (tpm_size > 0 && ret == 0) {
-> +		ret = rx_buf[total_length + nbr_dummy_bytes - 1];
-> +
-> +		memcpy(tpm_data, rx_buf + total_length + nbr_dummy_bytes,
-> +		       tpm_size);
-> +	}
-> +
-> +	return ret;
-> +} /* read8_reg() */
-> +
-> +/*
-> + * st33zp24_spi_recv
-> + * Recv byte from the TIS register according to the ST33ZP24 SPI protocol.
-> + * @param: tpm, the chip description
-no such parameter :) 
-> + * @param: tpm_register, the tpm tis register where the data should be
-> read + * @param: tpm_data, the TPM response
-> + * @param: tpm_size, tpm TPM response size to read.
-> + * @return: number of byte written successfully: should be one if success.
-						 s ^^^^^^^ 
-						   written on recv?
-> + */
-> +static int st33zp24_spi_recv(void *phy_id, u8 tpm_register, u8 *tpm_data,
-> +			     int tpm_size)
-> +{
-> +	int ret;
-> +
-> +	ret = read8_reg(phy_id, tpm_register, tpm_data, tpm_size);
-> +	if (!ret)
-> +		return tpm_size;
-> +	return ret;
-> +} /* st33zp24_spi_recv() */
-> +
-> +static int evaluate_latency(void *phy_id)
-> +{
-> +	struct st33zp24_spi_phy *phy = phy_id;
-> +	int latency = 1, status = 0;
-> +	u8 data = 0;
-> +
-> +	while (!status && latency < MAX_SPI_LATENCY) {
-> +		phy->latency = latency;
-> +		status = read8_reg(phy_id, TPM_INTF_CAPABILITY, &data, 1);
-> +		latency++;
-> +	}
-> +	return latency - 1;
-why start at 1 and then deduce -1 at the end?
+On 01/23/2015 06:27 PM, Bjorn Helgaas wrote:
+> On Fri, Jan 23, 2015 at 05:32:38PM -0500, Murali Karicheri wrote:
+>> If there is a DT node available for the root bridge's parent device,
+>> use the dma configuration from that device node. For example, keystone
+>> PCI devices would require dma_pfn_offset to be set correctly in the
+>> device structure of the pci device in order to have the correct dma mask.
+>> The DT node will have dma-ranges defined for this. Also support using
+>> the DT property dma-coherent to allow coherent DMA operation by the
+>> PCI device.
+>>
+>> This patch use the new helper function of_pci_dma_configure() to update
+>> the device dma configuration.
+>>
+>> Cc: Joerg Roedel<joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+>> Cc: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> Cc: Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> Cc: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
+>> Cc: Suravee Suthikulpanit<Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+>>
+>> Signed-off-by: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
+>
+> I assume this series will be merged via some non-PCI tree, so:
 
-> +} /* evaluate_latency() */
-> +
-> +static const struct st33zp24_phy_ops spi_phy_ops = {
-> +	.send = st33zp24_spi_send,
-> +	.recv = st33zp24_spi_recv,
-> +};
-> +
-> +#ifdef CONFIG_OF
-> +static int tpm_stm_spi_of_request_resources(struct st33zp24_spi_phy *phy)
-> +{
-> +	struct device_node *pp;
-> +	struct spi_device *dev = phy->spi_device;
-> +	int gpio;
-> +	int ret;
-> +
-> +	pp = dev->dev.of_node;
-> +	if (!pp) {
-> +		dev_err(&dev->dev, "No platform data\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Get GPIO from device tree */
-> +	gpio = of_get_named_gpio(pp, "lpcpd-gpios", 0);
-> +	if (gpio < 0) {
-> +		dev_err(&dev->dev,
-> +			"Failed to retrieve lpcpd-gpios from dts.\n");
-> +		phy->io_lpcpd = -1;
-> +		/*
-> +		 * lpcpd pin is not specified. This is not an issue as
-> +		 * power management can be also managed by TPM specific
-> +		 * commands. So leave with a success status code.
-> +		 */
-> +		return 0;
-> +	}
-> +	/* GPIO request and configuration */
-> +	ret = devm_gpio_request_one(&dev->dev, gpio,
-> +			GPIOF_OUT_INIT_HIGH, "TPM IO LPCPD");
-> +	if (ret) {
-> +		dev_err(&dev->dev, "Failed to request lpcpd pin\n");
-> +		return -ENODEV;
-> +	}
-> +	phy->io_lpcpd = gpio;
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int tpm_stm_spi_of_request_resources(struct st33zp24_spi_phy *phy)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif
-> +
-> +static int tpm_stm_spi_request_resources(struct spi_device *dev,
-> +					 struct st33zp24_spi_phy *phy)
-> +{
-> +	struct st33zp24_platform_data *pdata;
-> +	int ret;
-> +
-> +	pdata = dev->dev.platform_data;
-> +	if (!pdata) {
-> +		dev_err(&dev->dev, "No platform data\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* store for late use */
-> +	phy->io_lpcpd = pdata->io_lpcpd;
-> +
-> +	if (gpio_is_valid(pdata->io_lpcpd)) {
-> +		ret = devm_gpio_request_one(&dev->dev,
-> +				pdata->io_lpcpd, GPIOF_OUT_INIT_HIGH,
-> +				"TPM IO_LPCPD");
-> +		if (ret) {
-> +			dev_err(&dev->dev, "%s : reset gpio_request failed\n",
-> +				__FILE__);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * tpm_st33_spi_probe initialize the TPM device
-> + * @param: client, the spi_device drescription (TPM SPI description).
-> + * @param: id, the spi_device_id struct.
-the params don't match the function below
-so again no such parameters :) 
-> + * @return: 0 in case of success.
-> + *	 -1 in other case.
-is this true? I guess not.
-> + */
-> +static int
-> +tpm_st33_spi_probe(struct spi_device *dev)
-> +{
-> +	int ret;
-> +	struct st33zp24_platform_data *pdata;
-> +	struct st33zp24_spi_phy *phy;
-> +
-> +	/* Check SPI platform functionnalities */
-> +	if (!dev) {
-> +		pr_info("%s: dev is NULL. Device is not accessible.\n",
-> +			__func__);
-> +		return -ENODEV;
-> +	}
-> +
-> +	phy = devm_kzalloc(&dev->dev, sizeof(struct st33zp24_spi_phy),
-> +			   GFP_KERNEL);
-> +	if (!phy)
-> +		return -ENOMEM;
-> +
-> +	phy->spi_device = dev;
-> +	pdata = dev->dev.platform_data;
-> +	if (!pdata && dev->dev.of_node) {
-> +		ret = tpm_stm_spi_of_request_resources(phy);
-> +		if (ret)
-> +			return ret;
-> +	} else if (pdata) {
-> +		ret = tpm_stm_spi_request_resources(dev, phy);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	phy->spi_xfer.tx_buf = devm_kmalloc(&dev->dev, (TPM_BUFSIZE +
-> +					(TPM_BUFSIZE / 2) + TPM_DIGEST_SIZE) *
-I don't get this calculation, why is this bugger so big?
-> +					sizeof(u8), GFP_KERNEL);
-sizeof(u8) can be removed.
-> +	if (!phy->spi_xfer.tx_buf)
-> +		return -ENOMEM;
-> +
-> +	phy->spi_xfer.rx_buf = devm_kmalloc(&dev->dev, (TPM_BUFSIZE +
-> +					(TPM_BUFSIZE / 2) + TPM_DIGEST_SIZE) *
-I don't get this calculation.
-> +					sizeof(u8), GFP_KERNEL);
+Not sure who will pick this. Since this is for PCI, will it be possible 
+to apply this to arm-pci/next?
 
-sizeof(u8) can be removed.
-> +	if (!phy->spi_xfer.rx_buf)
-> +		return -ENOMEM;
-> +
-> +	phy->latency = evaluate_latency(phy);
-> +	if (phy->latency <= 0)
-> +		return -ENODEV;
-> +
-> +	return st33zp24_probe(phy, &spi_phy_ops, &dev->dev, dev->irq,
-> +			      phy->io_lpcpd);
-> +}
-> +
-> +/*
-> + * tpm_st33_spi_remove remove the TPM device
-> + * @param: client, the spi_device drescription (TPM SPI description).
-> + * @return: 0 in case of success.
-> + */
-> +static int tpm_st33_spi_remove(struct spi_device *dev)
-> +{
-> +	struct tpm_chip *chip = spi_get_drvdata(dev);
-> +
-> +	return st33zp24_remove(chip);
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id of_st33zp24_spi_match[] = {
-> +	{ .compatible = "st,st33zp24-spi", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, of_st33zp24_spi_match);
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(st33zp24_spi_ops, st33zp24_pm_suspend,
-> +			 st33zp24_pm_resume);
-> +
-> +static struct spi_driver tpm_st33_spi_driver = {
-> +	.driver = {
-> +		.owner = THIS_MODULE,
-> +		.name = TPM_ST33_SPI,
-> +		.pm = &st33zp24_spi_ops,
-> +		.of_match_table = of_match_ptr(of_st33zp24_spi_match),
-> +	},
-> +	.probe = tpm_st33_spi_probe,
-> +	.remove = tpm_st33_spi_remove,
-> +};
-> +
-> +module_spi_driver(tpm_st33_spi_driver);
-> +
-> +MODULE_AUTHOR("TPM support (TPMsupport-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org)");
-> +MODULE_DESCRIPTION("STM TPM 1.2 SPI ST33 Driver");
-> +MODULE_VERSION("1.3.0");
-> +MODULE_LICENSE("GPL");
+>
+> Acked-by: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will add your ack for v5.
+
+Murali
+>
+>> ---
+>>   drivers/pci/probe.c |    2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 23212f8..d7dcd6c 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -6,6 +6,7 @@
+>>   #include<linux/delay.h>
+>>   #include<linux/init.h>
+>>   #include<linux/pci.h>
+>> +#include<linux/of_pci.h>
+>>   #include<linux/pci_hotplug.h>
+>>   #include<linux/slab.h>
+>>   #include<linux/module.h>
+>> @@ -1520,6 +1521,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>>   	dev->dev.dma_mask =&dev->dma_mask;
+>>   	dev->dev.dma_parms =&dev->dma_parms;
+>>   	dev->dev.coherent_dma_mask = 0xffffffffull;
+>> +	of_pci_dma_configure(dev);
+>>
+>>   	pci_set_dma_max_seg_size(dev, 65536);
+>>   	pci_set_dma_seg_boundary(dev, 0xffffffff);
+>> --
+>> 1.7.9.5
+>>
+
+
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
