@@ -1,93 +1,169 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] PCI: update dma configuration from DT
-Date: Mon, 26 Jan 2015 18:28:54 -0500
-Message-ID: <54C6CDB6.2080207@ti.com>
-References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
-	<1422052359-12384-6-git-send-email-m-karicheri2@ti.com>
-	<20150123232725.GV29776@google.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
+Date: Tue, 27 Jan 2015 00:57:00 +0100
+Message-ID: <54C6D44C.4060106@suse.de>
+References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com> <1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20150123232725.GV29776-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="GsJqPrllPDqFf9KBORojVe0UiwjkGA44H"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420818231-13451-7-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/23/2015 06:27 PM, Bjorn Helgaas wrote:
-> On Fri, Jan 23, 2015 at 05:32:38PM -0500, Murali Karicheri wrote:
->> If there is a DT node available for the root bridge's parent device,
->> use the dma configuration from that device node. For example, keystone
->> PCI devices would require dma_pfn_offset to be set correctly in the
->> device structure of the pci device in order to have the correct dma mask.
->> The DT node will have dma-ranges defined for this. Also support using
->> the DT property dma-coherent to allow coherent DMA operation by the
->> PCI device.
->>
->> This patch use the new helper function of_pci_dma_configure() to update
->> the device dma configuration.
->>
->> Cc: Joerg Roedel<joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
->> Cc: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> Cc: Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>
->> Cc: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->> Cc: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
->> Cc: Suravee Suthikulpanit<Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->>
->> Signed-off-by: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
->
-> I assume this series will be merged via some non-PCI tree, so:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GsJqPrllPDqFf9KBORojVe0UiwjkGA44H
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Not sure who will pick this. Since this is for PCI, will it be possible 
-to apply this to arm-pci/next?
+Am 09.01.2015 um 16:43 schrieb Soren Brinkmann:
+> Add pinctrl descriptions to the zc702 and zc706 device trees.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Tested-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> ---
+> Changes since v1:
+>  - remove 'pinctrl-' prefix for pinctrl sub-nodes
+>  - separate config and mux nodes
+>=20
+> Changes since RFC v2:
+>  - add pinconf properties to zc702 mdio node
+>  - remove arguments from bias-related props
+>=20
+> Changes since RFC v1:
+>  - separate DT changes into their own patch
+> ---
+>  arch/arm/boot/dts/zynq-7000.dtsi |   8 +-
+>  arch/arm/boot/dts/zynq-zc702.dts | 181 +++++++++++++++++++++++++++++++=
+++++++++
+>  arch/arm/boot/dts/zynq-zc706.dts | 152 +++++++++++++++++++++++++++++++=
++
+>  3 files changed, 340 insertions(+), 1 deletion(-)
+[...]
+> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-=
+zc702.dts
+> index 280f02dd4ddc..4995412f116f 100644
+> --- a/arch/arm/boot/dts/zynq-zc702.dts
+> +++ b/arch/arm/boot/dts/zynq-zc702.dts
+[...]
+> @@ -50,15 +52,24 @@
+>  	status =3D "okay";
+>  	phy-mode =3D "rgmii-id";
+>  	phy-handle =3D <&ethernet_phy>;
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_gem0_default>;
+> =20
+>  	ethernet_phy: ethernet-phy@7 {
+>  		reg =3D <7>;
+>  	};
+>  };
+> =20
+> +&gpio0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_gpio0_default>;
 
->
-> Acked-by: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+On linux-next the equivalent no longer works for the Parallella, with
+gpio failing to probe.
 
-I will add your ack for v5.
+If I move these two properties to the leds node (for which I am
+configuring gpio 7) then I get a heartbeat as before.
 
-Murali
->
->> ---
->>   drivers/pci/probe.c |    2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 23212f8..d7dcd6c 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -6,6 +6,7 @@
->>   #include<linux/delay.h>
->>   #include<linux/init.h>
->>   #include<linux/pci.h>
->> +#include<linux/of_pci.h>
->>   #include<linux/pci_hotplug.h>
->>   #include<linux/slab.h>
->>   #include<linux/module.h>
->> @@ -1520,6 +1521,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->>   	dev->dev.dma_mask =&dev->dma_mask;
->>   	dev->dev.dma_parms =&dev->dma_parms;
->>   	dev->dev.coherent_dma_mask = 0xffffffffull;
->> +	of_pci_dma_configure(dev);
->>
->>   	pci_set_dma_max_seg_size(dev, 65536);
->>   	pci_set_dma_seg_boundary(dev, 0xffffffff);
->> --
->> 1.7.9.5
->>
+Regards,
+Andreas
+
+> +};
+> +
+>  &i2c0 {
+>  	status =3D "okay";
+>  	clock-frequency =3D <400000>;
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_i2c0_default>;
+> =20
+>  	i2cswitch@74 {
+>  		compatible =3D "nxp,pca9548";
+> @@ -132,10 +143,180 @@
+>  	};
+>  };
+> =20
+> +&pinctrl0 {
+[...]
+> +	pinctrl_gpio0_default: gpio0-default {
+> +		mux {
+> +			function =3D "gpio0";
+> +			groups =3D "gpio0_7_grp", "gpio0_8_grp", "gpio0_9_grp",
+> +				 "gpio0_10_grp", "gpio0_11_grp", "gpio0_12_grp",
+> +				 "gpio0_13_grp", "gpio0_14_grp";
+> +		};
+> +
+> +		conf {
+> +			groups =3D "gpio0_7_grp", "gpio0_8_grp", "gpio0_9_grp",
+> +				 "gpio0_10_grp", "gpio0_11_grp", "gpio0_12_grp",
+> +				 "gpio0_13_grp", "gpio0_14_grp";
+> +			slew-rate =3D <0>;
+> +			io-standard =3D <1>;
+> +		};
+> +
+> +		conf-pull-up {
+> +			pins =3D "MIO9", "MIO10", "MIO11", "MIO12", "MIO13", "MIO14";
+> +			bias-pull-up;
+> +		};
+> +
+> +		conf-pull-none {
+> +			pins =3D "MIO7", "MIO8";
+> +			bias-disable;
+> +		};
+> +	};
+[...]
+> +};
+> +
+>  &sdhci0 {
+>  	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_sdhci0_default>;
+>  };
+> =20
+>  &uart1 {
+>  	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_uart1_default>;
+>  };
+[dito for zc706]
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upmanyu,=
+
+Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
 
 
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+--GsJqPrllPDqFf9KBORojVe0UiwjkGA44H
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUxtRMAAoJEPou0S0+fgE/OzoQAK+nrGpRFOJLfGu8CPjK6rtX
+MhiL8uZtasyRC8XJM9kS1r91Dwyqn9TqpdyKItedA+WEzGHiEiSuqZHtJ+2ghycX
+TqdUE8kDMMD6Dnpwm8wfS0hc/2tsUM1w6zuA/vva92eMGIFc5kxAb59TjUOTWQJ9
+luyBI261QTFcKJ458Co7ZzOJ3MTZx3/vKDHL1E+pws9S9rtUVDrfplIB0rhH5gLr
+dUL03FpLB5UKvu8Cc0d7A1IBShqWRiKVBbo/8hjA5AwG/TwhRe6ZrybUaj2DYyMK
+k40+41Na0hNMYJBMJ6qJZC3jkB4UxD9EDN2rhn2c+juq3gDSQgotyAQi9Mj0ORoA
+jUA7guMsxV2dCFI47Bism0Zn1PMIqLcUwJoLWPxkTHgQDl0evjR9V+j5Ou6cpnep
+EhmXX3iWYhfM2iHSLnBjC91Tx1HPih16MKyD+F5kL253fuG1kIh1PARw2G8agoR5
+XvwfI/fsMYRckP9o/Tgphvv/wfxs91BZA7TSPxA30Vshn7hLu3h44P/eXQVgJCaa
+cJDf8V1PyRhKYc5zAGcPC+JOSqHX+UF4EXU3eNIO5guhvLjTcCUT79dXby+sFuDU
+gv9Fm2eP0pYSL7vd8i9yRFqfxtlyrEHptPGvAoSHIZ5jPGT7UTmn+MolcoFr0YbC
+3j2Le73Pd5IroMo/lZ/a
+=dj7v
+-----END PGP SIGNATURE-----
+
+--GsJqPrllPDqFf9KBORojVe0UiwjkGA44H--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
