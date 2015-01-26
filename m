@@ -1,116 +1,135 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv2] mvebu: add Linksys WRT1900AC (Mamba) support
-Date: Mon, 26 Jan 2015 19:44:36 +0100
-Message-ID: <20150126184436.GE5015@lunn.ch>
-References: <1421687701-5667-1-git-send-email-kaloz@openwrt.org>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 1/6] of: iommu: add ptr to OF node arg to of_iommu_configure()
+Date: Mon, 26 Jan 2015 13:49:01 -0500
+Message-ID: <54C68C1D.5030605@ti.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com> <1422052359-12384-2-git-send-email-m-karicheri2@ti.com> <4711364.TTK5TCBdiy@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421687701-5667-1-git-send-email-kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <4711364.TTK5TCBdiy@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 19, 2015 at 06:15:01PM +0100, Imre Kaloz wrote:
-> The Linksys WRT1900AC (Mamba) is a router that has
-> 
-> - 2 mini-PCIe slots with Marvell 88W8864 radios
-> - 1 USB 3.0 port
-> - 1 USB 2.0/eSATAp port
-> - 2 Ethernet interfaces connected to a 88E6172 switch (1x WAN + 4x LAN)
-> - 128MB NAND flash
-> - 256MB RAM
-> 
-> Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> ---
-> Changes since v1:
->   * add dual license
->   * lower SPI speed to meet the chip's maximum
->   * pinctrl cleanups based on Andrew Lunn's suggestions
-> ---
->  arch/arm/boot/dts/armada-xp-mamba.dts | 273 ++++++++++++++++++++++++++++++++++
->  1 file changed, 273 insertions(+)
->  create mode 100644 arch/arm/boot/dts/armada-xp-mamba.dts
-> 
-> diff --git a/arch/arm/boot/dts/armada-xp-mamba.dts b/arch/arm/boot/dts/armada-xp-mamba.dts
-> new file mode 100644
-> index 0000000..e368d18
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-xp-mamba.dts
-> @@ -0,0 +1,273 @@
-> +/*
-> + * Device Tree file for the Linksys WRT1900AC (Mamba).
-> + *
-> + * Note: this board is shipped with a new generation boot loader that
-> + * remaps internal registers at 0xf1000000. Therefore, if earlyprintk
-> + * is used, the CONFIG_DEBUG_MVEBU_UART_ALTERNATE option should be
-> + * used.
-> + *
-> + * Copyright (C) 2014 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> + *
-> + * Based on armada-xp-axpwifiap.dts:
-> + *
-> + *     Copyright (C) 2013 Marvell
-> + *
-> + *     Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is licensed under the terms of the GNU General Public
-> + *     License version 2.  This program is licensed "as is" without
-> + *     any warranty of any kind, whether express or implied.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include "armada-xp-mv78230.dtsi"
-> +
-> +/ {
-> +	model = "Linksys WRT1900AC (Mamba)";
-> +	compatible = "linksys,mamba", "marvell,armadaxp-mv78230",
-> +		     "marvell,armadaxp", "marvell,armada-370-xp";
+On 01/25/2015 08:32 AM, Laurent Pinchart wrote:
+> Hi Murali,
+>
+> Thank you for the patch.
+>
+> On Friday 23 January 2015 17:32:34 Murali Karicheri wrote:
+>> Function of_iommu_configure() is called from of_dma_configure() to
+>> setup iommu ops using DT property. This API is currently used for
+>> platform devices for which DMA configuration (including iommu ops)
+>> may come from device's parent. To extend this functionality for PCI
+>> devices, this API need to take a parent node ptr as an argument
+>> instead of assuming device's parent. This is needed since for PCI, the
+>> dma configuration may be defined in the DT node of the root bus bridge's
+>> parent device. Currently only dma-range is used for PCI and iommu is not
+>> supported. So return error if the device is PCI.
+>>
+>> Cc: Joerg Roedel<joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+>> Cc: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> Cc: Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> Cc: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
+>> Cc: Suravee Suthikulpanit<Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+>>
+>> Signed-off-by: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/iommu/of_iommu.c |   10 ++++++++--
+>>   drivers/of/platform.c    |    2 +-
+>>   include/linux/of_iommu.h |    6 ++++--
+>>   3 files changed, 13 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+>> index af1dc6a..439235b 100644
+>> --- a/drivers/iommu/of_iommu.c
+>> +++ b/drivers/iommu/of_iommu.c
+>> @@ -133,19 +133,25 @@ struct iommu_ops *of_iommu_get_ops(struct device_node
+>> *np) return ops;
+>>   }
+>>
+>> -struct iommu_ops *of_iommu_configure(struct device *dev)
+>> +struct iommu_ops *of_iommu_configure(struct device *dev,
+>> +				     struct device_node *iommu_np)
+>>   {
+>>   	struct of_phandle_args iommu_spec;
+>>   	struct device_node *np;
+>>   	struct iommu_ops *ops = NULL;
+>>   	int idx = 0;
+>>
+>> +	if (dev_is_pci(dev)) {
+>> +		dev_err(dev, "iommu is currently not supported for PCI\n");
+>> +		return NULL;
+>> +	}
+>> +
+>>   	/*
+>>   	 * We don't currently walk up the tree looking for a parent IOMMU.
+>>   	 * See the `Notes:' section of
+>>   	 * Documentation/devicetree/bindings/iommu/iommu.txt
+>>   	 */
+> Wouldn't it be better to fix this rather than passing the device node pointer
+> to the function ? The solution would be more generic.
+Laurent,
 
-Hi Imre
+Will Deacon (Copied here) is working on this as we alteady discussed in 
+this thread. So it will be
+addressed by him in another series.
 
-So the consensus seems to be 
+Murali
+>
+>> -	while (!of_parse_phandle_with_args(dev->of_node, "iommus",
+>> +	while (!of_parse_phandle_with_args(iommu_np, "iommus",
+>>   					   "#iommu-cells", idx,
+>>   					&iommu_spec)) {
+>>   		np = iommu_spec.np;
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index a54ec10..7675b79 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -196,7 +196,7 @@ static void of_dma_configure(struct device *dev)
+>>   	dev_dbg(dev, "device is%sdma coherent\n",
+>>   		coherent ? " " : " not ");
+>>
+>> -	iommu = of_iommu_configure(dev);
+>> +	iommu = of_iommu_configure(dev, dev->of_node);
+>>   	dev_dbg(dev, "device is%sbehind an iommu\n",
+>>   		iommu ? " " : " not ");
+>>
+>> diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+>> index 16c7554..a97e5bd 100644
+>> --- a/include/linux/of_iommu.h
+>> +++ b/include/linux/of_iommu.h
+>> @@ -12,7 +12,8 @@ extern int of_get_dma_window(struct device_node *dn, const
+>> char *prefix, size_t *size);
+>>
+>>   extern void of_iommu_init(void);
+>> -extern struct iommu_ops *of_iommu_configure(struct device *dev);
+>> +extern struct iommu_ops *of_iommu_configure(struct device *dev,
+>> +					struct device_node *iommu_np);
+>>
+>>   #else
+>>
+>> @@ -24,7 +25,8 @@ static inline int of_get_dma_window(struct device_node
+>> *dn, const char *prefix, }
+>>
+>>   static inline void of_iommu_init(void) { }
+>> -static inline struct iommu_ops *of_iommu_configure(struct device *dev)
+>> +static inline struct iommu_ops *of_iommu_configure(struct device *dev,
+>> +					 struct device_node *iommu_np)
+>>   {
+>>   	return NULL;
+>>   }
 
- model = "Linksys WRT1900AC";
- compatible = "linksys,mamba", "...";
 
-with leds using mamba.
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
 
-Please name the file armada-xp-linksys-mamba.dts.
-
-       Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
