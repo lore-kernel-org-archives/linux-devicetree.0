@@ -1,136 +1,62 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] of: iommu: add ptr to OF node arg to of_iommu_configure()
-Date: Mon, 26 Jan 2015 13:49:01 -0500
-Message-ID: <54C68C1D.5030605@ti.com>
-References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com> <1422052359-12384-2-git-send-email-m-karicheri2@ti.com> <4711364.TTK5TCBdiy@avalon>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
+Date: Mon, 26 Jan 2015 13:27:07 -0600
+Message-ID: <CAL_JsqL9m-r3aJhiwSY61xXG9CbkHfD7RqrbNG=mBJnGD_-YPw@mail.gmail.com>
+References: <1421346798-17148-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <20150122144818.GG3413@katana> <CAL_JsqKEBYwX=5zgWbdVRxm-H-sFiDa9rAp26BvuKNECoNW=uQ@mail.gmail.com>
+ <20150122150243.GI3413@katana> <CAL_JsqKYvcec=xWQM7_Dgrr5zmkefXqGCQvHwJ+uxNgfiv7fcw@mail.gmail.com>
+ <20150124042623.GB1190@katana> <DEFFB75F-347B-43F9-98E5-BBD019276A37@konsulko.com>
+ <20150126155550.GB13494@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4711364.TTK5TCBdiy@avalon>
+In-Reply-To: <20150126155550.GB13494@katana>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/2015 08:32 AM, Laurent Pinchart wrote:
-> Hi Murali,
+On Mon, Jan 26, 2015 at 9:55 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote=
+:
+> On Sat, Jan 24, 2015 at 09:16:16AM +0200, Pantelis Antoniou wrote:
+>> Hi Wolfram,
+>>
+>> > On Jan 24, 2015, at 06:26 , Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote=
+:
+>> >
+>> >
+>> >> Feel free to apply it for 3.19 with my ack. You then want to pick=
+ up
+>> >> v1 of this patch.
+>> >
+>> > Sigh, I give up, this is too confusing. I don't know which one is =
+V1,
+>> > they are not numbered in any way. And I have been holding back my =
+pull
+>> > request for too long already.
+>> >
+>> > I'll drop this patch. Whatever should be applied should be resent,
+>> > mentioning the release it is aimed for and how the planning/depend=
+ency
+>> > on the DT patch is.
+>> >
+>>
+>> Nooooo! This is a bugfix for 3.19 :)
+>>
+>> I=E2=80=99m resending the original patch; the dependency is on
+>>
+>>       "of: Empty node & property flag accessors when !OF=E2=80=9D
+>>
+>> https://lkml.org/lkml/2015/1/21/602
 >
-> Thank you for the patch.
->
-> On Friday 23 January 2015 17:32:34 Murali Karicheri wrote:
->> Function of_iommu_configure() is called from of_dma_configure() to
->> setup iommu ops using DT property. This API is currently used for
->> platform devices for which DMA configuration (including iommu ops)
->> may come from device's parent. To extend this functionality for PCI
->> devices, this API need to take a parent node ptr as an argument
->> instead of assuming device's parent. This is needed since for PCI, the
->> dma configuration may be defined in the DT node of the root bus bridge's
->> parent device. Currently only dma-range is used for PCI and iommu is not
->> supported. So return error if the device is PCI.
->>
->> Cc: Joerg Roedel<joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
->> Cc: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> Cc: Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>
->> Cc: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->> Cc: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
->> Cc: Suravee Suthikulpanit<Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->>
->> Signed-off-by: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
->> ---
->>   drivers/iommu/of_iommu.c |   10 ++++++++--
->>   drivers/of/platform.c    |    2 +-
->>   include/linux/of_iommu.h |    6 ++++--
->>   3 files changed, 13 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
->> index af1dc6a..439235b 100644
->> --- a/drivers/iommu/of_iommu.c
->> +++ b/drivers/iommu/of_iommu.c
->> @@ -133,19 +133,25 @@ struct iommu_ops *of_iommu_get_ops(struct device_node
->> *np) return ops;
->>   }
->>
->> -struct iommu_ops *of_iommu_configure(struct device *dev)
->> +struct iommu_ops *of_iommu_configure(struct device *dev,
->> +				     struct device_node *iommu_np)
->>   {
->>   	struct of_phandle_args iommu_spec;
->>   	struct device_node *np;
->>   	struct iommu_ops *ops = NULL;
->>   	int idx = 0;
->>
->> +	if (dev_is_pci(dev)) {
->> +		dev_err(dev, "iommu is currently not supported for PCI\n");
->> +		return NULL;
->> +	}
->> +
->>   	/*
->>   	 * We don't currently walk up the tree looking for a parent IOMMU.
->>   	 * See the `Notes:' section of
->>   	 * Documentation/devicetree/bindings/iommu/iommu.txt
->>   	 */
-> Wouldn't it be better to fix this rather than passing the device node pointer
-> to the function ? The solution would be more generic.
-Laurent,
+> Which is going in when?
 
-Will Deacon (Copied here) is working on this as we alteady discussed in 
-this thread. So it will be
-addressed by him in another series.
+Can you apply it since it is a dependency on this bug fix patch.
 
-Murali
->
->> -	while (!of_parse_phandle_with_args(dev->of_node, "iommus",
->> +	while (!of_parse_phandle_with_args(iommu_np, "iommus",
->>   					   "#iommu-cells", idx,
->>   					&iommu_spec)) {
->>   		np = iommu_spec.np;
->> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> index a54ec10..7675b79 100644
->> --- a/drivers/of/platform.c
->> +++ b/drivers/of/platform.c
->> @@ -196,7 +196,7 @@ static void of_dma_configure(struct device *dev)
->>   	dev_dbg(dev, "device is%sdma coherent\n",
->>   		coherent ? " " : " not ");
->>
->> -	iommu = of_iommu_configure(dev);
->> +	iommu = of_iommu_configure(dev, dev->of_node);
->>   	dev_dbg(dev, "device is%sbehind an iommu\n",
->>   		iommu ? " " : " not ");
->>
->> diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
->> index 16c7554..a97e5bd 100644
->> --- a/include/linux/of_iommu.h
->> +++ b/include/linux/of_iommu.h
->> @@ -12,7 +12,8 @@ extern int of_get_dma_window(struct device_node *dn, const
->> char *prefix, size_t *size);
->>
->>   extern void of_iommu_init(void);
->> -extern struct iommu_ops *of_iommu_configure(struct device *dev);
->> +extern struct iommu_ops *of_iommu_configure(struct device *dev,
->> +					struct device_node *iommu_np);
->>
->>   #else
->>
->> @@ -24,7 +25,8 @@ static inline int of_get_dma_window(struct device_node
->> *dn, const char *prefix, }
->>
->>   static inline void of_iommu_init(void) { }
->> -static inline struct iommu_ops *of_iommu_configure(struct device *dev)
->> +static inline struct iommu_ops *of_iommu_configure(struct device *dev,
->> +					 struct device_node *iommu_np)
->>   {
->>   	return NULL;
->>   }
-
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
-
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
