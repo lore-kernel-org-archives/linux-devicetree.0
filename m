@@ -1,180 +1,73 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Mon, 26 Jan 2015 18:27:57 +0200
-Message-ID: <54C66B0D.9040109@ti.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>	<1422274532-9488-2-git-send-email-rogerq@ti.com> <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ASoC: codecs: wm8904: add dt ids table
+Date: Mon, 26 Jan 2015 16:42:29 +0000
+Message-ID: <20150126164229.GB21293@sirena.org.uk>
+References: <1418614273-2303-1-git-send-email-voice.shen@atmel.com>
+ <20150115115425.GX3043@sirena.org.uk>
+ <54B866B9.8000900@atmel.com>
+ <54C65C36.9050106@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com
-Cc: Felipe Balbi <balbi@ti.com>, tony@atomide.com, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, george.cherian@ti.com, nsekhar@ti.com, devicetree <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ViWwB84N1zFtNiVD"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54C65C36.9050106-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sound-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Morozov <linux-lCH5ugpmZSMox3rIn2DAYQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
 
-All your comments are valid. Need some clarification on one comment.
+--ViWwB84N1zFtNiVD
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 26/01/15 15:56, Chanwoo Choi wrote:
-> Hi Roger,
-> 
-> This patch looks good to me. But I add some comment.
-> If you modify some comment, I'll apply this patch on 3.21 queue.
-> 
-> On Mon, Jan 26, 2015 at 9:15 PM, Roger Quadros <rogerq@ti.com> wrote:
->> This driver observes the USB ID pin connected over a GPIO and
->> updates the USB cable extcon states accordingly.
->>
->> The existing GPIO extcon driver is not suitable for this purpose
->> as it needs to be taught to understand USB cable states and it
->> can't handle more than one cable per instance.
->>
->> For the USB case we need to handle 2 cable states.
->> 1) USB (attach/detach)
->> 2) USB-Host (attach/detach)
->>
->> This driver can be easily updated in the future to handle VBUS
->> events in case it happens to be available on GPIO for any platform.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  20 ++
->>  drivers/extcon/Kconfig                             |   7 +
->>  drivers/extcon/Makefile                            |   1 +
->>  drivers/extcon/extcon-usb-gpio.c                   | 214 +++++++++++++++++++++
->>  4 files changed, 242 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
->>
+On Mon, Jan 26, 2015 at 04:24:38PM +0100, Nicolas Ferre wrote:
+> Le 16/01/2015 02:17, Bo Shen a =E9crit :
 
-<snip>
+> >> Does this end up in the i2c_driver_id driver data or do we need some
+> >> extra code when devtype is assigned to check for an of_node and look at
+> >> the DT data instead?  That certainly used to be the case...
 
->> +
->> +static int usb_extcon_probe(struct platform_device *pdev)
->> +{
->> +       struct device *dev = &pdev->dev;
->> +       struct device_node *np = dev->of_node;
->> +       struct usb_extcon_info *info;
->> +       int ret;
->> +
->> +       if (!np)
->> +               return -EINVAL;
->> +
->> +       info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
->> +       if (!info)
->> +               return -ENOMEM;
->> +
->> +       info->dev = dev;
->> +       info->id_gpiod = devm_gpiod_get(&pdev->dev, "id");
->> +       if (IS_ERR(info->id_gpiod)) {
->> +               dev_err(dev, "failed to get ID GPIO\n");
->> +               return PTR_ERR(info->id_gpiod);
->> +       }
->> +
->> +       ret = gpiod_set_debounce(info->id_gpiod,
->> +                                USB_GPIO_DEBOUNCE_MS * 1000);
->> +       if (ret < 0)
->> +               info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
->> +
->> +       INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
->> +
->> +       info->id_irq = gpiod_to_irq(info->id_gpiod);
->> +       if (info->id_irq < 0) {
->> +               dev_err(dev, "failed to get ID IRQ\n");
->> +               return info->id_irq;
->> +       }
->> +
->> +       ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
->> +                                       usb_irq_handler,
->> +                                       IRQF_SHARED | IRQF_ONESHOT |
->> +                                       IRQF_NO_SUSPEND,
->> +                                       pdev->name, info);
+> > At the beginning I think as the same as you, and also add the code to=
+=20
+> > get the data as I do in <drivers/misc/atmel-ssc.c>. However, as I=20
+> > remember, I2C seems only use the compatible string after the comma, tha=
+t=20
+> > means only for "wlf,wm8904", it uses "wm8904" to match. So, I remove al=
+l=20
+> > the code I added, and just keep these, and it can get the device type=
+=20
+> > correctly.
 
-use of IRQF_NO_SUSPEND is not recommended to be used together with IRQF_SHARED so
-I'll remove IRQF_SHARED from here if we decide to stick with IRQF_NO_SUSPEND.
-More on this below.
+> > So, when I submit the patch and keep the code as simple as possible.
 
->> +       if (ret < 0) {
->> +               dev_err(dev, "failed to request handler for ID IRQ\n");
->> +               return ret;
->> +       }
->> +
->> +       info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->> +       if (IS_ERR(info->edev)) {
->> +               dev_err(dev, "failed to allocate extcon device\n");
->> +               return -ENOMEM;
->> +       }
->> +
->> +       ret = devm_extcon_dev_register(dev, info->edev);
->> +       if (ret < 0) {
->> +               dev_err(dev, "failed to register extcon device\n");
->> +               return ret;
->> +       }
->> +
->> +       platform_set_drvdata(pdev, info);
-> 
-> I prefer to execute the device_init_wakeup() function as following
-> for suspend/resume function:
->             device_init_wakeup(&pdev->dev, 1);
-> 
->> +
->> +       /* Perform initial detection */
->> +       usb_extcon_detect_cable(&info->wq_detcable.work);
->> +
->> +       return 0;
->> +}
->> +
->> +static int usb_extcon_remove(struct platform_device *pdev)
->> +{
->> +       struct usb_extcon_info *info = platform_get_drvdata(pdev);
->> +
->> +       cancel_delayed_work_sync(&info->wq_detcable);
-> 
-> Need to add blank line.
-> 
->> +       return 0;
->> +}
->> +
->> +#ifdef CONFIG_PM_SLEEP
->> +static int usb_extcon_suspend(struct device *dev)
->> +{
->> +       struct usb_extcon_info *info = dev_get_drvdata(dev);
->> +
->> +       enable_irq_wake(info->id_irq);
-> 
-> I prefer to use device_may_wakeup() function for whether
-> executing enable_irq_wake() or not. Also, The disable_irq()
-> in the suspend function would prevent us from discarding interrupt
-> before wakeup from suspend completely.
-> 
+> I don't understand what's keeping this patch from being applied. Voice,
+> do you mind re-sending?
 
-I need more clarification here.
+I need to convince myself that the above actually works and is doing the
+right thing; the above explanation sounds like if it works it might be
+relying on a bug.
 
-If we are going to use enable_irq_wake() here then what is the point of IRQF_NO_SUSPEND?
+--ViWwB84N1zFtNiVD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->From Documentation/power/suspend-and-interrupts.txt I see that interrupts marked
-as IRQF_NO_SUSPEND should not be configured for system wakeup using enable_irq_wake().
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-what is your preference?
+iQEcBAEBCAAGBQJUxm50AAoJECTWi3JdVIfQRJkH/26//wf/lSxYQGI3s2tcHMY3
+xLGkekFc+GuSLkudf84JTvMwmGuRsh7wGW5OfV40Oq1OB4Fxoj2H9N5ySWv8K/1+
+HYlc1gd2AqYKGM/o60VpBIOIQadPaxIVFYVmf0XcBxfjktuAi2lGO/c66D3QskA8
+EmHHT4ZbReTWV3TfMB3inIey6mSFgEkszfcOzvU05vwpy5VH7xrpi7JG5gSTXNxG
+9Aet8v38l5At0M2Tflb/SqrAKAZtSpxwqTz7IATe4l9W4r3KjOAUH1bRfj7ngFQh
+unMs+/PJx9sjGXHYw9/Ma8FJyXbJPkQada3aB1WdgRGsXbtxNeZX1PuZ/7M2Jpg=
+=qC8j
+-----END PGP SIGNATURE-----
 
-Is it good enough to not use IRQF_NO_SUSPEND but use enable_irq_wake() instead to
-enable system wakeup for that IRQ.
-
->             if (device_may_wakeup(dev))
->                      enable_irq_wake(info->id_irq);
->             disable_irq(info->id_irq);
-
-why do we need to disable irq here? How will the system wakeup if IRQ is disabled?
-
-> 
-> 
->> +       return 0;
->> +}
->> +
-
-<snip>
-
-cheers,
--roger
+--ViWwB84N1zFtNiVD--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
