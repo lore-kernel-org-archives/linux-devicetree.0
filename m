@@ -1,370 +1,81 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [PATCH 4/6] power: max77843_battery: Add Max77843 fuel gauge
- device driver
-Date: Mon, 26 Jan 2015 08:44:34 +0900
-Message-ID: <54C57FE2.3070908@samsung.com>
-References: <1421989367-32721-1-git-send-email-jaewon02.kim@samsung.com>
- <1421989367-32721-5-git-send-email-jaewon02.kim@samsung.com>
- <20150125135340.GC2719@earth.universe>
+From: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add dts file for pcDuino 3 Nano board
+Date: Mon, 26 Jan 2015 00:35:20 +0000
+Message-ID: <20150126003520.GA871@cartman.at.offog.org>
+References: <1422199921-325-1-git-send-email-ats@offog.org>
+ <20150125164846.GL8470@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150125135340.GC2719@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150125164846.GL8470@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Maxime,
 
-Thanks for your review.
+On Sun, Jan 25, 2015 at 05:48:46PM +0100, Maxime Ripard wrote:
+> > +			label = "pcduino3-nano:green:led3";
+...
+> > +			label = "pcduino3-nano:green:led4";
+> Where are the three other leds?
 
-I'll fix patch as your advice.
+LED1 is the power LED, and as far as I can see there isn't an LED2 on
+the board. LED5 is next to LED3/4, but it's not exposed by the 3.4
+kernel that LinkSprite ship, and this forum post says it's not
+software-controllable (which seems weird):
+http://forum.linksprite.com/index.php?/topic/3145-pcduino3-nano-led-control/
 
-Thanks,
-Beomho Seo
+> Also, usually, the last part of the label is what the led function
+> usually is.
 
-On 01/25/2015 10:53 PM, Sebastian Reichel wrote:
-> Hi,
+"LED3" and "LED4" are how those LEDs are actually labelled on the board
+(unlike the pcDuino v3, which labels them "TX" and "RX", and calls them
+pcduino3:green:rx/tx in the DTS). I've changed them to
+pcduino3-nano:led3:usr and pcduino3-nano:led4:usr, but if you've got any
+better suggestions then please let me know!
+
+> > +&pio {
+> > +	ahci_pwr_pin_a: ahci_pwr_pin@0 {
+> > +		allwinner,pins = "PH2";
+> > +	};
+> We usually declare a whole new node for this one...
+...
+> > +&reg_ahci_5v {
+> > +	gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
+> ... and we override the pinctrl-0 property here.
+
+Done -- I've followed lime2's example, which makes it looks the same as
+I've done for reg_usb1_vbus.
+
+> > +&uart0 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&uart0_pins_a>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart2 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&uart2_pins_a>;
+> > +	status = "okay";
+> > +};
 > 
-> On Fri, Jan 23, 2015 at 02:02:45PM +0900, Jaewon Kim wrote:
->> From: Beomho Seo <beomho.seo@samsung.com>
->>
->> This patch adds device driver of max77843 fuel gauge.
->> The driver support for battery fuel gauge in Maxim Max77843.
->> It is fuel-gauge systems for lithuum-ion batteries in handled and
->> portable devices.
->>
->> Cc: Sebastian Reichel <sre@kernel.org>
->> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->> ---
->>  drivers/power/Kconfig            |    9 ++
->>  drivers/power/Makefile           |    1 +
->>  drivers/power/max77843_battery.c |  283 ++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 293 insertions(+)
->>  create mode 100644 drivers/power/max77843_battery.c
->>
->> diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
->> index a054a28..0039bbb 100644
->> --- a/drivers/power/Kconfig
->> +++ b/drivers/power/Kconfig
->> @@ -212,6 +212,15 @@ config BATTERY_MAX17042
->>  	  with MAX17042. This driver also supports max17047/50 chips which are
->>  	  improved version of max17042.
->>  
->> +config BATTERY_MAX77843
->> +	tristate "Maxim MAX77843 Fuel Gauge"
->> +	depends on MFD_MAX77843
->> +	help
->> +	  This add support for battery fuel gauge in Maxim MAX77843.
-> 
-> add -> adds
-> 
->> +	  It is fuel-gauge systems for lithuum-ion (Li+) batteries in handled and
->> +	  portable devices. The MAX17040 is configured to operate with a single
->> +	  lithium cell.
-> 
-> It is a fuel-gauge for a lithium-ion batteries with a single
-> cell and can be found in portable devices.
-> 
->> +
->>  config BATTERY_Z2
->>  	tristate "Z2 battery driver"
->>  	depends on I2C && MACH_ZIPIT2
->> diff --git a/drivers/power/Makefile b/drivers/power/Makefile
->> index 212c6a2..ae0d795 100644
->> --- a/drivers/power/Makefile
->> +++ b/drivers/power/Makefile
->> @@ -33,6 +33,7 @@ obj-$(CONFIG_BATTERY_DA9030)	+= da9030_battery.o
->>  obj-$(CONFIG_BATTERY_DA9052)	+= da9052-battery.o
->>  obj-$(CONFIG_BATTERY_MAX17040)	+= max17040_battery.o
->>  obj-$(CONFIG_BATTERY_MAX17042)	+= max17042_battery.o
->> +obj-$(CONFIG_BATTERY_MAX77843)	+= max77843_battery.o
->>  obj-$(CONFIG_BATTERY_Z2)	+= z2_battery.o
->>  obj-$(CONFIG_BATTERY_S3C_ADC)	+= s3c_adc_battery.o
->>  obj-$(CONFIG_BATTERY_TWL4030_MADC)	+= twl4030_madc_battery.o
->> diff --git a/drivers/power/max77843_battery.c b/drivers/power/max77843_battery.c
->> new file mode 100644
->> index 0000000..a08dd0c
->> --- /dev/null
->> +++ b/drivers/power/max77843_battery.c
->> @@ -0,0 +1,283 @@
->> +/*
->> + * Fuel gauge driver for Maxim MAX77843
->> + *
->> + * Copyright (C) 2014 Samsung Electronics, Co., Ltd.
->> + * Author: Beomho Seo <beomho.seo@samsung.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published bythe Free Software Foundation.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/power_supply.h>
->> +#include <linux/mfd/max77843-private.h>
->> +
->> +struct max77843_battery {
->> +	struct device		*dev;
->> +	struct max77843		*max77843;
->> +	struct i2c_client	*client;
->> +	struct regmap		*regmap;
->> +	struct power_supply	psy;
->> +};
->> +
->> +static int max77843_battery_get_capacity(struct max77843_battery *battery)
->> +{
->> +	struct regmap *regmap = battery->regmap;
->> +	int ret, val;
->> +	u8 reg_data[2];
->> +
->> +	ret = regmap_bulk_read(regmap, MAX77843_FG_REG_SOCREP, reg_data, 2);
->> +	if (ret) {
->> +		dev_err(battery->dev, "Failed to read fuelgauge register\n");
->> +		return ret;
->> +	}
->> +
->> +	val =  ((reg_data[1] * 100) + (reg_data[0] * 100 / 256)) / 100;
-> 
-> so
-> 
-> val = reg_data[1]?
-> 
->> +	return val;
->> +}
->> +
->> +static int max77843_battery_get_energy_prop(struct max77843_battery *battery,
->> +		enum power_supply_property psp)
->> +{
->> +	struct regmap *regmap = battery->regmap;
->> +	unsigned int reg;
->> +	int ret, val;
->> +	u8 reg_data[2];
->> +
->> +	switch (psp) {
->> +	case POWER_SUPPLY_PROP_ENERGY_FULL:
->> +		reg = MAX77843_FG_REG_FULLCAP;
->> +		break;
->> +	case POWER_SUPPLY_PROP_ENERGY_NOW:
->> +		reg = MAX77843_FG_REG_REMCAP_REP;
->> +		break;
->> +	case POWER_SUPPLY_PROP_ENERGY_AVG:
->> +		reg = MAX77843_FG_REG_REMCAP_AV;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	ret = regmap_bulk_read(regmap, reg, reg_data, 2);
->> +	if (ret) {
->> +		dev_err(battery->dev, "Failed to read fuelgauge register\n");
->> +		return ret;
->> +	}
->> +
->> +	val = (reg_data[1] << 8) | reg_data[0];
->> +
->> +	return val;
->> +}
->> +
->> +static int max77843_battery_get_current_prop(struct max77843_battery *battery,
->> +		enum power_supply_property psp)
->> +{
->> +	struct regmap *regmap = battery->regmap;
->> +	unsigned int reg;
->> +	int ret, val;
->> +	u8 reg_data[2];
->> +
->> +	switch (psp) {
->> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
->> +		reg = MAX77843_FG_REG_CURRENT;
->> +		break;
->> +	case POWER_SUPPLY_PROP_CURRENT_AVG:
->> +		reg = MAX77843_FG_REG_AVG_CURRENT;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	ret = regmap_bulk_read(regmap, reg, reg_data, 2);
->> +	if (ret) {
->> +		dev_err(battery->dev, "Failed to read fuelgauge register\n");
->> +		return ret;
->> +	}
->> +
->> +	val = (reg_data[1] << 8) | reg_data[0];
->> +	if (val & 0x8000) {
->> +		/* Negative */
->> +		val = ~val & 0xffff;
->> +		val++;
->> +		val *= -1;
->> +	}
->> +	/* Unit of current is mA */
->> +	val =  val * 15625 / 100000;
->> +
->> +	return val;
->> +}
->> +
->> +static int max77843_battery_get_voltage_prop(struct max77843_battery *battery,
->> +		enum power_supply_property psp)
->> +{
->> +	struct regmap *regmap = battery->regmap;
->> +	unsigned int reg;
->> +	int ret, val;
->> +	u8 reg_data[2];
->> +
->> +	switch (psp) {
->> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
->> +		reg = MAX77843_FG_REG_VCELL;
->> +		break;
->> +	case POWER_SUPPLY_PROP_VOLTAGE_AVG:
->> +		reg = MAX77843_FG_REG_AVG_VCELL;
->> +		break;
->> +	case POWER_SUPPLY_PROP_VOLTAGE_OCV:
->> +		reg = MAX77843_FG_REG_OCV;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	ret = regmap_bulk_read(regmap, reg, reg_data, 2);
->> +	if (ret) {
->> +		dev_err(battery->dev, "Failed to read fuelgauge register\n");
->> +		return ret;
->> +	}
->> +
->> +	val = ((reg_data[1] << 4) + (reg_data[0] >> 4)) * 125;
->> +	val /= 100;
->> +
->> +	return val;
->> +}
->> +
->> +static const char *model_name = "MAX77843";
->> +static const char *manufacturer = "Maxim Integrated";
->> +
->> +static int max77843_battery_get_property(struct power_supply *psy,
->> +		enum power_supply_property psp,
->> +		union power_supply_propval *val)
->> +{
->> +	struct max77843_battery *battery = container_of(psy,
->> +				struct max77843_battery, psy);
->> +	switch (psp) {
->> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
->> +	case POWER_SUPPLY_PROP_VOLTAGE_AVG:
->> +	case POWER_SUPPLY_PROP_VOLTAGE_OCV:
->> +		val->intval = max77843_battery_get_voltage_prop(battery, psp);
->> +		break;
->> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
->> +	case POWER_SUPPLY_PROP_CURRENT_AVG:
->> +		val->intval = max77843_battery_get_current_prop(battery, psp);
->> +		break;
->> +	case POWER_SUPPLY_PROP_ENERGY_FULL:
->> +	case POWER_SUPPLY_PROP_ENERGY_NOW:
->> +	case POWER_SUPPLY_PROP_ENERGY_AVG:
->> +		val->intval = max77843_battery_get_energy_prop(battery, psp);
->> +		break;
->> +	case POWER_SUPPLY_PROP_CAPACITY:
->> +		val->intval = max77843_battery_get_capacity(battery);
->> +		break;
->> +	case POWER_SUPPLY_PROP_MODEL_NAME:
->> +		val->strval =  model_name;
->> +		break;
->> +	case POWER_SUPPLY_PROP_MANUFACTURER:
->> +		val->strval = manufacturer;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static enum power_supply_property max77843_battery_props[] = {
->> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
->> +	POWER_SUPPLY_PROP_VOLTAGE_AVG,
->> +	POWER_SUPPLY_PROP_VOLTAGE_OCV,
->> +	POWER_SUPPLY_PROP_CURRENT_NOW,
->> +	POWER_SUPPLY_PROP_CURRENT_AVG,
->> +	POWER_SUPPLY_PROP_ENERGY_FULL,
->> +	POWER_SUPPLY_PROP_ENERGY_NOW,
->> +	POWER_SUPPLY_PROP_ENERGY_AVG,
->> +	POWER_SUPPLY_PROP_CAPACITY,
->> +	POWER_SUPPLY_PROP_MODEL_NAME,
->> +	POWER_SUPPLY_PROP_MANUFACTURER,
->> +};
->> +
->> +static const struct regmap_config max77843_fuel_regmap_config = {
->> +	.reg_bits	= 8,
->> +	.val_bits	= 8,
->> +	.max_register	= MAX77843_FG_END,
->> +};
-> 
-> You always read 2 bytes, so it seems the device uses 16 bit sized
-> values?
-> 
->> +static int max77843_battery_probe(struct platform_device *pdev)
->> +{
->> +	struct max77843 *max77843 = dev_get_drvdata(pdev->dev.parent);
->> +	struct max77843_battery *battery;
->> +	int ret;
->> +
->> +	battery = devm_kzalloc(&pdev->dev, sizeof(*battery), GFP_KERNEL);
->> +	if (!battery)
->> +		return -ENOMEM;
->> +
->> +	battery->dev = &pdev->dev;
->> +	battery->max77843 = max77843;
->> +
->> +	battery->client = i2c_new_dummy(max77843->i2c->adapter, I2C_ADDR_FG);
->> +	if (!battery->client) {
->> +		dev_err(&pdev->dev, "Failed to get dummy i2c client.\n");
->> +		return PTR_ERR(battery->client);
->> +	}
->> +	i2c_set_clientdata(battery->client, max77843);
->> +
->> +	battery->regmap = devm_regmap_init_i2c(battery->client,
->> +			&max77843_fuel_regmap_config);
->> +	if (IS_ERR(battery->regmap)) {
->> +		ret = PTR_ERR(battery->regmap);
->> +		goto err_i2c;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, battery);
->> +
->> +	battery->psy.name	= "max77843-fuelgauge";
->> +	battery->psy.type	= POWER_SUPPLY_TYPE_BATTERY;
->> +	battery->psy.get_property	= max77843_battery_get_property;
->> +	battery->psy.properties		= max77843_battery_props;
->> +	battery->psy.num_properties	= ARRAY_SIZE(max77843_battery_props);
->> +
->> +	ret = power_supply_register(&pdev->dev, &battery->psy);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed  to register power supply\n");
->> +		goto err_i2c;
->> +	}
->> +
->> +	return 0;
->> +
->> +err_i2c:
->> +	i2c_unregister_device(battery->client);
-> 
-> This is missing in max77843_battery_remove()
-> 
->> +
->> +	return ret;
->> +}
->> +
->> +static int max77843_battery_remove(struct platform_device *pdev)
->> +{
->> +	struct max77843_battery *battery = platform_get_drvdata(pdev);
->> +
->> +	power_supply_unregister(&battery->psy);
->> +
->> +	return 0;
->> +}
-> 
->> [...]
-> 
-> -- Sebastian
-> 
+> You probably want aliases for these two UARTs.
+
+Done: I've aliased serial0 = &uart0 and serial1 = &uart2. Should there
+be aliases for I2C as well, since the same situation applies (i2c0 and
+i2c2)?
+
+More generally, is it correct to add nodes like these (uart2, spi0,
+i2c2) for features that appear on the Arduino GPIO headers?
+
+Thanks very much,
+
+-- 
+Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>                         <http://offog.org/>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
