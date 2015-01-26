@@ -1,52 +1,54 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: at91: sama5d4: dts: change the nand compatible
- string
-Date: Mon, 26 Jan 2015 09:12:10 -0800
-Message-ID: <20150126171210.GC5273@norris-Latitude-E6410>
-References: <1421656387-12538-2-git-send-email-josh.wu@atmel.com>
- <1421923305-10088-1-git-send-email-josh.wu@atmel.com>
- <54C0D872.6010005@atmel.com>
- <54C65838.4020707@atmel.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCHv5 2/2] leds: tlc591xx: Driver for the TI 8/16 Channel i2c
+ LED driver
+Date: Mon, 26 Jan 2015 18:10:52 +0100
+Message-ID: <20150126171052.GC5015@lunn.ch>
+References: <1421879364-8573-1-git-send-email-andrew@lunn.ch>
+ <1421879364-8573-3-git-send-email-andrew@lunn.ch>
+ <54C62919.8000205@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54C65838.4020707-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <54C62919.8000205@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, vigneshr@ti.com, Matthew.Fatheree@belkin.com, linux-leds@vger.kernel.org, kaloz@openwrt.org, linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 26, 2015 at 04:07:36PM +0100, Nicolas Ferre wrote:
-> Le 22/01/2015 12:01, Nicolas Ferre a =E9crit :
-> > Le 22/01/2015 11:41, Josh Wu a =E9crit :
-> >> As we introduce a new "atmel,sama5d4-nand" compatible string for s=
-ama5d4,
-> >> so we need to apply it for sama5d4 chip.
-> >>
-> >> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >=20
-> > Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >=20
-> > Brian,
-> > I suppose that it makes sense to keep this patch with the previous =
-one.
-> > So, can you take it in your tree?
-> >=20
-> > Otherwise, it can take the at91 -> arm-soc route.
+> So... To me it's still slightly unclear when should one write a PWM
+> driver and when a LED driver. But I would say that as the TLC591xx
+> outputs a PWM signal, it should be a PWM driver. Then the different
+> users of this PWM signal could be made on top of that (LED, backlight, GPO).
+> 
+> What would be the technical drawbacks with having the TLC591xx driver as
+> a PWM, instead of LED?
+ 
+Hi Tomi
 
-I actually would prefer that. The changes are sane enough by themselves=
-,
-and I don't often touch the arch/arm DTS files.
+We have been through this once, but the big technical drawback is that
+this hardware cannot do what the Linux Kernel defines as PWM.
 
-> I take it with me right now and try to send it to arm-soc for 3.20.
+It cannot correctly implement the PMW call:
 
-That's fine. Thanks.
+int pwm_config(struct pwm_device *pwm, int duty_ns, int period_ns);
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This hardware has a fixed period, since it is clocked at 97-kHz.  So
+you cannot set the period. The duty is also somewhat restrictive, in
+that it only allows 1/256 increments of the 97Khz.
+
+This hardware does however perfectly fit the LED API:
+
+enum led_brightness {
+        LED_OFF         = 0,
+        LED_HALF        = 127,
+        LED_FULL        = 255,
+};
+
+        void            (*brightness_set)(struct led_classdev *led_cdev,
+                                          enum led_brightness brightness);
+
+So we can model it perfectly as an LED driver, or badly as a PWM
+driver.
+
+   Andrew
