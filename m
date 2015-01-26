@@ -1,73 +1,120 @@
-From: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add dts file for pcDuino 3
- Nano board
-Date: Mon, 26 Jan 2015 13:59:31 +0000
-Message-ID: <20150126135931.GB871@cartman.at.offog.org>
-References: <1422199921-325-1-git-send-email-ats@offog.org>
- <20150125164846.GL8470@lukather>
- <20150126003520.GA871@cartman.at.offog.org>
- <20150126100921.GQ8470@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH RESEND v3 2/3] irqchip: vf610-mscm: dt-bindings: add
+ MSCM bindings
+Date: Mon, 26 Jan 2015 15:18:53 +0100
+Message-ID: <e8f5ff60a8da4c7539d9a33d162bb773@agner.ch>
+References: <1421309046-22452-1-git-send-email-stefan@agner.ch>
+ <1421309046-22452-3-git-send-email-stefan@agner.ch>
+ <20150126133602.GG23313@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCQPXGGUXQGBBSMQTGTAKGQEHNGR27I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150126100921.GQ8470@lukather>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150126133602.GG23313@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, Marc Zyngier <Marc.Zyngier@arm.com>, u.kleine-koenig@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, arnd@arndb.de, robh+dt@kernel.org, Pawel Moll <Pawel.Moll@arm.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On 2015-01-26 14:36, Mark Rutland wrote:
+> On Thu, Jan 15, 2015 at 08:04:05AM +0000, Stefan Agner wrote:
+>> Add binding documentation for Miscellaneous System Control Module
+>> found in Freescale Vybrid SoC's.
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>  .../bindings/arm/freescale/fsl,vf610-mscm.txt         | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm.txt
+>> new file mode 100644
+>> index 0000000..e051b88
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm.txt
+>> @@ -0,0 +1,19 @@
+>> +Freescale Vybrid Miscellaneous System Control Module
+>> +
+>> +The MSCM IP contains Access Control and TrustZone Security hardware,
+>> +CPU Configuration registers and Interrupt Router control.
+>> +
+>> +Required properties:
+>> +- compatible : "fsl,vf610-mscm", "syscon"
+> 
+> I'm a little concerned by this also being a syscon. What other devices
+> need to refer to this block as a syscon?
+> 
 
-On Mon, Jan 26, 2015 at 11:09:21AM +0100, Maxime Ripard wrote:
-> If you read Documentation/leds/leds-class.txt, the pattern to follow is:
-> "devicename:colour:function"
-> so it should rather be pcduino3-nano:green:usr1 and usr2, or some
-> other thing.
+The block offers several functionality. I'm happy we can discuss this
+here a bit more in depth, since I'm really not sure if the current
+solution is the best solution...
 
-How about pcduino3-nano:green:usr-led3/4? Or ...:usr1/2, and a comment
-in the .dts explaining how they're labelled on the board?
+Due to the general rule to not split hardware modules, I hesitated to
+make different nodes out of it. However, this module has some quite
+distinct sub-modules, hence I guess it would be also feasible to do so:
 
-There are a couple of other sunxi boards that have the same problem
-(multiple user-controllable LEDs of the same colour):
+0x40001000-0x4000105C - Processor information e.g. which processor ID is
+the accessing processor (processor identity), cache size etc...
+0x40001800-0x40001820 - CPU2CPU directed interrupt generation/clear
+registers...
+0x40001880-0x4000195E - the actual interrupt router
+0x40001C00-0x40001DDC - ACTZS TrustZone registers...
 
-sun4i-a10-marsboard.dts: label = "marsboard:red1:usr";
-sun4i-a10-marsboard.dts: label = "marsboard:red2:usr";
-sun4i-a10-marsboard.dts: label = "marsboard:red3:usr";
-sun4i-a10-marsboard.dts: label = "marsboard:red4:usr";
-sun9i-a80-optimus.dts: label = "optimus:led2:usr";
-sun9i-a80-optimus.dts: label = "optimus:led4:usr";
+This driver accesses the first and the third block. The first block is
+necessary since the driver needs to know which CPU ID it is running on
+to actually program the interrupt router (Note: this is a heterogeneous
+multiprocessing system. This are actually treated as two independent UP
+systems, considering that Linux can also run on the Cortex-M4).
 
-I can send a patch for those if you'd like as well?
+Hence, the syscon definition which would allow to access other areas as
+needed, especially the processor information might be needed by any
+other peripheral (driver) which needs to know what CPU it is running on.
+What do you think?
 
-> > Should there be aliases for I2C as well, since the same situation
-> > applies (i2c0 and i2c2)?
-> Yep.
+OTH, we could as well split it up in three or even four nodes. The MSCM
+interrupt router part just needs to access the the MSCM processor
+information part somehow (syscon?)...
 
-Added.
+Fwiw, in our downstream kernel, the CPU2CPU interrupts are used for
+Freescales messaging system (MCC). I hacked a special interface in that
+early version of this driver, to export this functionality. But then I
+guess such a functionality should not affect the device tree
+bindings...?
+http://git.toradex.com/cgit/linux-toradex.git/commit/?h=toradex_vf_3.18-next&id=6f0bbad6b805cf2014eec54531dbe4ddb4867a91
 
-> > More generally, is it correct to add nodes like these (uart2, spi0,
-> > i2c2) for features that appear on the Arduino GPIO headers?
-> If those pins are specifically dedicated to this feature, then yes.
+For detailed information, the module is documented in the public
+reference manual, chapter 64.
+http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=VF6xx&fpsp=1&tab=Documentation_Tab
 
-They're multipurpose pins on Arduino-compatible headers:
-http://learn.linksprite.com/wp-content/uploads/2014/10/pcDuino3-Nano_header-Model.jpg
+>> +- interrupt-controller : Identifies the node as an interrupt controller
+>> +- #interrupt-cells : Two cells, interrupt number and flags (IRQ type)
+> 
+> What numbers and flags are valid?
+> 
 
-How you want them to be configured will depend on what you have plugged
-in; for example, some Arduino add-on boards will expect J11 P1/2 to be
-serial RX/TX and some will expect them to be GPIOs. So should we
-configure i2c2 etc. by default (and let the user turn them into GPIOs
-if required), or just provide the GPIOs (and require the user to adjust
-the .dts)?
+The first cell is the hardware interrupt ID according to the MSCM
+interrupt router. The flags gets passed to the GIC interrupt controller
+only, hence those are the one which are supported by the GIC controller.
 
-Cheers,
 
--- 
-Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>                         <http://offog.org/>
+Will add that information, thx.
+
+--
+Stefan
+
+> Mark.
+> 
+>> +- reg : the register range of the MSCM module
+>> +
+>> +Example:
+>> +	mscm: mscm@40001000 {
+>> +		compatible = "fsl,vf610-mscm", "syscon";
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <2>;
+>> +		interrupt-parent = <&intc>;
+>> +		reg = <0x40001000 0x1000>;
+>> +	}
+>> --
+>> 2.2.1
+>>
+>>
