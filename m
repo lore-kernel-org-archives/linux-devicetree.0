@@ -1,118 +1,93 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add dts file for pcDuino 3 Nano board
-Date: Mon, 26 Jan 2015 11:09:21 +0100
-Message-ID: <20150126100921.GQ8470@lukather>
-References: <1422199921-325-1-git-send-email-ats@offog.org>
- <20150125164846.GL8470@lukather>
- <20150126003520.GA871@cartman.at.offog.org>
+From: Daniel Borkmann <dborkman@redhat.com>
+Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
+Date: Mon, 26 Jan 2015 11:10:45 +0100
+Message-ID: <54C612A5.2000208@redhat.com>
+References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk> <54C22E68.1080601@redhat.com> <54C60DB8.1060900@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AFQGHouA0VN8Ovbt"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150126003520.GA871-dFjyuVMluBNBLe56cvE0J2D2FQJk+8+b@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C60DB8.1060900@linn.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Cc: Stathis Voukelatos <stathisv70@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Stathis,
 
---AFQGHouA0VN8Ovbt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 01/26/2015 10:49 AM, Stathis Voukelatos wrote:
+> On 23/01/15 11:20, Daniel Borkmann wrote:
+>> On 01/23/2015 11:07 AM, Stathis Voukelatos wrote:
+>>> This patch adds support the Ethernet Packet Sniffer H/W module
+>>> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
+>>> The module allows Ethernet packets to be parsed, matched against
+>>> a user-defined pattern and timestamped. It sits between a 100M
+>>> Ethernet MAC and PHY and is completely passive with respect to
+>>> Ethernet frames.
+>>>
+>>> Matched packet bytes and timestamp values are returned through a
+>>> FIFO. Timestamps are provided to the module through an externally
+>>> generated Gray-encoded counter.
+>>>
+>>> The command pattern for packet matching is stored in module RAM
+>>> and consists of a sequence of 16-bit entries. Each entry includes
+>>> an 8-bit command code and and 8-bit data value. Valid command
+>>> codes are:
+>>> 0 - Don't care
+>>> 1 - Match: packet data must match command string byte
+>>> 2 - Copy: packet data will be copied to FIFO
+>>> 3 - Match/Stamp: if packet data matches string byte, a timestamp
+>>>                    is copied into the FIFO
+>>> 4 - Copy/Done: packet data will be copied into the FIFO.
+>>>                  This command terminates the command string.
+>>>
+>>> The driver consists of two modules:
+>>> - Core: it provides an API to user space using the Generic Netlink
+>>>           framework. Specific backend implementations, like the
+>>>           Ethernet Packet Sniffer, register one or more channels
+>>>           with the Core. For each channel a Genl family is created.
+>>>           User space can access a channel by sending Genl messages
+>>>           to the Genl family associated with the channel. Packet
+>>>           matching events are multicast.
+>>>
+>>> - Ethernet Packet Sniffer backend: provides the driver for the
+>>>           Linn Ethernet Packet Sniffer H/W modules.
+>>>
+>>> The split between a core and backend modules allows software-only
+>>> implementations to be added for platforms where no H/W support
+>>> is available.
+>>>
+>>> Based on 3.19-rc5
+>>>
+>>> Signed-off-by: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+>> Please have a look at packet sockets, they offer already all the
+>> functionality (if not more) your driver interface to the user space
+>> resembles, are transparent to the underlying hardware, and easily
+>> can cope with 100Mbit.
+>>
+>> If I understand this correctly, you are effectively introducing a
+>> parallel API *next* to packet sockets to user space that we have to
+>> maintain forever ...
+>>
+>> Thanks !
+>
+> Hello Daniel. Thank you for your feedback.
+> Packet sockets could also be used for the driver interface to
+> user space, however I think that both approaches would require the same
+> amount of maintenance. We need to maintain a protocol consisting of
+> a set of messages or commands that user space can use to communicate
+> with the driver in order to configure the H/W and retrieve results.
+> We could use packet sockets to send those messages  too, but I thought
+> netlink already provides a message exchange framework that we could
+> make use of.
 
-On Mon, Jan 26, 2015 at 12:35:20AM +0000, Adam Sampson wrote:
-> Hi Maxime,
->=20
-> On Sun, Jan 25, 2015 at 05:48:46PM +0100, Maxime Ripard wrote:
-> > > +			label =3D "pcduino3-nano:green:led3";
-> ...
-> > > +			label =3D "pcduino3-nano:green:led4";
-> > Where are the three other leds?
->=20
-> LED1 is the power LED, and as far as I can see there isn't an LED2 on
-> the board. LED5 is next to LED3/4, but it's not exposed by the 3.4
-> kernel that LinkSprite ship, and this forum post says it's not
-> software-controllable (which seems weird):
-> http://forum.linksprite.com/index.php?/topic/3145-pcduino3-nano-led-contr=
-ol/
->=20
-> > Also, usually, the last part of the label is what the led function
-> > usually is.
->=20
-> "LED3" and "LED4" are how those LEDs are actually labelled on the board
-> (unlike the pcDuino v3, which labels them "TX" and "RX", and calls them
-> pcduino3:green:rx/tx in the DTS). I've changed them to
-> pcduino3-nano:led3:usr and pcduino3-nano:led4:usr, but if you've got any
-> better suggestions then please let me know!
+When using packet sockets and your driver as a backend feeding them,
+users can see that there's an extra capturing/monitoring netdev present,
+all libpcap-based tools such as tcpdump et al would work out of the box
+w/o adapting any code, and as an admin you can also see what users/tools
+are making of use of the device through packet sockets. I couldn't parse
+the exact motivation from the commit message of why avoiding all this is
+better?
 
-It depends on what the leds are used for, but this is not what the
-label should be either.
-
-If you read Documentation/leds/leds-class.txt, the pattern to follow is:
-
-"devicename:colour:function"
-
-so it should rather be pcduino3-nano:green:usr1 and usr2, or some
-other thing.
-
-> > > +&uart0 {
-> > > +	pinctrl-names =3D "default";
-> > > +	pinctrl-0 =3D <&uart0_pins_a>;
-> > > +	status =3D "okay";
-> > > +};
-> > > +
-> > > +&uart2 {
-> > > +	pinctrl-names =3D "default";
-> > > +	pinctrl-0 =3D <&uart2_pins_a>;
-> > > +	status =3D "okay";
-> > > +};
-> >=20
-> > You probably want aliases for these two UARTs.
->=20
-> Done: I've aliased serial0 =3D &uart0 and serial1 =3D &uart2. Should there
-> be aliases for I2C as well, since the same situation applies (i2c0 and
-> i2c2)?
-
-Yep.
-
-> More generally, is it correct to add nodes like these (uart2, spi0,
-> i2c2) for features that appear on the Arduino GPIO headers?
-
-If those pins are specifically dedicated to this feature, then yes.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---AFQGHouA0VN8Ovbt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUxhJRAAoJEBx+YmzsjxAgPQwQAL3HsFKy0S+vnwdGN1UFEQqp
-9VjgCu/BLjMbkvkYC+4tlwHKViU7ZqfvFOjWnmNrVYpBNQpBjoMZSlzM9iSRnjhI
-XofUbFRzhFdzJz2xX0d8ecJee4Uy51Wnvbm2VzMhV8l74w62FgLYllD0Orxdx+Km
-4/WTe3/0SngB7zN1j/EDXClQtHwNkpbkDP+NG5SLqQSIrmPRwvmJyKj4Ca3LjV+k
-9j/cV+wn8jic31Lpczonzo0ECetX3RLIrzZO06KUQbtH/Ax1UKTT0B643parVNq3
-IKLibxzFnETUjQaw5ucZkN2qWqhfQiDeVwTXr3TDwoUUqmWcCSgO5O2u3xKxeIPY
-o+9PWB33PbWCIrckCqkQy8V0cx38wFfyFE51dQLIEgMt9IqoPboPTp+E7+2iHteF
-CFNwkxiC06WtP/3dqrrMUefYdK+1+KB/Ynvjh5p7ur0WCtgfcVnoW7WpztvCFNxZ
-//8TIiXJFFLjhOB6L+abqQkL4lzs4fhvdKEG6Lzye1wXmG0CkG7Lg3ADP+qI0ITH
-aIryQz6SPKEUrPHY9/bObDYIX7UjwK3/SeC3RC8KBPwT5Ji837hkuI2Z19U0/CfV
-v3uypPC2CoqoU9Uf6wHXrYWv0j1p1kmmDH1ET5wQepTVco3m32ORnpMMO/Ig1YML
-BR5kd1MFNG8yDmq/haVM
-=Fs02
------END PGP SIGNATURE-----
-
---AFQGHouA0VN8Ovbt--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Daniel
