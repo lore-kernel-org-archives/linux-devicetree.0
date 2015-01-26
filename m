@@ -1,85 +1,127 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power
- subsystem
-Date: Mon, 26 Jan 2015 20:46:45 +0100 (CET)
-Message-ID: <1719204322.245040.1422301605670.JavaMail.open-xchange@oxbaltgw03.schlund.de>
-References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com> <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com> <20150121230148.GJ13715@earth.universe> <54C0AFE4.3020701@i2se.com> <20150125150431.GE2719@earth.universe>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/4] arm: omap: hwmod: 43xx: add DebugSS hwmod data
+Date: Mon, 26 Jan 2015 13:49:33 -0600
+Message-ID: <20150126194933.GG6660@saruman.tx.rr.com>
+References: <1422054704-14915-1-git-send-email-balbi@ti.com>
+ <1422054704-14915-2-git-send-email-balbi@ti.com>
+ <alpine.DEB.2.02.1501260142590.5450@utopia.booyaka.com>
+ <20150126165640.GA10679@saruman.tx.rr.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150125150431.GE2719-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cyV/sMl4KAhiehtf"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150126165640.GA10679@saruman.tx.rr.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
+
+--cyV/sMl4KAhiehtf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-> Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 25. Januar 2015 um 16:04
-> geschrieben:
->
->
-> Hi,
->
-> [add maintainers from regulator framework]
->
-> On Thu, Jan 22, 2015 at 09:08:04AM +0100, Stefan Wahren wrote:
-> > Am 22.01.2015 um 00:01 schrieb Sebastian Reichel:
-> > > On Thu, Nov 20, 2014 at 08:14:36PM +0000, Stefan Wahren wrote:
-> > >> This patch adds a minimal driver for the Freescale i.MX23, i.MX28
-> > >> power subsystem. It's required to trigger the probing of the underlying
-> > >> drivers like on-chip regulators. Additionally the drivers supports
-> > >> the configuration of the DC-DC clock frequency to avoid possible
-> > >> interferences.
-> > > I would expect PLL to be board specific and part of DT. Why is it
-> > > specified as parameter?
-> >
-> > I think the switching frequency of the DC-DC belongs to the
-> > configuration and don't describe how the hardware is connected. But i
-> > don't have a problem to change it into a DT property.
-> >
-> > Does a common property name exists for the switching frequency or would
-> > it be vendor specific?
->
-> As far as I know most regulators have fixed switching frequencies,
-> so there is no common property name so far. I added regulator
-> framework people, since this property should be regulator specific.
->
-> Apart from introducing a custom/common switching-frequency property
-> the dts could also expose the PLL like this and use the common
-> clock-frequency property:
->
-> power: power@80044000 {
-> compatible = "fsl,imx28-power";
-> #address-cells = <1>;
-> #size-cells = <1>;
-> reg = <0x80044000 0x2000>;
-> interrupts = <6>;
-> ranges;
->
-> powerpll {
-> compatible = "fsl,imx28-power-pll"
-> #clock-cells = <0>;
-> clock-frequency = <12345>;
-> }
-> }
+On Mon, Jan 26, 2015 at 10:56:40AM -0600, Felipe Balbi wrote:
+> > the references below are from SPRUHL7
+> >=20
+> > On Fri, 23 Jan 2015, Felipe Balbi wrote:
+> >=20
+> > > Without hwmod data for DebugSS, performance monitors
+> > > have no chance of running on AM43xx devices.
+> > >=20
+> > > Signed-off-by: Felipe Balbi <balbi@ti.com>
+> > > ---
+> > >  arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 40 ++++++++++++++++++++=
+++++++++++
+> > >  arch/arm/mach-omap2/prcm43xx.h             |  1 +
+> > >  2 files changed, 41 insertions(+)
+> > >=20
+> > > diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/ma=
+ch-omap2/omap_hwmod_43xx_data.c
+> > > index 5c6c8410160e..6709704dd5b5 100644
+> > > --- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> > > +++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> > > @@ -19,6 +19,7 @@
+> > >  #include "omap_hwmod.h"
+> > >  #include "omap_hwmod_33xx_43xx_common_data.h"
+> > >  #include "prcm43xx.h"
+> > > +#include "prm44xx.h"
+> > >  #include "omap_hwmod_common_data.h"
+> > > =20
+> > > =20
+> > > @@ -60,6 +61,44 @@ static struct omap_hwmod am43xx_wkup_m3_hwmod =3D {
+> > >  	.rst_lines_cnt	=3D ARRAY_SIZE(am33xx_wkup_m3_resets),
+> > >  };
+> > > =20
+> > > +/*
+> > > + * 'debugss' class
+> > > + * debug and emulation sub system
+> > > + */
+> > > +static struct omap_hwmod_opt_clk am43xx_debugss_opt_clks[] =3D {
+> > > +	{ .role =3D "dbg_sysclk", .clk =3D "dbg_sysclk_ck" },
+> > > +	{ .role =3D "dbg_clka", .clk =3D "dbg_clka_ck", },
+> > > +	{ .role =3D "dbg_clkb", .clk =3D "dbg_clkb_ck", },
+> > > +	{ .role =3D "dbg_clkc", .clk =3D "dbg_clkc_ck", },
+> > > +};
+> > > +
+> > > +static struct omap_hwmod_class am43xx_debugss_hwmod_class =3D {
+> > > +	.name	=3D "debugss",
+> > > +};
+> > > +
+> > > +/* debugss */
+> > > +static struct omap_hwmod am43xx_debugss_hwmod =3D {
+> > > +	.name		=3D "debugss",
+> > > +	.class		=3D &am43xx_debugss_hwmod_class,
+> > > +	.clkdm_name	=3D "l3_aon_clkdm",
+> > > +	.main_clk	=3D "trace_clk_div_ck",
+> > > +	.prcm =3D {
+> > > +		.omap4 =3D {
+> > > +			.clkctrl_offs =3D AM43XX_CM_WKUP_DBGSS_CLKCTRL_OFFSET,
+> >=20
+> > According to Table 6-275 "PRCM_CM_WKUP_DBGSS_CLKCTRL Register Field=20
+> > Descriptions" this should have a=20
+> >=20
+> > 			.modulemode   =3D MODULEMODE_SWCTRL,
+>=20
+> hm... modulemode SWCTRL causes wait_target_ready to fail. Any hints ?
 
-okay i understand. But doesn't it need a extra driver to set the switching
-frequency because of the new compatible string?
+gets stuck in transition state. PRCM_CM_WKUP_DBGSS_CLKCTRL is always
+read as 0x 12510f00 which would translate into:
 
-At this point i think about moving this feature into the bootloader.
+- module disabled
+- all opt clocks are on
+- module is transitioning
+- module in standby
+- clkA as TPIU and STM trace clock
+- all dividers set to 2
 
-@Fabio, @Marek:
+--=20
+balbi
 
-What's your opinion about that?
+--cyV/sMl4KAhiehtf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->
-> -- Sebastian
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJUxppNAAoJEIaOsuA1yqRE03oP/iz4b6HWwuV/aZR99tL0+J4K
+K277SUKKsK/qaY6nNadlXMFmI4sOBGOy2o6m76tyJNUiSq0u8wMJFoGGayAULKJw
+XRUXeAElv6+OQfysBIWBNz4fbYzhMFLX90q/OIyrYlrmnYnAScoZ4e8FUhaDhoX0
+bLaA1CFZ2jiA5BziRsSaQkC7sE8z4O00Ofwv08rQqt15RbBG/IsstPcfRpelY/rR
+UdjEEydsUI+le4SRxdzzlcSxKJLP5fIsUS/zWXPoRQwC6Jmb99cAytnMGeS1SZj1
+1G4zijPyXuIcuar7L10uFFrSA6D38PjoUis2XSopky3fdLxT6tSx+Ufm2SHlt1CK
+ViWgirFxp+/sqEWnO9u2foxpfMcXNX1lXjPDgDWLoHzuc6uQw7+QH9irKUB3Apos
+mDud19Kl5xGKiANja0M0VribSIbDs2zb4DvqgFBvok++B+D2w8ONqQ/UPk94WBZc
+lRiYWS6fa3m+aDDG5pI9UKwcmI+FTK7pIKHWj8lGenuszOxrBRSPumrtuH/hrKKH
+/gDppOn33+yv3h9Ksr5VJ/53ejgZjaU4GXHHe/3JCX8Vf4ITIjHz284qmCokW9xf
+IfCGYZd9fx6J+CdN9Wp7ihk2UX6tr+3B+W7Sy3s/IH72G349rbI7Ws81gqszrgw6
+/LA+/IwWlXjnsJjc+2fV
+=XM3c
+-----END PGP SIGNATURE-----
+
+--cyV/sMl4KAhiehtf--
