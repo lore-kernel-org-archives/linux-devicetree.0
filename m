@@ -1,57 +1,92 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH] mmc: dw_mmc: fix bug that cause mmc_test failture
-Date: Mon, 26 Jan 2015 20:04:09 +0800
-Message-ID: <1422273849-29773-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 0/7] extcon: usb: Introduce USB GPIO extcon driver. Fix DRA7 & AM57xx USB.
+Date: Mon, 26 Jan 2015 14:15:25 +0200
+Message-ID: <1422274532-9488-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com, tony@atomide.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com
+Cc: george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The STOP command can terminate a data transfer between a memory card and
-mmc controller.
+Hi,
 
-As show in Synopsys DesignWare Cores Mobile Stroage Host Databook:
-Data timeout and Data end-bit error will terminate further data transfer
-by mmc controller. So we should not send abort command to terminate a
-data transfer again if we got DRTO and EBE interrupt.
+Still hoping this can make into 3.20 else we have USB peripheral mode broken on
+DRA7-evm, DRA72-evm and AM57xx-beagle-x15.
 
-After this patch, all mmc_test cases can pass on RK3288-Pink2 board.
+On DRA7 and AM57xx EVMs the USB ID pin is connected to a GPIO line.
+The USB drivers (dwc3 + dwc3-omap) depend on extcon framework to get the
+USB cable state (USB or USB-Host) to put the controller in the right mode.
 
-Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
----
- drivers/mmc/host/dw_mmc.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+There were earlier attempts [1] to get this working by trying to patch up
+the existing GPIO extcon driver.
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 4d2e3c2..4bd7df1 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -1520,7 +1520,10 @@ static void dw_mci_tasklet_func(unsigned long priv)
- 			if (test_and_clear_bit(EVENT_DATA_ERROR,
- 					       &host->pending_events)) {
- 				dw_mci_stop_dma(host);
--				send_stop_abort(host, data);
-+				if (data->stop ||
-+				    !(host->data_status & SDMMC_INT_DRTO) ||
-+				    !(host->data_status & SDMMC_INT_EBE))
-+					send_stop_abort(host, data);
- 				state = STATE_DATA_ERROR;
- 				break;
- 			}
-@@ -1547,7 +1550,10 @@ static void dw_mci_tasklet_func(unsigned long priv)
- 			if (test_and_clear_bit(EVENT_DATA_ERROR,
- 					       &host->pending_events)) {
- 				dw_mci_stop_dma(host);
--				send_stop_abort(host, data);
-+				if (data->stop ||
-+				    !(host->data_status & SDMMC_INT_DRTO) ||
-+				    !(host->data_status & SDMMC_INT_EBE))
-+					send_stop_abort(host, data);
- 				state = STATE_DATA_ERROR;
- 				break;
- 			}
+This series attemts to take a different approach by introducing a new
+USB specific extcon driver to handle the USB ID GPIO pin and
+interpret a right USB cable state.
+
+The reasoning to introduce this new driver is:
+1) The existing GPIO extcon driver doesn't understand USB cable states
+and it can't handle more than one cable per instance.
+   
+For the USB case we need to handle at least 2 cable states.
+    a) USB (attach/detach)
+    b) USB-Host (attach/detach)
+and could possible include more states like
+    c) Fast-charger (attach/detach)
+    d) Slow-charger (attach/detach)
+    
+2) This USB specific driver can be easily updated in the future to
+handle VBUS events, or charger detect events, in case it happens
+to be available on GPIO for any platform.
+
+3) The DT implementation is very easy. You just need one extcon node per USB
+instead of one extcon node per cable state as in case of [1].
+
+4) The cable state string doesn't need to be encoded in the device tree
+as in case of [1].
+
+5) With only ID event available, you can simulate a USB-peripheral attach
+when USB-Host is detacted instead of hacking the USB driver to do the same.
+
+Tested on DRA7-evm, DRA72-evm and AM57xx-beagle-x15
+
+Changelog:
+v2
+- Addressed review comments.
+- Fixed auto load of extcon-usb-gpio driver when used as module.
+- Fixed up AM57xx USB.
+
+--
+cheers,
+-roger
+[1] - https://lkml.org/lkml/2014/11/3/513
+
+Roger Quadros (7):
+  extcon: usb-gpio: Introduce gpio usb extcon driver
+  usb: extcon: Fix USB-Host cable name
+  ARM: dts: dra7-evm: Add extcon nodes for USB
+  ARM: dts: dra72-evm: Add extcon nodes for USB
+  ARM: dts: am57xx-beagle-x15: Add extcon nodes for USB
+  ARM: dts: am57xx-beagle-x15: Fix USB2 mode
+  ARM: omap2plus_defconfig: Enable EXTCON_GPIO_USB
+
+ .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  20 ++
+ arch/arm/boot/dts/am57xx-beagle-x15.dts            |  37 ++++
+ arch/arm/boot/dts/dra7-evm.dts                     |  31 +++
+ arch/arm/boot/dts/dra72-evm.dts                    |  31 +++
+ arch/arm/configs/omap2plus_defconfig               |   1 +
+ drivers/extcon/Kconfig                             |   7 +
+ drivers/extcon/Makefile                            |   1 +
+ drivers/extcon/extcon-palmas.c                     |  18 +-
+ drivers/extcon/extcon-usb-gpio.c                   | 214 +++++++++++++++++++++
+ drivers/usb/dwc3/dwc3-omap.c                       |   6 +-
+ drivers/usb/phy/phy-omap-otg.c                     |   4 +-
+ drivers/usb/phy/phy-tahvo.c                        |   8 +-
+ 12 files changed, 360 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+ create mode 100644 drivers/extcon/extcon-usb-gpio.c
+
 -- 
-1.8.3.2
-
-
+2.1.0
