@@ -1,60 +1,112 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RESEND v3 0/3] irqchip: vf610-mscm: add support for MSCM
- interrupt router
-Date: Mon, 26 Jan 2015 12:51:34 +0000
-Message-ID: <54C63856.7010704@arm.com>
-References: <1421309046-22452-1-git-send-email-stefan@agner.ch> <alpine.DEB.2.11.1501261115300.5526@nanos> <36990c90fa3d2ee0849227f31cbafb54@agner.ch>
+From: Marcin Wojtas <mw@semihalf.com>
+Subject: Re: [PATCH v3 2/7] mmc: sdhci-pxav3: Fix Armada 38x controller's caps
+ according to erratum ERR-7878951
+Date: Mon, 26 Jan 2015 13:57:52 +0100
+Message-ID: <CAPv3WKcVAea-ePkeO32Z2mqPzfExg0iBy7DQh00vHKxfLDSFsQ@mail.gmail.com>
+References: <1422031587-18212-1-git-send-email-gregory.clement@free-electrons.com>
+	<1422031587-18212-3-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <36990c90fa3d2ee0849227f31cbafb54-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1422031587-18212-3-git-send-email-gregory.clement@free-electrons.com>
+Sender: stable-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/01/15 11:55, Stefan Agner wrote:
-> On 2015-01-26 11:16, Thomas Gleixner wrote:
->> On Thu, 15 Jan 2015, Stefan Agner wrote:
->>
->>> Splitted out version of the MSCM driver. My first driver based on the
->>> routeable domain support and was part of the Vybrid Cortex-M4 support
->>> patchset.
->>>
->>> So far the MSCM interrupt router was initialized by the boot loader
->>> and configured all interrupts for the Cortex-A5 CPU. There are two
->>> use cases where a proper driver is necessary:
->>> - To run Linux on the Cortex-M4. When the kernel is running on the
->>>   non-preconfigured CPU, the interrupt router need to be configured
->>>   properly.
->>> - To support deeper sleep modes: LPSTOP clears the interrupt router
->>>   configuration, hence a driver needs to restore the configuration
->>>   on resume.
->>> I created a seperate patchset for that driver which hopefully makes
->>> it easier to get it into mergeable state.
->>>
->>> Since I identified some registers likely to be used by other drivers
->>> (e.g. CPU ID or the CPU Generate Interrupt Register) I also added
->>> the "syscon" compatible string to make the registers available for
->>> other drivers in case needed.
->>>
->>> This resend version of this patchset is rebased on v3.19-rc4.
->>
->> Has the discussion with Marc on the original V3 set been resolved?
-> 
-> There was no answer to the original v3 patch. The comments of Marc was
-> back in the v2 set, and has been resolved in v3. However, no Ack from
-> Marc so far.
+Hi Gregory,
 
-That's just me being lazy ;-). For the series:
+This patch looks alright to me now.
 
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Thanks,
+Marcin
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2015-01-23 17:46 GMT+01:00 Gregory CLEMENT <gregory.clement@free-electrons.com>:
+> From: Marcin Wojtas <mw@semihalf.com>
+>
+> According to erratum 'ERR-7878951' Armada 38x SDHCI controller has
+> different capabilities than the ones shown in its registers:
+>
+> - it doesn't support the voltage switching: it can work either with
+>   3.3V or 1.8V supply
+> - it doesn't support the SDR104 mode
+> - SDR50 mode doesn't need tuning
+>
+> The SDHCI_QUIRK_MISSING_CAPS quirk is used for updating the
+> capabilities accordingly.
+>
+> [gregory.clement@free-electrons.com: port from 3.10]
+>
+> Fixes: 5491ce3f79ee ("mmc: sdhci-pxav3: add support for the Armada 38x SDHCI controller")
+> Cc: <stable@vger.kernel.org> # v3.15+
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  drivers/mmc/host/sdhci-pxav3.c | 28 +++++++++++++++++++++++-----
+>  1 file changed, 23 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+> index 7b07325b4fba..cf017fc39143 100644
+> --- a/drivers/mmc/host/sdhci-pxav3.c
+> +++ b/drivers/mmc/host/sdhci-pxav3.c
+> @@ -118,8 +118,11 @@ static int mv_conf_mbus_windows(struct platform_device *pdev,
+>         return 0;
+>  }
+>
+> -static int armada_38x_quirks(struct sdhci_host *host)
+> +static int armada_38x_quirks(struct platform_device *pdev,
+> +                            struct sdhci_host *host)
+>  {
+> +       struct device_node *np = pdev->dev.of_node;
+> +
+>         host->quirks |= SDHCI_QUIRK_MISSING_CAPS;
+>         /*
+>          * According to erratum 'FE-2946959' both SDR50 and DDR50
+> @@ -129,6 +132,21 @@ static int armada_38x_quirks(struct sdhci_host *host)
+>          */
+>         host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
+>         host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_DDR50);
+> +
+> +       /*
+> +        * According to erratum 'ERR-7878951' Armada 38x SDHCI
+> +        * controller has different capabilities than the ones shown
+> +        * in its registers
+> +        */
+> +       host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
+> +       if (of_property_read_bool(np, "no-1-8-v")) {
+> +               host->caps &= ~SDHCI_CAN_VDD_180;
+> +               host->mmc->caps &= ~MMC_CAP_1_8V_DDR;
+> +       } else {
+> +               host->caps &= ~SDHCI_CAN_VDD_330;
+> +       }
+> +       host->caps1 &= ~(SDHCI_SUPPORT_SDR104 | SDHCI_USE_SDR50_TUNING);
+> +
+>         return 0;
+>  }
+>
+> @@ -332,8 +350,11 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
+>         if (!IS_ERR(pxa->clk_core))
+>                 clk_prepare_enable(pxa->clk_core);
+>
+> +       /* enable 1/8V DDR capable */
+> +       host->mmc->caps |= MMC_CAP_1_8V_DDR;
+> +
+>         if (of_device_is_compatible(np, "marvell,armada-380-sdhci")) {
+> -               ret = armada_38x_quirks(host);
+> +               ret = armada_38x_quirks(pdev, host);
+>                 if (ret < 0)
+>                         goto err_quirks;
+>                 ret = mv_conf_mbus_windows(pdev, mv_mbus_dram_info());
+> @@ -341,9 +362,6 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
+>                         goto err_mbus_win;
+>         }
+>
+> -       /* enable 1/8V DDR capable */
+> -       host->mmc->caps |= MMC_CAP_1_8V_DDR;
+> -
+>         match = of_match_device(of_match_ptr(sdhci_pxav3_of_match), &pdev->dev);
+>         if (match) {
+>                 ret = mmc_of_parse(host->mmc);
+> --
+> 2.1.0
+>
