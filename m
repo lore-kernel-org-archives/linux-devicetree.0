@@ -1,54 +1,57 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/4] dt: sound: jz4740: Add binding documentation for jz4740-i2s
-Date: Mon, 26 Jan 2015 12:56:23 +0100
-Message-ID: <2047908.1EOGyb8YHD@wuerfel>
-References: <1422267511-6649-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422267511-6649-3-git-send-email-Zubair.Kakakhel@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422267511-6649-3-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: tiwai@suse.de, perex@perex.cz, broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+From: Addy Ke <addy.ke@rock-chips.com>
+Subject: [PATCH] mmc: dw_mmc: fix bug that cause mmc_test failture
+Date: Mon, 26 Jan 2015 20:04:09 +0800
+Message-ID: <1422273849-29773-1-git-send-email-addy.ke@rock-chips.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 26 January 2015 10:18:29 Zubair Lutfullah Kakakhel wrote:
-> index 0000000..0e40517
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
-> @@ -0,0 +1,18 @@
-> +Ingenic JZ4740 I2S controller
-> +
-> +Required properties:
-> +- compatible : "ingenic,jz4740-i2s"
-> +- reg : I2S registers location and length
-> +- clocks : AIC and I2S PLL clock specifiers.
-> +- clock-names: "aic" and "i2s"
-> +
-> +Example:
-> +
-> +i2s: i2s@10020000 {
-> +       compatible = "ingenic,jz4740-i2s";
-> +       reg = <0x10020000 0x94>;
-> +
-> +       clocks = <&cgu JZ4740_CLK_AIC>, <&cgu JZ4740_CLK_I2SPLL>;
-> +       clock-names = "aic", "i2s";
-> +
-> +};
-> 
+The STOP command can terminate a data transfer between a memory card and
+mmc controller.
 
-I would argue that the binding should mandate "dmas" property already.
-The code currently does not use it, but it will need to get changed
-in order to allow the dmaengine driver for this platform to be
-converted. You should require only one argument for the channel ID,
-so something like
+As show in Synopsys DesignWare Cores Mobile Stroage Host Databook:
+Data timeout and Data end-bit error will terminate further data transfer
+by mmc controller. So we should not send abort command to terminate a
+data transfer again if we got DRTO and EBE interrupt.
 
-	dmas = <&dma 24>, <&dma 25>;
-	dma-names = "tx", "rx";
+After this patch, all mmc_test cases can pass on RK3288-Pink2 board.
 
-would be enough for the binding. Unfortunately that also requires
-having a device node for the dma engine, but you can cheat there
-and not call of_dma_controller_register() in the first step.
+Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+---
+ drivers/mmc/host/dw_mmc.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-	Arnd
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 4d2e3c2..4bd7df1 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -1520,7 +1520,10 @@ static void dw_mci_tasklet_func(unsigned long priv)
+ 			if (test_and_clear_bit(EVENT_DATA_ERROR,
+ 					       &host->pending_events)) {
+ 				dw_mci_stop_dma(host);
+-				send_stop_abort(host, data);
++				if (data->stop ||
++				    !(host->data_status & SDMMC_INT_DRTO) ||
++				    !(host->data_status & SDMMC_INT_EBE))
++					send_stop_abort(host, data);
+ 				state = STATE_DATA_ERROR;
+ 				break;
+ 			}
+@@ -1547,7 +1550,10 @@ static void dw_mci_tasklet_func(unsigned long priv)
+ 			if (test_and_clear_bit(EVENT_DATA_ERROR,
+ 					       &host->pending_events)) {
+ 				dw_mci_stop_dma(host);
+-				send_stop_abort(host, data);
++				if (data->stop ||
++				    !(host->data_status & SDMMC_INT_DRTO) ||
++				    !(host->data_status & SDMMC_INT_EBE))
++					send_stop_abort(host, data);
+ 				state = STATE_DATA_ERROR;
+ 				break;
+ 			}
+-- 
+1.8.3.2
+
+
