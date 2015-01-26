@@ -1,87 +1,60 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 3/7] ARM: dts: dra7-evm: Add extcon nodes for USB
-Date: Mon, 26 Jan 2015 14:15:28 +0200
-Message-ID: <1422274532-9488-4-git-send-email-rogerq@ti.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RESEND v3 0/3] irqchip: vf610-mscm: add support for MSCM
+ interrupt router
+Date: Mon, 26 Jan 2015 12:51:34 +0000
+Message-ID: <54C63856.7010704@arm.com>
+References: <1421309046-22452-1-git-send-email-stefan@agner.ch> <alpine.DEB.2.11.1501261115300.5526@nanos> <36990c90fa3d2ee0849227f31cbafb54@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422274532-9488-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com, tony@atomide.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc: george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <36990c90fa3d2ee0849227f31cbafb54-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On this EVM, the USB cable state has to be determined via the
-ID pin tied to a GPIO line. We use the gpio-usb-extcon driver
-to read the ID pin and the extcon framework to forward
-the USB cable state information to the USB driver so the
-controller can be configured in the right mode (host/peripheral).
+On 26/01/15 11:55, Stefan Agner wrote:
+> On 2015-01-26 11:16, Thomas Gleixner wrote:
+>> On Thu, 15 Jan 2015, Stefan Agner wrote:
+>>
+>>> Splitted out version of the MSCM driver. My first driver based on the
+>>> routeable domain support and was part of the Vybrid Cortex-M4 support
+>>> patchset.
+>>>
+>>> So far the MSCM interrupt router was initialized by the boot loader
+>>> and configured all interrupts for the Cortex-A5 CPU. There are two
+>>> use cases where a proper driver is necessary:
+>>> - To run Linux on the Cortex-M4. When the kernel is running on the
+>>>   non-preconfigured CPU, the interrupt router need to be configured
+>>>   properly.
+>>> - To support deeper sleep modes: LPSTOP clears the interrupt router
+>>>   configuration, hence a driver needs to restore the configuration
+>>>   on resume.
+>>> I created a seperate patchset for that driver which hopefully makes
+>>> it easier to get it into mergeable state.
+>>>
+>>> Since I identified some registers likely to be used by other drivers
+>>> (e.g. CPU ID or the CPU Generate Interrupt Register) I also added
+>>> the "syscon" compatible string to make the registers available for
+>>> other drivers in case needed.
+>>>
+>>> This resend version of this patchset is rebased on v3.19-rc4.
+>>
+>> Has the discussion with Marc on the original V3 set been resolved?
+> 
+> There was no answer to the original v3 patch. The comments of Marc was
+> back in the v2 set, and has been resolved in v3. However, no Ack from
+> Marc so far.
 
-Gets USB peripheral mode to work on this EVM.
+That's just me being lazy ;-). For the series:
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Felipe Balbi <balbi@ti.com>
-Acked-by: Felipe Balbi <balbi@ti.com>
----
- arch/arm/boot/dts/dra7-evm.dts | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index ad4118f..746cddb 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -26,6 +26,16 @@
- 		regulator-max-microvolt = <3300000>;
- 	};
- 
-+	extcon_usb1: extcon_usb1 {
-+		compatible = "linux,extcon-usb-gpio";
-+		id-gpio = <&pcf_gpio_21 1 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	extcon_usb2: extcon_usb2 {
-+		compatible = "linux,extcon-usb-gpio";
-+		id-gpio = <&pcf_gpio_21 2 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	vtt_fixed: fixedregulator-vtt {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vtt_fixed";
-@@ -391,6 +401,19 @@
- 			};
- 		};
- 	};
-+
-+	pcf_gpio_21: gpio@21 {
-+		compatible = "ti,pcf8575";
-+		reg = <0x21>;
-+		lines-initial-states = <0x1408>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
- };
- 
- &i2c2 {
-@@ -520,6 +543,14 @@
- 	};
- };
- 
-+&omap_dwc3_1 {
-+	extcon = <&extcon_usb1>;
-+};
-+
-+&omap_dwc3_2 {
-+	extcon = <&extcon_usb2>;
-+};
-+
- &usb1 {
- 	dr_mode = "peripheral";
- 	pinctrl-names = "default";
+	M.
 -- 
-2.1.0
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
