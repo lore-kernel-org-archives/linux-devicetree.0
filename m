@@ -1,103 +1,56 @@
-From: "christophe.ricard" <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd
- from struct st33zp24_platform_data to tpm_stm_dev
-Date: Mon, 26 Jan 2015 23:18:23 +0100
-Message-ID: <54C6BD2F.90605@gmail.com>
-References: <1422220293-21005-1-git-send-email-christophe-h.ricard@st.com> <1422220293-21005-2-git-send-email-christophe-h.ricard@st.com> <201501262315.07543.PeterHuewe@gmx.de>
+From: Bjorn <bjorn@sonymobile.com>
+Subject: Re: [PATCH 1/4] pinctrl: qcom: Add multiple copy base support
+Date: Mon, 26 Jan 2015 14:26:16 -0800
+Message-ID: <20150126222615.GA11960@sonymobile.com>
+References: <1418936395-14623-1-git-send-email-agross@codeaurora.org>
+ <1418936395-14623-2-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201501262315.07543.PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-15?Q?Peter_H=FCwe?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1418936395-14623-2-git-send-email-agross@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On Thu 18 Dec 12:59 PST 2014, Andy Gross wrote:
 
-The lpcpd pin allow the tpm to go in low power mode keeping the current=
-=20
-context in RAM.
-As mention in the dts documentation:
-"If set, power must be present when the platform is going into=20
-sleep/hibernate mode."
-The gpio state is enough to save and restore the context.
-This allows for example saving some memory wear or quicker state change=
-s...
+> Qualcomm pinctrl devices support functions that can be routed to multiple pins.
+> In some cases, there are additional mux registers that must be set for the pins
+> to work correctly.
+> 
 
-Best Regards
-Christophe
-On 26/01/2015 23:15, Peter H=FCwe wrote:
-> Hi Christophe,
-> Am Sonntag, 25. Januar 2015, 22:11:30 schrieb Christophe Ricard:
->> io_lpcpd is accessible from struct tpm_stm_dev.
->> struct st33zp24_platform_data is only valid when using static platfo=
-rm
->> configuration data, not when using dts.
->>
->> Reviewed-by: Jason Gunthorpe <jason.gunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
->> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
->> ---
->>   drivers/char/tpm/tpm_i2c_stm_st33.c | 18 +++++++++++-------
->>   1 file changed, 11 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c
->> b/drivers/char/tpm/tpm_i2c_stm_st33.c index 612845b..882c60a 100644
->> --- a/drivers/char/tpm/tpm_i2c_stm_st33.c
->> +++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
->> @@ -837,11 +837,14 @@ static int tpm_stm_i2c_remove(struct i2c_clien=
-t
->> *client) */
->>   static int tpm_stm_i2c_pm_suspend(struct device *dev)
->>   {
->> -	struct st33zp24_platform_data *pin_infos =3D dev->platform_data;
->> +	struct tpm_chip *chip =3D dev_get_drvdata(dev);
->> +	struct tpm_stm_dev *tpm_dev;
->>   	int ret =3D 0;
->>
->> -	if (gpio_is_valid(pin_infos->io_lpcpd))
->> -		gpio_set_value(pin_infos->io_lpcpd, 0);
->> +	tpm_dev =3D (struct tpm_stm_dev *)TPM_VPRIV(chip);
->> +
->> +	if (gpio_is_valid(tpm_dev->io_lpcpd))
->> +		gpio_set_value(tpm_dev->io_lpcpd, 0);
->>   	else
->>   		ret =3D tpm_pm_suspend(dev);
-> I know this is not changed by this patch, but
-> don't you need to send a tpm savestate? or is this implicit by pullin=
-g
-> io_lpcpd ?
->
->
->
->> @@ -856,12 +859,13 @@ static int tpm_stm_i2c_pm_suspend(struct devic=
-e *dev)
->>   static int tpm_stm_i2c_pm_resume(struct device *dev)
->>   {
->>   	struct tpm_chip *chip =3D dev_get_drvdata(dev);
->> -	struct st33zp24_platform_data *pin_infos =3D dev->platform_data;
->> -
->> +	struct tpm_stm_dev *tpm_dev;
->>   	int ret =3D 0;
->>
->> -	if (gpio_is_valid(pin_infos->io_lpcpd)) {
->> -		gpio_set_value(pin_infos->io_lpcpd, 1);
->> +	tpm_dev =3D (struct tpm_stm_dev *)TPM_VPRIV(chip);
->> +
->> +	if (gpio_is_valid(tpm_dev->io_lpcpd)) {
->> +		gpio_set_value(tpm_dev->io_lpcpd, 1);
->>   		ret =3D wait_for_stat(chip,
->>   				TPM_STS_VALID, chip->vendor.timeout_b,
->>   				&chip->vendor.read_queue, false);
->
-> Same applies to startup(STATE) on resume?
->
-> Peter
+I've described it as "second level muxing", but your description works too...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[..]
+
+> +	/*
+> +	 * if an alternate copy configuration is required, configure the pins to
+> +	 * steer the function to the correct set of pins.  This is used in cases
+> +	 * where we have more than one copy of the pins for a function
+> +	 */
+> +	if (f->requires_copy_select)
+> +		writel(f->copy_select_value, pctrl->regs + f->copy_select_reg);
+
+I'm not sure if this is sufficient.
+
+In the APQ8064 case (patch 3) you use this to write 0 or 1 to $2074, but if I
+read the documentation correctly you should also write to $207c and $2080 to
+enable/disable slew rate control of the individual paths.
+
+On 8974 we don't have the muxing, but the documentation states that we should
+set bit 0 of $2030 depending on slimbus being muxed or not. (not sure what to
+do about bit 1 though)
+
+
+I looked at assigning an optional function pointer to the function, that way we
+could easily express the platform specific tweaks in the individual drivers.
+
+However, as the muxing is deselected we need to make sure the slew rate is
+disabled and the only sane way I can think of then would be to tie this to the
+pingroup, as selecting any other entry from the pingroup should trigger the
+reset.
+
+Regards,
+Bjorn
