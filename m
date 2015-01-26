@@ -1,72 +1,85 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ASoC: codecs: wm8904: add dt ids table
-Date: Mon, 26 Jan 2015 16:42:29 +0000
-Message-ID: <20150126164229.GB21293@sirena.org.uk>
-References: <1418614273-2303-1-git-send-email-voice.shen@atmel.com>
- <20150115115425.GX3043@sirena.org.uk>
- <54B866B9.8000900@atmel.com>
- <54C65C36.9050106@atmel.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv2] mvebu: add Linksys WRT1900AC (Mamba) support
+Date: Mon, 26 Jan 2015 17:35:44 +0100
+Message-ID: <54C66CE0.8070407@free-electrons.com>
+References: <1421687701-5667-1-git-send-email-kaloz@openwrt.org> <20150119182113.GH32663@lunn.ch> <op.xsrcplz12s3iss@ecaz> <54C51FAA.4080300@gmail.com> <op.xs086cnu2s3iss@ecaz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ViWwB84N1zFtNiVD"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54C65C36.9050106-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <op.xs086cnu2s3iss@ecaz>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sound-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Morozov <linux-lCH5ugpmZSMox3rIn2DAYQ@public.gmane.org>
+To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 25/01/2015 20:16, Imre Kaloz wrote:
+> Hi Sebastian,
+> 
+> On Sun, 25 Jan 2015 17:54:02 +0100, Sebastian Hesselbarth  
+> <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>>> - OpenWrt is the only firmware/stack other than the official one and
+>>> people already know this device as "mamba".
+>>>
+>>> - Let's say the same device gets released under the same name or just
+>>> the radios change - so no redesign takes place at all. In my opinion
+>>> that hardly justifies adding multiple .dts files just to change the name
+>>> of the LEDs to reflect that. I think people who want to run mainline on
+>>> their device wouldn't be concerned about seeing a codename, but on the
+>>> other hand we could receive patches to "correct" the marketing name in
+>>> the LEDs.
+>>
+>> As soon as you'll discover another "mamba"-based device, you can
+>> split-off the common stuff into a linksys-mamba.dtsi and include it
+>> into each of the two device dts files.
+>>
+>> Right now, I'd suggest to have just a single linksys-wrt1900ac.dts.
+> 
+> Right now the only device using the board is the "mamba" with "WRT1900AC"  
+> as the marketing name.
+> 
+> Let me try to change the question: if we'll have a device made by  
+> "Company" called "foobar" marketed as "ABC100", mainline really prefers it  
+> to be called "company,abc100" (and hence the leds "abc100:color:label")  
+> instead of "company,foobar"?
 
---ViWwB84N1zFtNiVD
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't know if there is a guideline about it but as I wrote in the other
+email. Using the marketing name as model and board name as compatible string
+would make sens.
 
-On Mon, Jan 26, 2015 at 04:24:38PM +0100, Nicolas Ferre wrote:
-> Le 16/01/2015 02:17, Bo Shen a =E9crit :
+> 
+> As I've said, the "viper" has been sold as the EA4200v2 and the EA4500.  
+> Other than the sticker, it's the same device. So for me calling a single  
+> device as "linksys,viper" makes way more sense than creating a  
+> linksys-viper.dtsi and have a linksys-ea4200v2.dts and a  
+> linksys-ea4500.dts - (so multiple kernels) just to make the model / led  
+> name follow the sticker.
+> 
 
-> >> Does this end up in the i2c_driver_id driver data or do we need some
-> >> extra code when devtype is assigned to check for an of_node and look at
-> >> the DT data instead?  That certainly used to be the case...
+>From my point of view the compatible name and dts[i|] files are two separate things.
+This kind of information can (would?) be updated by the bootlader either natively
+or by using impedance-matcher. It would even be possible to use  dt overlays. We
+don't have to provide one dts for any variation of the same board.
 
-> > At the beginning I think as the same as you, and also add the code to=
-=20
-> > get the data as I do in <drivers/misc/atmel-ssc.c>. However, as I=20
-> > remember, I2C seems only use the compatible string after the comma, tha=
-t=20
-> > means only for "wlf,wm8904", it uses "wm8904" to match. So, I remove al=
-l=20
-> > the code I added, and just keep these, and it can get the device type=
-=20
-> > correctly.
+Gregory
 
-> > So, when I submit the patch and keep the code as simple as possible.
+> Also, please mind we are talking about consumer stuff here, so it's likely  
+> there will be multiple versions (maybe with different socs/whatever). Do  
+> we really want to have devices named after random marketing name + version  
+> number combos? ABC100 can be the same as FOO1000v3 and BAR9999v5 or  
+> WTH555v2.
+> 
+> 
+> Imre
+> 
 
-> I don't understand what's keeping this patch from being applied. Voice,
-> do you mind re-sending?
 
-I need to convince myself that the above actually works and is doing the
-right thing; the above explanation sounds like if it works it might be
-relying on a bug.
-
---ViWwB84N1zFtNiVD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJUxm50AAoJECTWi3JdVIfQRJkH/26//wf/lSxYQGI3s2tcHMY3
-xLGkekFc+GuSLkudf84JTvMwmGuRsh7wGW5OfV40Oq1OB4Fxoj2H9N5ySWv8K/1+
-HYlc1gd2AqYKGM/o60VpBIOIQadPaxIVFYVmf0XcBxfjktuAi2lGO/c66D3QskA8
-EmHHT4ZbReTWV3TfMB3inIey6mSFgEkszfcOzvU05vwpy5VH7xrpi7JG5gSTXNxG
-9Aet8v38l5At0M2Tflb/SqrAKAZtSpxwqTz7IATe4l9W4r3KjOAUH1bRfj7ngFQh
-unMs+/PJx9sjGXHYw9/Ma8FJyXbJPkQada3aB1WdgRGsXbtxNeZX1PuZ/7M2Jpg=
-=qC8j
------END PGP SIGNATURE-----
-
---ViWwB84N1zFtNiVD--
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
