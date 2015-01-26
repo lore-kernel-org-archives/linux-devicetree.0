@@ -1,90 +1,208 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv5 2/2] leds: tlc591xx: Driver for the TI 8/16 Channel
- i2c LED driver
-Date: Mon, 26 Jan 2015 13:46:33 +0200
-Message-ID: <54C62919.8000205@ti.com>
-References: <1421879364-8573-1-git-send-email-andrew@lunn.ch> <1421879364-8573-3-git-send-email-andrew@lunn.ch>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: add generic dt-card support
+Date: Mon, 26 Jan 2015 12:53:53 +0100
+Message-ID: <54C62AD1.2090207@metafoo.de>
+References: <cover.1421868426.git.moinejf@free.fr>	<d0c66c2e2f200119f9990fa52a503b1a4af6238f.1421868426.git.moinejf@free.fr>	<54C0088F.9070609@metafoo.de>	<20150122090723.50ac0156@armhf>	<54C14EB3.8080305@metafoo.de>	<20150123131554.623003f9@armhf>	<54C252F4.9000504@metafoo.de>	<20150123193456.276ea512@armhf>	<54C381A7.3020209@metafoo.de> <20150124141820.3793bd47@armhf>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="iHUKXFl55uCQ5q9cMtwrcTxQ4cMLfbAsD"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421879364-8573-3-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20150124141820.3793bd47@armhf>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, Matthew.Fatheree-REUqjI8E1xrQT0dZR+AlfA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---iHUKXFl55uCQ5q9cMtwrcTxQ4cMLfbAsD
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On 01/24/2015 02:18 PM, Jean-Francois Moine wrote:
+> On Sat, 24 Jan 2015 12:27:35 +0100
+> Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>
+>> On 01/23/2015 07:34 PM, Jean-Francois Moine wrote:
+>>> On Fri, 23 Jan 2015 14:56:04 +0100
+>>> Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>>>
+>>>> On 01/23/2015 01:15 PM, Jean-Francois Moine wrote:
+>>> There is no first or second output in the kirkwood controller; there
+>>> are I2S and S/PDIF outputs. Their hardware controls are done by bits in
+>>> the different registers. Then, the driver may define its DAIs in any
+>>> order and assign any DAI ID to these DAIs. So, for a given DAI, there
+>>> is no relation between its type (I2s or S/PDIF), index in the dai
+>>> driver (= asoc component index) and ID.
+>>>
+>>> In the simple-card DT, the CPU DAI (as the CODEC DAI) is referenced by
+>>> a phandle (the audio-controller) and a number which should identify the
+>>> DAI. This number is translated to a DAI name thanks to the function
+>>> snd_soc_get_dai_name(). This function scans the components and returns
+>>> the name of the DAI (component) supported by the audio controller with
+>>> the searched number equal to the component index (there is no 'xlate'
+>>> function).
+>>>
+>>> So, with the simple-card, the CPU or CODEC DAI binding (phandle +
+>>> number) identifies what the software has put in its table, but not a
+>>> hardware entity.
+>>
+>> Are you talking about the kirkwood driver or about things in general?
+>
+> I was talking about the kirkwood driver for the I2S and S/PDIF numbers.
+> Other drivers may have the same problems.
+>
+>> What you are saying is not true in general, if it is true for the kirkwood
+>> driver than the driver is broken in regards to DT bindings.
+>>
+>> The specifier that follows after the phandle is hardware specific. This can
+>> be any number of integers. And the meaning of this is defined in the
+>> bindings specification for that hardware.
+>>
+>> Many specifications define a binding in which either no specifier needs to
+>> be supplied, since there is only a single DAI, or one integer specifier
+>> which denotes which DAI is referenced for a multi-DAI controller. In the
+>> later case the bindings specification has to state which number maps to
+>> which physical DAI. Out of convenience many drivers use the same order as
+>> given in the bindings specification for their ASoC DAIs. Which is why the
+>> ASoC core provides a standard implementation for translating phandle +
+>> specifier to a ASoC DAI. But it is important to remember that the
+>> authoritative entity here is the bindings specification and not the driver.
+>>
+>> If the bindings specification uses a different scheme for referencing the
+>> DAIs a custom xlate function needs to be provided by the driver confirms to
+>> this specification.
+>
+> I did not have a look at any other multi-DAI audio CPU/CODEC, so, I can
+> be wrong.
+>
+> All I can say is:
+> - the driver is responsible to define its DAIs,
+> - it may create them in any order,
+> - the index of these DAIs is used in the DT.
 
-Hi,
+The index in the DT needs to match the index that is in the DT 
+specification. This does not necessarily have to match the ASoC driver ID. 
+But since it makes things easier for the driver a lot of drivers opt for 
+using the same IDs as specified in the DT specification.
 
-On 22/01/15 00:29, Andrew Lunn wrote:
-> The TLC59116 is an I2C bus controlled 16-channel LED driver.  The
-> TLC59108 is an I2C bus controlled 8-channel LED driver, which is very
-> similar to the TLC59116. Each LED output has its own 8-bit
-> fixed-frequency PWM controller to control the brightness of the LED.
-> The LEDs can also be fixed off and on, making them suitable for use as
-> GPOs.
+>
+> Then, for you, the DT binding should clearly indicate the relation
+> between the specifier that follows the phandle and the hardware DAI.
+>
+> For the kirkwood audio controller, with a DT as:
+>
+> 	audio-ports = "spdif", "i2s";
+>
+> the DT documentation should say:
+>
+> - option 1: "the DAI specifier is always '0' for I2S and '1' for S/PDIF"
+>
+> - option 2: "the DAI specifier is the index of the port in the port declaration"
+>
+> The actual problem is that there is no port definition in the DT for
+> the kirkwood audio controller.
+>
+> On the other side, referencing the DAI by an endpoint nullifies the DAI
+> specifier problem: this last one does not exist anymore!
+>
+>>>> Could you describe in detail what a card builder is and how to decide when
+>>>> and how a card builder is executed?
+>>>
+>>> A card builder is a device which
+>>> - scans the graph of ports,
+>>> - fills the struct snd_soc_card according to the links between the
+>>>     ports and their properties,
+>>> - and, eventually, calls snd_soc_register_card().
+>>>
+>>> The simple card builder, 'dt-card' (maybe a better name would have been
+>>> 'graph-card'), acts just like the simple-card except that it does not
+>>> appear in the DT. Its creation is done by an audio controller.
+>>>
+>>> For complex cards, a card builder would be the same as an actual card
+>>> driver, but with the capability to know about the board thanks to the
+>>> graph of ports. Its creation could be done by a compatible device in
+>>> the DT (as actually) or by the unique or a 'master' audio controller.
+>>>
+>>> A card builder is subject to a PROBE_DEFER after calling
+>>> snd_soc_register_card(), so, when it is created by an audio controller,
+>>> this last one should have created its own resources.
+>>>
+>>> An audio controller does the following:
+>>> - initialize the hardware and software,
+>>> - create the DAIs from:
+>>> 	- the graph of ports or
+>>> 	- default values
+>>> - register these DAIs and
+>>> - if the DAIs where created by a graph of port,
+>>> 	create the card builder.
+>
+>> I don't understand how invoking the card builder from the CPU side audio
+>> controller driver will work. The audio controller driver does not know what
+>> card it is part of, so how does it decide which builder to call, and what
+>> happens in the case of multiple CPU side audio controllers involved in the
+>> same card. In rare cases there might not even be a CPU side audio controller
+>> involved at all.
+>
+> Each entity referenced in the graph knows each other one and the simple
+> dt-card builder works only for one audio controller and one CODEC level
+> (each audio link in the graph has the controller as an endpoint).
+>
+> For more complex cards, a DT information must exist. It can be:
+>
+> - a board specific sound node:
+>
+> 	sound {
+> 		compatible = "myboard,audio-card";
+> 		... card properties ...
+> 	};
+>
+> - a device specific sound node:
+>
+> 	sound {
+> 		compatible = "mydevice,audio-card";
+> 		audio-root = <&audio1>;	/* starting point of the graph */
+> 		... card properties ...
+> 	};
+>
+> - a generic sound node in the case of multi controllers or multi codec
+>    levels (after dt-card extension):
+>
+> 	sound {
+> 		compatible = "linux,dt-card";
+> 		audio-root = <&audio1>;	/* starting point of the graph */
+> 		... card properties ...
+> 	};
+>
+> For the last case, the creation of the simple dt-card builder could be
+> done by a node in the controller, avoiding the DT to have a knowledge
+> of this piece of software:
+>
+> 	&audio1 {
+> 		...
+> 		audio-card {
+> 			... card properties ...
+> 		}
+> 		port@0 {
+> 			...
+> 		};
+> 		...
+> 	};
 
-So as I've mentioned, our HW uses TLC59108 not only for LED (backlight)
-but also as a GPO. And as we shortly discussed (in private mails, I
-think), technically it's possible to write gpio and backligth drivers
-that utilize a LED driver to do the actual work.
+Is there any advantage to putting the card node inside the controller node 
+rather than having it as a separate node?
 
-Some years ago there was a patch from Peter to implement GPO on top of PW=
-M:
+>
+>> I think this is something that needs to be done in the ASoC/ALSA core
+>> itself. Create the graph, wait until all endpoints of the graph have been
+>> registered and then create the card. Or something similar.
+>
+> To go further, such a function could fully replace
+> snd_soc_register_card()!
 
-https://lkml.org/lkml/2012/11/22/108
+Yes, if the graph is strongly connected (which it should be) the framework 
+will be able to identify when all components that belong to the graph have 
+been registered and is then able to create a card for it.
 
-That wasn't merged, but there was also no outright NAK, although it
-seemed different people preferred different approach. That patch is
-quite similar to what we'd need for GPO on top of LED.
+Are you by chance at FOSDEM? If you are maybe we can sit down for a moment 
+and discuss things.
 
-However, I'm still not convinced that is the correct solution. A GPO
-support for a PWM output makes sense, as it's just a PWM with full
-on/off output. But a LED means a, well, LED, something that emits light.
-GPO on LED sounds a bit silly.
+- Lars
 
-So... To me it's still slightly unclear when should one write a PWM
-driver and when a LED driver. But I would say that as the TLC591xx
-outputs a PWM signal, it should be a PWM driver. Then the different
-users of this PWM signal could be made on top of that (LED, backlight, GP=
-O).
-
-What would be the technical drawbacks with having the TLC591xx driver as
-a PWM, instead of LED?
-
- Tomi
-
-
-
---iHUKXFl55uCQ5q9cMtwrcTxQ4cMLfbAsD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUxikZAAoJEPo9qoy8lh71R30QAJbWXlr7cgtePNnEVt8DzB6H
-KlzMstJcgU86C6Ruq6t1jGi1zGZciVIG52VrGwzBkBUbcFKX0OWf1F+ei6gOw1lc
-GYLqx230YCReRuU29234VLeNqtBKanFKGJL8uIkFJIygSenIiohEAKG7+BR2skR8
-qAvdfveOrFZ6mfeckzXKDFqk49WOb4spQ60eb5b+FIj9P4GzBzRXU0MIUGrhY1lA
-7NfCD6hcyPIcpWNx8zkJyCz03gYr1Fm2zSdr3LdkwwTxlfLirG5/wmhjKr8SDX3Q
-APw1iR9YZ2Bw0I4WpuvSGe2M6Tnl3sRD1sIbtLBPHQYzOZuN+OOfnUt6Ct0YypjV
-J/93kxNlq6YZOveAJ8ZvC6pzGTyxFAvoBa0fzuz1OnvtPJukA+3xNnWg447UZOZq
-tPxkXJU68UPeEqg9lmH5Y9uFCH63ZQKaSYLLpSQpe+pz42cdXmIjGI7LhDnCyUUV
-YNyDjWYIL1hYUByoW8Yj512VVK06jJG1tPg8e4yNBfdN1af/D4uaVvTU1LjCSUmk
-eVunX7YQVbsPt6S9Q6wkYqTmY1YMM+gJY9Qko+Mp9XaIdbe3WXuL+/yvnARbD+xg
-vUgVXCR72/2eooU9oVUv9sf7nteHpRwu2sV+9+hOqXrEJzKMBQj9yqfJHD0IJsC8
-z4YU9ftlye8V6Jo2rUwP
-=rKKU
------END PGP SIGNATURE-----
-
---iHUKXFl55uCQ5q9cMtwrcTxQ4cMLfbAsD--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
