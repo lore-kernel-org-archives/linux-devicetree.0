@@ -1,64 +1,84 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
-Date: Mon, 26 Jan 2015 20:45:41 +0100
-Message-ID: <20150126194540.GA27311@katana>
-References: <1421346798-17148-1-git-send-email-pantelis.antoniou@konsulko.com>
- <20150122144818.GG3413@katana>
- <CAL_JsqKEBYwX=5zgWbdVRxm-H-sFiDa9rAp26BvuKNECoNW=uQ@mail.gmail.com>
- <20150122150243.GI3413@katana>
- <CAL_JsqKYvcec=xWQM7_Dgrr5zmkefXqGCQvHwJ+uxNgfiv7fcw@mail.gmail.com>
- <20150124042623.GB1190@katana>
- <DEFFB75F-347B-43F9-98E5-BBD019276A37@konsulko.com>
- <20150126155550.GB13494@katana>
- <CAL_JsqL9m-r3aJhiwSY61xXG9CbkHfD7RqrbNG=mBJnGD_-YPw@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power
+ subsystem
+Date: Mon, 26 Jan 2015 20:46:45 +0100 (CET)
+Message-ID: <1719204322.245040.1422301605670.JavaMail.open-xchange@oxbaltgw03.schlund.de>
+References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com> <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com> <20150121230148.GJ13715@earth.universe> <54C0AFE4.3020701@i2se.com> <20150125150431.GE2719@earth.universe>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL9m-r3aJhiwSY61xXG9CbkHfD7RqrbNG=mBJnGD_-YPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150125150431.GE2719-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 25. Januar 2015 um 16:04
+> geschrieben:
+>
+>
+> Hi,
+>
+> [add maintainers from regulator framework]
+>
+> On Thu, Jan 22, 2015 at 09:08:04AM +0100, Stefan Wahren wrote:
+> > Am 22.01.2015 um 00:01 schrieb Sebastian Reichel:
+> > > On Thu, Nov 20, 2014 at 08:14:36PM +0000, Stefan Wahren wrote:
+> > >> This patch adds a minimal driver for the Freescale i.MX23, i.MX28
+> > >> power subsystem. It's required to trigger the probing of the underlying
+> > >> drivers like on-chip regulators. Additionally the drivers supports
+> > >> the configuration of the DC-DC clock frequency to avoid possible
+> > >> interferences.
+> > > I would expect PLL to be board specific and part of DT. Why is it
+> > > specified as parameter?
+> >
+> > I think the switching frequency of the DC-DC belongs to the
+> > configuration and don't describe how the hardware is connected. But i
+> > don't have a problem to change it into a DT property.
+> >
+> > Does a common property name exists for the switching frequency or would
+> > it be vendor specific?
+>
+> As far as I know most regulators have fixed switching frequencies,
+> so there is no common property name so far. I added regulator
+> framework people, since this property should be regulator specific.
+>
+> Apart from introducing a custom/common switching-frequency property
+> the dts could also expose the PLL like this and use the common
+> clock-frequency property:
+>
+> power: power@80044000 {
+> compatible = "fsl,imx28-power";
+> #address-cells = <1>;
+> #size-cells = <1>;
+> reg = <0x80044000 0x2000>;
+> interrupts = <6>;
+> ranges;
+>
+> powerpll {
+> compatible = "fsl,imx28-power-pll"
+> #clock-cells = <0>;
+> clock-frequency = <12345>;
+> }
+> }
 
-> > Which is going in when?
->=20
-> Can you apply it since it is a dependency on this bug fix patch.
+okay i understand. But doesn't it need a extra driver to set the switching
+frequency because of the new compatible string?
 
-I can but I don't have it in my inbox. So, I need a resent version with
-a DT maintainer's ack.
+At this point i think about moving this feature into the bootloader.
 
+@Fabio, @Marek:
 
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+What's your opinion about that?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>
+> -- Sebastian
 
-iQIcBAEBAgAGBQJUxplkAAoJEBQN5MwUoCm2fsUP/1cfhvoOt7dzaUiFuk/jLij3
-Vs1j4mCn77Te9IrZpji/HfI5809gNbkRqKrlIn34At7VCYrmy0ClB5CRVsEqTa0E
-uoNCA31/K+b1WHNIiaCdSEkD7ehxrJkUiE9XQ1/1NHeS7Bhaj+86+vgKE3Gpa9tZ
-cJEYAfr/yoQ/nPJOH5HWx4n+20NaMPPZWKOS0S/OCBWoYm68XWQ1IJn6FQfhgBii
-kjdWSqNurEiHvRlI/b8+O/M6Qp46o1fiWNxyEscbdUke4KjtUUlfBKu3kqr8Irf3
-KpnCpK+3O+tZuUFZ/zZRbuzW4lOm37spYoFZci9iQJGFSWwAzSkpiI1qseQukqxY
-YTBtalDb9KvoLa4tspw88KbMB8UPcHnGDcwbL9Y5vY9G0qRfYVHXlCgupD6ywsyw
-cHNEdiNIGK3IWQ5kNvNmRR7+0uiBuSfoB08OzYZYVW3ibnw7h4curxuCqnZvr833
-+zn7QCVJ4IO1HrP8peIwskLRmaujOalKpj1Md9sKXNL3WzJFLjS/0gljvWXXgryY
-q8SW+Cb5tw/uISL0HDVnQKSGZbjIzDoRJM6IXEKzHj0pM45j/+QFuy4BTCeydOxT
-Uz47V9zHrwWRBIdQ8eBA6JRNUDx6+wMsDXTf0oFK/kc/GPL1ze4bSQ9t/32+yGa2
-ZUuG8gBUuSqAIwyZAZQO
-=C9jH
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
+Stefan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
