@@ -1,40 +1,65 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
-Date: Mon, 26 Jan 2015 11:39:45 -0800
-Message-ID: <1422301185.18650.4.camel@perches.com>
-References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk>
-	 <1422135432.18650.2.camel@perches.com> <54C620CB.3010500@linn.co.uk>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
+Date: Mon, 26 Jan 2015 20:45:41 +0100
+Message-ID: <20150126194540.GA27311@katana>
+References: <1421346798-17148-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <20150122144818.GG3413@katana>
+ <CAL_JsqKEBYwX=5zgWbdVRxm-H-sFiDa9rAp26BvuKNECoNW=uQ@mail.gmail.com>
+ <20150122150243.GI3413@katana>
+ <CAL_JsqKYvcec=xWQM7_Dgrr5zmkefXqGCQvHwJ+uxNgfiv7fcw@mail.gmail.com>
+ <20150124042623.GB1190@katana>
+ <DEFFB75F-347B-43F9-98E5-BBD019276A37@konsulko.com>
+ <20150126155550.GB13494@katana>
+ <CAL_JsqL9m-r3aJhiwSY61xXG9CbkHfD7RqrbNG=mBJnGD_-YPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54C620CB.3010500@linn.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, abrestic@chromium.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL9m-r3aJhiwSY61xXG9CbkHfD7RqrbNG=mBJnGD_-YPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-01-26 at 11:11 +0000, Stathis Voukelatos wrote:
-> On 24/01/15 21:37, Joe Perches wrote:
-> > On Fri, 2015-01-23 at 10:07 +0000, Stathis Voukelatos wrote:
-> >> This patch adds support the Ethernet Packet Sniffer H/W module
-> >> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
-> >> The module allows Ethernet packets to be parsed, matched against
-> >> a user-defined pattern and timestamped. It sits between a 100M
-> >> Ethernet MAC and PHY and is completely passive with respect to
-> >> Ethernet frames.
-> > []
-> >>   include/linux/pkt_sniffer.h                        |  89 +++++
-> > Why should this file be here?
-> > Why not in the drivers/net/pkt-sniffer directory?
-[]
-> This header file is the public API for the driver.
-> Should it not live under the 'include' directory?
-> Several other drivers seem to follow that convention.
 
-It depends on how public is public.
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If it's _really_ public, it should be in uapi.
-If it's kinda public, then _maybe_ it should be
-in include/linux, but how likely is it another
-driver will use it?
+> > Which is going in when?
+>=20
+> Can you apply it since it is a dependency on this bug fix patch.
+
+I can but I don't have it in my inbox. So, I need a resent version with
+a DT maintainer's ack.
+
+
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUxplkAAoJEBQN5MwUoCm2fsUP/1cfhvoOt7dzaUiFuk/jLij3
+Vs1j4mCn77Te9IrZpji/HfI5809gNbkRqKrlIn34At7VCYrmy0ClB5CRVsEqTa0E
+uoNCA31/K+b1WHNIiaCdSEkD7ehxrJkUiE9XQ1/1NHeS7Bhaj+86+vgKE3Gpa9tZ
+cJEYAfr/yoQ/nPJOH5HWx4n+20NaMPPZWKOS0S/OCBWoYm68XWQ1IJn6FQfhgBii
+kjdWSqNurEiHvRlI/b8+O/M6Qp46o1fiWNxyEscbdUke4KjtUUlfBKu3kqr8Irf3
+KpnCpK+3O+tZuUFZ/zZRbuzW4lOm37spYoFZci9iQJGFSWwAzSkpiI1qseQukqxY
+YTBtalDb9KvoLa4tspw88KbMB8UPcHnGDcwbL9Y5vY9G0qRfYVHXlCgupD6ywsyw
+cHNEdiNIGK3IWQ5kNvNmRR7+0uiBuSfoB08OzYZYVW3ibnw7h4curxuCqnZvr833
++zn7QCVJ4IO1HrP8peIwskLRmaujOalKpj1Md9sKXNL3WzJFLjS/0gljvWXXgryY
+q8SW+Cb5tw/uISL0HDVnQKSGZbjIzDoRJM6IXEKzHj0pM45j/+QFuy4BTCeydOxT
+Uz47V9zHrwWRBIdQ8eBA6JRNUDx6+wMsDXTf0oFK/kc/GPL1ze4bSQ9t/32+yGa2
+ZUuG8gBUuSqAIwyZAZQO
+=C9jH
+-----END PGP SIGNATURE-----
+
+--UlVJffcvxoiEqYs2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
