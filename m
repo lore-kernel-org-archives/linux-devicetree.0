@@ -1,238 +1,91 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: sun4i: Add initial dts for Gemei
- G9 tablet
-Date: Mon, 26 Jan 2015 20:00:06 +0200
-Message-ID: <1422295208-11016-1-git-send-email-plaes@plaes.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: add generic dt-card support
+Date: Mon, 26 Jan 2015 19:22:44 +0100
+Message-ID: <20150126192244.12a79eff@armhf>
+References: <cover.1421868426.git.moinejf@free.fr>
+	<d0c66c2e2f200119f9990fa52a503b1a4af6238f.1421868426.git.moinejf@free.fr>
+	<54C0088F.9070609@metafoo.de>
+	<20150122090723.50ac0156@armhf>
+	<54C14EB3.8080305@metafoo.de>
+	<20150123131554.623003f9@armhf>
+	<54C252F4.9000504@metafoo.de>
+	<20150123193456.276ea512@armhf>
+	<54C381A7.3020209@metafoo.de>
+	<20150124141820.3793bd47@armhf>
+	<54C62AD1.2090207@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJLTBEBXENBBLMBTKTAKGQEZECUVBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C62AD1.2090207@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Mark Brown <broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Gemei G9 is an A10 based tablet, with 1G RAM, 16G NAND, 1024x768
-IPS LCD display, stereo speakers, 1.3MP front camera and 5 MP
-rear camera, 8000mAh battery, GT901 2+1 touchscreen, Bosch BMA250
-accelerometer and RTL8188CUS USB wifi. It also has MicroSD slot,
-miniHDMI, 1 x MicroUSB OTG port and 1 x MicroUSB host port and
-3.5mm headphone jack.
+On Mon, 26 Jan 2015 12:53:53 +0100
+Lars-Peter Clausen <lars@metafoo.de> wrote:
+> > - a generic sound node in the case of multi controllers or multi co=
+dec
+> >    levels (after dt-card extension):
+> >
+> > 	sound {
+> > 		compatible =3D "linux,dt-card";
+> > 		audio-root =3D <&audio1>;	/* starting point of the graph */
+> > 		... card properties ...
+> > 	};
+> >
+> > For the last case, the creation of the simple dt-card builder could=
+ be
+> > done by a node in the controller, avoiding the DT to have a knowled=
+ge
+> > of this piece of software:
+> >
+> > 	&audio1 {
+> > 		...
+> > 		audio-card {
+> > 			... card properties ...
+> > 		}
+> > 		port@0 {
+> > 			...
+> > 		};
+> > 		...
+> > 	}; =20
+>=20
+> Is there any advantage to putting the card node inside the controller=
+ node=20
+> rather than having it as a separate node?
 
-Changes since v2:
- * Fix syntax error (brown paper bag release)
+There is no advantage, but it seems to me that the sound device is a
+software entity which should not appear in the devicetree.
 
-Changes since v1:
- * Added sun4i-lradc keymap
- * Added TODO note about missing IRQ pins for bma250
- * Fixed formatting issues and removed external URLs
+> >> I think this is something that needs to be done in the ASoC/ALSA c=
+ore
+> >> itself. Create the graph, wait until all endpoints of the graph ha=
+ve been
+> >> registered and then create the card. Or something similar. =20
+> >
+> > To go further, such a function could fully replace
+> > snd_soc_register_card()! =20
+>=20
+> Yes, if the graph is strongly connected (which it should be) the fram=
+ework=20
+> will be able to identify when all components that belong to the graph=
+ have=20
+> been registered and is then able to create a card for it.
 
-Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
----
- arch/arm/boot/dts/Makefile               |   6 +-
- arch/arm/boot/dts/sun4i-a10-gemei-g9.dts | 168 +++++++++++++++++++++++++++++++
- 2 files changed, 172 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
+Russell's "Componentized device handling" would permit to synchronize
+all components avoiding the PROBE_DEFERs, but there is a problem with
+the tda998x: this one is a component of both the audio and video
+subsystems, and the bind() callback does not indicate by which master
+compoment it is called...
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7df26a2..a2e05fc 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -447,12 +447,14 @@ dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-ba10-tvbox.dtb \
- 	sun4i-a10-chuwi-v7-cw0825.dtb \
- 	sun4i-a10-cubieboard.dtb \
-+	sun4i-a10-gemei-g9.dtb \
-+	sun4i-a10-hackberry.dtb \
-+	sun4i-a10-inet97fv2.dtb \
- 	sun4i-a10-marsboard.dtb \
- 	sun4i-a10-mini-xplus.dtb \
- 	sun4i-a10-mk802.dtb \
- 	sun4i-a10-mk802ii.dtb \
--	sun4i-a10-hackberry.dtb \
--	sun4i-a10-inet97fv2.dtb \
-+	sun4i-a10-mini-xplus.dtb \
- 	sun4i-a10-olinuxino-lime.dtb \
- 	sun4i-a10-pcduino.dtb
- dtb-$(CONFIG_MACH_SUN5I) += \
-diff --git a/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
-new file mode 100644
-index 0000000..0c73453
---- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
-@@ -0,0 +1,168 @@
-+/*
-+ * Copyright 2015 Priit Laes
-+ *
-+ * Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun4i-a10.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Gemei G9 Tablet";
-+	compatible = "gemei,g9", "allwinner,sun4i-a10";
-+};
-+
-+/*
-+ * TODO:
-+ *   2x cameras via CSI
-+ *   bma250 IRQs
-+ *   AXP battery management
-+ *   NAND
-+ *   OTG
-+ *   Touchscreen - gt801_2plus1 @ i2c adapter 2 @ 0x48
-+ */
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		compatible = "x-powers,axp209";
-+		reg = <0x34>;
-+		interrupts = <0>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+
-+	/* Accelerometer */
-+	bma250@18 {
-+		compatible = "bosch,bma250";
-+		reg = <0x18>;
-+
-+		/*
-+		 * TODO: interrupt pins:
-+		 * int1 - PH00
-+		 * int2 - PI10
-+		 */
-+	};
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_vcc3v0>;
-+
-+	status = "okay";
-+
-+	button@158 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <158730>;
-+	};
-+
-+	button@349 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <349206>;
-+	};
-+
-+	button@1142 {
-+		label = "Esc";
-+		linux,code = <KEY_ESC>;
-+		channel = <0>;
-+		voltage = <1142856>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH01 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+
-+&uart0  {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
--- 
-2.2.2
+> Are you by chance at FOSDEM? If you are maybe we can sit down for a m=
+oment=20
+> and discuss things.
+
+Sorry, I will not be at FOSDEM.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
