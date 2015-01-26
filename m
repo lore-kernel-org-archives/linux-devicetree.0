@@ -1,264 +1,81 @@
-From: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: sun7i: Add dts file for pcDuino 3 Nano board
-Date: Mon, 26 Jan 2015 09:55:17 +0000
-Message-ID: <1422266117-10851-1-git-send-email-ats@offog.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
+From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
+Date: Mon, 26 Jan 2015 09:49:44 +0000
+Message-ID: <54C60DB8.1060900@linn.co.uk>
+References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk> <54C22E68.1080601@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C22E68.1080601@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Borkmann <dborkman@redhat.com>, Stathis Voukelatos <stathisv70@gmail.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the LinkSprite pcDuino 3 Nano board. This is a low-cost
-Allwinner A20 board with Arduino-style GPIO headers; it features 1G RAM,
-4G NAND flash, 1 micro-SD, 2 USB sockets, 1 micro USB socket for OTG and
-another for power in, HDMI, SATA, 5V power for SATA devices, gigabit
-Ethernet, an IR receiver, 3.5mm audio out and a MIPI camera connector.
 
-For more details, see: http://linux-sunxi.org/LinkSprite_pcDuino3_Nano
+On 23/01/15 11:20, Daniel Borkmann wrote:
+> On 01/23/2015 11:07 AM, Stathis Voukelatos wrote:
+>> This patch adds support the Ethernet Packet Sniffer H/W module
+>> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
+>> The module allows Ethernet packets to be parsed, matched against
+>> a user-defined pattern and timestamped. It sits between a 100M
+>> Ethernet MAC and PHY and is completely passive with respect to
+>> Ethernet frames.
+>>
+>> Matched packet bytes and timestamp values are returned through a
+>> FIFO. Timestamps are provided to the module through an externally
+>> generated Gray-encoded counter.
+>>
+>> The command pattern for packet matching is stored in module RAM
+>> and consists of a sequence of 16-bit entries. Each entry includes
+>> an 8-bit command code and and 8-bit data value. Valid command
+>> codes are:
+>> 0 - Don't care
+>> 1 - Match: packet data must match command string byte
+>> 2 - Copy: packet data will be copied to FIFO
+>> 3 - Match/Stamp: if packet data matches string byte, a timestamp
+>>                    is copied into the FIFO
+>> 4 - Copy/Done: packet data will be copied into the FIFO.
+>>                  This command terminates the command string.
+>>
+>> The driver consists of two modules:
+>> - Core: it provides an API to user space using the Generic Netlink
+>>           framework. Specific backend implementations, like the
+>>           Ethernet Packet Sniffer, register one or more channels
+>>           with the Core. For each channel a Genl family is created.
+>>           User space can access a channel by sending Genl messages
+>>           to the Genl family associated with the channel. Packet
+>>           matching events are multicast.
+>>
+>> - Ethernet Packet Sniffer backend: provides the driver for the
+>>           Linn Ethernet Packet Sniffer H/W modules.
+>>
+>> The split between a core and backend modules allows software-only
+>> implementations to be added for platforms where no H/W support
+>> is available.
+>>
+>> Based on 3.19-rc5
+>>
+>> Signed-off-by: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+> Please have a look at packet sockets, they offer already all the
+> functionality (if not more) your driver interface to the user space
+> resembles, are transparent to the underlying hardware, and easily
+> can cope with 100Mbit.
+>
+> If I understand this correctly, you are effectively introducing a
+> parallel API *next* to packet sockets to user space that we have to
+> maintain forever ...
+>
+> Thanks !
+>
 
-Signed-off-by: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                    |    3 +-
- arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts |  212 +++++++++++++++++++++++++
- 2 files changed, 214 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7df26a2..c025724 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -479,7 +479,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
- 	sun7i-a20-olinuxino-micro.dtb \
--	sun7i-a20-pcduino3.dtb
-+	sun7i-a20-pcduino3.dtb \
-+	sun7i-a20-pcduino3-nano.dtb
- dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a23-ippo-q8h-v5.dtb \
- 	sun8i-a23-ippo-q8h-v1.2.dtb
-diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-new file mode 100644
-index 0000000..6055de5
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-@@ -0,0 +1,212 @@
-+/*
-+ * Copyright 2015 Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun7i-a20.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	model = "LinkSprite pcDuino3 Nano";
-+	compatible = "linksprite,pcduino3-nano", "allwinner,sun7i-a20";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart2;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_pcduino3_nano>;
-+
-+		led3 {
-+			label = "pcduino3-nano:led3:usr";
-+			gpios = <&pio 7 16 GPIO_ACTIVE_LOW>; /* PH16 */
-+		};
-+
-+		led4 {
-+			label = "pcduino3-nano:led4:usr";
-+			gpios = <&pio 7 15 GPIO_ACTIVE_LOW>; /* PH15 */
-+		};
-+	};
-+};
-+
-+&ahci {
-+	target-supply = <&reg_ahci_5v>;
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_pins_rgmii_a>;
-+	phy = <&phy1>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		compatible = "x-powers,axp209";
-+		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
-+&ir0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ir0_pins_a>;
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	ahci_pwr_pin_pcduino3_nano: ahci_pwr_pin@0 {
-+		allwinner,pins = "PH2";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	led_pins_pcduino3_nano: led_pins@0 {
-+		allwinner,pins = "PH16", "PH15";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	usb1_vbus_pin_pcduino3_nano: usb1_vbus_pin@0 {
-+		allwinner,pins = "PH11";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&reg_ahci_5v {
-+	pinctrl-0 = <&ahci_pwr_pin_pcduino3_nano>;
-+	gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	pinctrl-0 = <&usb1_vbus_pin_pcduino3_nano>;
-+	gpio = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
--- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hello Daniel. Thank you for your feedback.
+Packet sockets could also be used for the driver interface to
+user space, however I think that both approaches would require the same
+amount of maintenance. We need to maintain a protocol consisting of
+a set of messages or commands that user space can use to communicate
+with the driver in order to configure the H/W and retrieve results.
+We could use packet sockets to send those messages  too, but I thought
+netlink already provides a message exchange framework that we could
+make use of.
