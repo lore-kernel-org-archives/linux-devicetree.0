@@ -1,168 +1,41 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
-Date: Tue, 27 Jan 2015 00:57:00 +0100
-Message-ID: <54C6D44C.4060106@suse.de>
-References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com> <1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 00/13] 3.19 st21nfc fixes
+Date: Tue, 27 Jan 2015 00:57:17 +0100
+Message-ID: <20150126235717.GB23054@ribalta.ger.corp.intel.com>
+References: <1422225211-27510-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="GsJqPrllPDqFf9KBORojVe0UiwjkGA44H"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420818231-13451-7-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422225211-27510-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---GsJqPrllPDqFf9KBORojVe0UiwjkGA44H
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jan 25, 2015 at 11:33:18PM +0100, Christophe Ricard wrote:
+> Christophe Ricard (13):
+>   NFC: dts: st21nfca: Fix compatible string spelling to follow other
+>     drivers
+>   NFC: dts: st21nfcb: Fix compatible string spelling to follow other
+>     drivers
+>   NFC: st21nfcb: Fix "WARNING: invalid free of devm_ allocated data"
+>   NFC: st21nfca: Remove unreachable code
+>   NFC: st21nfcb: Avoid use of skb after free
+>   NFC: nfc_enable_se Remove useless blank line at beginning of function
+>   NFC: nfc_disable_se Remove useless blank line at beginning of function
+>   NFC: st21nfca: Remove skb_pipe_list and skb_pipe_info useless
+>     allocation
+>   NFC: st21nfca: Remove checkpatch.pl warning Possible unnecessary 'out
+>     of memory' message
+>   NFC: st21nfca: Fix some skb memory leaks
+>   NFC: st21nfcb: Fix "NULL pointer dereference" possible error
+>   NFC: st21nfcb: Remove useless include
+>   NFC: st21nfcb: Fix copy/paste error in comment
+All 13 patches applied to nfc-next, many thanks.
 
-Am 09.01.2015 um 16:43 schrieb Soren Brinkmann:
-> Add pinctrl descriptions to the zc702 and zc706 device trees.
->=20
-> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Tested-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
-> Changes since v1:
->  - remove 'pinctrl-' prefix for pinctrl sub-nodes
->  - separate config and mux nodes
->=20
-> Changes since RFC v2:
->  - add pinconf properties to zc702 mdio node
->  - remove arguments from bias-related props
->=20
-> Changes since RFC v1:
->  - separate DT changes into their own patch
-> ---
->  arch/arm/boot/dts/zynq-7000.dtsi |   8 +-
->  arch/arm/boot/dts/zynq-zc702.dts | 181 +++++++++++++++++++++++++++++++=
-++++++++
->  arch/arm/boot/dts/zynq-zc706.dts | 152 +++++++++++++++++++++++++++++++=
-+
->  3 files changed, 340 insertions(+), 1 deletion(-)
-[...]
-> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-=
-zc702.dts
-> index 280f02dd4ddc..4995412f116f 100644
-> --- a/arch/arm/boot/dts/zynq-zc702.dts
-> +++ b/arch/arm/boot/dts/zynq-zc702.dts
-[...]
-> @@ -50,15 +52,24 @@
->  	status =3D "okay";
->  	phy-mode =3D "rgmii-id";
->  	phy-handle =3D <&ethernet_phy>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_gem0_default>;
-> =20
->  	ethernet_phy: ethernet-phy@7 {
->  		reg =3D <7>;
->  	};
->  };
-> =20
-> +&gpio0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_gpio0_default>;
-
-On linux-next the equivalent no longer works for the Parallella, with
-gpio failing to probe.
-
-If I move these two properties to the leds node (for which I am
-configuring gpio 7) then I get a heartbeat as before.
-
-Regards,
-Andreas
-
-> +};
-> +
->  &i2c0 {
->  	status =3D "okay";
->  	clock-frequency =3D <400000>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_i2c0_default>;
-> =20
->  	i2cswitch@74 {
->  		compatible =3D "nxp,pca9548";
-> @@ -132,10 +143,180 @@
->  	};
->  };
-> =20
-> +&pinctrl0 {
-[...]
-> +	pinctrl_gpio0_default: gpio0-default {
-> +		mux {
-> +			function =3D "gpio0";
-> +			groups =3D "gpio0_7_grp", "gpio0_8_grp", "gpio0_9_grp",
-> +				 "gpio0_10_grp", "gpio0_11_grp", "gpio0_12_grp",
-> +				 "gpio0_13_grp", "gpio0_14_grp";
-> +		};
-> +
-> +		conf {
-> +			groups =3D "gpio0_7_grp", "gpio0_8_grp", "gpio0_9_grp",
-> +				 "gpio0_10_grp", "gpio0_11_grp", "gpio0_12_grp",
-> +				 "gpio0_13_grp", "gpio0_14_grp";
-> +			slew-rate =3D <0>;
-> +			io-standard =3D <1>;
-> +		};
-> +
-> +		conf-pull-up {
-> +			pins =3D "MIO9", "MIO10", "MIO11", "MIO12", "MIO13", "MIO14";
-> +			bias-pull-up;
-> +		};
-> +
-> +		conf-pull-none {
-> +			pins =3D "MIO7", "MIO8";
-> +			bias-disable;
-> +		};
-> +	};
-[...]
-> +};
-> +
->  &sdhci0 {
->  	status =3D "okay";
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_sdhci0_default>;
->  };
-> =20
->  &uart1 {
->  	status =3D "okay";
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart1_default>;
->  };
-[dito for zc706]
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upmanyu,=
-
-Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
-
-
---GsJqPrllPDqFf9KBORojVe0UiwjkGA44H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUxtRMAAoJEPou0S0+fgE/OzoQAK+nrGpRFOJLfGu8CPjK6rtX
-MhiL8uZtasyRC8XJM9kS1r91Dwyqn9TqpdyKItedA+WEzGHiEiSuqZHtJ+2ghycX
-TqdUE8kDMMD6Dnpwm8wfS0hc/2tsUM1w6zuA/vva92eMGIFc5kxAb59TjUOTWQJ9
-luyBI261QTFcKJ458Co7ZzOJ3MTZx3/vKDHL1E+pws9S9rtUVDrfplIB0rhH5gLr
-dUL03FpLB5UKvu8Cc0d7A1IBShqWRiKVBbo/8hjA5AwG/TwhRe6ZrybUaj2DYyMK
-k40+41Na0hNMYJBMJ6qJZC3jkB4UxD9EDN2rhn2c+juq3gDSQgotyAQi9Mj0ORoA
-jUA7guMsxV2dCFI47Bism0Zn1PMIqLcUwJoLWPxkTHgQDl0evjR9V+j5Ou6cpnep
-EhmXX3iWYhfM2iHSLnBjC91Tx1HPih16MKyD+F5kL253fuG1kIh1PARw2G8agoR5
-XvwfI/fsMYRckP9o/Tgphvv/wfxs91BZA7TSPxA30Vshn7hLu3h44P/eXQVgJCaa
-cJDf8V1PyRhKYc5zAGcPC+JOSqHX+UF4EXU3eNIO5guhvLjTcCUT79dXby+sFuDU
-gv9Fm2eP0pYSL7vd8i9yRFqfxtlyrEHptPGvAoSHIZ5jPGT7UTmn+MolcoFr0YbC
-3j2Le73Pd5IroMo/lZ/a
-=dj7v
------END PGP SIGNATURE-----
-
---GsJqPrllPDqFf9KBORojVe0UiwjkGA44H--
+Cheers,
+Samuel.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
