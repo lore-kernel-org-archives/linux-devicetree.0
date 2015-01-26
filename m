@@ -1,107 +1,83 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: at91/dt: sam9263: Add ac97 device node
-Date: Mon, 26 Jan 2015 17:00:41 +0100
-Message-ID: <54C664A9.7090403@atmel.com>
-References: <1419854922-29338-1-git-send-email-alexanders83@web.de> <1419854922-29338-3-git-send-email-alexanders83@web.de> <2066438.if5qXaBWRu@kongar> <20150108191603.GF2447@piout.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150108191603.GF2447-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Cc: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 3/5] drivers: bus: Add Simple Power-Managed Bus DT Bindings
+Date: Mon, 26 Jan 2015 17:16:15 +0100
+Message-ID: <1422288977-20353-4-git-send-email-geert+renesas@glider.be>
+References: <1422288977-20353-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1422288977-20353-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Felipe Balbi <balbi@ti.com>
+Cc: Olof Johansson <olof@lixom.net>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Le 08/01/2015 20:16, Alexandre Belloni a =E9crit :
-> Hi,
->=20
->=20
-> On 08/01/2015 at 20:12:04 +0100, Alexander Stein wrote :
->> Now that the implementation has been applied to sound/for-next (http=
-s://git.kernel.org/cgit/linux/kernel/git/tiwai/sound.git/log/?h=3Dfor-n=
-ext
->> ), who is going to pick the related patches (this one and the other =
-two adding documentation and default config)?
->>
->=20
-> Nicolas will do it but he has not yet started to create a branch for
-> 3.20.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+---
+v4:
+  - Replace "simple-bus" by "simple-pm-bus",
+  - Remove the "renesas,bsc" bindings. They will be specified in a
+    separate document.
 
-Yes, both first patches added to at91-3.20-dt branch.
+v3:
+  - Add Tested-by,
+  - Document required properties inherited from "simple-bus",
+  - Document required "reg" property for "renesas,bsc",
+  - Move "ranges" before "reg" in the example,
 
-Thanks, best regards,
+v2:
+  - New.
+---
+ .../devicetree/bindings/bus/simple-pm-bus.txt      | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/simple-pm-bus.txt
 
->> Best regards,
->> Alexander
->>
->> On Monday 29 December 2014, 13:08:41 wrote Alexander Stein:
->>> This adds the device node for the ac97 controller.
->>>
->>> Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
->>> Acked-By Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> ---
->>> Changes in v3:
->>> * Renamed the compatible string to atmel,at91sam9263-ac97c
->>> * Added 'Acked-By Alexandre Belloni <alexandre.belloni@free-electro=
-ns.com>'
->>>
->>>  arch/arm/boot/dts/at91sam9263.dtsi | 21 +++++++++++++++++++++
->>>  1 file changed, 21 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts=
-/at91sam9263.dtsi
->>> index 6283785..2e67e38 100644
->>> --- a/arch/arm/boot/dts/at91sam9263.dtsi
->>> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
->>> @@ -700,6 +700,16 @@
->>>  					};
->>>  				};
->>> =20
->>> +				ac97 {
->>> +					pinctrl_ac97: ac97-0 {
->>> +						atmel,pins =3D
->>> +							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB12 periph=
- A AC97FS pin */
->>> +							 AT91_PIOB 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB13 periph=
- A AC97CK pin */
->>> +							 AT91_PIOB 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB14 periph=
- A AC97TX pin */
->>> +							 AT91_PIOB 3 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PB14 peri=
-ph A AC97RX pin */
->>> +					};
->>> +				};
->>> +
->>>  				pioA: gpio@fffff200 {
->>>  					compatible =3D "atmel,at91rm9200-gpio";
->>>  					reg =3D <0xfffff200 0x200>;
->>> @@ -828,6 +838,17 @@
->>>  				status =3D "disabled";
->>>  			};
->>> =20
->>> +			ac97: sound@fffa0000 {
->>> +				compatible =3D "atmel,at91sam9263-ac97c";
->>> +				reg =3D <0xfffa0000 0x4000>;
->>> +				interrupts =3D <18 IRQ_TYPE_LEVEL_HIGH 5>;
->>> +				pinctrl-names =3D "default";
->>> +				pinctrl-0 =3D <&pinctrl_ac97>;
->>> +				clocks =3D <&ac97_clk>;
->>> +				clock-names =3D "ac97_clk";
->>> +				status =3D "disabled";
->>> +			};
->>> +
->>>  			macb0: ethernet@fffbc000 {
->>>  				compatible =3D "cdns,at32ap7000-macb", "cdns,macb";
->>>  				reg =3D <0xfffbc000 0x100>;
->>>
->>
->=20
+diff --git a/Documentation/devicetree/bindings/bus/simple-pm-bus.txt b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
+new file mode 100644
+index 0000000000000000..0415e93a816c5ac0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
+@@ -0,0 +1,41 @@
++Simple Power-Managed Bus
++========================
++
++A Simple Power-Managed Bus is a transparent bus that doesn't need a real
++driver, as it's typically initialized by the boot loader.
++
++However, its bus controller is part of a PM domain, or under the control of a
++functional clock.  Hence, the bus controller's PM domain and/or clock must be
++enabled for child devices connected to the bus (either on-SoC or externally)
++to function.
++
++The bindings for the Simple Power-Managed Bus extend the bindings for
++"simple-bus", as specified in ePAPR.
++
++
++Required properties:
++  - compatible: Must contain at least "simple-pm-bus".
++		It's recommended to let this be preceded by one or more
++		vendor-specific compatible values.
++  - #address-cells, #size-cells, ranges: Must describe the mapping between
++		parent address and child address spaces.
++
++Optional platform-specific properties for clock or PM domain control (at least
++one of them is required):
++  - clocks: Must contain a reference to the functional clock(s),
++  - power-domains: Must contain a reference to the PM domain.
++
++
++Example:
++
++	bsc: bus@fec10000 {
++		compatible = "renesas,bsc-sh73a0", "renesas,bsc",
++			     "simple-pm-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x20000000>;
++		reg = <0xfec10000 0x400>;
++		interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&zb_clk>;
++		power-domains = <&pd_a4s>;
++	};
+-- 
+1.9.1
 
-
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
