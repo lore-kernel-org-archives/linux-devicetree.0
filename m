@@ -1,143 +1,180 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v3] ARM: zynq: DT: Add USB to device tree
-Date: Mon, 26 Jan 2015 08:23:55 -0800
-Message-ID: <8f367d9b85924f8e9cc9cb6fdff9a054@BN1BFFO11FD040.protection.gbl>
-References: <1417536431-27759-1-git-send-email-soren.brinkmann@xilinx.com>
- <d78fedd84f354d80985187f851cb3cd1@BN1AFFO11FD055.protection.gbl>
- <54C5F89A.3090901@suse.de> <54C5F965.90100@monstr.eu>
- <54C5FBC3.7030903@suse.de> <54C60A56.7010403@suse.de>
- <c65880cef67945ebaf61306febc1349b@BN1BFFO11FD010.protection.gbl>
- <54C6698F.5020301@suse.de>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
+Date: Mon, 26 Jan 2015 18:27:57 +0200
+Message-ID: <54C66B0D.9040109@ti.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com>	<1422274532-9488-2-git-send-email-rogerq@ti.com> <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54C6698F.5020301@suse.de>
+In-Reply-To: <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: monstr@monstr.eu, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ola Jeppson <ola@adapteva.com>
+To: cw00.choi@samsung.com
+Cc: Felipe Balbi <balbi@ti.com>, tony@atomide.com, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, george.cherian@ti.com, nsekhar@ti.com, devicetree <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-01-26 at 05:21PM +0100, Andreas F=C3=A4rber wrote:
-> Am 26.01.2015 um 16:50 schrieb S=C3=B6ren Brinkmann:
-> > On Mon, 2015-01-26 at 10:35AM +0100, Andreas F=C3=A4rber wrote:
-> >> Am 26.01.2015 um 09:33 schrieb Andreas F=C3=A4rber:
-> >>> Am 26.01.2015 um 09:23 schrieb Michal Simek:
-> >>>> On 01/26/2015 09:19 AM, Andreas F=C3=A4rber wrote:
-> >>>>> And if I apply it to my -next based tree, adding corresponding =
-nodes to
-> >>>>> zynq-parallella.dts, I get repeatedly:
-> >>>>>
-> >>>>> [  +0,012242] ci_hdrc ci_hdrc.0: no of_node; not parsing pinctr=
-l DT
-> >>>>> [  +0,000157] ci_hdrc ci_hdrc.0: ChipIdea HDRC found, lpm: 0; c=
-ap:
-> >>>>> f090e100 op: f090e140
-> >>>>> [  +0,000081] platform ci_hdrc.0: Driver ci_hdrc requests probe=
- deferral
-> >>>>> [  +0,005360] ci_hdrc ci_hdrc.1: no of_node; not parsing pinctr=
-l DT
-> >>>>> [  +0,000120] ci_hdrc ci_hdrc.1: ChipIdea HDRC found, lpm: 0; c=
-ap:
-> >>>>> f0910100 op: f0910140
-> >>>>> [  +0,001810] platform ci_hdrc.1: Driver ci_hdrc requests probe=
- deferral
-> >>>>>
-> >>>>> Am I missing any other patches or config options?
-> >>>>> (I do notice that the pinctrl v3 patch that got merged has a tr=
-ivial bug
-> >>>>> for usb0, for which I'll send a patch later on.)
-> >>>>
-> >>>> Why is it deferred? Is it because of pinmuxing stuff?
-> >>>
-> >>> No, happened without as well.
-> >>>
-> >>> Looking at a different place in dmesg, I spot this:
-> >>>
-> >>> [  +0,003988] usb_phy_generic phy0: GPIO lookup for consumer rese=
-t-gpios
-> >>> [  +0,000012] usb_phy_generic phy0: using device tree for GPIO lo=
-okup
-> >>> [  +0,000015] of_get_named_gpiod_flags: can't parse 'reset-gpios-=
-gpios'
-> >>> property
-> >>>  of node '/phy0[0]'
-> >>> [  +0,000013] of_get_named_gpiod_flags: can't parse 'reset-gpios-=
-gpio'
-> >>> property
-> >>> of node '/phy0[0]'
-> >>> [  +0,000010] usb_phy_generic phy0: using lookup tables for GPIO =
-lookup
-> >>> [  +0,000153] usb_phy_generic phy0: lookup for GPIO reset-gpios f=
-ailed
-> >>> [  +0,000012] usb_phy_generic phy0: Error requesting RESET GPIO
-> >>> [  +0,004360] usb_phy_generic: probe of phy0 failed with error -2
-> >>> [  +0,004991] usb_phy_generic phy1: GPIO lookup for consumer rese=
-t-gpios
-> >>> [  +0,000012] usb_phy_generic phy1: using device tree for GPIO lo=
-okup
-> >>> [  +0,000013] of_get_named_gpiod_flags: can't parse 'reset-gpios-=
-gpios'
-> >>> property
-> >>>  of node '/phy1[0]'
-> >>> [  +0,000013] of_get_named_gpiod_flags: can't parse 'reset-gpios-=
-gpio'
-> >>> property of node '/phy1[0]'
-> >>> [  +0,000010] usb_phy_generic phy1: using lookup tables for GPIO =
-lookup
-> >>> [  +0,000012] usb_phy_generic phy1: lookup for GPIO reset-gpios f=
-ailed
-> >>> [  +0,000011] usb_phy_generic phy1: Error requesting RESET GPIO
-> >>> [  +0,004337] usb_phy_generic: probe of phy1 failed with error -2
-> >>>
-> >>> So, I guess the chipidea driver is deferring because the phys wan=
-t a
-> >>> property that neither me nor you are specifying? Would that be th=
-e two
-> >>> MDIO pins 52 and 53 that would need to be specified?
-> >>
-> >> Erm, scratch that last question - wrong PHY. Trying it resolved th=
-e
-> >> above phy errors but not the original problem. And so does an empt=
-y one:
-> >>
-> >> @@ -99,11 +100,13 @@
-> >>
-> >>         usb_phy0: phy0 {
-> >>                 compatible =3D "usb-nop-xceiv";
-> >> +               reset-gpios =3D <>;
-> >>                 #phy-cells =3D <0>;
-> >>         };
-> >>
-> >>         usb_phy1: phy1 {
-> >>                 compatible =3D "usb-nop-xceiv";
-> >> +               reset-gpios =3D <>;
-> >>                 #phy-cells =3D <0>;
-> >>         };
-> >>  };
-> >>
-> >> In my manuals and notes I can't find any GPIO being used as reset =
-for
-> >> the USB PHYs. Any thoughts appreciated.
-> >=20
-> > Such a connection is optional. The platform might rely on its reset
-> > circuit, though it might not work for warm reboots.
-> > I haven't looked at parallela docs, but if there is a schematic
-> > available, that should tell you if/what is connected to the PHY res=
-et
-> > pin.
->=20
-> I do have the schematic, and the way I read it, only the on-board res=
-et
-> button resets the PHYs.
->=20
-> Yet it looks as if usb-nop-xceiv insists on a reset-gpios above, no?
-> Does it work on your boards with linux-next?
+Hi Chanwoo,
 
-I haven't re-tested it since I submitted the patches, but at that time
-it worked. But I also didn't test USB with the pinctrl patches together=
-=2E
-I'll do some testing later today.
+All your comments are valid. Need some clarification on one comment.
 
-	Soren
+On 26/01/15 15:56, Chanwoo Choi wrote:
+> Hi Roger,
+> 
+> This patch looks good to me. But I add some comment.
+> If you modify some comment, I'll apply this patch on 3.21 queue.
+> 
+> On Mon, Jan 26, 2015 at 9:15 PM, Roger Quadros <rogerq@ti.com> wrote:
+>> This driver observes the USB ID pin connected over a GPIO and
+>> updates the USB cable extcon states accordingly.
+>>
+>> The existing GPIO extcon driver is not suitable for this purpose
+>> as it needs to be taught to understand USB cable states and it
+>> can't handle more than one cable per instance.
+>>
+>> For the USB case we need to handle 2 cable states.
+>> 1) USB (attach/detach)
+>> 2) USB-Host (attach/detach)
+>>
+>> This driver can be easily updated in the future to handle VBUS
+>> events in case it happens to be available on GPIO for any platform.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  20 ++
+>>  drivers/extcon/Kconfig                             |   7 +
+>>  drivers/extcon/Makefile                            |   1 +
+>>  drivers/extcon/extcon-usb-gpio.c                   | 214 +++++++++++++++++++++
+>>  4 files changed, 242 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
+>>
+
+<snip>
+
+>> +
+>> +static int usb_extcon_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       struct device_node *np = dev->of_node;
+>> +       struct usb_extcon_info *info;
+>> +       int ret;
+>> +
+>> +       if (!np)
+>> +               return -EINVAL;
+>> +
+>> +       info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+>> +       if (!info)
+>> +               return -ENOMEM;
+>> +
+>> +       info->dev = dev;
+>> +       info->id_gpiod = devm_gpiod_get(&pdev->dev, "id");
+>> +       if (IS_ERR(info->id_gpiod)) {
+>> +               dev_err(dev, "failed to get ID GPIO\n");
+>> +               return PTR_ERR(info->id_gpiod);
+>> +       }
+>> +
+>> +       ret = gpiod_set_debounce(info->id_gpiod,
+>> +                                USB_GPIO_DEBOUNCE_MS * 1000);
+>> +       if (ret < 0)
+>> +               info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
+>> +
+>> +       INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
+>> +
+>> +       info->id_irq = gpiod_to_irq(info->id_gpiod);
+>> +       if (info->id_irq < 0) {
+>> +               dev_err(dev, "failed to get ID IRQ\n");
+>> +               return info->id_irq;
+>> +       }
+>> +
+>> +       ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
+>> +                                       usb_irq_handler,
+>> +                                       IRQF_SHARED | IRQF_ONESHOT |
+>> +                                       IRQF_NO_SUSPEND,
+>> +                                       pdev->name, info);
+
+use of IRQF_NO_SUSPEND is not recommended to be used together with IRQF_SHARED so
+I'll remove IRQF_SHARED from here if we decide to stick with IRQF_NO_SUSPEND.
+More on this below.
+
+>> +       if (ret < 0) {
+>> +               dev_err(dev, "failed to request handler for ID IRQ\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
+>> +       if (IS_ERR(info->edev)) {
+>> +               dev_err(dev, "failed to allocate extcon device\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       ret = devm_extcon_dev_register(dev, info->edev);
+>> +       if (ret < 0) {
+>> +               dev_err(dev, "failed to register extcon device\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       platform_set_drvdata(pdev, info);
+> 
+> I prefer to execute the device_init_wakeup() function as following
+> for suspend/resume function:
+>             device_init_wakeup(&pdev->dev, 1);
+> 
+>> +
+>> +       /* Perform initial detection */
+>> +       usb_extcon_detect_cable(&info->wq_detcable.work);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int usb_extcon_remove(struct platform_device *pdev)
+>> +{
+>> +       struct usb_extcon_info *info = platform_get_drvdata(pdev);
+>> +
+>> +       cancel_delayed_work_sync(&info->wq_detcable);
+> 
+> Need to add blank line.
+> 
+>> +       return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM_SLEEP
+>> +static int usb_extcon_suspend(struct device *dev)
+>> +{
+>> +       struct usb_extcon_info *info = dev_get_drvdata(dev);
+>> +
+>> +       enable_irq_wake(info->id_irq);
+> 
+> I prefer to use device_may_wakeup() function for whether
+> executing enable_irq_wake() or not. Also, The disable_irq()
+> in the suspend function would prevent us from discarding interrupt
+> before wakeup from suspend completely.
+> 
+
+I need more clarification here.
+
+If we are going to use enable_irq_wake() here then what is the point of IRQF_NO_SUSPEND?
+
+>From Documentation/power/suspend-and-interrupts.txt I see that interrupts marked
+as IRQF_NO_SUSPEND should not be configured for system wakeup using enable_irq_wake().
+
+what is your preference?
+
+Is it good enough to not use IRQF_NO_SUSPEND but use enable_irq_wake() instead to
+enable system wakeup for that IRQ.
+
+>             if (device_may_wakeup(dev))
+>                      enable_irq_wake(info->id_irq);
+>             disable_irq(info->id_irq);
+
+why do we need to disable irq here? How will the system wakeup if IRQ is disabled?
+
+> 
+> 
+>> +       return 0;
+>> +}
+>> +
+
+<snip>
+
+cheers,
+-roger
