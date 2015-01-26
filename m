@@ -1,39 +1,44 @@
-From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
-Date: Mon, 26 Jan 2015 11:11:07 +0000
-Message-ID: <54C620CB.3010500@linn.co.uk>
-References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk> <1422135432.18650.2.camel@perches.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422135432.18650.2.camel@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, abrestic@chromium.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/4] clk: st: New clock domain
+Date: Mon, 26 Jan 2015 11:13:56 +0000
+Message-ID: <1422270840-3039-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+ST hardware have a bunch of clocks which must not be turned off.
+If drivers a) fail to obtain a reference to any of these or b) give
+up a previously obtained reference during suspend, the common clk
+framework will attempt to turn them off and the hardware will
+subsequently die.  The only way to recover from this failure is to
+restart.
 
-On 24/01/15 21:37, Joe Perches wrote:
-> On Fri, 2015-01-23 at 10:07 +0000, Stathis Voukelatos wrote:
->> This patch adds support the Ethernet Packet Sniffer H/W module
->> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
->> The module allows Ethernet packets to be parsed, matched against
->> a user-defined pattern and timestamped. It sits between a 100M
->> Ethernet MAC and PHY and is completely passive with respect to
->> Ethernet frames.
-> []
->>   include/linux/pkt_sniffer.h                        |  89 +++++
-> Why should this file be here?
-> Why not in the drivers/net/pkt-sniffer directory?
->
-Hi Joe,
-Thank you for the feedback.
-This header file is the public API for the driver.
-Should it not live under the 'include' directory?
-Several other drivers seem to follow that convention.
+To avoid either of these two scenarios from catastrophically
+disabling the running system we have implemented a clock domain
+where clocks are consumed and references are taken, thus preventing
+them from being shut down by the framework.
 
-I will include your other suggestions in the next version
-of the patch set.
-Thank you,
-Stathis
+Lee Jones (4):
+  ARM: sti: stih407-family: Supply defines for CLOCKGEN A0
+  ARM: sti: stih407-family: Provide Clock Domain information
+  clk: st: Provide a clock domain
+  clk: dt: st: Introduce clock domain documentation
+
+ .../devicetree/bindings/clock/st/st,clk-domain.txt | 34 ++++++++++++
+ arch/arm/boot/dts/stih407-family.dtsi              | 13 +++++
+ drivers/clk/st/Makefile                            |  2 +-
+ drivers/clk/st/clk-domain.c                        | 63 ++++++++++++++++++++++
+ include/dt-bindings/clock/stih407-clks.h           |  4 ++
+ 5 files changed, 115 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,clk-domain.txt
+ create mode 100644 drivers/clk/st/clk-domain.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
