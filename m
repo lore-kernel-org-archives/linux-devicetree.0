@@ -1,88 +1,117 @@
-From: huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4] drm/panel: Add support for AUO b101ean01 panel
-Date: Mon, 26 Jan 2015 09:47:25 +0800
-Message-ID: <1422236845-25672-1-git-send-email-hl@rock-chips.com>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] arm: omap: hwmod: 43xx: add DebugSS hwmod data
+Date: Mon, 26 Jan 2015 02:04:35 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1501260142590.5450@utopia.booyaka.com>
+References: <1422054704-14915-1-git-send-email-balbi@ti.com> <1422054704-14915-2-git-send-email-balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422054704-14915-2-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AUO b101ean01 panel is a 10.1" 1280x800 panel,
-which can be supported by the simple panel driver.
+Hi
 
-Signed-off-by: huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+the references below are from SPRUHL7
 
----
+On Fri, 23 Jan 2015, Felipe Balbi wrote:
 
-Changes in v4:
-- Add auo,b101ean01.txt file
+> Without hwmod data for DebugSS, performance monitors
+> have no chance of running on AM43xx devices.
+> 
+> Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 40 ++++++++++++++++++++++++++++++
+>  arch/arm/mach-omap2/prcm43xx.h             |  1 +
+>  2 files changed, 41 insertions(+)
+> 
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> index 5c6c8410160e..6709704dd5b5 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> @@ -19,6 +19,7 @@
+>  #include "omap_hwmod.h"
+>  #include "omap_hwmod_33xx_43xx_common_data.h"
+>  #include "prcm43xx.h"
+> +#include "prm44xx.h"
+>  #include "omap_hwmod_common_data.h"
+>  
+>  
+> @@ -60,6 +61,44 @@ static struct omap_hwmod am43xx_wkup_m3_hwmod = {
+>  	.rst_lines_cnt	= ARRAY_SIZE(am33xx_wkup_m3_resets),
+>  };
+>  
+> +/*
+> + * 'debugss' class
+> + * debug and emulation sub system
+> + */
+> +static struct omap_hwmod_opt_clk am43xx_debugss_opt_clks[] = {
+> +	{ .role = "dbg_sysclk", .clk = "dbg_sysclk_ck" },
+> +	{ .role = "dbg_clka", .clk = "dbg_clka_ck", },
+> +	{ .role = "dbg_clkb", .clk = "dbg_clkb_ck", },
+> +	{ .role = "dbg_clkc", .clk = "dbg_clkc_ck", },
+> +};
+> +
+> +static struct omap_hwmod_class am43xx_debugss_hwmod_class = {
+> +	.name	= "debugss",
+> +};
+> +
+> +/* debugss */
+> +static struct omap_hwmod am43xx_debugss_hwmod = {
+> +	.name		= "debugss",
+> +	.class		= &am43xx_debugss_hwmod_class,
+> +	.clkdm_name	= "l3_aon_clkdm",
+> +	.main_clk	= "trace_clk_div_ck",
+> +	.prcm = {
+> +		.omap4 = {
+> +			.clkctrl_offs = AM43XX_CM_WKUP_DBGSS_CLKCTRL_OFFSET,
 
- .../devicetree/bindings/panel/auo,b101ean01.txt    |  7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/auo,b101ean01.txt
+According to Table 6-275 "PRCM_CM_WKUP_DBGSS_CLKCTRL Register Field 
+Descriptions" this should have a 
 
-diff --git a/Documentation/devicetree/bindings/panel/auo,b101ean01.txt b/Documentation/devicetree/bindings/panel/auo,b101ean01.txt
-new file mode 100644
-index 0000000..3590b07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/auo,b101ean01.txt
-@@ -0,0 +1,7 @@
-+AU Optronics Corporation 10.1" WSVGA TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "auo,b101ean01"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index e95385b..24828e0 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -345,6 +345,29 @@ static const struct panel_desc auo_b101aw03 = {
- 	},
- };
- 
-+static const struct drm_display_mode auo_b101ean01_mode = {
-+	.clock = 72500,
-+	.hdisplay = 1280,
-+	.hsync_start = 1280 + 147,
-+	.hsync_end = 1280 + 147 + 32,
-+	.htotal = 1280 + 147 + 32 + 21,
-+	.vdisplay = 800,
-+	.vsync_start = 800 + 4,
-+	.vsync_end = 800 + 4 + 4,
-+	.vtotal = 800 + 4 + 4 + 8,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc auo_b101ean01 = {
-+	.modes = &auo_b101ean01_mode,
-+	.num_modes = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 217,
-+		.height = 136,
-+	},
-+};
-+
- static const struct drm_display_mode auo_b101xtn01_mode = {
- 	.clock = 72000,
- 	.hdisplay = 1366,
-@@ -727,6 +750,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "auo,b101aw03",
- 		.data = &auo_b101aw03,
- 	}, {
-+		.compatible = "auo,b101ean01",
-+		.data = &auo_b101ean01,
-+	}, {
- 		.compatible = "auo,b101xtn01",
- 		.data = &auo_b101xtn01,
- 	}, {
--- 
-1.9.1
+			.modulemode   = MODULEMODE_SWCTRL,
 
+> +		},
+> +	},
+> +	.opt_clks	= am43xx_debugss_opt_clks,
+> +	.opt_clks_cnt	= ARRAY_SIZE(am43xx_debugss_opt_clks),
+> +};
+> +
+> +/* debugss -> l3_main_2 */
+> +static struct omap_hwmod_ocp_if am43xx_debugss__l3_main = {
+> +	.master		= &am43xx_debugss_hwmod,
+> +	.slave		= &am33xx_l3_main_hwmod,
+> +	.clk		= "sys_clkin_ck",
+> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+> +};
+> +
+
+According to Table 31-25 "Debug Modules Memory Mapping" there are a few 
+initiator ports on the DEBUGSS that are connected to various slave ports 
+on various chip-wide interconnects: L3_EMU, L4_PER, L4_WAKEUP, L4_CFG. I 
+would suggest starting by adding at least one of them as a struct 
+omap_hwmod_ocp_if record.  The one attached to L3_EMU would seem like a 
+good one to start with.
+
+> diff --git a/arch/arm/mach-omap2/prcm43xx.h b/arch/arm/mach-omap2/prcm43xx.h
+> index ad7b3e9977f8..bb42cd80526d 100644
+> --- a/arch/arm/mach-omap2/prcm43xx.h
+> +++ b/arch/arm/mach-omap2/prcm43xx.h
+> @@ -93,6 +93,7 @@
+>  #define AM43XX_CM_PER_TIMER5_CLKCTRL_OFFSET		0x0548
+>  #define AM43XX_CM_PER_TIMER6_CLKCTRL_OFFSET		0x0550
+>  #define AM43XX_CM_PER_TIMER7_CLKCTRL_OFFSET		0x0558
+> +#define AM43XX_CM_WKUP_DBGSS_CLKCTRL_OFFSET		0x0020
+>  #define AM43XX_CM_WKUP_WKUP_M3_CLKCTRL_OFFSET		0x0228
+>  #define AM43XX_CM_WKUP_CONTROL_CLKCTRL_OFFSET		0x0360
+>  #define AM43XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET	0x0350
+> -- 
+> 2.3.0-rc1
+
+
+- Paul
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
