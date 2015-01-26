@@ -1,68 +1,127 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 0/4] Add basic support for Mediatek MT8173 SoC
-Date: Mon, 26 Jan 2015 15:27:29 +0100
-Message-ID: <CABuKBeKjGL6puqhqCb6b4=5Qb9+hcm-sGQ7vLxyb2jAFaLYGUQ@mail.gmail.com>
-References: <1421054073-43468-1-git-send-email-eddie.huang@mediatek.com>
+From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: allwinner: sun4i-emac: fix emac
+ SRAM mapping
+Date: Mon, 26 Jan 2015 15:34:49 +0100
+Message-ID: <54C65089.70305@gmail.com>
+References: <1422200959-1717-1-git-send-email-jenskuske@gmail.com> <1422200959-1717-4-git-send-email-jenskuske@gmail.com> <20150125162510.GK8470@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421054073-43468-1-git-send-email-eddie.huang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Peter Maydell <peter.maydell@linaro.org>, Yu-hau Chen <yh.chen@mediatek.c>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBDFBTGTAKGQEAINPHTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150125162510.GK8470@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-01-12 10:14 GMT+01:00 Eddie Huang <eddie.huang@mediatek.com>:
-> MT8173 is a SoC based on 64bit ARMv8 architecture. It contains 2 CA53 + 2 CA57 cores.
-> MT8173 share many HW IP with MT8135 and other MT65xx series. This patchset was tested
-> on MT8173 engineer sample, and boot to shell ok.
->
-> This series contains document bindings, device tree, defconfig, and one sysirq
-> modification for MT8173.
->
-> Changes in v4:
-> 1. Add sysirq, uart binding documents.
-> 2. Disable UART in mt8173.dtsi, enable needed UART in mt8173-evb.dtsi
->
-> This patch base on 3.19-rc1, Joe's sysirq patch [1] and test boot to shell with
-> Catalin Marinas's arch_timer virtual counter patch [2]
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/310335.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/309856.html
+Hi,
 
-Applied to v3.20-next/arm64.
-Thanks.
+On 25/01/15 17:25, Maxime Ripard wrote:
+> Hi Jens,
+>
+> On Sun, Jan 25, 2015 at 04:49:19PM +0100, Jens Kuske wrote:
+>> The EMAC needs SRAM block A3_A4 being mapped to EMAC peripheral to
+>> work. This is done by the bootloader most of the time, but U-Boot
+>> Falcon Mode, for example, skips emac initialization and SRAM would
+>> stay mapped to the CPU.
+>
+> Thanks for reviving this.
+>
+>> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   drivers/net/ethernet/allwinner/Kconfig      |  1 +
+>>   drivers/net/ethernet/allwinner/sun4i-emac.c | 18 ++++++++++++++++++
+>>   2 files changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/allwinner/Kconfig b/drivers/net/ethernet/allwinner/Kconfig
+>> index d8d95d4..508a288 100644
+>> --- a/drivers/net/ethernet/allwinner/Kconfig
+>> +++ b/drivers/net/ethernet/allwinner/Kconfig
+>> @@ -28,6 +28,7 @@ config SUN4I_EMAC
+>>   	select MII
+>>   	select PHYLIB
+>>   	select MDIO_SUN4I
+>> +	select MFD_SYSCON
+>>           ---help---
+>>             Support for Allwinner A10 EMAC ethernet driver.
+>>
+>> diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
+>> index 1fcd556..86c891d 100644
+>> --- a/drivers/net/ethernet/allwinner/sun4i-emac.c
+>> +++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
+>> @@ -18,6 +18,8 @@
+>>   #include <linux/gpio.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/irq.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/mfd/syscon/sun4i-sc.h>
+>>   #include <linux/mii.h>
+>>   #include <linux/module.h>
+>>   #include <linux/netdevice.h>
+>> @@ -28,6 +30,7 @@
+>>   #include <linux/of_platform.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/phy.h>
+>> +#include <linux/regmap.h>
+>>
+>>   #include "sun4i-emac.h"
+>>
+>> @@ -78,6 +81,7 @@ struct emac_board_info {
+>>
+>>   	struct phy_device	*phy_dev;
+>>   	struct device_node	*phy_node;
+>> +	struct regmap		*sc;
+>>   	unsigned int		link;
+>>   	unsigned int		speed;
+>>   	unsigned int		duplex;
+>> @@ -862,6 +866,18 @@ static int emac_probe(struct platform_device *pdev)
+>>   		goto out;
+>>   	}
+>>
+>> +	/* Map SRAM_A3_A4 to EMAC */
+>> +	db->sc = syscon_regmap_lookup_by_compatible(
+>> +						"allwinner,sun4i-a10-syscon");
+>> +	if (IS_ERR(db->sc)) {
+>> +		dev_err(&pdev->dev, "failed to find syscon regmap\n");
+>> +		ret = PTR_ERR(db->sc);
+>> +		goto out;
+>> +	}
+>> +
+>> +	regmap_update_bits(db->sc, SUN4I_SC1, SUN4I_SC1_SRAM_A3_A4_MAP_MASK,
+>> +						SUN4I_SC1_SRAM_A3_A4_MAP_EMAC);
+>> +
+>
+> I don't think that using a syscon is the right solution here.
+>
+> All this SRAM mapping thing is mutually exclusive, and will possibly
+> impact other drivers as well.
 
->
-> Eddie Huang (3):
->   Document: DT: Add bindings for mediatek MT8173 SoC Platform
->   arm64: dts: Add mediatek MT8173 SoC and evaluation board dts and
->     Makefile
->   arm64: mediatek: Add MT8173 SoC Kconfig and defconfig
->
-> Yingjoe Chen (1):
->   irqchip: mtk-sysirq: Get irq number from register resource size
->
->  Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
->  .../bindings/arm/mediatek/mediatek,sysirq.txt      |   1 +
->  .../devicetree/bindings/serial/mtk-uart.txt        |   4 +-
->  arch/arm64/Kconfig                                 |   6 +
->  arch/arm64/boot/dts/Makefile                       |   1 +
->  arch/arm64/boot/dts/mediatek/Makefile              |   5 +
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  38 +++++
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 168 +++++++++++++++++++++
->  arch/arm64/configs/defconfig                       |   2 +
->  drivers/irqchip/irq-mtk-sysirq.c                   |  18 ++-
->  10 files changed, 239 insertions(+), 8 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/mediatek/Makefile
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173.dtsi
->
-> --
-> 1.8.1.1.dirty
->
+Each single SRAM area can only be mapped to a single peripheral, so as 
+long as the driver only changes bits related to his own area nothing can 
+go wrong I believe.
 
+SRAM_C2 looks like it can be mapped do different devices (AE, CE, ACE), 
+but as far as I understand this, they are all related to the ACE device, 
+sharing a common register space, and would have to be handled by a 
+single driver anyway (if that will ever happen without docs) 
+https://linux-sunxi.org/ACE_Register_guide
 
+> I think this is a more a case for a small driver in drivers/soc that
+> would take care of this, and make sure that client drivers don't step
+> on each other's toe.
 
--- 
-motzblog.wordpress.com
+I'm not convinced this is necessary, but what would this driver do 
+different than a basic regmap? Check if the area is already mapped by 
+any driver and deny mapping it again by a different driver? Which 
+different driver, each area is only interesting for a single 
+device/driver? Except maybe mapping it to CPU as general purpose sram, 
+but that would need some direct agreement with the driver to steal its 
+memory anyway.
+
+Jens
