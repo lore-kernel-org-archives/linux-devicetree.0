@@ -1,98 +1,54 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH 1/2] mmc: core: use card pointer as the first parameter of execute_tuning()
-Date: Mon, 26 Jan 2015 19:19:34 +0800
-Message-ID: <1422271175-19445-2-git-send-email-addy.ke@rock-chips.com>
-References: <1422271175-19445-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422271175-19445-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
+From: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
+Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
+Date: Mon, 26 Jan 2015 11:23:42 +0000
+Message-ID: <54C623BE.6010206@linn.co.uk>
+References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk> <3515756.ch1oRd7PaS@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3515756.ch1oRd7PaS@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We need to take the card pointer in execute_tuning() for mmc_send_status(),
-but mmc->card is NULL in tuning state. So we need change the first parameter
-of execute_tuning() to card pointer(struct mmc_card * card).
 
-Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
----
- drivers/mmc/core/core.c           | 2 +-
- drivers/mmc/host/dw_mmc.c         | 3 ++-
- drivers/mmc/host/rtsx_pci_sdmmc.c | 3 ++-
- drivers/mmc/host/rtsx_usb_sdmmc.c | 3 ++-
- include/linux/mmc/host.h          | 2 +-
- 5 files changed, 8 insertions(+), 5 deletions(-)
+On 23/01/15 10:21, Arnd Bergmann wrote:
+> On Friday 23 January 2015 10:07:01 Stathis Voukelatos wrote:
+>> +- interrupts : sniffer interrupt specifier
+>> +- clocks : specify the system clock for the peripheral
+>> +- clock-names : must contain the "sys" entry
+>> +- fifo-block-words : number of words in one data FIFO entry
+>> +
+>> +Example:
+>> +
+>> +sniffer@1814a000 {
+>> +        compatible = "linn,eth-sniffer";
+>> +        reg = <0x1814a000 0x100>, <0x1814a400 0x400>, <0x1814a800 0x400>;
+>> +        reg-names = "regs", "tx-ram", "rx-ram";
+>> +        interrupts = <GIC_SHARED 58 IRQ_TYPE_LEVEL_HIGH>;
+>> +        interrupt-names = "eth-sniffer-irq";
+>> +        clocks = <&system_clk>;
+>> +        clock-names = "sys";
+>> +        fifo-block-words = <4>;
+>>
+> The example contains an interrupt-names property that is not documented.
+> If you want to name interrupts, the exact name strings need to
+> be mandated by the binding. Alternatively just drop the name.
+> I notice that the driver requests the first interrupt without giving
+> a name anyway, and the description above suggests that there can
+> only be one interrupt.
+>
+> 	Arnd
+>
+Hi Arnd,
+Yes, we can probably just drop the interrupt name field.
+It will be done in the next version of the patch set.
+Thank you,
+Stathis
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 1be7055..271f024 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -1101,7 +1101,7 @@ int mmc_execute_tuning(struct mmc_card *card)
- 		opcode = MMC_SEND_TUNING_BLOCK;
- 
- 	mmc_host_clk_hold(host);
--	err = host->ops->execute_tuning(host, opcode);
-+	err = host->ops->execute_tuning(card, opcode);
- 	mmc_host_clk_release(host);
- 
- 	if (err)
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 4bd22af..e54e656 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -1485,8 +1485,9 @@ free_blk_test:
- 	return ret;
- }
- 
--static int dw_mci_execute_tuning(struct mmc_host *mmc, u32 opcode)
-+static int dw_mci_execute_tuning(struct mmc_card *card, u32 opcode)
- {
-+	struct mmc_host *mmc = card->host;
- 	struct dw_mci_slot *slot = mmc_priv(mmc);
- 	struct dw_mci *host = slot->host;
- 	const struct dw_mci_drv_data *drv_data = host->drv_data;
-diff --git a/drivers/mmc/host/rtsx_pci_sdmmc.c b/drivers/mmc/host/rtsx_pci_sdmmc.c
-index 1d3d6c4..230bd2f 100644
---- a/drivers/mmc/host/rtsx_pci_sdmmc.c
-+++ b/drivers/mmc/host/rtsx_pci_sdmmc.c
-@@ -1270,8 +1270,9 @@ out:
- 	return err;
- }
- 
--static int sdmmc_execute_tuning(struct mmc_host *mmc, u32 opcode)
-+static int sdmmc_execute_tuning(struct mmc_card *card, u32 opcode)
- {
-+	struct mmc_host *mmc = card->host;
- 	struct realtek_pci_sdmmc *host = mmc_priv(mmc);
- 	struct rtsx_pcr *pcr = host->pcr;
- 	int err = 0;
-diff --git a/drivers/mmc/host/rtsx_usb_sdmmc.c b/drivers/mmc/host/rtsx_usb_sdmmc.c
-index 88af827..c494c06 100644
---- a/drivers/mmc/host/rtsx_usb_sdmmc.c
-+++ b/drivers/mmc/host/rtsx_usb_sdmmc.c
-@@ -1265,8 +1265,9 @@ out:
- 		return 0;
- }
- 
--static int sdmmc_execute_tuning(struct mmc_host *mmc, u32 opcode)
-+static int sdmmc_execute_tuning(struct mmc_card *card, u32 opcode)
- {
-+	struct mmc_host *mmc = card->host;
- 	struct rtsx_usb_sdmmc *host = mmc_priv(mmc);
- 	struct rtsx_ucr *ucr = host->ucr;
- 	int err = 0;
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 0c8cbe5..ec4128e 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -133,7 +133,7 @@ struct mmc_host_ops {
- 	int	(*card_busy)(struct mmc_host *host);
- 
- 	/* The tuning command opcode value is different for SD and eMMC cards */
--	int	(*execute_tuning)(struct mmc_host *host, u32 opcode);
-+	int	(*execute_tuning)(struct mmc_card *card, u32 opcode);
- 
- 	/* Prepare HS400 target operating frequency depending host driver */
- 	int	(*prepare_hs400_tuning)(struct mmc_host *host, struct mmc_ios *ios);
--- 
-1.8.3.2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
