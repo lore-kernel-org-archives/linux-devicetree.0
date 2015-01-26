@@ -1,72 +1,75 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V3 1/4] sound: soc: jz4740: Add dynamic sampling rate support to jz4740-i2s
-Date: Mon, 26 Jan 2015 14:53:10 +0000
-Message-ID: <1422283993-53642-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1422283993-53642-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: at91: sama5d4: dts: change the nand compatible
+ string
+Date: Mon, 26 Jan 2015 16:07:36 +0100
+Message-ID: <54C65838.4020707@atmel.com>
+References: <1421656387-12538-2-git-send-email-josh.wu@atmel.com> <1421923305-10088-1-git-send-email-josh.wu@atmel.com> <54C0D872.6010005@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422283993-53642-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tiwai@suse.de, perex@perex.cz
-Cc: broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Zubair.Kakakhel@imgtec.com, lars@metafoo.de
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54C0D872.6010005-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The div clock register is not modified during jz4740_i2s_hw_params.
-Hence, default sampling rates are actually used regardless of
-sampling rates input from userspace.
+Le 22/01/2015 12:01, Nicolas Ferre a =E9crit :
+> Le 22/01/2015 11:41, Josh Wu a =E9crit :
+>> As we introduce a new "atmel,sama5d4-nand" compatible string for sam=
+a5d4,
+>> so we need to apply it for sama5d4 chip.
+>>
+>> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>=20
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>=20
+> Brian,
+> I suppose that it makes sense to keep this patch with the previous on=
+e.
+> So, can you take it in your tree?
+>=20
+> Otherwise, it can take the at91 -> arm-soc route.
 
-This patch adds support to calculate the value of the divider from
-the parameters passed from userspace and update the relevant div
-registers
+Bryan,
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+I take it with me right now and try to send it to arm-soc for 3.20.
 
----
-V2 changes: Removed a redundant #define
----
- sound/soc/jz4740/jz4740-i2s.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Best regards,
 
-diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
-index d3d45c6..b7a7e82 100644
---- a/sound/soc/jz4740/jz4740-i2s.c
-+++ b/sound/soc/jz4740/jz4740-i2s.c
-@@ -83,6 +83,8 @@
- #define JZ_AIC_I2S_STATUS_BUSY BIT(2)
- 
- #define JZ_AIC_CLK_DIV_MASK 0xf
-+#define I2SDIV_DV_SHIFT 8
-+#define I2SDIV_DV_MASK (0xf << I2SDIV_DV_SHIFT)
- 
- struct jz4740_i2s {
- 	struct resource *mem;
-@@ -237,10 +239,14 @@ static int jz4740_i2s_hw_params(struct snd_pcm_substream *substream,
- {
- 	struct jz4740_i2s *i2s = snd_soc_dai_get_drvdata(dai);
- 	unsigned int sample_size;
--	uint32_t ctrl;
-+	uint32_t ctrl, div_reg;
-+	int div;
- 
- 	ctrl = jz4740_i2s_read(i2s, JZ_REG_AIC_CTRL);
- 
-+	div_reg = jz4740_i2s_read(i2s, JZ_REG_AIC_CLK_DIV);
-+	div = clk_get_rate(i2s->clk_i2s) / (64 * params_rate(params));
-+
- 	switch (params_format(params)) {
- 	case SNDRV_PCM_FORMAT_S8:
- 		sample_size = 0;
-@@ -264,7 +270,10 @@ static int jz4740_i2s_hw_params(struct snd_pcm_substream *substream,
- 		ctrl |= sample_size << JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_OFFSET;
- 	}
- 
-+	div_reg &= ~I2SDIV_DV_MASK;
-+	div_reg |= (div - 1) << I2SDIV_DV_SHIFT;
- 	jz4740_i2s_write(i2s, JZ_REG_AIC_CTRL, ctrl);
-+	jz4740_i2s_write(i2s, JZ_REG_AIC_CLK_DIV, div_reg);
- 
- 	return 0;
- }
--- 
-1.9.1
+
+>> ---
+>>
+>> Changes in v2:
+>> - still keep the old rm9200 nand compatible string for compatible ol=
+d driver.
+>>
+>>  arch/arm/boot/dts/sama5d4.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama=
+5d4.dtsi
+>> index 1b0f30c..e40b1da 100644
+>> --- a/arch/arm/boot/dts/sama5d4.dtsi
+>> +++ b/arch/arm/boot/dts/sama5d4.dtsi
+>> @@ -267,7 +267,7 @@
+>>  		};
+>> =20
+>>  		nand0: nand@80000000 {
+>> -			compatible =3D "atmel,at91rm9200-nand";
+>> +			compatible =3D "atmel,sama5d4-nand", "atmel,at91rm9200-nand";
+>>  			#address-cells =3D <1>;
+>>  			#size-cells =3D <1>;
+>>  			ranges;
+>>
+>=20
+>=20
+
+
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
