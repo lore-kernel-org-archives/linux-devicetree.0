@@ -1,103 +1,53 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] drivers: of: fix resources freeing in
- of_pci_get_host_bridge_resources()
-Date: Mon, 26 Jan 2015 13:06:42 +0000
-Message-ID: <20150126130642.GB956@e106497-lin.cambridge.arm.com>
-References: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1420644571-18928-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20150119183228.GE10762@e106497-lin.cambridge.arm.com>
- <20150120104922.GF5398@red-moon>
- <20150120112031.GA342@bart.dudau.co.uk>
- <20150126112111.GA547@red-moon>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V2 0/4] sound:soc: jz4740: DT, dynamic sampling, enable clocks
+Date: Mon, 26 Jan 2015 13:15:34 +0000
+Message-ID: <1422278138-51097-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150126112111.GA547@red-moon>
-Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 26, 2015 at 11:21:11AM +0000, Lorenzo Pieralisi wrote:
-> On Tue, Jan 20, 2015 at 11:20:32AM +0000, Liviu Dudau wrote:
-> > On Tue, Jan 20, 2015 at 10:49:22AM +0000, Lorenzo Pieralisi wrote:
-> > > On Mon, Jan 19, 2015 at 06:32:29PM +0000, Liviu Dudau wrote:
-> > >=20
-> > > [...]
-> > >=20
-> > > > > @@ -146,6 +146,7 @@ int of_pci_get_host_bridge_resources(stru=
-ct device_node *dev,
-> > > > >  	struct of_pci_range_parser parser;
-> > > > >  	char range_type[4];
-> > > > >  	int err;
-> > > > > +	struct pci_host_bridge_window *window;
-> > > > > =20
-> > > > >  	if (io_base)
-> > > > >  		*io_base =3D (resource_size_t)OF_BAD_ADDR;
-> > > > > @@ -225,7 +226,10 @@ int of_pci_get_host_bridge_resources(str=
-uct device_node *dev,
-> > > > >  conversion_failed:
-> > > > >  	kfree(res);
-> > > > >  parse_failed:
-> > > > > +	list_for_each_entry(window, resources, list)
-> > > > > +		kfree(window->res);
-> > > > >  	pci_free_resource_list(resources);
-> > > > > +	kfree(bus_range);
-> > > > >  	return err;
-> > > > >  }
-> > > > >  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
-> > > >=20
-> > > > Hi Lorenzo et all,
-> > > >=20
-> > > > Here is my personal view and I am happy to hear from others on =
-the desired
-> > > > behaviour:
-> > > >=20
-> > > > When I wrote this function what I had in mind was that it will =
-parse as
-> > > > much as possible from the device tree and return a list of reso=
-urces that
-> > > > could be successfully converted. If the entire list of ranges c=
-ould not
-> > > > be converted then an error code will be returned, but the calle=
-r still
-> > > > had the list as constructed up to the error. It was the job of =
-the caller
-> > > > to free the list in either cases, as stated in the comment.
-> > >=20
-> > > That's what I am questioning. If the function takes an error path=
-, the
-> > > windows list is freed, so the resource pointers are gone. There i=
-s no
-> > > way the caller can grab those resource pointers and free them.
-> >=20
-> > I stand corrected. Your patch is needed.
->=20
-> Mind acking it ? I will ask Bjorn to take it then.
+Hi,
 
-Sure.=20
+Here are a few simple patches for the jz4740.
 
-Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+First adds dynamic sampling support to jz4740-i2s.
+Then two to add a simple binding and DT support.
+Then a patch to set the clock rate for i2s.
 
->=20
-> Thanks,
-> Lorenzo
->=20
+These are in preparation for jz4780 and ci20 later on.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Patches are based on 3.19-rc6. Quite disjoint and stay within jz4740 
+so should apply easily on other trees.
+
+If you would like to have them rebased to a different tree, please tell.
+
+Thank-you
+
+V2 changes: 
+Removed a redundant #define
+Added #ifdef CONFIG_OF
+Added dma in binding document
+Removed a redundant call to clk_prepare_enable
+
+Zubair Lutfullah Kakakhel (4):
+  sound: soc: jz4740: Add dynamic sampling rate support to jz4740-i2s
+  dt: sound: jz4740: Add binding documentation for jz4740-i2s
+  sound: soc: jz4740: Add DT support to jz4740-i2s driver
+  sound: jz4740: set i2s clk rate to 12MHz
+
+ .../bindings/sound/ingenic,jz4740-i2s.txt          | 21 +++++++++++++++++++++
+ sound/soc/jz4740/jz4740-i2s.c                      | 22 +++++++++++++++++++++-
+ 2 files changed, 42 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
+
+-- 
+1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
