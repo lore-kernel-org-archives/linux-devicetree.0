@@ -1,55 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH net-next v8 0/4] net: Add Keystone NetCP ethernet driver support
-Date: Tue, 27 Jan 2015 23:28:42 +0100
-Message-ID: <25883654.BLFxICW9P0@wuerfel>
-References: <1421367007-19744-1-git-send-email-m-karicheri2@ti.com> <20150119.151106.822126941934010309.davem@davemloft.net> <54BE7A00.2020205@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: watchdog: Add DT binding documentation for jz47xx watchdog timer
+Date: Tue, 27 Jan 2015 23:36:36 +0100
+Message-ID: <2960717.ZtXrNMeS1F@wuerfel>
+References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com> <16185448.sH4QMJhjYS@wuerfel> <20150127221909.GA21671@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54BE7A00.2020205@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150127221909.GA21671-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 20 January 2015 10:53:36 Murali Karicheri wrote:
-> On 01/19/2015 03:11 PM, David Miller wrote:
-> > From: Murali Karicheri<m-karicheri2@ti.com>
-> > Date: Thu, 15 Jan 2015 19:10:03 -0500
-> >
-> >> The Network Coprocessor (NetCP) is a hardware accelerator that processes
-> >> Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
-> >> switch sub-module to send and receive packets. NetCP also includes a packet
-> >> accelerator (PA) module to perform packet classification operations such as
-> >> header matching, and packet modification operations such as checksum
-> >> generation. NetCP can also optionally include a Security Accelerator(SA)
-> >> capable of performing IPSec operations on ingress/egress packets.
-> >>
-> >> Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
-> >> includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
-> >> 1Gb/s rates per Ethernet port.
-> >>
-> >> Both GBE and XGBE network processors supported using common driver. It
-> >> is also designed to handle future variants of NetCP.
-> >
-> > Series applied to net-next, thanks.
-> David,
+On Tuesday 27 January 2015 14:19:09 Guenter Roeck wrote:
+> On Tue, Jan 27, 2015 at 10:29:49PM +0100, Arnd Bergmann wrote:
+> > On Tuesday 27 January 2015 12:52:29 Guenter Roeck wrote:
+> > > Driver does this (today):
+> > > 
+> > >          drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
+> > > 
+> > > Isn't that the name to use ? Just wondering.
+> > 
+> > Just because the driver uses it at the moment does not mean it's the name
+> > that the IP block uses.
+> > 
+> > clk_get() has the unpleasant property of doing fuzzy matching
+> > on the name that is passed. It first tries to use the string
+> > as the name of the clock input of the device, but if that is
+> > not there, it falls back to looking for a global clk with a con_id.
+> > 
+> > In DT, we only support the first kind, but if a driver currently
+> > uses the second, you get the wrong name.
+> > 
+> > Looking at arch/mips/jz4740/clock.c now, this seems to be exactly
+> > what is going on here: there is no clkdev_add call to associate
+> > the device clocks, so it can only match a global clock entry. 
+> > 
+> Me confused :-(.
 > 
-> Thanks a lot for applying this series. This helps us move forward to 
-> work on the next set of patches.
+> Does that mean the driver needs to be fixed, that the DT property
+> needs to change (to what ?), or both ?
 
-Hi Murali,
+Both.
 
-Building an ARM 'allmodconfig' kernel now runs into two separate problems
-from your driver:
+The jz47xx clock driver should register a clkdev lookup table with
+proper clock input names for each clock that is referenced by a
+device, and then the drivers can use the right names.
 
-- you have two module_init() instances in one module, which conflict.
+In a lot of cases, the best name for a clock is no name so you
+just use an anonymous clock like
 
-- you have two files that are linked into more than one module, so building
-  both TI_CPSW and TI_KEYSTONE_NETCP in the same kernel fails.
+	clk = clk_get(dev, NULL);
 
-The answer to both of these is probably to have separate loadable modules,
-but you might be able to come up with a different solution.
+but this still requires a clock lookup table.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
