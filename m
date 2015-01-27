@@ -1,51 +1,48 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC/PATCH] pinctrl: sh-pfc: Accept standard function, pins and
- groups properties
-Date: Tue, 27 Jan 2015 21:40:45 +0100
-Message-ID: <CAMuHMdW5Apvbe7+y2FW6O=JS7ZMUQsW6eFMc-ooiLvF3fqY0WA@mail.gmail.com>
-References: <CACRpkda4SBof0EaZVWtEYaeb6j_BGAVj39kje+mBz90eB3qAwQ@mail.gmail.com>
-	<1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: watchdog: Add DT binding documentation for
+ jz47xx watchdog timer
+Date: Tue, 27 Jan 2015 12:52:29 -0800
+Message-ID: <20150127205229.GA6983@roeck-us.net>
+References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+ <1422371490-44402-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+ <11680810.808F8uDyN0@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niso@kth.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <11680810.808F8uDyN0@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 27, 2015 at 9:31 PM, Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
-> +               if (of_find_property(np, "groups", NULL) ||
-> +                   of_find_property(np, "pins", NULL)) {
-> +                       pmx->func_prop_name = "function";
-> +                       pmx->groups_prop_name = "groups";
-> +                       pmx->pins_prop_name = "pins";
-> +               } else {
-> +                       pmx->func_prop_name = "renesas,function";
-> +                       pmx->groups_prop_name = "renesas,groups";
-> +                       pmx->pins_prop_name = "renesas,pins";
-> +               }
+On Tue, Jan 27, 2015 at 09:16:45PM +0100, Arnd Bergmann wrote:
+> On Tuesday 27 January 2015 15:11:29 Zubair Lutfullah Kakakhel wrote:
+> > +clocks: phandle to rtcclk
+> > +clock-names: must be "rtc"
+> > +
+> > +Example:
+> > +
+> > +watchdog: jz47xx-watchdog@0x10002000 {
+> > +       compatible = "ingenic,jz4780-watchdog";
+> > +       reg = <0x10002000 0x100>;
+> > +
+> > +       clocks = <&rtclk>;
+> > +       clock-names = "rtc";
+> > +};
+> 
+> Why is the name "rtc"? are you sure you are not confusing the output
+> name of the clock controller with the input of the watchdog device?
+> 
+Driver does this (today):
 
-Do we want to be clever and save memory?
+	 drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
 
-        pmx->func_prop_name = "renesas,function";
-        pmx->groups_prop_name = "renesas,groups";
-        pmx->pins_prop_name = "renesas,pins";
-        if (of_find_property(np, "groups", NULL) ||
-            of_find_property(np, "pins", NULL)) {
-                pmx->func_prop_name += strlen("renesas,");
-                pmx->groups_prop_name += strlen("renesas,");
-                pmx->pins_prop_name += strlen("renesas,");
-        }
+Isn't that the name to use ? Just wondering.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Thanks,
+Guenter
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
