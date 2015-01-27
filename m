@@ -1,72 +1,47 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v1 3/3] Documentation: dt-bindings: Add the binding info for
-	APM X-Gene AHBC IOMMU driver.
-Date: Tue, 27 Jan 2015 22:55:54 +0530
-Message-ID: <1422379554-10328-4-git-send-email-stripathi@apm.com>
-References: <1422379554-10328-1-git-send-email-stripathi@apm.com>
+From: Bjorn <bjorn@sonymobile.com>
+Subject: Re: [PATCH 3/3] pinctrl: qcom: Add msm8916 pinctrl driver
+Date: Tue, 27 Jan 2015 09:31:08 -0800
+Message-ID: <20150127173107.GE11960@sonymobile.com>
+References: <1421745476-6276-1-git-send-email-svarbanov@mm-sol.com>
+ <1421745476-6276-4-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1422379554-10328-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1421745476-6276-4-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Joonwoo Park <joonwoop@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree binding information for X-Gene
-AHBC IOMMU driver.
+On Tue 20 Jan 01:17 PST 2015, Stanimir Varbanov wrote:
 
-Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
----
- .../devicetree/bindings/iommu/xgene,ahbc-iommu.txt | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/xgene,ahbc-iommu.txt
+> From: Joonwoo Park <joonwoop@codeaurora.org>
+> 
+> Add initial pinctrl driver to support pin configuration with
+> pinctrl framework for msm8916.
+> 
+> Signed-off-by: Joonwoo Park <joonwoop@codeaurora.org>
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> ---
+[..]
+> +
+> +static const struct msm_pingroup msm8916_groups[] = {
+> +       PINGROUP(0, blsp_spi1, blsp_uart1, blsp_uim1, dmic0_clk, NA, NA, NA, NA,
+> +                NA),
 
-diff --git a/Documentation/devicetree/bindings/iommu/xgene,ahbc-iommu.txt b/Documentation/devicetree/bindings/iommu/xgene,ahbc-iommu.txt
-new file mode 100644
-index 0000000..37ad3a6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/xgene,ahbc-iommu.txt
-@@ -0,0 +1,31 @@
-+*APM X-Gene AHBC IOMMU Architecture Implementation
-+
-+APM X-Gene SoC AHBC IOMMU translates the AHBC 32-bit address from
-+dma master to 42-bit AXI address by using a set of AIM(AHB Inbound mapper)
-+register.
-+
-+** AHBC IOMMU required properties:
-+
-+- compatible    : Should be "apm,xgene-ahbc-iommu"
-+- reg           : Base address of the AHBC AXI mapper registers
-+- iommu-cells   : It is single master IOMMU.
-+
-+Example:
-+		/* IOMMU controller device node */
-+		ahbc_iommu: ahbc_iommu@0x1f2a0080 {
-+			compatible = "apm,xgene-ahbc-iommu";
-+			#iommu-cells = <0>;
-+			reg = <0x0 0x1f2a0080 0x0 0x90>;
-+		};
-+
-+		/* Master node */
-+		sdhc0: sdhc@1c000000 {
-+			device_type = "sdhc";
-+			compatible = "arasan,sdhci-8.9a";
-+			reg = <0x0 0x1c000000 0x0 0x100>;
-+			interrupts = <0x0 0x49 0x4>;
-+			clock-names = "clk_xin", "clk_ahb";
-+			clocks = <&sdioclk 0>, <&ahbclk 0>;
-+			iommus = <&ahbc_iommu>;
-+		};
-+
---
-1.8.2.1
+It's totally okay not to line break these things...
+
+> +       PINGROUP(1, blsp_spi1, blsp_uart1, blsp_uim1, dmic0_data, NA, NA, NA,
+> +                NA, NA),
+> +       PINGROUP(2, blsp_spi1, blsp_uart1, blsp_i2c1, NA, NA, NA, NA, NA, NA),
+[..]
+> +};
+> +
+[..]
+
+My documentation is lacking the pingroup table, the rest is:
+Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+
+Regards,
+Bjorn
