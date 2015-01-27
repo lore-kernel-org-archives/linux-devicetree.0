@@ -1,40 +1,55 @@
-From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Subject: [PATCH] staging: iio: adc: mxs-lradc: Change type in printf format string
-Date: Tue, 27 Jan 2015 23:23:33 +0100
-Message-ID: <1422397413-9447-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Cc: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aybuke Ozdemir <aybuke.147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vaishali Thakkar <vthakkar1994-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Hodaszi <robert.hodaszi-i7dp0qKlBMg@public.gmane.org>, Brian Vandre <bvandre-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH net-next v8 0/4] net: Add Keystone NetCP ethernet driver support
+Date: Tue, 27 Jan 2015 23:28:42 +0100
+Message-ID: <25883654.BLFxICW9P0@wuerfel>
+References: <1421367007-19744-1-git-send-email-m-karicheri2@ti.com> <20150119.151106.822126941934010309.davem@davemloft.net> <54BE7A00.2020205@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54BE7A00.2020205@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Wrong type in printf format string, requires 'int'
-but the argument type is 'unsigned int'
+On Tuesday 20 January 2015 10:53:36 Murali Karicheri wrote:
+> On 01/19/2015 03:11 PM, David Miller wrote:
+> > From: Murali Karicheri<m-karicheri2@ti.com>
+> > Date: Thu, 15 Jan 2015 19:10:03 -0500
+> >
+> >> The Network Coprocessor (NetCP) is a hardware accelerator that processes
+> >> Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
+> >> switch sub-module to send and receive packets. NetCP also includes a packet
+> >> accelerator (PA) module to perform packet classification operations such as
+> >> header matching, and packet modification operations such as checksum
+> >> generation. NetCP can also optionally include a Security Accelerator(SA)
+> >> capable of performing IPSec operations on ingress/egress packets.
+> >>
+> >> Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+> >> includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+> >> 1Gb/s rates per Ethernet port.
+> >>
+> >> Both GBE and XGBE network processors supported using common driver. It
+> >> is also designed to handle future variants of NetCP.
+> >
+> > Series applied to net-next, thanks.
+> David,
+> 
+> Thanks a lot for applying this series. This helps us move forward to 
+> work on the next set of patches.
 
-This was found using a static code analysis program called cppcheck
+Hi Murali,
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
----
- drivers/staging/iio/adc/mxs-lradc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Building an ARM 'allmodconfig' kernel now runs into two separate problems
+from your driver:
 
-diff --git a/drivers/staging/iio/adc/mxs-lradc.c b/drivers/staging/iio/adc/mxs-lradc.c
-index f053535..887767b 100644
---- a/drivers/staging/iio/adc/mxs-lradc.c
-+++ b/drivers/staging/iio/adc/mxs-lradc.c
-@@ -1001,7 +1001,7 @@ static ssize_t mxs_lradc_show_scale_available_ch(struct device *dev,
- 	int i, len = 0;
- 
- 	for (i = 0; i < ARRAY_SIZE(lradc->scale_avail[ch]); i++)
--		len += sprintf(buf + len, "%d.%09u ",
-+		len += sprintf(buf + len, "%u.%09u ",
- 			       lradc->scale_avail[ch][i].integer,
- 			       lradc->scale_avail[ch][i].nano);
- 
--- 
-1.7.10.4
+- you have two module_init() instances in one module, which conflict.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- you have two files that are linked into more than one module, so building
+  both TI_CPSW and TI_KEYSTONE_NETCP in the same kernel fails.
+
+The answer to both of these is probably to have separate loadable modules,
+but you might be able to come up with a different solution.
+
+	Arnd
