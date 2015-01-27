@@ -1,101 +1,74 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v4 0/5] drivers: bus: Add Simple Power-Managed Bus
-Date: Tue, 27 Jan 2015 09:42:03 -0800
-Message-ID: <7htwzcyvbo.fsf@deeprootsystems.com>
-References: <1422288977-20353-1-git-send-email-geert+renesas@glider.be>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] arm: omap: hwmod: 43xx: add DebugSS hwmod data
+Date: Tue, 27 Jan 2015 17:55:44 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1501271751020.4845@utopia.booyaka.com>
+References: <1422054704-14915-1-git-send-email-balbi@ti.com> <1422054704-14915-2-git-send-email-balbi@ti.com> <alpine.DEB.2.02.1501260142590.5450@utopia.booyaka.com> <20150126165640.GA10679@saruman.tx.rr.com> <20150126194933.GG6660@saruman.tx.rr.com>
+ <20150127160143.GH14623@saruman.tx.rr.com> <alpine.DEB.2.02.1501271652340.7149@utopia.booyaka.com> <20150127171532.GC14878@saruman.tx.rr.com> <20150127171843.GD14878@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1422288977-20353-1-git-send-email-geert+renesas@glider.be>
-	(Geert Uytterhoeven's message of "Mon, 26 Jan 2015 17:16:12 +0100")
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Felipe Balbi <balbi@ti.com>, Olof Johansson <olof@lixom.net>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150127171843.GD14878-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Geert Uytterhoeven <geert+renesas@glider.be> writes:
+On Tue, 27 Jan 2015, Felipe Balbi wrote:
 
->         Hi all,
->
-> The Renesas Bus State Controller (BSC) provides an external bus for
-> connecting multiple external devices to an SoC, driving several chip
-> select lines, for e.g. NOR FLASH, Ethernet and USB.
-> On the kzm9g and ape6evm development boards, an smsc9220 Ethernet
-> controller is connnected to the BSC of an SH-Mobile AG5 (sh73a0) resp.
-> R-Mobile APE6 (r8a73a4) SoC.
->
-> The BSC is a fairly simple memory-mapped bus, hence a "simple-bus"
-> compatibility seems suitable.  However, the BSC is special in two
-> ways:
->   1. It is part of a PM domain (A4S on sh73a0),
->   2. It has a gateable functional clock (ZB).
-> Before a device connected to the BSC can be accessed, the PM domain
-> containing the BSC must be powered on, and the functional clock
-> driving the BSC must be enabled.
->
-> Both special properties can be described in DT in a standardized way
-> ("power-domains = <&pd_a4s>" and "clocks = <&zb_clk>", cfr. the
-> example in the DT binding documentation).  Externally connected
-> devices are described as children of the BSC node.
->
-> Unfortunately this doesn't mean everything will work out-of-the-box.
-> There are two problems:
->   1. Without a device driver bound to the bus device, this device is
->      not attached to the PM domain. And although a child device is
->      present and active, the PM domain may be powered down, as it's
->      considered unused by the PM domain core.
->   2. Without a device driver calling pm_runtime_enable(), its
->      functional clock is not enabled. Once runtime PM is enabled, the
->      R-Mobile PM domain platform driver manages the functional clock
->      using runtime PM.
->
-> As none of the above is really bus hardware-specific (PM domains and
-> functional clocks in clock domains are handled from genpd and platform
-> code), this series adds a Simple Power-Managed Bus driver for
-> transparent busses, which matches against "simple-pm-bus", enables
-> runtime PM for the bus device, and calls of_platform_populate() to
-> probe for child devices.
-> Due to the child-parent relationship of devices connected to the bus,
-> as long as the device drivers for the child devices are runtime PM
-> enabled, the bus's PM domain will be powered, and the bus's clock will
-> be enabled automatically when needed, for both runtime PM and s2ram.
->
-> This was tested on sh73a0/kzm9g-multiplatform (by me), and (v3) on
-> r8a73a4/ape6evm-multiplatform (by Ulrich Hecht). Without this,
-> Ethernet doesn't work, as the ZB clock is disabled by
-> clk_disable_unused().
->
-> Felipe: It looks like drivers/usb/musb/musb_am335x.c can be removed, if
-> "ti,am33xx-usb" claims compatibility with "simple-pm-bus"?
->
-> As drivers/bus doesn't have a maintainer, and this driver is needed to
-> move two shmobile platforms away from legacy to multiplatform, I think
-> this can go in through Simon's shmobile tree.
->
-> Changes compared to v3:
->   - Replace "simple-bus" by "simple-pm-bus" in the bindings,
->   - Move the "renesas,bsc" bindings to a separate document,
->   - Bind against the generic "simple-pm-bus" instead of "renesas,bsc",
->   - Explicitly call of_platform_populate() after pm_runtime_enable() to
->     enforce ordering, instead of depending on claimed compatibility with
->     "simple-bus".
->
-> Changes compared to v2:
->   - Document required properties inherited from "simple-bus",
->   - Document required "reg" property for "renesas,bsc",
->   - Move "ranges" before "reg" in the example,
->   - Add Tested-by,
->   - Split-off sh73a0/kzm9g and r8a73a4/ape6evm DTS updates.
->
-> Changes compared to v1 (more detailed change logs in the individual
-> patches):
->   - Added sorting of drivers/bus Kconfig and Makefile entries,
->   - Added DT binding documentation,
->   - Rename from "Renesas Bus State Controller Driver" (renesas-bsc) to
->     "Simple Power-Managed Bus Driver" (simple-pm-bus),
->   - Postponed adding power-domains properties to the dtsi,
->   - Added updates for r8a73a4/ape6evm.
->
-> Thanks for your comments!
+> On Tue, Jan 27, 2015 at 11:15:32AM -0600, Felipe Balbi wrote:
+> > On Tue, Jan 27, 2015 at 05:12:05PM +0000, Paul Walmsley wrote:
+> > > On Tue, 27 Jan 2015, Felipe Balbi wrote:
+> > > 
+> > > > On Mon, Jan 26, 2015 at 01:49:33PM -0600, Felipe Balbi wrote:
+> > > > > On Mon, Jan 26, 2015 at 10:56:40AM -0600, Felipe Balbi wrote:
+> > > > >
+> > > > > > hm... modulemode SWCTRL causes wait_target_ready to fail. Any hints ?
+> > > > > 
+> > > > > gets stuck in transition state. PRCM_CM_WKUP_DBGSS_CLKCTRL is always
+> > > > > read as 0x 12510f00 which would translate into:
+> > > > > 
+> > > > > - module disabled
+> > > > > - all opt clocks are on
+> > > > > - module is transitioning
+> > > > > - module in standby
+> > > > > - clkA as TPIU and STM trace clock
+> > > > > - all dividers set to 2
+> > > > 
+> > > > just fyi, checking with HW folks, this might be a new bug, unless
+> > > > debugss needs something special.
+> > > 
+> > > If that happens on DEBUGSS disable, it's probably the same issue as on 
+> > > AM33xx:
+> > > 
+> > > http://www.spinics.net/lists/arm-kernel/msg320801.html
+> > > http://www.spinics.net/lists/arm-kernel/msg321930.html
+> > > http://www.spinics.net/lists/arm-kernel/msg329151.html
+> > > 
+> > > Does adding HWMOD_INIT_NO_IDLE fix the issue you're seeing?
+> > 
+> > I'll try it out in a bit...
+> 
+> nope, same thing.
+> 
+> [   27.633235] omap_hwmod: debugss: _wait_target_disable failed
 
-Reviewed-by: Kevin Hilman <khilman@linaro.org>
+OK, looking at the code, this makes sense.  So here's what I'd suggest 
+asking the hardware team: is the right approach to:
+
+1. keep the DEBUGSS CLKCTRL MODULEMODE bitfield at 0x2 all the time, even 
+when it's not in use or when entering chip low-power states, or
+
+2. program the DEBUGSS CLKCTRL MODULEMODE bitfield to 0x0 when the DEBUGSS 
+is not in use or when entering chip low-power states, but ignore the 
+DEBUGSS CLKCTRL IDLEST register 
+
+We'll need a new hwmod flag either way; the question is whether it should 
+be something like HWMOD_CANNOT_DISABLE (case 1), or 
+HWMOD_DISABLE_IGNORE_IDLEST (case 2).
+
+
+- Paul
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
