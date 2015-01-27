@@ -1,30 +1,60 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] staging: iio: adc: mxs-lradc: Change type in printf format string
-Date: Tue, 27 Jan 2015 23:59:58 +0100
-Message-ID: <201501272359.59011.marex@denx.de>
-References: <1422397413-9447-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] ARM: digicolor: add minimal device tree
+ description
+Date: Tue, 27 Jan 2015 15:01:41 -0800
+Message-ID: <20150127230141.GA11263@quad.lixom.net>
+References: <cover.1421219953.git.baruch@tkos.co.il>
+ <474d0849bb30ab4ec323fa4c1bc67b30b31d3884.1421219953.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422397413-9447-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aybuke Ozdemir <aybuke.147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vaishali Thakkar <vthakkar1994-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Hodaszi <robert.hodaszi-i7dp0qKlBMg@public.gmane.org>, Brian Vandre <bvandre-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <474d0849bb30ab4ec323fa4c1bc67b30b31d3884.1421219953.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, January 27, 2015 at 11:23:33 PM, Rickard Strandqvist wrote:
-> Wrong type in printf format string, requires 'int'
-> but the argument type is 'unsigned int'
+Hi,
+
+On Wed, Jan 14, 2015 at 10:40:32AM +0200, Baruch Siach wrote:
+> cx92755.dtsi describes CX92755 on chip peripherals. conexant_equinox.dts
+> describes the Equinox evaluation board for the CX92755 SoC.
 > 
-> This was found using a static code analysis program called cppcheck
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile             |   1 +
+>  arch/arm/boot/dts/conexant_equinox.dts |  74 +++++++++++++++++++++++
+>  arch/arm/boot/dts/cx92755.dtsi         | 107 +++++++++++++++++++++++++++++++++
+>  3 files changed, 182 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/conexant_equinox.dts
+>  create mode 100644 arch/arm/boot/dts/cx92755.dtsi
 > 
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 91bd5bd62857..fbeb65eaddda 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -75,6 +75,7 @@ dtb-$(CONFIG_ARCH_BRCMSTB) += \
+>  	bcm7445-bcm97445svmb.dtb
+>  dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
+>  	da850-evm.dtb
+> +dtb-$(CONFIG_ARCH_DIGICOLOR) += conexant_equinox.dtb
+>  dtb-$(CONFIG_ARCH_EFM32) += efm32gg-dk3750.dtb
+>  dtb-$(CONFIG_ARCH_EXYNOS) += exynos3250-monk.dtb \
+>  	exynos3250-rinato.dtb \
+> diff --git a/arch/arm/boot/dts/conexant_equinox.dts b/arch/arm/boot/dts/conexant_equinox.dts
+> new file mode 100644
+> index 000000000000..f33bf5635d47
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/conexant_equinox.dts
 
-Makes sense, thanks!
+To segment the namespace a bit, we ask that you prefix your dts files with the
+platform. What would be a suitable prefix here? conexant? digicolor?
 
-Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
-Best regards,
-Marek Vasut
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
