@@ -1,54 +1,75 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Reading /sys with side effects (was Re: [PATCH 1/2] Documentation:
- leds: Add description of LED Flash class extension)
-Date: Tue, 27 Jan 2015 23:37:08 +0100
-Message-ID: <20150127221958.GA18993@amd>
-References: <1422346028-16739-1-git-send-email-j.anaszewski@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: watchdog: Add DT binding documentation for jz47xx watchdog timer
+Date: Tue, 27 Jan 2015 23:42:14 +0100
+Message-ID: <9081741.fTg5kD1W54@wuerfel>
+References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com> <20150127221909.GA21671@roeck-us.net> <2960717.ZtXrNMeS1F@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422346028-16739-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, Greg KH <greg@kroah.com>, kernel list <linux-kernel@vger.kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2960717.ZtXrNMeS1F@wuerfel>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Tuesday 27 January 2015 23:36:36 Arnd Bergmann wrote:
+> On Tuesday 27 January 2015 14:19:09 Guenter Roeck wrote:
+> > On Tue, Jan 27, 2015 at 10:29:49PM +0100, Arnd Bergmann wrote:
+> > > On Tuesday 27 January 2015 12:52:29 Guenter Roeck wrote:
+> > > > Driver does this (today):
+> > > > 
+> > > >          drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
+> > > > 
+> > > > Isn't that the name to use ? Just wondering.
+> > > 
+> > > Just because the driver uses it at the moment does not mean it's the name
+> > > that the IP block uses.
+> > > 
+> > > clk_get() has the unpleasant property of doing fuzzy matching
+> > > on the name that is passed. It first tries to use the string
+> > > as the name of the clock input of the device, but if that is
+> > > not there, it falls back to looking for a global clk with a con_id.
+> > > 
+> > > In DT, we only support the first kind, but if a driver currently
+> > > uses the second, you get the wrong name.
+> > > 
+> > > Looking at arch/mips/jz4740/clock.c now, this seems to be exactly
+> > > what is going on here: there is no clkdev_add call to associate
+> > > the device clocks, so it can only match a global clock entry. 
+> > > 
+> > Me confused :-(.
+> > 
+> > Does that mean the driver needs to be fixed, that the DT property
+> > needs to change (to what ?), or both ?
+> 
+> Both.
+> 
+> The jz47xx clock driver should register a clkdev lookup table with
+> proper clock input names for each clock that is referenced by a
+> device, and then the drivers can use the right names.
+> 
+> In a lot of cases, the best name for a clock is no name so you
+> just use an anonymous clock like
+> 
+>         clk = clk_get(dev, NULL);
+> 
+> but this still requires a clock lookup table.
 
-> +	- flash_fault - list of flash faults that may have occurred:
-> +		* led-over-voltage - flash controller voltage to the flash LED
-> +			has exceededthe limit specific to the flash controller
-> +		* flash-timeout-exceeded - the flash strobe was still on when
-> +			the timeout set by the user has expired; not all flash
-> +			controllers may set this in all such conditions
-> +		* controller-over-temperature - the flash controller has
-> +			overheated
-> +		* controller-short-circuit - the short circuit protection
-> +			of the flash controller has been triggered
-> +		* led-power-supply-over-current - current in the LED power
-> +			supply has exceeded the limit specific to the flash
-> +			controller
-> +		* indicator-led-fault - the flash controller has detected
-> +			a short or open circuit condition on the indicator LED
-> +		* led-under-voltage - flash controller voltage to the flash
-> +			LED has been below the minimum limit specific to
-> +			the flash
-> +		* controller-under-voltage - the input voltage of the flash
-> +			controller is below the limit under which strobing the
-> +			flash at full current will not be possible. The condition
-> +			persists until this flag is no longer set
-> +		* led-over-temperature - the temperature of the LED has exceeded
-> +			its allowed upper limit
-> +
-> +		Flash faults are cleared, if possible, by reading the attribute.
+To illustrate why the current approach is wrong, think of a driver
+that handles a device that can be used on two different SoCs.
 
-That's bad. Now you can no longer present flash_fault file as readable
-to non-root users, and grep -ri foo /sys will interfere with your
-camera application.
+The name used by the clock provider is SoC specific, so the driver
+would need to know which SoC it's being used on in order to pass
+the right clock signal name. clkdev is meant to solve this by providing
+a lookup between the device/clock-input pair and the actual clock.
 
-Bad interface, just fix it.
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Apparently jz4740 does not share any devices with another SoC at
+the moment, so this has not been a problem, but if jz4780 has
+a slightly different clock tree, it's already broken.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
