@@ -1,40 +1,88 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH V3 0/2] dmaengine: Support for IMG MDC
-Date: Tue, 27 Jan 2015 10:00:12 +0000
-Message-ID: <CAL1qeaEF_J_VXvbF_VCPgacGGrbqagGALUm1m=T_yVqV7RooUg@mail.gmail.com>
-References: <1418338757-10022-1-git-send-email-abrestic@chromium.org>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] ARM: mediatek: Add config options for mediatek
+ SoCs.
+Date: Tue, 27 Jan 2015 11:16:40 +0100
+Message-ID: <1422353800.14015.35.camel@x220>
+References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
+	 <1421818097-9281-2-git-send-email-hongzhou.yang@mediatek.com>
+	 <CABuKBeJGigY5ym9cJy=PYK8jbdsOLLtkmovHq6xho4gYseCAWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418338757-10022-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CABuKBeJGigY5ym9cJy=PYK8jbdsOLLtkmovHq6xho4gYseCAWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "Joe. C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, alan.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, toby.liu@mediat
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Joe,
 
-On Thu, Dec 11, 2014 at 10:59 PM, Andrew Bresticker
-<abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> This series adds support for the IMG Multi-threaded DMA Controller (MDC)
-> which is found on IMG SoCs.  Currently this driver only supports the
-> variant found on the MIPS-based Pistachio SoC.
->
-> The MDC supports slave and memory-to-memory transfers on up to 32 channels.
-> Requests from channels are handled by MDC threads.  Thread assignments are
-> per-channel and are specified in the device-tree.
->
-> Tested on a platform based on the Pistachio SoC with additional patches.
-> Support for Pistachio will be submitted later.  Slave DMA was tested
-> with the recently submitted IMG SPFI driver [1] and memory-to-memory
-> DMA was tested with the dmatest module.
->
-> Based on Vinod's slave-dma/topic/slave_caps_device_control_fix.
+On Thu, 2015-01-22 at 13:54 +0100, Matthias Brugger wrote:
+> 2015-01-21 6:28 GMT+01:00 Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> > From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >
+> > The upcoming MTK pinctrl driver have a big pin table for each SoC
+> > and we don't want to bloat the kernel binary if we don't need it.
+> > Add config options so we can build for one SoC only.
+> >
+> > Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Applied to v3.20-next/soc
 
-Any more comments on this series?  I'd like to get this in for 3.20 if possible.
+This became commit ad8a221e1f49 ("ARM: mediatek: Add config options for
+mediatek SoCs.") in today's linux-next (ie, next-20150127). I noticed
+because a script I use to check linux-next spotted a problem with it.
 
-Thanks!
-Andrew
+> > ---
+> >  arch/arm/mach-mediatek/Kconfig | 22 +++++++++++++++++++++-
+> >  1 file changed, 21 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+> > index f73f588..f7e463c 100644
+> > --- a/arch/arm/mach-mediatek/Kconfig
+> > +++ b/arch/arm/mach-mediatek/Kconfig
+> > @@ -1,6 +1,26 @@
+> > -config ARCH_MEDIATEK
+> > +menuconfig ARCH_MEDIATEK
+> >         bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
+> >         select ARM_GIC
+> >         select MTK_TIMER
+> >         help
+> >           Support for Mediatek MT65xx & MT81xx SoCs
+> > +
+> > +if ARCH_MEDIATEK
+> > +
+> > +config MACH_MT6589
+> > +       bool "MediaTek MT6589 SoCs support"
+> > +       default ARCH_MEDIATEK
+> > +
+> > +config MACH_MT6592
+> > +       bool "MediaTek MT6592 SoCs support"
+> > +       default ARCH_MEDIATEK
+> > +
+> > +config MACH_MT8127
+> > +       bool "MediaTek MT8127 SoCs support"
+> > +       default ARCH_MEDIATEK
+> > +
+> > +config MACH_MT8135
+> > +       bool "MediaTek MT8135 SoCs support"
+> > +       default ARCH_MEDIATEK
+> > +
+> > +endif
+
+None of these four new MACH_MT* Kconfig symbols are currently used in
+linux-next. I assume that patches that actually use them (either as a
+Kconfig symbol or as a CONFIG_* macro) are still pending. Is that
+correct?
+
+Thanks,
+
+
+Paul Bolle
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
