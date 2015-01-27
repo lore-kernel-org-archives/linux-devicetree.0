@@ -1,71 +1,50 @@
-From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 1/3] ASoC: codecs: wm8904: add dt ids
- table
-Date: Tue, 27 Jan 2015 09:35:13 +0800
-Message-ID: <54C6EB51.80005@atmel.com>
-References: <1418614273-2303-1-git-send-email-voice.shen@atmel.com> <20150115115425.GX3043@sirena.org.uk> <54B866B9.8000900@atmel.com> <54C65C36.9050106@atmel.com> <20150126164229.GB21293@sirena.org.uk> <54C67007.6000708@metafoo.de>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH] usb: phy-generic: Don't fail on missing gpio reset
+Date: Mon, 26 Jan 2015 17:45:29 -0800
+Message-ID: <1422323129-20969-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54C67007.6000708-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sound-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Morozov <linux-lCH5ugpmZSMox3rIn2DAYQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ola Jeppson <ola@adapteva.com>, linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark, Lars-Perter,
+A reset through a GPIO is optional. Don't fail probing when it is
+missing.
 
-On 01/27/2015 12:49 AM, Lars-Peter Clausen wrote:
-> On 01/26/2015 05:42 PM, Mark Brown wrote:
->> On Mon, Jan 26, 2015 at 04:24:38PM +0100, Nicolas Ferre wrote:
->>> Le 16/01/2015 02:17, Bo Shen a =E9crit :
->>
->>>>> Does this end up in the i2c_driver_id driver data or do we need s=
-ome
->>>>> extra code when devtype is assigned to check for an of_node and
->>>>> look at
->>>>> the DT data instead?  That certainly used to be the case...
->>
->>>> At the beginning I think as the same as you, and also add the code=
- to
->>>> get the data as I do in <drivers/misc/atmel-ssc.c>. However, as I
->>>> remember, I2C seems only use the compatible string after the comma=
-,
->>>> that
->>>> means only for "wlf,wm8904", it uses "wm8904" to match. So, I remo=
-ve
->>>> all
->>>> the code I added, and just keep these, and it can get the device t=
-ype
->>>> correctly.
->>
->>>> So, when I submit the patch and keep the code as simple as possibl=
-e.
->>
->>> I don't understand what's keeping this patch from being applied. Vo=
-ice,
->>> do you mind re-sending?
->>
->> I need to convince myself that the above actually works and is doing=
- the
->> right thing; the above explanation sounds like if it works it might =
-be
->> relying on a bug.
->
-> I'd call it a undocumented feature. But I wouldn't rely on it being
-> around for ever. In my opinion to be future proof the driver should
-> explicitly handle the OF case in the probe function.
->
+Reported-by: Andreas F=C3=A4rber <afaerber@suse.de>
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+---
+Hi Andreas,
 
-I will add this into probe function in next version.
-Thanks.
+does this do the trick?
 
-Best Regards,
-Bo Shen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Thanks,
+	S=C3=B6ren
+
+ drivers/usb/phy/phy-generic.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generi=
+c.c
+index dd05254241fb..a73d4c738f0b 100644
+--- a/drivers/usb/phy/phy-generic.c
++++ b/drivers/usb/phy/phy-generic.c
+@@ -241,10 +241,8 @@ int usb_phy_gen_create_phy(struct device *dev, str=
+uct usb_phy_generic *nop,
+=20
+ 	if (err =3D=3D -EPROBE_DEFER)
+ 		return -EPROBE_DEFER;
+-	if (err) {
+-		dev_err(dev, "Error requesting RESET GPIO\n");
+-		return err;
+-	}
++	if (err)
++		nop->gpiod_reset =3D NULL;
+=20
+ 	nop->phy.otg =3D devm_kzalloc(dev, sizeof(*nop->phy.otg),
+ 			GFP_KERNEL);
+--=20
+2.2.2.1.g63c5777
