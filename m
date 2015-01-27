@@ -1,83 +1,90 @@
 From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] usb: phy-generic: Don't fail on missing gpio reset
-Date: Tue, 27 Jan 2015 09:20:47 -0600
-Message-ID: <20150127152047.GA13776@saruman.tx.rr.com>
-References: <1422323129-20969-1-git-send-email-soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v3 0/5] Add support for Fujitsu USB host controller
+Date: Tue, 27 Jan 2015 09:22:50 -0600
+Message-ID: <20150127152250.GB13776@saruman.tx.rr.com>
+References: <1422173608-24355-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
 Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1422323129-20969-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ola Jeppson <ola@adapteva.com>, linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org, Felipe Balbi <balbi@ti.com>
+In-Reply-To: <1422173608-24355-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sneeker Yeh <sneeker.yeh@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=iso-8859-1
+--xgyAXRrhYN0wYx8y
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 26, 2015 at 05:45:29PM -0800, Soren Brinkmann wrote:
-> A reset through a GPIO is optional. Don't fail probing when it is
-> missing.
->=20
-> Reported-by: Andreas F=E4rber <afaerber@suse.de>
-> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> ---
-> Hi Andreas,
->=20
-> does this do the trick?
->=20
-> 	Thanks,
-> 	S=F6ren
->=20
->  drivers/usb/phy/phy-generic.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
-> index dd05254241fb..a73d4c738f0b 100644
-> --- a/drivers/usb/phy/phy-generic.c
-> +++ b/drivers/usb/phy/phy-generic.c
-> @@ -241,10 +241,8 @@ int usb_phy_gen_create_phy(struct device *dev, struc=
-t usb_phy_generic *nop,
-> =20
->  	if (err =3D=3D -EPROBE_DEFER)
->  		return -EPROBE_DEFER;
-> -	if (err) {
-> -		dev_err(dev, "Error requesting RESET GPIO\n");
-> -		return err;
-> -	}
-> +	if (err)
-> +		nop->gpiod_reset =3D NULL;
+Hi,
 
-there's a better patch to use gpiod_get_optional(), instead.
+On Sun, Jan 25, 2015 at 04:13:23PM +0800, Sneeker Yeh wrote:
+> These patches add support for XHCI compliant Host controller found
+> on Fujitsu Socs, and are based on http://lwn.net/Articles/629162/
+> The first patch is to add Fujitsu glue layer of Synopsis DesignWare USB3 =
+driver
+> and last four patch is about quirk implementation of errata in Synopsis
+> DesignWare USB3 IP.
+>=20
+> Patch 1 introduces a quirk with device disconnection management necessary
+> Synopsys Designware USB3 IP with versions < 3.00a and hardware configurat=
+ion
+> DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1. It solves a problem where without =
+the
+> quirk, that host controller will die after a usb device is disconnected f=
+rom
+> port of root hub.
+>=20
+> Patch 2 is to set Synopsis quirk in xhci platform driver based on xhci pl=
+atform
+> data.
+>=20
+> Patch 3 is to add a revison number 2.90a and 3.00a of Synopsis DesignWare=
+ USB3
+> IP core driver.
+>=20
+> Patch 4 introduces using a quirk based on a errata of Synopsis
+> DesignWare USB3 IP which is versions < 3.00a and has hardware configurati=
+on
+> DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1, which cannot be read from software=
+=2E As a
+> result this quirk has to be enabled via platform data or device tree.
+>=20
+> Patch 5 introduces Fujitsu Specific Glue layer in Synopsis DesignWare USB=
+3 IP
+> driver.=20
+>=20
+
+Mathias, let me know how you want to handle this. Either I take them
+all, or you take them all. What do you prefer ?
 
 --=20
 balbi
 
---7AUc2qLy4jB3hD7Z
+--xgyAXRrhYN0wYx8y
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUx6zPAAoJEIaOsuA1yqREIZsQAKqQcHbwfPNixQ93RQPXhV3x
-au60/mtVkYNza+ZtJgPakyLMR06f/j8xuZXirVC3qzPq8mmugpqUTTzKf5I3kNtv
-3Rdt9DvrVY+hGOxiCPmd+gjKe1BLvosjuUa6DzF+6LQulQEDFIhq6pOfYlbPm79I
-XGahyK0/BWhBMzQsjX3/Vto7kgVOe5W899yU70K1qIqjUOnwZGGyYOifa0yIGkjM
-2uU3fYryeAD03cmyN5E/4MnHmDnGai6xakoNBZFBaLH3FQX9B02jPPOa3tXGatvi
-+KIB1GBHqiTWo7lDldlpM2+HB9RNBdVzdEXm/uRu2OYY/wq0KpoxryZ8Vozs4BIU
-jq5SH6Bt/5TyXmUzQNqbQ6J2KPzD6x0tMrp9a4kfKStN2OCXJN3hdleCYY+z52j0
-XBQWDvZ3IhkGeYQmbYDBITVeuYV7WcX6LNkUexpyh3h+EK1qRHP3jwksAo1Y2J7R
-jXyG0Df1ozUiROgTQyDFYLvRFeXNyhmCYp1nwlOBNbbtXkxmI/l7b/2fImov/Pnp
-Utu0GXzGfAfI+cCkci7hc37FnGCnRXMEjfbzuSwvy6ASBGBbK4nK6mXI0/xRj8gO
-DrFPR4hxvUYjz+fihh/yUr7i7iIOLamdcvMpWLRol4gTcpVFtVGofdz4b8de38jh
-t+fNXkMMRA8fZZU+ERir
-=CBzx
+iQIcBAEBAgAGBQJUx61KAAoJEIaOsuA1yqREpJIP/0qd7l0DX4/2yFZ59RADw2D7
+J6Z4lDVgJmgFrho04qp9Wax3ExF9VWlKUrP/uXVd9ud3YZTSGXOMtWCQmZiTOyzo
+GH1ABqqoSPZq6ECt7GDEkwDe7LQEM4c1iRhvUPHwz6b8OPrZZs167VsbnOr831FA
+i0uoUxejYYr74nvUPMw151G0DErby+fhX9lUiv/l6JdnYZjBA3945FDsAGguf6AU
+DXfBz2eCBznupLuGI//BnEuLDUvzJdTUH19fu6PVTKdJbGlCmhP/wCRQ5fGDr0Rv
+/+R1H8Lb5nRNzu4xaQ+FA0GRz4kCsUQTdrtNsrw5Uok5lBG2p1/eq/jejo8xmlNJ
+pW+ID6ey4dcppW5eAyC0q0dMUw4Jz/EFUKjeH9+yYKKbgaFqT9HXT38uee5lCaFn
+7Uf13TC+A5mBObl99PqwdOZC/1edX7wLNLao2Fcf7+kbCzxN3pXP/vI/6k+z2Ick
+XZyU+4si9zeGzF2+7qADGgioSEp4BWCe19PIlCCejqywH2+w2MUd5vih+ArUpcQA
+JojAwpZcuBi5AQNQQpCEVo7JAdpypxoXbbLymuyhK2c07kczRw/R6cmF50QCDy1i
+8yRMkZEN9LyUXr+7aDHggr+s6wYWDsdSkryrLxNQaH0SomRc7Yi83AF8d40Yb6hB
+QrtfgmJ6hFIaIHaDqhBI
+=zZxd
 -----END PGP SIGNATURE-----
 
---7AUc2qLy4jB3hD7Z--
+--xgyAXRrhYN0wYx8y--
