@@ -1,73 +1,49 @@
-From: Peter Rosin <peda@lysator.liu.se>
-Subject: [PATCH 7/7 RESEND] ASoC: pcm512x: Support SND_SOC_DAIFMT_CBM_CFS
-Date: Tue, 27 Jan 2015 20:50:48 +0100
-Message-ID: <1422388248-25722-8-git-send-email-peda@lysator.liu.se>
-References: <1422388248-25722-1-git-send-email-peda@lysator.liu.se>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/7] spi: spi-fsl-dspi: Remove usage of devm_kzalloc
+Date: Tue, 27 Jan 2015 19:52:34 +0000
+Message-ID: <20150127195234.GP21293@sirena.org.uk>
+References: <1422356244-15629-1-git-send-email-bhuvanchandra.dv@toradex.com>
+ <1422356244-15629-4-git-send-email-bhuvanchandra.dv@toradex.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="V2D0VtBIapj4C4hL"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422388248-25722-1-git-send-email-peda@lysator.liu.se>
+Content-Disposition: inline
+In-Reply-To: <1422356244-15629-4-git-send-email-bhuvanchandra.dv@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org
-Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Clemens Ladisch <clemens@ladisch.de>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Cc: mark.rutland@arm.com, stefan@agner.ch, shawn.guo@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, B44548@freescale.com, Li.Xiubo@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- sound/soc/codecs/pcm512x.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+--V2D0VtBIapj4C4hL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/sound/soc/codecs/pcm512x.c b/sound/soc/codecs/pcm512x.c
-index 7f45cc468fa1..33aa18c8c88e 100644
---- a/sound/soc/codecs/pcm512x.c
-+++ b/sound/soc/codecs/pcm512x.c
-@@ -486,6 +486,7 @@ static int pcm512x_dai_startup(struct snd_pcm_substream *substream,
- 
- 	switch (pcm512x->fmt & SND_SOC_DAIFMT_MASTER_MASK) {
- 	case SND_SOC_DAIFMT_CBM_CFM:
-+	case SND_SOC_DAIFMT_CBM_CFS:
- 		return pcm512x_dai_startup_master(substream, dai);
- 
- 	case SND_SOC_DAIFMT_CBS_CFS:
-@@ -992,6 +993,8 @@ static int pcm512x_hw_params(struct snd_pcm_substream *substream,
- 	struct pcm512x_priv *pcm512x = snd_soc_codec_get_drvdata(codec);
- 	int alen;
- 	int gpio;
-+	int clock_output;
-+	int master_mode;
- 	int ret;
- 
- 	dev_dbg(codec->dev, "hw_params %u Hz, %u channels\n",
-@@ -1040,6 +1043,12 @@ static int pcm512x_hw_params(struct snd_pcm_substream *substream,
- 		}
- 		return 0;
- 	case SND_SOC_DAIFMT_CBM_CFM:
-+		clock_output = PCM512x_BCKO | PCM512x_LRKO;
-+		master_mode = PCM512x_RLRK | PCM512x_RBCK;
-+		break;
-+	case SND_SOC_DAIFMT_CBM_CFS:
-+		clock_output = PCM512x_BCKO;
-+		master_mode = PCM512x_RBCK;
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -1136,7 +1145,7 @@ static int pcm512x_hw_params(struct snd_pcm_substream *substream,
- 
- 	ret = regmap_update_bits(pcm512x->regmap, PCM512x_BCLK_LRCLK_CFG,
- 				 PCM512x_BCKP | PCM512x_BCKO | PCM512x_LRKO,
--				 PCM512x_BCKO | PCM512x_LRKO);
-+				 clock_output);
- 	if (ret != 0) {
- 		dev_err(codec->dev, "Failed to enable clock output: %d\n", ret);
- 		return ret;
-@@ -1144,7 +1153,7 @@ static int pcm512x_hw_params(struct snd_pcm_substream *substream,
- 
- 	ret = regmap_update_bits(pcm512x->regmap, PCM512x_MASTER_MODE,
- 				 PCM512x_RLRK | PCM512x_RBCK,
--				 PCM512x_RLRK | PCM512x_RBCK);
-+				 master_mode);
- 	if (ret != 0) {
- 		dev_err(codec->dev, "Failed to enable master mode: %d\n", ret);
- 		return ret;
--- 
-1.7.10.4
+On Tue, Jan 27, 2015 at 04:27:20PM +0530, Bhuvanchandra DV wrote:
+> devm_* API was supposed to be used only in probe function call.
+> Memory is allocated at 'probe' and free automatically at 'remove'.
+
+Applied, thanks.  Please don't dump entire backtraces into your commit
+logs - they're far too big and not very helpful, they can obscure real
+content in the message.  Explain in words what the problem is and if a
+backtrace helps illustrate that edit it down to only relevant portions
+rather than blindly including the entire thing.
+
+--V2D0VtBIapj4C4hL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUx+yBAAoJECTWi3JdVIfQ1dIH/RazSTyXAf0/KYwBdLpXRnaI
+Srtfx2q39mTxoHeUzBlxK1ViJ3C+FieTDHNH6n7W603G7hmGJ5qvdhv4pjmK4Z7+
+xJ6M6O20SZCyn8V2XwwK+YrD1yaYxaBiwKq3B5TLjxg54wDqdCWTLXFKwVZ6DeCQ
+DODlHU73Dn79xp4fIMRs6uXyshadx1bp2gNVfdAu4FXp7vXi1CZESBXcII2sVzb4
+CT0LdhKmIsqbuwSB/NxIHb1QxcLS6dWBXoES1bdlXLBjCzwKlUxdnSY7sJIp5Qf2
+2T7gRnGhatMe5R3NPwGMHZeRGLDw0Cz+vtwm9rPSpeVIl6PvYh6s/bNc5/5emqc=
+=91Ri
+-----END PGP SIGNATURE-----
+
+--V2D0VtBIapj4C4hL--
