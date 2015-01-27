@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 05/10] ARM: dts: sun9i: Add usb phy nodes to
- a80 dtsi
-Date: Wed, 28 Jan 2015 03:54:10 +0800
-Message-ID: <1422388455-25923-6-git-send-email-wens@csie.org>
+Subject: [PATCH v3 08/10] ARM: dts: sun9i: Enable USB support on
+ A80 Optimus board
+Date: Wed, 28 Jan 2015 03:54:13 +0800
+Message-ID: <1422388455-25923-9-git-send-email-wens@csie.org>
 References: <1422388455-25923-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -20,61 +20,106 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On sun9i, there are 3 independent usb phys for EHCI/OHCI.
-Add device nodes for them.
-
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80.dtsi | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/arm/boot/dts/sun9i-a80-optimus.dts | 60 +++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 679cf2878800..d7ebd9390b01 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -355,6 +355,43 @@
- 		 */
- 		ranges = <0 0 0 0x20000000>;
+diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+index c4de9cb9a5f6..16d30bb3a872 100644
+--- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
++++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+@@ -83,6 +83,18 @@
+ 	};
+ };
  
-+		usbphy1: phy@00a00800 {
-+			compatible = "allwinner,sun9i-a80-usb-phy";
-+			reg = <0x00a00800 0x4>;
-+			clocks = <&usb_phy_clk 1>;
-+			clock-names = "phy";
-+			resets = <&usb_phy_clk 17>;
-+			reset-names = "phy";
-+			status = "disabled";
-+			#phy-cells = <0>;
-+		};
++&ehci0 {
++	status = "okay";
++};
 +
-+		usbphy2: phy@00a01800 {
-+			compatible = "allwinner,sun9i-a80-usb-phy";
-+			reg = <0x00a01800 0x4>;
-+			clocks = <&usb_phy_clk 2>, <&usb_phy_clk 10>,
-+				 <&usb_phy_clk 3>;
-+			clock-names = "hsic_480M", "hsic_12M", "phy";
-+			resets = <&usb_phy_clk 18>, <&usb_phy_clk 19>;
-+			reset-names = "hsic", "phy";
-+			status = "disabled";
-+			#phy-cells = <0>;
-+			/* usb1 is always used with HSIC */
-+			phy_type = "hsic";
-+		};
++&ehci1 {
++	status = "okay";
++};
 +
-+		usbphy3: phy@00a02800 {
-+			compatible = "allwinner,sun9i-a80-usb-phy";
-+			reg = <0x00a02800 0x4>;
-+			clocks = <&usb_phy_clk 4>, <&usb_phy_clk 10>,
-+				 <&usb_phy_clk 5>;
-+			clock-names = "hsic_480M", "hsic_12M", "phy";
-+			resets = <&usb_phy_clk 20>, <&usb_phy_clk 21>;
-+			reset-names = "hsic", "phy";
-+			status = "disabled";
-+			#phy-cells = <0>;
-+		};
++&ehci2 {
++	status = "okay";
++};
 +
- 		mmc0: mmc@01c0f000 {
- 			compatible = "allwinner,sun5i-a13-mmc";
- 			reg = <0x01c0f000 0x1000>;
+ &i2c3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c3_pins_a>;
+@@ -94,6 +106,14 @@
+ 	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
++&ohci2 {
++	status = "okay";
++};
++
+ &pio {
+ 	led_pins_optimus: led-pins@0 {
+ 		allwinner,pins = "PH0", "PH1";
+@@ -108,6 +128,20 @@
+ 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ 	};
++
++	usb1_vbus_pin_optimus: usb1_vbus_pin@1 {
++		allwinner,pins = "PH4";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	usb3_vbus_pin_optimus: usb3_vbus_pin@1 {
++		allwinner,pins = "PH5";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
+ };
+ 
+ &mmc0 {
+@@ -129,6 +163,18 @@
+ 	status = "okay";
+ };
+ 
++&reg_usb1_vbus {
++	pinctrl-0 = <&usb1_vbus_pin_optimus>;
++	gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
++	status = "okay";
++};
++
++&reg_usb3_vbus {
++	pinctrl-0 = <&usb3_vbus_pin_optimus>;
++	gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+@@ -145,3 +191,17 @@
+ 	/* Enable internal pull-up */
+ 	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ };
++
++&usbphy1 {
++	vbus-supply = <&reg_usb1_vbus>;
++	status = "okay";
++};
++
++&usbphy2 {
++	status = "okay";
++};
++
++&usbphy3 {
++	vbus-supply = <&reg_usb3_vbus>;
++	status = "okay";
++};
 -- 
 2.1.4
