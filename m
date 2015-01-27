@@ -1,62 +1,66 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 00/10] Secure Element support for HCI based NFC controller & st21nfca integration
-Date: Tue, 27 Jan 2015 01:18:10 +0100
-Message-ID: <1422317900-3810-1-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH 05/10] NFC: hci: Add cmd_received handler
+Date: Tue, 27 Jan 2015 01:18:15 +0100
+Message-ID: <1422317900-3810-6-git-send-email-christophe-h.ricard@st.com>
+References: <1422317900-3810-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422317900-3810-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
+When a command is received, it is sometime needed to let the CLF driver do
+some additional operations. (ex: count remaining pipe notification...)
 
-I am changing a little bit the way pipes and gates are referenced because 1 gate
-on the Terminal Host may connect severals differents Host (e.g: UICC, eSE...). 
-I chose to reference a pipe with a tuple {gate, host}.
-I chose also to keep the gate --> pipe reference with a little drawback:
-- se_io will only be able to send data to an eSE (over SWP)... To my knowledge
-the aren't any UICC with APDU Reader gate available in the field.
+Make also generic HCI commands available to other NFC drivers
 
-In this serie, I have taken into account your previous comment on patches #5, #6, #7, #8.
->From the one sent earlier in December 2014:
-https://lists.01.org/pipermail/linux-nfc/2014-December/003204.html
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+---
+ include/net/nfc/hci.h | 8 ++++++++
+ net/nfc/hci/core.c    | 3 +++
+ 2 files changed, 11 insertions(+)
 
-I believe there are not much changes other than those one for HCI and st21nfca.
-
-Best Regards
-Christophe
-
-Christophe Ricard (10):
-  NFC: hci: Change event_received handler gate parameter to pipe
-  NFC: hci: Add pipes table to reference them with a tuple {gate, host}
-  NFC: hci: Change nfc_hci_send_response gate parameter to pipe
-  NFC: hci: Reference every pipe information according to notification
-  NFC: hci: Add cmd_received handler
-  NFC: pn544: Change event_received gate parameter to pipe
-  NFC: microread: Change event_received gate parameter to pipe
-  NFC: hci: Remove nfc_hci_pipe2gate function
-  NFC: st21nfca: Adding support for secure element
-  NFC: dts: st21nfca: Document ese-present & uicc-present DTS property
-
- .../devicetree/bindings/net/nfc/st21nfca.txt       |   7 +
- drivers/nfc/microread/microread.c                  |   3 +-
- drivers/nfc/pn544/pn544.c                          |   3 +-
- drivers/nfc/st21nfca/Makefile                      |   2 +-
- drivers/nfc/st21nfca/i2c.c                         |  17 +-
- drivers/nfc/st21nfca/st21nfca.c                    | 134 ++++++-
- drivers/nfc/st21nfca/st21nfca.h                    |  21 +-
- drivers/nfc/st21nfca/st21nfca_se.c                 | 390 +++++++++++++++++++++
- drivers/nfc/st21nfca/st21nfca_se.h                 |  63 ++++
- include/linux/platform_data/st21nfca.h             |   2 +
- include/net/nfc/hci.h                              |  25 +-
- net/nfc/hci/command.c                              |  23 +-
- net/nfc/hci/core.c                                 |  97 +++--
- net/nfc/hci/hci.h                                  |  10 +-
- net/nfc/hci/hcp.c                                  |  11 -
- 15 files changed, 724 insertions(+), 84 deletions(-)
- create mode 100644 drivers/nfc/st21nfca/st21nfca_se.c
- create mode 100644 drivers/nfc/st21nfca/st21nfca_se.h
-
+diff --git a/include/net/nfc/hci.h b/include/net/nfc/hci.h
+index 1d1fd2b..ab672b5 100644
+--- a/include/net/nfc/hci.h
++++ b/include/net/nfc/hci.h
+@@ -53,6 +53,8 @@ struct nfc_hci_ops {
+ 			      struct nfc_target *target);
+ 	int (*event_received)(struct nfc_hci_dev *hdev, u8 pipe, u8 event,
+ 			      struct sk_buff *skb);
++	void (*cmd_received)(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
++			    struct sk_buff *skb);
+ 	int (*fw_download)(struct nfc_hci_dev *hdev, const char *firmware_name);
+ 	int (*discover_se)(struct nfc_hci_dev *dev);
+ 	int (*enable_se)(struct nfc_hci_dev *dev, u32 se_idx);
+@@ -230,6 +232,12 @@ void nfc_hci_reset_pipes_per_host(struct nfc_hci_dev *hdev, u8 host);
+ #define NFC_HCI_EVT_POST_DATA			0x02
+ #define NFC_HCI_EVT_HOT_PLUG			0x03
+ 
++/* Generic commands */
++#define NFC_HCI_ANY_SET_PARAMETER	0x01
++#define NFC_HCI_ANY_GET_PARAMETER	0x02
++#define NFC_HCI_ANY_OPEN_PIPE		0x03
++#define NFC_HCI_ANY_CLOSE_PIPE		0x04
++
+ /* Reader RF gates events */
+ #define NFC_HCI_EVT_READER_REQUESTED	0x10
+ #define NFC_HCI_EVT_END_OPERATION	0x11
+diff --git a/net/nfc/hci/core.c b/net/nfc/hci/core.c
+index a664a67..6e061da 100644
+--- a/net/nfc/hci/core.c
++++ b/net/nfc/hci/core.c
+@@ -249,6 +249,9 @@ void nfc_hci_cmd_received(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
+ 		break;
+ 	}
+ 
++	if (hdev->ops->cmd_received)
++		hdev->ops->cmd_received(hdev, pipe, cmd, skb);
++
+ exit:
+ 	nfc_hci_hcp_message_tx(hdev, pipe, NFC_HCI_HCP_RESPONSE,
+ 			       status, NULL, 0, NULL, NULL, 0);
 -- 
 2.1.0
 
