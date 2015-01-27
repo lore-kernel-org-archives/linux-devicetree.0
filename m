@@ -1,78 +1,58 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power
- subsystem
-Date: Tue, 27 Jan 2015 00:16:29 +0000
-Message-ID: <20150127001629.GP21293@sirena.org.uk>
-References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
- <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com>
- <20150121230148.GJ13715@earth.universe>
- <54C0AFE4.3020701@i2se.com>
- <20150125150431.GE2719@earth.universe>
- <1719204322.245040.1422301605670.JavaMail.open-xchange@oxbaltgw03.schlund.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Qx/Zgj6HpoLOE58Z"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1719204322.245040.1422301605670.JavaMail.open-xchange@oxbaltgw03.schlund.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>, Sascha Hauer <kernel@pengutronix.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 01/10] NFC: hci: Change event_received handler gate parameter to pipe
+Date: Tue, 27 Jan 2015 01:18:11 +0100
+Message-ID: <1422317900-3810-2-git-send-email-christophe-h.ricard@st.com>
+References: <1422317900-3810-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422317900-3810-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Several pipes may point to the same CLF gate.
+For example: In the case of dual secure element 2 pipes (1 for uicc and
+1 for eSE) may point to the connectivity gate.
 
---Qx/Zgj6HpoLOE58Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Keep this information as is as we can easily determine gate and host
+triggering an event.  For example in the case of the EVT_TRANSACTION.
 
-On Mon, Jan 26, 2015 at 08:46:45PM +0100, Stefan Wahren wrote:
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+---
+ include/net/nfc/hci.h | 2 +-
+ net/nfc/hci/core.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> > > Does a common property name exists for the switching frequency or wou=
-ld
-> > > it be vendor specific?
+diff --git a/include/net/nfc/hci.h b/include/net/nfc/hci.h
+index 14bd0e1..031c0be 100644
+--- a/include/net/nfc/hci.h
++++ b/include/net/nfc/hci.h
+@@ -51,7 +51,7 @@ struct nfc_hci_ops {
+ 	int (*tm_send)(struct nfc_hci_dev *hdev, struct sk_buff *skb);
+ 	int (*check_presence)(struct nfc_hci_dev *hdev,
+ 			      struct nfc_target *target);
+-	int (*event_received)(struct nfc_hci_dev *hdev, u8 gate, u8 event,
++	int (*event_received)(struct nfc_hci_dev *hdev, u8 pipe, u8 event,
+ 			      struct sk_buff *skb);
+ 	int (*fw_download)(struct nfc_hci_dev *hdev, const char *firmware_name);
+ 	int (*discover_se)(struct nfc_hci_dev *dev);
+diff --git a/net/nfc/hci/core.c b/net/nfc/hci/core.c
+index ef50e77..12a9a4b 100644
+--- a/net/nfc/hci/core.c
++++ b/net/nfc/hci/core.c
+@@ -338,7 +338,7 @@ void nfc_hci_event_received(struct nfc_hci_dev *hdev, u8 pipe, u8 event,
+ 	}
+ 
+ 	if (hdev->ops->event_received) {
+-		r = hdev->ops->event_received(hdev, gate, event, skb);
++		r = hdev->ops->event_received(hdev, pipe, event, skb);
+ 		if (r <= 0)
+ 			goto exit_noskb;
+ 	}
+-- 
+2.1.0
 
-> > As far as I know most regulators have fixed switching frequencies,
-> > so there is no common property name so far. I added regulator
-> > framework people, since this property should be regulator specific.
-
-No, it's pretty common for there to be a couple of options - there's
-normally a performance tradeoff (power for regulation accuracy and/or
-cost) which can be selected.  IIRC it's selected at design time as it
-affect the choice of passives on the board.
-
-> okay i understand. But doesn't it need a extra driver to set the switching
-> frequency because of the new compatible string?
-
-I don't understand this bit at all, sorry.
-
->=20
-> At this point i think about moving this feature into the bootloader.
->=20
-> @Fabio, @Marek:
->=20
-> What's your opinion about that?
->=20
-> >
-> > -- Sebastian
->=20
-> Stefan
->=20
-
---Qx/Zgj6HpoLOE58Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJUxtjcAAoJECTWi3JdVIfQXYQH/0a/jSZNYPLcM4QNROz8kRyy
-KRorHdPmVmRAcoCvlXWL8ambIsWto/p1VsUacm8ZqFCIBfCtRLAkKWljty5N0JUV
-D3IE0/vtqwLChmeC8BdouU1/flwRtYKoP5y6zbwt10qhIgBH/IyzLhMx7S5noZcR
-XvkN4BqkG04k/F5rekTAbMg42F9Ea1HPaXbX5SKAHlTj5v0j6UPkev5hUscyYUiA
-TUDQ4f4CwNWgBtaI+ARLfL5gaMmxrIvrHX662qGviOT+hadFmn9/VEBPYAs1SKCK
-9V25dUpgbTte4PXLVnJLpb/xIwKDG5uNWHwiORC9MmmogxIpudS9EUQOXLn9DSg=
-=Y1Y2
------END PGP SIGNATURE-----
-
---Qx/Zgj6HpoLOE58Z--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
