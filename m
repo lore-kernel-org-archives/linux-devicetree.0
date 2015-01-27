@@ -1,34 +1,50 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/7] pinctrl: mediatek: emulate GPIO interrupt on both-edges
-Date: Tue, 27 Jan 2015 15:21:10 +0100
-Message-ID: <CACRpkdbncsDJ3pP0dETpho5+j+OVuaYr=YTsH8pAs7vuT_9OLw@mail.gmail.com>
-References: <1422339332-27498-1-git-send-email-chaotian.jing@mediatek.com>
-	<1422339332-27498-2-git-send-email-chaotian.jing@mediatek.com>
+From: Daniel Borkmann <dborkman@redhat.com>
+Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
+Date: Tue, 27 Jan 2015 15:46:53 +0100
+Message-ID: <54C7A4DD.7030109@redhat.com>
+References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk> <54C22E68.1080601@redhat.com> <54C60DB8.1060900@linn.co.uk> <54C612A5.2000208@redhat.com> <54C7736C.8090704@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422339332-27498-2-git-send-email-chaotian.jing@mediatek.com>
+In-Reply-To: <54C7736C.8090704@linn.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bin.zhang@mediatek.com
+To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 27, 2015 at 7:15 AM, Chaotian Jing
-<chaotian.jing@mediatek.com> wrote:
+Hi Stathis,
 
-> From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+On 01/27/2015 12:15 PM, Stathis Voukelatos wrote:
+> On 26/01/15 10:10, Daniel Borkmann wrote:
+>>> Hello Daniel. Thank you for your feedback.
+>>> Packet sockets could also be used for the driver interface to
+>>> user space, however I think that both approaches would require the same
+>>> amount of maintenance. We need to maintain a protocol consisting of
+>>> a set of messages or commands that user space can use to communicate
+>>> with the driver in order to configure the H/W and retrieve results.
+>>> We could use packet sockets to send those messages  too, but I thought
+>>> netlink already provides a message exchange framework that we could
+>>> make use of.
+>>
+>> When using packet sockets and your driver as a backend feeding them,
+>> users can see that there's an extra capturing/monitoring netdev present,
+>> all libpcap-based tools such as tcpdump et al would work out of the box
+>> w/o adapting any code, and as an admin you can also see what users/tools
+>> are making of use of the device through packet sockets. I couldn't parse
+>> the exact motivation from the commit message of why avoiding all this is
+>> better?
 >
-> MTK EINT does not support generating interrupt on both edges.
-> Emulate this by changing edge polarity while enable irq,
-> set types and interrupt handling. This follows an example of
-> drivers/gpio/gpio-mxc.c.
->
-> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> Just wanted to clarify some implementation details for your approach.
+> - The driver would need to create and register two net_device instances.
+> One for sniffing Ethernet TX packets and one for RX.
 
-Hongzhu, if you're fine with this patch can you ACK it as maintainer
-of the pinctrl driver so I can merge it immediately on top of your
-drivern whenever we consider it finished (and if it applies still...)
+Hm, I would represent the whole device as a single monitoring-only netdev.
+I'm somehow still missing the big advantage of all this as compared to
+using packet sockets on the normal netdev? I couldn't parse that from your
+commit message.
 
-Yours,
-Linus Walleij
+> - Would the control interface for the sniffer in that case need to be
+> through private socket ioctls (ie SIOCDEVPRIVATE + x ioctl ids)?
+
+Nope, please have a look at Documentation/networking/packet_mmap.txt.
