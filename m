@@ -1,82 +1,97 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
-Date: Mon, 26 Jan 2015 18:05:23 -0800
-Message-ID: <95fcb833572949c9aa2f406c0b147d1f@BL2FFO11FD060.protection.gbl>
-References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
- <1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com>
- <54C6D44C.4060106@suse.de>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH v3 1/2] ASoC: codecs: wm8904: add dt ids table
+Date: Tue, 27 Jan 2015 11:36:39 +0800
+Message-ID: <1422329800-28481-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54C6D44C.4060106@suse.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Heiko Stuebner <heiko@sntech.de>, linux-sh@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, linux-rockchip@lists.infradead.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, nicolas.ferre@atmel.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, Alexander Morozov <linux@meltdown.ru>, Bo Shen <voice.shen@atmel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-01-27 at 12:57AM +0100, Andreas F=C3=A4rber wrote:
-> Am 09.01.2015 um 16:43 schrieb Soren Brinkmann:
-> > Add pinctrl descriptions to the zc702 and zc706 device trees.
-> >=20
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> > ---
-> > Changes since v1:
-> >  - remove 'pinctrl-' prefix for pinctrl sub-nodes
-> >  - separate config and mux nodes
-> >=20
-> > Changes since RFC v2:
-> >  - add pinconf properties to zc702 mdio node
-> >  - remove arguments from bias-related props
-> >=20
-> > Changes since RFC v1:
-> >  - separate DT changes into their own patch
-> > ---
-> >  arch/arm/boot/dts/zynq-7000.dtsi |   8 +-
-> >  arch/arm/boot/dts/zynq-zc702.dts | 181 +++++++++++++++++++++++++++=
-++++++++++++
-> >  arch/arm/boot/dts/zynq-zc706.dts | 152 +++++++++++++++++++++++++++=
-+++++
-> >  3 files changed, 340 insertions(+), 1 deletion(-)
-> [...]
-> > diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/z=
-ynq-zc702.dts
-> > index 280f02dd4ddc..4995412f116f 100644
-> > --- a/arch/arm/boot/dts/zynq-zc702.dts
-> > +++ b/arch/arm/boot/dts/zynq-zc702.dts
-> [...]
-> > @@ -50,15 +52,24 @@
-> >  	status =3D "okay";
-> >  	phy-mode =3D "rgmii-id";
-> >  	phy-handle =3D <&ethernet_phy>;
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_gem0_default>;
-> > =20
-> >  	ethernet_phy: ethernet-phy@7 {
-> >  		reg =3D <7>;
-> >  	};
-> >  };
-> > =20
-> > +&gpio0 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_gpio0_default>;
->=20
-> On linux-next the equivalent no longer works for the Parallella, with
-> gpio failing to probe.
->=20
-> If I move these two properties to the leds node (for which I am
-> configuring gpio 7) then I get a heartbeat as before.
+From: Alexander Morozov <linux@meltdown.ru>
 
-I think for USB I have a fix (see other email with patch), but LEDs see=
-m
-to be broken too. On my zc702 I get:
-   of_get_named_gpiod_flags: parsed 'gpios' property of node '/leds/ds2=
-3[0]' - status (-517)
+The WM8904 and WM8918 has the same data type, while the WM8912
+has different data type. So, use the data in dt ids table to
+distinguish them.
 
-517 is probe deferral. Looks like the LED driver needs to learn to defe=
-r
-probing when the GPIO driver isn't available yet.
+Signed-off-by: Alexander Morozov <linux@meltdown.ru>
+[voice.shen@atmel.com: add code to distinguish device type]
+Signed-off-by: Bo Shen <voice.shen@atmel.com>
+---
+Changes in v3:
+  - Get the device type from match data in probe function.
+Changes in v2:
+  - Add driver data for distinguish the device capability.
 
-	S=C3=B6ren
+ sound/soc/codecs/wm8904.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
+index 4d2d2b1..a80bc52 100644
+--- a/sound/soc/codecs/wm8904.c
++++ b/sound/soc/codecs/wm8904.c
+@@ -2098,6 +2098,24 @@ static const struct regmap_config wm8904_regmap = {
+ 	.num_reg_defaults = ARRAY_SIZE(wm8904_reg_defaults),
+ };
+ 
++#ifdef CONFIG_OF
++static enum wm8904_type wm8904_data = WM8904;
++static enum wm8904_type wm8912_data = WM8912;
++
++static const struct of_device_id wm8904_of_match[] = {
++	{
++		.compatible = "wlf,wm8904",
++		.data = &wm8904_data,
++	}, {
++		.compatible = "wlf,wm8912",
++		.data = &wm8912_data,
++	}, {
++		/* sentinel */
++	}
++};
++MODULE_DEVICE_TABLE(of, wm8904_of_match);
++#endif
++
+ static int wm8904_i2c_probe(struct i2c_client *i2c,
+ 			    const struct i2c_device_id *id)
+ {
+@@ -2125,7 +2143,17 @@ static int wm8904_i2c_probe(struct i2c_client *i2c,
+ 		return ret;
+ 	}
+ 
+-	wm8904->devtype = id->driver_data;
++	if (i2c->dev.of_node) {
++		const struct of_device_id *match;
++
++		match = of_match_node(wm8904_of_match, i2c->dev.of_node);
++		if (match == NULL)
++			return -EINVAL;
++		wm8904->devtype = *((enum wm8904_type *)match->data);
++	} else {
++		wm8904->devtype = id->driver_data;
++	}
++
+ 	i2c_set_clientdata(i2c, wm8904);
+ 	wm8904->pdata = i2c->dev.platform_data;
+ 
+@@ -2259,6 +2287,7 @@ static struct i2c_driver wm8904_i2c_driver = {
+ 	.driver = {
+ 		.name = "wm8904",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(wm8904_of_match),
+ 	},
+ 	.probe =    wm8904_i2c_probe,
+ 	.remove =   wm8904_i2c_remove,
+-- 
+2.3.0.rc0
