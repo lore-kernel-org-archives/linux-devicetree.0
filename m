@@ -1,8 +1,7 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 06/10] ARM: dts: sun9i: Add USB host
- controller nodes to a80 dtsi
-Date: Wed, 28 Jan 2015 03:54:11 +0800
-Message-ID: <1422388455-25923-7-git-send-email-wens@csie.org>
+Subject: [PATCH v3 10/10] ARM: multi_v7_defconfig: Enable CONFIG_PHY_SUN9I_USB
+Date: Wed, 28 Jan 2015 03:54:15 +0800
+Message-ID: <1422388455-25923-11-git-send-email-wens@csie.org>
 References: <1422388455-25923-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -20,107 +19,24 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The A80 has 3 EHCI/OHCI USB controllers.
+On sun9i we have a new PHY driver for USB.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80.dtsi | 70 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index d7ebd9390b01..9483b15bfda7 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -355,6 +355,28 @@
- 		 */
- 		ranges = <0 0 0 0x20000000>;
- 
-+		ehci0: usb@00a00000 {
-+			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
-+			reg = <0x00a00000 0x100>;
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&usb_mod_clk 1>;
-+			resets = <&usb_mod_clk 17>;
-+			phys = <&usbphy1>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
-+		ohci0: usb@00a00400 {
-+			compatible = "allwinner,sun9i-a80-ohci", "generic-ohci";
-+			reg = <0x00a00400 0x100>;
-+			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&usb_mod_clk 1>, <&usb_mod_clk 2>;
-+			resets = <&usb_mod_clk 17>;
-+			phys = <&usbphy1>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
- 		usbphy1: phy@00a00800 {
- 			compatible = "allwinner,sun9i-a80-usb-phy";
- 			reg = <0x00a00800 0x4>;
-@@ -366,6 +388,32 @@
- 			#phy-cells = <0>;
- 		};
- 
-+		ehci1: usb@00a01000 {
-+			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
-+			reg = <0x00a01000 0x100>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&usb_mod_clk 3>;
-+			resets = <&usb_mod_clk 18>;
-+			phys = <&usbphy2>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
-+		/*
-+		 * Even though ohci1 exists, it is never used as
-+		 * usb1 only has HSIC pins routed externally
-+		 */
-+		ohci1: usb@00a01400 {
-+			compatible = "allwinner,sun9i-a80-ohci", "generic-ohci";
-+			reg = <0x00a01400 0x100>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&usb_mod_clk 3>, <&usb_mod_clk 4>;
-+			resets = <&usb_mod_clk 18>;
-+			phys = <&usbphy2>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
- 		usbphy2: phy@00a01800 {
- 			compatible = "allwinner,sun9i-a80-usb-phy";
- 			reg = <0x00a01800 0x4>;
-@@ -380,6 +428,28 @@
- 			phy_type = "hsic";
- 		};
- 
-+		ehci2: usb@00a02000 {
-+			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
-+			reg = <0x00a02000 0x100>;
-+			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&usb_mod_clk 5>;
-+			resets = <&usb_mod_clk 19>;
-+			phys = <&usbphy3>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
-+		ohci2: usb@00a02400 {
-+			compatible = "allwinner,sun9i-a80-ohci", "generic-ohci";
-+			reg = <0x00a02400 0x100>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&usb_mod_clk 5>, <&usb_mod_clk 6>;
-+			resets = <&usb_mod_clk 19>;
-+			phys = <&usbphy3>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
- 		usbphy3: phy@00a02800 {
- 			compatible = "allwinner,sun9i-a80-usb-phy";
- 			reg = <0x00a02800 0x4>;
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index eec304487e6d..63fcc5522393 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -462,6 +462,7 @@ CONFIG_TI_PIPE3=y
+ CONFIG_PHY_MIPHY365X=y
+ CONFIG_PHY_STIH41X_USB=y
+ CONFIG_PHY_SUN4I_USB=y
++CONFIG_PHY_SUN9I_USB=y
+ CONFIG_EXT4_FS=y
+ CONFIG_AUTOFS4_FS=y
+ CONFIG_MSDOS_FS=y
 -- 
 2.1.4
