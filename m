@@ -1,165 +1,101 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] net: allwinner: sun4i-emac: fix emac
- SRAM mapping
-Date: Tue, 27 Jan 2015 19:13:50 +0100
-Message-ID: <20150127181350.GK7200@lukather>
-References: <1422200959-1717-1-git-send-email-jenskuske@gmail.com>
- <1422200959-1717-4-git-send-email-jenskuske@gmail.com>
- <20150125162510.GK8470@lukather>
- <54C65089.70305@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] drivers: bus: Add Simple Power-Managed Bus DT
+ Bindings
+Date: Tue, 27 Jan 2015 18:17:27 +0000
+Message-ID: <20150127181727.GO17721@leverpostej>
+References: <1422288977-20353-1-git-send-email-geert+renesas@glider.be>
+ <1422288977-20353-4-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Jl+DbTnyraiZ/loT"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBLFLT6TAKGQEYOPIRQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54C65089.70305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1422288977-20353-4-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Jl+DbTnyraiZ/loT
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi,
-
-On Mon, Jan 26, 2015 at 03:34:49PM +0100, Jens Kuske wrote:
-> Hi,
+On Mon, Jan 26, 2015 at 04:16:15PM +0000, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Tested-by: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> v4:
+>   - Replace "simple-bus" by "simple-pm-bus",
+>   - Remove the "renesas,bsc" bindings. They will be specified in a
+>     separate document.
 > 
-> On 25/01/15 17:25, Maxime Ripard wrote:
-> >Hi Jens,
-> >
-> >On Sun, Jan 25, 2015 at 04:49:19PM +0100, Jens Kuske wrote:
-> >>The EMAC needs SRAM block A3_A4 being mapped to EMAC peripheral to
-> >>work. This is done by the bootloader most of the time, but U-Boot
-> >>Falcon Mode, for example, skips emac initialization and SRAM would
-> >>stay mapped to the CPU.
-> >
-> >Thanks for reviving this.
-> >
-> >>Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>---
-> >>  drivers/net/ethernet/allwinner/Kconfig      |  1 +
-> >>  drivers/net/ethernet/allwinner/sun4i-emac.c | 18 ++++++++++++++++++
-> >>  2 files changed, 19 insertions(+)
-> >>
-> >>diff --git a/drivers/net/ethernet/allwinner/Kconfig b/drivers/net/ethernet/allwinner/Kconfig
-> >>index d8d95d4..508a288 100644
-> >>--- a/drivers/net/ethernet/allwinner/Kconfig
-> >>+++ b/drivers/net/ethernet/allwinner/Kconfig
-> >>@@ -28,6 +28,7 @@ config SUN4I_EMAC
-> >>  	select MII
-> >>  	select PHYLIB
-> >>  	select MDIO_SUN4I
-> >>+	select MFD_SYSCON
-> >>          ---help---
-> >>            Support for Allwinner A10 EMAC ethernet driver.
-> >>
-> >>diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-> >>index 1fcd556..86c891d 100644
-> >>--- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-> >>+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-> >>@@ -18,6 +18,8 @@
-> >>  #include <linux/gpio.h>
-> >>  #include <linux/interrupt.h>
-> >>  #include <linux/irq.h>
-> >>+#include <linux/mfd/syscon.h>
-> >>+#include <linux/mfd/syscon/sun4i-sc.h>
-> >>  #include <linux/mii.h>
-> >>  #include <linux/module.h>
-> >>  #include <linux/netdevice.h>
-> >>@@ -28,6 +30,7 @@
-> >>  #include <linux/of_platform.h>
-> >>  #include <linux/platform_device.h>
-> >>  #include <linux/phy.h>
-> >>+#include <linux/regmap.h>
-> >>
-> >>  #include "sun4i-emac.h"
-> >>
-> >>@@ -78,6 +81,7 @@ struct emac_board_info {
-> >>
-> >>  	struct phy_device	*phy_dev;
-> >>  	struct device_node	*phy_node;
-> >>+	struct regmap		*sc;
-> >>  	unsigned int		link;
-> >>  	unsigned int		speed;
-> >>  	unsigned int		duplex;
-> >>@@ -862,6 +866,18 @@ static int emac_probe(struct platform_device *pdev)
-> >>  		goto out;
-> >>  	}
-> >>
-> >>+	/* Map SRAM_A3_A4 to EMAC */
-> >>+	db->sc = syscon_regmap_lookup_by_compatible(
-> >>+						"allwinner,sun4i-a10-syscon");
-> >>+	if (IS_ERR(db->sc)) {
-> >>+		dev_err(&pdev->dev, "failed to find syscon regmap\n");
-> >>+		ret = PTR_ERR(db->sc);
-> >>+		goto out;
-> >>+	}
-> >>+
-> >>+	regmap_update_bits(db->sc, SUN4I_SC1, SUN4I_SC1_SRAM_A3_A4_MAP_MASK,
-> >>+						SUN4I_SC1_SRAM_A3_A4_MAP_EMAC);
-> >>+
-> >
-> >I don't think that using a syscon is the right solution here.
-> >
-> >All this SRAM mapping thing is mutually exclusive, and will possibly
-> >impact other drivers as well.
+> v3:
+>   - Add Tested-by,
+>   - Document required properties inherited from "simple-bus",
+>   - Document required "reg" property for "renesas,bsc",
+>   - Move "ranges" before "reg" in the example,
 > 
-> Each single SRAM area can only be mapped to a single peripheral, so as long
-> as the driver only changes bits related to his own area nothing can go wrong
-> I believe.
-
-Which is exactly my point. This kind of assumption is very
-fragile. Such mistakes might be made, will slip in under any review
-and might get un-noticed for a very long time.
-
-While adding a simple driver at least would make this obvious when two
-drivers will contend for the same SRAM mapping.
-
-> SRAM_C2 looks like it can be mapped do different devices (AE, CE, ACE), but
-> as far as I understand this, they are all related to the ACE device, sharing
-> a common register space, and would have to be handled by a single driver
-> anyway (if that will ever happen without docs)
-> https://linux-sunxi.org/ACE_Register_guide
+> v2:
+>   - New.
+> ---
+>  .../devicetree/bindings/bus/simple-pm-bus.txt      | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/simple-pm-bus.txt
 > 
-> >I think this is a more a case for a small driver in drivers/soc that
-> >would take care of this, and make sure that client drivers don't step
-> >on each other's toe.
-> 
-> I'm not convinced this is necessary, but what would this driver do different
-> than a basic regmap? Check if the area is already mapped by any driver and
-> deny mapping it again by a different driver? Which different driver, each
-> area is only interesting for a single device/driver? Except maybe mapping it
-> to CPU as general purpose sram, but that would need some direct agreement
-> with the driver to steal its memory anyway.
+> diff --git a/Documentation/devicetree/bindings/bus/simple-pm-bus.txt b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
+> new file mode 100644
+> index 0000000000000000..0415e93a816c5ac0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
+> @@ -0,0 +1,41 @@
+> +Simple Power-Managed Bus
+> +========================
+> +
+> +A Simple Power-Managed Bus is a transparent bus that doesn't need a real
+> +driver, as it's typically initialized by the boot loader.
+> +
+> +However, its bus controller is part of a PM domain, or under the control of a
+> +functional clock.  Hence, the bus controller's PM domain and/or clock must be
+> +enabled for child devices connected to the bus (either on-SoC or externally)
+> +to function.
+> +
+> +The bindings for the Simple Power-Managed Bus extend the bindings for
+> +"simple-bus", as specified in ePAPR.
 
-Off the top of my head:
-  - Make sure no one step on each other's toe, including the CPU that
-    might require a SRAM for several things (suspend, cpuidle, PSCI,
-    etc.)
-  - Provide a comprehensive status of the various SRAM and what they
-    are mapped to in debugfs
-  - Provide an abstraction to the SRAM mapping IP. You make the
-    assumption that the client drivers will always use on an A10 or an
-    SoC that has the same SRAMs, and the same IP to control which
-    device they are mapped to. This might not be true for other
-    drivers, and other SoCs.
-  - Make any adjustment to these registers that wouldn't fit in any
-    client drivers.
+I would note that "simple-pm-bus" follows the "simple-bus" set of
+properties, but is not an extension of "simple-bus".
 
-Maxime
+For the reasons I mentioned previously, I don't think that any
+"simple-pm-bus" should be "simple-bus" compatible (and I believe we
+should document that requirement below).
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---Jl+DbTnyraiZ/loT--
+> +
+> +
+> +Required properties:
+> +  - compatible: Must contain at least "simple-pm-bus".
+> +		It's recommended to let this be preceded by one or more
+> +		vendor-specific compatible values.
+> +  - #address-cells, #size-cells, ranges: Must describe the mapping between
+> +		parent address and child address spaces.
+> +
+> +Optional platform-specific properties for clock or PM domain control (at least
+> +one of them is required):
+> +  - clocks: Must contain a reference to the functional clock(s),
+
+I'm a little worried about the clocks. What are the expectations on
+their configuration?
+
+I don't see how we can generally rely on the clock configuration being
+correct unless the input clocks only have on/off controls, and the OS
+doesn't see any of the parent clock tree it could potentially change the
+configuration of (beyond on/off).
+
+Otherwise we're relying on implicit behaviour elsewhere in Linux (which
+_will_ break over time), and this ends up not being usable by anything
+else.
+
+I'm coming to the opinion that while we might be able to have common
+driver in Linux, we can't have a common "simple-pm-bus" binding because
+it implicitly assumes too much about the OS behaviour.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
