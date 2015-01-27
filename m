@@ -1,50 +1,101 @@
-From: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 0/2] Add Spreadtrum SoC bindings and serial driver support
-Date: Tue, 27 Jan 2015 23:43:51 +0800
-Message-ID: <CAAfSe-sPv+TDrUXYfW8DRJZiXjhVpRr=Wd3td7kHeB5r2LEnjw@mail.gmail.com>
-References: <1422345407-10037-1-git-send-email-chunyan.zhang@spreadtrum.com>
-	<2196748.ag4UzqF1Px@wuerfel>
-	<20150127145518.GA32531@kroah.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
+Date: Tue, 27 Jan 2015 10:44:45 -0500
+Message-ID: <54C7B26D.3080505@ti.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com> <1422052359-12384-4-git-send-email-m-karicheri2@ti.com> <54C77616.80301@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150127145518.GA32531-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "florian.vaussard-p8DiymsW2f8@public.gmane.org" <florian.vaussard-p8DiymsW2f8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, zhizhou.zhang
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <54C77616.80301@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 27, 2015 at 10:55 PM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Tue, Jan 27, 2015 at 02:24:02PM +0100, Arnd Bergmann wrote:
->> On Tuesday 27 January 2015 15:56:45 Chunyan Zhang wrote:
->> > This patch-set split the last version, and addressed the review comments from
->> > last version on serial driver code.
->> >
->> > Changes from v7:
->> > * Addressed review comments from Peter:
->> >         - Initialized the stack local with zero in sprd_set_termios()
->> >         - Used dev_get_drvdata() to get sprd_uart_port
->> >
->>
->> Looks good to me, but you still have too many people on 'To', so Greg
->> might be missing that you expect him to merge it.
->>
->> Greg, if there are no further comments, can you take both patches through
->> the tty git?
+On 01/27/2015 06:27 AM, Robin Murphy wrote:
+> Hi Murali,
 >
-> Will do, thanks.
+> On 23/01/15 22:32, Murali Karicheri wrote:
+>> Fix the dma-range size when the DT attribute is missing. i.e set size to
+>> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. To detect
+>> overflow when mask is set to max of u64, add a check, log error and
+>> return.
+>> Some platform use mask format for size in DTS. So add a work around to
+>> catch this and fix.
+>>
+>> Cc: Joerg Roedel <joro@8bytes.org>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Russell King <linux@arm.linux.org.uk>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> ---
+>> drivers/of/device.c | 14 +++++++++++++-
+>> 1 file changed, 13 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>> index 2de320d..0a5ff54 100644
+>> --- a/drivers/of/device.c
+>> +++ b/drivers/of/device.c
+>> @@ -105,12 +105,24 @@ void of_dma_configure(struct device *dev, struct
+>> device_node *np)
+>> ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>> if (ret < 0) {
+>> dma_addr = offset = 0;
+>> - size = dev->coherent_dma_mask;
+>> + size = dev->coherent_dma_mask + 1;
+>> } else {
+>> offset = PFN_DOWN(paddr - dma_addr);
+>> + /*
+>> + * Add a work around to treat the size as mask + 1 in case
+>> + * it is defined in DT as a mask.
+>> + */
+>> + if (size & 1)
+>> + size = size + 1;
+>> dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>> }
+>>
+>> + /* if size is 0, we have an overflow of u64 */
+>> + if (!size) {
+>> + dev_err(dev, "invalid size\n");
+>> + return;
+>> + }
+>> +
 >
-> greg k-h
+> This seems potentially fragile to dodgy DTs given that we might also be
+> using size to make a mask later. Would it make sense to double-up a
+> sanity check as mask-format detection? Something like:
+>
+> if is_power_of_2(size)
+> // use size
+> else if is_power_of_2(size + 1)
+> // use size + 1
+> else
+> // cry
+>
+Robin,
 
-To Arnd, Greg, Peter, and to all of others
+I think this is better. I will wait for some more time for anyone to 
+respond and re-send my patch with this change.
 
-thank you so much for your help.
-You all gave us so many important comments and valuable suggestions
-these months.
+Thanks
+Murali
+>
+> Robin.
+>
+>> dev->dma_pfn_offset = offset;
+>>
+>> coherent = of_dma_is_coherent(np);
+>>
+>
+>
 
-Best regards,
-Chunyan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
