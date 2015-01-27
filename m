@@ -1,59 +1,56 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 3/3] usb: ohci: jz4740: prepare the clock before enabling it
-Date: Tue, 27 Jan 2015 14:02:36 +0000
-Message-ID: <1422367356-38012-4-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V2 2/3] usb: ohci: jz4740: add DT support
+Date: Tue, 27 Jan 2015 14:02:35 +0000
+Message-ID: <1422367356-38012-3-git-send-email-Zubair.Kakakhel@imgtec.com>
 References: <1422367356-38012-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422367356-38012-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stern@rowland.harvard.edu
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Zubair.Kakakhel@imgtec.com
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422367356-38012-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton@imgtec.com>
+From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
-The clock must have been prepared before enabling it.
+This is a simple matter of providing a match table, the probe code needs
+no modification.
 
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-
---
-V2 changes. Add disable_unprepare as well
+Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/usb/host/ohci-jz4740.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/host/ohci-jz4740.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/usb/host/ohci-jz4740.c b/drivers/usb/host/ohci-jz4740.c
-index bb69733..129f6b9 100644
+index 8ddd8f5..bb69733 100644
 --- a/drivers/usb/host/ohci-jz4740.c
 +++ b/drivers/usb/host/ohci-jz4740.c
-@@ -189,7 +189,7 @@ static int jz4740_ohci_probe(struct platform_device *pdev)
+@@ -234,11 +234,20 @@ static int jz4740_ohci_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- 
- 	clk_set_rate(jz4740_ohci->clk, 48000000);
--	clk_enable(jz4740_ohci->clk);
-+	clk_prepare_enable(jz4740_ohci->clk);
- 	if (jz4740_ohci->vbus)
- 		ohci_jz4740_set_vbus_power(jz4740_ohci, true);
- 
-@@ -209,7 +209,7 @@ static int jz4740_ohci_probe(struct platform_device *pdev)
- err_disable:
- 	if (jz4740_ohci->vbus)
- 		regulator_disable(jz4740_ohci->vbus);
--	clk_disable(jz4740_ohci->clk);
-+	clk_disable_unprepare(jz4740_ohci->clk);
- 
- err_free:
- 	usb_put_hcd(hcd);
-@@ -227,7 +227,7 @@ static int jz4740_ohci_remove(struct platform_device *pdev)
- 	if (jz4740_ohci->vbus)
- 		regulator_disable(jz4740_ohci->vbus);
- 
--	clk_disable(jz4740_ohci->clk);
-+	clk_disable_unprepare(jz4740_ohci->clk);
- 
- 	usb_put_hcd(hcd);
- 
++#ifdef CONFIG_OF
++static struct of_device_id jz4740_ohci_of_match[] = {
++	{ .compatible = "ingenic,jz4740-ohci", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, jz4740_ohci_of_match);
++#endif
++
+ static struct platform_driver ohci_hcd_jz4740_driver = {
+ 	.probe = jz4740_ohci_probe,
+ 	.remove = jz4740_ohci_remove,
+ 	.driver = {
+ 		.name = "jz4740-ohci",
++		.of_match_table = of_match_ptr(jz4740_ohci_of_match),
+ 		.owner = THIS_MODULE,
+ 	},
+ };
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
