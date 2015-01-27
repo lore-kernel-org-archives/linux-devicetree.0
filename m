@@ -1,31 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 2/2] arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
-Date: Tue, 27 Jan 2015 21:13:51 +0100
-Message-ID: <4747424.udeKOcy6tC@wuerfel>
-References: <1422379260-10139-1-git-send-email-stripathi@apm.com> <1422379260-10139-3-git-send-email-stripathi@apm.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/2] watchdog: jz4740: Add DT support
+Date: Tue, 27 Jan 2015 21:15:37 +0100
+Message-ID: <2690526.hgsE0j4AZc@wuerfel>
+References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422371490-44402-3-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1422379260-10139-3-git-send-email-stripathi@apm.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: chris@printf.net, anton@enomsg.org, linux-mmc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, mlangsdo@redhat.com, patches@apm.com
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422371490-44402-3-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 January 2015 22:51:00 Suman Tripathi wrote:
-> 
-> +               sdhc0: sdhc@1c000000 {
-> +                       device_type = "sdhc";
-> +                       compatible = "arasan,sdhci-8.9a";
-> +                       reg = <0x0 0x1c000000 0x0 0x100>;
-> +                       interrupts = <0x0 0x49 0x4>;
-> +                       clock-names = "clk_xin", "clk_ahb";
-> +                       clocks = <&sdioclk 0>, <&ahbclk 0>;
-> +               };
+On Tuesday 27 January 2015 15:11:30 Zubair Lutfullah Kakakhel wrote:
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id jz4740_of_matches[] = {
+> +       { .compatible = "ingenic,jz4740-watchdog", },
+> +       { /* sentinel */ }
+> +};
+> +#endif
 > +
+>  static int jz4740_wdt_probe(struct platform_device *pdev)
+>  {
+>         struct jz4740_wdt_drvdata *drvdata;
+> @@ -211,6 +219,7 @@ static struct platform_driver jz4740_wdt_driver = {
+>         .remove = jz4740_wdt_remove,
+>         .driver = {
+>                 .name = "jz4740-wdt",
+> +               .of_match_table = of_match_ptr(jz4740_of_matches),
+>         },
+> 
 
-Here you don't provide an 'iommus' property, which means that the
-device is unable to use the iommu.
+Why the #ifdef? Presumably we want to move over jz4740 to DT-only in the
+long run, so you could just remove the #ifdef and the of_match_ptr()
+wrapper.
+
+Also, you should add a MODULE_DEVICE_TABLE() entry.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
