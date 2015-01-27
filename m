@@ -1,76 +1,78 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH_V2 1/3] dt: usb: jz4740: Add DT binding document for OHCI
-Date: Tue, 27 Jan 2015 14:02:34 +0000
-Message-ID: <1422367356-38012-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1422367356-38012-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
+Date: Tue, 27 Jan 2015 15:07:26 +0100
+Message-ID: <CACRpkdazPhi6ebrMs4uN9wC_fxyDzFUUTuy=4qObEsdtU_VBrw@mail.gmail.com>
+References: <20141127101830.GP30369@pengutronix.de>
+	<CACRpkdbMdJT6y-NL36RgQe0-CAFAVGqKiwY9+yFcwA7JDLmA+Q@mail.gmail.com>
+	<20141202135527.GM30369@pengutronix.de>
+	<CACRpkdZeRd+j7d_iRphruHRg8p3XjqWK8_HQzLH2PTZ_pqOrYA@mail.gmail.com>
+	<20150112122200.GC18908@pengutronix.de>
+	<CACRpkdYXrdiRWMV8YpxrSLe2rLEV-ZnX7=36w21zGquh==6WgA@mail.gmail.com>
+	<20150113161614.GF23940@pengutronix.de>
+	<CACRpkdYRrs2=gNM1XGSh1cSo5Pvx6iNLt4HjL6gdTqGPWYSRDw@mail.gmail.com>
+	<1421403805.11671.58.camel@mtksdaap41>
+	<CACRpkdYmjrEtds4wLr0cOmCPOLhS9xisfrY-cNZ3r0oh8n489Q@mail.gmail.com>
+	<20150126155733.GQ12209@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422367356-38012-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150126155733.GQ12209@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, huang eddie <eddie.huang@mediatek.com>, dandan.he@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On Mon, Jan 26, 2015 at 4:57 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Tue, Jan 20, 2015 at 10:45:09AM +0100, Linus Walleij wrote:
 
-Add the binding documentation for the JZ47xx OHCI controller.
+>> As discussed with Sascha Hauer it is ambigous to use "pins" for
+>> a numerical value indicating both a mux setting and a pin. Sascha
+>> suggests using "pinmux" and adding this as a secondary generic
+>> binding for this type of pin controllers that use numbers and #defines
+>> to set up bindings.
+>>
+>> We should still move these parsing functions to the core.
+>
+> I tried that for the last few days and failed.
+>
+> Part of the problem is that the core lacks the data structures to put
+> the information in. There is
+>
+> struct pinctrl_map_mux {
+>         const char *group;
+>         const char *function;
+> };
+>
+> but its meaning is SoC specific. Some SoCs combine the pins found in a
+> dt subnode to one group (i.MX, rockchip, at91) while others make an
+> individual group from each single pin (Tegra, others?). Also the
+> function string is SoC specific. Some SoCs just define functions like
+> "alt1".."altn" which are valid for all groups, others define different
+> function names for each group.
+>
+> Another thing is that the binding gives us numbers, but struct
+> pinctrl_map_mux expects strings, so the numbers would have to be
+> converted to strings. This is crude since the contents of struct
+> pinctrl_map_mux are converted from strings back to numbers later from
+> the pinctrl core with the help of the driver. So we would have to
+> translate the numbers from the bindings to strings just to convert them
+> back to numbers before passing them to the driver later.
 
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+So can we use a union?
 
----
-The jz4740 is platform only at the moment.
+struct pinctrl_map_mux {
+        union group {
+              const char *groupstr;
+              u16 groupno;
+        };
+        union function {
+              const char *functionstr;
+              u16 funcno;
+        };
+};
 
-But DT support is being added
+The augment the code to reference foo->group.groupstr or
+foo->group.groupno etc depending on runpath.
 
-See http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
-
-jz47xx is used because jz4780 will also use this driver
-
-V2 Changes: Removed interrupt parent binding as that can be inherited.
-Forgot a binding for clock-names
----
- .../bindings/usb/ingenic,jz47xx-ohci.txt           | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz47xx-ohci.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz47xx-ohci.txt b/Documentation/devicetree/bindings/usb/ingenic,jz47xx-ohci.txt
-new file mode 100644
-index 0000000..2e5dce5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ingenic,jz47xx-ohci.txt
-@@ -0,0 +1,26 @@
-+Ingenic JZ47XX SoC OHCI controller binding
-+
-+The Ingenic JZ47XX SoC includes an OHCI compliant USB host controller
-+interface for use with USB 1.1 devices.
-+
-+Required properties:
-+ - compatible: Should be "ingenic,jz4740-ohci"
-+ - reg: Should contain the address & size of the OHCI controller registers.
-+ - interrupts: Should specify the interrupt line number
-+ - clocks: Should contain a single clock specifier for the SoC UHC clock.
-+ - clock-names: Must be "uhc"
-+
-+Example for jz4780:
-+
-+/ {
-+	ohci: jz4780-ohci@0x134a0000 {
-+		compatible = "ingenic,jz4780-ohci";
-+		reg = <0x134a0000 0x10000>;
-+
-+		interrupts = <5>;
-+
-+		clocks = <&cgu JZ4780_CLK_UHC>;
-+		clock-names = "uhc";
-+	};
-+};
-+
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
