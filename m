@@ -1,80 +1,91 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: watchdog: Add DT binding documentation for
- jz47xx watchdog timer
-Date: Tue, 27 Jan 2015 08:30:08 -0800
-Message-ID: <20150127163008.GA21459@roeck-us.net>
-References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1422371490-44402-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt: usb: jz4740: Add DT binding document for OHCI
+Date: Tue, 27 Jan 2015 19:30:53 +0300
+Message-ID: <54C7BD3D.4010707@cogentembedded.com>
+References: <1422366439-34641-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422366439-34641-2-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1422371490-44402-2-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1422366439-34641-2-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 27, 2015 at 03:11:29PM +0000, Zubair Lutfullah Kakakhel wrote:
-> Add binding for jz47xx watchdog timer. It is a simple watchdog timer.
-> Needs rtc clock and register addresses
-> 
+Hello.
+
+On 01/27/2015 04:47 PM, Zubair Lutfullah Kakakhel wrote:
+
+> From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+
+> Add the binding documentation for the JZ47xx OHCI controller.
+
+> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 > Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> 
+
 > ---
 > The jz4740 is platform only at the moment.
-> 
+
 > But DT support is being added
-> 
+
 > See http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
-> 
+
 > jz47xx is used because jz4780 will also use this driver
-
-Not a valid argument. Please use jz4740, per convention.
-
-xx implies anything from 00 to 99, which is not necessarily correct.
-If support for other chips is added, that information can be mentioned
-in the file itself, as it is done for many other drivers.
-
 > ---
->  .../devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt b/Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt
+>   .../bindings/usb/ingenic,jz47xx-ohci.txt           | 28 ++++++++++++++++++++++
+>   1 file changed, 28 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz47xx-ohci.txt
+
+> diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz47xx-ohci.txt b/Documentation/devicetree/bindings/usb/ingenic,jz47xx-ohci.txt
 > new file mode 100644
-> index 0000000..bf4c404
+> index 0000000..2fada8b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt
-> @@ -0,0 +1,17 @@
-> +Ingenic Watchdog Timer (WDT) Controller for JZ47XX
+> +++ b/Documentation/devicetree/bindings/usb/ingenic,jz47xx-ohci.txt
+> @@ -0,0 +1,28 @@
+> +Ingenic JZ47XX SoC OHCI controller binding
+
+    I think JZ47xx would look a bit better.
+
+> +
+> +The Ingenic JZ47XX SoC includes an OHCI compliant USB host controller
+> +interface for use with USB 1.1 devices.
 > +
 > +Required properties:
-> +compatible: "ingenic,jz4740-watchdog"
-> +reg: Register address and length for watchdog registers
-> +clocks: phandle to rtcclk
-> +clock-names: must be "rtc"
-> +
-> +Example:
-> +
-> +watchdog: jz47xx-watchdog@0x10002000 {
-> +	compatible = "ingenic,jz4780-watchdog";
+> + - compatible: Should be "ingenic,jz4740-ohci"
+> + - reg: Should contain the address & size of the OHCI controller registers.
+> + - interrupt-parent: Should be the phandle of the interrupt controller that
+> +   delivers interrupts to the OHCI block.
 
-"ingenic,jz4780-watchdog" is not listed as possible value above,
-nor is it listed in the patch itself, so you can not use it here.
+    This is never a required prop, it can be inherited from a parent node.
 
-> +	reg = <0x10002000 0x100>;
+> + - interrupts: Should specify the interrupt provided by interrupt-parent.
+> + - clocks: Should contain a single clock specifier for the SoC UHC clock.
 > +
-> +	clocks = <&rtclk>;
-> +	clock-names = "rtc";
-> +};
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Example SoC include file for jz4780:
+> +
+> +/ {
+> +	ohci: jz4780-ohci@0x134a0000 {
+
+    The ePAPR standard says we shouldn't name the nodes after the chips used 
+but use the generic names, which would be "usb" in this case. And please drop 
+"0x" from the <unit-address> part of the name.
+
+> +		compatible = "ingenic,jz4780-ohci";
+> +		reg = <0x134a0000 0x10000>;
+> +
+> +		interrupt-parent = <&intc>;
+> +		interrupts = <5>;
+> +
+> +		clocks = <&cgu JZ4780_CLK_UHC>;
+> +		clock-names = "uhc";
+
+    You forgot to mention this prop above.
+
+[...]
+
+WBR, Sergei
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
