@@ -1,91 +1,37 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dtc: parser: Add label while overriding nodes
-Date: Tue, 27 Jan 2015 17:34:31 -0600
-Message-ID: <CAL_Jsq+w7R=99qPc+YG_Bh1L-nMs1Gptjwo=KYTK5OX2HVVNpA@mail.gmail.com>
-References: <1420726362-22555-1-git-send-email-nikhil.nd@ti.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] Add basic support for Mediatek MT8173 SoC
+Date: Wed, 28 Jan 2015 00:52:15 +0100
+Message-ID: <CABuKBeKWr_Jp6sdqEfq0oxAEob7VQN0B2icK2GSOH2=AtpqFCQ@mail.gmail.com>
+References: <1421054073-43468-1-git-send-email-eddie.huang@mediatek.com>
+	<CABuKBeKjGL6puqhqCb6b4=5Qb9+hcm-sGQ7vLxyb2jAFaLYGUQ@mail.gmail.com>
+	<alpine.DEB.2.11.1501261633450.5526@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420726362-22555-1-git-send-email-nikhil.nd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nikhil Devshatwar <nikhil.nd-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.11.1501261633450.5526@nanos>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yu-hau Chen <yh.chen@mediatek>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 8, 2015 at 8:12 AM, Nikhil Devshatwar <nikhil.nd-l0cyMroinI0@public.gmane.org> wrote:
-> Current device tree compiler allows to define multiple labels when defining
-> the device node the first time. Typically device nodes are defined in
-> DTSI files. Now these nodes can be overriden for updating some of the
-> properties. Typically, device nodes are overridden in DTS files.
+Hi Thomas,
+
+2015-01-26 16:34 GMT+01:00 Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>:
+> On Mon, 26 Jan 2015, Matthias Brugger wrote:
+>> Applied to v3.20-next/arm64.
+>> >
+>> > Yingjoe Chen (1):
+>> >   irqchip: mtk-sysirq: Get irq number from register resource size
 >
-> When working with adapter boards, most of the time adapter board can fit to
-> multiple base boards. But depending on which base board it is connected to,
-> the devices on the adapter board would be children of different devices.
->
-> e.g. On dra7-evm.dts, i2c2 is exported for expansion connector whereas
-> on dra72-evm.dts, i2c5 is exported for expansion connector.
-> This causes a problem when writing a generic device tree file for
-> the adapter board. Because, you cannot know wheather all the devices on
+> I just queued that irqchip patch in irq/core ....
 
-s/wheather/whether/
+What I wanted to express is, that I applied the rest of the series,
+but not this patch, as it goes through your tree.
+Sorry for the confusion.
 
-> adpter board are present on i2c or i2c5.
-
-s/adpter/adapter/
-
-> The problem can be solved by adding a common label (e.g. i2cexp) in both
-> of the DTS files when overriding the device nodes for i2c2 or i2c5.
-> This way, generic adapter board file would override the i2cexp. And
-> depending on which base board you use the adpter board, all the devices
-
-s/adpter/adapter/
-
-> are automatically added for correct device nodes.
->
-> Change-Id: I3ad7247a79baed7268a91fc691360aece73d6d1b
-
-Get rid of this Gerrit nonsense.
-
-> Signed-off-by: Nikhil Devshatwar <nikhil.nd-l0cyMroinI0@public.gmane.org>
-> ---
->  scripts/dtc/dtc-parser.y |   12 ++++++++++++
->  1 file changed, 12 insertions(+)
-
-You need to send this against upstream dtc, not the copy in the kernel.
-
-Seems like a reasonable change, but I'm not too familar with dtc source.
-
-> diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
-> index f412460..d9ed3b7 100644
-> --- a/scripts/dtc/dtc-parser.y
-> +++ b/scripts/dtc/dtc-parser.y
-> @@ -145,6 +145,18 @@ devicetree:
->                 {
->                         $$ = merge_nodes($1, $3);
->                 }
-> +
-> +       | devicetree DT_LABEL DT_REF nodedef
-> +               {
-> +                       struct node *target = get_node_by_ref($1, $3);
-> +
-> +                       add_label(&target->labels, $2);
-> +                       if (target)
-> +                               merge_nodes(target, $4);
-> +                       else
-> +                               print_error("label or path, '%s', not found", $2);
-> +                       $$ = $1;
-> +               }
->         | devicetree DT_REF nodedef
->                 {
->                         struct node *target = get_node_by_ref($1, $2);
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+motzblog.wordpress.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
