@@ -1,98 +1,62 @@
-From: Gyungoh Yoo <gyungoh@gmail.com>
-Subject: Re: [PATCH v10 4/6] devicetree: Add new SKY81452 backlight binding
-Date: Tue, 27 Jan 2015 16:02:09 +0900
-Message-ID: <20150127070209.GA3301@jack-ThinkPad-T520>
-References: <1421994515-3070-1-git-send-email-jack.yoo@skyworksinc.com>
- <1421994515-3070-5-git-send-email-jack.yoo@skyworksinc.com>
+From: Pranavkumar Sawargaonkar <psawargaonkar@apm.com>
+Subject: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
+Date: Tue, 27 Jan 2015 12:33:26 +0530
+Message-ID: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421994515-3070-5-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, robh+dt@kernel.org, jg1.han@samsung.com, cooloney@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org
-Cc: akpm@linux-foundation.org, jic23@kernel.org, thomas.petazzoni@free-electrons.com, ktsai@capellamicro.com, hs@denx.de, stwiss.opensource@diasemi.com, matti.vaittinen@nsn.com, broonie@kernel.org, jason@lakedaemon.net, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Feng Kan <fkan@apm.com>, arnd@arndb.de, marc.zyngier@arm.com, jcm@redhat.com, patches@apm.com, kvmarm@lists.cs.columbia.edu, christoffer.dall@linaro.org, Tushar Jagad <tjagad@apm.com>, Pranavkumar Sawargaonkar <psawargaonkar@apm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 23, 2015 at 03:28:33PM +0900, gyungoh@gmail.com wrote:
-> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-> 
-> Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-> Acked-by: Bryan Wu <cooloney@gmail.com>
+In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
+in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
+size due to size alignment checking in vgic driver for VCPU Control and
+VCPU register.
 
-The existing Ack is only for backlight driver.
+This patch corrects the sizes to be inline with the hardware spec.
 
-DT Ack please.
+CC: linux-arm-kernel@lists.infradead.org
+CC: kvmarm@lists.cs.columbia.edu
+CC: arnd@arndb.de
+CC: marc.zyngier@arm.com
+CC: christoffer.dall@linaro.org
+CC: jcm@redhat.com
+Signed-off-by: Pranavkumar Sawargaonkar <psawargaonkar@apm.com>
+Signed-off-by: Tushar Jagad <tjagad@apm.com>
+Signed-off-by: Feng Kan <fkan@apm.com>
+---
+ arch/arm64/boot/dts/apm/apm-storm.dtsi |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> ---
-> Changes v10:
-> Nothing
-> 
-> Changes v9:
-> Nothing
-> 
-> Changes v8:
-> Renamed property names for backlight with vendor prefix
-> Modified gpio-enable property to generic property for GPIO
-> Made up the example for backlight DT
-> 
-> Changes v7:
-> Nothing
-> 
-> Changes v6:
-> Nothing
-> 
-> Changes v5:
-> Nothing
-> 
-> Changes v4:
-> Nothing
-> 
-> Changes v3:
-> Nothing
-> 
-> Changes v2:
-> Added reg attribute for I2C slave address
-> 
->  .../video/backlight/sky81452-backlight.txt         | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-> new file mode 100644
-> index 0000000..8daebf5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-> @@ -0,0 +1,29 @@
-> +SKY81452-backlight bindings
-> +
-> +Required properties:
-> +- compatible		: Must be "skyworks,sky81452-backlight"
-> +
-> +Optional properties:
-> +- name			: Name of backlight device. Default is 'lcd-backlight'.
-> +- gpios			: GPIO to use to EN pin.
-> +			See Documentation/devicetree/bindings/gpio/gpio.txt
-> +- skyworks,en-channels	: Enable mask for current sink channel 1 to 6.
-> +- skyworks,ignore-pwm	: Ignore both PWM input
-> +- skyworks,dpwm-mode	: Enable DPWM dimming mode, otherwise Analog dimming.
-> +- skyworks,phase-shift	: Enable phase shift mode
-> +- skyworks,ovp-level	: Over-voltage protection level.
-> +			Should be between 14 or 28V.
-> +- skyworks,short-detection-threshold	: It should be one of 4, 5, 6 and 7V.
-> +- skyworks,current-limit	: It should be 2300mA or 2750mA.
-> +
-> +Example:
-> +
-> +	backlight {
-> +		compatible = "skyworks,sky81452-backlight";
-> +		name = "pwm-backlight";
-> +		skyworks,en-channels = <0x3f>;
-> +		skyworks,ignore-pwm;
-> +		skyworks,phase-shift;
-> +		skyworks,ovp-level = <20>;
-> +		skyworks,current-limit = <2300>;
-> +	};
-> -- 
-> 1.9.1
-> 
+diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+index f1ad9c2..65f0e6d 100644
+--- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+@@ -81,10 +81,10 @@
+ 		compatible = "arm,cortex-a15-gic";
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+-		reg = <0x0 0x78010000 0x0 0x1000>,	/* GIC Dist */
+-		      <0x0 0x78020000 0x0 0x1000>,	/* GIC CPU */
+-		      <0x0 0x78040000 0x0 0x2000>,	/* GIC VCPU Control */
+-		      <0x0 0x78060000 0x0 0x2000>;	/* GIC VCPU */
++		reg = <0x0 0x78010000 0x0 0x10000>,	/* GIC Dist */
++		      <0x0 0x78020000 0x0 0x20000>,	/* GIC CPU */
++		      <0x0 0x78040000 0x0 0x10000>,	/* GIC VCPU Control */
++		      <0x0 0x78060000 0x0 0x20000>;	/* GIC VCPU */
+ 		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
+ 	};
+
+--
+1.7.9.5
