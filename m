@@ -1,41 +1,79 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH v3 2/2] binding: wm8904: add new compatible string
-Date: Tue, 27 Jan 2015 11:36:40 +0800
-Message-ID: <1422329800-28481-2-git-send-email-voice.shen@atmel.com>
-References: <1422329800-28481-1-git-send-email-voice.shen@atmel.com>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V9 13/14] ARM: dts: snow: represent the connection between
+ bridge and panel using videoport and endpoints
+Date: Tue, 27 Jan 2015 09:57:39 +0530
+Message-ID: <CAEC9eQP+BiiM=-rMu+kqA721L76whbHCkpc15ctfhV3Z1ETwLw@mail.gmail.com>
+References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
+ <1421771935-31618-14-git-send-email-ajaykumar.rs@samsung.com>
+ <0c9401d036da$71046bf0$530d43d0$@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <1422329800-28481-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, nicolas.ferre@atmel.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0c9401d036da$71046bf0$530d43d0$@kernel.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kukjin Kim <kgene@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Jingoo Han <jg1.han@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The "wlf,wm8912" compatible string is used for wm8912, which
-share driver with wm8904, however, the data type is different.
-
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
----
-Changes in v3: None
-Changes in v2: None
-
- Documentation/devicetree/bindings/sound/wm8904.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/wm8904.txt b/Documentation/devicetree/bindings/sound/wm8904.txt
-index e99f409..66bf261 100644
---- a/Documentation/devicetree/bindings/sound/wm8904.txt
-+++ b/Documentation/devicetree/bindings/sound/wm8904.txt
-@@ -3,7 +3,7 @@ WM8904 audio CODEC
- This device supports I2C only.
- 
- Required properties:
--  - compatible: "wlf,wm8904"
-+  - compatible: "wlf,wm8904" or "wlf,wm8912"
-   - reg: the I2C address of the device.
-   - clock-names: "mclk"
-   - clocks: reference to
--- 
-2.3.0.rc0
-
+SGkgS3VramluLAoKT24gRnJpLCBKYW4gMjMsIDIwMTUgYXQgMTI6MzEgUE0sIEt1a2ppbiBLaW0g
+PGtnZW5lQGtlcm5lbC5vcmc+IHdyb3RlOgo+IEFqYXkgS3VtYXIgd3JvdGU6Cj4+Cj4+IERlZmlu
+ZSB2aWRlb3BvcnRzIGFuZCB1c2UgZW5kcG9pbnRzIHRvIGRlc2NyaWJlIHRoZSBjb25uZWN0aW9u
+IGJldHdlZW4KPj4gdGhlIGVuY29kZXIsIGJyaWRnZSBhbmQgdGhlIHBhbmVsLCBpbnN0ZWFkIG9m
+IHVzaW5nIHBoYW5kbGVzLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBamF5IEt1bWFyIDxhamF5a3Vt
+YXIucnNAc2Ftc3VuZy5jb20+Cj4+IEFja2VkLWJ5OiBJbmtpIERhZSA8aW5raS5kYWVAc2Ftc3Vu
+Zy5jb20+Cj4+IFRlc3RlZC1ieTogUmFodWwgU2hhcm1hIDxyYWh1bC5zaGFybWFAc2Ftc3VuZy5j
+b20+Cj4+IFRlc3RlZC1ieTogSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXIubWFydGlu
+ZXpAY29sbGFib3JhLmNvLnVrPgo+PiBUZXN0ZWQtYnk6IEd1c3Rhdm8gUGFkb3ZhbiA8Z3VzdGF2
+by5wYWRvdmFuQGNvbGxhYm9yYS5jby51az4KPj4gVGVzdGVkLWJ5OiBTam9lcmQgU2ltb25zIDxz
+am9lcmQuc2ltb25zQGNvbGxhYm9yYS5jby51az4KPj4gLS0tCj4+ICBhcmNoL2FybS9ib290L2R0
+cy9leHlub3M1MjUwLXNub3cuZHRzIHwgICAzMCArKysrKysrKysrKysrKysrKysrKysrKysrKysr
+LS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAyOCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+
+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zbm93LmR0cyBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtc25vdy5kdHMKPj4gaW5kZXggYjlhZWVjNC4u
+MWJkNWQzYSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zbm93
+LmR0cwo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLXNub3cuZHRzCj4+IEBA
+IC0xODMsNyArMTgzLDIwIEBACj4+ICAgICAgICAgICAgICAgICAgICAgICBwb3dlcmRvd24tZ3Bp
+b3MgPSA8JmdweTIgNSBHUElPX0FDVElWRV9ISUdIPjsKPj4gICAgICAgICAgICAgICAgICAgICAg
+IHJlc2V0LWdwaW9zID0gPCZncHgxIDUgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICAgICAgICAgICAg
+ICAgICAgICAgICBlZGlkLWVtdWxhdGlvbiA9IDw1PjsKPj4gLSAgICAgICAgICAgICAgICAgICAg
+IHBhbmVsID0gPCZwYW5lbD47Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgIHBvcnRzIHsK
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAwIHsKPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBicmlkZ2Vfb3V0OiBlbmRwb2ludCB7Cj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQg
+PSA8JnBhbmVsX2luPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9
+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+PiArCj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHBvcnRAMSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgYnJpZGdlX2luOiBlbmRwb2ludCB7Cj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmRwX291dD47Cj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAgICAgICAgICAgIH07Cj4+ICAgICAg
+ICAgICAgICAgfTsKPj4gICAgICAgfTsKPj4KPj4gQEAgLTIyOCw2ICsyNDEsMTIgQEAKPj4gICAg
+ICAgICAgICAgICBjb21wYXRpYmxlID0gImF1byxiMTE2eHcwMyI7Cj4+ICAgICAgICAgICAgICAg
+cG93ZXItc3VwcGx5ID0gPCZmZXQ2PjsKPj4gICAgICAgICAgICAgICBiYWNrbGlnaHQgPSA8JmJh
+Y2tsaWdodD47Cj4+ICsKPj4gKyAgICAgICAgICAgICBwb3J0IHsKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgIHBhbmVsX2luOiBlbmRwb2ludCB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmYnJpZGdlX291dD47Cj4+ICsgICAgICAgICAgICAgICAg
+ICAgICB9Owo+PiArICAgICAgICAgICAgIH07Cj4+ICAgICAgIH07Cj4+ICB9Owo+Pgo+PiBAQCAt
+MjQyLDcgKzI2MSwxNCBAQAo+PiAgICAgICBzYW1zdW5nLGxpbmstcmF0ZSA9IDwweDBhPjsKPj4g
+ICAgICAgc2Ftc3VuZyxsYW5lLWNvdW50ID0gPDI+Owo+PiAgICAgICBzYW1zdW5nLGhwZC1ncGlv
+ID0gPCZncHgwIDcgR1BJT19BQ1RJVkVfSElHSD47Cj4+IC0gICAgIGJyaWRnZSA9IDwmcHRuMzQ2
+MD47Cj4+ICsKPj4gKyAgICAgcG9ydHMgewo+PiArICAgICAgICAgICAgIHBvcnRAMCB7Cj4+ICsg
+ICAgICAgICAgICAgICAgICAgICBkcF9vdXQ6IGVuZHBvaW50IHsKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZicmlkZ2VfaW4+Owo+PiArICAgICAg
+ICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAgICB9Owo+PiArICAgICB9Owo+PiAgfTsK
+Pj4KPj4gICZlaGNpIHsKPj4gLS0KPj4gMS43LjkuNQo+Cj4gSSdtIGZpbmUgb24gdGhlIERUIGNo
+YW5nZXMgaW4gdGhpcyBzZXJpZXMsIHNoYWxsIEkgdGFrZSAxMy8xNCBhbmQgMTQvMTQgaW4KPiBT
+YW1zdW5nIHRyZWU/ClllcywgcGxlYXNlIHRha2UgdGhlc2UgcGF0Y2hlcy4KClRoYW5rcyBhbmQg
+cmVnYXJkcywKQWpheSBLdW1hcgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
