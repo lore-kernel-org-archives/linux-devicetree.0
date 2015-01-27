@@ -1,13 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 03/10] ARM: dts: sun9i: Add usb clock nodes
- to a80 dtsi
-Date: Wed, 28 Jan 2015 03:54:08 +0800
-Message-ID: <1422388455-25923-4-git-send-email-wens@csie.org>
+Subject: [PATCH v3 01/10] clk: sunxi: Move USB clocks to
+ separate file
+Date: Wed, 28 Jan 2015 03:54:06 +0800
+Message-ID: <1422388455-25923-2-git-send-email-wens@csie.org>
 References: <1422388455-25923-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3OZT6TAKGQEYQ3UXNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3WZT6TAKGQEQOKHTPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1422388455-25923-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,46 +21,391 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The USB controller and phy clocks and resets have a separate address
-block and driver. Add the nodes to represent them.
+The USB clocks originally shared code with the gates clocks, but had
+additional reset controllers. Move these to a separate file. This will
+allow us to add new support for slightly different USB clocks, such as
+on the A80, without affecting gates clocks, and also facilitate the
+migration of gates clocks to a generic solution.
+
+This also cleans up the USB clocks code slightly, such as adding
+newlines, getting rid of the unused clkdev call, using a simple
+u32 instead of BITMAP for the clock masks, using BIT() macro to
+declare the clock bitmasks, and using of_io_request_and_map() to
+get the I/O address.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 9e28ffc6dd90..679cf2878800 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -147,6 +147,28 @@
- 			clock-output-names = "osc32k";
- 		};
- 
-+		usb_mod_clk: clk@00a08000 {
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			compatible = "allwinner,sun9i-a80-usb-mod-clk";
-+			reg = <0x00a08000 0x4>;
-+			clocks = <&ahb1_gates 1>;
-+			clock-output-names = "usb0_ahb", "usb_ohci0",
-+					     "usb1_ahb", "usb_ohci1",
-+					     "usb2_ahb", "usb_ohci2";
-+		};
+This patch does quite a few cleanups in addition to the code movement.
+I'm not sure if it's acceptable.
+
+---
+ drivers/clk/sunxi/Makefile    |   1 +
+ drivers/clk/sunxi/clk-sunxi.c |  88 -------------------
+ drivers/clk/sunxi/clk-usb.c   | 190 ++++++++++++++++++++++++++++++++++++++=
+++++
+ 3 files changed, 191 insertions(+), 88 deletions(-)
+ create mode 100644 drivers/clk/sunxi/clk-usb.c
+
+diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+index 3a5292e3fcf8..058f273d6154 100644
+--- a/drivers/clk/sunxi/Makefile
++++ b/drivers/clk/sunxi/Makefile
+@@ -9,6 +9,7 @@ obj-y +=3D clk-mod0.o
+ obj-y +=3D clk-sun8i-mbus.o
+ obj-y +=3D clk-sun9i-core.o
+ obj-y +=3D clk-sun9i-mmc.o
++obj-y +=3D clk-usb.o
+=20
+ obj-$(CONFIG_MFD_SUN6I_PRCM) +=3D \
+ 	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 24c7cc12e9e1..af23be24d736 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -835,59 +835,6 @@ static void __init sunxi_divider_clk_setup(struct devi=
+ce_node *node,
+=20
+=20
+ /**
+- * sunxi_gates_reset... - reset bits in leaf gate clk registers handling
+- */
+-
+-struct gates_reset_data {
+-	void __iomem			*reg;
+-	spinlock_t			*lock;
+-	struct reset_controller_dev	rcdev;
+-};
+-
+-static int sunxi_gates_reset_assert(struct reset_controller_dev *rcdev,
+-			      unsigned long id)
+-{
+-	struct gates_reset_data *data =3D container_of(rcdev,
+-						     struct gates_reset_data,
+-						     rcdev);
+-	unsigned long flags;
+-	u32 reg;
+-
+-	spin_lock_irqsave(data->lock, flags);
+-
+-	reg =3D readl(data->reg);
+-	writel(reg & ~BIT(id), data->reg);
+-
+-	spin_unlock_irqrestore(data->lock, flags);
+-
+-	return 0;
+-}
+-
+-static int sunxi_gates_reset_deassert(struct reset_controller_dev *rcdev,
+-				unsigned long id)
+-{
+-	struct gates_reset_data *data =3D container_of(rcdev,
+-						     struct gates_reset_data,
+-						     rcdev);
+-	unsigned long flags;
+-	u32 reg;
+-
+-	spin_lock_irqsave(data->lock, flags);
+-
+-	reg =3D readl(data->reg);
+-	writel(reg | BIT(id), data->reg);
+-
+-	spin_unlock_irqrestore(data->lock, flags);
+-
+-	return 0;
+-}
+-
+-static struct reset_control_ops sunxi_gates_reset_ops =3D {
+-	.assert		=3D sunxi_gates_reset_assert,
+-	.deassert	=3D sunxi_gates_reset_deassert,
+-};
+-
+-/**
+  * sunxi_gates_clk_setup() - Setup function for leaf gates on clocks
+  */
+=20
+@@ -895,7 +842,6 @@ static struct reset_control_ops sunxi_gates_reset_ops =
+=3D {
+=20
+ struct gates_data {
+ 	DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
+-	u32 reset_mask;
+ };
+=20
+ static const struct gates_data sun4i_axi_gates_data __initconst =3D {
+@@ -994,26 +940,10 @@ static const struct gates_data sun8i_a23_apb2_gates_d=
+ata __initconst =3D {
+ 	.mask =3D {0x1F0007},
+ };
+=20
+-static const struct gates_data sun4i_a10_usb_gates_data __initconst =3D {
+-	.mask =3D {0x1C0},
+-	.reset_mask =3D 0x07,
+-};
+-
+-static const struct gates_data sun5i_a13_usb_gates_data __initconst =3D {
+-	.mask =3D {0x140},
+-	.reset_mask =3D 0x03,
+-};
+-
+-static const struct gates_data sun6i_a31_usb_gates_data __initconst =3D {
+-	.mask =3D { BIT(18) | BIT(17) | BIT(16) | BIT(10) | BIT(9) | BIT(8) },
+-	.reset_mask =3D BIT(2) | BIT(1) | BIT(0),
+-};
+-
+ static void __init sunxi_gates_clk_setup(struct device_node *node,
+ 					 struct gates_data *data)
+ {
+ 	struct clk_onecell_data *clk_data;
+-	struct gates_reset_data *reset_data;
+ 	const char *clk_parent;
+ 	const char *clk_name;
+ 	void __iomem *reg;
+@@ -1054,21 +984,6 @@ static void __init sunxi_gates_clk_setup(struct devic=
+e_node *node,
+ 	clk_data->clk_num =3D i;
+=20
+ 	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+-
+-	/* Register a reset controler for gates with reset bits */
+-	if (data->reset_mask =3D=3D 0)
+-		return;
+-
+-	reset_data =3D kzalloc(sizeof(*reset_data), GFP_KERNEL);
+-	if (!reset_data)
+-		return;
+-
+-	reset_data->reg =3D reg;
+-	reset_data->lock =3D &clk_lock;
+-	reset_data->rcdev.nr_resets =3D __fls(data->reset_mask) + 1;
+-	reset_data->rcdev.ops =3D &sunxi_gates_reset_ops;
+-	reset_data->rcdev.of_node =3D node;
+-	reset_controller_register(&reset_data->rcdev);
+ }
+=20
+=20
+@@ -1321,9 +1236,6 @@ static const struct of_device_id clk_gates_match[] __=
+initconst =3D {
+ 	{.compatible =3D "allwinner,sun9i-a80-apb1-gates-clk", .data =3D &sun9i_a=
+80_apb1_gates_data,},
+ 	{.compatible =3D "allwinner,sun6i-a31-apb2-gates-clk", .data =3D &sun6i_a=
+31_apb2_gates_data,},
+ 	{.compatible =3D "allwinner,sun8i-a23-apb2-gates-clk", .data =3D &sun8i_a=
+23_apb2_gates_data,},
+-	{.compatible =3D "allwinner,sun4i-a10-usb-clk", .data =3D &sun4i_a10_usb_=
+gates_data,},
+-	{.compatible =3D "allwinner,sun5i-a13-usb-clk", .data =3D &sun5i_a13_usb_=
+gates_data,},
+-	{.compatible =3D "allwinner,sun6i-a31-usb-clk", .data =3D &sun6i_a31_usb_=
+gates_data,},
+ 	{}
+ };
+=20
+diff --git a/drivers/clk/sunxi/clk-usb.c b/drivers/clk/sunxi/clk-usb.c
+new file mode 100644
+index 000000000000..f1dcc8fb5a7d
+--- /dev/null
++++ b/drivers/clk/sunxi/clk-usb.c
+@@ -0,0 +1,190 @@
++/*
++ * Copyright 2013-2015 Emilio L=C3=B3pez
++ *
++ * Emilio L=C3=B3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+		usb_phy_clk: clk@00a08004 {
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			compatible = "allwinner,sun9i-a80-usb-phy-clk";
-+			reg = <0x00a08004 0x4>;
-+			clocks = <&ahb1_gates 1>;
-+			clock-output-names = "usb_phy0", "usb_hsic1_480M",
-+					     "usb_phy1", "usb_hsic2_480M",
-+					     "usb_phy2", "usb_hsic_12M";
-+		};
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/reset-controller.h>
++#include <linux/spinlock.h>
 +
- 		pll4: clk@0600000c {
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun9i-a80-pll4-clk";
--- 
++
++/**
++ * sunxi_usb_reset... - reset bits in usb clk registers handling
++ */
++
++struct usb_reset_data {
++	void __iomem			*reg;
++	spinlock_t			*lock;
++	struct reset_controller_dev	rcdev;
++};
++
++static int sunxi_usb_reset_assert(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	struct usb_reset_data *data =3D container_of(rcdev,
++						   struct usb_reset_data,
++						   rcdev);
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(data->lock, flags);
++
++	reg =3D readl(data->reg);
++	writel(reg & ~BIT(id), data->reg);
++
++	spin_unlock_irqrestore(data->lock, flags);
++
++	return 0;
++}
++
++static int sunxi_usb_reset_deassert(struct reset_controller_dev *rcdev,
++				unsigned long id)
++{
++	struct usb_reset_data *data =3D container_of(rcdev,
++						     struct usb_reset_data,
++						     rcdev);
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(data->lock, flags);
++
++	reg =3D readl(data->reg);
++	writel(reg | BIT(id), data->reg);
++
++	spin_unlock_irqrestore(data->lock, flags);
++
++	return 0;
++}
++
++static struct reset_control_ops sunxi_usb_reset_ops =3D {
++	.assert		=3D sunxi_usb_reset_assert,
++	.deassert	=3D sunxi_usb_reset_deassert,
++};
++
++/**
++ * sunxi_usb_clk_setup() - Setup function for usb gate clocks
++ */
++
++#define SUNXI_USB_MAX_SIZE 32
++
++struct usb_clk_data {
++	u32 clk_mask;
++	u32 reset_mask;
++};
++
++static void __init sunxi_usb_clk_setup(struct device_node *node,
++				       const struct usb_clk_data *data,
++				       spinlock_t *lock)
++{
++	struct clk_onecell_data *clk_data;
++	struct usb_reset_data *reset_data;
++	const char *clk_parent;
++	const char *clk_name;
++	void __iomem *reg;
++	int qty;
++	int i =3D 0;
++	int j =3D 0;
++
++	reg =3D of_io_request_and_map(node, 0, of_node_full_name(node));
++	if (IS_ERR(reg))
++		return;
++
++	clk_parent =3D of_clk_get_parent_name(node, 0);
++	if (!clk_parent)
++		return;
++
++	/* Worst-case size approximation and memory allocation */
++	qty =3D find_last_bit((unsigned long *)&data->clk_mask,
++			    SUNXI_USB_MAX_SIZE);
++
++	clk_data =3D kmalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
++	if (!clk_data)
++		return;
++
++	clk_data->clks =3D kzalloc((qty+1) * sizeof(struct clk *), GFP_KERNEL);
++	if (!clk_data->clks) {
++		kfree(clk_data);
++		return;
++	}
++
++	for_each_set_bit(i, (unsigned long *)&data->clk_mask,
++			 SUNXI_USB_MAX_SIZE) {
++		of_property_read_string_index(node, "clock-output-names",
++					      j, &clk_name);
++		clk_data->clks[i] =3D clk_register_gate(NULL, clk_name,
++						      clk_parent, 0,
++						      reg, i, 0, lock);
++		WARN_ON(IS_ERR(clk_data->clks[i]));
++
++		j++;
++	}
++
++	/* Adjust to the real max */
++	clk_data->clk_num =3D i;
++
++	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
++
++	/* Register a reset controller for usb with reset bits */
++	if (data->reset_mask =3D=3D 0)
++		return;
++
++	reset_data =3D kzalloc(sizeof(*reset_data), GFP_KERNEL);
++	if (!reset_data)
++		return;
++
++	reset_data->reg =3D reg;
++	reset_data->lock =3D lock;
++	reset_data->rcdev.nr_resets =3D __fls(data->reset_mask) + 1;
++	reset_data->rcdev.ops =3D &sunxi_usb_reset_ops;
++	reset_data->rcdev.of_node =3D node;
++	reset_controller_register(&reset_data->rcdev);
++}
++
++static const struct usb_clk_data sun4i_a10_usb_clk_data __initconst =3D {
++	.clk_mask =3D BIT(8) | BIT(7) | BIT(6),
++	.reset_mask =3D BIT(2) | BIT(1) | BIT(0),
++};
++
++static DEFINE_SPINLOCK(sun4i_a10_usb_lock);
++
++static void __init sun4i_a10_usb_setup(struct device_node *node)
++{
++	sunxi_usb_clk_setup(node, &sun4i_a10_usb_clk_data, &sun4i_a10_usb_lock);
++}
++CLK_OF_DECLARE(sun4i_a10_usb, "allwinner,sun4i-a10-usb-clk", sun4i_a10_usb=
+_setup);
++
++static const struct usb_clk_data sun5i_a13_usb_clk_data __initconst =3D {
++	.clk_mask =3D BIT(8) | BIT(6),
++	.reset_mask =3D BIT(1) | BIT(0),
++};
++
++static void __init sun5i_a13_usb_setup(struct device_node *node)
++{
++	sunxi_usb_clk_setup(node, &sun5i_a13_usb_clk_data, &sun4i_a10_usb_lock);
++}
++CLK_OF_DECLARE(sun5i_a13_usb, "allwinner,sun5i-a13-usb-clk", sun5i_a13_usb=
+_setup);
++
++static const struct usb_clk_data sun6i_a31_usb_clk_data __initconst =3D {
++	.clk_mask =3D BIT(18) | BIT(17) | BIT(16) | BIT(10) | BIT(9) | BIT(8),
++	.reset_mask =3D BIT(2) | BIT(1) | BIT(0),
++};
++
++static void __init sun6i_a31_usb_setup(struct device_node *node)
++{
++	sunxi_usb_clk_setup(node, &sun6i_a31_usb_clk_data, &sun4i_a10_usb_lock);
++}
++CLK_OF_DECLARE(sun6i_a31_usb, "allwinner,sun6i-a31-usb-clk", sun6i_a31_usb=
+_setup);
+--=20
 2.1.4
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
