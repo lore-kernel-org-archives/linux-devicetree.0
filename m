@@ -1,202 +1,82 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Tue, 27 Jan 2015 10:54:16 +0900
-Message-ID: <54C6EFC8.1090601@samsung.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
- <1422274532-9488-2-git-send-email-rogerq@ti.com>
- <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
- <54C66B0D.9040109@ti.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
+Date: Mon, 26 Jan 2015 18:05:23 -0800
+Message-ID: <95fcb833572949c9aa2f406c0b147d1f@BL2FFO11FD060.protection.gbl>
+References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com>
+ <54C6D44C.4060106@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <54C66B0D.9040109-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54C6D44C.4060106@suse.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Heiko Stuebner <heiko@sntech.de>, linux-sh@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, linux-rockchip@lists.infradead.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+On Tue, 2015-01-27 at 12:57AM +0100, Andreas F=C3=A4rber wrote:
+> Am 09.01.2015 um 16:43 schrieb Soren Brinkmann:
+> > Add pinctrl descriptions to the zc702 and zc706 device trees.
+> >=20
+> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> > ---
+> > Changes since v1:
+> >  - remove 'pinctrl-' prefix for pinctrl sub-nodes
+> >  - separate config and mux nodes
+> >=20
+> > Changes since RFC v2:
+> >  - add pinconf properties to zc702 mdio node
+> >  - remove arguments from bias-related props
+> >=20
+> > Changes since RFC v1:
+> >  - separate DT changes into their own patch
+> > ---
+> >  arch/arm/boot/dts/zynq-7000.dtsi |   8 +-
+> >  arch/arm/boot/dts/zynq-zc702.dts | 181 +++++++++++++++++++++++++++=
+++++++++++++
+> >  arch/arm/boot/dts/zynq-zc706.dts | 152 +++++++++++++++++++++++++++=
++++++
+> >  3 files changed, 340 insertions(+), 1 deletion(-)
+> [...]
+> > diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/z=
+ynq-zc702.dts
+> > index 280f02dd4ddc..4995412f116f 100644
+> > --- a/arch/arm/boot/dts/zynq-zc702.dts
+> > +++ b/arch/arm/boot/dts/zynq-zc702.dts
+> [...]
+> > @@ -50,15 +52,24 @@
+> >  	status =3D "okay";
+> >  	phy-mode =3D "rgmii-id";
+> >  	phy-handle =3D <&ethernet_phy>;
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&pinctrl_gem0_default>;
+> > =20
+> >  	ethernet_phy: ethernet-phy@7 {
+> >  		reg =3D <7>;
+> >  	};
+> >  };
+> > =20
+> > +&gpio0 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&pinctrl_gpio0_default>;
+>=20
+> On linux-next the equivalent no longer works for the Parallella, with
+> gpio failing to probe.
+>=20
+> If I move these two properties to the leds node (for which I am
+> configuring gpio 7) then I get a heartbeat as before.
 
-On 01/27/2015 01:27 AM, Roger Quadros wrote:
-> Hi Chanwoo,
-> 
-> All your comments are valid. Need some clarification on one comment.
-> 
-> On 26/01/15 15:56, Chanwoo Choi wrote:
->> Hi Roger,
->>
->> This patch looks good to me. But I add some comment.
->> If you modify some comment, I'll apply this patch on 3.21 queue.
->>
->> On Mon, Jan 26, 2015 at 9:15 PM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
->>> This driver observes the USB ID pin connected over a GPIO and
->>> updates the USB cable extcon states accordingly.
->>>
->>> The existing GPIO extcon driver is not suitable for this purpose
->>> as it needs to be taught to understand USB cable states and it
->>> can't handle more than one cable per instance.
->>>
->>> For the USB case we need to handle 2 cable states.
->>> 1) USB (attach/detach)
->>> 2) USB-Host (attach/detach)
->>>
->>> This driver can be easily updated in the future to handle VBUS
->>> events in case it happens to be available on GPIO for any platform.
->>>
->>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  20 ++
->>>  drivers/extcon/Kconfig                             |   7 +
->>>  drivers/extcon/Makefile                            |   1 +
->>>  drivers/extcon/extcon-usb-gpio.c                   | 214 +++++++++++++++++++++
->>>  4 files changed, 242 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
->>>
-> 
-> <snip>
-> 
->>> +
->>> +static int usb_extcon_probe(struct platform_device *pdev)
->>> +{
->>> +       struct device *dev = &pdev->dev;
->>> +       struct device_node *np = dev->of_node;
->>> +       struct usb_extcon_info *info;
->>> +       int ret;
->>> +
->>> +       if (!np)
->>> +               return -EINVAL;
->>> +
->>> +       info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
->>> +       if (!info)
->>> +               return -ENOMEM;
->>> +
->>> +       info->dev = dev;
->>> +       info->id_gpiod = devm_gpiod_get(&pdev->dev, "id");
->>> +       if (IS_ERR(info->id_gpiod)) {
->>> +               dev_err(dev, "failed to get ID GPIO\n");
->>> +               return PTR_ERR(info->id_gpiod);
->>> +       }
->>> +
->>> +       ret = gpiod_set_debounce(info->id_gpiod,
->>> +                                USB_GPIO_DEBOUNCE_MS * 1000);
->>> +       if (ret < 0)
->>> +               info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
->>> +
->>> +       INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
->>> +
->>> +       info->id_irq = gpiod_to_irq(info->id_gpiod);
->>> +       if (info->id_irq < 0) {
->>> +               dev_err(dev, "failed to get ID IRQ\n");
->>> +               return info->id_irq;
->>> +       }
->>> +
->>> +       ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
->>> +                                       usb_irq_handler,
->>> +                                       IRQF_SHARED | IRQF_ONESHOT |
->>> +                                       IRQF_NO_SUSPEND,
->>> +                                       pdev->name, info);
-> 
-> use of IRQF_NO_SUSPEND is not recommended to be used together with IRQF_SHARED so
-> I'll remove IRQF_SHARED from here if we decide to stick with IRQF_NO_SUSPEND.
-> More on this below.
-> 
->>> +       if (ret < 0) {
->>> +               dev_err(dev, "failed to request handler for ID IRQ\n");
->>> +               return ret;
->>> +       }
->>> +
->>> +       info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->>> +       if (IS_ERR(info->edev)) {
->>> +               dev_err(dev, "failed to allocate extcon device\n");
->>> +               return -ENOMEM;
->>> +       }
->>> +
->>> +       ret = devm_extcon_dev_register(dev, info->edev);
->>> +       if (ret < 0) {
->>> +               dev_err(dev, "failed to register extcon device\n");
->>> +               return ret;
->>> +       }
->>> +
->>> +       platform_set_drvdata(pdev, info);
->>
->> I prefer to execute the device_init_wakeup() function as following
->> for suspend/resume function:
->>             device_init_wakeup(&pdev->dev, 1);
->>
->>> +
->>> +       /* Perform initial detection */
->>> +       usb_extcon_detect_cable(&info->wq_detcable.work);
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static int usb_extcon_remove(struct platform_device *pdev)
->>> +{
->>> +       struct usb_extcon_info *info = platform_get_drvdata(pdev);
->>> +
->>> +       cancel_delayed_work_sync(&info->wq_detcable);
->>
->> Need to add blank line.
->>
->>> +       return 0;
->>> +}
->>> +
->>> +#ifdef CONFIG_PM_SLEEP
->>> +static int usb_extcon_suspend(struct device *dev)
->>> +{
->>> +       struct usb_extcon_info *info = dev_get_drvdata(dev);
->>> +
->>> +       enable_irq_wake(info->id_irq);
->>
->> I prefer to use device_may_wakeup() function for whether
->> executing enable_irq_wake() or not. Also, The disable_irq()
->> in the suspend function would prevent us from discarding interrupt
->> before wakeup from suspend completely.
->>
-> 
-> I need more clarification here.
-> 
-> If we are going to use enable_irq_wake() here then what is the point of IRQF_NO_SUSPEND?
-> 
->>From Documentation/power/suspend-and-interrupts.txt I see that interrupts marked
-> as IRQF_NO_SUSPEND should not be configured for system wakeup using enable_irq_wake().
-> 
-> what is your preference?
-> 
-> Is it good enough to not use IRQF_NO_SUSPEND but use enable_irq_wake() instead to
-> enable system wakeup for that IRQ.
+I think for USB I have a fix (see other email with patch), but LEDs see=
+m
+to be broken too. On my zc702 I get:
+   of_get_named_gpiod_flags: parsed 'gpios' property of node '/leds/ds2=
+3[0]' - status (-517)
 
-I'm sorry for confusion about usage both IRQF_NO_SUSPEND and enable_irq_wake().
-If suspend() function in device driver executes the enable_irq_wake(),
-IRQF_NO_SUSPEND flag is not necessary.
+517 is probe deferral. Looks like the LED driver needs to learn to defe=
+r
+probing when the GPIO driver isn't available yet.
 
-I think that we better use enable_irq_wake() instead of adding IRQF_NO_SUSPEND flag.
-I'll expect to remove IRQF_NO_SUSPEND flag when requesting gpio interrupt.
-
-> 
->>             if (device_may_wakeup(dev))
->>                      enable_irq_wake(info->id_irq);
->>             disable_irq(info->id_irq);
-> 
-> why do we need to disable irq here? How will the system wakeup if IRQ is disabled?
-
-The disable_irq() may make the interrupt as masking state.
-Although interrput is masking state(disable), interrup can happen.
-but, the interrupt may remain the pending state without discarding it.
-
-And then,
-When resume() function in extcon-usb-gpio.c executes enable_irq(info->id_irq),
-pending interrupt will happen and executes the interrupt handler(usb_irq_handler).
-
-If we don't execute disable_irq() in suspend function,
-info->id->irq interrupt might happen before completing the resume sequence
-of extcon-gpio-usb driver.
-
-Thanks,
-Chanwoo Choi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	S=C3=B6ren
