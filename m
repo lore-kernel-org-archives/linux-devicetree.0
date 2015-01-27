@@ -1,55 +1,38 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/2] watchdog: jz4740: Add DT support
-Date: Tue, 27 Jan 2015 22:23:49 +0100
-Message-ID: <3983977.h1XXMbpmZb@wuerfel>
-References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com> <2690526.hgsE0j4AZc@wuerfel> <20150127205430.GB6983@roeck-us.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] dt: watchdog: Add DT binding documentation for jz47xx watchdog timer
+Date: Tue, 27 Jan 2015 22:29:49 +0100
+Message-ID: <16185448.sH4QMJhjYS@wuerfel>
+References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com> <11680810.808F8uDyN0@wuerfel> <20150127205229.GA6983@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150127205430.GB6983-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150127205229.GA6983@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, wim@iguana.be, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, paul@crapouillou.net
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 January 2015 12:54:30 Guenter Roeck wrote:
-> On Tue, Jan 27, 2015 at 09:15:37PM +0100, Arnd Bergmann wrote:
-> > On Tuesday 27 January 2015 15:11:30 Zubair Lutfullah Kakakhel wrote:
-> > >  };
-> > >  
-> > > +#ifdef CONFIG_OF
-> > > +static const struct of_device_id jz4740_of_matches[] = {
-> > > +       { .compatible = "ingenic,jz4740-watchdog", },
-> > > +       { /* sentinel */ }
-> > > +};
-> > > +#endif
-> > > +
-> > >  static int jz4740_wdt_probe(struct platform_device *pdev)
-> > >  {
-> > >         struct jz4740_wdt_drvdata *drvdata;
-> > > @@ -211,6 +219,7 @@ static struct platform_driver jz4740_wdt_driver = {
-> > >         .remove = jz4740_wdt_remove,
-> > >         .driver = {
-> > >                 .name = "jz4740-wdt",
-> > > +               .of_match_table = of_match_ptr(jz4740_of_matches),
-> > >         },
-> > > 
-> > 
-> > Why the #ifdef? Presumably we want to move over jz4740 to DT-only in the
-> > long run, so you could just remove the #ifdef and the of_match_ptr()
-> > wrapper.
-> > 
-> Only if "depends on OF" is added to its Kconfig entry, or am I missing
-> something ?
+On Tuesday 27 January 2015 12:52:29 Guenter Roeck wrote:
+> Driver does this (today):
 > 
+>          drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
+> 
+> Isn't that the name to use ? Just wondering.
 
-I'm pretty sure you don't need that, it will still compile and link
-fine, the only downside being a few wasted bytes to store the compatible
-string and the array.
+Just because the driver uses it at the moment does not mean it's the name
+that the IP block uses.
+
+clk_get() has the unpleasant property of doing fuzzy matching
+on the name that is passed. It first tries to use the string
+as the name of the clock input of the device, but if that is
+not there, it falls back to looking for a global clk with a con_id.
+
+In DT, we only support the first kind, but if a driver currently
+uses the second, you get the wrong name.
+
+Looking at arch/mips/jz4740/clock.c now, this seems to be exactly
+what is going on here: there is no clkdev_add call to associate
+the device clocks, so it can only match a global clock entry. :(
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
