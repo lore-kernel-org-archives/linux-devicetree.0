@@ -1,64 +1,68 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [PATCH 2/6] mfd: qcom,tcsr: Add device tree binding for TCSR
-Date: Tue, 27 Jan 2015 16:10:40 -0600
-Message-ID: <1422396644-21714-3-git-send-email-agross@codeaurora.org>
-References: <1422396644-21714-1-git-send-email-agross@codeaurora.org>
+From: "christophe.ricard" <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 27/34] NFC: st21nfcb: Add HCI protocol over NCI protocol
+ support
+Date: Tue, 27 Jan 2015 23:16:32 +0100
+Message-ID: <54C80E40.7020707@gmail.com>
+References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com> <1418072919-10535-28-git-send-email-christophe-h.ricard@st.com> <20150127004958.GB31396@ribalta.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1422396644-21714-1-git-send-email-agross@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Andy Gross <agross@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150127004958.GB31396-41CF7WKNp/FoDWY/xQGDymt3HXsI98Cx0E9HWUfgJXw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree binding for the Qualcomm Top Control and
-Status Register device.  The TCSR is comprised of a set of registers that
-provide various control and status functions for attached peripherals.
+Hi Samuel,
 
-Signed-off-by: Andy Gross <agross@codeaurora.org>
----
- .../devicetree/bindings/mfd/qcom,tcsr.txt          |   22 ++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
+The main reason for making an st21nfcb_hci_core is because the hci 
+network initialization procedure is proprietary.
+It is almost using only NCI standard commands but some id's and commands 
+could be proprietary.
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt b/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
-new file mode 100644
-index 0000000..e90519d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
-@@ -0,0 +1,22 @@
-+QCOM Top Control and Status Register
-+
-+Qualcomm devices have a set of registers that provide various control and status
-+functions for their peripherals.  This node is intended to allow access to these
-+registers via syscon.
-+
-+Required properties:
-+- compatible:	Should contain:
-+		"qcom,tcsr-ipq8064", "syscon" for IPQ8064
-+		"qcom,tcsr-apq8064", "syscon" for APQ8064
-+		"qcom,tcsr-msm8660", "syscon" for MSM8660
-+		"qcom,tcsr-msm8960", "syscon" for MSM8960
-+		"qcom,tcsr-msm8974", "syscon" for MSM8974
-+		"qcom,tcsr-apq8084", "syscon" for APQ8084
-+		"qcom,tcsr-msm8916", "syscon" for MSM8916
-+- reg: Address range for TCSR registers
-+
-+Example:
-+	tcsr: syscon@1a400000 {
-+		compatible = "qcom,tcsr-msm8960", "syscon";
-+		reg = <0x1a400000 0x100>;
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+I would ideally rely on the hci core framework but i run out of idea 
+when trying this.
+However i think "exporting the relevant API for drivers to send HCI 
+commands/events through their NCI connections."
+is a good idea i need to dig into. It will then needs to hci/nci hook 
+for the proprietary stuff.
+
+I have just one worry, when do you think those updates (patch 20 & 27) 
+needs to be ready for your 3.20 pull request ?
+
+Best Regards
+Christophe
+On 27/01/2015 01:49, Samuel Ortiz wrote:
+> Christophe,
+>
+> On Mon, Dec 08, 2014 at 10:08:32PM +0100, Christophe Ricard wrote:
+>> Some st21nfcb features are only available through HCI commands. Those
+>> HCI commands can be address over NCI by sending data using a dynamic
+>> conn_id. This is useful for example for Secure Element communication.
+>>
+>> The HCI core brings the minimal HCI functions required to communicate with
+>> a secure element.
+>>
+>> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>   drivers/nfc/st21nfcb/Makefile            |   2 +-
+>>   drivers/nfc/st21nfcb/st21nfcb_hci_core.c | 783 +++++++++++++++++++++++++++++++
+>>   drivers/nfc/st21nfcb/st21nfcb_hci_core.h | 134 ++++++
+>>   3 files changed, 918 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/nfc/st21nfcb/st21nfcb_hci_core.c
+>>   create mode 100644 drivers/nfc/st21nfcb/st21nfcb_hci_core.h
+> I may be missing some details, but I believe most of this code could be
+> made part of the core NCI implementation. I don't mind creating an
+> hci_dev from there and exporting the relevant API for drivers to send
+> HCI commands/events through their NCI connections.
+> You would not need to bring chunks of the HCI core into a driver, and
+> as a side effect, patch #21 would no longer be needed.
+>
+> Cheers,
+> Samuel.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
