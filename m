@@ -1,166 +1,101 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] thermal: Fix examples in DT documentation
-Date: Tue, 27 Jan 2015 10:50:47 +0000
-Message-ID: <1422355847-23549-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCH 07/14] Doc/DT: Add DT binding doc for DRA7xx DSS
+Date: Tue, 27 Jan 2015 12:50:35 +0200
+Message-ID: <1422355842-11234-8-git-send-email-tomi.valkeinen@ti.com>
+References: <1422355842-11234-1-git-send-email-tomi.valkeinen@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1422355842-11234-1-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-fbdev@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There are various issues with the examples in this documentation, some
-of the DT labels are invalid and one of the macro THERMAL_NO_LIMITS
-referenced is not available as well.
+Add device tree binding documentation for DRA7xx display subsystem.
 
-As Its highly likely that people would pick some samples from the
-documentation, I though fixing these would be best rather than giving
-starter a challenge to figure out whats going wrong with examples.
-
-This patch attempts to fix such errors in the documentation.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org
 ---
- .../devicetree/bindings/thermal/thermal.txt        | 44 +++++++++++-----------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ .../devicetree/bindings/video/ti,dra7-dss.txt      | 69 ++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/ti,dra7-dss.txt
 
-diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-index f5db6b7..97ed14e 100644
---- a/Documentation/devicetree/bindings/thermal/thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-@@ -251,24 +251,24 @@ ocp {
- };
- 
- thermal-zones {
--	cpu-thermal: cpu-thermal {
-+	cpu_thermal: cpu-thermal {
- 		polling-delay-passive = <250>; /* milliseconds */
- 		polling-delay = <1000>; /* milliseconds */
- 
- 		thermal-sensors = <&bandgap0>;
- 
- 		trips {
--			cpu-alert0: cpu-alert {
-+			cpu_alert0: cpu-alert0 {
- 				temperature = <90000>; /* millicelsius */
- 				hysteresis = <2000>; /* millicelsius */
- 				type = "active";
- 			};
--			cpu-alert1: cpu-alert {
-+			cpu_alert1: cpu-alert1 {
- 				temperature = <100000>; /* millicelsius */
- 				hysteresis = <2000>; /* millicelsius */
- 				type = "passive";
- 			};
--			cpu-crit: cpu-crit {
-+			cpu_crit: cpu-crit {
- 				temperature = <125000>; /* millicelsius */
- 				hysteresis = <2000>; /* millicelsius */
- 				type = "critical";
-@@ -277,17 +277,17 @@ thermal-zones {
- 
- 		cooling-maps {
- 			map0 {
--				trip = <&cpu-alert0>;
--				cooling-device = <&fan0 THERMAL_NO_LIMITS 4>;
-+				trip = <&cpu_alert0>;
-+				cooling-device = <&fan0 THERMAL_NO_LIMIT 4>;
- 			};
- 			map1 {
--				trip = <&cpu-alert1>;
--				cooling-device = <&fan0 5 THERMAL_NO_LIMITS>;
-+				trip = <&cpu_alert1>;
-+				cooling-device = <&fan0 5 THERMAL_NO_LIMIT>;
- 			};
- 			map2 {
--				trip = <&cpu-alert1>;
-+				trip = <&cpu_alert1>;
- 				cooling-device =
--				    <&cpu0 THERMAL_NO_LIMITS THERMAL_NO_LIMITS>;
-+				    <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 			};
- 		};
- 	};
-@@ -298,13 +298,13 @@ used to monitor the zone 'cpu-thermal' using its sole sensor. A fan
- device (fan0) is controlled via I2C bus 1, at address 0x48, and has ten
- different cooling states 0-9. It is used to remove the heat out of
- the thermal zone 'cpu-thermal' using its cooling states
--from its minimum to 4, when it reaches trip point 'cpu-alert0'
-+from its minimum to 4, when it reaches trip point 'cpu_alert0'
- at 90C, as an example of active cooling. The same cooling device is used at
--'cpu-alert1', but from 5 to its maximum state. The cpu@0 device is also
-+'cpu_alert1', but from 5 to its maximum state. The cpu@0 device is also
- linked to the same thermal zone, 'cpu-thermal', as a passive cooling device,
--using all its cooling states at trip point 'cpu-alert1',
-+using all its cooling states at trip point 'cpu_alert1',
- which is a trip point at 100C. On the thermal zone 'cpu-thermal', at the
--temperature of 125C, represented by the trip point 'cpu-crit', the silicon
-+temperature of 125C, represented by the trip point 'cpu_crit', the silicon
- is not reliable anymore.
- 
- (b) - IC with several internal sensors
-@@ -329,7 +329,7 @@ ocp {
- };
- 
- thermal-zones {
--	cpu-thermal: cpu-thermal {
-+	cpu_thermal: cpu-thermal {
- 		polling-delay-passive = <250>; /* milliseconds */
- 		polling-delay = <1000>; /* milliseconds */
- 
-@@ -338,12 +338,12 @@ thermal-zones {
- 
- 		trips {
- 			/* each zone within the SoC may have its own trips */
--			cpu-alert: cpu-alert {
-+			cpu_alert: cpu-alert {
- 				temperature = <100000>; /* millicelsius */
- 				hysteresis = <2000>; /* millicelsius */
- 				type = "passive";
- 			};
--			cpu-crit: cpu-crit {
-+			cpu_crit: cpu-crit {
- 				temperature = <125000>; /* millicelsius */
- 				hysteresis = <2000>; /* millicelsius */
- 				type = "critical";
-@@ -365,12 +365,12 @@ thermal-zones {
- 
- 		trips {
- 			/* each zone within the SoC may have its own trips */
--			gpu-alert: gpu-alert {
-+			gpu_alert: gpu-alert {
- 				temperature = <90000>; /* millicelsius */
- 				hysteresis = <2000>; /* millicelsius */
- 				type = "passive";
- 			};
--			gpu-crit: gpu-crit {
-+			gpu_crit: gpu-crit {
- 				temperature = <105000>; /* millicelsius */
- 				hysteresis = <2000>; /* millicelsius */
- 				type = "critical";
-@@ -392,12 +392,12 @@ thermal-zones {
- 
- 		trips {
- 			/* each zone within the SoC may have its own trips */
--			dsp-alert: gpu-alert {
-+			dsp_alert: gpu-alert {
- 				temperature = <90000>; /* millicelsius */
- 				hysteresis = <2000>; /* millicelsius */
- 				type = "passive";
- 			};
--			dsp-crit: gpu-crit {
-+			dsp_crit: gpu-crit {
- 				temperature = <135000>; /* millicelsius */
- 				hysteresis = <2000>; /* millicelsius */
- 				type = "critical";
-@@ -457,7 +457,7 @@ ocp {
- };
- 
- thermal-zones {
--	cpu-thermal: cpu-thermal {
-+	cpu_thermal: cpu-thermal {
- 		polling-delay-passive = <250>; /* milliseconds */
- 		polling-delay = <1000>; /* milliseconds */
- 
+diff --git a/Documentation/devicetree/bindings/video/ti,dra7-dss.txt b/Documentation/devicetree/bindings/video/ti,dra7-dss.txt
+new file mode 100644
+index 000000000000..f33a05137b0e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/ti,dra7-dss.txt
+@@ -0,0 +1,69 @@
++Texas Instruments DRA7x Display Subsystem
++=========================================
++
++See Documentation/devicetree/bindings/video/ti,omap-dss.txt for generic
++description about OMAP Display Subsystem bindings.
++
++DSS Core
++--------
++
++Required properties:
++- compatible: "ti,dra7-dss"
++- reg: address and length of the register spaces for 'dss'
++- ti,hwmods: "dss_core"
++- clocks: handle to fclk
++- clock-names: "fck"
++- syscon: phandle to control module core syscon node
++
++Optional properties:
++
++Some DRA7xx SoCs have one dedicated video PLL, some have two. These properties
++can be used to describe the video PLLs:
++
++- reg: address and length of the register spaces for 'pll1_clkctrl',
++  'pll1', 'pll2_clkctrl', 'pll2'
++- clocks: handle to video1 pll clock and video2 pll clock
++- clock-names: "video1_clk" and "video2_clk"
++
++Required nodes:
++- DISPC
++
++Optional nodes:
++- DSS Submodules: HDMI
++- Video port for DPI output
++
++DPI Endpoint required properties:
++- data-lines: number of lines used
++
++
++DISPC
++-----
++
++Required properties:
++- compatible: "ti,dra7-dispc"
++- reg: address and length of the register space
++- ti,hwmods: "dss_dispc"
++- interrupts: the DISPC interrupt
++- clocks: handle to fclk
++- clock-names: "fck"
++
++HDMI
++----
++
++Required properties:
++- compatible: "ti,dra7-hdmi"
++- reg: addresses and lengths of the register spaces for 'wp', 'pll', 'phy',
++       'core'
++- reg-names: "wp", "pll", "phy", "core"
++- interrupts: the HDMI interrupt line
++- ti,hwmods: "dss_hdmi"
++- vdda-supply: vdda power supply
++- clocks: handles to fclk and pll clock
++- clock-names: "fck", "sys_clk"
++
++Optional nodes:
++- Video port for HDMI output
++
++HDMI Endpoint optional properties:
++- lanes: list of 8 pin numbers for the HDMI lanes: CLK+, CLK-, D0+, D0-,
++  D1+, D1-, D2+, D2-. (default: 0,1,2,3,4,5,6,7)
 -- 
-1.9.1
+2.2.2
 
