@@ -1,79 +1,78 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
-Date: Tue, 27 Jan 2015 01:00:16 +0100
-Message-ID: <54C6D510.6090105@suse.de>
-References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com> <1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com> <CACRpkdZ1jfTUqfLKonJxar2Jn25+4wTF-D4XUXOszSsoJrA07w@mail.gmail.com> <1a749692196d406a8229d4891f3563f4@BN1BFFO11FD016.protection.gbl>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power
+ subsystem
+Date: Tue, 27 Jan 2015 00:16:29 +0000
+Message-ID: <20150127001629.GP21293@sirena.org.uk>
+References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
+ <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com>
+ <20150121230148.GJ13715@earth.universe>
+ <54C0AFE4.3020701@i2se.com>
+ <20150125150431.GE2719@earth.universe>
+ <1719204322.245040.1422301605670.JavaMail.open-xchange@oxbaltgw03.schlund.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="8mQWRri3kJkN9UuGQwMJaJsDMH8oXU6vd"
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1a749692196d406a8229d4891f3563f4@BN1BFFO11FD016.protection.gbl>
-Sender: linux-sh-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Beniamino Galvani <b.galvani@gmail.com>, "ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alessandro Rubini <rubini@uni>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Qx/Zgj6HpoLOE58Z"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1719204322.245040.1422301605670.JavaMail.open-xchange@oxbaltgw03.schlund.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>, Sascha Hauer <kernel@pengutronix.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---8mQWRri3kJkN9UuGQwMJaJsDMH8oXU6vd
-Content-Type: text/plain; charset=utf-8
+
+--Qx/Zgj6HpoLOE58Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Am 12.01.2015 um 08:27 schrieb Michal Simek:
-> On 01/11/2015 10:38 PM, Linus Walleij wrote:
->> On Fri, Jan 9, 2015 at 4:43 PM, Soren Brinkmann
->> <soren.brinkmann@xilinx.com> wrote:
->>
->>> Add pinctrl descriptions to the zc702 and zc706 device trees.
->>>
->>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
->>> Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
->>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> Beautiful and in line with how I want things to look.
->>
->> Yours,
->> Linus Walleij
->>
+On Mon, Jan 26, 2015 at 08:46:45PM +0100, Stefan Wahren wrote:
+
+> > > Does a common property name exists for the switching frequency or wou=
+ld
+> > > it be vendor specific?
+
+> > As far as I know most regulators have fixed switching frequencies,
+> > so there is no common property name so far. I added regulator
+> > framework people, since this property should be regulator specific.
+
+No, it's pretty common for there to be a couple of options - there's
+normally a performance tradeoff (power for regulation accuracy and/or
+cost) which can be selected.  IIRC it's selected at design time as it
+affect the choice of passives on the board.
+
+> okay i understand. But doesn't it need a extra driver to set the switching
+> frequency because of the new compatible string?
+
+I don't understand this bit at all, sorry.
+
 >=20
-> Applied to zynq/dt.
+> At this point i think about moving this feature into the bootloader.
+>=20
+> @Fabio, @Marek:
+>=20
+> What's your opinion about that?
+>=20
+> >
+> > -- Sebastian
+>=20
+> Stefan
+>=20
 
-Did you maybe forget to push?
-
-https://github.com/Xilinx/linux-xlnx/commits/zynq/dt doesn't have it.
-
-Regards,
-Andreas
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upmanyu,=
-
-Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
-
-
---8mQWRri3kJkN9UuGQwMJaJsDMH8oXU6vd
+--Qx/Zgj6HpoLOE58Z
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJUxtUQAAoJEPou0S0+fgE/RRMP/RZHAQiHg6u0mD61B6ST7w6S
-OMMxjzGLQGPlfOzh50cJS+7f2Ij/P8SXYAqV5deYS9QirMhM7IkDmFE1B72eyjs0
-QiIEb9Vwvk4nUpIqFCJq5jcRj+Ka/t3XACisbsE0H3U8jMHy2Qq6oSxnq1UR4wfR
-W5T2BeO6ih3imA9Y1NTuql7A8/xiyokBgN+ofx9R4a3yb9nrGXbNlzm2Nw5Alc8o
-K1Mf2FyOBVlbTNUKHMOT/UFfFYdHAoliJJsX+Dfp+Ow8OkaqzOjEQtmDWzpvKFOv
-G6XfJ8ay66LAoY8yHBIN6Vd2aEA9z/EY9u/BwKDi8dDLSVZ2av80LVQBnXeXCIUB
-HxAMH16IQr5eUe3RiaQvQCZoNWjH4kiGohS3UYT21tMxvE9M6iJXMdIRwukwE2KI
-646mlADhWBFo9NOELvXspTjS7AciVy6PQ1L7kzot4DX2KLJgR/LPj9hjzKv/lFsH
-f3y4jqBzhZASrQZZY6VyPUnxNZN3P4u66aD2PuVFvJ1ucwrr7TW1XBA+QjJpSBgm
-vrdoxM5jD+kbIdfB2Uk/LhAYpISY4flJgSb6kGQlAMsoj5fvZ6F6jNmuFpoz84b3
-kkzOUAe/n1q6T460ko4cgT4k3WDHBehwBpjliLVXoiwhbigNX2qQ/RNUT1WdoILI
-6XHQOxPJOl3bI9VL39CD
-=YBeu
+iQEcBAEBCAAGBQJUxtjcAAoJECTWi3JdVIfQXYQH/0a/jSZNYPLcM4QNROz8kRyy
+KRorHdPmVmRAcoCvlXWL8ambIsWto/p1VsUacm8ZqFCIBfCtRLAkKWljty5N0JUV
+D3IE0/vtqwLChmeC8BdouU1/flwRtYKoP5y6zbwt10qhIgBH/IyzLhMx7S5noZcR
+XvkN4BqkG04k/F5rekTAbMg42F9Ea1HPaXbX5SKAHlTj5v0j6UPkev5hUscyYUiA
+TUDQ4f4CwNWgBtaI+ARLfL5gaMmxrIvrHX662qGviOT+hadFmn9/VEBPYAs1SKCK
+9V25dUpgbTte4PXLVnJLpb/xIwKDG5uNWHwiORC9MmmogxIpudS9EUQOXLn9DSg=
+=Y1Y2
 -----END PGP SIGNATURE-----
 
---8mQWRri3kJkN9UuGQwMJaJsDMH8oXU6vd--
+--Qx/Zgj6HpoLOE58Z--
