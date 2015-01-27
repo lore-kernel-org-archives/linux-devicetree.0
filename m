@@ -1,49 +1,117 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/7] spi: spi-fsl-dspi: Remove usage of devm_kzalloc
-Date: Tue, 27 Jan 2015 19:52:34 +0000
-Message-ID: <20150127195234.GP21293@sirena.org.uk>
-References: <1422356244-15629-1-git-send-email-bhuvanchandra.dv@toradex.com>
- <1422356244-15629-4-git-send-email-bhuvanchandra.dv@toradex.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v3 00/10] ARM: sun9i: Add USB host controller
+ support for A80
+Date: Wed, 28 Jan 2015 03:54:05 +0800
+Message-ID: <1422388455-25923-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="V2D0VtBIapj4C4hL"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422356244-15629-4-git-send-email-bhuvanchandra.dv@toradex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: mark.rutland@arm.com, stefan@agner.ch, shawn.guo@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, B44548@freescale.com, Li.Xiubo@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3WZT6TAKGQEQOKHTPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi everyone,
 
---V2D0VtBIapj4C4hL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is v3 of the sun9i A80 USB host support series.
 
-On Tue, Jan 27, 2015 at 04:27:20PM +0530, Bhuvanchandra DV wrote:
-> devm_* API was supposed to be used only in probe function call.
-> Memory is allocated at 'probe' and free automatically at 'remove'.
+This series adds USB host controller (EHCI/OHCI) support for the Allwinner
+A80 SoC. The A80 has 3 pairs of host controllers and USB PHYs. The PHYs,
+unlike in previous SoCs, do not have low level control registers anymore.
 
-Applied, thanks.  Please don't dump entire backtraces into your commit
-logs - they're far too big and not very helpful, they can obscure real
-content in the message.  Explain in words what the problem is and if a
-backtrace helps illustrate that edit it down to only relevant portions
-rather than blindly including the entire thing.
+As such, this series forgoes the original phy-sun4i-usb driver, and adds
+a new, simpler driver for the USB PHYs. It may be possible to merge the
+two, but given that work is being done on the OTG front for the earlier
+SoCs, it may be better to merge them after support is complete.
 
---V2D0VtBIapj4C4hL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+EHCI/OHCI0 corresponds to USB1 DP/DM pins; EHCI1 only has HSIC support;
+EHCI2/OHCI/2 is USB2 DP/DM externally. External pins labeled USB0 are
+for the USB 3.0 OTG controller.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changes since v2:
 
-iQEcBAEBCAAGBQJUx+yBAAoJECTWi3JdVIfQ1dIH/RazSTyXAf0/KYwBdLpXRnaI
-Srtfx2q39mTxoHeUzBlxK1ViJ3C+FieTDHNH6n7W603G7hmGJ5qvdhv4pjmK4Z7+
-xJ6M6O20SZCyn8V2XwwK+YrD1yaYxaBiwKq3B5TLjxg54wDqdCWTLXFKwVZ6DeCQ
-DODlHU73Dn79xp4fIMRs6uXyshadx1bp2gNVfdAu4FXp7vXi1CZESBXcII2sVzb4
-CT0LdhKmIsqbuwSB/NxIHb1QxcLS6dWBXoES1bdlXLBjCzwKlUxdnSY7sJIp5Qf2
-2T7gRnGhatMe5R3NPwGMHZeRGLDw0Cz+vtwm9rPSpeVIl6PvYh6s/bNc5/5emqc=
-=91Ri
------END PGP SIGNATURE-----
+  - Split out current USB clock/reset code with a separate patch.
 
---V2D0VtBIapj4C4hL--
+Changes since v1:
+
+  - Rework usb clock/reset driver to only enable ahb gate when child
+    clock gates are enabled.
+
+  - Add AHB_INCR16_BURST flag and HSIC specific bits to phy driver.
+
+  - Renumber USB PHYs according to sunxi tradition, usbphy0 for OTG,
+    usbphy1 and later for xHCI.
+
+  - Add VBUS regulator for usb3 to sunxi common regulators.
+
+  - Use common regulators for usb vbus regulators.
+
+  - Adapt to label references in board dts file.
+
+  - Use gpio and pinctrl macros in dts.
+
+
+Patch 1 moves the usb gate clocks and resets driver to a separate file.
+
+Patch 2 adds a80 specific support for usb-related clocks and resets.
+
+Patch 3 adds the device tree nodes for the usb clocks.
+
+Patch 4 adds a new generic phy driver for a80 usb phys. This has some
+code that is the same as the original phy-sun4i-usb driver, but is simpler.
+
+Patch 5 adds the 3 USB PHY nodes to the a80 dtsi.
+
+Patch 6 adds the USB host controller nodes to the a80 dtsi.
+
+Patch 7 adds a VBUS regulator for usb3 to sunxi common regulators.
+
+Patch 8 enables USB on the A80 Optimus board.
+
+Patch 9 enables sun9i USB PHY in sunxi_defconfig.
+
+Patch 10 enables sun9i USB PHY in multi_v7_defconfig.
+
+Regards,
+ChenYu
+
+
+Chen-Yu Tsai (10):
+  clk: sunxi: Move USB clocks to separate file
+  clk: sunxi: Add support for sun9i A80 USB clocks and resets
+  ARM: dts: sun9i: Add usb clock nodes to a80 dtsi
+  phy: Add driver to support individual USB PHYs on sun9i
+  ARM: dts: sun9i: Add usb phy nodes to a80 dtsi
+  ARM: dts: sun9i: Add USB host controller nodes to a80 dtsi
+  ARM: dts: sunxi: Add usb3_vbus regulator to common regulators dtsi
+  ARM: dts: sun9i: Enable USB support on A80 Optimus board
+  ARM: sunxi_defconfig: Enable CONFIG_PHY_SUN9I_USB
+  ARM: multi_v7_defconfig: Enable CONFIG_PHY_SUN9I_USB
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   2 +
+ .../devicetree/bindings/phy/sun9i-usb-phy.txt      |  34 +++
+ arch/arm/boot/dts/sun9i-a80-optimus.dts            |  60 ++++++
+ arch/arm/boot/dts/sun9i-a80.dtsi                   | 129 +++++++++++
+ arch/arm/boot/dts/sunxi-common-regulators.dtsi     |  10 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/configs/sunxi_defconfig                   |   1 +
+ drivers/clk/sunxi/Makefile                         |   1 +
+ drivers/clk/sunxi/clk-sunxi.c                      |  88 --------
+ drivers/clk/sunxi/clk-usb.c                        | 233 ++++++++++++++++++++
+ drivers/phy/Kconfig                                |  12 ++
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-sun9i-usb.c                        | 238 +++++++++++++++++++++
+ 13 files changed, 722 insertions(+), 88 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
+ create mode 100644 drivers/clk/sunxi/clk-usb.c
+ create mode 100644 drivers/phy/phy-sun9i-usb.c
+
+-- 
+2.1.4
