@@ -1,87 +1,99 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PATCH v5 1/5] ARM: mediatek: Add config options for mediatek
  SoCs.
-Date: Tue, 27 Jan 2015 11:16:40 +0100
-Message-ID: <1422353800.14015.35.camel@x220>
+Date: Tue, 27 Jan 2015 18:26:40 +0800
+Message-ID: <1422354400.32212.25.camel@mtksdaap41>
 References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
 	 <1421818097-9281-2-git-send-email-hongzhou.yang@mediatek.com>
 	 <CABuKBeJGigY5ym9cJy=PYK8jbdsOLLtkmovHq6xho4gYseCAWg@mail.gmail.com>
+	 <1422353800.14015.35.camel@x220>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABuKBeJGigY5ym9cJy=PYK8jbdsOLLtkmovHq6xho4gYseCAWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1422353800.14015.35.camel@x220>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Joe. C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, alan.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, toby.liu@mediat
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, alan.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, toby.liu@m
 List-Id: devicetree@vger.kernel.org
 
-Joe,
 
-On Thu, 2015-01-22 at 13:54 +0100, Matthias Brugger wrote:
-> 2015-01-21 6:28 GMT+01:00 Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> > From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >
-> > The upcoming MTK pinctrl driver have a big pin table for each SoC
-> > and we don't want to bloat the kernel binary if we don't need it.
-> > Add config options so we can build for one SoC only.
-> >
-> > Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Hi,
+
+On Tue, 2015-01-27 at 11:16 +0100, Paul Bolle wrote:
+> Joe,
 > 
-> Applied to v3.20-next/soc
+> On Thu, 2015-01-22 at 13:54 +0100, Matthias Brugger wrote:
+> > 2015-01-21 6:28 GMT+01:00 Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> > > From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > >
+> > > The upcoming MTK pinctrl driver have a big pin table for each SoC
+> > > and we don't want to bloat the kernel binary if we don't need it.
+> > > Add config options so we can build for one SoC only.
+> > >
+> > > Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Applied to v3.20-next/soc
+> 
+> This became commit ad8a221e1f49 ("ARM: mediatek: Add config options for
+> mediatek SoCs.") in today's linux-next (ie, next-20150127). I noticed
+> because a script I use to check linux-next spotted a problem with it.
+> 
+> > > ---
+> > >  arch/arm/mach-mediatek/Kconfig | 22 +++++++++++++++++++++-
+> > >  1 file changed, 21 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+> > > index f73f588..f7e463c 100644
+> > > --- a/arch/arm/mach-mediatek/Kconfig
+> > > +++ b/arch/arm/mach-mediatek/Kconfig
+> > > @@ -1,6 +1,26 @@
+> > > -config ARCH_MEDIATEK
+> > > +menuconfig ARCH_MEDIATEK
+> > >         bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
+> > >         select ARM_GIC
+> > >         select MTK_TIMER
+> > >         help
+> > >           Support for Mediatek MT65xx & MT81xx SoCs
+> > > +
+> > > +if ARCH_MEDIATEK
+> > > +
+> > > +config MACH_MT6589
+> > > +       bool "MediaTek MT6589 SoCs support"
+> > > +       default ARCH_MEDIATEK
+> > > +
+> > > +config MACH_MT6592
+> > > +       bool "MediaTek MT6592 SoCs support"
+> > > +       default ARCH_MEDIATEK
+> > > +
+> > > +config MACH_MT8127
+> > > +       bool "MediaTek MT8127 SoCs support"
+> > > +       default ARCH_MEDIATEK
+> > > +
+> > > +config MACH_MT8135
+> > > +       bool "MediaTek MT8135 SoCs support"
+> > > +       default ARCH_MEDIATEK
+> > > +
+> > > +endif
+> 
+> None of these four new MACH_MT* Kconfig symbols are currently used in
+> linux-next. I assume that patches that actually use them (either as a
+> Kconfig symbol or as a CONFIG_* macro) are still pending. Is that
+> correct?
 
-This became commit ad8a221e1f49 ("ARM: mediatek: Add config options for
-mediatek SoCs.") in today's linux-next (ie, next-20150127). I noticed
-because a script I use to check linux-next spotted a problem with it.
+Yes, it is used in patch 3 in this series[1], and is discussed in [2].
 
-> > ---
-> >  arch/arm/mach-mediatek/Kconfig | 22 +++++++++++++++++++++-
-> >  1 file changed, 21 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
-> > index f73f588..f7e463c 100644
-> > --- a/arch/arm/mach-mediatek/Kconfig
-> > +++ b/arch/arm/mach-mediatek/Kconfig
-> > @@ -1,6 +1,26 @@
-> > -config ARCH_MEDIATEK
-> > +menuconfig ARCH_MEDIATEK
-> >         bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
-> >         select ARM_GIC
-> >         select MTK_TIMER
-> >         help
-> >           Support for Mediatek MT65xx & MT81xx SoCs
-> > +
-> > +if ARCH_MEDIATEK
-> > +
-> > +config MACH_MT6589
-> > +       bool "MediaTek MT6589 SoCs support"
-> > +       default ARCH_MEDIATEK
-> > +
-> > +config MACH_MT6592
-> > +       bool "MediaTek MT6592 SoCs support"
-> > +       default ARCH_MEDIATEK
-> > +
-> > +config MACH_MT8127
-> > +       bool "MediaTek MT8127 SoCs support"
-> > +       default ARCH_MEDIATEK
-> > +
-> > +config MACH_MT8135
-> > +       bool "MediaTek MT8135 SoCs support"
-> > +       default ARCH_MEDIATEK
-> > +
-> > +endif
+Joe.C
 
-None of these four new MACH_MT* Kconfig symbols are currently used in
-linux-next. I assume that patches that actually use them (either as a
-Kconfig symbol or as a CONFIG_* macro) are still pending. Is that
-correct?
-
-Thanks,
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/318453.html
+[2]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/315616.html
 
 
-Paul Bolle
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
