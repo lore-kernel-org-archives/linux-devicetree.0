@@ -1,66 +1,76 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC 14/14] NFC: st21nfca: Add support for HCI event transaction
-Date: Tue, 27 Jan 2015 01:28:24 +0100
-Message-ID: <1422318504-10039-15-git-send-email-christophe-h.ricard@st.com>
-References: <1422318504-10039-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422318504-10039-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
+Date: Mon, 26 Jan 2015 16:32:55 -0800
+Message-ID: <db3077a2f9d8410f95cfd71f7e167494@BY2FFO11FD034.protection.gbl>
+References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com>
+ <54C6D44C.4060106@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54C6D44C.4060106@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Heiko Stuebner <heiko@sntech.de>, linux-sh@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, linux-rockchip@lists.infradead.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>
 List-Id: devicetree@vger.kernel.org
 
-The event transaction notifies the Device Host that an action is required
-to manage a specific Secure Element application.
+On Tue, 2015-01-27 at 12:57AM +0100, Andreas F=C3=A4rber wrote:
+> Am 09.01.2015 um 16:43 schrieb Soren Brinkmann:
+> > Add pinctrl descriptions to the zc702 and zc706 device trees.
+> >=20
+> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> > ---
+> > Changes since v1:
+> >  - remove 'pinctrl-' prefix for pinctrl sub-nodes
+> >  - separate config and mux nodes
+> >=20
+> > Changes since RFC v2:
+> >  - add pinconf properties to zc702 mdio node
+> >  - remove arguments from bias-related props
+> >=20
+> > Changes since RFC v1:
+> >  - separate DT changes into their own patch
+> > ---
+> >  arch/arm/boot/dts/zynq-7000.dtsi |   8 +-
+> >  arch/arm/boot/dts/zynq-zc702.dts | 181 +++++++++++++++++++++++++++=
+++++++++++++
+> >  arch/arm/boot/dts/zynq-zc706.dts | 152 +++++++++++++++++++++++++++=
++++++
+> >  3 files changed, 340 insertions(+), 1 deletion(-)
+> [...]
+> > diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/z=
+ynq-zc702.dts
+> > index 280f02dd4ddc..4995412f116f 100644
+> > --- a/arch/arm/boot/dts/zynq-zc702.dts
+> > +++ b/arch/arm/boot/dts/zynq-zc702.dts
+> [...]
+> > @@ -50,15 +52,24 @@
+> >  	status =3D "okay";
+> >  	phy-mode =3D "rgmii-id";
+> >  	phy-handle =3D <&ethernet_phy>;
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&pinctrl_gem0_default>;
+> > =20
+> >  	ethernet_phy: ethernet-phy@7 {
+> >  		reg =3D <7>;
+> >  	};
+> >  };
+> > =20
+> > +&gpio0 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&pinctrl_gpio0_default>;
+>=20
+> On linux-next the equivalent no longer works for the Parallella, with
+> gpio failing to probe.
+>=20
+> If I move these two properties to the leds node (for which I am
+> configuring gpio 7) then I get a heartbeat as before.
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/nfc/st21nfca/st21nfca_se.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Moving this away from the gpio node seems wrong. IMHO, it should be
+where it is. I guess, there might be some issues with probe
+ordering/deferral that we may have to sort out.
 
-diff --git a/drivers/nfc/st21nfca/st21nfca_se.c b/drivers/nfc/st21nfca/st21nfca_se.c
-index 9b93d39..bd13cac 100644
---- a/drivers/nfc/st21nfca/st21nfca_se.c
-+++ b/drivers/nfc/st21nfca/st21nfca_se.c
-@@ -301,6 +301,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
- 				u8 event, struct sk_buff *skb)
- {
- 	int r = 0;
-+	struct device *dev = &hdev->ndev->dev;
-+	struct nfc_evt_transaction *transaction;
- 
- 	pr_debug("connectivity gate event: %x\n", event);
- 
-@@ -308,6 +310,25 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
- 	case ST21NFCA_EVT_CONNECTIVITY:
- 		break;
- 	case ST21NFCA_EVT_TRANSACTION:
-+		if (skb->len < NFC_MIN_AID_LENGTH + 2 &&
-+		    skb->data[0] != NFC_EVT_TRANSACTION_AID_TAG)
-+			return -EPROTO;
-+
-+		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
-+						   skb->len - 2, GFP_KERNEL);
-+
-+		transaction->aid_len = skb->data[1];
-+		memcpy(transaction->aid, &skb->data[2], skb->data[1]);
-+
-+		if (skb->data[transaction->aid_len + 2] !=
-+		    NFC_EVT_TRANSACTION_PARAMS_TAG)
-+			return -EPROTO;
-+
-+		transaction->params_len = skb->data[transaction->aid_len + 3];
-+		memcpy(transaction->params, skb->data +
-+		       transaction->aid_len + 4, transaction->params_len);
-+
-+		r = nfc_se_transaction(hdev->ndev, host, transaction);
- 		break;
- 	default:
- 		return 1;
--- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	S=C3=B6ren
