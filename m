@@ -1,894 +1,405 @@
-From: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: [PATCH v8 2/2] tty/serial: Add Spreadtrum sc9836-uart driver support
-Date: Tue, 27 Jan 2015 15:56:47 +0800
-Message-ID: <1422345407-10037-3-git-send-email-chunyan.zhang@spreadtrum.com>
-References: <sc9836-serial-v8>
- <1422345407-10037-1-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] ARM:sunxi:drivers:input Add support
+ for A10/A20 PS2
+Date: Tue, 27 Jan 2015 00:03:13 -0800
+Message-ID: <20150127080313.GB11487@dtor-ws>
+References: <1422193209-17787-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1422193209-17787-3-git-send-email-vishnupatekar0510@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422345407-10037-1-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: jslaby-AlSwsSmVLrQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDP6N55ZUYDRBSMMTWTAKGQEQ36GJWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422193209-17787-3-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a full sc9836-uart driver for SC9836 SoC which is based on the
-spreadtrum sharkl64 platform.
-This driver also support earlycon.
+Hi Vishnu,
 
-Originally-by: Lanqing Liu <lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
- drivers/tty/serial/Kconfig       |   18 +
- drivers/tty/serial/Makefile      |    1 +
- drivers/tty/serial/sprd_serial.c |  797 ++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/serial_core.h |    3 +
- 4 files changed, 819 insertions(+)
- create mode 100644 drivers/tty/serial/sprd_serial.c
+On Sun, Jan 25, 2015 at 07:10:07PM +0530, Vishnu Patekar wrote:
+> Signed-off-by: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/input/serio/Kconfig     |   11 ++
+>  drivers/input/serio/Makefile    |    1 +
+>  drivers/input/serio/sun4i-ps2.c |  347 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 359 insertions(+)
+>  create mode 100644 drivers/input/serio/sun4i-ps2.c
+> 
+> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
+> index bc2d474..964afc5 100644
+> --- a/drivers/input/serio/Kconfig
+> +++ b/drivers/input/serio/Kconfig
+> @@ -281,4 +281,15 @@ config HYPERV_KEYBOARD
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called hyperv_keyboard.
+>  
+> +config SERIO_SUN4I_PS2
+> +	tristate "Allwinner A10 PS/2 controller support"
+> +	default n
+> +	depends on ARCH_SUNXI || COMPILE_TEST
+> +	help
+> +	  This selects support for the PS/2 Host Controller on
+> +	  Allwinner A10.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called sun4i-ps2.
+> +
+>  endif
+> diff --git a/drivers/input/serio/Makefile b/drivers/input/serio/Makefile
+> index 815d874..c600089 100644
+> --- a/drivers/input/serio/Makefile
+> +++ b/drivers/input/serio/Makefile
+> @@ -29,3 +29,4 @@ obj-$(CONFIG_SERIO_ARC_PS2)	+= arc_ps2.o
+>  obj-$(CONFIG_SERIO_APBPS2)	+= apbps2.o
+>  obj-$(CONFIG_SERIO_OLPC_APSP)	+= olpc_apsp.o
+>  obj-$(CONFIG_HYPERV_KEYBOARD)	+= hyperv-keyboard.o
+> +obj-$(CONFIG_SERIO_SUN4I_PS2)	+= sun4i-ps2.o
+> diff --git a/drivers/input/serio/sun4i-ps2.c b/drivers/input/serio/sun4i-ps2.c
+> new file mode 100644
+> index 0000000..d3cf6bc
+> --- /dev/null
+> +++ b/drivers/input/serio/sun4i-ps2.c
+> @@ -0,0 +1,347 @@
+> +/*
+> + *	Driver for Allwinner A10 PS2 host controller
+> + *
+> + *	Author: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *		Aaron.maoye <leafy.myeh-Q9AEpCAkrSgqDJ6do+/SaQ@public.gmane.org>
+> + *
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/serio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/errno.h>
+> +#include <linux/slab.h>
+> +#include <linux/list.h>
+> +#include <linux/io.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index c79b43c..13211f7 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1577,6 +1577,24 @@ config SERIAL_MEN_Z135
- 	  This driver can also be build as a module. If so, the module will be called
- 	  men_z135_uart.ko
- 
-+config SERIAL_SPRD
-+	tristate "Support for Spreadtrum serial"
-+	depends on ARCH_SPRD
-+	select SERIAL_CORE
-+	help
-+	  This enables the driver for the Spreadtrum's serial.
-+
-+config SERIAL_SPRD_CONSOLE
-+	bool "Spreadtrum UART console support"
-+	depends on SERIAL_SPRD=y
-+	select SERIAL_CORE_CONSOLE
-+	select SERIAL_EARLYCON
-+	help
-+	  Support for early debug console using Spreadtrum's serial. This enables
-+	  the console before standard serial driver is probed. This is enabled
-+	  with "earlycon" on the kernel command line. The console is
-+	  enabled when early_param is processed.
-+
- endmenu
- 
- config SERIAL_MCTRL_GPIO
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index 9a548ac..4801aca 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -93,6 +93,7 @@ obj-$(CONFIG_SERIAL_ARC)	+= arc_uart.o
- obj-$(CONFIG_SERIAL_RP2)	+= rp2.o
- obj-$(CONFIG_SERIAL_FSL_LPUART)	+= fsl_lpuart.o
- obj-$(CONFIG_SERIAL_MEN_Z135)	+= men_z135_uart.o
-+obj-$(CONFIG_SERIAL_SPRD) += sprd_serial.o
- 
- # GPIOLIB helpers for modem control lines
- obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+= serial_mctrl_gpio.o
-diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
-new file mode 100644
-index 0000000..bbd0447
---- /dev/null
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -0,0 +1,797 @@
-+/*
-+ * Copyright (C) 2012-2015 Spreadtrum Communications Inc.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/console.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/serial_core.h>
-+#include <linux/serial.h>
-+#include <linux/slab.h>
-+#include <linux/tty.h>
-+#include <linux/tty_flip.h>
-+
-+/* device name */
-+#define UART_NR_MAX		8
-+#define SPRD_TTY_NAME		"ttyS"
-+#define SPRD_FIFO_SIZE		128
-+#define SPRD_DEF_RATE		26000000
-+#define SPRD_BAUD_IO_LIMIT	3000000
-+#define SPRD_TIMEOUT		256
-+
-+/* the offset of serial registers and BITs for them */
-+/* data registers */
-+#define SPRD_TXD		0x0000
-+#define SPRD_RXD		0x0004
-+
-+/* line status register and its BITs  */
-+#define SPRD_LSR		0x0008
-+#define SPRD_LSR_OE		BIT(4)
-+#define SPRD_LSR_FE		BIT(3)
-+#define SPRD_LSR_PE		BIT(2)
-+#define SPRD_LSR_BI		BIT(7)
-+#define SPRD_LSR_TX_OVER	BIT(15)
-+
-+/* data number in TX and RX fifo */
-+#define SPRD_STS1		0x000C
-+
-+/* interrupt enable register and its BITs */
-+#define SPRD_IEN		0x0010
-+#define SPRD_IEN_RX_FULL	BIT(0)
-+#define SPRD_IEN_TX_EMPTY	BIT(1)
-+#define SPRD_IEN_BREAK_DETECT	BIT(7)
-+#define SPRD_IEN_TIMEOUT	BIT(13)
-+
-+/* interrupt clear register */
-+#define SPRD_ICLR		0x0014
-+
-+/* line control register */
-+#define SPRD_LCR		0x0018
-+#define SPRD_LCR_STOP_1BIT	0x10
-+#define SPRD_LCR_STOP_2BIT	0x30
-+#define SPRD_LCR_DATA_LEN	(BIT(2) | BIT(3))
-+#define SPRD_LCR_DATA_LEN5	0x0
-+#define SPRD_LCR_DATA_LEN6	0x4
-+#define SPRD_LCR_DATA_LEN7	0x8
-+#define SPRD_LCR_DATA_LEN8	0xc
-+#define SPRD_LCR_PARITY	(BIT(0) | BIT(1))
-+#define SPRD_LCR_PARITY_EN	0x2
-+#define SPRD_LCR_EVEN_PAR	0x0
-+#define SPRD_LCR_ODD_PAR	0x1
-+
-+/* control register 1 */
-+#define SPRD_CTL1			0x001C
-+#define RX_HW_FLOW_CTL_THLD	BIT(6)
-+#define RX_HW_FLOW_CTL_EN	BIT(7)
-+#define TX_HW_FLOW_CTL_EN	BIT(8)
-+#define RX_TOUT_THLD_DEF	0x3E00
-+#define RX_HFC_THLD_DEF	0x40
-+
-+/* fifo threshold register */
-+#define SPRD_CTL2		0x0020
-+#define THLD_TX_EMPTY	0x40
-+#define THLD_RX_FULL	0x40
-+
-+/* config baud rate register */
-+#define SPRD_CLKD0		0x0024
-+#define SPRD_CLKD1		0x0028
-+
-+/* interrupt mask status register */
-+#define SPRD_IMSR			0x002C
-+#define SPRD_IMSR_RX_FIFO_FULL		BIT(0)
-+#define SPRD_IMSR_TX_FIFO_EMPTY	BIT(1)
-+#define SPRD_IMSR_BREAK_DETECT		BIT(7)
-+#define SPRD_IMSR_TIMEOUT		BIT(13)
-+
-+struct reg_backup {
-+	u32 ien;
-+	u32 ctrl0;
-+	u32 ctrl1;
-+	u32 ctrl2;
-+	u32 clkd0;
-+	u32 clkd1;
-+	u32 dspwait;
-+};
-+
-+struct sprd_uart_port {
-+	struct uart_port port;
-+	struct reg_backup reg_bak;
-+	char name[16];
-+};
-+
-+static struct sprd_uart_port *sprd_port[UART_NR_MAX];
-+static int sprd_ports_num;
-+
-+static inline unsigned int serial_in(struct uart_port *port, int offset)
-+{
-+	return readl_relaxed(port->membase + offset);
-+}
-+
-+static inline void serial_out(struct uart_port *port, int offset, int value)
-+{
-+	writel_relaxed(value, port->membase + offset);
-+}
-+
-+static unsigned int sprd_tx_empty(struct uart_port *port)
-+{
-+	if (serial_in(port, SPRD_STS1) & 0xff00)
-+		return 0;
-+	else
-+		return TIOCSER_TEMT;
-+}
-+
-+static unsigned int sprd_get_mctrl(struct uart_port *port)
-+{
-+	return TIOCM_DSR | TIOCM_CTS;
-+}
-+
-+static void sprd_set_mctrl(struct uart_port *port, unsigned int mctrl)
-+{
-+	/* nothing to do */
-+}
-+
-+static void sprd_stop_tx(struct uart_port *port)
-+{
-+	unsigned int ien, iclr;
-+
-+	iclr = serial_in(port, SPRD_ICLR);
-+	ien = serial_in(port, SPRD_IEN);
-+
-+	iclr |= SPRD_IEN_TX_EMPTY;
-+	ien &= ~SPRD_IEN_TX_EMPTY;
-+
-+	serial_out(port, SPRD_ICLR, iclr);
-+	serial_out(port, SPRD_IEN, ien);
-+}
-+
-+static void sprd_start_tx(struct uart_port *port)
-+{
-+	unsigned int ien;
-+
-+	ien = serial_in(port, SPRD_IEN);
-+	if (!(ien & SPRD_IEN_TX_EMPTY)) {
-+		ien |= SPRD_IEN_TX_EMPTY;
-+		serial_out(port, SPRD_IEN, ien);
-+	}
-+}
-+
-+static void sprd_stop_rx(struct uart_port *port)
-+{
-+	unsigned int ien, iclr;
-+
-+	iclr = serial_in(port, SPRD_ICLR);
-+	ien = serial_in(port, SPRD_IEN);
-+
-+	ien &= ~(SPRD_IEN_RX_FULL | SPRD_IEN_BREAK_DETECT);
-+	iclr |= SPRD_IEN_RX_FULL | SPRD_IEN_BREAK_DETECT;
-+
-+	serial_out(port, SPRD_IEN, ien);
-+	serial_out(port, SPRD_ICLR, iclr);
-+}
-+
-+/* The Sprd serial does not support this function. */
-+static void sprd_break_ctl(struct uart_port *port, int break_state)
-+{
-+	/* nothing to do */
-+}
-+
-+static int handle_lsr_errors(struct uart_port *port,
-+			     unsigned int *flag,
-+			     unsigned int *lsr)
-+{
-+	int ret = 0;
-+
-+	/* statistics */
-+	if (*lsr & SPRD_LSR_BI) {
-+		*lsr &= ~(SPRD_LSR_FE | SPRD_LSR_PE);
-+		port->icount.brk++;
-+		ret = uart_handle_break(port);
-+		if (ret)
-+			return ret;
-+	} else if (*lsr & SPRD_LSR_PE)
-+		port->icount.parity++;
-+	else if (*lsr & SPRD_LSR_FE)
-+		port->icount.frame++;
-+	if (*lsr & SPRD_LSR_OE)
-+		port->icount.overrun++;
-+
-+	/* mask off conditions which should be ignored */
-+	*lsr &= port->read_status_mask;
-+	if (*lsr & SPRD_LSR_BI)
-+		*flag = TTY_BREAK;
-+	else if (*lsr & SPRD_LSR_PE)
-+		*flag = TTY_PARITY;
-+	else if (*lsr & SPRD_LSR_FE)
-+		*flag = TTY_FRAME;
-+
-+	return ret;
-+}
-+
-+static inline void sprd_rx(struct uart_port *port)
-+{
-+	struct tty_port *tty = &port->state->port;
-+	unsigned int ch, flag, lsr, max_count = SPRD_TIMEOUT;
-+
-+	while ((serial_in(port, SPRD_STS1) & 0x00ff) && max_count--) {
-+		lsr = serial_in(port, SPRD_LSR);
-+		ch = serial_in(port, SPRD_RXD);
-+		flag = TTY_NORMAL;
-+		port->icount.rx++;
-+
-+		if (lsr & (SPRD_LSR_BI | SPRD_LSR_PE |
-+			SPRD_LSR_FE | SPRD_LSR_OE))
-+			if (handle_lsr_errors(port, &lsr, &flag))
-+				continue;
-+		if (uart_handle_sysrq_char(port, ch))
-+			continue;
-+
-+		uart_insert_char(port, lsr, SPRD_LSR_OE, ch, flag);
-+	}
-+
-+	tty_flip_buffer_push(tty);
-+}
-+
-+static inline void sprd_tx(struct uart_port *port)
-+{
-+	struct circ_buf *xmit = &port->state->xmit;
-+	int count;
-+
-+	if (port->x_char) {
-+		serial_out(port, SPRD_TXD, port->x_char);
-+		port->icount.tx++;
-+		port->x_char = 0;
-+		return;
-+	}
-+
-+	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
-+		sprd_stop_tx(port);
-+		return;
-+	}
-+
-+	count = THLD_TX_EMPTY;
-+	do {
-+		serial_out(port, SPRD_TXD, xmit->buf[xmit->tail]);
-+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-+		port->icount.tx++;
-+		if (uart_circ_empty(xmit))
-+			break;
-+	} while (--count > 0);
-+
-+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-+		uart_write_wakeup(port);
-+
-+	if (uart_circ_empty(xmit))
-+		sprd_stop_tx(port);
-+}
-+
-+/* this handles the interrupt from one port */
-+static irqreturn_t sprd_handle_irq(int irq, void *dev_id)
-+{
-+	struct uart_port *port = dev_id;
-+	unsigned int ims;
-+
-+	spin_lock(&port->lock);
-+
-+	ims = serial_in(port, SPRD_IMSR);
-+
-+	if (!ims)
-+		return IRQ_NONE;
-+
-+	serial_out(port, SPRD_ICLR, ~0);
-+
-+	if (ims & (SPRD_IMSR_RX_FIFO_FULL |
-+		SPRD_IMSR_BREAK_DETECT | SPRD_IMSR_TIMEOUT))
-+		sprd_rx(port);
-+
-+	if (ims & SPRD_IMSR_TX_FIFO_EMPTY)
-+		sprd_tx(port);
-+
-+	spin_unlock(&port->lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sprd_startup(struct uart_port *port)
-+{
-+	int ret = 0;
-+	unsigned int ien, fc;
-+	unsigned int timeout;
-+	struct sprd_uart_port *sp;
-+	unsigned long flags;
-+
-+	serial_out(port, SPRD_CTL2, ((THLD_TX_EMPTY << 8) | THLD_RX_FULL));
-+
-+	/* clear rx fifo */
-+	timeout = SPRD_TIMEOUT;
-+	while (timeout-- && serial_in(port, SPRD_STS1) & 0x00ff)
-+		serial_in(port, SPRD_RXD);
-+
-+	/* clear tx fifo */
-+	timeout = SPRD_TIMEOUT;
-+	while (timeout-- && serial_in(port, SPRD_STS1) & 0xff00)
-+		cpu_relax();
-+
-+	/* clear interrupt */
-+	serial_out(port, SPRD_IEN, 0);
-+	serial_out(port, SPRD_ICLR, ~0);
-+
-+	/* allocate irq */
-+	sp = container_of(port, struct sprd_uart_port, port);
-+	snprintf(sp->name, sizeof(sp->name), "sprd_serial%d", port->line);
-+	ret = devm_request_irq(port->dev, port->irq, sprd_handle_irq,
-+				IRQF_SHARED, sp->name, port);
-+	if (ret) {
-+		dev_err(port->dev, "fail to request serial irq %d, ret=%d\n",
-+			port->irq, ret);
-+		return ret;
-+	}
-+	fc = serial_in(port, SPRD_CTL1);
-+	fc |= RX_TOUT_THLD_DEF | RX_HFC_THLD_DEF;
-+	serial_out(port, SPRD_CTL1, fc);
-+
-+	/* enable interrupt */
-+	spin_lock_irqsave(&port->lock, flags);
-+	ien = serial_in(port, SPRD_IEN);
-+	ien |= SPRD_IEN_RX_FULL | SPRD_IEN_BREAK_DETECT | SPRD_IEN_TIMEOUT;
-+	serial_out(port, SPRD_IEN, ien);
-+	spin_unlock_irqrestore(&port->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void sprd_shutdown(struct uart_port *port)
-+{
-+	serial_out(port, SPRD_IEN, 0);
-+	serial_out(port, SPRD_ICLR, ~0);
-+	devm_free_irq(port->dev, port->irq, port);
-+}
-+
-+static void sprd_set_termios(struct uart_port *port,
-+				    struct ktermios *termios,
-+				    struct ktermios *old)
-+{
-+	unsigned int baud, quot;
-+	unsigned int lcr = 0, fc;
-+	unsigned long flags;
-+
-+	/* ask the core to calculate the divisor for us */
-+	baud = uart_get_baud_rate(port, termios, old, 0, SPRD_BAUD_IO_LIMIT);
-+
-+	quot = (unsigned int)((port->uartclk + baud / 2) / baud);
-+
-+	/* set data length */
-+	switch (termios->c_cflag & CSIZE) {
-+	case CS5:
-+		lcr |= SPRD_LCR_DATA_LEN5;
-+		break;
-+	case CS6:
-+		lcr |= SPRD_LCR_DATA_LEN6;
-+		break;
-+	case CS7:
-+		lcr |= SPRD_LCR_DATA_LEN7;
-+		break;
-+	case CS8:
-+	default:
-+		lcr |= SPRD_LCR_DATA_LEN8;
-+		break;
-+	}
-+
-+	/* calculate stop bits */
-+	lcr &= ~(SPRD_LCR_STOP_1BIT | SPRD_LCR_STOP_2BIT);
-+	if (termios->c_cflag & CSTOPB)
-+		lcr |= SPRD_LCR_STOP_2BIT;
-+	else
-+		lcr |= SPRD_LCR_STOP_1BIT;
-+
-+	/* calculate parity */
-+	lcr &= ~SPRD_LCR_PARITY;
-+	termios->c_cflag &= ~CMSPAR;	/* no support mark/space */
-+	if (termios->c_cflag & PARENB) {
-+		lcr |= SPRD_LCR_PARITY_EN;
-+		if (termios->c_cflag & PARODD)
-+			lcr |= SPRD_LCR_ODD_PAR;
-+		else
-+			lcr |= SPRD_LCR_EVEN_PAR;
-+	}
-+
-+	spin_lock_irqsave(&port->lock, flags);
-+
-+	/* update the per-port timeout */
-+	uart_update_timeout(port, termios->c_cflag, baud);
-+
-+	port->read_status_mask = SPRD_LSR_OE;
-+	if (termios->c_iflag & INPCK)
-+		port->read_status_mask |= SPRD_LSR_FE | SPRD_LSR_PE;
-+	if (termios->c_iflag & (IGNBRK | BRKINT | PARMRK))
-+		port->read_status_mask |= SPRD_LSR_BI;
-+
-+	/* characters to ignore */
-+	port->ignore_status_mask = 0;
-+	if (termios->c_iflag & IGNPAR)
-+		port->ignore_status_mask |= SPRD_LSR_PE | SPRD_LSR_FE;
-+	if (termios->c_iflag & IGNBRK) {
-+		port->ignore_status_mask |= SPRD_LSR_BI;
-+		/*
-+		 * If we're ignoring parity and break indicators,
-+		 * ignore overruns too (for real raw support).
-+		 */
-+		if (termios->c_iflag & IGNPAR)
-+			port->ignore_status_mask |= SPRD_LSR_OE;
-+	}
-+
-+	/* flow control */
-+	fc = serial_in(port, SPRD_CTL1);
-+	fc &= ~(RX_HW_FLOW_CTL_THLD | RX_HW_FLOW_CTL_EN | TX_HW_FLOW_CTL_EN);
-+	if (termios->c_cflag & CRTSCTS) {
-+		fc |= RX_HW_FLOW_CTL_THLD;
-+		fc |= RX_HW_FLOW_CTL_EN;
-+		fc |= TX_HW_FLOW_CTL_EN;
-+	}
-+
-+	/* clock divider bit0~bit15 */
-+	serial_out(port, SPRD_CLKD0, quot & 0xffff);
-+
-+	/* clock divider bit16~bit20 */
-+	serial_out(port, SPRD_CLKD1, (quot & 0x1f0000) >> 16);
-+	serial_out(port, SPRD_LCR, lcr);
-+	fc |= RX_TOUT_THLD_DEF | RX_HFC_THLD_DEF;
-+	serial_out(port, SPRD_CTL1, fc);
-+
-+	spin_unlock_irqrestore(&port->lock, flags);
-+
-+	/* Don't rewrite B0 */
-+	if (tty_termios_baud_rate(termios))
-+		tty_termios_encode_baud_rate(termios, baud, baud);
-+}
-+
-+static const char *sprd_type(struct uart_port *port)
-+{
-+	return "SPX";
-+}
-+
-+static void sprd_release_port(struct uart_port *port)
-+{
-+	/* nothing to do */
-+}
-+
-+static int sprd_request_port(struct uart_port *port)
-+{
-+	return 0;
-+}
-+
-+static void sprd_config_port(struct uart_port *port, int flags)
-+{
-+	if (flags & UART_CONFIG_TYPE)
-+		port->type = PORT_SPRD;
-+}
-+
-+static int sprd_verify_port(struct uart_port *port,
-+				   struct serial_struct *ser)
-+{
-+	if (ser->type != PORT_SPRD)
-+		return -EINVAL;
-+	if (port->irq != ser->irq)
-+		return -EINVAL;
-+	return 0;
-+}
-+
-+static struct uart_ops serial_sprd_ops = {
-+	.tx_empty = sprd_tx_empty,
-+	.get_mctrl = sprd_get_mctrl,
-+	.set_mctrl = sprd_set_mctrl,
-+	.stop_tx = sprd_stop_tx,
-+	.start_tx = sprd_start_tx,
-+	.stop_rx = sprd_stop_rx,
-+	.break_ctl = sprd_break_ctl,
-+	.startup = sprd_startup,
-+	.shutdown = sprd_shutdown,
-+	.set_termios = sprd_set_termios,
-+	.type = sprd_type,
-+	.release_port = sprd_release_port,
-+	.request_port = sprd_request_port,
-+	.config_port = sprd_config_port,
-+	.verify_port = sprd_verify_port,
-+};
-+
-+#ifdef CONFIG_SERIAL_SPRD_CONSOLE
-+static inline void wait_for_xmitr(struct uart_port *port)
-+{
-+	unsigned int status, tmout = 10000;
-+
-+	/* wait up to 10ms for the character(s) to be sent */
-+	do {
-+		status = serial_in(port, SPRD_STS1);
-+		if (--tmout == 0)
-+			break;
-+		udelay(1);
-+	} while (status & 0xff00);
-+}
-+
-+static void sprd_console_putchar(struct uart_port *port, int ch)
-+{
-+	wait_for_xmitr(port);
-+	serial_out(port, SPRD_TXD, ch);
-+}
-+
-+static void sprd_console_write(struct console *co, const char *s,
-+				      unsigned int count)
-+{
-+	struct uart_port *port = &sprd_port[co->index]->port;
-+	int locked = 1;
-+	unsigned long flags;
-+
-+	if (port->sysrq)
-+		locked = 0;
-+	else if (oops_in_progress)
-+		locked = spin_trylock_irqsave(&port->lock, flags);
-+	else
-+		spin_lock_irqsave(&port->lock, flags);
-+
-+	uart_console_write(port, s, count, sprd_console_putchar);
-+
-+	/* wait for transmitter to become empty */
-+	wait_for_xmitr(port);
-+
-+	if (locked)
-+		spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
-+static int __init sprd_console_setup(struct console *co, char *options)
-+{
-+	struct uart_port *port;
-+	int baud = 115200;
-+	int bits = 8;
-+	int parity = 'n';
-+	int flow = 'n';
-+
-+	if (co->index >= UART_NR_MAX || co->index < 0)
-+		co->index = 0;
-+
-+	port = &sprd_port[co->index]->port;
-+	if (port == NULL) {
-+		pr_info("serial port %d not yet initialized\n", co->index);
-+		return -ENODEV;
-+	}
-+	if (options)
-+		uart_parse_options(options, &baud, &parity, &bits, &flow);
-+
-+	return uart_set_options(port, co, baud, parity, bits, flow);
-+}
-+
-+static struct uart_driver sprd_uart_driver;
-+static struct console sprd_console = {
-+	.name = SPRD_TTY_NAME,
-+	.write = sprd_console_write,
-+	.device = uart_console_device,
-+	.setup = sprd_console_setup,
-+	.flags = CON_PRINTBUFFER,
-+	.index = -1,
-+	.data = &sprd_uart_driver,
-+};
-+
-+#define SPRD_CONSOLE	(&sprd_console)
-+
-+/* Support for earlycon */
-+static void sprd_putc(struct uart_port *port, int c)
-+{
-+	unsigned int timeout = SPRD_TIMEOUT;
-+
-+	while (timeout-- &&
-+		   !(readl(port->membase + SPRD_LSR) & SPRD_LSR_TX_OVER))
-+		cpu_relax();
-+
-+	writeb(c, port->membase + SPRD_TXD);
-+}
-+
-+static void sprd_early_write(struct console *con, const char *s,
-+				    unsigned n)
-+{
-+	struct earlycon_device *dev = con->data;
-+
-+	uart_console_write(&dev->port, s, n, sprd_putc);
-+}
-+
-+static int __init sprd_early_console_setup(
-+				struct earlycon_device *device,
-+				const char *opt)
-+{
-+	if (!device->port.membase)
-+		return -ENODEV;
-+
-+	device->con->write = sprd_early_write;
-+	return 0;
-+}
-+
-+EARLYCON_DECLARE(sprd_serial, sprd_early_console_setup);
-+OF_EARLYCON_DECLARE(sprd_serial, "sprd,sc9836-uart",
-+		    sprd_early_console_setup);
-+
-+#else /* !CONFIG_SERIAL_SPRD_CONSOLE */
-+#define SPRD_CONSOLE		NULL
-+#endif
-+
-+static struct uart_driver sprd_uart_driver = {
-+	.owner = THIS_MODULE,
-+	.driver_name = "sprd_serial",
-+	.dev_name = SPRD_TTY_NAME,
-+	.major = 0,
-+	.minor = 0,
-+	.nr = UART_NR_MAX,
-+	.cons = SPRD_CONSOLE,
-+};
-+
-+static int sprd_probe_dt_alias(int index, struct device *dev)
-+{
-+	struct device_node *np;
-+	static bool seen_dev_with_alias;
-+	static bool seen_dev_without_alias;
-+	int ret = index;
-+
-+	if (!IS_ENABLED(CONFIG_OF))
-+		return ret;
-+
-+	np = dev->of_node;
-+	if (!np)
-+		return ret;
-+
-+	ret = of_alias_get_id(np, "serial");
-+	if (IS_ERR_VALUE(ret)) {
-+		seen_dev_without_alias = true;
-+		ret = index;
-+	} else {
-+		seen_dev_with_alias = true;
-+		if (ret >= ARRAY_SIZE(sprd_port) || sprd_port[ret] != NULL) {
-+			dev_warn(dev, "requested serial port %d  not available.\n", ret);
-+			ret = index;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int sprd_remove(struct platform_device *dev)
-+{
-+	struct sprd_uart_port *sup = platform_get_drvdata(dev);
-+
-+	if (sup) {
-+		uart_remove_one_port(&sprd_uart_driver, &sup->port);
-+		sprd_port[sup->port.line] = NULL;
-+		sprd_ports_num--;
-+	}
-+
-+	if (!sprd_ports_num)
-+		uart_unregister_driver(&sprd_uart_driver);
-+
-+	return 0;
-+}
-+
-+static int sprd_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct uart_port *up;
-+	struct clk *clk;
-+	int irq;
-+	int index;
-+	int ret;
-+
-+	for (index = 0; index < ARRAY_SIZE(sprd_port); index++)
-+		if (sprd_port[index] == NULL)
-+			break;
-+
-+	if (index == ARRAY_SIZE(sprd_port))
-+		return -EBUSY;
-+
-+	index = sprd_probe_dt_alias(index, &pdev->dev);
-+
-+	sprd_port[index] = devm_kzalloc(&pdev->dev,
-+		sizeof(*sprd_port[index]), GFP_KERNEL);
-+	if (!sprd_port[index])
-+		return -ENOMEM;
-+
-+	pdev->id = index;
-+
-+	up = &sprd_port[index]->port;
-+	up->dev = &pdev->dev;
-+	up->line = index;
-+	up->type = PORT_SPRD;
-+	up->iotype = SERIAL_IO_PORT;
-+	up->uartclk = SPRD_DEF_RATE;
-+	up->fifosize = SPRD_FIFO_SIZE;
-+	up->ops = &serial_sprd_ops;
-+	up->flags = UPF_BOOT_AUTOCONF;
-+
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (!IS_ERR(clk))
-+		up->uartclk = clk_get_rate(clk);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "not provide mem resource\n");
-+		return -ENODEV;
-+	}
-+	up->mapbase = res->start;
-+	up->membase = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(up->membase))
-+		return PTR_ERR(up->membase);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "not provide irq resource\n");
-+		return -ENODEV;
-+	}
-+	up->irq = irq;
-+
-+	if (!sprd_ports_num) {
-+		ret = uart_register_driver(&sprd_uart_driver);
-+		if (ret < 0) {
-+			pr_err("Failed to register SPRD-UART driver\n");
-+			return ret;
-+		}
-+	}
-+	sprd_ports_num++;
-+
-+	ret = uart_add_one_port(&sprd_uart_driver, up);
-+	if (ret) {
-+		sprd_port[index] = NULL;
-+		sprd_remove(pdev);
-+	}
-+
-+	platform_set_drvdata(pdev, up);
-+
-+	return ret;
-+}
-+
-+static int sprd_suspend(struct device *dev)
-+{
-+	struct sprd_uart_port *sup = dev_get_drvdata(dev);
-+
-+	uart_suspend_port(&sprd_uart_driver, &sup->port);
-+
-+	return 0;
-+}
-+
-+static int sprd_resume(struct device *dev)
-+{
-+	struct sprd_uart_port *sup = dev_get_drvdata(dev);
-+
-+	uart_resume_port(&sprd_uart_driver, &sup->port);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(sprd_pm_ops, sprd_suspend, sprd_resume);
-+
-+static const struct of_device_id serial_ids[] = {
-+	{.compatible = "sprd,sc9836-uart",},
-+	{}
-+};
-+
-+static struct platform_driver sprd_platform_driver = {
-+	.probe		= sprd_probe,
-+	.remove		= sprd_remove,
-+	.driver		= {
-+		.name	= "sprd_serial",
-+		.of_match_table = of_match_ptr(serial_ids),
-+		.pm	= &sprd_pm_ops,
-+	},
-+};
-+
-+module_platform_driver(sprd_platform_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Spreadtrum SoC serial driver series");
-diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
-index c172180..7e6eb39 100644
---- a/include/uapi/linux/serial_core.h
-+++ b/include/uapi/linux/serial_core.h
-@@ -248,4 +248,7 @@
- /* MESON */
- #define PORT_MESON	109
- 
-+/* SPRD SERIAL  */
-+#define PORT_SPRD	110
-+
- #endif /* _UAPILINUX_SERIAL_CORE_H */
+You do not really need all these of_* includes. Neither you need list.h.
+
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +
+> +#define DRIVER_NAME		"sun4i-ps2"
+> +
+> +/* register offset definitions */
+> +#define PS2_REG_GCTL		0x00	/*  PS2 Module Global Control Reg */
+> +#define PS2_REG_DATA		0x04	/*  PS2 Module Data Reg		*/
+> +#define PS2_REG_LCTL		0x08	/*  PS2 Module Line Control Reg */
+> +#define PS2_REG_LSTS		0x0C	/*  PS2 Module Line Status Reg	*/
+> +#define PS2_REG_FCTL		0x10	/*  PS2 Module FIFO Control Reg */
+> +#define PS2_REG_FSTS		0x14	/*  PS2 Module FIFO Status Reg	*/
+> +#define PS2_REG_CLKDR		0x18	/*  PS2 Module Clock Divider Reg*/
+> +
+> +/*  PS2 GLOBAL CONTROL REGISTER PS2_GCTL */
+> +#define PS2_GCTL_INTFLAG	BIT(4)
+> +#define PS2_GCTL_INTEN		BIT(3)
+> +#define PS2_GCTL_RESET		BIT(2)
+> +#define PS2_GCTL_MASTER		BIT(1)
+> +#define PS2_GCTL_BUSEN		BIT(0)
+> +
+> +/* PS2 LINE CONTROL REGISTER */
+> +#define PS2_LCTL_NOACK		BIT(18)
+> +#define PS2_LCTL_TXDTOEN	BIT(8)
+> +#define PS2_LCTL_STOPERREN	BIT(3)
+> +#define PS2_LCTL_ACKERREN	BIT(2)
+> +#define PS2_LCTL_PARERREN	BIT(1)
+> +#define PS2_LCTL_RXDTOEN	BIT(0)
+> +
+> +/* PS2 LINE STATUS REGISTER */
+> +#define PS2_LSTS_TXTDO		BIT(8)
+> +#define PS2_LSTS_STOPERR	BIT(3)
+> +#define PS2_LSTS_ACKERR		BIT(2)
+> +#define PS2_LSTS_PARERR		BIT(1)
+> +#define PS2_LSTS_RXTDO		BIT(0)
+> +
+> +#define PS2_LINE_ERROR_BIT \
+> +	(PS2_LSTS_TXTDO | PS2_LSTS_STOPERR | PS2_LSTS_ACKERR | \
+> +	PS2_LSTS_PARERR | PS2_LSTS_RXTDO)
+> +
+> +/* PS2 FIFO CONTROL REGISTER */
+> +#define PS2_FCTL_TXRST		BIT(17)
+> +#define PS2_FCTL_RXRST		BIT(16)
+> +#define PS2_FCTL_TXUFIEN	BIT(10)
+> +#define PS2_FCTL_TXOFIEN	BIT(9)
+> +#define PS2_FCTL_TXRDYIEN	BIT(8)
+> +#define PS2_FCTL_RXUFIEN	BIT(2)
+> +#define PS2_FCTL_RXOFIEN	BIT(1)
+> +#define PS2_FCTL_RXRDYIEN	BIT(0)
+> +
+> +/* PS2 FIFO STATUS REGISTER */
+> +#define PS2_FSTS_TXUF		BIT(10)
+> +#define PS2_FSTS_TXOF		BIT(9)
+> +#define PS2_FSTS_TXRDY		BIT(8)
+> +#define PS2_FSTS_RXUF		BIT(2)
+> +#define PS2_FSTS_RXOF		BIT(1)
+> +#define PS2_FSTS_RXRDY		BIT(0)
+> +
+> +#define PS2_FIFO_ERROR_BIT \
+> +	(PS2_FSTS_TXUF | PS2_FSTS_TXOF | PS2_FSTS_RXUF | PS2_FSTS_RXOF)
+> +
+> +#define PS2_SAMPLE_CLK		1000000
+> +#define PS2_SCLK		125000
+> +
+> +struct sun4i_ps2data {
+> +	struct serio *serio;
+> +	struct device *dev;
+> +
+> +	/* IO mapping base */
+> +	void __iomem	*reg_base;
+> +
+> +	/* clock management */
+> +	struct clk	*clk;
+> +
+> +	/* irq */
+> +	spinlock_t	lock;
+> +	int		irq;
+> +};
+> +
+> +/*********************/
+> +/* Interrupt handler */
+> +/*********************/
+> +static irqreturn_t sun4i_ps2_interrupt(int irq, void *dev_id)
+> +{
+> +	struct sun4i_ps2data *drvdata = dev_id;
+> +	u32 intr_status;
+> +	u32 fifo_status;
+> +	unsigned char byte;
+> +	unsigned int rxflags = 0;
+> +	u32 rval;
+> +
+> +	spin_lock(&drvdata->lock);
+> +
+> +	/* Get the PS/2 interrupts and clear them */
+> +	intr_status  = readl(drvdata->reg_base + PS2_REG_LSTS);
+> +	fifo_status  = readl(drvdata->reg_base + PS2_REG_FSTS);
+> +
+> +	/*Check Line Status Register*/
+> +	if (intr_status & PS2_LINE_ERROR_BIT) {
+> +		rxflags = (intr_status & PS2_LINE_ERROR_BIT) ? SERIO_FRAME : 0;
+> +		rxflags |= (intr_status & PS2_LSTS_PARERR) ? SERIO_PARITY : 0;
+> +		rxflags |= (intr_status & PS2_LSTS_PARERR) ? SERIO_TIMEOUT : 0;
+> +
+> +		rval = PS2_LSTS_TXTDO | PS2_LSTS_STOPERR | PS2_LSTS_ACKERR |
+> +			PS2_LSTS_PARERR | PS2_LSTS_RXTDO;
+> +		writel(rval, drvdata->reg_base + PS2_REG_LSTS);
+> +	}
+> +
+> +	/*Check FIFO Status Register*/
+> +	if (fifo_status & PS2_FIFO_ERROR_BIT) {
+> +		rval = PS2_FSTS_TXUF | PS2_FSTS_TXOF | PS2_FSTS_TXRDY |
+> +			PS2_FSTS_RXUF | PS2_FSTS_RXOF | PS2_FSTS_RXRDY;
+> +		writel(rval, drvdata->reg_base + PS2_REG_FSTS);
+> +	}
+> +
+> +	rval = (fifo_status >> 16) & 0x3;
+> +	while (rval--) {
+> +		byte = readl(drvdata->reg_base + PS2_REG_DATA) & 0xff;
+> +		serio_interrupt(drvdata->serio, byte, rxflags);
+> +	}
+> +
+> +	writel(intr_status, drvdata->reg_base + PS2_REG_LSTS);
+> +	writel(fifo_status, drvdata->reg_base + PS2_REG_FSTS);
+> +
+> +	spin_unlock(&drvdata->lock);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +
+> +static int sun4i_ps2_open(struct serio *pserio)
+> +{
+> +	struct sun4i_ps2data *drvdata = pserio->port_data;
+> +	u32 src_clk = 0;
+> +	u32 clk_scdf;
+> +	u32 clk_pcdf;
+> +	u32 rval;
+> +	unsigned long flags;
+> +
+> +	/*Set Line Control And Enable Interrupt*/
+> +	rval = PS2_LCTL_STOPERREN | PS2_LCTL_ACKERREN
+> +		| PS2_LCTL_PARERREN | PS2_LCTL_RXDTOEN;
+> +	writel(rval, drvdata->reg_base + PS2_REG_LCTL);
+> +
+> +	/*Reset FIFO*/
+> +	rval = PS2_FCTL_TXRST | PS2_FCTL_RXRST | PS2_FCTL_TXUFIEN
+> +		| PS2_FCTL_TXOFIEN | PS2_FCTL_RXUFIEN
+> +		| PS2_FCTL_RXOFIEN | PS2_FCTL_RXRDYIEN;
+> +
+> +	writel(rval, drvdata->reg_base + PS2_REG_FCTL);
+> +
+> +	src_clk = clk_get_rate(drvdata->clk);
+> +	/*Set Clock Divider Register*/
+> +	clk_scdf = src_clk / PS2_SAMPLE_CLK - 1;
+> +	clk_pcdf = PS2_SAMPLE_CLK / PS2_SCLK - 1;
+> +	rval = (clk_scdf<<8) | clk_pcdf;
+> +	writel(rval, drvdata->reg_base + PS2_REG_CLKDR);
+> +
+> +
+> +	/*Set Global Control Register*/
+> +	rval = PS2_GCTL_RESET | PS2_GCTL_INTEN | PS2_GCTL_MASTER
+> +		| PS2_GCTL_BUSEN;
+> +
+> +	spin_lock_irqsave(&drvdata->lock, flags);
+> +	writel(rval, drvdata->reg_base + PS2_REG_GCTL);
+> +	spin_unlock_irqrestore(&drvdata->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static void sun4i_ps2_close(struct serio *pserio)
+> +{
+> +	struct sun4i_ps2data *drvdata = pserio->port_data;
+> +	u32 rval;
+> +
+> +	/* shutoff the interrupt */
+> +	rval = readl(drvdata->reg_base + PS2_REG_GCTL);
+> +	writel(rval & ~(PS2_GCTL_INTEN), drvdata->reg_base + PS2_REG_GCTL);
+> +
+> +	synchronize_irq(drvdata->irq);
+> +}
+> +
+> +static int sun4i_ps2_write(struct serio *pserio, unsigned char val)
+> +{
+> +	unsigned long expire = jiffies + msecs_to_jiffies(10000);
+> +	struct sun4i_ps2data *drvdata;
+> +
+> +	drvdata = (struct sun4i_ps2data *)pserio->port_data;
+> +
+> +	do {
+> +		if (readl(drvdata->reg_base + PS2_REG_FSTS) & PS2_FSTS_TXRDY) {
+> +			writel(val, drvdata->reg_base + PS2_REG_DATA);
+> +			return 0;
+> +		}
+> +	} while (time_before(jiffies, expire));
+> +
+> +	return SERIO_TIMEOUT;
+> +}
+> +
+> +static int sun4i_ps2_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res; /* IO mem resources */
+> +	struct sun4i_ps2data *drvdata;
+> +	struct serio *serio;
+> +	struct device *dev = &pdev->dev;
+> +	unsigned int irq;
+> +	int error;
+> +
+> +	drvdata = kzalloc(sizeof(struct sun4i_ps2data), GFP_KERNEL);
+> +	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
+> +	if (!drvdata || !serio) {
+> +		error = -ENOMEM;
+> +		goto err_free_mem;
+> +	}
+> +
+> +	spin_lock_init(&drvdata->lock);
+> +
+> +	/* IO */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
+If you get NULL here you'll end up dereferencing it later.
+
+> +
+> +	drvdata->reg_base = ioremap(res->start, resource_size(res));
+> +	if (IS_ERR(drvdata->reg_base)) {
+
+ioremap returns NULL on failure, not ERR_PTR-encoded result.
+
+> +		dev_err(dev, "failed to map registers\n");
+> +		error = PTR_ERR(drvdata->reg_base);
+> +		goto err_free_mem;
+> +	}
+> +
+> +	drvdata->clk = clk_get(dev, NULL);
+> +	if (IS_ERR(drvdata->clk)) {
+> +		error = PTR_ERR(drvdata->clk);
+> +		dev_err(dev, "couldn't get clock %d\n", error);
+> +		goto err_ioremap;
+> +	}
+> +
+> +	error = clk_prepare_enable(drvdata->clk);
+> +	if (error) {
+> +		dev_err(dev, "failed to enable clock %d\n", error);
+> +		goto err_clk;
+> +	}
+> +
+> +	serio->id.type = SERIO_8042;
+> +	serio->write = sun4i_ps2_write;
+> +	serio->open = sun4i_ps2_open;
+> +	serio->close = sun4i_ps2_close;
+> +	serio->port_data = drvdata;
+> +	serio->dev.parent = dev;
+> +	strlcpy(serio->name, dev_name(dev), sizeof(serio->name));
+> +	strlcpy(serio->phys, dev_name(dev), sizeof(serio->phys));
+> +
+> +	/* shutoff interrupt */
+> +	writel(0, drvdata->reg_base + PS2_REG_GCTL);
+> +
+> +	/* Get IRQ for the device */
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (!irq) {
+> +		dev_err(dev, "no IRQ found\n");
+> +		error = -ENXIO;
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	drvdata->irq = irq;
+> +	drvdata->serio = serio;
+> +	drvdata->dev = dev;
+> +	error = request_irq(drvdata->irq, sun4i_ps2_interrupt, 0,
+> +				DRIVER_NAME, drvdata);
+> +
+> +	if (error) {
+> +		dev_err(drvdata->dev, "Interrupt alloc failed %d:error:%d\n",
+> +			drvdata->irq, error);
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	serio_register_port(serio);
+> +	platform_set_drvdata(pdev, drvdata);
+> +
+> +	return 0;	/* success */
+> +
+> +err_disable_clk:
+> +	clk_disable_unprepare(drvdata->clk);
+> +err_clk:
+> +	clk_put(drvdata->clk);
+> +err_ioremap:
+> +	 iounmap(drvdata->reg_base);
+> +err_free_mem:
+> +	kfree(serio);
+> +	kfree(drvdata);
+> +	return error;
+> +}
+> +
+> +static int sun4i_ps2_remove(struct platform_device *pdev)
+> +{
+> +	struct sun4i_ps2data *drvdata = platform_get_drvdata(pdev);
+> +
+> +	serio_unregister_port(drvdata->serio);
+> +	free_irq(drvdata->irq, drvdata);
+> +
+> +	if (!IS_ERR(drvdata->clk))
+> +		clk_disable_unprepare(drvdata->clk);
+
+If you fail to get clk you abort the probe so it is not possible to have
+IS_ERR() clk here.
+
+I fixed up the issues and applied the patch, thank you.
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
