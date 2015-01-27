@@ -1,134 +1,38 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/4] arm: omap: hwmod: 43xx: add DebugSS hwmod data
-Date: Tue, 27 Jan 2015 10:01:43 -0600
-Message-ID: <20150127160143.GH14623@saruman.tx.rr.com>
-References: <1422054704-14915-1-git-send-email-balbi@ti.com>
- <1422054704-14915-2-git-send-email-balbi@ti.com>
- <alpine.DEB.2.02.1501260142590.5450@utopia.booyaka.com>
- <20150126165640.GA10679@saruman.tx.rr.com>
- <20150126194933.GG6660@saruman.tx.rr.com>
-Reply-To: <balbi@ti.com>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v6 3/7] iio: Add support for DA9150 GPADC
+Date: Tue, 27 Jan 2015 16:15:37 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337AB529E60@SW-EX-MBX01.diasemi.com>
+References: <cover.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
+ <ae9b56cc8cd15bd72ea1b721ae02b1dde8632dbf.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
+ <54BFCE97.4050007@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kHRd/tpU31Zn62xO"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150126194933.GG6660@saruman.tx.rr.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54BFCE97.4050007-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---kHRd/tpU31Zn62xO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jan 26, 2015 at 01:49:33PM -0600, Felipe Balbi wrote:
-> Hi,
->=20
-> On Mon, Jan 26, 2015 at 10:56:40AM -0600, Felipe Balbi wrote:
-> > > the references below are from SPRUHL7
-> > >=20
-> > > On Fri, 23 Jan 2015, Felipe Balbi wrote:
-> > >=20
-> > > > Without hwmod data for DebugSS, performance monitors
-> > > > have no chance of running on AM43xx devices.
-> > > >=20
-> > > > Signed-off-by: Felipe Balbi <balbi@ti.com>
-> > > > ---
-> > > >  arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 40 ++++++++++++++++++=
-++++++++++++
-> > > >  arch/arm/mach-omap2/prcm43xx.h             |  1 +
-> > > >  2 files changed, 41 insertions(+)
-> > > >=20
-> > > > diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/=
-mach-omap2/omap_hwmod_43xx_data.c
-> > > > index 5c6c8410160e..6709704dd5b5 100644
-> > > > --- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-> > > > +++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-> > > > @@ -19,6 +19,7 @@
-> > > >  #include "omap_hwmod.h"
-> > > >  #include "omap_hwmod_33xx_43xx_common_data.h"
-> > > >  #include "prcm43xx.h"
-> > > > +#include "prm44xx.h"
-> > > >  #include "omap_hwmod_common_data.h"
-> > > > =20
-> > > > =20
-> > > > @@ -60,6 +61,44 @@ static struct omap_hwmod am43xx_wkup_m3_hwmod =
-=3D {
-> > > >  	.rst_lines_cnt	=3D ARRAY_SIZE(am33xx_wkup_m3_resets),
-> > > >  };
-> > > > =20
-> > > > +/*
-> > > > + * 'debugss' class
-> > > > + * debug and emulation sub system
-> > > > + */
-> > > > +static struct omap_hwmod_opt_clk am43xx_debugss_opt_clks[] =3D {
-> > > > +	{ .role =3D "dbg_sysclk", .clk =3D "dbg_sysclk_ck" },
-> > > > +	{ .role =3D "dbg_clka", .clk =3D "dbg_clka_ck", },
-> > > > +	{ .role =3D "dbg_clkb", .clk =3D "dbg_clkb_ck", },
-> > > > +	{ .role =3D "dbg_clkc", .clk =3D "dbg_clkc_ck", },
-> > > > +};
-> > > > +
-> > > > +static struct omap_hwmod_class am43xx_debugss_hwmod_class =3D {
-> > > > +	.name	=3D "debugss",
-> > > > +};
-> > > > +
-> > > > +/* debugss */
-> > > > +static struct omap_hwmod am43xx_debugss_hwmod =3D {
-> > > > +	.name		=3D "debugss",
-> > > > +	.class		=3D &am43xx_debugss_hwmod_class,
-> > > > +	.clkdm_name	=3D "l3_aon_clkdm",
-> > > > +	.main_clk	=3D "trace_clk_div_ck",
-> > > > +	.prcm =3D {
-> > > > +		.omap4 =3D {
-> > > > +			.clkctrl_offs =3D AM43XX_CM_WKUP_DBGSS_CLKCTRL_OFFSET,
-> > >=20
-> > > According to Table 6-275 "PRCM_CM_WKUP_DBGSS_CLKCTRL Register Field=
-=20
-> > > Descriptions" this should have a=20
-> > >=20
-> > > 			.modulemode   =3D MODULEMODE_SWCTRL,
-> >=20
-> > hm... modulemode SWCTRL causes wait_target_ready to fail. Any hints ?
->=20
-> gets stuck in transition state. PRCM_CM_WKUP_DBGSS_CLKCTRL is always
-> read as 0x 12510f00 which would translate into:
->=20
-> - module disabled
-> - all opt clocks are on
-> - module is transitioning
-> - module in standby
-> - clkA as TPIU and STM trace clock
-> - all dividers set to 2
-
-just fyi, checking with HW folks, this might be a new bug, unless
-debugss needs something special.
-
---=20
-balbi
-
---kHRd/tpU31Zn62xO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUx7ZnAAoJEIaOsuA1yqREy58P/07F6GxEmgFcLT1+RfA21u5z
-Z9/LNNerNP79pJWStyuJc1N1++h4cimpKXr3AJoJvJoEXniWMhdoqzNSDB3XDfFw
-/ycMn7aeuPnxx1x0atBm5K8t+AW1qmTNDFFMljuPprw7w85tjJAc9VOUSm+piZHf
-CU4mHuFZafQyZKV09jwz+NITLwMRIVk4pZqmFUKkzn7KMZz4sOzq2TcS4su0GVOw
-PSIjhM/q9xPZX6Lz8vEPUxqw9+0jj3EV+Go+RFWAsEZPJ9bf6Q2r09tClmj2gooC
-qxsuREHNS6IBGqq51ZMvcg3TbVok4GcQ3K2XhQJGwEHanxW/gYkd5nLe0R0jiqxE
-4vCxhvmq79IVdzK7RDT2+IAmkA9e9oZfyzL5hl/dujHnfgVP6jYN1TQOEjkYHrqW
-ESAxMcTrYcNHWbYicVsLdU7V7ZYGAa0zyyDkNR3im9/ZZoflseL0OnKzXy8IrBqt
-s1f7Mzle86qmKIaA5QAryxiy0sgEvqSwwEC+tUwgs9x7guriOfEnZzgqJhtDTe3H
-kU+85hxSygPecBeCXFrPvbXQIrQAZmSZ0m5KKSaKZmeDZ0GRXj+5zp4G+GWvXR3q
-c+8AiE0AZY2Z81myFgf2u+Bh9P86Zsk6YyzlacbEckfFEZK+bxRvO5y7Z2egL2KQ
-ICORiXc+vKQ5//muc5Tb
-=mit0
------END PGP SIGNATURE-----
-
---kHRd/tpU31Zn62xO--
+T24gSmFudWFyeSAyMSwgMjAxNSAxNjowNywgVmFya2EgQmhhZHJhbSB3cm90ZToNCg0KPiBPbiBX
+ZWRuZXNkYXkgMjEgSmFudWFyeSAyMDE1IDA5OjE2IFBNLCBBZGFtIFRob21zb24gd3JvdGU6DQo+
+ID4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIERBOTE1MCBDaGFyZ2VyICYgRnVlbC1HYXVn
+ZSBJQyBHUEFEQy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFkYW0gVGhvbXNvbiA8QWRhbS5U
+aG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEhhcnRtdXQg
+S25hYWNrIDxrbmFhY2suaEBnbXguZGU+DQo+ID4gQWNrZWQtYnk6IEpvbmF0aGFuIENhbWVyb24g
+PGppYzIzQGtlcm5lbC5vcmc+DQo+IA0KPiAoLi4uKQ0KPiANCj4gPiArDQo+ID4gK3N0YXRpYyBp
+bnQgZGE5MTUwX2dwYWRjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4g
+K3sNCj4gPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gKwlzdHJ1Y3Qg
+ZGE5MTUwICpkYTkxNTAgPSBkZXZfZ2V0X2RydmRhdGEoZGV2LT5wYXJlbnQpOw0KPiA+ICsJc3Ry
+dWN0IGRhOTE1MF9ncGFkYyAqZ3BhZGM7DQo+ID4gKwlzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2
+Ow0KPiA+ICsJaW50IGlycSwgcmV0Ow0KPiA+ICsNCj4gPiArCWluZGlvX2RldiA9IGRldm1faWlv
+X2RldmljZV9hbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKmdwYWRjKSk7DQo+IA0KPiAgIFlvdSBj
+YW4gZGlyZWN0bHkgdXNlICpkZXYqIGluc3RlYWQgb2YgKiZwZGV2LT5kZXYqDQoNClllcyBhZ3Jl
+ZWQuIENhbiBmb2xsb3cgdXAgd2l0aCBjaGFuZ2UgZm9yIHRoaXMgYXMgaXQncyBub3QgdXJnZW50
+IGFuZCB3b3VsZA0KcmF0aGVyIGxlYXZlIGN1cnJlbnQgcGF0Y2ggc2V0IGFzIGlzLg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
