@@ -1,100 +1,65 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] arm: omap: hwmod: 43xx: add DebugSS hwmod data
-Date: Tue, 27 Jan 2015 11:18:43 -0600
-Message-ID: <20150127171843.GD14878@saruman.tx.rr.com>
-References: <1422054704-14915-1-git-send-email-balbi@ti.com>
- <1422054704-14915-2-git-send-email-balbi@ti.com>
- <alpine.DEB.2.02.1501260142590.5450@utopia.booyaka.com>
- <20150126165640.GA10679@saruman.tx.rr.com>
- <20150126194933.GG6660@saruman.tx.rr.com>
- <20150127160143.GH14623@saruman.tx.rr.com>
- <alpine.DEB.2.02.1501271652340.7149@utopia.booyaka.com>
- <20150127171532.GC14878@saruman.tx.rr.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Bjorn <bjorn@sonymobile.com>
+Subject: Re: [PATCH 2/3] DT: pinctrl: Document Qualcomm MSM8916 pinctrl
+ binding
+Date: Tue, 27 Jan 2015 09:20:24 -0800
+Message-ID: <20150127172023.GD11960@sonymobile.com>
+References: <1421745476-6276-1-git-send-email-svarbanov@mm-sol.com>
+ <1421745476-6276-3-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8nsIa27JVQLqB7/C"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150127171532.GC14878-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1421745476-6276-3-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Joonwoo Park <joonwoop@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---8nsIa27JVQLqB7/C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue 20 Jan 01:17 PST 2015, Stanimir Varbanov wrote:
 
-On Tue, Jan 27, 2015 at 11:15:32AM -0600, Felipe Balbi wrote:
-> On Tue, Jan 27, 2015 at 05:12:05PM +0000, Paul Walmsley wrote:
-> > Hi
-> >=20
-> > On Tue, 27 Jan 2015, Felipe Balbi wrote:
-> >=20
-> > > On Mon, Jan 26, 2015 at 01:49:33PM -0600, Felipe Balbi wrote:
-> > > > On Mon, Jan 26, 2015 at 10:56:40AM -0600, Felipe Balbi wrote:
-> > > >
-> > > > > hm... modulemode SWCTRL causes wait_target_ready to fail. Any hin=
-ts ?
-> > > >=20
-> > > > gets stuck in transition state. PRCM_CM_WKUP_DBGSS_CLKCTRL is always
-> > > > read as 0x 12510f00 which would translate into:
-> > > >=20
-> > > > - module disabled
-> > > > - all opt clocks are on
-> > > > - module is transitioning
-> > > > - module in standby
-> > > > - clkA as TPIU and STM trace clock
-> > > > - all dividers set to 2
-> > >=20
-> > > just fyi, checking with HW folks, this might be a new bug, unless
-> > > debugss needs something special.
-> >=20
-> > If that happens on DEBUGSS disable, it's probably the same issue as on=
-=20
-> > AM33xx:
-> >=20
-> > http://www.spinics.net/lists/arm-kernel/msg320801.html
-> > http://www.spinics.net/lists/arm-kernel/msg321930.html
-> > http://www.spinics.net/lists/arm-kernel/msg329151.html
-> >=20
-> > Does adding HWMOD_INIT_NO_IDLE fix the issue you're seeing?
->=20
-> I'll try it out in a bit...
+> Adds devicetree binding documentation.
+> 
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+[..]
 
-nope, same thing.
+> +- function:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Specify the alternative function to be configured for the
+> +		    specified pins. Functions are only valid for gpio pins.
+> +		    Valid values are:
+> +	adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char, atest_char0,
+> +	atest_char1, atest_char2, atest_char3, atest_combodac, atest_gpsadc0,
+> +	atest_gpsadc1, atest_tsens, atest_wlan0, atest_wlan1, backlight_en,
+> +	bimc_dte0, bimc_dte1, blsp1_spi, blsp2_spi, blsp3_spi, blsp_i2c1,
+> +	blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6, blsp_spi1,
+> +	blsp_spi2, blsp_spi3, blsp_spi4, blsp_spi5, blsp_spi6, blsp_uart1,
+> +	blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst, cam1_standby, cam_mclk,
+> +	cci_async, cci_i2c, cci_timer0, cci_timer1, cci_timer2, cdc_pdm0,
+> +	codec_mad, dbg_out, display_5v, dmic0_clk, dmic0_data, dsi_rst,
+> +	ebi0_wrcdc, euro_us, ext_lpass, flash_strobe, gcc_gp1_clk_a,
+> +	gcc_gp1_clk_b, gcc_gp2_clk_a, gcc_gp2_clk_b, gcc_gp3_clk_a,
+> +	gcc_gp3_clk_b, gpio, gsm0_tx0, gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl,
+> +	kpsns0, kpsns1, kpsns2, ldo_en, ldo_update, mag_int, mdp_vsync,
+> +	modem_tsync, m_voc, nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2,
+> +	pri_mi2s, pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a,
+> +	pwr_crypto_enabled_b, pwr_modem_enabled_a, pwr_modem_enabled_b,
+> +	pwr_nav_enabled_a, pwr_nav_enabled_b, qdss_cti_trig_in_a0,
+> +	qdss_cti_trig_in_a1, qdss_cti_trig_in_b0, qdss_cti_trig_in_b1,
+> +	qdss_cti_trig_out_a0, qdss_cti_trig_out_a1, qdss_cti_trig_out_b0,
+> +	qdss_cti_trig_out_b1, qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a,
+> +	qdss_tracectl_b, qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card,
+> +	sd_write, sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1_clk, uim1_data,
+> +	uim1_present, uim1_reset, uim2_clk, uim2_data, uim2_present, uim2_reset,
+> +	uim3_clk, uim3_data, uim3_present, uim3_reset, uim_batt, wcss_bt,
+> +	wcss_fm, wcss_wlan, wcss_wlan0, wcss_wlan1, wcss_wlan2, webcam1_rst,
+> +
 
-[   27.633235] omap_hwmod: debugss: _wait_target_disable failed
+Looks reasonable, but unfortunately my 8916 documentation is incomplete so I
+can't review this part.
 
---=20
-balbi
+The rest is:
+Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 
---8nsIa27JVQLqB7/C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUx8hzAAoJEIaOsuA1yqREo+oP/idOLxZNT6NRLcPcPm1cZhn5
-c/J3Wp0pAzeUA04xvCCJgyx7jG4WYH8SimGNuRsMeMhC5tuZq+Woaf8r3JzcJTBn
-RPKYGx65U+IOlGukaqjzEpqKZVIASIwMRdCUdaM76TSPkdIAXN/oZttIC4nKfUqz
-9cBYgE5+CTXLavNLQXXwBxB4EaspDumQfEMonISyM27k5ubLRCuMRWk4hLfk+nd9
-ygQU3dMz1fqNN6/81TrMhBQcSvuHgPjl6O62lXEzZOuW7UMX+4gFp5KxhFb/jdcO
-ap98dYlVB2K/Qu9PfrtuKnwd9+RlQhxOkhW64BRNS2WHb0//rvocXOIr8Xj+u6bf
-NBc+omJ9OOHzdU+tHu27pCIi2EXq9iN95zPOQAYj4xIdLwoBnjLNOEGjDjGXVV99
-KPGfC8smdb/mJpionrrWgL4EXIvUzEdTKeLjiPA9Cw6p4//FaW9ccJCvShpJ19PR
-ckVwSMXWgG/X73kZl+/hUrtVBUkiDHj3sVK3jaTQwk0eIMDAb7cK7VLF/247Ui19
-OYgPuK74UdNZj2P0JpshbdGV6eznGe2V9cogyjgN3w8eytNAUduDl408q7w6lxTG
-nd57egebVbdkFTttxfzwVPNGX030e5MafCobAU8Mzl2sppUz0rpHBiBRgfMwy/h4
-c7VMm7/yIiZrxTPyttlv
-=ZOLF
------END PGP SIGNATURE-----
-
---8nsIa27JVQLqB7/C--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
