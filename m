@@ -1,75 +1,37 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: watchdog: Add DT binding documentation for jz47xx watchdog timer
-Date: Tue, 27 Jan 2015 23:42:14 +0100
-Message-ID: <9081741.fTg5kD1W54@wuerfel>
-References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com> <20150127221909.GA21671@roeck-us.net> <2960717.ZtXrNMeS1F@wuerfel>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 00/10] Secure Element support for HCI based NFC
+ controller & st21nfca integration
+Date: Tue, 27 Jan 2015 23:45:58 +0100
+Message-ID: <20150127224558.GA32667@ribalta.mp.intel.com>
+References: <1422317900-3810-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2960717.ZtXrNMeS1F@wuerfel>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422317900-3810-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 January 2015 23:36:36 Arnd Bergmann wrote:
-> On Tuesday 27 January 2015 14:19:09 Guenter Roeck wrote:
-> > On Tue, Jan 27, 2015 at 10:29:49PM +0100, Arnd Bergmann wrote:
-> > > On Tuesday 27 January 2015 12:52:29 Guenter Roeck wrote:
-> > > > Driver does this (today):
-> > > > 
-> > > >          drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
-> > > > 
-> > > > Isn't that the name to use ? Just wondering.
-> > > 
-> > > Just because the driver uses it at the moment does not mean it's the name
-> > > that the IP block uses.
-> > > 
-> > > clk_get() has the unpleasant property of doing fuzzy matching
-> > > on the name that is passed. It first tries to use the string
-> > > as the name of the clock input of the device, but if that is
-> > > not there, it falls back to looking for a global clk with a con_id.
-> > > 
-> > > In DT, we only support the first kind, but if a driver currently
-> > > uses the second, you get the wrong name.
-> > > 
-> > > Looking at arch/mips/jz4740/clock.c now, this seems to be exactly
-> > > what is going on here: there is no clkdev_add call to associate
-> > > the device clocks, so it can only match a global clock entry. 
-> > > 
-> > Me confused :-(.
-> > 
-> > Does that mean the driver needs to be fixed, that the DT property
-> > needs to change (to what ?), or both ?
-> 
-> Both.
-> 
-> The jz47xx clock driver should register a clkdev lookup table with
-> proper clock input names for each clock that is referenced by a
-> device, and then the drivers can use the right names.
-> 
-> In a lot of cases, the best name for a clock is no name so you
-> just use an anonymous clock like
-> 
->         clk = clk_get(dev, NULL);
-> 
-> but this still requires a clock lookup table.
+On Tue, Jan 27, 2015 at 01:18:10AM +0100, Christophe Ricard wrote:
+> Christophe Ricard (10):
+>   NFC: hci: Change event_received handler gate parameter to pipe
+>   NFC: hci: Add pipes table to reference them with a tuple {gate, host}
+>   NFC: hci: Change nfc_hci_send_response gate parameter to pipe
+>   NFC: hci: Reference every pipe information according to notification
+>   NFC: hci: Add cmd_received handler
+>   NFC: pn544: Change event_received gate parameter to pipe
+>   NFC: microread: Change event_received gate parameter to pipe
+>   NFC: hci: Remove nfc_hci_pipe2gate function
+>   NFC: st21nfca: Adding support for secure element
+>   NFC: dts: st21nfca: Document ese-present & uicc-present DTS property
+All 10 patches applied, with some commit messages fixes.
+Thanks a lot.
 
-To illustrate why the current approach is wrong, think of a driver
-that handles a device that can be used on two different SoCs.
-
-The name used by the clock provider is SoC specific, so the driver
-would need to know which SoC it's being used on in order to pass
-the right clock signal name. clkdev is meant to solve this by providing
-a lookup between the device/clock-input pair and the actual clock.
-
-Apparently jz4740 does not share any devices with another SoC at
-the moment, so this has not been a problem, but if jz4780 has
-a slightly different clock tree, it's already broken.
-
-	Arnd
+Cheers,
+Samuel.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
