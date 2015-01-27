@@ -1,57 +1,58 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH 1/2] dt: watchdog: Add DT binding documentation for jz47xx watchdog timer
-Date: Tue, 27 Jan 2015 15:11:29 +0000
-Message-ID: <1422371490-44402-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/2] mmc: core: use card pointer as the first parameter of execute_tuning()
+Date: Tue, 27 Jan 2015 16:18:06 +0100
+Message-ID: <CAPDyKFqjG=yxDcwnk4jbXMZ05hMkWR2x37uVpRNd_11-eB4G7w@mail.gmail.com>
+References: <1422271175-19445-1-git-send-email-addy.ke@rock-chips.com>
+	<1422271175-19445-2-git-send-email-addy.ke@rock-chips.com>
+	<CAPDyKFp=5epMggHu0+u_LU7ETujcoeP2xOpB7iD6JF2bs8BnEA@mail.gmail.com>
+	<CAD=FV=X9x0gW5TyLi4ERm8nxixQB__Y=5bRAtOax-_w+T33rCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wim@iguana.be
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Zubair.Kakakhel@imgtec.com, paul@crapouillou.net
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=X9x0gW5TyLi4ERm8nxixQB__Y=5bRAtOax-_w+T33rCg@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Addy Ke <addy.ke@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
 List-Id: devicetree@vger.kernel.org
 
-Add binding for jz47xx watchdog timer. It is a simple watchdog timer.
-Needs rtc clock and register addresses
+On 26 January 2015 at 18:45, Doug Anderson <dianders@chromium.org> wrote:
+> Ulf,
+>
+> On Mon, Jan 26, 2015 at 7:15 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> On 26 January 2015 at 12:19, Addy Ke <addy.ke@rock-chips.com> wrote:
+>>> We need to take the card pointer in execute_tuning() for mmc_send_status(),
+>>
+>> mmc_send_status() is an mmc core function, not intended for host's to call.
+>>
+>>> but mmc->card is NULL in tuning state. So we need change the first parameter
+>>> of execute_tuning() to card pointer(struct mmc_card * card).
+>>
+>> So, why do we need this?
+>
+> I asked Addy to post upstream against mmc_send_tuning(), but I guess
+> he didn't (he posted against Alex's NAKed patch instead).
+>
+> ...when I talked to him about it, Addy was asserting that when tuning
+> fails it is important (at least on dw_mmc on rk3288) that we wait for
+> the card to stop being busy and that the way to detect was using
+> mmc_send_status().
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+So, could that be due to the internal logic of the error handling in
+dw_mmc driver? Or you think this is a generic issue?
 
----
-The jz4740 is platform only at the moment.
+According to the specifications (eMMC and SD) both states that the
+tuning command has an R1 response. So, there shouldn't be any busy
+signalling involved - at least according to spec.
 
-But DT support is being added
+>
+> That would mean that against upstream you'd need to change
+> mmc_send_tuning() to take in the card as well (or move the "host->card
+> = card" assignment to before UHS init, which seems less desirable?)
+>
+> What do you think about that?  Is there a better solution?
 
-See http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
+Why do we need to change mmc_send_tuning()? I thought the issue was
+that mmc_send_status(), which currently takes "card" as a parameter.
 
-jz47xx is used because jz4780 will also use this driver
----
- .../devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt
-
-diff --git a/Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt b/Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt
-new file mode 100644
-index 0000000..bf4c404
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt
-@@ -0,0 +1,17 @@
-+Ingenic Watchdog Timer (WDT) Controller for JZ47XX
-+
-+Required properties:
-+compatible: "ingenic,jz4740-watchdog"
-+reg: Register address and length for watchdog registers
-+clocks: phandle to rtcclk
-+clock-names: must be "rtc"
-+
-+Example:
-+
-+watchdog: jz47xx-watchdog@0x10002000 {
-+	compatible = "ingenic,jz4780-watchdog";
-+	reg = <0x10002000 0x100>;
-+
-+	clocks = <&rtclk>;
-+	clock-names = "rtc";
-+};
--- 
-1.9.1
+Kind regards
+Uffe
