@@ -1,11 +1,13 @@
-From: Pranavkumar Sawargaonkar <psawargaonkar@apm.com>
-Subject: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
-Date: Tue, 27 Jan 2015 12:33:26 +0530
-Message-ID: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
+From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Subject: [PATCH 1/3] arm64: mediatek: Add config option for mt8173.
+Date: Tue, 27 Jan 2015 15:13:54 +0800
+Message-ID: <1422342836-27689-2-git-send-email-hongzhou.yang@mediatek.com>
+References: <1422342836-27689-1-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1422342836-27689-1-git-send-email-hongzhou.yang@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,48 +17,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Feng Kan <fkan@apm.com>, arnd@arndb.de, marc.zyngier@arm.com, jcm@redhat.com, patches@apm.com, kvmarm@lists.cs.columbia.edu, christoffer.dall@linaro.org, Tushar Jagad <tjagad@apm.com>, Pranavkumar Sawargaonkar <psawargaonkar@apm.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, eddie.huang@mediatek.com, linux-kernel@vger.kernel.org, alan.cheng@mediatek.com, maoguang.meng@mediatek.com, Ashwin Chaugule <ashwin.chaugule@linaro.org>, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
-in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
-size due to size alignment checking in vgic driver for VCPU Control and
-VCPU register.
+From: Hongzhou Yang <hongzhou.yang@mediatek.com>
 
-This patch corrects the sizes to be inline with the hardware spec.
+The upcoming MTK pinctrl driver have a big pin table for each SoC,
+and we don't want to bloat the kernel binary if we don't need it.
+Add config options so we can build for one SoC only.
 
-CC: linux-arm-kernel@lists.infradead.org
-CC: kvmarm@lists.cs.columbia.edu
-CC: arnd@arndb.de
-CC: marc.zyngier@arm.com
-CC: christoffer.dall@linaro.org
-CC: jcm@redhat.com
-Signed-off-by: Pranavkumar Sawargaonkar <psawargaonkar@apm.com>
-Signed-off-by: Tushar Jagad <tjagad@apm.com>
-Signed-off-by: Feng Kan <fkan@apm.com>
+Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
 ---
- arch/arm64/boot/dts/apm/apm-storm.dtsi |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/Kconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index f1ad9c2..65f0e6d 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -81,10 +81,10 @@
- 		compatible = "arm,cortex-a15-gic";
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
--		reg = <0x0 0x78010000 0x0 0x1000>,	/* GIC Dist */
--		      <0x0 0x78020000 0x0 0x1000>,	/* GIC CPU */
--		      <0x0 0x78040000 0x0 0x2000>,	/* GIC VCPU Control */
--		      <0x0 0x78060000 0x0 0x2000>;	/* GIC VCPU */
-+		reg = <0x0 0x78010000 0x0 0x10000>,	/* GIC Dist */
-+		      <0x0 0x78020000 0x0 0x20000>,	/* GIC CPU */
-+		      <0x0 0x78040000 0x0 0x10000>,	/* GIC VCPU Control */
-+		      <0x0 0x78060000 0x0 0x20000>;	/* GIC VCPU */
- 		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
- 	};
-
---
-1.7.9.5
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index e627ead..6213dac 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -151,9 +151,15 @@ menu "Platform selection"
+ config ARCH_MEDIATEK
+ 	bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
+ 	select ARM_GIC
++	select PINCTRL
+ 	help
+ 	  Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
+ 
++config MACH_MT8173
++	bool "Mediatek 8173 Soc Supprt"
++	depends on ARCH_MEDIATEK
++	default y
++
+ config ARCH_SEATTLE
+ 	bool "AMD Seattle SoC Family"
+ 	help
+-- 
+1.8.1.1.dirty
