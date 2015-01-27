@@ -1,212 +1,49 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Tue, 27 Jan 2015 17:38:13 +0200
-Message-ID: <54C7B0E5.20101@ti.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com> <1422274532-9488-2-git-send-email-rogerq@ti.com> <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com> <54C66B0D.9040109@ti.com> <54C6EFC8.1090601@samsung.com>
+From: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 0/2] Add Spreadtrum SoC bindings and serial driver support
+Date: Tue, 27 Jan 2015 23:43:51 +0800
+Message-ID: <CAAfSe-sPv+TDrUXYfW8DRJZiXjhVpRr=Wd3td7kHeB5r2LEnjw@mail.gmail.com>
+References: <1422345407-10037-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<2196748.ag4UzqF1Px@wuerfel>
+	<20150127145518.GA32531@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54C6EFC8.1090601-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20150127145518.GA32531-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "florian.vaussard-p8DiymsW2f8@public.gmane.org" <florian.vaussard-p8DiymsW2f8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, zhizhou.zhang
 List-Id: devicetree@vger.kernel.org
 
-Chanwoo,
+On Tue, Jan 27, 2015 at 10:55 PM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Tue, Jan 27, 2015 at 02:24:02PM +0100, Arnd Bergmann wrote:
+>> On Tuesday 27 January 2015 15:56:45 Chunyan Zhang wrote:
+>> > This patch-set split the last version, and addressed the review comments from
+>> > last version on serial driver code.
+>> >
+>> > Changes from v7:
+>> > * Addressed review comments from Peter:
+>> >         - Initialized the stack local with zero in sprd_set_termios()
+>> >         - Used dev_get_drvdata() to get sprd_uart_port
+>> >
+>>
+>> Looks good to me, but you still have too many people on 'To', so Greg
+>> might be missing that you expect him to merge it.
+>>
+>> Greg, if there are no further comments, can you take both patches through
+>> the tty git?
+>
+> Will do, thanks.
+>
+> greg k-h
 
-On 27/01/15 03:54, Chanwoo Choi wrote:
-> Hi Roger,
-> 
-> On 01/27/2015 01:27 AM, Roger Quadros wrote:
->> Hi Chanwoo,
->>
->> All your comments are valid. Need some clarification on one comment.
->>
->> On 26/01/15 15:56, Chanwoo Choi wrote:
->>> Hi Roger,
->>>
->>> This patch looks good to me. But I add some comment.
->>> If you modify some comment, I'll apply this patch on 3.21 queue.
->>>
->>> On Mon, Jan 26, 2015 at 9:15 PM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
->>>> This driver observes the USB ID pin connected over a GPIO and
->>>> updates the USB cable extcon states accordingly.
->>>>
->>>> The existing GPIO extcon driver is not suitable for this purpose
->>>> as it needs to be taught to understand USB cable states and it
->>>> can't handle more than one cable per instance.
->>>>
->>>> For the USB case we need to handle 2 cable states.
->>>> 1) USB (attach/detach)
->>>> 2) USB-Host (attach/detach)
->>>>
->>>> This driver can be easily updated in the future to handle VBUS
->>>> events in case it happens to be available on GPIO for any platform.
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  20 ++
->>>>  drivers/extcon/Kconfig                             |   7 +
->>>>  drivers/extcon/Makefile                            |   1 +
->>>>  drivers/extcon/extcon-usb-gpio.c                   | 214 +++++++++++++++++++++
->>>>  4 files changed, 242 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>>>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
->>>>
->>
->> <snip>
->>
->>>> +
->>>> +static int usb_extcon_probe(struct platform_device *pdev)
->>>> +{
->>>> +       struct device *dev = &pdev->dev;
->>>> +       struct device_node *np = dev->of_node;
->>>> +       struct usb_extcon_info *info;
->>>> +       int ret;
->>>> +
->>>> +       if (!np)
->>>> +               return -EINVAL;
->>>> +
->>>> +       info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
->>>> +       if (!info)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       info->dev = dev;
->>>> +       info->id_gpiod = devm_gpiod_get(&pdev->dev, "id");
->>>> +       if (IS_ERR(info->id_gpiod)) {
->>>> +               dev_err(dev, "failed to get ID GPIO\n");
->>>> +               return PTR_ERR(info->id_gpiod);
->>>> +       }
->>>> +
->>>> +       ret = gpiod_set_debounce(info->id_gpiod,
->>>> +                                USB_GPIO_DEBOUNCE_MS * 1000);
->>>> +       if (ret < 0)
->>>> +               info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
->>>> +
->>>> +       INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
->>>> +
->>>> +       info->id_irq = gpiod_to_irq(info->id_gpiod);
->>>> +       if (info->id_irq < 0) {
->>>> +               dev_err(dev, "failed to get ID IRQ\n");
->>>> +               return info->id_irq;
->>>> +       }
->>>> +
->>>> +       ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
->>>> +                                       usb_irq_handler,
->>>> +                                       IRQF_SHARED | IRQF_ONESHOT |
->>>> +                                       IRQF_NO_SUSPEND,
->>>> +                                       pdev->name, info);
->>
->> use of IRQF_NO_SUSPEND is not recommended to be used together with IRQF_SHARED so
->> I'll remove IRQF_SHARED from here if we decide to stick with IRQF_NO_SUSPEND.
->> More on this below.
->>
->>>> +       if (ret < 0) {
->>>> +               dev_err(dev, "failed to request handler for ID IRQ\n");
->>>> +               return ret;
->>>> +       }
->>>> +
->>>> +       info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->>>> +       if (IS_ERR(info->edev)) {
->>>> +               dev_err(dev, "failed to allocate extcon device\n");
->>>> +               return -ENOMEM;
->>>> +       }
->>>> +
->>>> +       ret = devm_extcon_dev_register(dev, info->edev);
->>>> +       if (ret < 0) {
->>>> +               dev_err(dev, "failed to register extcon device\n");
->>>> +               return ret;
->>>> +       }
->>>> +
->>>> +       platform_set_drvdata(pdev, info);
->>>
->>> I prefer to execute the device_init_wakeup() function as following
->>> for suspend/resume function:
->>>             device_init_wakeup(&pdev->dev, 1);
->>>
->>>> +
->>>> +       /* Perform initial detection */
->>>> +       usb_extcon_detect_cable(&info->wq_detcable.work);
->>>> +
->>>> +       return 0;
->>>> +}
->>>> +
->>>> +static int usb_extcon_remove(struct platform_device *pdev)
->>>> +{
->>>> +       struct usb_extcon_info *info = platform_get_drvdata(pdev);
->>>> +
->>>> +       cancel_delayed_work_sync(&info->wq_detcable);
->>>
->>> Need to add blank line.
->>>
->>>> +       return 0;
->>>> +}
->>>> +
->>>> +#ifdef CONFIG_PM_SLEEP
->>>> +static int usb_extcon_suspend(struct device *dev)
->>>> +{
->>>> +       struct usb_extcon_info *info = dev_get_drvdata(dev);
->>>> +
->>>> +       enable_irq_wake(info->id_irq);
->>>
->>> I prefer to use device_may_wakeup() function for whether
->>> executing enable_irq_wake() or not. Also, The disable_irq()
->>> in the suspend function would prevent us from discarding interrupt
->>> before wakeup from suspend completely.
->>>
->>
->> I need more clarification here.
->>
->> If we are going to use enable_irq_wake() here then what is the point of IRQF_NO_SUSPEND?
->>
->> >From Documentation/power/suspend-and-interrupts.txt I see that interrupts marked
->> as IRQF_NO_SUSPEND should not be configured for system wakeup using enable_irq_wake().
->>
->> what is your preference?
->>
->> Is it good enough to not use IRQF_NO_SUSPEND but use enable_irq_wake() instead to
->> enable system wakeup for that IRQ.
-> 
-> I'm sorry for confusion about usage both IRQF_NO_SUSPEND and enable_irq_wake().
-> If suspend() function in device driver executes the enable_irq_wake(),
-> IRQF_NO_SUSPEND flag is not necessary.
-> 
-> I think that we better use enable_irq_wake() instead of adding IRQF_NO_SUSPEND flag.
-> I'll expect to remove IRQF_NO_SUSPEND flag when requesting gpio interrupt.
-> 
-OK.
+To Arnd, Greg, Peter, and to all of others
 
->>
->>>             if (device_may_wakeup(dev))
->>>                      enable_irq_wake(info->id_irq);
->>>             disable_irq(info->id_irq);
->>
->> why do we need to disable irq here? How will the system wakeup if IRQ is disabled?
-> 
-> The disable_irq() may make the interrupt as masking state.
-> Although interrput is masking state(disable), interrup can happen.
-> but, the interrupt may remain the pending state without discarding it.
-> 
-> And then,
-> When resume() function in extcon-usb-gpio.c executes enable_irq(info->id_irq),
-> pending interrupt will happen and executes the interrupt handler(usb_irq_handler).
-> 
-> If we don't execute disable_irq() in suspend function,
-> info->id->irq interrupt might happen before completing the resume sequence
-> of extcon-gpio-usb driver.
+thank you so much for your help.
+You all gave us so many important comments and valuable suggestions
+these months.
 
-How will that cause a problem? If an interrupt happens _before_ the system enters
-SUSPEND state then kernel should abort the suspend. This should be taken care by 
-kernel PM core and not the device driver.
-
-I still fail to understand that we need to call disable_irq() in .suspend() and
-enable_irq() in .resume()
-
-can you point me to any other drivers doing so?
-
-cheers,
--roger
+Best regards,
+Chunyan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
