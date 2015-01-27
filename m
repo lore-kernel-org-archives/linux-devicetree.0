@@ -1,84 +1,58 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v1 2/2] arm64: dts: Add the arasan sdhc nodes in apm-storm.dtsi.
-Date: Tue, 27 Jan 2015 22:51:00 +0530
-Message-ID: <1422379260-10139-3-git-send-email-stripathi@apm.com>
-References: <1422379260-10139-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1422379260-10139-1-git-send-email-stripathi@apm.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: chris@printf.net, anton@enomsg.org, arnd@arndb.de
-Cc: linux-mmc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, mlangsdo@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
+From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
+Date: Tue, 27 Jan 2015 17:22:36 +0000
+Message-ID: <54C7C95C.4000007@linn.co.uk>
+References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk> <54C22E68.1080601@redhat.com> <54C60DB8.1060900@linn.co.uk> <54C612A5.2000208@redhat.com> <54C7736C.8090704@linn.co.uk> <54C7A4DD.7030109@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C7A4DD.7030109@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Borkmann <dborkman@redhat.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the arasan sdhc nodes to reuse the of-arasan
-driver for APM X-Gene SoC.
 
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi | 43 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+Hi Daniel,
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index f1ad9c2..52de7d3 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -144,6 +144,40 @@
- 				clock-output-names = "socplldiv2";
- 			};
+On 27/01/15 14:46, Daniel Borkmann wrote:
+>> Just wanted to clarify some implementation details for your approach.
+>> - The driver would need to create and register two net_device instances.
+>> One for sniffing Ethernet TX packets and one for RX.
+>
+> Hm, I would represent the whole device as a single monitoring-only 
+> netdev.
+> I'm somehow still missing the big advantage of all this as compared to
+> using packet sockets on the normal netdev? I couldn't parse that from 
+> your
+> commit message.
 
-+			ahbclk: ahbclk@1f2ac000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2ac000 0x0 0x1000
-+					0x0 0x17000000 0x0 0x2000>;
-+				reg-names = "csr-reg", "div-reg";
-+				csr-offset = <0x0>;
-+				csr-mask = <0x1>;
-+				enable-offset = <0x8>;
-+				enable-mask = <0x1>;
-+				divider-offset = <0x164>;
-+				divider-width = <0x5>;
-+				divider-shift = <0x0>;
-+				clock-output-names = "ahbclk";
-+			};
-+
-+			sdioclk: sdioclk@1f2ac000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2ac000 0x0 0x1000
-+					0x0 0x17000000 0x0 0x2000>;
-+				reg-names = "csr-reg", "div-reg";
-+				csr-offset = <0x0>;
-+				csr-mask = <0x2>;
-+				enable-offset = <0x8>;
-+				enable-mask = <0x2>;
-+				divider-offset = <0x178>;
-+				divider-width = <0x8>;
-+				divider-shift = <0x0>;
-+				clock-output-names = "sdioclk";
-+			};
-+
- 			qmlclk: qmlclk {
- 				compatible = "apm,xgene-device-clock";
- 				#clock-cells = <1>;
-@@ -595,6 +629,15 @@
- 			clocks = <&rtcclk 0>;
- 		};
+This H/W module was developed to allow accurate timestamping of selected
+outgoing or incoming data packets. Timestamp values are provided by an
+external implementation-dependent clock or timer that is of suitable
+quality for the application.
+Example: multiple audio receivers synchronizing their clocks to a
+single transmitter, for synchronized playback.
 
-+		sdhc0: sdhc@1c000000 {
-+			device_type = "sdhc";
-+			compatible = "arasan,sdhci-8.9a";
-+			reg = <0x0 0x1c000000 0x0 0x100>;
-+			interrupts = <0x0 0x49 0x4>;
-+			clock-names = "clk_xin", "clk_ahb";
-+			clocks = <&sdioclk 0>, <&ahbclk 0>;
-+		};
-+
- 		menet: ethernet@17020000 {
- 			compatible = "apm,xgene-enet";
- 			status = "disabled";
---
-1.8.2.1
+The TX and RX blocks of the sniffer can be operated (eg. started, stopped,
+configured) independently, that is why I believe two netdev instances would
+be a better match to the H/W architecture.
 
+>
+>> - Would the control interface for the sniffer in that case need to be
+>> through private socket ioctls (ie SIOCDEVPRIVATE + x ioctl ids)?
+>
+> Nope, please have a look at Documentation/networking/packet_mmap.txt.
+>
+>
+Thanks for the link to the document. That is the way forward for retrieving
+data from sniffer match events from user space very efficiently.
+
+However, I am not sure about configuration, where we want to eg set the
+command string, or query device attributes such as the size of the command
+memory. That looks more suitable to an ioctl or a netlink message to me
+and better use the packet socket just for data from sniffer match events.
+
+Thanks,
+Stathis
