@@ -1,100 +1,166 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v5 1/5] ARM: mediatek: Add config options for mediatek
- SoCs.
-Date: Tue, 27 Jan 2015 11:34:18 +0100
-Message-ID: <1422354858.14015.39.camel@x220>
-References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
-	 <1421818097-9281-2-git-send-email-hongzhou.yang@mediatek.com>
-	 <CABuKBeJGigY5ym9cJy=PYK8jbdsOLLtkmovHq6xho4gYseCAWg@mail.gmail.com>
-	 <1422353800.14015.35.camel@x220> <1422354400.32212.25.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422354400.32212.25.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Valentin Rothberg <valentinrothberg@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dandan.he@mediatek.com, alan.cheng@mediatek.com, toby.liu@mediat
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] thermal: Fix examples in DT documentation
+Date: Tue, 27 Jan 2015 10:50:47 +0000
+Message-ID: <1422355847-23549-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+There are various issues with the examples in this documentation, some
+of the DT labels are invalid and one of the macro THERMAL_NO_LIMITS
+referenced is not available as well.
 
-On Tue, 2015-01-27 at 18:26 +0800, Yingjoe Chen wrote:
-> On Tue, 2015-01-27 at 11:16 +0100, Paul Bolle wrote:
-> > On Thu, 2015-01-22 at 13:54 +0100, Matthias Brugger wrote:
-> > > 2015-01-21 6:28 GMT+01:00 Hongzhou Yang <hongzhou.yang@mediatek.com>:
-> > > > From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> > > >
-> > > > The upcoming MTK pinctrl driver have a big pin table for each SoC
-> > > > and we don't want to bloat the kernel binary if we don't need it.
-> > > > Add config options so we can build for one SoC only.
-> > > >
-> > > > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > > > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> > > > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> > > 
-> > > Applied to v3.20-next/soc
-> > 
-> > This became commit ad8a221e1f49 ("ARM: mediatek: Add config options for
-> > mediatek SoCs.") in today's linux-next (ie, next-20150127). I noticed
-> > because a script I use to check linux-next spotted a problem with it.
-> > 
-> > > > ---
-> > > >  arch/arm/mach-mediatek/Kconfig | 22 +++++++++++++++++++++-
-> > > >  1 file changed, 21 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
-> > > > index f73f588..f7e463c 100644
-> > > > --- a/arch/arm/mach-mediatek/Kconfig
-> > > > +++ b/arch/arm/mach-mediatek/Kconfig
-> > > > @@ -1,6 +1,26 @@
-> > > > -config ARCH_MEDIATEK
-> > > > +menuconfig ARCH_MEDIATEK
-> > > >         bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
-> > > >         select ARM_GIC
-> > > >         select MTK_TIMER
-> > > >         help
-> > > >           Support for Mediatek MT65xx & MT81xx SoCs
-> > > > +
-> > > > +if ARCH_MEDIATEK
-> > > > +
-> > > > +config MACH_MT6589
-> > > > +       bool "MediaTek MT6589 SoCs support"
-> > > > +       default ARCH_MEDIATEK
-> > > > +
-> > > > +config MACH_MT6592
-> > > > +       bool "MediaTek MT6592 SoCs support"
-> > > > +       default ARCH_MEDIATEK
-> > > > +
-> > > > +config MACH_MT8127
-> > > > +       bool "MediaTek MT8127 SoCs support"
-> > > > +       default ARCH_MEDIATEK
-> > > > +
-> > > > +config MACH_MT8135
-> > > > +       bool "MediaTek MT8135 SoCs support"
-> > > > +       default ARCH_MEDIATEK
-> > > > +
-> > > > +endif
-> > 
-> > None of these four new MACH_MT* Kconfig symbols are currently used in
-> > linux-next. I assume that patches that actually use them (either as a
-> > Kconfig symbol or as a CONFIG_* macro) are still pending. Is that
-> > correct?
-> 
-> Yes, it is used in patch 3 in this series[1], and is discussed in [2].
-> 
-> Joe.C
-> 
-> [1]
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/318453.html
+As Its highly likely that people would pick some samples from the
+documentation, I though fixing these would be best rather than giving
+starter a challenge to figure out whats going wrong with examples.
 
-That only seems to add a user for MACH_MT8135, not for the other three
-symbols. The other three symbols will be used too, won't they?
+This patch attempts to fix such errors in the documentation.
 
-> [2]
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/315616.html
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ .../devicetree/bindings/thermal/thermal.txt        | 44 +++++++++++-----------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-(For the record, that is a message regarding v4 of this patch.)
+diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+index f5db6b7..97ed14e 100644
+--- a/Documentation/devicetree/bindings/thermal/thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+@@ -251,24 +251,24 @@ ocp {
+ };
+ 
+ thermal-zones {
+-	cpu-thermal: cpu-thermal {
++	cpu_thermal: cpu-thermal {
+ 		polling-delay-passive = <250>; /* milliseconds */
+ 		polling-delay = <1000>; /* milliseconds */
+ 
+ 		thermal-sensors = <&bandgap0>;
+ 
+ 		trips {
+-			cpu-alert0: cpu-alert {
++			cpu_alert0: cpu-alert0 {
+ 				temperature = <90000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "active";
+ 			};
+-			cpu-alert1: cpu-alert {
++			cpu_alert1: cpu-alert1 {
+ 				temperature = <100000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			cpu-crit: cpu-crit {
++			cpu_crit: cpu-crit {
+ 				temperature = <125000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "critical";
+@@ -277,17 +277,17 @@ thermal-zones {
+ 
+ 		cooling-maps {
+ 			map0 {
+-				trip = <&cpu-alert0>;
+-				cooling-device = <&fan0 THERMAL_NO_LIMITS 4>;
++				trip = <&cpu_alert0>;
++				cooling-device = <&fan0 THERMAL_NO_LIMIT 4>;
+ 			};
+ 			map1 {
+-				trip = <&cpu-alert1>;
+-				cooling-device = <&fan0 5 THERMAL_NO_LIMITS>;
++				trip = <&cpu_alert1>;
++				cooling-device = <&fan0 5 THERMAL_NO_LIMIT>;
+ 			};
+ 			map2 {
+-				trip = <&cpu-alert1>;
++				trip = <&cpu_alert1>;
+ 				cooling-device =
+-				    <&cpu0 THERMAL_NO_LIMITS THERMAL_NO_LIMITS>;
++				    <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 			};
+ 		};
+ 	};
+@@ -298,13 +298,13 @@ used to monitor the zone 'cpu-thermal' using its sole sensor. A fan
+ device (fan0) is controlled via I2C bus 1, at address 0x48, and has ten
+ different cooling states 0-9. It is used to remove the heat out of
+ the thermal zone 'cpu-thermal' using its cooling states
+-from its minimum to 4, when it reaches trip point 'cpu-alert0'
++from its minimum to 4, when it reaches trip point 'cpu_alert0'
+ at 90C, as an example of active cooling. The same cooling device is used at
+-'cpu-alert1', but from 5 to its maximum state. The cpu@0 device is also
++'cpu_alert1', but from 5 to its maximum state. The cpu@0 device is also
+ linked to the same thermal zone, 'cpu-thermal', as a passive cooling device,
+-using all its cooling states at trip point 'cpu-alert1',
++using all its cooling states at trip point 'cpu_alert1',
+ which is a trip point at 100C. On the thermal zone 'cpu-thermal', at the
+-temperature of 125C, represented by the trip point 'cpu-crit', the silicon
++temperature of 125C, represented by the trip point 'cpu_crit', the silicon
+ is not reliable anymore.
+ 
+ (b) - IC with several internal sensors
+@@ -329,7 +329,7 @@ ocp {
+ };
+ 
+ thermal-zones {
+-	cpu-thermal: cpu-thermal {
++	cpu_thermal: cpu-thermal {
+ 		polling-delay-passive = <250>; /* milliseconds */
+ 		polling-delay = <1000>; /* milliseconds */
+ 
+@@ -338,12 +338,12 @@ thermal-zones {
+ 
+ 		trips {
+ 			/* each zone within the SoC may have its own trips */
+-			cpu-alert: cpu-alert {
++			cpu_alert: cpu-alert {
+ 				temperature = <100000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			cpu-crit: cpu-crit {
++			cpu_crit: cpu-crit {
+ 				temperature = <125000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "critical";
+@@ -365,12 +365,12 @@ thermal-zones {
+ 
+ 		trips {
+ 			/* each zone within the SoC may have its own trips */
+-			gpu-alert: gpu-alert {
++			gpu_alert: gpu-alert {
+ 				temperature = <90000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			gpu-crit: gpu-crit {
++			gpu_crit: gpu-crit {
+ 				temperature = <105000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "critical";
+@@ -392,12 +392,12 @@ thermal-zones {
+ 
+ 		trips {
+ 			/* each zone within the SoC may have its own trips */
+-			dsp-alert: gpu-alert {
++			dsp_alert: gpu-alert {
+ 				temperature = <90000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			dsp-crit: gpu-crit {
++			dsp_crit: gpu-crit {
+ 				temperature = <135000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "critical";
+@@ -457,7 +457,7 @@ ocp {
+ };
+ 
+ thermal-zones {
+-	cpu-thermal: cpu-thermal {
++	cpu_thermal: cpu-thermal {
+ 		polling-delay-passive = <250>; /* milliseconds */
+ 		polling-delay = <1000>; /* milliseconds */
+ 
+-- 
+1.9.1
 
-
-Paul Bolle
