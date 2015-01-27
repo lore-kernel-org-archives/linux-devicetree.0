@@ -1,79 +1,42 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V9 13/14] ARM: dts: snow: represent the connection between
- bridge and panel using videoport and endpoints
-Date: Tue, 27 Jan 2015 09:57:39 +0530
-Message-ID: <CAEC9eQP+BiiM=-rMu+kqA721L76whbHCkpc15ctfhV3Z1ETwLw@mail.gmail.com>
-References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
- <1421771935-31618-14-git-send-email-ajaykumar.rs@samsung.com>
- <0c9401d036da$71046bf0$530d43d0$@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <0c9401d036da$71046bf0$530d43d0$@kernel.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kukjin Kim <kgene@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Jingoo Han <jg1.han@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 2/3] dt/bindings: gpio: add compatible string for marvell,pxa1928-gpio
+Date: Mon, 26 Jan 2015 22:46:05 -0600
+Message-ID: <1422333966-18338-3-git-send-email-robh@kernel.org>
+References: <1422333966-18338-1-git-send-email-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1422333966-18338-1-git-send-email-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgS3VramluLAoKT24gRnJpLCBKYW4gMjMsIDIwMTUgYXQgMTI6MzEgUE0sIEt1a2ppbiBLaW0g
-PGtnZW5lQGtlcm5lbC5vcmc+IHdyb3RlOgo+IEFqYXkgS3VtYXIgd3JvdGU6Cj4+Cj4+IERlZmlu
-ZSB2aWRlb3BvcnRzIGFuZCB1c2UgZW5kcG9pbnRzIHRvIGRlc2NyaWJlIHRoZSBjb25uZWN0aW9u
-IGJldHdlZW4KPj4gdGhlIGVuY29kZXIsIGJyaWRnZSBhbmQgdGhlIHBhbmVsLCBpbnN0ZWFkIG9m
-IHVzaW5nIHBoYW5kbGVzLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBamF5IEt1bWFyIDxhamF5a3Vt
-YXIucnNAc2Ftc3VuZy5jb20+Cj4+IEFja2VkLWJ5OiBJbmtpIERhZSA8aW5raS5kYWVAc2Ftc3Vu
-Zy5jb20+Cj4+IFRlc3RlZC1ieTogUmFodWwgU2hhcm1hIDxyYWh1bC5zaGFybWFAc2Ftc3VuZy5j
-b20+Cj4+IFRlc3RlZC1ieTogSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXIubWFydGlu
-ZXpAY29sbGFib3JhLmNvLnVrPgo+PiBUZXN0ZWQtYnk6IEd1c3Rhdm8gUGFkb3ZhbiA8Z3VzdGF2
-by5wYWRvdmFuQGNvbGxhYm9yYS5jby51az4KPj4gVGVzdGVkLWJ5OiBTam9lcmQgU2ltb25zIDxz
-am9lcmQuc2ltb25zQGNvbGxhYm9yYS5jby51az4KPj4gLS0tCj4+ICBhcmNoL2FybS9ib290L2R0
-cy9leHlub3M1MjUwLXNub3cuZHRzIHwgICAzMCArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-LS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAyOCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+
-Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zbm93LmR0cyBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtc25vdy5kdHMKPj4gaW5kZXggYjlhZWVjNC4u
-MWJkNWQzYSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zbm93
-LmR0cwo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLXNub3cuZHRzCj4+IEBA
-IC0xODMsNyArMTgzLDIwIEBACj4+ICAgICAgICAgICAgICAgICAgICAgICBwb3dlcmRvd24tZ3Bp
-b3MgPSA8JmdweTIgNSBHUElPX0FDVElWRV9ISUdIPjsKPj4gICAgICAgICAgICAgICAgICAgICAg
-IHJlc2V0LWdwaW9zID0gPCZncHgxIDUgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICAgICAgICAgICAg
-ICAgICAgICAgICBlZGlkLWVtdWxhdGlvbiA9IDw1PjsKPj4gLSAgICAgICAgICAgICAgICAgICAg
-IHBhbmVsID0gPCZwYW5lbD47Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgIHBvcnRzIHsK
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAwIHsKPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBicmlkZ2Vfb3V0OiBlbmRwb2ludCB7Cj4+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQg
-PSA8JnBhbmVsX2luPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9
-Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+PiArCj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHBvcnRAMSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgYnJpZGdlX2luOiBlbmRwb2ludCB7Cj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmRwX291dD47Cj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAgICAgICAgICAgIH07Cj4+ICAgICAg
-ICAgICAgICAgfTsKPj4gICAgICAgfTsKPj4KPj4gQEAgLTIyOCw2ICsyNDEsMTIgQEAKPj4gICAg
-ICAgICAgICAgICBjb21wYXRpYmxlID0gImF1byxiMTE2eHcwMyI7Cj4+ICAgICAgICAgICAgICAg
-cG93ZXItc3VwcGx5ID0gPCZmZXQ2PjsKPj4gICAgICAgICAgICAgICBiYWNrbGlnaHQgPSA8JmJh
-Y2tsaWdodD47Cj4+ICsKPj4gKyAgICAgICAgICAgICBwb3J0IHsKPj4gKyAgICAgICAgICAgICAg
-ICAgICAgIHBhbmVsX2luOiBlbmRwb2ludCB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmYnJpZGdlX291dD47Cj4+ICsgICAgICAgICAgICAgICAg
-ICAgICB9Owo+PiArICAgICAgICAgICAgIH07Cj4+ICAgICAgIH07Cj4+ICB9Owo+Pgo+PiBAQCAt
-MjQyLDcgKzI2MSwxNCBAQAo+PiAgICAgICBzYW1zdW5nLGxpbmstcmF0ZSA9IDwweDBhPjsKPj4g
-ICAgICAgc2Ftc3VuZyxsYW5lLWNvdW50ID0gPDI+Owo+PiAgICAgICBzYW1zdW5nLGhwZC1ncGlv
-ID0gPCZncHgwIDcgR1BJT19BQ1RJVkVfSElHSD47Cj4+IC0gICAgIGJyaWRnZSA9IDwmcHRuMzQ2
-MD47Cj4+ICsKPj4gKyAgICAgcG9ydHMgewo+PiArICAgICAgICAgICAgIHBvcnRAMCB7Cj4+ICsg
-ICAgICAgICAgICAgICAgICAgICBkcF9vdXQ6IGVuZHBvaW50IHsKPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZicmlkZ2VfaW4+Owo+PiArICAgICAg
-ICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAgICB9Owo+PiArICAgICB9Owo+PiAgfTsK
-Pj4KPj4gICZlaGNpIHsKPj4gLS0KPj4gMS43LjkuNQo+Cj4gSSdtIGZpbmUgb24gdGhlIERUIGNo
-YW5nZXMgaW4gdGhpcyBzZXJpZXMsIHNoYWxsIEkgdGFrZSAxMy8xNCBhbmQgMTQvMTQgaW4KPiBT
-YW1zdW5nIHRyZWU/ClllcywgcGxlYXNlIHRha2UgdGhlc2UgcGF0Y2hlcy4KClRoYW5rcyBhbmQg
-cmVnYXJkcywKQWpheSBLdW1hcgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+Add a new compatible string for PXA1928 GPIO controller. The IP block is
+same as prior chips with a 6th bank added.
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/gpio/mrvl-gpio.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+index b2afdb2..67a2e4e 100644
+--- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+@@ -3,8 +3,8 @@
+ Required properties:
+ - compatible : Should be "intel,pxa25x-gpio", "intel,pxa26x-gpio",
+ 		"intel,pxa27x-gpio", "intel,pxa3xx-gpio",
+-		"marvell,pxa93x-gpio", "marvell,mmp-gpio" or
+-		"marvell,mmp2-gpio".
++		"marvell,pxa93x-gpio", "marvell,mmp-gpio",
++		"marvell,mmp2-gpio" or marvell,pxa1928-gpio.
+ - reg : Address and length of the register set for the device
+ - interrupts : Should be the port interrupt shared by all gpio pins.
+   There're three gpio interrupts in arch-pxa, and they're gpio0,
+-- 
+2.1.0
