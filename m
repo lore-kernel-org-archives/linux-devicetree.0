@@ -1,57 +1,51 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 4/4] ARM: shmobile: emev2-kzm9d: Add PFC information for uart1
-Date: Tue, 27 Jan 2015 22:35:22 +0200
-Message-ID: <2057603.FzjFJsB71b@avalon>
-References: <1421583604-27256-1-git-send-email-niso@kth.se> <1421583604-27256-5-git-send-email-niso@kth.se>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC/PATCH] pinctrl: sh-pfc: Accept standard function, pins and
+ groups properties
+Date: Tue, 27 Jan 2015 21:40:45 +0100
+Message-ID: <CAMuHMdW5Apvbe7+y2FW6O=JS7ZMUQsW6eFMc-ooiLvF3fqY0WA@mail.gmail.com>
+References: <CACRpkda4SBof0EaZVWtEYaeb6j_BGAVj39kje+mBz90eB3qAwQ@mail.gmail.com>
+	<1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1421583604-27256-5-git-send-email-niso@kth.se>
+In-Reply-To: <1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niso@kth.se>
-Cc: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niso@kth.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+On Tue, Jan 27, 2015 at 9:31 PM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
+> +               if (of_find_property(np, "groups", NULL) ||
+> +                   of_find_property(np, "pins", NULL)) {
+> +                       pmx->func_prop_name = "function";
+> +                       pmx->groups_prop_name = "groups";
+> +                       pmx->pins_prop_name = "pins";
+> +               } else {
+> +                       pmx->func_prop_name = "renesas,function";
+> +                       pmx->groups_prop_name = "renesas,groups";
+> +                       pmx->pins_prop_name = "renesas,pins";
+> +               }
 
-Thank you for the patch.
+Do we want to be clever and save memory?
 
-On Sunday 18 January 2015 13:20:04 Niklas S=F6derlund wrote:
-> Configure the pinmux on kzm9d to use the serial connector for uart1.
->=20
-> Signed-off-by: Niklas S=F6derlund <niso@kth.se>
+        pmx->func_prop_name = "renesas,function";
+        pmx->groups_prop_name = "renesas,groups";
+        pmx->pins_prop_name = "renesas,pins";
+        if (of_find_property(np, "groups", NULL) ||
+            of_find_property(np, "pins", NULL)) {
+                pmx->func_prop_name += strlen("renesas,");
+                pmx->groups_prop_name += strlen("renesas,");
+                pmx->pins_prop_name += strlen("renesas,");
+        }
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Gr{oetje,eeting}s,
 
-> ---
->  arch/arm/boot/dts/emev2-kzm9d.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts
-> b/arch/arm/boot/dts/emev2-kzm9d.dts index 667d323..1944627 100644
-> --- a/arch/arm/boot/dts/emev2-kzm9d.dts
-> +++ b/arch/arm/boot/dts/emev2-kzm9d.dts
-> @@ -94,3 +94,16 @@
->  		vdd33a-supply =3D <&reg_3p3v>;
->  	};
->  };
-> +
-> +&pfc {
-> +	uart1_pins: uart@e1030000 {
-> +		renesas,groups =3D "uart1_ctrl", "uart1_data";
-> +		renesas,function =3D "uart1";
-> +	};
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-0 =3D <&uart1_pins>;
-> +	pinctrl-names =3D "default";
-> +	status =3D "okay";
-> +};
+                        Geert
 
---=20
-Regards,
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Laurent Pinchart
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
