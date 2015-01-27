@@ -1,59 +1,81 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v6 5/7] power: Add support for DA9150 Charger
-Date: Tue, 27 Jan 2015 16:16:31 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB529E6E@SW-EX-MBX01.diasemi.com>
-References: <cover.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
- <d9c5c61443e266880cab3cbe7502142439fe9886.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
- <54BFD072.8000707@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: watchdog: Add DT binding documentation for
+ jz47xx watchdog timer
+Date: Tue, 27 Jan 2015 08:30:08 -0800
+Message-ID: <20150127163008.GA21459@roeck-us.net>
+References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+ <1422371490-44402-2-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54BFD072.8000707-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422371490-44402-2-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gSmFudWFyeSAyMSwgMjAxNSAxNjoxNSwgVmFya2EgQmhhZHJhbSB3cm90ZToNCg0KPiBPbiBX
-ZWRuZXNkYXkgMjEgSmFudWFyeSAyMDE1IDA5OjE2IFBNLCBBZGFtIFRob21zb24gd3JvdGU6DQo+
-ID4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIERBOTE1MCBDaGFyZ2VyICYgRnVlbC1HYXVn
-ZSBJQyBDaGFyZ2VyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQWRhbSBUaG9tc29uIDxBZGFt
-LlRob21zb24uT3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4gPiAtLS0NCj4gDQo+ICguLi4pDQo+
-IA0KPiA+ICtzdGF0aWMgaW50IGRhOTE1MF9jaGFyZ2VyX3JlZ2lzdGVyX2lycShzdHJ1Y3QgcGxh
-dGZvcm1fZGV2aWNlICpwZGV2LA0KPiA+ICsJCQkJICAgICAgIGlycV9oYW5kbGVyX3QgaGFuZGxl
-ciwNCj4gPiArCQkJCSAgICAgICBjb25zdCBjaGFyICppcnFfbmFtZSkNCj4gPiArew0KPiA+ICsJ
-c3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPiArCXN0cnVjdCBkYTkxNTBfY2hh
-cmdlciAqY2hhcmdlciA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ICsJaW50IGly
-cSwgcmV0Ow0KPiA+ICsNCj4gPiArCWlycSA9IHBsYXRmb3JtX2dldF9pcnFfYnluYW1lKHBkZXYs
-IGlycV9uYW1lKTsNCj4gPiArCWlmIChpcnEgPCAwKSB7DQo+ID4gKwkJZGV2X2VycihkZXYsICJG
-YWlsZWQgdG8gZ2V0IElSUSBDSEdfU1RBVFVTOiAlZFxuIiwgaXJxKTsNCj4gPiArCQlyZXR1cm4g
-aXJxOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCXJldCA9IHJlcXVlc3RfdGhyZWFkZWRfaXJxKGly
-cSwgTlVMTCwgaGFuZGxlciwgSVJRRl9PTkVTSE9ULCBpcnFfbmFtZSwNCj4gPiArCQkJCSAgIGNo
-YXJnZXIpOw0KPiANCj4gV2h5IGRvbiB5b3UgdXNlIGRldm1fKiBBUEkuLj8NCg0KQXMgbWVudGlv
-bmVkIGluIHByZXZpb3VzIGRpc2N1c3Npb25zLCB0aGUgb3JkZXIgb2YgdGlkeSB1cCBpcyBpbXBv
-cnRhbnQgc28gDQpkZXZtXyogZnVuY3Rpb25zIGNhbm5vdCBiZSB1c2VkIGhlcmUuDQoNCj4gDQo+
-ID4gKwlpZiAocmV0KQ0KPiA+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHJlcXVlc3QgSVJR
-ICVkOiAlZFxuIiwgaXJxLCByZXQpOw0KPiA+ICsNCj4gPiArCXJldHVybiByZXQ7DQo+ID4gK30N
-Cj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIGRhOTE1MF9jaGFyZ2VyX3VucmVnaXN0ZXJfaXJxKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQo+ID4gKwkJCQkJICBjb25zdCBjaGFyICppcnFf
-bmFtZSkNCj4gPiArew0KPiA+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4g
-PiArCXN0cnVjdCBkYTkxNTBfY2hhcmdlciAqY2hhcmdlciA9IHBsYXRmb3JtX2dldF9kcnZkYXRh
-KHBkZXYpOw0KPiA+ICsJaW50IGlycTsNCj4gPiArDQo+ID4gKwlpcnEgPSBwbGF0Zm9ybV9nZXRf
-aXJxX2J5bmFtZShwZGV2LCBpcnFfbmFtZSk7DQo+ID4gKwlpZiAoaXJxIDwgMCkgew0KPiA+ICsJ
-CWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBJUlEgQ0hHX1NUQVRVUzogJWRcbiIsIGlycSk7
-DQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWZyZWVfaXJxKGlycSwgY2hh
-cmdlcik7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgZGE5MTUwX2NoYXJnZXJfcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiArew0KPiA+ICsJc3RydWN0IGRl
-dmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPiArCXN0cnVjdCBkYTkxNTAgKmRhOTE1MCA9IGRl
-dl9nZXRfZHJ2ZGF0YShkZXYtPnBhcmVudCk7DQo+ID4gKwlzdHJ1Y3QgZGE5MTUwX2NoYXJnZXIg
-KmNoYXJnZXI7DQo+ID4gKwlzdHJ1Y3QgcG93ZXJfc3VwcGx5ICp1c2IsICpiYXR0ZXJ5Ow0KPiA+
-ICsJdTggcmVnOw0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwljaGFyZ2VyID0gZGV2bV9r
-emFsbG9jKGRldiwgc2l6ZW9mKHN0cnVjdCBkYTkxNTBfY2hhcmdlciksIEdGUF9LRVJORUwpOw0K
-PiA+ICsJaWYgKGNoYXJnZXIgPT0gTlVMTCkNCj4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gDQo+
-IHNpemVvZihzdHJ1Y3QgZGE5MTUwX2NoYXJnZXIpIGNhbiBiZSByZXBsYWNlZCB3aXRoIHNpemVv
-ZigqY2hhcmdlcikuLi4NCj4gDQo+ICohKiBvcGVyYXRvciBjYW4gYmUgdXNlZCBpbiBjb21wYXJp
-c29uIHdpdGggTlVMTC4uLg0KPiANCg0KWWVzLCBidXQgZnVuY3Rpb25hbGx5IG5vIGRpZmZlcmVu
-dC4gQ2FuIG1heWJlIGNoYW5nZSB0aGlzIGFyb3VuZCBsYXRlciwgYnV0DQp3b3VsZCBsaWtlIHRv
-IGF2b2lkIGNoYW5naW5nIGN1cnJlbnQgcGF0Y2ggc2V0IHJpZ2h0IG5vdy4NCg==
+On Tue, Jan 27, 2015 at 03:11:29PM +0000, Zubair Lutfullah Kakakhel wrote:
+> Add binding for jz47xx watchdog timer. It is a simple watchdog timer.
+> Needs rtc clock and register addresses
+> 
+> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> 
+> ---
+> The jz4740 is platform only at the moment.
+> 
+> But DT support is being added
+> 
+> See http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
+> 
+> jz47xx is used because jz4780 will also use this driver
+
+Not a valid argument. Please use jz4740, per convention.
+
+xx implies anything from 00 to 99, which is not necessarily correct.
+If support for other chips is added, that information can be mentioned
+in the file itself, as it is done for many other drivers.
+
+> ---
+>  .../devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt b/Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt
+> new file mode 100644
+> index 0000000..bf4c404
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/ingenic,jz47xx-wdt.txt
+> @@ -0,0 +1,17 @@
+> +Ingenic Watchdog Timer (WDT) Controller for JZ47XX
+> +
+> +Required properties:
+> +compatible: "ingenic,jz4740-watchdog"
+> +reg: Register address and length for watchdog registers
+> +clocks: phandle to rtcclk
+> +clock-names: must be "rtc"
+> +
+> +Example:
+> +
+> +watchdog: jz47xx-watchdog@0x10002000 {
+> +	compatible = "ingenic,jz4780-watchdog";
+
+"ingenic,jz4780-watchdog" is not listed as possible value above,
+nor is it listed in the patch itself, so you can not use it here.
+
+> +	reg = <0x10002000 0x100>;
+> +
+> +	clocks = <&rtclk>;
+> +	clock-names = "rtc";
+> +};
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
