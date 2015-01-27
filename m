@@ -1,101 +1,179 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
-Date: Tue, 27 Jan 2015 10:44:45 -0500
-Message-ID: <54C7B26D.3080505@ti.com>
-References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com> <1422052359-12384-4-git-send-email-m-karicheri2@ti.com> <54C77616.80301@arm.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] thermal: Fix examples in DT documentation
+Date: Tue, 27 Jan 2015 15:49:37 +0000
+Message-ID: <54C7B391.4000103@linaro.org>
+References: <1422355847-23549-1-git-send-email-srinivas.kandagatla@linaro.org> <20150127150737.GC29600@developer.hsd1.ca.comcast.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <54C77616.80301@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150127150737.GC29600@developer.hsd1.ca.comcast.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/27/2015 06:27 AM, Robin Murphy wrote:
-> Hi Murali,
+
+
+On 27/01/15 15:07, Eduardo Valentin wrote:
+> Hello Srinivas,
 >
-> On 23/01/15 22:32, Murali Karicheri wrote:
->> Fix the dma-range size when the DT attribute is missing. i.e set size to
->> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. To detect
->> overflow when mask is set to max of u64, add a check, log error and
->> return.
->> Some platform use mask format for size in DTS. So add a work around to
->> catch this and fix.
->>
->> Cc: Joerg Roedel <joro@8bytes.org>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Cc: Russell King <linux@arm.linux.org.uk>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> Just a minor request in the end:
+>
+Sure, I will fix the other issues you spotted too in next version.
 >> ---
->> drivers/of/device.c | 14 +++++++++++++-
->> 1 file changed, 13 insertions(+), 1 deletion(-)
+>>   .../devicetree/bindings/thermal/thermal.txt        | 44 +++++++++++-----------
+>>   1 file changed, 22 insertions(+), 22 deletions(-)
 >>
->> diff --git a/drivers/of/device.c b/drivers/of/device.c
->> index 2de320d..0a5ff54 100644
->> --- a/drivers/of/device.c
->> +++ b/drivers/of/device.c
->> @@ -105,12 +105,24 @@ void of_dma_configure(struct device *dev, struct
->> device_node *np)
->> ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
->> if (ret < 0) {
->> dma_addr = offset = 0;
->> - size = dev->coherent_dma_mask;
->> + size = dev->coherent_dma_mask + 1;
->> } else {
->> offset = PFN_DOWN(paddr - dma_addr);
->> + /*
->> + * Add a work around to treat the size as mask + 1 in case
->> + * it is defined in DT as a mask.
->> + */
->> + if (size & 1)
->> + size = size + 1;
->> dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
->> }
+>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> index f5db6b7..97ed14e 100644
+>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> @@ -251,24 +251,24 @@ ocp {
+>>   };
 >>
->> + /* if size is 0, we have an overflow of u64 */
->> + if (!size) {
->> + dev_err(dev, "invalid size\n");
->> + return;
->> + }
->> +
->
-> This seems potentially fragile to dodgy DTs given that we might also be
-> using size to make a mask later. Would it make sense to double-up a
-> sanity check as mask-format detection? Something like:
->
-> if is_power_of_2(size)
-> // use size
-> else if is_power_of_2(size + 1)
-> // use size + 1
-> else
-> // cry
->
-Robin,
-
-I think this is better. I will wait for some more time for anyone to 
-respond and re-send my patch with this change.
-
-Thanks
-Murali
->
-> Robin.
->
->> dev->dma_pfn_offset = offset;
+>>   thermal-zones {
+>> -	cpu-thermal: cpu-thermal {
+>> +	cpu_thermal: cpu-thermal {
+>>   		polling-delay-passive = <250>; /* milliseconds */
+>>   		polling-delay = <1000>; /* milliseconds */
 >>
->> coherent = of_dma_is_coherent(np);
+>>   		thermal-sensors = <&bandgap0>;
+>>
+>>   		trips {
+>> -			cpu-alert0: cpu-alert {
+>> +			cpu_alert0: cpu-alert0 {
+>>   				temperature = <90000>; /* millicelsius */
+>>   				hysteresis = <2000>; /* millicelsius */
+>>   				type = "active";
+>>   			};
+>> -			cpu-alert1: cpu-alert {
+>> +			cpu_alert1: cpu-alert1 {
+>>   				temperature = <100000>; /* millicelsius */
+>>   				hysteresis = <2000>; /* millicelsius */
+>>   				type = "passive";
+>>   			};
+>> -			cpu-crit: cpu-crit {
+>> +			cpu_crit: cpu-crit {
+>>   				temperature = <125000>; /* millicelsius */
+>>   				hysteresis = <2000>; /* millicelsius */
+>>   				type = "critical";
+>> @@ -277,17 +277,17 @@ thermal-zones {
+>>
+>>   		cooling-maps {
+>>   			map0 {
+>> -				trip = <&cpu-alert0>;
+>> -				cooling-device = <&fan0 THERMAL_NO_LIMITS 4>;
+>> +				trip = <&cpu_alert0>;
+>> +				cooling-device = <&fan0 THERMAL_NO_LIMIT 4>;
+>>   			};
+>>   			map1 {
+>> -				trip = <&cpu-alert1>;
+>> -				cooling-device = <&fan0 5 THERMAL_NO_LIMITS>;
+>> +				trip = <&cpu_alert1>;
+>> +				cooling-device = <&fan0 5 THERMAL_NO_LIMIT>;
+>>   			};
+>>   			map2 {
+>> -				trip = <&cpu-alert1>;
+>> +				trip = <&cpu_alert1>;
+>>   				cooling-device =
+>> -				    <&cpu0 THERMAL_NO_LIMITS THERMAL_NO_LIMITS>;
+>> +				    <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>>   			};
+>>   		};
+>>   	};
+>> @@ -298,13 +298,13 @@ used to monitor the zone 'cpu-thermal' using its sole sensor. A fan
+>>   device (fan0) is controlled via I2C bus 1, at address 0x48, and has ten
+>>   different cooling states 0-9. It is used to remove the heat out of
+>>   the thermal zone 'cpu-thermal' using its cooling states
+>> -from its minimum to 4, when it reaches trip point 'cpu-alert0'
+>> +from its minimum to 4, when it reaches trip point 'cpu_alert0'
+>>   at 90C, as an example of active cooling. The same cooling device is used at
+>> -'cpu-alert1', but from 5 to its maximum state. The cpu@0 device is also
+>> +'cpu_alert1', but from 5 to its maximum state. The cpu@0 device is also
+>>   linked to the same thermal zone, 'cpu-thermal', as a passive cooling device,
+>> -using all its cooling states at trip point 'cpu-alert1',
+>> +using all its cooling states at trip point 'cpu_alert1',
+>>   which is a trip point at 100C. On the thermal zone 'cpu-thermal', at the
+>> -temperature of 125C, represented by the trip point 'cpu-crit', the silicon
+>> +temperature of 125C, represented by the trip point 'cpu_crit', the silicon
+>>   is not reliable anymore.
+>>
+>>   (b) - IC with several internal sensors
+>> @@ -329,7 +329,7 @@ ocp {
+>>   };
+>>
+>>   thermal-zones {
+>> -	cpu-thermal: cpu-thermal {
+>> +	cpu_thermal: cpu-thermal {
+>>   		polling-delay-passive = <250>; /* milliseconds */
+>>   		polling-delay = <1000>; /* milliseconds */
+>>
+>> @@ -338,12 +338,12 @@ thermal-zones {
+>>
+>>   		trips {
+>>   			/* each zone within the SoC may have its own trips */
+>> -			cpu-alert: cpu-alert {
+>> +			cpu_alert: cpu-alert {
+>>   				temperature = <100000>; /* millicelsius */
+>>   				hysteresis = <2000>; /* millicelsius */
+>>   				type = "passive";
+>>   			};
+>> -			cpu-crit: cpu-crit {
+>> +			cpu_crit: cpu-crit {
+>>   				temperature = <125000>; /* millicelsius */
+>>   				hysteresis = <2000>; /* millicelsius */
+>>   				type = "critical";
+>> @@ -365,12 +365,12 @@ thermal-zones {
+>>
+>>   		trips {
+>>   			/* each zone within the SoC may have its own trips */
+>> -			gpu-alert: gpu-alert {
+>> +			gpu_alert: gpu-alert {
+>>   				temperature = <90000>; /* millicelsius */
+>>   				hysteresis = <2000>; /* millicelsius */
+>>   				type = "passive";
+>>   			};
+>> -			gpu-crit: gpu-crit {
+>> +			gpu_crit: gpu-crit {
+>>   				temperature = <105000>; /* millicelsius */
+>>   				hysteresis = <2000>; /* millicelsius */
+>>   				type = "critical";
+>> @@ -392,12 +392,12 @@ thermal-zones {
+>>
+>>   		trips {
+>>   			/* each zone within the SoC may have its own trips */
+>> -			dsp-alert: gpu-alert {
+>> +			dsp_alert: gpu-alert {
+>
+> I suppose the original text has a typo, it should be:
+>
+> +			dsp_alert: dsp-alert {
+>
+>>   				temperature = <90000>; /* millicelsius */
+>>   				hysteresis = <2000>; /* millicelsius */
+>>   				type = "passive";
+>>   			};
+>> -			dsp-crit: gpu-crit {
+>> +			dsp_crit: gpu-crit {
+>>   				temperature = <135000>; /* millicelsius */
+>>   				hysteresis = <2000>; /* millicelsius */
+>>   				type = "critical";
+>> @@ -457,7 +457,7 @@ ocp {
+>>   };
+>>
+>>   thermal-zones {
+>> -	cpu-thermal: cpu-thermal {
+>> +	cpu_thermal: cpu-thermal {
+>>   		polling-delay-passive = <250>; /* milliseconds */
+>>   		polling-delay = <1000>; /* milliseconds */
 >>
 >
+> While here, can you please include in your patch fixes for remaining
+> examples? From quick look, 'board-thermal', 'adc-dummy', and
+> 'dsp-thermal' are occurrences of the same problem you fixing in other
+> parts of the file.
 >
-
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+>> --
+>> 1.9.1
+>>
