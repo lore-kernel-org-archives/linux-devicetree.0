@@ -1,42 +1,43 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 09/10] ARM: sunxi_defconfig: Enable CONFIG_PHY_SUN9I_USB
-Date: Wed, 28 Jan 2015 03:54:14 +0800
-Message-ID: <1422388455-25923-10-git-send-email-wens@csie.org>
-References: <1422388455-25923-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 1/2] mmc: host: arasan: Add addition of-arasan quirks
+ and IOMMU support for arasan SDHCI driver.
+Date: Tue, 27 Jan 2015 21:12:39 +0100
+Message-ID: <2889598.XIWjCcRL7e@wuerfel>
+References: <1422379260-10139-1-git-send-email-stripathi@apm.com>
+ <1422379260-10139-2-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB36ZT6TAKGQEDPC2A6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1422388455-25923-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1422379260-10139-2-git-send-email-stripathi@apm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Suman Tripathi <stripathi@apm.com>
+Cc: devicetree@vger.kernel.org, mlangsdo@redhat.com, jcm@redhat.com, anton@enomsg.org, linux-mmc@vger.kernel.org, chris@printf.net, patches@apm.com, ddutile@redhat.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On sun9i we have a new PHY driver for USB.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/configs/sunxi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 38840a812924..6b271645eb43 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -106,6 +106,7 @@ CONFIG_RTC_DRV_SUN6I=y
- CONFIG_RTC_DRV_SUNXI=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_PHY_SUN4I_USB=y
-+CONFIG_PHY_SUN9I_USB=y
- CONFIG_EXT4_FS=y
- CONFIG_VFAT_FS=y
- CONFIG_TMPFS=y
--- 
-2.1.4
+T24gVHVlc2RheSAyNyBKYW51YXJ5IDIwMTUgMjI6NTA6NTkgU3VtYW4gVHJpcGF0aGkgd3JvdGU6
+Cj4gQEAgLTE3NCw2ICsxNzYsMTMgQEAgc3RhdGljIGludCBzZGhjaV9hcmFzYW5fcHJvYmUoc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgICAgICAgIHBsdGZtX2hvc3QtPnByaXYgPSBz
+ZGhjaV9hcmFzYW47Cj4gICAgICAgICBwbHRmbV9ob3N0LT5jbGsgPSBjbGtfeGluOwo+IAo+ICsg
+ICAgICAgcmV0ID0geGdlbmVfYWhiY19pb21tdV9hdHRhY2hfZGV2aWNlKCZwZGV2LT5kZXYpOwo+
+ICsgICAgICAgaWYgKHJldCA8IDAgJiYgSVNfRU5BQkxFRChDT05GSUdfWEdFTkVfQUhCQ19JT01N
+VSkpIHsKPiArICAgICAgICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LAo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICJ1bmFibGUgdG8gYXR0YWNoIGRldmljZSB0byBpb21tdSAleFxuIiwgcmV0
+KTsKPiArICAgICAgICAgICAgICAgZ290byBjbGtfZGlzYWJsZV9hbGw7Cj4gKyAgICAgICB9Cj4g
+Kwo+ICAgICAgICAgcmV0ID0gc2RoY2lfYWRkX2hvc3QoaG9zdCk7Cj4gICAgICAgICBpZiAocmV0
+KSB7Cj4gICAgICAgICAgICAgICAgIGRldl9lcnIoJnBkZXYtPmRldiwgInBsYXRmb3JtIHJlZ2lz
+dGVyIGZhaWxlZCAoJXUpXG4iLCByZXQpOwo+IAoKVGhpcyBsb29rcyB3cm9uZzogdGhlIGlvbW11
+IHNob3VsZCBiZSBhdXRvbWF0aWNhbGx5IGNvbmZpZ3VyZWQgZm9yIGRldmljZXMKdGhhdCBuZWVk
+IGl0LCB3aXRob3V0IGFueSBpbnRlcmFjdGlvbiBmcm9tIHRoZSBkcml2ZXIuCgoJQXJuZApfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYg
+bWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMu
+b3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
