@@ -1,42 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/3] dt/bindings: gpio: add compatible string for marvell,pxa1928-gpio
-Date: Mon, 26 Jan 2015 22:46:05 -0600
-Message-ID: <1422333966-18338-3-git-send-email-robh@kernel.org>
-References: <1422333966-18338-1-git-send-email-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422333966-18338-1-git-send-email-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: [PATCH 4/7] arm64: mediatek: Add Mediatek MMC support in defconfig
+Date: Tue, 27 Jan 2015 14:15:29 +0800
+Message-ID: <1422339332-27498-5-git-send-email-chaotian.jing@mediatek.com>
+References: <1422339332-27498-1-git-send-email-chaotian.jing@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1422339332-27498-1-git-send-email-chaotian.jing@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, bin.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new compatible string for PXA1928 GPIO controller. The IP block is
-same as prior chips with a 6th bank added.
+Add CONFIG_MMC_MTK=y in defconfig
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
 ---
- Documentation/devicetree/bindings/gpio/mrvl-gpio.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-index b2afdb2..67a2e4e 100644
---- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-@@ -3,8 +3,8 @@
- Required properties:
- - compatible : Should be "intel,pxa25x-gpio", "intel,pxa26x-gpio",
- 		"intel,pxa27x-gpio", "intel,pxa3xx-gpio",
--		"marvell,pxa93x-gpio", "marvell,mmp-gpio" or
--		"marvell,mmp2-gpio".
-+		"marvell,pxa93x-gpio", "marvell,mmp-gpio",
-+		"marvell,mmp2-gpio" or marvell,pxa1928-gpio.
- - reg : Address and length of the register set for the device
- - interrupts : Should be the port interrupt shared by all gpio pins.
-   There're three gpio interrupts in arch-pxa, and they're gpio0,
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 5afda35..678c583 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -121,6 +121,7 @@ CONFIG_MMC_ARMMMCI=y
+ CONFIG_MMC_SDHCI=y
+ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_SPI=y
++CONFIG_MMC_MTK=y
+ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_EFI=y
+ CONFIG_RTC_DRV_XGENE=y
 -- 
-2.1.0
+1.8.1.1.dirty
