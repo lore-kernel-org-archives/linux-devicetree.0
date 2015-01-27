@@ -1,101 +1,64 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH 07/14] Doc/DT: Add DT binding doc for DRA7xx DSS
-Date: Tue, 27 Jan 2015 12:50:35 +0200
-Message-ID: <1422355842-11234-8-git-send-email-tomi.valkeinen@ti.com>
-References: <1422355842-11234-1-git-send-email-tomi.valkeinen@ti.com>
+From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
+Date: Tue, 27 Jan 2015 10:51:09 +0000
+Message-ID: <54C76D9D.8070704@linn.co.uk>
+References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk> <54C6BFEA.5020101@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1422355842-11234-1-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-fbdev@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C6BFEA.5020101@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Stathis Voukelatos <stathisv70@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: abrestic@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for DRA7xx display subsystem.
+Hi Florian,
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/video/ti,dra7-dss.txt      | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/ti,dra7-dss.txt
+On 26/01/15 22:30, Florian Fainelli wrote:
+> On 23/01/15 02:07, Stathis Voukelatos wrote:
+>> This patch adds support the Ethernet Packet Sniffer H/W module
+>> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
+>> The module allows Ethernet packets to be parsed, matched against
+>> a user-defined pattern and timestamped. It sits between a 100M
+>> Ethernet MAC and PHY and is completely passive with respect to
+>> Ethernet frames.
+> Is there any latency penalty involved in capturing (or not) packets as
+> opposed to having this capture HW unused?
 
-diff --git a/Documentation/devicetree/bindings/video/ti,dra7-dss.txt b/Documentation/devicetree/bindings/video/ti,dra7-dss.txt
-new file mode 100644
-index 000000000000..f33a05137b0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/ti,dra7-dss.txt
-@@ -0,0 +1,69 @@
-+Texas Instruments DRA7x Display Subsystem
-+=========================================
-+
-+See Documentation/devicetree/bindings/video/ti,omap-dss.txt for generic
-+description about OMAP Display Subsystem bindings.
-+
-+DSS Core
-+--------
-+
-+Required properties:
-+- compatible: "ti,dra7-dss"
-+- reg: address and length of the register spaces for 'dss'
-+- ti,hwmods: "dss_core"
-+- clocks: handle to fclk
-+- clock-names: "fck"
-+- syscon: phandle to control module core syscon node
-+
-+Optional properties:
-+
-+Some DRA7xx SoCs have one dedicated video PLL, some have two. These properties
-+can be used to describe the video PLLs:
-+
-+- reg: address and length of the register spaces for 'pll1_clkctrl',
-+  'pll1', 'pll2_clkctrl', 'pll2'
-+- clocks: handle to video1 pll clock and video2 pll clock
-+- clock-names: "video1_clk" and "video2_clk"
-+
-+Required nodes:
-+- DISPC
-+
-+Optional nodes:
-+- DSS Submodules: HDMI
-+- Video port for DPI output
-+
-+DPI Endpoint required properties:
-+- data-lines: number of lines used
-+
-+
-+DISPC
-+-----
-+
-+Required properties:
-+- compatible: "ti,dra7-dispc"
-+- reg: address and length of the register space
-+- ti,hwmods: "dss_dispc"
-+- interrupts: the DISPC interrupt
-+- clocks: handle to fclk
-+- clock-names: "fck"
-+
-+HDMI
-+----
-+
-+Required properties:
-+- compatible: "ti,dra7-hdmi"
-+- reg: addresses and lengths of the register spaces for 'wp', 'pll', 'phy',
-+       'core'
-+- reg-names: "wp", "pll", "phy", "core"
-+- interrupts: the HDMI interrupt line
-+- ti,hwmods: "dss_hdmi"
-+- vdda-supply: vdda power supply
-+- clocks: handles to fclk and pll clock
-+- clock-names: "fck", "sys_clk"
-+
-+Optional nodes:
-+- Video port for HDMI output
-+
-+HDMI Endpoint optional properties:
-+- lanes: list of 8 pin numbers for the HDMI lanes: CLK+, CLK-, D0+, D0-,
-+  D1+, D1-, D2+, D2-. (default: 0,1,2,3,4,5,6,7)
--- 
-2.2.2
+There is no additional latency introduced by the sniffer at the H/W level,
+if that is what you mean. Only the S/W overhead for handling the
+sniffer interrupt for each match event.
 
+>> Matched packet bytes and timestamp values are returned through a
+>> FIFO. Timestamps are provided to the module through an externally
+>> generated Gray-encoded counter.
+>>
+>> The command pattern for packet matching is stored in module RAM
+>> and consists of a sequence of 16-bit entries. Each entry includes
+>> an 8-bit command code and and 8-bit data value. Valid command
+>> codes are:
+>> 0 - Don't care
+>> 1 - Match: packet data must match command string byte
+>> 2 - Copy: packet data will be copied to FIFO
+>> 3 - Match/Stamp: if packet data matches string byte, a timestamp
+>>                   is copied into the FIFO
+>> 4 - Copy/Done: packet data will be copied into the FIFO.
+>>                 This command terminates the command string.
+>>
+>> The driver consists of two modules:
+>> - Core: it provides an API to user space using the Generic Netlink
+>>          framework. Specific backend implementations, like the
+>>          Ethernet Packet Sniffer, register one or more channels
+>>          with the Core. For each channel a Genl family is created.
+>>          User space can access a channel by sending Genl messages
+>>          to the Genl family associated with the channel. Packet
+>>          matching events are multicast.
+> Instead of having this new generic netlink family to control sniffing,
+> could we imagine registering a netdevice which does not nothing but
+> still allows for tools like tcpdump, af_packet and other capture tools
+> to work transparently and just leverage the HW capture?
+Thanks, I will work on that change. It has been suggested by a previous
+reviewer too and it makes sense to go down that route.
+
+Stathis
