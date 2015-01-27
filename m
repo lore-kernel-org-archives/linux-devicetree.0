@@ -1,165 +1,84 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: unittest: Overlays with sub-devices tests
-Date: Tue, 27 Jan 2015 11:23:53 +0000
-Message-ID: <20150127112353.937C7C40E13@trevor.secretlab.ca>
-References: <1418992474-19416-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418992474-19416-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
+Date: Tue, 27 Jan 2015 11:27:18 +0000
+Message-ID: <54C77616.80301@arm.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com> <1422052359-12384-4-git-send-email-m-karicheri2@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1422052359-12384-4-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc: Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 19 Dec 2014 14:34:34 +0200
-, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
- wrote:
-> Introduce selftests for overlays using sub-devices present
-> in children nodes.
-> 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Hi Murali,
 
-Applied, and now in mainline, thanks!
-
-g.
-
+On 23/01/15 22:32, Murali Karicheri wrote:
+> Fix the dma-range size when the DT attribute is missing. i.e  set size to
+> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. To detect
+> overflow when mask is set to max of u64, add a check, log error and return.
+> Some platform use mask format for size in DTS. So add a work around to
+> catch this and fix.
+>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 > ---
->  drivers/of/unittest-data/tests-overlay.dtsi | 55 +++++++++++++++++++++++++++++
->  drivers/of/unittest.c                       | 39 ++++++++++++++++++++
->  2 files changed, 94 insertions(+)
-> 
-> diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
-> index 75976da..a2b687d 100644
-> --- a/drivers/of/unittest-data/tests-overlay.dtsi
-> +++ b/drivers/of/unittest-data/tests-overlay.dtsi
-> @@ -176,5 +176,60 @@
->  			};
->  		};
->  
-> +		overlay10 {
-> +			fragment@0 {
-> +				target-path = "/testcase-data/overlay-node/test-bus";
-> +				__overlay__ {
-> +
-> +					/* suppress DTC warning */
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					test-selftest10 {
-> +						compatible = "selftest";
-> +						status = "okay";
-> +						reg = <10>;
-> +
-> +						#address-cells = <1>;
-> +						#size-cells = <0>;
-> +
-> +						test-selftest101 {
-> +							compatible = "selftest";
-> +							status = "okay";
-> +							reg = <1>;
-> +						};
-> +
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		overlay11 {
-> +			fragment@0 {
-> +				target-path = "/testcase-data/overlay-node/test-bus";
-> +				__overlay__ {
-> +
-> +					/* suppress DTC warning */
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					test-selftest11 {
-> +						compatible = "selftest";
-> +						status = "okay";
-> +						reg = <11>;
-> +
-> +						#address-cells = <1>;
-> +						#size-cells = <0>;
-> +
-> +						test-selftest111 {
-> +							compatible = "selftest";
-> +							status = "okay";
-> +							reg = <1>;
-> +						};
-> +
-> +					};
-> +				};
-> +			};
-> +		};
->  	};
->  };
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 844838e..41a4a13 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -978,6 +978,9 @@ static int selftest_probe(struct platform_device *pdev)
->  	}
->  
->  	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
-> +
-> +	of_platform_populate(np, NULL, NULL, &pdev->dev);
-> +
->  	return 0;
->  }
->  
-> @@ -1385,6 +1388,39 @@ static void of_selftest_overlay_8(void)
->  	selftest(1, "overlay test %d passed\n", 8);
->  }
->  
-> +/* test insertion of a bus with parent devices */
-> +static void of_selftest_overlay_10(void)
-> +{
-> +	int ret;
-> +	char *child_path;
-> +
-> +	/* device should disable */
-> +	ret = of_selftest_apply_overlay_check(10, 10, 0, 1);
-> +	if (selftest(ret == 0, "overlay test %d failed; overlay application\n", 10))
+>   drivers/of/device.c |   14 +++++++++++++-
+>   1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 2de320d..0a5ff54 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -105,12 +105,24 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>   	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>   	if (ret < 0) {
+>   		dma_addr = offset = 0;
+> -		size = dev->coherent_dma_mask;
+> +		size = dev->coherent_dma_mask + 1;
+>   	} else {
+>   		offset = PFN_DOWN(paddr - dma_addr);
+> +		/*
+> +		 * Add a work around to treat the size as mask + 1 in case
+> +		 * it is defined in DT as a mask.
+> +		 */
+> +		if (size & 1)
+> +			size = size + 1;
+>   		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>   	}
+>
+> +	/* if size is 0, we have an overflow of u64 */
+> +	if (!size) {
+> +		dev_err(dev, "invalid size\n");
 > +		return;
+> +	}
 > +
-> +	child_path = kasprintf(GFP_KERNEL, "%s/test-selftest101",
-> +			selftest_path(10));
-> +	if (selftest(child_path, "overlay test %d failed; kasprintf\n", 10))
-> +		return;
-> +
-> +	ret = of_path_platform_device_exists(child_path);
-> +	kfree(child_path);
-> +	if (selftest(ret, "overlay test %d failed; no child device\n", 10))
-> +		return;
-> +}
-> +
-> +/* test insertion of a bus with parent devices (and revert) */
-> +static void of_selftest_overlay_11(void)
-> +{
-> +	int ret;
-> +
-> +	/* device should disable */
-> +	ret = of_selftest_apply_revert_overlay_check(11, 11, 0, 1);
-> +	if (selftest(ret == 0, "overlay test %d failed; overlay application\n", 11))
-> +		return;
-> +}
-> +
->  static void __init of_selftest_overlay(void)
->  {
->  	struct device_node *bus_np = NULL;
-> @@ -1433,6 +1469,9 @@ static void __init of_selftest_overlay(void)
->  	of_selftest_overlay_6();
->  	of_selftest_overlay_8();
->  
-> +	of_selftest_overlay_10();
-> +	of_selftest_overlay_11();
-> +
->  out:
->  	of_node_put(bus_np);
->  }
-> -- 
-> 1.7.12
-> 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This seems potentially fragile to dodgy DTs given that we might also be 
+using size to make a mask later. Would it make sense to double-up a 
+sanity check as mask-format detection? Something like:
+
+if is_power_of_2(size)
+	// use size
+else if is_power_of_2(size + 1)
+	// use size + 1
+else
+	// cry
+
+
+Robin.
+
+>   	dev->dma_pfn_offset = offset;
+>
+>   	coherent = of_dma_is_coherent(np);
+>
