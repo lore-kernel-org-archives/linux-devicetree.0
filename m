@@ -1,38 +1,35 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v3 1/4] ARM: initial support for Conexant Digicolor
- CX92755 SoC
-Date: Tue, 27 Jan 2015 15:02:02 -0800
-Message-ID: <20150127230202.GB11263@quad.lixom.net>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] ARM: digicolor: add low level debug support
+Date: Tue, 27 Jan 2015 15:02:18 -0800
+Message-ID: <20150127230218.GC11263@quad.lixom.net>
 References: <cover.1421219953.git.baruch@tkos.co.il>
- <b78eff5b92f808cb6748097b4f7867fb320e8d21.1421219953.git.baruch@tkos.co.il>
+ <5b6342c716e2e56da34d7a518b49817967de948a.1421219953.git.baruch@tkos.co.il>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <b78eff5b92f808cb6748097b4f7867fb320e8d21.1421219953.git.baruch@tkos.co.il>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: arm@kernel.org, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <5b6342c716e2e56da34d7a518b49817967de948a.1421219953.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 10:40:30AM +0200, Baruch Siach wrote:
-> Add initial support for the Conexant CX92755 SoC. The CX92755 is one of the
-> Digicolor series of SoCs, all sharing many of the same peripherals. The code
-> was tested on the CX92755 evaluation kit, AKA Equinox.
+On Wed, Jan 14, 2015 at 10:40:31AM +0200, Baruch Siach wrote:
+> Use the USART peripheral as UART for low level debug. Only the UA0 port is
+> currently supported.
 > 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 > ---
->  arch/arm/Kconfig                    |  2 ++
->  arch/arm/mach-digicolor/Kconfig     |  5 +++++
->  arch/arm/mach-digicolor/Makefile    |  1 +
->  arch/arm/mach-digicolor/digicolor.c | 18 ++++++++++++++++++
->  4 files changed, 26 insertions(+)
->  create mode 100644 arch/arm/mach-digicolor/Kconfig
->  create mode 100644 arch/arm/mach-digicolor/Makefile
->  create mode 100644 arch/arm/mach-digicolor/digicolor.c
+>  arch/arm/Kconfig.debug             | 12 ++++++++++--
+>  arch/arm/include/debug/digicolor.S | 35 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 45 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm/include/debug/digicolor.S
 
 Applied, thanks.
 
-
 -Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
