@@ -1,51 +1,111 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] watchdog: jz4740: Add DT support
-Date: Tue, 27 Jan 2015 12:54:30 -0800
-Message-ID: <20150127205430.GB6983@roeck-us.net>
-References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1422371490-44402-3-git-send-email-Zubair.Kakakhel@imgtec.com>
- <2690526.hgsE0j4AZc@wuerfel>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v5 1/8] of: iommu: add ptr to OF node arg to of_iommu_configure()
+Date: Tue, 27 Jan 2015 15:59:58 -0500
+Message-ID: <1422392405-32196-2-git-send-email-m-karicheri2@ti.com>
+References: <1422392405-32196-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2690526.hgsE0j4AZc@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1422392405-32196-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 27, 2015 at 09:15:37PM +0100, Arnd Bergmann wrote:
-> On Tuesday 27 January 2015 15:11:30 Zubair Lutfullah Kakakhel wrote:
-> >  };
-> >  
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id jz4740_of_matches[] = {
-> > +       { .compatible = "ingenic,jz4740-watchdog", },
-> > +       { /* sentinel */ }
-> > +};
-> > +#endif
-> > +
-> >  static int jz4740_wdt_probe(struct platform_device *pdev)
-> >  {
-> >         struct jz4740_wdt_drvdata *drvdata;
-> > @@ -211,6 +219,7 @@ static struct platform_driver jz4740_wdt_driver = {
-> >         .remove = jz4740_wdt_remove,
-> >         .driver = {
-> >                 .name = "jz4740-wdt",
-> > +               .of_match_table = of_match_ptr(jz4740_of_matches),
-> >         },
-> > 
-> 
-> Why the #ifdef? Presumably we want to move over jz4740 to DT-only in the
-> long run, so you could just remove the #ifdef and the of_match_ptr()
-> wrapper.
-> 
-Only if "depends on OF" is added to its Kconfig entry, or am I missing
-something ?
+Function of_iommu_configure() is called from of_dma_configure() to
+setup iommu ops using DT property. This API is currently used for
+platform devices for which DMA configuration (including iommu ops)
+may come from device's parent. To extend this functionality for PCI
+devices, this API need to take a parent node ptr as an argument
+instead of assuming device's parent. This is needed since for PCI, the
+dma configuration may be defined in the DT node of the root bus bridge's
+parent device. Currently only dma-range is used for PCI and iommu is not
+supported. So return error if the device is PCI.
 
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ drivers/iommu/of_iommu.c |   10 ++++++++--
+ drivers/of/platform.c    |    2 +-
+ include/linux/of_iommu.h |    6 ++++--
+ 3 files changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index af1dc6a..439235b 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -133,19 +133,25 @@ struct iommu_ops *of_iommu_get_ops(struct device_node *np)
+ 	return ops;
+ }
+ 
+-struct iommu_ops *of_iommu_configure(struct device *dev)
++struct iommu_ops *of_iommu_configure(struct device *dev,
++				     struct device_node *iommu_np)
+ {
+ 	struct of_phandle_args iommu_spec;
+ 	struct device_node *np;
+ 	struct iommu_ops *ops = NULL;
+ 	int idx = 0;
+ 
++	if (dev_is_pci(dev)) {
++		dev_err(dev, "iommu is currently not supported for PCI\n");
++		return NULL;
++	}
++
+ 	/*
+ 	 * We don't currently walk up the tree looking for a parent IOMMU.
+ 	 * See the `Notes:' section of
+ 	 * Documentation/devicetree/bindings/iommu/iommu.txt
+ 	 */
+-	while (!of_parse_phandle_with_args(dev->of_node, "iommus",
++	while (!of_parse_phandle_with_args(iommu_np, "iommus",
+ 					   "#iommu-cells", idx,
+ 					   &iommu_spec)) {
+ 		np = iommu_spec.np;
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index b0d50d7..d3f3988 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -196,7 +196,7 @@ static void of_dma_configure(struct device *dev)
+ 	dev_dbg(dev, "device is%sdma coherent\n",
+ 		coherent ? " " : " not ");
+ 
+-	iommu = of_iommu_configure(dev);
++	iommu = of_iommu_configure(dev, dev->of_node);
+ 	dev_dbg(dev, "device is%sbehind an iommu\n",
+ 		iommu ? " " : " not ");
+ 
+diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+index 16c7554..a97e5bd 100644
+--- a/include/linux/of_iommu.h
++++ b/include/linux/of_iommu.h
+@@ -12,7 +12,8 @@ extern int of_get_dma_window(struct device_node *dn, const char *prefix,
+ 			     size_t *size);
+ 
+ extern void of_iommu_init(void);
+-extern struct iommu_ops *of_iommu_configure(struct device *dev);
++extern struct iommu_ops *of_iommu_configure(struct device *dev,
++					struct device_node *iommu_np);
+ 
+ #else
+ 
+@@ -24,7 +25,8 @@ static inline int of_get_dma_window(struct device_node *dn, const char *prefix,
+ }
+ 
+ static inline void of_iommu_init(void) { }
+-static inline struct iommu_ops *of_iommu_configure(struct device *dev)
++static inline struct iommu_ops *of_iommu_configure(struct device *dev,
++					 struct device_node *iommu_np)
+ {
+ 	return NULL;
+ }
+-- 
+1.7.9.5
