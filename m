@@ -1,91 +1,53 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 3/6] ARM: DT: apq8064: Add TCSR support
-Date: Tue, 27 Jan 2015 16:10:41 -0600
-Message-ID: <1422396644-21714-4-git-send-email-agross@codeaurora.org>
+From: Andy Gross <agross@codeaurora.org>
+Subject: [PATCH 6/6] ARM: DT: msm8960: Add TCSR support
+Date: Tue, 27 Jan 2015 16:10:44 -0600
+Message-ID: <1422396644-21714-7-git-send-email-agross@codeaurora.org>
 References: <1422396644-21714-1-git-send-email-agross@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422396644-21714-1-git-send-email-agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1422396644-21714-1-git-send-email-agross@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-soc@vger.kernel.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 This patch adds TCSR support for use by the GSBI to automatically configure ADM
 CRCI values based on the GSBI port configuration.
 
-Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Andy Gross <agross@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-apq8064.dtsi |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/qcom-msm8960.dtsi |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index b3154c0..f9a947c 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -165,7 +165,7 @@
+diff --git a/arch/arm/boot/dts/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom-msm8960.dtsi
+index e1b0d5c..913a9f1 100644
+--- a/arch/arm/boot/dts/qcom-msm8960.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8960.dtsi
+@@ -121,7 +121,7 @@
+ 		};
  
- 		gsbi1: gsbi@12440000 {
- 			status = "disabled";
+ 		gsbi5: gsbi@16400000 {
 -			compatible = "qcom,gsbi-v1.0.0";
-+			compatible = "qcom,gsbi-apq8064";
- 			reg = <0x12440000 0x100>;
- 			clocks = <&gcc GSBI1_H_CLK>;
++			compatible = "qcom,gsbi-msm8960";
+ 			reg = <0x16400000 0x100>;
+ 			clocks = <&gcc GSBI5_H_CLK>;
  			clock-names = "iface";
-@@ -173,6 +173,9 @@
+@@ -129,6 +129,9 @@
  			#size-cells = <1>;
  			ranges;
  
-+			qcom,gsbi-num = <1>;
++			qcom,gsbi-num = <5>;
 +			syscon-tcsr = <&tcsr>;
 +
- 			i2c1: i2c@12460000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
- 				reg = <0x12460000 0x1000>;
-@@ -186,7 +189,7 @@
- 
- 		gsbi2: gsbi@12480000 {
- 			status = "disabled";
--			compatible = "qcom,gsbi-v1.0.0";
-+			compatible = "qcom,gsbi-apq8064";
- 			reg = <0x12480000 0x100>;
- 			clocks = <&gcc GSBI2_H_CLK>;
- 			clock-names = "iface";
-@@ -194,6 +197,9 @@
- 			#size-cells = <1>;
- 			ranges;
- 
-+			qcom,gsbi-num = <2>;
-+			syscon-tcsr = <&tcsr>;
-+
- 			i2c2: i2c@124a0000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
- 				reg = <0x124a0000 0x1000>;
-@@ -207,7 +213,7 @@
- 
- 		gsbi7: gsbi@16600000 {
- 			status = "disabled";
--			compatible = "qcom,gsbi-v1.0.0";
-+			compatible = "qcom,gsbi-apq8064";
- 			reg = <0x16600000 0x100>;
- 			clocks = <&gcc GSBI7_H_CLK>;
- 			clock-names = "iface";
-@@ -215,6 +221,9 @@
- 			#size-cells = <1>;
- 			ranges;
- 
-+			qcom,gsbi-num = <7>;
-+			syscon-tcsr = <&tcsr>;
-+
- 			serial@16640000 {
+ 			serial@16440000 {
  				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
- 				reg = <0x16640000 0x1000>,
-@@ -349,5 +358,10 @@
- 				pinctrl-0 = <&sdc4_gpios>;
+ 				reg = <0x16440000 0x1000>,
+@@ -238,5 +241,10 @@
+ 				vmmc-supply = <&vsdcc_fixed>;
  			};
  		};
 +
 +		tcsr: syscon@1a400000 {
-+			compatible = "qcom,tcsr-apq8064", "syscon";
++			compatible = "qcom,tcsr-msm8960", "syscon";
 +			reg = <0x1a400000 0x100>;
 +		};
  	};
@@ -93,8 +55,3 @@ index b3154c0..f9a947c 100644
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
