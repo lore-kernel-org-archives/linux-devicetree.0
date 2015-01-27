@@ -1,44 +1,59 @@
-From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH v7 0/2] Add Spreadtrum Sharkl64 Platform support
-Date: Tue, 27 Jan 2015 16:12:45 +0800
-Message-ID: <1422346367-10628-1-git-send-email-chunyan.zhang@spreadtrum.com>
-References: <sc9836-dt-v7>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 1/2] power: reset: add driver for Hardkernel's Odroid boards
+Date: Tue, 27 Jan 2015 09:16:23 +0100
+Message-ID: <54C74957.2000600@samsung.com>
+References: <1414588409-8065-1-git-send-email-m.szyprowski@samsung.com>
+ <20150122010631.GL13715@earth.universe> <54C05373.60308@samsung.com>
+ <54C22C5A.9050701@samsung.com> <20150125143207.GD2719@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <sc9836-dt-v7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, arnd@arndb.de, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: Joel.Schopp@amd.com, Thomas.Lendacky@amd.com, Suravee.Suthikulpanit@amd.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, orsonzhai@gmail.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20150125143207.GD2719@earth.universe>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Joonyoung Shim <jy0922.shim@samsung.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Tobias Jakobi <Liquid.Acid@gmx.net>, Daniel Drake <drake@endlessm.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch-set split the last version, and addressed the review comments from
-last version on serial driver code.
+Hello,
 
-Changes from v6:
-	- Setted stdout-path with "serial1:115200n8"
+On 2015-01-25 15:32, Sebastian Reichel wrote:
+> On Fri, Jan 23, 2015 at 12:11:22PM +0100, Marek Szyprowski wrote:
+>> Frankly, I analyzed this case once again and I came to conclusion
+>> that there is no need to make a separate reset driver for Odroid
+>> boards. There is nothing special, specific to whole board about
+>> this gpio. It is rather a property of MMC host controller and eMMC
+>> card that is connected to it. When only gpio toggling code is
+>> moved to reset handler registered from mmc controller, the board
+>> properly performs reboot with a generic exynos4 code.
+> OK, so I guess this will be fixed independently via mmc subsystem.
 
-Changes from v5:
-	- Added maintenance interrupt for gic
-	- Removed reg property from 'soc' and 'apb' nodes
+I've posted an updated patch.
 
-Zhizhou Zhang (2):
-  arm64: dts: Add support for Spreadtrum SC9836 SoC in dts and Makefile
-  arm64: Add support for Spreadtrum's Sharkl64 Platform in Kconfig and
-    defconfig
+>
+>> The poweroff code in above driver is just a generic Exynos4 code,
+>> so again there is no need to duplicate it.
+> OK. It seems there is a driver for that in arch/arm/mach-exynos.
+> Otherwise I would have suggest to create something like
+> syscon-reboot for shutdown.
+>
+>> By moving the code to mmc driver, the same approach can be used for other
+>> Odroid boards (XU/XU3) and maybe even other boards which need manual
+>> resetting of eMMC cards to properly perform reboot procedure.
+> I suggest to start a new thread for discussing this, which includes
+> linux-mmc. It might be interesting to provide some more details about
+> eMMC_nDET, since MMC already contain a reset signal (which seems to
+> be used according to the odroid schematics I found).
 
- arch/arm64/Kconfig                            |    5 ++
- arch/arm64/boot/dts/Makefile                  |    1 +
- arch/arm64/boot/dts/sprd/Makefile             |    5 ++
- arch/arm64/boot/dts/sprd/sc9836-openphone.dts |   49 ++++++++++++++++
- arch/arm64/boot/dts/sprd/sc9836.dtsi          |   74 +++++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/sharkl64.dtsi        |   65 ++++++++++++++++++++++
- arch/arm64/configs/defconfig                  |    1 +
- 7 files changed, 200 insertions(+)
- create mode 100644 arch/arm64/boot/dts/sprd/Makefile
- create mode 100644 arch/arm64/boot/dts/sprd/sc9836-openphone.dts
- create mode 100644 arch/arm64/boot/dts/sprd/sc9836.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl64.dtsi
+My fault. The documentation for this initial driver was incorrect. The 
+reboot
+fix has noting to eMMC_nDET signal. It should be eMMC nreset, which is 
+routed
+directly to SoC GPIO line with external pull-up resistor. I really have no
+idea why I wrote eMMC_nDET instead of nreset.
 
+Best regards
 -- 
-1.7.9.5
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
