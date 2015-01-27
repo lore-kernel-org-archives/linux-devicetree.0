@@ -1,59 +1,63 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 3/5] regulators: axp20x: Use "clock-frequency"
- property for dcdc work frequency
-Date: Tue, 27 Jan 2015 12:14:24 +0000
-Message-ID: <20150127121424.GS21293@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 4/5] regulators: axp20x: Change dcdc-workmode DT
+ property to boolean flag
+Date: Tue, 27 Jan 2015 12:27:14 +0000
+Message-ID: <20150127122714.GT21293@sirena.org.uk>
 References: <1421941147-9682-1-git-send-email-wens@csie.org>
- <1421941147-9682-4-git-send-email-wens@csie.org>
+ <1421941147-9682-5-git-send-email-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="z3XR48OWYS228AZl"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="j7iCko5qf//nELnG"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1421941147-9682-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1421941147-9682-5-git-send-email-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---z3XR48OWYS228AZl
+--j7iCko5qf//nELnG
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 22, 2015 at 11:39:05PM +0800, Chen-Yu Tsai wrote:
-> Since the dcdc regulator work frequency is a property of the regulators
-> DT sub-tree, there is no issue of naming collisions, so we can use the
-> standard "clock-frequency" binding for this.
+On Thu, Jan 22, 2015 at 11:39:06PM +0800, Chen-Yu Tsai wrote:
+> The "x-powers,dcdc-workmode" property only has 2 values. A request was
+> made to change this to a boolean flag named "x-powers,dcdc-workmode-pwm".
+> Given that this particular binding hasn't been used anywhere, it should
+> be safe to change.
 >=20
-> The driver sets a reasonable default value (same as the datasheet), and
-> only 1 dts has the old binding, with the default value.
+> Previously the absence of the property meant just keeping the PMIC in
+> whatever state was set by the bootloader. After this change, the absence
+> means using the "auto" (PWM/PFM hybrid) mode, which is also the hardware's
+> default.
+>=20
+> This patch also makes axp20x_set_dcdc_workmode() ignore attempts to set
+> the workmode for non-DCDC regulators.
 
-I don't see any benefit from this change - not only is this an
-incompatible change (which may affect out of tree users as well as in
-tree users) but it's not really doing anything with the clock API which
-I'd expect to be happening for a clock API property.  What's the goal
-here?
+Again I don't understand what this is supposed to accomplish, this seems
+to just make the binding less capable by forcing Linux to make a
+decision on the configuration rather than allowing it to use the
+hardware defaults untouched.  This runs contrary to our normal approach
+to regulaors which is to try to avoid touching the hardware unless
+explicit configuration is provided to say it's OK which in turn is there
+because getting regulators wrong can be such a bad thing for the system.
 
---z3XR48OWYS228AZl
+--j7iCko5qf//nELnG
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJUx4EfAAoJECTWi3JdVIfQxVEIAIBZUkhYIKUYUlp2lbbE2U39
-988UjOv7eAPlV/4oQP71bcaY4oFhzhmvX1Q76xiAK00CE38fVrrOf8izwwZB3zQy
-1jQr8sy4zB8lkZdM9l7jWJpGYVUlvWewbnZleZC/dj1p+4c64DNwb4tEb3Sg42Dm
-JjLTYtcWalPBwYWe4LLddt8urCgxTEyZKalBJj5akqaiuLs3IDTj0ggKqwqRFitR
-ulKn36Zx6T5BJdAsgAZSBc2NG7Y1KPbBkCIr9Y8/p+ZW8zm6L4cK/xIzUVtFiTws
-X0ME8hpvul39eZmF3fmfTUUj6pV3p0cOl3kwQQ+4LEMlMIHsz3V+QsRAxPAH4pk=
-=ymXa
+iQEcBAEBCAAGBQJUx4QiAAoJECTWi3JdVIfQpZAH/2EqyRP8DHx0DNMviHR0ZsES
+ipcwI1KczZ9MiUXcS/HbJA7BRUTKkc/NTvou1jwxVHoStOIg3yMWOAzqUk9Bwghe
+GiAphYP+TzjCTuF8PjJ+7sBIINxuLX9yZSShIj0C6+7P25X36RSgTzRsu8nhzn+O
+DEofS1oDTzM0CGYtCCKpgx79+rqrBqmgfRsiDpveHFqyo3BOwKzyEfr0u8wCwQ+Y
+kpQPy7jGni9BSGcKfWnKkd81nAcABUk6CXlkolXcTc/Eb6TXbazKx+2PEY+jIhue
+bgvxMhSXQNx4bvnAVc33ayYO65Wmj3rFRpjZRjOTDupXhgRPgmYnqIcRxrIDQtE=
+=T6JZ
 -----END PGP SIGNATURE-----
 
---z3XR48OWYS228AZl--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--j7iCko5qf//nELnG--
