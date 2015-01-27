@@ -1,126 +1,88 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
-Date: Tue, 27 Jan 2015 13:55:15 -0500
-Message-ID: <54C7DF13.20402@ti.com>
-References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
-	<1422052359-12384-4-git-send-email-m-karicheri2@ti.com>
-	<54C77616.80301@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 1/3] ASoC: samsung: Add machine driver
+ for Trats2
+Date: Tue, 27 Jan 2015 18:59:42 +0000
+Message-ID: <20150127185942.GM21293@sirena.org.uk>
+References: <1421989410-12490-1-git-send-email-ideal.song@samsung.com>
+ <1421989410-12490-2-git-send-email-ideal.song@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <54C77616.80301-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2257206771853245631=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1421989410-12490-2-git-send-email-ideal.song@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Inha Song <ideal.song@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sbkim73@samsung.com, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.de, robh+dt@kernel.org, kgene@kernel.org, s.nawrocki@samsung.com, galak@codeaurora.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/27/2015 06:27 AM, Robin Murphy wrote:
-> Hi Murali,
->
-> On 23/01/15 22:32, Murali Karicheri wrote:
->> Fix the dma-range size when the DT attribute is missing. i.e set size to
->> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. To detect
->> overflow when mask is set to max of u64, add a check, log error and
->> return.
->> Some platform use mask format for size in DTS. So add a work around to
->> catch this and fix.
->>
->> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
->> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
->> ---
->> drivers/of/device.c | 14 +++++++++++++-
->> 1 file changed, 13 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/device.c b/drivers/of/device.c
->> index 2de320d..0a5ff54 100644
->> --- a/drivers/of/device.c
->> +++ b/drivers/of/device.c
->> @@ -105,12 +105,24 @@ void of_dma_configure(struct device *dev, struct
->> device_node *np)
->> ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
->> if (ret < 0) {
->> dma_addr = offset = 0;
->> - size = dev->coherent_dma_mask;
->> + size = dev->coherent_dma_mask + 1;
->> } else {
->> offset = PFN_DOWN(paddr - dma_addr);
->> + /*
->> + * Add a work around to treat the size as mask + 1 in case
->> + * it is defined in DT as a mask.
->> + */
->> + if (size & 1)
->> + size = size + 1;
->> dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
->> }
->>
->> + /* if size is 0, we have an overflow of u64 */
->> + if (!size) {
->> + dev_err(dev, "invalid size\n");
->> + return;
->> + }
->> +
->
-> This seems potentially fragile to dodgy DTs given that we might also be
-> using size to make a mask later. Would it make sense to double-up a
-> sanity check as mask-format detection? Something like:
->
-> if is_power_of_2(size)
-> // use size
-> else if is_power_of_2(size + 1)
-> // use size + 1
-> else
-> // cry
-Robin,
 
-How about having the logic like this?
-
-	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-	if (ret < 0) {
-		dma_addr = offset = 0;
-		size = dev->coherent_dma_mask + 1;
-	} else {
-		offset = PFN_DOWN(paddr - dma_addr);
-		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
-	}
-
-	if (is_power_of_2(size + 1))
-		size = size + 1;
-	else if (!is_power_of_2(size))
-	{
-		dev_err(dev, "invalid size\n");
-		return;
-	}
-
-Murali
->
->
-> Robin.
->
->> dev->dma_pfn_offset = offset;
->>
->> coherent = of_dma_is_coherent(np);
->>
->
->
+--===============2257206771853245631==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7ftbJ8egIWVmlOqJ"
+Content-Disposition: inline
 
 
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+--7ftbJ8egIWVmlOqJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Jan 23, 2015 at 02:03:28PM +0900, Inha Song wrote:
+> This patch add the sound machine driver for Trats2 board.
+> The codec operate in master mode.
+
+This looks like (and mostly should be) a DTified copy of the littlemill
+driver.  The major differences are the fact that this lacks jack
+detection, the management of the clock and the fact that instead of
+picking a fixed clock frequency this tries to adjust based on
+hw_params().  Ideally we'd be able to merge these drivers so we're
+keeping up with best practice.
+
+The reason we pick a fixed frequency for littlemill is that the device
+supports analogue bypass paths which would be broken otherwise which
+will apply here also I imagine.
+
+> +config SND_SOC_SAMSUNG_TRATS2_WM1811
+> +	tristate "SoC I2S Audio support for WM1811 on Tizen Trats2 board"
+> +	depends on SND_SOC_SAMSUNG
+> +	select SND_SAMSUNG_I2S
+> +	select MFD_WM8994
+
+For things outside the audio subsystem it's more common to use a depends
+instead of a select - the selects are there because the drivers only
+work with a machine driver and if we go outside the subsystem then since
+selects aren't recursive we end up breaking elsewhere.  For example here
+we'll end up not selecting MFD_CORE.
+
+--7ftbJ8egIWVmlOqJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUx+AdAAoJECTWi3JdVIfQfdUH/RvJzdlHUSRh1yWQqBGUcj6U
+dUIAPq2NY7MEyC+gp1Xj5YsjnZ1da9w41wExLHLNX34+lUCDtKfb96WIxHNyrxg5
+q2ZRWpKa+sN8E1kwDrqYTWSXstbtNdy86RtUva47Y+2TN0GsFpyV75rDn39E8olb
+vanFXg85ZBMzQepVW2GQFCh2XyrPDfVLbpK9i4cYKPlNl5NDmDTA+7Ym7QbBqp40
+Yhaycl2WlHFyd3NH8vRbCjN1+20LwF6fjos2n4u7iWdtCdMBbjvAUWGYlQORjlch
+Zl3lZ5CaIRdDPar4+bEELb86n6d9wTqZd/vNGV8tcJB6iYsHoaSmo/N4KgrTXI4=
+=RXj1
+-----END PGP SIGNATURE-----
+
+--7ftbJ8egIWVmlOqJ--
+
+--===============2257206771853245631==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2257206771853245631==--
