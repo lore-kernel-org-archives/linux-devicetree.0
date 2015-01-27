@@ -1,32 +1,49 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] ahci_xgene: Fix the dma state machine lockup for the
- ATA_CMD_SMART PIO mode command.
-Date: Tue, 27 Jan 2015 13:19:50 -0500
-Message-ID: <20150127181950.GE12314@htj.dyndns.org>
-References: <1422381371-11361-1-git-send-email-stripathi@apm.com>
- <1422381371-11361-2-git-send-email-stripathi@apm.com>
+From: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add dts file for pcDuino 3
+ Nano board
+Date: Tue, 27 Jan 2015 18:25:33 +0000
+Message-ID: <20150127182533.GE871@cartman.at.offog.org>
+References: <1422199921-325-1-git-send-email-ats@offog.org>
+ <20150125164846.GL8470@lukather>
+ <20150126003520.GA871@cartman.at.offog.org>
+ <20150126100921.GQ8470@lukather>
+ <20150126135931.GB871@cartman.at.offog.org>
+ <20150127170035.GJ7200@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQPXGGUXQGBBJ5QT6TAKGQEEHCRVZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1422381371-11361-2-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
+In-Reply-To: <20150127170035.GJ7200@lukather>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 27, 2015 at 11:26:11PM +0530, Suman Tripathi wrote:
-> This patch addresses the issue with ATA_CMD_SMART pio mode
-> command for enumeration and device detection with ATA devices.It is the
-> same issue as in patch
-> 
-> www.spinics.net/lists/linux-ide/msg49092.html
+On Tue, Jan 27, 2015 at 06:00:35PM +0100, Maxime Ripard wrote:
+> > How about pcduino3-nano:green:usr-led3/4? Or ...:usr1/2, and a comment
+> > in the .dts explaining how they're labelled on the board?
+> The latter looks better yes. tx and rx would do too, if you know what
+> tx and what rx we're talking about here.
 
-The link is broken.  Can you please include at least a brief
-explanation of the problem and preferably link to something more
-permanant (commit ID, http://lkml.kernel.org/g/MSG_ID)?
+I've changed it to usr1/2 with comments. (I don't know if they were
+intended to be TX/RX; the documentation doesn't suggest so.)
 
-Thanks.
+> > They're multipurpose pins on Arduino-compatible headers:
+...
+> > So should we [...]
+> None of the above, if there's no hardware default, we won't enforce
+> any default either. This is a case for the DT overlays.
+
+OK -- that simplifies it quite a bit, then. v3 of the patch incoming!
+
+Thanks very much,
 
 -- 
-tejun
+Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>                         <http://offog.org/>
