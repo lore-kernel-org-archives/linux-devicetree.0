@@ -1,32 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 0/2] Add Spreadtrum SoC bindings and serial driver support
-Date: Tue, 27 Jan 2015 14:24:02 +0100
-Message-ID: <2196748.ag4UzqF1Px@wuerfel>
-References: <1422345407-10037-1-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] Fix reboot issue on Odroid boards with eMMC card
+Date: Tue, 27 Jan 2015 14:29:08 +0100
+Message-ID: <54C792A4.3040302@samsung.com>
+References: <1422346289-9348-1-git-send-email-m.szyprowski@samsung.com>
+ <1422348967.10070.26.camel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422345407-10037-1-git-send-email-chunyan.zhang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, gnomes@lxorguk.ukuu.org.uk, peter@hurleysoftware.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, jslaby@suse.cz, heiko@sntech.de, jason@lakedaemon.net, florian.vaussard@epfl.ch, andrew@lunn.ch, hytszk@gmail.com, antonynpavlov@gmail.com, shawn.guo@linaro.org, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1422348967.10070.26.camel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tobias Jakobi <Liquid.Acid-hi6Y0CQ0nG0@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 January 2015 15:56:45 Chunyan Zhang wrote:
-> This patch-set split the last version, and addressed the review comments from
-> last version on serial driver code.
-> 
-> Changes from v7:
-> * Addressed review comments from Peter:
->         - Initialized the stack local with zero in sprd_set_termios()
->         - Used dev_get_drvdata() to get sprd_uart_port
-> 
+Hello,
 
-Looks good to me, but you still have too many people on 'To', so Greg
-might be missing that you expect him to merge it.
+On 2015-01-27 09:56, Sjoerd Simons wrote:
+> On Tue, 2015-01-27 at 09:11 +0100, Marek Szyprowski wrote:
+>> This patchset fixes reboot hang issue on Hardkernel's Odroid boards with
+>> eMMC card. Those boards are designed in such a way, that the eMMC nreset
+>> signal is routed to SoC GPIO line instead of the board reset logic. To
+>> properly restard system, one need to set this line to zero before
+>> performing reboot.
+>>
+>> The initial patches consisted of a complete reset/power off driver, but
+>> after further analysis, it turned out that only eMMC nreset line control
+>> logic is specific for those boards. Everything else can be done by
+>> generic Exynos code, so the code has been moved to Exynos DW MMC driver.
+> This seems a general board design quirk, rather then an exynos specific
+> one. Potentially better to have this in the mmc core so it can be
+> re-used by non-exynos boards?
+>
+> A very quick peek at the schematic for the hardkernel C1 (amlogic
+> based), shows that for that board the eMMC reset line is hooked up to an
+> SoC gpio line as well. (Although ofcourse, it may not need to be reset
+> before a warm restart depending on what the amlogic rom code does).
+>
+>
+> Random side-note, at least the samsung peach chromebooks are also hooked
+> up this way. But don't run into this issue as they load their initial
+> stages from flash rather then the eMMC.
 
-Greg, if there are no further comments, can you take both patches through
-the tty git?
+Okay, I will try to move all the code to mmc core. I've also noticed that
+sdhci-pci driver already implements hw_reset feature with gpio line, 
+although
+I cannot find any user of it (I cannot find any platform data provider for
+sdhci-pci driver).
 
-	Arnd
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
