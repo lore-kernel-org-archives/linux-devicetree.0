@@ -1,49 +1,53 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v2 04/11] ARM: tegra: Set spi-max-frequency property to
- flash node
-Date: Tue, 27 Jan 2015 12:13:18 +0100
-Message-ID: <CAAObsKDx_W23OTL2RE4xxgXL-rtp3npkBtx6qMHV1j8ZXmo1rw@mail.gmail.com>
-References: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com>
- <1421338359-27467-5-git-send-email-tomeu.vizoso@collabora.com> <54B7F84A.6020906@wwwdotorg.org>
+From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
+Date: Tue, 27 Jan 2015 11:15:56 +0000
+Message-ID: <54C7736C.8090704@linn.co.uk>
+References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk> <54C22E68.1080601@redhat.com> <54C60DB8.1060900@linn.co.uk> <54C612A5.2000208@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54B7F84A.6020906-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C612A5.2000208@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Borkmann <dborkman@redhat.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15 January 2015 at 18:26, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 01/15/2015 09:12 AM, Tomeu Vizoso wrote:
->>
->> To silence a warning on Nyan boards.
->>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/tegra124-nyan-big.dts | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts
->> b/arch/arm/boot/dts/tegra124-nyan-big.dts
->> index 9a9cffe..94c7ba9 100644
->> --- a/arch/arm/boot/dts/tegra124-nyan-big.dts
->> +++ b/arch/arm/boot/dts/tegra124-nyan-big.dts
->> @@ -1660,6 +1660,7 @@
->>
->>                 flash@0 {
->>                         compatible = "winbond,w25q32dw";
->> +                       spi-max-frequency = <25000000>;
+Hi Daniel,
+
+On 26/01/15 10:10, Daniel Borkmann wrote:
+>> Hello Daniel. Thank you for your feedback.
+>> Packet sockets could also be used for the driver interface to
+>> user space, however I think that both approaches would require the same
+>> amount of maintenance. We need to maintain a protocol consisting of
+>> a set of messages or commands that user space can use to communicate
+>> with the driver in order to configure the H/W and retrieve results.
+>> We could use packet sockets to send those messages  too, but I thought
+>> netlink already provides a message exchange framework that we could
+>> make use of.
+>
+> When using packet sockets and your driver as a backend feeding them,
+> users can see that there's an extra capturing/monitoring netdev present,
+> all libpcap-based tools such as tcpdump et al would work out of the box
+> w/o adapting any code, and as an admin you can also see what users/tools
+> are making of use of the device through packet sockets. I couldn't parse
+> the exact motivation from the commit message of why avoiding all this is
+> better?
+>
+> Thanks,
+> Daniel
 >
 >
-> This property already exists in the SPI controller. Isn't the max frequency
-> supposed to inherit from there? If so, shouldn't the code not warn when such
-> inheritance happens, i.e. it'd be better to fix the code?
+Just wanted to clarify some implementation details for your approach.
+- The driver would need to create and register two net_device instances.
+One for sniffing Ethernet TX packets and one for RX.
+- Would the control interface for the sniffer in that case need to be
+through private socket ioctls (ie SIOCDEVPRIVATE + x ioctl ids)?
+- For each ethernet packet that matches the command string the sniffer
+returns some data bytes and optionally a timestamp (depending on the
+command string). Would a new protocol need to be added in
+<linux/if_ether.h> in order to deliver that data to user space through
+a packet socket?
 
-I don't think it's supposed to fall back to the controller's max freq,
-as each device has its own maximum frequency that it can support and
-it's not related to what the master supports.
-
-Regards,
-
-Tomeu
+Thanks,
+Stathis
