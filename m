@@ -1,58 +1,46 @@
-From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Subject: Re: [PATCH] net: Linn Ethernet Packet Sniffer driver
-Date: Tue, 27 Jan 2015 17:22:36 +0000
-Message-ID: <54C7C95C.4000007@linn.co.uk>
-References: <1422007621-13567-1-git-send-email-stathis.voukelatos@linn.co.uk> <54C22E68.1080601@redhat.com> <54C60DB8.1060900@linn.co.uk> <54C612A5.2000208@redhat.com> <54C7736C.8090704@linn.co.uk> <54C7A4DD.7030109@redhat.com>
+From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v1 0/3] Add support for APM X-Gene SoC AHBC IOMMU driver.
+Date: Tue, 27 Jan 2015 22:55:51 +0530
+Message-ID: <1422379554-10328-1-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54C7A4DD.7030109@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Borkmann <dborkman@redhat.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>, f.fainelli@gmail.com
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds the support for the APM X-Gene SoC AHBC IOMMU driver.
 
-Hi Daniel,
+v1 change:
+ * Change the binding info as per Arnd comments.
 
-On 27/01/15 14:46, Daniel Borkmann wrote:
->> Just wanted to clarify some implementation details for your approach.
->> - The driver would need to create and register two net_device instances.
->> One for sniffing Ethernet TX packets and one for RX.
->
-> Hm, I would represent the whole device as a single monitoring-only 
-> netdev.
-> I'm somehow still missing the big advantage of all this as compared to
-> using packet sockets on the normal netdev? I couldn't parse that from 
-> your
-> commit message.
+Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+---
 
-This H/W module was developed to allow accurate timestamping of selected
-outgoing or incoming data packets. Timestamp values are provided by an
-external implementation-dependent clock or timer that is of suitable
-quality for the application.
-Example: multiple audio receivers synchronizing their clocks to a
-single transmitter, for synchronized playback.
+Suman Tripathi (3):
+  xgene-ahbc-iommu: Add support for APM X-Gene SoC AHBC IOMMU driver.
+  arm64: dts: Add the APM X-Gene AHBC IOMMU DTS node.
+  Documentation: dt-bindings: Add the binding info for APM X-Gene AHBC
+    IOMMU driver.
 
-The TX and RX blocks of the sniffer can be operated (eg. started, stopped,
-configured) independently, that is why I believe two netdev instances would
-be a better match to the H/W architecture.
+ .../devicetree/bindings/iommu/xgene,ahbc-iommu.txt |  31 ++
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   7 +
+ drivers/iommu/Kconfig                              |  11 +
+ drivers/iommu/Makefile                             |   1 +
+ drivers/iommu/xgene-ahbc-iommu.c                   | 329 +++++++++++++++++++++
+ 5 files changed, 379 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/xgene,ahbc-iommu.txt
+ create mode 100644 drivers/iommu/xgene-ahbc-iommu.c
 
->
->> - Would the control interface for the sniffer in that case need to be
->> through private socket ioctls (ie SIOCDEVPRIVATE + x ioctl ids)?
->
-> Nope, please have a look at Documentation/networking/packet_mmap.txt.
->
->
-Thanks for the link to the document. That is the way forward for retrieving
-data from sniffer match events from user space very efficiently.
-
-However, I am not sure about configuration, where we want to eg set the
-command string, or query device attributes such as the size of the command
-memory. That looks more suitable to an ioctl or a netlink message to me
-and better use the packet socket just for data from sniffer match events.
-
-Thanks,
-Stathis
+--
+1.8.2.1
