@@ -1,76 +1,69 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
-Date: Mon, 26 Jan 2015 16:32:55 -0800
-Message-ID: <db3077a2f9d8410f95cfd71f7e167494@BY2FFO11FD034.protection.gbl>
-References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
- <1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com>
- <54C6D44C.4060106@suse.de>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: zynq: Remove bogus value from 'bias-disable'
+ property
+Date: Tue, 27 Jan 2015 01:38:00 +0100
+Message-ID: <54C6DDE8.3000905@suse.de>
+References: <1422301796-22888-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54C6D44C.4060106@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Heiko Stuebner <heiko@sntech.de>, linux-sh@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, linux-rockchip@lists.infradead.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="x7OTP5ALlf0PUxDlivFv2jtqOb9stSVwM"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422301796-22888-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-01-27 at 12:57AM +0100, Andreas F=C3=A4rber wrote:
-> Am 09.01.2015 um 16:43 schrieb Soren Brinkmann:
-> > Add pinctrl descriptions to the zc702 and zc706 device trees.
-> >=20
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> > ---
-> > Changes since v1:
-> >  - remove 'pinctrl-' prefix for pinctrl sub-nodes
-> >  - separate config and mux nodes
-> >=20
-> > Changes since RFC v2:
-> >  - add pinconf properties to zc702 mdio node
-> >  - remove arguments from bias-related props
-> >=20
-> > Changes since RFC v1:
-> >  - separate DT changes into their own patch
-> > ---
-> >  arch/arm/boot/dts/zynq-7000.dtsi |   8 +-
-> >  arch/arm/boot/dts/zynq-zc702.dts | 181 +++++++++++++++++++++++++++=
-++++++++++++
-> >  arch/arm/boot/dts/zynq-zc706.dts | 152 +++++++++++++++++++++++++++=
-+++++
-> >  3 files changed, 340 insertions(+), 1 deletion(-)
-> [...]
-> > diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/z=
-ynq-zc702.dts
-> > index 280f02dd4ddc..4995412f116f 100644
-> > --- a/arch/arm/boot/dts/zynq-zc702.dts
-> > +++ b/arch/arm/boot/dts/zynq-zc702.dts
-> [...]
-> > @@ -50,15 +52,24 @@
-> >  	status =3D "okay";
-> >  	phy-mode =3D "rgmii-id";
-> >  	phy-handle =3D <&ethernet_phy>;
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_gem0_default>;
-> > =20
-> >  	ethernet_phy: ethernet-phy@7 {
-> >  		reg =3D <7>;
-> >  	};
-> >  };
-> > =20
-> > +&gpio0 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_gpio0_default>;
->=20
-> On linux-next the equivalent no longer works for the Parallella, with
-> gpio failing to probe.
->=20
-> If I move these two properties to the leds node (for which I am
-> configuring gpio 7) then I get a heartbeat as before.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--x7OTP5ALlf0PUxDlivFv2jtqOb9stSVwM
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Moving this away from the gpio node seems wrong. IMHO, it should be
-where it is. I guess, there might be some issues with probe
-ordering/deferral that we may have to sort out.
+Am 26.01.2015 um 20:49 schrieb Soren Brinkmann:
+> In one pinctrl node, a 'bias-disable' property is erroneously assigned =
+a
+> value.
+>=20
+> Fixes: ARM: zynq: DT: Add pinctrl information
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-	S=C3=B6ren
+Reviewed-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+
+Andreas
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upmanyu,=
+
+Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
+
+
+--x7OTP5ALlf0PUxDlivFv2jtqOb9stSVwM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUxt3oAAoJEPou0S0+fgE/OgMQAKMHENAvD2Sl4Z2wkLszdq+n
+xC/d/8mD51o/95ByFKkMx0EjjFF43DOxJDGUbqcHzOOgfGyv0scDatFAqxWEabMC
+GnCbMJeFqUkaKhgQqhHCPwhYvMW6MFnA2VPcbhk8KyYY9Qhjlbq8xLyNUtWPYk6U
+s2LtzPoLn7R7r9JGZGPOpF0SMU7gB3htABqgNHSwN/L3hkKLRdmAL/mXBAxa6Qpp
+M+vxiDOwjzPdYx2+x6FX9kdXEVyyO1vp75YCSrq3VCiEZwt2gqlm1voPljdlcFKD
+5hUpsnbS/Jh+HvmxbuWRN1tyJmwEln3C8Zfy0ct8b5FRP7DHem/nmKeI/kzhobyl
+7fh6a3JV5GgfNCQk325AecONRiMwmdikxOmCJJsiDzrNb4HrZQsR/1Q+o/RV8LZv
+lfHA8+UjUVGcgyLtyLu46lx4xGa2PHO/jrMFj9wVqbkTTm05xhBmKCDwh7SNdBhi
+isZ9M4kDcnELrkd8DW6yRSuaZJp+1cNw1Cor0UVKfNgp5CJO6fAYqlThtyZdmuul
+mSSgUh18IN1/OInbXDurQxETEaYqrs3SfogofMAhZmHa/9cRzDQ6PX9kVTXrLSQh
+GIzVwdhpyCZcOwtq11JoWRsOc5h8hRDzfD0bOVmXhfqGfxVUM8bOu350DBw3h4Om
+aG1sEn/O9dcbKqTmJy5f
+=xgpu
+-----END PGP SIGNATURE-----
+
+--x7OTP5ALlf0PUxDlivFv2jtqOb9stSVwM--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
