@@ -1,75 +1,66 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v3 3/4] ARM: digicolor: add minimal device tree description
-Date: Wed, 28 Jan 2015 12:48:52 +0200
-Message-ID: <20150128104852.GE14175@tarshish>
-References: <cover.1421219953.git.baruch@tkos.co.il>
- <474d0849bb30ab4ec323fa4c1bc67b30b31d3884.1421219953.git.baruch@tkos.co.il>
- <20150127230141.GA11263@quad.lixom.net>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v3 00/10] Improvements to Tegra-based
+	Chromebook support
+Date: Wed, 28 Jan 2015 11:50:58 +0100
+Message-ID: <1422442278-10405-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20150127230141.GA11263@quad.lixom.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Wolfram Sang <wsa@the-dreams.de>, Andrew Bresticker <abrestic@chromium.org>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Dylan Reid <dgreid@chromium.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Brown <broonie@kernel.org>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Simon Glass <sjg@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Takashi Iwai <tiwai@suse.de>, Kumar Gala <galak@codeaurora.org>, Javier
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
-
-On Tue, Jan 27, 2015 at 03:01:41PM -0800, Olof Johansson wrote:
-> On Wed, Jan 14, 2015 at 10:40:32AM +0200, Baruch Siach wrote:
-> > cx92755.dtsi describes CX92755 on chip peripherals. conexant_equinox.dts
-> > describes the Equinox evaluation board for the CX92755 SoC.
-> > 
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > ---
-> >  arch/arm/boot/dts/Makefile             |   1 +
-> >  arch/arm/boot/dts/conexant_equinox.dts |  74 +++++++++++++++++++++++
-> >  arch/arm/boot/dts/cx92755.dtsi         | 107 +++++++++++++++++++++++++++++++++
-> >  3 files changed, 182 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/conexant_equinox.dts
-> >  create mode 100644 arch/arm/boot/dts/cx92755.dtsi
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index 91bd5bd62857..fbeb65eaddda 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -75,6 +75,7 @@ dtb-$(CONFIG_ARCH_BRCMSTB) += \
-> >  	bcm7445-bcm97445svmb.dtb
-> >  dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
-> >  	da850-evm.dtb
-> > +dtb-$(CONFIG_ARCH_DIGICOLOR) += conexant_equinox.dtb
-> >  dtb-$(CONFIG_ARCH_EFM32) += efm32gg-dk3750.dtb
-> >  dtb-$(CONFIG_ARCH_EXYNOS) += exynos3250-monk.dtb \
-> >  	exynos3250-rinato.dtb \
-> > diff --git a/arch/arm/boot/dts/conexant_equinox.dts b/arch/arm/boot/dts/conexant_equinox.dts
-> > new file mode 100644
-> > index 000000000000..f33bf5635d47
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/conexant_equinox.dts
-> 
-> To segment the namespace a bit, we ask that you prefix your dts files with the
-> platform. What would be a suitable prefix here? conexant? digicolor?
-
-I think we should use the actual SoC name, that is cx92755, just like the 
-.dtsi file is named. I'll resend this patch with the name change and a few 
-more incremental changes needed by the interrupt controller and timer drivers.
-
-Thanks,
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+djM6CSogQWRkZWQgYmluZGluZ3MgZm9yIHRoZSBMVE4xNDBBVDI5IHBhbmVsCgkqIFJlbW92ZWQg
+dGhlIGRlbGF5IGluIHB3cnNlcSwgYXMgd2hhdCB3YXMgYWN0dWFsbHkgbmVlZGVkIHdhcyB0byBh
+ZGQKCWEgZGVwZW5kZW5jeSBvbiB0aGUgcG93ZXIgc3VwcGxpZXMgb2YgdGhlIGhvc3QKCSogVXNl
+cyB0aGUgcGlubXV4IGZvciB0aGUgQmxhemUgYXMgZ2VuZXJhdGVkIGJ5IHRlZ3JhLXBpbm11eC1z
+Y3JpcHRzCgkqIFVzZXMgdGhlIHBpbm11eCBmb3IgdGhlIEJpZyBhcyBpbiB0aGUgbGFzdCBwYXRj
+aCBmcm9tIFNpbW9uIEdsYXNzCgpIZWxsbywKCnRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3Ig
+dGhlIFRlZ3JhLWJhc2VkIEhQIENocm9tZWJvb2sgMTQgKGFrYSBueWFuCmJsYXplKSwgd2hpY2gg
+aXMgdmVyeSBzaW1pbGFyIHRvIHRoZSBBY2VyIENocm9tZWJvb2sgMTMgKGFrYSBueWFuIGJpZyku
+CkJlY2F1c2UgdGhleSBib3RoIGluY2x1ZGUgdGVncmExMjQtbnlhbi5kdHNpLCBzb21lIGltcHJv
+dmVtZW50cyB0byBCbGF6ZQpzdXBwb3J0IGhhdmUgYWxzbyBiZW5lZml0dGVkIHRoZSBCaWcuIEkg
+aGF2ZSB0ZXN0ZWQgdGhhdCBVU0IyLCB0aGUgcGFuZWxzLApIRE1JLCB0aGUgdHJhY2twYWQsIFdp
+ZmkgYW5kIHNvdW5kIHdvcmsgb24gYm90aC4KClRoZSBEVCBmb3IgdGhlIEJpZyBpbmNsdWRlcyB0
+aGUgcGlubXV4IGNvbmZpZ3VyYXRpb24gYXMgZ2VuZXJhdGVkIGJ5CnRlZ3JhLXBpbm11eC1zY3Jp
+cHRzIHdpdGggU2ltb24ncyBwYXRjaCBhdDoKCmh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcv
+cGF0Y2gvNDE3Nzc5LwoKVGhlc2UgcGF0Y2hlcyBhcmUgYmFzZWQgb24gdG9wIG9mIGxpbnV4LW5l
+eHQgMjAxNTAxMjguCgpodHRwOi8vY2dpdC5jb2xsYWJvcmEuY29tL2dpdC91c2VyL3RvbWV1L2xp
+bnV4LmdpdC9sb2cvP2g9bnlhbi12MwoKUmVnYXJkcywKClRvbWV1CgpTdMOpcGhhbmUgTWFyY2hl
+c2luICgxKToKICBkcm0vcGFuZWw6IGFkZCBzdXBwb3J0IGZvciBTYW1zdW5nIExUTjE0MEFUMjkg
+cGFuZWwKClRvbWV1IFZpem9zbyAoOSk6CiAgQVJNOiB0ZWdyYTogU2V0IHRoZSBzb3VuZCBjYXJk
+IG1vZGVsIHRoYXQgYWxzYXVjbSBleHBlY3RzCiAgQVJNOiB0ZWdyYTogTW92ZSBvdXQgbnlhbi1n
+ZW5lcmljIHBhcnRzIG91dCBmcm9tIHRoZSBueWFuLWJpZyBEVAogIEFSTTogdGVncmE6IEFkZCBE
+VFMgZm9yIHRoZSBueWFuLWJsYXplIGJvYXJkCiAgQVJNOiB0ZWdyYTogQWRkIG5vZGUgZm9yIHRy
+YWNrcGFkIGluIE55YW4gYm9hcmRzCiAgQVNvQzogdGVncmE6IEFkZCBhIGNvbnRyb2wgZm9yIHRo
+ZSBoZWFkcGhvbmUgc3dpdGNoCiAgQVNvQzogdGVncmE6IGFkZCBzaW5rIGZvciB0aGUgaW50ZXJu
+YWwgbWljIHRvIHRlZ3JhX21heDk4MDkwCiAgQVJNOiB0ZWdyYTogVXNlIHB3cnNlcS1zaW1wbGUg
+Zm9yIHRoZSB3aWZpIGluIE55YW4KICBBUk06IHRlZ3JhOiBVc2UgdGhlIGdlbmVyYXRlZCBwaW5t
+dXggZGF0YQogIEFSTTogdGVncmE6IFNldCBzcGktbWF4LWZyZXF1ZW5jeSBwcm9wZXJ0eSB0byBm
+bGFzaCBub2RlCgogLi4uL2JpbmRpbmdzL3BhbmVsL3NhbXN1bmcsbHRuMTQwYXQyOS0zMDEudHh0
+ICAgICAgfCAgICA3ICsKIC4uLi9iaW5kaW5ncy9zb3VuZC9udmlkaWEsdGVncmEtYXVkaW8tbWF4
+OTgwOTAudHh0IHwgICAgMSArCiBhcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgIDEgKwogYXJjaC9hcm0vYm9vdC9kdHMvdGVncmExMjQtbnlhbi1i
+aWcuZHRzICAgICAgICAgICAgfCAyMTEyICsrKysrKysrKysrLS0tLS0tLS0tCiBhcmNoL2FybS9i
+b290L2R0cy90ZWdyYTEyNC1ueWFuLWJsYXplLmR0cyAgICAgICAgICB8IDEzMjUgKysrKysrKysr
+KysrCiBhcmNoL2FybS9ib290L2R0cy90ZWdyYTEyNC1ueWFuLmR0c2kgICAgICAgICAgICAgICB8
+ICA2OTIgKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAg
+ICAgICAgICAgfCAgIDI2ICsKIHNvdW5kL3NvYy90ZWdyYS90ZWdyYV9tYXg5ODA5MC5jICAgICAg
+ICAgICAgICAgICAgIHwgICAgMyArCiA4IGZpbGVzIGNoYW5nZWQsIDMyMDYgaW5zZXJ0aW9ucygr
+KSwgOTYxIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9zYW1zdW5nLGx0bjE0MGF0MjktMzAxLnR4dAogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTI0LW55YW4tYmxhemUuZHRzCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvdGVncmExMjQtbnlhbi5kdHNpCgot
+LSAKMS45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRw
+Oi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
