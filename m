@@ -1,39 +1,38 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Wed, 28 Jan 2015 09:04:17 +0200
-Message-ID: <20150128070417.GK17565@valkosipuli.retiisi.org.uk>
-References: <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
- <54B4DA81.7060900@samsung.com>
- <CAL_JsqLYxB5hzLAWXpU=uncM5DEMZU78mP673H9oSSNB-cgcYQ@mail.gmail.com>
- <54B8D4D0.3000904@samsung.com>
- <CAL_Jsq+EFWzs1HP1tVt6P=p=HZn2AtSPjp55YrmMQi_mE+kNfQ@mail.gmail.com>
- <54B933D0.1090004@samsung.com>
- <54BE7DAB.80702@samsung.com>
- <CAL_JsqKoiaUmVhbQdnNveG=AAYh4-OHGS70L+LAgLLoKChUuYQ@mail.gmail.com>
- <20150120174010.GA2900@amd>
- <54BF73B9.8060402@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] dt: watchdog: Add DT binding documentation for jz47xx watchdog timer
+Date: Wed, 28 Jan 2015 12:23:48 +0100
+Message-ID: <9831838.T0biTLFe1N@wuerfel>
+References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com> <9081741.fTg5kD1W54@wuerfel> <54C8B974.8030703@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54BF73B9.8060402@samsung.com>
+In-Reply-To: <54C8B974.8030703@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robherring2@gmail.com>, linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, wim@iguana.be, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, paul@crapouillou.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 21, 2015 at 10:39:05AM +0100, Jacek Anaszewski wrote:
-> I agree. I think that led-sources-cnt is redundant. A list property
-> can be read using of_prop_next_u32 function. I missed that and thus
-> proposed putting led-sources-cnt in each sub-node to be able to read
-> led-sources list with of_property_read_u32_array.
+On Wednesday 28 January 2015 10:27:00 Zubair Lutfullah Kakakhel wrote:
 > 
-> Effectively, I propose to avoid adding led-sources-cnt property.
+> There is on-going work to fix jz4740, add jz4780 and shake the entire clock tree as well.
+> 
+> Patch 14 onwards in this series
+> http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
 
-You can also read the array size using of_get_property().
+Right, that looks good.
+ 
+> Instead of lumping things out in huge changesets, I intended to push out the minor patches that are disjoint.
+> 
+> That was the purpose of sending these two patches.
+> 
+> Current binding requires the clock-name to be "rtc". Hence the name at the moment.
 
--- 
-Regards,
+The problem with the binding is that once you've established it, it
+is very hard to change. One possible solution would be to try
+'of_clk_get(dev->of_node, 0)' in the driver first, and only then
+call clk_get(dev, "rtc"). Doing that, you can have an anonymous clock
+in the DT without waiting for the clock driver to get merged first
+or breaking the existing setup.
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+	Arnd
