@@ -1,82 +1,50 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] clk: dt: st: Introduce clock domain documentation
-Date: Tue, 27 Jan 2015 17:19:02 -0800
-Message-ID: <20150128011902.22722.85007@quantum>
-References: <1422270840-3039-1-git-send-email-lee.jones@linaro.org>
- <1422270840-3039-5-git-send-email-lee.jones@linaro.org>
+From: Lennart Poettering <lennart@poettering.net>
+Subject: Re: Making udev emit a signal when it is done
+ loading modules
+Date: Wed, 28 Jan 2015 02:38:52 +0100
+Message-ID: <20150128013852.GA8177@gardel-login>
+References: <54BA20D0.7060402@redhat.com>
+ <20150117160319.GO18247@in.waw.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422270840-3039-5-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: base64
+Return-path: <systemd-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150117160319.GO18247@in.waw.pl>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/systemd-devel>,
+ <mailto:systemd-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/systemd-devel>
+List-Post: <mailto:systemd-devel@lists.freedesktop.org>
+List-Help: <mailto:systemd-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/systemd-devel>,
+ <mailto:systemd-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: systemd-devel-bounces@lists.freedesktop.org
+Sender: "systemd-devel" <systemd-devel-bounces@lists.freedesktop.org>
+To: Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>
+Cc: devicetree <devicetree@vger.kernel.org>, systemd-devel@lists.freedesktop.org, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lee Jones (2015-01-26 03:14:00)
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/st/st,clk-domain.txt | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/st/st,clk-domain.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/st/st,clk-domain.txt b/Documentation/devicetree/bindings/clock/st/st,clk-domain.txt
-> new file mode 100644
-> index 0000000..7309937
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/st/st,clk-domain.txt
-> @@ -0,0 +1,34 @@
-> +STMicroelectronics Clock Domain
-> +
-> +ST hardware have a bunch of clocks which must not be turned off.
-> +If drivers a) fail to obtain a reference to any of these or b) give
-> +up a previously obtained reference during suspend, the common clk
-> +framework will attempt to turn them off and the hardware will
-> +subsequently die.  The only way to recover from this failure is to
-> +restart.
-> +
-> +To avoid either of these two scenarios from catastrophically
-> +disabling the running system we have implemented a clock domain
-> +where clocks are consumed and references are taken, thus preventing
-> +them from being shut down by the framework.
-> +
-> +We use the generic clock bindings found in:
-> +  Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible : Must be "st,clk-domain"
-
-Seems like a useful feature for any clock provider, not just ST's. Have
-you thought about making this solution generic for DT-based clock
-providers?
-
-We could amend the common clock binding to include a special "always on"
-clock group that is automagically prepared and enabled when the clock
-provider/driver is registered, using a common function.
-
-Regards,
-Mike
-
-> +
-> +Example:
-> +
-> +clk-domain {
-> +       compatible = "st,clk-domain";
-> +       clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>,
-> +                <&clk_s_c0_flexgen CLK_COMPO_DVP>,
-> +                <&clk_s_c0_flexgen CLK_MMC_1>,
-> +                <&clk_s_c0_flexgen CLK_ICN_SBC>,
-> +                <&clk_s_c0_flexgen CLK_ICN_LMI>,
-> +                <&clk_s_c0_flexgen CLK_ICN_CPU>,
-> +                <&clk_s_c0_flexgen CLK_TX_ICN_DMU>,
-> +                <&clk_s_a0_flexgen CLK_IC_LMI0>,
-> +                <&clk_m_a9>;
-> +};
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0LCAxNy4wMS4xNSAxNzowMywgWmJpZ25pZXcgSsSZZHJ6ZWpld3NraS1Tem1layAoemJ5
+c3pla0Bpbi53YXcucGwpIHdyb3RlOgoKPiBPbiBTYXQsIEphbiAxNywgMjAxNSBhdCAwOTo0NDow
+MEFNICswMTAwLCBIYW5zIGRlIEdvZWRlIHdyb3RlOgo+ID4gV2Ugd291bGQgbGlrZQo+ID4gdWRl
+diB0byBlbWl0IGEgc2lnbmFsIChBQkkgdG8gYmUgZGlzY3Vzc2VkKSB3aGVuIGl0IGlzIGRvbmUK
+PiA+IHRyeWluZyB0byBsb2FkIG1vZHVsZXMgZm9yIGV2ZXJ5dGhpbmcgd2hpY2ggd2FzIGFscmVh
+ZHkgZW51bWVyYXRlZAo+ID4gd2hlbiBpdCBzdGFydHMsIGlvdyB3aGVuIHRoZXJlIGFyZSBubyBu
+ZXcgZGV2aWNlIGV2ZW50cyBwZW5kaW5nCj4gPiBhbnltb3JlIHdoZW4gdWRldiBkb2VzIGl0cyBp
+bml0aWFsIGhvdHBsdWcgcmVwbGF5Lgo+IEkgdGhpbmsgeW91IGNhbiBqdXN0IGNyZWF0ZSBhIHVu
+aXQgbGlrZToKPiAKPiAjIGRpc2FibGUtbmV3LWhhcmR3YXJlLnNlcnZpY2UKPiBbVW5pdF0KPiBB
+ZnRlcj1zeXN0ZW1kLXVkZXYtc2V0dGxlLnNlcnZpY2Ugc3lzdGVtZC1tb2R1bGVzLWxvYWQuc2Vy
+dmljZQo+IFdhbnRzPXN5c3RlbWQtdWRldi1zZXR0bGUuc2VydmljZQo+IAo+IFtTZXJ2aWNlXQo+
+IFR5cGU9b25lc2hvdAo+IFJlbWFpbkFmdGVyRXhpdD15ZXMKPiBFeGVjU3RhcnQ9L3Vzci9sb2Nh
+bC9iaW4vcGluZy10aGUta2VybmVsCj4gCj4gPiBTbyB0aGUgcXVlc3Rpb24gdG8geW91IGlzIHdv
+dWxkIHlvdSBiZSB3aWxsaW5nIHRvIGluY2x1ZGUgc3VjaAo+ID4gZnVuY3Rpb25hbGl0eSBpbiB1
+ZGV2Pwo+IEkgZG9uJ3QgdGhpbmsgdWRldmQgaGFzIGVub3VnaCBrbm93bGVkZ2UuIEJ1dCBhIHN5
+c3RlbWQgdW5pdCBsaWtlCj4gdGhlIG9uZSBhYm92ZSBzaG91bGQgd29yay4KClRvIGNsYXJpZnkg
+dGhpczogaWYgcGVvcGxlIGRvIHRoaXMsIHRoZW4gdGhpcyBwdWxscyBpbgpzeXN0ZW1kLXVkZXYt
+c2V0dGxlLnNlcnZpY2UsIHdoaWNoIHNsb3dzIGRvd24gYm9vdC4gRXZlcnkgc2VydmljZSB0aGF0
+CmRvZXMgdGhhdCBpcyBoZW5jZSBhIG1ham91ciBzb3VyY2Ugb2Ygc2xvd25lc3MuIAoKSXQncyBh
+IGhhY2sgdG8gdXNlIHRoaXMsIG5vdCBhIHNvbHV0aW9uLiAKCkxlbm5hcnQKCi0tIApMZW5uYXJ0
+IFBvZXR0ZXJpbmcsIFJlZCBIYXQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Kc3lzdGVtZC1kZXZlbCBtYWlsaW5nIGxpc3QKc3lzdGVtZC1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL3N5c3RlbWQtZGV2ZWwK
