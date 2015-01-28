@@ -1,212 +1,102 @@
-From: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 5/5] iio: common: ssp_sensors: Add sensorhub gyroscope sensor
-Date: Wed, 28 Jan 2015 15:05:54 +0100
-Message-ID: <1422453954-27317-6-git-send-email-k.wrona@samsung.com>
-References: <1422453954-27317-1-git-send-email-k.wrona@samsung.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1422453954-27317-1-git-send-email-k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Karol Wrona <wrona.vy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC v2 00/14] Secure Element support for NCI based NFC controller, st21nfcb integration and EVT_TRANSACTION
+Date: Wed, 28 Jan 2015 21:17:17 +0100
+Message-ID: <1422476251-25972-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds gyroscope iio driver which uses sensorhub as data
-provider.
+Hi Samuel,
 
-Signed-off-by: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/iio/gyro/Makefile          |    2 +
- drivers/iio/gyro/ssp_gyro_sensor.c |  168 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 170 insertions(+)
- create mode 100644 drivers/iio/gyro/ssp_gyro_sensor.c
+This is a pre-send with an update including your comments on patch #20.
+Patch #27 is not yet modified. I hope to send something for review tonight.
 
-diff --git a/drivers/iio/gyro/Makefile b/drivers/iio/gyro/Makefile
-index 36a3877..f46341b 100644
---- a/drivers/iio/gyro/Makefile
-+++ b/drivers/iio/gyro/Makefile
-@@ -16,6 +16,8 @@ itg3200-y               := itg3200_core.o
- itg3200-$(CONFIG_IIO_BUFFER) += itg3200_buffer.o
- obj-$(CONFIG_ITG3200)   += itg3200.o
- 
-+obj-$(CONFIG_IIO_SSP_SENSORS_COMMONS) += ssp_gyro_sensor.o
-+
- obj-$(CONFIG_IIO_ST_GYRO_3AXIS) += st_gyro.o
- st_gyro-y := st_gyro_core.o
- st_gyro-$(CONFIG_IIO_BUFFER) += st_gyro_buffer.o
-diff --git a/drivers/iio/gyro/ssp_gyro_sensor.c b/drivers/iio/gyro/ssp_gyro_sensor.c
-new file mode 100644
-index 0000000..0a8afdd
---- /dev/null
-+++ b/drivers/iio/gyro/ssp_gyro_sensor.c
-@@ -0,0 +1,168 @@
-+/*
-+ *  Copyright (C) 2014, Samsung Electronics Co. Ltd. All Rights Reserved.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/iio/common/ssp_sensors.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/kfifo_buf.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include "../common/ssp_sensors/ssp_iio_sensor.h"
-+
-+#define SSP_CHANNEL_COUNT 3
-+
-+#define SSP_GYROSCOPE_NAME "ssp-gyroscope"
-+static const char ssp_gyro_name[] = SSP_GYROSCOPE_NAME;
-+
-+enum ssp_gyro_3d_channel {
-+	SSP_CHANNEL_SCAN_INDEX_X,
-+	SSP_CHANNEL_SCAN_INDEX_Y,
-+	SSP_CHANNEL_SCAN_INDEX_Z,
-+	SSP_CHANNEL_SCAN_INDEX_TIME,
-+};
-+
-+static int ssp_gyro_read_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan, int *val,
-+			     int *val2, long mask)
-+{
-+	u32 t;
-+	struct ssp_data *data = dev_get_drvdata(indio_dev->dev.parent->parent);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		t = ssp_get_sensor_delay(data, SSP_GYROSCOPE_SENSOR);
-+		ssp_convert_to_freq(t, val, val2);
-+		return IIO_VAL_INT_PLUS_MICRO;
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int ssp_gyro_write_raw(struct iio_dev *indio_dev,
-+			      struct iio_chan_spec const *chan, int val,
-+			      int val2, long mask)
-+{
-+	int ret;
-+	struct ssp_data *data = dev_get_drvdata(indio_dev->dev.parent->parent);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		ret = ssp_convert_to_time(val, val2);
-+		ret = ssp_change_delay(data, SSP_GYROSCOPE_SENSOR, ret);
-+		if (ret < 0)
-+			dev_err(&indio_dev->dev, "gyro sensor enable fail\n");
-+
-+		return ret;
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static struct iio_info ssp_gyro_iio_info = {
-+	.read_raw = &ssp_gyro_read_raw,
-+	.write_raw = &ssp_gyro_write_raw,
-+};
-+
-+static const unsigned long ssp_gyro_scan_mask[] = { 0x07, 0, };
-+
-+static const struct iio_chan_spec ssp_gyro_channels[] = {
-+	SSP_CHANNEL_AG(IIO_ANGL_VEL, IIO_MOD_X, SSP_CHANNEL_SCAN_INDEX_X),
-+	SSP_CHANNEL_AG(IIO_ANGL_VEL, IIO_MOD_Y, SSP_CHANNEL_SCAN_INDEX_Y),
-+	SSP_CHANNEL_AG(IIO_ANGL_VEL, IIO_MOD_Z, SSP_CHANNEL_SCAN_INDEX_Z),
-+	SSP_CHAN_TIMESTAMP(SSP_CHANNEL_SCAN_INDEX_TIME),
-+};
-+
-+static int ssp_process_gyro_data(struct iio_dev *indio_dev, void *buf,
-+				 int64_t timestamp)
-+{
-+	return ssp_common_process_data(indio_dev, buf, SSP_GYROSCOPE_SIZE,
-+				       timestamp);
-+}
-+
-+static const struct iio_buffer_setup_ops ssp_gyro_buffer_ops = {
-+	.postenable = &ssp_common_buffer_postenable,
-+	.postdisable = &ssp_common_buffer_postdisable,
-+};
-+
-+static int ssp_gyro_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct iio_dev *indio_dev;
-+	struct ssp_sensor_data *spd;
-+	struct iio_buffer *buffer;
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*spd));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	spd = iio_priv(indio_dev);
-+
-+	spd->process_data = ssp_process_gyro_data;
-+	spd->type = SSP_GYROSCOPE_SENSOR;
-+
-+	indio_dev->name = ssp_gyro_name;
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->info = &ssp_gyro_iio_info;
-+	indio_dev->modes = INDIO_BUFFER_SOFTWARE;
-+	indio_dev->channels = ssp_gyro_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(ssp_gyro_channels);
-+	indio_dev->available_scan_masks = ssp_gyro_scan_mask;
-+
-+	buffer = devm_iio_kfifo_allocate(&pdev->dev);
-+	if (!buffer)
-+		return -ENOMEM;
-+
-+	iio_device_attach_buffer(indio_dev, buffer);
-+
-+	indio_dev->setup_ops = &ssp_gyro_buffer_ops;
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* ssp registering should be done after all iio setup */
-+	ssp_register_consumer(indio_dev, SSP_GYROSCOPE_SENSOR);
-+
-+	return 0;
-+}
-+
-+static int ssp_gyro_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+
-+	iio_device_unregister(indio_dev);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver ssp_gyro_driver = {
-+	.driver = {
-+		.name = SSP_GYROSCOPE_NAME,
-+	},
-+	.probe = ssp_gyro_probe,
-+	.remove = ssp_gyro_remove,
-+};
-+
-+module_platform_driver(ssp_gyro_driver);
-+
-+MODULE_AUTHOR("Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-+MODULE_DESCRIPTION("Samsung sensorhub gyroscopes driver");
-+MODULE_LICENSE("GPL");
+"
+I have to introduce dynnamic conn_id management has described in the NCI
+specification. Only RF static conn_id was supported so far. I have tried to
+do a minimun changeset in order to bring all the necessary NCI functions in
+order to operate with a secure element with ST21NFCB NFC controller. Besides the
+standard NCI commands, the HCI commands are sent following a proprietary
+implementation.
+
+Miscellaneous
+-------------
+I am also routing the HCI event TRANSACTION up to user space. It may help to understand
+the necessity to reference every pipe with a tuple {gate, host}. This for example allows
+to keep the host information generating this particular event.
+
+Open Questions:
+---------------
+Both integration may have little gap in their card emulation behavior.
+For example:
+- ST21NFCA will have card emulation active as soon as we activate a secure element.
+- ST21NFCB will have card emulation active according to the selected polling mode.
+When do you expect to have card emulation to be active ?
+
+When an application is running, it might be necessary to signals to the under layers
+that it has finished to operate with a particular secure element. The goal here is to release
+a secure element without deactivating it. For example to allow automatic sleep mode.
+With my current implementation,
+- With ST21NFCB, enable_se/disable_se may fit this request as both secure element are kept activated.
+- With ST21NFCA, enable_se/disable_se does not fit this requirement as i am completely deactivating 
+the secure element.
+I am not sure if the SE activation should not be done in the discovery_se without any deactivation
+until the device remove function(?).
+"
+
+Any feedback are welcome.
+
+Best Regards
+Christophe
+
+Christophe Ricard (14):
+  NFC: nci: Add dynamic conn_id NCI concept.
+  NFC: nci: Make nci_request available for nfc driver
+  NFC: nci: Add NCI NFCEE constant
+  NFC: nci: Add nci_nfcee_discover handler command/response/notification
+  NFC: nci: Add nci_nfcee_mode_set handler command/response
+  NFC: nci: Add nci_core_conn_create handler command/response
+  NFC: nci: Add nci_core_conn_close handler command/response
+  NFC: st21nfcb: Add HCI protocol over NCI protocol support
+  NFC: st21nfcb: Adding support for secure element
+  NFC: Forward NFC_EVT_TRANSACTION up to user space
+  NFC: nci: Add support RF_NFCEE_ACTION_NTF
+  NFC: nci: Change NCI state machine to LISTEN_ACTIVE and ignore
+    parameters in rf_intf_activated_ntf
+  NFC: st21nfcb: Add support for HCI event transaction
+  NFC: st21nfca: Add support for HCI event transaction
+
+ drivers/nfc/st21nfca/st21nfca_se.c       |  21 +
+ drivers/nfc/st21nfcb/Makefile            |   2 +-
+ drivers/nfc/st21nfcb/st21nfcb.c          |   8 +-
+ drivers/nfc/st21nfcb/st21nfcb.h          |   2 +
+ drivers/nfc/st21nfcb/st21nfcb_hci_core.c | 823 +++++++++++++++++++++++++++++++
+ drivers/nfc/st21nfcb/st21nfcb_hci_core.h | 134 +++++
+ drivers/nfc/st21nfcb/st21nfcb_se.c       | 631 ++++++++++++++++++++++++
+ drivers/nfc/st21nfcb/st21nfcb_se.h       |  59 +++
+ include/net/nfc/nci.h                    |  95 ++++
+ include/net/nfc/nci_core.h               |  41 +-
+ include/net/nfc/nfc.h                    |  27 +
+ include/uapi/linux/nfc.h                 |   1 +
+ net/nfc/core.c                           |  21 +
+ net/nfc/nci/core.c                       | 121 ++++-
+ net/nfc/nci/data.c                       |  72 ++-
+ net/nfc/nci/ntf.c                        |  93 +++-
+ net/nfc/nci/rsp.c                        | 100 +++-
+ net/nfc/netlink.c                        |  47 ++
+ net/nfc/nfc.h                            |   2 +
+ 19 files changed, 2255 insertions(+), 45 deletions(-)
+ create mode 100644 drivers/nfc/st21nfcb/st21nfcb_hci_core.c
+ create mode 100644 drivers/nfc/st21nfcb/st21nfcb_hci_core.h
+ create mode 100644 drivers/nfc/st21nfcb/st21nfcb_se.c
+ create mode 100644 drivers/nfc/st21nfcb/st21nfcb_se.h
+
 -- 
-1.7.9.5
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
