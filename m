@@ -1,8 +1,8 @@
 From: Paul Walmsley <paul@pwsan.com>
-Subject: [PATCH 13/24] Documentation: DT bindings: add more chip compatible
- strings for Tegra PMC
-Date: Wed, 28 Jan 2015 16:49:38 -0700
-Message-ID: <20150128234938.20644.51314.stgit@dusk.lan>
+Subject: [PATCH 08/24] Documentation: DT bindings: add more chip compatible
+ strings for Tegra UART
+Date: Wed, 28 Jan 2015 16:49:37 -0700
+Message-ID: <20150128234937.20644.53335.stgit@dusk.lan>
 References: <20150128234935.20644.89300.stgit@dusk.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -10,11 +10,11 @@ Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20150128234935.20644.89300.stgit@dusk.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Peter Hurley <peter@hurleysoftware.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jingchang Lu <jingchang.lu@freescale.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, John Crispin <blogic@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Add compatible strings for the PMC IP block present on several Tegra
+Add compatible strings for the UART IP blocks present on several Tegra
 chips.  The primary objective here is to avoid checkpatch warnings,
 per:
 
@@ -26,31 +26,31 @@ Cc: Pawel Moll <pawel.moll@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
 Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jingchang Lu <jingchang.lu@freescale.com>
+Cc: Peter Hurley <peter@hurleysoftware.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>
+Cc: John Crispin <blogic@openwrt.org>
 Cc: Paul Walmsley <pwalmsley@nvidia.com>
 Cc: devicetree@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/serial/of-serial.txt       |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-index 68ac65f82a1c..84bb31e7b778 100644
---- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-@@ -6,7 +6,11 @@ modes. It provides power-gating controllers for SoC and CPU power-islands.
- 
- Required properties:
- - name : Should be pmc
--- compatible : Should contain "nvidia,tegra<chip>-pmc".
-+- compatible : "nvidia,tegra20-pmc"
-+  "nvidia,tegra30-pmc"
-+  "nvidia,tegra114-pmc"
-+  "nvidia,tegra124-pmc"
-+  "nvidia,tegra132-pmc" (not yet matched by the driver)
- - reg : Offset and length of the register set for the device
- - clocks : Must contain an entry for each entry in clock-names.
-   See ../clocks/clock-bindings.txt for details.
+diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
+index b52b98234b9b..06ebae54cbcc 100644
+--- a/Documentation/devicetree/bindings/serial/of-serial.txt
++++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+@@ -9,6 +9,11 @@ Required properties:
+ 	- "ns16750"
+ 	- "ns16850"
+ 	- "nvidia,tegra20-uart"
++	- "nvidia,tegra30-uart" (not yet matched by the driver)
++	- "nvidia,tegra114-uart" (not yet matched by the driver)
++	- "nvidia,tegra124-uart" (not yet matched by the driver)
++	- "nvidia,tegra132-uart" (not yet matched by the driver)
++	- "nvidia,tegra210-uart" (not yet matched by the driver)
+ 	- "nxp,lpc3220-uart"
+ 	- "ralink,rt2880-uart"
+ 	- "ibm,qpace-nwp-serial"
