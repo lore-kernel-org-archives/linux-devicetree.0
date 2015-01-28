@@ -1,127 +1,60 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] of: iommu: add ptr to OF node arg to
-	of_iommu_configure()
-Date: Wed, 28 Jan 2015 13:32:19 +0000
-Message-ID: <20150128133219.GM1569@arm.com>
-References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
-	<3953539.m9NpxSWcJ5@avalon> <20150128122941.GK1569@arm.com>
-	<13812499.ICbNgSDOae@avalon>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: henninger: rename board to Porter
+Date: Wed, 28 Jan 2015 16:41:44 +0300
+Message-ID: <54C8E718.7060504@cogentembedded.com>
+References: <2481726.lh33apx2TG@wasted.cogentembedded.com>
+ <CAMuHMdW3NmzGxGa9DOHpk4Evjg=+bduUPiMoRZT9Ko7+jNp-Nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <13812499.ICbNgSDOae@avalon>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdW3NmzGxGa9DOHpk4Evjg=+bduUPiMoRZT9Ko7+jNp-Nw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Linux-sh list <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 01:15:10PM +0000, Laurent Pinchart wrote:
-> On Wednesday 28 January 2015 12:29:42 Will Deacon wrote:
-> > On Wed, Jan 28, 2015 at 12:23:03PM +0000, Laurent Pinchart wrote:
-> > > On Wednesday 28 January 2015 11:33:00 Will Deacon wrote:
-> > >> On Mon, Jan 26, 2015 at 06:49:01PM +0000, Murali Karicheri wrote:
-> > >>> On 01/25/2015 08:32 AM, Laurent Pinchart wrote:
-> > >>>> On Friday 23 January 2015 17:32:34 Murali Karicheri wrote:
-> > >>>>> Function of_iommu_configure() is called from of_dma_configure() to
-> > >>>>> setup iommu ops using DT property. This API is currently used for
-> > >>>>> platform devices for which DMA configuration (including iommu ops)
-> > >>>>> may come from device's parent. To extend this functionality for PCI
-> > >>>>> devices, this API need to take a parent node ptr as an argument
-> > >>>>> instead of assuming device's parent. This is needed since for PCI,
-> > >>>>> the dma configuration may be defined in the DT node of the root bus
-> > >>>>> bridge's parent device. Currently only dma-range is used for PCI and
-> > >>>>> iommu is not supported. So return error if the device is PCI.
-> > >>>>> 
-> > >>>>> Cc: Joerg Roedel<joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-> > >>>>> Cc: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >>>>> Cc: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >>>>> Cc: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> > >>>>> Cc: Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>
-> > >>>>> Cc: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> > >>>>> Cc: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
-> > >>>>> Cc: Suravee Suthikulpanit<Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-> > >>>>> 
-> > >>>>> Signed-off-by: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
-> > >>>>> ---
-> > >>>>> 
-> > >>>>>   drivers/iommu/of_iommu.c |   10 ++++++++--
-> > >>>>>   drivers/of/platform.c    |    2 +-
-> > >>>>>   include/linux/of_iommu.h |    6 ++++--
-> > >>>>>   3 files changed, 13 insertions(+), 5 deletions(-)
-> > >>>>> 
-> > >>>>> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> > >>>>> index af1dc6a..439235b 100644
-> > >>>>> --- a/drivers/iommu/of_iommu.c
-> > >>>>> +++ b/drivers/iommu/of_iommu.c
-> > >>>>> @@ -133,19 +133,25 @@ struct iommu_ops *of_iommu_get_ops(struct
-> > >>>>> device_node *np)
-> > >>>>>   	return ops;
-> > >>>>>  }
-> > >>>>> 
-> > >>>>> -struct iommu_ops *of_iommu_configure(struct device *dev)
-> > >>>>> +struct iommu_ops *of_iommu_configure(struct device *dev,
-> > >>>>> +				     struct device_node *iommu_np)
-> > >>>>>  {
-> > >>>>>   	struct of_phandle_args iommu_spec;
-> > >>>>>   	struct device_node *np;
-> > >>>>>   	struct iommu_ops *ops = NULL;
-> > >>>>>   	int idx = 0;
-> > >>>>> 
-> > >>>>> +	if (dev_is_pci(dev)) {
-> > >>>>> +		dev_err(dev, "iommu is currently not supported for PCI\n");
-> > >>>>> +		return NULL;
-> > >>>>> +	}
-> > >>>>> +
-> > >>>>>   	/*
-> > >>>>>   	 * We don't currently walk up the tree looking for a parent
-> > >>>>>   	 IOMMU.
-> > >>>>>   	 * See the `Notes:' section of
-> > >>>>>   	 * Documentation/devicetree/bindings/iommu/iommu.txt
-> > >>>>>   	 */
-> > >>>> 
-> > >>>> Wouldn't it be better to fix this rather than passing the device node
-> > >>>> pointer to the function ? The solution would be more generic.
-> > >>> 
-> > >>> Will Deacon (Copied here) is working on this as we alteady discussed
-> > >>> in this thread. So it will be addressed by him in another series.
-> > >> 
-> > >> Well, "working on this" equates to "has it somewhere near the bottom of
-> > >> a very long list" :)
-> > > 
-> > > What's your opinion on this patch then, do you think adding the iommu_np
-> > > argument makes sense as a temporary hack, or should we instead walk up the
-> > > tree looking for an iommus attribute in parent nodes ? I don't expect that
-> > > to be insanely difficult to code.
-> > 
-> > If walking up the tree is useful, then I think we should do that and update
-> > the Documentation to reflect the new behaviour.
-> 
-> If I understand Murali's patch set right (please correct me if that's not the 
-> case) the PCI code walks up the DT nodes hierarchy to the parent node that 
-> contains the iommus attribute and passes a pointer to that node to this 
-> function. It's thus a PCI-specific solution. As a temporary hack that's OK I 
-> suppose, but if implementing it right straight away isn't difficult that would 
-> be better.
+Hello.
 
-It looks to me like the code walks the PCI topology to get the DT node for
-the host controller, and passes *that* to of_dma_configure. That sounds
-like the right thing to do to me, especially since the PCI topology is
-likely not encoded in the device-tree. So actually, it is passing the
-first parent node afaict.
+On 1/25/2015 10:30 PM, Geert Uytterhoeven wrote:
 
-The part I'm more interested in is the mapping of RequesterID (PCI dma
-alias) to IOMMU ID when we transition from the PCI topology to the DT
-topology. Currently, it seems to be 1:1 on the platforms I have, but I
-doubt this will always be the case.
+>> Renesas has made some changes to the Henninger low cost board hardware and at
+>> the same time decided to  rename the board  to Porter.
 
-Will
+> Which changes?
+
+   I don't have a list ready, sorry. One thing I know is that HDMI chip is 
+different (the same as on Koelsch now); we don't support it yet...
+
+> They're not reflected in the new DTS?
+
+    Not yet.
+
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+>> ---
+>> This patch is against 'renesas-devel-20150123-v3.19-rc5' tag of Simon Horman's
+>> 'renesas.git' repo.
+>>
+>>   arch/arm/boot/dts/Makefile                                     |  2 +-
+>>   .../arm/boot/dts/{r8a7791-henninger.dts => r8a7791-porter.dts} | 10 +++++-----
+>>   2 files changed, 6 insertions(+), 6 deletions(-)
+>>   rename arch/arm/boot/dts/{r8a7791-henninger.dts => r8a7791-porter.dts} (96%)
+
+> You forgot to update Documentation/devicetree/bindings/arm/shmobile.txt
+
+    No wonder -- I had no idea it is listed there...
+
+> Gr{oetje,eeting}s,
+
+>                          Geert
+
+WBR, Sergei
