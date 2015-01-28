@@ -1,146 +1,79 @@
-From: Mason <mpeg.blue@free.fr>
-Subject: Delays, clocks, timers, hrtimers, etc
-Date: Wed, 28 Jan 2015 14:16:21 +0100
-Message-ID: <54C8E125.3070905@free.fr>
+From: <shh.xie@gmail.com>
+Subject: [PATCH][v4] power/fsl: add MDIO dt binding for FMan
+Date: Wed, 28 Jan 2015 19:54:24 +0800
+Message-ID: <1422446064-3901-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linux ARM <linux-arm-kernel@lists.infradead.org>, cpufreq <cpufreq@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, DT <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, scottwood@freescale.com
+Cc: Shaohui Xie <Shaohui.Xie@freescale.com>, Emilian.Medve@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-I am swimming in a sea of confusion, and am hoping someone would toss
-me a life-jacket (of enlightenment). Please forgive me if some of my
-questions are poorly asked or appear in seemingly random order.
-
-Working on a Cortex A9 based SoC, I set out to "clean up" the platform
-specific timer code, by using as much generic framework as possible.
-(Right now, there's a lot of "redundant" code in the mach dir.)
-
-
-Q1. the {n,u,m}delay function family
-
-arch/arm/include/asm/delay.h mentions
-"Delay routines, using a pre-computed "loops_per_second" value."
-*BUT* if the frequency changes dynamically (thanks to cpufreq)
-the "loops_per_second" value cannot be pre-computed, as it would
-change dynamically too, right?
-
-Looking at arch/arm/lib/delay.c it seems the default implementation
-is a busy loop (in delay-loop.S) which looks up "loops_per_jiffy"
-in the prolog to determine the number of times to loop, right?
-
-http://lxr.free-electrons.com/source/arch/arm/lib/delay-loop.S
-
-(Side issue, why is the loop unrolled in __loop_delay? What is the
-point of unrolling a busy loop? This is commented code however.)
-
-What happens if loops_per_jiffy changes while one core is in the
-busy loop? It seems we might exit the loop too early, which could
-break some drivers with some weird heisenbug, no?
-
-Also, is the update of loops_per_jiffy atomic? Is it possible that
-if one core reads it while another updates it, we get garbage?
-
-I suppose this is one reason why the default functions are overridden
-by register_current_timer_delay(&arch_delay_timer) right? I think the
-property of a timer is that its frequency doesn't change, even if the
-CPU's frequency changes? So we are still busy looping, but we are
-checking the actual time spent in the loop, whatever the cpufreq?
-
-Reference
-https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
-
-
-Q2. Cortex A9 global and private timers
-
-http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0407f/CIHGECHJ.html
-
-(What are private timers used for?)
-
-In my platform-specific code, there is a config option to choose between
-
-1) the ARM global timer
-2) a platform-specific timer (timer0)
-
-I noticed that there is generic code to support the global timer in
-drivers/clocksource/arm_global_timer.c
-
-config ARM_GLOBAL_TIMER
-	bool
-	select CLKSRC_OF if OF
-	help
-	  This options enables support for the ARM global timer unit
-
-config CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
-	bool
-	depends on ARM_GLOBAL_TIMER
-	default y
-	help
-	 Use ARM global timer clock source as sched_clock
-
-I was thinking it would be better to use the "standard" option (ARM global timer)
-as it is "officially" supported in the vanilla kernel. So less code to write and
-to debug, and it has likely received more testing. Why would one rely on
-platform-specific timers then?
-
-Are high-resolution timers supported with the global timer?
-
-
-Q3. Using the generic global timer implementation
-
-So, how do I use that implementation?
-(Is someone other than STMicro using it?)
-
-I see:
-
-static void __init global_timer_of_register(struct device_node *np)
-CLOCKSOURCE_OF_DECLARE(arm_gt, "arm,cortex-a9-global-timer", global_timer_of_register);
-
-OF stands for open firmware, yes?
-So is this related to device tree?
-
-http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/arm/global_timer.txt
-
-This file makes no sense to me.
-
-- interrupts : One interrupt to each core
-interrupts = <1 13 0xf01>;
-what are 1 13 0xf01 ??
-
-- clocks : Should be phandle to a clock.
-clocks = <&arm_periph_clk>;
-
-For my (old) 3.14 kernel, I found this:
-
-     /*
-      * ARM Peripheral clock for timers
-      */
-     arm_periph_clk: arm_periph_clk {
-       #clock-cells = <0>;
-       compatible = "fixed-clock";
-       clock-frequency = <600000000>;
-     };
-
-But it looks like the definitions have moved around since then?
-
-This device tree concept is too much to swallow in a single serving.
-Please tell me if I'm going down the correct rabbit hole, and I'll
-do some LWN readings to try to wrap my mind around the concept.
-
-
-Anyway, if anyone can help me out on some of these topics, I'd be
-eternally grateful.
-
-Regards.
+RnJvbTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb20+CgpUaGlzIGJpbmRp
+bmcgaXMgZm9yIEZNYW4gTURJTywgaXQgY292ZXJzIEZNYW4gdjIgJiBGTWFuIHYzLgoKU2lnbmVk
+LW9mZi1ieTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb20+Ci0tLQpjaGFu
+Z2VzIGZvciBWNDoKcmV2aXNlZCBNRElPIGludGVycnVwdCByZWxhdGVkIHN0YXRlbWVudC4KCmNo
+YW5nZXMgaW4gdjM6CnJlcGhyYXNlIHRoZSAnRGVmaW5pdGlvbicgb2YgcHJvcGVydHkgJ2J1cy1m
+cmVxdWVuY3knLCBkb24ndCBpbmNsdWRlIHRoZQpwcm9wZXJ0eSBpbiBleGFtcGxlLgoKY2hhbmdl
+cyBpbiB2MjoKYWRkcmVzc2VkIGNvbW1lbnRzIGZyb20gU2NvdHQgaW4gVjEuCgogLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQgICAgICAgfCA3MCArKysrKysrKysr
+KysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNzAgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4
+dAppbmRleCBlZGVlYTE2Li43NzRjMjRmIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0CkBAIC03LDYgKzcsNyBAQCBD
+T05URU5UUwogICAtIEZNYW4gTVVSQU0gTm9kZQogICAtIEZNYW4gZFRTRUMvWEdFQy9tRU1BQyBO
+b2RlCiAgIC0gRk1hbiBJRUVFIDE1ODggTm9kZQorICAtIEZNYW4gTURJTyBOb2RlCiAgIC0gRXhh
+bXBsZQogCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpAQCAtMzU3LDYgKzM1OCw2OSBAQCBwdHAtdGlt
+ZXJAZmUwMDAgewogfTsKIAogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KK0ZNYW4gTURJTyBOb2RlCisK
+K0RFU0NSSVBUSU9OCisKK1RoZSBNRElPIGlzIGEgYnVzIHRvIHdoaWNoIHRoZSBQSFkgZGV2aWNl
+cyBhcmUgY29ubmVjdGVkLgorCitQUk9QRVJUSUVTCisKKy0gY29tcGF0aWJsZQorCQlVc2FnZTog
+cmVxdWlyZWQKKwkJVmFsdWUgdHlwZTogPHN0cmluZ2xpc3Q+CisJCURlZmluaXRpb246IEEgc3Rh
+bmRhcmQgcHJvcGVydHkuCisJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4tbWRpbyIgZm9yIDEgR2Iv
+cyBNRElPIGZyb20gRk1hbiB2Mi4KKwkJTXVzdCBpbmNsdWRlICJmc2wsZm1hbi14bWRpbyIgZm9y
+IDEwIEdiL3MgTURJTyBmcm9tIEZNYW4gdjIuCisJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4tbWVt
+YWMtbWRpbyIgZm9yIDEvMTAgR2IvcyBNRElPIGZyb20KKwkJRk1hbiB2My4KKworLSByZWcKKwkJ
+VXNhZ2U6IHJlcXVpcmVkCisJCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+CisJCURl
+ZmluaXRpb246IEEgc3RhbmRhcmQgcHJvcGVydHkuCisKKy0gYnVzLWZyZXF1ZW5jeQorCQlVc2Fn
+ZTogb3B0aW9uYWwKKwkJVmFsdWUgdHlwZTogPHUzMj4KKwkJRGVmaW5pdGlvbjogU3BlY2lmaWVz
+IHRoZSBleHRlcm5hbCBNRElPIGJ1cyBjbG9jayBzcGVlZCB0bworCQliZSB1c2VkLCBpZiBkaWZm
+ZXJlbnQgZnJvbSB0aGUgc3RhbmRhcmQgMi41IE1Iei4KKwkJVGhpcyBtYXkgYmUgZHVlIHRvIHRo
+ZSBzdGFuZGFyZCBzcGVlZCBiZWluZyB1bnN1cHBvcnRlZCAoZS5nLgorCQlkdWUgdG8gYSBoYXJk
+d2FyZSBwcm9ibGVtKSwgb3IgdG8gYWR2ZXJ0aXNlIHRoYXQgYWxsIHJlbGV2YW50CisJCWNvbXBv
+bmVudHMgaW4gdGhlIHN5c3RlbSBzdXBwb3J0IGEgZmFzdGVyIHNwZWVkLgorCistIGludGVycnVw
+dHMKKwkJVXNhZ2U6IHJlcXVpcmVkCisJCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+
+CisJCURlZmluaXRpb246IEV2ZW50IGludGVycnVwdCBvZiBleHRlcm5hbCBNRElPIGNvbnRyb2xs
+ZXIuCisKKy0gZnNsLGZtYW4taW50ZXJuYWwtbWRpbworCQlVc2FnZTogcmVxdWlyZWQgZm9yIGlu
+dGVybmFsIE1ESU8KKwkJVmFsdWUgdHlwZTogYm9vbGVhbgorCQlEZWZpbml0aW9uOiBGbWFuIGhh
+cyBpbnRlcm5hbCBNRElPIGZvciBpbnRlcm5hbCBQQ1MoUGh5c2ljYWwKKwkJQ29kaW5nIFN1Ymxh
+eWVyKSBQSFlzIGFuZCBleHRlcm5hbCBNRElPIGZvciBleHRlcm5hbCBQSFlzLgorCQlUaGUgc2V0
+dGluZ3MgYW5kIHByb2dyYW1taW5nIHJvdXRpbmVzIGZvciBpbnRlcm5hbC9leHRlcm5hbAorCQlN
+RElPIGFyZSBkaWZmZXJlbnQuIE11c3QgYmUgaW5jbHVkZWQgZm9yIGludGVybmFsIE1ESU8uCisK
+K0VYQU1QTEUKKworRXhhbXBsZSBmb3IgRk1hbiB2MiBleHRlcm5hbCBNRElPOgorCittZGlvQGYx
+MDAwIHsKKwljb21wYXRpYmxlID0gImZzbCxmbWFuLXhtZGlvIjsKKwlyZWcgPSA8MHhmMTAwMCAw
+eDEwMDA+OworCWludGVycnVwdHMgPSA8MTAxIDIgMCAwPjsKK307CisKK0V4YW1wbGUgZm9yIEZN
+YW4gdjMgaW50ZXJuYWwgTURJTzoKKworbWRpb0BmMTAwMCB7CisJY29tcGF0aWJsZSA9ICJmc2ws
+Zm1hbi1tZW1hYy1tZGlvIjsKKwlyZWcgPSA8MHhmMTAwMCAweDEwMDA+OworCWZzbCxmbWFuLWlu
+dGVybmFsLW1kaW87Cit9OworCis9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQogRXhhbXBsZQogCiBmbWFu
+QDQwMDAwMCB7CkBAIC01MzEsNCArNTk1LDEwIEBAIGZtYW5ANDAwMDAwIHsKIAkJY29tcGF0aWJs
+ZSA9ICJmc2wsZm1hbi1wdHAtdGltZXIiOwogCQlyZWcgPSA8MHhmZTAwMCAweDEwMDA+OwogCX07
+CisKKwltZGlvQGYxMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi14bWRpbyI7CisJCXJl
+ZyA9IDwweGYxMDAwIDB4MTAwMD47CisJCWludGVycnVwdHMgPSA8MTAxIDIgMCAwPjsKKwl9Owog
+fTsKLS0gCjEuOC40LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFi
+cy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
