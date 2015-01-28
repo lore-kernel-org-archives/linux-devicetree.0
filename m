@@ -1,61 +1,53 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V3 3/3] usb: ohci: jz4740: prepare the clock before enabling it
-Date: Wed, 28 Jan 2015 13:26:05 +0000
-Message-ID: <1422451565-29096-4-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1422451565-29096-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V3 0/3] usb: ohci: jz4740: Add DT support and a fix
+Date: Wed, 28 Jan 2015 13:26:02 +0000
+Message-ID: <1422451565-29096-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422451565-29096-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stern@rowland.harvard.edu
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Zubair.Kakakhel@imgtec.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton@imgtec.com>
+Hi,
 
-The clock must have been prepared before enabling it.
+Here are a few simple patches for the jz4740.
 
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+First adds a simple DT binding.
+Seconds adds DT support.
+Third is a minor fix in clock enabling.
 
---
-V2 changes. Add disable_unprepare as well
----
- drivers/usb/host/ohci-jz4740.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Patches are based on 3.19-rc6. Quite disjoint and stay within jz4740 
+so should apply easily on other trees.
 
-diff --git a/drivers/usb/host/ohci-jz4740.c b/drivers/usb/host/ohci-jz4740.c
-index bb69733..129f6b9 100644
---- a/drivers/usb/host/ohci-jz4740.c
-+++ b/drivers/usb/host/ohci-jz4740.c
-@@ -189,7 +189,7 @@ static int jz4740_ohci_probe(struct platform_device *pdev)
- 
- 
- 	clk_set_rate(jz4740_ohci->clk, 48000000);
--	clk_enable(jz4740_ohci->clk);
-+	clk_prepare_enable(jz4740_ohci->clk);
- 	if (jz4740_ohci->vbus)
- 		ohci_jz4740_set_vbus_power(jz4740_ohci, true);
- 
-@@ -209,7 +209,7 @@ static int jz4740_ohci_probe(struct platform_device *pdev)
- err_disable:
- 	if (jz4740_ohci->vbus)
- 		regulator_disable(jz4740_ohci->vbus);
--	clk_disable(jz4740_ohci->clk);
-+	clk_disable_unprepare(jz4740_ohci->clk);
- 
- err_free:
- 	usb_put_hcd(hcd);
-@@ -227,7 +227,7 @@ static int jz4740_ohci_remove(struct platform_device *pdev)
- 	if (jz4740_ohci->vbus)
- 		regulator_disable(jz4740_ohci->vbus);
- 
--	clk_disable(jz4740_ohci->clk);
-+	clk_disable_unprepare(jz4740_ohci->clk);
- 
- 	usb_put_hcd(hcd);
- 
+If you would like to have them rebased to a different tree, please tell.
+
+Thank-you
+
+V3 changes
+DT corrections. Added ACKS for 2 and 3.
+
+V2 changes
+Removed an interrupt parent binding. Forgot a binding
+Unprepared clock when disabling
+
+ZubairLK
+
+Paul Burton (3):
+  dt: usb: jz4740: Add DT binding document for OHCI
+  usb: ohci: jz4740: add DT support
+  usb: ohci: jz4740: prepare the clock before enabling it
+
+ .../bindings/usb/ingenic,jz4740-ohci.txt           | 26 ++++++++++++++++++++++
+ drivers/usb/host/ohci-jz4740.c                     | 15 ++++++++++---
+ 2 files changed, 38 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
+
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
