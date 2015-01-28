@@ -1,78 +1,85 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v2 11/14] NFC: nci: Add support RF_NFCEE_ACTION_NTF
-Date: Wed, 28 Jan 2015 21:17:28 +0100
-Message-ID: <1422476251-25972-12-git-send-email-christophe-h.ricard@st.com>
-References: <1422476251-25972-1-git-send-email-christophe-h.ricard@st.com>
+From: RICARD Christophe <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Aw: [PATCH v5 3/4] tpm/st33zp24/spi: Add st33zp24 spi phy
+Date: Wed, 28 Jan 2015 20:13:33 +0100
+Message-ID: <54C934DD.2040109@gmail.com>
+References: <1422395850-21644-1-git-send-email-christophe-h.ricard@st.com>, <1422395850-21644-4-git-send-email-christophe-h.ricard@st.com> <trinity-1682f383-7165-419d-b9f7-ef1f205304d2-1422463682896@3capp-gmx-bs38>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422476251-25972-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <trinity-1682f383-7165-419d-b9f7-ef1f205304d2-1422463682896@3capp-gmx-bs38>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Huewe <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
+Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RF NFCEE Action is the mechanism used to indicate that an action involving one of the NFCEEs
-in the device has occurred that may be of interest to the DH.
+Hi Peter,
 
-This may happen for example when doing an RF Transaction with a payment reader.
+A TPM command can be up to 2048 byte, A TPM response can be up to 1024 =
+byte.
+Between command and response, there are latency byte (up to 15 usually=20
+on st33zp24 2 are enough).
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- include/net/nfc/nci.h |  8 ++++++++
- net/nfc/nci/ntf.c     | 11 +++++++++++
- 2 files changed, 19 insertions(+)
+Overall when sending a command and expecting an answer we need in worst=
+=20
+case:
+2048 (for the TPM command) + 1024 (for the TPM answer).  We need some=20
+latency byte before the answer is available (max 15).
+We have 2048 + 1024 + 15.
 
-diff --git a/include/net/nfc/nci.h b/include/net/nfc/nci.h
-index deac78b..6c1beb2 100644
---- a/include/net/nfc/nci.h
-+++ b/include/net/nfc/nci.h
-@@ -499,6 +499,14 @@ struct nci_rf_deactivate_ntf {
- 	__u8	reason;
- } __packed;
- 
-+#define NCI_OP_RF_NFCEE_ACTION_NTF	nci_opcode_pack(NCI_GID_RF_MGMT, 0x09)
-+struct nci_rf_nfcee_action_ntf {
-+	__u8 nfcee_id;
-+	__u8 trigger;
-+	__u8 supported_data_length;
-+	__u8 supported_data[0];
-+} __packed;
-+
- #define NCI_OP_NFCEE_DISCOVER_NTF nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x00)
- struct nci_nfcee_supported_protocol {
- 	__u8	num_protocol;
-diff --git a/net/nfc/nci/ntf.c b/net/nfc/nci/ntf.c
-index a1ca2b4..4cdb95d 100644
---- a/net/nfc/nci/ntf.c
-+++ b/net/nfc/nci/ntf.c
-@@ -749,6 +749,12 @@ exit:
- 	nci_req_complete(ndev, status);
- }
- 
-+static void nci_nfcee_action_ntf_packet(struct nci_dev *ndev,
-+					struct sk_buff *skb)
-+{
-+	pr_debug("\n");
-+}
-+
- void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
- {
- 	__u16 ntf_opcode = nci_opcode(skb->data);
-@@ -790,6 +796,11 @@ void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
- 	case NCI_OP_NFCEE_DISCOVER_NTF:
- 		nci_nfcee_discover_ntf_packet(ndev, skb);
- 		break;
-+
-+	case NCI_OP_RF_NFCEE_ACTION_NTF:
-+		nci_nfcee_action_ntf_packet(ndev, skb);
-+		break;
-+
- 	default:
- 		pr_err("unknown ntf opcode 0x%x\n", ntf_opcode);
- 		break;
--- 
-2.1.0
+I will go for a define making the code more readable together with a=20
+comment.
+
+Best Regards
+Christophe
+Le 28/01/2015 17:48, Peter Huewe a =C3=A9crit :
+> Hi Christophe,
+>
+> sorry to be nitty picky but I still don't get this calculation
+>
+>
+> + /* max tpm tx buffer(TPM_BUFSIZE) + max tpm rx buffer(TPM_BUFSIZE /=
+ 2)
+> + * + MAX_SPI_LATENCY.
+> + */
+> + phy->spi_xfer.tx_buf =3D devm_kmalloc(&dev->dev, (TPM_BUFSIZE +
+> + (TPM_BUFSIZE / 2) + MAX_SPI_LATENCY),
+> + GFP_KERNEL);
+> + if (!phy->spi_xfer.tx_buf)
+> + return -ENOMEM;
+> +
+> + phy->spi_xfer.rx_buf =3D devm_kmalloc(&dev->dev, (TPM_BUFSIZE +
+> + (TPM_BUFSIZE / 2) + MAX_SPI_LATENCY),
+> + GFP_KERNEL);
+> + if (!phy->spi_xfer.rx_buf)
+> + return -ENOMEM;
+>  =20
+>
+> and the comment
+> + /* max tpm tx buffer(TPM_BUFSIZE) + max tpm rx buffer(TPM_BUFSIZE /=
+ 2)
+> + * + MAX_SPI_LATENCY.
+> does not help either.
+>
+>
+>
+> Why do you define TPM_BUFSIZE as 2048, add TPM_BUFSIZE/2 and somethin=
+g called MAX_SPI_LATENCY to it to use it as your buffer size?
+> Latency is for me something timing related.
+>
+> Since you use this TPM_BUFSIZE only in these two lines I'd be happy w=
+ith either
+> define which has this magical 2048+2014+15
+> or (maybe better) add a reasonable comment describing the meaning of =
+this strange calculation.
+>
+>
+> Thanks,
+> Peter
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
