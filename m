@@ -1,82 +1,42 @@
-From: "Devshatwar, Nikhil" <nikhil.nd-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH] dtc: parser: Add label while overriding nodes
-Date: Wed, 28 Jan 2015 06:38:11 +0000
-Message-ID: <E60A9E1B4132A24DB80BD56ABC9268473504400F@DBDE04.ent.ti.com>
-References: <1420726362-22555-1-git-send-email-nikhil.nd@ti.com>
- <CAL_Jsq+w7R=99qPc+YG_Bh1L-nMs1Gptjwo=KYTK5OX2HVVNpA@mail.gmail.com>
+From: BhuvanChandra.DV <bhuvanchandra.dv@toradex.com>
+Subject: Re: [PATCH 4/7] spi: spi-fsl-dspi: avoid preparing the clock two times
+Date: Wed, 28 Jan 2015 06:58:33 +0000
+Message-ID: <1422428658040.88027@toradex.com>
+References: <1422356244-15629-1-git-send-email-bhuvanchandra.dv@toradex.com>
+ <1422356244-15629-5-git-send-email-bhuvanchandra.dv@toradex.com>
+ <20150127130117.GU21293@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+w7R=99qPc+YG_Bh1L-nMs1Gptjwo=KYTK5OX2HVVNpA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150127130117.GU21293@sirena.org.uk>
+Content-Language: en-IN
+Content-ID: <2FBC3D3D0C135044B31BCFB8805A25B2@toradex.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "B44548@freescale.com" <B44548@freescale.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRv
-OnJvYmhlcnJpbmcyQGdtYWlsLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBKYW51YXJ5IDI4LCAy
-MDE1IDU6MDUgQU0NCj4gVG86IERldnNoYXR3YXIsIE5pa2hpbA0KPiBDYzogZGV2aWNldHJlZS1j
-b21waWxlckB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBk
-ZXZpY2V0cmVlLXNwZWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1vbWFwDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0hdIGR0YzogcGFyc2VyOiBBZGQgbGFiZWwgd2hpbGUgb3ZlcnJpZGluZyBub2Rlcw0K
-PiANCj4gT24gVGh1LCBKYW4gOCwgMjAxNSBhdCA4OjEyIEFNLCBOaWtoaWwgRGV2c2hhdHdhciA8
-bmlraGlsLm5kQHRpLmNvbT4NCj4gd3JvdGU6DQo+ID4gQ3VycmVudCBkZXZpY2UgdHJlZSBjb21w
-aWxlciBhbGxvd3MgdG8gZGVmaW5lIG11bHRpcGxlIGxhYmVscyB3aGVuDQo+ID4gZGVmaW5pbmcg
-dGhlIGRldmljZSBub2RlIHRoZSBmaXJzdCB0aW1lLiBUeXBpY2FsbHkgZGV2aWNlIG5vZGVzIGFy
-ZQ0KPiA+IGRlZmluZWQgaW4gRFRTSSBmaWxlcy4gTm93IHRoZXNlIG5vZGVzIGNhbiBiZSBvdmVy
-cmlkZW4gZm9yIHVwZGF0aW5nDQo+ID4gc29tZSBvZiB0aGUgcHJvcGVydGllcy4gVHlwaWNhbGx5
-LCBkZXZpY2Ugbm9kZXMgYXJlIG92ZXJyaWRkZW4gaW4gRFRTDQo+IGZpbGVzLg0KPiA+DQo+ID4g
-V2hlbiB3b3JraW5nIHdpdGggYWRhcHRlciBib2FyZHMsIG1vc3Qgb2YgdGhlIHRpbWUgYWRhcHRl
-ciBib2FyZCBjYW4NCj4gPiBmaXQgdG8gbXVsdGlwbGUgYmFzZSBib2FyZHMuIEJ1dCBkZXBlbmRp
-bmcgb24gd2hpY2ggYmFzZSBib2FyZCBpdCBpcw0KPiA+IGNvbm5lY3RlZCB0bywgdGhlIGRldmlj
-ZXMgb24gdGhlIGFkYXB0ZXIgYm9hcmQgd291bGQgYmUgY2hpbGRyZW4gb2YNCj4gZGlmZmVyZW50
-IGRldmljZXMuDQo+ID4NCj4gPiBlLmcuIE9uIGRyYTctZXZtLmR0cywgaTJjMiBpcyBleHBvcnRl
-ZCBmb3IgZXhwYW5zaW9uIGNvbm5lY3Rvcg0KPiB3aGVyZWFzDQo+ID4gb24gZHJhNzItZXZtLmR0
-cywgaTJjNSBpcyBleHBvcnRlZCBmb3IgZXhwYW5zaW9uIGNvbm5lY3Rvci4NCj4gPiBUaGlzIGNh
-dXNlcyBhIHByb2JsZW0gd2hlbiB3cml0aW5nIGEgZ2VuZXJpYyBkZXZpY2UgdHJlZSBmaWxlIGZv
-ciB0aGUNCj4gPiBhZGFwdGVyIGJvYXJkLiBCZWNhdXNlLCB5b3UgY2Fubm90IGtub3cgd2hlYXRo
-ZXIgYWxsIHRoZSBkZXZpY2VzIG9uDQo+IA0KPiBzL3doZWF0aGVyL3doZXRoZXIvDQo+IA0KPiA+
-IGFkcHRlciBib2FyZCBhcmUgcHJlc2VudCBvbiBpMmMgb3IgaTJjNS4NCj4gDQo+IHMvYWRwdGVy
-L2FkYXB0ZXIvDQo+IA0KPiA+IFRoZSBwcm9ibGVtIGNhbiBiZSBzb2x2ZWQgYnkgYWRkaW5nIGEg
-Y29tbW9uIGxhYmVsIChlLmcuIGkyY2V4cCkgaW4NCj4gPiBib3RoIG9mIHRoZSBEVFMgZmlsZXMg
-d2hlbiBvdmVycmlkaW5nIHRoZSBkZXZpY2Ugbm9kZXMgZm9yIGkyYzIgb3INCj4gaTJjNS4NCj4g
-PiBUaGlzIHdheSwgZ2VuZXJpYyBhZGFwdGVyIGJvYXJkIGZpbGUgd291bGQgb3ZlcnJpZGUgdGhl
-IGkyY2V4cC4gQW5kDQo+ID4gZGVwZW5kaW5nIG9uIHdoaWNoIGJhc2UgYm9hcmQgeW91IHVzZSB0
-aGUgYWRwdGVyIGJvYXJkLCBhbGwgdGhlDQo+ID4gZGV2aWNlcw0KPiANCj4gcy9hZHB0ZXIvYWRh
-cHRlci8NCj4gDQo+ID4gYXJlIGF1dG9tYXRpY2FsbHkgYWRkZWQgZm9yIGNvcnJlY3QgZGV2aWNl
-IG5vZGVzLg0KPiA+DQo+ID4gQ2hhbmdlLUlkOiBJM2FkNzI0N2E3OWJhZWQ3MjY4YTkxZmM2OTEz
-NjBhZWNlNzNkNmQxYg0KPiANCj4gR2V0IHJpZCBvZiB0aGlzIEdlcnJpdCBub25zZW5zZS4NCj4g
-DQo+ID4gU2lnbmVkLW9mZi1ieTogTmlraGlsIERldnNoYXR3YXIgPG5pa2hpbC5uZEB0aS5jb20+
-DQo+ID4gLS0tDQo+ID4gIHNjcmlwdHMvZHRjL2R0Yy1wYXJzZXIueSB8ICAgMTIgKysrKysrKysr
-KysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspDQo+IA0KPiBZb3UgbmVl
-ZCB0byBzZW5kIHRoaXMgYWdhaW5zdCB1cHN0cmVhbSBkdGMsIG5vdCB0aGUgY29weSBpbiB0aGUg
-a2VybmVsLg0KPiANCj4gU2VlbXMgbGlrZSBhIHJlYXNvbmFibGUgY2hhbmdlLCBidXQgSSdtIG5v
-dCB0b28gZmFtaWxhciB3aXRoIGR0Yw0KPiBzb3VyY2UuDQo+IA0KDQpPSywgbm8gcHJvYmxlbQ0K
-DQpUaGFua3MsDQpOaWtoaWwgRA0KDQo+ID4gZGlmZiAtLWdpdCBhL3NjcmlwdHMvZHRjL2R0Yy1w
-YXJzZXIueSBiL3NjcmlwdHMvZHRjL2R0Yy1wYXJzZXIueQ0KPiBpbmRleA0KPiA+IGY0MTI0NjAu
-LmQ5ZWQzYjcgMTAwNjQ0DQo+ID4gLS0tIGEvc2NyaXB0cy9kdGMvZHRjLXBhcnNlci55DQo+ID4g
-KysrIGIvc2NyaXB0cy9kdGMvZHRjLXBhcnNlci55DQo+ID4gQEAgLTE0NSw2ICsxNDUsMTggQEAg
-ZGV2aWNldHJlZToNCj4gPiAgICAgICAgICAgICAgICAgew0KPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICQkID0gbWVyZ2Vfbm9kZXMoJDEsICQzKTsNCj4gPiAgICAgICAgICAgICAgICAgfQ0K
-PiA+ICsNCj4gPiArICAgICAgIHwgZGV2aWNldHJlZSBEVF9MQUJFTCBEVF9SRUYgbm9kZWRlZg0K
-PiA+ICsgICAgICAgICAgICAgICB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0
-IG5vZGUgKnRhcmdldCA9IGdldF9ub2RlX2J5X3JlZigkMSwNCj4gJDMpOw0KPiA+ICsNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBhZGRfbGFiZWwoJnRhcmdldC0+bGFiZWxzLCAkMik7DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaWYgKHRhcmdldCkNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIG1lcmdlX25vZGVzKHRhcmdldCwgJDQpOw0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIGVsc2UNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHByaW50X2Vycm9yKCJsYWJlbCBvciBwYXRoLCAnJXMnLCBub3QNCj4gZm91bmQiLCAkMik7DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgJCQgPSAkMTsNCj4gPiArICAgICAgICAgICAgICAg
-fQ0KPiA+ICAgICAgICAgfCBkZXZpY2V0cmVlIERUX1JFRiBub2RlZGVmDQo+ID4gICAgICAgICAg
-ICAgICAgIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3Qgbm9kZSAqdGFyZ2V0
-ID0gZ2V0X25vZGVfYnlfcmVmKCQxLA0KPiAkMik7DQo+ID4gLS0NCj4gPiAxLjcuOS41DQo+ID4N
-Cj4gPiAtLQ0KPiA+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5l
-ICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIg0KPiA+IGluIHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0
-byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnIE1vcmUgbWFqb3Jkb21vDQo+ID4gaW5mbyBhdCAg
-aHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 01/27/2015 06:31 PM, Mark Brown wrote:
+> On Tue, Jan 27, 2015 at 04:27:21PM +0530, Bhuvanchandra DV wrote:
+>> regmap_read/regmap_write will expect the peripheral clock
+>> to be enabled before accessing the registers of the peripheral.
+>> Since the peripheral clock is enabled separatly, avoid redundant clock
+>> prepare (with devm_regmap_init_mmio_clk) and use devm_regmap_init_mmio instead.
+> What's the advantage of this?  The clock API is refcounted so there
+> should be no issue with this and it seems like it's opening us up to
+> bugs if there's a path where we interact with the registers without
+> enabling the clocks.
+
+My initial thought was that, since regmap_mmio_init_clk() does call
+clk_prepare(), to go with regmap_mmio_init() as clk_prepare_enable()
+is called at a later stage in the probe().
