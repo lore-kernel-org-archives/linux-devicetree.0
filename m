@@ -1,64 +1,59 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 06/24] Documentation: DT bindings: add more chip compatible
- strings for Tegra APB_MISC
+From: Paul Walmsley <paul@pwsan.com>
+Subject: [PATCH 01/24] Documentation: DT: document compatible string
+ existence requirement
 Date: Wed, 28 Jan 2015 16:49:37 -0700
-Message-ID: <20150128234937.20644.82091.stgit@dusk.lan>
+Message-ID: <20150128234936.20644.76672.stgit@dusk.lan>
 References: <20150128234935.20644.89300.stgit@dusk.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150128234935.20644.89300.stgit-orwA252wQtA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150128234935.20644.89300.stgit@dusk.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
 
-Add compatible strings for the APB_MISC IP blocks present on several Tegra
-chips.  The primary objective here is to avoid checkpatch warnings,
-per:
+DT maintainers require all compatible strings used in chip or board
+DTS file to be previously documented somewhere in
+Documentation/devicetree/bindings, per:
 
 http://marc.info/?l=linux-tegra&m=142201349727836&w=2
 
-Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Document this requirement in the DT patch submission requirements
+text file.
+
+Signed-off-by: Paul Walmsley <paul@pwsan.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Paul Walmsley <pwalmsley@nvidia.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- .../bindings/misc/nvidia,tegra20-apbmisc.txt       |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/submitting-patches.txt     |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-index b97b8bef1fe5..2723f3e4e52d 100644
---- a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-+++ b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-@@ -3,9 +3,10 @@ NVIDIA Tegra20/Tegra30/Tegr114/Tegra124 apbmisc block
- Required properties:
- - compatible : should be:
-        "nvidia,tegra20-apbmisc"
--       "nvidia,tegra30-apbmisc"
--       "nvidia,tegra114-apbmisc"
--       "nvidia,tegra124-apbmisc"
-+       "nvidia,tegra30-apbmisc" (not yet matched in the driver)
-+       "nvidia,tegra114-apbmisc" (not yet matched in the driver)
-+       "nvidia,tegra124-apbmisc" (not yet matched in the driver)
-+       "nvidia,tegra132-apbmisc" (not yet matched in the driver)
- - reg: Should contain 2 entries: the first entry gives the physical address
-        and length of the registers which contain revision and debug features.
-        The second entry gives the physical address and length of the
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+index b7ba01ad1426..4b2bbb6047c4 100644
+--- a/Documentation/devicetree/bindings/submitting-patches.txt
++++ b/Documentation/devicetree/bindings/submitting-patches.txt
+@@ -15,6 +15,14 @@ I. For patch submitters
+   3) The Documentation/ portion of the patch should come in the series before
+      the code implementing the binding.
+ 
++  4) Any compatible strings used in a chip or board DTS file must be
++     previously documented in the corresponding DT binding text file
++     in Documentation/devicetree/bindings.  This rule applies even if
++     the Linux device driver does not yet match on the compatible
++     string.  checkpatch will emit warnings if this step is not
++     followed as of commit bff5da4335256513497cc8c79f9a9d1665e09864
++     ("checkpatch: add DT compatible string documentation checks").
++
+ II. For kernel maintainers
+ 
+   1) If you aren't comfortable reviewing a given binding, reply to it and ask
