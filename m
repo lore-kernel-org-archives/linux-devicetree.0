@@ -1,44 +1,43 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Wed, 28 Jan 2015 09:09:55 -0800
-Message-ID: <20150128170954.GQ28663@atomide.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
- <1422274532-9488-2-git-send-email-rogerq@ti.com>
- <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
- <54C66B0D.9040109@ti.com>
- <54C6EFC8.1090601@samsung.com>
- <54C7B0E5.20101@ti.com>
- <54C8472B.6070302@samsung.com>
- <54C8D238.4080001@ti.com>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 0/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Wed, 28 Jan 2015 15:39:22 -0300
+Message-ID: <54C92CDA.8030500@imgtec.com>
+References: <1420550375-22867-1-git-send-email-ezequiel.garcia@imgtec.com> <54BE383F.6050209@imgtec.com> <54BE5F50.9050900@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54C8D238.4080001@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Felipe Balbi <balbi@ti.com>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, george.cherian@ti.com, nsekhar@ti.com, devicetree <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54BE5F50.9050900-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [150128 04:15]:
-> On 28/01/15 04:19, Chanwoo Choi wrote:
-> >>
-> >> I still fail to understand that we need to call disable_irq() in .suspend() and
-> >> enable_irq() in .resume()
-> >>
-> >> can you point me to any other drivers doing so?
-> > 
-> > You can refer the suspend function in drivers/mfd/max14577.c or drivers/mfd/max77693.c.
-> > The max14577_suspend() includes the detailed comment for why using disable_irq() in suspend function.
-> > 
-> > In max14577 case, max14577_suspend() use disable_irq() function because of i2c dependency.
-> > If max14577 device is wake-up from suspend state before completing the resume sequence
-> > of i2c, max14577 may fail to read/write i2c communication.
+On 01/20/2015 10:59 AM, Guenter Roeck wrote:
+> On 01/20/2015 03:13 AM, Ezequiel Garcia wrote:
+>> Hi Wim,
+>>
+>> On 01/06/2015 10:19 AM, Ezequiel Garcia wrote:
+>>> Here's the seventh round for IMG PDC Watchdog driver.
+>>> The series is based on v3.19-rc3.
+>>>
+>>
+>> Guenter has reviewed both patches. Do you think you can review this
+>> soonishly and let me know if you have more comments?
+>>
 > 
-> Thanks for this information. I will add disable/enable_irq() in suspend/resume().
+> I'll send a pull request to Wim either this or next week.
+> 
 
-Are the .dts changes safe for me to apply already?
+Guenter,
 
-Regards,
+I hate to be so spammy here. Do you still plan to send a pull request?
 
-Tony
+Next week is -rc7, so I'm wondering if there's any way we can be on time
+for v3.20.
+-- 
+Ezequiel
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
