@@ -1,205 +1,110 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
-Date: Wed, 28 Jan 2015 12:34:59 -0500
-Message-ID: <54C91DC3.4020101@ti.com>
-References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
-	<1422052359-12384-4-git-send-email-m-karicheri2@ti.com>
-	<54C77616.80301@arm.com> <54C7DF13.20402@ti.com>
-	<20150128110523.GC6646@e104818-lin.cambridge.arm.com>
-	<CAL_JsqJiCKW0ny=_ueq=A7RH3octpEhN+KZuLZhbNEHusyjcig@mail.gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 4/4] clk: dt: st: Introduce clock domain documentation
+Date: Wed, 28 Jan 2015 09:46:40 -0800
+Message-ID: <20150128174640.22722.75574@quantum>
+References: <1422270840-3039-1-git-send-email-lee.jones@linaro.org>
+ <1422270840-3039-5-git-send-email-lee.jones@linaro.org>
+ <20150128011902.22722.85007@quantum> <20150128075835.GF4567@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAL_JsqJiCKW0ny=_ueq=A7RH3octpEhN+KZuLZhbNEHusyjcig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150128075835.GF4567@x1>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/28/2015 10:45 AM, Rob Herring wrote:
-> On Wed, Jan 28, 2015 at 5:05 AM, Catalin Marinas
-> <catalin.marinas-5wv7dgnIgG8@public.gmane.org>  wrote:
->> On Tue, Jan 27, 2015 at 06:55:15PM +0000, Murali Karicheri wrote:
->>> On 01/27/2015 06:27 AM, Robin Murphy wrote:
->>>> On 23/01/15 22:32, Murali Karicheri wrote:
->>>>> Fix the dma-range size when the DT attribute is missing. i.e set size to
->>>>> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. To detect
->>>>> overflow when mask is set to max of u64, add a check, log error and
->>>>> return.
->>>>> Some platform use mask format for size in DTS. So add a work around to
->>>>> catch this and fix.
->>>>>
->>>>> Cc: Joerg Roedel<joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
->>>>> Cc: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> Cc: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>> Cc: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->>>>> Cc: Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>
->>>>> Cc: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->>>>> Cc: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
->>>>> Cc: Suravee Suthikulpanit<Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->>>>>
->>>>> Signed-off-by: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
->>>>> ---
->>>>> drivers/of/device.c | 14 +++++++++++++-
->>>>> 1 file changed, 13 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/of/device.c b/drivers/of/device.c
->>>>> index 2de320d..0a5ff54 100644
->>>>> --- a/drivers/of/device.c
->>>>> +++ b/drivers/of/device.c
->>>>> @@ -105,12 +105,24 @@ void of_dma_configure(struct device *dev, struct
->>>>> device_node *np)
->>>>> ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
->>>>> if (ret<  0) {
->>>>> dma_addr = offset = 0;
->>>>> - size = dev->coherent_dma_mask;
->>>>> + size = dev->coherent_dma_mask + 1;
->>>>> } else {
->>>>> offset = PFN_DOWN(paddr - dma_addr);
->>>>> + /*
->>>>> + * Add a work around to treat the size as mask + 1 in case
->>>>> + * it is defined in DT as a mask.
->>>>> + */
->>>>> + if (size&  1)
->>>>> + size = size + 1;
->>>>> dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
->>>>> }
->>>>>
->>>>> + /* if size is 0, we have an overflow of u64 */
->>>>> + if (!size) {
->>>>> + dev_err(dev, "invalid size\n");
->>>>> + return;
->>>>> + }
->>>>> +
->>>>
->>>> This seems potentially fragile to dodgy DTs given that we might also be
->>>> using size to make a mask later. Would it make sense to double-up a
->>>> sanity check as mask-format detection? Something like:
->>>>
->>>> if is_power_of_2(size)
->>>> // use size
->>>> else if is_power_of_2(size + 1)
->>>> // use size + 1
->>>> else
->>>> // cry
->>>
->>> How about having the logic like this?
->>>
->>>        ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
->>>        if (ret<  0) {
->>>                dma_addr = offset = 0;
->>>                size = dev->coherent_dma_mask + 1;
->>>        } else {
->>>                offset = PFN_DOWN(paddr - dma_addr);
->>>                dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
->>>        }
->>>
->>>        if (is_power_of_2(size + 1))
->>>                size = size + 1;
->>>        else if (!is_power_of_2(size))
->>>        {
->>>                dev_err(dev, "invalid size\n");
->>>                return;
->>>        }
->>
->> In of_dma_configure(), we currently assume that the default coherent
->> mask is 32-bit. In this thread:
->>
->> http://article.gmane.org/gmane.linux.kernel/1835096
->>
->> we talked about setting the coherent mask based on size automatically.
->> I'm not sure about the size but I think we can assume is 32-bit mask + 1
->> if it is not specified in the DT. Instead of just assuming a default
->> mask, let's assume a default size and create the mask based on this
->> (untested):
->>
->> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> index 5b33c6a21807..9ff8d1286b44 100644
->> --- a/drivers/of/platform.c
->> +++ b/drivers/of/platform.c
->> @@ -170,10 +170,10 @@ static void of_dma_configure(struct device *dev)
->>          struct iommu_ops *iommu;
->>
->>          /*
->> -        * Set default dma-mask to 32 bit. Drivers are expected to setup
->> -        * the correct supported dma_mask.
->> +        * Set default size to cover the 32-bit. Drivers are expected to setup
->> +        * the correct size and dma_mask.
->>           */
->> -       dev->coherent_dma_mask = DMA_BIT_MASK(32);
->> +       size = 1ULL<<  32;
->>
->>          /*
->>           * Set it to coherent_dma_mask by default if the architecture
->> @@ -185,13 +185,24 @@ static void of_dma_configure(struct device *dev)
->>          ret = of_dma_get_range(dev->of_node,&dma_addr,&paddr,&size);
->>          if (ret<  0) {
->>                  dma_addr = offset = 0;
->> -               size = dev->coherent_dma_mask;
->
-> Are we assuming dma_addr, paddr and size are not touched on error? If
-> so, we can get rid of this clause entirely.
-Checking the code for of_dma_get_range() I see paddr is modified on 
-error case, but is used only for success case in this function. dma_addr 
-and size are not modified. So setting dma_addr and offset to zero before 
-hand like size might work as below
-
-dma_addr = offset = 0;
-size = 1ULL <<  32;
-
-ret = of_dma_get_range(dev->of_node,&dma_addr,&paddr,&size);
-if (!ret) {
-	offset = PFN_DOWN(paddr - dma_addr);
-}
-
-.. rest of the code.
-
-Murali
-
-
->
->>          } else {
->>                  offset = PFN_DOWN(paddr - dma_addr);
->>                  dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
->>          }
->>          dev->dma_pfn_offset = offset;
->>
->> +       /*
->> +        * Workaround for DTs setting the size to a mask or 0.
->> +        */
->> +       if (is_power_of_2(size + 1))
->> +               size += 1;
->
-> As I mentioned, I think power of 2 is too restrictive (from a DT
-> perspective even though the kernel may require a power of 2 here for
-> the mask). Just checking bit0 set should be enough.
->
-> Also, we need a WARN here so DTs get fixed.
->
->> +
->> +       /*
->> +        * Coherent DMA masks larger than 32-bit must be explicitly set by the
->> +        * driver.
->> +        */
->> +       dev->coherent_dma_mask = min(DMA_BIT_MASK(32), DMA_BIT_MASK(ilog2(size)));
->> +
->>          coherent = of_dma_is_coherent(dev->of_node);
->>          dev_dbg(dev, "device is%sdma coherent\n",
->>                  coherent ? " " : " not ");
->>
->> --
->> Catalin
-
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+UXVvdGluZyBMZWUgSm9uZXMgKDIwMTUtMDEtMjcgMjM6NTg6MzUpCj4gT24gVHVlLCAyNyBKYW4g
+MjAxNSwgTWlrZSBUdXJxdWV0dGUgd3JvdGU6Cj4gCj4gPiBRdW90aW5nIExlZSBKb25lcyAoMjAx
+NS0wMS0yNiAwMzoxNDowMCkKPiA+ID4gU2lnbmVkLW9mZi1ieTogTGVlIEpvbmVzIDxsZWUuam9u
+ZXNAbGluYXJvLm9yZz4KPiA+ID4gLS0tCj4gPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9j
+bG9jay9zdC9zdCxjbGstZG9tYWluLnR4dCB8IDM0ICsrKysrKysrKysrKysrKysrKysrKysKPiA+
+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspCj4gPiA+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1k
+b21haW4udHh0Cj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0Cj4gPiA+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0Cj4gPiA+IGluZGV4IDAwMDAwMDAuLjczMDk5MzcKPiA+ID4gLS0tIC9k
+ZXYvbnVsbAo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xv
+Y2svc3Qvc3QsY2xrLWRvbWFpbi50eHQKPiA+ID4gQEAgLTAsMCArMSwzNCBAQAo+ID4gPiArU1RN
+aWNyb2VsZWN0cm9uaWNzIENsb2NrIERvbWFpbgo+ID4gPiArCj4gPiA+ICtTVCBoYXJkd2FyZSBo
+YXZlIGEgYnVuY2ggb2YgY2xvY2tzIHdoaWNoIG11c3Qgbm90IGJlIHR1cm5lZCBvZmYuCj4gPiA+
+ICtJZiBkcml2ZXJzIGEpIGZhaWwgdG8gb2J0YWluIGEgcmVmZXJlbmNlIHRvIGFueSBvZiB0aGVz
+ZSBvciBiKSBnaXZlCj4gPiA+ICt1cCBhIHByZXZpb3VzbHkgb2J0YWluZWQgcmVmZXJlbmNlIGR1
+cmluZyBzdXNwZW5kLCB0aGUgY29tbW9uIGNsawo+ID4gPiArZnJhbWV3b3JrIHdpbGwgYXR0ZW1w
+dCB0byB0dXJuIHRoZW0gb2ZmIGFuZCB0aGUgaGFyZHdhcmUgd2lsbAo+ID4gPiArc3Vic2VxdWVu
+dGx5IGRpZS4gIFRoZSBvbmx5IHdheSB0byByZWNvdmVyIGZyb20gdGhpcyBmYWlsdXJlIGlzIHRv
+Cj4gPiA+ICtyZXN0YXJ0Lgo+ID4gPiArCj4gPiA+ICtUbyBhdm9pZCBlaXRoZXIgb2YgdGhlc2Ug
+dHdvIHNjZW5hcmlvcyBmcm9tIGNhdGFzdHJvcGhpY2FsbHkKPiA+ID4gK2Rpc2FibGluZyB0aGUg
+cnVubmluZyBzeXN0ZW0gd2UgaGF2ZSBpbXBsZW1lbnRlZCBhIGNsb2NrIGRvbWFpbgo+ID4gPiAr
+d2hlcmUgY2xvY2tzIGFyZSBjb25zdW1lZCBhbmQgcmVmZXJlbmNlcyBhcmUgdGFrZW4sIHRodXMg
+cHJldmVudGluZwo+ID4gPiArdGhlbSBmcm9tIGJlaW5nIHNodXQgZG93biBieSB0aGUgZnJhbWV3
+b3JrLgo+ID4gPiArCj4gPiA+ICtXZSB1c2UgdGhlIGdlbmVyaWMgY2xvY2sgYmluZGluZ3MgZm91
+bmQgaW46Cj4gPiA+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9j
+bG9jay1iaW5kaW5ncy50eHQKPiA+ID4gKwo+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+
+ID4gKy0gY29tcGF0aWJsZSA6IE11c3QgYmUgInN0LGNsay1kb21haW4iCj4gPiAKPiA+IFNlZW1z
+IGxpa2UgYSB1c2VmdWwgZmVhdHVyZSBmb3IgYW55IGNsb2NrIHByb3ZpZGVyLCBub3QganVzdCBT
+VCdzLiBIYXZlCj4gPiB5b3UgdGhvdWdodCBhYm91dCBtYWtpbmcgdGhpcyBzb2x1dGlvbiBnZW5l
+cmljIGZvciBEVC1iYXNlZCBjbG9jawo+ID4gcHJvdmlkZXJzPwo+ID4gCj4gPiBXZSBjb3VsZCBh
+bWVuZCB0aGUgY29tbW9uIGNsb2NrIGJpbmRpbmcgdG8gaW5jbHVkZSBhIHNwZWNpYWwgImFsd2F5
+cyBvbiIKPiA+IGNsb2NrIGdyb3VwIHRoYXQgaXMgYXV0b21hZ2ljYWxseSBwcmVwYXJlZCBhbmQg
+ZW5hYmxlZCB3aGVuIHRoZSBjbG9jawo+ID4gcHJvdmlkZXIvZHJpdmVyIGlzIHJlZ2lzdGVyZWQs
+IHVzaW5nIGEgY29tbW9uIGZ1bmN0aW9uLgo+IAo+IE9NRywgSSdtIGFjdHVhbGx5IGdvaW5nIHRv
+IHN0cmFuZ2xlIHlvdSEKPiAKPiBUaGlzIGlzIHdoYXQgSSd2ZSBiZWVuIHByb3Bvc2luZyB0byB5
+b3UgKHByaXZhdGVseSkgZm9yIHdlZWtzLgoKWWlrZXMhIFBsZWFzZSBkbyBub3Qgc3RyYW5nbGUg
+bWUgeWV0LiBJIGhhdmUgYm9va3Mgb24gbG9hbiBmcm9tIG15CnB1YmxpYyBsaWJyYXJ5IHRoYXQg
+SSBtdXN0IHJldHVybiBiZWZvcmUgSSBleHBpcmUuCgo+IAo+IERvZXMgdGhpcyByaW5nIGFueSBi
+ZWxscz8KPiAKPiAgICJKdXN0IEZZSSwgSSBhbSBub3QgZ29pbmcgdG8gYWRkIGFueSBtZXRob2Qg
+dG8gdGhlIGtlcm5lbCB0aGF0Cj4gICBwZXJtYW5lbnRseSBlbmFibGVzIGEgY2xvY2sgdmlhIHNv
+bWUgbmV3IGFwaS4gQXQgdGhlIHdvcnN0IGNhc2UgeW91cgo+ICAgY2xvY2sgZHJpdmVyIGNhbiBz
+aW1wbHkgY2FsbCBjbGtfcHJlcGFyZV9lbmFibGUgaW4gaXRzIHByb2JlCj4gICBmdW5jdGlvbiAo
+dGhlcmUgYXJlIHNvbWUgZXhhbXBsZXMgb2YgdGhpcykuIgo+IAoKSW4gYWxsIGZhaXJuZXNzIEkg
+Zm91bmQgdGhlIGNoYXQgbG9nIHdoZXJlIEkgd3JvdGUgdGhlIGFib3ZlIHF1b3RlIGFuZAp0aGVy
+ZSB3YXMgbm90IG11Y2ggY29udGV4dCBmb3IgdGhlIHByb2JsZW0geW91IHdlcmUgdHJ5aW5nIHRv
+IHNvbHZlLiBBbmQKd2Ugd2VyZSBib3RoIHRyYXBwZWQgaW4gZGlmZmVyZW50IG1lZXRpbmdzIGF0
+IGEgY29uZmVyZW5jZSBhbmQgY291bGQgbm90CmRpc2N1c3MgaXQgZmFjZSB0byBmYWNlIGJlZm9y
+ZSB5b3VyIGZsaWdodC4gU29tZSB0aGluZ3MgYXJlIGRvbmUgYmV0dGVyCm92ZXIgZW1haWwgdGhh
+biBvdmVyIGEgcXVpY2sgR29vZ2xlIGNoYXQuCgo+IEkgd2lsbCBiZSBtb3JlIHRoYW4gaGFwcHkg
+dG8gbWFrZSB0aGlzIGEgZ2VuZXJpYyBkcml2ZXIsIGlmIHRoYXRzIHdoYXQKPiB5b3Ugd2FudCAo
+bm93KS4gOykKCldlbGwgeW91ciBtZXRob2QgZG9lcyB1c2UgY2xrX2dldCBhbmQgY2xrX3ByZXBh
+cmVfZW5hYmxlIHdoaWNoIHNhdGlzZmllcwpteSBzdGF0ZW1lbnQgYWJvdmUuIFdoZW4gSSBzYWlk
+ICJubyIgdG8gdGhpcyBpZGVhIGVhcmxpZXIgSSBoYWQgaW1hZ2luZWQKeW91IGJhbmdpbmcgb24g
+dGhlIHJlZ2lzdGVyIHRvIGtlZXAgdGhlIGNsb2NrIGVuYWJsZWQgaW4gaGFyZHdhcmUsIGJ1dApo
+YXZlIHRoZSBmcmFtZXdvcmsga2VlcCB0aGUgZW5hYmxlX2NvdW50ICYgcHJlcGFyZV9jb3VudCBh
+dCAwLiBGb2xrcwpoYXZlIGFza2VkIGZvciB0aGlzIGJlZm9yZSBhbmQgaXQgaXMgYSBuby1nby4K
+ClJpZ2h0IG5vdyBJIHRoaW5rIHRoYXQgdGhlIGNvbW1vbiBjbG9jayBiaW5kaW5nICh3aGljaCBp
+cyB0aGUgcm9vdCBvZgphbGwgb2YgdGhlIHZlbmRvci1zcGVjaWZpYyBiaW5kaW5ncykgY291bGQg
+Y3JlYXRlIGEgc3BlY2lhbCBjb250YWluZXIKZm9yIGFsd2F5cy1vbiBjbG9ja3MuIFdlIHdvdWxk
+IG5lZWQgdG8gZGVmaW5lIHRoaXMgYmVoYXZpb3IuIEZvcgpzaW1wbGljaXR5IEkgdGhpbmsgdGhl
+IG9ubHkgY2xvY2tzIHRoYXQgc2hvdWxkIGdvIGludG8gdGhpcyBjb250YWluZXIKYXJlIGNsb2Nr
+cyB0aGF0IHdlIG5ldmVyIGdhdGUgZHVyaW5nIHRoZSBsaWZldGltZSBvZiB0aGUgZGV2aWNlIGJl
+aW5nCnBvd2VyZWQgb24sIGFuZCB0aGV5IGFyZSBjbG9ja3MgdGhhdCBkbyBub3QgbmVlZCB0byBi
+ZSBtYW5hZ2VkIGJ5CmV4dGVybmFsIGRyaXZlcnMuCgpvZl9jbGtfc2V0X2RlZmF1bHRzIGlzIGNh
+bGxlZCBmcm9tIG9mX2Nsa19hZGRfcHJvdmlkZXIgd2hpY2ggbWlnaHQgYmUgYQpnb29kIHBsYWNl
+IHRvIHN0YXJ0IGxvb2tpbmcuCgpXaGF0IGRvIHlvdSB0aGluaz8KClJlZ2FyZHMsCk1pa2UKCj4g
+Cj4gPiA+ICtFeGFtcGxlOgo+ID4gPiArCj4gPiA+ICtjbGstZG9tYWluIHsKPiA+ID4gKyAgICAg
+ICBjb21wYXRpYmxlID0gInN0LGNsay1kb21haW4iOwo+ID4gPiArICAgICAgIGNsb2NrcyA9IDwm
+Y2xrX3NfYzBfZmxleGdlbiBDTEtfRVhUMkZfQTk+LAo+ID4gPiArICAgICAgICAgICAgICAgIDwm
+Y2xrX3NfYzBfZmxleGdlbiBDTEtfQ09NUE9fRFZQPiwKPiA+ID4gKyAgICAgICAgICAgICAgICA8
+JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX01NQ18xPiwKPiA+ID4gKyAgICAgICAgICAgICAgICA8JmNs
+a19zX2MwX2ZsZXhnZW4gQ0xLX0lDTl9TQkM+LAo+ID4gPiArICAgICAgICAgICAgICAgIDwmY2xr
+X3NfYzBfZmxleGdlbiBDTEtfSUNOX0xNST4sCj4gPiA+ICsgICAgICAgICAgICAgICAgPCZjbGtf
+c19jMF9mbGV4Z2VuIENMS19JQ05fQ1BVPiwKPiA+ID4gKyAgICAgICAgICAgICAgICA8JmNsa19z
+X2MwX2ZsZXhnZW4gQ0xLX1RYX0lDTl9ETVU+LAo+ID4gPiArICAgICAgICAgICAgICAgIDwmY2xr
+X3NfYTBfZmxleGdlbiBDTEtfSUNfTE1JMD4sCj4gPiA+ICsgICAgICAgICAgICAgICAgPCZjbGtf
+bV9hOT47Cj4gPiA+ICt9Owo+IAo+IC0tIAo+IExlZSBKb25lcwo+IExpbmFybyBTVE1pY3JvZWxl
+Y3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBz
+b2Z0d2FyZSBmb3IgQVJNIFNvQ3MKPiBGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIg
+fCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
