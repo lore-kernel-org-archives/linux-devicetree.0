@@ -1,14 +1,16 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/7] ARM: vf610: add second DSPI instance
-Date: Wed, 28 Jan 2015 10:08:38 +0100
-Message-ID: <8e7c50f79165374935f42c15aeff42a8@agner.ch>
-References: <1422356244-15629-1-git-send-email-bhuvanchandra.dv@toradex.com>
- <1422356244-15629-2-git-send-email-bhuvanchandra.dv@toradex.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH 1/7] pinctrl: mediatek: emulate GPIO interrupt on
+ both-edges
+Date: Wed, 28 Jan 2015 17:24:18 +0800
+Message-ID: <1422437058.32212.38.camel@mtksdaap41>
+References: <1422339332-27498-1-git-send-email-chaotian.jing@mediatek.com>
+ <1422339332-27498-2-git-send-email-chaotian.jing@mediatek.com>
+ <CACRpkdbncsDJ3pP0dETpho5+j+OVuaYr=YTsH8pAs7vuT_9OLw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1422356244-15629-2-git-send-email-bhuvanchandra.dv@toradex.com>
+In-Reply-To: <CACRpkdbncsDJ3pP0dETpho5+j+OVuaYr=YTsH8pAs7vuT_9OLw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,62 +20,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, B44548@freescale.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Li.Xiubo@freescale.com, broonie@kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, bin.zhang@mediatek.com, Will Deacon <will.deacon@arm.com>, Chris Ball <chris@printf.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-01-27 11:57, Bhuvanchandra DV wrote:
-> Acked-by: Stefan Agner <stefan@agner.ch>
-> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-> ---
->  arch/arm/boot/dts/vf500.dtsi |  4 ++++
->  arch/arm/boot/dts/vfxxx.dtsi | 11 +++++++++++
->  2 files changed, 15 insertions(+)
+On Tue, 2015-01-27 at 15:21 +0100, Linus Walleij wrote:
+> On Tue, Jan 27, 2015 at 7:15 AM, Chaotian Jing
+> <chaotian.jing@mediatek.com> wrote:
 > 
-> diff --git a/arch/arm/boot/dts/vf500.dtsi b/arch/arm/boot/dts/vf500.dtsi
-> index 1dbf8d2..f5f807c 100644
-> --- a/arch/arm/boot/dts/vf500.dtsi
-> +++ b/arch/arm/boot/dts/vf500.dtsi
-> @@ -66,6 +66,10 @@
->  	interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
->  };
->  
-> +&dspi1 {
-> +	interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-> +};
-> +
->  &edma0 {
->  	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
->  			<GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index a29c7ce..789744b 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -139,6 +139,17 @@
->  				status = "disabled";
->  			};
->  
-> +			dspi1: dspi1@4002d000 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				compatible = "fsl,vf610-dspi";
-> +				reg = <0x4002d000 0x1000>;
-> +				clocks = <&clks VF610_CLK_DSPI1>;
-> +				clock-names = "dspi";
-> +				spi-num-chipselects = <5>;
-> +				status = "disabled";
-> +			};
-> +
->  			sai2: sai@40031000 {
->  				compatible = "fsl,vf610-sai";
->  				reg = <0x40031000 0x1000>;
+> > From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> >
+> > MTK EINT does not support generating interrupt on both edges.
+> > Emulate this by changing edge polarity while enable irq,
+> > set types and interrupt handling. This follows an example of
+> > drivers/gpio/gpio-mxc.c.
+> >
+> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> 
+> Hongzhu, if you're fine with this patch can you ACK it as maintainer
+> of the pinctrl driver so I can merge it immediately on top of your
+> drivern whenever we consider it finished (and if it applies still...)
 
+Hi Linus,
 
-Acked-by: Stefan Agner <stefan@agner.ch>
+Thanks for reviewing.
+Please note this patch depends on mt8173 pinctrl driver patch[1], and
+modify files introduced in that patch. So this patch should be merged
+after that series.
 
-Shawn, this will conflict with the pending MSCM driver patchset. I
-probably have to resend the MSCM patchset anyway, also, the fix would be
-trivial anyway.
+Joe.C
 
---
-Stefan
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/320066.html
