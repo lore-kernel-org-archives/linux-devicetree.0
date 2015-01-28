@@ -1,18 +1,15 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v9 2/2] tty/serial: Add Spreadtrum sc9836-uart driver
- support
-Date: Wed, 28 Jan 2015 11:54:01 +0200
-Message-ID: <20150128095401.GC14175@tarshish>
-References: <1422413261-17184-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1422413261-17184-3-git-send-email-chunyan.zhang@spreadtrum.com>
- <20150128061250.GQ2555@sapphire.tkos.co.il>
- <CAAfSe-v4FGpHL3N3utiDwcoc7qus1XZZszuXBqB6LeE1frAfeA@mail.gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 2/7] ARM: vf-colibri: add SPI support and enable MCP2515
+ CAN
+Date: Wed, 28 Jan 2015 10:55:23 +0100
+Message-ID: <47943ef82a880a0c681ccd0b9fd22eda@agner.ch>
+References: <1422356244-15629-1-git-send-email-bhuvanchandra.dv@toradex.com>
+ <1422356244-15629-3-git-send-email-bhuvanchandra.dv@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAAfSe-v4FGpHL3N3utiDwcoc7qus1XZZszuXBqB6LeE1frAfeA@mail.gmail.com>
+In-Reply-To: <1422356244-15629-3-git-send-email-bhuvanchandra.dv@toradex.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,31 +19,135 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lyra Zhang <zhang.lyra@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>, Pawel Moll <pawel.moll@arm.com>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "antonynpavlov@gmail.com" <antonynpavlov@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Orson Zhai <orsonzhai@gmail.com>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "ijc+devicetree@hellion.org.uk" <ijc+device>
+To: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, B44548@freescale.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Li.Xiubo@freescale.com, broonie@kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lyra Zhang,
-
-On Wed, Jan 28, 2015 at 04:46:33PM +0800, Lyra Zhang wrote:
-> On Wed, Jan 28, 2015 at 2:12 PM, Baruch Siach <baruch@tkos.co.il> wrote:
-> > On Wed, Jan 28, 2015 at 10:47:41AM +0800, Chunyan Zhang wrote:
-> >> +             if (uart_handle_sysrq_char(port, ch))
-> >> +                     continue;
-> >
-> > My comment[1] on a previous version of this patch still stands.
-> > uart_handle_sysrq_char is a NOP when SUPPORT_SYSRQ is not defined.
+On 2015-01-27 11:57, Bhuvanchandra DV wrote:
+> MCP2515 CAN controller is available on Colibri Evaluation board.
+> Hence enable MCP2515 CAN.
 > 
-> yes, there are two definitions in serial_core.h, and it returns 0 when
-> SUPPORT_SYSRQ is not defined.
-> so, I think my code behavior does not hurt, right?
+> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+> ---
+>  arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 31 +++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/vf-colibri.dtsi         | 15 +++++++++++++++
+>  2 files changed, 46 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> index 36cafbf..69364b0 100644
+> --- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> @@ -12,6 +12,12 @@
+>  		bootargs = "console=ttyLP0,115200";
+>  	};
+>  
+> +	clk16m: clk16m {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <16000000>;
+> +	};
+> +
+>  	regulators {
+>  		compatible = "simple-bus";
+>  		#address-cells = <1>;
+> @@ -47,6 +53,21 @@
+>  	status  = "okay";
+>  };
+>  
+> +&dspi1 {
+> +	status = "okay";
+> +
+> +	can2: mcp2515@0 {
 
-Right. I just wanted to point out that you can easily define SUPPORT_SYSRQ as 
-appropriate like many other serial drivers do to get sysrq support.
 
-baruch
+The device tree usage website states (devicetree.org): "nodes are named
+according to what kind of device it represents"...
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+You can use the label to specify the type, e.g. I would suggest to use
+something like:
+
+
+	mcp2515can: can@0 {
+...
+
+
+
+
+> +		compatible = "microchip,mcp2515";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_can_int>;
+> +		reg = <0>;
+> +		clocks = <&clk16m>;
+> +		spi-max-frequency = <10000000>;
+> +		interrupt-parent = <&gpio2>;
+
+The interrupt line of the MCP2515 is connected to SODIMM 73, which is
+PORT1[11] on Vybrid. My recent renaming of the GPIO's has been merged
+already:
+https://lkml.org/lkml/2015/1/16/419
+
+Hence, this should be updated to gpio1.
+
+
+> +		interrupts = <11 GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+> +
+>  &esdhc1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_esdhc1>;
+> @@ -94,3 +115,13 @@
+>  &usbh1 {
+>  	vbus-supply = <&usbh_vbus_reg>;
+>  };
+> +
+> +&iomuxc {
+> +	vf610-colibri {
+> +		pinctrl_can_int: can_int {
+> +			fsl,pins = <
+> +				VF610_PAD_PTB21__GPIO_43	0x22ed
+> +			>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi
+> b/arch/arm/boot/dts/vf-colibri.dtsi
+> index 5c2b732..fbef082 100644
+> --- a/arch/arm/boot/dts/vf-colibri.dtsi
+> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
+> @@ -23,6 +23,12 @@
+>  	status = "okay";
+>  };
+>  
+> +&dspi1 {
+> +	bus-num = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_dspi1>;
+> +};
+> +
+>  &edma0 {
+>  	status = "okay";
+>  };
+> @@ -107,6 +113,15 @@
+>  			>;
+>  		};
+>  
+> +		pinctrl_dspi1: dspi1grp {
+> +			fsl,pins = <
+> +				VF610_PAD_PTD5__DSPI1_CS0		0x33e2
+> +				VF610_PAD_PTD6__DSPI1_SIN		0x33e1
+> +				VF610_PAD_PTD7__DSPI1_SOUT		0x33e2
+> +				VF610_PAD_PTD8__DSPI1_SCK		0x33e2
+> +			>;
+> +		};
+> +
+>  		pinctrl_esdhc1: esdhc1grp {
+>  			fsl,pins = <
+>  				VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
+
+
+The rest looks good, thx.
+
+--
+Stefan
