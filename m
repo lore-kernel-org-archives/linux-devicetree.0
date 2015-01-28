@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v2 10/14] NFC: Forward NFC_EVT_TRANSACTION up to user space
-Date: Wed, 28 Jan 2015 21:17:27 +0100
-Message-ID: <1422476251-25972-11-git-send-email-christophe-h.ricard@st.com>
+Subject: [RFC v2 06/14] NFC: nci: Add nci_core_conn_create handler command/response
+Date: Wed, 28 Jan 2015 21:17:23 +0100
+Message-ID: <1422476251-25972-7-git-send-email-christophe-h.ricard@st.com>
 References: <1422476251-25972-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1422476251-25972-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,185 +10,157 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-NFC_EVT_TRANSACTION is not managed so far.
-
-Forward event information up to user space in order to tell an application
-that some user action(s) are needed.
-
-Forwarded information are:
-- SE host generating the event
-- Application IDentifier doing the operation
-- Applications parameters
+Add nci_core_conn_create handler according to NFC Forum NCI specification.
+It is necessary for example for secure element handling.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- include/net/nfc/nfc.h    | 27 +++++++++++++++++++++++++++
- include/uapi/linux/nfc.h |  1 +
- net/nfc/core.c           | 21 +++++++++++++++++++++
- net/nfc/netlink.c        | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- net/nfc/nfc.h            |  2 ++
- 5 files changed, 98 insertions(+)
+ include/net/nfc/nci.h      | 25 +++++++++++++++++++++++++
+ include/net/nfc/nci_core.h |  2 ++
+ net/nfc/nci/core.c         | 24 ++++++++++++++++++++++++
+ net/nfc/nci/rsp.c          | 31 +++++++++++++++++++++++++++++++
+ 4 files changed, 82 insertions(+)
 
-diff --git a/include/net/nfc/nfc.h b/include/net/nfc/nfc.h
-index 12adb81..73190e6 100644
---- a/include/net/nfc/nfc.h
-+++ b/include/net/nfc/nfc.h
-@@ -135,6 +135,31 @@ struct nfc_se {
- 	u16 state;
- };
+diff --git a/include/net/nfc/nci.h b/include/net/nfc/nci.h
+index 230f227..b8ff50c 100644
+--- a/include/net/nfc/nci.h
++++ b/include/net/nfc/nci.h
+@@ -243,6 +243,23 @@ struct nci_core_set_config_cmd {
+ 	struct	set_config_param param; /* support 1 param per cmd is enough */
+ } __packed;
  
-+/**
-+ * nfc_evt_transaction - A struct for NFC secure element event transaction.
-+ *
-+ * @aid: The application identifier triggering the event
-+ *
-+ * @aid_len: The application identifier length [5:16]
-+ *
-+ * @params: The application parameters transmitted during the transaction
-+ *
-+ * @params_len: The applications parameters length [0:255]
-+ *
-+ */
-+#define NFC_MIN_AID_LENGTH	5
-+#define	NFC_MAX_AID_LENGTH	16
-+#define NFC_MAX_PARAMS_LENGTH	255
-+
-+#define NFC_EVT_TRANSACTION_AID_TAG	0x81
-+#define NFC_EVT_TRANSACTION_PARAMS_TAG	0x82
-+struct nfc_evt_transaction {
-+	u32 aid_len;
-+	u8 aid[NFC_MAX_AID_LENGTH];
-+	u8 params_len;
-+	u8 params[NFC_MAX_PARAMS_LENGTH];
++#define NCI_OP_CORE_CONN_CREATE_CMD	nci_opcode_pack(NCI_GID_CORE, 0x04)
++struct dest_spec_params {
++	__u8	id;
++	__u8	protocol;
 +} __packed;
 +
- struct nfc_genl_data {
- 	u32 poll_req_portid;
- 	struct mutex genl_data_mutex;
-@@ -262,6 +287,8 @@ int nfc_tm_data_received(struct nfc_dev *dev, struct sk_buff *skb);
++struct core_conn_create_dest_spec_params {
++	__u8	type;
++	__u8	length;
++	struct dest_spec_params value;
++} __packed;
++
++struct nci_core_conn_create_cmd {
++	__u8	destination_type;
++	__u8	number_destination_params;
++	struct core_conn_create_dest_spec_params params;
++} __packed;
+ #define NCI_OP_RF_DISCOVER_MAP_CMD	nci_opcode_pack(NCI_GID_RF_MGMT, 0x00)
+ struct disc_map_config {
+ 	__u8	rf_protocol;
+@@ -327,6 +344,14 @@ struct nci_core_set_config_rsp {
+ 	__u8	params_id[0];	/* variable size array */
+ } __packed;
  
- void nfc_driver_failure(struct nfc_dev *dev, int err);
++#define NCI_OP_CORE_CONN_CREATE_RSP	nci_opcode_pack(NCI_GID_CORE, 0x04)
++struct nci_core_conn_create_rsp {
++	__u8	status;
++	__u8	max_ctrl_pkt_payload_len;
++	__u8    credits;
++	__u8	conn_id;
++} __packed;
++
+ #define NCI_OP_RF_DISCOVER_MAP_RSP	nci_opcode_pack(NCI_GID_RF_MGMT, 0x00)
  
-+int nfc_se_transaction(struct nfc_dev *dev, u8 se_idx,
-+		       struct nfc_evt_transaction *evt_transaction);
- int nfc_add_se(struct nfc_dev *dev, u32 se_idx, u16 type);
- int nfc_remove_se(struct nfc_dev *dev, u32 se_idx);
- struct nfc_se *nfc_find_se(struct nfc_dev *dev, u32 se_idx);
-diff --git a/include/uapi/linux/nfc.h b/include/uapi/linux/nfc.h
-index 8119255..c1e2e63 100644
---- a/include/uapi/linux/nfc.h
-+++ b/include/uapi/linux/nfc.h
-@@ -183,6 +183,7 @@ enum nfc_attrs {
- 	NFC_ATTR_SE_APDU,
- 	NFC_ATTR_TARGET_ISO15693_DSFID,
- 	NFC_ATTR_TARGET_ISO15693_UID,
-+	NFC_ATTR_SE_PARAMS,
- /* private: internal use only */
- 	__NFC_ATTR_AFTER_LAST
- };
-diff --git a/net/nfc/core.c b/net/nfc/core.c
-index 7f1b635..cff3f16 100644
---- a/net/nfc/core.c
-+++ b/net/nfc/core.c
-@@ -932,6 +932,27 @@ int nfc_remove_se(struct nfc_dev *dev, u32 se_idx)
+ #define NCI_OP_RF_DISCOVER_RSP		nci_opcode_pack(NCI_GID_RF_MGMT, 0x03)
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index 2f7ffa2..600cf30 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -186,6 +186,8 @@ int nci_set_config(struct nci_dev *ndev, __u8 id, size_t len, __u8 *val);
+ 
+ int nci_nfcee_discover(struct nci_dev *ndev, u8 action);
+ int nci_nfcee_mode_set(struct nci_dev *ndev, u8 nfcee_id, u8 nfcee_mode);
++int nci_core_conn_create(struct nci_dev *ndev,
++			 struct core_conn_create_dest_spec_params *params);
+ 
+ static inline struct sk_buff *nci_skb_alloc(struct nci_dev *ndev,
+ 					    unsigned int len,
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 8741a45..61648b4 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -494,6 +494,30 @@ int nci_nfcee_mode_set(struct nci_dev *ndev, u8 nfcee_id, u8 nfcee_mode)
  }
- EXPORT_SYMBOL(nfc_remove_se);
+ EXPORT_SYMBOL(nci_nfcee_mode_set);
  
-+int nfc_se_transaction(struct nfc_dev *dev, u8 se_idx,
-+		       struct nfc_evt_transaction *evt_transaction)
++static void nci_core_conn_create_req(struct nci_dev *ndev, unsigned long opt)
 +{
-+	int rc;
++	struct nci_core_conn_create_cmd cmd;
++	struct core_conn_create_dest_spec_params *params =
++				(struct core_conn_create_dest_spec_params *)opt;
 +
-+	pr_debug("transaction: %x\n", se_idx);
++	cmd.destination_type = NCI_DESTINATION_NFCEE;
++	cmd.number_destination_params = 1;
++	memcpy(&cmd.params.type, params,
++	       sizeof(struct core_conn_create_dest_spec_params));
++	nci_send_cmd(ndev, NCI_OP_CORE_CONN_CREATE_CMD,
++		     sizeof(struct nci_core_conn_create_cmd), &cmd);
++}
 +
-+	device_lock(&dev->dev);
++int nci_core_conn_create(struct nci_dev *ndev,
++			 struct core_conn_create_dest_spec_params *params)
++{
++	ndev->cur_id = params->value.id;
++	return nci_request(ndev, nci_core_conn_create_req,
++			(unsigned long)params,
++			msecs_to_jiffies(NCI_CMD_TIMEOUT));
++}
++EXPORT_SYMBOL(nci_core_conn_create);
 +
-+	if (!evt_transaction) {
-+		rc = -EPROTO;
-+		goto out;
+ static int nci_set_local_general_bytes(struct nfc_dev *nfc_dev)
+ {
+ 	struct nci_dev *ndev = nfc_get_drvdata(nfc_dev);
+diff --git a/net/nfc/nci/rsp.c b/net/nfc/nci/rsp.c
+index 1fb5b71..ddb0008 100644
+--- a/net/nfc/nci/rsp.c
++++ b/net/nfc/nci/rsp.c
+@@ -224,6 +224,33 @@ static void nci_nfcee_mode_set_rsp_packet(struct nci_dev *ndev,
+ 	nci_req_complete(ndev, status);
+ }
+ 
++static void nci_core_conn_create_rsp_packet(struct nci_dev *ndev,
++					    struct sk_buff *skb)
++{
++	__u8 status = skb->data[0];
++	struct nci_conn_info *conn_info;
++	struct nci_core_conn_create_rsp *rsp;
++
++	pr_debug("status 0x%x\n", status);
++
++	if (status == NCI_STATUS_OK) {
++		rsp = (struct nci_core_conn_create_rsp *)skb->data;
++		conn_info = ndev->conn_info_by_id[ndev->cur_id];
++		if (!conn_info) {
++			status = NCI_STATUS_REJECTED;
++			goto exit;
++		}
++
++		conn_info->conn_id = rsp->conn_id;
++		ndev->conn_info_by_conn_id[conn_info->conn_id] = conn_info;
++		conn_info->max_pkt_payload_len = rsp->max_ctrl_pkt_payload_len;
++		atomic_set(&conn_info->credits_cnt, rsp->credits);
 +	}
 +
-+	rc = nfc_genl_se_transaction(dev, se_idx, evt_transaction);
-+out:
-+	device_unlock(&dev->dev);
-+	return rc;
++exit:
++	nci_req_complete(ndev, status);
 +}
-+EXPORT_SYMBOL(nfc_se_transaction);
 +
- static void nfc_release(struct device *d)
+ void nci_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb)
  {
- 	struct nfc_dev *dev = to_nfc_dev(d);
-diff --git a/net/nfc/netlink.c b/net/nfc/netlink.c
-index be387e6..14a2d11 100644
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -497,6 +497,53 @@ free_msg:
- 	return -EMSGSIZE;
- }
+ 	__u16 rsp_opcode = nci_opcode(skb->data);
+@@ -253,6 +280,10 @@ void nci_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb)
+ 		nci_core_set_config_rsp_packet(ndev, skb);
+ 		break;
  
-+int nfc_genl_se_transaction(struct nfc_dev *dev, u8 se_idx,
-+			    struct nfc_evt_transaction *evt_transaction)
-+{
-+	struct nfc_se *se;
-+	struct sk_buff *msg;
-+	void *hdr;
++	case NCI_OP_CORE_CONN_CREATE_RSP:
++		nci_core_conn_create_rsp_packet(ndev, skb);
++		break;
 +
-+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	hdr = genlmsg_put(msg, 0, 0, &nfc_genl_family, 0,
-+			  NFC_EVENT_SE_TRANSACTION);
-+	if (!hdr)
-+		goto free_msg;
-+
-+	se = nfc_find_se(dev, se_idx);
-+	if (!se)
-+		goto free_msg;
-+
-+	if (nla_put_u32(msg, NFC_ATTR_DEVICE_INDEX, dev->idx) ||
-+	    nla_put_u32(msg, NFC_ATTR_SE_INDEX, se_idx) ||
-+	    nla_put_u8(msg, NFC_ATTR_SE_TYPE, se->type) ||
-+	    nla_put(msg, NFC_ATTR_SE_AID, evt_transaction->aid_len,
-+		    evt_transaction->aid) ||
-+	    nla_put(msg, NFC_ATTR_SE_PARAMS, evt_transaction->params_len,
-+		    evt_transaction->params))
-+		goto nla_put_failure;
-+
-+	/* evt_transaction is no more used */
-+	devm_kfree(&dev->dev, evt_transaction);
-+
-+	genlmsg_end(msg, hdr);
-+
-+	genlmsg_multicast(&nfc_genl_family, msg, 0, 0, GFP_KERNEL);
-+
-+	return 0;
-+
-+nla_put_failure:
-+	genlmsg_cancel(msg, hdr);
-+free_msg:
-+	/* evt_transaction is no more used */
-+	devm_kfree(&dev->dev, evt_transaction);
-+	nlmsg_free(msg);
-+	return -EMSGSIZE;
-+}
-+
- static int nfc_genl_send_device(struct sk_buff *msg, struct nfc_dev *dev,
- 				u32 portid, u32 seq,
- 				struct netlink_callback *cb,
-diff --git a/net/nfc/nfc.h b/net/nfc/nfc.h
-index 88d6006..a8ce80b 100644
---- a/net/nfc/nfc.h
-+++ b/net/nfc/nfc.h
-@@ -100,6 +100,8 @@ int nfc_genl_llc_send_sdres(struct nfc_dev *dev, struct hlist_head *sdres_list);
- 
- int nfc_genl_se_added(struct nfc_dev *dev, u32 se_idx, u16 type);
- int nfc_genl_se_removed(struct nfc_dev *dev, u32 se_idx);
-+int nfc_genl_se_transaction(struct nfc_dev *dev, u8 se_idx,
-+			    struct nfc_evt_transaction *evt_transaction);
- 
- struct nfc_dev *nfc_get_device(unsigned int idx);
- 
+ 	case NCI_OP_RF_DISCOVER_MAP_RSP:
+ 		nci_rf_disc_map_rsp_packet(ndev, skb);
+ 		break;
 -- 
 2.1.0
 
