@@ -1,7 +1,8 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 3/3] dts: versatile: add sysregs node
-Date: Wed, 28 Jan 2015 11:56:32 -0600
-Message-ID: <1422467792-2065-4-git-send-email-robh@kernel.org>
+Subject: [PATCH 2/3] clocksource: versatile: adapt for Versatile AB and PB
+ boards
+Date: Wed, 28 Jan 2015 11:56:31 -0600
+Message-ID: <1422467792-2065-3-git-send-email-robh@kernel.org>
 References: <1422467792-2065-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,38 +19,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Versatile boards have the same sysregs as other ARM Ltd boards. Add
-the nodes in order to enable support for 24MHz counter as sched_clock.
-
-This is a minimal node definition as the existing sub node definition
-used on VExpress has some issues raised by Linus W.
+The same 24MHz counter is also present on Versatile AB and PB boards, so
+add the compatible string for them.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/arm/boot/dts/versatile-ab.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/clocksource/versatile.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index 27d0d9c..01f4019 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -252,6 +252,11 @@
- 			#size-cells = <1>;
- 			ranges = <0 0x10000000 0x10000>;
+diff --git a/drivers/clocksource/versatile.c b/drivers/clocksource/versatile.c
+index 2798e74..0a26d3d 100644
+--- a/drivers/clocksource/versatile.c
++++ b/drivers/clocksource/versatile.c
+@@ -36,5 +36,7 @@ static void __init versatile_sched_clock_init(struct device_node *node)
  
-+			sysreg@0 {
-+				compatible = "arm,versatile-sysreg", "syscon";
-+				reg = <0x00000 0x1000>;
-+			};
-+
- 			aaci@4000 {
- 				compatible = "arm,primecell";
- 				reg = <0x4000 0x1000>;
+ 	sched_clock_register(versatile_sys_24mhz_read, 32, 24000000);
+ }
+-CLOCKSOURCE_OF_DECLARE(versatile, "arm,vexpress-sysreg",
++CLOCKSOURCE_OF_DECLARE(vexpress, "arm,vexpress-sysreg",
++		       versatile_sched_clock_init);
++CLOCKSOURCE_OF_DECLARE(versatile, "arm,versatile-sysreg",
+ 		       versatile_sched_clock_init);
 -- 
 2.1.0
