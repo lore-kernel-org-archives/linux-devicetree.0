@@ -1,206 +1,251 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] pinctrl: qcom: Add msm8916 pinctrl driver
-Date: Wed, 28 Jan 2015 17:18:47 -0600
-Message-ID: <20150128231847.GC17315@qualcomm.com>
-References: <1421745476-6276-1-git-send-email-svarbanov@mm-sol.com>
- <1421745476-6276-4-git-send-email-svarbanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] thermal: Fix examples in DT documentation
+Date: Wed, 28 Jan 2015 17:13:35 +0000
+Message-ID: <1422465215-12716-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421745476-6276-4-git-send-email-svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Joonwoo Park <joonwoop-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 20, 2015 at 11:17:56AM +0200, Stanimir Varbanov wrote:
+There are various issues with the examples in this documentation, some
+of the DT labels are invalid and one of the macro THERMAL_NO_LIMITS
+referenced is not available as well.
 
-<snip>
+This patch attempts to fix such errors in the documentation.
 
-> +	MSM_MUX_blsp1_spi,
-> +	MSM_MUX_blsp2_spi,
-> +	MSM_MUX_blsp3_spi,
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+Changes Since v1:
+	- Fixed few more typo's as suggested by Eduardo Valentin
 
-The above three need to be renamed to blsp_spiX_csX to denote which SPI and chip
-select they modify.
+ .../devicetree/bindings/thermal/thermal.txt        | 66 +++++++++++-----------
+ 1 file changed, 33 insertions(+), 33 deletions(-)
 
-> +	MSM_MUX_blsp_i2c1,
-> +	MSM_MUX_blsp_i2c2,
-> +	MSM_MUX_blsp_i2c3,
-> +	MSM_MUX_blsp_i2c4,
-> +	MSM_MUX_blsp_i2c5,
-> +	MSM_MUX_blsp_i2c6,
-> +	MSM_MUX_blsp_spi1,
-> +	MSM_MUX_blsp_spi2,
-> +	MSM_MUX_blsp_spi3,
-> +	MSM_MUX_blsp_spi4,
-> +	MSM_MUX_blsp_spi5,
-> +	MSM_MUX_blsp_spi6,
-
-<snip>
-
-> +	MSM_MUX_uim1_clk,
-> +	MSM_MUX_uim1_data,
-> +	MSM_MUX_uim1_present,
-> +	MSM_MUX_uim1_reset,
-> +	MSM_MUX_uim2_clk,
-> +	MSM_MUX_uim2_data,
-> +	MSM_MUX_uim2_present,
-> +	MSM_MUX_uim2_reset,
-> +	MSM_MUX_uim3_clk,
-> +	MSM_MUX_uim3_data,
-> +	MSM_MUX_uim3_present,
-> +	MSM_MUX_uim3_reset,
-
-Can the UIM be collapsed into uim1, uim2, uim3?
-
-> +	MSM_MUX_uim_batt,
-> +	MSM_MUX_wcss_bt,
-> +	MSM_MUX_wcss_fm,
-> +	MSM_MUX_wcss_wlan,
-> +	MSM_MUX_wcss_wlan0,
-> +	MSM_MUX_wcss_wlan1,
-> +	MSM_MUX_wcss_wlan2,
-
-Can the wcss_wlan0/1/2 be collapsed down into wlan?
-
-> +	MSM_MUX_webcam1_rst,
-> +	MSM_MUX_NA,
-> +};
-
-<snip>
-
-
-> +	PINGROUP(9, blsp_spi3, qdss_tracedata_a, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(10, blsp_spi3, blsp_i2c3, qdss_tracedata_a, NA, NA, NA, NA, NA,
-> +		 NA),
-> +	PINGROUP(11, blsp_spi3, blsp_i2c3, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(12, blsp_spi4, gcc_gp2_clk_b, NA, atest_combodac, NA, NA, NA,
-> +		 NA, NA),
-> +	PINGROUP(13, blsp_spi4, gcc_gp3_clk_b, NA, atest_combodac, NA, NA, NA,
-> +		 NA, NA),
-> +	PINGROUP(14, blsp_spi4, blsp_i2c4, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(15, blsp_spi4, blsp_i2c4, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(16, blsp_spi5, blsp1_spi, NA, atest_bbrx1, NA, NA, NA, NA, NA),
-
-The blsp1_spi is cs2.  We usually denote these as separate from the blspX_spi.
-And we should probably call it blsp_spi1_cs2
-
-> +	PINGROUP(17, blsp_spi5, blsp2_spi, NA, atest_bbrx0, NA, NA, NA, NA, NA),
-
-The blsp2_spi is cs2.  We usually denote these as separate from the blspX_spi.
-And we should probably call it blsp_spi2_cs2
-
-> +	PINGROUP(18, blsp_spi5, blsp_i2c5, NA, atest_gpsadc1, NA, NA, NA, NA,
-> +		 NA),
-> +	PINGROUP(19, blsp_spi5, blsp_i2c5, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(20, blsp_spi6, NA, NA, NA, NA, NA, NA, qdss_cti_trig_in_a0,
-> +		 NA),
-> +	PINGROUP(21, blsp_spi6, NA, NA, NA, NA, NA, NA, qdss_cti_trig_in_b0,
-> +		 NA),
-> +	PINGROUP(22, blsp_spi6, blsp_i2c6, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(23, blsp_spi6, blsp_i2c6, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(24, mdp_vsync, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(25, mdp_vsync, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(26, cam_mclk, NA, NA, NA, NA, NA, qdss_tracedata_b, NA, NA),
-
-cam_mclk0?
-
-> +	PINGROUP(27, cam_mclk, NA, NA, NA, NA, NA, NA, NA, qdss_tracedata_b),
-
-cam_mclk1?
-
-> +	PINGROUP(28, pwr_modem_enabled_a, NA, NA, NA, NA, NA, qdss_tracedata_b,
-> +		 NA, atest_combodac),
-> +	PINGROUP(29, cci_i2c, NA, NA, NA, NA, NA, qdss_tracedata_b, NA,
-> +		 atest_combodac),
-> +	PINGROUP(30, cci_i2c, NA, NA, NA, NA, NA, NA, NA, qdss_tracedata_b),
-> +	PINGROUP(31, cci_timer0, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(32, cci_timer1, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(33, cci_async, NA, NA, NA, NA, NA, NA, NA, qdss_tracedata_b),
-> +	PINGROUP(34, pwr_nav_enabled_a, NA, NA, NA, NA, NA, NA, NA,
-> +		 qdss_tracedata_b),
-> +	PINGROUP(35, pwr_crypto_enabled_a, NA, NA, NA, NA, NA, NA, NA,
-> +		 qdss_tracedata_b),
-> +	PINGROUP(36, NA, NA, NA, NA, NA, NA, NA, qdss_tracedata_b, NA),
-> +	PINGROUP(37, blsp3_spi, NA, NA, NA, NA, NA, qdss_tracedata_b, NA, NA),
-
-See above for chip selects..... blsp_spi3_cs2
-
-> +	PINGROUP(38, cci_timer2, adsp_ext, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(39, wcss_bt, qdss_tracedata_a, NA, atest_combodac, NA, NA, NA,
-> +		 NA, NA),
-> +	PINGROUP(40, wcss_wlan2, qdss_tracedata_a, NA, atest_combodac, NA, NA,
-
-Use wlan_data instead?  This is data pin 2 for wlan_data. or use wcss_wlan
-
-> +		 NA, NA, NA),
-> +	PINGROUP(41, wcss_wlan1, qdss_tracedata_a, NA, atest_combodac, NA, NA,
-
-Use wlan_data instead?  This is data pin 1 for wlan_data. or use wcss_wlan
-
-> +		 NA, NA, NA),
-> +	PINGROUP(42, wcss_wlan0, qdss_tracedata_a, NA, atest_combodac, NA, NA,
-
-Use wlan_data instead?  This is data pin 0 for wlan_data. or use wcss_wlan
-
-> +		 NA, NA, NA),
-> +	PINGROUP(43, wcss_wlan, prng_rosc, qdss_tracedata_a, NA, atest_combodac,
-> +		 NA, NA, NA, NA),
-> +	PINGROUP(44, wcss_wlan, NA, atest_combodac, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(45, wcss_fm, ext_lpass, qdss_tracectl_a, NA, atest_combodac,
-
-<snip>
-
-> +	PINGROUP(67, cdc_pdm0, ebi0_wrcdc, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(68, cdc_pdm0, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(69, blsp3_spi, qdss_tracedata_a, NA, atest_combodac, NA, NA,
-
-See above spi chip selects..... blsp_spi3_cs3
-
-> +		 NA, NA, NA),
-> +	PINGROUP(70, NA, NA, NA, NA, NA, NA, NA, NA, NA),
-
-<snip>
-
-> +	PINGROUP(109, pbs2, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(110, blsp1_spi, pri_mi2s_ws, NA, qdss_tracedata_b, NA, NA, NA,
-
-See above spi chip selects..... blsp_spi1_cs1
-
-> +		 NA, NA),
-> +	PINGROUP(111, qdss_tracedata_b, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(112, sec_mi2s, NA, NA, NA, qdss_tracedata_a, NA, atest_tsens,
-> +		 NA, NA),
-> +	PINGROUP(113, pri_mi2s, NA, pwr_modem_enabled_b, NA, NA, NA, NA, NA,
-> +		 qdss_tracedata_a),
-> +	PINGROUP(114, pri_mi2s, pwr_nav_enabled_b, NA, NA, NA, NA, NA,
-> +		 qdss_tracedata_a, NA),
-> +	PINGROUP(115, pri_mi2s, pwr_crypto_enabled_b, NA, NA, NA, NA, NA,
-> +		 qdss_tracedata_a, NA),
-> +	PINGROUP(116, pri_mi2s, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(117, sec_mi2s, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(118, sec_mi2s, NA, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(119, sec_mi2s, m_voc, NA, NA, NA, NA, NA, NA, NA),
-> +	PINGROUP(120, blsp3_spi, ldo_update, NA, NA, NA, NA, NA, NA, NA),
-
-See above spi chip selects..... blsp_spi3_cs1
-
-> +	PINGROUP(121, sd_write, blsp2_spi, ldo_en, NA, NA, NA, NA, NA, NA),
-
-See above spi chip selects..... blsp_spi2_cs1
-
-> +	SDC_PINGROUP(sdc1_clk, 0x10a000, 13, 6),
-> +	SDC_PINGROUP(sdc1_cmd, 0x10a000, 11, 3),
-> +	SDC_PINGROUP(sdc1_data, 0x10a000, 9, 0),
-
-<snip>
-
+diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+index f5db6b7..91c77da 100644
+--- a/Documentation/devicetree/bindings/thermal/thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+@@ -251,24 +251,24 @@ ocp {
+ };
+ 
+ thermal-zones {
+-	cpu-thermal: cpu-thermal {
++	cpu_thermal: cpu-thermal {
+ 		polling-delay-passive = <250>; /* milliseconds */
+ 		polling-delay = <1000>; /* milliseconds */
+ 
+ 		thermal-sensors = <&bandgap0>;
+ 
+ 		trips {
+-			cpu-alert0: cpu-alert {
++			cpu_alert0: cpu-alert0 {
+ 				temperature = <90000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "active";
+ 			};
+-			cpu-alert1: cpu-alert {
++			cpu_alert1: cpu-alert1 {
+ 				temperature = <100000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			cpu-crit: cpu-crit {
++			cpu_crit: cpu-crit {
+ 				temperature = <125000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "critical";
+@@ -277,17 +277,17 @@ thermal-zones {
+ 
+ 		cooling-maps {
+ 			map0 {
+-				trip = <&cpu-alert0>;
+-				cooling-device = <&fan0 THERMAL_NO_LIMITS 4>;
++				trip = <&cpu_alert0>;
++				cooling-device = <&fan0 THERMAL_NO_LIMIT 4>;
+ 			};
+ 			map1 {
+-				trip = <&cpu-alert1>;
+-				cooling-device = <&fan0 5 THERMAL_NO_LIMITS>;
++				trip = <&cpu_alert1>;
++				cooling-device = <&fan0 5 THERMAL_NO_LIMIT>;
+ 			};
+ 			map2 {
+-				trip = <&cpu-alert1>;
++				trip = <&cpu_alert1>;
+ 				cooling-device =
+-				    <&cpu0 THERMAL_NO_LIMITS THERMAL_NO_LIMITS>;
++				    <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 			};
+ 		};
+ 	};
+@@ -298,13 +298,13 @@ used to monitor the zone 'cpu-thermal' using its sole sensor. A fan
+ device (fan0) is controlled via I2C bus 1, at address 0x48, and has ten
+ different cooling states 0-9. It is used to remove the heat out of
+ the thermal zone 'cpu-thermal' using its cooling states
+-from its minimum to 4, when it reaches trip point 'cpu-alert0'
++from its minimum to 4, when it reaches trip point 'cpu_alert0'
+ at 90C, as an example of active cooling. The same cooling device is used at
+-'cpu-alert1', but from 5 to its maximum state. The cpu@0 device is also
++'cpu_alert1', but from 5 to its maximum state. The cpu@0 device is also
+ linked to the same thermal zone, 'cpu-thermal', as a passive cooling device,
+-using all its cooling states at trip point 'cpu-alert1',
++using all its cooling states at trip point 'cpu_alert1',
+ which is a trip point at 100C. On the thermal zone 'cpu-thermal', at the
+-temperature of 125C, represented by the trip point 'cpu-crit', the silicon
++temperature of 125C, represented by the trip point 'cpu_crit', the silicon
+ is not reliable anymore.
+ 
+ (b) - IC with several internal sensors
+@@ -329,7 +329,7 @@ ocp {
+ };
+ 
+ thermal-zones {
+-	cpu-thermal: cpu-thermal {
++	cpu_thermal: cpu-thermal {
+ 		polling-delay-passive = <250>; /* milliseconds */
+ 		polling-delay = <1000>; /* milliseconds */
+ 
+@@ -338,12 +338,12 @@ thermal-zones {
+ 
+ 		trips {
+ 			/* each zone within the SoC may have its own trips */
+-			cpu-alert: cpu-alert {
++			cpu_alert: cpu-alert {
+ 				temperature = <100000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			cpu-crit: cpu-crit {
++			cpu_crit: cpu-crit {
+ 				temperature = <125000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "critical";
+@@ -356,7 +356,7 @@ thermal-zones {
+ 		};
+ 	};
+ 
+-	gpu-thermal: gpu-thermal {
++	gpu_thermal: gpu-thermal {
+ 		polling-delay-passive = <120>; /* milliseconds */
+ 		polling-delay = <1000>; /* milliseconds */
+ 
+@@ -365,12 +365,12 @@ thermal-zones {
+ 
+ 		trips {
+ 			/* each zone within the SoC may have its own trips */
+-			gpu-alert: gpu-alert {
++			gpu_alert: gpu-alert {
+ 				temperature = <90000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			gpu-crit: gpu-crit {
++			gpu_crit: gpu-crit {
+ 				temperature = <105000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "critical";
+@@ -383,7 +383,7 @@ thermal-zones {
+ 		};
+ 	};
+ 
+-	dsp-thermal: dsp-thermal {
++	dsp_thermal: dsp-thermal {
+ 		polling-delay-passive = <50>; /* milliseconds */
+ 		polling-delay = <1000>; /* milliseconds */
+ 
+@@ -392,12 +392,12 @@ thermal-zones {
+ 
+ 		trips {
+ 			/* each zone within the SoC may have its own trips */
+-			dsp-alert: gpu-alert {
++			dsp_alert: dsp-alert {
+ 				temperature = <90000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			dsp-crit: gpu-crit {
++			dsp_crit: gpu-crit {
+ 				temperature = <135000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "critical";
+@@ -457,7 +457,7 @@ ocp {
+ };
+ 
+ thermal-zones {
+-	cpu-thermal: cpu-thermal {
++	cpu_thermal: cpu-thermal {
+ 		polling-delay-passive = <250>; /* milliseconds */
+ 		polling-delay = <1000>; /* milliseconds */
+ 
+@@ -508,7 +508,7 @@ with many sensors and many cooling devices.
+ 	/*
+ 	 * An IC with several temperature sensor.
+ 	 */
+-	adc-dummy: sensor@0x50 {
++	adc_dummy: sensor@0x50 {
+ 		...
+ 		#thermal-sensor-cells = <1>; /* sensor internal ID */
+ 	};
+@@ -531,7 +531,7 @@ thermal-zones {
+ 		};
+ 	};
+ 
+-	board-thermal: board-thermal {
++	board_thermal: board-thermal {
+ 		polling-delay-passive = <1000>; /* milliseconds */
+ 		polling-delay = <2500>; /* milliseconds */
+ 
+@@ -548,22 +548,22 @@ thermal-zones {
+ 
+ 		trips {
+ 			/* Trips are based on resulting linear equation */
+-			cpu-trip: cpu-trip {
++			cpu_trip: cpu-trip {
+ 				temperature = <60000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			gpu-trip: gpu-trip {
++			gpu_trip: gpu-trip {
+ 				temperature = <55000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			}
+-			lcd-trip: lcp-trip {
++			lcd_trip: lcp-trip {
+ 				temperature = <53000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "passive";
+ 			};
+-			crit-trip: crit-trip {
++			crit_trip: crit-trip {
+ 				temperature = <68000>; /* millicelsius */
+ 				hysteresis = <2000>; /* millicelsius */
+ 				type = "critical";
+@@ -572,17 +572,17 @@ thermal-zones {
+ 
+ 		cooling-maps {
+ 			map0 {
+-				trip = <&cpu-trip>;
++				trip = <&cpu_trip>;
+ 				cooling-device = <&cpu0 0 2>;
+ 				contribution = <55>;
+ 			};
+ 			map1 {
+-				trip = <&gpu-trip>;
++				trip = <&gpu_trip>;
+ 				cooling-device = <&gpu0 0 2>;
+ 				contribution = <20>;
+ 			};
+ 			map2 {
+-				trip = <&lcd-trip>;
++				trip = <&lcd_trip>;
+ 				cooling-device = <&lcd0 5 10>;
+ 				contribution = <15>;
+ 			};
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
