@@ -1,14 +1,12 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/3] clocksource: versatile: adapt for Versatile AB and PB
- boards
-Date: Wed, 28 Jan 2015 11:56:31 -0600
-Message-ID: <1422467792-2065-3-git-send-email-robh@kernel.org>
-References: <1422467792-2065-1-git-send-email-robh@kernel.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH v2 0/6] Add multiple GPIO and external clock to MMC
+ pwrseq_simple
+Date: Wed, 28 Jan 2015 19:15:47 +0100
+Message-ID: <1422468953-7594-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1422467792-2065-1-git-send-email-robh@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,35 +16,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Arend van Spriel <arend@broadcom.com>, Kukjin Kim <kgene@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Olof Johansson <olof@lixom.net>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The same 24MHz counter is also present on Versatile AB and PB boards, so
-add the compatible string for them.
+Hello Ulf,
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
----
- drivers/clocksource/versatile.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Many WLAN chips attached to an SDIO interface needs more than one GPIO
+for their reset sequence and also an external clock to be operational.
 
-diff --git a/drivers/clocksource/versatile.c b/drivers/clocksource/versatile.c
-index 2798e74..0a26d3d 100644
---- a/drivers/clocksource/versatile.c
-+++ b/drivers/clocksource/versatile.c
-@@ -36,5 +36,7 @@ static void __init versatile_sched_clock_init(struct device_node *node)
- 
- 	sched_clock_register(versatile_sys_24mhz_read, 32, 24000000);
- }
--CLOCKSOURCE_OF_DECLARE(versatile, "arm,vexpress-sysreg",
-+CLOCKSOURCE_OF_DECLARE(vexpress, "arm,vexpress-sysreg",
-+		       versatile_sched_clock_init);
-+CLOCKSOURCE_OF_DECLARE(versatile, "arm,versatile-sysreg",
- 		       versatile_sched_clock_init);
--- 
-2.1.0
+Since this is very common, this series extend the simple MMC power sequence
+to support more than one reset GPIO and also an optional external clock.
+
+This is the second version of the series that addressed issues pointed out
+by Arend van Spriel and Srinivas Kandagatla.
+
+The series depend on v4 "mmc: core: Add support for MMC power sequences":
+
+http://comments.gmane.org/gmane.linux.kernel.mmc/30665
+
+Javier Martinez Canillas (6):
+  mmc: pwrseq: Document that simple sequence support more than one GPIO
+  mmc: pwrseq_simple: Extend to support more pins
+  mmc: pwrseq: Document optional clock for the simple power sequence
+  mmc: pwrseq_simple: Add optional reference clock support
+  ARM: dts: exynos5250-snow: Enable wifi power-on
+  ARM: dts: exynos5250-snow: Add cap-sdio-irq to wifi mmc node
+
+ .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  | 11 ++-
+ arch/arm/boot/dts/exynos5250-snow.dts              | 26 ++++++-
+ drivers/mmc/core/pwrseq_simple.c                   | 85 ++++++++++++++++++----
+ 3 files changed, 103 insertions(+), 19 deletions(-)
+
+Patch #1 extends the simple MMC power sequence DT binding to support more
+than one GPIO and patch #2 adds the actual implementation.
+
+In the same way, patch #3 and #4 extend the simple MMC power sequence DT
+binding and pwrseq_simple driver to support an optional external clock.
+
+Finally as an example, patch #5 and patch #6 adds support for the wifi
+chip in the Exynos5250 Snow that needs all these resources. These two
+patches were added to the series only for completeness.
+
+Best regards,
+Javier
