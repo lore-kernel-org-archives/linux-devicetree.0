@@ -1,44 +1,57 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH] Devicetree binding for omap3-serial & bcm2048 combination
-Date: Wed, 28 Jan 2015 10:35:01 +0100
-Message-ID: <20150128093501.GA17338@amd>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v5 0/2]  Initial support for voltage ADC
+Date: Wed, 28 Jan 2015 10:25:40 +0200
+Message-ID: <1422433540.5754.6.camel@mm-sol.com>
+References: <1421748922-8933-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <1421748922-8933-1-git-send-email-iivanov@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: marcel@holtmann.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Nokia N900 contains bluetooth module connected on serial
-port. Unfortunately, serial and bluetooth are rather closely coupled,
-so standard serial driver can not be used, and we really don't want
-/dev/ttyS1 to be published for internal port of bluetooth
-stack... Hence solution below.
 
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+On Tue, 2015-01-20 at 12:15 +0200, Ivan T. Ivanov wrote:
+> This type of volatage ADC could be found in Qualcomm's SPMI PMIC's.
+> I'm sorry that it took me so long to send the updated version.
+> 
+> Changes since v4.
+> - Addressed review comments from Hartmut Knaack and Jonathan Cameron:
+>   Fixed spelling errors in DT description files.
+>   Removed unused structure member.
+>   Access to hardware during conversion is protected with mutex.
+>   Measuring reference points moved at driver probe time.
+> 
+> Patches are based on current iio/testing branch.
 
-diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
-index 342eedd..e9fde42 100644
---- a/Documentation/devicetree/bindings/serial/omap_serial.txt
-+++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
-@@ -4,7 +4,14 @@ Required properties:
- - compatible : should be "ti,omap2-uart" for OMAP2 controllers
- - compatible : should be "ti,omap3-uart" for OMAP3 controllers
- - compatible : should be "ti,omap4-uart" for OMAP4 controllers
-+- compatible : should be "ti+brcm,omap3-uart,bcm2048" for bcm2048
-+	       bluetooth connected to OMAP3 serial
- - ti,hwmods : Must be "uart<n>", n being the instance number (1-based)
- 
- Optional properties:
- - clock-frequency : frequency of the clock input to the UART
-+
-+Required properties for ti+brcm,omap3-uart,bcm2048:
-+- reset-gpios : gpio for reset pin
-+- host-wakeup-gpios : gpio for host wakeup
-+- bluetooth-wakeup-gpios : gpio for bluetooth wakeup
+Hi, 
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Are there any comments on these patches?
+
+Regards,
+Ivan
+
+> 
+> v4 could be found here: https://lkml.org/lkml/2014/11/3/425
+> 
+> Stanimir Varbanov (2):
+>   DT: iio: vadc: document dt binding
+>   iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+> 
+>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  129 +++
+>  drivers/iio/adc/Kconfig                            |   14 +
+>  drivers/iio/adc/Makefile                           |    1 +
+>  drivers/iio/adc/qcom-spmi-vadc.c                   | 1016 ++++++++++++++++++++
+>  include/dt-bindings/iio/qcom,spmi-vadc.h           |  119 +++
+>  5 files changed, 1279 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-vadc.h
+> 
+> --
+> 1.9.1
+> 
+> 
