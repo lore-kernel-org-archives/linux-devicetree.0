@@ -1,53 +1,53 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH_V3 0/3] usb: ohci: jz4740: Add DT support and a fix
-Date: Wed, 28 Jan 2015 13:26:02 +0000
-Message-ID: <1422451565-29096-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V3 2/3] usb: ohci: jz4740: add DT support
+Date: Wed, 28 Jan 2015 13:26:04 +0000
+Message-ID: <1422451565-29096-3-git-send-email-Zubair.Kakakhel@imgtec.com>
+References: <1422451565-29096-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1422451565-29096-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stern@rowland.harvard.edu
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Paul Burton <paul.burton@imgtec.com>
 
-Here are a few simple patches for the jz4740.
+This is a simple matter of providing a match table, the probe code needs
+no modification.
 
-First adds a simple DT binding.
-Seconds adds DT support.
-Third is a minor fix in clock enabling.
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+---
+ drivers/usb/host/ohci-jz4740.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Patches are based on 3.19-rc6. Quite disjoint and stay within jz4740 
-so should apply easily on other trees.
-
-If you would like to have them rebased to a different tree, please tell.
-
-Thank-you
-
-V3 changes
-DT corrections. Added ACKS for 2 and 3.
-
-V2 changes
-Removed an interrupt parent binding. Forgot a binding
-Unprepared clock when disabling
-
-ZubairLK
-
-Paul Burton (3):
-  dt: usb: jz4740: Add DT binding document for OHCI
-  usb: ohci: jz4740: add DT support
-  usb: ohci: jz4740: prepare the clock before enabling it
-
- .../bindings/usb/ingenic,jz4740-ohci.txt           | 26 ++++++++++++++++++++++
- drivers/usb/host/ohci-jz4740.c                     | 15 ++++++++++---
- 2 files changed, 38 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
-
+diff --git a/drivers/usb/host/ohci-jz4740.c b/drivers/usb/host/ohci-jz4740.c
+index 8ddd8f5..bb69733 100644
+--- a/drivers/usb/host/ohci-jz4740.c
++++ b/drivers/usb/host/ohci-jz4740.c
+@@ -234,11 +234,20 @@ static int jz4740_ohci_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id jz4740_ohci_of_match[] = {
++	{ .compatible = "ingenic,jz4740-ohci", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, jz4740_ohci_of_match);
++#endif
++
+ static struct platform_driver ohci_hcd_jz4740_driver = {
+ 	.probe = jz4740_ohci_probe,
+ 	.remove = jz4740_ohci_remove,
+ 	.driver = {
+ 		.name = "jz4740-ohci",
++		.of_match_table = of_match_ptr(jz4740_ohci_of_match),
+ 		.owner = THIS_MODULE,
+ 	},
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
