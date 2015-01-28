@@ -1,50 +1,127 @@
-From: Lennart Poettering <lennart@poettering.net>
-Subject: Re: Making udev emit a signal when it is done
- loading modules
-Date: Wed, 28 Jan 2015 02:38:52 +0100
-Message-ID: <20150128013852.GA8177@gardel-login>
-References: <54BA20D0.7060402@redhat.com>
- <20150117160319.GO18247@in.waw.pl>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/8] of: iommu: add ptr to OF node arg to
+	of_iommu_configure()
+Date: Tue, 27 Jan 2015 20:18:28 -0600
+Message-ID: <CAL_JsqLSxzWt6JiKbzpPPZEygU07AJ+oj24zcPmnhUXoLTnQjA@mail.gmail.com>
+References: <1422392405-32196-1-git-send-email-m-karicheri2@ti.com>
+	<1422392405-32196-2-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <systemd-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20150117160319.GO18247@in.waw.pl>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/systemd-devel>,
- <mailto:systemd-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/systemd-devel>
-List-Post: <mailto:systemd-devel@lists.freedesktop.org>
-List-Help: <mailto:systemd-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/systemd-devel>,
- <mailto:systemd-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: systemd-devel-bounces@lists.freedesktop.org
-Sender: "systemd-devel" <systemd-devel-bounces@lists.freedesktop.org>
-To: Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>
-Cc: devicetree <devicetree@vger.kernel.org>, systemd-devel@lists.freedesktop.org, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1422392405-32196-2-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCAxNy4wMS4xNSAxNzowMywgWmJpZ25pZXcgSsSZZHJ6ZWpld3NraS1Tem1layAoemJ5
-c3pla0Bpbi53YXcucGwpIHdyb3RlOgoKPiBPbiBTYXQsIEphbiAxNywgMjAxNSBhdCAwOTo0NDow
-MEFNICswMTAwLCBIYW5zIGRlIEdvZWRlIHdyb3RlOgo+ID4gV2Ugd291bGQgbGlrZQo+ID4gdWRl
-diB0byBlbWl0IGEgc2lnbmFsIChBQkkgdG8gYmUgZGlzY3Vzc2VkKSB3aGVuIGl0IGlzIGRvbmUK
-PiA+IHRyeWluZyB0byBsb2FkIG1vZHVsZXMgZm9yIGV2ZXJ5dGhpbmcgd2hpY2ggd2FzIGFscmVh
-ZHkgZW51bWVyYXRlZAo+ID4gd2hlbiBpdCBzdGFydHMsIGlvdyB3aGVuIHRoZXJlIGFyZSBubyBu
-ZXcgZGV2aWNlIGV2ZW50cyBwZW5kaW5nCj4gPiBhbnltb3JlIHdoZW4gdWRldiBkb2VzIGl0cyBp
-bml0aWFsIGhvdHBsdWcgcmVwbGF5Lgo+IEkgdGhpbmsgeW91IGNhbiBqdXN0IGNyZWF0ZSBhIHVu
-aXQgbGlrZToKPiAKPiAjIGRpc2FibGUtbmV3LWhhcmR3YXJlLnNlcnZpY2UKPiBbVW5pdF0KPiBB
-ZnRlcj1zeXN0ZW1kLXVkZXYtc2V0dGxlLnNlcnZpY2Ugc3lzdGVtZC1tb2R1bGVzLWxvYWQuc2Vy
-dmljZQo+IFdhbnRzPXN5c3RlbWQtdWRldi1zZXR0bGUuc2VydmljZQo+IAo+IFtTZXJ2aWNlXQo+
-IFR5cGU9b25lc2hvdAo+IFJlbWFpbkFmdGVyRXhpdD15ZXMKPiBFeGVjU3RhcnQ9L3Vzci9sb2Nh
-bC9iaW4vcGluZy10aGUta2VybmVsCj4gCj4gPiBTbyB0aGUgcXVlc3Rpb24gdG8geW91IGlzIHdv
-dWxkIHlvdSBiZSB3aWxsaW5nIHRvIGluY2x1ZGUgc3VjaAo+ID4gZnVuY3Rpb25hbGl0eSBpbiB1
-ZGV2Pwo+IEkgZG9uJ3QgdGhpbmsgdWRldmQgaGFzIGVub3VnaCBrbm93bGVkZ2UuIEJ1dCBhIHN5
-c3RlbWQgdW5pdCBsaWtlCj4gdGhlIG9uZSBhYm92ZSBzaG91bGQgd29yay4KClRvIGNsYXJpZnkg
-dGhpczogaWYgcGVvcGxlIGRvIHRoaXMsIHRoZW4gdGhpcyBwdWxscyBpbgpzeXN0ZW1kLXVkZXYt
-c2V0dGxlLnNlcnZpY2UsIHdoaWNoIHNsb3dzIGRvd24gYm9vdC4gRXZlcnkgc2VydmljZSB0aGF0
-CmRvZXMgdGhhdCBpcyBoZW5jZSBhIG1ham91ciBzb3VyY2Ugb2Ygc2xvd25lc3MuIAoKSXQncyBh
-IGhhY2sgdG8gdXNlIHRoaXMsIG5vdCBhIHNvbHV0aW9uLiAKCkxlbm5hcnQKCi0tIApMZW5uYXJ0
-IFBvZXR0ZXJpbmcsIFJlZCBIYXQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Kc3lzdGVtZC1kZXZlbCBtYWlsaW5nIGxpc3QKc3lzdGVtZC1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL3N5c3RlbWQtZGV2ZWwK
+On Tue, Jan 27, 2015 at 2:59 PM, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org> wrote:
+> Function of_iommu_configure() is called from of_dma_configure() to
+> setup iommu ops using DT property. This API is currently used for
+> platform devices for which DMA configuration (including iommu ops)
+> may come from device's parent. To extend this functionality for PCI
+> devices, this API need to take a parent node ptr as an argument
+> instead of assuming device's parent. This is needed since for PCI, the
+> dma configuration may be defined in the DT node of the root bus bridge's
+> parent device. Currently only dma-range is used for PCI and iommu is not
+> supported. So return error if the device is PCI.
+>
+> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+>
+> Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/iommu/of_iommu.c |   10 ++++++++--
+>  drivers/of/platform.c    |    2 +-
+>  include/linux/of_iommu.h |    6 ++++--
+>  3 files changed, 13 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index af1dc6a..439235b 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -133,19 +133,25 @@ struct iommu_ops *of_iommu_get_ops(struct device_node *np)
+>         return ops;
+>  }
+>
+> -struct iommu_ops *of_iommu_configure(struct device *dev)
+> +struct iommu_ops *of_iommu_configure(struct device *dev,
+> +                                    struct device_node *iommu_np)
+>  {
+>         struct of_phandle_args iommu_spec;
+>         struct device_node *np;
+>         struct iommu_ops *ops = NULL;
+>         int idx = 0;
+>
+> +       if (dev_is_pci(dev)) {
+> +               dev_err(dev, "iommu is currently not supported for PCI\n");
+> +               return NULL;
+> +       }
+> +
+>         /*
+>          * We don't currently walk up the tree looking for a parent IOMMU.
+>          * See the `Notes:' section of
+>          * Documentation/devicetree/bindings/iommu/iommu.txt
+>          */
+> -       while (!of_parse_phandle_with_args(dev->of_node, "iommus",
+> +       while (!of_parse_phandle_with_args(iommu_np, "iommus",
+>                                            "#iommu-cells", idx,
+>                                            &iommu_spec)) {
+>                 np = iommu_spec.np;
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index b0d50d7..d3f3988 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -196,7 +196,7 @@ static void of_dma_configure(struct device *dev)
+>         dev_dbg(dev, "device is%sdma coherent\n",
+>                 coherent ? " " : " not ");
+>
+> -       iommu = of_iommu_configure(dev);
+> +       iommu = of_iommu_configure(dev, dev->of_node);
+>         dev_dbg(dev, "device is%sbehind an iommu\n",
+>                 iommu ? " " : " not ");
+>
+> diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+> index 16c7554..a97e5bd 100644
+> --- a/include/linux/of_iommu.h
+> +++ b/include/linux/of_iommu.h
+> @@ -12,7 +12,8 @@ extern int of_get_dma_window(struct device_node *dn, const char *prefix,
+>                              size_t *size);
+>
+>  extern void of_iommu_init(void);
+> -extern struct iommu_ops *of_iommu_configure(struct device *dev);
+> +extern struct iommu_ops *of_iommu_configure(struct device *dev,
+> +                                       struct device_node *iommu_np);
+>
+>  #else
+>
+> @@ -24,7 +25,8 @@ static inline int of_get_dma_window(struct device_node *dn, const char *prefix,
+>  }
+>
+>  static inline void of_iommu_init(void) { }
+> -static inline struct iommu_ops *of_iommu_configure(struct device *dev)
+> +static inline struct iommu_ops *of_iommu_configure(struct device *dev,
+> +                                        struct device_node *iommu_np)
+>  {
+>         return NULL;
+>  }
+> --
+> 1.7.9.5
+>
