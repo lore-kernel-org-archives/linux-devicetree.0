@@ -1,54 +1,64 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 09/24] Documentation: DT bindings: add more chip compatible
- strings for Tegra PWM
-Date: Wed, 28 Jan 2015 16:49:37 -0700
-Message-ID: <20150128234937.20644.4804.stgit@dusk.lan>
-References: <20150128234935.20644.89300.stgit@dusk.lan>
+From: "Peter Huewe" <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
+Subject: Aw: [PATCH v5 3/4] tpm/st33zp24/spi: Add st33zp24 spi phy
+Date: Wed, 28 Jan 2015 17:48:03 +0100
+Message-ID: <trinity-1682f383-7165-419d-b9f7-ef1f205304d2-1422463682896@3capp-gmx-bs38>
+References: <1422395850-21644-1-git-send-email-christophe-h.ricard@st.com>,
+ <1422395850-21644-4-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150128234935.20644.89300.stgit-orwA252wQtA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422395850-21644-4-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Christophe,
 
-Add compatible strings for the PWM IP blocks present on several Tegra
-chips.  The primary objective here is to avoid checkpatch warnings,
-per:
+sorry to be nitty picky but I still don't get this calculation
 
-http://marc.info/?l=linux-tegra&m=142201349727836&w=2
 
-Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../devicetree/bindings/pwm/nvidia,tegra20-pwm.txt |    4 ++++
- 1 file changed, 4 insertions(+)
++ /* max tpm tx buffer(TPM_BUFSIZE) + max tpm rx buffer(TPM_BUFSIZE / 2=
+)
++ * + MAX_SPI_LATENCY.
++ */
++ phy->spi_xfer.tx_buf =3D devm_kmalloc(&dev->dev, (TPM_BUFSIZE +
++ (TPM_BUFSIZE / 2) + MAX_SPI_LATENCY),
++ GFP_KERNEL);
++ if (!phy->spi_xfer.tx_buf)
++ return -ENOMEM;
++
++ phy->spi_xfer.rx_buf =3D devm_kmalloc(&dev->dev, (TPM_BUFSIZE +
++ (TPM_BUFSIZE / 2) + MAX_SPI_LATENCY),
++ GFP_KERNEL);
++ if (!phy->spi_xfer.rx_buf)
++ return -ENOMEM;
+=C2=A0
 
-diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-index c7ea9d4a988b..f3390f602378 100644
---- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-@@ -4,6 +4,10 @@ Required properties:
- - compatible: should be one of:
-   - "nvidia,tegra20-pwm"
-   - "nvidia,tegra30-pwm"
-+  - "nvidia,tegra114-pwm" (not yet matched by the driver)
-+  - "nvidia,tegra124-pwm" (not yet matched by the driver)
-+  - "nvidia,tegra132-pwm" (not yet matched by the driver)
-+  - "nvidia,tegra210-pwm" (not yet matched by the driver)
- - reg: physical base address and length of the controller's registers
- - #pwm-cells: should be 2. See pwm.txt in this directory for a description of
-   the cells format.
+and the comment=20
++ /* max tpm tx buffer(TPM_BUFSIZE) + max tpm rx buffer(TPM_BUFSIZE / 2=
+)
++ * + MAX_SPI_LATENCY.
+does not help either.
+
+
+
+Why do you define TPM_BUFSIZE as 2048, add TPM_BUFSIZE/2 and something =
+called MAX_SPI_LATENCY to it to use it as your buffer size?
+Latency is for me something timing related.
+
+Since you use this TPM_BUFSIZE only in these two lines I'd be happy wit=
+h either
+define which has this magical 2048+2014+15=20
+or (maybe better) add a reasonable comment describing the meaning of th=
+is strange calculation.
+
+
+Thanks,
+Peter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
