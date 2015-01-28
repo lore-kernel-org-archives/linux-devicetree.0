@@ -1,17 +1,16 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v5 2/5] dt-bindings: Add pinctrl bindings for
- mt65xx/mt81xx.
-Date: Wed, 28 Jan 2015 08:49:07 +0100
-Message-ID: <20150128074907.GY12209@pengutronix.de>
-References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
- <1421818097-9281-3-git-send-email-hongzhou.yang@mediatek.com>
- <CACRpkdb5=SX0-xdpngBszcha=R4nPLTSv3b_n=NOtGUL6f2_Fg@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 4/4] clk: dt: st: Introduce clock domain documentation
+Date: Wed, 28 Jan 2015 07:58:35 +0000
+Message-ID: <20150128075835.GF4567@x1>
+References: <1422270840-3039-1-git-send-email-lee.jones@linaro.org>
+ <1422270840-3039-5-git-send-email-lee.jones@linaro.org>
+ <20150128011902.22722.85007@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdb5=SX0-xdpngBszcha=R4nPLTSv3b_n=NOtGUL6f2_Fg@mail.gmail.com>
+In-Reply-To: <20150128011902.22722.85007@quantum>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,33 +20,65 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, maoguang.meng@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, alan.cheng@mediatek.com, Russell King <linux@arm.linux.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, toby.liu@mediatek.com, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrsoft.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, huang eddie <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>
+To: Mike Turquette <mturquette@linaro.org>
+Cc: devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 27, 2015 at 03:19:01PM +0100, Linus Walleij wrote:
-> On Wed, Jan 21, 2015 at 6:28 AM, Hongzhou Yang
-> <hongzhou.yang@mediatek.com> wrote:
-> 
-> > From: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> >
-> > Add devicetree bindings for Mediatek SoC pinctrl driver.
-> >
-> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> 
-> Sascha can you ACK this binding?
-
-Just did that.
-
-> If you confirm it will cover also your usecase I'm gonna be happy
-> with this...
-
-\o/
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+T24gVHVlLCAyNyBKYW4gMjAxNSwgTWlrZSBUdXJxdWV0dGUgd3JvdGU6Cgo+IFF1b3RpbmcgTGVl
+IEpvbmVzICgyMDE1LTAxLTI2IDAzOjE0OjAwKQo+ID4gU2lnbmVkLW9mZi1ieTogTGVlIEpvbmVz
+IDxsZWUuam9uZXNAbGluYXJvLm9yZz4KPiA+IC0tLQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0IHwgMzQgKysrKysrKysrKysrKysrKysrKysr
+Kwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspCj4gPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9zdC9zdCxjbGst
+ZG9tYWluLnR4dAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0Cj4gPiBuZXcgZmlsZSBt
+b2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uNzMwOTkzNwo+ID4gLS0tIC9kZXYvbnVsbAo+
+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNs
+ay1kb21haW4udHh0Cj4gPiBAQCAtMCwwICsxLDM0IEBACj4gPiArU1RNaWNyb2VsZWN0cm9uaWNz
+IENsb2NrIERvbWFpbgo+ID4gKwo+ID4gK1NUIGhhcmR3YXJlIGhhdmUgYSBidW5jaCBvZiBjbG9j
+a3Mgd2hpY2ggbXVzdCBub3QgYmUgdHVybmVkIG9mZi4KPiA+ICtJZiBkcml2ZXJzIGEpIGZhaWwg
+dG8gb2J0YWluIGEgcmVmZXJlbmNlIHRvIGFueSBvZiB0aGVzZSBvciBiKSBnaXZlCj4gPiArdXAg
+YSBwcmV2aW91c2x5IG9idGFpbmVkIHJlZmVyZW5jZSBkdXJpbmcgc3VzcGVuZCwgdGhlIGNvbW1v
+biBjbGsKPiA+ICtmcmFtZXdvcmsgd2lsbCBhdHRlbXB0IHRvIHR1cm4gdGhlbSBvZmYgYW5kIHRo
+ZSBoYXJkd2FyZSB3aWxsCj4gPiArc3Vic2VxdWVudGx5IGRpZS4gIFRoZSBvbmx5IHdheSB0byBy
+ZWNvdmVyIGZyb20gdGhpcyBmYWlsdXJlIGlzIHRvCj4gPiArcmVzdGFydC4KPiA+ICsKPiA+ICtU
+byBhdm9pZCBlaXRoZXIgb2YgdGhlc2UgdHdvIHNjZW5hcmlvcyBmcm9tIGNhdGFzdHJvcGhpY2Fs
+bHkKPiA+ICtkaXNhYmxpbmcgdGhlIHJ1bm5pbmcgc3lzdGVtIHdlIGhhdmUgaW1wbGVtZW50ZWQg
+YSBjbG9jayBkb21haW4KPiA+ICt3aGVyZSBjbG9ja3MgYXJlIGNvbnN1bWVkIGFuZCByZWZlcmVu
+Y2VzIGFyZSB0YWtlbiwgdGh1cyBwcmV2ZW50aW5nCj4gPiArdGhlbSBmcm9tIGJlaW5nIHNodXQg
+ZG93biBieSB0aGUgZnJhbWV3b3JrLgo+ID4gKwo+ID4gK1dlIHVzZSB0aGUgZ2VuZXJpYyBjbG9j
+ayBiaW5kaW5ncyBmb3VuZCBpbjoKPiA+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgo+ID4gKy0gY29tcGF0aWJsZSA6IE11c3QgYmUgInN0LGNsay1kb21haW4iCj4gCj4gU2Vl
+bXMgbGlrZSBhIHVzZWZ1bCBmZWF0dXJlIGZvciBhbnkgY2xvY2sgcHJvdmlkZXIsIG5vdCBqdXN0
+IFNUJ3MuIEhhdmUKPiB5b3UgdGhvdWdodCBhYm91dCBtYWtpbmcgdGhpcyBzb2x1dGlvbiBnZW5l
+cmljIGZvciBEVC1iYXNlZCBjbG9jawo+IHByb3ZpZGVycz8KPiAKPiBXZSBjb3VsZCBhbWVuZCB0
+aGUgY29tbW9uIGNsb2NrIGJpbmRpbmcgdG8gaW5jbHVkZSBhIHNwZWNpYWwgImFsd2F5cyBvbiIK
+PiBjbG9jayBncm91cCB0aGF0IGlzIGF1dG9tYWdpY2FsbHkgcHJlcGFyZWQgYW5kIGVuYWJsZWQg
+d2hlbiB0aGUgY2xvY2sKPiBwcm92aWRlci9kcml2ZXIgaXMgcmVnaXN0ZXJlZCwgdXNpbmcgYSBj
+b21tb24gZnVuY3Rpb24uCgpPTUcsIEknbSBhY3R1YWxseSBnb2luZyB0byBzdHJhbmdsZSB5b3Uh
+CgpUaGlzIGlzIHdoYXQgSSd2ZSBiZWVuIHByb3Bvc2luZyB0byB5b3UgKHByaXZhdGVseSkgZm9y
+IHdlZWtzLgoKRG9lcyB0aGlzIHJpbmcgYW55IGJlbGxzPwoKICAiSnVzdCBGWUksIEkgYW0gbm90
+IGdvaW5nIHRvIGFkZCBhbnkgbWV0aG9kIHRvIHRoZSBrZXJuZWwgdGhhdAogIHBlcm1hbmVudGx5
+IGVuYWJsZXMgYSBjbG9jayB2aWEgc29tZSBuZXcgYXBpLiBBdCB0aGUgd29yc3QgY2FzZSB5b3Vy
+CiAgY2xvY2sgZHJpdmVyIGNhbiBzaW1wbHkgY2FsbCBjbGtfcHJlcGFyZV9lbmFibGUgaW4gaXRz
+IHByb2JlCiAgZnVuY3Rpb24gKHRoZXJlIGFyZSBzb21lIGV4YW1wbGVzIG9mIHRoaXMpLiIKCkkg
+d2lsbCBiZSBtb3JlIHRoYW4gaGFwcHkgdG8gbWFrZSB0aGlzIGEgZ2VuZXJpYyBkcml2ZXIsIGlm
+IHRoYXRzIHdoYXQKeW91IHdhbnQgKG5vdykuIDspCgo+ID4gK0V4YW1wbGU6Cj4gPiArCj4gPiAr
+Y2xrLWRvbWFpbiB7Cj4gPiArICAgICAgIGNvbXBhdGlibGUgPSAic3QsY2xrLWRvbWFpbiI7Cj4g
+PiArICAgICAgIGNsb2NrcyA9IDwmY2xrX3NfYzBfZmxleGdlbiBDTEtfRVhUMkZfQTk+LAo+ID4g
+KyAgICAgICAgICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX0NPTVBPX0RWUD4sCj4gPiAr
+ICAgICAgICAgICAgICAgIDwmY2xrX3NfYzBfZmxleGdlbiBDTEtfTU1DXzE+LAo+ID4gKyAgICAg
+ICAgICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX0lDTl9TQkM+LAo+ID4gKyAgICAgICAg
+ICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX0lDTl9MTUk+LAo+ID4gKyAgICAgICAgICAg
+ICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX0lDTl9DUFU+LAo+ID4gKyAgICAgICAgICAgICAg
+ICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX1RYX0lDTl9ETVU+LAo+ID4gKyAgICAgICAgICAgICAg
+ICA8JmNsa19zX2EwX2ZsZXhnZW4gQ0xLX0lDX0xNSTA+LAo+ID4gKyAgICAgICAgICAgICAgICA8
+JmNsa19tX2E5PjsKPiA+ICt9OwoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9u
+aWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJl
+IGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
+a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
+bmVsCg==
