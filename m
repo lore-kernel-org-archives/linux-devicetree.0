@@ -1,93 +1,139 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH net-next v8 0/4] net: Add Keystone NetCP ethernet driver
- support
-Date: Wed, 28 Jan 2015 12:43:57 -0500
-Message-ID: <54C91FDD.1000009@ti.com>
-References: <1421367007-19744-1-git-send-email-m-karicheri2@ti.com> <20150119.151106.822126941934010309.davem@davemloft.net> <54BE7A00.2020205@ti.com> <25883654.BLFxICW9P0@wuerfel> <54C91328.6030208@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54C91328.6030208@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 1/2] mmc: pwrseq: Add support to control multiple gpios in simple pwrseq
+Date: Wed, 28 Jan 2015 13:16:59 +0000
+Message-ID: <1422451019-9372-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1422450981-9328-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1422450981-9328-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/28/2015 11:49 AM, Murali Karicheri wrote:
-> On 01/27/2015 05:28 PM, Arnd Bergmann wrote:
->> On Tuesday 20 January 2015 10:53:36 Murali Karicheri wrote:
->>> On 01/19/2015 03:11 PM, David Miller wrote:
->>>> From: Murali Karicheri<m-karicheri2@ti.com>
->>>> Date: Thu, 15 Jan 2015 19:10:03 -0500
->>>>
->>>>> The Network Coprocessor (NetCP) is a hardware accelerator that
->>>>> processes
->>>>> Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with
->>>>> a ethernet
->>>>> switch sub-module to send and receive packets. NetCP also includes
->>>>> a packet
->>>>> accelerator (PA) module to perform packet classification operations
->>>>> such as
->>>>> header matching, and packet modification operations such as checksum
->>>>> generation. NetCP can also optionally include a Security
->>>>> Accelerator(SA)
->>>>> capable of performing IPSec operations on ingress/egress packets.
->>>>>
->>>>> Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
->>>>> includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
->>>>> 1Gb/s rates per Ethernet port.
->>>>>
->>>>> Both GBE and XGBE network processors supported using common driver. It
->>>>> is also designed to handle future variants of NetCP.
->>>>
->>>> Series applied to net-next, thanks.
->>> David,
->>>
->>> Thanks a lot for applying this series. This helps us move forward to
->>> work on the next set of patches.
->>
->> Hi Murali,
->>
->> Building an ARM 'allmodconfig' kernel now runs into two separate problems
->> from your driver:
->>
->> - you have two module_init() instances in one module, which conflict.
->>
->> - you have two files that are linked into more than one module, so
->> building
->> both TI_CPSW and TI_KEYSTONE_NETCP in the same kernel fails.
->>
->> The answer to both of these is probably to have separate loadable
->> modules,
->> but you might be able to come up with a different solution.
-> Arnd,
->
-> Thanks for letting us know. We will look into this.
->
-> How do I reproduce this? Is there a defconfig used for allmodconfig? I
-> am unable to find one. Any details to reproduce this will be useful.
->
-Ok I think I found it.
+This patch adds support to reset/powerup multiple gpio pins on a given
+sdio bus. The use case is simple, on sdio we could have multiple devices
+like WLAN, BT which are controlled by there own reset lines. So having
+multiple reset is something more useful in such cases.
 
-I did this with next-next branch and it seems to work. I will make 
-kernel build to reproduce this.
+Without this patch I could not get BT and WLAN working at same time on IFC6410.
 
-make ARCH=arm allmodconfig
-make uImage;
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/mmc/core/pwrseq_simple.c | 64 ++++++++++++++++++++++++++++------------
+ 1 file changed, 45 insertions(+), 19 deletions(-)
 
-I am building it now.
-
-Murali
-> Thanks.
->
-> Murali
->>
->> Arnd
->
->
-
-
+diff --git a/drivers/mmc/core/pwrseq_simple.c b/drivers/mmc/core/pwrseq_simple.c
+index 0958c69..bb9aadd 100644
+--- a/drivers/mmc/core/pwrseq_simple.c
++++ b/drivers/mmc/core/pwrseq_simple.c
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+ #include <linux/device.h>
++#include <linux/of.h>
+ #include <linux/err.h>
+ #include <linux/gpio/consumer.h>
+ 
+@@ -19,34 +20,44 @@
+ 
+ struct mmc_pwrseq_simple {
+ 	struct mmc_pwrseq pwrseq;
+-	struct gpio_desc *reset_gpio;
++	int		ngpios;
++	struct gpio_desc *reset_gpios[0];
+ };
+ 
+-static void mmc_pwrseq_simple_pre_power_on(struct mmc_host *host)
++static void __mmc_pwrseq_simple_pre_post_power_on_off(struct mmc_host *host,
++						      bool on)
+ {
+ 	struct mmc_pwrseq_simple *pwrseq = container_of(host->pwrseq,
+ 					struct mmc_pwrseq_simple, pwrseq);
++	int i;
+ 
+-	if (!IS_ERR(pwrseq->reset_gpio))
+-		gpiod_set_value_cansleep(pwrseq->reset_gpio, 1);
++	if (!IS_ERR(pwrseq->reset_gpios)) {
++		for (i = 0; i < pwrseq->ngpios; i++)
++			gpiod_set_value_cansleep(pwrseq->reset_gpios[i],
++						 on ? : 0);
++	}
+ }
+ 
+-static void mmc_pwrseq_simple_post_power_on(struct mmc_host *host)
++static void mmc_pwrseq_simple_pre_power_on(struct mmc_host *host)
+ {
+-	struct mmc_pwrseq_simple *pwrseq = container_of(host->pwrseq,
+-					struct mmc_pwrseq_simple, pwrseq);
++	__mmc_pwrseq_simple_pre_post_power_on_off(host, true);
++}
+ 
+-	if (!IS_ERR(pwrseq->reset_gpio))
+-		gpiod_set_value_cansleep(pwrseq->reset_gpio, 0);
++static void mmc_pwrseq_simple_post_power_on(struct mmc_host *host)
++{
++	__mmc_pwrseq_simple_pre_post_power_on_off(host, false);
+ }
+ 
+ static void mmc_pwrseq_simple_free(struct mmc_host *host)
+ {
+ 	struct mmc_pwrseq_simple *pwrseq = container_of(host->pwrseq,
+ 					struct mmc_pwrseq_simple, pwrseq);
++	int i;
+ 
+-	if (!IS_ERR(pwrseq->reset_gpio))
+-		gpiod_put(pwrseq->reset_gpio);
++	if (!IS_ERR(pwrseq->reset_gpios)) {
++		for (i = 0; i < pwrseq->ngpios; i++)
++			gpiod_put(pwrseq->reset_gpios[i]);
++	}
+ 
+ 	kfree(pwrseq);
+ 	host->pwrseq = NULL;
+@@ -62,20 +73,35 @@ static struct mmc_pwrseq_ops mmc_pwrseq_simple_ops = {
+ int mmc_pwrseq_simple_alloc(struct mmc_host *host, struct device *dev)
+ {
+ 	struct mmc_pwrseq_simple *pwrseq;
+-	int ret = 0;
++	int ngpios, i, ret = 0;
++
++	ngpios = of_count_phandle_with_args(dev->of_node,
++					    "reset-gpios", "#gpio-cells");
+ 
+-	pwrseq = kzalloc(sizeof(struct mmc_pwrseq_simple), GFP_KERNEL);
++	if (!ngpios)
++		return -ENOENT;
++
++	pwrseq = kzalloc(sizeof(struct mmc_pwrseq_simple) +
++			 ngpios * sizeof(struct gpio_desc *), GFP_KERNEL);
+ 	if (!pwrseq)
+ 		return -ENOMEM;
+ 
+-	pwrseq->reset_gpio = gpiod_get_index(dev, "reset", 0, GPIOD_OUT_HIGH);
+-	if (IS_ERR(pwrseq->reset_gpio) &&
+-		PTR_ERR(pwrseq->reset_gpio) != -ENOENT &&
+-		PTR_ERR(pwrseq->reset_gpio) != -ENOSYS) {
+-		ret = PTR_ERR(pwrseq->reset_gpio);
+-		goto free;
++	for (i = 0; i < ngpios; i++) {
++		pwrseq->reset_gpios[i] = gpiod_get_index(dev, "reset",
++							 i, GPIOD_OUT_HIGH);
++		if (IS_ERR(pwrseq->reset_gpios[i]) &&
++			PTR_ERR(pwrseq->reset_gpios[i]) != -ENOENT &&
++			PTR_ERR(pwrseq->reset_gpios[i]) != -ENOSYS) {
++			ret = PTR_ERR(pwrseq->reset_gpios[i]);
++
++			while (--i)
++				gpiod_put(pwrseq->reset_gpios[i]);
++
++			goto free;
++		}
+ 	}
+ 
++	pwrseq->ngpios = ngpios;
+ 	pwrseq->pwrseq.ops = &mmc_pwrseq_simple_ops;
+ 	host->pwrseq = &pwrseq->pwrseq;
+ 
 -- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+1.9.1
+
