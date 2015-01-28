@@ -1,71 +1,92 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] ASoC: codecs: wm8904: add dt ids
-	table
-Date: Wed, 28 Jan 2015 19:31:10 +0000
-Message-ID: <20150128193110.GI21293@sirena.org.uk>
-References: <1422329800-28481-1-git-send-email-voice.shen@atmel.com>
+Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
+Date: Wed, 28 Jan 2015 20:06:00 +0000
+Message-ID: <20150128200600.GR21293@sirena.org.uk>
+References: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6924232422850186852=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1422329800-28481-1-git-send-email-voice.shen@atmel.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, Alexander Morozov <linux@meltdown.ru>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============7284111937237183172=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: nm@ti.com, rob.herring@linaro.org, kesavan.abhilash@gmail.com, linaro-kernel@lists.linaro.org, catalin.marinas@arm.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, santosh.shilimkar@oracle.com, Rafael Wysocki <rjw@rjwysocki.net>, olof@lixom.net, devicetree@vger.kernel.org, mike.turquette@linaro.org, Sudeep.Holla@arm.com, grant.likely@linaro.org, ta.omasab@gmail.com, arnd.bergmann@linaro.org, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
 
---===============6924232422850186852==
+--===============7284111937237183172==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hZNcg5Zgu0ROmvXA"
+	protocol="application/pgp-signature"; boundary="Cs0fHyJFdv98avw5"
 Content-Disposition: inline
 
 
---hZNcg5Zgu0ROmvXA
+--Cs0fHyJFdv98avw5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 27, 2015 at 11:36:39AM +0800, Bo Shen wrote:
-> From: Alexander Morozov <linux@meltdown.ru>
->=20
-> The WM8904 and WM8918 has the same data type, while the WM8912
-> has different data type. So, use the data in dt ids table to
-> distinguish them.
+On Fri, Jan 23, 2015 at 04:14:50PM +0530, Viresh Kumar wrote:
 
-Applied both, thanks - please use subjct lines matching the style for
-the subsystem and CC maintainers (including driver maintainers).
+> +- opp-listN:
+> +  List of nodes defining performance points. Following belong to the nodes
+> +  within the opp-lists.
 
---hZNcg5Zgu0ROmvXA
+Why is there the N here?  It doesn't correspond to the examples...
+
+> +  Required properties:
+> +  - opp-khz: Frequency in kHz
+> +  - opp-microvolt: voltage in micro Volts
+
+I thought the goal here was to specify ranges?
+
+> +- oppN:
+> +  Operating performance point node per device. Devices using it should have its
+> +  phandle in their "operating-points-v2" property.
+> +
+> +  Required properties:
+> +  - compatible: allow OPPs to express their compatibility.
+> +  - opp-list: phandle to opp-list defined above.
+
+I don't understand what that compatible property is intended to mean and
+I expect other readers might be similarly confused - is it a standard
+compatbile property meaning this noe corresponds to some sort of device?
+
+There also appears to be no code matching these bindings...
+
+--Cs0fHyJFdv98avw5
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJUyTj9AAoJECTWi3JdVIfQvGsH/1WOvFO1DaNSf9xCwdhhKk/3
-QDEey4WnmaU8bsBlecqtyoNVeKw01ymjETR0b7r5fTq5vNCJQNbaoIbId7g1YxDI
-Q7ReZcl5JTLFus5sZlW4y0+94vGLjOxqecmIKWw4hIlwpAV2gpBrO49DlMcjw3y7
-tpDvLJfrX+Su+mgkE9+N7MXWrK7BAARZ72PlN3Y5PvDY8UAq6lH08nqvlUfIkniC
-0c818pv7xvH4K75DI/lDPTSt1+h+wT3LKeHlpxQXiGFsZa7SmryvGIDFac1zy8jT
-BttMGkAzdxs9ua8kU9MJ9JtNADqgAoqT+1njgDwSM/v8Sb2CTtlHTMuE9B03/90=
-=u0Lg
+iQEcBAEBCAAGBQJUyUEnAAoJECTWi3JdVIfQMrIH/3wp7SZiW6k2SVgumUWp0APZ
+a+Ybjr8gplR9gD02G0ooleKjBug+CsESEs3RByv6/Q/NOG6CluJTMJBSo3xMFKAy
+2sAlZ3lgRkMv6Fv3PqBECB2guyuoRjS0MyyjN0LzO+i4jRKnz4vNyLyLp7FRzG5y
+zg8i2+/gdtuNSlC6UcrByPN8BvC1qSjFJyR7rkitvvp10eRCiz5aUVA25wQTxwGS
+dYqyCGpFTzpixzYvVWPw27Thq5YGdznPGKnLvO/1sNbJFqEEzlPd/6KSOlzz28fP
+PzDeFy2WoZxQCzVEkAbvVGRNFc+4bUS13JrBMzwSpH2xqOPBa54J09wlgCBAKgM=
+=kOGF
 -----END PGP SIGNATURE-----
 
---hZNcg5Zgu0ROmvXA--
+--Cs0fHyJFdv98avw5--
 
---===============6924232422850186852==
+
+--===============7284111937237183172==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============6924232422850186852==--
+--===============7284111937237183172==--
