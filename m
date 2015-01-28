@@ -1,15 +1,13 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 4/4] clk: dt: st: Introduce clock domain documentation
-Date: Wed, 28 Jan 2015 09:46:40 -0800
-Message-ID: <20150128174640.22722.75574@quantum>
-References: <1422270840-3039-1-git-send-email-lee.jones@linaro.org>
- <1422270840-3039-5-git-send-email-lee.jones@linaro.org>
- <20150128011902.22722.85007@quantum> <20150128075835.GF4567@x1>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/3] dt/bindings: Add binding for Versatile system registers
+Date: Wed, 28 Jan 2015 11:56:30 -0600
+Message-ID: <1422467792-2065-2-git-send-email-robh@kernel.org>
+References: <1422467792-2065-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150128075835.GF4567@x1>
+In-Reply-To: <1422467792-2065-1-git-send-email-robh@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,92 +17,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBMZWUgSm9uZXMgKDIwMTUtMDEtMjcgMjM6NTg6MzUpCj4gT24gVHVlLCAyNyBKYW4g
-MjAxNSwgTWlrZSBUdXJxdWV0dGUgd3JvdGU6Cj4gCj4gPiBRdW90aW5nIExlZSBKb25lcyAoMjAx
-NS0wMS0yNiAwMzoxNDowMCkKPiA+ID4gU2lnbmVkLW9mZi1ieTogTGVlIEpvbmVzIDxsZWUuam9u
-ZXNAbGluYXJvLm9yZz4KPiA+ID4gLS0tCj4gPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9j
-bG9jay9zdC9zdCxjbGstZG9tYWluLnR4dCB8IDM0ICsrKysrKysrKysrKysrKysrKysrKysKPiA+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspCj4gPiA+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1k
-b21haW4udHh0Cj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0Cj4gPiA+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4gPiA+IGluZGV4IDAwMDAwMDAuLjczMDk5MzcKPiA+ID4gLS0tIC9k
-ZXYvbnVsbAo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xv
-Y2svc3Qvc3QsY2xrLWRvbWFpbi50eHQKPiA+ID4gQEAgLTAsMCArMSwzNCBAQAo+ID4gPiArU1RN
-aWNyb2VsZWN0cm9uaWNzIENsb2NrIERvbWFpbgo+ID4gPiArCj4gPiA+ICtTVCBoYXJkd2FyZSBo
-YXZlIGEgYnVuY2ggb2YgY2xvY2tzIHdoaWNoIG11c3Qgbm90IGJlIHR1cm5lZCBvZmYuCj4gPiA+
-ICtJZiBkcml2ZXJzIGEpIGZhaWwgdG8gb2J0YWluIGEgcmVmZXJlbmNlIHRvIGFueSBvZiB0aGVz
-ZSBvciBiKSBnaXZlCj4gPiA+ICt1cCBhIHByZXZpb3VzbHkgb2J0YWluZWQgcmVmZXJlbmNlIGR1
-cmluZyBzdXNwZW5kLCB0aGUgY29tbW9uIGNsawo+ID4gPiArZnJhbWV3b3JrIHdpbGwgYXR0ZW1w
-dCB0byB0dXJuIHRoZW0gb2ZmIGFuZCB0aGUgaGFyZHdhcmUgd2lsbAo+ID4gPiArc3Vic2VxdWVu
-dGx5IGRpZS4gIFRoZSBvbmx5IHdheSB0byByZWNvdmVyIGZyb20gdGhpcyBmYWlsdXJlIGlzIHRv
-Cj4gPiA+ICtyZXN0YXJ0Lgo+ID4gPiArCj4gPiA+ICtUbyBhdm9pZCBlaXRoZXIgb2YgdGhlc2Ug
-dHdvIHNjZW5hcmlvcyBmcm9tIGNhdGFzdHJvcGhpY2FsbHkKPiA+ID4gK2Rpc2FibGluZyB0aGUg
-cnVubmluZyBzeXN0ZW0gd2UgaGF2ZSBpbXBsZW1lbnRlZCBhIGNsb2NrIGRvbWFpbgo+ID4gPiAr
-d2hlcmUgY2xvY2tzIGFyZSBjb25zdW1lZCBhbmQgcmVmZXJlbmNlcyBhcmUgdGFrZW4sIHRodXMg
-cHJldmVudGluZwo+ID4gPiArdGhlbSBmcm9tIGJlaW5nIHNodXQgZG93biBieSB0aGUgZnJhbWV3
-b3JrLgo+ID4gPiArCj4gPiA+ICtXZSB1c2UgdGhlIGdlbmVyaWMgY2xvY2sgYmluZGluZ3MgZm91
-bmQgaW46Cj4gPiA+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9j
-bG9jay1iaW5kaW5ncy50eHQKPiA+ID4gKwo+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+
-ID4gKy0gY29tcGF0aWJsZSA6IE11c3QgYmUgInN0LGNsay1kb21haW4iCj4gPiAKPiA+IFNlZW1z
-IGxpa2UgYSB1c2VmdWwgZmVhdHVyZSBmb3IgYW55IGNsb2NrIHByb3ZpZGVyLCBub3QganVzdCBT
-VCdzLiBIYXZlCj4gPiB5b3UgdGhvdWdodCBhYm91dCBtYWtpbmcgdGhpcyBzb2x1dGlvbiBnZW5l
-cmljIGZvciBEVC1iYXNlZCBjbG9jawo+ID4gcHJvdmlkZXJzPwo+ID4gCj4gPiBXZSBjb3VsZCBh
-bWVuZCB0aGUgY29tbW9uIGNsb2NrIGJpbmRpbmcgdG8gaW5jbHVkZSBhIHNwZWNpYWwgImFsd2F5
-cyBvbiIKPiA+IGNsb2NrIGdyb3VwIHRoYXQgaXMgYXV0b21hZ2ljYWxseSBwcmVwYXJlZCBhbmQg
-ZW5hYmxlZCB3aGVuIHRoZSBjbG9jawo+ID4gcHJvdmlkZXIvZHJpdmVyIGlzIHJlZ2lzdGVyZWQs
-IHVzaW5nIGEgY29tbW9uIGZ1bmN0aW9uLgo+IAo+IE9NRywgSSdtIGFjdHVhbGx5IGdvaW5nIHRv
-IHN0cmFuZ2xlIHlvdSEKPiAKPiBUaGlzIGlzIHdoYXQgSSd2ZSBiZWVuIHByb3Bvc2luZyB0byB5
-b3UgKHByaXZhdGVseSkgZm9yIHdlZWtzLgoKWWlrZXMhIFBsZWFzZSBkbyBub3Qgc3RyYW5nbGUg
-bWUgeWV0LiBJIGhhdmUgYm9va3Mgb24gbG9hbiBmcm9tIG15CnB1YmxpYyBsaWJyYXJ5IHRoYXQg
-SSBtdXN0IHJldHVybiBiZWZvcmUgSSBleHBpcmUuCgo+IAo+IERvZXMgdGhpcyByaW5nIGFueSBi
-ZWxscz8KPiAKPiAgICJKdXN0IEZZSSwgSSBhbSBub3QgZ29pbmcgdG8gYWRkIGFueSBtZXRob2Qg
-dG8gdGhlIGtlcm5lbCB0aGF0Cj4gICBwZXJtYW5lbnRseSBlbmFibGVzIGEgY2xvY2sgdmlhIHNv
-bWUgbmV3IGFwaS4gQXQgdGhlIHdvcnN0IGNhc2UgeW91cgo+ICAgY2xvY2sgZHJpdmVyIGNhbiBz
-aW1wbHkgY2FsbCBjbGtfcHJlcGFyZV9lbmFibGUgaW4gaXRzIHByb2JlCj4gICBmdW5jdGlvbiAo
-dGhlcmUgYXJlIHNvbWUgZXhhbXBsZXMgb2YgdGhpcykuIgo+IAoKSW4gYWxsIGZhaXJuZXNzIEkg
-Zm91bmQgdGhlIGNoYXQgbG9nIHdoZXJlIEkgd3JvdGUgdGhlIGFib3ZlIHF1b3RlIGFuZAp0aGVy
-ZSB3YXMgbm90IG11Y2ggY29udGV4dCBmb3IgdGhlIHByb2JsZW0geW91IHdlcmUgdHJ5aW5nIHRv
-IHNvbHZlLiBBbmQKd2Ugd2VyZSBib3RoIHRyYXBwZWQgaW4gZGlmZmVyZW50IG1lZXRpbmdzIGF0
-IGEgY29uZmVyZW5jZSBhbmQgY291bGQgbm90CmRpc2N1c3MgaXQgZmFjZSB0byBmYWNlIGJlZm9y
-ZSB5b3VyIGZsaWdodC4gU29tZSB0aGluZ3MgYXJlIGRvbmUgYmV0dGVyCm92ZXIgZW1haWwgdGhh
-biBvdmVyIGEgcXVpY2sgR29vZ2xlIGNoYXQuCgo+IEkgd2lsbCBiZSBtb3JlIHRoYW4gaGFwcHkg
-dG8gbWFrZSB0aGlzIGEgZ2VuZXJpYyBkcml2ZXIsIGlmIHRoYXRzIHdoYXQKPiB5b3Ugd2FudCAo
-bm93KS4gOykKCldlbGwgeW91ciBtZXRob2QgZG9lcyB1c2UgY2xrX2dldCBhbmQgY2xrX3ByZXBh
-cmVfZW5hYmxlIHdoaWNoIHNhdGlzZmllcwpteSBzdGF0ZW1lbnQgYWJvdmUuIFdoZW4gSSBzYWlk
-ICJubyIgdG8gdGhpcyBpZGVhIGVhcmxpZXIgSSBoYWQgaW1hZ2luZWQKeW91IGJhbmdpbmcgb24g
-dGhlIHJlZ2lzdGVyIHRvIGtlZXAgdGhlIGNsb2NrIGVuYWJsZWQgaW4gaGFyZHdhcmUsIGJ1dApo
-YXZlIHRoZSBmcmFtZXdvcmsga2VlcCB0aGUgZW5hYmxlX2NvdW50ICYgcHJlcGFyZV9jb3VudCBh
-dCAwLiBGb2xrcwpoYXZlIGFza2VkIGZvciB0aGlzIGJlZm9yZSBhbmQgaXQgaXMgYSBuby1nby4K
-ClJpZ2h0IG5vdyBJIHRoaW5rIHRoYXQgdGhlIGNvbW1vbiBjbG9jayBiaW5kaW5nICh3aGljaCBp
-cyB0aGUgcm9vdCBvZgphbGwgb2YgdGhlIHZlbmRvci1zcGVjaWZpYyBiaW5kaW5ncykgY291bGQg
-Y3JlYXRlIGEgc3BlY2lhbCBjb250YWluZXIKZm9yIGFsd2F5cy1vbiBjbG9ja3MuIFdlIHdvdWxk
-IG5lZWQgdG8gZGVmaW5lIHRoaXMgYmVoYXZpb3IuIEZvcgpzaW1wbGljaXR5IEkgdGhpbmsgdGhl
-IG9ubHkgY2xvY2tzIHRoYXQgc2hvdWxkIGdvIGludG8gdGhpcyBjb250YWluZXIKYXJlIGNsb2Nr
-cyB0aGF0IHdlIG5ldmVyIGdhdGUgZHVyaW5nIHRoZSBsaWZldGltZSBvZiB0aGUgZGV2aWNlIGJl
-aW5nCnBvd2VyZWQgb24sIGFuZCB0aGV5IGFyZSBjbG9ja3MgdGhhdCBkbyBub3QgbmVlZCB0byBi
-ZSBtYW5hZ2VkIGJ5CmV4dGVybmFsIGRyaXZlcnMuCgpvZl9jbGtfc2V0X2RlZmF1bHRzIGlzIGNh
-bGxlZCBmcm9tIG9mX2Nsa19hZGRfcHJvdmlkZXIgd2hpY2ggbWlnaHQgYmUgYQpnb29kIHBsYWNl
-IHRvIHN0YXJ0IGxvb2tpbmcuCgpXaGF0IGRvIHlvdSB0aGluaz8KClJlZ2FyZHMsCk1pa2UKCj4g
-Cj4gPiA+ICtFeGFtcGxlOgo+ID4gPiArCj4gPiA+ICtjbGstZG9tYWluIHsKPiA+ID4gKyAgICAg
-ICBjb21wYXRpYmxlID0gInN0LGNsay1kb21haW4iOwo+ID4gPiArICAgICAgIGNsb2NrcyA9IDwm
-Y2xrX3NfYzBfZmxleGdlbiBDTEtfRVhUMkZfQTk+LAo+ID4gPiArICAgICAgICAgICAgICAgIDwm
-Y2xrX3NfYzBfZmxleGdlbiBDTEtfQ09NUE9fRFZQPiwKPiA+ID4gKyAgICAgICAgICAgICAgICA8
-JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX01NQ18xPiwKPiA+ID4gKyAgICAgICAgICAgICAgICA8JmNs
-a19zX2MwX2ZsZXhnZW4gQ0xLX0lDTl9TQkM+LAo+ID4gPiArICAgICAgICAgICAgICAgIDwmY2xr
-X3NfYzBfZmxleGdlbiBDTEtfSUNOX0xNST4sCj4gPiA+ICsgICAgICAgICAgICAgICAgPCZjbGtf
-c19jMF9mbGV4Z2VuIENMS19JQ05fQ1BVPiwKPiA+ID4gKyAgICAgICAgICAgICAgICA8JmNsa19z
-X2MwX2ZsZXhnZW4gQ0xLX1RYX0lDTl9ETVU+LAo+ID4gPiArICAgICAgICAgICAgICAgIDwmY2xr
-X3NfYTBfZmxleGdlbiBDTEtfSUNfTE1JMD4sCj4gPiA+ICsgICAgICAgICAgICAgICAgPCZjbGtf
-bV9hOT47Cj4gPiA+ICt9Owo+IAo+IC0tIAo+IExlZSBKb25lcwo+IExpbmFybyBTVE1pY3JvZWxl
-Y3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBz
-b2Z0d2FyZSBmb3IgQVJNIFNvQ3MKPiBGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIg
-fCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+Add binding for Versatile board system registers found in the FPGA of the
+Versatile/AB and Versatile/PB boards.
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/arm/versatile-sysreg.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/versatile-sysreg.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/versatile-sysreg.txt b/Documentation/devicetree/bindings/arm/versatile-sysreg.txt
+new file mode 100644
+index 0000000..a4f1526
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/versatile-sysreg.txt
+@@ -0,0 +1,10 @@
++ARM Versatile system registers
++--------------------------------------
++
++This is a system control registers block, providing multiple low level
++platform functions like board detection and identification, software
++interrupt generation, MMC and NOR Flash control etc.
++
++Required node properties:
++- compatible value : = "arm,versatile-sysreg", "syscon"
++- reg : physical base address and the size of the registers window
+-- 
+2.1.0
