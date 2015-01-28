@@ -1,302 +1,328 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v5 1/2] DT: iio: vadc: document dt binding
-Date: Wed, 28 Jan 2015 18:45:37 +0000
-Message-ID: <54C92E51.5040508@kernel.org>
-References: <1421748922-8933-1-git-send-email-iivanov@mm-sol.com> <1421748922-8933-2-git-send-email-iivanov@mm-sol.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/4] mmc: core: add support for hardware reset gpio line
+Date: Wed, 28 Jan 2015 15:24:03 +0100
+Message-ID: <CAPDyKFpowidghwadJS+gYP0EVo6gRUhAG8s14CMEbwatFadP2Q@mail.gmail.com>
+References: <1422453595-21160-1-git-send-email-m.szyprowski@samsung.com>
+	<1422453595-21160-2-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421748922-8933-2-git-send-email-iivanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1422453595-21160-2-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Tobias Jakobi <liquid.acid@gmx.net>, Daniel Drake <drake@endlessm.com>, Sebastian Reichel <sre@kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Joonyoung Shim <jy0922.shim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20/01/15 10:15, Ivan T. Ivanov wrote:
-> From: Stanimir Varbanov <svarbanov@mm-sol.com>
-> 
-> Document DT binding for Qualcomm SPMI PMIC voltage ADC
-> driver.
-> 
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-Given the only changes since the previous version (back in
-November are trivial typo corrections) I'm deeming this
-to have met the 3 weeks waiting for any DT responses and
-taking it through IIO.
+On 28 January 2015 at 14:59, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> There are boards (like Hardkernel's Odroid boards) on which eMMC card's
+> reset line is connected to GPIO line instead of the hardware reset
+> logic. In case of such boards, if first stage of bootloader is loaded
+> from such eMMC card, before performing system reboot, additional reset
+> of eMMC card is required to properly boot the whole system again. This
+> patch adds code for handling reset gpio lines defined in device tree.
 
-Applied to the togreg branch of iio.git - initially pushed out
-as testing.
 
-Jonathan
+I don't follow the above sequence. Can you try to elaborate and
+describe for what exact scenario we require the hardware reset to be
+done?
+
+Also, I wonder whether we could extend the mmc-pwrseq to cover your
+case? Did you consider that as an option?
+
+Kind regards
+Uffe
+
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 129 +++++++++++++++++++++
->  include/dt-bindings/iio/qcom,spmi-vadc.h           | 119 +++++++++++++++++++
->  2 files changed, 248 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-vadc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> new file mode 100644
-> index 0000000..0fb4613
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> @@ -0,0 +1,129 @@
-> +Qualcomm's SPMI PMIC voltage ADC
+>  Documentation/devicetree/bindings/mmc/mmc.txt |  35 +++++----
+>  drivers/mmc/core/core.c                       |   2 +
+>  drivers/mmc/core/host.c                       |  11 +++
+>  drivers/mmc/core/slot-gpio.c                  | 101 +++++++++++++++++++++++++-
+>  include/linux/mmc/slot-gpio.h                 |   7 ++
+>  5 files changed, 139 insertions(+), 17 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index 438899e8829b..c952cdea0201 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -21,6 +21,9 @@ Optional properties:
+>    below for the case, when a GPIO is used for the CD line
+>  - wp-inverted: when present, polarity on the WP line is inverted. See the note
+>    below for the case, when a GPIO is used for the WP line
+> +- reset-gpios: Specify GPIO for hardware reset of a card, see gpio binding
+> +- reset-inverted: when present, polarity on the reset line is inverted. See
+> +  the note below for the case, when a GPIO is used for the reset line
+>  - max-frequency: maximum operating clock frequency
+>  - no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
+>    this system, even if the controller claims it is.
+> @@ -43,22 +46,24 @@ Optional properties:
+>  - dsr: Value the card's (optional) Driver Stage Register (DSR) should be
+>    programmed with. Valid range: [0 .. 0xffff].
+>
+> -*NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+> -polarity properties, we have to fix the meaning of the "normal" and "inverted"
+> -line levels. We choose to follow the SDHCI standard, which specifies both those
+> -lines as "active low." Therefore, using the "cd-inverted" property means, that
+> -the CD line is active high, i.e. it is high, when a card is inserted. Similar
+> -logic applies to the "wp-inverted" property.
+> -
+> -CD and WP lines can be implemented on the hardware in one of two ways: as GPIOs,
+> -specified in cd-gpios and wp-gpios properties, or as dedicated pins. Polarity of
+> -dedicated pins can be specified, using *-inverted properties. GPIO polarity can
+> -also be specified using the OF_GPIO_ACTIVE_LOW flag. This creates an ambiguity
+> -in the latter case. We choose to use the XOR logic for GPIO CD and WP lines.
+> -This means, the two properties are "superimposed," for example leaving the
+> +*NOTE* on CD, WP and RESET polarity. To use common for all SD/MMC host
+> +controllers line polarity properties, we have to fix the meaning of the
+> +"normal" and "inverted" line levels. We choose to follow the SDHCI
+> +standard, which specifies both those lines as "active low." Therefore,
+> +using the "cd-inverted" property means, that the CD line is active high,
+> +i.e. it is high, when a card is inserted. Similar logic applies to the
+> +"wp-inverted" and "reset-inverted" property.
 > +
-> +SPMI PMIC voltage ADC (VADC) provides interface to clients to read
-> +voltage. The VADC is a 15-bit sigma-delta ADC.
+> +CD, WP and RESET lines can be implemented on the hardware in one of two
+> +ways: as GPIOs, specified in cd-gpios and wp-gpios properties, or as
+> +dedicated pins. Polarity of dedicated pins can be specified, using
+> +*-inverted properties. GPIO polarity can also be specified using the
+> +OF_GPIO_ACTIVE_LOW flag. This creates an ambiguity in the latter case.
+> +We choose to use the XOR logic for GPIO CD and WP lines. This means, the
+> +two properties are "superimposed," for example leaving the
+>  OF_GPIO_ACTIVE_LOW flag clear and specifying the respective *-inverted
+> -property results in a double-inversion and actually means the "normal" line
+> -polarity is in effect.
+> +property results in a double-inversion and actually means the "normal"
+> +line polarity is in effect.
+>
+>  Optional SDIO properties:
+>  - keep-power-in-suspend: Preserves card power during a suspend/resume cycle
+> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> index 1be7055548cb..b556c3b5d83d 100644
+> --- a/drivers/mmc/core/core.c
+> +++ b/drivers/mmc/core/core.c
+> @@ -2520,6 +2520,7 @@ void mmc_start_host(struct mmc_host *host)
+>                 mmc_power_off(host);
+>         else
+>                 mmc_power_up(host, host->ocr_avail);
+> +       mmc_gpiod_request_restart_handler(host);
+>         mmc_gpiod_request_cd_irq(host);
+>         _mmc_detect_change(host, 0, false);
+>  }
+> @@ -2557,6 +2558,7 @@ void mmc_stop_host(struct mmc_host *host)
+>
+>         BUG_ON(host->card);
+>
+> +       mmc_gpiod_free_restart_handler(host);
+>         mmc_power_off(host);
+>  }
+>
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index 8be0df758e68..644d0f41b8f6 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -317,6 +317,7 @@ int mmc_of_parse(struct mmc_host *host)
+>         int len, ret;
+>         bool cd_cap_invert, cd_gpio_invert = false;
+>         bool ro_cap_invert, ro_gpio_invert = false;
+> +       bool rst_cap_invert;
+>
+>         if (!host->parent || !host->parent->of_node)
+>                 return 0;
+> @@ -404,6 +405,16 @@ int mmc_of_parse(struct mmc_host *host)
+>         if (ro_cap_invert ^ ro_gpio_invert)
+>                 host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
+>
+> +       /* Parse HW Reset */
+> +       rst_cap_invert = of_property_read_bool(np, "reset-inverted");
 > +
-> +VADC node:
+> +       ret = mmc_gpiod_request_rst(host, "reset", 0, rst_cap_invert);
+> +       if (!ret) {
+> +               dev_info(host->parent, "Got HW Reset GPIO\n");
+> +               host->caps |= MMC_CAP_HW_RESET;
+> +       } else if (ret != -ENOENT)
+> +               return ret;
 > +
-> +- compatible:
-> +    Usage: required
-> +    Value type: <string>
-> +    Definition: Should contain "qcom,spmi-vadc".
+>         if (of_find_property(np, "cap-sd-highspeed", &len))
+>                 host->caps |= MMC_CAP_SD_HIGHSPEED;
+>         if (of_find_property(np, "cap-mmc-highspeed", &len))
+> diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
+> index 27117ba47073..5a2ca43e0e8d 100644
+> --- a/drivers/mmc/core/slot-gpio.c
+> +++ b/drivers/mmc/core/slot-gpio.c
+> @@ -8,6 +8,7 @@
+>   * published by the Free Software Foundation.
+>   */
+>
+> +#include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/gpio.h>
+>  #include <linux/gpio/consumer.h>
+> @@ -17,17 +18,22 @@
+>  #include <linux/mmc/slot-gpio.h>
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+> +#include <linux/reboot.h>
+>
+>  #include "slot-gpio.h"
+>
+>  struct mmc_gpio {
+>         struct gpio_desc *ro_gpio;
+>         struct gpio_desc *cd_gpio;
+> +       struct gpio_desc *rst_gpio;
+>         bool override_ro_active_level;
+>         bool override_cd_active_level;
+> +       bool rst_raw_active_level;
+> +       struct notifier_block rst_nb;
+>         irqreturn_t (*cd_gpio_isr)(int irq, void *dev_id);
+>         char *ro_label;
+> -       char cd_label[0];
+> +       char *cd_label;
+> +       char rst_label[0];
+>  };
+>
+>  static irqreturn_t mmc_gpio_cd_irqt(int irq, void *dev_id)
+> @@ -45,12 +51,14 @@ int mmc_gpio_alloc(struct mmc_host *host)
+>  {
+>         size_t len = strlen(dev_name(host->parent)) + 4;
+>         struct mmc_gpio *ctx = devm_kzalloc(host->parent,
+> -                               sizeof(*ctx) + 2 * len, GFP_KERNEL);
+> +                               sizeof(*ctx) + 3 * len + 1, GFP_KERNEL);
+>
+>         if (ctx) {
+> +               ctx->cd_label = ctx->rst_label + len + 1;
+>                 ctx->ro_label = ctx->cd_label + len;
+>                 snprintf(ctx->cd_label, len, "%s cd", dev_name(host->parent));
+>                 snprintf(ctx->ro_label, len, "%s ro", dev_name(host->parent));
+> +               snprintf(ctx->rst_label, len, "%s rst", dev_name(host->parent));
+>                 host->slot.handler_priv = ctx;
+>                 host->slot.cd_irq = -EINVAL;
+>         }
+> @@ -88,6 +96,21 @@ int mmc_gpio_get_cd(struct mmc_host *host)
+>  }
+>  EXPORT_SYMBOL(mmc_gpio_get_cd);
+>
+> +void mmc_gpio_do_hw_reset(struct mmc_host *host)
+> +{
+> +       struct mmc_gpio *ctx = host->slot.handler_priv;
+> +       if (!ctx || !ctx->rst_gpio)
+> +               return;
 > +
-> +- reg:
-> +    Usage: required
-> +    Value type: <prop-encoded-array>
-> +    Definition: VADC base address and length in the SPMI PMIC register map.
+> +       gpiod_set_raw_value_cansleep(ctx->rst_gpio, ctx->rst_raw_active_level);
+> +       /* For eMMC, minimum is 1us but give it 10us for good measure */
+> +       udelay(10);
+> +       gpiod_set_raw_value_cansleep(ctx->rst_gpio, !ctx->rst_raw_active_level);
+> +       /* For eMMC, minimum is 200us but give it 300us for good measure */
+> +       usleep_range(300, 1000);
+> +}
+> +EXPORT_SYMBOL(mmc_gpio_do_hw_reset);
 > +
-> +- #address-cells:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Must be one. Child node 'reg' property should define ADC
-> +            channel number.
+>  /**
+>   * mmc_gpio_request_ro - request a gpio for write-protection
+>   * @host: mmc host
+> @@ -167,6 +190,48 @@ void mmc_gpio_set_cd_isr(struct mmc_host *host,
+>  }
+>  EXPORT_SYMBOL(mmc_gpio_set_cd_isr);
+>
+> +static int mmc_gpio_rst_nb(struct notifier_block *this, unsigned long mode,
+> +                          void *cmd)
+> +{
+> +       struct mmc_gpio *ctx = container_of(this, struct mmc_gpio, rst_nb);
 > +
-> +- #size-cells:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Must be zero.
+> +       gpiod_set_raw_value(ctx->rst_gpio, ctx->rst_raw_active_level);
+> +       /* For eMMC, minimum is 1us but give it 10us for good measure */
+> +       udelay(10);
+> +       gpiod_set_raw_value(ctx->rst_gpio, !ctx->rst_raw_active_level);
+> +       /* For eMMC, minimum is 200us but give it 300us for good measure */
+> +       udelay(300);
 > +
-> +- #io-channel-cells:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Must be one. For details about IIO bindings see:
-> +            Documentation/devicetree/bindings/iio/iio-bindings.txt
+> +       return NOTIFY_DONE;
+> +}
 > +
-> +- interrupts:
-> +    Usage: optional
-> +    Value type: <prop-encoded-array>
-> +    Definition: End of conversion interrupt.
+> +void mmc_gpiod_request_restart_handler(struct mmc_host *host)
+> +{
+> +       struct mmc_gpio *ctx = host->slot.handler_priv;
 > +
-> +Channel node properties:
+> +       if (!ctx || !ctx->rst_gpio)
+> +               return;
 > +
-> +- reg:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: ADC channel number.
-> +            See include/dt-bindings/iio/qcom,spmi-vadc.h
+> +       ctx->rst_nb.notifier_call = mmc_gpio_rst_nb;
+> +       ctx->rst_nb.priority = 255;
 > +
-> +- qcom,decimation:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: This parameter is used to decrease ADC sampling rate.
-> +            Quicker measurements can be made by reducing decimation ratio.
-> +            Valid values are 512, 1024, 2048, 4096.
-> +            If property is not found, default value of 512 will be used.
+> +       register_restart_handler(&ctx->rst_nb);
+> +       return;
+> +}
+> +EXPORT_SYMBOL(mmc_gpiod_request_restart_handler);
 > +
-> +- qcom,pre-scaling:
-> +    Usage: optional
-> +    Value type: <u32 array>
-> +    Definition: Used for scaling the channel input signal before the signal is
-> +            fed to VADC. The configuration for this node is to know the
-> +            pre-determined ratio and use it for post scaling. Select one from
-> +            the following options.
-> +            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
-> +            If property is not found default value depending on chip will be used.
+> +void mmc_gpiod_free_restart_handler(struct mmc_host *host)
+> +{
+> +       struct mmc_gpio *ctx = host->slot.handler_priv;
 > +
-> +- qcom,ratiometric:
-> +    Usage: optional
-> +    Value type: <empty>
-> +    Definition: Channel calibration type. If this property is specified
-> +            VADC will use the VDD reference (1.8V) and GND for channel
-> +            calibration. If property is not found, channel will be
-> +            calibrated with 0.625V and 1.25V reference channels, also
-> +            known as absolute calibration.
+> +       if (!ctx || !ctx->rst_gpio)
+> +               return;
 > +
-> +- qcom,hw-settle-time:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Time between AMUX getting configured and the ADC starting
-> +            conversion. Delay = 100us * (value) for value < 11, and
-> +            2ms * (value - 10) otherwise.
-> +            Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
-> +            900 us and 1, 2, 4, 6, 8, 10 ms
-> +            If property is not found, channel will use 0us.
+> +       unregister_restart_handler(&ctx->rst_nb);
+> +       return;
+> +}
+> +EXPORT_SYMBOL(mmc_gpiod_free_restart_handler);
 > +
-> +- qcom,avg-samples:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Number of samples to be used for measurement.
-> +            Averaging provides the option to obtain a single measurement
-> +            from the ADC that is an average of multiple samples. The value
-> +            selected is 2^(value).
-> +            Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
-> +            If property is not found, 1 sample will be used.
+>  /**
+>   * mmc_gpio_request_cd - request a gpio for card-detection
+>   * @host: mmc host
+> @@ -303,3 +368,35 @@ int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
+>         return 0;
+>  }
+>  EXPORT_SYMBOL(mmc_gpiod_request_ro);
 > +
-> +NOTE:
-> +
-> +Following channels, also known as reference point channels, are used for
-> +result calibration and their channel configuration nodes should be defined:
-> +VADC_REF_625MV and/or VADC_SPARE1(based on PMIC version) VADC_REF_1250MV,
-> +VADC_GND_REF and VADC_VDD_VADC.
-> +
-> +Example:
-> +
-> +	/* VADC node */
-> +	pmic_vadc: vadc@3100 {
-> +		compatible = "qcom,spmi-vadc";
-> +		reg = <0x3100 0x100>;
-> +		interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		#io-channel-cells = <1>;
-> +		io-channel-ranges;
-> +
-> +		/* Channel node */
-> +		usb_id_nopull {
-> +			reg = <VADC_LR_MUX10_USB_ID>;
-> +			qcom,decimation = <512>;
-> +			qcom,ratiometric;
-> +			qcom,hw-settle-time = <200>;
-> +			qcom,avg-samples = <1>;
-> +			qcom,pre-scaling = <1 3>;
-> +		};
-> +	};
-> +
-> +	/* IIO client node */
-> +	usb {
-> +		io-channels = <&pmic_vadc VADC_LR_MUX10_USB_ID>;
-> +		io-channel-names = "vadc";
-> +	};
-> diff --git a/include/dt-bindings/iio/qcom,spmi-vadc.h b/include/dt-bindings/iio/qcom,spmi-vadc.h
-> new file mode 100644
-> index 0000000..42121fa
-> --- /dev/null
-> +++ b/include/dt-bindings/iio/qcom,spmi-vadc.h
-> @@ -0,0 +1,119 @@
-> +/*
-> + * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+> +/**
+> + * mmc_gpiod_request_rst - request a gpio descriptor for hw reset
+> + * @host: mmc host
+> + * @con_id: function within the GPIO consumer
+> + * @idx: index of the GPIO to obtain in the consumer
+> + * @inverted: indicated the polarity of reset line should be inverted
+> + * (xored with GPIO_ACTIVE_LOW flag of gpio descriptor)
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+> + * Returns zero on success, else an error.
 > + */
+> +int mmc_gpiod_request_rst(struct mmc_host *host, const char *con_id,
+> +                         unsigned int idx, bool inverted)
+> +{
+> +       struct mmc_gpio *ctx = host->slot.handler_priv;
+> +       struct gpio_desc *desc;
 > +
-> +#ifndef _DT_BINDINGS_QCOM_SPMI_VADC_H
-> +#define _DT_BINDINGS_QCOM_SPMI_VADC_H
+> +       if (!con_id)
+> +               con_id = ctx->rst_label;
 > +
-> +/* Voltage ADC channels */
-> +#define VADC_USBIN				0x00
-> +#define VADC_DCIN				0x01
-> +#define VADC_VCHG_SNS				0x02
-> +#define VADC_SPARE1_03				0x03
-> +#define VADC_USB_ID_MV				0x04
-> +#define VADC_VCOIN				0x05
-> +#define VADC_VBAT_SNS				0x06
-> +#define VADC_VSYS				0x07
-> +#define VADC_DIE_TEMP				0x08
-> +#define VADC_REF_625MV				0x09
-> +#define VADC_REF_1250MV				0x0a
-> +#define VADC_CHG_TEMP				0x0b
-> +#define VADC_SPARE1				0x0c
-> +#define VADC_SPARE2				0x0d
-> +#define VADC_GND_REF				0x0e
-> +#define VADC_VDD_VADC				0x0f
+> +       desc = devm_gpiod_get_index(host->parent, con_id, idx);
+> +       if (IS_ERR(desc))
+> +               return PTR_ERR(desc);
 > +
-> +#define VADC_P_MUX1_1_1				0x10
-> +#define VADC_P_MUX2_1_1				0x11
-> +#define VADC_P_MUX3_1_1				0x12
-> +#define VADC_P_MUX4_1_1				0x13
-> +#define VADC_P_MUX5_1_1				0x14
-> +#define VADC_P_MUX6_1_1				0x15
-> +#define VADC_P_MUX7_1_1				0x16
-> +#define VADC_P_MUX8_1_1				0x17
-> +#define VADC_P_MUX9_1_1				0x18
-> +#define VADC_P_MUX10_1_1			0x19
-> +#define VADC_P_MUX11_1_1			0x1a
-> +#define VADC_P_MUX12_1_1			0x1b
-> +#define VADC_P_MUX13_1_1			0x1c
-> +#define VADC_P_MUX14_1_1			0x1d
-> +#define VADC_P_MUX15_1_1			0x1e
-> +#define VADC_P_MUX16_1_1			0x1f
+> +       ctx->rst_raw_active_level = !inverted ^ gpiod_is_active_low(desc);
+> +       ctx->rst_gpio = desc;
 > +
-> +#define VADC_P_MUX1_1_3				0x20
-> +#define VADC_P_MUX2_1_3				0x21
-> +#define VADC_P_MUX3_1_3				0x22
-> +#define VADC_P_MUX4_1_3				0x23
-> +#define VADC_P_MUX5_1_3				0x24
-> +#define VADC_P_MUX6_1_3				0x25
-> +#define VADC_P_MUX7_1_3				0x26
-> +#define VADC_P_MUX8_1_3				0x27
-> +#define VADC_P_MUX9_1_3				0x28
-> +#define VADC_P_MUX10_1_3			0x29
-> +#define VADC_P_MUX11_1_3			0x2a
-> +#define VADC_P_MUX12_1_3			0x2b
-> +#define VADC_P_MUX13_1_3			0x2c
-> +#define VADC_P_MUX14_1_3			0x2d
-> +#define VADC_P_MUX15_1_3			0x2e
-> +#define VADC_P_MUX16_1_3			0x2f
+> +       gpiod_direction_output_raw(desc, !ctx->rst_raw_active_level);
 > +
-> +#define VADC_LR_MUX1_BAT_THERM			0x30
-> +#define VADC_LR_MUX2_BAT_ID			0x31
-> +#define VADC_LR_MUX3_XO_THERM			0x32
-> +#define VADC_LR_MUX4_AMUX_THM1			0x33
-> +#define VADC_LR_MUX5_AMUX_THM2			0x34
-> +#define VADC_LR_MUX6_AMUX_THM3			0x35
-> +#define VADC_LR_MUX7_HW_ID			0x36
-> +#define VADC_LR_MUX8_AMUX_THM4			0x37
-> +#define VADC_LR_MUX9_AMUX_THM5			0x38
-> +#define VADC_LR_MUX10_USB_ID			0x39
-> +#define VADC_AMUX_PU1				0x3a
-> +#define VADC_AMUX_PU2				0x3b
-> +#define VADC_LR_MUX3_BUF_XO_THERM		0x3c
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(mmc_gpiod_request_rst);
+> diff --git a/include/linux/mmc/slot-gpio.h b/include/linux/mmc/slot-gpio.h
+> index 3945a8c9d3cb..48f814e1bbeb 100644
+> --- a/include/linux/mmc/slot-gpio.h
+> +++ b/include/linux/mmc/slot-gpio.h
+> @@ -26,8 +26,15 @@ int mmc_gpiod_request_cd(struct mmc_host *host, const char *con_id,
+>  int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
+>                          unsigned int idx, bool override_active_level,
+>                          unsigned int debounce, bool *gpio_invert);
+> +int mmc_gpiod_request_rst(struct mmc_host *host, const char *con_id,
+> +                        unsigned int idx, bool inverted);
+>  void mmc_gpio_set_cd_isr(struct mmc_host *host,
+>                          irqreturn_t (*isr)(int irq, void *dev_id));
+>  void mmc_gpiod_request_cd_irq(struct mmc_host *host);
+>
+> +void mmc_gpio_do_hw_reset(struct mmc_host *host);
+> +void mmc_gpiod_request_restart_handler(struct mmc_host *host);
+> +void mmc_gpiod_free_restart_handler(struct mmc_host *host);
 > +
-> +#define VADC_LR_MUX1_PU1_BAT_THERM		0x70
-> +#define VADC_LR_MUX2_PU1_BAT_ID			0x71
-> +#define VADC_LR_MUX3_PU1_XO_THERM		0x72
-> +#define VADC_LR_MUX4_PU1_AMUX_THM1		0x73
-> +#define VADC_LR_MUX5_PU1_AMUX_THM2		0x74
-> +#define VADC_LR_MUX6_PU1_AMUX_THM3		0x75
-> +#define VADC_LR_MUX7_PU1_AMUX_HW_ID		0x76
-> +#define VADC_LR_MUX8_PU1_AMUX_THM4		0x77
-> +#define VADC_LR_MUX9_PU1_AMUX_THM5		0x78
-> +#define VADC_LR_MUX10_PU1_AMUX_USB_ID		0x79
-> +#define VADC_LR_MUX3_BUF_PU1_XO_THERM		0x7c
 > +
-> +#define VADC_LR_MUX1_PU2_BAT_THERM		0xb0
-> +#define VADC_LR_MUX2_PU2_BAT_ID			0xb1
-> +#define VADC_LR_MUX3_PU2_XO_THERM		0xb2
-> +#define VADC_LR_MUX4_PU2_AMUX_THM1		0xb3
-> +#define VADC_LR_MUX5_PU2_AMUX_THM2		0xb4
-> +#define VADC_LR_MUX6_PU2_AMUX_THM3		0xb5
-> +#define VADC_LR_MUX7_PU2_AMUX_HW_ID		0xb6
-> +#define VADC_LR_MUX8_PU2_AMUX_THM4		0xb7
-> +#define VADC_LR_MUX9_PU2_AMUX_THM5		0xb8
-> +#define VADC_LR_MUX10_PU2_AMUX_USB_ID		0xb9
-> +#define VADC_LR_MUX3_BUF_PU2_XO_THERM		0xbc
-> +
-> +#define VADC_LR_MUX1_PU1_PU2_BAT_THERM		0xf0
-> +#define VADC_LR_MUX2_PU1_PU2_BAT_ID		0xf1
-> +#define VADC_LR_MUX3_PU1_PU2_XO_THERM		0xf2
-> +#define VADC_LR_MUX4_PU1_PU2_AMUX_THM1		0xf3
-> +#define VADC_LR_MUX5_PU1_PU2_AMUX_THM2		0xf4
-> +#define VADC_LR_MUX6_PU1_PU2_AMUX_THM3		0xf5
-> +#define VADC_LR_MUX7_PU1_PU2_AMUX_HW_ID		0xf6
-> +#define VADC_LR_MUX8_PU1_PU2_AMUX_THM4		0xf7
-> +#define VADC_LR_MUX9_PU1_PU2_AMUX_THM5		0xf8
-> +#define VADC_LR_MUX10_PU1_PU2_AMUX_USB_ID	0xf9
-> +#define VADC_LR_MUX3_BUF_PU1_PU2_XO_THERM	0xfc
-> +
-> +#endif /* _DT_BINDINGS_QCOM_SPMI_VADC_H */
+>  #endif
 > --
-> 1.9.1
-> 
+> 1.9.2
+>
