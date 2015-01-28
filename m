@@ -1,74 +1,70 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 5/7] spi: spi-fsl-dspi: Remove spi-bitbang
-Date: Wed, 28 Jan 2015 19:25:45 +0000
-Message-ID: <20150128192545.GA12296@sirena.org.uk>
-References: <1422356244-15629-1-git-send-email-bhuvanchandra.dv@toradex.com>
- <1422356244-15629-6-git-send-email-bhuvanchandra.dv@toradex.com>
+Subject: Re: [PATCH v2 0/7] ASoC: pcm512x: Clock master modes
+Date: Wed, 28 Jan 2015 19:29:07 +0000
+Message-ID: <20150128192907.GH21293@sirena.org.uk>
+References: <1422454572-7847-1-git-send-email-peda@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4201417194081579740=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1422356244-15629-6-git-send-email-bhuvanchandra.dv@toradex.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, B44548@freescale.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Li.Xiubo@freescale.com, linux-kernel@vger.kernel.org, stefan@agner.ch, linux-spi@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============2013275459038901597=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1422454572-7847-1-git-send-email-peda@lysator.liu.se>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Peter Rosin <peda@lysator.liu.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
 
---===============4201417194081579740==
+--===============2013275459038901597==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+	protocol="application/pgp-signature"; boundary="zsrtqxSV3n+NPNGz"
 Content-Disposition: inline
 
 
---cNdxnHkX5QqsyA0e
+--zsrtqxSV3n+NPNGz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 27, 2015 at 04:27:22PM +0530, Bhuvanchandra DV wrote:
-> From: Chao Fu <B44548@freescale.com>
+On Wed, Jan 28, 2015 at 03:16:05PM +0100, Peter Rosin wrote:
+> From: Peter Rosin <peda@axentia.se>
 >=20
-> DSPI module need cs change information in
-> a spi transfer. According to cs change, DSPI
+> Hi!
+>=20
+> [ Note that the dt change is in patch 5/7, for those only interested
+>   in that particular bit. ]
 
-Applied, thanks.
+Applied all except the register default change, thanks.
 
---cNdxnHkX5QqsyA0e
+--zsrtqxSV3n+NPNGz
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJUyTe4AAoJECTWi3JdVIfQEHQH/RdKiPoPotBM0/69lF5IH44z
-7AiRC0G611a+DnAkBrQmYHZ+od0qfKEUYF1C1RBfrHXo8qzQWqw6o4aDJS2whh6t
-fIeJrIRGMISYoh5I83Jwe39f3IZwGtOtw8igQiqjq1sBzH2YoPD+Szmq2IhSufMB
-qf47bJbq2IqlrTK8WK2Ev4d2ear534injn5vycf9DN5/G+yDwkM+t2ACZh3ujBzf
-5lslQGYFmm89AZImSA/VnlSjXyUQ2Fm7tRnSWbjfXNRTNnISOdpLE6BNMMWEcWdy
-pDnVTHK/zd77xBfFrxfdvWB64J6GWQH6OiPRE9spwriakeQgOzTS0wOQgUlIbBk=
-=WP2r
+iQEcBAEBCAAGBQJUyTiCAAoJECTWi3JdVIfQbJoH/iTTNvZhgl3mcybxLYN0wVp6
+bd6k3XwxivuGduqy9A5XTUFjf9//B1cUaJ3ACux6zgUEBU78a+HFPG4N6/3eXnKa
+nAfug1+nyhePl3iTow3NaO+GbG7+7mhGpeZImTFAztnas2SS7wa55YkwAyjuJoNw
+xoSepBHqM3zSRMHPQqaVKIT2sf6pg84bc7+5SZyT9FwWy+na+MQS/SbH/as52Vaf
+wN2RIu5AzcBQBaibuaaADaDkiPR56RaElCsByNSDKnfXo78K7ORJSGfS1uyDJa7b
+DucCVTLzAROZOF1qB/T+sKdfcwkM+F9lBjfhzesmJc0DlBm8h4ZiM2fnmDq3qLI=
+=nx76
 -----END PGP SIGNATURE-----
 
---cNdxnHkX5QqsyA0e--
+--zsrtqxSV3n+NPNGz--
 
-
---===============4201417194081579740==
+--===============2013275459038901597==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============4201417194081579740==--
+--===============2013275459038901597==--
