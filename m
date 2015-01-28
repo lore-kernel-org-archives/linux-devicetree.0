@@ -1,215 +1,90 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH v2 2/3] DT: pinctrl: Document Qualcomm MSM8916 pinctrl binding
-Date: Wed, 28 Jan 2015 12:36:05 +0200
-Message-ID: <1422441366-12575-3-git-send-email-svarbanov@mm-sol.com>
-References: <1422441366-12575-1-git-send-email-svarbanov@mm-sol.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: Re: [PATCH 1/2] dt: watchdog: Add DT binding documentation for jz47xx
+ watchdog timer
+Date: Wed, 28 Jan 2015 10:27:00 +0000
+Message-ID: <54C8B974.8030703@imgtec.com>
+References: <1422371490-44402-1-git-send-email-Zubair.Kakakhel@imgtec.com> <20150127221909.GA21671@roeck-us.net> <2960717.ZtXrNMeS1F@wuerfel> <9081741.fTg5kD1W54@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422441366-12575-1-git-send-email-svarbanov@mm-sol.com>
+In-Reply-To: <9081741.fTg5kD1W54@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Joonwoo Park <joonwoop@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+To: Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>
+Cc: wim@iguana.be, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, paul@crapouillou.net
 List-Id: devicetree@vger.kernel.org
 
-Adds devicetree binding documentation.
 
-Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
- .../bindings/pinctrl/qcom,msm8916-pinctrl.txt      |  186 ++++++++++++++++++++
- 1 files changed, 186 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
-new file mode 100644
-index 0000000..10c2dcf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
-@@ -0,0 +1,186 @@
-+Qualcomm MSM8916 TLMM block
-+
-+This binding describes the Top Level Mode Multiplexer block found in the
-+MSM8916 platform.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "qcom,msm8916-pinctrl"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the base address and size of the TLMM register space.
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the TLMM summary IRQ.
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <none>
-+	Definition: identifies this node as an interrupt controller
-+
-+- #interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 2. Specifying the pin number and flags, as defined
-+		    in <dt-bindings/interrupt-controller/irq.h>
-+
-+- gpio-controller:
-+	Usage: required
-+	Value type: <none>
-+	Definition: identifies this node as a gpio controller
-+
-+- #gpio-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 2. Specifying the pin number and flags, as defined
-+		    in <dt-bindings/gpio/gpio.h>
-+
-+Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
-+a general description of GPIO and interrupt bindings.
-+
-+Please refer to pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices, including the meaning of the
-+phrase "pin configuration node".
-+
-+The pin configuration nodes act as a container for an arbitrary number of
-+subnodes. Each of these subnodes represents some desired configuration for a
-+pin, a group, or a list of pins or groups. This configuration can include the
-+mux function to select on those pin(s)/group(s), and various pin configuration
-+parameters, such as pull-up, drive strength, etc.
-+
-+
-+PIN CONFIGURATION NODES:
-+
-+The name of each subnode is not important; all subnodes should be enumerated
-+and processed purely based on their content.
-+
-+Each subnode only affects those parameters that are explicitly listed. In
-+other words, a subnode that lists a mux function but no pin configuration
-+parameters implies no information about any pin configuration parameters.
-+Similarly, a pin subnode that describes a pullup parameter implies no
-+information about e.g. the mux function.
-+
-+
-+The following generic properties as defined in pinctrl-bindings.txt are valid
-+to specify in a pin configuration subnode:
-+
-+- pins:
-+	Usage: required
-+	Value type: <string-array>
-+	Definition: List of gpio pins affected by the properties specified in
-+		    this subnode.  Valid pins are:
-+		    gpio0-gpio121,
-+		    sdc1_clk,
-+		    sdc1_cmd,
-+		    sdc1_data
-+		    sdc2_clk,
-+		    sdc2_cmd,
-+		    sdc2_data,
-+		    qdsd_cmd,
-+		    qdsd_data0,
-+		    qdsd_data1,
-+		    qdsd_data2,
-+		    qdsd_data3
-+
-+- function:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Specify the alternative function to be configured for the
-+		    specified pins. Functions are only valid for gpio pins.
-+		    Valid values are:
-+	adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char, atest_char0,
-+	atest_char1, atest_char2, atest_char3, atest_combodac, atest_gpsadc0,
-+	atest_gpsadc1, atest_tsens, atest_wlan0, atest_wlan1, backlight_en,
-+	bimc_dte0, bimc_dte1, blsp1_spi, blsp2_spi, blsp3_spi, blsp_i2c1,
-+	blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6, blsp_spi1,
-+	blsp_spi2, blsp_spi3, blsp_spi4, blsp_spi5, blsp_spi6, blsp_uart1,
-+	blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst, cam1_standby, cam_mclk,
-+	cci_async, cci_i2c, cci_timer0, cci_timer1, cci_timer2, cdc_pdm0,
-+	codec_mad, dbg_out, display_5v, dmic0_clk, dmic0_data, dsi_rst,
-+	ebi0_wrcdc, euro_us, ext_lpass, flash_strobe, gcc_gp1_clk_a,
-+	gcc_gp1_clk_b, gcc_gp2_clk_a, gcc_gp2_clk_b, gcc_gp3_clk_a,
-+	gcc_gp3_clk_b, gpio, gsm0_tx0, gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl,
-+	kpsns0, kpsns1, kpsns2, ldo_en, ldo_update, mag_int, mdp_vsync,
-+	modem_tsync, m_voc, nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2,
-+	pri_mi2s, pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a,
-+	pwr_crypto_enabled_b, pwr_modem_enabled_a, pwr_modem_enabled_b,
-+	pwr_nav_enabled_a, pwr_nav_enabled_b, qdss_cti_trig_in_a0,
-+	qdss_cti_trig_in_a1, qdss_cti_trig_in_b0, qdss_cti_trig_in_b1,
-+	qdss_cti_trig_out_a0, qdss_cti_trig_out_a1, qdss_cti_trig_out_b0,
-+	qdss_cti_trig_out_b1, qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a,
-+	qdss_tracectl_b, qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card,
-+	sd_write, sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1_clk, uim1_data,
-+	uim1_present, uim1_reset, uim2_clk, uim2_data, uim2_present, uim2_reset,
-+	uim3_clk, uim3_data, uim3_present, uim3_reset, uim_batt, wcss_bt,
-+	wcss_fm, wcss_wlan, wcss_wlan0, wcss_wlan1, wcss_wlan2, webcam1_rst,
-+
-+- bias-disable:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configued as no pull.
-+
-+- bias-pull-down:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configued as pull down.
-+
-+- bias-pull-up:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configued as pull up.
-+
-+- output-high:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins are configured in output mode, driven
-+		    high.
-+		    Not valid for sdc pins.
-+
-+- output-low:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins are configured in output mode, driven
-+		    low.
-+		    Not valid for sdc pins.
-+
-+- drive-strength:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: Selects the drive strength for the specified pins, in mA.
-+		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
-+
-+Example:
-+
-+	tlmm: pinctrl@1000000 {
-+		compatible = "qcom,msm8916-pinctrl";
-+		reg = <0x1000000 0x300000>;
-+		interrupts = <0 208 0>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		uart2: uart2-default {
-+			mux {
-+				pins = "gpio4", "gpio5";
-+				function = "blsp_uart2";
-+			};
-+
-+			tx {
-+				pins = "gpio4";
-+				drive-strength = <4>;
-+				bias-disable;
-+			};
-+
-+			rx {
-+				pins = "gpio5";
-+				drive-strength = <2>;
-+				bias-pull-up;
-+			};
-+		};
-+	};
--- 
-1.7.0.4
+On 27/01/15 22:42, Arnd Bergmann wrote:
+> On Tuesday 27 January 2015 23:36:36 Arnd Bergmann wrote:
+>> On Tuesday 27 January 2015 14:19:09 Guenter Roeck wrote:
+>>> On Tue, Jan 27, 2015 at 10:29:49PM +0100, Arnd Bergmann wrote:
+>>>> On Tuesday 27 January 2015 12:52:29 Guenter Roeck wrote:
+>>>>> Driver does this (today):
+>>>>>
+>>>>>          drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
+>>>>>
+>>>>> Isn't that the name to use ? Just wondering.
+>>>>
+>>>> Just because the driver uses it at the moment does not mean it's the name
+>>>> that the IP block uses.
+>>>>
+>>>> clk_get() has the unpleasant property of doing fuzzy matching
+>>>> on the name that is passed. It first tries to use the string
+>>>> as the name of the clock input of the device, but if that is
+>>>> not there, it falls back to looking for a global clk with a con_id.
+>>>>
+>>>> In DT, we only support the first kind, but if a driver currently
+>>>> uses the second, you get the wrong name.
+>>>>
+>>>> Looking at arch/mips/jz4740/clock.c now, this seems to be exactly
+>>>> what is going on here: there is no clkdev_add call to associate
+>>>> the device clocks, so it can only match a global clock entry. 
+>>>>
+>>> Me confused :-(.
+>>>
+>>> Does that mean the driver needs to be fixed, that the DT property
+>>> needs to change (to what ?), or both ?
+>>
+>> Both.
+>>
+>> The jz47xx clock driver should register a clkdev lookup table with
+>> proper clock input names for each clock that is referenced by a
+>> device, and then the drivers can use the right names.
+>>
+>> In a lot of cases, the best name for a clock is no name so you
+>> just use an anonymous clock like
+>>
+>>         clk = clk_get(dev, NULL);
+>>
+>> but this still requires a clock lookup table.
+> 
+> To illustrate why the current approach is wrong, think of a driver
+> that handles a device that can be used on two different SoCs.
+> 
+> The name used by the clock provider is SoC specific, so the driver
+> would need to know which SoC it's being used on in order to pass
+> the right clock signal name. clkdev is meant to solve this by providing
+> a lookup between the device/clock-input pair and the actual clock.
+> 
+> Apparently jz4740 does not share any devices with another SoC at
+> the moment, so this has not been a problem, but if jz4780 has
+> a slightly different clock tree, it's already broken.
+> 
+> 	Arnd
+> 
+
+There is on-going work to fix jz4740, add jz4780 and shake the entire clock tree as well.
+
+Patch 14 onwards in this series
+http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
+
+Instead of lumping things out in huge changesets, I intended to push out the minor patches that are disjoint.
+
+That was the purpose of sending these two patches.
+
+Current binding requires the clock-name to be "rtc". Hence the name at the moment.
+
+Regards,
+ZubairLK
