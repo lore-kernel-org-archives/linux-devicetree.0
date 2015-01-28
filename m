@@ -1,16 +1,12 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
-Date: Wed, 28 Jan 2015 15:22:55 +0100
-Message-ID: <41babf16a78d4d48855d80d61262e39a@BL2FFO11FD033.protection.gbl>
-References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
- <1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com>
- <CACRpkdZ1jfTUqfLKonJxar2Jn25+4wTF-D4XUXOszSsoJrA07w@mail.gmail.com>
- <1a749692196d406a8229d4891f3563f4@BN1BFFO11FD016.protection.gbl>
- <54C6D510.6090105@suse.de>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v5] can: Convert to runtime_pm
+Date: Wed, 28 Jan 2015 15:46:05 +0100
+Message-ID: <54C8F62D.6090909@pengutronix.de>
+References: <baf987c11c0242c2bf87b81f9396b09d@BN1BFFO11FD018.protection.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6258704590180122145=="
+Content-Type: multipart/mixed; boundary="===============3877519863950968440=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <54C6D510.6090105@suse.de>
+In-Reply-To: <baf987c11c0242c2bf87b81f9396b09d@BN1BFFO11FD018.protection.gbl>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,68 +16,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Michal Simek <michal.simek@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Beniamino Galvani <b.galvani@gmail.com>, "ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Alessandro Rubini <rubini@unipv.it>, Soren Brinkmann <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============6258704590180122145==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="g11hhdKa1kOVO1p0GTnEo7Gkr3KLNnS9k"
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============3877519863950968440==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="bJ1c6I79LNEDHDDmqjJAhXxnT89tQaGj7"
 
---g11hhdKa1kOVO1p0GTnEo7Gkr3KLNnS9k
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--bJ1c6I79LNEDHDDmqjJAhXxnT89tQaGj7
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 01/27/2015 01:00 AM, Andreas F=C3=A4rber wrote:
-> Am 12.01.2015 um 08:27 schrieb Michal Simek:
->> On 01/11/2015 10:38 PM, Linus Walleij wrote:
->>> On Fri, Jan 9, 2015 at 4:43 PM, Soren Brinkmann
->>> <soren.brinkmann@xilinx.com> wrote:
->>>
->>>> Add pinctrl descriptions to the zc702 and zc706 device trees.
->>>>
->>>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
->>>> Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
->>>
->>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>>
->>> Beautiful and in line with how I want things to look.
->>>
->>> Yours,
->>> Linus Walleij
->>>
->>
->> Applied to zynq/dt.
+On 01/12/2015 04:04 PM, Kedareswara rao Appana wrote:
+> Instead of enabling/disabling clocks at several locations in the driver=
+,
+> Use the runtime_pm framework. This consolidates the actions for runtime=
+ PM
+> In the appropriate callbacks and makes the driver more readable and man=
+tainable.
 >=20
-> Did you maybe forget to push?
->=20
-> https://github.com/Xilinx/linux-xlnx/commits/zynq/dt doesn't have it.
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> ---
+> Changes for v5:
+>  - Updated with the review comments.
+>    Updated the remove fuction to use runtime_pm.
+> Chnages for v4:
+>  - Updated with the review comments.
+> Changes for v3:
+>   - Converted the driver to use runtime_pm.
+> Changes for v2:
+>   - Removed the struct platform_device* from suspend/resume
+>     as suggest by Lothar.
 
-Ah sorry - I have pushed it now.
+Any plans to submit a v6?
 
-Thanks,
-Michal
+Marc
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-
---g11hhdKa1kOVO1p0GTnEo7Gkr3KLNnS9k
+--bJ1c6I79LNEDHDDmqjJAhXxnT89tQaGj7
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+Version: GnuPG v2
 
-iEYEARECAAYFAlTI8L8ACgkQykllyylKDCF0DQCdHsx8Riz6BWAsBfKkzbn+Qats
-QuIAoJrLL3ZvczibjyujdweDn64rBb7w
-=0WFN
+iQIcBAEBCgAGBQJUyPY0AAoJECte4hHFiupUC8kP/A1gg65BeJRx9hXfakGQm/Ks
+M1KJpy4sRorbSLgdF1NI3EvaOJMptCnbWExPi+6yo7QvmJaiDAVxM5AiWoYvpyxt
+Ly0BOy3koRudsYYcuQ+ULsiI7KakJ73Qzr9KSiii2SNHxyOdOue7G1JJ4Riazw26
+fFZrVeSUgWSfABp23aaM1mUTi0xe1VUXWvWKqGPFIv+WVd5nYPb3NFpt6GjS6Bhj
+zqki9Htr67w0IHokmzctFd2gkSSWdrrLWQqrMKD8NqnyD+yNitacEEY3jcEpRRBm
+q7DnCiXq7lCvoV131moc2YJf/tab6ySKVMf3rZ6AU35DAysp9K+K1kAsVIofJzxt
+3uOZoatkcNVHmXjkO2sCOSYTYeAxB4vYU8SQiG15NdnRxNUkvA1+YvPqtI0obwJz
+E6tDS9zmGq+Qb2JmB/wELBUuRzyYaq8j4af0LMeoQLur89ZyxokDwpNIuC+yhHDG
+hzVzAzIK1xjfB7BsvAow+Y4nlh7R+4eGvL01w8mdzbtfJTBzth+ai8ZpScsXsIRu
+7+aE+Yun8s2xVYK5BAgjairAI3/1Nh2MydtUC6BpLsZGDxZXA23W1Lk4stcA7bz3
+cqkipWobTWdLx7WH4WZX4vybHv3amZ4220C7HI6BPSxdFubEnI3/hh1kP8Y7oFjM
+VsAMFnzXYmbqs8WQIEzk
+=GIE6
 -----END PGP SIGNATURE-----
 
---g11hhdKa1kOVO1p0GTnEo7Gkr3KLNnS9k--
+--bJ1c6I79LNEDHDDmqjJAhXxnT89tQaGj7--
 
 
---===============6258704590180122145==
+--===============3877519863950968440==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -92,4 +100,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============6258704590180122145==--
+--===============3877519863950968440==--
