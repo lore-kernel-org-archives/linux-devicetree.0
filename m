@@ -1,48 +1,46 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH v2 1/3] pinctrl: qcom: increase variable size for register offsets
-Date: Wed, 28 Jan 2015 12:36:04 +0200
-Message-ID: <1422441366-12575-2-git-send-email-svarbanov@mm-sol.com>
-References: <1422441366-12575-1-git-send-email-svarbanov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1422441366-12575-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Joonwoo Park <joonwoop@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v7 0/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Wed, 28 Jan 2015 10:57:11 -0800
+Message-ID: <20150128185711.GA6730@roeck-us.net>
+References: <1420550375-22867-1-git-send-email-ezequiel.garcia@imgtec.com>
+ <54BE383F.6050209@imgtec.com>
+ <54BE5F50.9050900@roeck-us.net>
+ <54C92CDA.8030500@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54C92CDA.8030500-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Joonwoo Park <joonwoop@codeaurora.org>
+On Wed, Jan 28, 2015 at 03:39:22PM -0300, Ezequiel Garcia wrote:
+> On 01/20/2015 10:59 AM, Guenter Roeck wrote:
+> > On 01/20/2015 03:13 AM, Ezequiel Garcia wrote:
+> >> Hi Wim,
+> >>
+> >> On 01/06/2015 10:19 AM, Ezequiel Garcia wrote:
+> >>> Here's the seventh round for IMG PDC Watchdog driver.
+> >>> The series is based on v3.19-rc3.
+> >>>
+> >>
+> >> Guenter has reviewed both patches. Do you think you can review this
+> >> soonishly and let me know if you have more comments?
+> >>
+> > 
+> > I'll send a pull request to Wim either this or next week.
+> > 
+> 
+> Guenter,
+> 
+> I hate to be so spammy here. Do you still plan to send a pull request?
+> 
+Yes. Sorry for the delay.
 
-On newer TLMM hardware blocks the registers are spread and
-we need an offsets upper than 16 bits to address them. Increase
-the register offset variables to 32 bits size.
-
-Signed-off-by: Joonwoo Park <joonwoop@codeaurora.org>
-Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
- drivers/pinctrl/qcom/pinctrl-msm.h |   10 +++++-----
- 1 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index b952c4b..54fdd04 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -70,11 +70,11 @@ struct msm_pingroup {
- 	unsigned *funcs;
- 	unsigned nfuncs;
- 
--	s16 ctl_reg;
--	s16 io_reg;
--	s16 intr_cfg_reg;
--	s16 intr_status_reg;
--	s16 intr_target_reg;
-+	u32 ctl_reg;
-+	u32 io_reg;
-+	u32 intr_cfg_reg;
-+	u32 intr_status_reg;
-+	u32 intr_target_reg;
- 
- 	unsigned mux_bit:5;
- 
--- 
-1.7.0.4
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
