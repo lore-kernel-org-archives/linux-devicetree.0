@@ -1,16 +1,16 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 4/4] clk: dt: st: Introduce clock domain documentation
-Date: Wed, 28 Jan 2015 07:58:35 +0000
-Message-ID: <20150128075835.GF4567@x1>
-References: <1422270840-3039-1-git-send-email-lee.jones@linaro.org>
- <1422270840-3039-5-git-send-email-lee.jones@linaro.org>
- <20150128011902.22722.85007@quantum>
+From: Lyra Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v9 2/2] tty/serial: Add Spreadtrum sc9836-uart driver
+ support
+Date: Wed, 28 Jan 2015 16:46:33 +0800
+Message-ID: <CAAfSe-v4FGpHL3N3utiDwcoc7qus1XZZszuXBqB6LeE1frAfeA@mail.gmail.com>
+References: <1422413261-17184-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1422413261-17184-3-git-send-email-chunyan.zhang@spreadtrum.com>
+ <20150128061250.GQ2555@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20150128011902.22722.85007@quantum>
+In-Reply-To: <20150128061250.GQ2555@sapphire.tkos.co.il>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,65 +20,97 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Mark Rutland <mark.rutland@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>, Pawel Moll <pawel.moll@arm.com>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "antonynpavlov@gmail.com" <antonynpavlov@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Orson Zhai <orsonzhai@gmail.com>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "ijc+devicetree@hellion.org.uk" <ijc+devicetr>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyNyBKYW4gMjAxNSwgTWlrZSBUdXJxdWV0dGUgd3JvdGU6Cgo+IFF1b3RpbmcgTGVl
-IEpvbmVzICgyMDE1LTAxLTI2IDAzOjE0OjAwKQo+ID4gU2lnbmVkLW9mZi1ieTogTGVlIEpvbmVz
-IDxsZWUuam9uZXNAbGluYXJvLm9yZz4KPiA+IC0tLQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0IHwgMzQgKysrKysrKysrKysrKysrKysrKysr
-Kwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspCj4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9zdC9zdCxjbGst
-ZG9tYWluLnR4dAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNsay1kb21haW4udHh0Cj4gPiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uNzMwOTkzNwo+ID4gLS0tIC9kZXYvbnVsbAo+
-ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N0L3N0LGNs
-ay1kb21haW4udHh0Cj4gPiBAQCAtMCwwICsxLDM0IEBACj4gPiArU1RNaWNyb2VsZWN0cm9uaWNz
-IENsb2NrIERvbWFpbgo+ID4gKwo+ID4gK1NUIGhhcmR3YXJlIGhhdmUgYSBidW5jaCBvZiBjbG9j
-a3Mgd2hpY2ggbXVzdCBub3QgYmUgdHVybmVkIG9mZi4KPiA+ICtJZiBkcml2ZXJzIGEpIGZhaWwg
-dG8gb2J0YWluIGEgcmVmZXJlbmNlIHRvIGFueSBvZiB0aGVzZSBvciBiKSBnaXZlCj4gPiArdXAg
-YSBwcmV2aW91c2x5IG9idGFpbmVkIHJlZmVyZW5jZSBkdXJpbmcgc3VzcGVuZCwgdGhlIGNvbW1v
-biBjbGsKPiA+ICtmcmFtZXdvcmsgd2lsbCBhdHRlbXB0IHRvIHR1cm4gdGhlbSBvZmYgYW5kIHRo
-ZSBoYXJkd2FyZSB3aWxsCj4gPiArc3Vic2VxdWVudGx5IGRpZS4gIFRoZSBvbmx5IHdheSB0byBy
-ZWNvdmVyIGZyb20gdGhpcyBmYWlsdXJlIGlzIHRvCj4gPiArcmVzdGFydC4KPiA+ICsKPiA+ICtU
-byBhdm9pZCBlaXRoZXIgb2YgdGhlc2UgdHdvIHNjZW5hcmlvcyBmcm9tIGNhdGFzdHJvcGhpY2Fs
-bHkKPiA+ICtkaXNhYmxpbmcgdGhlIHJ1bm5pbmcgc3lzdGVtIHdlIGhhdmUgaW1wbGVtZW50ZWQg
-YSBjbG9jayBkb21haW4KPiA+ICt3aGVyZSBjbG9ja3MgYXJlIGNvbnN1bWVkIGFuZCByZWZlcmVu
-Y2VzIGFyZSB0YWtlbiwgdGh1cyBwcmV2ZW50aW5nCj4gPiArdGhlbSBmcm9tIGJlaW5nIHNodXQg
-ZG93biBieSB0aGUgZnJhbWV3b3JrLgo+ID4gKwo+ID4gK1dlIHVzZSB0aGUgZ2VuZXJpYyBjbG9j
-ayBiaW5kaW5ncyBmb3VuZCBpbjoKPiA+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0
-aWVzOgo+ID4gKy0gY29tcGF0aWJsZSA6IE11c3QgYmUgInN0LGNsay1kb21haW4iCj4gCj4gU2Vl
-bXMgbGlrZSBhIHVzZWZ1bCBmZWF0dXJlIGZvciBhbnkgY2xvY2sgcHJvdmlkZXIsIG5vdCBqdXN0
-IFNUJ3MuIEhhdmUKPiB5b3UgdGhvdWdodCBhYm91dCBtYWtpbmcgdGhpcyBzb2x1dGlvbiBnZW5l
-cmljIGZvciBEVC1iYXNlZCBjbG9jawo+IHByb3ZpZGVycz8KPiAKPiBXZSBjb3VsZCBhbWVuZCB0
-aGUgY29tbW9uIGNsb2NrIGJpbmRpbmcgdG8gaW5jbHVkZSBhIHNwZWNpYWwgImFsd2F5cyBvbiIK
-PiBjbG9jayBncm91cCB0aGF0IGlzIGF1dG9tYWdpY2FsbHkgcHJlcGFyZWQgYW5kIGVuYWJsZWQg
-d2hlbiB0aGUgY2xvY2sKPiBwcm92aWRlci9kcml2ZXIgaXMgcmVnaXN0ZXJlZCwgdXNpbmcgYSBj
-b21tb24gZnVuY3Rpb24uCgpPTUcsIEknbSBhY3R1YWxseSBnb2luZyB0byBzdHJhbmdsZSB5b3Uh
-CgpUaGlzIGlzIHdoYXQgSSd2ZSBiZWVuIHByb3Bvc2luZyB0byB5b3UgKHByaXZhdGVseSkgZm9y
-IHdlZWtzLgoKRG9lcyB0aGlzIHJpbmcgYW55IGJlbGxzPwoKICAiSnVzdCBGWUksIEkgYW0gbm90
-IGdvaW5nIHRvIGFkZCBhbnkgbWV0aG9kIHRvIHRoZSBrZXJuZWwgdGhhdAogIHBlcm1hbmVudGx5
-IGVuYWJsZXMgYSBjbG9jayB2aWEgc29tZSBuZXcgYXBpLiBBdCB0aGUgd29yc3QgY2FzZSB5b3Vy
-CiAgY2xvY2sgZHJpdmVyIGNhbiBzaW1wbHkgY2FsbCBjbGtfcHJlcGFyZV9lbmFibGUgaW4gaXRz
-IHByb2JlCiAgZnVuY3Rpb24gKHRoZXJlIGFyZSBzb21lIGV4YW1wbGVzIG9mIHRoaXMpLiIKCkkg
-d2lsbCBiZSBtb3JlIHRoYW4gaGFwcHkgdG8gbWFrZSB0aGlzIGEgZ2VuZXJpYyBkcml2ZXIsIGlm
-IHRoYXRzIHdoYXQKeW91IHdhbnQgKG5vdykuIDspCgo+ID4gK0V4YW1wbGU6Cj4gPiArCj4gPiAr
-Y2xrLWRvbWFpbiB7Cj4gPiArICAgICAgIGNvbXBhdGlibGUgPSAic3QsY2xrLWRvbWFpbiI7Cj4g
-PiArICAgICAgIGNsb2NrcyA9IDwmY2xrX3NfYzBfZmxleGdlbiBDTEtfRVhUMkZfQTk+LAo+ID4g
-KyAgICAgICAgICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX0NPTVBPX0RWUD4sCj4gPiAr
-ICAgICAgICAgICAgICAgIDwmY2xrX3NfYzBfZmxleGdlbiBDTEtfTU1DXzE+LAo+ID4gKyAgICAg
-ICAgICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX0lDTl9TQkM+LAo+ID4gKyAgICAgICAg
-ICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX0lDTl9MTUk+LAo+ID4gKyAgICAgICAgICAg
-ICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX0lDTl9DUFU+LAo+ID4gKyAgICAgICAgICAgICAg
-ICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX1RYX0lDTl9ETVU+LAo+ID4gKyAgICAgICAgICAgICAg
-ICA8JmNsa19zX2EwX2ZsZXhnZW4gQ0xLX0lDX0xNSTA+LAo+ID4gKyAgICAgICAgICAgICAgICA8
-JmNsa19tX2E5PjsKPiA+ICt9OwoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9u
-aWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJl
-IGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+Hi, Baruch
+
+I'm sorry that I didn't receive your previous email.
+and my explanations are below.
+
+On Wed, Jan 28, 2015 at 2:12 PM, Baruch Siach <baruch@tkos.co.il> wrote:
+> Hi Chunyan Zhang,
+>
+> On Wed, Jan 28, 2015 at 10:47:41AM +0800, Chunyan Zhang wrote:
+> [...]
+>> +static inline void sprd_rx(struct uart_port *port)
+>> +{
+>> +     struct tty_port *tty = &port->state->port;
+>> +     unsigned int ch, flag, lsr, max_count = SPRD_TIMEOUT;
+>> +
+>> +     while ((serial_in(port, SPRD_STS1) & 0x00ff) && max_count--) {
+>> +             lsr = serial_in(port, SPRD_LSR);
+>> +             ch = serial_in(port, SPRD_RXD);
+>> +             flag = TTY_NORMAL;
+>> +             port->icount.rx++;
+>> +
+>> +             if (lsr & (SPRD_LSR_BI | SPRD_LSR_PE |
+>> +                     SPRD_LSR_FE | SPRD_LSR_OE))
+>> +                     if (handle_lsr_errors(port, &lsr, &flag))
+>> +                             continue;
+>> +             if (uart_handle_sysrq_char(port, ch))
+>> +                     continue;
+>
+> My comment[1] on a previous version of this patch still stands.
+> uart_handle_sysrq_char is a NOP when SUPPORT_SYSRQ is not defined.
+>
+
+yes, there are two definitions in serial_core.h, and it returns 0 when
+SUPPORT_SYSRQ is not defined.
+so, I think my code behavior does not hurt, right?
+
+>> +
+>> +             uart_insert_char(port, lsr, SPRD_LSR_OE, ch, flag);
+>> +     }
+>> +
+>> +     tty_flip_buffer_push(tty);
+>> +}
+>
+> [...]
+>
+>> +static void sprd_console_write(struct console *co, const char *s,
+>> +                                   unsigned int count)
+>> +{
+>> +     struct uart_port *port = &sprd_port[co->index]->port;
+>> +     int locked = 1;
+>> +     unsigned long flags;
+>> +
+>> +     if (port->sysrq)
+>> +             locked = 0;
+>
+> The sysrq field of struct uart_port is only defined when
+> CONFIG_SERIAL_CORE_CONSOLE or SUPPORT_SYSRQ are defined. You should #ifdef
+> this part accordingly to avoid build breakage.
+>
+
+we have this part to been included under #ifdef
+CONFIG_SERIAL_SPRD_CONSOLE which is selected with SERIAL_CORE_CONSOLE.
+
+Thank you very much!
+
+Chunyan
+
+>> +     else if (oops_in_progress)
+>> +             locked = spin_trylock_irqsave(&port->lock, flags);
+>> +     else
+>> +             spin_lock_irqsave(&port->lock, flags);
+>> +
+>> +     uart_console_write(port, s, count, sprd_console_putchar);
+>> +
+>> +     /* wait for transmitter to become empty */
+>> +     wait_for_xmitr(port);
+>> +
+>> +     if (locked)
+>> +             spin_unlock_irqrestore(&port->lock, flags);
+>> +}
+>
+> [1]
+>         http://article.gmane.org/gmane.linux.drivers.devicetree/106483
+>
+> baruch
+>
+> --
+>      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+> =}------------------------------------------------ooO--U--Ooo------------{=
+>    - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
