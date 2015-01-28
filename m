@@ -1,43 +1,49 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 0/2] watchdog: ImgTec PDC Watchdog Timer Driver
-Date: Wed, 28 Jan 2015 15:39:22 -0300
-Message-ID: <54C92CDA.8030500@imgtec.com>
-References: <1420550375-22867-1-git-send-email-ezequiel.garcia@imgtec.com> <54BE383F.6050209@imgtec.com> <54BE5F50.9050900@roeck-us.net>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH v4 2/2] ARM: digicolor: select syscon and timer
+Date: Thu, 29 Jan 2015 00:04:11 +0200
+Message-ID: <2d0359c67f731aab3befa4b3f059cc9fdbcf2ff6.1422481097.git.baruch@tkos.co.il>
+References: <8b74c50aebadc781a5aa8061f7639c9164433e84.1422481097.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54BE5F50.9050900-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8b74c50aebadc781a5aa8061f7639c9164433e84.1422481097.git.baruch@tkos.co.il>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2015 10:59 AM, Guenter Roeck wrote:
-> On 01/20/2015 03:13 AM, Ezequiel Garcia wrote:
->> Hi Wim,
->>
->> On 01/06/2015 10:19 AM, Ezequiel Garcia wrote:
->>> Here's the seventh round for IMG PDC Watchdog driver.
->>> The series is based on v3.19-rc3.
->>>
->>
->> Guenter has reviewed both patches. Do you think you can review this
->> soonishly and let me know if you have more comments?
->>
-> 
-> I'll send a pull request to Wim either this or next week.
-> 
+The digicolor interrupt controller driver now needs syscon.
 
-Guenter,
+Also, as per clocksource maintainer request, we now have a separate config
+symbol, CONFIG_DIGICOLOR_TIMER, for the digicolor timer.
 
-I hate to be so spammy here. Do you still plan to send a pull request?
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
+v4:
+   New patch in this series
 
-Next week is -rc7, so I'm wondering if there's any way we can be on time
-for v3.20.
+ arch/arm/mach-digicolor/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/mach-digicolor/Kconfig b/arch/arm/mach-digicolor/Kconfig
+index 5a0669a2738e..4f36d8d2bc57 100644
+--- a/arch/arm/mach-digicolor/Kconfig
++++ b/arch/arm/mach-digicolor/Kconfig
+@@ -2,4 +2,6 @@ config ARCH_DIGICOLOR
+ 	bool "Conexant Digicolor SoC Support"
+ 	depends on ARCH_MULTI_V7
+ 	select CLKSRC_MMIO
++	select DIGICOLOR_TIMER
+ 	select GENERIC_IRQ_CHIP
++	select MFD_SYSCON
 -- 
-Ezequiel
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
