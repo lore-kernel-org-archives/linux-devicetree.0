@@ -1,57 +1,54 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v5 0/2]  Initial support for voltage ADC
-Date: Wed, 28 Jan 2015 10:25:40 +0200
-Message-ID: <1422433540.5754.6.camel@mm-sol.com>
-References: <1421748922-8933-1-git-send-email-iivanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421748922-8933-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+From: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 2/5] iio: sensorhub: Add sensorhub bindings
+Date: Wed, 28 Jan 2015 15:05:51 +0100
+Message-ID: <1422453954-27317-3-git-send-email-k.wrona@samsung.com>
+References: <1422453954-27317-1-git-send-email-k.wrona@samsung.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1422453954-27317-1-git-send-email-k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Karol Wrona <wrona.vy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add sensorhub bindings for sensorhub on Galaxy Gear 2.
 
-On Tue, 2015-01-20 at 12:15 +0200, Ivan T. Ivanov wrote:
-> This type of volatage ADC could be found in Qualcomm's SPMI PMIC's.
-> I'm sorry that it took me so long to send the updated version.
-> 
-> Changes since v4.
-> - Addressed review comments from Hartmut Knaack and Jonathan Cameron:
->   Fixed spelling errors in DT description files.
->   Removed unused structure member.
->   Access to hardware during conversion is protected with mutex.
->   Measuring reference points moved at driver probe time.
-> 
-> Patches are based on current iio/testing branch.
+Signed-off-by: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/iio/sensorhub.txt          |   25 ++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/sensorhub.txt
 
-Hi, 
-
-Are there any comments on these patches?
-
-Regards,
-Ivan
-
-> 
-> v4 could be found here: https://lkml.org/lkml/2014/11/3/425
-> 
-> Stanimir Varbanov (2):
->   DT: iio: vadc: document dt binding
->   iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-> 
->  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  129 +++
->  drivers/iio/adc/Kconfig                            |   14 +
->  drivers/iio/adc/Makefile                           |    1 +
->  drivers/iio/adc/qcom-spmi-vadc.c                   | 1016 ++++++++++++++++++++
->  include/dt-bindings/iio/qcom,spmi-vadc.h           |  119 +++
->  5 files changed, 1279 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-vadc.h
-> 
-> --
-> 1.9.1
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/iio/sensorhub.txt b/Documentation/devicetree/bindings/iio/sensorhub.txt
+new file mode 100644
+index 0000000..8d57571
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/sensorhub.txt
+@@ -0,0 +1,25 @@
++Samsung Sensorhub driver
++
++Sensorhub is a MCU which manages several sensors and also plays the role
++of a virtual sensor device.
++
++Required properties:
++- compatible: "samsung,sensorhub-rinato" or "samsung,sensorhub-thermostat"
++- spi-max-frequency: max SPI clock frequency
++- interrupt-parent: interrupt parent
++- interrupts: communication interrupt
++- ap-mcu-gpios: [out] ap to sensorhub line - used during communication
++- mcu-ap-gpios: [in] sensorhub to ap - used during communication
++- mcu-reset-gpios: [out] sensorhub reset
++
++Example:
++
++	shub_spi: shub {
++		compatible = "samsung,sensorhub-rinato";
++		spi-max-frequency = <5000000>;
++		interrupt-parent = <&gpx0>;
++		interrupts = <2 0>;
++		ap-mcu-gpios = <&gpx0 0 0>;
++		mcu-ap-gpios = <&gpx0 4 0>;
++		mcu-reset-gpios = <&gpx0 5 0>;
++	};
+-- 
+1.7.9.5
