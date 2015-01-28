@@ -1,77 +1,61 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH_V3 1/3] dt: usb: jz4740: Add DT binding document for OHCI
-Date: Wed, 28 Jan 2015 13:26:03 +0000
-Message-ID: <1422451565-29096-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V3 3/3] usb: ohci: jz4740: prepare the clock before enabling it
+Date: Wed, 28 Jan 2015 13:26:05 +0000
+Message-ID: <1422451565-29096-4-git-send-email-Zubair.Kakakhel@imgtec.com>
 References: <1422451565-29096-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422451565-29096-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1422451565-29096-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stern@rowland.harvard.edu
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+From: Paul Burton <paul.burton@imgtec.com>
 
-Add the binding documentation for the JZ4740 OHCI controller.
+The clock must have been prepared before enabling it.
 
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-
----
-The jz4740 is platform only at the moment.
-
-But DT support is being added
-
-See http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
-
-V3 Changes: named binding jz4740 instead of confusing it with jz47xx.
-The driver name is jz4740. And will not be renamed
-
-V2 Changes: Removed interrupt parent binding as that can be inherited.
-Forgot a binding for clock-names
----
- .../bindings/usb/ingenic,jz4740-ohci.txt           | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
-new file mode 100644
-index 0000000..9f05cca
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
-@@ -0,0 +1,26 @@
-+Ingenic JZ4740 SoC OHCI controller binding
-+
-+The Ingenic JZ4740 SoC includes an OHCI compliant USB host controller
-+interface for use with USB 1.1 devices.
-+
-+Required properties:
-+ - compatible: Should be "ingenic,jz4740-ohci"
-+ - reg: Should contain the address & size of the OHCI controller registers.
-+ - interrupts: Should specify the interrupt line number
-+ - clocks: Should contain a single clock specifier for the SoC UHC clock.
-+ - clock-names: Must be "uhc"
-+
-+Example for jz4740:
-+
-+/ {
-+	ohci: jz4780-ohci@0x134a0000 {
-+		compatible = "ingenic,jz4740-ohci";
-+		reg = <0x134a0000 0x10000>;
-+
-+		interrupts = <5>;
-+
-+		clocks = <&cgu JZ4740_CLK_UHC>;
-+		clock-names = "uhc";
-+	};
-+};
-+
--- 
-1.9.1
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+V2 changes. Add disable_unprepare as well
+---
+ drivers/usb/host/ohci-jz4740.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/host/ohci-jz4740.c b/drivers/usb/host/ohci-jz4740.c
+index bb69733..129f6b9 100644
+--- a/drivers/usb/host/ohci-jz4740.c
++++ b/drivers/usb/host/ohci-jz4740.c
+@@ -189,7 +189,7 @@ static int jz4740_ohci_probe(struct platform_device *pdev)
+ 
+ 
+ 	clk_set_rate(jz4740_ohci->clk, 48000000);
+-	clk_enable(jz4740_ohci->clk);
++	clk_prepare_enable(jz4740_ohci->clk);
+ 	if (jz4740_ohci->vbus)
+ 		ohci_jz4740_set_vbus_power(jz4740_ohci, true);
+ 
+@@ -209,7 +209,7 @@ static int jz4740_ohci_probe(struct platform_device *pdev)
+ err_disable:
+ 	if (jz4740_ohci->vbus)
+ 		regulator_disable(jz4740_ohci->vbus);
+-	clk_disable(jz4740_ohci->clk);
++	clk_disable_unprepare(jz4740_ohci->clk);
+ 
+ err_free:
+ 	usb_put_hcd(hcd);
+@@ -227,7 +227,7 @@ static int jz4740_ohci_remove(struct platform_device *pdev)
+ 	if (jz4740_ohci->vbus)
+ 		regulator_disable(jz4740_ohci->vbus);
+ 
+-	clk_disable(jz4740_ohci->clk);
++	clk_disable_unprepare(jz4740_ohci->clk);
+ 
+ 	usb_put_hcd(hcd);
+ 
+-- 
+1.9.1
