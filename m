@@ -1,114 +1,67 @@
-From: "christophe.ricard" <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v2 00/14] Secure Element support for NCI based NFC controller,
- st21nfcb integration and EVT_TRANSACTION
-Date: Wed, 28 Jan 2015 22:11:35 +0100
-Message-ID: <54C95087.9090702@gmail.com>
-References: <1422476251-25972-1-git-send-email-christophe-h.ricard@st.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v3 03/10] drm/panel: add support for Samsung LTN140AT29 panel
+Date: Wed, 28 Jan 2015 11:51:01 +0100
+Message-ID: <1422442278-10405-4-git-send-email-tomeu.vizoso@collabora.com>
+References: <1422442278-10405-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422476251-25972-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1422442278-10405-1-git-send-email-tomeu.vizoso@collabora.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrew Bresticker <abrestic@chromium.org>, Simon Glass <sjg@chromium.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Dylan Reid <dgreid@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
-
-Please ignore this serie. It does not build.
-
-Sorry for that.
-Best Regards
-Christophe
-On 28/01/2015 21:17, Christophe Ricard wrote:
-> Hi Samuel,
->
-> This is a pre-send with an update including your comments on patch #20.
-> Patch #27 is not yet modified. I hope to send something for review tonight.
->
-> "
-> I have to introduce dynnamic conn_id management has described in the NCI
-> specification. Only RF static conn_id was supported so far. I have tried to
-> do a minimun changeset in order to bring all the necessary NCI functions in
-> order to operate with a secure element with ST21NFCB NFC controller. Besides the
-> standard NCI commands, the HCI commands are sent following a proprietary
-> implementation.
->
-> Miscellaneous
-> -------------
-> I am also routing the HCI event TRANSACTION up to user space. It may help to understand
-> the necessity to reference every pipe with a tuple {gate, host}. This for example allows
-> to keep the host information generating this particular event.
->
-> Open Questions:
-> ---------------
-> Both integration may have little gap in their card emulation behavior.
-> For example:
-> - ST21NFCA will have card emulation active as soon as we activate a secure element.
-> - ST21NFCB will have card emulation active according to the selected polling mode.
-> When do you expect to have card emulation to be active ?
->
-> When an application is running, it might be necessary to signals to the under layers
-> that it has finished to operate with a particular secure element. The goal here is to release
-> a secure element without deactivating it. For example to allow automatic sleep mode.
-> With my current implementation,
-> - With ST21NFCB, enable_se/disable_se may fit this request as both secure element are kept activated.
-> - With ST21NFCA, enable_se/disable_se does not fit this requirement as i am completely deactivating
-> the secure element.
-> I am not sure if the SE activation should not be done in the discovery_se without any deactivation
-> until the device remove function(?).
-> "
->
-> Any feedback are welcome.
->
-> Best Regards
-> Christophe
->
-> Christophe Ricard (14):
->    NFC: nci: Add dynamic conn_id NCI concept.
->    NFC: nci: Make nci_request available for nfc driver
->    NFC: nci: Add NCI NFCEE constant
->    NFC: nci: Add nci_nfcee_discover handler command/response/notification
->    NFC: nci: Add nci_nfcee_mode_set handler command/response
->    NFC: nci: Add nci_core_conn_create handler command/response
->    NFC: nci: Add nci_core_conn_close handler command/response
->    NFC: st21nfcb: Add HCI protocol over NCI protocol support
->    NFC: st21nfcb: Adding support for secure element
->    NFC: Forward NFC_EVT_TRANSACTION up to user space
->    NFC: nci: Add support RF_NFCEE_ACTION_NTF
->    NFC: nci: Change NCI state machine to LISTEN_ACTIVE and ignore
->      parameters in rf_intf_activated_ntf
->    NFC: st21nfcb: Add support for HCI event transaction
->    NFC: st21nfca: Add support for HCI event transaction
->
->   drivers/nfc/st21nfca/st21nfca_se.c       |  21 +
->   drivers/nfc/st21nfcb/Makefile            |   2 +-
->   drivers/nfc/st21nfcb/st21nfcb.c          |   8 +-
->   drivers/nfc/st21nfcb/st21nfcb.h          |   2 +
->   drivers/nfc/st21nfcb/st21nfcb_hci_core.c | 823 +++++++++++++++++++++++++++++++
->   drivers/nfc/st21nfcb/st21nfcb_hci_core.h | 134 +++++
->   drivers/nfc/st21nfcb/st21nfcb_se.c       | 631 ++++++++++++++++++++++++
->   drivers/nfc/st21nfcb/st21nfcb_se.h       |  59 +++
->   include/net/nfc/nci.h                    |  95 ++++
->   include/net/nfc/nci_core.h               |  41 +-
->   include/net/nfc/nfc.h                    |  27 +
->   include/uapi/linux/nfc.h                 |   1 +
->   net/nfc/core.c                           |  21 +
->   net/nfc/nci/core.c                       | 121 ++++-
->   net/nfc/nci/data.c                       |  72 ++-
->   net/nfc/nci/ntf.c                        |  93 +++-
->   net/nfc/nci/rsp.c                        | 100 +++-
->   net/nfc/netlink.c                        |  47 ++
->   net/nfc/nfc.h                            |   2 +
->   19 files changed, 2255 insertions(+), 45 deletions(-)
->   create mode 100644 drivers/nfc/st21nfcb/st21nfcb_hci_core.c
->   create mode 100644 drivers/nfc/st21nfcb/st21nfcb_hci_core.h
->   create mode 100644 drivers/nfc/st21nfcb/st21nfcb_se.c
->   create mode 100644 drivers/nfc/st21nfcb/st21nfcb_se.h
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogU3TDqXBoYW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1bS5vcmc+CgpUaGlzIHBh
+bmVsIGlzIHVzZWQgYnkgdGhlIE55YW4gQmxhemUgYm9hcmQgYW5kIHN1cHBvcnRlZCBieSB0aGUg
+c2ltcGxlLXBhbmVsCmRyaXZlci4KClNpZ25lZC1vZmYtYnk6IFN0w6lwaGFuZSBNYXJjaGVzaW4g
+PG1hcmNoZXVAY2hyb21pdW0ub3JnPgpbdG9tZXUudml6b3NvQGNvbGxhYm9yYS5jb206IGFkZCBk
+ZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50XQpTaWduZWQtb2ZmLWJ5OiBUb21ldSBWaXpvc28g
+PHRvbWV1LnZpem9zb0Bjb2xsYWJvcmEuY29tPgotLS0KIC4uLi9iaW5kaW5ncy9wYW5lbC9zYW1z
+dW5nLGx0bjE0MGF0MjktMzAxLnR4dCAgICAgIHwgIDcgKysrKysrCiBkcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKysrKysr
+KysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9zYW1zdW5nLGx0bjE0
+MGF0MjktMzAxLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9wYW5lbC9zYW1zdW5nLGx0bjE0MGF0MjktMzAxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9zYW1zdW5nLGx0bjE0MGF0MjktMzAxLnR4dApuZXcgZmls
+ZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5lN2Y5NjlkCi0tLSAvZGV2L251bGwKKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL3NhbXN1bmcsbHRuMTQwYXQy
+OS0zMDEudHh0CkBAIC0wLDAgKzEsNyBAQAorU2Ftc3VuZyBFbGVjdHJvbmljcyAxNCIgV1hHQSAo
+MTM2Nng3NjgpIFRGVCBMQ0QgcGFuZWwKKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0
+aWJsZTogc2hvdWxkIGJlICJzYW1zdW5nLGx0bjE0MGF0MjktMzAxIgorCitUaGlzIGJpbmRpbmcg
+aXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3Bl
+Y2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IDM5ODA2YzMuLjJkYTIyODUgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTc3OSw2ICs3NzksMjkgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBwYW5lbF9kZXNjIHNhbXN1bmdfbHRuMTAxbnQwNSA9IHsKIAl9LAogfTsKIAorc3Rh
+dGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIHNhbXN1bmdfbHRuMTQwYXQyOV8zMDFf
+bW9kZSA9IHsKKwkuY2xvY2sgPSA3NjMwMCwKKwkuaGRpc3BsYXkgPSAxMzY2LAorCS5oc3luY19z
+dGFydCA9IDEzNjYgKyA2NCwKKwkuaHN5bmNfZW5kID0gMTM2NiArIDY0ICsgNDgsCisJLmh0b3Rh
+bCA9IDEzNjYgKyA2NCArIDQ4ICsgMTI4LAorCS52ZGlzcGxheSA9IDc2OCwKKwkudnN5bmNfc3Rh
+cnQgPSA3NjggKyAyLAorCS52c3luY19lbmQgPSA3NjggKyAyICsgNSwKKwkudnRvdGFsID0gNzY4
+ICsgMiArIDUgKyAxNywKKwkudnJlZnJlc2ggPSA2MCwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1
+Y3QgcGFuZWxfZGVzYyBzYW1zdW5nX2x0bjE0MGF0MjlfMzAxID0geworCS5tb2RlcyA9ICZzYW1z
+dW5nX2x0bjE0MGF0MjlfMzAxX21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJLmJwYyA9IDYsCisJ
+LnNpemUgPSB7CisJCS53aWR0aCA9IDMyMCwKKwkJLmhlaWdodCA9IDE4NywKKwl9LAorfTsKKwog
+c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsK
+IAl7CiAJCS5jb21wYXRpYmxlID0gImF1byxiMTAxYXcwMyIsCkBAIC04NDEsNiArODY0LDkgQEAg
+c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsK
+IAkJLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxsdG4xMDFudDA1IiwKIAkJLmRhdGEgPSAmc2Ftc3Vu
+Z19sdG4xMDFudDA1LAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxsdG4xNDBhdDI5
+LTMwMSIsCisJCS5kYXRhID0gJnNhbXN1bmdfbHRuMTQwYXQyOV8zMDEsCisJfSwgewogCQkvKiBz
+ZW50aW5lbCAqLwogCX0KIH07Ci0tIAoxLjkuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
