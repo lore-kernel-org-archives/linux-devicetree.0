@@ -1,52 +1,45 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/2] mmc: pwrseq: Add support to multiple gpios in pwrseq simple
-Date: Wed, 28 Jan 2015 14:35:22 +0100
-Message-ID: <CAPDyKFquQgut1ZC9Jj=rbNwRKs3Qwr5LsUy_cmY7g2L8MG657Q@mail.gmail.com>
-References: <1422450981-9328-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: Aw: [PATCH v5 3/4] tpm/st33zp24/spi: Add st33zp24 spi phy
+Date: Wed, 28 Jan 2015 13:36:25 -0700
+Message-ID: <20150128203625.GB10610@obsidianresearch.com>
+References: <1422395850-21644-1-git-send-email-christophe-h.ricard@st.com>
+ <1422395850-21644-4-git-send-email-christophe-h.ricard@st.com>
+ <trinity-1682f383-7165-419d-b9f7-ef1f205304d2-1422463682896@3capp-gmx-bs38>
+ <54C934DD.2040109@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422450981-9328-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54C934DD.2040109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: RICARD Christophe <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter Huewe <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28 January 2015 at 14:16, Srinivas Kandagatla
-<srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This patchset adds support to reset/powerup multiple gpio pins on a given
-> sdio bus. The use case is simple, on sdio we could have multiple devices
-> like WLAN, BT which are controlled by there own reset lines. So having
-> multiple reset is something more useful in such cases.
->
-> Without this patch I could not get BT and WLAN working at same time on IFC6410.
->
-> Thanks,
-> srini
->
-> Srinivas Kandagatla (2):
->   mmc: pwrseq: Add support to control multiple gpios in simple pwrseq
->   mmc: pwrseq: Update document with multiple gpios support
->
->  .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |  7 ++-
->  drivers/mmc/core/pwrseq_simple.c                   | 64 +++++++++++++++-------
->  2 files changed, 49 insertions(+), 22 deletions(-)
->
-> --
-> 1.9.1
->
+On Wed, Jan 28, 2015 at 08:13:33PM +0100, RICARD Christophe wrote:
+> Hi Peter,
+> 
+> A TPM command can be up to 2048 byte, A TPM response can be up to 1024 byte.
+> Between command and response, there are latency byte (up to 15
+> usually on st33zp24 2 are enough).
+> 
+> Overall when sending a command and expecting an answer we need in
+> worst case:
+> 2048 (for the TPM command) + 1024 (for the TPM answer).  We need
+> some latency byte before the answer is available (max 15).
+> We have 2048 + 1024 + 15.
+> 
+> I will go for a define making the code more readable together with a
+> comment.
 
-Hi Srinivas,
+You can probably just make these static arrays inside your priv
+structure and drop these independent allocations:
 
-I noticed that Javier a few hours ago posted a patchset which
-implement the same thing as yours, I guess this is a wanted feature.
-:-)
+> >+ phy->spi_xfer.tx_buf = devm_kmalloc(&dev->dev, (TPM_BUFSIZE +
+> >+ (TPM_BUFSIZE / 2) + MAX_SPI_LATENCY),
+> >+ GFP_KERNEL);
 
-I am going to review Javier's patchset, would be nice if you could
-have a look at it as well.
-
-Kind regards
-Uffe
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
