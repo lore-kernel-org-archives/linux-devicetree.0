@@ -1,103 +1,67 @@
-From: Arend van Spriel <arend@broadcom.com>
-Subject: Re: [PATCH 5/5] ARM: dts: exynos5250-snow: Enable wifi power-on
-Date: Wed, 28 Jan 2015 15:03:36 +0100
-Message-ID: <54C8EC38.6010702@broadcom.com>
-References: <1422439819-29854-1-git-send-email-javier.martinez@collabora.co.uk>
- <1422439819-29854-6-git-send-email-javier.martinez@collabora.co.uk>
+From: Peter Rosin <peda@lysator.liu.se>
+Subject: [PATCH v2 0/7] ASoC: pcm512x: Clock master modes
+Date: Wed, 28 Jan 2015 15:16:05 +0100
+Message-ID: <1422454572-7847-1-git-send-email-peda@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1422439819-29854-6-git-send-email-javier.martinez@collabora.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Clemens Ladisch <clemens@ladisch.de>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On 01/28/15 11:10, Javier Martinez Canillas wrote:
-> The Snow board has a MMC/SDIO wifi chip that is always powered but it
-> needs a power sequence involving a reset (active low) and an enable
-> (active high) pins. Both pins are marked as active low since the MMC
-> simple power sequence driver asserts the pins prior to the card power
-> up procedure and de-asserts the pins after the card has been powered.
->
-> So the reset line will be left de-asserted and the enable pin will be
-> left asserted.
->
-> The chip also needs an external 32kHz reference clock to be operational
-> that is by the MAX77686 PMIC clock.
->
-> Add a simple MMC power sequence provider for the wifi MMC/SDIO slot.
->
-> Signed-off-by: Javier Martinez Canillas<javier.martinez@collabora.co.uk>
-> ---
->   arch/arm/boot/dts/exynos5250-snow.dts | 25 ++++++++++++++++++++++++-
->   1 file changed, 24 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-> index b9aeec430527..0f7971ba8238 100644
-> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> @@ -229,6 +229,13 @@
->   		power-supply =<&fet6>;
->   		backlight =<&backlight>;
->   	};
-> +
-> +	mmc3_pwrseq: mmc3_pwrseq {
-> +		reset-gpios =<&gpx0 2 GPIO_ACTIVE_LOW>, /* WIFI_RSTn */
-> +			<&gpx0 1 GPIO_ACTIVE_LOW>; /* WIFI_EN */
-> +		clocks =<&max77686 MAX77686_CLK_PMIC>;
-> +		clock-names = "ext_clock";
-> +	};
->   };
->
->   &dp {
-> @@ -531,17 +538,33 @@
->   	status = "okay";
->   	num-slots =<1>;
->   	broken-cd;
-> +	cap-sdio-irq;
+From: Peter Rosin <peda@axentia.se>
 
-This seems like an unrelated change, right?
+Hi!
 
-Regards,
-Arend
+[ Note that the dt change is in patch 5/7, for those only interested
+  in that particular bit. ]
 
->   	card-detect-delay =<200>;
->   	samsung,dw-mshc-ciu-div =<3>;
->   	samsung,dw-mshc-sdr-timing =<2 3>;
->   	samsung,dw-mshc-ddr-timing =<1 2>;
->   	pinctrl-names = "default";
-> -	pinctrl-0 =<&sd3_clk&sd3_cmd&sd3_bus4>;
-> +	pinctrl-0 =<&sd3_clk&sd3_cmd&sd3_bus4&wifi_en&wifi_rst>;
->   	bus-width =<4>;
->   	cap-sd-highspeed;
-> +	mmc-pwrseq =<&mmc3_pwrseq>;
->   };
->
->   &pinctrl_0 {
-> +	wifi_en: wifi-en {
-> +		samsung,pins = "gpx0-1";
-> +		samsung,pin-function =<1>;
-> +		samsung,pin-pud =<0>;
-> +		samsung,pin-drv =<0>;
-> +	};
-> +
-> +	wifi_rst: wifi-rst {
-> +		samsung,pins = "gpx0-2";
-> +		samsung,pin-function =<1>;
-> +		samsung,pin-pud =<0>;
-> +		samsung,pin-drv =<0>;
-> +	};
-> +
->   	power_key_irq: power-key-irq {
->   		samsung,pins = "gpx1-3";
->   		samsung,pin-function =<0xf>;
+This series implements BCLK master modes for the pcm512x driver. It has
+only been tested with the pcm5142 chip, but they are from the same family
+and should be compatible. I have mainly used the spec for the newer
+pcm5242 chip (also from the same family) as it fills in a lot of blanks
+in the pcm512x/pcm514x specs.
+
+The code has also seen most of its testing in a 3.10 environment, so
+there might be some forward-porting warts. But it is able to play sound
+in 3.18 as well, and most of the changes have little to do with anything
+but the clocking in the chip itself.
+
+Changes since v1:
+- Use snd_soc_params_to_frame_size and snd_soc_params_to_bclk instead of
+  implementing home-grown versions based on the physical width. The
+  I2S-communication will no longer have padding bits for S24_LE.
+
+Cheers,
+Peter
+
+Peter Rosin (7):
+  ALSA: pcm: Add snd_interval_ranges() and
+    snd_pcm_hw_constraint_ranges()
+  ASoC: pcm512x: Fix spelling of register field names.
+  ASoC: pcm512x: Change register default to match actual content after
+    reset
+  ASoC: pcm512x: Support mastering BCLK/LRCLK without using the PLL
+  ASoC: pcm512x: Support mastering BCLK/LRCLK using the PLL
+  ASoC: pcm512x: Avoid the PLL for the DAC clock, if possible
+  ASoC: pcm512x: Support SND_SOC_DAIFMT_CBM_CFS
+
+ .../devicetree/bindings/sound/pcm512x.txt          |   25 +-
+ include/sound/pcm.h                                |   12 +
+ sound/core/pcm_lib.c                               |   85 ++
+ sound/soc/codecs/pcm512x.c                         |  933 +++++++++++++++++++-
+ sound/soc/codecs/pcm512x.h                         |  109 ++-
+ 5 files changed, 1139 insertions(+), 25 deletions(-)
+
+-- 
+1.7.10.4
