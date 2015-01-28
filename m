@@ -1,51 +1,63 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 0/2] watchdog: ImgTec PDC Watchdog Timer Driver
-Date: Wed, 28 Jan 2015 15:56:49 -0300
-Message-ID: <54C930F1.1080805@imgtec.com>
-References: <1420550375-22867-1-git-send-email-ezequiel.garcia@imgtec.com> <54BE383F.6050209@imgtec.com> <54BE5F50.9050900@roeck-us.net> <54C92CDA.8030500@imgtec.com> <20150128185711.GA6730@roeck-us.net>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] mmc: pwrseq: Add support to multiple gpios in pwrseq
+ simple
+Date: Wed, 28 Jan 2015 13:46:47 +0000
+Message-ID: <54C8E847.10506@linaro.org>
+References: <1422450981-9328-1-git-send-email-srinivas.kandagatla@linaro.org> <CAPDyKFquQgut1ZC9Jj=rbNwRKs3Qwr5LsUy_cmY7g2L8MG657Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150128185711.GA6730-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFquQgut1ZC9Jj=rbNwRKs3Qwr5LsUy_cmY7g2L8MG657Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 01/28/2015 03:57 PM, Guenter Roeck wrote:
-> On Wed, Jan 28, 2015 at 03:39:22PM -0300, Ezequiel Garcia wrote:
->> On 01/20/2015 10:59 AM, Guenter Roeck wrote:
->>> On 01/20/2015 03:13 AM, Ezequiel Garcia wrote:
->>>> Hi Wim,
->>>>
->>>> On 01/06/2015 10:19 AM, Ezequiel Garcia wrote:
->>>>> Here's the seventh round for IMG PDC Watchdog driver.
->>>>> The series is based on v3.19-rc3.
->>>>>
->>>>
->>>> Guenter has reviewed both patches. Do you think you can review this
->>>> soonishly and let me know if you have more comments?
->>>>
->>>
->>> I'll send a pull request to Wim either this or next week.
->>>
+On 28/01/15 13:35, Ulf Hansson wrote:
+> On 28 January 2015 at 14:16, Srinivas Kandagatla
+> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> This patchset adds support to reset/powerup multiple gpio pins on a given
+>> sdio bus. The use case is simple, on sdio we could have multiple devices
+>> like WLAN, BT which are controlled by there own reset lines. So having
+>> multiple reset is something more useful in such cases.
 >>
->> Guenter,
+>> Without this patch I could not get BT and WLAN working at same time on IFC6410.
 >>
->> I hate to be so spammy here. Do you still plan to send a pull request?
+>> Thanks,
+>> srini
 >>
-> Yes. Sorry for the delay.
-> 
+>> Srinivas Kandagatla (2):
+>>    mmc: pwrseq: Add support to control multiple gpios in simple pwrseq
+>>    mmc: pwrseq: Update document with multiple gpios support
+>>
+>>   .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |  7 ++-
+>>   drivers/mmc/core/pwrseq_simple.c                   | 64 +++++++++++++++-------
+>>   2 files changed, 49 insertions(+), 22 deletions(-)
+>>
+>> --
+>> 1.9.1
+>>
+>
+> Hi Srinivas,
+>
+> I noticed that Javier a few hours ago posted a patchset which
+> implement the same thing as yours, I guess this is a wanted feature.
+> :-)
+yes.
 
-OK, no problem, was just checking.
+>
+> I am going to review Javier's patchset, would be nice if you could
+> have a look at it as well.
+Sure.. they look very similar..
 
-Thanks a lot for taking care of this!
--- 
-Ezequiel
+!!!  Should have sent my patches yesterday :-)
+>
+> Kind regards
+> Uffe
+>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
