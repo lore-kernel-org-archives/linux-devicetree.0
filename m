@@ -1,84 +1,56 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v10 04/19] dt-binding: mfd: max77693: Add DT binding
- related macros
-Date: Wed, 28 Jan 2015 10:52:53 +0200
-Message-ID: <20150128085253.GL17565@valkosipuli.retiisi.org.uk>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-5-git-send-email-j.anaszewski@samsung.com>
- <20150120111243.GC13701@x1>
- <54BE4FB1.3030209@samsung.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] mmc: dw_mmc-exynos: add support for controlling emmc
+ reset pin
+Date: Wed, 28 Jan 2015 15:54:23 +0100
+Message-ID: <CAPDyKFr9fQ5ny=Foi4x_-wEQA9K0wRqqEfLxmxtBn5tmPwS-Nw@mail.gmail.com>
+References: <1422346289-9348-1-git-send-email-m.szyprowski@samsung.com>
+	<1422346289-9348-2-git-send-email-m.szyprowski@samsung.com>
+	<54C74C33.5050305@samsung.com>
+	<54C8D8E3.9060609@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54BE4FB1.3030209@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54C8D8E3.9060609-hi6Y0CQ0nG0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tobias Jakobi <liquid.acid-hi6Y0CQ0nG0@public.gmane.org>
+Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+On 28 January 2015 at 13:41, Tobias Jakobi <liquid.acid-hi6Y0CQ0nG0@public.gmane.org> wrote:
+> Hello!
+>
+> Jaehoon Chung wrote:
+>> mmc core supported to hw_reset function.
+>> So i think we can use it. It's called at only initial time to clear the previous status.
+>> But i think it can be called at reboot time. (it needs to implement codes.)
+>> how about?
+> I don't think that's going the work. The problem here is that depending
+> on the board configuration, the eMMC might carry the bootloader. If the
+> eMMC subsystem is not properly reset _during_ reboot, the board won't
+> even start since no bootloader is found. So we don't even reach the
+> point where the kernel does anything.
 
-On Tue, Jan 20, 2015 at 01:53:05PM +0100, Jacek Anaszewski wrote:
-> On 01/20/2015 12:12 PM, Lee Jones wrote:
-> >On Fri, 09 Jan 2015, Jacek Anaszewski wrote:
-> >
-> >>Add macros for max77693 led part related binding.
-> >>
-> >>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> >>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >>Cc: Lee Jones <lee.jones@linaro.org>
-> >>Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> >>---
-> >>  include/dt-bindings/mfd/max77693.h |   21 +++++++++++++++++++++
-> >>  1 file changed, 21 insertions(+)
-> >>  create mode 100644 include/dt-bindings/mfd/max77693.h
-> >>
-> >>diff --git a/include/dt-bindings/mfd/max77693.h b/include/dt-bindings/mfd/max77693.h
-> >>new file mode 100644
-> >>index 0000000..f53e197
-> >>--- /dev/null
-> >>+++ b/include/dt-bindings/mfd/max77693.h
-> >>@@ -0,0 +1,21 @@
-> >>+/*
-> >>+ * This header provides macros for MAX77693 device binding
-> >>+ *
-> >>+ * Copyright (C) 2014, Samsung Electronics Co., Ltd.
-> >>+ *
-> >>+ * Author: Jacek Anaszewski <j.anaszewski@samsung.com>
-> >>+ */
-> >>+
-> >>+#ifndef __DT_BINDINGS_MAX77693_H__
-> >>+#define __DT_BINDINGS_MAX77693_H
-> >>+
-> >>+/* External trigger type */
-> >>+#define MAX77693_LED_TRIG_TYPE_EDGE	0
-> >>+#define MAX77693_LED_TRIG_TYPE_LEVEL	1
-> >>+
-> >>+/* Boost modes */
-> >>+#define MAX77693_LED_BOOST_OFF		0
-> >>+#define MAX77693_LED_BOOST_ADAPTIVE	1
-> >>+#define MAX77693_LED_BOOST_FIXED	2
-> >>+
-> >>+#endif /* __DT_BINDINGS_MAX77693_H */
-> >
-> >These look fairly generic.  Do generic LED defines already exist?  If
-> >not, can they?
-> 
-> I am not entirely sure that they are generic. Different devices
-> may define different trigger types for low current LEDs and flash
-> LEDs. Boost modes could also have different semantics.
-> 
-> Regardless of the above we can consider renaming the file to
-> include/dt-bindings/leds/max77693.h
-> 
-> Bryan - what is your opinion?
+I guess it depends on what's being done during the reboot sequence.
 
-At least trigger type can be chosen for lm3555 (as3645a) as well. I'm not
-sure about boost mode.
+The most proper thing would be to let the boot loader control the GPIO
+to trigger the HW reset, but that would mean the boot loader need to
+know about board specific configurations, such as which GPIO pin. So
+maybe SOC vendors need to state what GPIO pin to use and don't leave
+that as a configurable option.
 
--- 
-Regards,
+>From kernel perspective, the best we can do is to the GPIO, when doing
+a controlled reset (soft reset, or whatever we call it), but I am not
+sure where that should be done? Is there a guarantee that the mmc bus'
+->shutdown() callback gets called in this sequence?
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Moreover, adding the reset GPIO as part of the initialization
+procedure in the mmc core, gives us other benefits and it won't hurt.
+So no matter, I think it's worth to proceed and discuss Marek's
+proposal.
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
