@@ -1,153 +1,54 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 2/7] ARM: vf-colibri: add SPI support and enable MCP2515
- CAN
-Date: Wed, 28 Jan 2015 10:55:23 +0100
-Message-ID: <47943ef82a880a0c681ccd0b9fd22eda@agner.ch>
-References: <1422356244-15629-1-git-send-email-bhuvanchandra.dv@toradex.com>
- <1422356244-15629-3-git-send-email-bhuvanchandra.dv@toradex.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC 2/2] sunxi: Initial Inet 86VS support.
+Date: Wed, 28 Jan 2015 11:11:06 +0100
+Message-ID: <54C8B5BA.5010009@redhat.com>
+References: <cover.1422316795.git.hramrach@gmail.com> <b6bc51df9b432465b7615d60e2f9ffcd6d9900f8.1422316795.git.hramrach@gmail.com> <54C8B3D2.8060601@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1422356244-15629-3-git-send-email-bhuvanchandra.dv@toradex.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, B44548@freescale.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Li.Xiubo@freescale.com, broonie@kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBQPLUKTAKGQEKMZNDZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <54C8B3D2.8060601-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-01-27 11:57, Bhuvanchandra DV wrote:
-> MCP2515 CAN controller is available on Colibri Evaluation board.
-> Hence enable MCP2515 CAN.
-> 
-> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-> ---
->  arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 31 +++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/vf-colibri.dtsi         | 15 +++++++++++++++
->  2 files changed, 46 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-> b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-> index 36cafbf..69364b0 100644
-> --- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-> +++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-> @@ -12,6 +12,12 @@
->  		bootargs = "console=ttyLP0,115200";
->  	};
->  
-> +	clk16m: clk16m {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <16000000>;
-> +	};
-> +
->  	regulators {
->  		compatible = "simple-bus";
->  		#address-cells = <1>;
-> @@ -47,6 +53,21 @@
->  	status  = "okay";
->  };
->  
-> +&dspi1 {
-> +	status = "okay";
-> +
-> +	can2: mcp2515@0 {
+Hi,
 
+On 28-01-15 11:02, Hans de Goede wrote:
+> Hi,
+>
+> On 04-01-15 21:06, Michal Suchanek wrote:
+>> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Thanks, I've merged this with a number of changes:
+>
+> - Cleaned it up a bit
+> - Ported it to our new simplified dram config code in u-boot-sunxi/next
+> - Added OTG (host mode) support, so that you can hookup a keyboard and
+>    interact with u-boot (kernel otg host support is coming soonish too)
+> - Fixed the dtb name from sun5i-inet-86vs.dtb to sun5i-a13-inet-86vs.dtb
+>    to match the upstream kernel dts / dtb naming scheme.
 
-The device tree usage website states (devicetree.org): "nodes are named
-according to what kind of device it represents"...
+Talking about upstream dts files, it would be great if you could officially
+submit one for the Inet 86VS upstream:
 
-You can use the label to specify the type, e.g. I would suggest to use
-something like:
+1) Drop any nand bits you may have in there as the nand code is not upstream yet
+2) We've recently adapted a new style for upstream dts files, please reformat
+    the dts you've accordingly, see e.g.:
+    https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/dt-for-3.20&id=19a08b6b3f782f577b4b0fef9b6e60beba66c2f3
+3) Write a proper commit message with a short description of the board, and
+    be sure to add a Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+4) Be sure to send the patch directly to Maxime Ripard, with devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+    in the Cc, you may Cc other people / lists too, but you must send it to
+    those 2 addresses.
 
+Regards,
 
-	mcp2515can: can@0 {
-...
-
-
-
-
-> +		compatible = "microchip,mcp2515";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_can_int>;
-> +		reg = <0>;
-> +		clocks = <&clk16m>;
-> +		spi-max-frequency = <10000000>;
-> +		interrupt-parent = <&gpio2>;
-
-The interrupt line of the MCP2515 is connected to SODIMM 73, which is
-PORT1[11] on Vybrid. My recent renaming of the GPIO's has been merged
-already:
-https://lkml.org/lkml/2015/1/16/419
-
-Hence, this should be updated to gpio1.
-
-
-> +		interrupts = <11 GPIO_ACTIVE_LOW>;
-> +	};
-> +};
-> +
->  &esdhc1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_esdhc1>;
-> @@ -94,3 +115,13 @@
->  &usbh1 {
->  	vbus-supply = <&usbh_vbus_reg>;
->  };
-> +
-> +&iomuxc {
-> +	vf610-colibri {
-> +		pinctrl_can_int: can_int {
-> +			fsl,pins = <
-> +				VF610_PAD_PTB21__GPIO_43	0x22ed
-> +			>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi
-> b/arch/arm/boot/dts/vf-colibri.dtsi
-> index 5c2b732..fbef082 100644
-> --- a/arch/arm/boot/dts/vf-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
-> @@ -23,6 +23,12 @@
->  	status = "okay";
->  };
->  
-> +&dspi1 {
-> +	bus-num = <1>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_dspi1>;
-> +};
-> +
->  &edma0 {
->  	status = "okay";
->  };
-> @@ -107,6 +113,15 @@
->  			>;
->  		};
->  
-> +		pinctrl_dspi1: dspi1grp {
-> +			fsl,pins = <
-> +				VF610_PAD_PTD5__DSPI1_CS0		0x33e2
-> +				VF610_PAD_PTD6__DSPI1_SIN		0x33e1
-> +				VF610_PAD_PTD7__DSPI1_SOUT		0x33e2
-> +				VF610_PAD_PTD8__DSPI1_SCK		0x33e2
-> +			>;
-> +		};
-> +
->  		pinctrl_esdhc1: esdhc1grp {
->  			fsl,pins = <
->  				VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
-
-
-The rest looks good, thx.
-
---
-Stefan
+Hans
