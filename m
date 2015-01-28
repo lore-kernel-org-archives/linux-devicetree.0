@@ -1,154 +1,156 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH net-next v8 0/4] net: Add Keystone NetCP ethernet driver
- support
-Date: Wed, 28 Jan 2015 15:43:57 -0500
-Message-ID: <54C94A0D.9050505@ti.com>
-References: <1421367007-19744-1-git-send-email-m-karicheri2@ti.com> <20150119.151106.822126941934010309.davem@davemloft.net> <54BE7A00.2020205@ti.com> <25883654.BLFxICW9P0@wuerfel> <54C91328.6030208@ti.com> <54C91FDD.1000009@ti.com> <54C92878.3030207@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 4/7] mmc: sdhci-pxav3: Modify clock settings for the
+ SDR50 and DDR50 modes
+Date: Wed, 28 Jan 2015 21:44:06 +0100
+Message-ID: <CAPDyKFpTnGrdKLYjH=GaG2bQ-44F68fSxRvRQBi8bHP5A83Ahw@mail.gmail.com>
+References: <1422031587-18212-1-git-send-email-gregory.clement@free-electrons.com>
+ <1422031587-18212-5-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54C92878.3030207@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1422031587-18212-5-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/28/2015 01:20 PM, Murali Karicheri wrote:
-> On 01/28/2015 12:43 PM, Murali Karicheri wrote:
->> On 01/28/2015 11:49 AM, Murali Karicheri wrote:
->>> On 01/27/2015 05:28 PM, Arnd Bergmann wrote:
->>>> On Tuesday 20 January 2015 10:53:36 Murali Karicheri wrote:
->>>>> On 01/19/2015 03:11 PM, David Miller wrote:
->>>>>> From: Murali Karicheri<m-karicheri2@ti.com>
->>>>>> Date: Thu, 15 Jan 2015 19:10:03 -0500
->>>>>>
->>>>>>> The Network Coprocessor (NetCP) is a hardware accelerator that
->>>>>>> processes
->>>>>>> Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem =
-with
->>>>>>> a ethernet
->>>>>>> switch sub-module to send and receive packets. NetCP also inclu=
-des
->>>>>>> a packet
->>>>>>> accelerator (PA) module to perform packet classification operat=
-ions
->>>>>>> such as
->>>>>>> header matching, and packet modification operations such as che=
-cksum
->>>>>>> generation. NetCP can also optionally include a Security
->>>>>>> Accelerator(SA)
->>>>>>> capable of performing IPSec operations on ingress/egress packet=
-s.
->>>>>>>
->>>>>>> Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE)
->>>>>>> which
->>>>>>> includes a 3-port Ethernet switch sub-module capable of 10Gb/s =
-and
->>>>>>> 1Gb/s rates per Ethernet port.
->>>>>>>
->>>>>>> Both GBE and XGBE network processors supported using common
->>>>>>> driver. It
->>>>>>> is also designed to handle future variants of NetCP.
->>>>>>
->>>>>> Series applied to net-next, thanks.
->>>>> David,
->>>>>
->>>>> Thanks a lot for applying this series. This helps us move forward=
- to
->>>>> work on the next set of patches.
->>>>
->>>> Hi Murali,
->>>>
->>>> Building an ARM 'allmodconfig' kernel now runs into two separate
->>>> problems
->>>> from your driver:
->>>>
->>>> - you have two module_init() instances in one module, which confli=
-ct.
->>>>
->>>> - you have two files that are linked into more than one module, so
->>>> building
->>>> both TI_CPSW and TI_KEYSTONE_NETCP in the same kernel fails.
->>>>
->>>> The answer to both of these is probably to have separate loadable
->>>> modules,
->>>> but you might be able to come up with a different solution.
->>> Arnd,
->>>
->>> Thanks for letting us know. We will look into this.
->>>
->>> How do I reproduce this? Is there a defconfig used for allmodconfig=
-? I
->>> am unable to find one. Any details to reproduce this will be useful=
-=2E
->>>
->> Ok I think I found it.
->>
->> I did this with next-next branch and it seems to work. I will make
->> kernel build to reproduce this.
->>
->> make ARCH=3Darm allmodconfig
->> make uImage;
->>
->> I am building it now.
-> Arnd,
+On 23 January 2015 at 17:46, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
+> From: Marcin Wojtas <mw@semihalf.com>
 >
-> I see allmodconfig configure NetCP driver as module. My uImage build
-> from net-next branch went through fine. I am building modules right n=
-ow
-> and should show error as you have pointed out. Let me know if you any
-> issues on how I am working to reproduce the issue (wrong branch, wron=
-g
-> /incomplete commands etc. I have my CROSS_COMPILE and ARCH set in my
-> env). Want to reproduce this so as to make sure my fix is addressing
-> this. Hope I am on the right track.
-
-Reproduced this. Following errors seen when building the modules.
-
-   LD [M]  drivers/net/ethernet/ti/keystone_netcp.o
-drivers/net/ethernet/ti/netcp_ethss.o: In function `init_module':
-netcp_ethss.c:(.init.text+0x0): multiple definition of `init_module'
-drivers/net/ethernet/ti/netcp_core.o:netcp_core.c:(.init.text+0x0):=20
-first defined here
-drivers/net/ethernet/ti/netcp_ethss.o: In function `cleanup_module':
-netcp_ethss.c:(.exit.text+0x0): multiple definition of `cleanup_module'
-drivers/net/ethernet/ti/netcp_core.o:netcp_core.c:(.exit.text+0x0):=20
-first defined here
-make[4]: *** [drivers/net/ethernet/ti/keystone_netcp.o] Error 1
-
-
-BTW, I had to disable cpsw_ale.c to get to build keystone NetCP. I am=20
-assuming someone from TI is addressing this.
-
-drivers/net/ethernet/ti/cpsw_ale.c: In function =91cpsw_ale_start=92:
-drivers/net/ethernet/ti/cpsw_ale.c:759:2: error: =91KBUILD_MODNAME=92=20
-undeclared (first use in this function)
-drivers/net/ethernet/ti/cpsw_ale.c:759:2: note: each undeclared=20
-identifier is reported only once for each function it appears in
-
-Murali
-
+> According to erratum 'FE-2946959' both SDR50 and DDR50 modes require
+> specific clock adjustments in SDIO3 Configuration register.
 >
-> Thanks
+> This commit add the support of this register and for SDR50 or DDR50
+> mode use it as suggested by the erratum:
+> - Set the SDIO3 Clock Inv field in SDIO3 Configuration register to not
+> inverted.
+> - Set the Sample FeedBack Clock field to 0x1
 >
-> Murali
->>
->> Murali
->>> Thanks.
->>>
->>> Murali
->>>>
->>>> Arnd
->>>
->>>
->>
->>
+> [gregory.clement@free-electrons.com: port from 3.10]
 >
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  drivers/mmc/host/sdhci-pxav3.c | 60 ++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 52 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+> index cf017fc39143..a3ebb4404849 100644
+> --- a/drivers/mmc/host/sdhci-pxav3.c
+> +++ b/drivers/mmc/host/sdhci-pxav3.c
+> @@ -62,6 +62,7 @@ struct sdhci_pxa {
+>         struct clk *clk_core;
+>         struct clk *clk_io;
+>         u8      power_mode;
+> +       void __iomem *sdio3_conf_reg;
+>  };
+>
+>  /*
+> @@ -72,6 +73,14 @@ struct sdhci_pxa {
+>  #define SDHCI_WINDOW_BASE(i)   (0x84 + ((i) << 3))
+>  #define SDHCI_MAX_WIN_NUM      8
+>
+> +/*
+> + * Fields below belong to SDIO3 Configuration Register (third register
+> + * region for the Armada 38x flavor)
+> + */
+> +
+> +#define SDIO3_CONF_CLK_INV     BIT(0)
+> +#define SDIO3_CONF_SD_FB_CLK   BIT(2)
+> +
+>  static int mv_conf_mbus_windows(struct platform_device *pdev,
+>                                 const struct mbus_dram_target_info *dram)
+>  {
+> @@ -122,16 +131,31 @@ static int armada_38x_quirks(struct platform_device *pdev,
+>                              struct sdhci_host *host)
+>  {
+>         struct device_node *np = pdev->dev.of_node;
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct sdhci_pxa *pxa = pltfm_host->priv;
+> +       struct resource *res;
+>
+>         host->quirks |= SDHCI_QUIRK_MISSING_CAPS;
+> -       /*
+> -        * According to erratum 'FE-2946959' both SDR50 and DDR50
+> -        * modes require specific clock adjustments in SDIO3
+> -        * Configuration register, if the adjustment is not done,
+> -        * remove them from the capabilities.
+> -        */
+> -       host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
+> -       host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_DDR50);
+> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +                                          "conf-sdio3");
+> +       if (res) {
+> +               pxa->sdio3_conf_reg = devm_ioremap_resource(&pdev->dev, res);
+> +               if (IS_ERR(pxa->sdio3_conf_reg))
+> +                       return PTR_ERR(pxa->sdio3_conf_reg);
+> +       } else {
+> +               /*
+> +                * According to erratum 'FE-2946959' both SDR50 and DDR50
+> +                * modes require specific clock adjustments in SDIO3
+> +                * Configuration register, if the adjustment is not done,
+> +                * remove them from the capabilities.
+> +                */
+> +               host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
+> +               host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_DDR50);
+> +
+> +               dev_warn(&pdev->dev, "conf-sdio3 register not found\n");
+> +               dev_warn(&pdev->dev, "disabling SDR50 and DDR50 modes\n");
+> +               dev_warn(&pdev->dev, "consider updating your dtb\n");
+
+One dev_warn() should be enough. Also I don't think checkpatch
+complains about long lines for dev_warn().
+
+> +       }
+>
+>         /*
+>          * According to erratum 'ERR-7878951' Armada 38x SDHCI
+> @@ -226,6 +250,8 @@ static void pxav3_gen_init_74_clocks(struct sdhci_host *host, u8 power_mode)
+>
+>  static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+>  {
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct sdhci_pxa *pxa = pltfm_host->priv;
+>         u16 ctrl_2;
+>
+>         /*
+> @@ -255,6 +281,24 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+>                 break;
+>         }
+>
+> +       /*
+> +        * Update SDIO3 Configuration register according to erratum
+> +        * FE-2946959
+> +        */
+> +       if (pxa->sdio3_conf_reg) {
+> +               u8 reg_val  = readb(pxa->sdio3_conf_reg);
+> +
+> +               if (uhs == MMC_TIMING_UHS_SDR50 ||
+> +                   uhs == MMC_TIMING_UHS_DDR50) {
+> +                       reg_val &= ~SDIO3_CONF_CLK_INV;
+> +                       reg_val |= SDIO3_CONF_SD_FB_CLK;
+> +               } else {
+> +                       reg_val |= SDIO3_CONF_CLK_INV;
+> +                       reg_val &= ~SDIO3_CONF_SD_FB_CLK;
+> +               }
+> +               writeb(reg_val, pxa->sdio3_conf_reg);
+> +       }
+> +
+>         sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
+>         dev_dbg(mmc_dev(host->mmc),
+>                 "%s uhs = %d, ctrl_2 = %04X\n",
+> --
+> 2.1.0
 >
 
-
---=20
-Murali Karicheri
-Linux Kernel, Texas Instruments
+Kind regards
+Uffe
