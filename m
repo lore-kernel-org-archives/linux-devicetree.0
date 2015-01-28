@@ -1,59 +1,39 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: [PATCH 01/24] Documentation: DT: document compatible string
- existence requirement
-Date: Wed, 28 Jan 2015 16:49:37 -0700
-Message-ID: <20150128234936.20644.76672.stgit@dusk.lan>
-References: <20150128234935.20644.89300.stgit@dusk.lan>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: Aw: [PATCH v5 3/4] tpm/st33zp24/spi: Add st33zp24 spi phy
+Date: Wed, 28 Jan 2015 14:53:45 -0700
+Message-ID: <20150128215345.GA5211@obsidianresearch.com>
+References: <1422395850-21644-1-git-send-email-christophe-h.ricard@st.com>
+ <1422395850-21644-4-git-send-email-christophe-h.ricard@st.com>
+ <trinity-1682f383-7165-419d-b9f7-ef1f205304d2-1422463682896@3capp-gmx-bs38>
+ <54C934DD.2040109@gmail.com>
+ <20150128203625.GB10610@obsidianresearch.com>
+ <78f08c37-9a15-4007-88f6-2c79ba113e6f@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150128234935.20644.89300.stgit@dusk.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <78f08c37-9a15-4007-88f6-2c79ba113e6f-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: peterhuewe-Mmb7MZpHnFY@public.gmane.org
+Cc: RICARD Christophe <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 28, 2015 at 10:49:39PM +0100, peterhuewe-Mmb7MZpHnFY@public.gmane.org wrote:
 
-DT maintainers require all compatible strings used in chip or board
-DTS file to be previously documented somewhere in
-Documentation/devicetree/bindings, per:
+> >> I will go for a define making the code more readable together with a
+> >> comment.
+> >
+> >You can probably just make these static arrays inside your priv
+> >structure and drop these independent allocations:
+> 
+> Hmm, doesn' t spi stuff need dma'able buffers?
 
-http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+Well, the buffer allocation is already devm_kalloc, so it won't change
+the properties to combine it with the devm_kalloc that creates the
+priv structure.
 
-Document this requirement in the DT patch submission requirements
-text file.
-
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Paul Walmsley <pwalmsley@nvidia.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- .../devicetree/bindings/submitting-patches.txt     |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
-index b7ba01ad1426..4b2bbb6047c4 100644
---- a/Documentation/devicetree/bindings/submitting-patches.txt
-+++ b/Documentation/devicetree/bindings/submitting-patches.txt
-@@ -15,6 +15,14 @@ I. For patch submitters
-   3) The Documentation/ portion of the patch should come in the series before
-      the code implementing the binding.
- 
-+  4) Any compatible strings used in a chip or board DTS file must be
-+     previously documented in the corresponding DT binding text file
-+     in Documentation/devicetree/bindings.  This rule applies even if
-+     the Linux device driver does not yet match on the compatible
-+     string.  checkpatch will emit warnings if this step is not
-+     followed as of commit bff5da4335256513497cc8c79f9a9d1665e09864
-+     ("checkpatch: add DT compatible string documentation checks").
-+
- II. For kernel maintainers
- 
-   1) If you aren't comfortable reviewing a given binding, reply to it and ask
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
