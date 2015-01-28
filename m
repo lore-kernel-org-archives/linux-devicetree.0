@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v2 14/14] NFC: st21nfca: Add support for HCI event transaction
-Date: Wed, 28 Jan 2015 21:17:31 +0100
-Message-ID: <1422476251-25972-15-git-send-email-christophe-h.ricard@st.com>
+Subject: [RFC v2 12/14] NFC: nci: Change NCI state machine to LISTEN_ACTIVE and ignore parameters in rf_intf_activated_ntf
+Date: Wed, 28 Jan 2015 21:17:29 +0100
+Message-ID: <1422476251-25972-13-git-send-email-christophe-h.ricard@st.com>
 References: <1422476251-25972-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1422476251-25972-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,53 +10,41 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The event transaction notifies the Device Host that an action is required
-to manage a specific Secure Element application.
+When receiving a intf_activated notification, if the rf interface is
+NCI_RF_INTERFACE_NFCEE_DIRECT, we need to ignore the next parameters and
+change the NCI state machine to NCI_LISTEN_ACTIVE.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/st21nfca_se.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ net/nfc/nci/ntf.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/nfc/st21nfca/st21nfca_se.c b/drivers/nfc/st21nfca/st21nfca_se.c
-index 9b93d39..bd13cac 100644
---- a/drivers/nfc/st21nfca/st21nfca_se.c
-+++ b/drivers/nfc/st21nfca/st21nfca_se.c
-@@ -301,6 +301,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
- 				u8 event, struct sk_buff *skb)
- {
- 	int r = 0;
-+	struct device *dev = &hdev->ndev->dev;
-+	struct nfc_evt_transaction *transaction;
+diff --git a/net/nfc/nci/ntf.c b/net/nfc/nci/ntf.c
+index 4cdb95d..19eaf52 100644
+--- a/net/nfc/nci/ntf.c
++++ b/net/nfc/nci/ntf.c
+@@ -545,6 +545,13 @@ static void nci_rf_intf_activated_ntf_packet(struct nci_dev *ndev,
+ 	pr_debug("rf_tech_specific_params_len %d\n",
+ 		 ntf.rf_tech_specific_params_len);
  
- 	pr_debug("connectivity gate event: %x\n", event);
- 
-@@ -308,6 +310,25 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
- 	case ST21NFCA_EVT_CONNECTIVITY:
- 		break;
- 	case ST21NFCA_EVT_TRANSACTION:
-+		if (skb->len < NFC_MIN_AID_LENGTH + 2 &&
-+		    skb->data[0] != NFC_EVT_TRANSACTION_AID_TAG)
-+			return -EPROTO;
++	/* If this contains a value of 0x00 (NFCEE Direct RF
++	 * Interface) then all following parameters SHALL contain a
++	 * value of 0 and SHALL be ignored.
++	 */
++	if (ntf.rf_interface == NCI_RF_INTERFACE_NFCEE_DIRECT)
++		goto listen;
 +
-+		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
-+						   skb->len - 2, GFP_KERNEL);
-+
-+		transaction->aid_len = skb->data[1];
-+		memcpy(transaction->aid, &skb->data[2], skb->data[1]);
-+
-+		if (skb->data[transaction->aid_len + 2] !=
-+		    NFC_EVT_TRANSACTION_PARAMS_TAG)
-+			return -EPROTO;
-+
-+		transaction->params_len = skb->data[transaction->aid_len + 3];
-+		memcpy(transaction->params, skb->data +
-+		       transaction->aid_len + 4, transaction->params_len);
-+
-+		r = nfc_se_transaction(hdev->ndev, host, transaction);
- 		break;
- 	default:
- 		return 1;
+ 	if (ntf.rf_tech_specific_params_len > 0) {
+ 		switch (ntf.activation_rf_tech_and_mode) {
+ 		case NCI_NFC_A_PASSIVE_POLL_MODE:
+@@ -660,6 +667,7 @@ exit:
+ 			nci_req_complete(ndev, err);
+ 		}
+ 	} else {
++listen:
+ 		/* Listen mode */
+ 		atomic_set(&ndev->state, NCI_LISTEN_ACTIVE);
+ 		if (err == NCI_STATUS_OK &&
 -- 
 2.1.0
 
