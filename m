@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v2 13/14] NFC: st21nfcb: Add support for HCI event transaction
-Date: Wed, 28 Jan 2015 21:17:30 +0100
-Message-ID: <1422476251-25972-14-git-send-email-christophe-h.ricard@st.com>
+Subject: [RFC v2 14/14] NFC: st21nfca: Add support for HCI event transaction
+Date: Wed, 28 Jan 2015 21:17:31 +0100
+Message-ID: <1422476251-25972-15-git-send-email-christophe-h.ricard@st.com>
 References: <1422476251-25972-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1422476251-25972-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -15,34 +15,32 @@ to manage a specific Secure Element application.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfcb/st21nfcb_se.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/nfc/st21nfca/st21nfca_se.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/nfc/st21nfcb/st21nfcb_se.c b/drivers/nfc/st21nfcb/st21nfcb_se.c
-index cf65368..6868043 100644
---- a/drivers/nfc/st21nfcb/st21nfcb_se.c
-+++ b/drivers/nfc/st21nfcb/st21nfcb_se.c
-@@ -287,14 +287,35 @@ static int st21nfcb_hci_connectivity_event_received(struct st21nfcb_hci_dev *hde
- 						    struct sk_buff *skb)
+diff --git a/drivers/nfc/st21nfca/st21nfca_se.c b/drivers/nfc/st21nfca/st21nfca_se.c
+index 9b93d39..bd13cac 100644
+--- a/drivers/nfc/st21nfca/st21nfca_se.c
++++ b/drivers/nfc/st21nfca/st21nfca_se.c
+@@ -301,6 +301,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
+ 				u8 event, struct sk_buff *skb)
  {
  	int r = 0;
-+	struct device *dev = &hdev->ndev->nfc_dev->dev;
++	struct device *dev = &hdev->ndev->dev;
 +	struct nfc_evt_transaction *transaction;
  
  	pr_debug("connectivity gate event: %x\n", event);
  
- 	switch (event) {
- 	case ST21NFCB_EVT_CONNECTIVITY:
-+
- 	break;
- 	case ST21NFCB_EVT_TRANSACTION:
--	break;
+@@ -308,6 +310,25 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
+ 	case ST21NFCA_EVT_CONNECTIVITY:
+ 		break;
+ 	case ST21NFCA_EVT_TRANSACTION:
 +		if (skb->len < NFC_MIN_AID_LENGTH + 2 &&
 +		    skb->data[0] != NFC_EVT_TRANSACTION_AID_TAG)
 +			return -EPROTO;
 +
 +		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
-+					    skb->len - 2, GFP_KERNEL);
++						   skb->len - 2, GFP_KERNEL);
 +
 +		transaction->aid_len = skb->data[1];
 +		memcpy(transaction->aid, &skb->data[2], skb->data[1]);
@@ -55,10 +53,10 @@ index cf65368..6868043 100644
 +		memcpy(transaction->params, skb->data +
 +		       transaction->aid_len + 4, transaction->params_len);
 +
-+		r = nfc_se_transaction(hdev->ndev->nfc_dev, host, transaction);
++		r = nfc_se_transaction(hdev->ndev, host, transaction);
+ 		break;
  	default:
  		return 1;
- 	}
 -- 
 2.1.0
 
