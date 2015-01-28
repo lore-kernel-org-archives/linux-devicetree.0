@@ -1,17 +1,16 @@
-From: BhuvanChandra.DV <bhuvanchandra.dv@toradex.com>
-Subject: Re: [PATCH 3/7] spi: spi-fsl-dspi: Remove usage of devm_kzalloc
-Date: Wed, 28 Jan 2015 07:05:55 +0000
-Message-ID: <1422429099979.36592@toradex.com>
-References: <1422356244-15629-1-git-send-email-bhuvanchandra.dv@toradex.com>
- <1422356244-15629-4-git-send-email-bhuvanchandra.dv@toradex.com>
- <20150127195234.GP21293@sirena.org.uk>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v5 2/5] dt-bindings: Add pinctrl bindings for
+ mt65xx/mt81xx.
+Date: Wed, 28 Jan 2015 08:48:38 +0100
+Message-ID: <20150128074838.GX12209@pengutronix.de>
+References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
+ <1421818097-9281-3-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150127195234.GP21293@sirena.org.uk>
-Content-Language: en-IN
-Content-ID: <4DFFBB99900C8C4C913A540DE3462F9E@toradex.com>
+Content-Disposition: inline
+In-Reply-To: <1421818097-9281-3-git-send-email-hongzhou.yang@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,19 +20,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "B44548@freescale.com" <B44548@freescale.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, maoguang.meng@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, alan.cheng@mediatek.com, Russell King <linux@arm.linux.org.uk>, toby.liu@mediatek.com, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrsoft.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 21, 2015 at 01:28:14PM +0800, Hongzhou Yang wrote:
+> From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> 
+> Add devicetree bindings for Mediatek SoC pinctrl driver.
+> 
+> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
 
-On 01/28/2015 01:22 AM, Mark Brown wrote:
-> On Tue, Jan 27, 2015 at 04:27:20PM +0530, Bhuvanchandra DV wrote:
->> devm_* API was supposed to be used only in probe function call.
->> Memory is allocated at 'probe' and free automatically at 'remove'.
-> Applied, thanks.  Please don't dump entire backtraces into your commit
-> logs - they're far too big and not very helpful, they can obscure real
-> content in the message.  Explain in words what the problem is and if a
-> backtrace helps illustrate that edit it down to only relevant portions
-> rather than blindly including the entire thing.
+This basically follows the pinmux binding I suggested as generic pinmux
+binding for per-pin type controllers, so:
 
-OK
+Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+
+Sascha
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
