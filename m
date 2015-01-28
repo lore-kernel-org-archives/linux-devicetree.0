@@ -1,224 +1,73 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Wed, 28 Jan 2015 11:19:23 +0900
-Message-ID: <54C8472B.6070302@samsung.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
- <1422274532-9488-2-git-send-email-rogerq@ti.com>
- <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
- <54C66B0D.9040109@ti.com> <54C6EFC8.1090601@samsung.com>
- <54C7B0E5.20101@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 3/8] of: fix size when dma-range is not used
+Date: Tue, 27 Jan 2015 20:37:14 -0600
+Message-ID: <CAL_JsqJCE2c7PjwN_ynC5_hufe=Xo55E0j=EW5GbuX9saf82dQ@mail.gmail.com>
+References: <1422392405-32196-1-git-send-email-m-karicheri2@ti.com>
+	<1422392405-32196-4-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-reply-to: <54C7B0E5.20101@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Felipe Balbi <balbi@ti.com>, tony@atomide.com, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, george.cherian@ti.com, nsekhar@ti.com, devicetree <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1422392405-32196-4-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+On Tue, Jan 27, 2015 at 3:00 PM, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org> wrote:
+> Fix the dma-range size when the DT attribute is missing. i.e  set size to
+> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. Also add
+> code to check invalid values of size configured in DT and log error.
+>
+> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+>
+> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/of/device.c |    9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 2de320d..17504f4 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -105,12 +105,19 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>         ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>         if (ret < 0) {
+>                 dma_addr = offset = 0;
+> -               size = dev->coherent_dma_mask;
+> +               size = dev->coherent_dma_mask + 1;
 
-On 01/28/2015 12:38 AM, Roger Quadros wrote:
-> Chanwoo,
-> 
-> On 27/01/15 03:54, Chanwoo Choi wrote:
->> Hi Roger,
->>
->> On 01/27/2015 01:27 AM, Roger Quadros wrote:
->>> Hi Chanwoo,
->>>
->>> All your comments are valid. Need some clarification on one comment.
->>>
->>> On 26/01/15 15:56, Chanwoo Choi wrote:
->>>> Hi Roger,
->>>>
->>>> This patch looks good to me. But I add some comment.
->>>> If you modify some comment, I'll apply this patch on 3.21 queue.
->>>>
->>>> On Mon, Jan 26, 2015 at 9:15 PM, Roger Quadros <rogerq@ti.com> wrote:
->>>>> This driver observes the USB ID pin connected over a GPIO and
->>>>> updates the USB cable extcon states accordingly.
->>>>>
->>>>> The existing GPIO extcon driver is not suitable for this purpose
->>>>> as it needs to be taught to understand USB cable states and it
->>>>> can't handle more than one cable per instance.
->>>>>
->>>>> For the USB case we need to handle 2 cable states.
->>>>> 1) USB (attach/detach)
->>>>> 2) USB-Host (attach/detach)
->>>>>
->>>>> This driver can be easily updated in the future to handle VBUS
->>>>> events in case it happens to be available on GPIO for any platform.
->>>>>
->>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>> ---
->>>>>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  20 ++
->>>>>  drivers/extcon/Kconfig                             |   7 +
->>>>>  drivers/extcon/Makefile                            |   1 +
->>>>>  drivers/extcon/extcon-usb-gpio.c                   | 214 +++++++++++++++++++++
->>>>>  4 files changed, 242 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>>>>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
->>>>>
->>>
->>> <snip>
->>>
->>>>> +
->>>>> +static int usb_extcon_probe(struct platform_device *pdev)
->>>>> +{
->>>>> +       struct device *dev = &pdev->dev;
->>>>> +       struct device_node *np = dev->of_node;
->>>>> +       struct usb_extcon_info *info;
->>>>> +       int ret;
->>>>> +
->>>>> +       if (!np)
->>>>> +               return -EINVAL;
->>>>> +
->>>>> +       info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
->>>>> +       if (!info)
->>>>> +               return -ENOMEM;
->>>>> +
->>>>> +       info->dev = dev;
->>>>> +       info->id_gpiod = devm_gpiod_get(&pdev->dev, "id");
->>>>> +       if (IS_ERR(info->id_gpiod)) {
->>>>> +               dev_err(dev, "failed to get ID GPIO\n");
->>>>> +               return PTR_ERR(info->id_gpiod);
->>>>> +       }
->>>>> +
->>>>> +       ret = gpiod_set_debounce(info->id_gpiod,
->>>>> +                                USB_GPIO_DEBOUNCE_MS * 1000);
->>>>> +       if (ret < 0)
->>>>> +               info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
->>>>> +
->>>>> +       INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
->>>>> +
->>>>> +       info->id_irq = gpiod_to_irq(info->id_gpiod);
->>>>> +       if (info->id_irq < 0) {
->>>>> +               dev_err(dev, "failed to get ID IRQ\n");
->>>>> +               return info->id_irq;
->>>>> +       }
->>>>> +
->>>>> +       ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
->>>>> +                                       usb_irq_handler,
->>>>> +                                       IRQF_SHARED | IRQF_ONESHOT |
->>>>> +                                       IRQF_NO_SUSPEND,
->>>>> +                                       pdev->name, info);
->>>
->>> use of IRQF_NO_SUSPEND is not recommended to be used together with IRQF_SHARED so
->>> I'll remove IRQF_SHARED from here if we decide to stick with IRQF_NO_SUSPEND.
->>> More on this below.
->>>
->>>>> +       if (ret < 0) {
->>>>> +               dev_err(dev, "failed to request handler for ID IRQ\n");
->>>>> +               return ret;
->>>>> +       }
->>>>> +
->>>>> +       info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->>>>> +       if (IS_ERR(info->edev)) {
->>>>> +               dev_err(dev, "failed to allocate extcon device\n");
->>>>> +               return -ENOMEM;
->>>>> +       }
->>>>> +
->>>>> +       ret = devm_extcon_dev_register(dev, info->edev);
->>>>> +       if (ret < 0) {
->>>>> +               dev_err(dev, "failed to register extcon device\n");
->>>>> +               return ret;
->>>>> +       }
->>>>> +
->>>>> +       platform_set_drvdata(pdev, info);
->>>>
->>>> I prefer to execute the device_init_wakeup() function as following
->>>> for suspend/resume function:
->>>>             device_init_wakeup(&pdev->dev, 1);
->>>>
->>>>> +
->>>>> +       /* Perform initial detection */
->>>>> +       usb_extcon_detect_cable(&info->wq_detcable.work);
->>>>> +
->>>>> +       return 0;
->>>>> +}
->>>>> +
->>>>> +static int usb_extcon_remove(struct platform_device *pdev)
->>>>> +{
->>>>> +       struct usb_extcon_info *info = platform_get_drvdata(pdev);
->>>>> +
->>>>> +       cancel_delayed_work_sync(&info->wq_detcable);
->>>>
->>>> Need to add blank line.
->>>>
->>>>> +       return 0;
->>>>> +}
->>>>> +
->>>>> +#ifdef CONFIG_PM_SLEEP
->>>>> +static int usb_extcon_suspend(struct device *dev)
->>>>> +{
->>>>> +       struct usb_extcon_info *info = dev_get_drvdata(dev);
->>>>> +
->>>>> +       enable_irq_wake(info->id_irq);
->>>>
->>>> I prefer to use device_may_wakeup() function for whether
->>>> executing enable_irq_wake() or not. Also, The disable_irq()
->>>> in the suspend function would prevent us from discarding interrupt
->>>> before wakeup from suspend completely.
->>>>
->>>
->>> I need more clarification here.
->>>
->>> If we are going to use enable_irq_wake() here then what is the point of IRQF_NO_SUSPEND?
->>>
->>> >From Documentation/power/suspend-and-interrupts.txt I see that interrupts marked
->>> as IRQF_NO_SUSPEND should not be configured for system wakeup using enable_irq_wake().
->>>
->>> what is your preference?
->>>
->>> Is it good enough to not use IRQF_NO_SUSPEND but use enable_irq_wake() instead to
->>> enable system wakeup for that IRQ.
->>
->> I'm sorry for confusion about usage both IRQF_NO_SUSPEND and enable_irq_wake().
->> If suspend() function in device driver executes the enable_irq_wake(),
->> IRQF_NO_SUSPEND flag is not necessary.
->>
->> I think that we better use enable_irq_wake() instead of adding IRQF_NO_SUSPEND flag.
->> I'll expect to remove IRQF_NO_SUSPEND flag when requesting gpio interrupt.
->>
-> OK.
-> 
->>>
->>>>             if (device_may_wakeup(dev))
->>>>                      enable_irq_wake(info->id_irq);
->>>>             disable_irq(info->id_irq);
->>>
->>> why do we need to disable irq here? How will the system wakeup if IRQ is disabled?
->>
->> The disable_irq() may make the interrupt as masking state.
->> Although interrput is masking state(disable), interrup can happen.
->> but, the interrupt may remain the pending state without discarding it.
->>
->> And then,
->> When resume() function in extcon-usb-gpio.c executes enable_irq(info->id_irq),
->> pending interrupt will happen and executes the interrupt handler(usb_irq_handler).
->>
->> If we don't execute disable_irq() in suspend function,
->> info->id->irq interrupt might happen before completing the resume sequence
->> of extcon-gpio-usb driver.
-> 
-> How will that cause a problem? If an interrupt happens _before_ the system enters
-> SUSPEND state then kernel should abort the suspend. This should be taken care by 
-> kernel PM core and not the device driver.
-> 
-> I still fail to understand that we need to call disable_irq() in .suspend() and
-> enable_irq() in .resume()
-> 
-> can you point me to any other drivers doing so?
+This is fine since coherent_dma_mask will always be 4G - 1 in this case.
 
-You can refer the suspend function in drivers/mfd/max14577.c or drivers/mfd/max77693.c.
-The max14577_suspend() includes the detailed comment for why using disable_irq() in suspend function.
+>         } else {
+>                 offset = PFN_DOWN(paddr - dma_addr);
+>                 dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>         }
+>
+> +       if (is_power_of_2(size + 1))
+> +               size = size + 1;
+> +       else if (!is_power_of_2(size)) {
+> +               dev_err(dev, "invalid size\n");
+> +               return;
 
-In max14577 case, max14577_suspend() use disable_irq() function because of i2c dependency.
-If max14577 device is wake-up from suspend state before completing the resume sequence
-of i2c, max14577 may fail to read/write i2c communication.
+I think this is too restrictive. I think checking bit 0 is 1 is enough
+to tell the size is a mask.
 
-Thanks,
-Chanwoo Choi
+I would like it to be a WARN if detected and just add 1.
 
+Rob
