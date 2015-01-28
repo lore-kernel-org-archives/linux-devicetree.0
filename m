@@ -1,85 +1,81 @@
-From: Peter Rosin <peda@lysator.liu.se>
-Subject: [PATCH v2 7/7] ASoC: pcm512x: Support
-	SND_SOC_DAIFMT_CBM_CFS
-Date: Wed, 28 Jan 2015 15:16:12 +0100
-Message-ID: <1422454572-7847-8-git-send-email-peda@lysator.liu.se>
-References: <1422454572-7847-1-git-send-email-peda@lysator.liu.se>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 1/2] ARM: zynq: Remove bogus value from 'bias-disable'
+ property
+Date: Wed, 28 Jan 2015 15:21:19 +0100
+Message-ID: <ce6e56872ab744a49612ef9bca07c73d@BN1AFFO11FD005.protection.gbl>
+References: <1422301796-22888-1-git-send-email-soren.brinkmann@xilinx.com>
+ <54C6DDE8.3000905@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1422454572-7847-1-git-send-email-peda@lysator.liu.se>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Clemens Ladisch <clemens@ladisch.de>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Peter Rosin <peda@axentia.se>
+Content-Type: multipart/mixed; boundary="===============1752180519077223602=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <54C6DDE8.3000905@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+--===============1752180519077223602==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="Of3Md1kDMWwojpwvIlFLKVqWoDU8k6HtX"
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- sound/soc/codecs/pcm512x.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+--Of3Md1kDMWwojpwvIlFLKVqWoDU8k6HtX
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/sound/soc/codecs/pcm512x.c b/sound/soc/codecs/pcm512x.c
-index d46d6cdb6b87..64be85fb2748 100644
---- a/sound/soc/codecs/pcm512x.c
-+++ b/sound/soc/codecs/pcm512x.c
-@@ -464,6 +464,7 @@ static int pcm512x_dai_startup(struct snd_pcm_substream *substream,
- 
- 	switch (pcm512x->fmt & SND_SOC_DAIFMT_MASTER_MASK) {
- 	case SND_SOC_DAIFMT_CBM_CFM:
-+	case SND_SOC_DAIFMT_CBM_CFS:
- 		return pcm512x_dai_startup_master(substream, dai);
- 
- 	case SND_SOC_DAIFMT_CBS_CFS:
-@@ -970,6 +971,8 @@ static int pcm512x_hw_params(struct snd_pcm_substream *substream,
- 	struct pcm512x_priv *pcm512x = snd_soc_codec_get_drvdata(codec);
- 	int alen;
- 	int gpio;
-+	int clock_output;
-+	int master_mode;
- 	int ret;
- 
- 	dev_dbg(codec->dev, "hw_params %u Hz, %u channels\n",
-@@ -1018,6 +1021,12 @@ static int pcm512x_hw_params(struct snd_pcm_substream *substream,
- 		}
- 		return 0;
- 	case SND_SOC_DAIFMT_CBM_CFM:
-+		clock_output = PCM512x_BCKO | PCM512x_LRKO;
-+		master_mode = PCM512x_RLRK | PCM512x_RBCK;
-+		break;
-+	case SND_SOC_DAIFMT_CBM_CFS:
-+		clock_output = PCM512x_BCKO;
-+		master_mode = PCM512x_RBCK;
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -1114,7 +1123,7 @@ static int pcm512x_hw_params(struct snd_pcm_substream *substream,
- 
- 	ret = regmap_update_bits(pcm512x->regmap, PCM512x_BCLK_LRCLK_CFG,
- 				 PCM512x_BCKP | PCM512x_BCKO | PCM512x_LRKO,
--				 PCM512x_BCKO | PCM512x_LRKO);
-+				 clock_output);
- 	if (ret != 0) {
- 		dev_err(codec->dev, "Failed to enable clock output: %d\n", ret);
- 		return ret;
-@@ -1122,7 +1131,7 @@ static int pcm512x_hw_params(struct snd_pcm_substream *substream,
- 
- 	ret = regmap_update_bits(pcm512x->regmap, PCM512x_MASTER_MODE,
- 				 PCM512x_RLRK | PCM512x_RBCK,
--				 PCM512x_RLRK | PCM512x_RBCK);
-+				 master_mode);
- 	if (ret != 0) {
- 		dev_err(codec->dev, "Failed to enable master mode: %d\n", ret);
- 		return ret;
--- 
-1.7.10.4
+On 01/27/2015 01:38 AM, Andreas F=C3=A4rber wrote:
+> Am 26.01.2015 um 20:49 schrieb Soren Brinkmann:
+>> In one pinctrl node, a 'bias-disable' property is erroneously assigned=
+ a
+>> value.
+>>
+>> Fixes: ARM: zynq: DT: Add pinctrl information
+>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>=20
+> Reviewed-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>=20
+> Andreas
+>=20
+
+Applied both.
+
+Thanks,
+Michal
+
+
+--Of3Md1kDMWwojpwvIlFLKVqWoDU8k6HtX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlTI8GMACgkQykllyylKDCHOvgCfbuar5AsiJInFpFDpFKWmS2/o
+ao0AoIrnqImPrQk7T3HaPUuvPq6lfq7p
+=ufXe
+-----END PGP SIGNATURE-----
+
+--Of3Md1kDMWwojpwvIlFLKVqWoDU8k6HtX--
+
+
+--===============1752180519077223602==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1752180519077223602==--
