@@ -1,328 +1,1106 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/4] mmc: core: add support for hardware reset gpio line
-Date: Wed, 28 Jan 2015 15:24:03 +0100
-Message-ID: <CAPDyKFpowidghwadJS+gYP0EVo6gRUhAG8s14CMEbwatFadP2Q@mail.gmail.com>
-References: <1422453595-21160-1-git-send-email-m.szyprowski@samsung.com>
-	<1422453595-21160-2-git-send-email-m.szyprowski@samsung.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v5 2/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Wed, 28 Jan 2015 18:46:20 +0000
+Message-ID: <54C92E7C.5040507@kernel.org>
+References: <1421748922-8933-1-git-send-email-iivanov@mm-sol.com> <1421748922-8933-3-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1422453595-21160-2-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Tobias Jakobi <liquid.acid@gmx.net>, Daniel Drake <drake@endlessm.com>, Sebastian Reichel <sre@kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Joonyoung Shim <jy0922.shim@samsung.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421748922-8933-3-git-send-email-iivanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28 January 2015 at 14:59, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> There are boards (like Hardkernel's Odroid boards) on which eMMC card's
-> reset line is connected to GPIO line instead of the hardware reset
-> logic. In case of such boards, if first stage of bootloader is loaded
-> from such eMMC card, before performing system reboot, additional reset
-> of eMMC card is required to properly boot the whole system again. This
-> patch adds code for handling reset gpio lines defined in device tree.
+On 20/01/15 10:15, Ivan T. Ivanov wrote:
+> From: Stanimir Varbanov <svarbanov@mm-sol.com>
+> 
+> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+> 15bits resolution and register space inside PMIC accessible across
+> SPMI bus.
+> 
+> The vadc driver registers itself through IIO interface.
+> 
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+One minor comment inline.  Looks good to me.
+Applied to the togreg branch of iio.git - initially pushed out as testing.
 
-
-I don't follow the above sequence. Can you try to elaborate and
-describe for what exact scenario we require the hardware reset to be
-done?
-
-Also, I wonder whether we could extend the mmc-pwrseq to cover your
-case? Did you consider that as an option?
-
-Kind regards
-Uffe
-
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Glad to have this one out of the pending list ;)
 > ---
->  Documentation/devicetree/bindings/mmc/mmc.txt |  35 +++++----
->  drivers/mmc/core/core.c                       |   2 +
->  drivers/mmc/core/host.c                       |  11 +++
->  drivers/mmc/core/slot-gpio.c                  | 101 +++++++++++++++++++++++++-
->  include/linux/mmc/slot-gpio.h                 |   7 ++
->  5 files changed, 139 insertions(+), 17 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index 438899e8829b..c952cdea0201 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -21,6 +21,9 @@ Optional properties:
->    below for the case, when a GPIO is used for the CD line
->  - wp-inverted: when present, polarity on the WP line is inverted. See the note
->    below for the case, when a GPIO is used for the WP line
-> +- reset-gpios: Specify GPIO for hardware reset of a card, see gpio binding
-> +- reset-inverted: when present, polarity on the reset line is inverted. See
-> +  the note below for the case, when a GPIO is used for the reset line
->  - max-frequency: maximum operating clock frequency
->  - no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
->    this system, even if the controller claims it is.
-> @@ -43,22 +46,24 @@ Optional properties:
->  - dsr: Value the card's (optional) Driver Stage Register (DSR) should be
->    programmed with. Valid range: [0 .. 0xffff].
->
-> -*NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
-> -polarity properties, we have to fix the meaning of the "normal" and "inverted"
-> -line levels. We choose to follow the SDHCI standard, which specifies both those
-> -lines as "active low." Therefore, using the "cd-inverted" property means, that
-> -the CD line is active high, i.e. it is high, when a card is inserted. Similar
-> -logic applies to the "wp-inverted" property.
-> -
-> -CD and WP lines can be implemented on the hardware in one of two ways: as GPIOs,
-> -specified in cd-gpios and wp-gpios properties, or as dedicated pins. Polarity of
-> -dedicated pins can be specified, using *-inverted properties. GPIO polarity can
-> -also be specified using the OF_GPIO_ACTIVE_LOW flag. This creates an ambiguity
-> -in the latter case. We choose to use the XOR logic for GPIO CD and WP lines.
-> -This means, the two properties are "superimposed," for example leaving the
-> +*NOTE* on CD, WP and RESET polarity. To use common for all SD/MMC host
-> +controllers line polarity properties, we have to fix the meaning of the
-> +"normal" and "inverted" line levels. We choose to follow the SDHCI
-> +standard, which specifies both those lines as "active low." Therefore,
-> +using the "cd-inverted" property means, that the CD line is active high,
-> +i.e. it is high, when a card is inserted. Similar logic applies to the
-> +"wp-inverted" and "reset-inverted" property.
+>  drivers/iio/adc/Kconfig          |   14 +
+>  drivers/iio/adc/Makefile         |    1 +
+>  drivers/iio/adc/qcom-spmi-vadc.c | 1016 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1031 insertions(+)
+>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index d0924f3..792e2b8 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -220,6 +220,20 @@ config QCOM_SPMI_IADC
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called qcom-spmi-iadc.
+> 
+> +config QCOM_SPMI_VADC
+> +	tristate "Qualcomm SPMI PMIC voltage ADC"
+> +	depends on SPMI
+> +	select REGMAP_SPMI
+> +	help
+> +	  This is the IIO Voltage ADC driver for Qualcomm QPNP VADC Chip.
 > +
-> +CD, WP and RESET lines can be implemented on the hardware in one of two
-> +ways: as GPIOs, specified in cd-gpios and wp-gpios properties, or as
-> +dedicated pins. Polarity of dedicated pins can be specified, using
-> +*-inverted properties. GPIO polarity can also be specified using the
-> +OF_GPIO_ACTIVE_LOW flag. This creates an ambiguity in the latter case.
-> +We choose to use the XOR logic for GPIO CD and WP lines. This means, the
-> +two properties are "superimposed," for example leaving the
->  OF_GPIO_ACTIVE_LOW flag clear and specifying the respective *-inverted
-> -property results in a double-inversion and actually means the "normal" line
-> -polarity is in effect.
-> +property results in a double-inversion and actually means the "normal"
-> +line polarity is in effect.
->
->  Optional SDIO properties:
->  - keep-power-in-suspend: Preserves card power during a suspend/resume cycle
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index 1be7055548cb..b556c3b5d83d 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -2520,6 +2520,7 @@ void mmc_start_host(struct mmc_host *host)
->                 mmc_power_off(host);
->         else
->                 mmc_power_up(host, host->ocr_avail);
-> +       mmc_gpiod_request_restart_handler(host);
->         mmc_gpiod_request_cd_irq(host);
->         _mmc_detect_change(host, 0, false);
->  }
-> @@ -2557,6 +2558,7 @@ void mmc_stop_host(struct mmc_host *host)
->
->         BUG_ON(host->card);
->
-> +       mmc_gpiod_free_restart_handler(host);
->         mmc_power_off(host);
->  }
->
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index 8be0df758e68..644d0f41b8f6 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -317,6 +317,7 @@ int mmc_of_parse(struct mmc_host *host)
->         int len, ret;
->         bool cd_cap_invert, cd_gpio_invert = false;
->         bool ro_cap_invert, ro_gpio_invert = false;
-> +       bool rst_cap_invert;
->
->         if (!host->parent || !host->parent->of_node)
->                 return 0;
-> @@ -404,6 +405,16 @@ int mmc_of_parse(struct mmc_host *host)
->         if (ro_cap_invert ^ ro_gpio_invert)
->                 host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
->
-> +       /* Parse HW Reset */
-> +       rst_cap_invert = of_property_read_bool(np, "reset-inverted");
+> +	  The driver supports multiple channels read. The VADC is a 15-bit
+> +	  sigma-delta ADC. Some of the channels are internally used for
+> +	  calibration.
 > +
-> +       ret = mmc_gpiod_request_rst(host, "reset", 0, rst_cap_invert);
-> +       if (!ret) {
-> +               dev_info(host->parent, "Got HW Reset GPIO\n");
-> +               host->caps |= MMC_CAP_HW_RESET;
-> +       } else if (ret != -ENOENT)
-> +               return ret;
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called qcom-spmi-vadc.
 > +
->         if (of_find_property(np, "cap-sd-highspeed", &len))
->                 host->caps |= MMC_CAP_SD_HIGHSPEED;
->         if (of_find_property(np, "cap-mmc-highspeed", &len))
-> diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
-> index 27117ba47073..5a2ca43e0e8d 100644
-> --- a/drivers/mmc/core/slot-gpio.c
-> +++ b/drivers/mmc/core/slot-gpio.c
-> @@ -8,6 +8,7 @@
->   * published by the Free Software Foundation.
->   */
->
+>  config ROCKCHIP_SARADC
+>  	tristate "Rockchip SARADC driver"
+>  	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index c06718b..285b0a0 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -23,6 +23,7 @@ obj-$(CONFIG_MCP3422) += mcp3422.o
+>  obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
+>  obj-$(CONFIG_NAU7802) += nau7802.o
+>  obj-$(CONFIG_QCOM_SPMI_IADC) += qcom-spmi-iadc.o
+> +obj-$(CONFIG_QCOM_SPMI_VADC) += qcom-spmi-vadc.o
+>  obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
+>  obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
+>  obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+> diff --git a/drivers/iio/adc/qcom-spmi-vadc.c b/drivers/iio/adc/qcom-spmi-vadc.c
+> new file mode 100644
+> index 0000000..3211729
+> --- /dev/null
+> +++ b/drivers/iio/adc/qcom-spmi-vadc.c
+> @@ -0,0 +1,1016 @@
+> +/*
+> + * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/completion.h>
 > +#include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/gpio.h>
->  #include <linux/gpio/consumer.h>
-> @@ -17,17 +18,22 @@
->  #include <linux/mmc/slot-gpio.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> +#include <linux/reboot.h>
->
->  #include "slot-gpio.h"
->
->  struct mmc_gpio {
->         struct gpio_desc *ro_gpio;
->         struct gpio_desc *cd_gpio;
-> +       struct gpio_desc *rst_gpio;
->         bool override_ro_active_level;
->         bool override_cd_active_level;
-> +       bool rst_raw_active_level;
-> +       struct notifier_block rst_nb;
->         irqreturn_t (*cd_gpio_isr)(int irq, void *dev_id);
->         char *ro_label;
-> -       char cd_label[0];
-> +       char *cd_label;
-> +       char rst_label[0];
->  };
->
->  static irqreturn_t mmc_gpio_cd_irqt(int irq, void *dev_id)
-> @@ -45,12 +51,14 @@ int mmc_gpio_alloc(struct mmc_host *host)
->  {
->         size_t len = strlen(dev_name(host->parent)) + 4;
->         struct mmc_gpio *ctx = devm_kzalloc(host->parent,
-> -                               sizeof(*ctx) + 2 * len, GFP_KERNEL);
-> +                               sizeof(*ctx) + 3 * len + 1, GFP_KERNEL);
->
->         if (ctx) {
-> +               ctx->cd_label = ctx->rst_label + len + 1;
->                 ctx->ro_label = ctx->cd_label + len;
->                 snprintf(ctx->cd_label, len, "%s cd", dev_name(host->parent));
->                 snprintf(ctx->ro_label, len, "%s ro", dev_name(host->parent));
-> +               snprintf(ctx->rst_label, len, "%s rst", dev_name(host->parent));
->                 host->slot.handler_priv = ctx;
->                 host->slot.cd_irq = -EINVAL;
->         }
-> @@ -88,6 +96,21 @@ int mmc_gpio_get_cd(struct mmc_host *host)
->  }
->  EXPORT_SYMBOL(mmc_gpio_get_cd);
->
-> +void mmc_gpio_do_hw_reset(struct mmc_host *host)
-> +{
-> +       struct mmc_gpio *ctx = host->slot.handler_priv;
-> +       if (!ctx || !ctx->rst_gpio)
-> +               return;
+> +#include <linux/err.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/log2.h>
 > +
-> +       gpiod_set_raw_value_cansleep(ctx->rst_gpio, ctx->rst_raw_active_level);
-> +       /* For eMMC, minimum is 1us but give it 10us for good measure */
-> +       udelay(10);
-> +       gpiod_set_raw_value_cansleep(ctx->rst_gpio, !ctx->rst_raw_active_level);
-> +       /* For eMMC, minimum is 200us but give it 300us for good measure */
-> +       usleep_range(300, 1000);
-> +}
-> +EXPORT_SYMBOL(mmc_gpio_do_hw_reset);
+> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
 > +
->  /**
->   * mmc_gpio_request_ro - request a gpio for write-protection
->   * @host: mmc host
-> @@ -167,6 +190,48 @@ void mmc_gpio_set_cd_isr(struct mmc_host *host,
->  }
->  EXPORT_SYMBOL(mmc_gpio_set_cd_isr);
->
-> +static int mmc_gpio_rst_nb(struct notifier_block *this, unsigned long mode,
-> +                          void *cmd)
-> +{
-> +       struct mmc_gpio *ctx = container_of(this, struct mmc_gpio, rst_nb);
+> +/* VADC register and bit definitions */
+> +#define VADC_REVISION2				0x1
+> +#define VADC_REVISION2_SUPPORTED_VADC		1
 > +
-> +       gpiod_set_raw_value(ctx->rst_gpio, ctx->rst_raw_active_level);
-> +       /* For eMMC, minimum is 1us but give it 10us for good measure */
-> +       udelay(10);
-> +       gpiod_set_raw_value(ctx->rst_gpio, !ctx->rst_raw_active_level);
-> +       /* For eMMC, minimum is 200us but give it 300us for good measure */
-> +       udelay(300);
+> +#define VADC_PERPH_TYPE				0x4
+> +#define VADC_PERPH_TYPE_ADC			8
 > +
-> +       return NOTIFY_DONE;
-> +}
+> +#define VADC_PERPH_SUBTYPE			0x5
+> +#define VADC_PERPH_SUBTYPE_VADC			1
 > +
-> +void mmc_gpiod_request_restart_handler(struct mmc_host *host)
-> +{
-> +       struct mmc_gpio *ctx = host->slot.handler_priv;
+> +#define VADC_STATUS1				0x8
+> +#define VADC_STATUS1_OP_MODE			4
+> +#define VADC_STATUS1_REQ_STS			BIT(1)
+> +#define VADC_STATUS1_EOC			BIT(0)
+> +#define VADC_STATUS1_REQ_STS_EOC_MASK		0x3
 > +
-> +       if (!ctx || !ctx->rst_gpio)
-> +               return;
+> +#define VADC_MODE_CTL				0x40
+> +#define VADC_OP_MODE_SHIFT			3
+> +#define VADC_OP_MODE_NORMAL			0
+> +#define VADC_AMUX_TRIM_EN			BIT(1)
+> +#define VADC_ADC_TRIM_EN			BIT(0)
 > +
-> +       ctx->rst_nb.notifier_call = mmc_gpio_rst_nb;
-> +       ctx->rst_nb.priority = 255;
+> +#define VADC_EN_CTL1				0x46
+> +#define VADC_EN_CTL1_SET			BIT(7)
 > +
-> +       register_restart_handler(&ctx->rst_nb);
-> +       return;
-> +}
-> +EXPORT_SYMBOL(mmc_gpiod_request_restart_handler);
+> +#define VADC_ADC_CH_SEL_CTL			0x48
 > +
-> +void mmc_gpiod_free_restart_handler(struct mmc_host *host)
-> +{
-> +       struct mmc_gpio *ctx = host->slot.handler_priv;
+> +#define VADC_ADC_DIG_PARAM			0x50
+> +#define VADC_ADC_DIG_DEC_RATIO_SEL_SHIFT	2
 > +
-> +       if (!ctx || !ctx->rst_gpio)
-> +               return;
+> +#define VADC_HW_SETTLE_DELAY			0x51
 > +
-> +       unregister_restart_handler(&ctx->rst_nb);
-> +       return;
-> +}
-> +EXPORT_SYMBOL(mmc_gpiod_free_restart_handler);
+> +#define VADC_CONV_REQ				0x52
+> +#define VADC_CONV_REQ_SET			BIT(7)
 > +
->  /**
->   * mmc_gpio_request_cd - request a gpio for card-detection
->   * @host: mmc host
-> @@ -303,3 +368,35 @@ int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
->         return 0;
->  }
->  EXPORT_SYMBOL(mmc_gpiod_request_ro);
+> +#define VADC_FAST_AVG_CTL			0x5a
+> +#define VADC_FAST_AVG_EN			0x5b
+> +#define VADC_FAST_AVG_EN_SET			BIT(7)
+> +
+> +#define VADC_ACCESS				0xd0
+> +#define VADC_ACCESS_DATA			0xa5
+> +
+> +#define VADC_PERH_RESET_CTL3			0xda
+> +#define VADC_FOLLOW_WARM_RB			BIT(2)
+> +
+> +#define VADC_DATA				0x60	/* 16 bits */
+> +
+> +#define VADC_CONV_TIME_MIN_US			2000
+> +#define VADC_CONV_TIME_MAX_US			2100
+> +
+> +/* Min ADC code represents 0V */
+> +#define VADC_MIN_ADC_CODE			0x6000
+> +/* Max ADC code represents full-scale range of 1.8V */
+> +#define VADC_MAX_ADC_CODE			0xa800
+> +
+> +#define VADC_ABSOLUTE_RANGE_UV			625000
+> +#define VADC_RATIOMETRIC_RANGE_UV		1800000
+> +
+> +#define VADC_DEF_PRESCALING			0 /* 1:1 */
+> +#define VADC_DEF_DECIMATION			0 /* 512 */
+> +#define VADC_DEF_HW_SETTLE_TIME			0 /* 0 us */
+> +#define VADC_DEF_AVG_SAMPLES			0 /* 1 sample */
+> +#define VADC_DEF_CALIB_TYPE			VADC_CALIB_ABSOLUTE
+> +
+> +#define VADC_DECIMATION_MIN			512
+> +#define VADC_DECIMATION_MAX			4096
+> +
+> +#define VADC_HW_SETTLE_DELAY_MAX		10000
+> +#define VADC_AVG_SAMPLES_MAX			512
+> +
+> +#define KELVINMIL_CELSIUSMIL			273150
+> +
+> +#define VADC_CHAN_MIN			VADC_USBIN
+> +#define VADC_CHAN_MAX			VADC_LR_MUX3_BUF_PU1_PU2_XO_THERM
+> +
+> +/*
+> + * VADC_CALIB_ABSOLUTE: uses the 625mV and 1.25V as reference channels.
+> + * VADC_CALIB_RATIOMETRIC: uses the reference voltage (1.8V) and GND for
+> + * calibration.
+> + */
+> +enum vadc_calibration {
+> +	VADC_CALIB_ABSOLUTE = 0,
+> +	VADC_CALIB_RATIOMETRIC
+> +};
 > +
 > +/**
-> + * mmc_gpiod_request_rst - request a gpio descriptor for hw reset
-> + * @host: mmc host
-> + * @con_id: function within the GPIO consumer
-> + * @idx: index of the GPIO to obtain in the consumer
-> + * @inverted: indicated the polarity of reset line should be inverted
-> + * (xored with GPIO_ACTIVE_LOW flag of gpio descriptor)
+> + * struct vadc_linear_graph - Represent ADC characteristics.
+> + * @dy: numerator slope to calculate the gain.
+> + * @dx: denominator slope to calculate the gain.
+> + * @gnd: A/D word of the ground reference used for the channel.
 > + *
-> + * Returns zero on success, else an error.
+> + * Each ADC device has different offset and gain parameters which are
+> + * computed to calibrate the device.
 > + */
-> +int mmc_gpiod_request_rst(struct mmc_host *host, const char *con_id,
-> +                         unsigned int idx, bool inverted)
+> +struct vadc_linear_graph {
+> +	s32 dy;
+> +	s32 dx;
+> +	s32 gnd;
+> +};
+> +
+> +/**
+> + * struct vadc_prescale_ratio - Represent scaling ratio for ADC input.
+> + * @num: the inverse numerator of the gain applied to the input channel.
+> + * @den: the inverse denominator of the gain applied to the input channel.
+> + */
+> +struct vadc_prescale_ratio {
+> +	u32 num;
+> +	u32 den;
+> +};
+> +
+> +/**
+> + * struct vadc_channel_prop - VADC channel property.
+> + * @channel: channel number, refer to the channel list.
+> + * @calibration: calibration type.
+> + * @decimation: sampling rate supported for the channel.
+> + * @prescale: channel scaling performed on the input signal.
+> + * @hw_settle_time: the time between AMUX being configured and the
+> + *	start of conversion.
+> + * @avg_samples: ability to provide single result from the ADC
+> + *	that is an average of multiple measurements.
+> + */
+> +struct vadc_channel_prop {
+> +	unsigned int channel;
+> +	enum vadc_calibration calibration;
+> +	unsigned int decimation;
+> +	unsigned int prescale;
+> +	unsigned int hw_settle_time;
+> +	unsigned int avg_samples;
+> +};
+> +
+> +/**
+> + * struct vadc_priv - VADC private structure.
+> + * @regmap: pointer to struct regmap.
+> + * @dev: pointer to struct device.
+> + * @base: base address for the ADC peripheral.
+> + * @nchannels: number of VADC channels.
+> + * @chan_props: array of VADC channel properties.
+> + * @iio_chans: array of IIO channels specification.
+> + * @are_ref_measured: are reference points measured.
+> + * @poll_eoc: use polling instead of interrupt.
+> + * @complete: VADC result notification after interrupt is received.
+> + * @graph: store parameters for calibration.
+> + * @lock: ADC lock for access to the peripheral.
+> + */
+> +struct vadc_priv {
+> +	struct regmap		 *regmap;
+> +	struct device		 *dev;
+> +	u16			 base;
+> +	unsigned int		 nchannels;
+> +	struct vadc_channel_prop *chan_props;
+> +	struct iio_chan_spec	 *iio_chans;
+> +	bool			 are_ref_measured;
+> +	bool			 poll_eoc;
+> +	struct completion	 complete;
+> +	struct vadc_linear_graph graph[2];
+> +	struct mutex		 lock;
+> +};
+> +
+> +static const struct vadc_prescale_ratio vadc_prescale_ratios[] = {
+> +	{.num =  1, .den =  1},
+> +	{.num =  1, .den =  3},
+> +	{.num =  1, .den =  4},
+> +	{.num =  1, .den =  6},
+> +	{.num =  1, .den = 20},
+> +	{.num =  1, .den =  8},
+> +	{.num = 10, .den = 81},
+> +	{.num =  1, .den = 10}
+> +};
+> +
+> +static int vadc_read(struct vadc_priv *vadc, u16 offset, u8 *data)
 > +{
-> +       struct mmc_gpio *ctx = host->slot.handler_priv;
-> +       struct gpio_desc *desc;
-> +
-> +       if (!con_id)
-> +               con_id = ctx->rst_label;
-> +
-> +       desc = devm_gpiod_get_index(host->parent, con_id, idx);
-> +       if (IS_ERR(desc))
-> +               return PTR_ERR(desc);
-> +
-> +       ctx->rst_raw_active_level = !inverted ^ gpiod_is_active_low(desc);
-> +       ctx->rst_gpio = desc;
-> +
-> +       gpiod_direction_output_raw(desc, !ctx->rst_raw_active_level);
-> +
-> +       return 0;
+> +	return regmap_bulk_read(vadc->regmap, vadc->base + offset, data, 1);
 > +}
-> +EXPORT_SYMBOL(mmc_gpiod_request_rst);
-> diff --git a/include/linux/mmc/slot-gpio.h b/include/linux/mmc/slot-gpio.h
-> index 3945a8c9d3cb..48f814e1bbeb 100644
-> --- a/include/linux/mmc/slot-gpio.h
-> +++ b/include/linux/mmc/slot-gpio.h
-> @@ -26,8 +26,15 @@ int mmc_gpiod_request_cd(struct mmc_host *host, const char *con_id,
->  int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
->                          unsigned int idx, bool override_active_level,
->                          unsigned int debounce, bool *gpio_invert);
-> +int mmc_gpiod_request_rst(struct mmc_host *host, const char *con_id,
-> +                        unsigned int idx, bool inverted);
->  void mmc_gpio_set_cd_isr(struct mmc_host *host,
->                          irqreturn_t (*isr)(int irq, void *dev_id));
->  void mmc_gpiod_request_cd_irq(struct mmc_host *host);
->
-> +void mmc_gpio_do_hw_reset(struct mmc_host *host);
-> +void mmc_gpiod_request_restart_handler(struct mmc_host *host);
-> +void mmc_gpiod_free_restart_handler(struct mmc_host *host);
 > +
+> +static int vadc_write(struct vadc_priv *vadc, u16 offset, u8 data)
+> +{
+> +	return regmap_write(vadc->regmap, vadc->base + offset, data);
+> +}
 > +
->  #endif
+> +static int vadc_reset(struct vadc_priv *vadc)
+> +{
+> +	u8 data;
+> +	int ret;
+> +
+> +	ret = vadc_write(vadc, VADC_ACCESS, VADC_ACCESS_DATA);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vadc_read(vadc, VADC_PERH_RESET_CTL3, &data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vadc_write(vadc, VADC_ACCESS, VADC_ACCESS_DATA);
+> +	if (ret)
+> +		return ret;
+> +
+> +	data |= VADC_FOLLOW_WARM_RB;
+> +
+> +	return vadc_write(vadc, VADC_PERH_RESET_CTL3, data);
+> +}
+> +
+> +static int vadc_set_state(struct vadc_priv *vadc, bool state)
+> +{
+> +	return vadc_write(vadc, VADC_EN_CTL1, state ? VADC_EN_CTL1_SET : 0);
+> +}
+> +
+> +static void vadc_show_status(struct vadc_priv *vadc)
+> +{
+> +	u8 mode, sta1, chan, dig, en, req;
+> +	int ret;
+> +
+> +	ret = vadc_read(vadc, VADC_MODE_CTL, &mode);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_ADC_DIG_PARAM, &dig);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_ADC_CH_SEL_CTL, &chan);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_CONV_REQ, &req);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_STATUS1, &sta1);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = vadc_read(vadc, VADC_EN_CTL1, &en);
+> +	if (ret)
+> +		return;
+> +
+> +	dev_err(vadc->dev,
+> +		"mode:%02x en:%02x chan:%02x dig:%02x req:%02x sta1:%02x\n",
+> +		mode, en, chan, dig, req, sta1);
+> +}
+> +
+> +static int vadc_configure(struct vadc_priv *vadc,
+> +			  struct vadc_channel_prop *prop)
+> +{
+> +	u8 decimation, mode_ctrl;
+> +	int ret;
+> +
+> +	/* Mode selection */
+> +	mode_ctrl = (VADC_OP_MODE_NORMAL << VADC_OP_MODE_SHIFT) |
+> +		     VADC_ADC_TRIM_EN | VADC_AMUX_TRIM_EN;
+> +	ret = vadc_write(vadc, VADC_MODE_CTL, mode_ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Channel selection */
+> +	ret = vadc_write(vadc, VADC_ADC_CH_SEL_CTL, prop->channel);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Digital parameter setup */
+> +	decimation = prop->decimation << VADC_ADC_DIG_DEC_RATIO_SEL_SHIFT;
+> +	ret = vadc_write(vadc, VADC_ADC_DIG_PARAM, decimation);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* HW settle time delay */
+> +	ret = vadc_write(vadc, VADC_HW_SETTLE_DELAY, prop->hw_settle_time);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vadc_write(vadc, VADC_FAST_AVG_CTL, prop->avg_samples);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (prop->avg_samples)
+> +		ret = vadc_write(vadc, VADC_FAST_AVG_EN, VADC_FAST_AVG_EN_SET);
+> +	else
+> +		ret = vadc_write(vadc, VADC_FAST_AVG_EN, 0);
+> +
+> +	return ret;
+> +}
+> +
+> +static int vadc_poll_wait_eoc(struct vadc_priv *vadc, unsigned int interval_us)
+> +{
+> +	unsigned int count, retry;
+> +	u8 sta1;
+> +	int ret;
+> +
+> +	retry = interval_us / VADC_CONV_TIME_MIN_US;
+> +
+> +	for (count = 0; count < retry; count++) {
+> +		ret = vadc_read(vadc, VADC_STATUS1, &sta1);
+> +		if (ret)
+> +			return ret;
+> +
+> +		sta1 &= VADC_STATUS1_REQ_STS_EOC_MASK;
+> +		if (sta1 == VADC_STATUS1_EOC)
+> +			return 0;
+> +
+> +		usleep_range(VADC_CONV_TIME_MIN_US, VADC_CONV_TIME_MAX_US);
+> +	}
+> +
+> +	vadc_show_status(vadc);
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static int vadc_read_result(struct vadc_priv *vadc, u16 *data)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(vadc->regmap, vadc->base + VADC_DATA, data, 2);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*data = clamp_t(u16, *data, VADC_MIN_ADC_CODE, VADC_MAX_ADC_CODE);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct vadc_channel_prop *vadc_get_channel(struct vadc_priv *vadc,
+> +						  unsigned int num)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < vadc->nchannels; i++)
+> +		if (vadc->chan_props[i].channel == num)
+> +			return &vadc->chan_props[i];
+> +
+> +	dev_dbg(vadc->dev, "no such channel %02x\n", num);
+> +
+> +	return NULL;
+> +}
+> +
+> +static int vadc_do_conversion(struct vadc_priv *vadc,
+> +			      struct vadc_channel_prop *prop, u16 *data)
+> +{
+> +	unsigned int timeout;
+> +	int ret;
+> +
+> +	mutex_lock(&vadc->lock);
+> +
+> +	ret = vadc_configure(vadc, prop);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	if (!vadc->poll_eoc)
+> +		reinit_completion(&vadc->complete);
+> +
+> +	ret = vadc_set_state(vadc, true);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	ret = vadc_write(vadc, VADC_CONV_REQ, VADC_CONV_REQ_SET);
+> +	if (ret)
+> +		goto err_disable;
+> +
+> +	timeout = BIT(prop->avg_samples) * VADC_CONV_TIME_MIN_US * 2;
+> +
+> +	if (vadc->poll_eoc) {
+> +		ret = vadc_poll_wait_eoc(vadc, timeout);
+> +	} else {
+> +		ret = wait_for_completion_timeout(&vadc->complete, timeout);
+> +		if (!ret) {
+> +			ret = -ETIMEDOUT;
+> +			goto err_disable;
+> +		}
+> +
+> +		/* Double check conversion status */
+> +		ret = vadc_poll_wait_eoc(vadc, VADC_CONV_TIME_MIN_US);
+> +		if (ret)
+> +			goto err_disable;
+> +	}
+> +
+> +	ret = vadc_read_result(vadc, data);
+> +
+> +err_disable:
+> +	vadc_set_state(vadc, false);
+> +	if (ret)
+> +		dev_err(vadc->dev, "conversion failed\n");
+> +unlock:
+> +	mutex_unlock(&vadc->lock);
+> +	return ret;
+> +}
+> +
+> +static int vadc_measure_ref_points(struct vadc_priv *vadc)
+> +{
+> +	struct vadc_channel_prop *prop;
+> +	u16 read_1, read_2;
+> +	int ret;
+> +
+> +	vadc->graph[VADC_CALIB_RATIOMETRIC].dx = VADC_RATIOMETRIC_RANGE_UV;
+> +	vadc->graph[VADC_CALIB_ABSOLUTE].dx = VADC_ABSOLUTE_RANGE_UV;
+> +
+> +	prop = vadc_get_channel(vadc, VADC_REF_1250MV);
+> +	ret = vadc_do_conversion(vadc, prop, &read_1);
+> +	if (ret)
+> +		goto err;
+> +
+> +	/* Try with buffered 625mV channel first */
+> +	prop = vadc_get_channel(vadc, VADC_SPARE1);
+> +	if (!prop)
+> +		prop = vadc_get_channel(vadc, VADC_REF_625MV);
+> +
+> +	ret = vadc_do_conversion(vadc, prop, &read_2);
+> +	if (ret)
+> +		goto err;
+> +
+> +	if (read_1 == read_2) {
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	vadc->graph[VADC_CALIB_ABSOLUTE].dy = read_1 - read_2;
+> +	vadc->graph[VADC_CALIB_ABSOLUTE].gnd = read_2;
+> +
+> +	/* Ratiometric calibration */
+> +	prop = vadc_get_channel(vadc, VADC_VDD_VADC);
+> +	ret = vadc_do_conversion(vadc, prop, &read_1);
+> +	if (ret)
+> +		goto err;
+> +
+> +	prop = vadc_get_channel(vadc, VADC_GND_REF);
+> +	ret = vadc_do_conversion(vadc, prop, &read_2);
+> +	if (ret)
+> +		goto err;
+> +
+> +	if (read_1 == read_2) {
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	vadc->graph[VADC_CALIB_RATIOMETRIC].dy = read_1 - read_2;
+> +	vadc->graph[VADC_CALIB_RATIOMETRIC].gnd = read_2;
+> +err:
+> +	if (ret)
+> +		dev_err(vadc->dev, "measure reference points failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static s32 vadc_calibrate(struct vadc_priv *vadc,
+> +			  const struct vadc_channel_prop *prop, u16 adc_code)
+> +{
+> +	const struct vadc_prescale_ratio *prescale;
+> +	s32 voltage;
+> +
+> +	voltage = adc_code - vadc->graph[prop->calibration].gnd;
+> +	voltage *= vadc->graph[prop->calibration].dx;
+> +	voltage = voltage / vadc->graph[prop->calibration].dy;
+> +
+> +	if (prop->calibration == VADC_CALIB_ABSOLUTE)
+> +		voltage += vadc->graph[prop->calibration].dx;
+> +
+> +	if (voltage < 0)
+> +		voltage = 0;
+> +
+> +	prescale = &vadc_prescale_ratios[prop->prescale];
+> +
+> +	voltage = voltage * prescale->den;
+> +
+> +	return voltage / prescale->num;
+> +}
+> +
+> +static int vadc_decimation_from_dt(u32 value)
+> +{
+> +	if (!is_power_of_2(value) || value < VADC_DECIMATION_MIN ||
+> +	    value > VADC_DECIMATION_MAX)
+> +		return -EINVAL;
+> +
+> +	return __ffs64(value / VADC_DECIMATION_MIN);
+> +}
+> +
+> +static int vadc_prescaling_from_dt(u32 num, u32 den)
+> +{
+> +	unsigned int pre;
+> +
+> +	for (pre = 0; pre < ARRAY_SIZE(vadc_prescale_ratios); pre++)
+> +		if (vadc_prescale_ratios[pre].num == num &&
+> +		    vadc_prescale_ratios[pre].den == den)
+> +			break;
+> +
+> +	if (pre == ARRAY_SIZE(vadc_prescale_ratios))
+> +		return -EINVAL;
+> +
+> +	return pre;
+> +}
+> +
+> +static int vadc_hw_settle_time_from_dt(u32 value)
+> +{
+> +	if ((value <= 1000 && value % 100) || (value > 1000 && value % 2000))
+> +		return -EINVAL;
+> +
+> +	if (value <= 1000)
+> +		value /= 100;
+> +	else
+> +		value = value / 2000 + 10;
+> +
+> +	return value;
+> +}
+> +
+> +static int vadc_avg_samples_from_dt(u32 value)
+> +{
+> +	if (!is_power_of_2(value) || value > VADC_AVG_SAMPLES_MAX)
+> +		return -EINVAL;
+> +
+> +	return __ffs64(value);
+> +}
+> +
+> +static int vadc_read_raw(struct iio_dev *indio_dev,
+> +			 struct iio_chan_spec const *chan, int *val, int *val2,
+> +			 long mask)
+> +{
+> +	struct vadc_priv *vadc = iio_priv(indio_dev);
+> +	struct vadc_channel_prop *prop;
+> +	u16 adc_code;
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_PROCESSED:
+> +		prop = &vadc->chan_props[chan->address];
+> +		ret = vadc_do_conversion(vadc, prop, &adc_code);
+> +		if (ret)
+> +			break;
+> +
+> +		*val = vadc_calibrate(vadc, prop, adc_code);
+> +
+> +		/* 2mV/K, return milli Celsius */
+> +		*val /= 2;
+> +		*val -= KELVINMIL_CELSIUSMIL;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_RAW:
+> +		prop = &vadc->chan_props[chan->address];
+> +		ret = vadc_do_conversion(vadc, prop, &adc_code);
+> +		if (ret)
+> +			break;
+> +
+> +		*val = vadc_calibrate(vadc, prop, adc_code);
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = 0;
+> +		*val2 = 1000;
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int vadc_of_xlate(struct iio_dev *indio_dev,
+> +			 const struct of_phandle_args *iiospec)
+> +{
+> +	struct vadc_priv *vadc = iio_priv(indio_dev);
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < vadc->nchannels; i++)
+> +		if (vadc->iio_chans[i].channel == iiospec->args[0])
+> +			return i;
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info vadc_info = {
+> +	.read_raw = vadc_read_raw,
+> +	.of_xlate = vadc_of_xlate,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +struct vadc_channels {
+> +	const char *datasheet_name;
+> +	unsigned int prescale_index;
+> +	enum iio_chan_type type;
+> +	long info_mask;
+> +};
+> +
+> +#define VADC_CHAN(_dname, _type, _mask, _pre)				\
+> +	[VADC_##_dname] = {						\
+> +		.datasheet_name = __stringify(_dname),			\
+> +		.prescale_index = _pre,					\
+> +		.type = _type,						\
+> +		.info_mask = _mask					\
+> +	},								\
+> +
+> +#define VADC_CHAN_TEMP(_dname, _pre)					\
+> +	VADC_CHAN(_dname, IIO_TEMP, BIT(IIO_CHAN_INFO_PROCESSED), _pre)	\
+> +
+> +#define VADC_CHAN_VOLT(_dname, _pre)					\
+> +	VADC_CHAN(_dname, IIO_VOLTAGE,					\
+> +		  BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),	\
+> +		  _pre)							\
+> +
+> +/*
+> + * The array represents all possible ADC channels found in the supported PMICs.
+> + * Every index in the array is equal to the channel number per datasheet. The
+> + * gaps in the array should be treated as reserved channels.
+> + */
+> +static const struct vadc_channels vadc_chans[] = {
+> +	VADC_CHAN_VOLT(USBIN, 4)
+> +	VADC_CHAN_VOLT(DCIN, 4)
+> +	VADC_CHAN_VOLT(VCHG_SNS, 3)
+> +	VADC_CHAN_VOLT(SPARE1_03, 1)
+> +	VADC_CHAN_VOLT(USB_ID_MV, 1)
+> +	VADC_CHAN_VOLT(VCOIN, 1)
+> +	VADC_CHAN_VOLT(VBAT_SNS, 1)
+> +	VADC_CHAN_VOLT(VSYS, 1)
+> +	VADC_CHAN_TEMP(DIE_TEMP, 0)
+> +	VADC_CHAN_VOLT(REF_625MV, 0)
+> +	VADC_CHAN_VOLT(REF_1250MV, 0)
+> +	VADC_CHAN_VOLT(CHG_TEMP, 0)
+> +	VADC_CHAN_VOLT(SPARE1, 0)
+> +	VADC_CHAN_VOLT(SPARE2, 0)
+> +	VADC_CHAN_VOLT(GND_REF, 0)
+> +	VADC_CHAN_VOLT(VDD_VADC, 0)
+> +
+> +	VADC_CHAN_VOLT(P_MUX1_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX2_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX3_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX4_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX5_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX6_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX7_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX8_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX9_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX10_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX11_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX12_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX13_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX14_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX15_1_1, 0)
+> +	VADC_CHAN_VOLT(P_MUX16_1_1, 0)
+> +
+> +	VADC_CHAN_VOLT(P_MUX1_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX2_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX3_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX4_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX5_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX6_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX7_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX8_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX9_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX10_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX11_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX12_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX13_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX14_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX15_1_3, 1)
+> +	VADC_CHAN_VOLT(P_MUX16_1_3, 1)
+> +
+> +	VADC_CHAN_VOLT(LR_MUX1_BAT_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX2_BAT_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_XO_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX4_AMUX_THM1, 0)
+> +	VADC_CHAN_VOLT(LR_MUX5_AMUX_THM2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX6_AMUX_THM3, 0)
+> +	VADC_CHAN_VOLT(LR_MUX7_HW_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX8_AMUX_THM4, 0)
+> +	VADC_CHAN_VOLT(LR_MUX9_AMUX_THM5, 0)
+> +	VADC_CHAN_VOLT(LR_MUX10_USB_ID, 0)
+> +	VADC_CHAN_VOLT(AMUX_PU1, 0)
+> +	VADC_CHAN_VOLT(AMUX_PU2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_BUF_XO_THERM, 0)
+> +
+> +	VADC_CHAN_VOLT(LR_MUX1_PU1_BAT_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX2_PU1_BAT_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_PU1_XO_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX4_PU1_AMUX_THM1, 0)
+> +	VADC_CHAN_VOLT(LR_MUX5_PU1_AMUX_THM2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX6_PU1_AMUX_THM3, 0)
+> +	VADC_CHAN_VOLT(LR_MUX7_PU1_AMUX_HW_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX8_PU1_AMUX_THM4, 0)
+> +	VADC_CHAN_VOLT(LR_MUX9_PU1_AMUX_THM5, 0)
+> +	VADC_CHAN_VOLT(LR_MUX10_PU1_AMUX_USB_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_BUF_PU1_XO_THERM, 0)
+> +
+> +	VADC_CHAN_VOLT(LR_MUX1_PU2_BAT_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX2_PU2_BAT_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_PU2_XO_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX4_PU2_AMUX_THM1, 0)
+> +	VADC_CHAN_VOLT(LR_MUX5_PU2_AMUX_THM2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX6_PU2_AMUX_THM3, 0)
+> +	VADC_CHAN_VOLT(LR_MUX7_PU2_AMUX_HW_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX8_PU2_AMUX_THM4, 0)
+> +	VADC_CHAN_VOLT(LR_MUX9_PU2_AMUX_THM5, 0)
+> +	VADC_CHAN_VOLT(LR_MUX10_PU2_AMUX_USB_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_BUF_PU2_XO_THERM, 0)
+> +
+> +	VADC_CHAN_VOLT(LR_MUX1_PU1_PU2_BAT_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX2_PU1_PU2_BAT_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_PU1_PU2_XO_THERM, 0)
+> +	VADC_CHAN_VOLT(LR_MUX4_PU1_PU2_AMUX_THM1, 0)
+> +	VADC_CHAN_VOLT(LR_MUX5_PU1_PU2_AMUX_THM2, 0)
+> +	VADC_CHAN_VOLT(LR_MUX6_PU1_PU2_AMUX_THM3, 0)
+> +	VADC_CHAN_VOLT(LR_MUX7_PU1_PU2_AMUX_HW_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX8_PU1_PU2_AMUX_THM4, 0)
+> +	VADC_CHAN_VOLT(LR_MUX9_PU1_PU2_AMUX_THM5, 0)
+> +	VADC_CHAN_VOLT(LR_MUX10_PU1_PU2_AMUX_USB_ID, 0)
+> +	VADC_CHAN_VOLT(LR_MUX3_BUF_PU1_PU2_XO_THERM, 0)
+> +};
+> +
+> +static int vadc_get_dt_channel_data(struct device *dev,
+> +				    struct vadc_channel_prop *prop,
+> +				    struct device_node *node)
+> +{
+> +	const char *name = node->name;
+> +	u32 chan, value, varr[2];
+> +	int ret;
+> +
+> +	ret = of_property_read_u32(node, "reg", &chan);
+> +	if (ret) {
+> +		dev_err(dev, "invalid channel number %s\n", name);
+> +		return ret;
+> +	}
+> +
+> +	if (chan > VADC_CHAN_MAX || chan < VADC_CHAN_MIN) {
+> +		dev_err(dev, "%s invalid channel number %d\n", name, chan);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* the channel has DT description */
+> +	prop->channel = chan;
+> +
+> +	ret = of_property_read_u32(node, "qcom,decimation", &value);
+> +	if (!ret) {
+> +		ret = vadc_decimation_from_dt(value);
+> +		if (ret < 0) {
+> +			dev_err(dev, "%02x invalid decimation %d\n",
+> +				chan, value);
+> +			return ret;
+> +		}
+> +		prop->decimation = ret;
+> +	} else {
+> +		prop->decimation = VADC_DEF_DECIMATION;
+> +	}
+> +
+> +	ret = of_property_read_u32_array(node, "qcom,pre-scaling", varr, 2);
+> +	if (!ret) {
+> +		ret = vadc_prescaling_from_dt(varr[0], varr[1]);
+> +		if (ret < 0) {
+> +			dev_err(dev, "%02x invalid pre-scaling <%d %d>\n",
+> +				chan, varr[0], varr[1]);
+> +			return ret;
+> +		}
+> +		prop->prescale = ret;
+> +	} else {
+> +		prop->prescale = vadc_chans[prop->channel].prescale_index;
+> +	}
+> +
+> +	ret = of_property_read_u32(node, "qcom,hw-settle-time", &value);
+> +	if (!ret) {
+> +		ret = vadc_hw_settle_time_from_dt(value);
+> +		if (ret < 0) {
+> +			dev_err(dev, "%02x invalid hw-settle-time %d us\n",
+> +				chan, value);
+> +			return ret;
+> +		}
+> +		prop->hw_settle_time = ret;
+> +	} else {
+> +		prop->hw_settle_time = VADC_DEF_HW_SETTLE_TIME;
+> +	}
+> +
+> +	ret = of_property_read_u32(node, "qcom,avg-samples", &value);
+> +	if (!ret) {
+> +		ret = vadc_avg_samples_from_dt(value);
+> +		if (ret < 0) {
+> +			dev_err(dev, "%02x invalid avg-samples %d\n",
+> +				chan, value);
+> +			return ret;
+> +		}
+> +		prop->avg_samples = ret;
+> +	} else {
+> +		prop->avg_samples = VADC_DEF_AVG_SAMPLES;
+> +	}
+> +
+> +	if (of_property_read_bool(node, "qcom,ratiometric"))
+> +		prop->calibration = VADC_CALIB_RATIOMETRIC;
+> +	else
+> +		prop->calibration = VADC_CALIB_ABSOLUTE;
+> +
+> +	dev_dbg(dev, "%02x name %s\n", chan, name);
+> +
+> +	return 0;
+> +}
+> +
+> +static int vadc_get_dt_data(struct vadc_priv *vadc, struct device_node *node)
+> +{
+> +	const struct vadc_channels *vadc_chan;
+> +	struct iio_chan_spec *iio_chan;
+> +	struct vadc_channel_prop prop;
+> +	struct device_node *child;
+> +	unsigned int index = 0;
+> +	int ret;
+> +
+> +	vadc->nchannels = of_get_available_child_count(node);
+> +	if (!vadc->nchannels)
+> +		return -EINVAL;
+> +
+> +	vadc->iio_chans = devm_kcalloc(vadc->dev, vadc->nchannels,
+> +				       sizeof(*vadc->iio_chans), GFP_KERNEL);
+> +	if (!vadc->iio_chans)
+> +		return -ENOMEM;
+> +
+> +	vadc->chan_props = devm_kcalloc(vadc->dev, vadc->nchannels,
+> +					sizeof(*vadc->chan_props), GFP_KERNEL);
+> +	if (!vadc->chan_props)
+> +		return -ENOMEM;
+> +
+> +	iio_chan = vadc->iio_chans;
+> +
+> +	for_each_available_child_of_node(node, child) {
+> +		ret = vadc_get_dt_channel_data(vadc->dev, &prop, child);
+> +		if (ret)
+> +			return ret;
+> +
+> +		vadc->chan_props[index] = prop;
+> +
+> +		vadc_chan = &vadc_chans[prop.channel];
+> +
+> +		iio_chan->channel = prop.channel;
+> +		iio_chan->datasheet_name = vadc_chan->datasheet_name;
+> +		iio_chan->info_mask_separate = vadc_chan->info_mask;
+> +		iio_chan->type = vadc_chan->type;
+> +		iio_chan->indexed = 1;
+> +		iio_chan->address = index++;
+> +
+> +		iio_chan++;
+> +	}
+> +
+> +	/* These channels are mandatory, they are used as reference points */
+> +	if (!vadc_get_channel(vadc, VADC_REF_1250MV)) {
+> +		dev_err(vadc->dev, "Please define 1.25V channel\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!vadc_get_channel(vadc, VADC_REF_625MV)) {
+> +		dev_err(vadc->dev, "Please define 0.625V channel\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!vadc_get_channel(vadc, VADC_VDD_VADC)) {
+> +		dev_err(vadc->dev, "Please define VDD channel\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!vadc_get_channel(vadc, VADC_GND_REF)) {
+> +		dev_err(vadc->dev, "Please define GND channel\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t vadc_isr(int irq, void *dev_id)
+> +{
+> +	struct vadc_priv *vadc = dev_id;
+> +
+> +	complete(&vadc->complete);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int vadc_check_revision(struct vadc_priv *vadc)
+> +{
+> +	u8 val;
+> +	int ret;
+> +
+> +	ret = vadc_read(vadc, VADC_PERPH_TYPE, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val < VADC_PERPH_TYPE_ADC) {
+> +		dev_err(vadc->dev, "%d is not ADC\n", val);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = vadc_read(vadc, VADC_PERPH_SUBTYPE, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val < VADC_PERPH_SUBTYPE_VADC) {
+> +		dev_err(vadc->dev, "%d is not VADC\n", val);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = vadc_read(vadc, VADC_REVISION2, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val < VADC_REVISION2_SUPPORTED_VADC) {
+> +		dev_err(vadc->dev, "revision %d not supported\n", val);
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int vadc_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct device *dev = &pdev->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct vadc_priv *vadc;
+> +	struct regmap *regmap;
+> +	int ret, irq_eoc;
+> +	u32 reg;
+> +
+> +	regmap = dev_get_regmap(dev->parent, NULL);
+> +	if (!regmap)
+> +		return -ENODEV;
+> +
+> +	ret = of_property_read_u32(node, "reg", &reg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*vadc));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	vadc = iio_priv(indio_dev);
+> +	vadc->regmap = regmap;
+> +	vadc->dev = dev;
+> +	vadc->base = reg;
+> +	vadc->are_ref_measured = false;
+> +	init_completion(&vadc->complete);
+> +	mutex_init(&vadc->lock);
+> +
+> +	ret = vadc_check_revision(vadc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vadc_get_dt_data(vadc, node);
+> +	if (ret)
+> +		return ret;
+> +
+> +	irq_eoc = platform_get_irq(pdev, 0);
+> +	if (irq_eoc < 0) {
+> +		if (irq_eoc == -EPROBE_DEFER || irq_eoc == -EINVAL)
+> +			return irq_eoc;
+This does feel a little backwards.  I'd normally expect to see those
+errors that indicate one is not specified tested against, rather than
+trying to guess all the reasons it might fail otherwise....
+
+This way round strikes me as probably more fragile as additional errors
+may turn up in that function over time..
+
+> +		vadc->poll_eoc = true;
+> +	} else {
+> +		ret = devm_request_irq(dev, irq_eoc, vadc_isr, 0,
+> +				       "spmi-vadc", vadc);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	ret = vadc_reset(vadc);
+> +	if (ret) {
+> +		dev_err(dev, "reset failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = vadc_measure_ref_points(vadc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->dev.of_node = node;
+> +	indio_dev->name = pdev->name;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &vadc_info;
+> +	indio_dev->channels = vadc->iio_chans;
+> +	indio_dev->num_channels = vadc->nchannels;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +static const struct of_device_id vadc_match_table[] = {
+> +	{ .compatible = "qcom,spmi-vadc" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, vadc_match_table);
+> +
+> +static struct platform_driver vadc_driver = {
+> +	.driver = {
+> +		   .name = "qcom-spmi-vadc",
+> +		   .of_match_table = vadc_match_table,
+> +	},
+> +	.probe = vadc_probe,
+> +};
+> +module_platform_driver(vadc_driver);
+> +
+> +MODULE_ALIAS("platform:qcom-spmi-vadc");
+> +MODULE_DESCRIPTION("Qualcomm SPMI PMIC voltage ADC driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
+> +MODULE_AUTHOR("Ivan T. Ivanov <iivanov@mm-sol.com>");
 > --
-> 1.9.2
->
+> 1.9.1
+> 
