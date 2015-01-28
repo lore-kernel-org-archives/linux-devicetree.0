@@ -1,45 +1,180 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] ARM: zynq: Remove bogus value from 'bias-disable'
- property
-Date: Wed, 28 Jan 2015 07:41:39 -0800
-Message-ID: <421020c5dac8492ea949dc202441c184@BL2FFO11FD054.protection.gbl>
-References: <1422301796-22888-1-git-send-email-soren.brinkmann@xilinx.com>
- <54C6DDE8.3000905@suse.de>
- <ce6e56872ab744a49612ef9bca07c73d@BN1AFFO11FD005.protection.gbl>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
+Date: Wed, 28 Jan 2015 09:45:19 -0600
+Message-ID: <CAL_JsqJiCKW0ny=_ueq=A7RH3octpEhN+KZuLZhbNEHusyjcig@mail.gmail.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
+	<1422052359-12384-4-git-send-email-m-karicheri2@ti.com>
+	<54C77616.80301@arm.com> <54C7DF13.20402@ti.com>
+	<20150128110523.GC6646@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <ce6e56872ab744a49612ef9bca07c73d@BN1AFFO11FD005.protection.gbl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20150128110523.GC6646-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE1LTAxLTI4IGF0IDAzOjIxUE0gKzAxMDAsIE1pY2hhbCBTaW1layB3cm90ZToK
-PiBPbiAwMS8yNy8yMDE1IDAxOjM4IEFNLCBBbmRyZWFzIEbDpHJiZXIgd3JvdGU6Cj4gPiBBbSAy
-Ni4wMS4yMDE1IHVtIDIwOjQ5IHNjaHJpZWIgU29yZW4gQnJpbmttYW5uOgo+ID4+IEluIG9uZSBw
-aW5jdHJsIG5vZGUsIGEgJ2JpYXMtZGlzYWJsZScgcHJvcGVydHkgaXMgZXJyb25lb3VzbHkgYXNz
-aWduZWQgYQo+ID4+IHZhbHVlLgo+ID4+Cj4gPj4gRml4ZXM6IEFSTTogenlucTogRFQ6IEFkZCBw
-aW5jdHJsIGluZm9ybWF0aW9uCj4gPj4gU2lnbmVkLW9mZi1ieTogU29yZW4gQnJpbmttYW5uIDxz
-b3Jlbi5icmlua21hbm5AeGlsaW54LmNvbT4KPiA+IAo+ID4gUmV2aWV3ZWQtYnk6IEFuZHJlYXMg
-RsOkcmJlciA8YWZhZXJiZXJAc3VzZS5kZT4KPiA+IAo+ID4gQW5kcmVhcwo+ID4gCj4gCj4gQXBw
-bGllZCBib3RoLgoKVGhhbmtzLiBHaXZlbiBob3cgdGhlIGJyYW5jaCBsb29rcyBub3csIHlvdSBj
-b3VsZCBzcXVhc2ggJ0FSTTogenlucTogRFQ6ClJlbW92ZSBib2d1cyB2YWx1ZSBmcm9tICdiaWFz
-LWRpc2FibGUnIHByb3BlcnR5JyBhbmQgJ0FSTTogenlucTogRFQ6IEFkZApwaW5jdHJsIGluZm9y
-bWF0aW9uIHRvIFVTQiBub2RlcycgaW50byAnQVJNOiB6eW5xOiBEVDogQWRkIHBpbmN0cmwKaW5m
-b3JtYXRpb24nLiBUaGVuIHdlIGhhdmUgaXQgYWxsIGluIG9uZSBwYXRjaCBhbmQgc3BhcmUgZXZl
-cnlib2R5IHRoZQppbnRlcm1pdHRlbnQsIHBhcnRseSBicm9rZW4gY29tbWl0cy4KCglTw7ZyZW4K
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+On Wed, Jan 28, 2015 at 5:05 AM, Catalin Marinas
+<catalin.marinas-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Jan 27, 2015 at 06:55:15PM +0000, Murali Karicheri wrote:
+>> On 01/27/2015 06:27 AM, Robin Murphy wrote:
+>> > On 23/01/15 22:32, Murali Karicheri wrote:
+>> >> Fix the dma-range size when the DT attribute is missing. i.e set size to
+>> >> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. To detect
+>> >> overflow when mask is set to max of u64, add a check, log error and
+>> >> return.
+>> >> Some platform use mask format for size in DTS. So add a work around to
+>> >> catch this and fix.
+>> >>
+>> >> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+>> >> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> >> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+>> >> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> >> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> >> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+>> >>
+>> >> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+>> >> ---
+>> >> drivers/of/device.c | 14 +++++++++++++-
+>> >> 1 file changed, 13 insertions(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>> >> index 2de320d..0a5ff54 100644
+>> >> --- a/drivers/of/device.c
+>> >> +++ b/drivers/of/device.c
+>> >> @@ -105,12 +105,24 @@ void of_dma_configure(struct device *dev, struct
+>> >> device_node *np)
+>> >> ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>> >> if (ret < 0) {
+>> >> dma_addr = offset = 0;
+>> >> - size = dev->coherent_dma_mask;
+>> >> + size = dev->coherent_dma_mask + 1;
+>> >> } else {
+>> >> offset = PFN_DOWN(paddr - dma_addr);
+>> >> + /*
+>> >> + * Add a work around to treat the size as mask + 1 in case
+>> >> + * it is defined in DT as a mask.
+>> >> + */
+>> >> + if (size & 1)
+>> >> + size = size + 1;
+>> >> dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>> >> }
+>> >>
+>> >> + /* if size is 0, we have an overflow of u64 */
+>> >> + if (!size) {
+>> >> + dev_err(dev, "invalid size\n");
+>> >> + return;
+>> >> + }
+>> >> +
+>> >
+>> > This seems potentially fragile to dodgy DTs given that we might also be
+>> > using size to make a mask later. Would it make sense to double-up a
+>> > sanity check as mask-format detection? Something like:
+>> >
+>> > if is_power_of_2(size)
+>> > // use size
+>> > else if is_power_of_2(size + 1)
+>> > // use size + 1
+>> > else
+>> > // cry
+>>
+>> How about having the logic like this?
+>>
+>>       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>>       if (ret < 0) {
+>>               dma_addr = offset = 0;
+>>               size = dev->coherent_dma_mask + 1;
+>>       } else {
+>>               offset = PFN_DOWN(paddr - dma_addr);
+>>               dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>>       }
+>>
+>>       if (is_power_of_2(size + 1))
+>>               size = size + 1;
+>>       else if (!is_power_of_2(size))
+>>       {
+>>               dev_err(dev, "invalid size\n");
+>>               return;
+>>       }
+>
+> In of_dma_configure(), we currently assume that the default coherent
+> mask is 32-bit. In this thread:
+>
+> http://article.gmane.org/gmane.linux.kernel/1835096
+>
+> we talked about setting the coherent mask based on size automatically.
+> I'm not sure about the size but I think we can assume is 32-bit mask + 1
+> if it is not specified in the DT. Instead of just assuming a default
+> mask, let's assume a default size and create the mask based on this
+> (untested):
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 5b33c6a21807..9ff8d1286b44 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -170,10 +170,10 @@ static void of_dma_configure(struct device *dev)
+>         struct iommu_ops *iommu;
+>
+>         /*
+> -        * Set default dma-mask to 32 bit. Drivers are expected to setup
+> -        * the correct supported dma_mask.
+> +        * Set default size to cover the 32-bit. Drivers are expected to setup
+> +        * the correct size and dma_mask.
+>          */
+> -       dev->coherent_dma_mask = DMA_BIT_MASK(32);
+> +       size = 1ULL << 32;
+>
+>         /*
+>          * Set it to coherent_dma_mask by default if the architecture
+> @@ -185,13 +185,24 @@ static void of_dma_configure(struct device *dev)
+>         ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
+>         if (ret < 0) {
+>                 dma_addr = offset = 0;
+> -               size = dev->coherent_dma_mask;
+
+Are we assuming dma_addr, paddr and size are not touched on error? If
+so, we can get rid of this clause entirely.
+
+>         } else {
+>                 offset = PFN_DOWN(paddr - dma_addr);
+>                 dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
+>         }
+>         dev->dma_pfn_offset = offset;
+>
+> +       /*
+> +        * Workaround for DTs setting the size to a mask or 0.
+> +        */
+> +       if (is_power_of_2(size + 1))
+> +               size += 1;
+
+As I mentioned, I think power of 2 is too restrictive (from a DT
+perspective even though the kernel may require a power of 2 here for
+the mask). Just checking bit0 set should be enough.
+
+Also, we need a WARN here so DTs get fixed.
+
+> +
+> +       /*
+> +        * Coherent DMA masks larger than 32-bit must be explicitly set by the
+> +        * driver.
+> +        */
+> +       dev->coherent_dma_mask = min(DMA_BIT_MASK(32), DMA_BIT_MASK(ilog2(size)));
+> +
+>         coherent = of_dma_is_coherent(dev->of_node);
+>         dev_dbg(dev, "device is%sdma coherent\n",
+>                 coherent ? " " : " not ");
+>
+> --
+> Catalin
