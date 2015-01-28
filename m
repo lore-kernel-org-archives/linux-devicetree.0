@@ -1,80 +1,83 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 3/8] of: fix size when dma-range is not used
-Date: Wed, 28 Jan 2015 11:21:54 +0000
-Message-ID: <54C8C652.8050507@arm.com>
-References: <1422392405-32196-1-git-send-email-m-karicheri2@ti.com>
-	<1422392405-32196-4-git-send-email-m-karicheri2@ti.com>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH v10 1/2] Documentation: DT: Add bindings for Spreadtrum SoC
+ Platform
+Date: Wed, 28 Jan 2015 19:08:43 +0800
+Message-ID: <1422443324-25082-2-git-send-email-chunyan.zhang@spreadtrum.com>
+References: <sc9836-serial-v10>
+ <1422443324-25082-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1422392405-32196-4-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1422443324-25082-1-git-send-email-chunyan.zhang@spreadtrum.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org
+Cc: mark.rutland@arm.com, gnomes@lxorguk.ukuu.org.uk, heiko@sntech.de, andrew@lunn.ch, jslaby@suse.cz, lanqing.liu@spreadtrum.com, arnd@arndb.de, zhang.lyra@gmail.com, zhizhou.zhang@spreadtrum.com, geng.ren@spreadtrum.com, antonynpavlov@gmail.com, linux-serial@vger.kernel.org, grant.likely@linaro.org, orsonzhai@gmail.com, florian.vaussard@epfl.ch, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, hytszk@gmail.com, robh+dt@kernel.org, wei.qiao@spreadtrum.com, linux-arm-kernel@lists.infradead.org, peter@hurleysoftware.com, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, galak@codeaurora.org, shawn.guo@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Murali,
+Adds Spreadtrum's prefix "sprd" to vendor-prefixes file.
+Adds the devicetree binding documentations for Spreadtrum's sc9836-uart
+and SC9836 SoC based on the Sharkl64 Platform which is a 64-bit SoC
+Platform of Spreadtrum.
 
-[sorry, missed replying to yesterday's version]
+Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+---
+ Documentation/devicetree/bindings/arm/sprd.txt     |   11 +++++++++++
+ .../devicetree/bindings/serial/sprd-uart.txt       |    7 +++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 3 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.txt
 
-On 27/01/15 21:00, Murali Karicheri wrote:
-> Fix the dma-range size when the DT attribute is missing. i.e  set size to
-> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. Also add
-> code to check invalid values of size configured in DT and log error.
->
-> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->
-> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-> ---
->   drivers/of/device.c |    9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 2de320d..17504f4 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -105,12 +105,19 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->   	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
->   	if (ret < 0) {
->   		dma_addr = offset = 0;
-> -		size = dev->coherent_dma_mask;
-> +		size = dev->coherent_dma_mask + 1;
->   	} else {
->   		offset = PFN_DOWN(paddr - dma_addr);
->   		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
->   	}
->
-> +	if (is_power_of_2(size + 1))
-> +		size = size + 1;
-> +	else if (!is_power_of_2(size)) {
-> +		dev_err(dev, "invalid size\n");
-> +		return;
-> +	}
-> +
-
-Couldn't these checks go into the "else" path above? We don't need to 
-check the non-DT case, because we know we've just set it to something 
-sensible.
-
-Robin.
-
->   	dev->dma_pfn_offset = offset;
->
->   	coherent = of_dma_is_coherent(np);
->
+diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
+new file mode 100644
+index 0000000..31a629d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/sprd.txt
+@@ -0,0 +1,11 @@
++Spreadtrum SoC Platforms Device Tree Bindings
++----------------------------------------------------
++
++Sharkl64 is a Spreadtrum's SoC Platform which is based
++on ARM 64-bit processor.
++
++SC9836 openphone board with SC9836 SoC based on the
++Sharkl64 Platform shall have the following properties.
++
++Required root node properties:
++        - compatible = "sprd,sc9836-openphone", "sprd,sc9836";
+diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+new file mode 100644
+index 0000000..2aff0f2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+@@ -0,0 +1,7 @@
++* Spreadtrum serial UART
++
++Required properties:
++- compatible: must be "sprd,sc9836-uart"
++- reg: offset and length of the register set for the device
++- interrupts: exactly one interrupt specifier
++- clocks: phandles to input clocks.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b1df0ad..0a8384f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -153,6 +153,7 @@ snps	Synopsys, Inc.
+ solidrun	SolidRun
+ sony	Sony Corporation
+ spansion	Spansion Inc.
++sprd	Spreadtrum Communications Inc.
+ st	STMicroelectronics
+ ste	ST-Ericsson
+ stericsson	ST-Ericsson
+-- 
+1.7.9.5
