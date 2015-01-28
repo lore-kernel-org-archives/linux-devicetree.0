@@ -1,89 +1,167 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 2/2] sunxi: Initial Inet 86VS support.
-Date: Wed, 28 Jan 2015 11:58:28 +0100
-Message-ID: <CAOMqctSjYdE3Lo-KHFCyZ6RWA08OWnGe4XvqEywz_DumkypuZA@mail.gmail.com>
-References: <cover.1422316795.git.hramrach@gmail.com> <b6bc51df9b432465b7615d60e2f9ffcd6d9900f8.1422316795.git.hramrach@gmail.com>
- <54C8B3D2.8060601@redhat.com> <54C8B5BA.5010009@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
+Date: Wed, 28 Jan 2015 11:05:23 +0000
+Message-ID: <20150128110523.GC6646@e104818-lin.cambridge.arm.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
+	<1422052359-12384-4-git-send-email-m-karicheri2@ti.com>
+	<54C77616.80301@arm.com> <54C7DF13.20402@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCQMLUOX54MBB7MBUOTAKGQEWFNQW6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <54C8B5BA.5010009-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54C7DF13.20402-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28 January 2015 at 11:11, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> On 28-01-15 11:02, Hans de Goede wrote:
->>
->> Hi,
->>
->> On 04-01-15 21:06, Michal Suchanek wrote:
->>>
->>> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->>
->> Thanks, I've merged this with a number of changes:
->>
->> - Cleaned it up a bit
->> - Ported it to our new simplified dram config code in u-boot-sunxi/next
+On Tue, Jan 27, 2015 at 06:55:15PM +0000, Murali Karicheri wrote:
+> On 01/27/2015 06:27 AM, Robin Murphy wrote:
+> > On 23/01/15 22:32, Murali Karicheri wrote:
+> >> Fix the dma-range size when the DT attribute is missing. i.e set size to
+> >> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. To detect
+> >> overflow when mask is set to max of u64, add a check, log error and
+> >> return.
+> >> Some platform use mask format for size in DTS. So add a work around to
+> >> catch this and fix.
+> >>
+> >> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+> >> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> >> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> >> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> >> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+> >>
+> >> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> >> ---
+> >> drivers/of/device.c | 14 +++++++++++++-
+> >> 1 file changed, 13 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> >> index 2de320d..0a5ff54 100644
+> >> --- a/drivers/of/device.c
+> >> +++ b/drivers/of/device.c
+> >> @@ -105,12 +105,24 @@ void of_dma_configure(struct device *dev, struct
+> >> device_node *np)
+> >> ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+> >> if (ret < 0) {
+> >> dma_addr = offset = 0;
+> >> - size = dev->coherent_dma_mask;
+> >> + size = dev->coherent_dma_mask + 1;
+> >> } else {
+> >> offset = PFN_DOWN(paddr - dma_addr);
+> >> + /*
+> >> + * Add a work around to treat the size as mask + 1 in case
+> >> + * it is defined in DT as a mask.
+> >> + */
+> >> + if (size & 1)
+> >> + size = size + 1;
+> >> dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+> >> }
+> >>
+> >> + /* if size is 0, we have an overflow of u64 */
+> >> + if (!size) {
+> >> + dev_err(dev, "invalid size\n");
+> >> + return;
+> >> + }
+> >> +
+> >
+> > This seems potentially fragile to dodgy DTs given that we might also be
+> > using size to make a mask later. Would it make sense to double-up a
+> > sanity check as mask-format detection? Something like:
+> >
+> > if is_power_of_2(size)
+> > // use size
+> > else if is_power_of_2(size + 1)
+> > // use size + 1
+> > else
+> > // cry
+> 
+> How about having the logic like this?
+> 
+> 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+> 	if (ret < 0) {
+> 		dma_addr = offset = 0;
+> 		size = dev->coherent_dma_mask + 1;
+> 	} else {
+> 		offset = PFN_DOWN(paddr - dma_addr);
+> 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+> 	}
+> 
+> 	if (is_power_of_2(size + 1))
+> 		size = size + 1;
+> 	else if (!is_power_of_2(size))
+> 	{
+> 		dev_err(dev, "invalid size\n");
+> 		return;
+> 	}
 
-Thanks for looking into this.
+In of_dma_configure(), we currently assume that the default coherent
+mask is 32-bit. In this thread:
 
-I don't really know what counts as 'clean' config. There are multiple
-ways to specify an option and different configs use different ways.
+http://article.gmane.org/gmane.linux.kernel/1835096
 
->> - Added OTG (host mode) support, so that you can hookup a keyboard and
->>    interact with u-boot (kernel otg host support is coming soonish too)
+we talked about setting the coherent mask based on size automatically.
+I'm not sure about the size but I think we can assume is 32-bit mask + 1
+if it is not specified in the DT. Instead of just assuming a default
+mask, let's assume a default size and create the mask based on this
+(untested):
 
-I did not have OTG in my tree when writing this. Maybe I Should pull
-some more patches.
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 5b33c6a21807..9ff8d1286b44 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -170,10 +170,10 @@ static void of_dma_configure(struct device *dev)
+ 	struct iommu_ops *iommu;
+ 
+ 	/*
+-	 * Set default dma-mask to 32 bit. Drivers are expected to setup
+-	 * the correct supported dma_mask.
++	 * Set default size to cover the 32-bit. Drivers are expected to setup
++	 * the correct size and dma_mask.
+ 	 */
+-	dev->coherent_dma_mask = DMA_BIT_MASK(32);
++	size = 1ULL << 32;
+ 
+ 	/*
+ 	 * Set it to coherent_dma_mask by default if the architecture
+@@ -185,13 +185,24 @@ static void of_dma_configure(struct device *dev)
+ 	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
+ 	if (ret < 0) {
+ 		dma_addr = offset = 0;
+-		size = dev->coherent_dma_mask;
+ 	} else {
+ 		offset = PFN_DOWN(paddr - dma_addr);
+ 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
+ 	}
+ 	dev->dma_pfn_offset = offset;
+ 
++	/*
++	 * Workaround for DTs setting the size to a mask or 0.
++	 */
++	if (is_power_of_2(size + 1))
++		size += 1;
++
++	/*
++	 * Coherent DMA masks larger than 32-bit must be explicitly set by the
++	 * driver.
++	 */
++	dev->coherent_dma_mask = min(DMA_BIT_MASK(32), DMA_BIT_MASK(ilog2(size)));
++
+ 	coherent = of_dma_is_coherent(dev->of_node);
+ 	dev_dbg(dev, "device is%sdma coherent\n",
+ 		coherent ? " " : " not ");
 
->> - Fixed the dtb name from sun5i-inet-86vs.dtb to sun5i-a13-inet-86vs.dtb
->>    to match the upstream kernel dts / dtb naming scheme.
->
-
-Speaking of testing
-
-I use FEL to boot the new u-boot and kernel. What was the way to build
-FEL spl since we have no separate FEL defconfigs?
-
-And even if there is option to enable fel it does not change to SD
-uart, does it?
-It probably should not by default even on devices without uart but
-selecting SD uart is required to have console.
-
->
-> Talking about upstream dts files, it would be great if you could officially
-> submit one for the Inet 86VS upstream:
->
-> 1) Drop any nand bits you may have in there as the nand code is not upstream
-> yet
-> 2) We've recently adapted a new style for upstream dts files, please
-> reformat
->    the dts you've accordingly, see e.g.:
->
-> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/dt-for-3.20&id=19a08b6b3f782f577b4b0fef9b6e60beba66c2f3
-> 3) Write a proper commit message with a short description of the board, and
->    be sure to add a Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 4) Be sure to send the patch directly to Maxime Ripard, with
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->    in the Cc, you may Cc other people / lists too, but you must send it to
->    those 2 addresses.
->
-
-My DT file is not complete. The nand part would probably be better in
-a separate patch but I would like to have console working.
-
-Thanks
-
-Michal
+-- 
+Catalin
