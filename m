@@ -1,54 +1,81 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v1 27/34] NFC: st21nfcb: Add HCI protocol over NCI
- protocol support
-Date: Wed, 28 Jan 2015 01:04:14 +0100
-Message-ID: <20150128000414.GD32667@ribalta.mp.intel.com>
-References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
- <1418072919-10535-28-git-send-email-christophe-h.ricard@st.com>
- <20150127004958.GB31396@ribalta.ger.corp.intel.com>
- <54C80E40.7020707@gmail.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] clk: dt: st: Introduce clock domain documentation
+Date: Tue, 27 Jan 2015 17:19:02 -0800
+Message-ID: <20150128011902.22722.85007@quantum>
+References: <1422270840-3039-1-git-send-email-lee.jones@linaro.org>
+ <1422270840-3039-5-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54C80E40.7020707-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1422270840-3039-5-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "christophe.ricard" <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
-
-On Tue, Jan 27, 2015 at 11:16:32PM +0100, christophe.ricard wrote:
-> The main reason for making an st21nfcb_hci_core is because the hci network
-> initialization procedure is proprietary.
-> It is almost using only NCI standard commands but some id's and commands
-> could be proprietary.
-That could most likely be fixed with an additional NCI hook.
-
-
-> I would ideally rely on the hci core framework but i run out of idea when
-> trying this.
-> However i think "exporting the relevant API for drivers to send HCI
-> commands/events through their NCI connections."
-Yes, the idea would be for the NCI core to create an hci_dev and
-associate it with the right nci_dev (probably when the driver requests
-it). Then you should be able to call into the HCI core API, even if it
-takes exporting some of it.
-
-> is a good idea i need to dig into. It will then needs to hci/nci hook for
-> the proprietary stuff.
+Quoting Lee Jones (2015-01-26 03:14:00)
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/clock/st/st,clk-domain.txt | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/st/st,clk-domain.txt
 > 
-> I have just one worry, when do you think those updates (patch 20 & 27) needs
-> to be ready for your 3.20 pull request ?
-I'm going to send a first pull request tomorrow. And a second one
-beginning of next week. I realize it leaves you with very little time,
-but I feel patch #27 is quite a bit of potentially duplicated code.
-What about you look at patch #20 first and I could then take all your
-patchset except for patches #27 and #28 ?
+> diff --git a/Documentation/devicetree/bindings/clock/st/st,clk-domain.txt b/Documentation/devicetree/bindings/clock/st/st,clk-domain.txt
+> new file mode 100644
+> index 0000000..7309937
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/st/st,clk-domain.txt
+> @@ -0,0 +1,34 @@
+> +STMicroelectronics Clock Domain
+> +
+> +ST hardware have a bunch of clocks which must not be turned off.
+> +If drivers a) fail to obtain a reference to any of these or b) give
+> +up a previously obtained reference during suspend, the common clk
+> +framework will attempt to turn them off and the hardware will
+> +subsequently die.  The only way to recover from this failure is to
+> +restart.
+> +
+> +To avoid either of these two scenarios from catastrophically
+> +disabling the running system we have implemented a clock domain
+> +where clocks are consumed and references are taken, thus preventing
+> +them from being shut down by the framework.
+> +
+> +We use the generic clock bindings found in:
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible : Must be "st,clk-domain"
 
-Cheers,
-Samuel.
+Seems like a useful feature for any clock provider, not just ST's. Have
+you thought about making this solution generic for DT-based clock
+providers?
+
+We could amend the common clock binding to include a special "always on"
+clock group that is automagically prepared and enabled when the clock
+provider/driver is registered, using a common function.
+
+Regards,
+Mike
+
+> +
+> +Example:
+> +
+> +clk-domain {
+> +       compatible = "st,clk-domain";
+> +       clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>,
+> +                <&clk_s_c0_flexgen CLK_COMPO_DVP>,
+> +                <&clk_s_c0_flexgen CLK_MMC_1>,
+> +                <&clk_s_c0_flexgen CLK_ICN_SBC>,
+> +                <&clk_s_c0_flexgen CLK_ICN_LMI>,
+> +                <&clk_s_c0_flexgen CLK_ICN_CPU>,
+> +                <&clk_s_c0_flexgen CLK_TX_ICN_DMU>,
+> +                <&clk_s_a0_flexgen CLK_IC_LMI0>,
+> +                <&clk_m_a9>;
+> +};
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
