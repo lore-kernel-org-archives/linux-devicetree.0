@@ -1,275 +1,162 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Thu, 29 Jan 2015 10:49:11 +0900
-Message-ID: <54C99197.5070605@samsung.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
- <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
+From: Tobias Jakobi <liquid.acid-hi6Y0CQ0nG0@public.gmane.org>
+Subject: Re: [PATCH 1/2] mmc: dw_mmc-exynos: add support for
+ controlling emmc reset pin
+Date: Wed, 28 Jan 2015 13:41:07 +0100
+Message-ID: <54C8D8E3.9060609@gmx.net>
+References: <1422346289-9348-1-git-send-email-m.szyprowski@samsung.com> <1422346289-9348-2-git-send-email-m.szyprowski@samsung.com> <54C74C33.5050305@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <54C8D2F4.9050404@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54C74C33.5050305-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+Hello!
 
-We need to discuss one point about 'id_irqwake'.
-I don't recommend to use 'id_irqwake' field.
+Jaehoon Chung wrote:
+> mmc core supported to hw_reset function.
+> So i think we can use it. It's called at only initial time to clear the previous status.
+> But i think it can be called at reboot time. (it needs to implement codes.)
+> how about?
+I don't think that's going the work. The problem here is that depending
+on the board configuration, the eMMC might carry the bootloader. If the
+eMMC subsystem is not properly reset _during_ reboot, the board won't
+even start since no bootloader is found. So we don't even reach the
+point where the kernel does anything.
 
-And I catch build warning by using "select" keywork in Kconfig.
-It is my wrong guide of "select" keyword. So, I'll change it 
-as 'depends on' keyword.
 
-Looks good to me except for 'id_irqwake'. 
-I'll apply this patch on 3.21 queue after completing this discussion.
+With best wishes,
+Tobias
 
-On 01/28/2015 09:15 PM, Roger Quadros wrote:
-> This driver observes the USB ID pin connected over a GPIO and
-> updates the USB cable extcon states accordingly.
+
+
 > 
-> The existing GPIO extcon driver is not suitable for this purpose
-> as it needs to be taught to understand USB cable states and it
-> can't handle more than one cable per instance.
+> Best Regards,
+> Jaehoon Chung
 > 
-> For the USB case we need to handle 2 cable states.
-> 1) USB (attach/detach)
-> 2) USB-Host (attach/detach)
+>>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |  6 +++
+>>  drivers/mmc/host/dw_mmc-exynos.c                   | 43 +++++++++++++++++++++-
+>>  2 files changed, 48 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> index ee4fc0576c7d..fc53d335e7db 100644
+>> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> @@ -50,6 +50,12 @@ Required Properties:
+>>        - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
+>>          phase shift clocks should be 0.
+>>  
+>> +Optional properties:
+>> +
+>> +* dw-mshc-reset-gpios: optional property specifying gpio for the eMMC nreset
+>> +  line, it will be triggered on system reboot to properly reset eMMC card for
+>> +  next system boot.
+>> +
+>>  Required properties for a slot (Deprecated - Recommend to use one slot per host):
+>>  
+>>  * gpios: specifies a list of gpios used for command, clock and data bus. The
+>> diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
+>> index 509365cb22c6..2add5a93859d 100644
+>> --- a/drivers/mmc/host/dw_mmc-exynos.c
+>> +++ b/drivers/mmc/host/dw_mmc-exynos.c
+>> @@ -12,12 +12,14 @@
+>>  #include <linux/module.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/clk.h>
+>> +#include <linux/delay.h>
+>>  #include <linux/mmc/host.h>
+>>  #include <linux/mmc/dw_mmc.h>
+>>  #include <linux/mmc/mmc.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_gpio.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/reboot.h>
+>>  
+>>  #include "dw_mmc.h"
+>>  #include "dw_mmc-pltfm.h"
+>> @@ -77,8 +79,23 @@ struct dw_mci_exynos_priv_data {
+>>  	u32				sdr_timing;
+>>  	u32				ddr_timing;
+>>  	u32				cur_speed;
+>> +	struct gpio_desc 		*reset_gpio;
+>> +	struct notifier_block		reset_nb;
+>>  };
+>>  
+>> +static int dw_mci_restart_handler(struct notifier_block *this,
+>> +				  unsigned long mode, void *cmd)
+>> +{
+>> +	struct dw_mci_exynos_priv_data *data;
+>> +	data = container_of(this, struct dw_mci_exynos_priv_data, reset_nb);
+>> +
+>> +	gpiod_direction_output(data->reset_gpio, 0);
+>> +	mdelay(150);
+>> +	gpiod_direction_output(data->reset_gpio, 1);
+>> +
+>> +	return NOTIFY_DONE;
+>> +}
+>> +
+>>  static struct dw_mci_exynos_compatible {
+>>  	char				*compatible;
+>>  	enum dw_mci_exynos_type		ctrl_type;
+>> @@ -295,7 +312,20 @@ static int dw_mci_exynos_parse_dt(struct dw_mci *host)
+>>  		return ret;
+>>  
+>>  	priv->ddr_timing = SDMMC_CLKSEL_TIMING(timing[0], timing[1], div);
+>> +
+>> +	priv->reset_gpio = devm_gpiod_get_optional(host->dev,
+>> +						   "samsung,dw-mshc-reset",
+>> +						   GPIOD_OUT_HIGH);
+>> +	if (!IS_ERR_OR_NULL(priv->reset_gpio)) {
+>> +		priv->reset_nb.notifier_call = dw_mci_restart_handler;
+>> +		priv->reset_nb.priority = 255;
+>> +		ret = register_restart_handler(&priv->reset_nb);
+>> +		if (ret)
+>> +			dev_err(host->dev, "cannot register restart handler\n");
+>> +	}
+>> +
+>>  	host->priv = priv;
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> @@ -490,6 +520,17 @@ static int dw_mci_exynos_probe(struct platform_device *pdev)
+>>  	return dw_mci_pltfm_register(pdev, drv_data);
+>>  }
+>>  
+>> +static int dw_mci_exynos_remove(struct platform_device *pdev)
+>> +{
+>> +	struct dw_mci *host = platform_get_drvdata(pdev);
+>> +	struct dw_mci_exynos_priv_data *priv = host->priv;
+>> +
+>> +	if (priv->reset_gpio)
+>> +		unregister_restart_handler(&priv->reset_nb);
+>> +
+>> +	return dw_mci_pltfm_remove(pdev);
+>> +}
+>> +
+>>  static const struct dev_pm_ops dw_mci_exynos_pmops = {
+>>  	SET_SYSTEM_SLEEP_PM_OPS(dw_mci_exynos_suspend, dw_mci_exynos_resume)
+>>  	.resume_noirq = dw_mci_exynos_resume_noirq,
+>> @@ -499,7 +540,7 @@ static const struct dev_pm_ops dw_mci_exynos_pmops = {
+>>  
+>>  static struct platform_driver dw_mci_exynos_pltfm_driver = {
+>>  	.probe		= dw_mci_exynos_probe,
+>> -	.remove		= __exit_p(dw_mci_pltfm_remove),
+>> +	.remove		= dw_mci_exynos_remove,
+>>  	.driver		= {
+>>  		.name		= "dwmmc_exynos",
+>>  		.of_match_table	= dw_mci_exynos_match,
+>>
 > 
-> This driver can be easily updated in the future to handle VBUS
-> events in case it happens to be available on GPIO for any platform.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
-> v3:
-> - removed IRQF_NO_SUSPEND flag. Added IRQF_TRIGGER_RISING and
->   IRQF_TRIGGER_FALLING
-> - Added disable_irq() to suspend() and enable_irq() to resume()
-> 
->  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  18 ++
->  drivers/extcon/Kconfig                             |   7 +
->  drivers/extcon/Makefile                            |   1 +
->  drivers/extcon/extcon-usb-gpio.c                   | 233 +++++++++++++++++++++
->  4 files changed, 259 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->  create mode 100644 drivers/extcon/extcon-usb-gpio.c
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> new file mode 100644
-> index 0000000..85fe6b0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> @@ -0,0 +1,18 @@
-> +USB GPIO Extcon device
-> +
-> +This is a virtual device used to generate USB cable states from the USB ID pin
-> +connected to a GPIO pin.
-> +
-> +Required properties:
-> +- compatible: Should be "linux,extcon-usb-gpio"
-> +- id-gpio: gpio for USB ID pin. See gpio binding.
-> +
-> +Example:
-> +	extcon_usb1 {
-> +		compatible = "linux,extcon-usb-gpio";
-> +		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-> +	}
-> +
-> +	&omap_dwc3_1 {
-> +		extcon = <&extcon_usb1>;
-> +	};
-> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-> index 6a1f7de..fd11536 100644
-> --- a/drivers/extcon/Kconfig
-> +++ b/drivers/extcon/Kconfig
-> @@ -93,4 +93,11 @@ config EXTCON_SM5502
->  	  Silicon Mitus SM5502. The SM5502 is a USB port accessory
->  	  detector and switch.
->  
-> +config EXTCON_USB_GPIO
-> +	tristate "USB GPIO extcon support"
-> +	select GPIOLIB
-
-I catch the build warning if using 'select' instead of 'depends on' as following:
-It is my wrong guide to you. So, I'll modify it by using "depends on" as your original patch.
-
-make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- zImage  -j 8
-scripts/kconfig/conf --silentoldconfig Kconfig
-drivers/gpio/Kconfig:34:error: recursive dependency detected!
-drivers/gpio/Kconfig:34:	symbol GPIOLIB is selected by EXTCON_USB_GPIO
-drivers/extcon/Kconfig:96:	symbol EXTCON_USB_GPIO depends on EXTCON
-drivers/extcon/Kconfig:1:	symbol EXTCON is selected by CHARGER_MANAGER
-drivers/power/Kconfig:316:	symbol CHARGER_MANAGER depends on POWER_SUPPLY
-drivers/power/Kconfig:1:	symbol POWER_SUPPLY is selected by HID_SONY
-drivers/hid/Kconfig:670:	symbol HID_SONY depends on NEW_LEDS
-drivers/leds/Kconfig:8:	symbol NEW_LEDS is selected by BCMA_DRIVER_GPIO
-drivers/bcma/Kconfig:75:	symbol BCMA_DRIVER_GPIO depends on GPIOLIB
-
-> +	help
-> +	  Say Y here to enable GPIO based USB cable detection extcon support.
-> +	  Used typically if GPIO is used for USB ID pin detection.
-> +
->  endif # MULTISTATE_SWITCH
-> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-> index 0370b42..6a08a98 100644
-> --- a/drivers/extcon/Makefile
-> +++ b/drivers/extcon/Makefile
-> @@ -12,3 +12,4 @@ obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
->  obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
->  obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
->  obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
-> +obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
-> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
-> new file mode 100644
-> index 0000000..99a58b2
-> --- /dev/null
-> +++ b/drivers/extcon/extcon-usb-gpio.c
-> @@ -0,0 +1,233 @@
-> +/**
-> + * drivers/extcon/extcon-usb-gpio.c - USB GPIO extcon driver
-> + *
-> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
-> + * Author: Roger Quadros <rogerq@ti.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/extcon.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define USB_GPIO_DEBOUNCE_MS	20	/* ms */
-> +
-> +struct usb_extcon_info {
-> +	struct device *dev;
-> +	struct extcon_dev *edev;
-> +
-> +	struct gpio_desc *id_gpiod;
-> +	int id_irq;
-> +	bool id_irqwake;		/* ID wakeup enabled flag */
-
-Do you really think id_irqwake is necessary?
-I think it is not necessary.
-
-> +
-> +	unsigned long debounce_jiffies;
-> +	struct delayed_work wq_detcable;
-> +};
-> +
-> +/* List of detectable cables */
-> +enum {
-> +	EXTCON_CABLE_USB = 0,
-> +	EXTCON_CABLE_USB_HOST,
-> +
-> +	EXTCON_CABLE_END,
-> +};
-> +
-> +static const char *usb_extcon_cable[] = {
-> +	[EXTCON_CABLE_USB] = "USB",
-> +	[EXTCON_CABLE_USB_HOST] = "USB-Host",
-> +	NULL,
-> +};
-> +
-
-[snip]
-
-> +
-> +static int usb_extcon_remove(struct platform_device *pdev)
-> +{
-> +	struct usb_extcon_info *info = platform_get_drvdata(pdev);
-> +
-> +	cancel_delayed_work_sync(&info->wq_detcable);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int usb_extcon_suspend(struct device *dev)
-> +{
-> +	struct usb_extcon_info *info = dev_get_drvdata(dev);
-> +
-> +	if (device_may_wakeup(dev))
-> +		if (!enable_irq_wake(info->id_irq))
-> +			info->id_irqwake = true;
-> +
-
-You can simplify this code as following without 'id_irqwake':
-
-	if (device_may_wakeup(dev))
-		enable_irq_wake(info->id_irq);
-
-> +	/*
-> +	 * We don't want to process any IRQs after this point
-> +	 * as GPIOs used behind I2C subsystem might not be
-> +	 * accessible until resume completes. So disable IRQ.
-> +	 */
-> +	disable_irq(info->id_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static int usb_extcon_resume(struct device *dev)
-> +{
-> +	struct usb_extcon_info *info = dev_get_drvdata(dev);
-> +
-> +	if (info->id_irqwake) {
-> +		disable_irq_wake(info->id_irq);
-> +		info->id_irqwake = false;
-> +	}
-
-ditto.
-
-	if (device_may_wakeup(dev))
-		disable_irq_wake(info->id_irq);
-
-> +
-> +	enable_irq(info->id_irq);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(usb_extcon_pm_ops,
-> +			 usb_extcon_suspend, usb_extcon_resume);
-> +
-> +static struct of_device_id usb_extcon_dt_match[] = {
-> +	{ .compatible = "linux,extcon-usb-gpio", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, usb_extcon_dt_match);
-> +
-> +static struct platform_driver usb_extcon_driver = {
-> +	.probe		= usb_extcon_probe,
-> +	.remove		= usb_extcon_remove,
-> +	.driver		= {
-> +		.name	= "extcon-usb-gpio",
-> +		.pm	= &usb_extcon_pm_ops,
-> +		.of_match_table = usb_extcon_dt_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(usb_extcon_driver);
-> +
-> +MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
-> +MODULE_DESCRIPTION("USB GPIO extcon driver");
-> +MODULE_LICENSE("GPL v2");
 > 
 
-Thanks,
-Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
