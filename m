@@ -1,80 +1,51 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/2] mmc: core: use card pointer as the first parameter of
- execute_tuning()
-Date: Wed, 28 Jan 2015 16:55:28 -0800
-Message-ID: <CAD=FV=VQg+sQUpgbKw7Zz=-f+jPM=6O-+3gUpohWhj8JeSPu6Q@mail.gmail.com>
-References: <1422271175-19445-1-git-send-email-addy.ke@rock-chips.com>
- <1422271175-19445-2-git-send-email-addy.ke@rock-chips.com>
- <CAPDyKFp=5epMggHu0+u_LU7ETujcoeP2xOpB7iD6JF2bs8BnEA@mail.gmail.com>
- <CAD=FV=X9x0gW5TyLi4ERm8nxixQB__Y=5bRAtOax-_w+T33rCg@mail.gmail.com>
- <CAPDyKFqjG=yxDcwnk4jbXMZ05hMkWR2x37uVpRNd_11-eB4G7w@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/2] mmc: dw_mmc-exynos: add support for controlling emmc
+ reset pin
+Date: Wed, 28 Jan 2015 16:40:54 +0100
+Message-ID: <CAPDyKFphCPAroG3EEVWHziCRR+t7xEi4UXzWE0LZDRu981xfbw@mail.gmail.com>
+References: <1422346289-9348-1-git-send-email-m.szyprowski@samsung.com>
+	<1422346289-9348-2-git-send-email-m.szyprowski@samsung.com>
+	<54C74C33.5050305@samsung.com>
+	<54C8D8E3.9060609@gmx.net>
+	<CAPDyKFr9fQ5ny=Foi4x_-wEQA9K0wRqqEfLxmxtBn5tmPwS-Nw@mail.gmail.com>
+	<54C8FF06.4000308@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFqjG=yxDcwnk4jbXMZ05hMkWR2x37uVpRNd_11-eB4G7w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Chris Ball <chris@printf.net>, Jianqun Xu <xjq@rock-chips.com>, chenfen <chenfen@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, lintao <lintao@rock-chips.com>, Jaehoon Chung <jh80.chung@samsung.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Han Jiang <hj@rock-chips.com>, Dinh Nguyen <dinguyen@altera.com>, Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Addy Ke <addy.ke@rock-chips.com>, Alexandru Stan <amstan@chromium.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>K
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <54C8FF06.4000308@gmx.net>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tobias Jakobi <liquid.acid@gmx.net>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Daniel Drake <drake@endlessm.com>, Sebastian Reichel <sre@kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Ulf,
-
-On Tue, Jan 27, 2015 at 7:18 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> I asked Addy to post upstream against mmc_send_tuning(), but I guess
->> he didn't (he posted against Alex's NAKed patch instead).
+On 28 January 2015 at 16:23, Tobias Jakobi <liquid.acid@gmx.net> wrote:
+> Ulf Hansson wrote:
+>> On 28 January 2015 at 13:41, Tobias Jakobi <liquid.acid@gmx.net> wrote:
+>>> Hello!
+>>>
+>>> Jaehoon Chung wrote:
+>>>> mmc core supported to hw_reset function.
+>>>> So i think we can use it. It's called at only initial time to clear the previous status.
+>>>> But i think it can be called at reboot time. (it needs to implement codes.)
+>>>> how about?
+>>> I don't think that's going the work. The problem here is that depending
+>>> on the board configuration, the eMMC might carry the bootloader. If the
+>>> eMMC subsystem is not properly reset _during_ reboot, the board won't
+>>> even start since no bootloader is found. So we don't even reach the
+>>> point where the kernel does anything.
 >>
->> ...when I talked to him about it, Addy was asserting that when tuning
->> fails it is important (at least on dw_mmc on rk3288) that we wait for
->> the card to stop being busy and that the way to detect was using
->> mmc_send_status().
->
-> So, could that be due to the internal logic of the error handling in
-> dw_mmc driver? Or you think this is a generic issue?
->
-> According to the specifications (eMMC and SD) both states that the
-> tuning command has an R1 response. So, there shouldn't be any busy
-> signalling involved - at least according to spec.
-
-I did a bit of digging into this issue myself.  What I found was that
-a "response CRC" and "end of transfer".  This was why I posted up
-<https://patchwork.kernel.org/patch/5623071/>.  From that patch:
-
-> Specifically it looks like in certain error conditions (I saw this
-> with Response CRC errors) that data keeps showing up in the FIFO even
-> after the error is reported and the CD (command done) bit is set.  If
-> we don't wait for this data to finish transferring then it confuses
-> the next transaction.  In the specific failure case I ran into I found
-> that I could monitor the data_state_mc_busy bit and wait for it to
-> clear, but in other failure cases this bit was stuck at busy when we
-> saw an error.  Hence a generic big delay seems like the only option.
-
-...Addy instead fixed the problem using mmc_send_status() to try to
-detect when the transfer was all done and it apparently worked, but it
-seemed odd to me.  My MMC "expertise" pretty much ends with looking
-for simple logic errors in the MMC driver, so my hope was that one of
-you guys would know this better...
-
-
->> That would mean that against upstream you'd need to change
->> mmc_send_tuning() to take in the card as well (or move the "host->card
->> = card" assignment to before UHS init, which seems less desirable?)
+>> I guess it depends on what's being done during the reboot sequence.
 >>
->> What do you think about that?  Is there a better solution?
->
-> Why do we need to change mmc_send_tuning()? I thought the issue was
-> that mmc_send_status(), which currently takes "card" as a parameter.
+>> The most proper thing would be to let the boot loader control the GPIO
+>> to trigger the HW reset, but that would mean the boot loader need to
+>> know about board specific configurations, such as which GPIO pin. So
+>> maybe SOC vendors need to state what GPIO pin to use and don't leave
+>> that as a configurable option.
+> Not the bootloader, but the iROM code would have to do this, and as far
+> as I know the iROM can't be modified. Or am I missing something here?
 
-Well, if mmc_send_tuning() needed to call mmc_send_status() then
-mmc_send_tuning() would need the card parameter, right?
+You are right! The "bootloader" can very likely be stored in ROM code.
+That's why I also said the GPIO shouldn't be configurable. :-)
 
-
-Doug
+Kind regards
+Uffe
