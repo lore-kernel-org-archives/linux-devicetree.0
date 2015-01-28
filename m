@@ -1,46 +1,96 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: Aw: [PATCH v5 3/4] tpm/st33zp24/spi: Add st33zp24 spi phy
-Date: Wed, 28 Jan 2015 13:36:25 -0700
-Message-ID: <20150128203625.GB10610@obsidianresearch.com>
-References: <1422395850-21644-1-git-send-email-christophe-h.ricard@st.com>
- <1422395850-21644-4-git-send-email-christophe-h.ricard@st.com>
- <trinity-1682f383-7165-419d-b9f7-ef1f205304d2-1422463682896@3capp-gmx-bs38>
- <54C934DD.2040109@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 1/7] mmc: sdhci-pxav3: Fix SDR50 and DDR50 capabilities
+ for the Armada 38x flavor
+Date: Wed, 28 Jan 2015 21:36:32 +0100
+Message-ID: <CAPDyKFp=TxkL4BPMxVU+pMPoCQ1xPq0XZ+ZPpBFFaDnNtFjynw@mail.gmail.com>
+References: <1422010594-1735-1-git-send-email-gregory.clement@free-electrons.com>
+ <1422010594-1735-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54C934DD.2040109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: RICARD Christophe <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter Huewe <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1422010594-1735-2-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, stable@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 08:13:33PM +0100, RICARD Christophe wrote:
-> Hi Peter,
-> 
-> A TPM command can be up to 2048 byte, A TPM response can be up to 1024 byte.
-> Between command and response, there are latency byte (up to 15
-> usually on st33zp24 2 are enough).
-> 
-> Overall when sending a command and expecting an answer we need in
-> worst case:
-> 2048 (for the TPM command) + 1024 (for the TPM answer).  We need
-> some latency byte before the answer is available (max 15).
-> We have 2048 + 1024 + 15.
-> 
-> I will go for a define making the code more readable together with a
-> comment.
+On 23 January 2015 at 11:56, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
+> According to erratum 'FE-2946959' both SDR50 and DDR50 modes require
+> specific clock adjustments in SDIO3 Configuration register. However,
+> this register was not part of the device tree binding. Even if the
+> binding can (and will) be extended we still need handling the case
+> where this register was not available. In this case we use the
+> SDHCI_QUIRK_MISSING_CAPS quirk remove them from the capabilities.
+>
+> This commit is based on the work done by Marcin Wojtas<mw@semihalf.com>
+>
+> Fixes: 5491ce3f79ee ("mmc: sdhci-pxav3: add support for the Armada 38x SDHCI controller")
+> Cc: <stable@vger.kernel.org> # v3.15+
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Marcin Wojtas <mw@semihalf.com>
+> ---
+>  drivers/mmc/host/sdhci-pxav3.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+> index ca3424e7ef71..7b07325b4fba 100644
+> --- a/drivers/mmc/host/sdhci-pxav3.c
+> +++ b/drivers/mmc/host/sdhci-pxav3.c
+> @@ -118,6 +118,20 @@ static int mv_conf_mbus_windows(struct platform_device *pdev,
+>         return 0;
+>  }
+>
+> +static int armada_38x_quirks(struct sdhci_host *host)
 
-You can probably just make these static arrays inside your priv
-structure and drop these independent allocations:
+Seems like this function can be void instead of always returning 0.
 
-> >+ phy->spi_xfer.tx_buf = devm_kmalloc(&dev->dev, (TPM_BUFSIZE +
-> >+ (TPM_BUFSIZE / 2) + MAX_SPI_LATENCY),
-> >+ GFP_KERNEL);
+> +{
+> +       host->quirks |= SDHCI_QUIRK_MISSING_CAPS;
+> +       /*
+> +        * According to erratum 'FE-2946959' both SDR50 and DDR50
+> +        * modes require specific clock adjustments in SDIO3
+> +        * Configuration register, if the adjustment is not done,
+> +        * remove them from the capabilities.
+> +        */
+> +       host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
+> +       host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_DDR50);
+> +       return 0;
+> +}
+> +
+>  static void pxav3_reset(struct sdhci_host *host, u8 mask)
+>  {
+>         struct platform_device *pdev = to_platform_device(mmc_dev(host->mmc));
+> @@ -319,6 +333,9 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
+>                 clk_prepare_enable(pxa->clk_core);
+>
+>         if (of_device_is_compatible(np, "marvell,armada-380-sdhci")) {
+> +               ret = armada_38x_quirks(host);
+> +               if (ret < 0)
+> +                       goto err_quirks;
+>                 ret = mv_conf_mbus_windows(pdev, mv_mbus_dram_info());
+>                 if (ret < 0)
+>                         goto err_mbus_win;
+> @@ -400,6 +417,7 @@ err_mbus_win:
+>         if (!IS_ERR(pxa->clk_core))
+>                 clk_disable_unprepare(pxa->clk_core);
+>  err_clk_get:
+> +err_quirks:
+>         sdhci_pltfm_free(pdev);
+>         return ret;
+>  }
+> --
+> 2.1.0
+>
 
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
