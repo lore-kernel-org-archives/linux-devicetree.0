@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v2 05/14] NFC: nci: Add nci_nfcee_mode_set handler command/response
-Date: Wed, 28 Jan 2015 21:17:22 +0100
-Message-ID: <1422476251-25972-6-git-send-email-christophe-h.ricard@st.com>
+Subject: [RFC v2 03/14] NFC: nci: Add NCI NFCEE constant
+Date: Wed, 28 Jan 2015 21:17:20 +0100
+Message-ID: <1422476251-25972-4-git-send-email-christophe-h.ricard@st.com>
 References: <1422476251-25972-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1422476251-25972-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,119 +10,95 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add nci_nfcee_mode_set handler according to NFC Forum NCI specification.
-It is necessary for example for secure element handling.
+Add NFCEE NCI constant for:
+- NFCEE Interface/Protocols
+- Destination type
+- Destination-specific parameters type
+- NFCEE Discovery Action
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- include/net/nfc/nci.h      |  9 +++++++++
- include/net/nfc/nci_core.h |  1 +
- net/nfc/nci/core.c         | 21 +++++++++++++++++++++
- net/nfc/nci/rsp.c          | 13 +++++++++++++
- 4 files changed, 44 insertions(+)
+ include/net/nfc/nci.h | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
 diff --git a/include/net/nfc/nci.h b/include/net/nfc/nci.h
-index 6d99e8f..230f227 100644
+index e7257a4..6d99e8f 100644
 --- a/include/net/nfc/nci.h
 +++ b/include/net/nfc/nci.h
-@@ -284,6 +284,14 @@ struct nci_nfcee_discover_cmd {
- 	__u8	discovery_action;
+@@ -62,6 +62,25 @@
+ #define NCI_STATUS_NFCEE_PROTOCOL_ERROR				0xc2
+ #define NCI_STATUS_NFCEE_TIMEOUT_ERROR				0xc3
+ 
++/* NFCEE Interface/Protocols */
++#define NCI_NFCEE_INTERFACE_APDU           0x00
++#define NCI_NFCEE_INTERFACE_HCI_ACCESS     0x01
++#define NCI_NFCEE_INTERFACE_TYPE3_CMD_SET  0x02
++#define NCI_NFCEE_INTERFACE_TRANSPARENT        0x03
++
++/* Destination type */
++#define NCI_DESTINATION_NFCC_LOOPBACK      0x01
++#define NCI_DESTINATION_REMOTE_NFC_ENDPOINT    0x02
++#define NCI_DESTINATION_NFCEE              0x03
++
++/* Destination-specific parameters type */
++#define NCI_DESTINATION_SPECIFIC_PARAM_RF_TYPE     0x00
++#define NCI_DESTINATION_SPECIFIC_PARAM_NFCEE_TYPE  0x01
++
++/* NFCEE Discovery Action */
++#define NCI_NFCEE_DISCOVERY_ACTION_DISABLE			0x00
++#define NCI_NFCEE_DISCOVERY_ACTION_ENABLE			0x01
++
+ /* NCI RF Technology and Mode */
+ #define NCI_NFC_A_PASSIVE_POLL_MODE				0x00
+ #define NCI_NFC_B_PASSIVE_POLL_MODE				0x01
+@@ -260,6 +279,11 @@ struct nci_rf_deactivate_cmd {
+ 	__u8	type;
  } __packed;
  
-+#define NCI_OP_NFCEE_MODE_SET_CMD nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x01)
-+#define NCI_NFCEE_DISABLE	0x00
-+#define NCI_NFCEE_ENABLE	0x01
-+struct nci_nfcee_mode_set_cmd {
-+	__u8	nfcee_id;
-+	__u8	nfcee_mode;
++#define NCI_OP_NFCEE_DISCOVER_CMD nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x00)
++struct nci_nfcee_discover_cmd {
++	__u8	discovery_action;
 +} __packed;
 +
  /* ----------------------- */
  /* ---- NCI Responses ---- */
  /* ----------------------- */
-@@ -333,6 +341,7 @@ struct nci_nfcee_discover_rsp {
- 	__u8	num_nfcee;
- } __packed;
+@@ -303,6 +327,12 @@ struct nci_core_set_config_rsp {
  
-+#define NCI_OP_NFCEE_MODE_SET_RSP nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x01)
+ #define NCI_OP_RF_DEACTIVATE_RSP	nci_opcode_pack(NCI_GID_RF_MGMT, 0x06)
+ 
++#define NCI_OP_NFCEE_DISCOVER_RSP nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x00)
++struct nci_nfcee_discover_rsp {
++	__u8	status;
++	__u8	num_nfcee;
++} __packed;
++
  /* --------------------------- */
  /* ---- NCI Notifications ---- */
  /* --------------------------- */
-diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
-index c492266..2f7ffa2 100644
---- a/include/net/nfc/nci_core.h
-+++ b/include/net/nfc/nci_core.h
-@@ -185,6 +185,7 @@ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb);
- int nci_set_config(struct nci_dev *ndev, __u8 id, size_t len, __u8 *val);
+@@ -430,4 +460,22 @@ struct nci_rf_deactivate_ntf {
+ 	__u8	reason;
+ } __packed;
  
- int nci_nfcee_discover(struct nci_dev *ndev, u8 action);
-+int nci_nfcee_mode_set(struct nci_dev *ndev, u8 nfcee_id, u8 nfcee_mode);
- 
- static inline struct sk_buff *nci_skb_alloc(struct nci_dev *ndev,
- 					    unsigned int len,
-diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
-index d8cb395..8741a45 100644
---- a/net/nfc/nci/core.c
-+++ b/net/nfc/nci/core.c
-@@ -473,6 +473,27 @@ int nci_nfcee_discover(struct nci_dev *ndev, u8 action)
- }
- EXPORT_SYMBOL(nci_nfcee_discover);
- 
-+static void nci_nfcee_mode_set_req(struct nci_dev *ndev, unsigned long opt)
-+{
-+	struct nci_nfcee_mode_set_cmd *cmd =
-+					(struct nci_nfcee_mode_set_cmd *)opt;
++#define NCI_OP_NFCEE_DISCOVER_NTF nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x00)
++struct nci_nfcee_supported_protocol {
++	__u8	num_protocol;
++	__u8	supported_protocol[0];
++} __packed;
 +
-+	nci_send_cmd(ndev, NCI_OP_NFCEE_MODE_SET_CMD,
-+		     sizeof(struct nci_nfcee_mode_set_cmd), cmd);
-+}
++struct nci_nfcee_information_tlv {
++	__u8	num_tlv;
++	__u8	information_tlv[0];
++} __packed;
 +
-+int nci_nfcee_mode_set(struct nci_dev *ndev, u8 nfcee_id, u8 nfcee_mode)
-+{
-+	struct nci_nfcee_mode_set_cmd cmd;
++struct nci_nfcee_discover_ntf {
++	__u8	nfcee_id;
++	__u8	nfcee_status;
++	struct nci_nfcee_supported_protocol supported_protocols;
++	struct nci_nfcee_information_tlv	information_tlv;
++} __packed;
 +
-+	cmd.nfcee_id = nfcee_id;
-+	cmd.nfcee_mode = nfcee_mode;
-+
-+	return nci_request(ndev, nci_nfcee_mode_set_req, (unsigned long)&cmd,
-+			   msecs_to_jiffies(NCI_CMD_TIMEOUT));
-+}
-+EXPORT_SYMBOL(nci_nfcee_mode_set);
-+
- static int nci_set_local_general_bytes(struct nfc_dev *nfc_dev)
- {
- 	struct nci_dev *ndev = nfc_get_drvdata(nfc_dev);
-diff --git a/net/nfc/nci/rsp.c b/net/nfc/nci/rsp.c
-index 2e549bd..1fb5b71 100644
---- a/net/nfc/nci/rsp.c
-+++ b/net/nfc/nci/rsp.c
-@@ -215,6 +215,15 @@ static void nci_nfcee_discover_rsp_packet(struct nci_dev *ndev,
- 		nci_req_complete(ndev, discover_rsp->status);
- }
- 
-+static void nci_nfcee_mode_set_rsp_packet(struct nci_dev *ndev,
-+					  struct sk_buff *skb)
-+{
-+	__u8 status = skb->data[0];
-+
-+	pr_debug("status 0x%x\n", status);
-+	nci_req_complete(ndev, status);
-+}
-+
- void nci_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb)
- {
- 	__u16 rsp_opcode = nci_opcode(skb->data);
-@@ -264,6 +273,10 @@ void nci_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb)
- 		nci_nfcee_discover_rsp_packet(ndev, skb);
- 		break;
- 
-+	case NCI_OP_NFCEE_MODE_SET_RSP:
-+		nci_nfcee_mode_set_rsp_packet(ndev, skb);
-+		break;
-+
- 	default:
- 		pr_err("unknown rsp opcode 0x%x\n", rsp_opcode);
- 		break;
+ #endif /* __NCI_H */
 -- 
 2.1.0
 
