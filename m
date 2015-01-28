@@ -1,56 +1,48 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mmc: dw_mmc-exynos: add support for controlling emmc
- reset pin
-Date: Wed, 28 Jan 2015 15:54:23 +0100
-Message-ID: <CAPDyKFr9fQ5ny=Foi4x_-wEQA9K0wRqqEfLxmxtBn5tmPwS-Nw@mail.gmail.com>
-References: <1422346289-9348-1-git-send-email-m.szyprowski@samsung.com>
-	<1422346289-9348-2-git-send-email-m.szyprowski@samsung.com>
-	<54C74C33.5050305@samsung.com>
-	<54C8D8E3.9060609@gmx.net>
+From: Peter Rosin <peda@axentia.se>
+Subject: RE: [PATCH v2 3/7] ASoC: pcm512x: Change register default to match
+ actual content after reset
+Date: Wed, 28 Jan 2015 20:42:06 +0000
+Message-ID: <4e50aac9e8ad4b5f8e8155ef8ca2d450@EMAIL.axentia.se>
+References: <1422454572-7847-1-git-send-email-peda@lysator.liu.se>
+ <1422454572-7847-4-git-send-email-peda@lysator.liu.se>
+ <20150128191217.GF21293@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54C8D8E3.9060609-hi6Y0CQ0nG0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tobias Jakobi <liquid.acid-hi6Y0CQ0nG0@public.gmane.org>
-Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150128191217.GF21293@sirena.org.uk>
+Content-Language: sv-SE
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Peter Rosin <peda@lysator.liu.se>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Clemens Ladisch <clemens@ladisch.de>, Lars-Peter Clausen <lars@metafoo.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28 January 2015 at 13:41, Tobias Jakobi <liquid.acid-hi6Y0CQ0nG0@public.gmane.org> wrote:
-> Hello!
->
-> Jaehoon Chung wrote:
->> mmc core supported to hw_reset function.
->> So i think we can use it. It's called at only initial time to clear the previous status.
->> But i think it can be called at reboot time. (it needs to implement codes.)
->> how about?
-> I don't think that's going the work. The problem here is that depending
-> on the board configuration, the eMMC might carry the bootloader. If the
-> eMMC subsystem is not properly reset _during_ reboot, the board won't
-> even start since no bootloader is found. So we don't even reach the
-> point where the kernel does anything.
+Hi Mark,
 
-I guess it depends on what's being done during the reboot sequence.
+First of all, thanks for taking the rest of the series!
 
-The most proper thing would be to let the boot loader control the GPIO
-to trigger the HW reset, but that would mean the boot loader need to
-know about board specific configurations, such as which GPIO pin. So
-maybe SOC vendors need to state what GPIO pin to use and don't leave
-that as a configurable option.
+Mark Brown wrote:
+> On Wed, Jan 28, 2015 at 03:16:08PM +0100, Peter Rosin wrote:
+> 
+> > @@ -78,7 +78,7 @@ static const struct reg_default
+> pcm512x_reg_defaults[] = {
+> >  	{ PCM512x_DIGITAL_VOLUME_2,  0x30 },
+> >  	{ PCM512x_DIGITAL_VOLUME_3,  0x30 },
+> >  	{ PCM512x_DIGITAL_MUTE_1,    0x22 },
+> > -	{ PCM512x_DIGITAL_MUTE_2,    0x00 },
+> > +	{ PCM512x_DIGITAL_MUTE_2,    0x02 },
+> 
+> The datasheet claims these have undefined values as reserved bits - what
+> would be a more robust change here would be to remove the register
+> default entirely so that we take the value the hardware has, giving
+> robustness against any hardware revisions.  Of course the device has rather a
+> lot of such reserved bits which is unfortunate.
 
->From kernel perspective, the best we can do is to the GPIO, when doing
-a controlled reset (soft reset, or whatever we call it), but I am not
-sure where that should be done? Is there a guarantee that the mmc bus'
-->shutdown() callback gets called in this sequence?
+Given the incompleteness of the datasheets this might be safest; a lot
+of the reserved areas appear to have undocumented functions. But it
+works as is of course, so it is not high priority... I don't know what happens
+when this particular bit is cleared, but it doesn't change anything for the
+pcm5142 that I am able to detect. So, no real problem with dropping 3/7.
 
-Moreover, adding the reset GPIO as part of the initialization
-procedure in the mmc core, gives us other benefits and it won't hurt.
-So no matter, I think it's worth to proceed and discuss Marek's
-proposal.
-
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Peter
