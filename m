@@ -1,35 +1,111 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/2] mmc: pwrseq: Add support to multiple gpios in pwrseq simple
-Date: Wed, 28 Jan 2015 13:16:21 +0000
-Message-ID: <1422450981-9328-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH net-next v8 0/4] net: Add Keystone NetCP ethernet driver
+ support
+Date: Wed, 28 Jan 2015 13:20:40 -0500
+Message-ID: <54C92878.3030207@ti.com>
+References: <1421367007-19744-1-git-send-email-m-karicheri2@ti.com> <20150119.151106.822126941934010309.davem@davemloft.net> <54BE7A00.2020205@ti.com> <25883654.BLFxICW9P0@wuerfel> <54C91328.6030208@ti.com> <54C91FDD.1000009@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C91FDD.1000009@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support to reset/powerup multiple gpio pins on a given
-sdio bus. The use case is simple, on sdio we could have multiple devices
-like WLAN, BT which are controlled by there own reset lines. So having
-multiple reset is something more useful in such cases.
+On 01/28/2015 12:43 PM, Murali Karicheri wrote:
+> On 01/28/2015 11:49 AM, Murali Karicheri wrote:
+>> On 01/27/2015 05:28 PM, Arnd Bergmann wrote:
+>>> On Tuesday 20 January 2015 10:53:36 Murali Karicheri wrote:
+>>>> On 01/19/2015 03:11 PM, David Miller wrote:
+>>>>> From: Murali Karicheri<m-karicheri2@ti.com>
+>>>>> Date: Thu, 15 Jan 2015 19:10:03 -0500
+>>>>>
+>>>>>> The Network Coprocessor (NetCP) is a hardware accelerator that
+>>>>>> processes
+>>>>>> Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with
+>>>>>> a ethernet
+>>>>>> switch sub-module to send and receive packets. NetCP also includes
+>>>>>> a packet
+>>>>>> accelerator (PA) module to perform packet classification operations
+>>>>>> such as
+>>>>>> header matching, and packet modification operations such as checksum
+>>>>>> generation. NetCP can also optionally include a Security
+>>>>>> Accelerator(SA)
+>>>>>> capable of performing IPSec operations on ingress/egress packets.
+>>>>>>
+>>>>>> Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+>>>>>> includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+>>>>>> 1Gb/s rates per Ethernet port.
+>>>>>>
+>>>>>> Both GBE and XGBE network processors supported using common
+>>>>>> driver. It
+>>>>>> is also designed to handle future variants of NetCP.
+>>>>>
+>>>>> Series applied to net-next, thanks.
+>>>> David,
+>>>>
+>>>> Thanks a lot for applying this series. This helps us move forward to
+>>>> work on the next set of patches.
+>>>
+>>> Hi Murali,
+>>>
+>>> Building an ARM 'allmodconfig' kernel now runs into two separate
+>>> problems
+>>> from your driver:
+>>>
+>>> - you have two module_init() instances in one module, which conflict.
+>>>
+>>> - you have two files that are linked into more than one module, so
+>>> building
+>>> both TI_CPSW and TI_KEYSTONE_NETCP in the same kernel fails.
+>>>
+>>> The answer to both of these is probably to have separate loadable
+>>> modules,
+>>> but you might be able to come up with a different solution.
+>> Arnd,
+>>
+>> Thanks for letting us know. We will look into this.
+>>
+>> How do I reproduce this? Is there a defconfig used for allmodconfig? I
+>> am unable to find one. Any details to reproduce this will be useful.
+>>
+> Ok I think I found it.
+>
+> I did this with next-next branch and it seems to work. I will make
+> kernel build to reproduce this.
+>
+> make ARCH=arm allmodconfig
+> make uImage;
+>
+> I am building it now.
+Arnd,
 
-Without this patch I could not get BT and WLAN working at same time on IFC6410.
+I see allmodconfig configure NetCP driver as module. My uImage build 
+from net-next branch went through fine. I am building modules right now 
+and should show error as you have pointed out. Let me know if you any 
+issues on how I am working to reproduce the issue (wrong branch, wrong 
+/incomplete commands etc. I have my CROSS_COMPILE and ARCH set in my 
+env). Want to reproduce this so as to make sure my fix is addressing 
+this. Hope I am on the right track.
 
-Thanks,
-srini
+Thanks
 
-Srinivas Kandagatla (2):
-  mmc: pwrseq: Add support to control multiple gpios in simple pwrseq
-  mmc: pwrseq: Update document with multiple gpios support
+Murali
+>
+> Murali
+>> Thanks.
+>>
+>> Murali
+>>>
+>>> Arnd
+>>
+>>
+>
+>
 
- .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |  7 ++-
- drivers/mmc/core/pwrseq_simple.c                   | 64 +++++++++++++++-------
- 2 files changed, 49 insertions(+), 22 deletions(-)
 
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Murali Karicheri
+Linux Kernel, Texas Instruments
