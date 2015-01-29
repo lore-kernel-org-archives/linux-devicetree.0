@@ -1,42 +1,50 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH 2/2] DT: leds: Add led-sources property
-Date: Thu, 29 Jan 2015 14:59:42 -0800
-Message-ID: <CAK5ve-L9W1+jED=jT9UYaU8CeN+QaGskHoo-os+ABZhJqN6n3w@mail.gmail.com>
-References: <1422346028-16739-1-git-send-email-j.anaszewski@samsung.com>
- <1422346028-16739-2-git-send-email-j.anaszewski@samsung.com>
- <54CA49F8.2030501@samsung.com> <CAL_JsqK28ZKLrzFH175GM9Ekbem2JcB9GhL-yB2-J4fq0RMCzg@mail.gmail.com>
- <CAK5ve-LKBfjRzxK_b0ByEF5uWHfAaBGS2OPznOiYNg9+FJP5Gg@mail.gmail.com> <20150129223010.GA2110@amd>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH net-next v8 0/4] net: Add Keystone NetCP ethernet driver
+ support
+Date: Thu, 29 Jan 2015 18:20:24 -0500
+Message-ID: <54CAC038.9000009@ti.com>
+References: <1421367007-19744-1-git-send-email-m-karicheri2@ti.com> <54C9654C.8030407@ti.com> <54CA6C20.5090301@ti.com> <15828198.gHAJTouZOU@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20150129223010.GA2110@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Rob Herring <robherring2@gmail.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <15828198.gHAJTouZOU@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, mugunthanvnm-l0cyMroinI0@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 29, 2015 at 2:30 PM, Pavel Machek <pavel@ucw.cz> wrote:
-> On Thu 2015-01-29 14:14:54, Bryan Wu wrote:
->> On Thu, Jan 29, 2015 at 1:03 PM, Rob Herring <robherring2@gmail.com> wrote:
->> > On Thu, Jan 29, 2015 at 8:55 AM, Jacek Anaszewski
->> > <j.anaszewski@samsung.com> wrote:
->> >> Hi Rob,
->> >>
->> >> Have we achieved consensus concerning this patch?
->> >> If so, can you give your ack?
->> >
->> > I think so.
->> >
->> > Acked-by: Rob Herring <robh@kernel.org>
->> >
->> >>
+On 01/29/2015 05:00 PM, Arnd Bergmann wrote:
+> On Thursday 29 January 2015 12:21:36 Murali Karicheri wrote:
 >>
->> OK, I can merge this patch into my tree with you guys Ack.
->> Jacek, does this patch depend on the first one which you are still
->> discussing with Pavel? Can I merge this one firstly.
+>> I think the solution is to make the cpsw_ale as a module and configured
+>> through a Kconfig option. I am working on a fix for this now.
+>>
+>> Similar fix is required for cpts.o. Currently we are not using this
+>> module for Netcp, but soon this will be re-used. I have send a patch
+>> that is already applied to net-next removing cpts.o for Netcp.
+>>
 >
-> Yes, you can.. they are independend.
->                                                                 Pavel
+> Great, thanks a lot for the follow-up.
+>
+> 	Arnd
+Arnd,
 
-Applied, thanks.
--Bryan
+I have just posted a patch to nedev list to address this issue. Please 
+review and let me know your comments. This also require some additional 
+fixes in drivers/soc/ti/ to build them as modules as well. Santosh has 
+queued them against next merge window.
+
+Felipe, Mugunthan,
+
+As the patch touches ti_cpsw as well, please review and provide your 
+comments. It will be great if you can apply this patch on net-next 
+branch and test it on ti platform using ti_cpsw driver.
+
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
