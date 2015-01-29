@@ -1,73 +1,109 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 02/24] Documentation: DT bindings: add more chip compatible
- strings for Tegra PCIe
-Date: Thu, 29 Jan 2015 15:45:38 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1501291543030.16475@utopia.booyaka.com>
-References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234937.20644.9400.stgit@dusk.lan> <CAL_JsqKMm=r+57ShskgbtNqnCGF1yKYDSJJFQ7o05keNzh5z+g@mail.gmail.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v10 2/2] tty/serial: Add Spreadtrum sc9836-uart driver
+ support
+Date: Thu, 29 Jan 2015 10:49:34 -0500
+Message-ID: <54CA568E.6080306@hurleysoftware.com>
+References: <sc9836-serial-v10> <1422443324-25082-1-git-send-email-chunyan.zhang@spreadtrum.com> <1422443324-25082-3-git-send-email-chunyan.zhang@spreadtrum.com> <54CA5128.8050500@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKMm=r+57ShskgbtNqnCGF1yKYDSJJFQ7o05keNzh5z+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54CA5128.8050500-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
+Hi Varka,
 
-On Thu, 29 Jan 2015, Rob Herring wrote:
-
-> On Wed, Jan 28, 2015 at 5:49 PM, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> > Add compatible strings for the PCIe IP blocks present on several Tegra
-> > chips.  The primary objective here is to avoid checkpatch warnings,
-> > per:
-> >
-> > http://marc.info/?l=linux-tegra&m=142201349727836&w=2
-> >
-> > Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> > Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > ---
-> >  .../bindings/pci/nvidia,tegra20-pcie.txt           |    2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> > index d763e047c6ae..e772884f1c33 100644
-> > --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> > @@ -5,6 +5,8 @@ Required properties:
-> >    - "nvidia,tegra20-pcie"
-> >    - "nvidia,tegra30-pcie"
-> >    - "nvidia,tegra124-pcie"
-> > +  - "nvidia,tegra132-pcie" (not yet matched in the driver)
-> > +  - "nvidia,tegra210-pcie" (not yet matched in the driver)
+On 01/29/2015 10:26 AM, Varka Bhadram wrote:
+> Hi,
 > 
-> Whether the driver matches or not is irrelevant to the binding and may
-> change over time. Does this mean the driver matches on something else
-> or Tegra132 is not yet supported in the driver? 
+> On Wednesday 28 January 2015 04:38 PM, Chunyan Zhang wrote:
+>> Add a full sc9836-uart driver for SC9836 SoC which is based on the
+>> spreadtrum sharkl64 platform.
+>> This driver also support earlycon.
+>>
+>> Originally-by: Lanqing Liu <lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+>> ---
+>>   drivers/tty/serial/Kconfig       |   18 +
+>>   drivers/tty/serial/Makefile      |    1 +
+>>   drivers/tty/serial/sprd_serial.c |  793 ++++++++++++++++++++++++++++++++++++++
+>>   include/uapi/linux/serial_core.h |    3 +
+>>   4 files changed, 815 insertions(+)
+>>   create mode 100644 drivers/tty/serial/sprd_serial.c
+>>
+> (...)
+> 
+>> +static int sprd_probe(struct platform_device *pdev)
+>> +{
+>> +    struct resource *res;
+>> +    struct uart_port *up;
+>> +    struct clk *clk;
+>> +    int irq;
+>> +    int index;
+>> +    int ret;
+>> +
+>> +    for (index = 0; index < ARRAY_SIZE(sprd_port); index++)
+>> +        if (sprd_port[index] == NULL)
+>> +            break;
+>> +
+>> +    if (index == ARRAY_SIZE(sprd_port))
+>> +        return -EBUSY;
+>> +
+>> +    index = sprd_probe_dt_alias(index, &pdev->dev);
+>> +
+>> +    sprd_port[index] = devm_kzalloc(&pdev->dev,
+>> +        sizeof(*sprd_port[index]), GFP_KERNEL);
+>> +    if (!sprd_port[index])
+>> +        return -ENOMEM;
+>> +
+>> +    up = &sprd_port[index]->port;
+>> +    up->dev = &pdev->dev;
+>> +    up->line = index;
+>> +    up->type = PORT_SPRD;
+>> +    up->iotype = SERIAL_IO_PORT;
+>> +    up->uartclk = SPRD_DEF_RATE;
+>> +    up->fifosize = SPRD_FIFO_SIZE;
+>> +    up->ops = &serial_sprd_ops;
+>> +    up->flags = UPF_BOOT_AUTOCONF;
+>> +
+>> +    clk = devm_clk_get(&pdev->dev, NULL);
+>> +    if (!IS_ERR(clk))
+>> +        up->uartclk = clk_get_rate(clk);
+>> +
+>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +    if (!res) {
+>> +        dev_err(&pdev->dev, "not provide mem resource\n");
+>> +        return -ENODEV;
+>> +    }
+> 
+> This check is not required. It will be done by devm_ioremap_resource()
 
-It means that the driver currently matches on one of the first three 
-strings that don't carry that annotation.
+I disagree. devm_ioremap_resource() interprets the NULL resource as
+a bad parameter and returns -EINVAL which is then forwarded as the
+return value from the probe.
 
-> If the former, what is important is what are the valid combinations of 
-> compatible properties and that is not captured here. In other words, 
-> what is the fallback compatible string for each chip?
+-ENODEV is the correct return value from the probe if the expected
+resource is not available (either because it doesn't exist or was already
+claimed by another driver).
 
-The intention was to try to be helpful: to document that anyone adding a 
-"nvidia,tegra132-pcie" compatible string would also need to add one of the 
-other strings as a fallback.  Would you like that to be documented in a 
-different way, or removed?
+Regards,
+Peter Hurley
 
+>> +    up->mapbase = res->start;
+>> +    up->membase = devm_ioremap_resource(&pdev->dev, res);
+>> +    if (IS_ERR(up->membase))
+>> +        return PTR_ERR(up->membase);
+>> +
+>>
+> 
 
-- Paul
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
