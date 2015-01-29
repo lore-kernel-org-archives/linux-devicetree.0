@@ -1,104 +1,45 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
-Date: Thu, 29 Jan 2015 14:48:32 +0200
-Message-ID: <1422535712.28891.3.camel@mm-sol.com>
-References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: BhuvanChandra.DV <bhuvanchandra.dv@toradex.com>
+Subject: Re: [PATCH 7/7] spi: spi-fsl-dspi: Add support for TCFQ transfer mode
+Date: Thu, 29 Jan 2015 12:53:57 +0000
+Message-ID: <1422536382672.21760@toradex.com>
+References: <1422356608-15961-1-git-send-email-bhuvanchandra.dv@toradex.com>
+ <1422356608-15961-2-git-send-email-bhuvanchandra.dv@toradex.com>
+ <20150128190342.GE21293@sirena.org.uk> <1422533049999.91114@toradex.com>
+ <20150129121320.GI21293@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422060853-1067-2-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150129121320.GI21293@sirena.org.uk>
+Content-Language: en-IN
+Content-ID: <2EB79AB5DBC01549B4F66E2879FBDED3@toradex.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "B44548@freescale.com" <B44548@freescale.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Bjorn,
+On 01/29/2015 05:43 PM, Mark Brown wrote:
+> On Thu, Jan 29, 2015 at 11:58:25AM +0000, BhuvanChandra.DV wrote:
+>
+>> As far as i understood the major difference between the two modes are when
+>> the interrupt to trigger, as EOQ mode will trigger the interrupt at end of
+>> queue and TCF will trigger the interrupt at every frame transfer. Probably
+>> mode selection shouldn't be a device tree property, but i don't see any
+>> automatic way to choose between the modes.
+>> Maybe a config would be more appropriate?
+> Or if there's either no particular reason to choose one over the other
+> or one is always better then just pick one in the driver and don't worry
+> about implementing both.
 
-Just few nitpick comments. 
-
-On Fri, 2015-01-23 at 16:54 -0800, Bjorn Andersson wrote:
-> From: Courtney Cavin cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> 
-> This adds support for the WLED ('White' LED) block on Qualcomm's
-> PM8941 PMICs.
-> 
-> Signed-off-by: Courtney Cavin cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> Signed-off-by: Bjorn Andersson andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
->  drivers/leds/Kconfig            |   8 +
->  drivers/leds/Makefile           |   1 +
->  drivers/leds/leds-pm8941-wled.c | 459 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 468 insertions(+)
->  create mode 100644 drivers/leds/leds-pm8941-wled.c
-> 
-
-<snip>
-
-> +
-> +#define PM8941_WLED_REG_VAL_BASE               0x40
-> +#define  PM8941_WLED_REG_VAL_MAX               0xFFF
-> +
-> +#define PM8941_WLED_REG_MOD_EN                 0x46
-> +#define  PM8941_WLED_REG_MOD_EN_BIT            BIT(7)
-> +#define  PM8941_WLED_REG_MOD_EN_MASK           BIT(7)
-
-Is it possible bit definitions to have same indentation like registers offsets?
-
-> 
-> +struct pm8941_wled_config {
-> +       u32 i_boost_limit;
-> +       u32 ovp;
-> +       u32 switch_freq;
-> +       u32 num_strings;
-> +       u32 i_limit;
-> +       bool cs_out_en;
-> +       bool ext_gen;
-> +       bool cabc_en;
-> +};
-> +
-
-Could this be further squashed to bellow structure?
-
-> +struct pm8941_wled {
-> +       struct regmap *regmap;
-> +       u16 addr;
-> +
-> +       struct led_classdev cdev;
-> +
-> +       struct pm8941_wled_config cfg;
-> +};
-> +
-> 
-
-<snip>
-
-> +static void pm8941_wled_set_brightness(struct led_classdev *cdev,
-> +                                                                                       enum 
-> led_brightness value)
-> +{
-> +       if (pm8941_wled_set(cdev, value)) {
-
-pm8941_wled_set() is used only here, could it be merged into this function?
- 
-> +               dev_err(cdev->dev, "Unable to set brightness\n");
-> +               return;
-> +       }
-> +       cdev->brightness = value;
-> +}
-> +
-> 
-
-Otherwise it looks good. Driver is loaded and device is detected
-properly (i have added readings for type and subtype registers).
-Do you know where I can measure result from changing brightness 
-sysfs entry. I am using 8074 dragonboard?
-
-Thank you,
-Ivan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Among the two, EOQ would be better since with TCF, interrupts are generated at
+every frame transfer, which could be a problem at higher frequencies.
+I think we can omit this patch then.
