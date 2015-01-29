@@ -1,102 +1,58 @@
-From: Karol Wrona <k.wrona@samsung.com>
-Subject: [RFC PATCH 1/1] PM / domains: Add support for virtual power domains
-Date: Thu, 29 Jan 2015 19:12:56 +0100
-Message-ID: <1422555176-13054-2-git-send-email-k.wrona@samsung.com>
-References: <1422555176-13054-1-git-send-email-k.wrona@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1422555176-13054-1-git-send-email-k.wrona@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Amit Daniel Kachhap <amit.daniel@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Karol Wrona <wrona.vy@gmail.com>, Karol Wrona <k.wrona@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 01/24] Documentation: DT: document compatible string
+ existence requirement
+Date: Thu, 29 Jan 2015 12:15:49 -0600
+Message-ID: <CAL_JsqKjKnxUE=1hd7Le_QRrUQ8=BMgKRnw7q_Uqzn8z6gQ-Bw@mail.gmail.com>
+References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234936.20644.76672.stgit@dusk.lan>
+ <54CA6331.3010909@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54CA6331.3010909-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are the power domains which are turned off or put to retention only during
-suspend or special processor states.  In such case there is a need to register
-some devices which belong to such domain that PM core could know the state of
-such devices and decide which power mode should be chosen i.e. the domain can
-not be put to retention if some devices are active.  Virtual power domain has
-empty power_on/off callbacks as there is no need to gate anything.
+On Thu, Jan 29, 2015 at 10:43 AM, Javier Martinez Canillas
+<javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+> Hello Paul,
+>
+> On 01/29/2015 12:49 AM, Paul Walmsley wrote:
+>>
+>> DT maintainers require all compatible strings used in chip or board
+>> DTS file to be previously documented somewhere in
+>> Documentation/devicetree/bindings, per:
+>>
+>> http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+>>
+>
+> I would had preferred if checkpatch.pl didn't warn about the most specific
+> variants of the IP blocks tbh.
 
-Signed-off-by: Karol Wrona <k.wrona@samsung.com>
----
- drivers/base/power/Makefile          |    3 +-
- drivers/base/power/pm_domains_virt.c |   54 ++++++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 1 deletion(-)
- create mode 100644 drivers/base/power/pm_domains_virt.c
+Patches welcome.
 
-diff --git a/drivers/base/power/Makefile b/drivers/base/power/Makefile
-index 1cb8544..360a0e2 100644
---- a/drivers/base/power/Makefile
-+++ b/drivers/base/power/Makefile
-@@ -2,7 +2,8 @@ obj-$(CONFIG_PM)	+= sysfs.o generic_ops.o common.o qos.o runtime.o
- obj-$(CONFIG_PM_SLEEP)	+= main.o wakeup.o
- obj-$(CONFIG_PM_TRACE_RTC)	+= trace.o
- obj-$(CONFIG_PM_OPP)	+= opp.o
--obj-$(CONFIG_PM_GENERIC_DOMAINS)	+=  domain.o domain_governor.o
-+obj-$(CONFIG_PM_GENERIC_DOMAINS)	+= domain.o domain_governor.o \
-+					   pm_domains_virt.o
- obj-$(CONFIG_HAVE_CLK)	+= clock_ops.o
- 
- ccflags-$(CONFIG_DEBUG_DRIVER) := -DDEBUG
-diff --git a/drivers/base/power/pm_domains_virt.c b/drivers/base/power/pm_domains_virt.c
-new file mode 100644
-index 0000000..bd4d6b6
---- /dev/null
-+++ b/drivers/base/power/pm_domains_virt.c
-@@ -0,0 +1,54 @@
-+/*
-+ *  Copyright (C) 2015, Samsung Electronics Co. Ltd. All Rights Reserved.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/pm_domain.h>
-+#include <linux/slab.h>
-+
-+static int pd_power_off(struct generic_pm_domain *domain)
-+{
-+	return 0;
-+}
-+
-+static int pd_power_on(struct generic_pm_domain *domain)
-+{
-+	return 0;
-+}
-+
-+int __init virt_pm_domains_init(void)
-+{
-+	struct device_node *np;
-+
-+	for_each_compatible_node(np, NULL, "linux,virtual-pm-domains") {
-+		struct generic_pm_domain *pd;
-+
-+		pd = kzalloc(sizeof(*pd), GFP_KERNEL);
-+		if (!pd)
-+			return -ENOMEM;
-+
-+		pd->power_off = pd_power_off;
-+		pd->power_on = pd_power_on;
-+		pd->name = kstrdup(np->name, GFP_KERNEL);
-+		if (!pd->name)
-+			return -ENOMEM;
-+
-+		pm_genpd_init(pd, NULL, false);
-+		of_genpd_add_provider_simple(np, pd);
-+	}
-+
-+	return 0;
-+}
-+arch_initcall(virt_pm_domains_init);
--- 
-1.7.9.5
+It would be hard because in cases where there are generic strings, we
+always need to have a specific one.
+
+> Since afaiu those were only added to the compatible string as a way to make
+> it future proof in case there is going to be needed later. So in that sense
+> I thought they were not part of the DT ABI.
+>
+> Now, dumping the unused specific strings in binding docs only to make
+> checkpatch happy, will have the effect of making those unused strings become
+> part of the DT ABI. Which mean that couldn't be dropped later if those are
+> found to not be needed since there won't be a way to know if an OS following
+> the DT binding will be matching those or not.
+
+If they are in the DTS, then they are effectively already part of the ABI.
+
+You have some wiggle room if they are known not to be used whether
+they are documented or not. You can never prove they are not needed in
+the future to be able to drop them.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
