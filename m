@@ -1,75 +1,55 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] of: iommu: add ptr to OF node arg to
-	of_iommu_configure()
-Date: Thu, 29 Jan 2015 10:49:38 -0600
-Message-ID: <CAL_Jsq+rzwk0Rw5RRKf9oLqXNFFgnJb4UQ_AzpJLxN1Z0rJWMQ@mail.gmail.com>
-References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
-	<13812499.ICbNgSDOae@avalon> <20150128133219.GM1569@arm.com>
-	<5349994.6VHXzPdIxs@avalon>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
+Date: Thu, 29 Jan 2015 08:56:26 -0800
+Message-ID: <20150129165625.GB16250@atomide.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
+ <1422274532-9488-2-git-send-email-rogerq@ti.com>
+ <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
+ <54C66B0D.9040109@ti.com>
+ <54C6EFC8.1090601@samsung.com>
+ <54C7B0E5.20101@ti.com>
+ <54C8472B.6070302@samsung.com>
+ <54C8D238.4080001@ti.com>
+ <20150128170954.GQ28663@atomide.com>
+ <54CA1A12.5080507@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5349994.6VHXzPdIxs@avalon>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54CA1A12.5080507@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Felipe Balbi <balbi@ti.com>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, george.cherian@ti.com, nsekhar@ti.com, devicetree <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 5:32 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> Hi Will,
->
-> On Wednesday 28 January 2015 13:32:19 Will Deacon wrote:
->> On Wed, Jan 28, 2015 at 01:15:10PM +0000, Laurent Pinchart wrote:
->> > On Wednesday 28 January 2015 12:29:42 Will Deacon wrote:
->> >> On Wed, Jan 28, 2015 at 12:23:03PM +0000, Laurent Pinchart wrote:
->> >>> On Wednesday 28 January 2015 11:33:00 Will Deacon wrote:
->> >>>> On Mon, Jan 26, 2015 at 06:49:01PM +0000, Murali Karicheri wrote:
->> >>>>> On 01/25/2015 08:32 AM, Laurent Pinchart wrote:
->> >>>>>> On Friday 23 January 2015 17:32:34 Murali Karicheri wrote:
->> >>>>>>> Function of_iommu_configure() is called from of_dma_configure() to
->> >>>>>>> setup iommu ops using DT property. This API is currently used for
->> >>>>>>> platform devices for which DMA configuration (including iommu ops)
->> >>>>>>> may come from device's parent. To extend this functionality for
->> >>>>>>> PCI devices, this API need to take a parent node ptr as an argument
->> >>>>>>> instead of assuming device's parent. This is needed since for PCI,
->> >>>>>>> the dma configuration may be defined in the DT node of the root
->> >>>>>>> bus bridge's parent device. Currently only dma-range is used for PCI
->> >>>>>>> and iommu is not supported. So return error if the device is PCI.
+* Roger Quadros <rogerq@ti.com> [150129 03:34]:
+> On 28/01/15 19:09, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq@ti.com> [150128 04:15]:
+> >> On 28/01/15 04:19, Chanwoo Choi wrote:
+> >>>>
+> >>>> I still fail to understand that we need to call disable_irq() in .suspend() and
+> >>>> enable_irq() in .resume()
+> >>>>
+> >>>> can you point me to any other drivers doing so?
+> >>>
+> >>> You can refer the suspend function in drivers/mfd/max14577.c or drivers/mfd/max77693.c.
+> >>> The max14577_suspend() includes the detailed comment for why using disable_irq() in suspend function.
+> >>>
+> >>> In max14577 case, max14577_suspend() use disable_irq() function because of i2c dependency.
+> >>> If max14577 device is wake-up from suspend state before completing the resume sequence
+> >>> of i2c, max14577 may fail to read/write i2c communication.
+> >>
+> >> Thanks for this information. I will add disable/enable_irq() in suspend/resume().
+> > 
+> > Are the .dts changes safe for me to apply already?
+> > 
+> 
+> Yes Tony, you can pick them. Thanks.
 
-[...]
+OK will apply the dts changes into omap-for-v3.20/dt thanks.
+I have also the defconfig changes tagged, will apply those
+a bit later probably as a fix after the driver is merged.
 
->> > If I understand Murali's patch set right (please correct me if that's not
->> > the case) the PCI code walks up the DT nodes hierarchy to the parent node
->> > that contains the iommus attribute and passes a pointer to that node to
->> > this function. It's thus a PCI-specific solution. As a temporary hack
->> > that's OK I suppose, but if implementing it right straight away isn't
->> > difficult that would be better.
->>
->> It looks to me like the code walks the PCI topology to get the DT node for
->> the host controller, and passes *that* to of_dma_configure. That sounds
->> like the right thing to do to me, especially since the PCI topology is
->> likely not encoded in the device-tree. So actually, it is passing the
->> first parent node afaict.
->
-> Indeed, that's right. I forgot for a moment that we have non-DT devices ;-)
->
-> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->
-> Murali, nitpicking a bit, shouldn't the iommu_np parameter be renamed ? It
-> points to the node containing the iommus parameter, not to the iommu node, so
-> the current name is slightly confusing. A brief kerneldoc above the function
-> would also help. This can be the subject of a separate patch.
+Regards,
 
-It was more confusing having np and node within the function.
-
-Rob
+Tony
