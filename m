@@ -1,59 +1,75 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH 7/7] spi: spi-fsl-dspi: Add support for TCFQ transfer mode
-Date: Thu, 29 Jan 2015 19:10:31 +0100
-Message-ID: <1a28f3439386e1132ae0f3ab80666305@agner.ch>
-References: <1422356608-15961-1-git-send-email-bhuvanchandra.dv@toradex.com>
- <1422356608-15961-2-git-send-email-bhuvanchandra.dv@toradex.com>
- <20150128190342.GE21293@sirena.org.uk> <1422533049999.91114@toradex.com>
- <20150129121320.GI21293@sirena.org.uk> <1422536382672.21760@toradex.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422536382672.21760-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "BhuvanChandra.DV" <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH V2 RESEND 2/4] dt-bindings: Add root properties for Raspberry Pi
+Date: Thu, 29 Jan 2015 18:10:48 +0000
+Message-ID: <1422555050-28509-3-git-send-email-stefan.wahren@i2se.com>
+References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422555050-28509-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-01-29 13:53, BhuvanChandra.DV wrote:
-> On 01/29/2015 05:43 PM, Mark Brown wrote:
->> On Thu, Jan 29, 2015 at 11:58:25AM +0000, BhuvanChandra.DV wrote:
->>
->>> As far as i understood the major difference between the two modes are when
->>> the interrupt to trigger, as EOQ mode will trigger the interrupt at end of
->>> queue and TCF will trigger the interrupt at every frame transfer. Probably
->>> mode selection shouldn't be a device tree property, but i don't see any
->>> automatic way to choose between the modes.
->>> Maybe a config would be more appropriate?
->> Or if there's either no particular reason to choose one over the other
->> or one is always better then just pick one in the driver and don't worry
->> about implementing both.
-> 
-> Among the two, EOQ would be better since with TCF, interrupts are generated at
-> every frame transfer, which could be a problem at higher frequencies.
-> I think we can omit this patch then.
+This patch adds root compatible properties for the following boards:
+- Raspberry Pi Model A
+- Raspberry Pi Model A+
+- Raspberry Pi Model B
+- Raspberry Pi Model B (no P5)
+- Raspberry Pi Model B rev2
+- Raspberry Pi Model B+
+- Raspberry Pi Compute Module
 
-It would be interesting to know what the authors original motivation
-implementing this feature was. Reading the email of the original
-patchset indicates that there are platforms where only TCF is supported:
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/bcm2835.txt |   31 +++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-<quote>
-For adopting of different platform, either of them is a way of DSPI
-transfer data.
-</quote>
-
-However, I don't know which platform that would be. Also, it seems that
-Chao Fu's email is not valid anymore. 
-
-@Xiubo Li, maybe you can shed some light on this?
-
->From the platform I am concerned about, Vybrid, it seems not very
-useful, so I'm fine with omitting that patch.
+diff --git a/Documentation/devicetree/bindings/arm/bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm2835.txt
+index ac68348..c78576b 100644
+--- a/Documentation/devicetree/bindings/arm/bcm2835.txt
++++ b/Documentation/devicetree/bindings/arm/bcm2835.txt
+@@ -1,8 +1,35 @@
+ Broadcom BCM2835 device tree bindings
+ -------------------------------------------
+ 
+-Boards with the BCM2835 SoC shall have the following properties:
++Raspberry Pi Model A
++Required root node properties:
++compatible = "raspberrypi,model-a", "brcm,bcm2835";
+ 
+-Required root node property:
++Raspberry Pi Model A+
++Required root node properties:
++compatible = "raspberrypi,model-a-plus", "brcm,bcm2835";
+ 
++Raspberry Pi Model B
++Required root node properties:
++compatible = "raspberrypi,model-b", "brcm,bcm2835";
++
++Raspberry Pi Model B (no P5)
++early model B with I2C0 rather than I2C1 routed to the expansion header
++Required root node properties:
++compatible = "raspberrypi,model-b-i2c0", "brcm,bcm2835";
++
++Raspberry Pi Model B rev2
++Required root node properties:
++compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
++
++Raspberry Pi Model B+
++Required root node properties:
++compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
++
++Raspberry Pi Compute Module
++Required root node properties:
++compatible = "raspberrypi,compute-module", "brcm,bcm2835";
++
++Generic BCM2835 board
++Required root node properties:
+ compatible = "brcm,bcm2835";
+-- 
+1.7.9.5
 
 --
-Stefan 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
