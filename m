@@ -1,291 +1,158 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v2] thermal: Fix examples in DT documentation
-Date: Wed, 28 Jan 2015 13:29:31 -0400
-Message-ID: <20150128172929.GA27003@developer.hsd1.ca.comcast.net>
-References: <1422465215-12716-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] ARM: dts: Add HS400 support for exynos5420 and exynos5800
+Date: Thu, 29 Jan 2015 11:43:29 +0900
+Message-ID: <CAGOxZ50kXSrTxNpjsc19B-5A=7EMPevdbAZZO7zwtzWtac-OBQ@mail.gmail.com>
+References: <1421231446-4776-1-git-send-email-alim.akhtar@samsung.com>
+ <1421231446-4776-3-git-send-email-alim.akhtar@samsung.com>
+ <54BEDE9C.5060501@samsung.com> <CAGOxZ5186+9U-6eri6OSGw9awsmr0EPP-gdhu-__oCWP1Oyyxg@mail.gmail.com>
+ <54C06049.5070106@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422465215-12716-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54C06049.5070106-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, kgene <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jaehoon,
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for review.
 
-On Wed, Jan 28, 2015 at 05:13:35PM +0000, Srinivas Kandagatla wrote:
-> There are various issues with the examples in this documentation, some
-> of the DT labels are invalid and one of the macro THERMAL_NO_LIMITS
-> referenced is not available as well.
->=20
-> This patch attempts to fix such errors in the documentation.
->=20
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> Changes Since v1:
-> 	- Fixed few more typo's as suggested by Eduardo Valentin
+On Thu, Jan 22, 2015 at 11:28 AM, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi.
+>
+> On 01/21/2015 11:12 PM, Alim Akhtar wrote:
+>> Hi Jaehoon
+>>
+>> On Wed, Jan 21, 2015 at 4:32 AM, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>> Hi,
+>>>
+>>> If you want to enable the hs400 mode, need to add "mmc-hs400-1_8v" or "mmc-hs400-1_2v".
+>>> But this patch didn't add them. do you have any other plan?
+>>>
+>> Yes, right, plan is to send separate patch to enable hs400, as of now
+>> I am not sure if all the 5800-peach-pi boards are populated with
+>> emmc5.0 device or not. So I will enable HS400 after confirming this
+>> point.
+>
+> I know if card is not support hs400, then it should be enabled to other bus mode.
+>
+hmm...mmc-hs{200/400}-1_8v are host capabilities, so host should first
+support this, then we can enable it.
+ok,  I will enable HS400 for peach-pi in this series.
+Also I checked UMs for 5420/5800, in UM, strobe signal is named as
+RCLK, so going to keep the same name as UM.
+Will resend the patches after modification shortly.
 
-Looks like there are still occurencies of adc-dummy after your patch.
-But I am amending myself, no need to resend.
+> Best Regards,
+> Jaehoon Chung
+>
+>>> On 01/14/2015 07:30 PM, Alim Akhtar wrote:
+>>>> From: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>
+>>>> HS400 timing values are added for SMDK5420, exynos5420-peach-pit
+>>>> and exynos5800-peach-pi boards.
+>>>> This also adds RCLK GPIO line, this gpio should be in pull-down
+>>>> state.
+>>>>
+>>>> Signed-off-by: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>> [Alim: addressed review comments]
+>>>> ---
+>>>>  arch/arm/boot/dts/exynos5420-peach-pit.dts |    4 +++-
+>>>>  arch/arm/boot/dts/exynos5420-pinctrl.dtsi  |    7 +++++++
+>>>>  arch/arm/boot/dts/exynos5420-smdk5420.dts  |    4 +++-
+>>>>  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    4 +++-
+>>>>  4 files changed, 16 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>>>> index 9a050e1..7ffaba8 100644
+>>>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>>>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>>>> @@ -569,8 +569,10 @@
+>>>>       samsung,dw-mshc-ciu-div = <3>;
+>>>>       samsung,dw-mshc-sdr-timing = <0 4>;
+>>>>       samsung,dw-mshc-ddr-timing = <0 2>;
+>>>> +     samsung,dw-mshc-hs400-timing = <0 2>;
+>>>> +     read-strobe-delay = <90>;
+>>>>       pinctrl-names = "default";
+>>>> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>>>> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+>>>>       bus-width = <8>;
+>>>>  };
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+>>>> index ba686e4..8b15316 100644
+>>>> --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+>>>> +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+>>>> @@ -201,6 +201,13 @@
+>>>>                       samsung,pin-drv = <3>;
+>>>>               };
+>>>>
+>>>> +             sd0_rclk: sd0-rclk {
+>>>
+>>> I know it used to "sd0_rdqs", not "sd0_rclk".
+>>> Change name.
+>>>
+>> Ok, I will change as per UM of 5800/5420,
+>>
+>>> Best Regards,
+>>> Jaehoon Chung
+>>>> +                     samsung,pins = "gpc0-7";
+>>>> +                     samsung,pin-function = <2>;
+>>>> +                     samsung,pin-pud = <1>;
+>>>> +                     samsung,pin-drv = <3>;
+>>>> +             };
+>>>> +
+>>>>               sd1_cmd: sd1-cmd {
+>>>>                       samsung,pins = "gpc1-1";
+>>>>                       samsung,pin-function = <2>;
+>>>> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>>>> index 8be3d7b..5290e79 100644
+>>>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>>>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>>>> @@ -80,8 +80,10 @@
+>>>>               samsung,dw-mshc-ciu-div = <3>;
+>>>>               samsung,dw-mshc-sdr-timing = <0 4>;
+>>>>               samsung,dw-mshc-ddr-timing = <0 2>;
+>>>> +             samsung,dw-mshc-hs400-timing = <0 2>;
+>>>> +             read-strobe-delay = <90>;
+>>>>               pinctrl-names = "default";
+>>>> -             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>>>> +             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+>>>>               bus-width = <8>;
+>>>>               cap-mmc-highspeed;
+>>>>       };
+>>>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>>> index e8fdda8..fa1c858 100644
+>>>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>>> @@ -557,8 +557,10 @@
+>>>>       samsung,dw-mshc-ciu-div = <3>;
+>>>>       samsung,dw-mshc-sdr-timing = <0 4>;
+>>>>       samsung,dw-mshc-ddr-timing = <0 2>;
+>>>> +     samsung,dw-mshc-hs400-timing = <0 2>;
+>>>> +     read-strobe-delay = <90>;
+>>>>       pinctrl-names = "default";
+>>>> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>>>> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+>>>>       bus-width = <8>;
+>>>>  };
+>>>>
+>>>>
+>>>
+>>
+>>
+>>
+>
 
->=20
->  .../devicetree/bindings/thermal/thermal.txt        | 66 +++++++++++-----=
-------
->  1 file changed, 33 insertions(+), 33 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Docu=
-mentation/devicetree/bindings/thermal/thermal.txt
-> index f5db6b7..91c77da 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -251,24 +251,24 @@ ocp {
->  };
-> =20
->  thermal-zones {
-> -	cpu-thermal: cpu-thermal {
-> +	cpu_thermal: cpu-thermal {
->  		polling-delay-passive =3D <250>; /* milliseconds */
->  		polling-delay =3D <1000>; /* milliseconds */
-> =20
->  		thermal-sensors =3D <&bandgap0>;
-> =20
->  		trips {
-> -			cpu-alert0: cpu-alert {
-> +			cpu_alert0: cpu-alert0 {
->  				temperature =3D <90000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "active";
->  			};
-> -			cpu-alert1: cpu-alert {
-> +			cpu_alert1: cpu-alert1 {
->  				temperature =3D <100000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "passive";
->  			};
-> -			cpu-crit: cpu-crit {
-> +			cpu_crit: cpu-crit {
->  				temperature =3D <125000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "critical";
-> @@ -277,17 +277,17 @@ thermal-zones {
-> =20
->  		cooling-maps {
->  			map0 {
-> -				trip =3D <&cpu-alert0>;
-> -				cooling-device =3D <&fan0 THERMAL_NO_LIMITS 4>;
-> +				trip =3D <&cpu_alert0>;
-> +				cooling-device =3D <&fan0 THERMAL_NO_LIMIT 4>;
->  			};
->  			map1 {
-> -				trip =3D <&cpu-alert1>;
-> -				cooling-device =3D <&fan0 5 THERMAL_NO_LIMITS>;
-> +				trip =3D <&cpu_alert1>;
-> +				cooling-device =3D <&fan0 5 THERMAL_NO_LIMIT>;
->  			};
->  			map2 {
-> -				trip =3D <&cpu-alert1>;
-> +				trip =3D <&cpu_alert1>;
->  				cooling-device =3D
-> -				    <&cpu0 THERMAL_NO_LIMITS THERMAL_NO_LIMITS>;
-> +				    <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->  			};
->  		};
->  	};
-> @@ -298,13 +298,13 @@ used to monitor the zone 'cpu-thermal' using its so=
-le sensor. A fan
->  device (fan0) is controlled via I2C bus 1, at address 0x48, and has ten
->  different cooling states 0-9. It is used to remove the heat out of
->  the thermal zone 'cpu-thermal' using its cooling states
-> -from its minimum to 4, when it reaches trip point 'cpu-alert0'
-> +from its minimum to 4, when it reaches trip point 'cpu_alert0'
->  at 90C, as an example of active cooling. The same cooling device is used=
- at
-> -'cpu-alert1', but from 5 to its maximum state. The cpu@0 device is also
-> +'cpu_alert1', but from 5 to its maximum state. The cpu@0 device is also
->  linked to the same thermal zone, 'cpu-thermal', as a passive cooling dev=
-ice,
-> -using all its cooling states at trip point 'cpu-alert1',
-> +using all its cooling states at trip point 'cpu_alert1',
->  which is a trip point at 100C. On the thermal zone 'cpu-thermal', at the
-> -temperature of 125C, represented by the trip point 'cpu-crit', the silic=
-on
-> +temperature of 125C, represented by the trip point 'cpu_crit', the silic=
-on
->  is not reliable anymore.
-> =20
->  (b) - IC with several internal sensors
-> @@ -329,7 +329,7 @@ ocp {
->  };
-> =20
->  thermal-zones {
-> -	cpu-thermal: cpu-thermal {
-> +	cpu_thermal: cpu-thermal {
->  		polling-delay-passive =3D <250>; /* milliseconds */
->  		polling-delay =3D <1000>; /* milliseconds */
-> =20
-> @@ -338,12 +338,12 @@ thermal-zones {
-> =20
->  		trips {
->  			/* each zone within the SoC may have its own trips */
-> -			cpu-alert: cpu-alert {
-> +			cpu_alert: cpu-alert {
->  				temperature =3D <100000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "passive";
->  			};
-> -			cpu-crit: cpu-crit {
-> +			cpu_crit: cpu-crit {
->  				temperature =3D <125000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "critical";
-> @@ -356,7 +356,7 @@ thermal-zones {
->  		};
->  	};
-> =20
-> -	gpu-thermal: gpu-thermal {
-> +	gpu_thermal: gpu-thermal {
->  		polling-delay-passive =3D <120>; /* milliseconds */
->  		polling-delay =3D <1000>; /* milliseconds */
-> =20
-> @@ -365,12 +365,12 @@ thermal-zones {
-> =20
->  		trips {
->  			/* each zone within the SoC may have its own trips */
-> -			gpu-alert: gpu-alert {
-> +			gpu_alert: gpu-alert {
->  				temperature =3D <90000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "passive";
->  			};
-> -			gpu-crit: gpu-crit {
-> +			gpu_crit: gpu-crit {
->  				temperature =3D <105000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "critical";
-> @@ -383,7 +383,7 @@ thermal-zones {
->  		};
->  	};
-> =20
-> -	dsp-thermal: dsp-thermal {
-> +	dsp_thermal: dsp-thermal {
->  		polling-delay-passive =3D <50>; /* milliseconds */
->  		polling-delay =3D <1000>; /* milliseconds */
-> =20
-> @@ -392,12 +392,12 @@ thermal-zones {
-> =20
->  		trips {
->  			/* each zone within the SoC may have its own trips */
-> -			dsp-alert: gpu-alert {
-> +			dsp_alert: dsp-alert {
->  				temperature =3D <90000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "passive";
->  			};
-> -			dsp-crit: gpu-crit {
-> +			dsp_crit: gpu-crit {
->  				temperature =3D <135000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "critical";
-> @@ -457,7 +457,7 @@ ocp {
->  };
-> =20
->  thermal-zones {
-> -	cpu-thermal: cpu-thermal {
-> +	cpu_thermal: cpu-thermal {
->  		polling-delay-passive =3D <250>; /* milliseconds */
->  		polling-delay =3D <1000>; /* milliseconds */
-> =20
-> @@ -508,7 +508,7 @@ with many sensors and many cooling devices.
->  	/*
->  	 * An IC with several temperature sensor.
->  	 */
-> -	adc-dummy: sensor@0x50 {
-> +	adc_dummy: sensor@0x50 {
->  		...
->  		#thermal-sensor-cells =3D <1>; /* sensor internal ID */
->  	};
-> @@ -531,7 +531,7 @@ thermal-zones {
->  		};
->  	};
-> =20
-> -	board-thermal: board-thermal {
-> +	board_thermal: board-thermal {
->  		polling-delay-passive =3D <1000>; /* milliseconds */
->  		polling-delay =3D <2500>; /* milliseconds */
-> =20
-> @@ -548,22 +548,22 @@ thermal-zones {
-> =20
->  		trips {
->  			/* Trips are based on resulting linear equation */
-> -			cpu-trip: cpu-trip {
-> +			cpu_trip: cpu-trip {
->  				temperature =3D <60000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "passive";
->  			};
-> -			gpu-trip: gpu-trip {
-> +			gpu_trip: gpu-trip {
->  				temperature =3D <55000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "passive";
->  			}
-> -			lcd-trip: lcp-trip {
-> +			lcd_trip: lcp-trip {
->  				temperature =3D <53000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "passive";
->  			};
-> -			crit-trip: crit-trip {
-> +			crit_trip: crit-trip {
->  				temperature =3D <68000>; /* millicelsius */
->  				hysteresis =3D <2000>; /* millicelsius */
->  				type =3D "critical";
-> @@ -572,17 +572,17 @@ thermal-zones {
-> =20
->  		cooling-maps {
->  			map0 {
-> -				trip =3D <&cpu-trip>;
-> +				trip =3D <&cpu_trip>;
->  				cooling-device =3D <&cpu0 0 2>;
->  				contribution =3D <55>;
->  			};
->  			map1 {
-> -				trip =3D <&gpu-trip>;
-> +				trip =3D <&gpu_trip>;
->  				cooling-device =3D <&gpu0 0 2>;
->  				contribution =3D <20>;
->  			};
->  			map2 {
-> -				trip =3D <&lcd-trip>;
-> +				trip =3D <&lcd_trip>;
->  				cooling-device =3D <&lcd0 5 10>;
->  				contribution =3D <15>;
->  			};
-> --=20
-> 1.9.1
->=20
 
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUyRxwAAoJEMLUO4d9pOJW5R0H/3r+kjBarskXEbUyBtDstf20
-1cipftzdyk1ezVmIi77Jl19LO3U5xhaG3nniTLy8f6eKF3wRowaaWA0p5WvMr2sL
-wfzlsbaRLHYznLnaCo/PClCaoZZ6eTZ/zR4DrXU/XoOqRZAvynwlvhxlZE2Fv4T+
-xYticLwKR5dkD1+20PkYQGU2PcTvts4M43ANyBLHdOzaKZ9XVQ5lXOVStS1nDSkm
-PjREhOlM7zYMXwdcRVbzrZu52mogwEvUQmvo7njRQSsndF3c5zGe6S3xOUTGha92
-FA0WAUQSQpm49ET0MP0kYt+eLKFDenpNChQ6I7t36z9CCYx6GE/JDxXPMXjzSI4=
-=3yke
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
+-- 
+Regards,
+Alim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
