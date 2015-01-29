@@ -1,29 +1,26 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH 1/4] NFC: nci: Add FWDL support
-Date: Fri, 30 Jan 2015 00:28:59 +0100
-Message-ID: <20150129232859.GA20998@ribalta.ger.corp.intel.com>
-References: <1421940460-14049-1-git-send-email-clement.perrochaud@effinnov.com>
- <1421940460-14049-2-git-send-email-clement.perrochaud@effinnov.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH net-next v8 0/4] net: Add Keystone NetCP ethernet driver support
+Date: Fri, 30 Jan 2015 00:49:38 +0100
+Message-ID: <1824888.BBQhuVu1zR@wuerfel>
+References: <1421367007-19744-1-git-send-email-m-karicheri2@ti.com> <15828198.gHAJTouZOU@wuerfel> <54CAC038.9000009@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421940460-14049-2-git-send-email-clement.perrochaud@effinnov.com>
+In-Reply-To: <54CAC038.9000009@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: clement.perrochaud@effinnov.com
-Cc: linux-nfc@lists.01.org, =?iso-8859-1?Q?Cl=E9ment?= Perrochaud <clement.perrochaud@nxp.com>, sunil.jogi@nxp.com, jerome.pele@nxp.com, Charles.Gorand-Effinnov@nxp.com, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, grant.likely@linaro.org, lefrique@marvell.com, christophe.ricard@gmail.com, cuissard@marvell.com, bzhao@marvell.com, hirent@marvell.com, akarwar@marvell.com, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: "Balbi, Felipe" <balbi@ti.com>, mugunthanvnm@ti.com, David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Clement,
+On Thursday 29 January 2015 18:20:24 Murali Karicheri wrote:
+> 
+> I have just posted a patch to nedev list to address this issue. Please 
+> review and let me know your comments. This also require some additional 
+> fixes in drivers/soc/ti/ to build them as modules as well. Santosh has 
+> queued them against next merge window.
 
-On Thu, Jan 22, 2015 at 04:27:37PM +0100, clement.perrochaud@effinnov.c=
-om wrote:
-> From: Cl=E9ment Perrochaud <clement.perrochaud@nxp.com>
+Ok, thanks for addressing this! As I wrote in reply to your patch, I'll
+give it some extra build testing in random configurations.
 
-- It really is not obvious that FWDL actually means firmware download
-- A small commit message explaining why you need this (Mostly for the
-  NXP chipset for now) would be nice.
-
-Cheers,
-Samuel.
+	Arnd
