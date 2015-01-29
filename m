@@ -1,52 +1,48 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: Re: [PATCH v8 0/2] Imagination Technologies PWM support
-Date: Thu, 29 Jan 2015 13:32:09 -0300
-Message-ID: <54CA6089.50505@imgtec.com>
-References: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com> <54BE3369.9000802@imgtec.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v10 2/2] tty/serial: Add Spreadtrum sc9836-uart driver
+ support
+Date: Thu, 29 Jan 2015 11:34:26 -0500
+Message-ID: <54CA6112.9020805@hurleysoftware.com>
+References: <sc9836-serial-v10> <1422443324-25082-1-git-send-email-chunyan.zhang@spreadtrum.com> <1422443324-25082-3-git-send-email-chunyan.zhang@spreadtrum.com> <54CA5128.8050500@gmail.com> <54CA568E.6080306@hurleysoftware.com> <20150129160553.GC26493@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54BE3369.9000802@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@imgtec.com>, Andrew Bresticker <abrestic@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vladimir_zapolskiy@mentor.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150129160553.GC26493-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2015 07:52 AM, Ezequiel Garcia wrote:
-> 
-> 
-> On 01/09/2015 02:54 PM, Ezequiel Garcia wrote:
->> A new round for the IMG PWM driver.
+On 01/29/2015 11:05 AM, Russell King - ARM Linux wrote:
+> On Thu, Jan 29, 2015 at 10:49:34AM -0500, Peter Hurley wrote:
+>> Hi Varka,
 >>
->> The IMG PWM controller is muxed with a PDM controller, through a shared
->> so-called periph register bit, which sets the output as PWM or PDM.
->> Because this register is not part of the pin controller block, but rather
->> PWM/PDM specific, and because the register is also used to set the PDM value,
->> it is simpler to use a regmap-based syscon to deal with it.
+>> On 01/29/2015 10:26 AM, Varka Bhadram wrote:
+>>> This check is not required. It will be done by devm_ioremap_resource()
 >>
->> This time, I'm removing the PDM driver from the submission and submitting the PWM
->> alone. The PDM was written as a misc driver, but had some design issues, so for
->> now I'm proposing to merge the PWM only.
+>> I disagree. devm_ioremap_resource() interprets the NULL resource as
+>> a bad parameter and returns -EINVAL which is then forwarded as the
+>> return value from the probe.
 >>
->> The series is based on v3.19-rc3. If at all possible I'd like to see this merged
->> for v3.20.
->>
+>> -ENODEV is the correct return value from the probe if the expected
+>> resource is not available (either because it doesn't exist or was already
+>> claimed by another driver).
 > 
-> Thierry,
+> (Adding Thierry as the author of this function.)
 > 
-> Any comments on this? Any chance we merge it in time for v3.20?
-> It's -rc5 already and I've started to worry.
+> I believe devm_ioremap_resource() was explicitly designed to remove such
+> error handling from drivers, and to give drivers a unified error response
+> to such things as missing resources.
 > 
+> See the comments for this function in lib/devres.c.
 
-Thierry,
+Maybe the purpose would be better served by wrapping the idiom in a single
+function.
 
-I'm very sorry to be so bothering, but I got no news from you and it's
--rc6 already. I'd say I'll resend this series to Andrew Morton, hoping
-we can merge this for v3.20.
-
-Please let me know if you'll be able to pick this.
-
-Thanks,
--- 
-Ezequiel
+Regards,
+Peter Hurley
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
