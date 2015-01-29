@@ -1,92 +1,29 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH 1/2] dt: dma: Add DT binding document for jz4780-dma
-Date: Thu, 29 Jan 2015 12:19:38 +0000
-Message-ID: <1422533980-42761-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1422533980-42761-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH_V3 1/3] dt: usb: jz4740: Add DT binding document for OHCI
+Date: Thu, 29 Jan 2015 13:24:49 +0100
+Message-ID: <1470487.UWavdNIQX5@wuerfel>
+References: <1422451565-29096-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422451565-29096-2-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422533980-42761-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Zubair.Kakakhel@imgtec.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422451565-29096-2-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+On Wednesday 28 January 2015 13:26:03 Zubair Lutfullah Kakakhel wrote:
+> + - clocks: Should contain a single clock specifier for the SoC UHC clock.
+> + - clock-names: Must be "uhc"
+> 
 
-Add device tree bindings for the DMA controller on JZ4780 SoCs, used by
-the dma-jz4780 driver.
+Same comment as for the watchdog binding, this should probably be
+removed. See what the other ohci drivers use and pick the most
+common clock name if you must have one.
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
----
- .../devicetree/bindings/dma/jz4780-dma.txt         | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/jz4780-dma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-new file mode 100644
-index 0000000..0e46056
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-@@ -0,0 +1,59 @@
-+* Ingenic JZ4780 DMA Controller
-+
-+Required properties:
-+
-+- compatible: Should be "ingenic,jz4780-dma"
-+- reg: Should contain the DMA controller registers location and length.
-+- interrupts: Should contain the interrupt specifier of the DMA controller.
-+- clocks: Should contain a clock specifier for the JZ4780 PDMA clock.
-+- #dma-cells: Must be <3>. Number of integer cells in the dmas property of
-+  DMA clients (see below).
-+
-+Optional properties:
-+
-+- ingenic,reserved-channels: Bitmask of channels to reserve for devices that
-+  need a specific channel. These channels will only be assigned when explicitly
-+  requested by a client. The primary use for this is channels 0 and 1, which
-+  can be configured to have special behaviour for NAND/BCH when using
-+  programmable firmware.
-+
-+Example:
-+
-+dma: dma@13420000 {
-+	compatible = "ingenic,jz4780-dma";
-+	reg = <0x13420000 0x10000>;
-+
-+	interrupts = <10>;
-+
-+	clocks = <&cgu JZ4780_CLK_PDMA>;
-+
-+	#dma-cells = <3>;
-+
-+	ingenic,reserved-channels = <0x3>;
-+};
-+
-+DMA clients must use the format described in dma.txt, giving a phandle to the
-+DMA controller plus the following 3 integer cells:
-+
-+1. Transmit request type: The DMA request type for transfers to the device on
-+   the allocated channel, as defined in the SoC documentation. If set to 0,
-+   transfers to the device will not be allowed on the channel.
-+
-+2. Receive request type: The DMA request type for transfers from the device on
-+   the allocated channel, as defined in the SoC documentation. If set to 0,
-+   transfers from the device will not be allowed on the channel.
-+
-+3. Channel: If set to 0xffffffff, any available channel will be allocated for
-+   the client. Otherwise, the exact channel specified will be used. The channel
-+   should be reserved on the DMA controller using the ingenic,reserved-channels
-+   property.
-+
-+Example:
-+
-+uart0: serial@10030000 {
-+	...
-+	dmas = <&dma 0x14 0 0xffffffff
-+		&dma 0 0x15 0xffffffff>;
-+	dma-names = "tx", "rx";
-+	...
-+};
--- 
-1.9.1
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
