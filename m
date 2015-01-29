@@ -1,71 +1,73 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
-Date: Thu, 29 Jan 2015 09:42:46 -0600
-Message-ID: <CAL_Jsq+mhuR-DnjXo9Mmgpazgb_3R+sm+Ztkd7+6Q3iVw0aKOA@mail.gmail.com>
-References: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar@linaro.org>
- <20150128200600.GR21293@sirena.org.uk> <CAKohpokxdpF2nTeOnDpofNM1vW3aZRyDBE3WKmvZ8wJedf-TGw@mail.gmail.com>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 02/24] Documentation: DT bindings: add more chip compatible
+ strings for Tegra PCIe
+Date: Thu, 29 Jan 2015 15:45:38 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1501291543030.16475@utopia.booyaka.com>
+References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234937.20644.9400.stgit@dusk.lan> <CAL_JsqKMm=r+57ShskgbtNqnCGF1yKYDSJJFQ7o05keNzh5z+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpokxdpF2nTeOnDpofNM1vW3aZRyDBE3WKmvZ8wJedf-TGw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKMm=r+57ShskgbtNqnCGF1yKYDSJJFQ7o05keNzh5z+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 7:39 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 29 January 2015 at 01:36, Mark Brown <broonie@kernel.org> wrote:
->> On Fri, Jan 23, 2015 at 04:14:50PM +0530, Viresh Kumar wrote:
+Hi Rob
 
-[...]
+On Thu, 29 Jan 2015, Rob Herring wrote:
 
->>> +  Required properties:
->>> +  - compatible: allow OPPs to express their compatibility.
->>> +  - opp-list: phandle to opp-list defined above.
->>
->> I don't understand what that compatible property is intended to mean and
->> I expect other readers might be similarly confused - is it a standard
->> compatbile property meaning this noe corresponds to some sort of device?
->
-> The goal is to choose the driver which we want to probe for a platform. There
-> can be multiple DT enabled cpufreq drivers present in a build and the platform
-> needs some way to choose one of them.
+> On Wed, Jan 28, 2015 at 5:49 PM, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org> wrote:
+> >
+> > Add compatible strings for the PCIe IP blocks present on several Tegra
+> > chips.  The primary objective here is to avoid checkpatch warnings,
+> > per:
+> >
+> > http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+> >
+> > Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> > Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > ---
+> >  .../bindings/pci/nvidia,tegra20-pcie.txt           |    2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > index d763e047c6ae..e772884f1c33 100644
+> > --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > @@ -5,6 +5,8 @@ Required properties:
+> >    - "nvidia,tegra20-pcie"
+> >    - "nvidia,tegra30-pcie"
+> >    - "nvidia,tegra124-pcie"
+> > +  - "nvidia,tegra132-pcie" (not yet matched in the driver)
+> > +  - "nvidia,tegra210-pcie" (not yet matched in the driver)
+> 
+> Whether the driver matches or not is irrelevant to the binding and may
+> change over time. Does this mean the driver matches on something else
+> or Tegra132 is not yet supported in the driver? 
 
-That was not my original thought, but rather it is versioning the
-binding and a way to find OPP nodes. That doesn't mean we can't do
-things to make it easier to match to drivers.
+It means that the driver currently matches on one of the first three 
+strings that don't carry that annotation.
 
-> For example, if both cpufreq-dt, exynos-cpufreq and arm-big-little drivers are
-> present in a kernel build, the how do we specify which one a platform wants to
-> use.
+> If the former, what is important is what are the valid combinations of 
+> compatible properties and that is not captured here. In other words, 
+> what is the fallback compatible string for each chip?
 
-What does the exynos driver do that the other 2 don't?
+The intention was to try to be helpful: to document that anyone adding a 
+"nvidia,tegra132-pcie" compatible string would also need to add one of the 
+other strings as a fallback.  Would you like that to be documented in a 
+different way, or removed?
 
-> The generic drivers (cpufreq-dt and big LITTLE) should match with some generic
-> strings, as these aren't specific to any platform. But exynos one can be matched
-> with the machine or Soc-family's existing compatible names.
 
-I will likely nak any such strings that are solely there to match to
-these 2 drivers. The information is there in DT already. It's just not
-a single property to match on. You can tell it is a big.LITTLE system
-by the fact your have 2 different cpu types. You can use the top level
-compatible strings when you need a machine specific driver. I would
-not be trying to get cpufreq platform devices to be created by
-of_platform_populate. The other issue I have is you may not always
-have 2 drivers for bL and non-bL. Really symmetric multi-cluster or
-single cluster should be a subset of functionality of bL.
-
-I think you just need to have an initcall which does this:
-
-if (of_find_matching_node_and_match(machine_specific_driver_match list))
-  platform_device_create(match->data);
-else if (is_big_little() && has_opp)
-  platform_device_create(big_little_device);
-else if (has_opp)
-  platform_device_create(cpufreq_dt_device);
-
-Or perhaps you handle the generic ones late in boot only if no machine
-specific driver has been probed. There is no generic solution ATM for
-selecting the best driver when there are multiple matches.
-
-Rob
+- Paul
