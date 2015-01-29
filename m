@@ -1,76 +1,59 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 02/24] Documentation: DT bindings: add more chip compatible
- strings for Tegra PCIe
-Date: Thu, 29 Jan 2015 17:29:35 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1501291729130.16475@utopia.booyaka.com>
-References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234937.20644.9400.stgit@dusk.lan> <CAL_JsqKMm=r+57ShskgbtNqnCGF1yKYDSJJFQ7o05keNzh5z+g@mail.gmail.com> <alpine.DEB.2.02.1501291543030.16475@utopia.booyaka.com>
- <CAL_JsqLE+W+T5YqzdB+DkdBE+HsgySX0yJHzn1y43QDfw4GA9A@mail.gmail.com> <alpine.DEB.2.02.1501291707350.16475@utopia.booyaka.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH 7/7] spi: spi-fsl-dspi: Add support for TCFQ transfer mode
+Date: Thu, 29 Jan 2015 19:10:31 +0100
+Message-ID: <1a28f3439386e1132ae0f3ab80666305@agner.ch>
+References: <1422356608-15961-1-git-send-email-bhuvanchandra.dv@toradex.com>
+ <1422356608-15961-2-git-send-email-bhuvanchandra.dv@toradex.com>
+ <20150128190342.GE21293@sirena.org.uk> <1422533049999.91114@toradex.com>
+ <20150129121320.GI21293@sirena.org.uk> <1422536382672.21760@toradex.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1501291707350.16475@utopia.booyaka.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422536382672.21760-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "BhuvanChandra.DV" <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Jan 2015, Paul Walmsley wrote:
-
-> Hi Rob
+On 2015-01-29 13:53, BhuvanChandra.DV wrote:
+> On 01/29/2015 05:43 PM, Mark Brown wrote:
+>> On Thu, Jan 29, 2015 at 11:58:25AM +0000, BhuvanChandra.DV wrote:
+>>
+>>> As far as i understood the major difference between the two modes are when
+>>> the interrupt to trigger, as EOQ mode will trigger the interrupt at end of
+>>> queue and TCF will trigger the interrupt at every frame transfer. Probably
+>>> mode selection shouldn't be a device tree property, but i don't see any
+>>> automatic way to choose between the modes.
+>>> Maybe a config would be more appropriate?
+>> Or if there's either no particular reason to choose one over the other
+>> or one is always better then just pick one in the driver and don't worry
+>> about implementing both.
 > 
-> On Thu, 29 Jan 2015, Rob Herring wrote:
-> 
-> > On Thu, Jan 29, 2015 at 9:45 AM, Paul Walmsley <paul@pwsan.com> wrote:
-> > > On Thu, 29 Jan 2015, Rob Herring wrote:
-> > >
-> > >> On Wed, Jan 28, 2015 at 5:49 PM, Paul Walmsley <paul@pwsan.com> wrote:
-> > >> >
-> > >> > Add compatible strings for the PCIe IP blocks present on several Tegra
-> > >> > chips.  The primary objective here is to avoid checkpatch warnings,
-> > >> > per:
-> > >> >
-> > 
-> > [...]
-> > 
-> > >> > +  - "nvidia,tegra132-pcie" (not yet matched in the driver)
-> > >> > +  - "nvidia,tegra210-pcie" (not yet matched in the driver)
-> > >>
-> > >> Whether the driver matches or not is irrelevant to the binding and may
-> > >> change over time. Does this mean the driver matches on something else
-> > >> or Tegra132 is not yet supported in the driver?
-> > >
-> > > It means that the driver currently matches on one of the first three
-> > > strings that don't carry that annotation.
-> > >
-> > >> If the former, what is important is what are the valid combinations of
-> > >> compatible properties and that is not captured here. In other words,
-> > >> what is the fallback compatible string for each chip?
-> > >
-> > > The intention was to try to be helpful: to document that anyone adding a
-> > > "nvidia,tegra132-pcie" compatible string would also need to add one of the
-> > > other strings as a fallback.  Would you like that to be documented in a
-> > > different way, or removed?
-> > 
-> > Then you should say something like 'must contain "nvidia,tegra20-pcie"
-> > and one of: ...'
-> > 
-> > You can also use nvidia,<chip>-pcie if you want. checkpatch will check
-> > for that pattern too. Then your documentation can be something like:
-> > 
-> > Must contain '"nvidia,<chip>-pcie", "nvidia,tegra20-pcie"' where
-> > <chip> is tegra30, tegra132, ...
-> > 
-> > We don't enforce that the <chip> part is documented ATM and not likely
-> > until we have a schema if ever.
-> 
-> OK, thanks for the explanation.
-> 
-> So would it be acceptable to you to skip the attempt to document which 
-> strings are actually supported by the current driver, and to simply use 
-> the <chip> wildcard?
+> Among the two, EOQ would be better since with TCF, interrupts are generated at
+> every frame transfer, which could be a problem at higher frequencies.
+> I think we can omit this patch then.
 
-(Just in case it wasn't clear, I mean for the purposes of the current 
-patch series, not necessarily in general)
+It would be interesting to know what the authors original motivation
+implementing this feature was. Reading the email of the original
+patchset indicates that there are platforms where only TCF is supported:
 
+<quote>
+For adopting of different platform, either of them is a way of DSPI
+transfer data.
+</quote>
 
-- Paul
+However, I don't know which platform that would be. Also, it seems that
+Chao Fu's email is not valid anymore. 
+
+@Xiubo Li, maybe you can shed some light on this?
+
+>From the platform I am concerned about, Vybrid, it seems not very
+useful, so I'm fine with omitting that patch.
+
+--
+Stefan 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
