@@ -1,34 +1,103 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 3/3] pinctrl: qcom: Add msm8916 pinctrl driver
-Date: Thu, 29 Jan 2015 16:27:03 +0200
-Message-ID: <54CA4337.6070500@mm-sol.com>
-References: <1421745476-6276-1-git-send-email-svarbanov@mm-sol.com> <1421745476-6276-4-git-send-email-svarbanov@mm-sol.com> <20150128231847.GC17315@qualcomm.com>
+From: Gustavo Padovan <gustavo@padovan.org>
+Subject: Re: [PATCH V9 04/14] drm/bridge: ptn3460: Convert to i2c driver model
+Date: Thu, 29 Jan 2015 12:29:19 -0200
+Message-ID: <20150129142919.GN2001@joana>
+References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
+ <1421771935-31618-5-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150128231847.GC17315@qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Joonwoo Park <joonwoop@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1421771935-31618-5-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay Kumar <ajaykumar.rs@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, inki.dae@samsung.com, thierry.reding@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, bhushan.r@samsung.com, prashanth.g@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Ajay,
 
-On 01/29/2015 01:18 AM, Andy Gross wrote:
-> On Tue, Jan 20, 2015 at 11:17:56AM +0200, Stanimir Varbanov wrote:
-> 
-> <snip>
-> 
->> +	MSM_MUX_blsp1_spi,
->> +	MSM_MUX_blsp2_spi,
->> +	MSM_MUX_blsp3_spi,
-> 
-> The above three need to be renamed to blsp_spiX_csX to denote which SPI and chip
-> select they modify.
+2015-01-20 Ajay Kumar <ajaykumar.rs@samsung.com>:
 
-I catch the idea, thanks for the tips. I will address all comments.
+> Use drm_bridge helpers to modify the driver to support
+> i2c driver model.
+> 
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Tested-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Tested-by: Gustavo Padovan <gustavo.padovan@collabora.co.uk>
+> Tested-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+> ---
+>  drivers/gpu/drm/bridge/Kconfig          |    2 +
+>  drivers/gpu/drm/bridge/ptn3460.c        |  124 +++++++++++++++++++++----------
+>  drivers/gpu/drm/exynos/exynos_dp_core.c |   22 ------
+>  3 files changed, 86 insertions(+), 62 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 884923f..4254c2b 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -1,5 +1,7 @@
+>  config DRM_PTN3460
+>  	tristate "PTN3460 DP/LVDS bridge"
+>  	depends on DRM
+> +	depends on OF && I2C
 
--- 
-regards,
-Stan
+Adding I2C here is causing this circular dependency:
+
+scripts/kconfig/conf --silentoldconfig Kconfig
+drivers/video/fbdev/Kconfig:5:error: recursive dependency detected!
+drivers/video/fbdev/Kconfig:5:  symbol FB is selected by DRM_KMS_FB_HELPER
+drivers/gpu/drm/Kconfig:34:     symbol DRM_KMS_FB_HELPER depends on
+DRM_KMS_HELPER
+drivers/gpu/drm/Kconfig:28:     symbol DRM_KMS_HELPER is selected by
+DRM_PTN3460
+drivers/gpu/drm/bridge/Kconfig:1:       symbol DRM_PTN3460 depends on I2C
+drivers/i2c/Kconfig:7:  symbol I2C is selected by FB_DDC
+drivers/video/fbdev/Kconfig:59: symbol FB_DDC is selected by FB_CYBER2000_DDC
+drivers/video/fbdev/Kconfig:374:        symbol FB_CYBER2000_DDC depends on
+FB_CYBER2000
+drivers/video/fbdev/Kconfig:362:        symbol FB_CYBER2000 depends on FB
+
+To solve this we just need to remove I2C from depends as DRM already selects
+I2C. This was already fixed by:
+
+
+commit 90bde571ad194adb039cb92a11a5b346f15eb610
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Tue Mar 25 12:06:46 2014 +0100
+
+    drm/bridge: PTN3460 needs DRM_KMS_HELPER
+
+    The recently added PTN3460 device driver uses interfaces that
+    are provided by the KMS helper infrastructure, so we should
+    explicitly select that to avoid this linker error:
+
+    ERROR: "drm_helper_probe_single_connector_modes" [drivers/gpu/drm/bridge/ptn3460.ko] undefined!
+    ERROR: "drm_helper_connector_dpms" [drivers/gpu/drm/bridge/ptn3460.ko] undefined!
+
+    We have to drop the I2C dependency to avoid a circular dependency
+    chain, but that's ok because DRM already selects I2C.
+
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+
+
+But you may have introduced it again on a rebase. The following patch fixes it:
+
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 990b4b2..946d1ef 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -1,7 +1,6 @@
+ config DRM_PTN3460
+        tristate "PTN3460 DP/LVDS bridge"
+-       depends on DRM
+-       depends on OF && I2C
++       depends on DRM && OF
+        select DRM_KMS_HELPER
+        select DRM_PANEL
+        ---help---
+
+
+	Gustavo
