@@ -1,93 +1,115 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] mmc: sdhci-pxav3: Fix SDR50 and DDR50 capabilities
- for the Armada 38x flavor
-Date: Thu, 29 Jan 2015 11:01:44 +0100
-Message-ID: <CAPDyKFoq+Z_n0GHkA4tWJp6vV_T+Fo3zm=CBfmNS+KN70qqwZA@mail.gmail.com>
-References: <1422010594-1735-1-git-send-email-gregory.clement@free-electrons.com>
-	<1422010594-1735-2-git-send-email-gregory.clement@free-electrons.com>
-	<CAPDyKFp=TxkL4BPMxVU+pMPoCQ1xPq0XZ+ZPpBFFaDnNtFjynw@mail.gmail.com>
-	<54C9EFC9.7090809@free-electrons.com>
-	<CAPDyKFqXLb+BOrotBv9UKDeSCriK2k9qmxKoUrWTKK7uM2oLTw@mail.gmail.com>
-	<54CA006F.8060108@free-electrons.com>
+From: Marc Dietrich <marvin24@gmx.de>
+Subject: Re: [PATCH 3/3] dt: paz00: define nvec as child of i2c bus
+Date: Thu, 29 Jan 2015 11:01:56 +0100
+Message-ID: <1500927.ysGdJAUmOd@fb07-iapwap2>
+References: <1422516022-27161-1-git-send-email-danindrey@mail.ru> <1422516022-27161-4-git-send-email-danindrey@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54CA006F.8060108-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; boundary="nextPart6458978.GtOuVI5b9r"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1422516022-27161-4-git-send-email-danindrey@mail.ru>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Danin <danindrey@mail.ru>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, ac100@lists.launchpad.net, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29 January 2015 at 10:42, Gregory CLEMENT
-<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Ulf,
->
-> On 29/01/2015 10:31, Ulf Hansson wrote:
->> [...]
->>
->>>> Seems like this function can be void instead of always returning 0.
->>>
->>> In patch 4 "mmc: sdhci-pxav3: Modify clock settings for the SDR50 and
->>> DDR50 modes", this function can return other values than 0.
->>>
->>> I could change the prototype in patch 4, but it would also imply
->>> removing the test of the return value in this patch and adding in back
->>> patch 4. By returning a value in this patch, it reduced the amount of
->>> change over the patches.
->>>
->>> But if you still prefer than I this function return void in this
->>> patch, I can do it.
->>
->> No worries, let's keep it as an int. But then I have a few other
->> comments, see below.
->
-> OK
->
->>
->>>
->>>
->>> Thanks,
->>>
->>> Gregory
->>>
->>>
->>>>
->>>>> +{
->>>>> +       host->quirks |= SDHCI_QUIRK_MISSING_CAPS;
->>>>> +       /*
->>>>> +        * According to erratum 'FE-2946959' both SDR50 and DDR50
->>>>> +        * modes require specific clock adjustments in SDIO3
->>>>> +        * Configuration register, if the adjustment is not done,
->>>>> +        * remove them from the capabilities.
->>>>> +        */
->>>>> +       host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
->>>>> +       host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_DDR50);
->>>>> +       return 0;
->>>>> +}
->>>>> +
->>>>>  static void pxav3_reset(struct sdhci_host *host, u8 mask)
->>>>>  {
->>>>>         struct platform_device *pdev = to_platform_device(mmc_dev(host->mmc));
->>>>> @@ -319,6 +333,9 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
->>>>>                 clk_prepare_enable(pxa->clk_core);
->>>>>
->>>>>         if (of_device_is_compatible(np, "marvell,armada-380-sdhci")) {
->>>>> +               ret = armada_38x_quirks(host);
->>>>> +               if (ret < 0)
->>
->> Since in patch 4 you return a proper error code, let's also adopt to
->> that here by changing to:
->>
->> "if (IS_ERR(ret))
->
-> The function returns an int and IS_ERR expects a pointer. I am not sure
-> this macro would be appropriate here.
 
-You are right. Don't know what I was thinking. :-)
+--nextPart6458978.GtOuVI5b9r
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-1"
 
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Am Donnerstag, 29. Januar 2015, 10:20:22 schrieb Andrey Danin:
+> NVEC driver was reimplemented to use tegra i2c. Use common i2c bindings
+> for NVEC node.
+> 
+> Signed-off-by: Andrey Danin <danindrey@mail.ru>
+> ---
+>  .../devicetree/bindings/nvec/nvidia,nvec.txt       | 19 ++-----------------
+> arch/arm/boot/dts/tegra20-paz00.dts                | 22
+> +++++++++------------- 2 files changed, 11 insertions(+), 30 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
+> b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt index
+> 5ae601e..d82c125 100644
+> --- a/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
+> +++ b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
+> @@ -2,20 +2,5 @@ NVIDIA compliant embedded controller
+> 
+>  Required properties:
+>  - compatible : should be "nvidia,nvec".
+
+based on the earlier discussion with Wolfram, this should be "nvidia,nvec-
+slave" to distunguish it from a possible nvec master driver.
+
+
+> -- reg : the iomem of the i2c slave controller
+> -- interrupts : the interrupt line of the i2c slave controller
+> -- clock-frequency : the frequency of the i2c bus
+> -- gpios : the gpio used for ec request
+> -- slave-addr: the i2c address of the slave controller
+> -- clocks : Must contain an entry for each entry in clock-names.
+> -  See ../clocks/clock-bindings.txt for details.
+> -- clock-names : Must include the following entries:
+> -  Tegra20/Tegra30:
+> -  - div-clk
+> -  - fast-clk
+> -  Tegra114:
+> -  - div-clk
+> -- resets : Must contain an entry for each entry in reset-names.
+> -  See ../reset/reset.txt for details.
+> -- reset-names : Must include the following entries:
+> -  - i2c
+> +- request-gpios : the gpio used for ec request
+> +- reg: the i2c address of the slave controller
+> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
+> b/arch/arm/boot/dts/tegra20-paz00.dts index ed7e100..65e247b 100644
+> --- a/arch/arm/boot/dts/tegra20-paz00.dts
+> +++ b/arch/arm/boot/dts/tegra20-paz00.dts
+> @@ -288,20 +288,16 @@
+>  		clock-frequency = <100000>;
+>  	};
+> 
+> -	nvec@7000c500 {
+> -		compatible = "nvidia,nvec";
+> -		reg = <0x7000c500 0x100>;
+> -		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> +	i2c@7000c500 {
+> +		status = "okay";
+>  		clock-frequency = <80000>;
+> -		request-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
+> -		slave-addr = <138>;
+> -		clocks = <&tegra_car TEGRA20_CLK_I2C3>,
+> -		         <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;
+> -		clock-names = "div-clk", "fast-clk";
+> -		resets = <&tegra_car 67>;
+> -		reset-names = "i2c";
+> +
+> +		nvec: nvec@45 {
+> +			compatible = "nvidia,nvec";
+> +			request-gpios = <&gpio TEGRA_GPIO(V, 2)
+> +				GPIO_ACTIVE_HIGH>;
+> +			reg = <0x45>;
+> +		};
+>  	};
+> 
+>  	i2c@7000d000 {
+
+--nextPart6458978.GtOuVI5b9r
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAABCAAGBQJUygUUAAoJEKyeR39HFBto68gIAJ2XSrdQVRtVsDp4YypU04yZ
+iVy/q6T+vR3/PZJcsF4FbCGQOepLMdLnHBJ1pubUkezKCjnnmj89t0asVwk0P5a+
+B+paMVQiBzm3YEpy2YnXuRcpmWweOWllpgd6b4SXKf7+NjtTLbbDtCtT14z1KneV
+EocOzEpzA6TxfhxWmxOtHRyJFMaNmX9TGWUgHK4UsgWHcJk1fmTYeGGMknXquuSK
+jJbsQCzxZ9dlrPgKriNWZKZKD+retfyXQ1o3q0iZwFb+1FzvDNWX/mMjl2IyPMRT
+QyzyQ4BYUV8vI4rjA1RtT845b9DZuA4P/yTPMUx+eMm8eFCQzgNBbRpJAQ6Kg3w=
+=ND/s
+-----END PGP SIGNATURE-----
+
+--nextPart6458978.GtOuVI5b9r--
