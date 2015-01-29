@@ -1,56 +1,61 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: zynq: Remove bogus value from 'bias-disable'
- property
-Date: Thu, 29 Jan 2015 15:35:14 +0100
-Message-ID: <4cef3a322a8543cdb8f9f57eafd7a09b@BL2FFO11FD014.protection.gbl>
-References: <1422301796-22888-1-git-send-email-soren.brinkmann@xilinx.com>
- <54C6DDE8.3000905@suse.de>
- <ce6e56872ab744a49612ef9bca07c73d@BN1AFFO11FD005.protection.gbl>
- <20150128154139.GK13057@xsjandreislx>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 24/24] Documentation: DT bindings: add nvidia, denver
+ compatible string
+Date: Thu, 29 Jan 2015 08:36:56 -0600
+Message-ID: <CAL_JsqJq8D86gUdw80Nev=zmW=kYR90iNKiTzciwpaGx2qNJsA@mail.gmail.com>
+References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234938.20644.69989.stgit@dusk.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150128154139.GK13057@xsjandreislx>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150128234938.20644.69989.stgit@dusk.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Rohit Vaswani <rvaswani@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/28/2015 04:41 PM, S=C3=B6ren Brinkmann wrote:
-> On Wed, 2015-01-28 at 03:21PM +0100, Michal Simek wrote:
->> On 01/27/2015 01:38 AM, Andreas F=C3=A4rber wrote:
->>> Am 26.01.2015 um 20:49 schrieb Soren Brinkmann:
->>>> In one pinctrl node, a 'bias-disable' property is erroneously assi=
-gned a
->>>> value.
->>>>
->>>> Fixes: ARM: zynq: DT: Add pinctrl information
->>>> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>>
->>> Reviewed-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
->>>
->>> Andreas
->>>
->>
->> Applied both.
->=20
-> Thanks. Given how the branch looks now, you could squash 'ARM: zynq: =
-DT:
-> Remove bogus value from 'bias-disable' property' and 'ARM: zynq: DT: =
-Add
-> pinctrl information to USB nodes' into 'ARM: zynq: DT: Add pinctrl
-> information'. Then we have it all in one patch and spare everybody th=
-e
-> intermittent, partly broken commits.
+On Wed, Jan 28, 2015 at 5:49 PM, Paul Walmsley <paul@pwsan.com> wrote:
+>
+> Add a compatible string for the NVIDIA Denver CPU to the ARM CPU DT
+> binding documentation file.  The primary objective here is to keep
+> checkpatch.pl from warning when the compatible string is used in an
+> SoC DT file, per:
+>
+> http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+>
+>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Olof Johansson <olof@lixom.net>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Rohit Vaswani <rvaswani@codeaurora.org>
+> Cc: Paul Walmsley <pwalmsley@nvidia.com>
+> Cc: Marc Carino <marc.ceeeee@gmail.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index b2aacbe16ed9..4ea31f0b7764 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -175,6 +175,7 @@ nodes to be present and contain the properties described below.
+>                             "marvell,pj4a"
+>                             "marvell,pj4b"
+>                             "marvell,sheeva-v5"
+> +                           "nvidia,denver" (not yet matched in the code)
 
-That's not a problem. I have sent pull request with current state.
+There's not variations or versions of Denver cores or plans to change
+from the codename?
 
-Thanks,
-Michal
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
