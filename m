@@ -1,198 +1,80 @@
-From: Aaron Sierra <asierra@xes-inc.com>
-Subject: Re: [PATCH 2/2 v3 RESEND] mtd: fsl_upm: Support NAND ECC DTS
- properties
-Date: Wed, 28 Jan 2015 18:37:36 -0600 (CST)
-Message-ID: <1309767342.94086.1422491856685.JavaMail.zimbra@xes-inc.com>
-References: <1136776275.110939.1421109367310.JavaMail.zimbra@xes-inc.com>
- <447095612.147126.1421278909058.JavaMail.zimbra@xes-inc.com>
- <20150123083026.GE3268@brian-ubuntu>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 1/2] mmc: core: use card pointer as the first parameter of
+ execute_tuning()
+Date: Wed, 28 Jan 2015 16:55:28 -0800
+Message-ID: <CAD=FV=VQg+sQUpgbKw7Zz=-f+jPM=6O-+3gUpohWhj8JeSPu6Q@mail.gmail.com>
+References: <1422271175-19445-1-git-send-email-addy.ke@rock-chips.com>
+ <1422271175-19445-2-git-send-email-addy.ke@rock-chips.com>
+ <CAPDyKFp=5epMggHu0+u_LU7ETujcoeP2xOpB7iD6JF2bs8BnEA@mail.gmail.com>
+ <CAD=FV=X9x0gW5TyLi4ERm8nxixQB__Y=5bRAtOax-_w+T33rCg@mail.gmail.com>
+ <CAPDyKFqjG=yxDcwnk4jbXMZ05hMkWR2x37uVpRNd_11-eB4G7w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20150123083026.GE3268@brian-ubuntu>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFqjG=yxDcwnk4jbXMZ05hMkWR2x37uVpRNd_11-eB4G7w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Chris Ball <chris@printf.net>, Jianqun Xu <xjq@rock-chips.com>, chenfen <chenfen@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, lintao <lintao@rock-chips.com>, Jaehoon Chung <jh80.chung@samsung.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Han Jiang <hj@rock-chips.com>, Dinh Nguyen <dinguyen@altera.com>, Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Addy Ke <addy.ke@rock-chips.com>, Alexandru Stan <amstan@chromium.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>K
 List-Id: devicetree@vger.kernel.org
 
------ Original Message -----
-> From: "Brian Norris" <computersforpeace@gmail.com>
-> Sent: Friday, January 23, 2015 2:30:26 AM
-> 
-> On Wed, Jan 14, 2015 at 05:41:49PM -0600, Aaron Sierra wrote:
-> > From: Jordan Friendshuh <jfriendshuh@xes-inc.com>
-> > 
-> > Support the generic nand-ecc-mode, nand-ecc-strength, and
-> > nand-ecc-step-size device-tree properties with the Freescale UPM NAND
-> > driver.
-> > 
-> > This patch preserves the default software ECC mode while adding the
-> > ability to use BCH ECC for larger NAND devices.
-> > 
-> > Signed-off-by: Jordan Friendshuh <jfriendshuh@xes-inc.com>
-> > Signed-off-by: Aaron Sierra <asierra@xes-inc.com>
-> > ---
-> > v2:
-> >     * Now using ECC mode and strength helpers from of_mtd.h
-> >     * ECC mode and strength checking is more robust
-> > v3 (resent due to [PATCH 1/2] v2 update):
-> >     * Require nand-ecc-step-size for soft_bch.
-> >     * Simplify mode/strength/step parameter checking.
-> > 
-> >  .../devicetree/bindings/mtd/fsl-upm-nand.txt       | 32 +++++++++++
-> >  drivers/mtd/nand/Kconfig                           |  1 +
-> >  drivers/mtd/nand/fsl_upm.c                         | 66
-> >  ++++++++++++++++++++--
-> 
-> I was thinking about this a bit more, and it seems like we could really
-> just factor this all into the core nand_base code with something like
-> the following patch. It could possibly use some smarter logic to rule
-> out certain combinations (but some of those are already caught in
-> nand_scan_tail() anyway). What do you think?
+Ulf,
 
-Brian,
-If the NAND device tree property fetching were moved out of fsl_upm,
-I think it should not be called within nand_scan(). I think that
-it's imperative that each driver be able to access these properties
-before handing off to nand_scan(), since there are hardware ECC
-modes that only drivers will know how to error check.
+On Tue, Jan 27, 2015 at 7:18 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> I asked Addy to post upstream against mmc_send_tuning(), but I guess
+>> he didn't (he posted against Alex's NAKed patch instead).
+>>
+>> ...when I talked to him about it, Addy was asserting that when tuning
+>> fails it is important (at least on dw_mmc on rk3288) that we wait for
+>> the card to stop being busy and that the way to detect was using
+>> mmc_send_status().
+>
+> So, could that be due to the internal logic of the error handling in
+> dw_mmc driver? Or you think this is a generic issue?
+>
+> According to the specifications (eMMC and SD) both states that the
+> tuning command has an R1 response. So, there shouldn't be any busy
+> signalling involved - at least according to spec.
 
-Also, catching errors in nand_scan_tail() tends to result in BUG()s.
+I did a bit of digging into this issue myself.  What I found was that
+a "response CRC" and "end of transfer".  This was why I posted up
+<https://patchwork.kernel.org/patch/5623071/>.  From that patch:
 
-That said, this could be useful as a publicly exported function that
-individual drivers are responsible for calling (maybe in of_mtd.c).
+> Specifically it looks like in certain error conditions (I saw this
+> with Response CRC errors) that data keeps showing up in the FIFO even
+> after the error is reported and the CD (command done) bit is set.  If
+> we don't wait for this data to finish transferring then it confuses
+> the next transaction.  In the specific failure case I ran into I found
+> that I could monitor the data_state_mc_busy bit and wait for it to
+> clear, but in other failure cases this bit was stuck at busy when we
+> saw an error.  Hence a generic big delay seems like the only option.
 
-I have a couple of additional comments inline below.
- 
-> diff --git a/drivers/mtd/nand/fsl_upm.c b/drivers/mtd/nand/fsl_upm.c
-> index 72755d7ec25d..fc4834946233 100644
-> --- a/drivers/mtd/nand/fsl_upm.c
-> +++ b/drivers/mtd/nand/fsl_upm.c
-> @@ -181,6 +181,7 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
->  	flash_np = of_get_next_child(upm_np, NULL);
->  	if (!flash_np)
->  		return -ENODEV;
-> +	fun->chip.dn = flash_np;
->  
->  	fun->mtd.name = kasprintf(GFP_KERNEL, "0x%llx.%s", (u64)io_res->start,
->  				  flash_np->name);
-> diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
-> index 3f24b587304f..b701c3f23da1 100644
-> --- a/drivers/mtd/nand/nand_base.c
-> +++ b/drivers/mtd/nand/nand_base.c
-> @@ -48,6 +48,7 @@
->  #include <linux/leds.h>
->  #include <linux/io.h>
->  #include <linux/mtd/partitions.h>
-> +#include <linux/of_mtd.h>
->  
->  /* Define default oob placement schemes for large and small page devices */
->  static struct nand_ecclayout nand_oob_8 = {
-> @@ -3780,6 +3781,33 @@ ident_done:
->  	return type;
->  }
->  
-> +static int nand_dt_init(struct mtd_info *mtd, struct nand_chip *chip,
-> +			struct device_node *dn)
+...Addy instead fixed the problem using mmc_send_status() to try to
+detect when the transfer was all done and it apparently worked, but it
+seemed odd to me.  My MMC "expertise" pretty much ends with looking
+for simple logic errors in the MMC driver, so my hope was that one of
+you guys would know this better...
 
-Assuming that of_mtd.c is the best place to put this, the
-prototype could be simplified a little:
 
-int of_nand_chip_init(struct device_node *dn, struct nand_chip *chip)
+>> That would mean that against upstream you'd need to change
+>> mmc_send_tuning() to take in the card as well (or move the "host->card
+>> = card" assignment to before UHS init, which seems less desirable?)
+>>
+>> What do you think about that?  Is there a better solution?
+>
+> Why do we need to change mmc_send_tuning()? I thought the issue was
+> that mmc_send_status(), which currently takes "card" as a parameter.
 
-> +{
-> +	int ecc_mode, ecc_strength, ecc_step;
-> +
-> +	if (of_get_nand_bus_width(dn) == 16)
-> +		chip->options |= NAND_BUSWIDTH_16;
-> +
-> +	if (of_get_nand_on_flash_bbt(dn))
-> +		chip->bbt_options |= NAND_BBT_USE_FLASH;
-> +
-> +	ecc_mode = of_get_nand_ecc_mode(dn);
-> +	ecc_strength = of_get_nand_ecc_strength(dn);
-> +	ecc_step = of_get_nand_ecc_step_size(dn);
-> +
-> +	if (ecc_mode >= 0)
-> +		chip->ecc.mode = ecc_mode;
-> +
-> +	if (ecc_strength >= 0)
-> +		chip->ecc.strength = ecc_strength;
-> +
-> +	if (ecc_step > 0)
-> +		chip->ecc.size = ecc_step;
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * nand_scan_ident - [NAND Interface] Scan for the NAND device
->   * @mtd: MTD device structure
-> @@ -3797,6 +3825,13 @@ int nand_scan_ident(struct mtd_info *mtd, int
-> maxchips,
->  	int i, nand_maf_id, nand_dev_id;
->  	struct nand_chip *chip = mtd->priv;
->  	struct nand_flash_dev *type;
-> +	int ret;
-> +
-> +	if (chip->dn) {
-> +		ret = nand_dt_init(mtd, chip, chip->dn);
-> +		if (ret)
-> +			return ret;
-> +	}
->  
->  	/* Set the default functions */
->  	nand_set_defaults(chip, chip->options & NAND_BUSWIDTH_16);
-> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-> index 3d4ea7eb2b68..e0f40e12a2c8 100644
-> --- a/include/linux/mtd/nand.h
-> +++ b/include/linux/mtd/nand.h
-> @@ -26,6 +26,8 @@
->  
->  struct mtd_info;
->  struct nand_flash_dev;
-> +struct device_node;
-> +
->  /* Scan and identify a NAND device */
->  extern int nand_scan(struct mtd_info *mtd, int max_chips);
->  /*
-> @@ -542,6 +544,7 @@ struct nand_buffers {
->   *			flash device
->   * @IO_ADDR_W:		[BOARDSPECIFIC] address to write the 8 I/O lines of the
->   *			flash device.
-> + * @dn:			[BOARDSPECIFIC] device node describing this instance
->   * @read_byte:		[REPLACEABLE] read one byte from the chip
->   * @read_word:		[REPLACEABLE] read one word from the chip
->   * @write_byte:		[REPLACEABLE] write a single byte to the chip on the
-> @@ -644,6 +647,8 @@ struct nand_chip {
->  	void __iomem *IO_ADDR_R;
->  	void __iomem *IO_ADDR_W;
->  
-> +	struct device_node *dn;
-> +
+Well, if mmc_send_tuning() needed to call mmc_send_status() then
+mmc_send_tuning() would need the card parameter, right?
 
-This addition to struct nand_chip wouldn't be needed, then.
 
->  	uint8_t (*read_byte)(struct mtd_info *mtd);
->  	u16 (*read_word)(struct mtd_info *mtd);
->  	void (*write_byte)(struct mtd_info *mtd, uint8_t byte);
-> 
-
-You hinted at implementing stronger error checking. If we went
-this route, would it make sense to only error check the software
-ECC modes?
-
--Aaron
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Doug
