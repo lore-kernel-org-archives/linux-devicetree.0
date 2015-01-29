@@ -1,11 +1,14 @@
 From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v4 0/5] ARM: at91: fix irq_pm_install_action WARNING
-Date: Thu, 29 Jan 2015 11:33:35 +0100
-Message-ID: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v4 5/5] ARM: at91/dt: define a virtual irq demultiplexer chip
+ connected on irq1
+Date: Thu, 29 Jan 2015 11:33:40 +0100
+Message-ID: <1422527620-8308-6-git-send-email-boris.brezillon@free-electrons.com>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,82 +22,582 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, N
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris Brezillon <boris.brezillon@free-electrons.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Commit cab303be91dc47942bc25de33dc1140123540800 [1] introduced a WARN_ON
-test which triggers a WARNING backtrace on at91 platforms.
-While this WARN_ON is absolutely necessary to warn users that they should
-not mix request with and without IRQF_NO_SUSPEND flags on shared IRQs,
-there is no easy way to solve this issue on at91 platforms.
+IRQ1 is multiplexing several peripheral IRQs, but there's no way to
+properly demultiplex those IRQs.
+Use a virtual irq demux chip to achieve this demultiplexing operation.
 
-The main reason is that the init timer is often using a shared irq line
-and thus request this irq with IRQF_NO_SUSPEND flag set, while other
-peripherals request the same irq line without this flag.
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+---
+ arch/arm/boot/dts/at91rm9200.dtsi  | 20 +++++++++++++++++---
+ arch/arm/boot/dts/at91sam9260.dtsi | 26 +++++++++++++++++++++-----
+ arch/arm/boot/dts/at91sam9261.dtsi | 26 +++++++++++++++++++++-----
+ arch/arm/boot/dts/at91sam9263.dtsi | 29 +++++++++++++++++++++++------
+ arch/arm/boot/dts/at91sam9g45.dtsi | 29 +++++++++++++++++++++++------
+ arch/arm/boot/dts/at91sam9n12.dtsi | 25 +++++++++++++++++++++----
+ arch/arm/boot/dts/at91sam9rl.dtsi  | 29 +++++++++++++++++++++++------
+ arch/arm/boot/dts/at91sam9x5.dtsi  | 26 +++++++++++++++++++++-----
+ 8 files changed, 170 insertions(+), 40 deletions(-)
 
-As suggested by Thomas, the first 3 patches of this series add a dumb
-demultiplexer irqchip implementation.
-This demuxer registers to a source interrupt and then forwards all received
-interrupts to its children (it they are enabled).
-
-The last two patches rework at91 DTs and config to make use of this dumb
-demuxer implementation.
-
-Rob, I know you were not in favor of exposing this in the DT but we really
-need to quickly a solution: more and more people complain about this warning.
-If you see a better way to handle this case please share it.
-
-Best Regards,
-
-Boris
-
-Changes since v3:
- - replace dumb by virt
-
-Changes since v2:
- - removed unneeded dumb demux flags passed to irq_alloc_dumb_demux_chip
- - set nested lockdep class for all requested irqs
- - add some explanation to the DT binding doc
- - change the compatible string to clearly show that this chip is purely
-   virtual
- - added dumb demuxer to all at91 impacted SoCs
-
-Changes since v1:
- - went for an dumb irq demuxer approach instead of trying to fix the
-   current shared irq code
-
-Boris Brezillon (5):
-  genirq: Authorize chained handlers to remain disabled when initialized
-  irqchip: add virtual demultiplexer implementation
-  irqchip: Add DT binding doc for the virtual irq demuxer chip
-  ARM: at91/dt: select VIRT_IRQ_DEMUX for all at91 SoCs
-  ARM: at91/dt: define a virtual irq demultiplexer chip connected on
-    irq1
-
- .../bindings/interrupt-controller/dumb-demux.txt   |  41 ++++++
- arch/arm/boot/dts/at91rm9200.dtsi                  |  20 ++-
- arch/arm/boot/dts/at91sam9260.dtsi                 |  26 +++-
- arch/arm/boot/dts/at91sam9261.dtsi                 |  26 +++-
- arch/arm/boot/dts/at91sam9263.dtsi                 |  29 ++++-
- arch/arm/boot/dts/at91sam9g45.dtsi                 |  29 ++++-
- arch/arm/boot/dts/at91sam9n12.dtsi                 |  25 +++-
- arch/arm/boot/dts/at91sam9rl.dtsi                  |  29 ++++-
- arch/arm/boot/dts/at91sam9x5.dtsi                  |  26 +++-
- arch/arm/mach-at91/Kconfig                         |   2 +
- drivers/irqchip/Kconfig                            |   4 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-virt-demux.c                   |  72 +++++++++++
- include/linux/irq.h                                |  64 +++++++++-
- include/linux/irqdomain.h                          |   1 +
- kernel/irq/Kconfig                                 |   5 +
- kernel/irq/Makefile                                |   1 +
- kernel/irq/chip.c                                  |  53 +++++++-
- kernel/irq/handle.c                                |  31 ++++-
- kernel/irq/internals.h                             |   3 +
- kernel/irq/irqdomain.c                             |   2 +-
- kernel/irq/msi.c                                   |   3 +-
- kernel/irq/virt-demux-chip.c                       | 140 +++++++++++++++++++++
- 23 files changed, 580 insertions(+), 53 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
- create mode 100644 drivers/irqchip/irq-virt-demux.c
- create mode 100644 kernel/irq/virt-demux-chip.c
-
+diff --git a/arch/arm/boot/dts/at91rm9200.dtsi b/arch/arm/boot/dts/at91rm9200.dtsi
+index 6c97d4a..c5f673b 100644
+--- a/arch/arm/boot/dts/at91rm9200.dtsi
++++ b/arch/arm/boot/dts/at91rm9200.dtsi
+@@ -94,7 +94,7 @@
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91rm9200-pmc";
+ 				reg = <0xfffffc00 0x100>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 0>;
+ 				interrupt-controller;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -353,7 +353,7 @@
+ 			st: timer@fffffd00 {
+ 				compatible = "atmel,at91rm9200-st";
+ 				reg = <0xfffffd00 0x100>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 1>;
+ 			};
+ 
+ 			tcb0: timer@fffa0000 {
+@@ -820,7 +820,7 @@
+ 			dbgu: serial@fffff200 {
+ 				compatible = "atmel,at91rm9200-usart";
+ 				reg = <0xfffff200 0x200>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 2>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+ 				clocks = <&mck>;
+@@ -944,4 +944,18 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
++
++	virt_irq1_demux: virt-irq-demux@1 {
++		compatible = "virtual,irq-demux";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++		/*
++		 * Interrupt lines:
++		 * 0: PMC
++		 * 1: ST
++		 * 2: DBGU
++		 */
++		irqs = <0x7>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index dd1313c..bf7a6a2 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -97,7 +97,7 @@
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91sam9260-pmc";
+ 				reg = <0xfffffc00 0x100>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 0>;
+ 				interrupt-controller;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -364,7 +364,7 @@
+ 			pit: timer@fffffd30 {
+ 				compatible = "atmel,at91sam9260-pit";
+ 				reg = <0xfffffd30 0xf>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 1>;
+ 				clocks = <&mck>;
+ 			};
+ 
+@@ -750,7 +750,7 @@
+ 			dbgu: serial@fffff200 {
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xfffff200 0x200>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 2>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+ 				clocks = <&mck>;
+@@ -959,7 +959,7 @@
+ 			rtc@fffffd20 {
+ 				compatible = "atmel,at91sam9260-rtt";
+ 				reg = <0xfffffd20 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 3>;
+ 				clocks = <&clk32k>;
+ 				status = "disabled";
+ 			};
+@@ -967,7 +967,7 @@
+ 			watchdog@fffffd40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffd40 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 4>;
+ 				atmel,watchdog-type = "hardware";
+ 				atmel,reset-type = "all";
+ 				atmel,dbg-halt;
+@@ -1010,6 +1010,22 @@
+ 		};
+ 	};
+ 
++	virt_irq1_demux: virt-irq-demux@1 {
++		compatible = "virtual,irq-demux";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++		/*
++		 * Interrupt lines:
++		 * 0: PMC
++		 * 1: PIT
++		 * 2: DBGU
++		 * 3: RTT
++		 * 4: WATCHDOG
++		 */
++		irqs = <0x1f>;
++	};
++
+ 	i2c@0 {
+ 		compatible = "i2c-gpio";
+ 		gpios = <&pioA 23 GPIO_ACTIVE_HIGH /* sda */
+diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
+index cdb9ed6..6eaa5f6 100644
+--- a/arch/arm/boot/dts/at91sam9261.dtsi
++++ b/arch/arm/boot/dts/at91sam9261.dtsi
+@@ -272,7 +272,7 @@
+ 			dbgu: serial@fffff200 {
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xfffff200 0x200>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 2>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+ 				clocks = <&mck>;
+@@ -564,7 +564,7 @@
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91rm9200-pmc";
+ 				reg = <0xfffffc00 0x100>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 0>;
+ 				interrupt-controller;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -824,14 +824,14 @@
+ 			pit: timer@fffffd30 {
+ 				compatible = "atmel,at91sam9260-pit";
+ 				reg = <0xfffffd30 0xf>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 1>;
+ 				clocks = <&mck>;
+ 			};
+ 
+ 			rtc@fffffd20 {
+ 				compatible = "atmel,at91sam9260-rtt";
+ 				reg = <0xfffffd20 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 3>;
+ 				clocks = <&slow_xtal>;
+ 				status = "disabled";
+ 			};
+@@ -839,7 +839,7 @@
+ 			watchdog@fffffd40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffd40 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 4>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -864,4 +864,20 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
++
++	virt_irq1_demux: virt-irq-demux@1 {
++		compatible = "virtual,irq-demux";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++		/*
++		 * Interrupt lines:
++		 * 0: PMC
++		 * 1: ST
++		 * 2: DBGU
++		 * 3: RTT
++		 * 4: WATCHDOG
++		 */
++		irqs = <0x1f>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index e8c6c60..70986b5 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -85,7 +85,7 @@
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91rm9200-pmc";
+ 				reg = <0xfffffc00 0x100>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 0>;
+ 				interrupt-controller;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -359,7 +359,7 @@
+ 			pit: timer@fffffd30 {
+ 				compatible = "atmel,at91sam9260-pit";
+ 				reg = <0xfffffd30 0xf>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 1>;
+ 				clocks = <&mck>;
+ 			};
+ 
+@@ -744,7 +744,7 @@
+ 			dbgu: serial@ffffee00 {
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xffffee00 0x200>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 2>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+ 				clocks = <&mck>;
+@@ -870,7 +870,7 @@
+ 			watchdog@fffffd40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffd40 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 4>;
+ 				atmel,watchdog-type = "hardware";
+ 				atmel,reset-type = "all";
+ 				atmel,dbg-halt;
+@@ -927,7 +927,7 @@
+ 			rtc@fffffd20 {
+ 				compatible = "atmel,at91sam9260-rtt";
+ 				reg = <0xfffffd20 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 3>;
+ 				clocks = <&slow_xtal>;
+ 				status = "disabled";
+ 			};
+@@ -935,7 +935,7 @@
+ 			rtc@fffffd50 {
+ 				compatible = "atmel,at91sam9260-rtt";
+ 				reg = <0xfffffd50 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 5>;
+ 				clocks = <&slow_xtal>;
+ 				status = "disabled";
+ 			};
+@@ -998,4 +998,21 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
++
++	virt_irq1_demux: virt-irq-demux@1 {
++		compatible = "virtual,irq-demux";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++		/*
++		 * Interrupt lines:
++		 * 0: PMC
++		 * 1: PIT
++		 * 2: DBGU
++		 * 3: RTT1
++		 * 4: WATCHDOG
++		 * 5: RTT2
++		 */
++		irqs = <0x3f>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 2a8da8a..487400d 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -111,7 +111,7 @@
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91sam9g45-pmc";
+ 				reg = <0xfffffc00 0x100>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 0>;
+ 				interrupt-controller;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -387,7 +387,7 @@
+ 			pit: timer@fffffd30 {
+ 				compatible = "atmel,at91sam9260-pit";
+ 				reg = <0xfffffd30 0xf>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 1>;
+ 				clocks = <&mck>;
+ 			};
+ 
+@@ -890,7 +890,7 @@
+ 			dbgu: serial@ffffee00 {
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xffffee00 0x200>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 2>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+ 				clocks = <&mck>;
+@@ -1107,7 +1107,7 @@
+ 			watchdog@fffffd40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffd40 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 4>;
+ 				atmel,watchdog-type = "hardware";
+ 				atmel,reset-type = "all";
+ 				atmel,dbg-halt;
+@@ -1234,7 +1234,7 @@
+ 			rtc@fffffd20 {
+ 				compatible = "atmel,at91sam9260-rtt";
+ 				reg = <0xfffffd20 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 3>;
+ 				clocks = <&clk32k>;
+ 				status = "disabled";
+ 			};
+@@ -1242,7 +1242,7 @@
+ 			rtc@fffffdb0 {
+ 				compatible = "atmel,at91rm9200-rtc";
+ 				reg = <0xfffffdb0 0x30>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 5>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1316,4 +1316,21 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
++
++	virt_irq1_demux: virt-irq-demux@1 {
++		compatible = "virtual,irq-demux";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++		/*
++		 * Interrupt lines:
++		 * 0: PMC
++		 * 1: PIT
++		 * 2: DBGU
++		 * 3: RTT
++		 * 4: WATCHDOG
++		 * 5: RTC
++		 */
++		irqs = <0x3f>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+index 68eb9ad..6067040 100644
+--- a/arch/arm/boot/dts/at91sam9n12.dtsi
++++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+@@ -94,7 +94,7 @@
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91sam9n12-pmc";
+ 				reg = <0xfffffc00 0x200>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 0>;
+ 				interrupt-controller;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -376,7 +376,7 @@
+ 			pit: timer@fffffe30 {
+ 				compatible = "atmel,at91sam9260-pit";
+ 				reg = <0xfffffe30 0xf>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 1>;
+ 				clocks = <&mck>;
+ 			};
+ 
+@@ -754,7 +754,7 @@
+ 			dbgu: serial@fffff200 {
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xfffff200 0x200>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 2>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+ 				clocks = <&mck>;
+@@ -885,7 +885,8 @@
+ 			watchdog@fffffe40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffe40 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 4>;
++				interrupts-extended = <&virt_irq1_demux 4>;
+ 				atmel,watchdog-type = "hardware";
+ 				atmel,reset-type = "all";
+ 				atmel,dbg-halt;
+@@ -948,4 +949,20 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
++
++	virt_irq1_demux: virt-irq-demux@1 {
++		compatible = "virtual,irq-demux";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++		/*
++		 * Interrupt lines:
++		 * 0: PMC
++		 * 1: PIT
++		 * 2: DBGU
++		 * 3: RTC
++		 * 4: WATCHDOG
++		 */
++		irqs = <0x1f>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/at91sam9rl.dtsi b/arch/arm/boot/dts/at91sam9rl.dtsi
+index 7242437..becd94a 100644
+--- a/arch/arm/boot/dts/at91sam9rl.dtsi
++++ b/arch/arm/boot/dts/at91sam9rl.dtsi
+@@ -374,7 +374,7 @@
+ 			dbgu: serial@fffff200 {
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xfffff200 0x200>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 2>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+ 				clocks = <&mck>;
+@@ -811,7 +811,7 @@
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91sam9g45-pmc";
+ 				reg = <0xfffffc00 0x100>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 0>;
+ 				interrupt-controller;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -1023,14 +1023,14 @@
+ 			pit: timer@fffffd30 {
+ 				compatible = "atmel,at91sam9260-pit";
+ 				reg = <0xfffffd30 0xf>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 1>;
+ 				clocks = <&mck>;
+ 			};
+ 
+ 			watchdog@fffffd40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffd40 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 4>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1063,14 +1063,14 @@
+ 			rtc@fffffeb0 {
+ 				compatible = "atmel,at91rm9200-rtc";
+ 				reg = <0xfffffeb0 0x40>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 5>;
+ 				status = "disabled";
+ 			};
+ 
+ 			rtc@fffffd20 {
+ 				compatible = "atmel,at91sam9260-rtt";
+ 				reg = <0xfffffd20 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 3>;
+ 				clocks = <&clk32k>;
+ 				status = "disabled";
+ 			};
+@@ -1110,4 +1110,21 @@
+ 		pinctrl-0 = <&pinctrl_i2c_gpio1>;
+ 		status = "disabled";
+ 	};
++
++	virt_irq1_demux: virt-irq-demux@1 {
++		compatible = "virtual,irq-demux";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++		/*
++		 * Interrupt lines:
++		 * 0: PMC
++		 * 1: PIT
++		 * 2: DBGU
++		 * 3: RTT
++		 * 4: WATCHDOG
++		 * 5: RTC
++		 */
++		irqs = <0x3f>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index bbb3ba6..d4bc3cc 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -102,7 +102,7 @@
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91sam9x5-pmc";
+ 				reg = <0xfffffc00 0x100>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 0>;
+ 				interrupt-controller;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -381,7 +381,7 @@
+ 			pit: timer@fffffe30 {
+ 				compatible = "atmel,at91sam9260-pit";
+ 				reg = <0xfffffe30 0xf>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 1>;
+ 				clocks = <&mck>;
+ 			};
+ 
+@@ -857,7 +857,7 @@
+ 			dbgu: serial@fffff200 {
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xfffff200 0x200>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 2>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+ 				dmas = <&dma1 1 AT91_DMA_CFG_PER_ID(8)>,
+@@ -1121,7 +1121,7 @@
+ 			watchdog@fffffe40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffe40 0x10>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 4>;
+ 				atmel,watchdog-type = "hardware";
+ 				atmel,reset-type = "all";
+ 				atmel,dbg-halt;
+@@ -1132,7 +1132,7 @@
+ 			rtc@fffffeb0 {
+ 				compatible = "atmel,at91sam9x5-rtc";
+ 				reg = <0xfffffeb0 0x40>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupts-extended = <&virt_irq1_demux 3>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1231,4 +1231,20 @@
+ 		pinctrl-0 = <&pinctrl_i2c_gpio2>;
+ 		status = "disabled";
+ 	};
++
++	virt_irq1_demux: virt-irq-demux@1 {
++		compatible = "virtual,irq-demux";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++		/*
++		 * Interrupt lines:
++		 * 0: PMC
++		 * 1: PIT
++		 * 2: DBGU
++		 * 3: RTC
++		 * 4: WATCHDOG
++		 */
++		irqs = <0x1f>;
++	};
+ };
 -- 
 1.9.1
