@@ -1,101 +1,127 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 02/24] Documentation: DT bindings: add more chip compatible
- strings for Tegra PCIe
-Date: Thu, 29 Jan 2015 18:49:43 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1501291846340.16475@utopia.booyaka.com>
-References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234937.20644.9400.stgit@dusk.lan> <CAL_JsqKMm=r+57ShskgbtNqnCGF1yKYDSJJFQ7o05keNzh5z+g@mail.gmail.com> <alpine.DEB.2.02.1501291543030.16475@utopia.booyaka.com>
- <CAL_JsqLE+W+T5YqzdB+DkdBE+HsgySX0yJHzn1y43QDfw4GA9A@mail.gmail.com> <alpine.DEB.2.02.1501291707350.16475@utopia.booyaka.com> <CAL_JsqKaDi1cZN8Ndb0FPhvgRVFyxc1NRhV2cx-XJ323wTKiEQ@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] iio: common: ssp_sensors: Add sensorhub driver
+Date: Thu, 29 Jan 2015 18:53:25 +0000
+Message-ID: <54CA81A5.50206@kernel.org>
+References: <1422453954-27317-1-git-send-email-k.wrona@samsung.com> <1422453954-27317-2-git-send-email-k.wrona@samsung.com> <54CA7D85.20409@kernel.org> <54CA8021.2020909@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKaDi1cZN8Ndb0FPhvgRVFyxc1NRhV2cx-XJ323wTKiEQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54CA8021.2020909-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Karol Wrona <wrona.vy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Jan 2015, Rob Herring wrote:
-
-> On Thu, Jan 29, 2015 at 11:08 AM, Paul Walmsley <paul@pwsan.com> wrote:
-> > On Thu, 29 Jan 2015, Rob Herring wrote:
-> >
-> >> On Thu, Jan 29, 2015 at 9:45 AM, Paul Walmsley <paul@pwsan.com> wrote:
-> >> > On Thu, 29 Jan 2015, Rob Herring wrote:
-> >> >
-> >> >> On Wed, Jan 28, 2015 at 5:49 PM, Paul Walmsley <paul@pwsan.com> wrote:
-> >> >> >
-> >> >> > Add compatible strings for the PCIe IP blocks present on several Tegra
-> >> >> > chips.  The primary objective here is to avoid checkpatch warnings,
-> >> >> > per:
-> >> >> >
-> >>
-> >> [...]
-> >>
-> >> >> > +  - "nvidia,tegra132-pcie" (not yet matched in the driver)
-> >> >> > +  - "nvidia,tegra210-pcie" (not yet matched in the driver)
-> >> >>
-> >> >> Whether the driver matches or not is irrelevant to the binding and may
-> >> >> change over time. Does this mean the driver matches on something else
-> >> >> or Tegra132 is not yet supported in the driver?
-> >> >
-> >> > It means that the driver currently matches on one of the first three
-> >> > strings that don't carry that annotation.
-> >> >
-> >> >> If the former, what is important is what are the valid combinations of
-> >> >> compatible properties and that is not captured here. In other words,
-> >> >> what is the fallback compatible string for each chip?
-> >> >
-> >> > The intention was to try to be helpful: to document that anyone adding a
-> >> > "nvidia,tegra132-pcie" compatible string would also need to add one of the
-> >> > other strings as a fallback.  Would you like that to be documented in a
-> >> > different way, or removed?
-> >>
-> >> Then you should say something like 'must contain "nvidia,tegra20-pcie"
-> >> and one of: ...'
-> >>
-> >> You can also use nvidia,<chip>-pcie if you want. checkpatch will check
-> >> for that pattern too. Then your documentation can be something like:
-> >>
-> >> Must contain '"nvidia,<chip>-pcie", "nvidia,tegra20-pcie"' where
-> >> <chip> is tegra30, tegra132, ...
-> >>
-> >> We don't enforce that the <chip> part is documented ATM and not likely
-> >> until we have a schema if ever.
-> >
-> > OK, thanks for the explanation.
-> >
-> > So would it be acceptable to you to skip the attempt to document which
-> > strings are actually supported by the current driver, and to simply use
-> > the <chip> wildcard?
+On 29/01/15 18:46, Karol Wrona wrote:
+> On 01/29/2015 07:35 PM, Jonathan Cameron wrote:
+>> On 28/01/15 14:05, Karol Wrona wrote:
+>>> Sensorhub  is MCU dedicated to collect data and manage several sensors.
+>>> Sensorhub is a spi device which provides a layer for IIO devices. It provides
+>>> some data parsing and common mechanism for sensorhub sensors.
+>>>
+>>> Adds common sensorhub library for sensorhub driver and iio drivers
+>>> which uses sensorhub MCU to communicate with sensors.
+>>>
+>>> Signed-off-by: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> A couple of build errors from this one...
+>>
+>> I've fixed them up and applied to the togreg branch of iio.git.
+>> Pushed out as testing.  If you get a chance to check I didn't
+>> mess anything up that would be great.
+>>> ---
+>>>  drivers/iio/common/Kconfig               |    1 +
+>>>  drivers/iio/common/Makefile              |    1 +
+>>>  drivers/iio/common/ssp_sensors/Kconfig   |   26 ++
+>>>  drivers/iio/common/ssp_sensors/Makefile  |    8 +
+>>>  drivers/iio/common/ssp_sensors/ssp.h     |  257 +++++++++++
+>>>  drivers/iio/common/ssp_sensors/ssp_dev.c |  712 ++++++++++++++++++++++++++++++
+>>>  drivers/iio/common/ssp_sensors/ssp_spi.c |  608 +++++++++++++++++++++++++
+>>>  include/linux/iio/common/ssp_sensors.h   |   82 ++++
+>>>  8 files changed, 1695 insertions(+)
+>>>  create mode 100644 drivers/iio/common/ssp_sensors/Kconfig
+>>>  create mode 100644 drivers/iio/common/ssp_sensors/Makefile
+>>>  create mode 100644 drivers/iio/common/ssp_sensors/ssp.h
+>>>  create mode 100644 drivers/iio/common/ssp_sensors/ssp_dev.c
+>>>  create mode 100644 drivers/iio/common/ssp_sensors/ssp_spi.c
+>>>  create mode 100644 include/linux/iio/common/ssp_sensors.h
+>>>
+>>> diff --git a/drivers/iio/common/Kconfig b/drivers/iio/common/Kconfig
+>>> index 0b6e97d..790f106 100644
+>>> --- a/drivers/iio/common/Kconfig
+>>> +++ b/drivers/iio/common/Kconfig
+>>> @@ -3,4 +3,5 @@
+>>>  #
+>>>  
+>>>  source "drivers/iio/common/hid-sensors/Kconfig"
+>>> +source "drivers/iio/common/ssp_sensors/Kconfig"
+>>>  source "drivers/iio/common/st_sensors/Kconfig"
+>>> diff --git a/drivers/iio/common/Makefile b/drivers/iio/common/Makefile
+>>> index 3112df0..b1e4d9c 100644
+>>> --- a/drivers/iio/common/Makefile
+>>> +++ b/drivers/iio/common/Makefile
+>>> @@ -8,4 +8,5 @@
+>>>  
+>>>  # When adding new entries keep the list in alphabetical order
+>>>  obj-y += hid-sensors/
+>>> +obj-y += ssp_sensors/
+>>>  obj-y += st_sensors/
+>>> diff --git a/drivers/iio/common/ssp_sensors/Kconfig b/drivers/iio/common/ssp_sensors/Kconfig
+>>> new file mode 100644
+>>> index 0000000..0ea4faf
+>>> --- /dev/null
+>>> +++ b/drivers/iio/common/ssp_sensors/Kconfig
+>>> @@ -0,0 +1,26 @@
+>>> +#
+>>> +# SSP sensor drivers and commons configuration
+>>> +#
+>>> +menu "SSP Sensor Common"
+>>> +
+>>> +config IIO_SSP_SENSORS_COMMONS
+>>> +	tristate "Commons for all SSP Sensor IIO drivers"
+>>> +	depends on IIO_SSP_SENSORHUB
+>>> +	select IIO_BUFFER
+>>> +	select IIO_KFIFO_BUF
+>>> +	help
+>>> +	  Say yes here to build commons for SSP sensors.
+>>> +	  To compile this as a module, choose M here: the module
+>>> +	  will be called ssp_iio.
+>>> +
+>>> +config IIO_SSP_SENSORHUB
+>>> +	tristate "Samsung Sensorhub driver"
+>>> +	depends on SPI
+>>> +	select MFD_CORE
+>>> +	help
+>>> +	  SSP driver for sensorhub. +	  If you say yes here you get ssp support for sensorhub.
+>>> +	  To compile this driver as a module, choose M here: the
+>>> +	  module will be called sensorhub.
+>>> +
+>>> +endmenu
+>>> diff --git a/drivers/iio/common/ssp_sensors/Makefile b/drivers/iio/common/ssp_sensors/Makefile
+>>> new file mode 100644
+>>> index 0000000..1e0389e
+>>> --- /dev/null
+>>> +++ b/drivers/iio/common/ssp_sensors/Makefile
+>>> @@ -0,0 +1,8 @@
+>>> +#
+>>> +# Makefile for SSP sensor drivers and commons.
+>>> +#
+>>> +
+>>> +sensorhub-objs				:= ssp_dev.o ssp_spi.o
+>>> +obj-$(CONFIG_IIO_SSP_SENSORHUB)		+= sensorhub.o
+>>> +
+>>> +obj-$(CONFIG_IIO_SSP_SENSORS_COMMONS) 	+= ssp_iio.o
+>> This file isn't in this patch.
 > 
-> I don't think the binding document should say anything about what the
-> driver uses or not. 
+> Thanks for doing that.
+> I had to mess sth up during rebase.
+> 
+> [...]
+> 
+That's fine, I just messed up moving it myself.  Forgot the Kconfig
+bit needed to move patch as well.
 
-OK, will remove those.
+Anyhow, hopefully the version I push in a few secs will be right!
 
-> It should describe what combinations of compatible strings in a dts are 
-> valid. I didn't look at every patch, but the ones like this one are.
-
-OK, will switch to the format you described earlier:
-
-"Must contain '"nvidia,<chip>-pcie", "nvidia,tegra20-pcie"' where
- <chip> is tegra30, tegra132, ..."
-
-> I'd be fine with most of this all in one patch BTW.
-
-OK, will squash.
-
-> You should attempt to document known values of <chip> if you use it
-> (you could refer to another doc for the list).
-
-Is there an example of this in the tree that you have in mind, where 
-another document is used for the list?  Would it just contain a list of 
-the Tegra chips, e.g., tegra30, tegra114, tegra124, etc?
-
-> I was only highlighting what you can get away with if no one is paying 
-> attention, not that you don't need to add tegra132, etc. :)
-
-OK.
-
-
-- Paul
+Jonathan
