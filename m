@@ -1,61 +1,92 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 24/24] Documentation: DT bindings: add nvidia, denver
- compatible string
-Date: Thu, 29 Jan 2015 08:36:56 -0600
-Message-ID: <CAL_JsqJq8D86gUdw80Nev=zmW=kYR90iNKiTzciwpaGx2qNJsA@mail.gmail.com>
-References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234938.20644.69989.stgit@dusk.lan>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V9 04/14] drm/bridge: ptn3460: Convert to i2c driver model
+Date: Thu, 29 Jan 2015 20:09:07 +0530
+Message-ID: <CAEC9eQMKrUsdUdSRPNqE_YOobb__8nXLLe454kKXab14rPg-ZA@mail.gmail.com>
+References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
+ <1421771935-31618-5-git-send-email-ajaykumar.rs@samsung.com>
+ <20150129142919.GN2001@joana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150128234938.20644.69989.stgit@dusk.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Rohit Vaswani <rvaswani@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150129142919.GN2001@joana>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Gustavo Padovan <gustavo@padovan.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Jingoo Han <jg1.han@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 5:49 PM, Paul Walmsley <paul@pwsan.com> wrote:
->
-> Add a compatible string for the NVIDIA Denver CPU to the ARM CPU DT
-> binding documentation file.  The primary objective here is to keep
-> checkpatch.pl from warning when the compatible string is used in an
-> SoC DT file, per:
->
-> http://marc.info/?l=linux-tegra&m=142201349727836&w=2
->
->
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Rohit Vaswani <rvaswani@codeaurora.org>
-> Cc: Paul Walmsley <pwalmsley@nvidia.com>
-> Cc: Marc Carino <marc.ceeeee@gmail.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index b2aacbe16ed9..4ea31f0b7764 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -175,6 +175,7 @@ nodes to be present and contain the properties described below.
->                             "marvell,pj4a"
->                             "marvell,pj4b"
->                             "marvell,sheeva-v5"
-> +                           "nvidia,denver" (not yet matched in the code)
-
-There's not variations or versions of Denver cores or plans to change
-from the codename?
-
-Rob
+SGkgR3VzdGF2bywKCkkgdGhpbmsgVGhpZXJyeSBhbHJlYWR5IGZpeGVkIGl0LiBDaGVjayB0aGlz
+LgpodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0L25leHQvbGludXgt
+bmV4dC5naXQvdHJlZS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKCgpSZWdhcmRzLApB
+amF5CgoKCk9uIFRodSwgSmFuIDI5LCAyMDE1IGF0IDc6NTkgUE0sIEd1c3Rhdm8gUGFkb3ZhbiA8
+Z3VzdGF2b0BwYWRvdmFuLm9yZz4gd3JvdGU6Cj4gSGkgQWpheSwKPgo+IDIwMTUtMDEtMjAgQWph
+eSBLdW1hciA8YWpheWt1bWFyLnJzQHNhbXN1bmcuY29tPjoKPgo+PiBVc2UgZHJtX2JyaWRnZSBo
+ZWxwZXJzIHRvIG1vZGlmeSB0aGUgZHJpdmVyIHRvIHN1cHBvcnQKPj4gaTJjIGRyaXZlciBtb2Rl
+bC4KPj4KPj4gU2lnbmVkLW9mZi1ieTogQWpheSBLdW1hciA8YWpheWt1bWFyLnJzQHNhbXN1bmcu
+Y29tPgo+PiBBY2tlZC1ieTogSW5raSBEYWUgPGlua2kuZGFlQHNhbXN1bmcuY29tPgo+PiBUZXN0
+ZWQtYnk6IFJhaHVsIFNoYXJtYSA8cmFodWwuc2hhcm1hQHNhbXN1bmcuY29tPgo+PiBUZXN0ZWQt
+Ynk6IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyLm1hcnRpbmV6QGNvbGxhYm9yYS5j
+by51az4KPj4gVGVzdGVkLWJ5OiBHdXN0YXZvIFBhZG92YW4gPGd1c3Rhdm8ucGFkb3ZhbkBjb2xs
+YWJvcmEuY28udWs+Cj4+IFRlc3RlZC1ieTogU2pvZXJkIFNpbW9ucyA8c2pvZXJkLnNpbW9uc0Bj
+b2xsYWJvcmEuY28udWs+Cj4+IC0tLQo+PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmln
+ICAgICAgICAgIHwgICAgMiArCj4+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3B0bjM0NjAuYyAg
+ICAgICAgfCAgMTI0ICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0KPj4gIGRyaXZlcnMv
+Z3B1L2RybS9leHlub3MvZXh5bm9zX2RwX2NvcmUuYyB8ICAgMjIgLS0tLS0tCj4+ICAzIGZpbGVz
+IGNoYW5nZWQsIDg2IGluc2VydGlvbnMoKyksIDYyIGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9LY29uZmlnCj4+IGluZGV4IDg4NDkyM2YuLjQyNTRjMmIgMTAwNjQ0Cj4+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL0tjb25maWcKPj4gQEAgLTEsNSArMSw3IEBACj4+ICBjb25maWcgRFJNX1BUTjM0NjAKPj4g
+ICAgICAgdHJpc3RhdGUgIlBUTjM0NjAgRFAvTFZEUyBicmlkZ2UiCj4+ICAgICAgIGRlcGVuZHMg
+b24gRFJNCj4+ICsgICAgIGRlcGVuZHMgb24gT0YgJiYgSTJDCj4KPiBBZGRpbmcgSTJDIGhlcmUg
+aXMgY2F1c2luZyB0aGlzIGNpcmN1bGFyIGRlcGVuZGVuY3k6Cj4KPiBzY3JpcHRzL2tjb25maWcv
+Y29uZiAtLXNpbGVudG9sZGNvbmZpZyBLY29uZmlnCj4gZHJpdmVycy92aWRlby9mYmRldi9LY29u
+ZmlnOjU6ZXJyb3I6IHJlY3Vyc2l2ZSBkZXBlbmRlbmN5IGRldGVjdGVkIQo+IGRyaXZlcnMvdmlk
+ZW8vZmJkZXYvS2NvbmZpZzo1OiAgc3ltYm9sIEZCIGlzIHNlbGVjdGVkIGJ5IERSTV9LTVNfRkJf
+SEVMUEVSCj4gZHJpdmVycy9ncHUvZHJtL0tjb25maWc6MzQ6ICAgICBzeW1ib2wgRFJNX0tNU19G
+Ql9IRUxQRVIgZGVwZW5kcyBvbgo+IERSTV9LTVNfSEVMUEVSCj4gZHJpdmVycy9ncHUvZHJtL0tj
+b25maWc6Mjg6ICAgICBzeW1ib2wgRFJNX0tNU19IRUxQRVIgaXMgc2VsZWN0ZWQgYnkKPiBEUk1f
+UFROMzQ2MAo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZzoxOiAgICAgICBzeW1ib2wg
+RFJNX1BUTjM0NjAgZGVwZW5kcyBvbiBJMkMKPiBkcml2ZXJzL2kyYy9LY29uZmlnOjc6ICBzeW1i
+b2wgSTJDIGlzIHNlbGVjdGVkIGJ5IEZCX0REQwo+IGRyaXZlcnMvdmlkZW8vZmJkZXYvS2NvbmZp
+Zzo1OTogc3ltYm9sIEZCX0REQyBpcyBzZWxlY3RlZCBieSBGQl9DWUJFUjIwMDBfRERDCj4gZHJp
+dmVycy92aWRlby9mYmRldi9LY29uZmlnOjM3NDogICAgICAgIHN5bWJvbCBGQl9DWUJFUjIwMDBf
+RERDIGRlcGVuZHMgb24KPiBGQl9DWUJFUjIwMDAKPiBkcml2ZXJzL3ZpZGVvL2ZiZGV2L0tjb25m
+aWc6MzYyOiAgICAgICAgc3ltYm9sIEZCX0NZQkVSMjAwMCBkZXBlbmRzIG9uIEZCCj4KPiBUbyBz
+b2x2ZSB0aGlzIHdlIGp1c3QgbmVlZCB0byByZW1vdmUgSTJDIGZyb20gZGVwZW5kcyBhcyBEUk0g
+YWxyZWFkeSBzZWxlY3RzCj4gSTJDLiBUaGlzIHdhcyBhbHJlYWR5IGZpeGVkIGJ5Ogo+Cj4KPiBj
+b21taXQgOTBiZGU1NzFhZDE5NGFkYjAzOWNiOTJhMTFhNWIzNDZmMTVlYjYxMAo+IEF1dGhvcjog
+QXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4KPiBEYXRlOiAgIFR1ZSBNYXIgMjUgMTI6MDY6
+NDYgMjAxNCArMDEwMAo+Cj4gICAgIGRybS9icmlkZ2U6IFBUTjM0NjAgbmVlZHMgRFJNX0tNU19I
+RUxQRVIKPgo+ICAgICBUaGUgcmVjZW50bHkgYWRkZWQgUFROMzQ2MCBkZXZpY2UgZHJpdmVyIHVz
+ZXMgaW50ZXJmYWNlcyB0aGF0Cj4gICAgIGFyZSBwcm92aWRlZCBieSB0aGUgS01TIGhlbHBlciBp
+bmZyYXN0cnVjdHVyZSwgc28gd2Ugc2hvdWxkCj4gICAgIGV4cGxpY2l0bHkgc2VsZWN0IHRoYXQg
+dG8gYXZvaWQgdGhpcyBsaW5rZXIgZXJyb3I6Cj4KPiAgICAgRVJST1I6ICJkcm1faGVscGVyX3By
+b2JlX3NpbmdsZV9jb25uZWN0b3JfbW9kZXMiIFtkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3B0bjM0
+NjAua29dIHVuZGVmaW5lZCEKPiAgICAgRVJST1I6ICJkcm1faGVscGVyX2Nvbm5lY3Rvcl9kcG1z
+IiBbZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9wdG4zNDYwLmtvXSB1bmRlZmluZWQhCj4KPiAgICAg
+V2UgaGF2ZSB0byBkcm9wIHRoZSBJMkMgZGVwZW5kZW5jeSB0byBhdm9pZCBhIGNpcmN1bGFyIGRl
+cGVuZGVuY3kKPiAgICAgY2hhaW4sIGJ1dCB0aGF0J3Mgb2sgYmVjYXVzZSBEUk0gYWxyZWFkeSBz
+ZWxlY3RzIEkyQy4KPgo+ICAgICBTaWduZWQtb2ZmLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFy
+bmRiLmRlPgo+ICAgICBTaWduZWQtb2ZmLWJ5OiBEYXZlIEFpcmxpZSA8YWlybGllZEByZWRoYXQu
+Y29tPgo+Cj4KPiBCdXQgeW91IG1heSBoYXZlIGludHJvZHVjZWQgaXQgYWdhaW4gb24gYSByZWJh
+c2UuIFRoZSBmb2xsb3dpbmcgcGF0Y2ggZml4ZXMgaXQ6Cj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmln
+Cj4gaW5kZXggOTkwYjRiMi4uOTQ2ZDFlZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+YnJpZGdlL0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKPiBA
+QCAtMSw3ICsxLDYgQEAKPiAgY29uZmlnIERSTV9QVE4zNDYwCj4gICAgICAgICB0cmlzdGF0ZSAi
+UFROMzQ2MCBEUC9MVkRTIGJyaWRnZSIKPiAtICAgICAgIGRlcGVuZHMgb24gRFJNCj4gLSAgICAg
+ICBkZXBlbmRzIG9uIE9GICYmIEkyQwo+ICsgICAgICAgZGVwZW5kcyBvbiBEUk0gJiYgT0YKPiAg
+ICAgICAgIHNlbGVjdCBEUk1fS01TX0hFTFBFUgo+ICAgICAgICAgc2VsZWN0IERSTV9QQU5FTAo+
+ICAgICAgICAgLS0taGVscC0tLQo+Cj4KPiAgICAgICAgIEd1c3Rhdm8KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
