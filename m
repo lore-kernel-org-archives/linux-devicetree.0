@@ -1,52 +1,36 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] iio: Add Cosmic Circuits ADC support
-Date: Thu, 29 Jan 2015 18:12:11 +0000
-Message-ID: <54CA77FB.9030403@kernel.org>
-References: <1420577257-10846-1-git-send-email-ezequiel.garcia@imgtec.com> <54B133FE.1020808@kernel.org> <54BE33FB.6020800@imgtec.com> <54BEBC80.1090608@kernel.org> <54CA5FCC.5090801@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54CA5FCC.5090801-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Karol Wrona <k.wrona@samsung.com>
+Subject: [RFC PATCH 0/1] PM / domains: Add support for virtual power domains
+Date: Thu, 29 Jan 2015 19:12:55 +0100
+Message-ID: <1422555176-13054-1-git-send-email-k.wrona@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Amit Daniel Kachhap <amit.daniel@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Karol Wrona <wrona.vy@gmail.com>, Karol Wrona <k.wrona@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29/01/15 16:29, Ezequiel Garcia wrote:
-> Hi Jonathan,
-> 
-> On 01/20/2015 05:37 PM, Jonathan Cameron wrote:
-> [..]
->>
->> Hi, I'm afraid that I'm a little stalled on sending it on because Greg
->> hasn't yet picked up my last pull request.  In the mean time I've applied
->> it to the branch that will get rebased once he's taken that and pushed it
->> out as testing.
->>
-> 
-> I can't find your second pull anywhere. Any chance we can get this
-> driver in v3.20?
-I've not sent it yet. Had a bit of a backlog of review to catch up with.
-+ in theory should be fine for a pull in the next day or two...
-> 
-> Also, I can't find the driver anywhere in your testing branch here:
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/jic23/iio.git/
-> 
-> Seems like patches 2 and 3 are there, but not patch 1/3 of the series:
-> "iio: adc: Cosmic Circuits 10001 ADC driver".
-you are quite right.  I have no idea how that happened.  Anyhow, 
-it's there now.
+Hello,
 
+This patch adds virtual power domain handling.  Some comments are needed if
+such approach has any sense.  The goal is to know the state of devices
+residing in domain which is never gated or are gated only during sleep.
+I.e. in Exynos3250 SoC there is one domain which is only put into retention
+in LPD state and to enter it some devices (i.e. mmc host controller) have
+to be inactive.  Using domains and runtime PM it would be able to give
+an information to PM core that the SoC is ready for deeper power state.
 
-> 
-> Please let me know if you need anything at all from me!
-> 
-> Thanks a lot,
-> 
+TODO: binding doc, add child-parent hierarchy 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Karol
+
+Karol Wrona (1):
+  PM / domains: Add support for virtual power domains
+
+ drivers/base/power/Makefile          |    3 +-
+ drivers/base/power/pm_domains_virt.c |   54 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/base/power/pm_domains_virt.c
+
+-- 
+1.7.9.5
+
