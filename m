@@ -1,57 +1,143 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
-Date: Thu, 29 Jan 2015 11:07:44 +0000
-Message-ID: <20150129110744.GU21293@sirena.org.uk>
-References: <CAKohpokxdpF2nTeOnDpofNM1vW3aZRyDBE3WKmvZ8wJedf-TGw@mail.gmail.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+ driver support
+Date: Thu, 29 Jan 2015 11:24:41 +0000
+Message-ID: <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
+References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
+ <3236720.MHeqOodrCV@wuerfel>
+ <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
+ <1967130.oYyZRWCcEF@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="EUFYPFpHgv7thsbJ"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohpokxdpF2nTeOnDpofNM1vW3aZRyDBE3WKmvZ8wJedf-TGw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Mike Turquette <mike.turquette@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Thomas Abraham <ta.omasab@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vinod,
 
---EUFYPFpHgv7thsbJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Thu, Jan 29, 2015 at 07:09:23AM +0530, Viresh Kumar wrote:
-> On 29 January 2015 at 01:36, Mark Brown <broonie@kernel.org> wrote:
+> -----Original Message-----
+> From: Appana Durga Kedareswara Rao
+> Sent: Monday, January 19, 2015 7:39 PM
+> To: 'Arnd Bergmann'; vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; Srikanth Vemula; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> Srikanth Thokala; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Michal
+> Simek; Anirudha Sarangi; grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+> driver support
+>
+> Hi Arnd,
+>
+> > -----Original Message-----
+> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> > Sent: Friday, October 24, 2014 7:29 PM
+> > To: Appana Durga Kedareswara Rao
+> > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; Srikanth Vemula; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > Srikanth Thokala; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> > Michal Simek; Anirudha Sarangi; grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org;
+> > dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> > Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access
+> > Engine driver support
+> >
+> > On Friday 24 October 2014 12:08:26 Appana Durga Kedareswara Rao wrote:
+> > > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> > > > On Tuesday 21 October 2014 09:06:13 Appana Durga Kedareswara Rao
+> > wrote:
+> > > > > The above mentioned API's  and structures will be used by the
+> > > > > dma test client driver's to set hardware configuration information.
+> > > > > The dma client drivers are not mainlined  yet and it is
+> > > > > Internally used by our git-tree  to test the DMA functionality in
+> loopback .
+> > > >
+> > > > I would suggest you add the test driver into the main dmaengine
+> > > > driver file directly then, so you don't need to export the symbols.
+> > > > If there are important reasons to keep that as separate files,
+> > > > just move the header to the drivers/dma/ directory and add the
+> > > > test driver
+> > there.
+> > >
+> > > Sorry I forgot to mention the below things in the mail .The Config
+> > > API's and structures not only used by the dmaengine driver's but
+> > > also used by the  various IP's  (Ex: Ethernet driver and SRIO driver
+> > > these drivers are under development).For example the Ethernet driver
+> > > is resides under drivers/net/ethernet but it needs to set some
+> > > specific configuration parameters of the dma that's why created a
+> > > separate header file for the h/w configurable parameters.
+> >
+> > That is a bug in the ethernet driver, and we should not merge such code.
+> >
+> > Please fix those drivers before submitting them, so they don't rely on
+> > additional interfaces beyond what the DMA engine API provides.
+> >
+> > If you need something that the common interface is missing, you can
+> > send a patch to extend the dmaengine core driver, but more likely it
+> > already does what you need and you are just not using it right.
+> >
+>
+> Sorry for the delay in the reply.
+> We need that header file in the include/linux/ directory for various
+> reasons.
+>
+>  As you know the Xilinx DMA's have a set of configurable parameters which
+> we expect the DMA users to take advantage of.
+>
+>  For example:
+>  For Axi DMA we have the following parameters that we expect to be
+> commonly used.
+>  Coalesce count --> Used to configure the coalesce value.
+>  Delay timer ---> Used to set the delay value.
+>
+>  We expect the Xilinx AXI Ethernet driver to use the Axi DMA driver in  near
+> furture. If so, using ethtool, we expect the driver users to play with the
+> above parameters to do performance tuning.
+>
+>  Hence AxiDMA driver must expose means to change coalese count or delay
+> timer.
+>
+>  Similarly For Axi VDMA we have the following parameters that will be used
+> by the users of this driver.
+>  hsize  --> Used to configure number of bytes per line.
+>  vsize  -->Number of lines per frame.
+>  stride  --> Number of bytes per line.
+>
+>
+>  Earlier in the driver we are embedding dma_slave_config into custom
+> structs But Lars suggested to modify it. please refer to the below thread for
+> more details.
+>  http://www.spinics.net/lists/dmaengine/msg00010.html
+>
+>  And later we thought of creating a separate private member in
+> dma_slave_config for sharing additional configuration between slave
+> device and dma engine Or a new dma_ctrl_cmd like
+>  FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
+>
+>  Finally Vinod was ok with the existing suggestion so we dropped the above
+> thought.
+>
+>  @Vinod : Could you please comment on this.
 
-> >> +  Required properties:
-> >> +  - compatible: allow OPPs to express their compatibility.
-> >> +  - opp-list: phandle to opp-list defined above.
+Ping ?
 
-> > I don't understand what that compatible property is intended to mean and
-> > I expect other readers might be similarly confused - is it a standard
-> > compatbile property meaning this noe corresponds to some sort of device?
+Regards,
+Kedar.
 
-> The goal is to choose the driver which we want to probe for a platform. There
-> can be multiple DT enabled cpufreq drivers present in a build and the platform
-> needs some way to choose one of them.
+>
+> Regards,
+> Kedar.
+>
+> >     Arnd
 
-So you need to document this as a platform device then if that's what
-you're doing here; there's more than just specifying a compatible string
-involved.
 
---EUFYPFpHgv7thsbJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
 
-iQEcBAEBCAAGBQJUyhR/AAoJECTWi3JdVIfQuHsH/2ncbje++IRo/Su+cMRTBnih
-/HKH2EcrscYaOxO0OV7SaX/cdyILurAwus3xcPjspXxMsg4TQmgFheRLJlMGPrS2
-cWop6v6sm4H/elABk42et2jzkdKhwRHnLBTwJhI2tEe8lEvQCDapCuI5ntBX9bqV
-eJWbVsvmmtkWY8WmW2vN9GeBjiM9C90SouQaw1qXSJ2nSooBk62iPyqcCc1S9klm
-Q5Ck4kVWM5l+GLZzi63oO+MY8bdpuT1gH1lucDwXYkvBaO9PwdFkLKDKvQvTNYa3
-Fctve8NraiHyqZOFJvjwGbfyD/0mTGxl1e/NtWEelDVmV5hTI/CAJfR0Hz8+B1I=
-=tyjU
------END PGP SIGNATURE-----
-
---EUFYPFpHgv7thsbJ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
