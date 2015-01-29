@@ -1,50 +1,29 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH net-next v8 0/4] net: Add Keystone NetCP ethernet driver
- support
-Date: Thu, 29 Jan 2015 18:20:24 -0500
-Message-ID: <54CAC038.9000009@ti.com>
-References: <1421367007-19744-1-git-send-email-m-karicheri2@ti.com> <54C9654C.8030407@ti.com> <54CA6C20.5090301@ti.com> <15828198.gHAJTouZOU@wuerfel>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH 1/4] NFC: nci: Add FWDL support
+Date: Fri, 30 Jan 2015 00:28:59 +0100
+Message-ID: <20150129232859.GA20998@ribalta.ger.corp.intel.com>
+References: <1421940460-14049-1-git-send-email-clement.perrochaud@effinnov.com>
+ <1421940460-14049-2-git-send-email-clement.perrochaud@effinnov.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <15828198.gHAJTouZOU@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, mugunthanvnm-l0cyMroinI0@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1421940460-14049-2-git-send-email-clement.perrochaud@effinnov.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: clement.perrochaud@effinnov.com
+Cc: linux-nfc@lists.01.org, =?iso-8859-1?Q?Cl=E9ment?= Perrochaud <clement.perrochaud@nxp.com>, sunil.jogi@nxp.com, jerome.pele@nxp.com, Charles.Gorand-Effinnov@nxp.com, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, grant.likely@linaro.org, lefrique@marvell.com, christophe.ricard@gmail.com, cuissard@marvell.com, bzhao@marvell.com, hirent@marvell.com, akarwar@marvell.com, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2015 05:00 PM, Arnd Bergmann wrote:
-> On Thursday 29 January 2015 12:21:36 Murali Karicheri wrote:
->>
->> I think the solution is to make the cpsw_ale as a module and configured
->> through a Kconfig option. I am working on a fix for this now.
->>
->> Similar fix is required for cpts.o. Currently we are not using this
->> module for Netcp, but soon this will be re-used. I have send a patch
->> that is already applied to net-next removing cpts.o for Netcp.
->>
->
-> Great, thanks a lot for the follow-up.
->
-> 	Arnd
-Arnd,
+Hi Clement,
 
-I have just posted a patch to nedev list to address this issue. Please 
-review and let me know your comments. This also require some additional 
-fixes in drivers/soc/ti/ to build them as modules as well. Santosh has 
-queued them against next merge window.
+On Thu, Jan 22, 2015 at 04:27:37PM +0100, clement.perrochaud@effinnov.c=
+om wrote:
+> From: Cl=E9ment Perrochaud <clement.perrochaud@nxp.com>
 
-Felipe, Mugunthan,
+- It really is not obvious that FWDL actually means firmware download
+- A small commit message explaining why you need this (Mostly for the
+  NXP chipset for now) would be nice.
 
-As the patch touches ti_cpsw as well, please review and provide your 
-comments. It will be great if you can apply this patch on net-next 
-branch and test it on ti platform using ti_cpsw driver.
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Samuel.
