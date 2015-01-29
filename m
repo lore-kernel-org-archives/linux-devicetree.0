@@ -1,54 +1,41 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dtc: Use quotes to include header files
-Date: Thu, 29 Jan 2015 10:30:02 -0600
-Message-ID: <CAL_JsqJ9P8Wco3szNW0gU-mSV=ryDr6ZfZ3y1XETYuVOX6XYNA@mail.gmail.com>
-References: <7947240.7yktm8fT2X@wuerfel> <1418696004-12829-1-git-send-email-chris.packham@alliedtelesis.co.nz>
- <20150129155646.BBA8AC413BE@trevor.secretlab.ca>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 0/3] iio: Add Cosmic Circuits ADC support
+Date: Thu, 29 Jan 2015 13:29:00 -0300
+Message-ID: <54CA5FCC.5090801@imgtec.com>
+References: <1420577257-10846-1-git-send-email-ezequiel.garcia@imgtec.com> <54B133FE.1020808@kernel.org> <54BE33FB.6020800@imgtec.com> <54BEBC80.1090608@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150129155646.BBA8AC413BE-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54BEBC80.1090608-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 29, 2015 at 9:56 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 16 Dec 2014 15:13:24 +1300
-> , Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
->  wrote:
->> Currently in arch and driver code that needs early access to the
->> flattened device tree it is necessary to add specific CFLAGS so that
->> when scripts/dtc/libfdt/libfdt.h is included the C preprocessor is able
->> to locate the libfdt versions of libfdt_env.h and fdt.h without
->> generating an error.
+Hi Jonathan,
 
-[...]
-
->> diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
->> index 73f4975..ea1ddcd 100644
->> --- a/scripts/dtc/libfdt/libfdt.h
->> +++ b/scripts/dtc/libfdt/libfdt.h
->> @@ -51,8 +51,8 @@
->>   *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->>   */
->>
->> -#include <libfdt_env.h>
->> -#include <fdt.h>
->> +#include "libfdt_env.h"
->> +#include "fdt.h"
+On 01/20/2015 05:37 PM, Jonathan Cameron wrote:
+[..]
 >
-> Until this is resolved with upstream DTC, what about adding dummy
-> libfdt.h, libfdt_env.h and fdt.h to include/linux? That would get this
-> out of the blocker path for merging this code.
+> Hi, I'm afraid that I'm a little stalled on sending it on because Greg
+> hasn't yet picked up my last pull request.  In the mean time I've applied
+> it to the branch that will get rebased once he's taken that and pushed it
+> out as testing.
+> 
 
-2 of those already exist. Is it only a matter of adding fdt.h or is
-there more to it?
+I can't find your second pull anywhere. Any chance we can get this
+driver in v3.20?
 
-This could also be carried as part of the import script to fix up.
+Also, I can't find the driver anywhere in your testing branch here:
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+https://git.kernel.org/cgit/linux/kernel/git/jic23/iio.git/
+
+Seems like patches 2 and 3 are there, but not patch 1/3 of the series:
+"iio: adc: Cosmic Circuits 10001 ADC driver".
+
+Please let me know if you need anything at all from me!
+
+Thanks a lot,
+-- 
+Ezequiel
