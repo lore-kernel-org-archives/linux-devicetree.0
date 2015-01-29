@@ -1,55 +1,53 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Thu, 29 Jan 2015 08:56:26 -0800
-Message-ID: <20150129165625.GB16250@atomide.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
- <1422274532-9488-2-git-send-email-rogerq@ti.com>
- <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com>
- <54C66B0D.9040109@ti.com>
- <54C6EFC8.1090601@samsung.com>
- <54C7B0E5.20101@ti.com>
- <54C8472B.6070302@samsung.com>
- <54C8D238.4080001@ti.com>
- <20150128170954.GQ28663@atomide.com>
- <54CA1A12.5080507@ti.com>
+From: Paul Walmsley <pwalmsley@nvidia.com>
+Subject: Re: [PATCH 01/24] Documentation: DT: document compatible string existence
+ requirement
+Date: Thu, 29 Jan 2015 10:06:21 -0700
+Message-ID: <54CA688D.9070209@nvidia.com>
+References: <20150128234935.20644.89300.stgit@dusk.lan>
+ <20150128234936.20644.76672.stgit@dusk.lan>
+ <54CA6331.3010909@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54CA1A12.5080507@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Felipe Balbi <balbi@ti.com>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, george.cherian@ti.com, nsekhar@ti.com, devicetree <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54CA6331.3010909@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Paul Walmsley <paul@pwsan.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [150129 03:34]:
-> On 28/01/15 19:09, Tony Lindgren wrote:
-> > * Roger Quadros <rogerq@ti.com> [150128 04:15]:
-> >> On 28/01/15 04:19, Chanwoo Choi wrote:
-> >>>>
-> >>>> I still fail to understand that we need to call disable_irq() in .suspend() and
-> >>>> enable_irq() in .resume()
-> >>>>
-> >>>> can you point me to any other drivers doing so?
-> >>>
-> >>> You can refer the suspend function in drivers/mfd/max14577.c or drivers/mfd/max77693.c.
-> >>> The max14577_suspend() includes the detailed comment for why using disable_irq() in suspend function.
-> >>>
-> >>> In max14577 case, max14577_suspend() use disable_irq() function because of i2c dependency.
-> >>> If max14577 device is wake-up from suspend state before completing the resume sequence
-> >>> of i2c, max14577 may fail to read/write i2c communication.
-> >>
-> >> Thanks for this information. I will add disable/enable_irq() in suspend/resume().
-> > 
-> > Are the .dts changes safe for me to apply already?
-> > 
-> 
-> Yes Tony, you can pick them. Thanks.
+Hello Javier,
 
-OK will apply the dts changes into omap-for-v3.20/dt thanks.
-I have also the defconfig changes tagged, will apply those
-a bit later probably as a fix after the driver is merged.
+On 01/29/2015 09:43 AM, Javier Martinez Canillas wrote:
+> Hello Paul,
+>
+> On 01/29/2015 12:49 AM, Paul Walmsley wrote:
+>> DT maintainers require all compatible strings used in chip or board
+>> DTS file to be previously documented somewhere in
+>> Documentation/devicetree/bindings, per:
+>>
+>> http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+>>
+> I would had preferred if checkpatch.pl didn't warn about the most specific
+> variants of the IP blocks tbh.
+>
+> Since afaiu those were only added to the compatible string as a way to make
+> it future proof in case there is going to be needed later. So in that sense
+> I thought they were not part of the DT ABI.
+>
+> Now, dumping the unused specific strings in binding docs only to make
+> checkpatch happy, will have the effect of making those unused strings become
+> part of the DT ABI. Which mean that couldn't be dropped later if those are
+> found to not be needed since there won't be a way to know if an OS following
+> the DT binding will be matching those or not.
+>
+> But since the decision is to warn for all strings in a compatible property
+> even if those are not used, I agree with you that it should be documented.
+>
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 
-Regards,
+Thanks for the review.
 
-Tony
+For what it's worth, I agree with almost everything you wrote.
+
+- Paul
