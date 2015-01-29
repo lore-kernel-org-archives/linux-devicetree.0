@@ -1,31 +1,115 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
-Date: Thu, 29 Jan 2015 17:04:09 +0530
-Message-ID: <CAKohpomqR77p0PKXCC+VbxtwWG+BGGaMJ7r5NVXKt4XUP9=OAQ@mail.gmail.com>
-References: <CAKohpokxdpF2nTeOnDpofNM1vW3aZRyDBE3WKmvZ8wJedf-TGw@mail.gmail.com>
-	<20150129110744.GU21293@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150129110744.GU21293-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v4 0/7] Fixes and improvements for SDHCI on Armada 38x
+Date: Thu, 29 Jan 2015 12:36:23 +0100
+Message-ID: <1422531390-31038-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 January 2015 at 16:37, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Jan 29, 2015 at 07:09:23AM +0530, Viresh Kumar wrote:
+Hi,
 
->> The goal is to choose the driver which we want to probe for a platform. There
->> can be multiple DT enabled cpufreq drivers present in a build and the platform
->> needs some way to choose one of them.
->
-> So you need to document this as a platform device then if that's what
-> you're doing here; there's more than just specifying a compatible string
-> involved.
+this series brings fixes and improvements for the SDHCI controller of
+the Armada 38x SoCs.
 
-Will elaborate more on this to make it crystal clear..
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The changes for this forth version was done on the 1st and 4th
+patches, see the changelog for the details.
+
+The first two patches are fixes and should be also applied on the
+stable branch (I added stable in copy for this).
+
+The first one removes the SDR50 and DDR50 mode timing from the
+capabilities of the controller because the current implementation
+doesn't support it.
+
+The second one fix controller's caps according to the limitation of
+the hardware.
+
+The third one extends the Device Tree binding of the Armada 38x. It
+allows using the SDIO3 configuration register.
+
+The forth patch adds the support of this new register in the
+driver. Thanks to this one, specific clock adjustments can be done in
+order to support the SDR50 and DDR50 modes timing.
+
+The fifth patch is device tree clean-up.
+
+The sixth patch update the SDHCI node on Armada 38x in order to use
+the new register and then to be able to support the SDR50 and DDR50
+modes timing.
+
+Finally, the seventh patch add the description of SDHCI for the Armada
+388 RD board which was missing.
+
+Patches 1 to 4 should be merged through the mmc tree and patches 5 to
+7 should be merged through mvebu and then arm-soc.
+
+Patch 4 depend on patch 2.
+Patch 2 depend on patch 1.
+And patch 1 depend on commit aa8165f91442 "mmc: sdhci-pxav3: do the
+mbus window configuration after enabling clocks" which have been
+merged.
+
+But as all this patch should be merged through the same tree it would
+not be a problem
+
+The patches 5 to 7 depend on the patches already merged in mvebu.
+
+As they are fixes, patches 1 and 2 should be merged in 3.18-rc or at
+least in 3.19 and then they will be part of 3.18.1. For the other
+patches it would be nice if they could be part of 3.19.
+
+Thanks,
+
+Gregory
+
+Changelog:
+
+v3 -> v4:
+- Merge the 3 dev_wanr message in a single one
+- Remove err_quirks label
+
+v2 -> v3:
+- Use of_property_read_bool() instead of of_get_property
+- Brace the else case according to the Documentation/CodingStyle
+- Move the setting of MMC_CAP_1_8V_DDR before the armada_38x_quirks
+  calls
+
+v1 -> v2:
+- Put back Marcin as author of patch 2 and 3
+- Removed MMC_CAP_1_8V_DDR in the probe function
+
+Gregory CLEMENT (5):
+  mmc: sdhci-pxav3: Fix SDR50 and DDR50 capabilities for the Armada 38x
+    flavor
+  mmc: sdhci-pxav3: Extend binding with SDIO3 conf reg for the Armada
+    38x
+  ARM: mvebu: Use macros for interrupt flags on Armada 38x sdhci node
+  ARM: mvebu: Update the SDHCI node on Armada 38x
+  ARM: mvebu: Add Device Tree description of SDHCI for Armada 388 RD
+
+
+Gregory CLEMENT (5):
+  mmc: sdhci-pxav3: Fix SDR50 and DDR50 capabilities for the Armada 38x
+    flavor
+  mmc: sdhci-pxav3: Extend binding with SDIO3 conf reg for the Armada
+    38x
+  ARM: mvebu: Use macros for interrupt flags on Armada 38x sdhci node
+  ARM: mvebu: Update the SDHCI node on Armada 38x
+  ARM: mvebu: Add Device Tree description of SDHCI for Armada 388 RD
+
+Marcin Wojtas (2):
+  mmc: sdhci-pxav3: Fix Armada 38x controller's caps according to
+    erratum ERR-7878951
+  mmc: sdhci-pxav3: Modify clock settings for the SDR50 and DDR50 modes
+
+ .../devicetree/bindings/mmc/sdhci-pxa.txt          | 15 ++--
+ arch/arm/boot/dts/armada-388-rd.dts                | 10 +++
+ arch/arm/boot/dts/armada-38x.dtsi                  |  7 +-
+ drivers/mmc/host/sdhci-pxav3.c                     | 83 +++++++++++++++++++++-
+ 4 files changed, 106 insertions(+), 9 deletions(-)
+
+-- 
+2.1.0
+
