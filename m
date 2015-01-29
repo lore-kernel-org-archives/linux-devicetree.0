@@ -1,57 +1,55 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v4 3/7] mmc: sdhci-pxav3: Extend binding with SDIO3 conf reg for the Armada 38x
-Date: Thu, 29 Jan 2015 12:36:26 +0100
-Message-ID: <1422531390-31038-4-git-send-email-gregory.clement@free-electrons.com>
-References: <1422531390-31038-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1422531390-31038-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: BhuvanChandra.DV <bhuvanchandra.dv@toradex.com>
+Subject: Re: [PATCH 7/7] spi: spi-fsl-dspi: Add support for TCFQ transfer mode
+Date: Thu, 29 Jan 2015 11:58:25 +0000
+Message-ID: <1422533049999.91114@toradex.com>
+References: <1422356608-15961-1-git-send-email-bhuvanchandra.dv@toradex.com>
+ <1422356608-15961-2-git-send-email-bhuvanchandra.dv@toradex.com>
+ <20150128190342.GE21293@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150128190342.GE21293@sirena.org.uk>
+Content-Language: en-IN
+Content-ID: <A6F915F439DC7C4E816B817C61BC688E@toradex.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "B44548@freescale.com" <B44548@freescale.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The SDHCI unit used on the Armada 38x needs using an extra register to
-do specific clock adjustments in order to support the SDR50 and DDR50
-modes. This patch extends the binding to allow using this register.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- Documentation/devicetree/bindings/mmc/sdhci-pxa.txt | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+On 01/29/2015 12:33 AM, Mark Brown wrote:
+> On Tue, Jan 27, 2015 at 04:33:28PM +0530, Bhuvanchandra DV wrote:
+>
+>> TCFQ is interrupt of Transfer Complete Flag in DSPI module.
+>> EOQ is interrupt of End of Queue Flag in DSPI module.
+>> For adopting of different platform, either of them is a way of DSPI
+>> transfer data. This patch add TCF support for DSPI module  in other platform.
+> I can't really understand what the purpose of this is, sorry.  What are
+> these modes and why would one choose one over the other?  Your changelog
+> suggests this is being done per board which implies that it's tuning for
+> performance but that's usually something that should be done in device
+> drivers, not the device tree - perhaps the tuning will change over time
+> as the driver is optimized or perhaps it varies depending on the
+> transfer.
+>
+> The code mentions a DMA option as well, generally where it's available
+> DMA is something that's chosen at runtime based on the length of the
+> transfer.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
-index 4dd6deb90719..3d1b449d6097 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
-@@ -9,9 +9,13 @@ Required properties:
- - reg:
-   * for "mrvl,pxav2-mmc" and "mrvl,pxav3-mmc", one register area for
-     the SDHCI registers.
--  * for "marvell,armada-380-sdhci", two register areas. The first one
--    for the SDHCI registers themselves, and the second one for the
--    AXI/Mbus bridge registers of the SDHCI unit.
-+
-+  * for "marvell,armada-380-sdhci", three register areas. The first
-+    one for the SDHCI registers themselves, the second one for the
-+    AXI/Mbus bridge registers of the SDHCI unit, the third one for the
-+    SDIO3 Configuration register
-+- reg names: should be "sdhci", "mbus", "conf-sdio3". only mandatory
-+  for "marvell,armada-380-sdhci"
- - clocks: Array of clocks required for SDHCI; requires at least one for
-     I/O clock.
- - clock-names: Array of names corresponding to clocks property; shall be
-@@ -35,7 +39,10 @@ sdhci@d4280800 {
- 
- sdhci@d8000 {
- 	compatible = "marvell,armada-380-sdhci";
--	reg = <0xd8000 0x1000>, <0xdc000 0x100>;
-+	reg-names = "sdhci", "mbus", "conf-sdio3";
-+	reg = <0xd8000 0x1000>,
-+		<0xdc000 0x100>;
-+		<0x18454 0x4>;
- 	interrupts = <0 25 0x4>;
- 	clocks = <&gateclk 17>;
- 	clock-names = "io";
--- 
-2.1.0
+As far as i understood the major difference between the two modes are when
+the interrupt to trigger, as EOQ mode will trigger the interrupt at end of
+queue and TCF will trigger the interrupt at every frame transfer. Probably
+mode selection shouldn't be a device tree property, but i don't see any
+automatic way to choose between the modes.
+Maybe a config would be more appropriate?
 
+@Chao, is there any specific reason to implement this mode?
