@@ -1,147 +1,56 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v6 5/8] iio: adc: fsl,imx25-gcq driver
-Date: Thu, 29 Jan 2015 20:00:49 +0530
-Message-ID: <54CA4419.1060207@gmail.com>
-References: <1422540556-14828-1-git-send-email-mpa@pengutronix.de> <1422540556-14828-6-git-send-email-mpa@pengutronix.de>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: zynq: Remove bogus value from 'bias-disable'
+ property
+Date: Thu, 29 Jan 2015 15:35:14 +0100
+Message-ID: <4cef3a322a8543cdb8f9f57eafd7a09b@BL2FFO11FD014.protection.gbl>
+References: <1422301796-22888-1-git-send-email-soren.brinkmann@xilinx.com>
+ <54C6DDE8.3000905@suse.de>
+ <ce6e56872ab744a49612ef9bca07c73d@BN1AFFO11FD005.protection.gbl>
+ <20150128154139.GK13057@xsjandreislx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1422540556-14828-6-git-send-email-mpa@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Fabio Estevam <festevam@gmail.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>
-Cc: Denis Carikli <denis@eukrea.com>, =?windows-1252?Q?Eric_B=E9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150128154139.GK13057@xsjandreislx>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 01/28/2015 04:41 PM, S=C3=B6ren Brinkmann wrote:
+> On Wed, 2015-01-28 at 03:21PM +0100, Michal Simek wrote:
+>> On 01/27/2015 01:38 AM, Andreas F=C3=A4rber wrote:
+>>> Am 26.01.2015 um 20:49 schrieb Soren Brinkmann:
+>>>> In one pinctrl node, a 'bias-disable' property is erroneously assi=
+gned a
+>>>> value.
+>>>>
+>>>> Fixes: ARM: zynq: DT: Add pinctrl information
+>>>> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Reviewed-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>>>
+>>> Andreas
+>>>
+>>
+>> Applied both.
+>=20
+> Thanks. Given how the branch looks now, you could squash 'ARM: zynq: =
+DT:
+> Remove bogus value from 'bias-disable' property' and 'ARM: zynq: DT: =
+Add
+> pinctrl information to USB nodes' into 'ARM: zynq: DT: Add pinctrl
+> information'. Then we have it all in one patch and spare everybody th=
+e
+> intermittent, partly broken commits.
 
-On Thursday 29 January 2015 07:39 PM, Markus Pargmann wrote:
-> This is a conversion queue driver for the mx25 SoC. It uses the central
-> ADC which is used by two seperate independent queues. This driver
-> prepares different conversion configurations for each possible input.
-> For a conversion it creates a conversionqueue of one item with the
-> correct configuration for the chosen channel. It then executes the queue
-> once and disables the conversion queue afterwards.
->
-> The reference voltages are configurable through devicetree subnodes,
-> depending on the connections of the ADC inputs.
->
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> Signed-off-by: Denis Carikli <denis@eukrea.com>
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> ---
->   drivers/iio/adc/Kconfig                     |   7 +
->   drivers/iio/adc/Makefile                    |   1 +
->   drivers/iio/adc/fsl-imx25-gcq.c             | 361 ++++++++++++++++++++++++++++
->   include/dt-bindings/iio/adc/fsl-imx25-gcq.h |  18 ++
->   4 files changed, 387 insertions(+)
->   create mode 100644 drivers/iio/adc/fsl-imx25-gcq.c
->   create mode 100644 include/dt-bindings/iio/adc/fsl-imx25-gcq.h
->
-(...)
+That's not a problem. I have sent pull request with current state.
 
-> +static int mx25_gcq_probe(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev;
-> +	struct mx25_gcq_priv *priv;
-> +	struct mx25_tsadc *tsadc = dev_get_drvdata(pdev->dev.parent);
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	void __iomem *mem;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*priv));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	priv = iio_priv(indio_dev);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	mem = devm_ioremap_resource(dev, res);
-> +	if (!mem)
-> +		return -ENOMEM;
-> +
-> +	priv->regs = devm_regmap_init_mmio(dev, mem, &mx25_gcq_regconfig);
-> +	if (IS_ERR(priv->regs)) {
-> +		dev_err(dev, "Failed to initialize regmap\n");
-> +		return PTR_ERR(priv->regs);
-> +	}
-> +
-> +	init_completion(&priv->completed);
-> +
-> +	/* Optional external regulator */
-> +	priv->ext_vref = devm_regulator_get(&pdev->dev, "vref");
-> +	if (!IS_ERR_OR_NULL(priv->ext_vref)) {
-> +		ret = regulator_enable(priv->ext_vref);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = mx25_gcq_setup_cfgs(pdev, priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->clk = tsadc->clk;
-> +	ret = clk_prepare_enable(priv->clk);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable clock\n");
-> +		return ret;
-> +	}
-> +
-> +	priv->irq = platform_get_irq(pdev, 0);
-> +	if (priv->irq <= 0) {
-> +		dev_err(dev, "Failed to get IRQ\n");
-> +		ret = priv->irq;
-> +		goto err_clk_unprepare;
-> +	}
-> +
-> +	ret = request_irq(priv->irq, mx25_gcq_irq, 0, pdev->name, priv);
-
-Use of devm_* API
-
-> +	if (ret) {
-> +		dev_err(dev, "Failed requesting IRQ\n");
-> +		goto err_clk_unprepare;
-> +	}
-> +
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->channels = mx25_gcq_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(mx25_gcq_channels);
-> +	indio_dev->info = &mx25_gcq_iio_info;
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register iio device\n");
-> +		goto err_irq_free;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	return 0;
-> +
-> +err_irq_free:
-> +	free_irq(priv->irq, (void *)priv);
-
-This is not required if use devm_*
-
-> +err_clk_unprepare:
-> +	clk_disable_unprepare(priv->clk);
-> +	return ret;
-> +}
-> +
-> +static int mx25_gcq_remove(struct platform_device *pdev)
-> +{
-> +	struct mx25_gcq_priv *priv = platform_get_drvdata(pdev);
-> +	struct iio_dev *indio_dev = iio_priv_to_dev(pdev);
-> +
-> +	iio_device_unregister(indio_dev);
-> +	free_irq(priv->irq, priv);
-
-Dto...
-
->
-
--- 
 Thanks,
-Varka Bhadram.
+Michal
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
