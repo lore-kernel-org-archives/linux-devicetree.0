@@ -1,157 +1,66 @@
-From: Mason <mpeg.blue@free.fr>
-Subject: Re: Delays, clocks, timers, hrtimers, etc
-Date: Thu, 29 Jan 2015 14:57:37 +0100
-Message-ID: <54CA3C51.2030802@free.fr>
-References: <54C8E125.3070905@free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <54C8E125.3070905@free.fr>
-Sender: cpufreq-owner@vger.kernel.org
-To: Linux ARM <linux-arm-kernel@lists.infradead.org>, cpufreq <cpufreq@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, DT <devicetree@vger.kernel.org>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v6 0/8] imx25 adc and touchscreen driver
+Date: Thu, 29 Jan 2015 15:09:08 +0100
+Message-ID: <1422540556-14828-1-git-send-email-mpa@pengutronix.de>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Fabio Estevam <festevam@gmail.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>
+Cc: Denis Carikli <denis@eukrea.com>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-[ I am aware that my message is way too long, and that few people would have
-the time to answer all these questions. So maybe, if someone feels inclined
-to answer just one or two, that might kickstart some discussion, and I might
-learn something along the way. Regards. ]
+This series adds a driver for the Freescale i.MX25 SoC internal ADC unit which
+is used for touchscreen and ADC. The driver consists of three parts, the MFD
+driver which handles interrupts and some central configuration registers, the
+ADC driver and the touchscreen driver.
 
-FTR, I've been reading about DeviceTree:
+v6 splits the remaining DT binding documentation out into seperate patches. I
+reworked the dt bindings for the gcq unit and made some code improvements from
+comments.
 
-http://lwn.net/Articles/573409/
-http://www.carbondesignsystems.com/virtual-prototype-blog/bid/195122/Running-the-Latest-Linux-Kernel-on-a-Minimal-ARM-Cortex-A15-System
-http://devicetree.org/Device_Tree_Usage
+Best regards,
 
-And I am resisting the urge to pile on a few more questions ;-/
+Markus
 
-Regards.
 
-On 28/01/2015 14:16, Mason wrote:
-> Hello,
->
-> I am swimming in a sea of confusion, and am hoping someone would toss
-> me a life-jacket (of enlightenment). Please forgive me if some of my
-> questions are poorly asked or appear in seemingly random order.
->
-> Working on a Cortex A9 based SoC, I set out to "clean up" the platform
-> specific timer code, by using as much generic framework as possible.
-> (Right now, there's a lot of "redundant" code in the mach dir.)
->
->
-> Q1. the {n,u,m}delay function family
->
-> arch/arm/include/asm/delay.h mentions
-> "Delay routines, using a pre-computed "loops_per_second" value."
-> *BUT* if the frequency changes dynamically (thanks to cpufreq)
-> the "loops_per_second" value cannot be pre-computed, as it would
-> change dynamically too, right?
->
-> Looking at arch/arm/lib/delay.c it seems the default implementation
-> is a busy loop (in delay-loop.S) which looks up "loops_per_jiffy"
-> in the prolog to determine the number of times to loop, right?
->
-> http://lxr.free-electrons.com/source/arch/arm/lib/delay-loop.S
->
-> (Side issue, why is the loop unrolled in __loop_delay? What is the
-> point of unrolling a busy loop? This is commented code however.)
->
-> What happens if loops_per_jiffy changes while one core is in the
-> busy loop? It seems we might exit the loop too early, which could
-> break some drivers with some weird heisenbug, no?
->
-> Also, is the update of loops_per_jiffy atomic? Is it possible that
-> if one core reads it while another updates it, we get garbage?
->
-> I suppose this is one reason why the default functions are overridden
-> by register_current_timer_delay(&arch_delay_timer) right? I think the
-> property of a timer is that its frequency doesn't change, even if the
-> CPU's frequency changes? So we are still busy looping, but we are
-> checking the actual time spent in the loop, whatever the cpufreq?
->
-> Reference
-> https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
->
->
-> Q2. Cortex A9 global and private timers
->
-> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0407f/CIHGECHJ.html
->
-> (What are private timers used for?)
->
-> In my platform-specific code, there is a config option to choose between
->
-> 1) the ARM global timer
-> 2) a platform-specific timer (timer0)
->
-> I noticed that there is generic code to support the global timer in
-> drivers/clocksource/arm_global_timer.c
->
-> config ARM_GLOBAL_TIMER
->      bool
->      select CLKSRC_OF if OF
->      help
->        This options enables support for the ARM global timer unit
->
-> config CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
->      bool
->      depends on ARM_GLOBAL_TIMER
->      default y
->      help
->       Use ARM global timer clock source as sched_clock
->
-> I was thinking it would be better to use the "standard" option (ARM global timer)
-> as it is "officially" supported in the vanilla kernel. So less code to write and
-> to debug, and it has likely received more testing. Why would one rely on
-> platform-specific timers then?
->
-> Are high-resolution timers supported with the global timer?
->
->
-> Q3. Using the generic global timer implementation
->
-> So, how do I use that implementation?
-> (Is someone other than STMicro using it?)
->
-> I see:
->
-> static void __init global_timer_of_register(struct device_node *np)
-> CLOCKSOURCE_OF_DECLARE(arm_gt, "arm,cortex-a9-global-timer", global_timer_of_register);
->
-> OF stands for open firmware, yes?
-> So is this related to device tree?
->
-> http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/arm/global_timer.txt
->
-> This file makes no sense to me.
->
-> - interrupts : One interrupt to each core
-> interrupts = <1 13 0xf01>;
-> what are 1 13 0xf01 ??
->
-> - clocks : Should be phandle to a clock.
-> clocks = <&arm_periph_clk>;
->
-> For my (old) 3.14 kernel, I found this:
->
->      /*
->       * ARM Peripheral clock for timers
->       */
->      arm_periph_clk: arm_periph_clk {
->        #clock-cells = <0>;
->        compatible = "fixed-clock";
->        clock-frequency = <600000000>;
->      };
->
-> But it looks like the definitions have moved around since then?
->
-> This device tree concept is too much to swallow in a single serving.
-> Please tell me if I'm going down the correct rabbit hole, and I'll
-> do some LWN readings to try to wrap my mind around the concept.
->
->
-> Anyway, if anyone can help me out on some of these topics, I'd be
-> eternally grateful.
->
-> Regards.
+Denis Carikli (2):
+  ARM: dts: imx25: Add TSC and ADC support
+  ARM: imx_v4_v5_defconfig: Add I.MX25 Touchscreen controller and ADC
+    support.
+
+Markus Pargmann (6):
+  ARM: dt: Binding documentation for imx25 ADC/TSC
+  ARM: dt: Binding documentation for imx25 GCQ
+  ARM: dt: Binding documentation for imx25 touchscreen controller
+  mfd: fsl imx25 Touchscreen ADC driver
+  iio: adc: fsl,imx25-gcq driver
+  input: touchscreen: imx25 tcq driver
+
+ .../devicetree/bindings/iio/adc/fsl,imx25-gcq.txt  |  54 ++
+ .../bindings/input/touchscreen/fsl-mx25-tcq.txt    |  29 +
+ .../devicetree/bindings/mfd/fsl-imx25-tsadc.txt    |  46 ++
+ arch/arm/boot/dts/imx25.dtsi                       |  30 +-
+ arch/arm/configs/imx_v4_v5_defconfig               |   4 +
+ drivers/iio/adc/Kconfig                            |   7 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/fsl-imx25-gcq.c                    | 361 +++++++++++++
+ drivers/input/touchscreen/Kconfig                  |   6 +
+ drivers/input/touchscreen/Makefile                 |   1 +
+ drivers/input/touchscreen/fsl-imx25-tcq.c          | 587 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/fsl-imx25-tsadc.c                      | 167 ++++++
+ include/dt-bindings/iio/adc/fsl-imx25-gcq.h        |  18 +
+ include/linux/mfd/imx25-tsadc.h                    | 143 +++++
+ 16 files changed, 1463 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
+ create mode 100644 drivers/iio/adc/fsl-imx25-gcq.c
+ create mode 100644 drivers/input/touchscreen/fsl-imx25-tcq.c
+ create mode 100644 drivers/mfd/fsl-imx25-tsadc.c
+ create mode 100644 include/dt-bindings/iio/adc/fsl-imx25-gcq.h
+ create mode 100644 include/linux/mfd/imx25-tsadc.h
+
+-- 
+2.1.4
 
