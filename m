@@ -1,41 +1,52 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] iio: Add Cosmic Circuits ADC support
-Date: Thu, 29 Jan 2015 13:29:00 -0300
-Message-ID: <54CA5FCC.5090801@imgtec.com>
-References: <1420577257-10846-1-git-send-email-ezequiel.garcia@imgtec.com> <54B133FE.1020808@kernel.org> <54BE33FB.6020800@imgtec.com> <54BEBC80.1090608@kernel.org>
+From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Subject: Re: [PATCH v8 0/2] Imagination Technologies PWM support
+Date: Thu, 29 Jan 2015 13:32:09 -0300
+Message-ID: <54CA6089.50505@imgtec.com>
+References: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com> <54BE3369.9000802@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54BEBC80.1090608-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54BE3369.9000802@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@imgtec.com>, Andrew Bresticker <abrestic@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
-
-On 01/20/2015 05:37 PM, Jonathan Cameron wrote:
-[..]
->
-> Hi, I'm afraid that I'm a little stalled on sending it on because Greg
-> hasn't yet picked up my last pull request.  In the mean time I've applied
-> it to the branch that will get rebased once he's taken that and pushed it
-> out as testing.
+On 01/20/2015 07:52 AM, Ezequiel Garcia wrote:
+> 
+> 
+> On 01/09/2015 02:54 PM, Ezequiel Garcia wrote:
+>> A new round for the IMG PWM driver.
+>>
+>> The IMG PWM controller is muxed with a PDM controller, through a shared
+>> so-called periph register bit, which sets the output as PWM or PDM.
+>> Because this register is not part of the pin controller block, but rather
+>> PWM/PDM specific, and because the register is also used to set the PDM value,
+>> it is simpler to use a regmap-based syscon to deal with it.
+>>
+>> This time, I'm removing the PDM driver from the submission and submitting the PWM
+>> alone. The PDM was written as a misc driver, but had some design issues, so for
+>> now I'm proposing to merge the PWM only.
+>>
+>> The series is based on v3.19-rc3. If at all possible I'd like to see this merged
+>> for v3.20.
+>>
+> 
+> Thierry,
+> 
+> Any comments on this? Any chance we merge it in time for v3.20?
+> It's -rc5 already and I've started to worry.
 > 
 
-I can't find your second pull anywhere. Any chance we can get this
-driver in v3.20?
+Thierry,
 
-Also, I can't find the driver anywhere in your testing branch here:
+I'm very sorry to be so bothering, but I got no news from you and it's
+-rc6 already. I'd say I'll resend this series to Andrew Morton, hoping
+we can merge this for v3.20.
 
-https://git.kernel.org/cgit/linux/kernel/git/jic23/iio.git/
+Please let me know if you'll be able to pick this.
 
-Seems like patches 2 and 3 are there, but not patch 1/3 of the series:
-"iio: adc: Cosmic Circuits 10001 ADC driver".
-
-Please let me know if you need anything at all from me!
-
-Thanks a lot,
+Thanks,
 -- 
 Ezequiel
