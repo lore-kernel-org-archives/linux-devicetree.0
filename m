@@ -1,54 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 7/7] spi: spi-fsl-dspi: Add support for TCFQ transfer mode
-Date: Thu, 29 Jan 2015 12:13:20 +0000
-Message-ID: <20150129121320.GI21293@sirena.org.uk>
-References: <1422356608-15961-1-git-send-email-bhuvanchandra.dv@toradex.com>
- <1422356608-15961-2-git-send-email-bhuvanchandra.dv@toradex.com>
- <20150128190342.GE21293@sirena.org.uk>
- <1422533049999.91114@toradex.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH 0/2] dt: dma: Add DMA driver for jz4780
+Date: Thu, 29 Jan 2015 12:19:37 +0000
+Message-ID: <1422533980-42761-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+b69FlTXZi5jeJ9W"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422533049999.91114@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "BhuvanChandra.DV" <bhuvanchandra.dv@toradex.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "stefan@agner.ch" <stefan@agner.ch>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "B44548@freescale.com" <B44548@freescale.com>, "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+To: vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---+b69FlTXZi5jeJ9W
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Here we have two patches that add a DMA driver for the Ingenic JZ4780 SoC.
 
-On Thu, Jan 29, 2015 at 11:58:25AM +0000, BhuvanChandra.DV wrote:
+JZ4780 support is still in-flight.
 
-> As far as i understood the major difference between the two modes are when
-> the interrupt to trigger, as EOQ mode will trigger the interrupt at end of
-> queue and TCF will trigger the interrupt at every frame transfer. Probably
-> mode selection shouldn't be a device tree property, but i don't see any
-> automatic way to choose between the modes.
-> Maybe a config would be more appropriate?
+See http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
 
-Or if there's either no particular reason to choose one over the other
-or one is always better then just pick one in the driver and don't worry
-about implementing both.
+These are based on 3.19-rc6.
 
---+b69FlTXZi5jeJ9W
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Apart from the channel numbers, jz4740 and jz4780 are quite different.
+jz4780 has many more features in hardware.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Hence, we are unable to use the jz4740-dma driver.
 
-iQEcBAEBCAAGBQJUyiPfAAoJECTWi3JdVIfQERQH/RQ8TEoE6Fq+doSDczZ7ViUg
-rj51hTC1gzhgNtgICDzMjuurX/qxvC2pNCxZUWzxgG/Hh5V+7pjFi6+zmlyPp4xA
-qG8ktLi2WoowWa2pYJa+rmA2Z5JYwha5GY0JsEDntA/da+oyc9DUN6osvyHXcGvq
-mbTfmaXYtlEV+MfhqX0kWtBfqIdDUs8PDHcbrdp1ot0DQjO8KikvBebQNfOnVxrf
-kApfPtNXTkaCs1mkekI3IXnwTW+UDKIy2xbldZUQOzPffwTNaQhfZ4BcpO8LLYOr
-cxkpZD8MLgyuJ9KaHrVqMoaFY9ohKDUa+l+XFSDaMf2LcTfw9uY9o4u6k+pXPSQ=
-=j3xY
------END PGP SIGNATURE-----
+ZubairLK
 
---+b69FlTXZi5jeJ9W--
+Alex Smith (2):
+  dt: dma: Add DT binding document for jz4780-dma
+  dma: jz4780: add driver for the Ingenic JZ4780 DMA controller
+
+ .../devicetree/bindings/dma/jz4780-dma.txt         |  59 ++
+ drivers/dma/Kconfig                                |  10 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/dma-jz4780.c                           | 856 +++++++++++++++++++++
+ include/dt-bindings/dma/jz4780-dma.h               |  49 ++
+ 5 files changed, 975 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/jz4780-dma.txt
+ create mode 100644 drivers/dma/dma-jz4780.c
+ create mode 100644 include/dt-bindings/dma/jz4780-dma.h
+
+-- 
+1.9.1
