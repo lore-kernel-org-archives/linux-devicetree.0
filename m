@@ -1,91 +1,30 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: Reading /sys with side effects (was Re: [PATCH 1/2]
- Documentation: leds: Add description of LED Flash class extension)
-Date: Thu, 29 Jan 2015 22:14:20 +0100
-Message-ID: <20150129211420.GA21140@amd>
-References: <1422346028-16739-1-git-send-email-j.anaszewski@samsung.com>
- <20150127221958.GA18993@amd>
- <54C8A130.8000807@samsung.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] ARM: digicolor: select syscon and timer
+Date: Thu, 29 Jan 2015 13:52:14 -0800
+Message-ID: <20150129215214.GA20785@quad.lixom.net>
+References: <8b74c50aebadc781a5aa8061f7639c9164433e84.1422481097.git.baruch@tkos.co.il>
+ <2d0359c67f731aab3befa4b3f059cc9fdbcf2ff6.1422481097.git.baruch@tkos.co.il>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54C8A130.8000807-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <2d0359c67f731aab3befa4b3f059cc9fdbcf2ff6.1422481097.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> >>+	- flash_fault - list of flash faults that may have occurred:
-> >>+		* led-over-voltage - flash controller voltage to the flash LED
-> >>+			has exceededthe limit specific to the flash controller
-> >>+		* flash-timeout-exceeded - the flash strobe was still on when
-> >>+			the timeout set by the user has expired; not all flash
-> >>+			controllers may set this in all such conditions
-> >>+		* controller-over-temperature - the flash controller has
-> >>+			overheated
-> >>+		* controller-short-circuit - the short circuit protection
-> >>+			of the flash controller has been triggered
-> >>+		* led-power-supply-over-current - current in the LED power
-> >>+			supply has exceeded the limit specific to the flash
-> >>+			controller
-> >>+		* indicator-led-fault - the flash controller has detected
-> >>+			a short or open circuit condition on the indicator LED
-> >>+		* led-under-voltage - flash controller voltage to the flash
-> >>+			LED has been below the minimum limit specific to
-> >>+			the flash
-> >>+		* controller-under-voltage - the input voltage of the flash
-> >>+			controller is below the limit under which strobing the
-> >>+			flash at full current will not be possible. The condition
-> >>+			persists until this flag is no longer set
-> >>+		* led-over-temperature - the temperature of the LED has exceeded
-> >>+			its allowed upper limit
-> >>+
-> >>+		Flash faults are cleared, if possible, by reading the attribute.
-> >
-> >That's bad. Now you can no longer present flash_fault file as readable
-> >to non-root users, and grep -ri foo /sys will interfere with your
-> >camera application.
-> >
-> >Bad interface, just fix it.
+On Thu, Jan 29, 2015 at 12:04:11AM +0200, Baruch Siach wrote:
+> The digicolor interrupt controller driver now needs syscon.
 > 
-> In my opinion it isn't crucial for the user to be aware of the
-> fact that some non-persistent fault happened right after strobing the
-> flash (e.g. over temperature).
+> Also, as per clocksource maintainer request, we now have a separate config
+> symbol, CONFIG_DIGICOLOR_TIMER, for the digicolor timer.
 > 
-> I cannot see anything harmful in the situation when someone does grep
-> on /sys and clears non-persistent fault on a flash LED device.
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 
-So why export the faults at all?
+Thanks, applied 1-2.
 
-I mean... another user can just read the file in loop, and the camera
-application will not get any useful information.
-
-> Also, not all devices may be able to report the faults that happened
-> earlier but are not valid at the time of I2C readout. In that case the
-> user will never now that the fault has ever occurred, unless they read
-> the flash_fault attribute at the proper moment.
-> 
-> In this case we cannot enforce consistent policy for all devices.
-
-Too bad. But lets do a good job at least for devices where we can do a
-good job, ok?
-
-> Please describe the use case when clearing the fault on read can be
-> harmful, if you have any.
-
-while true; grep -ri foo /sys; done
-
-And no, your application trying to read the faults will very probably
-read nothing.
-
-									Pavel
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
