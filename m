@@ -1,11 +1,16 @@
-From: Andrey Danin <danindrey@mail.ru>
-Subject: [PATCH 0/3] arm: tegra: implement NVEC driver using tegra i2c.
-Date: Thu, 29 Jan 2015 10:20:19 +0300
-Message-ID: <1422516022-27161-1-git-send-email-danindrey@mail.ru>
+From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Subject: Re: [PATCH 1/7] pinctrl: mediatek: emulate GPIO interrupt on
+ both-edges
+Date: Wed, 28 Jan 2015 23:29:39 -0800
+Message-ID: <1422516579.23729.7.camel@mussux00.eus.mediatek.inc>
+References: <1422339332-27498-1-git-send-email-chaotian.jing@mediatek.com>
+ <1422339332-27498-2-git-send-email-chaotian.jing@mediatek.com>
+ <CACRpkdbncsDJ3pP0dETpho5+j+OVuaYr=YTsH8pAs7vuT_9OLw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdbncsDJ3pP0dETpho5+j+OVuaYr=YTsH8pAs7vuT_9OLw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,41 +20,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, ac100@lists.launchpad.net
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Julian Andres Klode <jak@jak-linux.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Marc Dietrich <marvin24@gmx.de>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Andrey Danin <danindrey@mail.ru>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Chris Ball <chris@printf.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, bin.zhang@mediatek.com, Chaotian Jing <chaotian.jing@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 2015-01-27 at 15:21 +0100, Linus Walleij wrote:
+> On Tue, Jan 27, 2015 at 7:15 AM, Chaotian Jing
+> <chaotian.jing@mediatek.com> wrote:
+> 
+> > From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> >
+> > MTK EINT does not support generating interrupt on both edges.
+> > Emulate this by changing edge polarity while enable irq,
+> > set types and interrupt handling. This follows an example of
+> > drivers/gpio/gpio-mxc.c.
+> >
+> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> 
+> Hongzhu, if you're fine with this patch can you ACK it as maintainer
+> of the pinctrl driver so I can merge it immediately on top of your
+> drivern whenever we consider it finished (and if it applies still...)
+> 
+> Yours,
+> Linus Walleij
 
-NVEC driver contains code to manage tegra i2c controller in slave mode.
-I2C slave support was implemented in linux kernel. The goal of this
-patch serie is to implement I2C slave mode in tegra drived and rework
-NVEC driver to use it.
+Hi Linus,
 
-Patches are based on i2c for-next.
+I think it's good, thank you.
+Acked-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
 
-Patch 1 imeplents slave mode for tegra I2C controller. This patch
-was checked on tegra 2 device (Toshiba AC100) only. Please review
-carefully.
-
-Patch 2 reworks NVEC driver itself. I kept code close to original.
-
-Patch 3 fixes device tree and documentation.
-
-
-Thanks in advance
-
-Andrey Danin (3):
-  i2c: tegra: implement slave mode
-  staging/nvec: reimplement on top of tegra i2c driver
-  dt: paz00: define nvec as child of i2c bus
-
- .../devicetree/bindings/nvec/nvidia,nvec.txt       |  19 +-
- arch/arm/boot/dts/tegra20-paz00.dts                |  22 +-
- drivers/i2c/busses/i2c-tegra.c                     | 131 +++++++
- drivers/staging/nvec/nvec.c                        | 379 +++++++--------------
- drivers/staging/nvec/nvec.h                        |  17 +-
- 5 files changed, 264 insertions(+), 304 deletions(-)
-
--- 
-1.9.1
+Yours,
+Hongzhou
