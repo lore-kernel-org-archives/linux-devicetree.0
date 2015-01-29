@@ -1,47 +1,50 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v10 2/2] tty/serial: Add Spreadtrum sc9836-uart driver
- support
-Date: Thu, 29 Jan 2015 11:34:26 -0500
-Message-ID: <54CA6112.9020805@hurleysoftware.com>
-References: <sc9836-serial-v10> <1422443324-25082-1-git-send-email-chunyan.zhang@spreadtrum.com> <1422443324-25082-3-git-send-email-chunyan.zhang@spreadtrum.com> <54CA5128.8050500@gmail.com> <54CA568E.6080306@hurleysoftware.com> <20150129160553.GC26493@n2100.arm.linux.org.uk>
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH 01/24] Documentation: DT: document compatible string existence
+ requirement
+Date: Thu, 29 Jan 2015 17:43:29 +0100
+Message-ID: <54CA6331.3010909@collabora.co.uk>
+References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234936.20644.76672.stgit@dusk.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150129160553.GC26493-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <20150128234936.20644.76672.stgit-orwA252wQtA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2015 11:05 AM, Russell King - ARM Linux wrote:
-> On Thu, Jan 29, 2015 at 10:49:34AM -0500, Peter Hurley wrote:
->> Hi Varka,
->>
->> On 01/29/2015 10:26 AM, Varka Bhadram wrote:
->>> This check is not required. It will be done by devm_ioremap_resource()
->>
->> I disagree. devm_ioremap_resource() interprets the NULL resource as
->> a bad parameter and returns -EINVAL which is then forwarded as the
->> return value from the probe.
->>
->> -ENODEV is the correct return value from the probe if the expected
->> resource is not available (either because it doesn't exist or was already
->> claimed by another driver).
-> 
-> (Adding Thierry as the author of this function.)
-> 
-> I believe devm_ioremap_resource() was explicitly designed to remove such
-> error handling from drivers, and to give drivers a unified error response
-> to such things as missing resources.
-> 
-> See the comments for this function in lib/devres.c.
+Hello Paul,
 
-Maybe the purpose would be better served by wrapping the idiom in a single
-function.
+On 01/29/2015 12:49 AM, Paul Walmsley wrote:
+> 
+> DT maintainers require all compatible strings used in chip or board
+> DTS file to be previously documented somewhere in
+> Documentation/devicetree/bindings, per:
+> 
+> http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+>
 
-Regards,
-Peter Hurley
+I would had preferred if checkpatch.pl didn't warn about the most specific
+variants of the IP blocks tbh.
+
+Since afaiu those were only added to the compatible string as a way to make
+it future proof in case there is going to be needed later. So in that sense
+I thought they were not part of the DT ABI.
+
+Now, dumping the unused specific strings in binding docs only to make
+checkpatch happy, will have the effect of making those unused strings become
+part of the DT ABI. Which mean that couldn't be dropped later if those are
+found to not be needed since there won't be a way to know if an OS following
+the DT binding will be matching those or not.
+
+But since the decision is to warn for all strings in a compatible property
+even if those are not used, I agree with you that it should be documented.
+
+Reviewed-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+
+Best regards,
+Javier
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
