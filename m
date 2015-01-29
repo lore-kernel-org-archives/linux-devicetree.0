@@ -1,143 +1,288 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
- driver support
-Date: Thu, 29 Jan 2015 11:24:41 +0000
-Message-ID: <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
-References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
- <3236720.MHeqOodrCV@wuerfel>
- <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
- <1967130.oYyZRWCcEF@wuerfel>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
+Date: Thu, 29 Jan 2015 13:26:39 +0200
+Message-ID: <54CA18EF.2060607@ti.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com> <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com> <54C99197.5070605@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C99197.5070605@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Chanwoo,
 
+On 29/01/15 03:49, Chanwoo Choi wrote:
+> Hi Roger,
+> 
+> We need to discuss one point about 'id_irqwake'.
+> I don't recommend to use 'id_irqwake' field.
+> 
+> And I catch build warning by using "select" keywork in Kconfig.
+> It is my wrong guide of "select" keyword. So, I'll change it 
+> as 'depends on' keyword.
+> 
+> Looks good to me except for 'id_irqwake'. 
+> I'll apply this patch on 3.21 queue after completing this discussion.
+> 
+> On 01/28/2015 09:15 PM, Roger Quadros wrote:
+>> This driver observes the USB ID pin connected over a GPIO and
+>> updates the USB cable extcon states accordingly.
+>>
+>> The existing GPIO extcon driver is not suitable for this purpose
+>> as it needs to be taught to understand USB cable states and it
+>> can't handle more than one cable per instance.
+>>
+>> For the USB case we need to handle 2 cable states.
+>> 1) USB (attach/detach)
+>> 2) USB-Host (attach/detach)
+>>
+>> This driver can be easily updated in the future to handle VBUS
+>> events in case it happens to be available on GPIO for any platform.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>> v3:
+>> - removed IRQF_NO_SUSPEND flag. Added IRQF_TRIGGER_RISING and
+>>   IRQF_TRIGGER_FALLING
+>> - Added disable_irq() to suspend() and enable_irq() to resume()
+>>
+>>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  18 ++
+>>  drivers/extcon/Kconfig                             |   7 +
+>>  drivers/extcon/Makefile                            |   1 +
+>>  drivers/extcon/extcon-usb-gpio.c                   | 233 +++++++++++++++++++++
+>>  4 files changed, 259 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>> new file mode 100644
+>> index 0000000..85fe6b0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>> @@ -0,0 +1,18 @@
+>> +USB GPIO Extcon device
+>> +
+>> +This is a virtual device used to generate USB cable states from the USB ID pin
+>> +connected to a GPIO pin.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "linux,extcon-usb-gpio"
+>> +- id-gpio: gpio for USB ID pin. See gpio binding.
+>> +
+>> +Example:
+>> +	extcon_usb1 {
+>> +		compatible = "linux,extcon-usb-gpio";
+>> +		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
+>> +	}
+>> +
+>> +	&omap_dwc3_1 {
+>> +		extcon = <&extcon_usb1>;
+>> +	};
+>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+>> index 6a1f7de..fd11536 100644
+>> --- a/drivers/extcon/Kconfig
+>> +++ b/drivers/extcon/Kconfig
+>> @@ -93,4 +93,11 @@ config EXTCON_SM5502
+>>  	  Silicon Mitus SM5502. The SM5502 is a USB port accessory
+>>  	  detector and switch.
+>>  
+>> +config EXTCON_USB_GPIO
+>> +	tristate "USB GPIO extcon support"
+>> +	select GPIOLIB
+> 
+> I catch the build warning if using 'select' instead of 'depends on' as following:
+> It is my wrong guide to you. So, I'll modify it by using "depends on" as your original patch.
 
-> -----Original Message-----
-> From: Appana Durga Kedareswara Rao
-> Sent: Monday, January 19, 2015 7:39 PM
-> To: 'Arnd Bergmann'; vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; Srikanth Vemula; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> Srikanth Thokala; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Michal
-> Simek; Anirudha Sarangi; grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-> Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
-> driver support
->
-> Hi Arnd,
->
-> > -----Original Message-----
-> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> > Sent: Friday, October 24, 2014 7:29 PM
-> > To: Appana Durga Kedareswara Rao
-> > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; Srikanth Vemula; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > Srikanth Thokala; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> > Michal Simek; Anirudha Sarangi; grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org;
-> > dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-> > Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access
-> > Engine driver support
-> >
-> > On Friday 24 October 2014 12:08:26 Appana Durga Kedareswara Rao wrote:
-> > > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> > > > On Tuesday 21 October 2014 09:06:13 Appana Durga Kedareswara Rao
-> > wrote:
-> > > > > The above mentioned API's  and structures will be used by the
-> > > > > dma test client driver's to set hardware configuration information.
-> > > > > The dma client drivers are not mainlined  yet and it is
-> > > > > Internally used by our git-tree  to test the DMA functionality in
-> loopback .
-> > > >
-> > > > I would suggest you add the test driver into the main dmaengine
-> > > > driver file directly then, so you don't need to export the symbols.
-> > > > If there are important reasons to keep that as separate files,
-> > > > just move the header to the drivers/dma/ directory and add the
-> > > > test driver
-> > there.
-> > >
-> > > Sorry I forgot to mention the below things in the mail .The Config
-> > > API's and structures not only used by the dmaengine driver's but
-> > > also used by the  various IP's  (Ex: Ethernet driver and SRIO driver
-> > > these drivers are under development).For example the Ethernet driver
-> > > is resides under drivers/net/ethernet but it needs to set some
-> > > specific configuration parameters of the dma that's why created a
-> > > separate header file for the h/w configurable parameters.
-> >
-> > That is a bug in the ethernet driver, and we should not merge such code.
-> >
-> > Please fix those drivers before submitting them, so they don't rely on
-> > additional interfaces beyond what the DMA engine API provides.
-> >
-> > If you need something that the common interface is missing, you can
-> > send a patch to extend the dmaengine core driver, but more likely it
-> > already does what you need and you are just not using it right.
-> >
->
-> Sorry for the delay in the reply.
-> We need that header file in the include/linux/ directory for various
-> reasons.
->
->  As you know the Xilinx DMA's have a set of configurable parameters which
-> we expect the DMA users to take advantage of.
->
->  For example:
->  For Axi DMA we have the following parameters that we expect to be
-> commonly used.
->  Coalesce count --> Used to configure the coalesce value.
->  Delay timer ---> Used to set the delay value.
->
->  We expect the Xilinx AXI Ethernet driver to use the Axi DMA driver in  near
-> furture. If so, using ethtool, we expect the driver users to play with the
-> above parameters to do performance tuning.
->
->  Hence AxiDMA driver must expose means to change coalese count or delay
-> timer.
->
->  Similarly For Axi VDMA we have the following parameters that will be used
-> by the users of this driver.
->  hsize  --> Used to configure number of bytes per line.
->  vsize  -->Number of lines per frame.
->  stride  --> Number of bytes per line.
->
->
->  Earlier in the driver we are embedding dma_slave_config into custom
-> structs But Lars suggested to modify it. please refer to the below thread for
-> more details.
->  http://www.spinics.net/lists/dmaengine/msg00010.html
->
->  And later we thought of creating a separate private member in
-> dma_slave_config for sharing additional configuration between slave
-> device and dma engine Or a new dma_ctrl_cmd like
->  FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
->
->  Finally Vinod was ok with the existing suggestion so we dropped the above
-> thought.
->
->  @Vinod : Could you please comment on this.
+OK. Thanks.
 
-Ping ?
+> 
+> make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- zImage  -j 8
+> scripts/kconfig/conf --silentoldconfig Kconfig
+> drivers/gpio/Kconfig:34:error: recursive dependency detected!
+> drivers/gpio/Kconfig:34:	symbol GPIOLIB is selected by EXTCON_USB_GPIO
+> drivers/extcon/Kconfig:96:	symbol EXTCON_USB_GPIO depends on EXTCON
+> drivers/extcon/Kconfig:1:	symbol EXTCON is selected by CHARGER_MANAGER
+> drivers/power/Kconfig:316:	symbol CHARGER_MANAGER depends on POWER_SUPPLY
+> drivers/power/Kconfig:1:	symbol POWER_SUPPLY is selected by HID_SONY
+> drivers/hid/Kconfig:670:	symbol HID_SONY depends on NEW_LEDS
+> drivers/leds/Kconfig:8:	symbol NEW_LEDS is selected by BCMA_DRIVER_GPIO
+> drivers/bcma/Kconfig:75:	symbol BCMA_DRIVER_GPIO depends on GPIOLIB
+> 
+>> +	help
+>> +	  Say Y here to enable GPIO based USB cable detection extcon support.
+>> +	  Used typically if GPIO is used for USB ID pin detection.
+>> +
+>>  endif # MULTISTATE_SWITCH
+>> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
+>> index 0370b42..6a08a98 100644
+>> --- a/drivers/extcon/Makefile
+>> +++ b/drivers/extcon/Makefile
+>> @@ -12,3 +12,4 @@ obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
+>>  obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
+>>  obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
+>>  obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
+>> +obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
+>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+>> new file mode 100644
+>> index 0000000..99a58b2
+>> --- /dev/null
+>> +++ b/drivers/extcon/extcon-usb-gpio.c
+>> @@ -0,0 +1,233 @@
+>> +/**
+>> + * drivers/extcon/extcon-usb-gpio.c - USB GPIO extcon driver
+>> + *
+>> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
+>> + * Author: Roger Quadros <rogerq@ti.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/extcon.h>
+>> +#include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_gpio.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/workqueue.h>
+>> +
+>> +#define USB_GPIO_DEBOUNCE_MS	20	/* ms */
+>> +
+>> +struct usb_extcon_info {
+>> +	struct device *dev;
+>> +	struct extcon_dev *edev;
+>> +
+>> +	struct gpio_desc *id_gpiod;
+>> +	int id_irq;
+>> +	bool id_irqwake;		/* ID wakeup enabled flag */
+> 
+> Do you really think id_irqwake is necessary?
+> I think it is not necessary.
 
-Regards,
-Kedar.
+I will explain below why it is necessary.
 
->
-> Regards,
-> Kedar.
->
-> >     Arnd
+> 
+>> +
+>> +	unsigned long debounce_jiffies;
+>> +	struct delayed_work wq_detcable;
+>> +};
+>> +
+>> +/* List of detectable cables */
+>> +enum {
+>> +	EXTCON_CABLE_USB = 0,
+>> +	EXTCON_CABLE_USB_HOST,
+>> +
+>> +	EXTCON_CABLE_END,
+>> +};
+>> +
+>> +static const char *usb_extcon_cable[] = {
+>> +	[EXTCON_CABLE_USB] = "USB",
+>> +	[EXTCON_CABLE_USB_HOST] = "USB-Host",
+>> +	NULL,
+>> +};
+>> +
+> 
+> [snip]
+> 
+>> +
+>> +static int usb_extcon_remove(struct platform_device *pdev)
+>> +{
+>> +	struct usb_extcon_info *info = platform_get_drvdata(pdev);
+>> +
+>> +	cancel_delayed_work_sync(&info->wq_detcable);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM_SLEEP
+>> +static int usb_extcon_suspend(struct device *dev)
+>> +{
+>> +	struct usb_extcon_info *info = dev_get_drvdata(dev);
+>> +
+>> +	if (device_may_wakeup(dev))
+>> +		if (!enable_irq_wake(info->id_irq))
+>> +			info->id_irqwake = true;
+>> +
+> 
+> You can simplify this code as following without 'id_irqwake':
+> 
+> 	if (device_may_wakeup(dev))
+> 		enable_irq_wake(info->id_irq);
 
+enable_irq_wake() can fail. And if it does we need to keep track of it
+to prevent unbalanced disable_irq_wake() call in resume().
+That's the reason I've added the id_irqwake flag in struct usb_extcon_info.
 
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> +	/*
+>> +	 * We don't want to process any IRQs after this point
+>> +	 * as GPIOs used behind I2C subsystem might not be
+>> +	 * accessible until resume completes. So disable IRQ.
+>> +	 */
+>> +	disable_irq(info->id_irq);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int usb_extcon_resume(struct device *dev)
+>> +{
+>> +	struct usb_extcon_info *info = dev_get_drvdata(dev);
+>> +
+>> +	if (info->id_irqwake) {
+>> +		disable_irq_wake(info->id_irq);
+>> +		info->id_irqwake = false;
+>> +	}
+> 
+> ditto.
+> 
+> 	if (device_may_wakeup(dev))
+> 		disable_irq_wake(info->id_irq);
+> 
+>> +
+>> +	enable_irq(info->id_irq);
+>> +
+>> +	return 0;
+>> +}
+>> +#endif
+>> +
+>> +static SIMPLE_DEV_PM_OPS(usb_extcon_pm_ops,
+>> +			 usb_extcon_suspend, usb_extcon_resume);
+>> +
+>> +static struct of_device_id usb_extcon_dt_match[] = {
+>> +	{ .compatible = "linux,extcon-usb-gpio", },
+>> +	{ /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, usb_extcon_dt_match);
+>> +
+>> +static struct platform_driver usb_extcon_driver = {
+>> +	.probe		= usb_extcon_probe,
+>> +	.remove		= usb_extcon_remove,
+>> +	.driver		= {
+>> +		.name	= "extcon-usb-gpio",
+>> +		.pm	= &usb_extcon_pm_ops,
+>> +		.of_match_table = usb_extcon_dt_match,
+>> +	},
+>> +};
+>> +
+>> +module_platform_driver(usb_extcon_driver);
+>> +
+>> +MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
+>> +MODULE_DESCRIPTION("USB GPIO extcon driver");
+>> +MODULE_LICENSE("GPL v2");
+>>
+> 
+cheers,
+-roger
