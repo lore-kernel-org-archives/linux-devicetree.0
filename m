@@ -1,95 +1,95 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv6 0/5] Add Altera peripheral memories to EDAC framework
-Date: Thu, 29 Jan 2015 14:53:06 -0600
-Message-ID: <54CA9DB2.4070109@opensource.altera.com>
-References: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 2/2] DT: leds: Add led-sources property
+Date: Thu, 29 Jan 2015 15:03:12 -0600
+Message-ID: <CAL_JsqK28ZKLrzFH175GM9Ekbem2JcB9GhL-yB2-J4fq0RMCzg@mail.gmail.com>
+References: <1422346028-16739-1-git-send-email-j.anaszewski@samsung.com>
+ <1422346028-16739-2-git-send-email-j.anaszewski@samsung.com> <54CA49F8.2030501@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <54CA49F8.2030501@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Device Tree Maintainers,
+On Thu, Jan 29, 2015 at 8:55 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> Hi Rob,
+>
+> Have we achieved consensus concerning this patch?
+> If so, can you give your ack?
 
-On 01/08/2015 08:53 PM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
->
-> This patch adds the L2 cache and OCRAM peripherals to the EDAC framework
-> using the EDAC device framework. The ECC is enabled early in the boot
-> process in the platform specific code.
->
+I think so.
 
-The changes in this patch series revision were mainly to address device 
-tree concerns. There were changes in other areas of the code to address 
-these changes but I believe the other maintainers are waiting to see if 
-these changes are accepted before they will review (they had approved 
-the previous patch changes).
+Acked-by: Rob Herring <robh@kernel.org>
 
-How does the this patch series appear from a device tree perspective?
-
-Thank you for your time,
-
-Thor
-
-
-> v2 changes:
-> - Split On-Chip RAM ECC platform initialization into separate patch from
->    L2 ECC platform initialization.
-> - Fix L2 cache dependency comments.
-> - Remove OCRAM node from dts and reference prior patch.
 >
-> v3 changes:
-> - Move L2 cache & On-Chip RAM EDAC code into altera_edac.c
-> - Remove SDRAM module compile.
 >
-> v4 changes:
-> - Change mask defines to use BIT().
-> - Fix comment style to agree with kernel coding style.
-> - Better printk description for read != write in trigger.
-> - Remove SysFS debugging message.
-> - Better dci->mod_name
-> - Move gen_pool pointer assignment to end of function.
-> - Invert logic to reduce indent in ocram depenency check.
-> - Change from dev_err() to edac_printk()
-> - Replace magic numbers with defines & comments.
-> - Improve error injection test.
-> - Change Makefile intermediary name to altr (from alt)
+> On 01/27/2015 09:07 AM, Jacek Anaszewski wrote:
+>>
+>> Add a property for defining device outputs the LED
+>> represented by the DT child node is connected to.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Bryan Wu <cooloney@gmail.com>
+>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>   Documentation/devicetree/bindings/leds/common.txt |   16
+>> +++++++++++++++-
+>>   1 file changed, 15 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt
+>> b/Documentation/devicetree/bindings/leds/common.txt
+>> index a2c3f7a..34811c5 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -1,6 +1,19 @@
+>>   Common leds properties.
+>>
+>> +LED and flash LED devices provide the same basic functionality as current
+>> +regulators, but extended with LED and flash LED specific features like
+>> +blinking patterns, flash timeout, flash faults and external flash strobe
+>> mode.
+>> +
+>> +Many LED devices expose more than one current output that can be
+>> connected
+>> +to one or more discrete LED component. Since the arrangement of
+>> connections
+>> +can influence the way of the LED device initialization, the LED
+>> components
+>> +have to be tightly coupled with the LED device binding. They are
+>> represented
+>> +by child nodes of the parent LED device binding.
+>> +
+>>   Optional properties for child nodes:
+>> +- led-sources : List of device current outputs the LED is connected to.
+>> The
+>> +               outputs are identified by the numbers that must be defined
+>> +               in the LED device binding documentation.
+>>   - label : The label for this LED.  If omitted, the label is
+>>     taken from the node name (excluding the unit address).
+>>
+>> @@ -33,7 +46,8 @@ system-status {
+>>
+>>   camera-flash {
+>>         label = "Flash";
+>> +       led-sources = <0>, <1>;
+>>         max-microamp = <50000>;
+>>         flash-max-microamp = <320000>;
+>>         flash-timeout-us = <500000>;
+>> -}
+>> +};
+>>
 >
-> v5 changes:
-> - Remove l2cache.h by using if (IS_ENABLED(CONFIG_EDAC_ALTERA_L2C))
-> - Remove ocram.h by using if (IS_ENABLED(CONFIG_EDAC_ALTERA_OCRAM))
-> - Check prop variable before using. Include io.h.
-> - Add defines for better readability. Remove MAINTAINERS changes.
 >
-> v6 changes:
-> - Simplify OCRAM initialization. Remove be32_to_cpup() calls.
-> - Remove syscon from L2 Cache. Force L2 Cache on if ECC enabled.
-> - Convert to nested ECC in device tree.
-> - Additional comments to clarify debug error injection.
->
-> Thor Thayer (5):
->    arm: socfpga: Enable L2 Cache ECC on startup.
->    arm: socfpga: Enable OCRAM ECC on startup.
->    edac: altera: Remove SDRAM module compile
->    edac: altera: Add Altera L2 Cache and OCRAM EDAC Support
->    arm: dts: Add Altera L2 Cache and OCRAM EDAC entries
->
->   .../bindings/arm/altera/socfpga-edac.txt           |   46 ++
->   arch/arm/boot/dts/socfpga.dtsi                     |   20 +
->   arch/arm/mach-socfpga/Makefile                     |    2 +
->   arch/arm/mach-socfpga/core.h                       |    2 +
->   arch/arm/mach-socfpga/l2_cache.c                   |   39 ++
->   arch/arm/mach-socfpga/ocram.c                      |   97 ++++
->   arch/arm/mach-socfpga/socfpga.c                    |    4 +-
->   drivers/edac/Kconfig                               |   20 +-
->   drivers/edac/Makefile                              |    5 +-
->   drivers/edac/altera_edac.c                         |  506 +++++++++++++++++++-
->   10 files changed, 735 insertions(+), 6 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
->   create mode 100644 arch/arm/mach-socfpga/l2_cache.c
->   create mode 100644 arch/arm/mach-socfpga/ocram.c
->
+> --
+> Best Regards,
+> Jacek Anaszewski
