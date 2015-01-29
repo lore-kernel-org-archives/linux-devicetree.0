@@ -1,59 +1,65 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] Devicetree binding for omap3-serial & bcm2048 combination
-Date: Thu, 29 Jan 2015 10:17:48 +0000
-Message-ID: <20150129101748.GQ17721@leverpostej>
-References: <20150128093501.GA17338@amd>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH 2/3] clocksource: versatile: adapt for Versatile AB and
+ PB boards
+Date: Thu, 29 Jan 2015 10:28:59 +0000
+Message-ID: <20150129102859.GR956@e106497-lin.cambridge.arm.com>
+References: <1422467792-2065-1-git-send-email-robh@kernel.org>
+ <1422467792-2065-3-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1422467792-2065-3-git-send-email-robh@kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150128093501.GA17338@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "marcel@holtmann.org" <marcel@holtmann.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 09:35:01AM +0000, Pavel Machek wrote:
-> Nokia N900 contains bluetooth module connected on serial
-> port. Unfortunately, serial and bluetooth are rather closely coupled,
-> so standard serial driver can not be used, and we really don't want
-> /dev/ttyS1 to be published for internal port of bluetooth
-> stack... Hence solution below.
+On Wed, Jan 28, 2015 at 05:56:31PM +0000, Rob Herring wrote:
+> The same 24MHz counter is also present on Versatile AB and PB boards,=
+ so
+> add the compatible string for them.
+>=20
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  drivers/clocksource/versatile.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clocksource/versatile.c b/drivers/clocksource/ve=
+rsatile.c
+> index 2798e74..0a26d3d 100644
+> --- a/drivers/clocksource/versatile.c
+> +++ b/drivers/clocksource/versatile.c
+> @@ -36,5 +36,7 @@ static void __init versatile_sched_clock_init(struc=
+t device_node *node)
+> =20
+>  	sched_clock_register(versatile_sys_24mhz_read, 32, 24000000);
+>  }
+> -CLOCKSOURCE_OF_DECLARE(versatile, "arm,vexpress-sysreg",
+> +CLOCKSOURCE_OF_DECLARE(vexpress, "arm,vexpress-sysreg",
+> +		       versatile_sched_clock_init);
+> +CLOCKSOURCE_OF_DECLARE(versatile, "arm,versatile-sysreg",
+>  		       versatile_sched_clock_init);
 
-How are they closely coupled?
+Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
-> index 342eedd..e9fde42 100644
-> --- a/Documentation/devicetree/bindings/serial/omap_serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
-> @@ -4,7 +4,14 @@ Required properties:
->  - compatible : should be "ti,omap2-uart" for OMAP2 controllers
->  - compatible : should be "ti,omap3-uart" for OMAP3 controllers
->  - compatible : should be "ti,omap4-uart" for OMAP4 controllers
-> +- compatible : should be "ti+brcm,omap3-uart,bcm2048" for bcm2048
-> +	       bluetooth connected to OMAP3 serial
+> --=20
+> 2.1.0
+>=20
+>=20
 
-I'm very much not keen on munging the two devices into one.
-
-Elsewhere Neil Brown and others having been looking into allowing UARTs
-to function as busses for single devices, which to me seems to cover
-this case.
-
-Mark.
-
->  - ti,hwmods : Must be "uart<n>", n being the instance number (1-based)
->  
->  Optional properties:
->  - clock-frequency : frequency of the clock input to the UART
-> +
-> +Required properties for ti+brcm,omap3-uart,bcm2048:
-> +- reset-gpios : gpio for reset pin
-> +- host-wakeup-gpios : gpio for host wakeup
-> +- bluetooth-wakeup-gpios : gpio for bluetooth wakeup
-> 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-> 
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
