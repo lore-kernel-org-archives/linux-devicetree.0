@@ -1,92 +1,95 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/6] soc: qcom: gsbi: Add support for ADM CRCI muxing
-Date: Wed, 28 Jan 2015 22:45:37 -0800
-Message-ID: <20150129064537.GD23506@codeaurora.org>
-References: <1422396644-21714-1-git-send-email-agross@codeaurora.org>
- <1422396644-21714-2-git-send-email-agross@codeaurora.org>
- <20150129021150.GC23506@codeaurora.org>
- <20150129054143.GD13842@qualcomm.com>
+From: Andrey Danin <danindrey@mail.ru>
+Subject: [PATCH 3/3] dt: paz00: define nvec as child of i2c bus
+Date: Thu, 29 Jan 2015 10:20:22 +0300
+Message-ID: <1422516022-27161-4-git-send-email-danindrey@mail.ru>
+References: <1422516022-27161-1-git-send-email-danindrey@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150129054143.GD13842@qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1422516022-27161-1-git-send-email-danindrey@mail.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, ac100@lists.launchpad.net
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Marc Dietrich <marvin24@gmx.de>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Andrey Danin <danindrey@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-On 01/28, Andy Gross wrote:
-> On Wed, Jan 28, 2015 at 06:11:50PM -0800, Stephen Boyd wrote:
-> 
-> > 
-> > > +- syscon-tcsr: indicates phandle of TCSR syscon node
-> > 
-> > Make this optional but required if any child nodes use dma?
-> 
-> To enforce that I'd have to determine that a child has a dmas.  I guess that
-> isn't so bad.
+NVEC driver was reimplemented to use tegra i2c. Use common i2c bindings
+for NVEC node.
 
-I don't think we need to write any code in the driver to enforce
-this right now. As long as nobody gets it wrong bad things won't
-happen and we can just assume that the DT is correct. Once we get
-some bad DT we can go ahead and implement some DT parsing stuff.
+Signed-off-by: Andrey Danin <danindrey@mail.ru>
+---
+ .../devicetree/bindings/nvec/nvidia,nvec.txt       | 19 ++-----------------
+ arch/arm/boot/dts/tegra20-paz00.dts                | 22 +++++++++-------------
+ 2 files changed, 11 insertions(+), 30 deletions(-)
 
-> 
-> 
-> > > +
-> > > +	if (!gsbi_num || gsbi_num > MAX_GSBI) {
-> > > +		dev_err(&pdev->dev, "invalid gsbi number\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > >  	if (of_property_read_u32(node, "qcom,mode", &gsbi->mode)) {
-> > >  		dev_err(&pdev->dev, "missing mode configuration\n");
-> > >  		return -EINVAL;
-> > > @@ -64,6 +185,26 @@ static int gsbi_probe(struct platform_device *pdev)
-> > >  	writel_relaxed((gsbi->mode << GSBI_PROTOCOL_SHIFT) | gsbi->crci,
-> > >  				base + GSBI_CTRL_REG);
-> > >  
-> > > +	/*
-> > > +	 * modify tcsr to reflect mode and ADM CRCI mux
-> > > +	 * Each gsbi contains a pair of bits, one for RX and one for TX
-> > > +	 * SPI mode requires both bits cleared, otherwise they are set
-> > > +	 */
-> > > +	match = of_match_node(gsbi_dt_match, node);
-> > 
-> > Why not match the config to the TCSR compatible string? Wouldn't
-> > that more accurately reflect that we need to set different bits
-> > depending on which type of TCSR we're using? The version of GSBI
-> > hardware is not actually changing in every different SoC so I
-> > don't see why we want to change the compatible there just because
-> > the TCSR register layout changed.
-> 
-> That is true.  However, with the gsbi compat, I avoid doing a match multiple
-> times and get the table I need immediately.  The alternative is N checks or
-> pulling the compat strings and comparing them to get the right table.
-
-Sorry I'm not following. We always have to call of_match_node()
-here and I'm just suggesting we replace gsbi_dt_match with
-tcsr_dt_match and leave gsbi_dt_match like it was before. I don't
-see how anything is avoided.
-
-> 
-> 
-> > > +
-> > > +	if (config)
-> > > +		for (i = 0; i < config->num_rows; i++) {
-> > > +			if (gsbi->mode == GSBI_PROT_SPI)
-> > 
-> > Doesn't I2C need the same treatment (anything in QUP really)?
-> > Maybe the logic could be changed to check for gsbi->crci ==
-> > GSBI_CRCI_QUP?
-> 
-> Nope.  I2C doesn't support DMA when ADM is the controller.  It's only SPI or
-> UART.
-
-Ok, I don't get it but I guess it doesn't matter if I2C doesn't
-use it.
-
+diff --git a/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
+index 5ae601e..d82c125 100644
+--- a/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
++++ b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
+@@ -2,20 +2,5 @@ NVIDIA compliant embedded controller
+ 
+ Required properties:
+ - compatible : should be "nvidia,nvec".
+-- reg : the iomem of the i2c slave controller
+-- interrupts : the interrupt line of the i2c slave controller
+-- clock-frequency : the frequency of the i2c bus
+-- gpios : the gpio used for ec request
+-- slave-addr: the i2c address of the slave controller
+-- clocks : Must contain an entry for each entry in clock-names.
+-  See ../clocks/clock-bindings.txt for details.
+-- clock-names : Must include the following entries:
+-  Tegra20/Tegra30:
+-  - div-clk
+-  - fast-clk
+-  Tegra114:
+-  - div-clk
+-- resets : Must contain an entry for each entry in reset-names.
+-  See ../reset/reset.txt for details.
+-- reset-names : Must include the following entries:
+-  - i2c
++- request-gpios : the gpio used for ec request
++- reg: the i2c address of the slave controller
+diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
+index ed7e100..65e247b 100644
+--- a/arch/arm/boot/dts/tegra20-paz00.dts
++++ b/arch/arm/boot/dts/tegra20-paz00.dts
+@@ -288,20 +288,16 @@
+ 		clock-frequency = <100000>;
+ 	};
+ 
+-	nvec@7000c500 {
+-		compatible = "nvidia,nvec";
+-		reg = <0x7000c500 0x100>;
+-		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
++	i2c@7000c500 {
++		status = "okay";
+ 		clock-frequency = <80000>;
+-		request-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
+-		slave-addr = <138>;
+-		clocks = <&tegra_car TEGRA20_CLK_I2C3>,
+-		         <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;
+-		clock-names = "div-clk", "fast-clk";
+-		resets = <&tegra_car 67>;
+-		reset-names = "i2c";
++
++		nvec: nvec@45 {
++			compatible = "nvidia,nvec";
++			request-gpios = <&gpio TEGRA_GPIO(V, 2)
++				GPIO_ACTIVE_HIGH>;
++			reg = <0x45>;
++		};
+ 	};
+ 
+ 	i2c@7000d000 {
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
