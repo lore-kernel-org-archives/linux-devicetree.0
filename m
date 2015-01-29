@@ -1,71 +1,38 @@
 From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH V2 RESEND 2/4] dt-bindings: Add root properties for Raspberry Pi
-Date: Thu, 29 Jan 2015 18:10:48 +0000
-Message-ID: <1422555050-28509-3-git-send-email-stefan.wahren@i2se.com>
-References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH V2 RESEND 0/4] ARM: bcm2835: DT improvements
+Date: Thu, 29 Jan 2015 18:10:46 +0000
+Message-ID: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422555050-28509-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds root compatible properties for the following boards:
-- Raspberry Pi Model A
-- Raspberry Pi Model A+
-- Raspberry Pi Model B
-- Raspberry Pi Model B (no P5)
-- Raspberry Pi Model B rev2
-- Raspberry Pi Model B+
-- Raspberry Pi Compute Module
+This patch series contains DT improvements for the Raspberry Pi.
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/bcm2835.txt |   31 +++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
+Patch 1,2: Add missing vendor prefix and root compatible properties
+Patch 3,4: Use constants for pin function instead of error-prone numbers
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm2835.txt
-index ac68348..c78576b 100644
---- a/Documentation/devicetree/bindings/arm/bcm2835.txt
-+++ b/Documentation/devicetree/bindings/arm/bcm2835.txt
-@@ -1,8 +1,35 @@
- Broadcom BCM2835 device tree bindings
- -------------------------------------------
- 
--Boards with the BCM2835 SoC shall have the following properties:
-+Raspberry Pi Model A
-+Required root node properties:
-+compatible = "raspberrypi,model-a", "brcm,bcm2835";
- 
--Required root node property:
-+Raspberry Pi Model A+
-+Required root node properties:
-+compatible = "raspberrypi,model-a-plus", "brcm,bcm2835";
- 
-+Raspberry Pi Model B
-+Required root node properties:
-+compatible = "raspberrypi,model-b", "brcm,bcm2835";
-+
-+Raspberry Pi Model B (no P5)
-+early model B with I2C0 rather than I2C1 routed to the expansion header
-+Required root node properties:
-+compatible = "raspberrypi,model-b-i2c0", "brcm,bcm2835";
-+
-+Raspberry Pi Model B rev2
-+Required root node properties:
-+compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
-+
-+Raspberry Pi Model B+
-+Required root node properties:
-+compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
-+
-+Raspberry Pi Compute Module
-+Required root node properties:
-+compatible = "raspberrypi,compute-module", "brcm,bcm2835";
-+
-+Generic BCM2835 board
-+Required root node properties:
- compatible = "brcm,bcm2835";
+Changes in V2:
+- add all currently known Raspberry Pi boards to binding documentation 
+  as suggested by Stephen Warren
+
+Stefan Wahren (4):
+  dt-bindings: Add vendor prefix for Raspberry Pi
+  dt-bindings: Add root properties for Raspberry Pi
+  ARM: bcm2835: Add header file for pinctrl constants
+  ARM: bcm2835: Use pinctrl header
+
+ Documentation/devicetree/bindings/arm/bcm2835.txt  |   31 ++++++++++++++++++--
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts           |    4 +--
+ arch/arm/boot/dts/bcm2835-rpi-b.dts                |    4 +--
+ arch/arm/boot/dts/bcm2835-rpi.dtsi                 |    8 ++---
+ arch/arm/boot/dts/bcm2835.dtsi                     |    3 +-
+ include/dt-bindings/pinctrl/bcm2835.h              |   27 +++++++++++++++++
+ 7 files changed, 67 insertions(+), 11 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/bcm2835.h
+
 -- 
 1.7.9.5
 
