@@ -1,58 +1,66 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: [PATCH 04/24] Documentation: DT bindings: add more chip compatible
- strings for Tegra timers
-Date: Wed, 28 Jan 2015 16:49:37 -0700
-Message-ID: <20150128234937.20644.54294.stgit@dusk.lan>
-References: <20150128234935.20644.89300.stgit@dusk.lan>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
+Date: Thu, 29 Jan 2015 07:09:23 +0530
+Message-ID: <CAKohpokxdpF2nTeOnDpofNM1vW3aZRyDBE3WKmvZ8wJedf-TGw@mail.gmail.com>
+References: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar@linaro.org>
+	<20150128200600.GR21293@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150128234935.20644.89300.stgit@dusk.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150128200600.GR21293-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 29 January 2015 at 01:36, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Jan 23, 2015 at 04:14:50PM +0530, Viresh Kumar wrote:
+>
+>> +- opp-listN:
+>> +  List of nodes defining performance points. Following belong to the nodes
+>> +  within the opp-lists.
+>
+> Why is there the N here?  It doesn't correspond to the examples...
 
-Add compatible strings for the timer IP blocks present on several
-Tegra chips.  The primary objective here is to avoid checkpatch
-warnings, per:
+I meant [0..N], probably its better to remove it ..
 
-http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+>> +  Required properties:
+>> +  - opp-khz: Frequency in kHz
+>> +  - opp-microvolt: voltage in micro Volts
+>
+> I thought the goal here was to specify ranges?
 
-N.B. The nvidia,tegra20-timer compatible string is removed from the
-nvidia,tegra30-timer.txt documentation file because it's already
-mentioned in the nvidia,tegra20-timer.txt documentation file.
+Yeah, I wasn't 100% sure of what you suggested and so asked a question in
+the mail earlier. I will change it to what you suggested.
 
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>
-Cc: Paul Walmsley <pwalmsley@nvidia.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- .../bindings/timer/nvidia,tegra30-timer.txt        |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+>> +- oppN:
+>> +  Operating performance point node per device. Devices using it should have its
+>> +  phandle in their "operating-points-v2" property.
+>> +
+>> +  Required properties:
+>> +  - compatible: allow OPPs to express their compatibility.
+>> +  - opp-list: phandle to opp-list defined above.
+>
+> I don't understand what that compatible property is intended to mean and
+> I expect other readers might be similarly confused - is it a standard
+> compatbile property meaning this noe corresponds to some sort of device?
 
-diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt b/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
-index b5082a1cf461..bbf38d26605b 100644
---- a/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
-@@ -6,7 +6,9 @@ trigger a legacy watchdog reset.
- 
- Required properties:
- 
--- compatible : should be "nvidia,tegra30-timer", "nvidia,tegra20-timer".
-+- compatible : "nvidia,tegra30-timer"
-+  "nvidia,tegra124-timer" (not yet matched in the driver)
-+  "nvidia,tegra132-timer" (not yet matched in the driver)
- - reg : Specifies base physical address and size of the registers.
- - interrupts : A list of 6 interrupts; one per each of timer channels 1
-     through 5, and one for the shared interrupt for the remaining channels.
+The goal is to choose the driver which we want to probe for a platform. There
+can be multiple DT enabled cpufreq drivers present in a build and the platform
+needs some way to choose one of them.
+
+For example, if both cpufreq-dt, exynos-cpufreq and arm-big-little drivers are
+present in a kernel build, the how do we specify which one a platform wants to
+use.
+
+The generic drivers (cpufreq-dt and big LITTLE) should match with some generic
+strings, as these aren't specific to any platform. But exynos one can be matched
+with the machine or Soc-family's existing compatible names.
+
+> There also appears to be no code matching these bindings...
+
+I still have to post it, was trying to finalize the bindings first.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
