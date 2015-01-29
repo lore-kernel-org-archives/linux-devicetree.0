@@ -1,65 +1,70 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH 2/3] clocksource: versatile: adapt for Versatile AB and
- PB boards
-Date: Thu, 29 Jan 2015 10:28:59 +0000
-Message-ID: <20150129102859.GR956@e106497-lin.cambridge.arm.com>
-References: <1422467792-2065-1-git-send-email-robh@kernel.org>
- <1422467792-2065-3-git-send-email-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq demuxer chip
+Date: Thu, 29 Jan 2015 11:33:38 +0100
+Message-ID: <1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422467792-2065-3-git-send-email-robh@kernel.org>
-Content-Disposition: inline
+In-Reply-To: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 05:56:31PM +0000, Rob Herring wrote:
-> The same 24MHz counter is also present on Versatile AB and PB boards,=
- so
-> add the compatible string for them.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  drivers/clocksource/versatile.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clocksource/versatile.c b/drivers/clocksource/ve=
-rsatile.c
-> index 2798e74..0a26d3d 100644
-> --- a/drivers/clocksource/versatile.c
-> +++ b/drivers/clocksource/versatile.c
-> @@ -36,5 +36,7 @@ static void __init versatile_sched_clock_init(struc=
-t device_node *node)
-> =20
->  	sched_clock_register(versatile_sys_24mhz_read, 32, 24000000);
->  }
-> -CLOCKSOURCE_OF_DECLARE(versatile, "arm,vexpress-sysreg",
-> +CLOCKSOURCE_OF_DECLARE(vexpress, "arm,vexpress-sysreg",
-> +		       versatile_sched_clock_init);
-> +CLOCKSOURCE_OF_DECLARE(versatile, "arm,versatile-sysreg",
->  		       versatile_sched_clock_init);
+Add documentation for the virtual irq demuxer.
 
-Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+---
+ .../bindings/interrupt-controller/dumb-demux.txt   | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
 
-> --=20
-> 2.1.0
->=20
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+new file mode 100644
+index 0000000..b9a7830
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+@@ -0,0 +1,41 @@
++* Virtual Interrupt Demultiplexer
++
++This virtual demultiplexer simply forward all incoming interrupts to its
++enabled/unmasked children.
++It is only intended to be used by hardware that do not provide a proper way
++to demultiplex a source interrupt, and thus have to wake all their children
++up so that they can possibly handle the interrupt (if needed).
++This can be seen as an alternative to shared interrupts when at least one
++of the interrupt children is a timer (and require the irq to stay enabled
++on suspend) while others are not. This will prevent calling irq handlers of
++non timer devices while they are suspended.
++
++Required properties:
++- compatible: Should be "virtual,irq-demux".
++- interrupt-controller: Identifies the node as an interrupt controller.
++- interrupts-extended or interrupt-parent and interrupts: Reference the source
++  interrupt connected to this dumb demuxer.
++- #interrupt-cells: The number of cells to define the interrupts (should be 1).
++  The only cell is the IRQ number.
++- irqs: u32 bitfield specifying the interrupts provided by the demuxer.
++
++Examples:
++	/*
++	 * virtual demuxer controller
++	 */
++	virt_irq1_demux: virt-irq-demux@1 {
++		compatible = "virtual,irq-demux";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupts-extended = <&aic 1 IRQ_TYPE_LEVEL_HIGH 7>;
++		irqs = <0x3f>;
++	};
++
++	/*
++	 * Device connected on this dumb demuxer
++	 */
++	dma: dma-controller@ffffec00 {
++		compatible = "atmel,at91sam9g45-dma";
++		reg = <0xffffec00 0x200>;
++		interrupts-extended = <&virt_irq1_demux 0>;
++	};
+-- 
+1.9.1
