@@ -1,79 +1,51 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 2/2] DT: leds: Add led-sources property
-Date: Thu, 29 Jan 2015 15:55:52 +0100
-Message-ID: <54CA49F8.2030501@samsung.com>
-References: <1422346028-16739-1-git-send-email-j.anaszewski@samsung.com>
- <1422346028-16739-2-git-send-email-j.anaszewski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1422346028-16739-2-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH v3 0/6] Add multiple GPIO and external clock to MMC pwrseq_simple
+Date: Thu, 29 Jan 2015 16:00:02 +0100
+Message-ID: <1422543608-24704-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Arend van Spriel <arend@broadcom.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello Ulf,
 
-Have we achieved consensus concerning this patch?
-If so, can you give your ack?
+Many WLAN chips attached to an SDIO interface needs more than one GPIO
+for their reset sequence and also an external clock to be operational.
 
-On 01/27/2015 09:07 AM, Jacek Anaszewski wrote:
-> Add a property for defining device outputs the LED
-> represented by the DT child node is connected to.
->
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->   Documentation/devicetree/bindings/leds/common.txt |   16 +++++++++++++++-
->   1 file changed, 15 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index a2c3f7a..34811c5 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -1,6 +1,19 @@
->   Common leds properties.
->
-> +LED and flash LED devices provide the same basic functionality as current
-> +regulators, but extended with LED and flash LED specific features like
-> +blinking patterns, flash timeout, flash faults and external flash strobe mode.
-> +
-> +Many LED devices expose more than one current output that can be connected
-> +to one or more discrete LED component. Since the arrangement of connections
-> +can influence the way of the LED device initialization, the LED components
-> +have to be tightly coupled with the LED device binding. They are represented
-> +by child nodes of the parent LED device binding.
-> +
->   Optional properties for child nodes:
-> +- led-sources : List of device current outputs the LED is connected to. The
-> +		outputs are identified by the numbers that must be defined
-> +		in the LED device binding documentation.
->   - label : The label for this LED.  If omitted, the label is
->     taken from the node name (excluding the unit address).
->
-> @@ -33,7 +46,8 @@ system-status {
->
->   camera-flash {
->   	label = "Flash";
-> +	led-sources = <0>, <1>;
->   	max-microamp = <50000>;
->   	flash-max-microamp = <320000>;
->   	flash-timeout-us = <500000>;
-> -}
-> +};
->
+Since this is very common, this series extend the simple MMC power sequence
+to support more than one reset GPIO and also an optional external clock.
 
+This is the third version of the series that addressed issues pointed out
+in the previous versions.
 
--- 
-Best Regards,
-Jacek Anaszewski
+The series depend on v4 "mmc: core: Add support for MMC power sequences":
+
+http://comments.gmane.org/gmane.linux.kernel.mmc/30665
+
+Javier Martinez Canillas (6):
+  mmc: pwrseq: Document that simple sequence support more than one GPIO
+  mmc: pwrseq_simple: Extend to support more pins
+  mmc: pwrseq: Document optional clock for the simple power sequence
+  mmc: pwrseq_simple: Add optional reference clock support
+  ARM: dts: exynos5250-snow: Enable wifi power-on
+  ARM: dts: exynos5250-snow: Add cap-sdio-irq to wifi mmc node
+
+ .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  | 11 ++-
+ arch/arm/boot/dts/exynos5250-snow.dts              | 26 ++++++-
+ drivers/mmc/core/pwrseq_simple.c                   | 89 ++++++++++++++++++----
+ 3 files changed, 107 insertions(+), 19 deletions(-)
+
+Patch #1 extends the simple MMC power sequence DT binding to support more
+than one GPIO and patch #2 adds the actual implementation.
+
+In the same way, patch #3 and #4 extend the simple MMC power sequence DT
+binding and pwrseq_simple driver to support an optional external clock.
+
+Finally as an example, patch #5 and patch #6 adds support for the wifi
+chip in the Exynos5250 Snow that needs all these resources. These two
+patches were added to the series only for completeness and should be
+picked by Kukjin through his linux-samsung tree.
+
+Best regards,
+Javier
