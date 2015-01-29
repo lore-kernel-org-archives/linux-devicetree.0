@@ -1,127 +1,128 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] iio: common: ssp_sensors: Add sensorhub driver
-Date: Thu, 29 Jan 2015 18:53:25 +0000
-Message-ID: <54CA81A5.50206@kernel.org>
-References: <1422453954-27317-1-git-send-email-k.wrona@samsung.com> <1422453954-27317-2-git-send-email-k.wrona@samsung.com> <54CA7D85.20409@kernel.org> <54CA8021.2020909@samsung.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
+Date: Thu, 29 Jan 2015 11:07:55 -0800
+Message-ID: <20150129190753.GN11960@sonymobile.com>
+References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <1422535712.28891.3.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54CA8021.2020909-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Karol Wrona <wrona.vy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422535712.28891.3.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Cavin, Courtney" <Courtney.Cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/01/15 18:46, Karol Wrona wrote:
-> On 01/29/2015 07:35 PM, Jonathan Cameron wrote:
->> On 28/01/15 14:05, Karol Wrona wrote:
->>> Sensorhub  is MCU dedicated to collect data and manage several sensors.
->>> Sensorhub is a spi device which provides a layer for IIO devices. It provides
->>> some data parsing and common mechanism for sensorhub sensors.
->>>
->>> Adds common sensorhub library for sensorhub driver and iio drivers
->>> which uses sensorhub MCU to communicate with sensors.
->>>
->>> Signed-off-by: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> A couple of build errors from this one...
->>
->> I've fixed them up and applied to the togreg branch of iio.git.
->> Pushed out as testing.  If you get a chance to check I didn't
->> mess anything up that would be great.
->>> ---
->>>  drivers/iio/common/Kconfig               |    1 +
->>>  drivers/iio/common/Makefile              |    1 +
->>>  drivers/iio/common/ssp_sensors/Kconfig   |   26 ++
->>>  drivers/iio/common/ssp_sensors/Makefile  |    8 +
->>>  drivers/iio/common/ssp_sensors/ssp.h     |  257 +++++++++++
->>>  drivers/iio/common/ssp_sensors/ssp_dev.c |  712 ++++++++++++++++++++++++++++++
->>>  drivers/iio/common/ssp_sensors/ssp_spi.c |  608 +++++++++++++++++++++++++
->>>  include/linux/iio/common/ssp_sensors.h   |   82 ++++
->>>  8 files changed, 1695 insertions(+)
->>>  create mode 100644 drivers/iio/common/ssp_sensors/Kconfig
->>>  create mode 100644 drivers/iio/common/ssp_sensors/Makefile
->>>  create mode 100644 drivers/iio/common/ssp_sensors/ssp.h
->>>  create mode 100644 drivers/iio/common/ssp_sensors/ssp_dev.c
->>>  create mode 100644 drivers/iio/common/ssp_sensors/ssp_spi.c
->>>  create mode 100644 include/linux/iio/common/ssp_sensors.h
->>>
->>> diff --git a/drivers/iio/common/Kconfig b/drivers/iio/common/Kconfig
->>> index 0b6e97d..790f106 100644
->>> --- a/drivers/iio/common/Kconfig
->>> +++ b/drivers/iio/common/Kconfig
->>> @@ -3,4 +3,5 @@
->>>  #
->>>  
->>>  source "drivers/iio/common/hid-sensors/Kconfig"
->>> +source "drivers/iio/common/ssp_sensors/Kconfig"
->>>  source "drivers/iio/common/st_sensors/Kconfig"
->>> diff --git a/drivers/iio/common/Makefile b/drivers/iio/common/Makefile
->>> index 3112df0..b1e4d9c 100644
->>> --- a/drivers/iio/common/Makefile
->>> +++ b/drivers/iio/common/Makefile
->>> @@ -8,4 +8,5 @@
->>>  
->>>  # When adding new entries keep the list in alphabetical order
->>>  obj-y += hid-sensors/
->>> +obj-y += ssp_sensors/
->>>  obj-y += st_sensors/
->>> diff --git a/drivers/iio/common/ssp_sensors/Kconfig b/drivers/iio/common/ssp_sensors/Kconfig
->>> new file mode 100644
->>> index 0000000..0ea4faf
->>> --- /dev/null
->>> +++ b/drivers/iio/common/ssp_sensors/Kconfig
->>> @@ -0,0 +1,26 @@
->>> +#
->>> +# SSP sensor drivers and commons configuration
->>> +#
->>> +menu "SSP Sensor Common"
->>> +
->>> +config IIO_SSP_SENSORS_COMMONS
->>> +	tristate "Commons for all SSP Sensor IIO drivers"
->>> +	depends on IIO_SSP_SENSORHUB
->>> +	select IIO_BUFFER
->>> +	select IIO_KFIFO_BUF
->>> +	help
->>> +	  Say yes here to build commons for SSP sensors.
->>> +	  To compile this as a module, choose M here: the module
->>> +	  will be called ssp_iio.
->>> +
->>> +config IIO_SSP_SENSORHUB
->>> +	tristate "Samsung Sensorhub driver"
->>> +	depends on SPI
->>> +	select MFD_CORE
->>> +	help
->>> +	  SSP driver for sensorhub. +	  If you say yes here you get ssp support for sensorhub.
->>> +	  To compile this driver as a module, choose M here: the
->>> +	  module will be called sensorhub.
->>> +
->>> +endmenu
->>> diff --git a/drivers/iio/common/ssp_sensors/Makefile b/drivers/iio/common/ssp_sensors/Makefile
->>> new file mode 100644
->>> index 0000000..1e0389e
->>> --- /dev/null
->>> +++ b/drivers/iio/common/ssp_sensors/Makefile
->>> @@ -0,0 +1,8 @@
->>> +#
->>> +# Makefile for SSP sensor drivers and commons.
->>> +#
->>> +
->>> +sensorhub-objs				:= ssp_dev.o ssp_spi.o
->>> +obj-$(CONFIG_IIO_SSP_SENSORHUB)		+= sensorhub.o
->>> +
->>> +obj-$(CONFIG_IIO_SSP_SENSORS_COMMONS) 	+= ssp_iio.o
->> This file isn't in this patch.
-> 
-> Thanks for doing that.
-> I had to mess sth up during rebase.
-> 
-> [...]
-> 
-That's fine, I just messed up moving it myself.  Forgot the Kconfig
-bit needed to move patch as well.
+On Thu 29 Jan 04:48 PST 2015, Ivan T. Ivanov wrote:
 
-Anyhow, hopefully the version I push in a few secs will be right!
+> 
+> Hi Bjorn,
+> 
+> Just few nitpick comments. 
+> 
 
-Jonathan
+Thanks.
+
+> On Fri, 2015-01-23 at 16:54 -0800, Bjorn Andersson wrote:
+> > From: Courtney Cavin cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> > 
+> > This adds support for the WLED ('White' LED) block on Qualcomm's
+> > PM8941 PMICs.
+> > 
+> > Signed-off-by: Courtney Cavin cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> > Signed-off-by: Bjorn Andersson andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> > ---
+> >  drivers/leds/Kconfig            |   8 +
+> >  drivers/leds/Makefile           |   1 +
+> >  drivers/leds/leds-pm8941-wled.c | 459 ++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 468 insertions(+)
+> >  create mode 100644 drivers/leds/leds-pm8941-wled.c
+> > 
+> 
+> <snip>
+> 
+> > +
+> > +#define PM8941_WLED_REG_VAL_BASE               0x40
+> > +#define  PM8941_WLED_REG_VAL_MAX               0xFFF
+> > +
+> > +#define PM8941_WLED_REG_MOD_EN                 0x46
+> > +#define  PM8941_WLED_REG_MOD_EN_BIT            BIT(7)
+> > +#define  PM8941_WLED_REG_MOD_EN_MASK           BIT(7)
+> 
+> Is it possible bit definitions to have same indentation like registers offsets?
+> 
+
+Well, yes ;)
+
+But I like the separation, so unless Bryan would like me to change it I prefer
+to leave it as is.
+
+> > 
+> > +struct pm8941_wled_config {
+> > +       u32 i_boost_limit;
+> > +       u32 ovp;
+> > +       u32 switch_freq;
+> > +       u32 num_strings;
+> > +       u32 i_limit;
+> > +       bool cs_out_en;
+> > +       bool ext_gen;
+> > +       bool cabc_en;
+> > +};
+> > +
+> 
+> Could this be further squashed to bellow structure?
+> 
+
+It could, but I see that it would simplify things.
+
+> > +struct pm8941_wled {
+> > +       struct regmap *regmap;
+> > +       u16 addr;
+> > +
+> > +       struct led_classdev cdev;
+> > +
+> > +       struct pm8941_wled_config cfg;
+> > +};
+> > +
+> > 
+> 
+> <snip>
+> 
+> > +static void pm8941_wled_set_brightness(struct led_classdev *cdev,
+> > +                                                                                       enum 
+> > led_brightness value)
+> > +{
+> > +       if (pm8941_wled_set(cdev, value)) {
+> 
+> pm8941_wled_set() is used only here, could it be merged into this function?
+>  
+
+It could, but that would just mean that we move these lines into the tail of
+pm8941_wled_set and replace all the returns with a bunch of gotos. So I don't
+think it's cleaner.
+
+> > +               dev_err(cdev->dev, "Unable to set brightness\n");
+> > +               return;
+> > +       }
+> > +       cdev->brightness = value;
+> > +}
+> > +
+> > 
+> 
+> Otherwise it looks good. Driver is loaded and device is detected
+> properly (i have added readings for type and subtype registers).
+> Do you know where I can measure result from changing brightness 
+> sysfs entry. I am using 8074 dragonboard?
+> 
+
+I'm not sure how this is exposed on the dragonboard. I've tested it on Xperia
+Z1 (honami) and the display lights up nicely.
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
