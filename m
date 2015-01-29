@@ -1,61 +1,23 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 02/24] Documentation: DT bindings: add more chip
- compatible strings for Tegra PCIe
-Date: Thu, 29 Jan 2015 08:45:37 -0600
-Message-ID: <CAL_JsqKMm=r+57ShskgbtNqnCGF1yKYDSJJFQ7o05keNzh5z+g@mail.gmail.com>
-References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234937.20644.9400.stgit@dusk.lan>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 3/6] iio: adc: fsl,imx25-gcq driver
+Date: Thu, 29 Jan 2015 12:51:36 -0200
+Message-ID: <CAOMZO5DdeQ+7wwytyRiTd6og2DarS9vBoMhq04gfvMfhS+UPag@mail.gmail.com>
+References: <1422108103-15052-1-git-send-email-mpa@pengutronix.de>
+	<1422108103-15052-4-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150128234937.20644.9400.stgit@dusk.lan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422108103-15052-4-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 5:49 PM, Paul Walmsley <paul@pwsan.com> wrote:
->
-> Add compatible strings for the PCIe IP blocks present on several Tegra
-> chips.  The primary objective here is to avoid checkpatch warnings,
-> per:
->
-> http://marc.info/?l=linux-tegra&m=142201349727836&w=2
->
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Alexandre Courbot <gnurou@gmail.com>
-> Cc: linux-tegra@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  .../bindings/pci/nvidia,tegra20-pcie.txt           |    2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> index d763e047c6ae..e772884f1c33 100644
-> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> @@ -5,6 +5,8 @@ Required properties:
->    - "nvidia,tegra20-pcie"
->    - "nvidia,tegra30-pcie"
->    - "nvidia,tegra124-pcie"
-> +  - "nvidia,tegra132-pcie" (not yet matched in the driver)
-> +  - "nvidia,tegra210-pcie" (not yet matched in the driver)
+Hi Markus,
 
-Whether the driver matches or not is irrelevant to the binding and may
-change over time. Does this mean the driver matches on something else
-or Tegra132 is not yet supported in the driver? If the former, what is
-important is what are the valid combinations of compatible properties
-and that is not captured here. In other words, what is the fallback
-compatible string for each chip?
+On Sat, Jan 24, 2015 at 12:01 PM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
 
-The same comments apply to the rest of the series.
+> +       priv->irq = platform_get_irq(pdev, 0);
+> +       if (priv->irq <= 0) {
 
-Rob
+This should be: if (priv->irq < 0) {
