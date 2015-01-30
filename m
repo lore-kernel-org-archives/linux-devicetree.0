@@ -1,81 +1,165 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/2] clk: qcom: gcc-msm8960: add child devices support.
-Date: Fri, 30 Jan 2015 18:06:37 +0000
-Message-ID: <54CBC82D.2050003@linaro.org>
-References: <1422613004-29802-1-git-send-email-srinivas.kandagatla@linaro.org>	<1422613060-29886-1-git-send-email-srinivas.kandagatla@linaro.org> <CAJAp7Oi_nxEyBZ0bTaQr6d-8sy8M4dFLJxOWCrniX6Pd9+_AGQ@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
+Date: Fri, 30 Jan 2015 13:06:27 -0500
+Message-ID: <54CBC823.3020905@ti.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com> <1422052359-12384-4-git-send-email-m-karicheri2@ti.com> <54C77616.80301@arm.com> <54C7DF13.20402@ti.com> <20150128110523.GC6646@e104818-lin.cambridge.arm.com> <54C9068D.8050701@arm.com> <20150128173048.GE31752@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7Oi_nxEyBZ0bTaQr6d-8sy8M4dFLJxOWCrniX6Pd9+_AGQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, edubezval@gmail.com, nrajan@codeaurora.com, Arnd Bergmann <arnd@arndb.de>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150128173048.GE31752@e104818-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Robin Murphy <Robin.Murphy@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 30/01/15 16:57, Bjorn Andersson wrote:
-> On Fri, Jan 30, 2015 at 2:17 AM, Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->> This patch adds support to add child devices to gcc as some of the
->> registers mapped by gcc are used by drivers like thermal sensors.
+On 01/28/2015 12:30 PM, Catalin Marinas wrote:
+> On Wed, Jan 28, 2015 at 03:55:57PM +0000, Robin Murphy wrote:
+>> On 28/01/15 11:05, Catalin Marinas wrote:
+>>> On Tue, Jan 27, 2015 at 06:55:15PM +0000, Murali Karicheri wrote:
+>>>> How about having the logic like this?
+>>>>
+>>>> 	ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
+>>>> 	if (ret<  0) {
+>>>> 		dma_addr = offset = 0;
+>>>> 		size = dev->coherent_dma_mask + 1;
+>>>> 	} else {
+>>>> 		offset = PFN_DOWN(paddr - dma_addr);
+>>>> 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>>>> 	}
+>>>>
+>>>> 	if (is_power_of_2(size + 1))
+>>>> 		size = size + 1;
+>>>> 	else if (!is_power_of_2(size))
+>>>> 	{
+>>>> 		dev_err(dev, "invalid size\n");
+>>>> 		return;
+>>>> 	}
+>>>
+>>> In of_dma_configure(), we currently assume that the default coherent
+>>> mask is 32-bit. In this thread:
+>>>
+>>> http://article.gmane.org/gmane.linux.kernel/1835096
+>>>
+>>> we talked about setting the coherent mask based on size automatically.
+>>> I'm not sure about the size but I think we can assume is 32-bit mask + 1
+>>> if it is not specified in the DT. Instead of just assuming a default
+>>> mask, let's assume a default size and create the mask based on this
+>>> (untested):
+>>>
+>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>>> index 5b33c6a21807..9ff8d1286b44 100644
+>>> --- a/drivers/of/platform.c
+>>> +++ b/drivers/of/platform.c
+>>> @@ -170,10 +170,10 @@ static void of_dma_configure(struct device *dev)
+>>>    	struct iommu_ops *iommu;
+>>>
+>>>    	/*
+>>> -	 * Set default dma-mask to 32 bit. Drivers are expected to setup
+>>> -	 * the correct supported dma_mask.
+>>> +	 * Set default size to cover the 32-bit. Drivers are expected to setup
+>>> +	 * the correct size and dma_mask.
+>>>    	 */
+>>> -	dev->coherent_dma_mask = DMA_BIT_MASK(32);
+>>> +	size = 1ULL<<  32;
+>>>
+>>>    	/*
+>>>    	 * Set it to coherent_dma_mask by default if the architecture
+>>> @@ -185,13 +185,24 @@ static void of_dma_configure(struct device *dev)
+>>>    	ret = of_dma_get_range(dev->of_node,&dma_addr,&paddr,&size);
+>>>    	if (ret<  0) {
+>>>    		dma_addr = offset = 0;
+>>> -		size = dev->coherent_dma_mask;
+>>>    	} else {
+>>>    		offset = PFN_DOWN(paddr - dma_addr);
+>>>    		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
+>>>    	}
+>>>    	dev->dma_pfn_offset = offset;
+>>>
+>>> +	/*
+>>> +	 * Workaround for DTs setting the size to a mask or 0.
+>>> +	 */
+>>> +	if (is_power_of_2(size + 1))
+>>> +		size += 1;
 >>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/clk/qcom/gcc-msm8960.c | 10 +++++++++-
->>   1 file changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/clk/qcom/gcc-msm8960.c b/drivers/clk/qcom/gcc-msm8960.c
->> index 0cd3e26..3ba77c5 100644
->> --- a/drivers/clk/qcom/gcc-msm8960.c
->> +++ b/drivers/clk/qcom/gcc-msm8960.c
->> @@ -15,6 +15,7 @@
->>   #include <linux/bitops.h>
->>   #include <linux/err.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/of_platform.h>
->>   #include <linux/module.h>
->>   #include <linux/of.h>
->>   #include <linux/of_device.h>
->> @@ -3658,6 +3659,7 @@ static int gcc_msm8960_probe(struct platform_device *pdev)
->>          struct clk *clk;
->>          struct device *dev = &pdev->dev;
->>          const struct of_device_id *match;
->> +       int ret;
->>
->>          match = of_match_device(gcc_msm8960_match_table, &pdev->dev);
->>          if (!match)
->> @@ -3677,12 +3679,18 @@ static int gcc_msm8960_probe(struct platform_device *pdev)
->>          if (IS_ERR(clk))
->>                  return PTR_ERR(clk);
->>
->> -       return qcom_cc_probe(pdev, match->data);
->> +       ret = qcom_cc_probe(pdev, match->data);
->> +       if (ret)
->> +               return ret;
->> +
->> +       return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+>> In fact, since the ilog2 below ends up effectively rounding down, we
+>> might as well do away with this check as well and just add 1
+>> unconditionally. The only time it makes any difference is when we want
+>> it to anyway!
 >
-> How about calling of_syscon_register() instead? That would give us a
-> handle to a regmap that can be consumed in e.g. the thermal driver.
-
-Two things:
-- Are you sure, this looks like of_syscon_register() is a static function
-- gcc node would be required to add "syscon" compatible
-
-Unless am missing some patches, Am not sure if going via syscon is right 
-thing here?
-
-Stephen Any comments?
-
-
-
---srini
-
+> Well, we could simply ignore the is_power_of_2() check but without
+> incrementing size as we don't know what arch_setup_dma_ops() does with
+> it.
 >
-> I think this use case is exactly why that was introduced.
+> I think we can remove this check altogether (we leaved without it for a
+> while) but we need to add 1 when calculating the mask:
 >
-> Regards,
-> Bjorn
+> 	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
+> 				     DMA_BIT_MASK(ilog2(size + 1)));
 >
+For Keystone, the dma_addr is to be taken care as well to determine the 
+mask. The above will not work.
+
+Based on the discussion so far, this is the function I have come up with 
+incorporating the suggestions. Please review this and see if I have 
+missed out any. This works fine on Keystone.
+
+void of_dma_configure(struct device *dev, struct device_node *np)
+{
+	u64 dma_addr = 0, paddr, size;
+	int ret;
+	bool coherent;
+	unsigned long offset = 0;
+	struct iommu_ops *iommu;
+
+	/*
+	 * Set default size to cover the 32-bit. Drivers are expected to setup
+	 * the correct size and dma_mask.
+   	 */
+	size = 1ULL << 32;
+
+	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+	if (!ret) {
+		offset = PFN_DOWN(paddr - dma_addr);
+		if (!size) {
+			dev_err(dev, "Invalid size (%llx)\n",
+				size);
+			return;
+		}
+		if (size & 1) {
+			size = size + 1;
+			dev_warn(dev, "Incorrect usage of size (%llx)\n",
+				 size);
+		}
+		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+	}
+	dev->dma_pfn_offset = offset;
+
+	/*
+	 * Coherent DMA masks larger than 32-bit must be explicitly set by the
+	 * driver.
+	 */
+	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
+				     DMA_BIT_MASK(ilog2(dma_addr + size)));
+	/*
+	 * Set dma_mask to coherent_dma_mask by default if the architecture
+	 * code has not set it.
+	 */
+	if (!dev->dma_mask)
+		dev->dma_mask = &dev->coherent_dma_mask;
+
+	coherent = of_dma_is_coherent(np);
+	dev_dbg(dev, "device is%sdma coherent\n",
+		coherent ? " " : " not ");
+
+	iommu = of_iommu_configure(dev, np);
+	dev_dbg(dev, "device is%sbehind an iommu\n",
+		iommu ? " " : " not ");
+
+	arch_setup_dma_ops(dev, dma_addr, size, iommu, coherent);
+}
+
+
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
