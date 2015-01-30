@@ -1,213 +1,248 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 2/7] phy: miphy365x: Pass sysconfig register offsets
- via syscfg dt property.
-Date: Fri, 30 Jan 2015 16:38:10 +0530
-Message-ID: <54CB661A.7050706@ti.com>
-References: <1420643052-4506-1-git-send-email-peter.griffin@linaro.org> <1420643052-4506-3-git-send-email-peter.griffin@linaro.org> <54CB5E7E.8050507@ti.com> <54CB618E.60808@st.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
+Date: Fri, 30 Jan 2015 13:09:53 +0200
+Message-ID: <54CB6681.1070008@ti.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com> <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com> <54C99197.5070605@samsung.com> <54CA18EF.2060607@ti.com> <54CACAEF.6070208@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54CB618E.60808@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <maxime.coquelin@st.com>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, peppe.cavallaro@st.com, arnd@arndb.de
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54CACAEF.6070208-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Chanwoo,
 
-On Friday 30 January 2015 04:18 PM, Maxime Coquelin wrote:
-> Hi Kishon,
+On 30/01/15 02:06, Chanwoo Choi wrote:
+> Hi Roger,
 > 
-> On 01/30/2015 11:35 AM, Kishon Vijay Abraham I wrote:
->> Hi,
+> On 01/29/2015 08:26 PM, Roger Quadros wrote:
+>> Chanwoo,
 >>
->> On Wednesday 07 January 2015 08:34 PM, Peter Griffin wrote:
->>> Based on Arnds review comments here https://lkml.org/lkml/2014/11/13/161,
->>> update the miphy365 phy driver to access sysconfig register offsets via
->>> syscfg dt property.
+>> On 29/01/15 03:49, Chanwoo Choi wrote:
+>>> Hi Roger,
 >>>
->>> This is because the reg property should not be mixing address spaces
->>> like it does currently for miphy365. This change then also aligns us
->>> to how other platforms such as keystone and bcm7445 pass there syscon
->>> offsets via DT.
+>>> We need to discuss one point about 'id_irqwake'.
+>>> I don't recommend to use 'id_irqwake' field.
 >>>
->>> This patch breaks DT compatibility, but this platform is considered WIP,
->>> and is only used by a few developers who are upstreaming support for it.
->>> This change has been done as a single atomic commit to ensure it is
->>> bisectable.
->> I'm dropping this from my tree since I didn't get Ack from
->> "arch/arm/boot/dts/stih416.dtsi" Maintainer.
-> Sorry, on cover letter, I replied the series looked good to me.
-> So you can add:
-> 
-> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
-> 
-> And even:
-> 
-> Tested-by: Maxime Coquelin <maxime.coquelin@st.com>
-
-Thanks. I'll merge them now.
-I'd assume there won't be any conflicts when it gets merged to linus tree.
-
-Cheers
-Kishon
-
-> 
-> Kind regards,
-> Maxime
-> 
+>>> And I catch build warning by using "select" keywork in Kconfig.
+>>> It is my wrong guide of "select" keyword. So, I'll change it 
+>>> as 'depends on' keyword.
+>>>
+>>> Looks good to me except for 'id_irqwake'. 
+>>> I'll apply this patch on 3.21 queue after completing this discussion.
+>>>
+>>> On 01/28/2015 09:15 PM, Roger Quadros wrote:
+>>>> This driver observes the USB ID pin connected over a GPIO and
+>>>> updates the USB cable extcon states accordingly.
+>>>>
+>>>> The existing GPIO extcon driver is not suitable for this purpose
+>>>> as it needs to be taught to understand USB cable states and it
+>>>> can't handle more than one cable per instance.
+>>>>
+>>>> For the USB case we need to handle 2 cable states.
+>>>> 1) USB (attach/detach)
+>>>> 2) USB-Host (attach/detach)
+>>>>
+>>>> This driver can be easily updated in the future to handle VBUS
+>>>> events in case it happens to be available on GPIO for any platform.
+>>>>
+>>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>> v3:
+>>>> - removed IRQF_NO_SUSPEND flag. Added IRQF_TRIGGER_RISING and
+>>>>   IRQF_TRIGGER_FALLING
+>>>> - Added disable_irq() to suspend() and enable_irq() to resume()
+>>>>
+>>>>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  18 ++
+>>>>  drivers/extcon/Kconfig                             |   7 +
+>>>>  drivers/extcon/Makefile                            |   1 +
+>>>>  drivers/extcon/extcon-usb-gpio.c                   | 233 +++++++++++++++++++++
+>>>>  4 files changed, 259 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>>>>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>>>> new file mode 100644
+>>>> index 0000000..85fe6b0
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>>>> @@ -0,0 +1,18 @@
+>>>> +USB GPIO Extcon device
+>>>> +
+>>>> +This is a virtual device used to generate USB cable states from the USB ID pin
+>>>> +connected to a GPIO pin.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: Should be "linux,extcon-usb-gpio"
+>>>> +- id-gpio: gpio for USB ID pin. See gpio binding.
+>>>> +
+>>>> +Example:
+>>>> +	extcon_usb1 {
+>>>> +		compatible = "linux,extcon-usb-gpio";
+>>>> +		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
+>>>> +	}
+>>>> +
+>>>> +	&omap_dwc3_1 {
+>>>> +		extcon = <&extcon_usb1>;
+>>>> +	};
+>>>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+>>>> index 6a1f7de..fd11536 100644
+>>>> --- a/drivers/extcon/Kconfig
+>>>> +++ b/drivers/extcon/Kconfig
+>>>> @@ -93,4 +93,11 @@ config EXTCON_SM5502
+>>>>  	  Silicon Mitus SM5502. The SM5502 is a USB port accessory
+>>>>  	  detector and switch.
+>>>>  
+>>>> +config EXTCON_USB_GPIO
+>>>> +	tristate "USB GPIO extcon support"
+>>>> +	select GPIOLIB
+>>>
+>>> I catch the build warning if using 'select' instead of 'depends on' as following:
+>>> It is my wrong guide to you. So, I'll modify it by using "depends on" as your original patch.
 >>
->> Thanks
->> Kishon
->>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
->>> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
->>> ---
->>>   .../devicetree/bindings/phy/phy-miphy365x.txt      | 15 +++++------
->>>   arch/arm/boot/dts/stih416.dtsi                     | 10 ++++----
->>>   drivers/phy/phy-miphy365x.c                        | 29
->>> ++++++++--------------
->>>   3 files changed, 23 insertions(+), 31 deletions(-)
+>> OK. Thanks.
+>>
 >>>
->>> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->>> b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->>> index 42c8808..9802d5d 100644
->>> --- a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->>> +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->>> @@ -6,8 +6,10 @@ for SATA and PCIe.
->>>     Required properties (controller (parent) node):
->>>   - compatible    : Should be "st,miphy365x-phy"
->>> -- st,syscfg     : Should be a phandle of the system configuration register
->>> group
->>> -          which contain the SATA, PCIe mode setting bits
->>> +- st,syscfg     : Phandle / integer array property. Phandle of sysconfig group
->>> +          containing the miphy registers and integer array should contain
->>> +          an entry for each port sub-node, specifying the control
->>> +          register offset inside the sysconfig group.
->>>     Required nodes    :  A sub-node is required for each channel the controller
->>>              provides. Address range information including the usual
->>> @@ -26,7 +28,6 @@ Required properties (port (child) node):
->>>             registers filled in "reg":
->>>               - sata:   For SATA devices
->>>               - pcie:   For PCIe devices
->>> -            - syscfg: To specify the syscfg based config register
->>>     Optional properties (port (child) node):
->>>   - st,sata-gen         :    Generation of locally attached SATA IP.
->>> Expected values
->>> @@ -39,20 +40,20 @@ Example:
->>>         miphy365x_phy: miphy365x@fe382000 {
->>>           compatible      = "st,miphy365x-phy";
->>> -        st,syscfg      = <&syscfg_rear>;
->>> +        st,syscfg      = <&syscfg_rear 0x824 0x828>;
->>>           #address-cells    = <1>;
->>>           #size-cells    = <1>;
->>>           ranges;
->>>             phy_port0: port@fe382000 {
->>> -            reg = <0xfe382000 0x100>, <0xfe394000 0x100>, <0x824 0x4>;
->>> -            reg-names = "sata", "pcie", "syscfg";
->>> +            reg = <0xfe382000 0x100>, <0xfe394000 0x100>;
->>> +            reg-names = "sata", "pcie";
->>>               #phy-cells = <1>;
->>>               st,sata-gen = <3>;
->>>           };
->>>             phy_port1: port@fe38a000 {
->>> -            reg = <0xfe38a000 0x100>, <0xfe804000 0x100>, <0x828 0x4>;;
->>> +            reg = <0xfe38a000 0x100>, <0xfe804000 0x100>;;
->>>               reg-names = "sata", "pcie", "syscfg";
->>>               #phy-cells = <1>;
->>>               st,pcie-tx-pol-inv;
->>> diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
->>> index fad9073..85afe01 100644
->>> --- a/arch/arm/boot/dts/stih416.dtsi
->>> +++ b/arch/arm/boot/dts/stih416.dtsi
->>> @@ -283,21 +283,21 @@
->>>             miphy365x_phy: phy@fe382000 {
->>>               compatible      = "st,miphy365x-phy";
->>> -            st,syscfg      = <&syscfg_rear>;
->>> +            st,syscfg    = <&syscfg_rear 0x824 0x828>;
->>>               #address-cells    = <1>;
->>>               #size-cells    = <1>;
->>>               ranges;
->>>                 phy_port0: port@fe382000 {
->>>                   #phy-cells = <1>;
->>> -                reg = <0xfe382000 0x100>, <0xfe394000 0x100>, <0x824 0x4>;
->>> -                reg-names = "sata", "pcie", "syscfg";
->>> +                reg = <0xfe382000 0x100>, <0xfe394000 0x100>;
->>> +                reg-names = "sata", "pcie";
->>>               };
->>>                 phy_port1: port@fe38a000 {
->>>                   #phy-cells = <1>;
->>> -                reg = <0xfe38a000 0x100>, <0xfe804000 0x100>, <0x828 0x4>;
->>> -                reg-names = "sata", "pcie", "syscfg";
->>> +                reg = <0xfe38a000 0x100>, <0xfe804000 0x100>;
->>> +                reg-names = "sata", "pcie";
->>>               };
->>>           };
->>>   diff --git a/drivers/phy/phy-miphy365x.c b/drivers/phy/phy-miphy365x.c
->>> index 6ab43a8..6c80154 100644
->>> --- a/drivers/phy/phy-miphy365x.c
->>> +++ b/drivers/phy/phy-miphy365x.c
->>> @@ -141,7 +141,7 @@ struct miphy365x_phy {
->>>       bool pcie_tx_pol_inv;
->>>       bool sata_tx_pol_inv;
->>>       u32 sata_gen;
->>> -    u64 ctrlreg;
->>> +    u32 ctrlreg;
->>>       u8 type;
->>>   };
->>>   @@ -179,7 +179,7 @@ static int miphy365x_set_path(struct miphy365x_phy
->>> *miphy_phy,
->>>       bool sata = (miphy_phy->type == MIPHY_TYPE_SATA);
->>>         return regmap_update_bits(miphy_dev->regmap,
->>> -                  (unsigned int)miphy_phy->ctrlreg,
->>> +                  miphy_phy->ctrlreg,
->>>                     SYSCFG_SELECT_SATA_MASK,
->>>                     sata << SYSCFG_SELECT_SATA_POS);
->>>   }
->>> @@ -445,7 +445,6 @@ int miphy365x_get_addr(struct device *dev, struct
->>> miphy365x_phy *miphy_phy,
->>>   {
->>>       struct device_node *phynode = miphy_phy->phy->dev.of_node;
->>>       const char *name;
->>> -    const __be32 *taddr;
->>>       int type = miphy_phy->type;
->>>       int ret;
->>>   @@ -455,22 +454,6 @@ int miphy365x_get_addr(struct device *dev, struct
->>> miphy365x_phy *miphy_phy,
->>>           return ret;
->>>       }
->>>   -    if (!strncmp(name, "syscfg", 6)) {
->>> -        taddr = of_get_address(phynode, index, NULL, NULL);
->>> -        if (!taddr) {
->>> -            dev_err(dev, "failed to fetch syscfg address\n");
->>> -            return -EINVAL;
->>> -        }
->>> -
->>> -        miphy_phy->ctrlreg = of_translate_address(phynode, taddr);
->>> -        if (miphy_phy->ctrlreg == OF_BAD_ADDR) {
->>> -            dev_err(dev, "failed to translate syscfg address\n");
->>> -            return -EINVAL;
->>> -        }
->>> -
->>> -        return 0;
->>> -    }
->>> -
->>>       if (!((!strncmp(name, "sata", 4) && type == MIPHY_TYPE_SATA) ||
->>>             (!strncmp(name, "pcie", 4) && type == MIPHY_TYPE_PCIE)))
->>>           return 0;
->>> @@ -606,7 +589,15 @@ static int miphy365x_probe(struct platform_device *pdev)
->>>               return ret;
->>>             phy_set_drvdata(phy, miphy_dev->phys[port]);
->>> +
->>>           port++;
->>> +        /* sysconfig offsets are indexed from 1 */
->>> +        ret = of_property_read_u32_index(np, "st,syscfg", port,
->>> +                    &miphy_phy->ctrlreg);
->>> +        if (ret) {
->>> +            dev_err(&pdev->dev, "No sysconfig offset found\n");
->>> +            return ret;
->>> +        }
->>>       }
->>>         provider = devm_of_phy_provider_register(&pdev->dev, miphy365x_xlate);
+>>> make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- zImage  -j 8
+>>> scripts/kconfig/conf --silentoldconfig Kconfig
+>>> drivers/gpio/Kconfig:34:error: recursive dependency detected!
+>>> drivers/gpio/Kconfig:34:	symbol GPIOLIB is selected by EXTCON_USB_GPIO
+>>> drivers/extcon/Kconfig:96:	symbol EXTCON_USB_GPIO depends on EXTCON
+>>> drivers/extcon/Kconfig:1:	symbol EXTCON is selected by CHARGER_MANAGER
+>>> drivers/power/Kconfig:316:	symbol CHARGER_MANAGER depends on POWER_SUPPLY
+>>> drivers/power/Kconfig:1:	symbol POWER_SUPPLY is selected by HID_SONY
+>>> drivers/hid/Kconfig:670:	symbol HID_SONY depends on NEW_LEDS
+>>> drivers/leds/Kconfig:8:	symbol NEW_LEDS is selected by BCMA_DRIVER_GPIO
+>>> drivers/bcma/Kconfig:75:	symbol BCMA_DRIVER_GPIO depends on GPIOLIB
 >>>
+>>>> +	help
+>>>> +	  Say Y here to enable GPIO based USB cable detection extcon support.
+>>>> +	  Used typically if GPIO is used for USB ID pin detection.
+>>>> +
+>>>>  endif # MULTISTATE_SWITCH
+>>>> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
+>>>> index 0370b42..6a08a98 100644
+>>>> --- a/drivers/extcon/Makefile
+>>>> +++ b/drivers/extcon/Makefile
+>>>> @@ -12,3 +12,4 @@ obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
+>>>>  obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
+>>>>  obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
+>>>>  obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
+>>>> +obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
+>>>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+>>>> new file mode 100644
+>>>> index 0000000..99a58b2
+>>>> --- /dev/null
+>>>> +++ b/drivers/extcon/extcon-usb-gpio.c
+>>>> @@ -0,0 +1,233 @@
+>>>> +/**
+>>>> + * drivers/extcon/extcon-usb-gpio.c - USB GPIO extcon driver
+>>>> + *
+>>>> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
+>>>> + * Author: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or modify
+>>>> + * it under the terms of the GNU General Public License version 2 as
+>>>> + * published by the Free Software Foundation.
+>>>> + *
+>>>> + * This program is distributed in the hope that it will be useful,
+>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>> + * GNU General Public License for more details.
+>>>> + */
+>>>> +
+>>>> +#include <linux/extcon.h>
+>>>> +#include <linux/init.h>
+>>>> +#include <linux/interrupt.h>
+>>>> +#include <linux/irq.h>
+>>>> +#include <linux/kernel.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/of_gpio.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/slab.h>
+>>>> +#include <linux/workqueue.h>
+>>>> +
+>>>> +#define USB_GPIO_DEBOUNCE_MS	20	/* ms */
+>>>> +
+>>>> +struct usb_extcon_info {
+>>>> +	struct device *dev;
+>>>> +	struct extcon_dev *edev;
+>>>> +
+>>>> +	struct gpio_desc *id_gpiod;
+>>>> +	int id_irq;
+>>>> +	bool id_irqwake;		/* ID wakeup enabled flag */
+>>>
+>>> Do you really think id_irqwake is necessary?
+>>> I think it is not necessary.
+>>
+>> I will explain below why it is necessary.
+>>
+>>>
+>>>> +
+>>>> +	unsigned long debounce_jiffies;
+>>>> +	struct delayed_work wq_detcable;
+>>>> +};
+>>>> +
+>>>> +/* List of detectable cables */
+>>>> +enum {
+>>>> +	EXTCON_CABLE_USB = 0,
+>>>> +	EXTCON_CABLE_USB_HOST,
+>>>> +
+>>>> +	EXTCON_CABLE_END,
+>>>> +};
+>>>> +
+>>>> +static const char *usb_extcon_cable[] = {
+>>>> +	[EXTCON_CABLE_USB] = "USB",
+>>>> +	[EXTCON_CABLE_USB_HOST] = "USB-Host",
+>>>> +	NULL,
+>>>> +};
+>>>> +
+>>>
+>>> [snip]
+>>>
+>>>> +
+>>>> +static int usb_extcon_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct usb_extcon_info *info = platform_get_drvdata(pdev);
+>>>> +
+>>>> +	cancel_delayed_work_sync(&info->wq_detcable);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +#ifdef CONFIG_PM_SLEEP
+>>>> +static int usb_extcon_suspend(struct device *dev)
+>>>> +{
+>>>> +	struct usb_extcon_info *info = dev_get_drvdata(dev);
+>>>> +
+>>>> +	if (device_may_wakeup(dev))
+>>>> +		if (!enable_irq_wake(info->id_irq))
+>>>> +			info->id_irqwake = true;
+>>>> +
+>>>
+>>> You can simplify this code as following without 'id_irqwake':
+>>>
+>>> 	if (device_may_wakeup(dev))
+>>> 		enable_irq_wake(info->id_irq);
+>>
+>> enable_irq_wake() can fail. And if it does we need to keep track of it
+>> to prevent unbalanced disable_irq_wake() call in resume().
+>> That's the reason I've added the id_irqwake flag in struct usb_extcon_info.
 > 
+> It is not proper solution using id_irqwake. If fail to execute enable_irq_wake(),
+> usb_extcon_suspend() function have to return error immediately.
+> 
+
+Your point is valid. I will now need to investigate why enable_irq_wake() is failing
+when used for GPIO of PCA857x on DRA7-evm.
+
+cheers,
+-roger
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
