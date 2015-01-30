@@ -1,211 +1,52 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v2 2/7] phy: miphy365x: Pass sysconfig register offsets
- via syscfg dt property.
-Date: Fri, 30 Jan 2015 11:48:46 +0100
-Message-ID: <54CB618E.60808@st.com>
-References: <1420643052-4506-1-git-send-email-peter.griffin@linaro.org> <1420643052-4506-3-git-send-email-peter.griffin@linaro.org> <54CB5E7E.8050507@ti.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
+Date: Fri, 30 Jan 2015 12:58:39 +0200
+Message-ID: <54CB63DF.6070007@ti.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com> <1422274532-9488-2-git-send-email-rogerq@ti.com> <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com> <54C66B0D.9040109@ti.com> <54C6EFC8.1090601@samsung.com> <54C7B0E5.20101@ti.com> <54C8472B.6070302@samsung.com> <54C8D238.4080001@ti.com> <20150128170954.GQ28663@atomide.com> <54CA1A12.5080507@ti.com> <20150129165625.GB16250@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54CB5E7E.8050507@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, peppe.cavallaro@st.com, arnd@arndb.de
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150129165625.GB16250-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-On 01/30/2015 11:35 AM, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Wednesday 07 January 2015 08:34 PM, Peter Griffin wrote:
->> Based on Arnds review comments here https://lkml.org/lkml/2014/11/13/161,
->> update the miphy365 phy driver to access sysconfig register offsets via
->> syscfg dt property.
+On 29/01/15 18:56, Tony Lindgren wrote:
+> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150129 03:34]:
+>> On 28/01/15 19:09, Tony Lindgren wrote:
+>>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150128 04:15]:
+>>>> On 28/01/15 04:19, Chanwoo Choi wrote:
+>>>>>>
+>>>>>> I still fail to understand that we need to call disable_irq() in .suspend() and
+>>>>>> enable_irq() in .resume()
+>>>>>>
+>>>>>> can you point me to any other drivers doing so?
+>>>>>
+>>>>> You can refer the suspend function in drivers/mfd/max14577.c or drivers/mfd/max77693.c.
+>>>>> The max14577_suspend() includes the detailed comment for why using disable_irq() in suspend function.
+>>>>>
+>>>>> In max14577 case, max14577_suspend() use disable_irq() function because of i2c dependency.
+>>>>> If max14577 device is wake-up from suspend state before completing the resume sequence
+>>>>> of i2c, max14577 may fail to read/write i2c communication.
+>>>>
+>>>> Thanks for this information. I will add disable/enable_irq() in suspend/resume().
+>>>
+>>> Are the .dts changes safe for me to apply already?
+>>>
 >>
->> This is because the reg property should not be mixing address spaces
->> like it does currently for miphy365. This change then also aligns us
->> to how other platforms such as keystone and bcm7445 pass there syscon
->> offsets via DT.
->>
->> This patch breaks DT compatibility, but this platform is considered WIP,
->> and is only used by a few developers who are upstreaming support for it.
->> This change has been done as a single atomic commit to ensure it is
->> bisectable.
-> I'm dropping this from my tree since I didn't get Ack from
-> "arch/arm/boot/dts/stih416.dtsi" Maintainer.
-Sorry, on cover letter, I replied the series looked good to me.
-So you can add:
+>> Yes Tony, you can pick them. Thanks.
+> 
+> OK will apply the dts changes into omap-for-v3.20/dt thanks.
+> I have also the defconfig changes tagged, will apply those
+> a bit later probably as a fix after the driver is merged.
 
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+Sounds good to me. Thanks Tony.
 
-And even:
-
-Tested-by: Maxime Coquelin <maxime.coquelin@st.com>
-
-Kind regards,
-Maxime
-
->
-> Thanks
-> Kishon
->> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
->> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>   .../devicetree/bindings/phy/phy-miphy365x.txt      | 15 +++++------
->>   arch/arm/boot/dts/stih416.dtsi                     | 10 ++++----
->>   drivers/phy/phy-miphy365x.c                        | 29 ++++++++--------------
->>   3 files changed, 23 insertions(+), 31 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->> index 42c8808..9802d5d 100644
->> --- a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->> +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
->> @@ -6,8 +6,10 @@ for SATA and PCIe.
->>   
->>   Required properties (controller (parent) node):
->>   - compatible    : Should be "st,miphy365x-phy"
->> -- st,syscfg     : Should be a phandle of the system configuration register group
->> -		  which contain the SATA, PCIe mode setting bits
->> +- st,syscfg     : Phandle / integer array property. Phandle of sysconfig group
->> +		  containing the miphy registers and integer array should contain
->> +		  an entry for each port sub-node, specifying the control
->> +		  register offset inside the sysconfig group.
->>   
->>   Required nodes	:  A sub-node is required for each channel the controller
->>   		   provides. Address range information including the usual
->> @@ -26,7 +28,6 @@ Required properties (port (child) node):
->>   		  registers filled in "reg":
->>   			- sata:   For SATA devices
->>   			- pcie:   For PCIe devices
->> -			- syscfg: To specify the syscfg based config register
->>   
->>   Optional properties (port (child) node):
->>   - st,sata-gen	     :	Generation of locally attached SATA IP. Expected values
->> @@ -39,20 +40,20 @@ Example:
->>   
->>   	miphy365x_phy: miphy365x@fe382000 {
->>   		compatible      = "st,miphy365x-phy";
->> -		st,syscfg  	= <&syscfg_rear>;
->> +		st,syscfg  	= <&syscfg_rear 0x824 0x828>;
->>   		#address-cells	= <1>;
->>   		#size-cells	= <1>;
->>   		ranges;
->>   
->>   		phy_port0: port@fe382000 {
->> -			reg = <0xfe382000 0x100>, <0xfe394000 0x100>, <0x824 0x4>;
->> -			reg-names = "sata", "pcie", "syscfg";
->> +			reg = <0xfe382000 0x100>, <0xfe394000 0x100>;
->> +			reg-names = "sata", "pcie";
->>   			#phy-cells = <1>;
->>   			st,sata-gen = <3>;
->>   		};
->>   
->>   		phy_port1: port@fe38a000 {
->> -			reg = <0xfe38a000 0x100>, <0xfe804000 0x100>, <0x828 0x4>;;
->> +			reg = <0xfe38a000 0x100>, <0xfe804000 0x100>;;
->>   			reg-names = "sata", "pcie", "syscfg";
->>   			#phy-cells = <1>;
->>   			st,pcie-tx-pol-inv;
->> diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
->> index fad9073..85afe01 100644
->> --- a/arch/arm/boot/dts/stih416.dtsi
->> +++ b/arch/arm/boot/dts/stih416.dtsi
->> @@ -283,21 +283,21 @@
->>   
->>   		miphy365x_phy: phy@fe382000 {
->>   			compatible      = "st,miphy365x-phy";
->> -			st,syscfg  	= <&syscfg_rear>;
->> +			st,syscfg	= <&syscfg_rear 0x824 0x828>;
->>   			#address-cells	= <1>;
->>   			#size-cells	= <1>;
->>   			ranges;
->>   
->>   			phy_port0: port@fe382000 {
->>   				#phy-cells = <1>;
->> -				reg = <0xfe382000 0x100>, <0xfe394000 0x100>, <0x824 0x4>;
->> -				reg-names = "sata", "pcie", "syscfg";
->> +				reg = <0xfe382000 0x100>, <0xfe394000 0x100>;
->> +				reg-names = "sata", "pcie";
->>   			};
->>   
->>   			phy_port1: port@fe38a000 {
->>   				#phy-cells = <1>;
->> -				reg = <0xfe38a000 0x100>, <0xfe804000 0x100>, <0x828 0x4>;
->> -				reg-names = "sata", "pcie", "syscfg";
->> +				reg = <0xfe38a000 0x100>, <0xfe804000 0x100>;
->> +				reg-names = "sata", "pcie";
->>   			};
->>   		};
->>   
->> diff --git a/drivers/phy/phy-miphy365x.c b/drivers/phy/phy-miphy365x.c
->> index 6ab43a8..6c80154 100644
->> --- a/drivers/phy/phy-miphy365x.c
->> +++ b/drivers/phy/phy-miphy365x.c
->> @@ -141,7 +141,7 @@ struct miphy365x_phy {
->>   	bool pcie_tx_pol_inv;
->>   	bool sata_tx_pol_inv;
->>   	u32 sata_gen;
->> -	u64 ctrlreg;
->> +	u32 ctrlreg;
->>   	u8 type;
->>   };
->>   
->> @@ -179,7 +179,7 @@ static int miphy365x_set_path(struct miphy365x_phy *miphy_phy,
->>   	bool sata = (miphy_phy->type == MIPHY_TYPE_SATA);
->>   
->>   	return regmap_update_bits(miphy_dev->regmap,
->> -				  (unsigned int)miphy_phy->ctrlreg,
->> +				  miphy_phy->ctrlreg,
->>   				  SYSCFG_SELECT_SATA_MASK,
->>   				  sata << SYSCFG_SELECT_SATA_POS);
->>   }
->> @@ -445,7 +445,6 @@ int miphy365x_get_addr(struct device *dev, struct miphy365x_phy *miphy_phy,
->>   {
->>   	struct device_node *phynode = miphy_phy->phy->dev.of_node;
->>   	const char *name;
->> -	const __be32 *taddr;
->>   	int type = miphy_phy->type;
->>   	int ret;
->>   
->> @@ -455,22 +454,6 @@ int miphy365x_get_addr(struct device *dev, struct miphy365x_phy *miphy_phy,
->>   		return ret;
->>   	}
->>   
->> -	if (!strncmp(name, "syscfg", 6)) {
->> -		taddr = of_get_address(phynode, index, NULL, NULL);
->> -		if (!taddr) {
->> -			dev_err(dev, "failed to fetch syscfg address\n");
->> -			return -EINVAL;
->> -		}
->> -
->> -		miphy_phy->ctrlreg = of_translate_address(phynode, taddr);
->> -		if (miphy_phy->ctrlreg == OF_BAD_ADDR) {
->> -			dev_err(dev, "failed to translate syscfg address\n");
->> -			return -EINVAL;
->> -		}
->> -
->> -		return 0;
->> -	}
->> -
->>   	if (!((!strncmp(name, "sata", 4) && type == MIPHY_TYPE_SATA) ||
->>   	      (!strncmp(name, "pcie", 4) && type == MIPHY_TYPE_PCIE)))
->>   		return 0;
->> @@ -606,7 +589,15 @@ static int miphy365x_probe(struct platform_device *pdev)
->>   			return ret;
->>   
->>   		phy_set_drvdata(phy, miphy_dev->phys[port]);
->> +
->>   		port++;
->> +		/* sysconfig offsets are indexed from 1 */
->> +		ret = of_property_read_u32_index(np, "st,syscfg", port,
->> +					&miphy_phy->ctrlreg);
->> +		if (ret) {
->> +			dev_err(&pdev->dev, "No sysconfig offset found\n");
->> +			return ret;
->> +		}
->>   	}
->>   
->>   	provider = devm_of_phy_provider_register(&pdev->dev, miphy365x_xlate);
->>
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
