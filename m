@@ -1,38 +1,69 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Re: [PATCH v4 1/3] pinctrl: add driver for Amlogic Meson SoCs
-Date: Fri, 30 Jan 2015 14:49:26 +0100
-Message-ID: <CACRpkdbp4VXuGA+Lhm0sE_SGzQT8OEx7B+BBKZmXoxOUHw1r-g@mail.gmail.com>
-References: <1421518516-26976-1-git-send-email-b.galvani@gmail.com>
- <1421518516-26976-2-git-send-email-b.galvani@gmail.com>
- <CACRpkdZ6CX1XePa0sOY-0B9He9jYPNLqUtkk3LEGeT6eSQW9ew@mail.gmail.com>
- <2015012211022773401912@163.com>
- <CACRpkdb=9K62kJbQHWK=Bqfcz7zVckKcF3riC-9RDdd-8vG7bg@mail.gmail.com>
- <2015012310244690614024@163.com>
+Subject: Re: [PATCH 1/4] pinctrl: Broadcom Cygnus pinctrl device tree binding
+Date: Fri, 30 Jan 2015 14:54:23 +0100
+Message-ID: <CACRpkdZF8UHQEQh6AULEQ4RktgY2QNx0rbN_NHRj6gDsUJqM0A@mail.gmail.com>
+References: <rjui@broadcom.com>
+	<1417131990-17954-1-git-send-email-rjui@broadcom.com>
+	<1417131990-17954-2-git-send-email-rjui@broadcom.com>
+	<CACRpkdb5pNMbXmWGjrGpAYNLLwv6pWWOJQy0C6BLetNcStFM6A@mail.gmail.com>
+	<54B01D44.5080601@broadcom.com>
+	<CACRpkdbW5P=w0CPYYf_gfBuD7W0WOdAYCKpTXM5MsK9mdYDc5w@mail.gmail.com>
+	<54C1AE9F.3020407@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2015012310244690614024@163.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: 48169172 <48169172@163.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Victor Wan <victor.wan@amlogic.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, "b.galvani" <b.galvani@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Kumar Gala <galak@codeaurora.org>, "carlo@caione.org" <carlo@caione.org>, Jerry Cao <jerry.cao@amlogic.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54C1AE9F.3020407@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMjMsIDIwMTUgYXQgMzoyNSBBTSwgNDgxNjkxNzIgPDQ4MTY5MTcyQDE2My5j
-b20+IHdyb3RlOgoKPiBIaSBMaW51c++8jAo+IEkgZG8gbm90IGZpbmQgdGhlIG1lc29uIGRpciwK
-PiBodHRwczovL2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC9saW51c3cvbGlu
-dXgtcGluY3RybC5naXQvdHJlZS9kcml2ZXJzL3BpbmN0cmw/aD1kZXZlbAo+IElzIHRoZXJlIHNv
-bWV0aGluZyB3cm9uZz8KCk1heWJlIEkgdG9vayB0aW1lIHB1c2hpbmcgaXQgb3V0PwoKSXQncyBj
-ZXJ0YWlubHkgdGhlcmUgbm93LCBldmVuIG9uIHRoZSBsaW5rIHlvdSBzZW50LgoKWW91cnMsCkxp
-bnVzIFdhbGxlaWoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Jan 23, 2015 at 3:14 AM, Ray Jui <rjui@broadcom.com> wrote:
+
+> I have another question here. In the B0 revision of our Cygnus chip, the
+> ASIC team added a feature to allow individual pins to be muxed to GPIO.
+> The pinmux controller can still only do group-based muxing in general,
+> but at the same time, you can override most (but not all) individual
+> pins to GPIO.
+>
+> I believe this HW design actually forces us to mix use "groups" and
+> "pins" in DT.
+>
+> For example, assuming we mux pins 1 - 10 as MMC (one cmd line, one clk
+> line, and 8 data lines). One might make the decision that he only needs
+> 4 data lines instead of 8 data lines, and he wants to free up the 4 data
+> lines and uses as GPIO.
+
+I would split the 8 available data lines in two groups,
+like "data-1-4" and "data-5-8" since the use case is such
+that either you use four or eight lines, not 6 or 7, either
+just "data-1-4" or both "data-1-4" and "data-5-8".
+
+> Based on this example, is the following DT
+> configuration valid?
+
+> sd_node {
+>     function = "sd";
+>     groups = "sd_grps";
+> };
+>
+> gpio_node {
+>     function = "gpio";
+>     pins = "gpio_7", "gpio_8", "gpio_9", "gpio_10"; /* assuming 1:1
+> mapping between gpio and pin number to make this example simple */
+> };
+
+Muxing an individual GPIO from the device tree is seldom a
+good idea as you realized in your follow-up mail ;)
+
+But this:
+
+sd_node {
+     function = "sd";
+     groups = "data-1-4", "data-5-8", "other-pin-group";
+};
+
+Is perfectly fine. One function, several groups.
+
+Yours,
+Linus Walleij
