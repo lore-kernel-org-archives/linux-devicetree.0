@@ -1,56 +1,49 @@
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: Re: [v5, 5/6] powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support to
- device tree(s)
-Date: Fri, 30 Jan 2015 08:13:18 -0600
-Message-ID: <54CB917E.7080101@Freescale.com>
-References: <1418034561-12034-6-git-send-email-Emilian.Medve@Freescale.com>
- <20150130050318.GA12890@home.buserror.net>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] pinctrl: Broadcom Cygnus pinctrl device tree binding
+Date: Fri, 30 Jan 2015 15:18:16 +0100
+Message-ID: <CACRpkdYq7svYkg-zadA-vd0tG=--5pre4PBrzitqNwj6VwPYMw@mail.gmail.com>
+References: <rjui@broadcom.com>
+	<1417131990-17954-1-git-send-email-rjui@broadcom.com>
+	<1417131990-17954-2-git-send-email-rjui@broadcom.com>
+	<CACRpkdb5pNMbXmWGjrGpAYNLLwv6pWWOJQy0C6BLetNcStFM6A@mail.gmail.com>
+	<54B01D44.5080601@broadcom.com>
+	<CACRpkdbW5P=w0CPYYf_gfBuD7W0WOdAYCKpTXM5MsK9mdYDc5w@mail.gmail.com>
+	<54C1AE9F.3020407@broadcom.com>
+	<54C1EEF3.4040406@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150130050318.GA12890-vONcSABrMOVpTrP2zolEsF6hYfS7NtTn@public.gmane.org>
+In-Reply-To: <54C1EEF3.4040406-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Poonam Aggrwal <poonam.aggrwal-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Chunhe Lan <Chunhe.Lan-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Scott,
+On Fri, Jan 23, 2015 at 7:49 AM, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
 
+> I dig into the pinctrl framework code a bit more and found that I can
+> use pinctrl_request_gpio from the GPIO driver and implement
+> gpio_request_enable in the pinctrl driver.
 
-On 01/29/2015 11:03 PM, Scott Wood wrote:
-> On Mon, Dec 08, 2014 at 04:29:20AM -0600, Emil Medve wrote:
->> From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
->>
->> Change-Id: If643fa5ba0a903aef8f5056a2c90ebecc995b760
->> Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
->> Signed-off-by: Geoff Thorpe <Geoff.Thorpe-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> Signed-off-by: Hai-Ying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> Signed-off-by: Chunhe Lan <Chunhe.Lan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> [Emil Medve: Sync with the upstream binding]
->> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-> 
-> Doesn't apply cleanly
-> 
->> @@ -408,6 +415,8 @@ crypto: crypto@300000 {
->>  		fsl,iommu-parent = <&pamu1>;
->>  	};
->>  
->> +/include/ "qoriq-bman1.dtsi"
->> +
->>  /include/ "qoriq-fman-0.dtsi"
->>  /include/ "qoriq-fman-0-1g-0.dtsi"
->>  /include/ "qoriq-fman-0-1g-1.dtsi"
-> 
-> What tree did you base these patches on?  There's no fman in the upstream
-> device trees yet (just a binding).
+Yep :) ain't it nice.
 
-They were based on this patch series:
-http://patchwork.ozlabs.org/patch/370866. Will re-send
+> The only problem I see now is that these APIs seem to expect the use of
+> global GPIO numbers?
 
+No they don't, only if you use the deprecated pinctrl_add_gpio_range().
 
-Cheers,
+Instead, when you register your struct gpio_chip, use
+gpiochip_add_pin_range() and this will use relative offsets
+without relying on global GPIO numbers.
+
+This latter call replaces pinctrl_add_gpio_range().
+
+> I hope I'm not missing something here?
+
+You're missing gpiochip_add_pin_range() ;)
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
