@@ -1,30 +1,47 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [1/3] powerpc/pmac: Fix DT refcount imbalance in pmac_pic_probe_oldstyle
-Date: Fri, 30 Jan 2015 15:09:04 +1100 (AEDT)
-Message-ID: <20150130040904.8F89D1402A7@ozlabs.org>
-References: <1421243519-6257-2-git-send-email-geert+renesas@glider.be>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [v5, 5/6] powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support to
+ device tree(s)
+Date: Thu, 29 Jan 2015 23:03:18 -0600
+Message-ID: <20150130050318.GA12890@home.buserror.net>
+References: <1418034561-12034-6-git-send-email-Emilian.Medve@Freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421243519-6257-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1418034561-12034-6-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Emil Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Poonam Aggrwal <poonam.aggrwal-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Chunhe Lan <Chunhe.Lan-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-14-01 at 13:51:57 UTC, Geert Uytterhoeven wrote:
-> of_find_node_by_name() calls of_node_put() on its "from" parameter,
-> which must not be done on "master", as it's still in use, and will be
-> released manually later.  This may cause a zero kref refcount.
-> Use of_get_child_by_name() instead to fix this.
+On Mon, Dec 08, 2014 at 04:29:20AM -0600, Emil Medve wrote:
+> From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> 
+> Change-Id: If643fa5ba0a903aef8f5056a2c90ebecc995b760
+> Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Signed-off-by: Geoff Thorpe <Geoff.Thorpe-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Hai-Ying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Chunhe Lan <Chunhe.Lan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> [Emil Medve: Sync with the upstream binding]
+> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 
-But of_find_node_by_name() searches *all* nodes, not just the children of the
-parameter.
+Doesn't apply cleanly
 
-So this is a logic change AFAICS, and I have no idea what machines we'd need to
-test on to check it.
+> @@ -408,6 +415,8 @@ crypto: crypto@300000 {
+>  		fsl,iommu-parent = <&pamu1>;
+>  	};
+>  
+> +/include/ "qoriq-bman1.dtsi"
+> +
+>  /include/ "qoriq-fman-0.dtsi"
+>  /include/ "qoriq-fman-0-1g-0.dtsi"
+>  /include/ "qoriq-fman-0-1g-1.dtsi"
 
-So I think an of_node_get(master) would be safer and also fix the refcounting.
+What tree did you base these patches on?  There's no fman in the upstream
+device trees yet (just a binding).
 
-cheers
+-Scott
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
