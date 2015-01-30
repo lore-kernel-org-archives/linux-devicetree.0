@@ -1,101 +1,169 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v8 0/2] Imagination Technologies PWM support
-Date: Fri, 30 Jan 2015 10:18:34 +0100
-Message-ID: <20150130091832.GA16744@ulmo>
-References: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com>
- <54BE3369.9000802@imgtec.com>
- <54CA6089.50505@imgtec.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 5/5] drivers: bus: Add Simple Power-Managed Bus Driver
+Date: Fri, 30 Jan 2015 10:34:39 +0100
+Message-ID: <CAPDyKFpf74Mxova+QsYfhSVPc26-NhC7A4vFJfywPzP9oHkVhw@mail.gmail.com>
+References: <1422288977-20353-1-git-send-email-geert+renesas@glider.be>
+	<1422288977-20353-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54CA6089.50505@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Cc: Andrew Bresticker <abrestic@chromium.org>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vladimir_zapolskiy@mentor.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1422288977-20353-6-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Felipe Balbi <balbi@ti.com>, Olof Johansson <olof@lixom.net>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 26 January 2015 at 17:16, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> Add a driver for transparent busses that don't need a real driver, but
+> where the bus controller is part of a PM domain, or under the control of
+> a functional clock.  Typically, the bus controller's PM domain and/or
+> clock must be enabled for child devices connected to the bus (either
+> on-SoC or externally) to function.
+>
+> Hence the sole purpose of this driver is to enable its clock and PM
+> domain (if exist(s)), which are specified in the DT and managed from
+> platform and PM domain code, and to probe for child devices.
+>
+> Due to the child-parent relationship with devices connected to the bus,
+> PM domain and clock state transitions are handled in the correct order.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Tested-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> ---
+> v4:
+>   - Bind against the generic "simple-pm-bus" instead of "renesas,bsc",
+>   - Explicitly call of_platform_populate() after pm_runtime_enable() to
+>     enforce ordering, instead of depending on claimed compatibility with
+>     "simple-bus",
+>
+> v3:
+>   - Add Tested-by,
+>
+> v2:
+>   - Rename from "Renesas Bus State Controller Driver" (renesas-bsc) to
+>     "Simple Power-Managed Bus Driver" (simple-pm-bus),
+>   - Change module license to GPL v2,
+>   - Change email address to geert+renesas@glider.be.
+> ---
+>  drivers/bus/Kconfig         | 13 ++++++++++
+>  drivers/bus/Makefile        |  1 +
+>  drivers/bus/simple-pm-bus.c | 58 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 72 insertions(+)
+>  create mode 100644 drivers/bus/simple-pm-bus.c
+>
+> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> index 626960819e6df16c..7e9c2674af81d6e9 100644
+> --- a/drivers/bus/Kconfig
+> +++ b/drivers/bus/Kconfig
+> @@ -58,6 +58,19 @@ config OMAP_OCP2SCP
+>           OCP2SCP and in OMAP5, both USB PHY and SATA PHY is connected via
+>           OCP2SCP.
+>
+> +config SIMPLE_PM_BUS
+> +       bool "Simple Power-Managed Bus Driver"
+> +       depends on OF && PM
+> +       depends on ARCH_SHMOBILE || COMPILE_TEST
+> +       help
+> +         Driver for transparent busses that don't need a real driver, but
+> +         where the bus controller is part of a PM domain, or under the control
+> +         of a functional clock, and thus relies on runtime PM for managing
+> +         this PM domain and/or clock.
+> +         An example of such a bus controller is the Renesas Bus State
+> +         Controller (BSC, sometimes called "LBSC within Bus Bridge", or
+> +         "External Bus Interface") as found on several Renesas ARM SoCs.
+> +
+>  config VEXPRESS_CONFIG
+>         bool "Versatile Express configuration bus"
+>         default y if ARCH_VEXPRESS
+> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+> index 3cfaf2c7f25ac4f0..e023a2bec664d900 100644
+> --- a/drivers/bus/Makefile
+> +++ b/drivers/bus/Makefile
+> @@ -14,4 +14,5 @@ obj-$(CONFIG_MVEBU_MBUS)      += mvebu-mbus.o
+>  obj-$(CONFIG_OMAP_INTERCONNECT)        += omap_l3_smx.o omap_l3_noc.o
+>
+>  obj-$(CONFIG_OMAP_OCP2SCP)     += omap-ocp2scp.o
+> +obj-$(CONFIG_SIMPLE_PM_BUS)    += simple-pm-bus.o
+>  obj-$(CONFIG_VEXPRESS_CONFIG)  += vexpress-config.o
+> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+> new file mode 100644
+> index 0000000000000000..c5eb46cbf388b507
+> --- /dev/null
+> +++ b/drivers/bus/simple-pm-bus.c
+> @@ -0,0 +1,58 @@
+> +/*
+> + * Simple Power-Managed Bus Driver
+> + *
+> + * Copyright (C) 2014-2015 Glider bvba
+> + *
+> + * This file is subject to the terms and conditions of the GNU General Public
+> + * License.  See the file "COPYING" in the main directory of this archive
+> + * for more details.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +
+> +static int simple_pm_bus_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +
+> +       dev_dbg(&pdev->dev, "%s\n", __func__);
+> +
+> +       pm_runtime_enable(&pdev->dev);
+> +
+> +       if (np)
+> +               of_platform_populate(np, NULL, NULL, &pdev->dev);
+> +
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am not sure my comments is valid in this initial step. Yet, you
+state in the DT documentation, that this driver supports clocks and PM
+domains.
 
-On Thu, Jan 29, 2015 at 01:32:09PM -0300, Ezequiel Garcia wrote:
-> On 01/20/2015 07:52 AM, Ezequiel Garcia wrote:
-> >=20
-> >=20
-> > On 01/09/2015 02:54 PM, Ezequiel Garcia wrote:
-> >> A new round for the IMG PWM driver.
-> >>
-> >> The IMG PWM controller is muxed with a PDM controller, through a shared
-> >> so-called periph register bit, which sets the output as PWM or PDM.
-> >> Because this register is not part of the pin controller block, but rat=
-her
-> >> PWM/PDM specific, and because the register is also used to set the PDM=
- value,
-> >> it is simpler to use a regmap-based syscon to deal with it.
-> >>
-> >> This time, I'm removing the PDM driver from the submission and submitt=
-ing the PWM
-> >> alone. The PDM was written as a misc driver, but had some design issue=
-s, so for
-> >> now I'm proposing to merge the PWM only.
-> >>
-> >> The series is based on v3.19-rc3. If at all possible I'd like to see t=
-his merged
-> >> for v3.20.
-> >>
-> >=20
-> > Thierry,
-> >=20
-> > Any comments on this? Any chance we merge it in time for v3.20?
-> > It's -rc5 already and I've started to worry.
-> >=20
->=20
-> Thierry,
->=20
-> I'm very sorry to be so bothering, but I got no news from you and it's
-> -rc6 already. I'd say I'll resend this series to Andrew Morton, hoping
-> we can merge this for v3.20.
->=20
-> Please let me know if you'll be able to pick this.
+How you are going add that support it quite interesting. :-) I also
+especially interested how the interaction (child to parents) through
+runtime PM will look like.
 
-I can pick it up if you make up your mind about the license. The header
-comment says GPL v2 or later, but MODULE_LICENSE has "GPL v2", which
-does not include the "or later" part.
+Overall, I like the idea in patchset, but I would like to understand a
+bit more around the above.
 
-Also you're making it especially difficult to build-test by not
-providing even the basic bits of your SoC support first. All even
-linux-next seems to have for the Pistachio SoC is the addition of a
-compatible string to the dw-mmc driver.
+Kind regards
+Uffe
 
-I'll take the PWM driver, but I'll assume that you'll eventually have
-more pieces available, in which case I'd appreciate a note so I can
-update my build scripts.
-
-Thierry
-
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUy0xoAAoJEN0jrNd/PrOhdzoP/iosFdE7SURQFvDGWxobalW6
-42R7DJoSETupb3iPxqOoEj3kNB64jMTzzbbmW70i8TqCdNlLIqHvVZsVD72pKLvW
-0KP2bdX2jLDYd2RJNRdsHsJ5elFCHGDnQ+/lABobGTPatCirmMUasoVCcMvj9Z6s
-UICKi+Y9kalbj5DDaqIU1RcTpqxAlAWSeRSTd8uS+twhxYjhNkw6S4PcCBf3+tDn
-nCK0w7yO43hi5qoGaecfrb0TyYE37MqTGfxinHH8203s/uckfR6sRtwnMKNLcnmQ
-L3Q89nmrG4rPmeZ1siwILqmPArUBwn6LfEc1Fhj9KSoZjNCknQtG1xPXWTxjKiry
-zhU/Q9GFiY+KqTV24hqjCsYAOKAxZto9hp1Gqa+HECTfWJ8Y/aiRIsZB3qC+7372
-pPeHt11LTQ+SyJz98I5cUoIJFuxquCNlxkY0lQsdmQA+3iGC0kexOY0oPHOaO8Zk
-TfbUU0drpPR1Aww2d1v3ENWWTIDSyCIEqx+3hMiVW3Dt/Fkbd/ujdN34G7PXhorT
-hbWFTYTTShnETHB06y28OmGJjvO4nCGH3r6c0lbegGzCqyyqaZ6xANQOJBBJ4zWv
-sUeNbCrbcQSZVrH/fINtaioibEiJxHJ113VJgkX7BmtEXFthjQLzXKQOUHSj+mcP
-bPS2jP5mhoH0Rzm/h7Mg
-=sI1E
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
+> +       return 0;
+> +}
+> +
+> +static int simple_pm_bus_remove(struct platform_device *pdev)
+> +{
+> +       dev_dbg(&pdev->dev, "%s\n", __func__);
+> +
+> +       pm_runtime_disable(&pdev->dev);
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id simple_pm_bus_of_match[] = {
+> +       { .compatible = "simple-pm-bus", },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, simple_pm_bus_of_match);
+> +
+> +static struct platform_driver simple_pm_bus_driver = {
+> +       .probe = simple_pm_bus_probe,
+> +       .remove = simple_pm_bus_remove,
+> +       .driver = {
+> +               .name = "simple-pm-bus",
+> +               .of_match_table = simple_pm_bus_of_match,
+> +       },
+> +};
+> +
+> +module_platform_driver(simple_pm_bus_driver);
+> +
+> +MODULE_DESCRIPTION("Simple Power-Managed Bus Driver");
+> +MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.9.1
+>
