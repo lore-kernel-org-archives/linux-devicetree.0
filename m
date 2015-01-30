@@ -1,53 +1,35 @@
-From: Rameshwar Sahu <rsahu@apm.com>
-Subject: Re: [PATCH v4 0/3] dmaengine: APM X-Gene SoC DMA engine driver support
-Date: Fri, 30 Jan 2015 17:36:41 +0530
-Message-ID: <CAFd313xzYj00+2_5_xquRrza2tBPAn16HP5R7DfCuFWFq+LchA@mail.gmail.com>
-References: <1421838071-7347-1-git-send-email-rsahu@apm.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
+Date: Fri, 30 Jan 2015 13:39:13 +0100
+Message-ID: <20150130133913.083d1ade@armhf>
+References: <E1YH5bU-0005mG-3L@bombadil.infradead.org>
+	<54CB5267.5060004@gmail.com>
+	<20150130113118.5523ed68@armhf>
+	<54CB6440.1010002@gmail.com>
+	<20150130124144.501cf81d@armhf>
+	<54CB732F.7010409@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421838071-7347-1-git-send-email-rsahu@apm.com>
+In-Reply-To: <54CB732F.7010409@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>, Loc Ho <lho@apm.com>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Gabriel Dobato <dobatog@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+On Fri, 30 Jan 2015 13:03:59 +0100
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
 
-Any comments on this patch set.
+> Nope. The cm-a510 is just an add-on for a baseboard, it does not make
+> a working board. Just think of it as a feature-improved SoC.
 
+Well, I understand a bit, but I don't see clearly the physical system,
+nor how each part gets its configuration for booting.
 
-Thanks,
-with regards,
-Ram
+As you know better than I, it seems that you are the right person to
+create the .dtsi/.dts's :) and to explain Gabriel how to use them!
 
-
-On Wed, Jan 21, 2015 at 4:31 PM, Rameshwar Prasad Sahu <rsahu@apm.com> wrote:
-> This patch set implements the APM X-Gene SoC DMA driver
-> support to offload the DMA operations such as memory copy(memcpy),
-> scatter gathering.
->
-> v4 changes:
->         1. Fixed dma-ranges property on DTS.
->
-> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
-> Signed-off-by: Loc Ho <lho@apm.com>
-> ---
->
-> Rameshwar Prasad Sahu (3):
->   dmaengine: Add support for APM X-Gene SoC DMA engine driver
->   arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
->   Documentation: dma: Add APM X-Gene SoC DMA engine driver documentation
->
->  .../devicetree/bindings/dma/apm-xgene-dma.txt      |   49 +
->  arch/arm64/boot/dts/apm/apm-storm.dtsi             |   26 +
->  drivers/dma/Kconfig                                |    8 +
->  drivers/dma/Makefile                               |    1 +
->  drivers/dma/xgene-dma.c                            | 1566 ++++++++++++++++++++
->  5 files changed, 1650 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
->  create mode 100644 drivers/dma/xgene-dma.c
->
-> --
-> 1.8.2.1
->
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
