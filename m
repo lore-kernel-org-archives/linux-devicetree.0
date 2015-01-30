@@ -1,113 +1,102 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [Patch v2 1/6] soc: qcom: gsbi: Add support for ADM CRCI muxing
-Date: Fri, 30 Jan 2015 10:32:58 -0600
-Message-ID: <B36DEAB1-2D89-4B6B-991E-C2EDBEB684D9@codeaurora.org>
-References: <1422599135-5588-1-git-send-email-agross@codeaurora.org> <1422599135-5588-2-git-send-email-agross@codeaurora.org>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1422599135-5588-2-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-soc@vger.kernel.org
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 0/5] Add support for Fujitsu USB host controller
+Date: Fri, 30 Jan 2015 10:38:15 -0600
+Message-ID: <20150130163815.GG15318@saruman.tx.rr.com>
+References: <1422173608-24355-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <20150127152250.GB13776@saruman.tx.rr.com>
+ <20150129162312.GH21217@saruman.tx.rr.com>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="p7qwJlK53pWzbayA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150129162312.GH21217@saruman.tx.rr.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, Sneeker Yeh <sneeker.yeh@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
+--p7qwJlK53pWzbayA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Jan 30, 2015, at 12:25 AM, Andy Gross <agross@codeaurora.org> wrote:
+Hi,
 
-> This patch adds automatic configuration for the ADM CRCI muxing requi=
-red to
-> support DMA operations for GSBI clients.  The GSBI mode and instance =
-determine
-> the correct TCSR ADM CRCI MUX value that must be programmed so that t=
-he DMA
-> works properly.
+On Thu, Jan 29, 2015 at 10:23:12AM -0600, Felipe Balbi wrote:
+> On Tue, Jan 27, 2015 at 09:22:50AM -0600, Felipe Balbi wrote:
+> > Hi,
+> >=20
+> > On Sun, Jan 25, 2015 at 04:13:23PM +0800, Sneeker Yeh wrote:
+> > > These patches add support for XHCI compliant Host controller found
+> > > on Fujitsu Socs, and are based on http://lwn.net/Articles/629162/
+> > > The first patch is to add Fujitsu glue layer of Synopsis DesignWare U=
+SB3 driver
+> > > and last four patch is about quirk implementation of errata in Synops=
+is
+> > > DesignWare USB3 IP.
+> > >=20
+> > > Patch 1 introduces a quirk with device disconnection management neces=
+sary
+> > > Synopsys Designware USB3 IP with versions < 3.00a and hardware config=
+uration
+> > > DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1. It solves a problem where with=
+out the
+> > > quirk, that host controller will die after a usb device is disconnect=
+ed from
+> > > port of root hub.
+> > >=20
+> > > Patch 2 is to set Synopsis quirk in xhci platform driver based on xhc=
+i platform
+> > > data.
+> > >=20
+> > > Patch 3 is to add a revison number 2.90a and 3.00a of Synopsis Design=
+Ware USB3
+> > > IP core driver.
+> > >=20
+> > > Patch 4 introduces using a quirk based on a errata of Synopsis
+> > > DesignWare USB3 IP which is versions < 3.00a and has hardware configu=
+ration
+> > > DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1, which cannot be read from soft=
+ware. As a
+> > > result this quirk has to be enabled via platform data or device tree.
+> > >=20
+> > > Patch 5 introduces Fujitsu Specific Glue layer in Synopsis DesignWare=
+ USB3 IP
+> > > driver.=20
+> > >=20
+> >=20
+> > Mathias, let me know how you want to handle this. Either I take them
+> > all, or you take them all. What do you prefer ?
 >=20
-> Signed-off-by: Andy Gross <agross@codeaurora.org>
-> ---
-> .../devicetree/bindings/soc/qcom/qcom,gsbi.txt     |   18 ++-
-> drivers/soc/qcom/Kconfig                           |    1 +
-> drivers/soc/qcom/qcom_gsbi.c                       |  153 +++++++++++=
-+++++++++
-> 3 files changed, 171 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt=
- b/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
-> index 4ce24d4..8fe7b37 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
-> @@ -6,7 +6,7 @@ configuration settings.  The mode setting will govern=
- the input/output mode of
-> the 4 GSBI IOs.
->=20
-> Required properties:
-> -- compatible: must contain "qcom,gsbi-v1.0.0" for APQ8064/IPQ8064
-> +- compatible:	Should contain "qcom,gsbi-v1.0.0"
-> - reg: Address range for GSBI registers
-> - clocks: required clock
-> - clock-names: must contain "iface" entry
-> @@ -16,12 +16,16 @@ Required properties:
-> Optional properties:
-> - qcom,crci : indicates CRCI MUX value for QUP CRCI ports.  Please re=
-ference
->   dt-bindings/soc/qcom,gsbi.h for valid CRCI mux values.
-> +- syscon-tcsr: indicates phandle of TCSR syscon node.  Required if c=
-hild uses
-> +  dma.
->=20
-> Required properties if child node exists:
-> - #address-cells: Must be 1
-> - #size-cells: Must be 1
-> - ranges: Must be present
->=20
-> +Note: Each GSBI should have an alias correctly numbered in "aliases"=
- node.
-> +
-> Properties for children:
->=20
-> A GSBI controller node can contain 0 or more child nodes representing=
- serial
-> @@ -37,6 +41,10 @@ Example for APQ8064:
->=20
-> #include <dt-bindings/soc/qcom,gsbi.h>
->=20
-> +	aliases {
-> +		gsbi4 =3D <&gsbi4>;
-> +	};
+> Mathias ?
 
-You appear to be using the alias name to determine a index number for t=
-he gsbi, if that is the case, than you should probably just add a cell-=
-index node to the gsbi=92s for this purpose.
-
-> +
-> 	gsbi4@16300000 {
-> 		compatible =3D "qcom,gsbi-v1.0.0";
-> 		reg =3D <0x16300000 0x100>;
-> @@ -48,6 +56,8 @@ Example for APQ8064:
-> 		qcom,mode =3D <GSBI_PROT_I2C_UART>;
-> 		qcom,crci =3D <GSBI_CRCI_QUP>;
->=20
-> +		syscon-tcsr =3D <&tcsr>;
-> +
-> 		/* child nodes go under here */
->=20
-> 		i2c_qup4: i2c@16380000 {
-> @@ -76,3 +86,9 @@ Example for APQ8064:
-> 		};
-> 	};
->=20
-> +	tcsr: syscon@1a400000 {
-> +		compatible =3D "qcom,apq8064-tcsr", "syscon";
-> +		reg =3D <0x1a400000 0x100>;
-> +	};
-> +
-> +
-
-- k
+Mathias, a reminder on this series.
 
 --=20
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um,
-a Linux Foundation Collaborative Project
+balbi
+
+--p7qwJlK53pWzbayA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUy7N3AAoJEIaOsuA1yqREvRgP/13uuV8wRPJp+0TdNVub9YCX
+VNoPhoWQrf9NJbw/p6LQCWEkU1JEYrPPEaZqOLcDzOKi8yv5VAduovx+TBK/Zs36
+kNzgQ2j/dJXz87sN/DjhhaB47HkqGsg7UvoWs6dzWnYFRxdcoBj/6AEysXJD+Zlj
+RLaQAeyilowYVdinEjQLPGr/GsdrwuJtRJL3SN4H1FWyGT1+ddDwzO22+ZH0M1QI
+IcyO98qug8GzvKB4Cnr+jUnhcsNQFVfbt/Ruvd4Q/B1pAZysX/hSVaLaoenilvbj
+ZkXa0soszqfiUE8Foo+IcPcm/IHMmfxxfh4JmU69RWgT1Mk0bUhdNpxWxnqueRW5
+sPIuNSe0HjaFEqcpKHDFtKoYOiqIkOAzndsVWrk6rOHslzbE47KN5P2Y42LAjehc
+0GZIi43/OLDiZMuAKRK8/do+UeL/fa/KaMXmZtTJoxiGVEmRwyQylY2mMi4i1ZSU
+PkJLxluKqrhMaoMnTu4BPEpwmVALQWNkP9yG6Xf/N1VQrAJokRgFVE6hZCTfHpBc
+wj3zq9Nrn1X4OvsvBNw6Rl52VtRS2q/4R5IvikzO4t+MIBVUZYa6/MWAOb3Y2Hst
+MMZy6dt0bFpet3+R09elKWacFdQ0rYmJd/4+dQvQVz0fXegEPDQ6NGnzZsnEn5YB
+0GGy7sz/dro84gi8Ke2z
+=40qE
+-----END PGP SIGNATURE-----
+
+--p7qwJlK53pWzbayA--
