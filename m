@@ -1,27 +1,27 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH v8 0/2] Imagination Technologies PWM support
-Date: Fri, 30 Jan 2015 09:50:46 +0000
-Message-ID: <CAL1qeaH77fJuh8fM1tKJz0bizni1sErCy=EwZTzV=EY10dX9iA@mail.gmail.com>
-References: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com>
-	<54BE3369.9000802@imgtec.com>
-	<54CA6089.50505@imgtec.com>
-	<20150130091832.GA16744@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150130091832.GA16744@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, vladimir_zapolskiy@mentor.com
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 0/2] clk: qcom: gcc: Add support to child devices.
+Date: Fri, 30 Jan 2015 09:50:59 +0000
+Message-ID: <1422611459-15217-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, edubezval@gmail.com, nrajan@codeaurora.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-> Also you're making it especially difficult to build-test by not
-> providing even the basic bits of your SoC support first. All even
-> linux-next seems to have for the Pistachio SoC is the addition of a
-> compatible string to the dw-mmc driver.
->
-> I'll take the PWM driver, but I'll assume that you'll eventually have
-> more pieces available, in which case I'd appreciate a note so I can
-> update my build scripts.
+This patchset adds support to child devices whose memory registers fall
+insider gcc memory map.
+For example on APQ8064 whose thermal sensor registers are inside gcc memory range.
 
-FYI, I'm hoping to post Pistachio platform support for 3.21.
+Thanks,
+srini
+
+Srinivas Kandagatla (2):
+  clk: qcom: gcc-msm8960: add child devices support.
+  clk: qcom: gcc bindings: Update to add child node support.
+
+ Documentation/devicetree/bindings/clock/qcom,gcc.txt | 5 +++++
+ drivers/clk/qcom/gcc-msm8960.c                       | 7 ++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+-- 
+1.9.1
