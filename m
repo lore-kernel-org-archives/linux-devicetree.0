@@ -1,40 +1,47 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/2] clk: qcom: gcc bindings: Update to add child node support.
-Date: Fri, 30 Jan 2015 09:51:37 +0000
-Message-ID: <1422611497-15304-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1422611459-15217-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422611459-15217-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, edubezval@gmail.com, nrajan@codeaurora.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH v3 0/3] pinctrl: Qualcomm msm8916 pinctrl driver
+Date: Fri, 30 Jan 2015 12:03:58 +0200
+Message-ID: <1422612241-12944-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Joonwoo Park <joonwoop@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds note in the bindings about the optional child nodes
-which are currently possible with SOCs like MSM8960, APQ8064.
-These child device nodes are typically for drivers like thermal sensor
-which fall under the memory-map of gcc.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- Documentation/devicetree/bindings/clock/qcom,gcc.txt | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-index aba3d25..c79225b 100644
---- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-@@ -17,6 +17,11 @@ Required properties :
- - #clock-cells : shall contain 1
- - #reset-cells : shall contain 1
+Changes since v2:
+ - addressed all Andy's comments
  
-+Optional child nodes:
-+	Child nodes could be any device nodes with its own bindings which
-+	fall inside the memory-map of the Clock controller, for example
-+	thermal sensor driver.
-+
- Example:
- 	clock-controller@900000 {
- 		compatible = "qcom,gcc-msm8960";
--- 
-1.9.1
+-------------------------------------------------------------------------------
+
+Changes since v1:
+ - correct the subject and description in 1/3
+ - not break the fields in msm8916_groups[] array in 3/3
+ - added Reviewed-by tags on all three patches
+
+-------------------------------------------------------------------------------
+
+This series adds a pinctrl driver for Snapdragon 410 (msm8916) SoC. The first
+patch increase the register address variable size, next adds a binding document
+and the last patch adds the pinctrl driver
+
+Comments are welcome!
+
+regards,
+Stan
+
+Joonwoo Park (2):
+  pinctrl: qcom: increase variable size for register offsets
+  pinctrl: qcom: Add msm8916 pinctrl driver
+
+Stanimir Varbanov (1):
+  DT: pinctrl: Document Qualcomm MSM8916 pinctrl binding
+
+ .../bindings/pinctrl/qcom,msm8916-pinctrl.txt      |  186 ++++
+ drivers/pinctrl/qcom/Kconfig                       |    8 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm.h                 |   10 +-
+ drivers/pinctrl/qcom/pinctrl-msm8916.c             | 1005 ++++++++++++++++++++
+ 5 files changed, 1205 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8916.c
+
