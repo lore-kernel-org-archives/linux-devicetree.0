@@ -1,83 +1,62 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch V4 06/10] ASoC: ipq806x: Add LPASS CPU DAI driver
-Date: Sat, 7 Feb 2015 06:40:53 +0800
-Message-ID: <20150206224053.GH31311@finisterre.sirena.org.uk>
-References: <1423169626-22166-1-git-send-email-kwestfie@codeaurora.org>
- <1423169626-22166-7-git-send-email-kwestfie@codeaurora.org>
+Subject: Re: [PATCH 7/7] spi: spi-fsl-dspi: Add support for TCFQ transfer mode
+Date: Fri, 30 Jan 2015 13:30:33 +0100
+Message-ID: <20150130123033.GC26617@finisterre.sirena.org.uk>
+References: <1422356608-15961-1-git-send-email-bhuvanchandra.dv@toradex.com>
+ <1422356608-15961-2-git-send-email-bhuvanchandra.dv@toradex.com>
+ <20150128190342.GE21293@sirena.org.uk>
+ <1422533049999.91114@toradex.com>
+ <20150129121320.GI21293@sirena.org.uk>
+ <1422536382672.21760@toradex.com>
+ <1a28f3439386e1132ae0f3ab80666305@agner.ch>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nOM8ykUjac0mNN89"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="qtZFehHsKgwS5rPz"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1423169626-22166-7-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>
+In-Reply-To: <1a28f3439386e1132ae0f3ab80666305@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: "BhuvanChandra.DV" <bhuvanchandra.dv@toradex.com>, Li.Xiubo@freescale.com, mark.rutland@arm.com, shawn.guo@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, B44548@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---nOM8ykUjac0mNN89
+--qtZFehHsKgwS5rPz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 05, 2015 at 12:53:42PM -0800, Kenneth Westfield wrote:
+On Thu, Jan 29, 2015 at 07:10:31PM +0100, Stefan Agner wrote:
 
-> +	int bitwidth, ret;
+> It would be interesting to know what the authors original motivation
+> implementing this feature was. Reading the email of the original
+> patchset indicates that there are platforms where only TCF is supported:
 
-> +	bitwidth = snd_pcm_format_width(format);
-> +	if (bitwidth < 0) {
-> +		dev_err(dai->dev, "%s() invalid bit width given\n", __func__);
+> <quote>
+> For adopting of different platform, either of them is a way of DSPI
+> transfer data.
+> </quote>
 
-Print the error code.
+> However, I don't know which platform that would be. Also, it seems that
+> Chao Fu's email is not valid anymore.=20
 
-> +	regval = 0;
-> +	regval |= LPAIF_I2SCTL_LOOPBACK_DISABLE;
-> +	regval |= LPAIF_I2SCTL_WSSRC_INTERNAL;
+It's not clear to me if the above means that this is due to hardware
+differences or due to tuning for the platform.
 
-Why not just write a single assignment statement?
-
-> +	default:
-> +		dev_err(dai->dev, "%s() invalid bitwidth given: %u\n",
-> +				__func__, bitwidth);
-
-bitwidth is a signed type but you are using an unsigned format specifier
-here.
-
-> +	reg = LPAIF_I2SCTL_REG(LPAIF_I2S_PORT_MI2S);
-> +	mask = LPAIF_I2SCTL_SPKEN_MASK;
-> +	val = LPAIF_I2SCTL_SPKEN_ENABLE;
-> +	ret = regmap_update_bits(drvdata->lpaif_map, reg, mask, val);
-
-None of these intermediate variables seem to be doing a lot, why not
-just specify the constants directly as arguments (that's the more normal
-style)?  A similar thing applies in several other places in this file.
-
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id lpass_cpu_device_id[] = {
-> +	{.compatible = "qcom," DRV_NAME},
-> +	{}
-> +};
-> +#endif
-
-Using DRV_NAME in the compatible like this makes it impossible to grep
-for the driver which isn't helpful.  In general I prefer not to use
-DRV_NAME at all (exactly how often do we change the driver name?) but in
-this case it's actively harmful.
-
---nOM8ykUjac0mNN89
+--qtZFehHsKgwS5rPz
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJU1UL0AAoJECTWi3JdVIfQOyEH/iBT//c6RnPspqxa465+gMGb
-X/jWLwi8T9qImPVWCX5K0NviRc6uczLfAoc7N7HP4uO5igXzD+jNeBMlUg4c1wBf
-Z9djcrggnbLssQIBMC7JV8CdixThgLuS94Bdoh4F6xrlogK5Y/QQhVubpyFMEv0A
-4T8VZWmq5tRWx7vo5NUrdjaVJVv/hntBjFJi/HE4UoPo+v2tl2Eg1GfpgTkOavMu
-PH9nWjY2zXQQS+6Az84d1vMG9v9M53Tu3mmKXtMBzmpcPmNrikxKJ1bPnGF0SwNr
-ls2l2olyryKVHVabecUoIQas2w8w4Ik1hjejubKJf3NIqrSGwhvGODhJEic+LF8=
-=6ma1
+iQEcBAEBCAAGBQJUy3loAAoJECTWi3JdVIfQT0AH/ivYInkslNKtgOjFvD1qExRK
+PNLhOEsELIWSYyVdihg8Oam8IJMbYRUw8dqeTjib5mVC5fcZjBpe0XZ4wb3JTUJU
+IFoXoByRpNRg3hH8I2XxAO8W4wtU9YEZmYxc5M83ozFi351nhlgvJU+QK9Z8eL3z
+i4R2SRRlMukjXyHMmWNs6w9amf/GLBrfG5EX7WFdiId/8wou4LBE0HS7QUHuxNur
+Ok89ifvtntzDfzVlMN5A9PCDXp5F3SznLTpKCIcVMi+fvjF2TyFKQ+6vvu1T/rFB
+6pmemhZZqu+9E+D5ZcJ3VFuh7Yt1R0cfIaPCuMos5Lt/+mLYpvIyD/DjdL1AtxM=
+=tQfU
 -----END PGP SIGNATURE-----
 
---nOM8ykUjac0mNN89--
+--qtZFehHsKgwS5rPz--
