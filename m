@@ -1,33 +1,32 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] DT: pinctrl: Document Qualcomm MSM8916 pinctrl binding
-Date: Fri, 30 Jan 2015 14:34:33 +0100
-Message-ID: <CACRpkdZE+xoCEbsdZz9z-f0-u6He8ca5pHzhKjcAypEm_Pz=PQ@mail.gmail.com>
-References: <1422612241-12944-1-git-send-email-svarbanov@mm-sol.com>
-	<1422612241-12944-3-git-send-email-svarbanov@mm-sol.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/4] gpio: use sizeof() instead of hardcoded values
+Date: Fri, 30 Jan 2015 14:43:30 +0100
+Message-ID: <CACRpkdZHoeO1+mOhBh01i4D1KOCn2KAJO7v+UBQnHOXbZY_QKQ@mail.gmail.com>
+References: <1421876028-22799-1-git-send-email-o.schinagl@ultimaker.com>
+	<1421876028-22799-2-git-send-email-o.schinagl@ultimaker.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422612241-12944-3-git-send-email-svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Joonwoo Park <joonwoop-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1421876028-22799-2-git-send-email-o.schinagl@ultimaker.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Olliver Schinagl <o.schinagl@ultimaker.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Alexander Shiyan <shc_work@mail.ru>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, linux-leds@vger
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 30, 2015 at 11:04 AM, Stanimir Varbanov
-<svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
+On Wed, Jan 21, 2015 at 10:33 PM, Olliver Schinagl
+<o.schinagl@ultimaker.com> wrote:
 
-> Adds devicetree binding documentation.
+> From: Olliver Schinagl <oliver@schinagl.nl>
 >
-> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> gpiolib uses a fixed string for the suffixes and defines it at 32 bytes.
+> Later in the code snprintf is used with this fixed value of 32. Using
+> sizeof() is safer in case the size for the suffixes is ever changed.
+>
+> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
 
-Patch applied, as you're obviously working on enabling the
-generic bindings in another patch series, I'm not gonna
-whine about that right now :)
+OK looks nice.
+
+Patch applied.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
