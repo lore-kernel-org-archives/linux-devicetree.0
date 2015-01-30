@@ -1,84 +1,60 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/3] Documentation: DT: document compatible string
- existence requirement
+From: Paul Walmsley <paul@pwsan.com>
+Subject: [PATCH v2 3/3] Documentation: DT bindings: add nvidia,
+ tegra132-denver compatible string
 Date: Fri, 30 Jan 2015 15:11:04 -0700
-Message-ID: <20150130221104.4761.59173.stgit@dusk.lan>
+Message-ID: <20150130221104.4761.82708.stgit@dusk.lan>
 References: <20150130221104.4761.50643.stgit@dusk.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150130221104.4761.50643.stgit-orwA252wQtA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150130221104.4761.50643.stgit@dusk.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DT maintainers require all compatible strings used in chip or board
-DTS file to be previously documented somewhere in
-Documentation/devicetree/bindings, per:
+Add a compatible string for the NVIDIA Denver CPU to the ARM CPU DT
+binding documentation file.  The primary objective here is to keep
+checkpatch.pl from warning when the compatible string is used in an
+SoC DT file, per:
 
 http://marc.info/?l=linux-tegra&m=142201349727836&w=2
 
-Document this requirement in the DT patch submission requirements
-text file.
+This second version changes the string from "nvidia,denver" to
+"nvidia,tegra132-denver" to more precisely describe the revision of
+the Denver CPU complex that is present in the Tegra132 SoC.
 
-This second version updates the documentation to align with
-Rob's comments here:
-
-http://marc.info/?l=devicetree&m=142255654213019&w=2
-
-Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
-Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Paul Walmsley <paul@pwsan.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Rohit Vaswani <rvaswani@codeaurora.org>
+Cc: Paul Walmsley <pwalmsley@nvidia.com>
+Cc: Marc Carino <marc.ceeeee@gmail.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- .../devicetree/bindings/submitting-patches.txt     |   23 ++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ Documentation/devicetree/bindings/arm/cpus.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
-index b7ba01ad1426..56742bc70218 100644
---- a/Documentation/devicetree/bindings/submitting-patches.txt
-+++ b/Documentation/devicetree/bindings/submitting-patches.txt
-@@ -15,6 +15,29 @@ I. For patch submitters
-   3) The Documentation/ portion of the patch should come in the series before
-      the code implementing the binding.
- 
-+  4) Any compatible strings used in a chip or board DTS file must be
-+     previously documented in the corresponding DT binding text file
-+     in Documentation/devicetree/bindings.  This rule applies even if
-+     the Linux device driver does not yet match on the compatible
-+     string.  [ checkpatch will emit warnings if this step is not
-+     followed as of commit bff5da4335256513497cc8c79f9a9d1665e09864
-+     ("checkpatch: add DT compatible string documentation checks"). ]
-+
-+  5) The wildcard "<chip>" may be used in compatible strings, as in
-+     the following example:
-+
-+         - compatible: Must contain '"nvidia,<chip>-pcie",
-+           "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
-+
-+     As in the above example, the known values of "<chip>" should be
-+     documented if it is used.
-+
-+  6) If a documented compatible string is not yet matched by the
-+     driver, the documentation should also include a compatible
-+     string that is matched by the driver (as in the "nvidia,tegra20-pcie"
-+     example above).
-+
-+
- II. For kernel maintainers
- 
-   1) If you aren't comfortable reviewing a given binding, reply to it and ask
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index b2aacbe16ed9..8b9e0a95de31 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -175,6 +175,7 @@ nodes to be present and contain the properties described below.
+ 			    "marvell,pj4a"
+ 			    "marvell,pj4b"
+ 			    "marvell,sheeva-v5"
++			    "nvidia,tegra132-denver"
+ 			    "qcom,krait"
+ 			    "qcom,scorpion"
+ 	- enable-method
