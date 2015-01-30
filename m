@@ -1,72 +1,185 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V2] OPP: Redefine bindings to overcome shortcomings
-Date: Fri, 30 Jan 2015 10:47:15 +0530
-Message-ID: <CAKohpokig+CA00SSPhHfdMMgVm8PYHMRf+PLy0cGPbFYF6XT=w@mail.gmail.com>
-References: <cbe949d7a69c3b16a3e9d6e5429eb81d3ae9d8b9.1422009157.git.viresh.kumar@linaro.org>
-	<20150128200600.GR21293@sirena.org.uk>
-	<CAKohpokxdpF2nTeOnDpofNM1vW3aZRyDBE3WKmvZ8wJedf-TGw@mail.gmail.com>
-	<CAL_Jsq+mhuR-DnjXo9Mmgpazgb_3R+sm+Ztkd7+6Q3iVw0aKOA@mail.gmail.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v6 2/6] input: touchscreen: ti_am335x_tsc: Remove udelay
+ in interrupt handler
+Date: Fri, 30 Jan 2015 10:56:28 +0530
+Message-ID: <54CB1604.9030709@ti.com>
+References: <1420609779-11156-1-git-send-email-vigneshr@ti.com> <1420609779-11156-3-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+mhuR-DnjXo9Mmgpazgb_3R+sm+Ztkd7+6Q3iVw0aKOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1420609779-11156-3-git-send-email-vigneshr@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Brad Griffis <bgriffis@ti.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Jan Kardell <jan.kardell@telliq.com>, Felipe Balbi <balbi@ti.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 January 2015 at 21:12, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Jan 28, 2015 at 7:39 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
->> The goal is to choose the driver which we want to probe for a platform. There
->> can be multiple DT enabled cpufreq drivers present in a build and the platform
->> needs some way to choose one of them.
->
-> That was not my original thought, but rather it is versioning the
-> binding and a way to find OPP nodes. That doesn't mean we can't do
-> things to make it easier to match to drivers.
 
-Okay.
+On Wednesday 07 January 2015 11:19 AM, Vignesh R wrote:
+> From: Brad Griffis <bgriffis@ti.com>
+> 
+> TSC interrupt handler had udelay to avoid reporting of false pen-up
+> interrupt to user space. This patch implements workaround suggesting in
+> Advisory 1.0.31 of silicon errata for am335x, thus eliminating udelay
+> and touchscreen lag. This also improves performance of touchscreen and
+> eliminates sudden jump of cursor at touch release.
+> 
+> IDLECONFIG and CHARGECONFIG registers are to be configured
+> with same values in order to eliminate false pen-up events. This
+> workaround may result in false pen-down to be detected, hence considerable
+> charge step delay needs to be added. The charge delay is set to 0xB000
+> (in terms of ADC clock cycles) by default.
+> 
+> TSC steps are disabled at the end of every sampling cycle and EOS bit is
+> set. Once the EOS bit is set, the TSC steps need to be re-enabled to begin
+> next sampling cycle.
+> 
+> Signed-off-by: Brad Griffis <bgriffis@ti.com>
+> [vigneshr@ti.com: Ported the patch from v3.12 to v3.19rc1]
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ---
 
->> For example, if both cpufreq-dt, exynos-cpufreq and arm-big-little drivers are
->> present in a kernel build, the how do we specify which one a platform wants to
->> use.
->
-> What does the exynos driver do that the other 2 don't?
+Ping... Can somebody pick this patch series if there are no more comments??
 
-There are efforts going on to start using cpufreq-dt instead
-of exynos drivers. So, they might die at some point of time.
-
-Anyway, there can be cpufreq drivers which co-exist
-cpufreq-dt, even if they are parsing the same bindings.
-
-> I will likely nak any such strings that are solely there to match to
-> these 2 drivers. The information is there in DT already. It's just not
-> a single property to match on. You can tell it is a big.LITTLE system
-> by the fact your have 2 different cpu types. You can use the top level
-> compatible strings when you need a machine specific driver. I would
-> not be trying to get cpufreq platform devices to be created by
-> of_platform_populate. The other issue I have is you may not always
-> have 2 drivers for bL and non-bL. Really symmetric multi-cluster or
-> single cluster should be a subset of functionality of bL.
->
-> I think you just need to have an initcall which does this:
->
-> if (of_find_matching_node_and_match(machine_specific_driver_match list))
->   platform_device_create(match->data);
-> else if (is_big_little() && has_opp)
->   platform_device_create(big_little_device);
-> else if (has_opp)
->   platform_device_create(cpufreq_dt_device);
->
-> Or perhaps you handle the generic ones late in boot only if no machine
-> specific driver has been probed. There is no generic solution ATM for
-> selecting the best driver when there are multiple matches.
-
-One thing is clear. The compatibility string here isn't going to be
-like what I had in mind. So, let it just define the versioning
-here and I will see how can I solve the driver-probe problem.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> v5:
+>  - enable TSC steps only on EOS interrup
+> 
+> v4:
+>  - check for PEN_IRQ bit in ADCFSM to avoid false-pen when ADC
+>    and TSC are used together.
+>  - Set charge delay to 0x400 as default. Most devices function
+>    normally at this value.
+> 
+>  drivers/input/touchscreen/ti_am335x_tsc.c | 67 ++++++++++++++-----------------
+>  include/linux/mfd/ti_am335x_tscadc.h      |  3 +-
+>  2 files changed, 33 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> index dfbb9fe6a270..0625c102a1d0 100644
+> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> @@ -173,11 +173,9 @@ static void titsc_step_config(struct titsc *ts_dev)
+>  		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+>  	}
+>  
+> -	/* Charge step configuration */
+> -	config = ts_dev->bit_xp | ts_dev->bit_yn |
+> -			STEPCHARGE_RFP_XPUL | STEPCHARGE_RFM_XNUR |
+> -			STEPCHARGE_INM_AN1 | STEPCHARGE_INP(ts_dev->inp_yp);
+> +	/* Make CHARGECONFIG same as IDLECONFIG */
+>  
+> +	config = titsc_readl(ts_dev, REG_IDLECONFIG);
+>  	titsc_writel(ts_dev, REG_CHARGECONFIG, config);
+>  	titsc_writel(ts_dev, REG_CHARGEDELAY, CHARGEDLY_OPENDLY);
+>  
+> @@ -261,12 +259,34 @@ static irqreturn_t titsc_irq(int irq, void *dev)
+>  {
+>  	struct titsc *ts_dev = dev;
+>  	struct input_dev *input_dev = ts_dev->input;
+> -	unsigned int status, irqclr = 0;
+> +	unsigned int fsm, status, irqclr = 0;
+>  	unsigned int x = 0, y = 0;
+>  	unsigned int z1, z2, z;
+> -	unsigned int fsm;
+>  
+> -	status = titsc_readl(ts_dev, REG_IRQSTATUS);
+> +	status = titsc_readl(ts_dev, REG_RAWIRQSTATUS);
+> +	if (status & IRQENB_HW_PEN) {
+> +		ts_dev->pen_down = true;
+> +		titsc_writel(ts_dev, REG_IRQWAKEUP, 0x00);
+> +		titsc_writel(ts_dev, REG_IRQCLR, IRQENB_HW_PEN);
+> +		irqclr |= IRQENB_HW_PEN;
+> +	}
+> +
+> +	if (status & IRQENB_PENUP) {
+> +		fsm = titsc_readl(ts_dev, REG_ADCFSM);
+> +		if (fsm == ADCFSM_STEPID) {
+> +			ts_dev->pen_down = false;
+> +			input_report_key(input_dev, BTN_TOUCH, 0);
+> +			input_report_abs(input_dev, ABS_PRESSURE, 0);
+> +			input_sync(input_dev);
+> +		} else {
+> +			ts_dev->pen_down = true;
+> +		}
+> +		irqclr |= IRQENB_PENUP;
+> +	}
+> +
+> +	if (status & IRQENB_EOS)
+> +		irqclr |= IRQENB_EOS;
+> +
+>  	/*
+>  	 * ADC and touchscreen share the IRQ line.
+>  	 * FIFO1 interrupts are used by ADC. Handle FIFO0 IRQs here only
+> @@ -297,37 +317,11 @@ static irqreturn_t titsc_irq(int irq, void *dev)
+>  		}
+>  		irqclr |= IRQENB_FIFO0THRES;
+>  	}
+> -
+> -	/*
+> -	 * Time for sequencer to settle, to read
+> -	 * correct state of the sequencer.
+> -	 */
+> -	udelay(SEQ_SETTLE);
+> -
+> -	status = titsc_readl(ts_dev, REG_RAWIRQSTATUS);
+> -	if (status & IRQENB_PENUP) {
+> -		/* Pen up event */
+> -		fsm = titsc_readl(ts_dev, REG_ADCFSM);
+> -		if (fsm == ADCFSM_STEPID) {
+> -			ts_dev->pen_down = false;
+> -			input_report_key(input_dev, BTN_TOUCH, 0);
+> -			input_report_abs(input_dev, ABS_PRESSURE, 0);
+> -			input_sync(input_dev);
+> -		} else {
+> -			ts_dev->pen_down = true;
+> -		}
+> -		irqclr |= IRQENB_PENUP;
+> -	}
+> -
+> -	if (status & IRQENB_HW_PEN) {
+> -
+> -		titsc_writel(ts_dev, REG_IRQWAKEUP, 0x00);
+> -		titsc_writel(ts_dev, REG_IRQCLR, IRQENB_HW_PEN);
+> -	}
+> -
+>  	if (irqclr) {
+>  		titsc_writel(ts_dev, REG_IRQSTATUS, irqclr);
+> -		am335x_tsc_se_set_cache(ts_dev->mfd_tscadc, ts_dev->step_mask);
+> +		if (status & IRQENB_EOS)
+> +			am335x_tsc_se_set_cache(ts_dev->mfd_tscadc,
+> +						ts_dev->step_mask);
+>  		return IRQ_HANDLED;
+>  	}
+>  	return IRQ_NONE;
+> @@ -417,6 +411,7 @@ static int titsc_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	titsc_writel(ts_dev, REG_IRQENABLE, IRQENB_FIFO0THRES);
+> +	titsc_writel(ts_dev, REG_IRQENABLE, IRQENB_EOS);
+>  	err = titsc_config_wires(ts_dev);
+>  	if (err) {
+>  		dev_err(&pdev->dev, "wrong i/p wire configuration\n");
+> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
+> index e2e70053470e..3f4e994ace2b 100644
+> --- a/include/linux/mfd/ti_am335x_tscadc.h
+> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+> @@ -52,6 +52,7 @@
+>  
+>  /* IRQ enable */
+>  #define IRQENB_HW_PEN		BIT(0)
+> +#define IRQENB_EOS		BIT(1)
+>  #define IRQENB_FIFO0THRES	BIT(2)
+>  #define IRQENB_FIFO0OVRRUN	BIT(3)
+>  #define IRQENB_FIFO0UNDRFLW	BIT(4)
+> @@ -107,7 +108,7 @@
+>  /* Charge delay */
+>  #define CHARGEDLY_OPEN_MASK	(0x3FFFF << 0)
+>  #define CHARGEDLY_OPEN(val)	((val) << 0)
+> -#define CHARGEDLY_OPENDLY	CHARGEDLY_OPEN(1)
+> +#define CHARGEDLY_OPENDLY	CHARGEDLY_OPEN(0x400)
+>  
+>  /* Control register */
+>  #define CNTRLREG_TSCSSENB	BIT(0)
+> 
