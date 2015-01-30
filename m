@@ -1,106 +1,178 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: Re: [PATCH v8 0/2] Imagination Technologies PWM support
-Date: Fri, 30 Jan 2015 08:01:00 -0300
-Message-ID: <54CB646C.7040705@imgtec.com>
-References: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com> <54BE3369.9000802@imgtec.com> <54CA6089.50505@imgtec.com> <20150130091832.GA16744@ulmo>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 2/7] usb: extcon: Fix USB-Host cable name
+Date: Fri, 30 Jan 2015 13:04:25 +0200
+Message-ID: <54CB6539.1040703@ti.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com> <1422274532-9488-3-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150130091832.GA16744@ulmo>
+In-Reply-To: <1422274532-9488-3-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Andrew Bresticker <abrestic@chromium.org>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vladimir_zapolskiy@mentor.com
+To: balbi@ti.com, cw00.choi@samsung.com
+Cc: tony@atomide.com, myungjoo.ham@samsung.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+Felipe & Chanwoo,
 
-Hi Thierry,
-
-On 01/30/2015 06:18 AM, Thierry Reding wrote:
-> On Thu, Jan 29, 2015 at 01:32:09PM -0300, Ezequiel Garcia wrote:
->> On 01/20/2015 07:52 AM, Ezequiel Garcia wrote:
->>> 
->>> 
->>> On 01/09/2015 02:54 PM, Ezequiel Garcia wrote:
->>>> A new round for the IMG PWM driver.
->>>> 
->>>> The IMG PWM controller is muxed with a PDM controller,
->>>> through a shared so-called periph register bit, which sets
->>>> the output as PWM or PDM. Because this register is not part
->>>> of the pin controller block, but rather PWM/PDM specific, and
->>>> because the register is also used to set the PDM value, it is
->>>> simpler to use a regmap-based syscon to deal with it.
->>>> 
->>>> This time, I'm removing the PDM driver from the submission
->>>> and submitting the PWM alone. The PDM was written as a misc
->>>> driver, but had some design issues, so for now I'm proposing
->>>> to merge the PWM only.
->>>> 
->>>> The series is based on v3.19-rc3. If at all possible I'd like
->>>> to see this merged for v3.20.
->>>> 
->>> 
->>> Thierry,
->>> 
->>> Any comments on this? Any chance we merge it in time for
->>> v3.20? It's -rc5 already and I've started to worry.
->>> 
->> 
->> Thierry,
->> 
->> I'm very sorry to be so bothering, but I got no news from you and
->> it's -rc6 already. I'd say I'll resend this series to Andrew
->> Morton, hoping we can merge this for v3.20.
->> 
->> Please let me know if you'll be able to pick this.
+On 26/01/15 14:15, Roger Quadros wrote:
+> The recommended name for USB-Host cable state is "USB-Host" and not
+> "USB-HOST" as per drivers/extcon/extcon-class.c extcon_cable_name.
 > 
-> I can pick it up if you make up your mind about the license. The
-> header comment says GPL v2 or later, but MODULE_LICENSE has "GPL
-> v2", which does not include the "or later" part.
+> Change all instances of "USB-HOST" to "USB-Host".
 > 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Reviewed-by: Felipe Balbi <balbi@ti.com>
+> Acked-by: Felipe Balbi <balbi@ti.com>
 
-License should be GPL v2, sorry about that. Need me to fix it and
-resend or can you amend it before pushing this?
+This patch has no dependency to the rest so can be picked up as soon as possible.
 
-> Also you're making it especially difficult to build-test by not 
-> providing even the basic bits of your SoC support first. All even 
-> linux-next seems to have for the Pistachio SoC is the addition of
-> a compatible string to the dw-mmc driver.
+Do you think it is better to go via the USB tree?
+If yes then Chanwoo, can you please Ack this one? Thanks.
+
+This would mean that only the first patch needs to go through extcon tree as Tony
+will pick the rest.
+
+cheers,
+-roger
+
+> ---
+>  drivers/extcon/extcon-palmas.c | 18 +++++++++---------
+>  drivers/usb/dwc3/dwc3-omap.c   |  6 +++---
+>  drivers/usb/phy/phy-omap-otg.c |  4 ++--
+>  drivers/usb/phy/phy-tahvo.c    |  8 ++++----
+>  4 files changed, 18 insertions(+), 18 deletions(-)
 > 
-
-Well, we've added COMPILE_TEST for precisely this reason, so you only
-need to select COMPILE_TEST on any arch and you'll be able to build
-test the driver.
-
-> I'll take the PWM driver, but I'll assume that you'll eventually
-> have more pieces available, in which case I'd appreciate a note so
-> I can update my build scripts.
+> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
+> index 11c6757..6d002c3 100644
+> --- a/drivers/extcon/extcon-palmas.c
+> +++ b/drivers/extcon/extcon-palmas.c
+> @@ -31,7 +31,7 @@
+>  
+>  static const char *palmas_extcon_cable[] = {
+>  	[0] = "USB",
+> -	[1] = "USB-HOST",
+> +	[1] = "USB-Host",
+>  	NULL,
+>  };
+>  
+> @@ -93,26 +93,26 @@ static irqreturn_t palmas_id_irq_handler(int irq, void *_palmas_usb)
+>  			PALMAS_USB_ID_INT_LATCH_CLR,
+>  			PALMAS_USB_ID_INT_EN_HI_CLR_ID_GND);
+>  		palmas_usb->linkstat = PALMAS_USB_STATE_ID;
+> -		extcon_set_cable_state(palmas_usb->edev, "USB-HOST", true);
+> -		dev_info(palmas_usb->dev, "USB-HOST cable is attached\n");
+> +		extcon_set_cable_state(palmas_usb->edev, "USB-Host", true);
+> +		dev_info(palmas_usb->dev, "USB-Host cable is attached\n");
+>  	} else if ((set & PALMAS_USB_ID_INT_SRC_ID_FLOAT) &&
+>  				(id_src & PALMAS_USB_ID_INT_SRC_ID_FLOAT)) {
+>  		palmas_write(palmas_usb->palmas, PALMAS_USB_OTG_BASE,
+>  			PALMAS_USB_ID_INT_LATCH_CLR,
+>  			PALMAS_USB_ID_INT_EN_HI_CLR_ID_FLOAT);
+>  		palmas_usb->linkstat = PALMAS_USB_STATE_DISCONNECT;
+> -		extcon_set_cable_state(palmas_usb->edev, "USB-HOST", false);
+> -		dev_info(palmas_usb->dev, "USB-HOST cable is detached\n");
+> +		extcon_set_cable_state(palmas_usb->edev, "USB-Host", false);
+> +		dev_info(palmas_usb->dev, "USB-Host cable is detached\n");
+>  	} else if ((palmas_usb->linkstat == PALMAS_USB_STATE_ID) &&
+>  				(!(set & PALMAS_USB_ID_INT_SRC_ID_GND))) {
+>  		palmas_usb->linkstat = PALMAS_USB_STATE_DISCONNECT;
+> -		extcon_set_cable_state(palmas_usb->edev, "USB-HOST", false);
+> -		dev_info(palmas_usb->dev, "USB-HOST cable is detached\n");
+> +		extcon_set_cable_state(palmas_usb->edev, "USB-Host", false);
+> +		dev_info(palmas_usb->dev, "USB-Host cable is detached\n");
+>  	} else if ((palmas_usb->linkstat == PALMAS_USB_STATE_DISCONNECT) &&
+>  				(id_src & PALMAS_USB_ID_INT_SRC_ID_GND)) {
+>  		palmas_usb->linkstat = PALMAS_USB_STATE_ID;
+> -		extcon_set_cable_state(palmas_usb->edev, "USB-HOST", true);
+> -		dev_info(palmas_usb->dev, " USB-HOST cable is attached\n");
+> +		extcon_set_cable_state(palmas_usb->edev, "USB-Host", true);
+> +		dev_info(palmas_usb->dev, " USB-Host cable is attached\n");
+>  	}
+>  
+>  	return IRQ_HANDLED;
+> diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+> index 172d64e..6713ad9 100644
+> --- a/drivers/usb/dwc3/dwc3-omap.c
+> +++ b/drivers/usb/dwc3/dwc3-omap.c
+> @@ -445,14 +445,14 @@ static int dwc3_omap_extcon_register(struct dwc3_omap *omap)
+>  
+>  		omap->id_nb.notifier_call = dwc3_omap_id_notifier;
+>  		ret = extcon_register_interest(&omap->extcon_id_dev,
+> -					       edev->name, "USB-HOST",
+> +					       edev->name, "USB-Host",
+>  					       &omap->id_nb);
+>  		if (ret < 0)
+> -			dev_vdbg(omap->dev, "failed to register notifier for USB-HOST\n");
+> +			dev_vdbg(omap->dev, "failed to register notifier for USB-Host\n");
+>  
+>  		if (extcon_get_cable_state(edev, "USB") == true)
+>  			dwc3_omap_set_mailbox(omap, OMAP_DWC3_VBUS_VALID);
+> -		if (extcon_get_cable_state(edev, "USB-HOST") == true)
+> +		if (extcon_get_cable_state(edev, "USB-Host") == true)
+>  			dwc3_omap_set_mailbox(omap, OMAP_DWC3_ID_GROUND);
+>  	}
+>  
+> diff --git a/drivers/usb/phy/phy-omap-otg.c b/drivers/usb/phy/phy-omap-otg.c
+> index 56ee760..53cba3f 100644
+> --- a/drivers/usb/phy/phy-omap-otg.c
+> +++ b/drivers/usb/phy/phy-omap-otg.c
+> @@ -119,7 +119,7 @@ static int omap_otg_probe(struct platform_device *pdev)
+>  	otg_dev->vbus_nb.notifier_call = omap_otg_vbus_notifier;
+>  
+>  	ret = extcon_register_interest(&otg_dev->id_dev, config->extcon,
+> -				       "USB-HOST", &otg_dev->id_nb);
+> +				       "USB-Host", &otg_dev->id_nb);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -130,7 +130,7 @@ static int omap_otg_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	otg_dev->id = extcon_get_cable_state(extcon, "USB-HOST");
+> +	otg_dev->id = extcon_get_cable_state(extcon, "USB-Host");
+>  	otg_dev->vbus = extcon_get_cable_state(extcon, "USB");
+>  	omap_otg_set_mode(otg_dev);
+>  
+> diff --git a/drivers/usb/phy/phy-tahvo.c b/drivers/usb/phy/phy-tahvo.c
+> index 845f658..56d3704 100644
+> --- a/drivers/usb/phy/phy-tahvo.c
+> +++ b/drivers/usb/phy/phy-tahvo.c
+> @@ -61,7 +61,7 @@ struct tahvo_usb {
+>  };
+>  
+>  static const char *tahvo_cable[] = {
+> -	"USB-HOST",
+> +	"USB-Host",
+>  	"USB",
+>  	NULL,
+>  };
+> @@ -129,7 +129,7 @@ static void tahvo_usb_become_host(struct tahvo_usb *tu)
+>  {
+>  	struct retu_dev *rdev = dev_get_drvdata(tu->pt_dev->dev.parent);
+>  
+> -	extcon_set_cable_state(&tu->extcon, "USB-HOST", true);
+> +	extcon_set_cable_state(&tu->extcon, "USB-Host", true);
+>  
+>  	/* Power up the transceiver in USB host mode */
+>  	retu_write(rdev, TAHVO_REG_USBR, USBR_REGOUT | USBR_NSUSPEND |
+> @@ -148,7 +148,7 @@ static void tahvo_usb_become_peripheral(struct tahvo_usb *tu)
+>  {
+>  	struct retu_dev *rdev = dev_get_drvdata(tu->pt_dev->dev.parent);
+>  
+> -	extcon_set_cable_state(&tu->extcon, "USB-HOST", false);
+> +	extcon_set_cable_state(&tu->extcon, "USB-Host", false);
+>  
+>  	/* Power up transceiver and set it in USB peripheral mode */
+>  	retu_write(rdev, TAHVO_REG_USBR, USBR_SLAVE_CONTROL | USBR_REGOUT |
+> @@ -376,7 +376,7 @@ static int tahvo_usb_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/* Set the initial cable state. */
+> -	extcon_set_cable_state(&tu->extcon, "USB-HOST",
+> +	extcon_set_cable_state(&tu->extcon, "USB-Host",
+>  			       tu->tahvo_mode == TAHVO_MODE_HOST);
+>  	extcon_set_cable_state(&tu->extcon, "USB", tu->vbus_state);
+>  
 > 
-
-If you can pick it, it would be great. I understand it's hard to
-accept patches for drivers, when there's little testing possibilities.
-But on the other side, isn't it a positive thing that a vendor is
-pushing drivers this early?
-
-Thanks a lot,
-- -- 
-Ezequiel
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJUy2RhAAoJEIOKbhOEIHKiWB0QAKc4h+YLjxLLa7y0/NfoEiqV
-gwipBbrfO4leAB6RUiDOGil53Ir0Pxg87IbCHV5A0Gzxahv47GG41DYPVzbU3lHm
-DGkGqyXDf0BNQqJkCXmDWV9/8pnjFfUMDlSrs15pxXTaRjZ7m6CrxCoZof5UVt91
-4cmeDYHg4lr+YzT3oXuyiKFlrIRrT5heD3gfyL5IB9qQypR2KPnpDrCwMcmT6+ag
-zI6sg6OAi8de7ZvSWEZSK7WkymhgduR9Rt0WRQBC3EKF2dCsUxhmZt14RJsDcpEK
-LWn5z1FxImtJq8vWOq/E2F9AWtQ/o9gUeII2myNDaL2SIrVoggUP+yKV51J8bidl
-G2HXU8NEIHCaqcKl5sdbeEbB4diXVqGJu+d9SOM2lrW2PlwWN63jgnGfyYc2RadH
-60adajBgNjs9Ujfo5nFy+aYXJtJZk+4b1M0UMI+2qKV4G9PBfDrrpUMBRCRt8il4
-A15lUoHTwTeLQp8m7YmNuoKLhLmeVrBgbzBagFLUZgpJs7TEYIWefrh/jos37n2s
-aNlVW55c5CXDMDX9Bef4ar6Ch95TOxPqiED70e2/lNM0ckRzd7viQandUxquvc9q
-mSWhSxYuT62/B6innSbuWLdifKtCsqX+QQIo2NBC3AB+NVybEmC89gB8jx+Py7pX
-YS0wpCGXivYm3AIWhhyT
-=qi1N
------END PGP SIGNATURE-----
