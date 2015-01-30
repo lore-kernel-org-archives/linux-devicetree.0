@@ -1,51 +1,81 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
-Date: Fri, 30 Jan 2015 13:50:59 +0100
-Message-ID: <54CB7E33.3080909@gmail.com>
-References: <E1YH5bU-0005mG-3L@bombadil.infradead.org> <54CB5267.5060004@gmail.com> <20150130113118.5523ed68@armhf> <54CB6440.1010002@gmail.com> <20150130124144.501cf81d@armhf> <54CB732F.7010409@gmail.com> <20150130133913.083d1ade@armhf>
-Content-Type: text/plain; charset=utf-8; format=flowed
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v3 4/6] mmc: pwrseq_simple: Add optional reference clock
+ support
+Date: Fri, 30 Jan 2015 14:03:33 +0100
+Message-ID: <54CB8125.7030107@collabora.co.uk>
+References: <1422543608-24704-1-git-send-email-javier.martinez@collabora.co.uk>	<1422543608-24704-5-git-send-email-javier.martinez@collabora.co.uk> <CAPDyKFp5tGogzjU27jTDcHviUUwnTSgq4EP484_OprV_nPBsOg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150130133913.083d1ade@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFp5tGogzjU27jTDcHviUUwnTSgq4EP484_OprV_nPBsOg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Arend van Spriel <arend@broadcom.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30.01.2015 13:39, Jean-Francois Moine wrote:
-> On Fri, 30 Jan 2015 13:03:59 +0100
-> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Nope. The cm-a510 is just an add-on for a baseboard, it does not make
->> a working board. Just think of it as a feature-improved SoC.
+Hello Ulf,
+
+On 01/30/2015 12:17 PM, Ulf Hansson wrote:
+>>  };
+>> @@ -39,6 +42,11 @@ static void mmc_pwrseq_simple_pre_power_on(struct mmc_host *host)
+>>         struct mmc_pwrseq_simple *pwrseq = container_of(host->pwrseq,
+>>                                         struct mmc_pwrseq_simple, pwrseq);
+>>
+>> +       if (!IS_ERR(pwrseq->ext_clk)) {
+> 
+> This should be:
+> 
+> if (!IS_ERR(pwrseq->ext_clk) && !pwrseq->clk_enabled) {
+> 
 >
-> Well, I understand a bit, but I don't see clearly the physical system,
-> nor how each part gets its configuration for booting.
 
-TBH, I completely missed that the cm-a510 can come in different
-configurations, e.g. with or without WiFi. Nevertheless, considering
-that there are only a handful of configurations available, IMHO the
-right thing would be a dtsi with all possible options described by
-corresponding but disabled nodes.
+Oh, I thought that it was not possible to enter mmc_pwrseq_pre_power_on()
+twice without a prior call to mmc_pwrseq_power_off() but I guess I didn't
+read the MMC core code carefully...
+ 
+>> +               clk_prepare_enable(pwrseq->ext_clk);
+>> +               pwrseq->clk_enabled = true;
+>> +       }
+>> +
+>>         mmc_pwrseq_simple_set_gpios_value(pwrseq, 1);
+>>  }
+>>
+>> @@ -50,6 +58,19 @@ static void mmc_pwrseq_simple_post_power_on(struct mmc_host *host)
+>>         mmc_pwrseq_simple_set_gpios_value(pwrseq, 0);
+>>  }
+>>
+>> +static void mmc_pwrseq_simple_power_off(struct mmc_host *host)
+>> +{
+>> +       struct mmc_pwrseq_simple *pwrseq = container_of(host->pwrseq,
+>> +                                       struct mmc_pwrseq_simple, pwrseq);
+>> +
+>> +       mmc_pwrseq_simple_set_gpios_value(pwrseq, 1);
+>> +
+>> +       if (pwrseq->clk_enabled) {
+> 
+> I changed this as well, but that was just to make code clearer.
+> 
+> if (!IS_ERR(pwrseq->ext_clk) && pwrseq->clk_enabled) {
+> 
+>
 
-The actual physical system has to be determined at runtime in any
-way and it should be done by the bootloader. However, even the
-bootloader would be happy to find the right nodes to enable instead
-of creating them from scratch.
+Yeah, if IS_ERR(pwrseq->ext_clk) then clk_enabled will always be false but I
+agree that the change makes the code to be more consistent.
 
-> As you know better than I, it seems that you are the right person to
-> create the .dtsi/.dts's :) and to explain Gabriel how to use them!
+>>
+> 
+> As I stated in the response to he coverletter for the patchset, this
+> patch is applied for next with above changes.
+> 
+> Thanks!
+>
 
-Well, nothing that should stop you from improving your skills :)
+Thanks a lot for your help and for fixing these things!
 
-I'd be happy to take over, but I admit that my current lack of spare
-time would only allow me to support Gabriel and you.
+> Kind regards
+> Uffe
+>
 
-Let's wait for Gabriel's response on how he can help improving
-Dove mainline with his cm-a510 and baseboard.
-
-Sebastian
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
