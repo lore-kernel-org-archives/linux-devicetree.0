@@ -1,51 +1,61 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Fri, 30 Jan 2015 12:58:39 +0200
-Message-ID: <54CB63DF.6070007@ti.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com> <1422274532-9488-2-git-send-email-rogerq@ti.com> <CAGTfZH3nmpUGgFJ6RU+xH8tuDkGBFA-NbXWa0CSXZXR+DXrbkQ@mail.gmail.com> <54C66B0D.9040109@ti.com> <54C6EFC8.1090601@samsung.com> <54C7B0E5.20101@ti.com> <54C8472B.6070302@samsung.com> <54C8D238.4080001@ti.com> <20150128170954.GQ28663@atomide.com> <54CA1A12.5080507@ti.com> <20150129165625.GB16250@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
+Date: Fri, 30 Jan 2015 12:00:16 +0100
+Message-ID: <54CB6440.1010002@gmail.com>
+References: <E1YH5bU-0005mG-3L@bombadil.infradead.org> <54CB5267.5060004@gmail.com> <20150130113118.5523ed68@armhf>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150129165625.GB16250-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20150130113118.5523ed68@armhf>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/01/15 18:56, Tony Lindgren wrote:
-> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150129 03:34]:
->> On 28/01/15 19:09, Tony Lindgren wrote:
->>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150128 04:15]:
->>>> On 28/01/15 04:19, Chanwoo Choi wrote:
->>>>>>
->>>>>> I still fail to understand that we need to call disable_irq() in .suspend() and
->>>>>> enable_irq() in .resume()
->>>>>>
->>>>>> can you point me to any other drivers doing so?
->>>>>
->>>>> You can refer the suspend function in drivers/mfd/max14577.c or drivers/mfd/max77693.c.
->>>>> The max14577_suspend() includes the detailed comment for why using disable_irq() in suspend function.
->>>>>
->>>>> In max14577 case, max14577_suspend() use disable_irq() function because of i2c dependency.
->>>>> If max14577 device is wake-up from suspend state before completing the resume sequence
->>>>> of i2c, max14577 may fail to read/write i2c communication.
->>>>
->>>> Thanks for this information. I will add disable/enable_irq() in suspend/resume().
->>>
->>> Are the .dts changes safe for me to apply already?
->>>
->>
->> Yes Tony, you can pick them. Thanks.
-> 
-> OK will apply the dts changes into omap-for-v3.20/dt thanks.
-> I have also the defconfig changes tagged, will apply those
-> a bit later probably as a fix after the driver is merged.
+On 30.01.2015 11:31, Jean-Francois Moine wrote:
+> On Fri, 30 Jan 2015 10:44:07 +0100
+> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> I had a closer look on the Compulab website of the SoM [1] and think
+>> that we'll have to convert it to dove-cm-a510.dtsi and the baseboard
+>> Gabriel is using (maybe SBC-A510 [2]).
+>
+> I don't understand why the A510 contained in the cm-a510 should be
+> different from the one of the other boards (I just noticed a second
+> ethernet and a WiFi device - but, is the Compulab document up to date?).
 
-Sounds good to me. Thanks Tony.
+It is not the SoM that is different, but the baseboard it is attached
+to. So, the SoM makes a second layer of dtsi around the SoC but is not
+sufficient for a board dts.
 
-cheers,
--roger
+Regarding the on-SoM WiFi, that will be available on _any_ cm-a510
+equipped to _any_ baseboard, so it can be enabled in the som.dtsi.
+
+The second ethernet comes from a PCIe attached NIC, and as you already
+said, we simply don't know (yet) if it is actually wired-up on Gabriel's
+baseboard. If it is not wired-up on the baseboard, we definitely want
+it disabled in DT, too.
+
+> If it is the same, the dove.dtsi should work (and it seems to work for
+> Gabriel).
+
+Of course it does work for Gabriel but we don't want to exclusively
+mainline Gabriel's setup. In the best case, we want to provide a
+dove-cm-a510.dtsi that can be included in any baseboard somebody is
+using.
+
+> The only difference with the cm-a510 is the presence or not of the
+> connectors. So, all the Dove devices could be enabled in the DT, and,
+> if some room is needed in the board, the .config could be adapted
+> removing the useless drivers and have a minimal kernel.
+
+Adapting the .config and removing drivers is actually not an option.
+IMHO, introducing DT was meant for a single multi-arch kernel that
+can be shipped with common Linux distros. Therefore, DT is the place
+you enable/disable available resources. You leave most of the SoC (and
+SoM) nodes disabled as long as you cannot tell if there is a
+corresponding connector available.
+
+Sebastian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
