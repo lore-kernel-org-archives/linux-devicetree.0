@@ -1,7 +1,7 @@
 From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v2 3/6] ARM: DT: apq8064: Add TCSR support
-Date: Fri, 30 Jan 2015 00:25:32 -0600
-Message-ID: <1422599135-5588-4-git-send-email-agross@codeaurora.org>
+Subject: [Patch v2 6/6] ARM: DT: msm8960: Add TCSR support
+Date: Fri, 30 Jan 2015 00:25:35 -0600
+Message-ID: <1422599135-5588-7-git-send-email-agross@codeaurora.org>
 References: <1422599135-5588-1-git-send-email-agross@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1422599135-5588-1-git-send-email-agross@codeaurora.org>
@@ -15,60 +15,40 @@ CRCI values based on the GSBI port configuration.
 
 Signed-off-by: Andy Gross <agross@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-apq8064.dtsi |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/qcom-msm8960.dtsi |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index b3154c0..720fa2e 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -11,6 +11,12 @@
- 	compatible = "qcom,apq8064";
+diff --git a/arch/arm/boot/dts/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom-msm8960.dtsi
+index e1b0d5c..078b4fb 100644
+--- a/arch/arm/boot/dts/qcom-msm8960.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8960.dtsi
+@@ -11,6 +11,10 @@
+ 	compatible = "qcom,msm8960";
  	interrupt-parent = <&intc>;
  
 +	aliases {
-+		gsbi1 = &gsbi1;
-+		gsbi2 = &gsbi2;
-+		gsbi7 = &gsbi7;
++		gsbi5 = &gsbi5;
 +	};
 +
  	cpus {
  		#address-cells = <1>;
  		#size-cells = <0>;
-@@ -173,6 +179,8 @@
+@@ -129,6 +133,8 @@
  			#size-cells = <1>;
  			ranges;
  
 +			syscon-tcsr = <&tcsr>;
 +
- 			i2c1: i2c@12460000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
- 				reg = <0x12460000 0x1000>;
-@@ -194,6 +202,8 @@
- 			#size-cells = <1>;
- 			ranges;
- 
-+			syscon-tcsr = <&tcsr>;
-+
- 			i2c2: i2c@124a0000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
- 				reg = <0x124a0000 0x1000>;
-@@ -215,6 +225,8 @@
- 			#size-cells = <1>;
- 			ranges;
- 
-+			syscon-tcsr = <&tcsr>;
-+
- 			serial@16640000 {
+ 			serial@16440000 {
  				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
- 				reg = <0x16640000 0x1000>,
-@@ -349,5 +361,10 @@
- 				pinctrl-0 = <&sdc4_gpios>;
+ 				reg = <0x16440000 0x1000>,
+@@ -238,5 +244,10 @@
+ 				vmmc-supply = <&vsdcc_fixed>;
  			};
  		};
 +
 +		tcsr: syscon@1a400000 {
-+			compatible = "qcom,tcsr-apq8064", "syscon";
++			compatible = "qcom,tcsr-msm8960", "syscon";
 +			reg = <0x1a400000 0x100>;
 +		};
  	};
