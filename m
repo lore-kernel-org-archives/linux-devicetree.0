@@ -1,48 +1,114 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [v5, 5/6] powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support to
- device tree(s)
-Date: Thu, 29 Jan 2015 23:03:18 -0600
-Message-ID: <20150130050318.GA12890@home.buserror.net>
-References: <1418034561-12034-6-git-send-email-Emilian.Medve@Freescale.com>
+From: Henry Chen <henryc.chen@mediatek.com>
+Subject: [PATCH v4 7/7] dts: mediatek: Enable clock support for Mediatek
+ MT8173.
+Date: Fri, 30 Jan 2015 13:13:18 +0800
+Message-ID: <1422594798-13375-8-git-send-email-henryc.chen@mediatek.com>
+References: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1418034561-12034-6-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Poonam Aggrwal <poonam.aggrwal-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Geoff Thorpe <Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Chunhe Lan <Chunhe.Lan-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, jamesjj.liao@mediatek.com, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, devicetree@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 08, 2014 at 04:29:20AM -0600, Emil Medve wrote:
-> From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> 
-> Change-Id: If643fa5ba0a903aef8f5056a2c90ebecc995b760
-> Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Signed-off-by: Geoff Thorpe <Geoff.Thorpe-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Hai-Ying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Chunhe Lan <Chunhe.Lan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> [Emil Medve: Sync with the upstream binding]
-> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+From: James Liao <jamesjj.liao@mediatek.com>
 
-Doesn't apply cleanly
+This patch adds MT8173 clock controllers into device tree.
 
-> @@ -408,6 +415,8 @@ crypto: crypto@300000 {
->  		fsl,iommu-parent = <&pamu1>;
->  	};
->  
-> +/include/ "qoriq-bman1.dtsi"
-> +
->  /include/ "qoriq-fman-0.dtsi"
->  /include/ "qoriq-fman-0-1g-0.dtsi"
->  /include/ "qoriq-fman-0-1g-1.dtsi"
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 46 ++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-What tree did you base these patches on?  There's no fman in the upstream
-device trees yet (just a binding).
-
--Scott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 41c1441..31ccad3 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -11,6 +11,8 @@
+  * GNU General Public License for more details.
+  */
+ 
++#include <dt-bindings/clock/mt8173-clk.h>
++
+ / {
+ 	compatible = "mediatek,mt8173";
+ 	interrupt-parent = <&sysirq>;
+@@ -78,6 +80,26 @@
+ 		affinity_info = <0x84000004>;
+ 	};
+ 
++	clocks {
++		clk_null: clk_null {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <0>;
++		};
++
++		clk26m: clk26m {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <26000000>;
++		};
++
++		clk32k: clk32k {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <32000>;
++		};
++	};
++
+ 	uart_clk: dummy26m {
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <26000000>;
+@@ -99,6 +121,24 @@
+ 		compatible = "simple-bus";
+ 		ranges;
+ 
++		topckgen: topckgen@10000000 {
++			compatible = "mediatek,mt8173-topckgen";
++			reg = <0 0x10000000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
++		infracfg: infracfg@10001000 {
++			compatible = "mediatek,mt8173-infracfg";
++			reg = <0 0x10001000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
++		pericfg: pericfg@10003000 {
++			compatible = "mediatek,mt8173-pericfg";
++			reg = <0 0x10003000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
+ 		sysirq: intpol-controller@10200620 {
+ 			compatible = "mediatek,mt8173-sysirq", "mediatek,mt6577-sysirq";
+ 			interrupt-controller;
+@@ -107,6 +147,12 @@
+ 			reg = <0 0x10200620 0 0x20>;
+ 		};
+ 
++		apmixedsys: apmixedsys@10209000 {
++			compatible = "mediatek,mt8173-apmixedsys";
++			reg = <0 0x10209000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
+ 		gic: interrupt-controller@10220000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
+-- 
+1.8.1.1.dirty
