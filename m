@@ -1,33 +1,87 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 12/13] ARM: shmobile: alt dts: Add chosen/stdout-path
-Date: Sat, 31 Jan 2015 01:33:08 +0300
-Message-ID: <54CC06A4.9040408@cogentembedded.com>
-References: <1412349104-18724-1-git-send-email-geert+renesas@glider.be> <1412349104-18724-13-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH] ARM: shmobile: silk: initial device tree
+Date: Sat, 31 Jan 2015 01:52:16 +0300
+Message-ID: <1608366.HtA9yBksdO@wasted.cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1412349104-18724-13-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add the initial device tree for the R8A7794 SoC based SILK low cost board.
+SCIF2 serial port support is included, so that the serial console can work.
 
-On 10/03/2014 07:11 PM, Geert Uytterhoeven wrote:
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> Add a stdout-path property so that automatic console selection works
-> in the absence of a "console=" parameter on the kernel command line.
+---
+This patch is against the 'renesas-devel-20150129-v3.19-rc6' tag of Simon
+Horman's 'renesas.git' repo.
 
-> Note that we have to keep the "console=ttySC0,38400" parameter in
-> chosen/bootargs, else the console will use the default setting of 115200
-> baud.
+ arch/arm/boot/dts/Makefile         |    1 
+ arch/arm/boot/dts/r8a7794-silk.dts |   41 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
 
-    I've looked at the code and it appears that one can still specify a baud 
-rate after ':' even in the "stdout-path" prop.
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-WBR, Sergei
+Index: renesas/arch/arm/boot/dts/Makefile
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/Makefile
++++ renesas/arch/arm/boot/dts/Makefile
+@@ -421,6 +421,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += eme
+ 	r8a7791-koelsch.dtb \
+ 	r8a7791-porter.dtb \
+ 	r8a7794-alt.dtb \
++	r8a7794-silk.dtb \
+ 	sh73a0-kzm9g.dtb
+ dtb-$(CONFIG_ARCH_SOCFPGA) += socfpga_arria5_socdk.dtb \
+ 	socfpga_arria10_socdk.dtb \
+Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
+===================================================================
+--- /dev/null
++++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+@@ -0,0 +1,41 @@
++/*
++ * Device Tree Source for the SILK board
++ *
++ * Copyright (C) 2014 Renesas Electronics Corporation
++ * Copyright (C) 2014-2015 Renesas Solutions Corp.
++ * Copyright (C) 2014-2015 Cogent Embedded, Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "r8a7794.dtsi"
++
++/ {
++	model = "SILK";
++	compatible = "renesas,silk", "renesas,r8a7794";
++
++	aliases {
++		serial0 = &scif2;
++	};
++
++	chosen {
++		bootargs = "console=ttySC0,38400 ignore_loglevel";
++		stdout-path = &scif2;
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x40000000>;
++	};
++};
++
++&extal_clk {
++	clock-frequency = <20000000>;
++};
++
++&scif2 {
++	status = "okay";
++};
 
