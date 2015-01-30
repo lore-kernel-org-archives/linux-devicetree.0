@@ -1,14 +1,12 @@
 From: Henry Chen <henryc.chen@mediatek.com>
-Subject: [PATCH v4 4/7] dts: mediatek: Enable clock support for Mediatek
- MT8135.
-Date: Fri, 30 Jan 2015 13:13:15 +0800
-Message-ID: <1422594798-13375-5-git-send-email-henryc.chen@mediatek.com>
-References: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
+Subject: [PATCH v4 0/7] clk: Add common clock support for Mediatek MT8135 and
+ MT8173.
+Date: Fri, 30 Jan 2015 13:13:11 +0800
+Message-ID: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,94 +20,76 @@ To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
 Cc: Mark Rutland <mark.rutland@arm.com>, jamesjj.liao@mediatek.com, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, devicetree@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: James Liao <jamesjj.liao@mediatek.com>
+This patchset contains the initial common clock support for Mediatek SoCs.
+Mediatek SoC's clock architecture comprises of various PLLs, dividers, muxes and clock gates.
 
-This patch adds MT8135 clock controllers into device tree.
+This patchset also contains a basic clock support for Mediatek MT8135 and MT8173.
 
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
----
- arch/arm/boot/dts/mt8135.dtsi | 47 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+This driver is based on 3.19-rc1 + MT8135 and MT8173 basic support.
 
-diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-index ec83e69..f9b6a7d 100644
---- a/arch/arm/boot/dts/mt8135.dtsi
-+++ b/arch/arm/boot/dts/mt8135.dtsi
-@@ -12,6 +12,7 @@
-  * GNU General Public License for more details.
-  */
- 
-+#include <dt-bindings/clock/mt8135-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include "skeleton64.dtsi"
-@@ -92,6 +93,24 @@
- 			clock-frequency = <26000000>;
- 			#clock-cells = <0>;
- 		};
-+
-+		clk_null: clk_null {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <0>;
-+		};
-+
-+		clk26m: clk26m {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <26000000>;
-+		};
-+
-+		rtc32k: rtc32k {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <32000>;
-+		};
- 	};
- 
- 	soc {
-@@ -100,6 +119,28 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
-+		topckgen: topckgen@10000000 {
-+			compatible = "mediatek,mt8135-topckgen";
-+			reg = <0 0x10000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		infracfg: infracfg@10001000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "mediatek,mt8135-infracfg";
-+			reg = <0 0x10001000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		pericfg: pericfg@10003000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "mediatek,mt8135-pericfg";
-+			reg = <0 0x10003000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
- 		timer: timer@10008000 {
- 			compatible = "mediatek,mt8135-timer",
- 					"mediatek,mt6577-timer";
-@@ -128,6 +169,12 @@
- 			      <0 0x10216000 0 0x2000>;
- 		};
- 
-+		apmixedsys: apmixedsys@10209000 {
-+			compatible = "mediatek,mt8135-apmixedsys";
-+			reg = <0 0x10209000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
- 		uart0: serial@11006000 {
- 			compatible = "mediatek,mt8135-uart","mediatek,mt6577-uart";
- 			reg = <0 0x11006000 0 0x400>;
+Changes in v2:
+- Re-ordered patchset. Fold include/dt-bindings and DT document in 1st patch.
+
+Changes in v3:
+- Rebase to 3.19-rc1.
+- Refine code. Remove unneed functions, debug logs and comments, and fine tune error logs.
+
+Changes in v4:
+- Support MT8173 platform.
+- Re-ordered patchset. driver/clk/Makefile in 2nd patch.
+- Extract the common part definition(mtk_gate/mtk_pll/mtk_mux) from clk-mt8135.c/clk-mt8173.c to clk-mtk.c.
+- Refine code. Rmove unnessacary debug information and unsed defines, add prefix "mtk_" for static functions.
+- Remove flag CLK_IGNORE_UNUSED and set flag CLK_SET_RATE_PARENT on gate/mux/fixed-factor.
+- Use spin_lock_irqsave(&clk_ops_lock, flags) instead of mtk_clk_lock.
+- Example above include a node for the clock controller itself, followed by the i2c controller example above.
+
+James Liao (7):
+  clk: dts: mediatek: add Mediatek MT8135 clock bindings
+  clk: mediatek: Add initial common clock support for Mediatek SoCs.
+  clk: mediatek: Add basic clocks for Mediatek MT8135.
+  dts: mediatek: Enable clock support for Mediatek MT8135.
+  clk: dts: mediatek: add Mediatek MT8173 clock bindings
+  clk: mediatek: Add basic clocks for Mediatek MT8173.
+  dts: mediatek: Enable clock support for Mediatek MT8173.
+
+ .../bindings/clock/mediatek,mt8135-clock.txt       |   44 +
+ .../bindings/clock/mediatek,mt8173-clock.txt       |   42 +
+ arch/arm/boot/dts/mt8135.dtsi                      |   47 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   46 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/mediatek/Makefile                      |    3 +
+ drivers/clk/mediatek/clk-gate.c                    |  140 +++
+ drivers/clk/mediatek/clk-gate.h                    |   49 +
+ drivers/clk/mediatek/clk-mt8135-pll.c              |  860 ++++++++++++++++
+ drivers/clk/mediatek/clk-mt8135-pll.h              |   28 +
+ drivers/clk/mediatek/clk-mt8135.c                  |  866 +++++++++++++++++
+ drivers/clk/mediatek/clk-mt8173-pll.c              |  807 +++++++++++++++
+ drivers/clk/mediatek/clk-mt8173-pll.h              |   14 +
+ drivers/clk/mediatek/clk-mt8173.c                  | 1028 ++++++++++++++++++++
+ drivers/clk/mediatek/clk-mtk.c                     |  154 +++
+ drivers/clk/mediatek/clk-mtk.h                     |  132 +++
+ drivers/clk/mediatek/clk-pll.c                     |   63 ++
+ drivers/clk/mediatek/clk-pll.h                     |   52 +
+ include/dt-bindings/clock/mt8135-clk.h             |  190 ++++
+ include/dt-bindings/clock/mt8173-clk.h             |  214 ++++
+ 20 files changed, 4780 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8135-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8173-clock.txt
+ create mode 100644 drivers/clk/mediatek/Makefile
+ create mode 100644 drivers/clk/mediatek/clk-gate.c
+ create mode 100644 drivers/clk/mediatek/clk-gate.h
+ create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.h
+ create mode 100644 drivers/clk/mediatek/clk-mt8135.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8173-pll.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8173-pll.h
+ create mode 100644 drivers/clk/mediatek/clk-mt8173.c
+ create mode 100644 drivers/clk/mediatek/clk-mtk.c
+ create mode 100644 drivers/clk/mediatek/clk-mtk.h
+ create mode 100644 drivers/clk/mediatek/clk-pll.c
+ create mode 100644 drivers/clk/mediatek/clk-pll.h
+ create mode 100644 include/dt-bindings/clock/mt8135-clk.h
+ create mode 100644 include/dt-bindings/clock/mt8173-clk.h
+
 -- 
 1.8.1.1.dirty
