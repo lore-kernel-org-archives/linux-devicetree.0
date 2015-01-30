@@ -1,46 +1,46 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH][v4] power/fsl: add MDIO dt binding for FMan
-Date: Thu, 29 Jan 2015 20:43:40 -0600
-Message-ID: <1422585820.10544.146.camel@freescale.com>
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH][v4] power/fsl: add MDIO dt binding for FMan
+Date: Fri, 30 Jan 2015 03:04:03 +0000
+Message-ID: <DM2PR0301MB0864C4D65559673487B9267DE2310@DM2PR0301MB0864.namprd03.prod.outlook.com>
 References: <1422446064-3901-1-git-send-email-shh.xie@gmail.com>
 	 <1422579249.10544.140.camel@freescale.com>
 	 <DM2PR0301MB0864EF866EFDEB634BED54E5E2310@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1422585820.10544.146.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <DM2PR0301MB0864EF866EFDEB634BED54E5E2310-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <1422585820.10544.146.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-01-29 at 20:38 -0600, Xie Shaohui-B21989 wrote:
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Friday, January 30, 2015 8:54 AM
-> > To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve
-> > Emilian-EMMEDVE1; Xie Shaohui-B21989
-> > Subject: Re: [PATCH][v4] power/fsl: add MDIO dt binding for FMan
-> > 
-> > On Wed, 2015-01-28 at 19:54 +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > > +- interrupts
-> > > +		Usage: required
-> > > +		Value type: <prop-encoded-array>
-> > > +		Definition: Event interrupt of external MDIO controller.
-> > 
-> > What if this MDIO controller is not "external"?  Should Usage say
-> > "required for external MDIO"?
-> [S.H] I thought the definition can tell the interrupt is for external MDIO,
-> I can change the Usage to "required for external MDIO" in next version. 
-> how about other parts, are they OK?
-
-Yes.  I'll fix it up when applying.
-
--Scott
-
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
+PiBTZW50OiBGcmlkYXksIEphbnVhcnkgMzAsIDIwMTUgMTA6NDQgQU0NCj4gVG86IFhpZSBTaGFv
+aHVpLUIyMTk4OQ0KPiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBNZWR2ZQ0KPiBFbWlsaWFuLUVNTUVEVkUxDQo+IFN1YmplY3Q6
+IFJlOiBbUEFUQ0hdW3Y0XSBwb3dlci9mc2w6IGFkZCBNRElPIGR0IGJpbmRpbmcgZm9yIEZNYW4N
+Cj4gDQo+IE9uIFRodSwgMjAxNS0wMS0yOSBhdCAyMDozOCAtMDYwMCwgWGllIFNoYW9odWktQjIx
+OTg5IHdyb3RlOg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206
+IFdvb2QgU2NvdHQtQjA3NDIxDQo+ID4gPiBTZW50OiBGcmlkYXksIEphbnVhcnkgMzAsIDIwMTUg
+ODo1NCBBTQ0KPiA+ID4gVG86IHNoaC54aWVAZ21haWwuY29tDQo+ID4gPiBDYzogbGludXhwcGMt
+ZGV2QGxpc3RzLm96bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBNZWR2ZQ0K
+PiA+ID4gRW1pbGlhbi1FTU1FRFZFMTsgWGllIFNoYW9odWktQjIxOTg5DQo+ID4gPiBTdWJqZWN0
+OiBSZTogW1BBVENIXVt2NF0gcG93ZXIvZnNsOiBhZGQgTURJTyBkdCBiaW5kaW5nIGZvciBGTWFu
+DQo+ID4gPg0KPiA+ID4gT24gV2VkLCAyMDE1LTAxLTI4IGF0IDE5OjU0ICswODAwLCBzaGgueGll
+QGdtYWlsLmNvbSB3cm90ZToNCj4gPiA+ID4gKy0gaW50ZXJydXB0cw0KPiA+ID4gPiArCQlVc2Fn
+ZTogcmVxdWlyZWQNCj4gPiA+ID4gKwkJVmFsdWUgdHlwZTogPHByb3AtZW5jb2RlZC1hcnJheT4N
+Cj4gPiA+ID4gKwkJRGVmaW5pdGlvbjogRXZlbnQgaW50ZXJydXB0IG9mIGV4dGVybmFsIE1ESU8g
+Y29udHJvbGxlci4NCj4gPiA+DQo+ID4gPiBXaGF0IGlmIHRoaXMgTURJTyBjb250cm9sbGVyIGlz
+IG5vdCAiZXh0ZXJuYWwiPyAgU2hvdWxkIFVzYWdlIHNheQ0KPiA+ID4gInJlcXVpcmVkIGZvciBl
+eHRlcm5hbCBNRElPIj8NCj4gPiBbUy5IXSBJIHRob3VnaHQgdGhlIGRlZmluaXRpb24gY2FuIHRl
+bGwgdGhlIGludGVycnVwdCBpcyBmb3IgZXh0ZXJuYWwNCj4gPiBNRElPLCBJIGNhbiBjaGFuZ2Ug
+dGhlIFVzYWdlIHRvICJyZXF1aXJlZCBmb3IgZXh0ZXJuYWwgTURJTyIgaW4gbmV4dA0KPiB2ZXJz
+aW9uLg0KPiA+IGhvdyBhYm91dCBvdGhlciBwYXJ0cywgYXJlIHRoZXkgT0s/DQo+IA0KPiBZZXMu
+ICBJJ2xsIGZpeCBpdCB1cCB3aGVuIGFwcGx5aW5nLg0KDQpUaGFuayB5b3UhDQoNClNoYW9odWkN
+Cg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
