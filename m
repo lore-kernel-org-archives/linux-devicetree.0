@@ -1,62 +1,263 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V9 12/14] drm/bridge: Add i2c based driver for
- ps8622/ps8625 bridge
-Date: Fri, 30 Jan 2015 12:43:12 +0100
-Message-ID: <20150130114308.GD32359@ulmo>
-References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
- <1421771935-31618-13-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQMv_qbQJ=DKz=KznxkGbE2O08DUTwSDtpcfZeHtesEewA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+B+y8wtTXqdUj1xM"
+From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 11/12] ASoC: rockchip-hdmi-audio: add sound driver for hdmi audio
+Date: Fri, 30 Jan 2015 06:43:21 -0500
+Message-ID: <1422618201-27238-1-git-send-email-ykk@rock-chips.com>
+References: <1422617031-25098-1-git-send-email-ykk@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAEC9eQMv_qbQJ=DKz=KznxkGbE2O08DUTwSDtpcfZeHtesEewA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1422617031-25098-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ajay kumar <ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, InKi Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Sean Paul <seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pannaga Bhushan Reddy Patel <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prashanth G <prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>
+Cc: Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Ben Zhang <benzh-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-ph2c+iIn4itg9hUCZPvPmw@public.gmane.org, mmind00-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rockchip-discuss-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add a sound driver that combines rockchip-i2s cpu_dai and dw-hdmi-codec
+as codec_dai to provide hdmi audio output on rk3288 platforms.
 
---+B+y8wtTXqdUj1xM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+Changes in v2:
+- give "codec-name" & "codec-dai-name" an const name
 
-On Thu, Jan 29, 2015 at 08:12:20PM +0530, Ajay kumar wrote:
-> Hi Thierry,
->=20
-> I think you forgot to take this patch!
-> Can you check this?
+ sound/soc/rockchip/Kconfig               |   9 ++
+ sound/soc/rockchip/Makefile              |   2 +
+ sound/soc/rockchip/rockchip_hdmi_audio.c | 196 +++++++++++++++++++++++++++++++
+ 3 files changed, 207 insertions(+)
+ create mode 100644 sound/soc/rockchip/rockchip_hdmi_audio.c
 
-Yes, I missed it somehow. It didn't build for me after applying it now,
-but I fixed that up (and a few sparse warnings along with it). I'll send
-out another pull request shortly.
+diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
+index e181826..ed2b7f0 100644
+--- a/sound/soc/rockchip/Kconfig
++++ b/sound/soc/rockchip/Kconfig
+@@ -14,3 +14,12 @@ config SND_SOC_ROCKCHIP_I2S
+ 	  Say Y or M if you want to add support for I2S driver for
+ 	  Rockchip I2S device. The device supports upto maximum of
+ 	  8 channels each for play and record.
++
++config SND_SOC_ROCKCHIP_HDMI_AUDIO
++	tristate "ASoC support for Rockchip HDMI audio"
++	depends on SND_SOC_ROCKCHIP
++	select SND_SOC_ROCKCHIP_I2S
++	select SND_SOC_DW_HDMI_AUDIO
++	help
++	  Say Y or M here if you want to add support for SoC audio on Rockchip
++	  HDMI, such as rk3288 hdmi.
+diff --git a/sound/soc/rockchip/Makefile b/sound/soc/rockchip/Makefile
+index b921909..b9185b3 100644
+--- a/sound/soc/rockchip/Makefile
++++ b/sound/soc/rockchip/Makefile
+@@ -1,4 +1,6 @@
+ # ROCKCHIP Platform Support
+ snd-soc-i2s-objs := rockchip_i2s.o
++snd-soc-rockchip-hdmi-audio-objs := rockchip_hdmi_audio.o
+ 
+ obj-$(CONFIG_SND_SOC_ROCKCHIP_I2S) += snd-soc-i2s.o
++obj-$(CONFIG_SND_SOC_ROCKCHIP_HDMI_AUDIO) += snd-soc-rockchip-hdmi-audio.o
+diff --git a/sound/soc/rockchip/rockchip_hdmi_audio.c b/sound/soc/rockchip/rockchip_hdmi_audio.c
+new file mode 100644
+index 0000000..0c9f497
+--- /dev/null
++++ b/sound/soc/rockchip/rockchip_hdmi_audio.c
+@@ -0,0 +1,196 @@
++/*
++ * rockchip-hdmi-card.c
++ *
++ * ROCKCHIP ALSA SoC DAI driver for HDMI audio on rockchip processors.
++ * Copyright (c) 2014, ROCKCHIP CORPORATION. All rights reserved.
++ * Authors: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.*
++ *
++ */
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/platform_device.h>
++
++#include <sound/soc.h>
++#include <sound/pcm.h>
++#include <sound/jack.h>
++#include <sound/core.h>
++#include <sound/pcm_params.h>
++
++#include "rockchip_i2s.h"
++#include "../codecs/dw-hdmi-audio.h"
++
++#define DRV_NAME "rockchip-hdmi-audio"
++
++struct hdmi_audio_private {
++	struct snd_soc_jack hdmi_jack;
++};
++
++static int rockchip_hdmi_audio_hw_params(struct snd_pcm_substream *substream,
++					struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
++	unsigned int dai_fmt = rtd->dai_link->dai_fmt;
++	int mclk, ret;
++
++	switch (params_rate(params)) {
++	case 8000:
++	case 16000:
++	case 24000:
++	case 32000:
++	case 48000:
++	case 64000:
++	case 96000:
++		mclk = 12288000;
++		break;
++	case 11025:
++	case 22050:
++	case 44100:
++	case 88200:
++		mclk = 11289600;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = snd_soc_dai_set_fmt(cpu_dai, dai_fmt);
++	if (ret < 0) {
++		dev_err(cpu_dai->dev, "failed to set cpu_dai fmt.\n");
++		return ret;
++	}
++
++	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk, SND_SOC_CLOCK_OUT);
++	if (ret < 0) {
++		dev_err(cpu_dai->dev, "failed to set cpu_dai sysclk.\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int hdmi_audio_dai_init(struct snd_soc_pcm_runtime *runtime)
++{
++	struct snd_soc_codec *codec = runtime->codec;
++	struct snd_soc_card *card = runtime->card;
++	struct hdmi_audio_private *drv = snd_soc_card_get_drvdata(card);
++
++	/* Enable headphone jack detection */
++	snd_soc_jack_new(codec, "HDMI Jack", SND_JACK_LINEOUT,
++			 &drv->hdmi_jack);
++
++	return dw_hdmi_jack_detect(codec, &drv->hdmi_jack);
++}
++
++static struct snd_soc_ops hdmi_audio_dai_ops = {
++	.hw_params = rockchip_hdmi_audio_hw_params,
++};
++
++static struct snd_soc_dai_link hdmi_audio_dai = {
++	.name = "RockchipHDMI",
++	.stream_name = "RockchipHDMI",
++	.codec_name = "dw-hdmi-audio",
++	.codec_dai_name = "dw-hdmi-hifi",
++	.init = hdmi_audio_dai_init,
++	.ops = &hdmi_audio_dai_ops,
++	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
++		   SND_SOC_DAIFMT_CBS_CFS,
++};
++
++static struct snd_soc_card rockchip_hdmi_audio_card = {
++	.name = "RockchipHDMI",
++	.owner = THIS_MODULE,
++	.dai_link = &hdmi_audio_dai,
++	.num_links = 1,
++};
++
++static int rockchip_hdmi_audio_probe(struct platform_device *pdev)
++{
++	struct snd_soc_card *card = &rockchip_hdmi_audio_card;
++	struct device_node *np = pdev->dev.of_node;
++	struct hdmi_audio_private *drv;
++	int ret;
++
++	drv = devm_kzalloc(&pdev->dev, sizeof(*drv), GFP_KERNEL);
++	if (!drv)
++		return -ENOMEM;
++
++	card->dev = &pdev->dev;
++	platform_set_drvdata(pdev, card);
++	snd_soc_card_set_drvdata(card, drv);
++
++	hdmi_audio_dai.cpu_of_node = of_parse_phandle(np, "i2s-controller", 0);
++	if (!hdmi_audio_dai.cpu_of_node) {
++		dev_err(&pdev->dev, "Property 'i2s-controller' missing !\n");
++		goto free_priv_data;
++	}
++
++	hdmi_audio_dai.platform_of_node = hdmi_audio_dai.cpu_of_node;
++
++	ret = snd_soc_register_card(card);
++	if (ret) {
++		dev_err(&pdev->dev, "register card failed (%d)\n", ret);
++		card->dev = NULL;
++		goto free_cpu_of_node;
++	}
++
++	dev_info(&pdev->dev, "hdmi audio init success.\n");
++
++	return 0;
++
++free_cpu_of_node:
++	hdmi_audio_dai.cpu_of_node = NULL;
++	hdmi_audio_dai.platform_of_node = NULL;
++free_priv_data:
++	snd_soc_card_set_drvdata(card, NULL);
++	platform_set_drvdata(pdev, NULL);
++	devm_kfree(&pdev->dev, drv);
++	card->dev = NULL;
++
++	return ret;
++}
++
++static int rockchip_hdmi_audio_remove(struct platform_device *pdev)
++{
++	struct snd_soc_card *card = platform_get_drvdata(pdev);
++
++	snd_soc_unregister_card(card);
++	snd_soc_card_set_drvdata(card, NULL);
++	platform_set_drvdata(pdev, NULL);
++	card->dev = NULL;
++
++	return 0;
++}
++
++static const struct of_device_id rockchip_hdmi_audio_of_match[] = {
++	{ .compatible = "rockchip,rk3288-hdmi-audio", },
++	{},
++};
++
++static struct platform_driver rockchip_hdmi_audio_driver = {
++	.driver = {
++		.name = DRV_NAME,
++		.owner = THIS_MODULE,
++		.of_match_table = rockchip_hdmi_audio_of_match,
++	},
++	.probe = rockchip_hdmi_audio_probe,
++	.remove = rockchip_hdmi_audio_remove,
++};
++module_platform_driver(rockchip_hdmi_audio_driver);
++
++MODULE_AUTHOR("Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
++MODULE_DESCRIPTION("Rockchip HDMI Audio ASoC Interface");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:" DRV_NAME);
++MODULE_DEVICE_TABLE(of, rockchip_hdmi_audio_of_match);
+-- 
+2.1.2
 
-Thierry
 
---+B+y8wtTXqdUj1xM
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUy25MAAoJEN0jrNd/PrOhTzsQAIkipJrf+rQIZSHlDGvbZqA6
-kJMkr/bJ2LUsPxGye5JFqaZ54ewYC5PgAmQPsAEk7N9PyZW/1bsboK1oAXYa2nJv
-Lt9tiG1wUbBVATMkZzwi28nUqdCX4iL0y5MJ9uUvJWSUh4wDJeBKZzH9OeoRbNPM
-2BcKMU2YE62bqENFqmG5Cs/f0h4E6qyyZitqP7SNnexF8kz2qKdbDHK8wmG5PQOd
-J9vr2qAQKO81yYeVPfHHDS8LMEgjcsefRhmEZgENXG8iY03T4nlxTDEOF2sKTc8M
-X8dNFDL+Mlp4ZOY3beVp6sKBCBk1yklyLgpG8rpFK7fTF4r6Qjfq2a3OPbDKSGck
-D3o1qU6zuUFAhV/CLEETKlXE4ukMY4hNXeJZvADjuvttcuaICghBrboPK4Grva9i
-LBWbLHiH7cLSxO7O2PYbZhkTKwY3eSKrCeLKEfiq6L/N21MQjgG9YI9ZHblwEs5T
-vmUcG9bCogixcSRa4bksIfv4Dnz8Ii4CUuhaCVGUJ2xQx6wGRGJBx9XxRo7ZMqgp
-Tp9nu+ELY+L5bEP93MeXurYODDEcXZMBnDiRX2pLn0z1Edcv5xmdUbLeW0W8EQWC
-p6MCmdprkhMh6gaP2Ld8amFef4uO2QwcB2xvpkE0LNat/TVQNGunva1VKnzVXUSD
-437l2EN8PPmPKVlmOUla
-=owGE
------END PGP SIGNATURE-----
-
---+B+y8wtTXqdUj1xM--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
