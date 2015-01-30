@@ -1,69 +1,55 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [Patch v2 1/6] soc: qcom: gsbi: Add support for ADM CRCI muxing
-Date: Fri, 30 Jan 2015 15:48:26 -0600
-Message-ID: <C168E827-6052-4A7B-80EA-6330E8E08D51@codeaurora.org>
-References: <1422599135-5588-1-git-send-email-agross@codeaurora.org> <1422599135-5588-2-git-send-email-agross@codeaurora.org> <B36DEAB1-2D89-4B6B-991E-C2EDBEB684D9@codeaurora.org> <54CBF9AE.6060902@codeaurora.org>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54CBF9AE.6060902@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <agross@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-soc@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: alt dts: Drop console= bootargs parameter
+Date: Sat, 31 Jan 2015 00:49:23 +0300
+Message-ID: <54CBFC63.4070808@cogentembedded.com>
+References: <1415075018-27529-1-git-send-email-horms+renesas@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1415075018-27529-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, linux-sh@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
-On Jan 30, 2015, at 3:37 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+On 11/04/2014 07:23 AM, Simon Horman wrote:
 
-> On 01/30/15 08:32, Kumar Gala wrote:
->> On Jan 30, 2015, at 12:25 AM, Andy Gross <agross@codeaurora.org> wro=
-te:
->>=20
->>> Required properties if child node exists:
->>> - #address-cells: Must be 1
->>> - #size-cells: Must be 1
->>> - ranges: Must be present
->>>=20
->>> +Note: Each GSBI should have an alias correctly numbered in "aliase=
-s" node.
->>> +
->>> Properties for children:
->>>=20
->>> A GSBI controller node can contain 0 or more child nodes representi=
-ng serial
->>> @@ -37,6 +41,10 @@ Example for APQ8064:
->>>=20
->>> #include <dt-bindings/soc/qcom,gsbi.h>
->>>=20
->>> +	aliases {
->>> +		gsbi4 =3D <&gsbi4>;
->>> +	};
->> You appear to be using the alias name to determine a index number fo=
-r the gsbi, if that is the case, than you should probably just add a ce=
-ll-index node to the gsbi=92s for this purpose.
->>=20
->=20
-> I thought cell-index was "deprecated" and referred more to things lik=
-e
-> enumerating all the devices on a bus by assigning them a unique ID.
-> Aliases, on the other hand, allow us to enumerate a subset of devices
-> that share the same bus with other devices of different types. For
-> example, how would I know that a device is gsbi1 vs serial1 if they b=
-oth
-> used cell-index and they both had the same parent node?
+> Alt is booted from DT, so chosen/stdout-path is
+> always used, and we can drop the "console=" parameter from chosen/bootargs.
 
-I think the problem was cell-index was never well understood and abused=
-=2E  For the example you are giving you wouldn=92t use cell-index becau=
-se you are talking about things that would have different compatibles. =
- For what it appears we really are enumerating the GSBI hardware to mat=
-ch some programming interface convention.  If that is the case than I t=
-hink cell-index is proper.
+> This change has a side-effect of changing the console speed from 38400
+> to 115200. This is intentional as 115200 is consistently used on
+> all other shmobile boards.
 
-- k
+    I'd say it's not very practical to change the console's baud rate from 
+U-Boot's default (AFAIR changing baud rate in U-Boot didn't work)...
 
---=20
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um,
-a Linux Foundation Collaborative Project
+> Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>   arch/arm/boot/dts/r8a7794-alt.dts | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
+> index 8aec512..f2cf757 100644
+> --- a/arch/arm/boot/dts/r8a7794-alt.dts
+> +++ b/arch/arm/boot/dts/r8a7794-alt.dts
+> @@ -20,7 +20,7 @@
+>   	};
+>
+>   	chosen {
+> -		bootargs = "console=ttySC0,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp";
+> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+
+    Hm, does this even work as intended? I've tried to boot another R8A7794 
+based board and I couldn't get any output with alike command line. Booting 
+with 'earlyprintk=serial' has shown that tty0 was enabled as a console which 
+is not what we wanted.
+
+WBR, Sergei
+
