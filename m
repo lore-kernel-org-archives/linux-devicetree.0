@@ -1,54 +1,69 @@
-From: Jarkko Nikula <jarkko.nikula@bitmer.com>
-Subject: [PATCH] ARM: dst: OMAP3-N900: Add microphone bias voltages
-Date: Fri, 30 Jan 2015 21:23:20 +0200
-Message-ID: <1422645800-21287-1-git-send-email-jarkko.nikula@bitmer.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Jarkko Nikula <jarkko.nikula@bitmer.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 24/24] Documentation: DT bindings: add nvidia, denver
+ compatible string
+Date: Fri, 30 Jan 2015 19:33:56 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1501301933170.6569@utopia.booyaka.com>
+References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234938.20644.69989.stgit@dusk.lan> <CAL_JsqJq8D86gUdw80Nev=zmW=kYR90iNKiTzciwpaGx2qNJsA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJq8D86gUdw80Nev=zmW=kYR90iNKiTzciwpaGx2qNJsA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Rohit Vaswani <rvaswani@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pavel Machek <pavel@ucw.cz>
+Hi Rob
 
-N900 audio recording needs that codec provides bias voltage for integrated
-digital microphone and headset microphone depending which one is used.
-Digital microphone uses 2 V bias and it comes from the codec A part. Codec
-B part drives the headset microphone bias and that is set to 2.5 V.
+On Thu, 29 Jan 2015, Rob Herring wrote:
 
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-[Jarkko: Headset mic bias changed to 2 (2.5 V) as it was before commit
-e2e8bfdf6157 ("ASoC: tlv320aic3x: Convert mic bias to a supply widget")]
-Signed-off-by: Jarkko Nikula <jarkko.nikula@bitmer.com>
----
-Pavel: I hope you don't mind I took your diff from
-http://marc.info/?l=linux-kernel&m=142249383224678&w=2
-and added your Signed-off-by?
----
- arch/arm/boot/dts/omap3-n900.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+> On Wed, Jan 28, 2015 at 5:49 PM, Paul Walmsley <paul@pwsan.com> wrote:
+> >
+> > Add a compatible string for the NVIDIA Denver CPU to the ARM CPU DT
+> > binding documentation file.  The primary objective here is to keep
+> > checkpatch.pl from warning when the compatible string is used in an
+> > SoC DT file, per:
+> >
+> > http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+> >
+> >
+> > Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Pawel Moll <pawel.moll@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> > Cc: Kumar Gala <galak@codeaurora.org>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Olof Johansson <olof@lixom.net>
+> > Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > Cc: Rohit Vaswani <rvaswani@codeaurora.org>
+> > Cc: Paul Walmsley <pwalmsley@nvidia.com>
+> > Cc: Marc Carino <marc.ceeeee@gmail.com>
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > ---
+> >  Documentation/devicetree/bindings/arm/cpus.txt |    1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> > index b2aacbe16ed9..4ea31f0b7764 100644
+> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> > @@ -175,6 +175,7 @@ nodes to be present and contain the properties described below.
+> >                             "marvell,pj4a"
+> >                             "marvell,pj4b"
+> >                             "marvell,sheeva-v5"
+> > +                           "nvidia,denver" (not yet matched in the code)
+> 
+> There's not variations or versions of Denver cores or plans to change
+> from the codename?
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index b550c41b46f1..f7858f5974e3 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -478,6 +478,8 @@
- 		DRVDD-supply = <&vmmc2>;
- 		IOVDD-supply = <&vio>;
- 		DVDD-supply = <&vio>;
-+
-+		ai3x-micbias-vg = <1>;
- 	};
- 
- 	tlv320aic3x_aux: tlv320aic3x@19 {
-@@ -489,6 +491,8 @@
- 		DRVDD-supply = <&vmmc2>;
- 		IOVDD-supply = <&vio>;
- 		DVDD-supply = <&vio>;
-+
-+		ai3x-micbias-vg = <2>;
- 	};
- 
- 	tsl2563: tsl2563@29 {
--- 
-2.1.4
+Hard to say what the future will bring.  I'll change it to 
+"nvidia,tegra132-denver".
 
+
+- Paul
