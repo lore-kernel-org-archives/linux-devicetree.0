@@ -1,35 +1,82 @@
 From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/3] Documentation: DT bindings: update DT binding docs
- with Tegra chips
+Subject: [PATCH v2 1/3] Documentation: DT: document compatible string
+ existence requirement
 Date: Fri, 30 Jan 2015 15:11:04 -0700
-Message-ID: <20150130221104.4761.50643.stgit@dusk.lan>
+Message-ID: <20150130221104.4761.59173.stgit@dusk.lan>
+References: <20150130221104.4761.50643.stgit@dusk.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150130221104.4761.50643.stgit-orwA252wQtA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Update some of the DT binding documentation text files, per Mark's
-comments at:
+DT maintainers require all compatible strings used in chip or board
+DTS file to be previously documented somewhere in
+Documentation/devicetree/bindings, per:
 
 http://marc.info/?l=linux-tegra&m=142201349727836&w=2
 
-The primary goal with this series is to avoid checkpatch.pl warnings
-and align to the policy that Mark described.  This series also updates
-Documentation/devicetree/bindings/submitting-patches.txt to formally
-document this policy.
+Document this requirement in the DT patch submission requirements
+text file.
 
-These patches apply on next-20150123.
+This second version updates the documentation to align with
+Rob's comments here:
 
-This second version incorporates some revisions based on feedback from
-Rob Herring.
+http://marc.info/?l=devicetree&m=142255654213019&w=2
 
+Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
+Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../devicetree/bindings/submitting-patches.txt     |   23 ++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-- Paul
+diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+index b7ba01ad1426..56742bc70218 100644
+--- a/Documentation/devicetree/bindings/submitting-patches.txt
++++ b/Documentation/devicetree/bindings/submitting-patches.txt
+@@ -15,6 +15,29 @@ I. For patch submitters
+   3) The Documentation/ portion of the patch should come in the series before
+      the code implementing the binding.
+ 
++  4) Any compatible strings used in a chip or board DTS file must be
++     previously documented in the corresponding DT binding text file
++     in Documentation/devicetree/bindings.  This rule applies even if
++     the Linux device driver does not yet match on the compatible
++     string.  [ checkpatch will emit warnings if this step is not
++     followed as of commit bff5da4335256513497cc8c79f9a9d1665e09864
++     ("checkpatch: add DT compatible string documentation checks"). ]
++
++  5) The wildcard "<chip>" may be used in compatible strings, as in
++     the following example:
++
++         - compatible: Must contain '"nvidia,<chip>-pcie",
++           "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
++
++     As in the above example, the known values of "<chip>" should be
++     documented if it is used.
++
++  6) If a documented compatible string is not yet matched by the
++     driver, the documentation should also include a compatible
++     string that is matched by the driver (as in the "nvidia,tegra20-pcie"
++     example above).
++
++
+ II. For kernel maintainers
+ 
+   1) If you aren't comfortable reviewing a given binding, reply to it and ask
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
