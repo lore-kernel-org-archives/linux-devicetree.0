@@ -1,12 +1,13 @@
 From: Henry Chen <henryc.chen@mediatek.com>
-Subject: [PATCH v4 0/7] clk: Add common clock support for Mediatek MT8135 and
- MT8173.
-Date: Fri, 30 Jan 2015 13:13:11 +0800
-Message-ID: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
+Subject: [PATCH v4 5/7] clk: dts: mediatek: add Mediatek MT8173 clock bindings
+Date: Fri, 30 Jan 2015 13:13:16 +0800
+Message-ID: <1422594798-13375-6-git-send-email-henryc.chen@mediatek.com>
+References: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,76 +21,287 @@ To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
 Cc: Mark Rutland <mark.rutland@arm.com>, jamesjj.liao@mediatek.com, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, devicetree@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset contains the initial common clock support for Mediatek SoCs.
-Mediatek SoC's clock architecture comprises of various PLLs, dividers, muxes and clock gates.
+From: James Liao <jamesjj.liao@mediatek.com>
 
-This patchset also contains a basic clock support for Mediatek MT8135 and MT8173.
+Document the device-tree binding of Mediatek MT8173 SoC, including
+TOPCKGEN, PLLs, INFRA and PERI clock controller.
 
-This driver is based on 3.19-rc1 + MT8135 and MT8173 basic support.
-
-Changes in v2:
-- Re-ordered patchset. Fold include/dt-bindings and DT document in 1st patch.
-
-Changes in v3:
-- Rebase to 3.19-rc1.
-- Refine code. Remove unneed functions, debug logs and comments, and fine tune error logs.
-
-Changes in v4:
-- Support MT8173 platform.
-- Re-ordered patchset. driver/clk/Makefile in 2nd patch.
-- Extract the common part definition(mtk_gate/mtk_pll/mtk_mux) from clk-mt8135.c/clk-mt8173.c to clk-mtk.c.
-- Refine code. Rmove unnessacary debug information and unsed defines, add prefix "mtk_" for static functions.
-- Remove flag CLK_IGNORE_UNUSED and set flag CLK_SET_RATE_PARENT on gate/mux/fixed-factor.
-- Use spin_lock_irqsave(&clk_ops_lock, flags) instead of mtk_clk_lock.
-- Example above include a node for the clock controller itself, followed by the i2c controller example above.
-
-James Liao (7):
-  clk: dts: mediatek: add Mediatek MT8135 clock bindings
-  clk: mediatek: Add initial common clock support for Mediatek SoCs.
-  clk: mediatek: Add basic clocks for Mediatek MT8135.
-  dts: mediatek: Enable clock support for Mediatek MT8135.
-  clk: dts: mediatek: add Mediatek MT8173 clock bindings
-  clk: mediatek: Add basic clocks for Mediatek MT8173.
-  dts: mediatek: Enable clock support for Mediatek MT8173.
-
- .../bindings/clock/mediatek,mt8135-clock.txt       |   44 +
- .../bindings/clock/mediatek,mt8173-clock.txt       |   42 +
- arch/arm/boot/dts/mt8135.dtsi                      |   47 +
- arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   46 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/mediatek/Makefile                      |    3 +
- drivers/clk/mediatek/clk-gate.c                    |  140 +++
- drivers/clk/mediatek/clk-gate.h                    |   49 +
- drivers/clk/mediatek/clk-mt8135-pll.c              |  860 ++++++++++++++++
- drivers/clk/mediatek/clk-mt8135-pll.h              |   28 +
- drivers/clk/mediatek/clk-mt8135.c                  |  866 +++++++++++++++++
- drivers/clk/mediatek/clk-mt8173-pll.c              |  807 +++++++++++++++
- drivers/clk/mediatek/clk-mt8173-pll.h              |   14 +
- drivers/clk/mediatek/clk-mt8173.c                  | 1028 ++++++++++++++++++++
- drivers/clk/mediatek/clk-mtk.c                     |  154 +++
- drivers/clk/mediatek/clk-mtk.h                     |  132 +++
- drivers/clk/mediatek/clk-pll.c                     |   63 ++
- drivers/clk/mediatek/clk-pll.h                     |   52 +
- include/dt-bindings/clock/mt8135-clk.h             |  190 ++++
- include/dt-bindings/clock/mt8173-clk.h             |  214 ++++
- 20 files changed, 4780 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8135-clock.txt
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+---
+ .../bindings/clock/mediatek,mt8173-clock.txt       |  42 ++++
+ include/dt-bindings/clock/mt8173-clk.h             | 214 +++++++++++++++++++++
+ 2 files changed, 256 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8173-clock.txt
- create mode 100644 drivers/clk/mediatek/Makefile
- create mode 100644 drivers/clk/mediatek/clk-gate.c
- create mode 100644 drivers/clk/mediatek/clk-gate.h
- create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.c
- create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.h
- create mode 100644 drivers/clk/mediatek/clk-mt8135.c
- create mode 100644 drivers/clk/mediatek/clk-mt8173-pll.c
- create mode 100644 drivers/clk/mediatek/clk-mt8173-pll.h
- create mode 100644 drivers/clk/mediatek/clk-mt8173.c
- create mode 100644 drivers/clk/mediatek/clk-mtk.c
- create mode 100644 drivers/clk/mediatek/clk-mtk.h
- create mode 100644 drivers/clk/mediatek/clk-pll.c
- create mode 100644 drivers/clk/mediatek/clk-pll.h
- create mode 100644 include/dt-bindings/clock/mt8135-clk.h
  create mode 100644 include/dt-bindings/clock/mt8173-clk.h
 
+diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt8173-clock.txt b/Documentation/devicetree/bindings/clock/mediatek,mt8173-clock.txt
+new file mode 100644
+index 0000000..15cd49a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/mediatek,mt8173-clock.txt
+@@ -0,0 +1,42 @@
++Mediatek MT8173 Clock Controller
++
++This binding uses the common clock binding:
++Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++The Mediatek MT8173 clock controller generates and supplies clock to various
++controllers within Mediatek MT8173 SoC.
++
++Required Properties:
++
++- compatible: should be one of following:
++	- "mediatek,mt8173-topckgen" : for topckgen clock controller of MT8173.
++	- "mediatek,mt8173-apmixedsys" : for apmixed_sys (PLLs) of MT8173.
++	- "mediatek,mt8173-infrasys" : for infra_sys clock controller of MT8173.
++	- "mediatek,mt8173-pericfg" : for peri_sys clock controller of MT8173.
++
++- reg: physical base address of the controller and length of memory mapped
++  region.
++
++- #clock-cells: should be 1.
++
++All available clocks are defined as preprocessor macros in
++dt-bindings/clock/mt8173-clk.h header and can be used in device tree sources.
++
++Example: I2C controller node that consumes the clock generated by the clock
++  controller (refer to the standard clock bindings for information about
++  "clocks" and "clock-names" properties):
++
++	pericfg: pericfg@10003000 {
++		compatible = "mediatek,mt8173-pericfg";
++		reg = <0 0x10003000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	i2c0: i2c@1100d000 {
++		compatible = "mediatek,mt8173-i2c", "mediatek,mt6589-i2c";
++		reg = <0 0x1100d000 0 0x70>, <0 0x11000300 0 0x80>;
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
++		clock-div = <16>;
++		clocks = <&pericfg PERI_I2C0>, <&pericfg PERI_AP_DMA>;
++		clock-names = "main", "dma";
++	};
+diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+new file mode 100644
+index 0000000..f3f1d13
+--- /dev/null
++++ b/include/dt-bindings/clock/mt8173-clk.h
+@@ -0,0 +1,214 @@
++/*
++ * Copyright (c) 2014 MediaTek Inc.
++ * Author: James Liao <jamesjj.liao@mediatek.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _DT_BINDINGS_CLK_MT8173_H
++#define _DT_BINDINGS_CLK_MT8173_H
++
++/* TOPCKGEN */
++
++#define TOP_CLKPH_MCK_O		1
++#define TOP_DPI_CK		2
++#define TOP_USB_SYSPLL_125M	3
++#define TOP_HDMITX_DIG_CTS	4
++#define TOP_ARMCA7PLL_754M	5
++#define TOP_ARMCA7PLL_502M	6
++#define TOP_MAIN_H546M		7
++#define TOP_MAIN_H364M		8
++#define TOP_MAIN_H218P4M	9
++#define TOP_MAIN_H156M		10
++#define TOP_TVDPLL_445P5M	11
++#define TOP_TVDPLL_594M		12
++#define TOP_UNIV_624M		13
++#define TOP_UNIV_416M		14
++#define TOP_UNIV_249P6M		15
++#define TOP_UNIV_178P3M		16
++#define TOP_UNIV_48M		17
++#define TOP_CLKRTC_EXT		18
++#define TOP_CLKRTC_INT		19
++#define TOP_FPC_CK		20
++#define TOP_HDMITXPLL_D2	21
++#define TOP_HDMITXPLL_D3	22
++#define TOP_ARMCA7PLL_D2	23
++#define TOP_ARMCA7PLL_D3	24
++#define TOP_APLL1_CK		25
++#define TOP_APLL2_CK		26
++#define TOP_DMPLL_CK		27
++#define TOP_DMPLL_D2		28
++#define TOP_DMPLL_D4		29
++#define TOP_DMPLL_D8		30
++#define TOP_DMPLL_D16		31
++#define TOP_LVDSPLL_D2		32
++#define TOP_LVDSPLL_D4		33
++#define TOP_LVDSPLL_D8		34
++#define TOP_MMPLL_CK		35
++#define TOP_MMPLL_D2		36
++#define TOP_MSDCPLL_CK		37
++#define TOP_MSDCPLL_D2		38
++#define TOP_MSDCPLL_D4		39
++#define TOP_MSDCPLL2_CK		40
++#define TOP_MSDCPLL2_D2		41
++#define TOP_MSDCPLL2_D4		42
++#define TOP_SYSPLL_D2		43
++#define TOP_SYSPLL1_D2		44
++#define TOP_SYSPLL1_D4		45
++#define TOP_SYSPLL1_D8		46
++#define TOP_SYSPLL1_D16		47
++#define TOP_SYSPLL_D3		48
++#define TOP_SYSPLL2_D2		49
++#define TOP_SYSPLL2_D4		50
++#define TOP_SYSPLL_D5		51
++#define TOP_SYSPLL3_D2		52
++#define TOP_SYSPLL3_D4		53
++#define TOP_SYSPLL_D7		54
++#define TOP_SYSPLL4_D2		55
++#define TOP_SYSPLL4_D4		56
++#define TOP_TVDPLL_CK		57
++#define TOP_TVDPLL_D2		58
++#define TOP_TVDPLL_D4		59
++#define TOP_TVDPLL_D8		60
++#define TOP_TVDPLL_D16		61
++#define TOP_UNIVPLL_D2		62
++#define TOP_UNIVPLL1_D2		63
++#define TOP_UNIVPLL1_D4		64
++#define TOP_UNIVPLL1_D8		65
++#define TOP_UNIVPLL_D3		66
++#define TOP_UNIVPLL2_D2		67
++#define TOP_UNIVPLL2_D4		68
++#define TOP_UNIVPLL2_D8		69
++#define TOP_UNIVPLL_D5		70
++#define TOP_UNIVPLL3_D2		71
++#define TOP_UNIVPLL3_D4		72
++#define TOP_UNIVPLL3_D8		73
++#define TOP_UNIVPLL_D7		74
++#define TOP_UNIVPLL_D26		75
++#define TOP_UNIVPLL_D52		76
++#define TOP_VCODECPLL_CK	77
++#define TOP_VCODECPLL_370P5	78
++#define TOP_VENCPLL_CK		79
++#define TOP_VENCPLL_D2		80
++#define TOP_VENCPLL_D4		81
++#define TOP_AXI_SEL		82
++#define TOP_MEM_SEL		83
++#define TOP_DDRPHYCFG_SEL	84
++#define TOP_MM_SEL		85
++#define TOP_PWM_SEL		86
++#define TOP_VDEC_SEL		87
++#define TOP_VENC_SEL		88
++#define TOP_MFG_SEL		89
++#define TOP_CAMTG_SEL		90
++#define TOP_UART_SEL		91
++#define TOP_SPI_SEL		92
++#define TOP_USB20_SEL		93
++#define TOP_USB30_SEL		94
++#define TOP_MSDC50_0_H_SEL	95
++#define TOP_MSDC50_0_SEL	96
++#define TOP_MSDC30_1_SEL	97
++#define TOP_MSDC30_2_SEL	98
++#define TOP_MSDC30_3_SEL	99
++#define TOP_AUDIO_SEL		100
++#define TOP_AUD_INTBUS_SEL	101
++#define TOP_PMICSPI_SEL		102
++#define TOP_SCP_SEL		103
++#define TOP_ATB_SEL		104
++#define TOP_VENC_LT_SEL		105
++#define TOP_DPI0_SEL		106
++#define TOP_IRDA_SEL		107
++#define TOP_CCI400_SEL		108
++#define TOP_AUD_1_SEL		109
++#define TOP_AUD_2_SEL		110
++#define TOP_MEM_MFG_IN_SEL	111
++#define TOP_AXI_MFG_IN_SEL	112
++#define TOP_SCAM_SEL		113
++#define TOP_SPINFI_IFR_SEL	114
++#define TOP_HDMI_SEL		115
++#define TOP_DPILVDS_SEL		116
++#define TOP_MSDC50_2_H_SEL	117
++#define TOP_HDCP_SEL		118
++#define TOP_HDCP_24M_SEL	119
++#define TOP_RTC_SEL		120
++#define TOP_NR_CLK		121
++
++/* APMIXED_SYS */
++
++#define APMIXED_ARMCA15PLL	1
++#define APMIXED_ARMCA7PLL	2
++#define APMIXED_MAINPLL		3
++#define APMIXED_UNIVPLL		4
++#define APMIXED_MMPLL		5
++#define APMIXED_MSDCPLL		6
++#define APMIXED_VENCPLL		7
++#define APMIXED_TVDPLL		8
++#define APMIXED_MPLL		9
++#define APMIXED_VCODECPLL	10
++#define APMIXED_APLL1		11
++#define APMIXED_APLL2		12
++#define APMIXED_LVDSPLL		13
++#define APMIXED_MSDCPLL2	14
++#define APMIXED_NR_CLK		15
++
++/* INFRA_SYS */
++
++#define INFRA_DBGCLK		1
++#define INFRA_SMI		2
++#define INFRA_AUDIO		3
++#define INFRA_GCE		4
++#define INFRA_L2C_SRAM		5
++#define INFRA_M4U		6
++#define INFRA_CPUM		7
++#define INFRA_KP		8
++#define INFRA_CEC		9
++#define INFRA_PMICSPI		10
++#define INFRA_PMICWRAP		11
++#define INFRA_NR_CLK		12
++
++/* PERI_SYS */
++
++#define PERI_NFI		1
++#define PERI_THERM		2
++#define PERI_PWM1		3
++#define PERI_PWM2		4
++#define PERI_PWM3		5
++#define PERI_PWM4		6
++#define PERI_PWM5		7
++#define PERI_PWM6		8
++#define PERI_PWM7		9
++#define PERI_PWM		10
++#define PERI_USB0		11
++#define PERI_USB1		12
++#define PERI_AP_DMA		13
++#define PERI_MSDC30_0		14
++#define PERI_MSDC30_1		15
++#define PERI_MSDC30_2		16
++#define PERI_MSDC30_3		17
++#define PERI_NLI_ARB		18
++#define PERI_IRDA		19
++#define PERI_UART0		20
++#define PERI_UART1		21
++#define PERI_UART2		22
++#define PERI_UART3		23
++#define PERI_I2C0		24
++#define PERI_I2C1		25
++#define PERI_I2C2		26
++#define PERI_I2C3		27
++#define PERI_I2C4		28
++#define PERI_AUXADC		29
++#define PERI_SPI0		30
++#define PERI_I2C5		31
++#define PERI_NFIECC		32
++#define PERI_SPI		33
++#define PERI_IRRX		34
++#define PERI_I2C6		35
++#define PERI_NR_CLK		36
++
++#endif /* _DT_BINDINGS_CLK_MT8173_H */
 -- 
 1.8.1.1.dirty
