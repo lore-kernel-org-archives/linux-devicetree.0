@@ -1,93 +1,211 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 1/4] mmc: core: add support for hardware reset gpio line
-Date: Fri, 30 Jan 2015 11:37:01 +0100
-Message-ID: <54CB5ECD.4090909@samsung.com>
-References: <1422453595-21160-1-git-send-email-m.szyprowski@samsung.com>
- <1422453595-21160-2-git-send-email-m.szyprowski@samsung.com>
- <CAPDyKFpowidghwadJS+gYP0EVo6gRUhAG8s14CMEbwatFadP2Q@mail.gmail.com>
- <54C9FA48.5050705@samsung.com>
- <CABxcv=nbTcuzcmhYHKnDom5XFd+gqUbKRF0THCKsN5tL8-cBGA@mail.gmail.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v2 2/7] phy: miphy365x: Pass sysconfig register offsets
+ via syscfg dt property.
+Date: Fri, 30 Jan 2015 11:48:46 +0100
+Message-ID: <54CB618E.60808@st.com>
+References: <1420643052-4506-1-git-send-email-peter.griffin@linaro.org> <1420643052-4506-3-git-send-email-peter.griffin@linaro.org> <54CB5E7E.8050507@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <CABxcv=nbTcuzcmhYHKnDom5XFd+gqUbKRF0THCKsN5tL8-cBGA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Tobias Jakobi <liquid.acid@gmx.net>, Daniel Drake <drake@endlessm.com>, Sebastian Reichel <sre@kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Joonyoung Shim <jy0922.shim@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54CB5E7E.8050507@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, peppe.cavallaro@st.com, arnd@arndb.de
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Kishon,
 
-On 2015-01-29 11:56, Javier Martinez Canillas wrote:
-> On Thu, Jan 29, 2015 at 10:15 AM, Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
->>> Also, I wonder whether we could extend the mmc-pwrseq to cover your
->>> case? Did you consider that as an option?
+On 01/30/2015 11:35 AM, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Wednesday 07 January 2015 08:34 PM, Peter Griffin wrote:
+>> Based on Arnds review comments here https://lkml.org/lkml/2014/11/13/161,
+>> update the miphy365 phy driver to access sysconfig register offsets via
+>> syscfg dt property.
 >>
->> I didn't consider mmc-pwrseq yet. For me it looked straightforward to
-> I agree with Ulf that using mmc-pwrseq would be a good solution and in
-> fact I think the pwrseq_simple [0] driver will fit your use case since
-> it supports a reset GPIO pin which is what many WLAN chips attached to
-> a SDIO interface use.
+>> This is because the reg property should not be mixing address spaces
+>> like it does currently for miphy365. This change then also aligns us
+>> to how other platforms such as keystone and bcm7445 pass there syscon
+>> offsets via DT.
+>>
+>> This patch breaks DT compatibility, but this platform is considered WIP,
+>> and is only used by a few developers who are upstreaming support for it.
+>> This change has been done as a single atomic commit to ensure it is
+>> bisectable.
+> I'm dropping this from my tree since I didn't get Ack from
+> "arch/arm/boot/dts/stih416.dtsi" Maintainer.
+Sorry, on cover letter, I replied the series looked good to me.
+So you can add:
 
-Ok, I've checked mmc-prwseq and mmc-pwrseq-simple. I also checked the
-hardware and it mmc-pwrseq-simple cannot be used directly.
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 
-Although the signal is called RSTN (on Odroid U3 schema), the eMMC card
-gets resetted not on low line level, but during the rising edge. This RSTN
-line is also pulled up by the external resistor. However, the strangest
-thing is the fact that the default SoC configuration (which is applied
-during hw reset) for this GPIO line is input, pulled-down. The SoC
-internal pull-down is stronger than the external pull up, so in the end,
-during the SoC reboot the RSTN signal is set to zero. Later bootloader
-disables the internal pull-down.
+And even:
 
-To sum up - to perform proper reboot on Odroid U3/XU3, one need to set
-RSTN to zero, wait a while and the set it back to 1.
+Tested-by: Maxime Coquelin <maxime.coquelin@st.com>
 
-To achieve this with mmc-pwrseq-simple, I would need to modify the power_off
-callback to toggle reset line to zero and back to one. This however might
-not be desired to other sd/mmc cards used with mmc-pwrseq-simple.
-
-I can also provide separate mmc-pwrsrq-odroid driver, which will be very
-similar to mmc-pwrseq-simple.
-
-Ulf - which approach would you prefer?
-
+Kind regards,
+Maxime
 
 >
->> implement
->> it just like card detect or write-protection gpio pins. I already noticed
->> that
->> there is code for some mmc host driver, which perform mmc hardware reset. If
->> you
->> think that extending pwrseq is the better approach, I will try to update my
->> patches. This will add reboot handler to mmc-pwrseq then. The only question
->> is
-> I don't think that adding a reboot handler to mmc-pwrseq is needed.
-> AFAICT the call chain is:
->
-> sys_reboot() -> kernel_restart() -> device_shutdown() ->
-> mmc_bus_shutdown() -> _mmc_suspend() -> mmc_power_off() ->
-> mmc_pwrseq_power_off() -> struct mmc_pwrseq_ops .power_off
->
-> So since the pwrseq_simple already asserts the reset GPIO in
-> .power_off, it should be enough to ensure the eMMC will be reset to
-> its default configuration for the iROM to work properly.
->
-> It also asserts the GPIO pin in .pre_power_on and de-asserts in
-> .post_power_on which should be needed as well for the other case you
-> mentioned when a broken bootloader left the emmc card in some unknown
-> state.
-
-emergency_restart() doesn't call device_shutdown(), so I think it still 
-makes
-sense to add real reset handler to mmc-pwrseq to ensure that power_off will
-be called even during emergency_restart().
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+> Thanks
+> Kishon
+>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+>> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>   .../devicetree/bindings/phy/phy-miphy365x.txt      | 15 +++++------
+>>   arch/arm/boot/dts/stih416.dtsi                     | 10 ++++----
+>>   drivers/phy/phy-miphy365x.c                        | 29 ++++++++--------------
+>>   3 files changed, 23 insertions(+), 31 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>> index 42c8808..9802d5d 100644
+>> --- a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>> +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+>> @@ -6,8 +6,10 @@ for SATA and PCIe.
+>>   
+>>   Required properties (controller (parent) node):
+>>   - compatible    : Should be "st,miphy365x-phy"
+>> -- st,syscfg     : Should be a phandle of the system configuration register group
+>> -		  which contain the SATA, PCIe mode setting bits
+>> +- st,syscfg     : Phandle / integer array property. Phandle of sysconfig group
+>> +		  containing the miphy registers and integer array should contain
+>> +		  an entry for each port sub-node, specifying the control
+>> +		  register offset inside the sysconfig group.
+>>   
+>>   Required nodes	:  A sub-node is required for each channel the controller
+>>   		   provides. Address range information including the usual
+>> @@ -26,7 +28,6 @@ Required properties (port (child) node):
+>>   		  registers filled in "reg":
+>>   			- sata:   For SATA devices
+>>   			- pcie:   For PCIe devices
+>> -			- syscfg: To specify the syscfg based config register
+>>   
+>>   Optional properties (port (child) node):
+>>   - st,sata-gen	     :	Generation of locally attached SATA IP. Expected values
+>> @@ -39,20 +40,20 @@ Example:
+>>   
+>>   	miphy365x_phy: miphy365x@fe382000 {
+>>   		compatible      = "st,miphy365x-phy";
+>> -		st,syscfg  	= <&syscfg_rear>;
+>> +		st,syscfg  	= <&syscfg_rear 0x824 0x828>;
+>>   		#address-cells	= <1>;
+>>   		#size-cells	= <1>;
+>>   		ranges;
+>>   
+>>   		phy_port0: port@fe382000 {
+>> -			reg = <0xfe382000 0x100>, <0xfe394000 0x100>, <0x824 0x4>;
+>> -			reg-names = "sata", "pcie", "syscfg";
+>> +			reg = <0xfe382000 0x100>, <0xfe394000 0x100>;
+>> +			reg-names = "sata", "pcie";
+>>   			#phy-cells = <1>;
+>>   			st,sata-gen = <3>;
+>>   		};
+>>   
+>>   		phy_port1: port@fe38a000 {
+>> -			reg = <0xfe38a000 0x100>, <0xfe804000 0x100>, <0x828 0x4>;;
+>> +			reg = <0xfe38a000 0x100>, <0xfe804000 0x100>;;
+>>   			reg-names = "sata", "pcie", "syscfg";
+>>   			#phy-cells = <1>;
+>>   			st,pcie-tx-pol-inv;
+>> diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
+>> index fad9073..85afe01 100644
+>> --- a/arch/arm/boot/dts/stih416.dtsi
+>> +++ b/arch/arm/boot/dts/stih416.dtsi
+>> @@ -283,21 +283,21 @@
+>>   
+>>   		miphy365x_phy: phy@fe382000 {
+>>   			compatible      = "st,miphy365x-phy";
+>> -			st,syscfg  	= <&syscfg_rear>;
+>> +			st,syscfg	= <&syscfg_rear 0x824 0x828>;
+>>   			#address-cells	= <1>;
+>>   			#size-cells	= <1>;
+>>   			ranges;
+>>   
+>>   			phy_port0: port@fe382000 {
+>>   				#phy-cells = <1>;
+>> -				reg = <0xfe382000 0x100>, <0xfe394000 0x100>, <0x824 0x4>;
+>> -				reg-names = "sata", "pcie", "syscfg";
+>> +				reg = <0xfe382000 0x100>, <0xfe394000 0x100>;
+>> +				reg-names = "sata", "pcie";
+>>   			};
+>>   
+>>   			phy_port1: port@fe38a000 {
+>>   				#phy-cells = <1>;
+>> -				reg = <0xfe38a000 0x100>, <0xfe804000 0x100>, <0x828 0x4>;
+>> -				reg-names = "sata", "pcie", "syscfg";
+>> +				reg = <0xfe38a000 0x100>, <0xfe804000 0x100>;
+>> +				reg-names = "sata", "pcie";
+>>   			};
+>>   		};
+>>   
+>> diff --git a/drivers/phy/phy-miphy365x.c b/drivers/phy/phy-miphy365x.c
+>> index 6ab43a8..6c80154 100644
+>> --- a/drivers/phy/phy-miphy365x.c
+>> +++ b/drivers/phy/phy-miphy365x.c
+>> @@ -141,7 +141,7 @@ struct miphy365x_phy {
+>>   	bool pcie_tx_pol_inv;
+>>   	bool sata_tx_pol_inv;
+>>   	u32 sata_gen;
+>> -	u64 ctrlreg;
+>> +	u32 ctrlreg;
+>>   	u8 type;
+>>   };
+>>   
+>> @@ -179,7 +179,7 @@ static int miphy365x_set_path(struct miphy365x_phy *miphy_phy,
+>>   	bool sata = (miphy_phy->type == MIPHY_TYPE_SATA);
+>>   
+>>   	return regmap_update_bits(miphy_dev->regmap,
+>> -				  (unsigned int)miphy_phy->ctrlreg,
+>> +				  miphy_phy->ctrlreg,
+>>   				  SYSCFG_SELECT_SATA_MASK,
+>>   				  sata << SYSCFG_SELECT_SATA_POS);
+>>   }
+>> @@ -445,7 +445,6 @@ int miphy365x_get_addr(struct device *dev, struct miphy365x_phy *miphy_phy,
+>>   {
+>>   	struct device_node *phynode = miphy_phy->phy->dev.of_node;
+>>   	const char *name;
+>> -	const __be32 *taddr;
+>>   	int type = miphy_phy->type;
+>>   	int ret;
+>>   
+>> @@ -455,22 +454,6 @@ int miphy365x_get_addr(struct device *dev, struct miphy365x_phy *miphy_phy,
+>>   		return ret;
+>>   	}
+>>   
+>> -	if (!strncmp(name, "syscfg", 6)) {
+>> -		taddr = of_get_address(phynode, index, NULL, NULL);
+>> -		if (!taddr) {
+>> -			dev_err(dev, "failed to fetch syscfg address\n");
+>> -			return -EINVAL;
+>> -		}
+>> -
+>> -		miphy_phy->ctrlreg = of_translate_address(phynode, taddr);
+>> -		if (miphy_phy->ctrlreg == OF_BAD_ADDR) {
+>> -			dev_err(dev, "failed to translate syscfg address\n");
+>> -			return -EINVAL;
+>> -		}
+>> -
+>> -		return 0;
+>> -	}
+>> -
+>>   	if (!((!strncmp(name, "sata", 4) && type == MIPHY_TYPE_SATA) ||
+>>   	      (!strncmp(name, "pcie", 4) && type == MIPHY_TYPE_PCIE)))
+>>   		return 0;
+>> @@ -606,7 +589,15 @@ static int miphy365x_probe(struct platform_device *pdev)
+>>   			return ret;
+>>   
+>>   		phy_set_drvdata(phy, miphy_dev->phys[port]);
+>> +
+>>   		port++;
+>> +		/* sysconfig offsets are indexed from 1 */
+>> +		ret = of_property_read_u32_index(np, "st,syscfg", port,
+>> +					&miphy_phy->ctrlreg);
+>> +		if (ret) {
+>> +			dev_err(&pdev->dev, "No sysconfig offset found\n");
+>> +			return ret;
+>> +		}
+>>   	}
+>>   
+>>   	provider = devm_of_phy_provider_register(&pdev->dev, miphy365x_xlate);
+>>
