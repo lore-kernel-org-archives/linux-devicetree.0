@@ -1,96 +1,60 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] MAINTAINERS: Add entry for Maxim PMICs on Samsung boards
-Date: Fri, 30 Jan 2015 13:17:10 -0800
-Message-ID: <20150130211710.22722.17974@quantum>
-References: <1422612635-5711-1-git-send-email-k.kozlowski@samsung.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [Patch v2 1/6] soc: qcom: gsbi: Add support for ADM CRCI muxing
+Date: Fri, 30 Jan 2015 13:37:50 -0800
+Message-ID: <54CBF9AE.6060902@codeaurora.org>
+References: <1422599135-5588-1-git-send-email-agross@codeaurora.org> <1422599135-5588-2-git-send-email-agross@codeaurora.org> <B36DEAB1-2D89-4B6B-991E-C2EDBEB684D9@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422612635-5711-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <B36DEAB1-2D89-4B6B-991E-C2EDBEB684D9-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Krzysztof Kozlowski (2015-01-30 02:10:35)
-> Add myself and Chanwoo Choi as supporters to help in reviewing patches
-> for Maxim 77686 PMIC and Maxim 14577/77693 MUIC drivers:
->  - mfd (all of them),
->  - extcon (extcon-max14577.c, extcon-max77693.c),
->  - regulator (all of them),
->  - clock (clk-max77686.c),
->  - RTC (rtc-max77686.c).
-> 
-> Lately I am the author of contributors to them. These drivers are used
-> on Exynos-based boards (Trats 2, Gear 1 and Gear 2).
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 01/30/15 08:32, Kumar Gala wrote:
+> On Jan 30, 2015, at 12:25 AM, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrot=
+e:
+>
+>> Required properties if child node exists:
+>> - #address-cells: Must be 1
+>> - #size-cells: Must be 1
+>> - ranges: Must be present
+>>
+>> +Note: Each GSBI should have an alias correctly numbered in "aliases=
+" node.
+>> +
+>> Properties for children:
+>>
+>> A GSBI controller node can contain 0 or more child nodes representin=
+g serial
+>> @@ -37,6 +41,10 @@ Example for APQ8064:
+>>
+>> #include <dt-bindings/soc/qcom,gsbi.h>
+>>
+>> +	aliases {
+>> +		gsbi4 =3D <&gsbi4>;
+>> +	};
+> You appear to be using the alias name to determine a index number for=
+ the gsbi, if that is the case, than you should probably just add a cel=
+l-index node to the gsbi=92s for this purpose.
+>
 
-Acked-by: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+I thought cell-index was "deprecated" and referred more to things like
+enumerating all the devices on a bus by assigning them a unique ID.
+Aliases, on the other hand, allow us to enumerate a subset of devices
+that share the same bus with other devices of different types. For
+example, how would I know that a device is gsbi1 vs serial1 if they bot=
+h
+used cell-index and they both had the same parent node?
 
-> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. Add also Chanwoo Choi as supporter on his request [1].
-> 2. Move out chargers (power supply) to separate patch (applied already
->    by Sebastian Reichel [2]). Patch is rebased on next which includes
->    this.
-> 3. Add acks from Mark Brown and Lee Jones.
-> 
-> [1] https://lkml.org/lkml/2015/1/16/571
-> [2] http://git.infradead.org/battery-2.6.git/commit/f8f847b51a0e1cb0c96e706d5da0ac507d96c605
-> ---
->  MAINTAINERS | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5d7404add7ed..775a631118ef 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6191,6 +6191,26 @@ S:       Supported
->  F:     drivers/power/max14577_charger.c
->  F:     drivers/power/max77693_charger.c
->  
-> +MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BOARDS
-> +M:     Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> +M:     Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> +L:     linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +S:     Supported
-> +F:     drivers/*/max14577.c
-> +F:     drivers/*/max77686.c
-> +F:     drivers/*/max77693.c
-> +F:     drivers/extcon/extcon-max14577.c
-> +F:     drivers/extcon/extcon-max77693.c
-> +F:     drivers/rtc/rtc-max77686.c
-> +F:     drivers/clk/clk-max77686.c
-> +F:     Documentation/devicetree/bindings/mfd/max14577.txt
-> +F:     Documentation/devicetree/bindings/mfd/max77686.txt
-> +F:     Documentation/devicetree/bindings/mfd/max77693.txt
-> +F:     Documentation/devicetree/bindings/clock/maxim,max77686.txt
-> +F:     include/linux/mfd/max14577*.h
-> +F:     include/linux/mfd/max77686*.h
-> +F:     include/linux/mfd/max77693*.h
-> +
->  MAXIRADIO FM RADIO RECEIVER DRIVER
->  M:     Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
->  L:     linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> -- 
-> 1.9.1
-> 
+--=20
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
