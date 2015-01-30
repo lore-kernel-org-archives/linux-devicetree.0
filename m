@@ -1,39 +1,38 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/4] gpio: add parameter to allow the use named gpios
-Date: Fri, 30 Jan 2015 14:46:18 +0100
-Message-ID: <CACRpkdbywy3Nrg+d8YAGTYH_Z-AB=UDB7zyq85rD8WoCwAk5eA@mail.gmail.com>
-References: <1421876028-22799-1-git-send-email-o.schinagl@ultimaker.com>
-	<1421876028-22799-3-git-send-email-o.schinagl@ultimaker.com>
+Subject: Re: Re: [PATCH v4 1/3] pinctrl: add driver for Amlogic Meson SoCs
+Date: Fri, 30 Jan 2015 14:49:26 +0100
+Message-ID: <CACRpkdbp4VXuGA+Lhm0sE_SGzQT8OEx7B+BBKZmXoxOUHw1r-g@mail.gmail.com>
+References: <1421518516-26976-1-git-send-email-b.galvani@gmail.com>
+ <1421518516-26976-2-git-send-email-b.galvani@gmail.com>
+ <CACRpkdZ6CX1XePa0sOY-0B9He9jYPNLqUtkk3LEGeT6eSQW9ew@mail.gmail.com>
+ <2015012211022773401912@163.com>
+ <CACRpkdb=9K62kJbQHWK=Bqfcz7zVckKcF3riC-9RDdd-8vG7bg@mail.gmail.com>
+ <2015012310244690614024@163.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1421876028-22799-3-git-send-email-o.schinagl@ultimaker.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Olliver Schinagl <o.schinagl@ultimaker.com>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Alexander Shiyan <shc_work@mail.ru>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2015012310244690614024@163.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: 48169172 <48169172@163.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Victor Wan <victor.wan@amlogic.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, "b.galvani" <b.galvani@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Kumar Gala <galak@codeaurora.org>, "carlo@caione.org" <carlo@caione.org>, Jerry Cao <jerry.cao@amlogic.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 21, 2015 at 10:33 PM, Olliver Schinagl
-<o.schinagl@ultimaker.com> wrote:
-
-> From: Olliver Schinagl <oliver@schinagl.nl>
->
-> The gpio binding document says that new code should always use named
-> gpios. Patch 40b73183 added support to parse a list of gpios from child
-> nodes, but does not make it possible to use named gpios. This patch adds
-> the con_id property and implements it is done in gpiolib.c, where the
-> old-style of using unnamed gpios still works.
->
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> ---
->  drivers/gpio/devres.c                     | 18 +++++++++++++++++-
->  drivers/input/keyboard/gpio_keys_polled.c |  2 +-
->  drivers/leds/leds-gpio.c                  |  2 +-
->  include/linux/gpio/consumer.h             |  1 +
-
-Alexandre: does this match your vision of how it should work, i.e. ACK?
-
-Bryan/Dmitry: can you ACK the oneliners in your subsystems?
-
-Yours,
-Linus Walleij
+T24gRnJpLCBKYW4gMjMsIDIwMTUgYXQgMzoyNSBBTSwgNDgxNjkxNzIgPDQ4MTY5MTcyQDE2My5j
+b20+IHdyb3RlOgoKPiBIaSBMaW51c++8jAo+IEkgZG8gbm90IGZpbmQgdGhlIG1lc29uIGRpciwK
+PiBodHRwczovL2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC9saW51c3cvbGlu
+dXgtcGluY3RybC5naXQvdHJlZS9kcml2ZXJzL3BpbmN0cmw/aD1kZXZlbAo+IElzIHRoZXJlIHNv
+bWV0aGluZyB3cm9uZz8KCk1heWJlIEkgdG9vayB0aW1lIHB1c2hpbmcgaXQgb3V0PwoKSXQncyBj
+ZXJ0YWlubHkgdGhlcmUgbm93LCBldmVuIG9uIHRoZSBsaW5rIHlvdSBzZW50LgoKWW91cnMsCkxp
+bnVzIFdhbGxlaWoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWFybS1rZXJuZWwK
