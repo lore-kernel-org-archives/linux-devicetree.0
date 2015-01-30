@@ -1,69 +1,43 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 24/24] Documentation: DT bindings: add nvidia, denver
- compatible string
-Date: Fri, 30 Jan 2015 19:33:56 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1501301933170.6569@utopia.booyaka.com>
-References: <20150128234935.20644.89300.stgit@dusk.lan> <20150128234938.20644.69989.stgit@dusk.lan> <CAL_JsqJq8D86gUdw80Nev=zmW=kYR90iNKiTzciwpaGx2qNJsA@mail.gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH] ARM: dst: OMAP3-N900: Add microphone bias voltages
+Date: Fri, 30 Jan 2015 21:03:22 +0100
+Message-ID: <20150130200321.GA2087@amd>
+References: <1422645800-21287-1-git-send-email-jarkko.nikula@bitmer.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJq8D86gUdw80Nev=zmW=kYR90iNKiTzciwpaGx2qNJsA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Rohit Vaswani <rvaswani@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pwalmsley@nvidia.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422645800-21287-1-git-send-email-jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
-
-On Thu, 29 Jan 2015, Rob Herring wrote:
-
-> On Wed, Jan 28, 2015 at 5:49 PM, Paul Walmsley <paul@pwsan.com> wrote:
-> >
-> > Add a compatible string for the NVIDIA Denver CPU to the ARM CPU DT
-> > binding documentation file.  The primary objective here is to keep
-> > checkpatch.pl from warning when the compatible string is used in an
-> > SoC DT file, per:
-> >
-> > http://marc.info/?l=linux-tegra&m=142201349727836&w=2
-> >
-> >
-> > Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Pawel Moll <pawel.moll@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> > Cc: Kumar Gala <galak@codeaurora.org>
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Olof Johansson <olof@lixom.net>
-> > Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > Cc: Rohit Vaswani <rvaswani@codeaurora.org>
-> > Cc: Paul Walmsley <pwalmsley@nvidia.com>
-> > Cc: Marc Carino <marc.ceeeee@gmail.com>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.txt |    1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> > index b2aacbe16ed9..4ea31f0b7764 100644
-> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> > @@ -175,6 +175,7 @@ nodes to be present and contain the properties described below.
-> >                             "marvell,pj4a"
-> >                             "marvell,pj4b"
-> >                             "marvell,sheeva-v5"
-> > +                           "nvidia,denver" (not yet matched in the code)
+On Fri 2015-01-30 21:23:20, Jarkko Nikula wrote:
+> From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 > 
-> There's not variations or versions of Denver cores or plans to change
-> from the codename?
+> N900 audio recording needs that codec provides bias voltage for integrated
+> digital microphone and headset microphone depending which one is used.
+> Digital microphone uses 2 V bias and it comes from the codec A part. Codec
+> B part drives the headset microphone bias and that is set to 2.5 V.
+> 
+> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> [Jarkko: Headset mic bias changed to 2 (2.5 V) as it was before commit
+> e2e8bfdf6157 ("ASoC: tlv320aic3x: Convert mic bias to a supply widget")]
+> Signed-off-by: Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>
+> ---
+> Pavel: I hope you don't mind I took your diff from
+> http://marc.info/?l=linux-kernel&m=142249383224678&w=2
+> and added your Signed-off-by?
 
-Hard to say what the future will bring.  I'll change it to 
-"nvidia,tegra132-denver".
+No problem, my patches are GPLed. Thanks!
+								Pavel
+								
 
-
-- Paul
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
