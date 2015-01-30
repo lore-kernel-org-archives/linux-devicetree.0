@@ -1,296 +1,211 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Fri, 30 Jan 2015 09:06:07 +0900
-Message-ID: <54CACAEF.6070208@samsung.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
- <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
- <54C99197.5070605@samsung.com> <54CA18EF.2060607@ti.com>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH 3/4] NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver
+Date: Fri, 30 Jan 2015 01:07:38 +0100
+Message-ID: <20150130000738.GB20998@ribalta.ger.corp.intel.com>
+References: <1421940460-14049-1-git-send-email-clement.perrochaud@effinnov.com>
+ <1421940460-14049-4-git-send-email-clement.perrochaud@effinnov.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <54CA18EF.2060607@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1421940460-14049-4-git-send-email-clement.perrochaud@effinnov.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+To: clement.perrochaud@effinnov.com
+Cc: linux-nfc@lists.01.org, =?iso-8859-1?Q?Cl=E9ment?= Perrochaud <clement.perrochaud@nxp.com>, sunil.jogi@nxp.com, jerome.pele@nxp.com, Charles.Gorand-Effinnov@nxp.com, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, grant.likely@linaro.org, lefrique@marvell.com, christophe.ricard@gmail.com, cuissard@marvell.com, bzhao@marvell.com, hirent@marvell.com, akarwar@marvell.com, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+Hi Clement,
 
-On 01/29/2015 08:26 PM, Roger Quadros wrote:
-> Chanwoo,
-> 
-> On 29/01/15 03:49, Chanwoo Choi wrote:
->> Hi Roger,
->>
->> We need to discuss one point about 'id_irqwake'.
->> I don't recommend to use 'id_irqwake' field.
->>
->> And I catch build warning by using "select" keywork in Kconfig.
->> It is my wrong guide of "select" keyword. So, I'll change it 
->> as 'depends on' keyword.
->>
->> Looks good to me except for 'id_irqwake'. 
->> I'll apply this patch on 3.21 queue after completing this discussion.
->>
->> On 01/28/2015 09:15 PM, Roger Quadros wrote:
->>> This driver observes the USB ID pin connected over a GPIO and
->>> updates the USB cable extcon states accordingly.
->>>
->>> The existing GPIO extcon driver is not suitable for this purpose
->>> as it needs to be taught to understand USB cable states and it
->>> can't handle more than one cable per instance.
->>>
->>> For the USB case we need to handle 2 cable states.
->>> 1) USB (attach/detach)
->>> 2) USB-Host (attach/detach)
->>>
->>> This driver can be easily updated in the future to handle VBUS
->>> events in case it happens to be available on GPIO for any platform.
->>>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>> v3:
->>> - removed IRQF_NO_SUSPEND flag. Added IRQF_TRIGGER_RISING and
->>>   IRQF_TRIGGER_FALLING
->>> - Added disable_irq() to suspend() and enable_irq() to resume()
->>>
->>>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  18 ++
->>>  drivers/extcon/Kconfig                             |   7 +
->>>  drivers/extcon/Makefile                            |   1 +
->>>  drivers/extcon/extcon-usb-gpio.c                   | 233 +++++++++++++++++++++
->>>  4 files changed, 259 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>> new file mode 100644
->>> index 0000000..85fe6b0
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>> @@ -0,0 +1,18 @@
->>> +USB GPIO Extcon device
->>> +
->>> +This is a virtual device used to generate USB cable states from the USB ID pin
->>> +connected to a GPIO pin.
->>> +
->>> +Required properties:
->>> +- compatible: Should be "linux,extcon-usb-gpio"
->>> +- id-gpio: gpio for USB ID pin. See gpio binding.
->>> +
->>> +Example:
->>> +	extcon_usb1 {
->>> +		compatible = "linux,extcon-usb-gpio";
->>> +		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
->>> +	}
->>> +
->>> +	&omap_dwc3_1 {
->>> +		extcon = <&extcon_usb1>;
->>> +	};
->>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
->>> index 6a1f7de..fd11536 100644
->>> --- a/drivers/extcon/Kconfig
->>> +++ b/drivers/extcon/Kconfig
->>> @@ -93,4 +93,11 @@ config EXTCON_SM5502
->>>  	  Silicon Mitus SM5502. The SM5502 is a USB port accessory
->>>  	  detector and switch.
->>>  
->>> +config EXTCON_USB_GPIO
->>> +	tristate "USB GPIO extcon support"
->>> +	select GPIOLIB
->>
->> I catch the build warning if using 'select' instead of 'depends on' as following:
->> It is my wrong guide to you. So, I'll modify it by using "depends on" as your original patch.
-> 
-> OK. Thanks.
-> 
->>
->> make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- zImage  -j 8
->> scripts/kconfig/conf --silentoldconfig Kconfig
->> drivers/gpio/Kconfig:34:error: recursive dependency detected!
->> drivers/gpio/Kconfig:34:	symbol GPIOLIB is selected by EXTCON_USB_GPIO
->> drivers/extcon/Kconfig:96:	symbol EXTCON_USB_GPIO depends on EXTCON
->> drivers/extcon/Kconfig:1:	symbol EXTCON is selected by CHARGER_MANAGER
->> drivers/power/Kconfig:316:	symbol CHARGER_MANAGER depends on POWER_SUPPLY
->> drivers/power/Kconfig:1:	symbol POWER_SUPPLY is selected by HID_SONY
->> drivers/hid/Kconfig:670:	symbol HID_SONY depends on NEW_LEDS
->> drivers/leds/Kconfig:8:	symbol NEW_LEDS is selected by BCMA_DRIVER_GPIO
->> drivers/bcma/Kconfig:75:	symbol BCMA_DRIVER_GPIO depends on GPIOLIB
->>
->>> +	help
->>> +	  Say Y here to enable GPIO based USB cable detection extcon support.
->>> +	  Used typically if GPIO is used for USB ID pin detection.
->>> +
->>>  endif # MULTISTATE_SWITCH
->>> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
->>> index 0370b42..6a08a98 100644
->>> --- a/drivers/extcon/Makefile
->>> +++ b/drivers/extcon/Makefile
->>> @@ -12,3 +12,4 @@ obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
->>>  obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
->>>  obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
->>>  obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
->>> +obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
->>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
->>> new file mode 100644
->>> index 0000000..99a58b2
->>> --- /dev/null
->>> +++ b/drivers/extcon/extcon-usb-gpio.c
->>> @@ -0,0 +1,233 @@
->>> +/**
->>> + * drivers/extcon/extcon-usb-gpio.c - USB GPIO extcon driver
->>> + *
->>> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
->>> + * Author: Roger Quadros <rogerq@ti.com>
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + */
->>> +
->>> +#include <linux/extcon.h>
->>> +#include <linux/init.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/irq.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_gpio.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/workqueue.h>
->>> +
->>> +#define USB_GPIO_DEBOUNCE_MS	20	/* ms */
->>> +
->>> +struct usb_extcon_info {
->>> +	struct device *dev;
->>> +	struct extcon_dev *edev;
->>> +
->>> +	struct gpio_desc *id_gpiod;
->>> +	int id_irq;
->>> +	bool id_irqwake;		/* ID wakeup enabled flag */
->>
->> Do you really think id_irqwake is necessary?
->> I think it is not necessary.
-> 
-> I will explain below why it is necessary.
-> 
->>
->>> +
->>> +	unsigned long debounce_jiffies;
->>> +	struct delayed_work wq_detcable;
->>> +};
->>> +
->>> +/* List of detectable cables */
->>> +enum {
->>> +	EXTCON_CABLE_USB = 0,
->>> +	EXTCON_CABLE_USB_HOST,
->>> +
->>> +	EXTCON_CABLE_END,
->>> +};
->>> +
->>> +static const char *usb_extcon_cable[] = {
->>> +	[EXTCON_CABLE_USB] = "USB",
->>> +	[EXTCON_CABLE_USB_HOST] = "USB-Host",
->>> +	NULL,
->>> +};
->>> +
->>
->> [snip]
->>
->>> +
->>> +static int usb_extcon_remove(struct platform_device *pdev)
->>> +{
->>> +	struct usb_extcon_info *info = platform_get_drvdata(pdev);
->>> +
->>> +	cancel_delayed_work_sync(&info->wq_detcable);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +#ifdef CONFIG_PM_SLEEP
->>> +static int usb_extcon_suspend(struct device *dev)
->>> +{
->>> +	struct usb_extcon_info *info = dev_get_drvdata(dev);
->>> +
->>> +	if (device_may_wakeup(dev))
->>> +		if (!enable_irq_wake(info->id_irq))
->>> +			info->id_irqwake = true;
->>> +
->>
->> You can simplify this code as following without 'id_irqwake':
->>
->> 	if (device_may_wakeup(dev))
->> 		enable_irq_wake(info->id_irq);
-> 
-> enable_irq_wake() can fail. And if it does we need to keep track of it
-> to prevent unbalanced disable_irq_wake() call in resume().
-> That's the reason I've added the id_irqwake flag in struct usb_extcon_info.
+On Thu, Jan 22, 2015 at 04:27:39PM +0100, clement.perrochaud@effinnov.c=
+om wrote:
+> From: Cl=E9ment Perrochaud <clement.perrochaud@nxp.com>
+>=20
+> Signed-off-by: Cl=E9ment Perrochaud <clement.perrochaud@nxp.com>
+> Signed-off-by: Cl=E9ment Perrochaud <clement.perrochaud@effinnov.com>
+Are you sure you want both S-O-B lines ?
 
-It is not proper solution using id_irqwake. If fail to execute enable_irq_wake(),
-usb_extcon_suspend() function have to return error immediately.
 
-> 
->>
->>> +	/*
->>> +	 * We don't want to process any IRQs after this point
->>> +	 * as GPIOs used behind I2C subsystem might not be
->>> +	 * accessible until resume completes. So disable IRQ.
->>> +	 */
->>> +	disable_irq(info->id_irq);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int usb_extcon_resume(struct device *dev)
->>> +{
->>> +	struct usb_extcon_info *info = dev_get_drvdata(dev);
->>> +
->>> +	if (info->id_irqwake) {
->>> +		disable_irq_wake(info->id_irq);
->>> +		info->id_irqwake = false;
->>> +	}
->>
->> ditto.
->>
->> 	if (device_may_wakeup(dev))
->> 		disable_irq_wake(info->id_irq);
->>
->>> +
->>> +	enable_irq(info->id_irq);
->>> +
->>> +	return 0;
->>> +}
->>> +#endif
->>> +
->>> +static SIMPLE_DEV_PM_OPS(usb_extcon_pm_ops,
->>> +			 usb_extcon_suspend, usb_extcon_resume);
->>> +
->>> +static struct of_device_id usb_extcon_dt_match[] = {
->>> +	{ .compatible = "linux,extcon-usb-gpio", },
->>> +	{ /* sentinel */ }
->>> +};
->>> +MODULE_DEVICE_TABLE(of, usb_extcon_dt_match);
->>> +
->>> +static struct platform_driver usb_extcon_driver = {
->>> +	.probe		= usb_extcon_probe,
->>> +	.remove		= usb_extcon_remove,
->>> +	.driver		= {
->>> +		.name	= "extcon-usb-gpio",
->>> +		.pm	= &usb_extcon_pm_ops,
->>> +		.of_match_table = usb_extcon_dt_match,
->>> +	},
->>> +};
->>> +
->>> +module_platform_driver(usb_extcon_driver);
->>> +
->>> +MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
->>> +MODULE_DESCRIPTION("USB GPIO extcon driver");
->>> +MODULE_LICENSE("GPL v2");
+> +static int nxp_nci_i2c_fw_read(struct nxp_nci_i2c_phy *phy,
+> +			       struct sk_buff **skb)
+> +{
+> +	struct i2c_client *client =3D phy->i2c_dev;
+> +	u16 header;
+> +	size_t frame_len;
+> +	int r;
+> +
+> +	r =3D i2c_master_recv(client, (u8 *) &header, NXP_NCI_FW_HDR_LEN);
+> +	if (r < 0) {
+> +		goto fw_read_exit;
+> +	} else if (r !=3D NXP_NCI_FW_HDR_LEN) {
+> +		nfc_err(&client->dev, "Incorrect header length: %u\n", r);
+> +		r =3D -EBADMSG;
+> +		goto fw_read_exit;
+> +	}
+> +
+> +	frame_len =3D (get_unaligned_be16(&header) & NXP_NCI_FW_FRAME_LEN_M=
+ASK) +
+> +		    NXP_NCI_FW_CRC_LEN;
+> +
+> +	*skb =3D alloc_skb(NXP_NCI_FW_HDR_LEN + frame_len, GFP_KERNEL);
+> +	if (*skb =3D=3D NULL) {
+> +		r =3D -ENOMEM;
+> +		goto fw_read_exit;
+> +	}
+> +
+> +	memcpy(skb_put(*skb, NXP_NCI_FW_HDR_LEN), &header, NXP_NCI_FW_HDR_L=
+EN);
+> +
+> +	r =3D i2c_master_recv(client, skb_put(*skb, frame_len), frame_len);
+> +	if (r !=3D frame_len) {
+> +		nfc_err(&client->dev,
+> +			"Invalid frame length: %u (expected %u)\n",
+> +			r, frame_len);
+> +		r =3D -EBADMSG;
+> +		goto fw_read_exit_free_skb;
+> +	}
+> +
+> +	r =3D 0;
+> +	goto fw_read_exit;
+return 0; is enough.
 
-Thanks,
-Chanwoo
+> +static int nxp_nci_i2c_nci_read(struct nxp_nci_i2c_phy *phy,
+> +				struct sk_buff **skb)
+> +{
+> +	struct nci_ctrl_hdr header; /* May actually be a data header */
+> +	struct i2c_client *client =3D phy->i2c_dev;
+> +	int r;
+> +
+> +	r =3D i2c_master_recv(client, (u8 *) &header, NCI_CTRL_HDR_SIZE);
+> +	if (r < 0) {
+> +		goto nci_read_exit;
+> +	} else if (r !=3D NCI_CTRL_HDR_SIZE) {
+> +		nfc_err(&client->dev, "Incorrect header length: %u\n", r);
+> +		r =3D -EBADMSG;
+> +		goto nci_read_exit;
+> +	}
+> +
+> +	*skb =3D alloc_skb(NCI_CTRL_HDR_SIZE + header.plen, GFP_KERNEL);
+> +	if (*skb =3D=3D NULL) {
+> +		r =3D -ENOMEM;
+> +		goto nci_read_exit;
+> +	}
+> +
+> +	memcpy(skb_put(*skb, NCI_CTRL_HDR_SIZE), (void *) &header,
+> +	       NCI_CTRL_HDR_SIZE);
+> +
+> +	r =3D i2c_master_recv(client, skb_put(*skb, header.plen), header.pl=
+en);
+> +	if (r !=3D header.plen) {
+> +		nfc_err(&client->dev,
+> +			"Invalid frame payload length: %u (expected %u)\n",
+> +			r, header.plen);
+> +		r =3D -EBADMSG;
+> +		goto nci_read_exit_free_skb;
+> +	}
+> +
+> +	r =3D 0;
+> +	goto nci_read_exit;
+Ditto.
+
+> +static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
+> +{
+> +	struct nxp_nci_i2c_phy *phy =3D phy_id;
+> +	struct i2c_client *client;
+> +	struct nxp_nci_info *info;
+> +
+> +	struct sk_buff *skb =3D NULL;
+> +	int r =3D 0;
+> +
+> +	if (!phy || !phy->ndev)
+> +		goto exit_irq_none;
+> +
+> +	client =3D phy->i2c_dev;
+> +
+> +	if (!client || irq !=3D client->irq)
+> +		goto exit_irq_none;
+> +
+> +	if (phy->hard_fault !=3D 0)
+> +		goto exit_irq_handled;
+> +
+> +	info =3D nci_get_drvdata(phy->ndev);
+
+You probably want to take the info_lock mutex here.
+
+> +	switch (info->mode) {
+> +	case NXP_NCI_MODE_NCI:
+> +		r =3D nxp_nci_i2c_nci_read(phy, &skb);
+> +		break;
+> +	case NXP_NCI_MODE_FW:
+> +		r =3D nxp_nci_i2c_fw_read(phy, &skb);
+> +		break;
+> +	case NXP_NCI_MODE_COLD:
+> +		r =3D -EREMOTEIO;
+> +		break;
+> +	}
+> +
+> +	if (r =3D=3D -EREMOTEIO) {
+> +		phy->hard_fault =3D r;
+> +		skb =3D NULL;
+> +	} else if (r < 0) {
+> +		nfc_err(&client->dev, "Read failed with error %d\n", r);
+> +		goto exit_irq_handled;
+> +	}
+> +
+> +	switch (info->mode) {
+> +	case NXP_NCI_MODE_NCI:
+> +		nci_recv_frame(phy->ndev, skb);
+> +		break;
+> +	case NXP_NCI_MODE_FW:
+> +		nxp_nci_fw_recv_frame(phy->ndev, skb);
+> +		break;
+> +	case NXP_NCI_MODE_COLD:
+> +		break;
+> +	}
+> +
+> +exit_irq_handled:
+> +	return IRQ_HANDLED;
+> +exit_irq_none:
+> +	WARN_ON_ONCE(1);
+> +	return IRQ_NONE;
+> +}
+> +static int nxp_nci_i2c_request_gpios(struct nxp_nci_i2c_phy *phy)
+> +{
+> +	int r;
+> +
+> +	r =3D gpio_request(phy->gpio_en, "nxp_nci_en");
+Please use the devm_gpiod_* API so that you don't need to free GPIOs
+explicitely.
+
+
+> +	if (r < 0)
+> +		goto err_out;
+> +
+> +	r =3D gpio_direction_output(phy->gpio_en, 0);
+> +	if (r < 0)
+> +		goto err_gpio_en;
+> +
+> +	r =3D gpio_request(phy->gpio_fw, "nxp_nci_fw");
+> +	if (r < 0)
+> +		goto err_gpio_en;
+> +
+> +	r =3D gpio_direction_output(phy->gpio_fw, 0);
+> +	if (r < 0)
+> +		goto err_gpio_fw;
+> +
+> +	goto err_out;
+> +
+> +err_gpio_fw:
+> +	gpio_free(phy->gpio_fw);
+> +err_gpio_en:
+> +	gpio_free(phy->gpio_en);
+> +err_out:
+> +	return r;
+> +}
+> +
+> +static void nxp_nci_i2c_free_gpios(struct nxp_nci_i2c_phy *phy)
+> +{
+> +	gpio_free(phy->gpio_fw);
+> +	gpio_free(phy->gpio_en);
+> +}
+You would no longer need that one with devm_gpiod_*.
