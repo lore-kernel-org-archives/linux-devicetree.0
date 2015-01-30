@@ -1,62 +1,106 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
-Date: Fri, 30 Jan 2015 12:00:16 +0100
-Message-ID: <54CB6440.1010002@gmail.com>
-References: <E1YH5bU-0005mG-3L@bombadil.infradead.org> <54CB5267.5060004@gmail.com> <20150130113118.5523ed68@armhf>
-Content-Type: text/plain; charset=utf-8; format=flowed
+From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Subject: Re: [PATCH v8 0/2] Imagination Technologies PWM support
+Date: Fri, 30 Jan 2015 08:01:00 -0300
+Message-ID: <54CB646C.7040705@imgtec.com>
+References: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com> <54BE3369.9000802@imgtec.com> <54CA6089.50505@imgtec.com> <20150130091832.GA16744@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150130113118.5523ed68@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150130091832.GA16744@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Andrew Bresticker <abrestic@chromium.org>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-On 30.01.2015 11:31, Jean-Francois Moine wrote:
-> On Fri, 30 Jan 2015 10:44:07 +0100
-> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> I had a closer look on the Compulab website of the SoM [1] and think
->> that we'll have to convert it to dove-cm-a510.dtsi and the baseboard
->> Gabriel is using (maybe SBC-A510 [2]).
->
-> I don't understand why the A510 contained in the cm-a510 should be
-> different from the one of the other boards (I just noticed a second
-> ethernet and a WiFi device - but, is the Compulab document up to date?).
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-It is not the SoM that is different, but the baseboard it is attached
-to. So, the SoM makes a second layer of dtsi around the SoC but is not
-sufficient for a board dts.
+Hi Thierry,
 
-Regarding the on-SoM WiFi, that will be available on _any_ cm-a510
-equipped to _any_ baseboard, so it can be enabled in the som.dtsi.
+On 01/30/2015 06:18 AM, Thierry Reding wrote:
+> On Thu, Jan 29, 2015 at 01:32:09PM -0300, Ezequiel Garcia wrote:
+>> On 01/20/2015 07:52 AM, Ezequiel Garcia wrote:
+>>> 
+>>> 
+>>> On 01/09/2015 02:54 PM, Ezequiel Garcia wrote:
+>>>> A new round for the IMG PWM driver.
+>>>> 
+>>>> The IMG PWM controller is muxed with a PDM controller,
+>>>> through a shared so-called periph register bit, which sets
+>>>> the output as PWM or PDM. Because this register is not part
+>>>> of the pin controller block, but rather PWM/PDM specific, and
+>>>> because the register is also used to set the PDM value, it is
+>>>> simpler to use a regmap-based syscon to deal with it.
+>>>> 
+>>>> This time, I'm removing the PDM driver from the submission
+>>>> and submitting the PWM alone. The PDM was written as a misc
+>>>> driver, but had some design issues, so for now I'm proposing
+>>>> to merge the PWM only.
+>>>> 
+>>>> The series is based on v3.19-rc3. If at all possible I'd like
+>>>> to see this merged for v3.20.
+>>>> 
+>>> 
+>>> Thierry,
+>>> 
+>>> Any comments on this? Any chance we merge it in time for
+>>> v3.20? It's -rc5 already and I've started to worry.
+>>> 
+>> 
+>> Thierry,
+>> 
+>> I'm very sorry to be so bothering, but I got no news from you and
+>> it's -rc6 already. I'd say I'll resend this series to Andrew
+>> Morton, hoping we can merge this for v3.20.
+>> 
+>> Please let me know if you'll be able to pick this.
+> 
+> I can pick it up if you make up your mind about the license. The
+> header comment says GPL v2 or later, but MODULE_LICENSE has "GPL
+> v2", which does not include the "or later" part.
+> 
 
-The second ethernet comes from a PCIe attached NIC, and as you already
-said, we simply don't know (yet) if it is actually wired-up on Gabriel's
-baseboard. If it is not wired-up on the baseboard, we definitely want
-it disabled in DT, too.
+License should be GPL v2, sorry about that. Need me to fix it and
+resend or can you amend it before pushing this?
 
-> If it is the same, the dove.dtsi should work (and it seems to work for
-> Gabriel).
+> Also you're making it especially difficult to build-test by not 
+> providing even the basic bits of your SoC support first. All even 
+> linux-next seems to have for the Pistachio SoC is the addition of
+> a compatible string to the dw-mmc driver.
+> 
 
-Of course it does work for Gabriel but we don't want to exclusively
-mainline Gabriel's setup. In the best case, we want to provide a
-dove-cm-a510.dtsi that can be included in any baseboard somebody is
-using.
+Well, we've added COMPILE_TEST for precisely this reason, so you only
+need to select COMPILE_TEST on any arch and you'll be able to build
+test the driver.
 
-> The only difference with the cm-a510 is the presence or not of the
-> connectors. So, all the Dove devices could be enabled in the DT, and,
-> if some room is needed in the board, the .config could be adapted
-> removing the useless drivers and have a minimal kernel.
+> I'll take the PWM driver, but I'll assume that you'll eventually
+> have more pieces available, in which case I'd appreciate a note so
+> I can update my build scripts.
+> 
 
-Adapting the .config and removing drivers is actually not an option.
-IMHO, introducing DT was meant for a single multi-arch kernel that
-can be shipped with common Linux distros. Therefore, DT is the place
-you enable/disable available resources. You leave most of the SoC (and
-SoM) nodes disabled as long as you cannot tell if there is a
-corresponding connector available.
+If you can pick it, it would be great. I understand it's hard to
+accept patches for drivers, when there's little testing possibilities.
+But on the other side, isn't it a positive thing that a vendor is
+pushing drivers this early?
 
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks a lot,
+- -- 
+Ezequiel
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJUy2RhAAoJEIOKbhOEIHKiWB0QAKc4h+YLjxLLa7y0/NfoEiqV
+gwipBbrfO4leAB6RUiDOGil53Ir0Pxg87IbCHV5A0Gzxahv47GG41DYPVzbU3lHm
+DGkGqyXDf0BNQqJkCXmDWV9/8pnjFfUMDlSrs15pxXTaRjZ7m6CrxCoZof5UVt91
+4cmeDYHg4lr+YzT3oXuyiKFlrIRrT5heD3gfyL5IB9qQypR2KPnpDrCwMcmT6+ag
+zI6sg6OAi8de7ZvSWEZSK7WkymhgduR9Rt0WRQBC3EKF2dCsUxhmZt14RJsDcpEK
+LWn5z1FxImtJq8vWOq/E2F9AWtQ/o9gUeII2myNDaL2SIrVoggUP+yKV51J8bidl
+G2HXU8NEIHCaqcKl5sdbeEbB4diXVqGJu+d9SOM2lrW2PlwWN63jgnGfyYc2RadH
+60adajBgNjs9Ujfo5nFy+aYXJtJZk+4b1M0UMI+2qKV4G9PBfDrrpUMBRCRt8il4
+A15lUoHTwTeLQp8m7YmNuoKLhLmeVrBgbzBagFLUZgpJs7TEYIWefrh/jos37n2s
+aNlVW55c5CXDMDX9Bef4ar6Ch95TOxPqiED70e2/lNM0ckRzd7viQandUxquvc9q
+mSWhSxYuT62/B6innSbuWLdifKtCsqX+QQIo2NBC3AB+NVybEmC89gB8jx+Py7pX
+YS0wpCGXivYm3AIWhhyT
+=qi1N
+-----END PGP SIGNATURE-----
