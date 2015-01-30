@@ -1,48 +1,165 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 2/4] NFC: nxp-nci: Add support for NXP NCI chips
-Date: Fri, 30 Jan 2015 01:10:48 +0100
-Message-ID: <20150130001048.GD20998@ribalta.ger.corp.intel.com>
-References: <1421940460-14049-1-git-send-email-clement.perrochaud@effinnov.com>
- <1421940460-14049-3-git-send-email-clement.perrochaud@effinnov.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
+Date: Fri, 30 Jan 2015 09:11:20 +0900
+Message-ID: <54CACC28.3050306@samsung.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
+ <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421940460-14049-3-git-send-email-clement.perrochaud-BPEPtVrvniRWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: clement.perrochaud-BPEPtVrvniRWk0Htik3J/w@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, =?iso-8859-1?Q?Cl=E9ment?= Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>, sunil.jogi-3arQi8VN3Tc@public.gmane.org, jerome.pele-3arQi8VN3Tc@public.gmane.org, Charles.Gorand-Effinnov-3arQi8VN3Tc@public.gmane.org, lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lefrique-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, bzhao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, hirent-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <54C8D2F4.9050404@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Clement,
+Hi Roger,
 
-On Thu, Jan 22, 2015 at 04:27:38PM +0100, clement.perrochaud-BPEPtVrvniRWk0Htik3J/w@public.gmane.org wrote:
-> @@ -686,7 +686,7 @@ L:	alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org (moderated for non-subscribers)
->  W:	http://blackfin.uclinux.org/
->  S:	Supported
->  F:	sound/soc/blackfin/*
-> - 
+On 01/28/2015 09:15 PM, Roger Quadros wrote:
+> This driver observes the USB ID pin connected over a GPIO and
+> updates the USB cable extcon states accordingly.
+> 
+> The existing GPIO extcon driver is not suitable for this purpose
+> as it needs to be taught to understand USB cable states and it
+> can't handle more than one cable per instance.
+> 
+> For the USB case we need to handle 2 cable states.
+> 1) USB (attach/detach)
+> 2) USB-Host (attach/detach)
+> 
+> This driver can be easily updated in the future to handle VBUS
+> events in case it happens to be available on GPIO for any platform.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+> v3:
+> - removed IRQF_NO_SUSPEND flag. Added IRQF_TRIGGER_RISING and
+>   IRQF_TRIGGER_FALLING
+> - Added disable_irq() to suspend() and enable_irq() to resume()
+> 
+>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  18 ++
+>  drivers/extcon/Kconfig                             |   7 +
+>  drivers/extcon/Makefile                            |   1 +
+>  drivers/extcon/extcon-usb-gpio.c                   | 233 +++++++++++++++++++++
+>  4 files changed, 259 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> new file mode 100644
+> index 0000000..85fe6b0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> @@ -0,0 +1,18 @@
+> +USB GPIO Extcon device
 > +
-Unneeded change, please remove it.
+> +This is a virtual device used to generate USB cable states from the USB ID pin
+> +connected to a GPIO pin.
+> +
+> +Required properties:
+> +- compatible: Should be "linux,extcon-usb-gpio"
+> +- id-gpio: gpio for USB ID pin. See gpio binding.
+> +
+> +Example:
+> +	extcon_usb1 {
+> +		compatible = "linux,extcon-usb-gpio";
+> +		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
+> +	}
+> +
+> +	&omap_dwc3_1 {
+> +		extcon = <&extcon_usb1>;
+> +	};
+> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+> index 6a1f7de..fd11536 100644
+> --- a/drivers/extcon/Kconfig
+> +++ b/drivers/extcon/Kconfig
+> @@ -93,4 +93,11 @@ config EXTCON_SM5502
+>  	  Silicon Mitus SM5502. The SM5502 is a USB port accessory
+>  	  detector and switch.
+>  
+> +config EXTCON_USB_GPIO
+> +	tristate "USB GPIO extcon support"
+> +	select GPIOLIB
+> +	help
+> +	  Say Y here to enable GPIO based USB cable detection extcon support.
+> +	  Used typically if GPIO is used for USB ID pin detection.
+> +
+>  endif # MULTISTATE_SWITCH
+> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
+> index 0370b42..6a08a98 100644
+> --- a/drivers/extcon/Makefile
+> +++ b/drivers/extcon/Makefile
+> @@ -12,3 +12,4 @@ obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
+>  obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
+>  obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
+>  obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
+> +obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
+> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+> new file mode 100644
+> index 0000000..99a58b2
+> --- /dev/null
+> +++ b/drivers/extcon/extcon-usb-gpio.c
+> @@ -0,0 +1,233 @@
+> +/**
+> + * drivers/extcon/extcon-usb-gpio.c - USB GPIO extcon driver
+> + *
+> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
+> + * Author: Roger Quadros <rogerq@ti.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/extcon.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/workqueue.h>
+> +
+> +#define USB_GPIO_DEBOUNCE_MS	20	/* ms */
+> +
+> +struct usb_extcon_info {
+> +	struct device *dev;
+> +	struct extcon_dev *edev;
+> +
+> +	struct gpio_desc *id_gpiod;
+> +	int id_irq;
+> +	bool id_irqwake;		/* ID wakeup enabled flag */
+> +
+> +	unsigned long debounce_jiffies;
+> +	struct delayed_work wq_detcable;
+> +};
+> +
+> +/* List of detectable cables */
+> +enum {
+> +	EXTCON_CABLE_USB = 0,
+> +	EXTCON_CABLE_USB_HOST,
+> +
+> +	EXTCON_CABLE_END,
+> +};
+> +
+> +static const char *usb_extcon_cable[] = {
+> +	[EXTCON_CABLE_USB] = "USB",
+> +	[EXTCON_CABLE_USB_HOST] = "USB-Host",
 
-> +config NFC_NXP_NCI
-> +	tristate "NXP-NCI NFC driver"
-> +	depends on NFC_NCI
-> +	default n
-> +	---help---
-> +	  Generic core driver for NXP NCI chips.
-It usually is nice to be more specific and describe which chipsets
-(e.g. NPC100) this driver supports among all the NXP NCI chipsets.
+I'll use the defined name for extcon cable name as soon because 
+it has potential isseu about the conflict of extcon cable name between subsystems.
+So, I recommend to use a captical letter as "USB-HOST" instead of "USB-Host".
+If other extcon driver don't use the captical letter, I'll fix it.
 
-> +struct nxp_nci_phy_ops {
-> +	int (*enable)(void *id);
-> +	int (*fw_enable)(void *id);
-Wouldn't a int (*enable)(void *id, enum nxp_nci_mode mode); hook be
-enough ?
+[snip]
 
-Cheers,
-Samuel.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Chanwoo Choi
