@@ -1,47 +1,117 @@
-From: Daniel Stone <daniel@fooishbar.org>
-Subject: Re: [PATCH 03/14] drm/bridge: make bridge registration independent of
- drm flow
-Date: Fri, 30 Jan 2015 16:08:04 +0000
-Message-ID: <CAPj87rMXRGB48k_jnfuxNUh4W6JP63vb4Ak1bkFoNj8wSmq+Tw@mail.gmail.com>
-References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
- <1421771935-31618-4-git-send-email-ajaykumar.rs@samsung.com>
- <CAF6AEGs8GbgYMLmaPjGnXAv=Gsf6gMhNj+Zt0-2GKHOnHv4d4Q@mail.gmail.com>
+From: Chris Packham <chrisp-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: [PATCH] dtc: Use quotes to include header files
+Date: Sat, 31 Jan 2015 05:21:47 +1300 (NZDT)
+Message-ID: <alpine.DEB.2.10.1501310514250.16453@chrisp-dl.ws.atlnz.lc>
+References: <7947240.7yktm8fT2X@wuerfel> <1418696004-12829-1-git-send-email-chris.packham@alliedtelesis.co.nz> <20150129155646.BBA8AC413BE@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAF6AEGs8GbgYMLmaPjGnXAv=Gsf6gMhNj+Zt0-2GKHOnHv4d4Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, jg1.han@samsung.com, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Ajay kumar <ajaynumb@gmail.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: TEXT/PLAIN; format=flowed; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150129155646.BBA8AC413BE-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, jdl-CYoMK+44s/E@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAzMCBKYW51YXJ5IDIwMTUgYXQgMTU6MzcsIFJvYiBDbGFyayA8cm9iZGNsYXJrQGdt
-YWlsLmNvbT4gd3JvdGU6Cj4gb2ssIHNvIEkgcHJvYmFibHkgc2hvdWxkIGhhdmUgaGFkIGEgY2xv
-c2VyIGxvb2sgYXQgdGhpcyBiZWZvcmUgaXQKPiBsYW5kZWQgaW4gZHJtLW5leHQsIHNvIGlmIGl0
-IGlzIHRvbyBsYXRlIHRvIHJldmVydCAoYW5kIGRlYWwgdy8KPiB1bnRhbmdsaW5nIHN1YnNlcXVl
-bnQgcGF0Y2hlcyB0aGF0IGRlcGVuZCBvbiB0aGlzKSBzb21lIG9mIHRoZXNlCj4gaXNzdWVzIHdl
-J2xsIGp1c3QgaGF2ZSB0byBmaXggd2l0aCBmb2xsb3ctb24gcGF0Y2hlcy4KPgo+IDEpIG5lZWRz
-IGhlYWRlcmRvYyBmb3IgbmV3IGZ4bnMgaW4gZHJtX2JyaWRnZS5jLCBhbmQgbmVlZHMgdG8gYmUg
-YWRkZWQKPiBpbiBkcm0udG1wbAo+IDIpIGFzIGZhciBhcyBJIGNhbiB0ZWxsLCB0aGUgbmV3IGFw
-cHJvYWNoIHRvIGNsZWFuaW5nIHVwIGJyaWRnZQo+IG9iamVjdHMgaXMgdG8ganVzdCBsZXQgdGhl
-bSBsZWFrICE/IQo+Cj4gSSdsbCBhbHNvIG5lZWQgdG8gdXBkYXRlIHRoZSBuZXcgYnJpZGdlIGlu
-IHRoZSBtc20gZWRwIGNvZGUuLgo+IGFsdGhvdWdoIHRoYXQgaXNuJ3Qgc3VjaCBhIGJpZyBkZWFs
-IGlmIEkga25ldyBob3cgdGhpcyB3YXMgKnN1cHBvc2VkKgo+IHRvIHdvcmsuLiBzaW5jZSB3aGF0
-IGlzIHRoZXJlIG5vdyBhdCBsZWFzdCBkb2Vzbid0IGxvb2sgcmlnaHQuLgoKR2l2ZW4gaG93IGxv
-bmcgdGhlc2UgcGF0Y2hlcyBzYXQgYXJvdW5kIGRvaW5nIGJlaW5nIHBhc3NpdmVseSBOQUNLZWQK
-YnkgZGlzY3Vzc2lvbnMgZ29pbmcgYXJvdW5kIGluIGNpcmNsZXMsIGFuZCBob3cgdXNlZnVsIHRo
-ZXkgYXJlLCBJJ2QKYmUgbXVjaCBtb3JlIGluIGZhdm91ciBvZiBmaXhpbmcgdGhlbSB1cCB0aGFu
-IHJldmVydGluZyBhbmQgZ29pbmcKdGhyb3VnaCB0aGUgd2hvbGUgY2lyY3VzIGFnYWluIC4uLgoK
-Q2hlZXJzLApEYW5pZWwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+
+
+On Thu, 29 Jan 2015, Grant Likely wrote:
+
+> On Tue, 16 Dec 2014 15:13:24 +1300
+> , Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+> wrote:
+>> Currently in arch and driver code that needs early access to the
+>> flattened device tree it is necessary to add specific CFLAGS so that
+>> when scripts/dtc/libfdt/libfdt.h is included the C preprocessor is able
+>> to locate the libfdt versions of libfdt_env.h and fdt.h without
+>> generating an error.
+>>
+>> We already provide an alternative linux-specific
+>> version of libfdt_env.h and directly include scripts/dtc/libfdt/fdt.h
+>> so the inclusion by scripts/dtc/libfdt/libfdt.h is a no-op thanks to the
+>> inclusion guards.
+>>
+>> By using quotes in scripts/dtc/libfdt/libfdt.h it picks up fdt.h and
+>> libfdt_env.h from the source directory without needing to add CFLAGS for
+>> the sources that happen to include linux/libfdt.h.
+>>
+>> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+>> ---
+>> Hi,
+>>
+>> This probably should come via git://git.jdl.com/software/dtc.git however
+>> this appears to be inaccessible at the moment. Is this still the
+>> canonical source for the device tree compiler and libfdt or has it been
+>> moved? How much deviation from the canonical source are we prepared to
+>> live with in the kernel?
+>>
+>> This came up on the arm-LKML[1]. Basically in the name of backwards
+>> compatibility I need to add a .dt_fixup to add some required nodes to
+>> the flattened device tree prior to the tree being un-flattened and
+>> processed. This is a trick powerpc makes use of fairly extensively and
+>> there are a few other instances of this.
+>>
+>> For the files that include linux/libfdt.h we currently also have to
+>> specify additional CFLAGS to satisfy the CPP.
+>>
+>>   $ git grep '<linux/libfdt.h>'
+>>   arch/mips/cavium-octeon/octeon-platform.c:#include <linux/libfdt.h>
+>>   arch/mips/cavium-octeon/setup.c:#include <linux/libfdt.h>
+>>   arch/mips/mti-sead3/sead3-setup.c:#include <linux/libfdt.h>
+>>   arch/powerpc/kernel/prom.c:#include <linux/libfdt.h>
+>>   drivers/firmware/efi/libstub/fdt.c:#include <linux/libfdt.h>
+>>   drivers/of/fdt.c:#include <linux/libfdt.h>
+>>   drivers/of/fdt_address.c:#include <linux/libfdt.h>
+>>
+>>   $ git grep -e '-I.*dtc/libfdt'
+>>   arch/mips/cavium-octeon/Makefile:CFLAGS_octeon-platform.o = -I$(src)/../../../scripts/dtc/libfdt
+>>   arch/mips/cavium-octeon/Makefile:CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
+>>   arch/mips/mti-sead3/Makefile:CFLAGS_sead3-setup.o = -I$(src)/../../../scripts/dtc/libfdt
+>>   arch/powerpc/kernel/Makefile:CFLAGS_prom.o              = -I$(src)/../../../scripts/dtc/libfdt
+>>   drivers/firmware/efi/libstub/Makefile:CFLAGS_fdt.o += -I$(srctree)/scripts/dtc/libfdt/
+>>   drivers/of/Makefile:CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+>>   drivers/of/Makefile:CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
+>>   lib/Makefile:   $(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
+>>
+>> Simply by switching to using quotes we can avoid having this extra step.
+>>
+>> Assuming that this patch is acceptable a follow on clean up would be to
+>> remove the instances of CFLAGS_... listed above.
+>>
+>> Regards,
+>> Chris
+>> --
+>> [1] - http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/310840.html
+>>
+>>  scripts/dtc/libfdt/libfdt.h | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
+>> index 73f4975..ea1ddcd 100644
+>> --- a/scripts/dtc/libfdt/libfdt.h
+>> +++ b/scripts/dtc/libfdt/libfdt.h
+>> @@ -51,8 +51,8 @@
+>>   *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>>   */
+>>
+>> -#include <libfdt_env.h>
+>> -#include <fdt.h>
+>> +#include "libfdt_env.h"
+>> +#include "fdt.h"
+>
+> Until this is resolved with upstream DTC, what about adding dummy
+> libfdt.h, libfdt_env.h and fdt.h to include/linux? That would get this
+> out of the blocker path for merging this code.
+>
+> g.
+>
+
+I'm traveling right now but I could work up an example patch next week.
+
+>From the other discussions I think there are arguments in favor of keeping 
+the angle brackets for the userspace libfdt usage. Any change in the 
+kernel either adding dummy files in the system include path or performing 
+a subsititution in an import script would probably be permanent.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
