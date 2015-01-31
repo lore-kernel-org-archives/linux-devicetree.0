@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 07/11] drm/rockchip: attach rgb bridge to encoders needing it
-Date: Sat, 31 Jan 2015 17:33:00 +0100
-Message-ID: <1422721984-27782-8-git-send-email-heiko@sntech.de>
+Subject: [PATCH 09/11] ARM: dts: rockchip: add rk3288 lcdc0 pinmux settings
+Date: Sat, 31 Jan 2015 17:33:02 +0100
+Message-ID: <1422721984-27782-10-git-send-email-heiko@sntech.de>
 References: <1422721984-27782-1-git-send-email-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1422721984-27782-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
@@ -10,99 +10,34 @@ To: airlied-cv59FeDIM0c@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public
 Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On SoCs like the rk3288 the lvds controller needs to be configured even for
-just providing rgb data to an attached encoder. As internals of the
-rockchip drm driver should not leak into the implementation of generic
-i2c encoders etc, go through the list of encoders and attach any necessary
-rgb bridges when building the drm device in the load callback.
+Add pinctrl settings for the configurable lcdc0 signals dclk, den, hsync
+and vsync. The lcdc0 data pin configuration is not software controlable.
 
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- .../devicetree/bindings/video/rockchip-vop.txt     | 16 +++++++++++
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c        | 32 ++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+ arch/arm/boot/dts/rk3288.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/video/rockchip-vop.txt b/Documentation/devicetree/bindings/video/rockchip-vop.txt
-index d15351f..b7762ed 100644
---- a/Documentation/devicetree/bindings/video/rockchip-vop.txt
-+++ b/Documentation/devicetree/bindings/video/rockchip-vop.txt
-@@ -32,6 +32,11 @@ Required properties:
- - port: A port node with endpoint definitions as defined in
-   Documentation/devicetree/bindings/media/video-interfaces.txt.
- 
-+Optional properties in encoder nodes:
-+- rockchip,rgb-bridge: if a separate controller is regulating access
-+		to the rgb output interface it should be referenced
-+		in the encoder node.
-+
- Example:
- SoC specific DT entry:
- 	vopb: vopb@ff930000 {
-@@ -56,3 +61,14 @@ SoC specific DT entry:
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index d771f68..846d961 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -910,6 +910,15 @@
  			};
  		};
- 	};
-+
-+Additional entries when a rgb-bridge is used:
-+
-+	lvds: lvds@ff96c000 {
-+		...
-+	};
-+
-+	external-encoder {
-+		...
-+		rockchip,rgb-bridge = <&lvds>;
-+	};
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-index 30da781..86a3e61 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-@@ -130,6 +130,7 @@ static int rockchip_drm_load(struct drm_device *drm_dev, unsigned long flags)
- 	struct dma_iommu_mapping *mapping;
- 	struct device *dev = drm_dev->dev;
- 	struct drm_connector *connector;
-+	struct drm_encoder *encoder;
- 	int ret;
  
- 	private = devm_kzalloc(drm_dev->dev, sizeof(*private), GFP_KERNEL);
-@@ -173,6 +174,37 @@ static int rockchip_drm_load(struct drm_device *drm_dev, unsigned long flags)
- 		goto err_detach_device;
- 
- 	/*
-+	 * Attach rgb bridge to encoders needing it.
-+	 */
-+	list_for_each_entry(encoder, &drm_dev->mode_config.encoder_list, head) {
-+		struct device_node *rgb_node;
++		lcdc0 {
++			lcdc0_ctl: lcdc0-ctl {
++				rockchip,pins = <1 24 RK_FUNC_1 &pcfg_pull_none>,
++						<1 25 RK_FUNC_1 &pcfg_pull_none>,
++						<1 26 RK_FUNC_1 &pcfg_pull_none>,
++						<1 27 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
 +
-+		if (!encoder->of_node)
-+			continue;
-+
-+		rgb_node = of_parse_phandle(encoder->of_node,
-+					    "rockchip,rgb-bridge", 0);
-+		if (rgb_node) {
-+			struct drm_bridge *bridge;
-+
-+			bridge = of_drm_find_bridge(rgb_node);
-+			of_node_put(rgb_node);
-+			if (!bridge) {
-+				ret = -EPROBE_DEFER;
-+				goto err_unbind;
-+			}
-+
-+			encoder->bridge = bridge;
-+			bridge->encoder = encoder;
-+			ret = drm_bridge_attach(encoder->dev, bridge);
-+			if (ret) {
-+				DRM_ERROR("Failed to attach bridge to drm\n");
-+				goto err_unbind;
-+			}
-+		}
-+	}
-+
-+	/*
- 	 * All components are now added, we can publish the connector sysfs
- 	 * entries to userspace.  This will generate hotplug events and so
- 	 * userspace will expect to be able to access DRM at this point.
+ 		sdmmc {
+ 			sdmmc_clk: sdmmc-clk {
+ 				rockchip,pins = <6 20 RK_FUNC_1 &pcfg_pull_none>;
 -- 
 2.1.1
 
