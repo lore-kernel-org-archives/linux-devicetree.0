@@ -1,80 +1,98 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: shmobile: alt dts: Drop console= bootargs parameter
-Date: Sat, 31 Jan 2015 13:17:34 +0900
-Message-ID: <20150131041731.GA7605@verge.net.au>
-References: <1415075018-27529-1-git-send-email-horms+renesas@verge.net.au>
- <54CBFC63.4070808@cogentembedded.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
+Date: Sat, 31 Jan 2015 13:21:43 +0900
+Message-ID: <20150131042143.GB7605@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <1608366.HtA9yBksdO@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54CBFC63.4070808-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1608366.HtA9yBksdO@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Sat, Jan 31, 2015 at 12:49:23AM +0300, Sergei Shtylyov wrote:
-> Hello.
+On Sat, Jan 31, 2015 at 01:52:16AM +0300, Sergei Shtylyov wrote:
+> Add the initial device tree for the R8A7794 SoC based SILK low cost board.
+> SCIF2 serial port support is included, so that the serial console can work.
 > 
-> On 11/04/2014 07:23 AM, Simon Horman wrote:
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > 
-> >Alt is booted from DT, so chosen/stdout-path is
-> >always used, and we can drop the "console=" parameter from chosen/bootargs.
+> ---
+> This patch is against the 'renesas-devel-20150129-v3.19-rc6' tag of Simon
+> Horman's 'renesas.git' repo.
 > 
-> >This change has a side-effect of changing the console speed from 38400
-> >to 115200. This is intentional as 115200 is consistently used on
-> >all other shmobile boards.
+>  arch/arm/boot/dts/Makefile         |    1 
+>  arch/arm/boot/dts/r8a7794-silk.dts |   41 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 42 insertions(+)
 > 
->    I'd say it's not very practical to change the console's baud rate from
-> U-Boot's default
+> Index: renesas/arch/arm/boot/dts/Makefile
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/Makefile
+> +++ renesas/arch/arm/boot/dts/Makefile
+> @@ -421,6 +421,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += eme
+>  	r8a7791-koelsch.dtb \
+>  	r8a7791-porter.dtb \
+>  	r8a7794-alt.dtb \
+> +	r8a7794-silk.dtb \
+>  	sh73a0-kzm9g.dtb
+>  dtb-$(CONFIG_ARCH_SOCFPGA) += socfpga_arria5_socdk.dtb \
+>  	socfpga_arria10_socdk.dtb \
+> Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
+> ===================================================================
+> --- /dev/null
+> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+> @@ -0,0 +1,41 @@
+> +/*
+> + * Device Tree Source for the SILK board
+> + *
+> + * Copyright (C) 2014 Renesas Electronics Corporation
+> + * Copyright (C) 2014-2015 Renesas Solutions Corp.
+> + * Copyright (C) 2014-2015 Cogent Embedded, Inc.
+> + *
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2.  This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
+> + */
+> +
+> +/dts-v1/;
+> +#include "r8a7794.dtsi"
+> +
+> +/ {
+> +	model = "SILK";
+> +	compatible = "renesas,silk", "renesas,r8a7794";
+> +
+> +	aliases {
+> +		serial0 = &scif2;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttySC0,38400 ignore_loglevel";
 
-It is consistent with the handling of all other boards with
-renesas SoCs that are present in mainline.
+Please remove console= for consistency with other boards
+based on Renesas SoCs.
 
-> (AFAIR changing baud rate in U-Boot didn't work)...
-
-Perhaps that relates to the version of built of uboot.
-On the board I have access to I see:
-
-ver=U-Boot 2013.01.01-g5df9446 (Oct 01 2014 - 14:59:23)
-
-And the following setting altered the baud rate of u-boot (IIRC).
-
-baudrate=115200
-
-> >Cc: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> >Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> >---
-> >  arch/arm/boot/dts/r8a7794-alt.dts | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> >diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
-> >index 8aec512..f2cf757 100644
-> >--- a/arch/arm/boot/dts/r8a7794-alt.dts
-> >+++ b/arch/arm/boot/dts/r8a7794-alt.dts
-> >@@ -20,7 +20,7 @@
-> >  	};
-> >
-> >  	chosen {
-> >-		bootargs = "console=ttySC0,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp";
-> >+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+> +		stdout-path = &scif2;
+> +	};
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0 0x40000000 0 0x40000000>;
+> +	};
+> +};
+> +
+> +&extal_clk {
+> +	clock-frequency = <20000000>;
+> +};
+> +
+> +&scif2 {
+> +	status = "okay";
+> +};
 > 
->    Hm, does this even work as intended? I've tried to boot another R8A7794
-> based board and I couldn't get any output with alike command line. Booting
-> with 'earlyprintk=serial' has shown that tty0 was enabled as a console which
-> is not what we wanted.
-
-If you are backporting this change then I believe it has some dependencies
-that I can follow up on if it is useful to you.
-
-If you are using mainline (e.g. next or renesas-next) then yes,
-it works. I have tested it numerous times since the patch was merged.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
