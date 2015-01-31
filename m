@@ -1,49 +1,58 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 01/11] drm/encoder: allow encoders to remember their of_node
-Date: Sat, 31 Jan 2015 17:32:54 +0100
-Message-ID: <1422721984-27782-2-git-send-email-heiko@sntech.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 11/11] ARM: dts: rockchip: add vga encoder and enable lvds on
+ rk3288-firefly
+Date: Sat, 31 Jan 2015 17:33:04 +0100
+Message-ID: <1422721984-27782-12-git-send-email-heiko@sntech.de>
 References: <1422721984-27782-1-git-send-email-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422721984-27782-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1422721984-27782-1-git-send-email-heiko@sntech.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: airlied@linux.ie, mark.yao@rock-chips.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add an of_node field to struct drm_encoder to let encoders optionally
-remember from which devicetree node they originated.
-
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- include/drm/drm_crtc.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
-index cc369f3..0448732 100644
---- a/include/drm/drm_crtc.h
-+++ b/include/drm/drm_crtc.h
-@@ -527,6 +527,7 @@ struct drm_encoder_funcs {
- /**
-  * struct drm_encoder - central DRM encoder structure
-  * @dev: parent DRM device
-+ * @of_node: device node pointer to the bridge
-  * @head: list management
-  * @base: base KMS object
-  * @name: encoder name
-@@ -543,6 +544,9 @@ struct drm_encoder_funcs {
-  */
- struct drm_encoder {
- 	struct drm_device *dev;
-+#ifdef CONFIG_OF
-+	struct device_node *of_node;
-+#endif
- 	struct list_head head;
- 
- 	struct drm_mode_object base;
--- 
-2.1.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIHRoZSBzZGE3MTIzIHNpbXBsZSB2Z2EgZW5jb2RlciwgY29ubmVjdCBpdCB0byB0aGUgdm9w
+IG91dHB1dHMKYW5kIGVuYWJsZSB0aGUgbHZkcyBjb250cm9sbGVyIHdpdGggdGhlIGNvcnJlY3Qg
+c2V0dGluZ3MuCgpTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRl
+PgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1maXJlZmx5LmR0c2kgfCA0NSArKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDQ1IGluc2VydGlv
+bnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtZmlyZWZseS5kdHNp
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LWZpcmVmbHkuZHRzaQppbmRleCBlNmY4NzNhLi45
+ZDM4M2VhIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtZmlyZWZseS5kdHNp
+CisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1maXJlZmx5LmR0c2kKQEAgLTE1OSw2ICsx
+NTksMjcgQEAKIAkJcmVndWxhdG9yLWFsd2F5cy1vbjsKIAkJdmluLXN1cHBseSA9IDwmdmNjXzV2
+PjsKIAl9OworCisJc2RhNzEyMzogdmdhLWVuY29kZXIgeworCQljb21wYXRpYmxlID0gImFkaSxh
+ZHY3MTIzIjsKKwkJZGRjLWkyYy1idXMgPSA8JmkyYzQ+OworCQllbmFibGUtZ3BpbyA9IDwmZ3Bp
+bzAgMTcgR1BJT19BQ1RJVkVfSElHSD47CisJCXJvY2tjaGlwLHJnYi1icmlkZ2UgPSA8Jmx2ZHM+
+OworCQl2YWEtc3VwcGx5ID0gPCZ2Y2NfaW8+OworCisJCXZnYV9pbjogcG9ydCB7CisJCQkjYWRk
+cmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxzID0gPDA+OworCQkJdmdhX2luX3ZvcGI6
+IGVuZHBvaW50QDAgeworCQkJCXJlZyA9IDwwPjsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZv
+cGJfb3V0X3ZnYT47CisJCQl9OworCQkJdmdhX2luX3ZvcGw6IGVuZHBvaW50QDEgeworCQkJCXJl
+ZyA9IDwxPjsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGxfb3V0X3ZnYT47CisJCQl9Owor
+CQl9OworCX07CiB9OwogCiAmY3B1MCB7CkBAIC0zMzEsNiArMzUyLDE2IEBACiAJc3RhdHVzID0g
+Im9rYXkiOwogfTsKIAorJmx2ZHMgeworCWF2ZGQxdjAtc3VwcGx5ID0gPCZ2ZGQxMF9sY2Q+Owor
+CWF2ZGQxdjgtc3VwcGx5ID0gPCZ2Y2MxOF9sY2Q+OworCWF2ZGQzdjMtc3VwcGx5ID0gPCZ2Y2Nh
+XzMzPjsKKwlyb2NrY2hpcCxkYXRhLW1hcHBpbmcgPSAiamVpZGEiOworCXJvY2tjaGlwLGRhdGEt
+d2lkdGggPSA8MjQ+OworCXJvY2tjaGlwLG91dHB1dCA9ICJyZ2IiOworCXN0YXR1cyA9ICJva2F5
+IjsKK307CisKICZwaW5jdHJsIHsKIAlwY2ZnX291dHB1dF9oaWdoOiBwY2ZnLW91dHB1dC1oaWdo
+IHsKIAkJb3V0cHV0LWhpZ2g7CkBAIC00NzcsMTAgKzUwOCwyNCBAQAogCXN0YXR1cyA9ICJva2F5
+IjsKIH07CiAKKyZ2b3BiX291dCB7CisJdm9wYl9vdXRfdmdhOiBlbmRwb2ludEA5IHsKKwkJcmVn
+ID0gPDk+OworCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9pbl92b3BiPjsKKwl9OworfTsKKwog
+JnZvcGwgewogCXN0YXR1cyA9ICJva2F5IjsKIH07CiAKKyZ2b3BsX291dCB7CisJdm9wbF9vdXRf
+dmdhOiBlbmRwb2ludEA5IHsKKwkJcmVnID0gPDk+OworCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZn
+YV9pbl92b3BsPjsKKwl9OworfTsKKwogJnZvcGxfbW11IHsKIAlzdGF0dXMgPSAib2theSI7CiB9
+OwotLSAKMi4xLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
