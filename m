@@ -1,55 +1,49 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
-Date: Sat, 31 Jan 2015 07:41:20 +0200
-Message-ID: <CAK=WgbZ2986xxuAFvMSoyQLaPAxdUpZ8e5g-mSjyETfvd4KKHw@mail.gmail.com>
-References: <1421269101-51105-1-git-send-email-s-anna@ti.com>
- <1421269101-51105-2-git-send-email-s-anna@ti.com> <20150115135201.GG16217@leverpostej>
- <20150115135556.GH16217@leverpostej> <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
- <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com>
- <20150116101746.GA21809@leverpostej> <CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
- <CAJAp7Og+-KQd7bygWQjTS72Kye3fkp3s3ry+2bw7Gcv7aPF5AQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 12/13] ARM: shmobile: alt dts: Add chosen/stdout-path
+Date: Sat, 31 Jan 2015 11:18:11 +0100
+Message-ID: <CAMuHMdUoc0f0WReqx86Qe35zwnbT3j49q5b+fFHupQa+3QsKag@mail.gmail.com>
+References: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
+	<1412349104-18724-13-git-send-email-geert+renesas@glider.be>
+	<54CC06A4.9040408@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJAp7Og+-KQd7bygWQjTS72Kye3fkp3s3ry+2bw7Gcv7aPF5AQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <54CC06A4.9040408-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 31, 2015 at 1:29 AM, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org> wrote:
-> In a system where you have two hwlock blocks lckA and lckB, each
-> consisting of 8 locks and you have dspB that can only access lckB
+Hi Sergei,
 
-This is a good example - thanks. To be able to cope with such cases we
-will have to pass a hwlock block reference and its relative lock id.
+On Fri, Jan 30, 2015 at 11:33 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> On 10/03/2014 07:11 PM, Geert Uytterhoeven wrote:
+>> Add a stdout-path property so that automatic console selection works
+>> in the absence of a "console=" parameter on the kernel command line.
+>
+>> Note that we have to keep the "console=ttySC0,38400" parameter in
+>> chosen/bootargs, else the console will use the default setting of 115200
+>> baud.
+>
+>    I've looked at the code and it appears that one can still specify a baud
+> rate after ':' even in the "stdout-path" prop.
 
-The DT binding should definitely be prepared for such cases (just kill
-the base-id field?), but let's see what it means about the Linux
-implementation.
+That's correct. I believe that support was added later.
+Can you please send a patch?
 
-Since the existence of several hwblocks is still fictional (Bjorn,
-please confirm too?), we may prefer to introduce changes to support it
-only when it shows up; it all depends on the amount of changes needed.
-Suman, care to take a look please?
+Spaciba!
 
->> - Sometimes a remote processor, which may not be running Linux, will
->> have to dynamically allocate a hwlock, and send the ID of the
->> allocated lock to us (another processor running Linux)
->>
-> I'm sorry but you cannot have a system on both sides that is allowed
-> to do dynamic allocation from a limited set of resources.
+Gr{oetje,eeting}s,
 
-Of course not. On such systems, Linux is not the one responsible for
-allocating the hwlocks, at least not during part of the time or from
-part of the hwlocks. There were a few different use cases, with
-different semantics, that required communicating to Linux an hwlock
-id, but since none of them have reached mainline, we should only
-remember they may show up one day, but not put too much effort to
-support them right now.
+                        Geert
 
-Thanks,
-Ohad.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
