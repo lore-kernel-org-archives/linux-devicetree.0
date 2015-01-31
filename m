@@ -1,42 +1,112 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 08/11] drm/rockchip: enable rgb ouput of vops for vga and tv
- connectors
-Date: Sat, 31 Jan 2015 17:33:01 +0100
-Message-ID: <1422721984-27782-9-git-send-email-heiko@sntech.de>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 07/11] drm/rockchip: attach rgb bridge to encoders needing it
+Date: Sat, 31 Jan 2015 17:33:00 +0100
+Message-ID: <1422721984-27782-8-git-send-email-heiko@sntech.de>
 References: <1422721984-27782-1-git-send-email-heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1422721984-27782-1-git-send-email-heiko@sntech.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: airlied@linux.ie, mark.yao@rock-chips.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422721984-27782-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHNvY3MgaXRzZWxmIGRvIG5vdCBjb250YWluIGVuY29kZXJzIGZvciBlaXRoZXIgdmdhIG9y
-IHR2IG91dHB1dC4KVGhlcmVmb3JlIHRoZXNlIHdpbGwgYmUgcmVhbGl6ZWQgYnkgZXh0ZXJuYWwg
-Y29tcG9uZW50cyBhbmQgdGh1cyB1c2UgdGhlCnJnYiBvdXRwdXQuCgpTaWduZWQtb2ZmLWJ5OiBI
-ZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9yb2Nr
-Y2hpcC9yb2NrY2hpcF9kcm1fdm9wLmMgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRp
-b25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2Ry
-bV92b3AuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wLmMKaW5k
-ZXggYzAzODdmNy4uYjc0NDg4OCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
-L3JvY2tjaGlwX2RybV92b3AuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2No
-aXBfZHJtX3ZvcC5jCkBAIC04NjMsNiArODYzLDggQEAgc3RhdGljIGludCB2b3BfY3J0Y19tb2Rl
-X3NldChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCiAKIAlzd2l0Y2ggKHZvcC0+Y29ubmVjdG9yX3R5
-cGUpIHsKIAljYXNlIERSTV9NT0RFX0NPTk5FQ1RPUl9MVkRTOgorCWNhc2UgRFJNX01PREVfQ09O
-TkVDVE9SX1ZHQToKKwljYXNlIERSTV9NT0RFX0NPTk5FQ1RPUl9UVjoKIAkJVk9QX0NUUkxfU0VU
-KHZvcCwgcmdiX2VuLCAxKTsKIAkJYnJlYWs7CiAJY2FzZSBEUk1fTU9ERV9DT05ORUNUT1JfZURQ
-OgotLSAKMi4xLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On SoCs like the rk3288 the lvds controller needs to be configured even for
+just providing rgb data to an attached encoder. As internals of the
+rockchip drm driver should not leak into the implementation of generic
+i2c encoders etc, go through the list of encoders and attach any necessary
+rgb bridges when building the drm device in the load callback.
+
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ .../devicetree/bindings/video/rockchip-vop.txt     | 16 +++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        | 32 ++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/video/rockchip-vop.txt b/Documentation/devicetree/bindings/video/rockchip-vop.txt
+index d15351f..b7762ed 100644
+--- a/Documentation/devicetree/bindings/video/rockchip-vop.txt
++++ b/Documentation/devicetree/bindings/video/rockchip-vop.txt
+@@ -32,6 +32,11 @@ Required properties:
+ - port: A port node with endpoint definitions as defined in
+   Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
++Optional properties in encoder nodes:
++- rockchip,rgb-bridge: if a separate controller is regulating access
++		to the rgb output interface it should be referenced
++		in the encoder node.
++
+ Example:
+ SoC specific DT entry:
+ 	vopb: vopb@ff930000 {
+@@ -56,3 +61,14 @@ SoC specific DT entry:
+ 			};
+ 		};
+ 	};
++
++Additional entries when a rgb-bridge is used:
++
++	lvds: lvds@ff96c000 {
++		...
++	};
++
++	external-encoder {
++		...
++		rockchip,rgb-bridge = <&lvds>;
++	};
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+index 30da781..86a3e61 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+@@ -130,6 +130,7 @@ static int rockchip_drm_load(struct drm_device *drm_dev, unsigned long flags)
+ 	struct dma_iommu_mapping *mapping;
+ 	struct device *dev = drm_dev->dev;
+ 	struct drm_connector *connector;
++	struct drm_encoder *encoder;
+ 	int ret;
+ 
+ 	private = devm_kzalloc(drm_dev->dev, sizeof(*private), GFP_KERNEL);
+@@ -173,6 +174,37 @@ static int rockchip_drm_load(struct drm_device *drm_dev, unsigned long flags)
+ 		goto err_detach_device;
+ 
+ 	/*
++	 * Attach rgb bridge to encoders needing it.
++	 */
++	list_for_each_entry(encoder, &drm_dev->mode_config.encoder_list, head) {
++		struct device_node *rgb_node;
++
++		if (!encoder->of_node)
++			continue;
++
++		rgb_node = of_parse_phandle(encoder->of_node,
++					    "rockchip,rgb-bridge", 0);
++		if (rgb_node) {
++			struct drm_bridge *bridge;
++
++			bridge = of_drm_find_bridge(rgb_node);
++			of_node_put(rgb_node);
++			if (!bridge) {
++				ret = -EPROBE_DEFER;
++				goto err_unbind;
++			}
++
++			encoder->bridge = bridge;
++			bridge->encoder = encoder;
++			ret = drm_bridge_attach(encoder->dev, bridge);
++			if (ret) {
++				DRM_ERROR("Failed to attach bridge to drm\n");
++				goto err_unbind;
++			}
++		}
++	}
++
++	/*
+ 	 * All components are now added, we can publish the connector sysfs
+ 	 * entries to userspace.  This will generate hotplug events and so
+ 	 * userspace will expect to be able to access DRM at this point.
+-- 
+2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
