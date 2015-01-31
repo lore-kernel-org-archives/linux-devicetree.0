@@ -1,110 +1,80 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
-Date: Fri, 30 Jan 2015 15:29:44 -0800
-Message-ID: <CAJAp7Og+-KQd7bygWQjTS72Kye3fkp3s3ry+2bw7Gcv7aPF5AQ@mail.gmail.com>
-References: <1421269101-51105-1-git-send-email-s-anna@ti.com>
-	<1421269101-51105-2-git-send-email-s-anna@ti.com>
-	<20150115135201.GG16217@leverpostej>
-	<20150115135556.GH16217@leverpostej>
-	<CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
-	<CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com>
-	<20150116101746.GA21809@leverpostej>
-	<CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: shmobile: alt dts: Drop console= bootargs parameter
+Date: Sat, 31 Jan 2015 13:17:34 +0900
+Message-ID: <20150131041731.GA7605@verge.net.au>
+References: <1415075018-27529-1-git-send-email-horms+renesas@verge.net.au>
+ <54CBFC63.4070808@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>, Suman Anna <s-anna@ti.com>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54CBFC63.4070808-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 16, 2015 at 4:46 PM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
-> Mark,
->
-> On Fri, Jan 16, 2015 at 12:17 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->>> The hwlock is a basic hardware primitive that allow synchronization
->>> between different processors in the system, which may be running Linux
->>> as well as other operating systems, and may have no other means of
->>> communication.
->>>
->>> The hwlock id numbers are predefined, global and static across the
->>> entire system: Linux may boot well after other operating systems are
->>> already running and using these hwlocks to communicate, and therefore,
->>> in order to use these hardware devices, it must not enumerate them
->>> differently than the rest of the system.
->>
->> That's not true.
->>
->> In order to communicate it must agree with the other users as to the
->> meaning of each instance, and the protocol for use. That doesn't
->> necessarily mean that Linux needs to know the numerical ID from a
->> datasheet, and regardless that ID is separate from the logical ID Linux
->> uses internally.
->
-> Let me describe hwspinlocks a bit more so we all get to know it better
-> and can then agree on a proper solution.
->
-> - What makes handling of hwspinlock ID numbers convenient is the fact
-> that it's not based on random datasheet numbers. In fact, hwspinlocks
-> is just special memory: usually datasheets just define the base
-> address and the size of the hwspinlock area. So any numerical ID we
-> use to call the locks themselves are already logical and sane, similar
-> to the way we handle memory (i.e. if we have 32 locks we'll always use
-> 0..31). So hwlocks ids are very much like memory addressing, and not
-> irq numbers.
->
+Hi Sergei,
 
-But that's exactly how irqs or gpios work as well. If you have 32
-gpios in a system they used to be numbered 0-31 and people would
-reference them directly by that number. Every one of the systems that
-was designed in this way is moving away from it.
+On Sat, Jan 31, 2015 at 12:49:23AM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 11/04/2014 07:23 AM, Simon Horman wrote:
+> 
+> >Alt is booted from DT, so chosen/stdout-path is
+> >always used, and we can drop the "console=" parameter from chosen/bootargs.
+> 
+> >This change has a side-effect of changing the console speed from 38400
+> >to 115200. This is intentional as 115200 is consistently used on
+> >all other shmobile boards.
+> 
+>    I'd say it's not very practical to change the console's baud rate from
+> U-Boot's default
 
-> - Sometimes Linux will have to dynamically allocate a hwlock, and send
-> the ID of the allocated lock to a remote processor (which may not be
-> running Linux).
+It is consistent with the handling of all other boards with
+renesas SoCs that are present in mainline.
 
-In a system where you have two hwlock blocks lckA and lckB, each
-consisting of 8 locks and you have dspB that can only access lckB;
-will you tell the firmware engineers to always subtract 8 from the
-numbers you pass them?
+> (AFAIR changing baud rate in U-Boot didn't work)...
 
-Wouldn't it make much more sense to have local indexes here and pass
-them e.g lckB:2?
+Perhaps that relates to the version of built of uboot.
+On the board I have access to I see:
 
-> - Sometimes a remote processor, which may not be running Linux, will
-> have to dynamically allocate a hwlock, and send the ID of the
-> allocated lock to us (another processor running Linux)
->
+ver=U-Boot 2013.01.01-g5df9446 (Oct 01 2014 - 14:59:23)
 
-I'm sorry but you cannot have a system on both sides that is allowed
-to do dynamic allocation from a limited set of resources.
+And the following setting altered the baud rate of u-boot (IIRC).
 
-Further more this dynamic allocation leads to interesting race
-conditions as what happens if you dynamically allocate a hwlock that
-is statically allocated by another part of the system?
-The only solution I can think of is to have a static allocation of ids
-that the dynamic allocator might use, and then we're just carrying
-extra code when the system is already statically configured...
+baudrate=115200
 
-> We cannot tell in advance what kind of IPC is going to be used for
-> sending and receiving this hwlock ID. Some are handled by Linux
-> (kernel) and some by the user space. So we must be able to expose an
-> ID the system will understand as well as receive one.
->
+> >Cc: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> >Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> >---
+> >  arch/arm/boot/dts/r8a7794-alt.dts | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> >diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
+> >index 8aec512..f2cf757 100644
+> >--- a/arch/arm/boot/dts/r8a7794-alt.dts
+> >+++ b/arch/arm/boot/dts/r8a7794-alt.dts
+> >@@ -20,7 +20,7 @@
+> >  	};
+> >
+> >  	chosen {
+> >-		bootargs = "console=ttySC0,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp";
+> >+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+> 
+>    Hm, does this even work as intended? I've tried to boot another R8A7794
+> based board and I couldn't get any output with alike command line. Booting
+> with 'earlyprintk=serial' has shown that tty0 was enabled as a console which
+> is not what we wanted.
 
-Designing this interface to take into consideration that someone might
-send us something completely crazy isn't productive.
+If you are backporting this change then I believe it has some dependencies
+that I can follow up on if it is useful to you.
 
-
-The only reason for having num-locks and base-id in device tree is
-because of the current Linux implementation. base-id is not a property
-of the hardware and num-locks is not needed for anything but book
-keeping of base-id's in the hwlock framework.
-
-This is why I preferred Sumans earlier suggestion of having the
-binding consist of #hwlock-cells = <X> and the necessary accessor
-functions for resolving a hwlock based on a dt reference.
-
-Regards,
-Bjorn
+If you are using mainline (e.g. next or renesas-next) then yes,
+it works. I have tested it numerous times since the patch was merged.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
