@@ -1,140 +1,112 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] tty: serial: Add 8250 earlycon to support noinit
- option
-Date: Sun, 01 Feb 2015 11:27:31 -0500
-Message-ID: <54CE53F3.5040709@hurleysoftware.com>
-References: <1421068104-30463-1-git-send-email-eddie.huang@mediatek.com> <1421068104-30463-2-git-send-email-eddie.huang@mediatek.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
+Date: Sun, 1 Feb 2015 09:55:02 -0800
+Message-ID: <CAJAp7OjVULNRd113TtOEwaa6QO-XCDa0oxBm2H5NPvp_kLTSpA@mail.gmail.com>
+References: <1421269101-51105-1-git-send-email-s-anna@ti.com>
+	<1421269101-51105-2-git-send-email-s-anna@ti.com>
+	<20150115135201.GG16217@leverpostej>
+	<20150115135556.GH16217@leverpostej>
+	<CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
+	<CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com>
+	<20150116101746.GA21809@leverpostej>
+	<CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
+	<CAJAp7Og+-KQd7bygWQjTS72Kye3fkp3s3ry+2bw7Gcv7aPF5AQ@mail.gmail.com>
+	<CAK=WgbZ2986xxuAFvMSoyQLaPAxdUpZ8e5g-mSjyETfvd4KKHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421068104-30463-2-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbZ2986xxuAFvMSoyQLaPAxdUpZ8e5g-mSjyETfvd4KKHw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>, Suman Anna <s-anna@ti.com>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
+On Fri, Jan 30, 2015 at 9:41 PM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
+> On Sat, Jan 31, 2015 at 1:29 AM, Bjorn Andersson <bjorn@kryo.se> wrote:
+>> In a system where you have two hwlock blocks lckA and lckB, each
+>> consisting of 8 locks and you have dspB that can only access lckB
+>
+> This is a good example - thanks. To be able to cope with such cases we
+> will have to pass a hwlock block reference and its relative lock id.
+>
 
-On 01/12/2015 08:08 AM, Eddie Huang wrote:
-> Add earlycon support not only baudrate option, but also add noinit option.
-> If use noinit option, 8250 earlycon will not init serial hardware and use
-> loader setting.
+Correct, so the #hwlock-cells and hwlock part from the proposal are
+the important one. Having an optional hwlock-names will make things
+easier to read as well, but is not necessary.
 
-I see this went into Greg's tty-testing branch.
+> The DT binding should definitely be prepared for such cases (just kill
+> the base-id field?), but let's see what it means about the Linux
+> implementation.
+>
 
-The only point of this is to not program the divisor, right?
+>From the dt binding PoV, we should be able to skip num-locks as well.
+It seems most hwlock blocks have a fixed amount of locks provided and
+the drivers are reporting this to the core when registering.
 
-I ask because early_serial8250_setup() could already handle this without
-extra options by simply not doing divisor programming if no baud option is
-present.
+So I think we can reduce the binding to:
 
-And this blows up if the optional console= form is used:
-    console=uart,mmio32,<addr>,noinit
-because the ttyS console will expect line settings for console match.
+Providers:
+#hwlock-cells
+
+Consumers:
+hwlocks
+hwlock-names
+
+For the hardware where number of locks is actually variable (e.g.
+different variants of same block) there can be driver specific entries
+for this.
+
+> Since the existence of several hwblocks is still fictional (Bjorn,
+> please confirm too?), we may prefer to introduce changes to support it
+> only when it shows up; it all depends on the amount of changes needed.
+> Suman, care to take a look please?
+>
+
+I haven't seen any such systems yet.
+
+We could introduce the logic found in other subsystems of allowing -1
+as base_id and having the core find a available range. This will work
+for all cases where the global ids doesn't have to be static; either
+due to the fact that we use block:local-id or that the indices are
+hard coded. (Referencing locks via dt is equivalent of the
+block:local-id case)
+
+>>> - Sometimes a remote processor, which may not be running Linux, will
+>>> have to dynamically allocate a hwlock, and send the ID of the
+>>> allocated lock to us (another processor running Linux)
+>>>
+>> I'm sorry but you cannot have a system on both sides that is allowed
+>> to do dynamic allocation from a limited set of resources.
+>
+> Of course not. On such systems, Linux is not the one responsible for
+> allocating the hwlocks, at least not during part of the time or from
+> part of the hwlocks. There were a few different use cases, with
+> different semantics, that required communicating to Linux an hwlock
+> id, but since none of them have reached mainline, we should only
+> remember they may show up one day, but not put too much effort to
+> support them right now.
+>
+
+That makes more sense, although I still believe that you end up with a
+system wide setup where locks are statically allocated in some
+document beforehand. Either that or you will have to feed that other
+system with the list of constraints.
+
+Non the less, that's "unrelated".
+
+If we get an incoming message saying lckX:Y (or the global lckZ), we
+probably wouldn't define that in DT. We would need a way to resolve
+the hwlock-block "lckX" so we can request lock Y from that block. We
+would basically build the DT reference on the fly.
+
+I think this is a future problem to be solved and more importantly I
+don't think it's limited to hwlocks. If a system architect designs a
+system where a remote entity will do allocation of resources for us,
+they will most likely do so not only for hwlocks but also for gpios,
+irqs and other resources that we today reference with arguments in DT.
+Hopefully that will not happen anytime soon, so let's just ignore that
+problem for now and go for a simple binding that will cover todays use
+cases (with some thought into multi-block support).
 
 Regards,
-Peter Hurley
-
-> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/tty/serial/8250/8250_early.c |  7 ++++---
->  drivers/tty/serial/earlycon.c        | 17 ++++++++++++-----
->  include/linux/serial_8250.h          |  2 ++
->  include/linux/serial_core.h          |  1 +
->  4 files changed, 19 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_early.c b/drivers/tty/serial/8250/8250_early.c
-> index 4858b8a..a13d757 100644
-> --- a/drivers/tty/serial/8250/8250_early.c
-> +++ b/drivers/tty/serial/8250/8250_early.c
-> @@ -138,19 +138,20 @@ static void __init init_port(struct earlycon_device *device)
->  	serial8250_early_out(port, UART_LCR, c & ~UART_LCR_DLAB);
->  }
->  
-> -static int __init early_serial8250_setup(struct earlycon_device *device,
-> +int __init early_serial8250_setup(struct earlycon_device *device,
->  					 const char *options)
->  {
->  	if (!(device->port.membase || device->port.iobase))
->  		return 0;
->  
-> -	if (!device->baud) {
-> +	if (!device->baud && !device->noinit) {
->  		device->baud = probe_baud(&device->port);
->  		snprintf(device->options, sizeof(device->options), "%u",
->  			 device->baud);
->  	}
->  
-> -	init_port(device);
-> +	if (!device->noinit)
-> +		init_port(device);
->  
->  	early_device = device;
->  	device->con->write = early_serial8250_write;
-> diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-> index 64fe25a..4891251 100644
-> --- a/drivers/tty/serial/earlycon.c
-> +++ b/drivers/tty/serial/earlycon.c
-> @@ -58,7 +58,7 @@ static int __init parse_options(struct earlycon_device *device,
->  				char *options)
->  {
->  	struct uart_port *port = &device->port;
-> -	int mmio, mmio32, length;
-> +	int noinit, mmio, mmio32, length;
->  	unsigned long addr;
->  
->  	if (!options)
-> @@ -92,10 +92,17 @@ static int __init parse_options(struct earlycon_device *device,
->  	options = strchr(options, ',');
->  	if (options) {
->  		options++;
-> -		device->baud = simple_strtoul(options, NULL, 0);
-> -		length = min(strcspn(options, " ") + 1,
-> -			     (size_t)(sizeof(device->options)));
-> -		strlcpy(device->options, options, length);
-> +		noinit = !strncmp(options, "noinit", 6);
-> +		if (noinit) {
-> +			device->noinit = noinit;
-> +			strlcpy(device->options, options, 6);
-> +			device->options[6] = '\0';
-> +		} else {
-> +			device->baud = simple_strtoul(options, NULL, 0);
-> +			length = min(strcspn(options, " ") + 1,
-> +					(size_t)(sizeof(device->options)));
-> +			strlcpy(device->options, options, length);
-> +		}
->  	}
->  
->  	if (port->iotype == UPIO_MEM || port->iotype == UPIO_MEM32)
-> diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
-> index e02acf0..0e26eec 100644
-> --- a/include/linux/serial_8250.h
-> +++ b/include/linux/serial_8250.h
-> @@ -119,6 +119,8 @@ extern int serial8250_find_port(struct uart_port *p);
->  extern int serial8250_find_port_for_earlycon(void);
->  extern unsigned int serial8250_early_in(struct uart_port *port, int offset);
->  extern void serial8250_early_out(struct uart_port *port, int offset, int value);
-> +extern int early_serial8250_setup(struct earlycon_device *device,
-> +					 const char *options);
->  extern int setup_early_serial8250_console(char *cmdline);
->  extern void serial8250_do_set_termios(struct uart_port *port,
->  		struct ktermios *termios, struct ktermios *old);
-> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-> index 057038c..72c6698 100644
-> --- a/include/linux/serial_core.h
-> +++ b/include/linux/serial_core.h
-> @@ -326,6 +326,7 @@ struct earlycon_device {
->  	struct uart_port port;
->  	char options[16];		/* e.g., 115200n8 */
->  	unsigned int baud;
-> +	int noinit;
->  };
->  int setup_earlycon(char *buf, const char *match,
->  		   int (*setup)(struct earlycon_device *, const char *));
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
