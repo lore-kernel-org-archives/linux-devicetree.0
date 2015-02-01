@@ -1,17 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 06/10] ARM: dts: sun9i: Add USB host
- controller nodes to a80 dtsi
-Date: Sun, 1 Feb 2015 15:17:50 +0100
-Message-ID: <20150201141750.GG4827@lukather>
+Subject: Re: [PATCH v3 07/10] ARM: dts: sunxi: Add usb3_vbus
+ regulator to common regulators dtsi
+Date: Sun, 1 Feb 2015 15:20:07 +0100
+Message-ID: <20150201142007.GH4827@lukather>
 References: <1422388455-25923-1-git-send-email-wens@csie.org>
- <1422388455-25923-7-git-send-email-wens@csie.org>
+ <1422388455-25923-8-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="S5HS5MvDw4DmbRmb"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAXNXCTAKGQE3SONECQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="0XhtP95kHFp3KGBe"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7XOXCTAKGQE7FWA6DI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1422388455-25923-7-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1422388455-25923-8-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -23,85 +23,43 @@ To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---S5HS5MvDw4DmbRmb
+--0XhtP95kHFp3KGBe
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Wed, Jan 28, 2015 at 03:54:11AM +0800, Chen-Yu Tsai wrote:
-> The A80 has 3 EHCI/OHCI USB controllers.
+On Wed, Jan 28, 2015 at 03:54:12AM +0800, Chen-Yu Tsai wrote:
+> Some SoCs have a total of 4 possible USB controllers. One such example
+> is the A80, which has one USB3 dual role device and 3 EHCI/OHCI pairs.
+> 
+> Add a common VBUS regulator for the last host controller.
 > 
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun9i-a80.dtsi | 70 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
+>  arch/arm/boot/dts/sunxi-common-regulators.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-> index d7ebd9390b01..9483b15bfda7 100644
-> --- a/arch/arm/boot/dts/sun9i-a80.dtsi
-> +++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-> @@ -355,6 +355,28 @@
->  		 */
->  		ranges = <0 0 0 0x20000000>;
+> diff --git a/arch/arm/boot/dts/sunxi-common-regulators.dtsi b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
+> index e02baa66b33c..97fe8d73c4f7 100644
+> --- a/arch/arm/boot/dts/sunxi-common-regulators.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
+> @@ -130,6 +130,16 @@
+>  		status = "disabled";
+>  	};
 >  
-> +		ehci0: usb@00a00000 {
-> +			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
-> +			reg = <0x00a00000 0x100>;
-> +			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&usb_mod_clk 1>;
-> +			resets = <&usb_mod_clk 17>;
-> +			phys = <&usbphy1>;
-> +			phy-names = "usb";
-> +			status = "disabled";
-> +		};
-> +
-> +		ohci0: usb@00a00400 {
-> +			compatible = "allwinner,sun9i-a80-ohci", "generic-ohci";
-> +			reg = <0x00a00400 0x100>;
-> +			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&usb_mod_clk 1>, <&usb_mod_clk 2>;
-> +			resets = <&usb_mod_clk 17>;
-> +			phys = <&usbphy1>;
-> +			phy-names = "usb";
-> +			status = "disabled";
-> +		};
-> +
->  		usbphy1: phy@00a00800 {
->  			compatible = "allwinner,sun9i-a80-usb-phy";
->  			reg = <0x00a00800 0x4>;
-> @@ -366,6 +388,32 @@
->  			#phy-cells = <0>;
->  		};
->  
-> +		ehci1: usb@00a01000 {
-> +			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
-> +			reg = <0x00a01000 0x100>;
-> +			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&usb_mod_clk 3>;
-> +			resets = <&usb_mod_clk 18>;
-> +			phys = <&usbphy2>;
-> +			phy-names = "usb";
-> +			status = "disabled";
-> +		};
-> +
-> +		/*
-> +		 * Even though ohci1 exists, it is never used as
-> +		 * usb1 only has HSIC pins routed externally
-> +		 */
-> +		ohci1: usb@00a01400 {
-> +			compatible = "allwinner,sun9i-a80-ohci", "generic-ohci";
-> +			reg = <0x00a01400 0x100>;
-> +			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&usb_mod_clk 3>, <&usb_mod_clk 4>;
-> +			resets = <&usb_mod_clk 18>;
-> +			phys = <&usbphy2>;
-> +			phy-names = "usb";
-> +			status = "disabled";
-> +		};
+> +	reg_usb3_vbus: usb3-vbus {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		regulator-name = "usb3-vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		enable-active-high;
+> +		status = "disabled";
+> +	};
 > +
 
-Is it worth declaring it then? If it's not never ever going to be used
-since no pins are routed outside of the SoC, I don't think it should
-be declared in the DTSI.
+I don't think you replied to this one. What other SoC is using the
+USB3 regulator? Is it worth it to put it in there and bloat all the
+other DTS for something that is only used on a single board so far?
 
 Maxime
 
@@ -109,4 +67,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---S5HS5MvDw4DmbRmb--
+--0XhtP95kHFp3KGBe--
