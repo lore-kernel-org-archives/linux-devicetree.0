@@ -1,70 +1,65 @@
 Return-Path: <dobatog@gmail.com>
-Message-ID: <54D48711.8060903@gmail.com>
-Date: Fri, 06 Feb 2015 10:19:13 +0100
+Message-ID: <54CE354F.5090106@gmail.com>
+Date: Sun, 01 Feb 2015 15:16:47 +0100
 From: Gabriel Dobato <dobatog@gmail.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
-References: <E1YH5bU-0005mG-3L@bombadil.infradead.org> <54CB5267.5060004@gmail.com> <20150130113118.5523ed68@armhf> <54CB6440.1010002@gmail.com> <20150130124144.501cf81d@armhf> <54CB732F.7010409@gmail.com> <20150130133913.083d1ade@armhf> <54CB7E33.3080909@gmail.com> <54CE354F.5090106@gmail.com> <54D3EB26.9020909@gmail.com>
-In-Reply-To: <54D3EB26.9020909@gmail.com>
+References: <E1YH5bU-0005mG-3L@bombadil.infradead.org> <54CB5267.5060004@gmail.com> <20150130113118.5523ed68@armhf> <54CB6440.1010002@gmail.com> <20150130124144.501cf81d@armhf> <54CB732F.7010409@gmail.com> <20150130133913.083d1ade@armhf> <54CB7E33.3080909@gmail.com>
+In-Reply-To: <54CB7E33.3080909@gmail.com>
 Content-Type: multipart/alternative;
- boundary="------------080206070602070804090901"
+ boundary="------------000807030608040205020309"
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jean-Francois Moine <moinejf@free.fr>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, dobatog@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
 This is a multi-part message in MIME format.
---------------080206070602070804090901
+--------------000807030608040205020309
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-On 05/02/15 23:13, Sebastian Hesselbarth wrote:
-> Gabriel,
+> I'd be happy to take over, but I admit that my current lack of spare
+> time would only allow me to support Gabriel and you.
 >
-> great you can boot a recent kernel. I guess you had to quite heavily
-> modify current dove-cm-a510.dts? Can you upload the one you use now
-> to any pastebin and send the link? 
+> Let's wait for Gabriel's response on how he can help improving
+> Dove mainline with his cm-a510 and baseboard.
+>
+> Sebastian 
+Hello all,
 
-Hello Sebsatian,
+First of all, I would like to give thanks all people like you for all 
+your help and support. I really appreciate it.
 
-Not, I only had to include eth (as Mr. Moine told me) and mdio because I 
-mount rootfs via NFS.
+DT is new for me, I have never worked using this kind of hardware 
+description, so I am involving in many issues due to my lack of skills 
+in this kind of structure.
 
-> You didn't mention if you really use the sb-a510, i.e. the Compulab
-> reference baseboard. Is it what you are using with your cm-a510? 
+At this moment, I am focusing in the update of the version of the kernel 
+on the CM-A510 board (from 2.6 to 3.1x)in order to give more features to 
+the system, but as I said before, I have lots of problems.
 
-Yes, sorry for that, I am using SB-A510.
+Thanks to the help and support of Jean-Francois Moine, I have achieved 
+to boot the kernel completely and to mount the rootfs via NFS. I have a 
+prompt, what has been a very big step for me.
 
-At this moment, thanks to the help of Moine, I am trying to get video 
-output using the driver he made.
+> Nope. One dove.dtsi, one dove-cm-a510.dtsi, and one baseboard.dts 
+> including dove-cm-a510.dtsi for every baseboard we stumble upon. 
 
-But I think it is only the beginning....
+In reference to the structure of .dts and .dtsi files, I agree with this 
+kind of structure, of course, nobody as you can consider it better. I 
+think the idea of make a dove-cm-a510.dtsi file and different 
+baseboards.dts depending of the peripherals used is great. But as I say, 
+maybe I am not the right person to decide it, Jean-Froncois Moine and 
+you have better criteria.So, whatever you decide I would very happy to help.
 
-I wonder if it will there be driver support for the second ethernet 
-(PCIE attached NIC), and the rest of features remained, for DT...
+At this moment, I am trying to configure the framebuffer, but as Moine 
+told me,it seems there is not video driver support for this board in 
+DT... :( .
 
-Before using DT, I tried to boot a simple uImage (without DT), but it 
-did not boot
-
-the last ouput in the kernel trade was:
-...
-/uncompressing linux... done, booting the kernel./
-
-nothing else.... I wonder if there is a problem with the ID machine, I 
-don't know...
-The U-Boot used was the one provided by Compulab (Maybe the problem is 
-on Uboot...)
+Best regards, and thank you again...
 
 G.D
 
-
-
-
-
-
-
-
---------------080206070602070804090901
+--------------000807030608040205020309
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: 7bit
 
@@ -73,64 +68,52 @@ Content-Transfer-Encoding: 7bit
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   </head>
   <body bgcolor="#FFFFFF" text="#000000">
-    <br>
-    <div class="moz-cite-prefix">On 05/02/15 23:13, Sebastian
-      Hesselbarth wrote:<br>
-    </div>
-    <blockquote cite="mid:54D3EB26.9020909@gmail.com" type="cite">Gabriel,
+    <blockquote type="cite">I'd be happy to take over, but I admit that
+      my current lack of spare <br>
+      time would only allow me to support Gabriel and you. <br>
       <br>
+      Let's wait for Gabriel's response on how he can help improving <br>
+      Dove mainline with his cm-a510 and baseboard. <br>
       <br>
-      great you can boot a recent kernel. I guess you had to quite
-      heavily
-      <br>
-      modify current dove-cm-a510.dts? Can you upload the one you use
-      now
-      <br>
-      to any pastebin and send the link?
-    </blockquote>
+      Sebastian </blockquote>
+    Hello all,<br>
     <br>
-    Hello Sebsatian,<br>
+    First of all, I would like to give thanks all people like you for
+    all your help and support. I really appreciate it.<br>
     <br>
-    Not, I only had to include eth (as Mr. Moine told me) and mdio
-    because I mount rootfs via NFS.<br>
+    DT is new for me, I have never worked using this kind of hardware
+    description, so I am involving in many issues due to my lack of
+    skills in this kind of structure.<br>
     <br>
-    <blockquote type="cite">You didn't mention if you really use the
-      sb-a510, i.e. the Compulab
-      <br>
-      reference baseboard. Is it what you are using with your cm-a510?
-    </blockquote>
+    At this moment, I am focusing in the update of the version of the
+    kernel on the CM-A510 board (from 2.6 to 3.1x)in order to give more
+    features to the system, but as I said before, I have lots of
+    problems.<br>
     <br>
-    Yes, sorry for that, I am using SB-A510.<br>
+    Thanks to the help and support of Jean-Francois Moine, I have
+    achieved to boot the kernel completely and to mount the rootfs via
+    NFS. I have a prompt, what has been a very big step for me.<br>
     <br>
-    At this moment, thanks to the help of Moine, I am trying to get
-    video output using the driver he made.<br>
+    <pre wrap=""><blockquote type="cite"><font face="sans-serif">Nope. One dove.dtsi, one dove-cm-a510.dtsi, and one baseboard.dts
+including dove-cm-a510.dtsi for every baseboard we stumble upon.</font>
+</blockquote>
+</pre>
+    In reference to the structure of .dts and .dtsi files, I agree with
+    this kind of structure, of course, nobody as you can consider it
+    better. I think the idea of make a dove-cm-a510.dtsi file and
+    different baseboards.dts depending of the peripherals used is great.
+    But as I say, maybe I am not the right person to decide it,
+    Jean-Froncois Moine and you have better criteria.So, whatever you
+    decide I would very happy to help.<br>
     <br>
-    But I think it is only the beginning.... <br>
+    At this moment, I am trying to configure the framebuffer, but as
+    Moine told me,it seems there is not video driver support for this
+    board in DT... :( . <br>
     <br>
-    I wonder if it will there be driver support for the second ethernet
-    (PCIE attached NIC), and the rest of features remained, for DT...<br>
+    Best regards, and thank you again...<br>
     <br>
-    Before using DT, I tried to boot a simple uImage (without DT), but
-    it did not boot<br>
-    <br>
-    the last ouput in the kernel trade was:<br>
-    ...<br>
-    <i>uncompressing linux... done, booting the kernel.</i><br>
-    <br>
-    nothing else.... I wonder if there is a problem with the ID machine,
-    I don't know... <br>
-    The U-Boot used was the one provided by Compulab (Maybe the problem
-    is on Uboot...)<br>
-    <br>
-    G.D<br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    G.D
   </body>
 </html>
 
---------------080206070602070804090901--
+--------------000807030608040205020309--
