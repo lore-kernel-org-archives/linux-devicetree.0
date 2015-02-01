@@ -1,65 +1,53 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: dts: pxa: add pxa-timer to pxa27x
-Date: Sun, 1 Feb 2015 13:07:55 +0000
-Message-ID: <20150201130755.GA25767@leverpostej>
-References: <1422744510-3179-1-git-send-email-robert.jarzmik@free.fr>
- <1422744510-3179-5-git-send-email-robert.jarzmik@free.fr>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 01/10] clk: sunxi: Move USB clocks to
+ separate file
+Date: Sun, 1 Feb 2015 14:53:33 +0100
+Message-ID: <20150201135332.GB4827@lukather>
+References: <1422388455-25923-1-git-send-email-wens@csie.org>
+ <1422388455-25923-2-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSHAXCTAKGQEMF3AK6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1422744510-3179-5-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422388455-25923-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 31, 2015 at 10:48:30PM +0000, Robert Jarzmik wrote:
-> Each pxa has an embedded OS Timers IP. The kernel cannot work without a
-> valid clocksource, and this adds the OS Timers to the pxa device-tree
-> description.
-> 
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/pxa27x.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-> index 7f93828..9e6bf60 100644
-> --- a/arch/arm/boot/dts/pxa27x.dtsi
-> +++ b/arch/arm/boot/dts/pxa27x.dtsi
-> @@ -97,5 +97,18 @@
->  			status = "okay";
->  		};
->  	};
-> +
-> +	clocksources {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-There is absolutely no need for this container node.
-
-Please get rid of it and place the node below directly under the parent
-node.
-
-Mark.
-
-> +		pxa-timer@40a00000 {
-> +			compatible = "marvell,pxa-timer";
-> +			reg = <0x40a00000 0x20>;
-> +			interrupts = <26>;
-> +			clocks = <&pxa2xx_clks CLK_OSTIMER>;
-> +			status = "okay";
-> +		};
->  	};
->  };
-> -- 
-> 2.1.0
+On Wed, Jan 28, 2015 at 03:54:06AM +0800, Chen-Yu Tsai wrote:
+> The USB clocks originally shared code with the gates clocks, but had
+> additional reset controllers. Move these to a separate file. This will
+> allow us to add new support for slightly different USB clocks, such as
+> on the A80, without affecting gates clocks, and also facilitate the
+> migration of gates clocks to a generic solution.
 > 
+> This also cleans up the USB clocks code slightly, such as adding
+> newlines, getting rid of the unused clkdev call, using a simple
+> u32 instead of BITMAP for the clock masks, using BIT() macro to
+> declare the clock bitmasks, and using of_io_request_and_map() to
+> get the I/O address.
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+Applied, thanks!
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--oLBj+sq0vYjzfsbl--
