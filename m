@@ -1,41 +1,63 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 01/10] ARM: tegra: Set the sound card model that alsaucm
- expects
-Date: Mon, 02 Feb 2015 14:08:36 -0700
-Message-ID: <54CFE754.7000500@wwwdotorg.org>
-References: <1422442278-10405-1-git-send-email-tomeu.vizoso@collabora.com> <1422442278-10405-2-git-send-email-tomeu.vizoso@collabora.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
+Date: Mon, 2 Feb 2015 15:14:54 -0600
+Message-ID: <54CFE8CE.2080804@ti.com>
+References: <1421269101-51105-1-git-send-email-s-anna@ti.com> <1421269101-51105-2-git-send-email-s-anna@ti.com> <20150115135201.GG16217@leverpostej> <20150115135556.GH16217@leverpostej> <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com> <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com> <20150116101746.GA21809@leverpostej> <CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com> <CAJAp7Og+-KQd7bygWQjTS72Kye3fkp3s3ry+2bw7Gcv7aPF5AQ@mail.gmail.com> <CAK=WgbZ2986xxuAFvMSoyQLaPAxdUpZ8e5g-mSjyETfvd4KKHw@mail.gmail.com> <CAK=WgbZFZXcHuZUFVg4aAwjqzTQQxpV+Hp-DUYPKg5D8AsQ4Pg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422442278-10405-2-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK=WgbZFZXcHuZUFVg4aAwjqzTQQxpV+Hp-DUYPKg5D8AsQ4Pg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/28/2015 03:50 AM, Tomeu Vizoso wrote:
-> Patches are on its way to add a config file to alsaucm for the Nyan
-> boards. Use the same card ID that alsaucm will expect.
+On 02/01/2015 05:00 AM, Ohad Ben-Cohen wrote:
+> On Sat, Jan 31, 2015 at 7:41 AM, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> wrote:
+>> On Sat, Jan 31, 2015 at 1:29 AM, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org> wrote:
+>>> In a system where you have two hwlock blocks lckA and lckB, each
+>>> consisting of 8 locks and you have dspB that can only access lckB
+>>
+>> This is a good example - thanks. To be able to cope with such cases we
+>> will have to pass a hwlock block reference and its relative lock id.
 
-> diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts b/arch/arm/boot/dts/tegra124-nyan-big.dts
+So, you mean lckB is only between the host and dspB. Obviously, if it
+were shared between dspA and dspB only, then the allocation and
+management would be completely outside the host Linux driver's scope.
 
->   	sound {
-> -		compatible = "nvidia,tegra-audio-max98090-nyan-big",
-> +		compatible = "nvidia,tegra-audio-max98090-nyan",
->   			     "nvidia,tegra-audio-max98090";
+> 
+> Additionally, to support such a scenario, we can no longer retain the
+> simple dynamic allocation API we have today, because it might end up
+> allocating dspB an hwlock from IckA.
+> 
+> We will have to make sure hwlocks are allocated only from pools
+> visible to the user, something that will change not only the
+> hwspinlock API but also the way it maintains the hwlocks.
 
-I'm not convinced that removing the board-specific compatible value is a 
-great idea. What if we find we need to distinguish between different 
-boards that use this same binding in the future. That situation is 
-exactly why we have board-/SoC-specific values in compatible even if we 
-don't immediately use them.
+Right, the current API definitely will not scale for that. It was
+designed around the concept that it's easier to exchange a single global
+id, rather than a lcbB:id or some other similar semantics that needs to
+be interpreted.
 
-> -		nvidia,model = "Acer Chromebook 13";
-> +		nvidia,model = "GoogleNyan";
+> 
+> I suspect we want to wait for such hardware to show up first, and only
+> then add framework support for it. 
 
-I believe this also technically breaks ABI, since some user-space tools 
-use the model to look up saved state. Can we not leave this as is, and 
-just have the UCM files know about both names?
+Agreed.
 
-Aside from that, I think the series looks OK at a quick glance.
+regards
+Suman
+
+> Regardless, we obviously do want to
+> make sure our DT binding is prepared for the worse, so we'll drop the
+> "base-id" field.
+> 
+> Thanks,
+> Ohad.
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
