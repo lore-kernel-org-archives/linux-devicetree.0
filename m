@@ -1,160 +1,110 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/8] Support for Fujitsu MB86S7X SoCs
-Date: Mon, 2 Feb 2015 18:51:58 +0530
-Message-ID: <CAJe_ZhdqsTwD0KxzVzCCHExsoepCkLR2hXUbjnnmvSFhhvmgdw@mail.gmail.com>
-References: <1421663016-1327-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: Reading /sys with side effects (was Re: [PATCH 1/2]
+ Documentation: leds: Add description of LED Flash class extension)
+Date: Mon, 2 Feb 2015 14:51:03 +0100
+Message-ID: <20150202135103.GB26985@amd>
+References: <1422346028-16739-1-git-send-email-j.anaszewski@samsung.com>
+ <20150127221958.GA18993@amd>
+ <54C8A130.8000807@samsung.com>
+ <20150129211420.GA21140@amd>
+ <54CB4702.1090508@samsung.com>
+ <20150130164027.GA25830@kroah.com>
+ <54CF3E36.9000108@samsung.com>
+ <20150202094435.GA6686@amd>
+ <54CF65CB.3060207@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421663016-1327-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54CF65CB.3060207@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Greg KH <greg@kroah.com>, kernel list <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,  Hi Olof,
+Hi!
 
-  ... just a polite ping on the patchset.
+> >[Actually, you could _always_ do two reads on those devices, discard
+> >first result, and return the second. But I'm not sure how hardware
+> >will like that.]
+> 
+> This would be the most sensible option.
+> 
+> 
+> However, let's analyze the typical use cases for flash strobing:
+> 
+> 
+> -------------------------------------------------------------
+> 
+> 
+> >>>>>>>> Version without faults caching:
+> 
+> ============
+> Driver side:
+> ============
+> 
+> read_faults()
+> 	faults = read_i2c(); //read faults
+> 	if faults
+> 		write_i2c(); //clear faults, only for some devices
+> 		faults = read_i2c(); //read faults
+> 	return faults
+> 
+> ================
+> User space side:
+> ================
+> 
+> 1. faults = `cat flash_faults` //read_faults()
+> 2. if faults then
+> 	print "Unable to strobe the flash LED due to faults"
+>    else
+> 	echo 1 > flash_strobe
+> 
+> 
+> >>>>>>>> Version with faults caching:
+> 
+> ============
+> Driver side:
+> ============
+> 
+> read_faults()
+> 	faults |= read_i2c(); //read faults
+> 
+> clear_faults()
+> 	write_i2c(); //clear faults
+> 	faults = 0;
+> 
+> 
+> ================
+> User space side:
+> ================
+> 
+> 1. faults = `cat flash_faults` //read_faults()
+> 2. if faults then
+> 	echo 0 > flash_faults  //clear_faults()
+> 	faults = `cat flash_faults` //read_faults()
+> 3, if !faults
+> 	echo 1 > flash_strobe
+>    else
+> 	print "Unable to strobe the flash LED due to faults"
+> 
+> 
+> -------------------------------------------------------------
+> 
+> From the above it seems that version with clearing faults on read
+> results in the simpler flash strobing procedure on userspace side,
+> by the cost of additional bus access on the driver side.
 
-Thanks.
+I like caching version more (as it will allow by-hand debugging of
+"why did not flash fire? Aha, lets see in the file, there was fault),
+but both should be acceptable.
 
-On 19 January 2015 at 15:53, Vincent Yang
-<vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hello,
->
->   Fujitsu have a series of SoC already shipping based around
-> variations of 2xCA7+2xCA15 big.LITTLE architecture, and we would like
-> to upstream the basic support in this series.
->
->   MB86S70 is a big.LITTLE platform with 2xCA7+2xCA15 and an additiona=
-l
-> CM3 as the master. MB86S73 is a simple 2xCA7 and an additional CM3
-> master.
->
->   The DT includes references to sdhci patches which are being sent to
-> the mmc list at the same time.
->
->   We welcome any comments or questions.
->
-> Changes since v3:
-> * Identify platform, by checking presence of DT node
-> "fujitsu,mb86s70-scb-1.0" before populating cpu clocks and MCPM
-> support.
-> * Disable clock upon gpio module remove
-> * Lower init level of gpio driver from subsys_initcall to module_init
-> * Use managed device resource allocation in MHU driver
->
-> Changes since v2:
-> * Minor cleanup of MCPM as suggested by Nicolas Pitre.
->
-> Changes since v1:
-> * Thanks to Arnd, modified clock driver to populate clocks only when
-> some user need them. Node name changed from "fujitsu,mb86s70-clk" to
-> "fujitsu,mb86s70-crg11" . Controller+Domain+Port of a clock are now
-> three cells specified by the user node.
-> * aliases moved into board DTS files
-> * Voltage supply moved as per-board DT node.
-> * Removed default overly verbose loglevel=3D8
-> * Specify -march=3Darmv7-a flag for mcpm.c and smc.S that contain ARM=
-v7
-> specific code.
-> * Removed wrongly put outer_flush_all(), now using standard
-> v7_exit_coherency_flush() instead of platform specific macro.
-> * Simplified GPIO offset calculations in gpio-mb86s70.c driver. And
-> added .remove() for the driver
-> * ARM MHU driver provided a .remove() to enable module unloading.
-> * A few other misc cleanups suggested in v1 submission.
->
-> Thanks.
->
-> Jassi Brar (8):
->   ARM: Add platform support for Fujitsu MB86S7X SoCs
->   mailbox: arm_mhu: add driver for ARM MHU controller
->   ARM: MB86S7X: Add MCPM support
->   clk: Add clock driver for mb86s7x
->   gpio: Add Fujitsu MB86S7x GPIO driver
->   dt: mb86s7x: add dt files for MB86S7x evbs
->   of: add Fujitsu vendor prefix
->   ARM: MB86S7x: Add configs
->
->  Documentation/devicetree/bindings/arm/mb86s7x.txt  |   8 +
->  .../bindings/clock/fujitsu,mb86s70-crg11.txt       |  26 +
->  .../bindings/gpio/fujitsu,mb86s70-gpio.txt         |  20 +
->  .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++
->  .../devicetree/bindings/soc/mb86s7x/scb_mhu.txt    |  35 ++
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  MAINTAINERS                                        |   7 +
->  arch/arm/Kconfig                                   |   2 +
->  arch/arm/Makefile                                  |   1 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/mb86s70.dtsi                     |  91 ++++
->  arch/arm/boot/dts/mb86s70eb.dts                    |  57 +++
->  arch/arm/boot/dts/mb86s73.dtsi                     |  63 +++
->  arch/arm/boot/dts/mb86s73eb.dts                    |  44 ++
->  arch/arm/boot/dts/mb86s7x.dtsi                     | 140 ++++++
->  arch/arm/configs/fujitsu_defconfig                 | 232 +++++++++
->  arch/arm/configs/multi_v7_defconfig                |   5 +
->  arch/arm/mach-mb86s7x/Kconfig                      |  19 +
->  arch/arm/mach-mb86s7x/Makefile                     |   3 +
->  arch/arm/mach-mb86s7x/board.c                      |  23 +
->  arch/arm/mach-mb86s7x/mcpm.c                       | 318 +++++++++++=
-++
->  arch/arm/mach-mb86s7x/smc.S                        |  27 ++
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/clk-mb86s7x.c                          | 386 +++++++++++=
-++++
->  drivers/gpio/Kconfig                               |   6 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-mb86s7x.c                        | 232 +++++++++
->  drivers/mailbox/Kconfig                            |   7 +
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/arm_mhu.c                          | 211 ++++++++
->  drivers/soc/Makefile                               |   1 +
->  drivers/soc/mb86s7x/Makefile                       |   4 +
->  drivers/soc/mb86s7x/scb_mhu.c                      | 528 +++++++++++=
-++++++++++
->  include/soc/mb86s7x/scb_mhu.h                      | 105 ++++
->  34 files changed, 2640 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/mb86s7x.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/fujitsu,m=
-b86s70-crg11.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/fujitsu,mb=
-86s70-gpio.txt
->  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu=
-=2Etxt
->  create mode 100644 Documentation/devicetree/bindings/soc/mb86s7x/scb=
-_mhu.txt
->  create mode 100644 arch/arm/boot/dts/mb86s70.dtsi
->  create mode 100644 arch/arm/boot/dts/mb86s70eb.dts
->  create mode 100644 arch/arm/boot/dts/mb86s73.dtsi
->  create mode 100644 arch/arm/boot/dts/mb86s73eb.dts
->  create mode 100644 arch/arm/boot/dts/mb86s7x.dtsi
->  create mode 100644 arch/arm/configs/fujitsu_defconfig
->  create mode 100644 arch/arm/mach-mb86s7x/Kconfig
->  create mode 100644 arch/arm/mach-mb86s7x/Makefile
->  create mode 100644 arch/arm/mach-mb86s7x/board.c
->  create mode 100644 arch/arm/mach-mb86s7x/mcpm.c
->  create mode 100644 arch/arm/mach-mb86s7x/smc.S
->  create mode 100644 drivers/clk/clk-mb86s7x.c
->  create mode 100644 drivers/gpio/gpio-mb86s7x.c
->  create mode 100644 drivers/mailbox/arm_mhu.c
->  create mode 100644 drivers/soc/mb86s7x/Makefile
->  create mode 100644 drivers/soc/mb86s7x/scb_mhu.c
->  create mode 100644 include/soc/mb86s7x/scb_mhu.h
->
-> --
-> 1.9.0
->
+> we don't need additional attribute, just writing the flash_faults
+> attribute can do the clearing.
 
+Yes, writing flash_faults to clear is acceptable.
+									Pavel
 
-
---=20
-Linaro.org =E2=94=82 Open source software for ARM SoCs | Follow Linaro
-http://facebook.com/pages/Linaro/155974581091106  -
-http://twitter.com/#!/linaroorg - http://linaro.org/linaro-blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
