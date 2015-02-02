@@ -1,114 +1,53 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH v3] ahci_xgene: Fix the dma state machine lockup for the
- ATA_CMD_SMART PIO mode command.
-Date: Tue, 3 Feb 2015 01:18:52 +0530
-Message-ID: <CAOHikRDZ-xxBxT_jr44HmKiDHfn2Q1K0ihbNDH-6LvYaq08=gw@mail.gmail.com>
-References: <1422900439-5541-1-git-send-email-stripathi@apm.com>
-	<1422900439-5541-2-git-send-email-stripathi@apm.com>
-	<54CFCC28.6050609@cogentembedded.com>
-	<CAOHikRBMPbyS0q6814+Xkez7ToBwrC7Yzp4sy=NMmPDg-5wCBA@mail.gmail.com>
-	<54CFD38F.2060803@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
+Date: Mon, 02 Feb 2015 23:49:32 +0300
+Message-ID: <54CFE2DC.10100@cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com> <1608366.HtA9yBksdO@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <54CFD38F.2060803@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1608366.HtA9yBksdO-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-   Ugh, please avoid using HTML when posting to the lists hosted on
-vger.kernel.org -- it's configured to ignore such mails AFAIK.
-Yeah forgot to set the plain text mode. Sorry for that
+Hello.
 
->>>     This patch addresses the issue with ATA_CMD_SMART pio mode
->>>     command for enumeration and device detection with ATA devices.
->>>     The X-Gene AHCI controller has an errata in which it cannot clear
->>>     the BSY bit after the PIO setup FIS. The dma state machine enters
+On 01/31/2015 01:52 AM, Sergei Shtylyov wrote:
 
+> Add the initial device tree for the R8A7794 SoC based SILK low cost board.
+> SCIF2 serial port support is included, so that the serial console can work.
 
->>     Hum, if this happens after every PIO command (PIO setup FISes are not
->> specific to the command, right?), perhaps it would make more sense to record
->> the *protocol* used by the last command?
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-
-> No it happens for IDENTIFY DEVICE, ATA_CMD_PACKET and ATA_CMD_SMART commands .
-> It is actually the commands associated with a BSY bit clearing.
-
-
-   I don't understand that -- BSY bit is cleared for *every* command,
-either at the end of it, or along with setting the DRQ bit for PIO
-data transfer.
-BSY bit is cleared after the end of these commands by the controller.
-So due to the bug it doesn't clear it. When the DMA commands is issued
-, it check for the BSY bit cleared or not and finds not cleared and
-results in CMFatalErrorUpdate  and hangs.
-
->>>     CMFatalErrorUpdate state and locks up. It is the same issue as
->>>     in the commit 2a0bdff6b958d1b2523d2754b6cd5e__0ea4053016 (ahci-xgene:
->>>     fix the dma state machine lockup for the IDENTIFY DEVICE PIO mode
->>>     command).
-
-
->> [...]
-
-
->>>     Signed-off-by: Suman Tripathi <stripathi@apm.com <mailto:stripathi@apm.com>>
->>>     Reported-by:   Mark Langsdorf <mlangsdo@redhat.com
->>>     <mailto:mlangsdo@redhat.com>>
->>>
-
-MBR, Sergei
-
-On Tue, Feb 3, 2015 at 1:14 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 02/02/2015 10:37 PM, Suman Tripathi wrote:
+> ---
+> This patch is against the 'renesas-devel-20150129-v3.19-rc6' tag of Simon
+> Horman's 'renesas.git' repo.
 >
->    Ugh, please avoid using HTML when posting to the lists hosted on
-> vger.kernel.org -- it's configured to ignore such mails AFAIK.
+>   arch/arm/boot/dts/Makefile         |    1
+>   arch/arm/boot/dts/r8a7794-silk.dts |   41 +++++++++++++++++++++++++++++++++++++
+>   2 files changed, 42 insertions(+)
 >
->>>>     This patch addresses the issue with ATA_CMD_SMART pio mode
->>>>     command for enumeration and device detection with ATA devices.
->>>>     The X-Gene AHCI controller has an errata in which it cannot clear
->>>>     the BSY bit after the PIO setup FIS. The dma state machine enters
->
->
->>>     Hum, if this happens after every PIO command (PIO setup FISes are not
->>> specific to the command, right?), perhaps it would make more sense to
->>> record
->>> the *protocol* used by the last command?
->
->
->> No it happens for IDENTIFY DEVICE, ATA_CMD_PACKET and ATA_CMD_SMART
->> commands .
->> It is actually the commands associated with a BSY bit clearing.
->
->
->    I don't understand that -- BSY bit is cleared for *every* command, either
-> at the end of it, or along with setting the DRQ bit for PIO data transfer.
->
->>>>     CMFatalErrorUpdate state and locks up. It is the same issue as
->>>>     in the commit 2a0bdff6b958d1b2523d2754b6cd5e__0ea4053016
->>>> (ahci-xgene:
->>>>     fix the dma state machine lockup for the IDENTIFY DEVICE PIO mode
->>>>     command).
->
->
->>> [...]
->
->
->>>>     Signed-off-by: Suman Tripathi <stripathi@apm.com
->>>> <mailto:stripathi@apm.com>>
->>>>     Reported-by:   Mark Langsdorf <mlangsdo@redhat.com
->>>>     <mailto:mlangsdo@redhat.com>>
->>>>
->
-> MBR, Sergei
->
+> Index: renesas/arch/arm/boot/dts/Makefile
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/Makefile
+> +++ renesas/arch/arm/boot/dts/Makefile
+> @@ -421,6 +421,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += eme
+>   	r8a7791-koelsch.dtb \
+>   	r8a7791-porter.dtb \
 
+    Oops, the patch was additionally against the Henninger->Porter rename 
+patch. I will fix that.
 
+>   	r8a7794-alt.dtb \
+> +	r8a7794-silk.dtb \
+>   	sh73a0-kzm9g.dtb
 
--- 
-Thanks,
-with regards,
-Suman Tripathi
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
