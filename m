@@ -1,151 +1,64 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/4] clocksource: mmp: add mmp timer driver
-Date: Mon, 2 Feb 2015 10:34:34 +0000
-Message-ID: <20150202103434.GA7459@leverpostej>
-References: <1422865899-8152-1-git-send-email-chao.xie@marvell.com>
- <1422865899-8152-2-git-send-email-chao.xie@marvell.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: Add syscon phandle to the video-phy node for
+ Exynos4
+Date: Mon, 02 Feb 2015 11:39:07 +0100
+Message-ID: <54CF53CB.3050100@samsung.com>
+References: <1421429438-32090-1-git-send-email-s.nawrocki@samsung.com>
+ <1421429438-32090-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422865899-8152-2-git-send-email-chao.xie@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chao Xie <chao.xie@marvell.com>
-Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1421429438-32090-2-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene@kernel.org
+Cc: kishon@ti.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 02, 2015 at 08:31:36AM +0000, Chao Xie wrote:
-> From: Chao Xie <chao.xie@marvell.com>
+Hi Kukjin,
+
+On 16/01/15 18:30, Sylwester Nawrocki wrote:
+> This is required to fix regression after introducing the PMU device
+> nodes required for the PMU driver modified in commit
+> 14fc8b93d47323561edf5d482d4a4b3ee1b90286
+> ("ARM: EXYNOS: Add platform driver support for Exynos PMU").
+> This change is needed to make MIPI DSI displays and MIPI CSI-2
+> camera sensors working again on Exynos4 boards.
 > 
-> MMP timer is attached to APB bus, It has the following
-> limitation.
-> 1. When get count of timer counter, it need some delay
->    to get a stable count.
-> 2. When set match register, it need disable the counter
->    first, and enable it after set the match register.
->    The disabling need wait for 2 clock cycle to take
->    effect.
-> 
-> To improve above #1, shadow register for count is added.
-> To improve above #2, CRSR register is added for quick updating.
-> 
-> So there are three types of timer.
-> timer1: old timer.
-> timer2: old timer with shadow register.
-> timer3: old timer with shadow and CRSR register.
-> 
-> This timer driver will be used for many SOCes.
-> 1. pxa168, pxa910, pxa988 pxa1088 have only timer1.
-> 2. pxa1L88, pxa1U88 have timer1 and timer3.
-> 3. pxa1928 has timer 2.
-> 
-> The driver supports DT and non-DT initialization.
-> The driver supports UP/SMP SOCes and 64 bit core.
-> 
-> Signed-off-by: Chao Xie <chao.xie@marvell.com>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > ---
->  .../devicetree/bindings/arm/mrvl/timer.txt         |  61 +-
->  drivers/clocksource/Makefile                       |   1 +
->  drivers/clocksource/timer-mmp.c                    | 837 +++++++++++++++++++++
->  include/linux/mmp_timer.h                          |  40 +
->  4 files changed, 933 insertions(+), 6 deletions(-)
->  create mode 100644 drivers/clocksource/timer-mmp.c
->  create mode 100644 include/linux/mmp_timer.h
+>  arch/arm/boot/dts/exynos4.dtsi |    1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/mrvl/timer.txt b/Documentation/devicetree/bindings/arm/mrvl/timer.txt
-> index 9a6e251..b49cb3e 100644
-> --- a/Documentation/devicetree/bindings/arm/mrvl/timer.txt
-> +++ b/Documentation/devicetree/bindings/arm/mrvl/timer.txt
-> @@ -1,13 +1,62 @@
->  * Marvell MMP Timer controller
-> 
-> +Each timer have multiple counters, so the timer DT need include counter's
-> +description.
-> +
-> +1. Timer
-> +
->  Required properties:
-> -- compatible : Should be "mrvl,mmp-timer".
-> +- compatible : Should be "marvell,mmp-timer".
->  - reg : Address and length of the register set of timer controller.
-> -- interrupts : Should be the interrupt number.
-> +- clocks : The first clock is the fequency of the apb bus that the timer
-> +  attached to. The second clock is the fast clock frequency of the timer.
-> +  This frequency and fast clock are used to calculated delay
-> +  loops for clock operations.
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index b8168f1..250ee50 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -76,6 +76,7 @@
+>  		compatible = "samsung,s5pv210-mipi-video-phy";
+>  		reg = <0x10020710 8>;
+>  		#phy-cells = <1>;
+> +		syscon = <&pmu_system_controller>;
+>  	};
+>  
+>  	pd_mfc: mfc-power-domain@10023C40 {
 
-It might be a good idea to use clock-names for "apb" and "fast" and use
-them in the driver.
+I'd like to remind you about a few pending dts patches I send to you, except
+the above one there are:
 
-> +
-> +Optional properties:
-> +- marvell,timer-has-crsr : This timer has CRSR register.
-> +- marvell,timer-has-shadow : This timer has shadow register.
-> +
-> +2. Counter
+[PATCH V3 15/15] ARM: dts: Fix I2S1, I2S2 compatible for exynos4 SoCs
+[PATCH] ARM: dts: Fix CLK_MOUT_CAMn parent clocks assignment for Trats2
+[PATCH] ARM: dts: Fix CLK_UART_ISP_SCLK clock assignment in exynos4x12.dtsi
+ 
+and
 
-The coutner nodes appear to be sub-nodes of the timer. That should be
-stated explicitly.
+[PATCH v2 14/16] ARM: dts: Exynos4 and Odroid X2/U3 sound device nodes update
 
-> +
-> +Required properties:
-> +- compatible : It can be
-> +      "marvell,timer-counter-clkevt" : The counter is used for clock event
-> +                                       device.
-> +      "marvell,timer-counter-clksrc" : The counter is used for clock source.
-> +      "marvell,timer-counter-delay" : The counter is used for delay timer.
+but this one depends on ASoC patch:
+[PATCH V3 11/15] ASoC: samsung: i2s: Add clk provider DT binding documentation
 
-These are all Linux-internal details. I don't see why we should need
-separate strings; Linux should be able to allocate these as appropriate
-(and a single timer should be able to be both a clocksource and a delay
-timer).
+hence it could be probably merged only after 3.20-rc1 release. 
 
-Is there any reason you envisage for having separate strings here? It
-douesn't make sense to me to do so.
-
-> +- marvell,timer-counter-id : The counter index in this timer.
-
-It sounds like you could use reg for this, unless you have other
-sub-nodes you'll need to instantiate?
-
-> 
-> -Example:
-> -       timer0: timer@d4014000 {
-> -               compatible = "mrvl,mmp-timer";
-> -               reg = <0xd4014000 0x100>;
-> +Optional properties:
-> +- marvell,fast-clock : whether the counter use the fast-clock for counting.
-
-It looks below like this is a policy decision, rather than a description
-of the HW. When would you select the fast clock and when would you not?
-Why can't the driver figure this out?
-
-> +- interrupts : The interrupt for clock event device.
-> +  Only valid for "marvell,timer-counter-clkevt".
-> +- marvell,timer-counter-cpu : which CPU the counter is bound. Only valid for
-> +  "marvell,timer-counter-clkevt".
-
-This sounds like a policy decision, rather than a description of the HW.
-
-Additionally, the number usage seems to be a Linux logical ID, rather
-than a physical CPU ID. This is broken.
-
-> +- marvell,timer-counter-broadcast : When this counter acts as clock event
-> +  device. It is broadcast clock event device.
-> +  Only valid for "marvell,timer-counter-clkevt".
-
-This is a Linux-internal detail. There shouldn't be a binding for this.
-
-> +- marvell,timer-counter-nodynirq : When this counter acts as broadcast clock
-> +  event device, it cannot switch the IRQ of broadcast clock event to any CPU.
-> +  Only valid for "marvell,timer-counter-clkevt".
-
-Likewise. Why can't you change the affinity?
-
-For all of the above properties, it sounds like what you actually
-need/want to do is to check if the number of available timers >=
-num_possible_cpus(), and if so, (dynamically) allocate a counter to each
-CPU. If not, set up a timer as a broadcast source (with dynirq).
-
+--
 Thanks,
-Mark.
+Sylwester
