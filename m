@@ -1,60 +1,44 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH 4/4] ARM: at91: dt: sama5d4ek: enable audio
-Date: Mon, 2 Feb 2015 14:51:47 +0800
-Message-ID: <1422859907-14881-5-git-send-email-voice.shen@atmel.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/4] ARM: at91: dt: sama5d4ek: enable ssc0
+Date: Mon, 2 Feb 2015 14:51:45 +0800
+Message-ID: <1422859907-14881-3-git-send-email-voice.shen@atmel.com>
 References: <1422859907-14881-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422859907-14881-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422859907-14881-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable audio support for sama5d4ek board.
+Enable SSC0 node, which will be used for audio.
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
+Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
 
- arch/arm/boot/dts/at91-sama5d4ek.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/at91-sama5d4ek.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm/boot/dts/at91-sama5d4ek.dts b/arch/arm/boot/dts/at91-sama5d4ek.dts
-index 7f47d92..0df5f1b 100644
+index 9198b71..32e9a9a 100644
 --- a/arch/arm/boot/dts/at91-sama5d4ek.dts
 +++ b/arch/arm/boot/dts/at91-sama5d4ek.dts
-@@ -190,6 +190,10 @@
- 						atmel,pins =
- 							<AT91_PIOE 13 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>; /* PE13 gpio */
- 					};
-+					pinctrl_pck2_as_audio_mck: pck2_as_audio_mck {
-+						atmel,pins =
-+							<AT91_PIOB 10 AT91_PERIPH_B AT91_PINCTRL_NONE>;
-+					};
+@@ -115,6 +115,10 @@
  				};
  			};
- 		};
-@@ -268,4 +272,20 @@
- 			gpio-key,wakeup;
- 		};
- 	};
+ 
++			ssc0: ssc@f8008000 {
++				status = "okay";
++			};
 +
-+	sound {
-+		compatible = "atmel,asoc-wm8904";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pck2_as_audio_mck>;
-+
-+		atmel,model = "wm8904 @ SAMA5D4EK";
-+		atmel,audio-routing =
-+			"Headphone Jack", "HPOUTL",
-+			"Headphone Jack", "HPOUTR",
-+			"IN1L", "Line In Jack",
-+			"IN1R", "Line In Jack";
-+
-+		atmel,ssc-controller = <&ssc0>;
-+		atmel,audio-codec = <&wm8904>;
-+	};
- };
+ 			spi0: spi@f8010000 {
+ 				cs-gpios = <&pioC 3 0>, <0>, <0>, <0>;
+ 				status = "okay";
 -- 
 2.3.0.rc0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
