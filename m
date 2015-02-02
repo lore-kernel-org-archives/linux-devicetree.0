@@ -1,72 +1,94 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v6 2/2] gpio: Document GPIO hogging mechanism
-Date: Mon, 2 Feb 2015 11:44:45 -0600
-Message-ID: <1422899085-678-3-git-send-email-bparrot@ti.com>
-References: <1422899085-678-1-git-send-email-bparrot@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 6/8] input: touchscreen: imx25 tcq driver
+Date: Mon, 2 Feb 2015 09:51:34 -0800
+Message-ID: <20150202175134.GB23909@dtor-ws>
+References: <1422540556-14828-1-git-send-email-mpa@pengutronix.de>
+ <1422540556-14828-7-git-send-email-mpa@pengutronix.de>
+ <54CA4320.4030607@gmail.com>
+ <20150130185721.GA11695@dtor-ws>
+ <20150202160539.GS16879@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422899085-678-1-git-send-email-bparrot@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>, Benoit Parrot <bparrot@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150202160539.GS16879-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add GPIO hogging documentation to gpio.txt
+On Mon, Feb 02, 2015 at 05:05:39PM +0100, Markus Pargmann wrote:
+> Hi,
+> 
+> On Fri, Jan 30, 2015 at 10:57:21AM -0800, Dmitry Torokhov wrote:
+> > On Thu, Jan 29, 2015 at 07:56:40PM +0530, Varka Bhadram wrote:
+> > > Hi,
+> > > 
+> > > On Thursday 29 January 2015 07:39 PM, Markus Pargmann wrote:
+> > > >This is a driver for the imx25 ADC/TSC module. It controls the
+> > > >touchscreen conversion queue and creates a touchscreen input device.
+> > > >The driver currently only supports 4 wire touchscreens. The driver uses
+> > > >a simple conversion queue of precharge, touch detection, X measurement,
+> > > >Y measurement, precharge and another touch detection.
+> > > >
+> > > >This driver uses the regmap from the parent to setup some touch specific
+> > > >settings in the core driver and setup a idle configuration with touch
+> > > >detection.
+> > > >
+> > > >Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > >Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> > > >Acked-by: Dmitry Torokhov <dtor-pghWNbHTmq7QT0dZR+AlfA@public.gmane.org>
+> > > >Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > >---
+> > > >  drivers/input/touchscreen/Kconfig         |   6 +
+> > > >  drivers/input/touchscreen/Makefile        |   1 +
+> > > >  drivers/input/touchscreen/fsl-imx25-tcq.c | 587 ++++++++++++++++++++++++++++++
+> > > >  3 files changed, 594 insertions(+)
+> > > >  create mode 100644 drivers/input/touchscreen/fsl-imx25-tcq.c
+> > > >
+> > > (...)
+> > > 
+> > > >+	ret = request_threaded_irq(priv->irq, mx25_tcq_irq, mx25_tcq_irq_thread,
+> > > >+				   IRQF_ONESHOT, pdev->name, priv);
+> > > 
+> > > We can use devres API for request_thread_irq()...
+> > > 
+> > > >+	if (ret) {
+> > > >+		dev_err(dev, "Failed requesting IRQ\n");
+> > > >+		goto err_clk_unprepare;
+> > > >+	}
+> > > >+
+> > > >+	ret = mx25_tcq_init(priv);
+> > > >+	if (ret) {
+> > > >+		dev_err(dev, "Failed to init tcq\n");
+> > > >+		goto error_free_irq;
+> > > >+	}
+> > > >+
+> > > >+	platform_set_drvdata(pdev, priv);
+> > > >+
+> > > >+	return 0;
+> > > >+
+> > > >+error_free_irq:
+> > > >+	free_irq(priv->irq, priv);
+> > > 
+> > > This is not required if we use devres API
+> > 
+> > Yes it does - you do not really want to stop clocks in the middle of
+> > servicing interrupt.
+> 
+> Thanks, I missed the clocks. I will not use devm here then.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
----
- Documentation/devicetree/bindings/gpio/gpio.txt | 30 +++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Actually, you still can if you move clock enabling/disabling and
+mx25_tcq_init() into input_dev->open() and ->close() callbacks. Close
+will be called during input device un-registration which happens (given
+your current sequence) after freeing irq by devm.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index b9bd1d6..a0ce2bd 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -115,6 +115,29 @@ Every GPIO controller node must contain both an empty "gpio-controller"
- property, and a #gpio-cells integer property, which indicates the number of
- cells in a gpio-specifier.
- 
-+The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
-+providing automatic GPIO request and configuration as part of the
-+gpio-controller's driver probe function.
-+
-+Each GPIO hog definition is represented as a child node of the GPIO controller.
-+Required properties:
-+- gpio-hog:   A property specifying that this child node represent a GPIO hog.
-+- gpios:      Store the GPIO information (id, flags, ...). Shall contain the
-+	      number of cells specified in its parent node (GPIO controller
-+	      node).
-+Only one of the following properties scanned in the order shown below.
-+This means that when multiple properties are present they will be searched
-+in the order presented below and the first match is taken as the intended
-+configuration.
-+- input:      A property specifying to set the GPIO direction as input.
-+- output-low  A property specifying to set the GPIO direction as output with
-+	      the value low.
-+- output-high A property specifying to set the GPIO direction as output with
-+	      the value high.
-+
-+Optional properties:
-+- line-name:  The GPIO label name. If not present the node name is used.
-+
- Example of two SOC GPIO banks defined as gpio-controller nodes:
- 
- 	qe_pio_a: gpio-controller@1400 {
-@@ -122,6 +145,13 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
- 		reg = <0x1400 0x18>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+
-+		line_b {
-+			gpio-hog;
-+			gpios = <6 0>;
-+			output-low;
-+			line-name = "foo-bar-gpio";
-+		};
- 	};
- 
- 	qe_pio_e: gpio-controller@1460 {
+By the way, I used my old @vmware address by accident. Can you please
+replace the original acked by with:
+
+Acked-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Thanks.
+
 -- 
-1.8.5.1
+Dmitry
