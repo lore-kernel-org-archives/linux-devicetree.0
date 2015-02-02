@@ -1,83 +1,111 @@
-From: Roman Volkov <v1ron@mail.ru>
-Subject: Re: [PATCH 1/5] i8042: intel-8042 DT documentation
-Date: Tue, 3 Feb 2015 01:10:51 +0300
-Message-ID: <20150203011051.11999a16@v1ron-s7>
-References: <1422913730-12663-1-git-send-email-v1ron@v1ros.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v4 2/5] ARM: dts: sun9i: Add USB host controller
+ nodes to a80 dtsi
+Date: Tue,  3 Feb 2015 06:22:02 +0800
+Message-ID: <1422915725-26492-3-git-send-email-wens@csie.org>
+References: <1422915725-26492-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1422913730-12663-1-git-send-email-v1ron@v1ros.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Roman Volkov <v1ron@v1ros.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>, Wolfram Sang <wsa@the-dreams.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBGXRX6TAKGQETCSZS7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1422915725-26492-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=D0=92 Tue,  3 Feb 2015 00:48:46 +0300
-Roman Volkov <v1ron@v1ros.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+The A80 has 3 EHCI/OHCI USB controllers.
 
-> Documentation for 'intel,8042' DT compatible node.
->=20
-> Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
-> Signed-off-by: Roman Volkov <v1ron@v1ros.org>
-> ---
->  .../devicetree/bindings/input/intel-8042.txt       | 29
-> ++++++++++++++++++++++ 1 file changed, 29 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/input/intel-8042.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/input/intel-8042.txt
-> b/Documentation/devicetree/bindings/input/intel-8042.txt new file
-> mode 100644 index 0000000..2aea7ec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/intel-8042.txt
-> @@ -0,0 +1,29 @@
-> +* Intel 8042 Keyboard Controller
-> +
-> +Required properties:
-> +- compatible: should be "intel,8042"
-> +- regs: memory for keyboard controller
-> +- interrupts: two interrupts should be specified (keyboard and aux)
-> +- command-reg: offset in memory for command register
-> +- status-reg: offset in memory for status register
-> +- data-reg: offset in memory for data register
-> +
-> +Optional properties:
-> +- init-reset: Controller should be reset on init and cleanup
-> +
-> +Optional Linux-specific properties:
-> +- linux,kbd_phys_desc: defaults to i8042/serio0
-> +- linux,aux_phys_desc: defaults to i8042/serio1
-> +- linux,mux_phys_desc: defaults to i8042/serio%d
-> +
-> +
-> +Example:
-> +	keyboard@d8008800 {
-> +		compatible =3D "intel,8042";
-> +		reg =3D <0xd8008800 0x100>;
-> +		interrupts =3D <23 4>;
-> +		command-reg =3D <0x04>;
-> +		status-reg =3D <0x04>;
-> +		data-reg =3D <0x00>;
-> +		mux-ports =3D <2>;
-> +	};
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun9i-a80.dtsi | 55 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-Hi,
-
-This patch set is to enable the Open Firmware Device Tree support for
-the i8042 controller. Yes, some ARM SoC boards are still using i8042. A=
-s
-an example, it is the vt8500 architecture.
-
-I've tested this on my wm8505 machine in both configurations: as a
-module and built-in. Also a modification of this driver is available
-at https://github.com/linux-wmt/linux-vtwm. This should not affect x86
-and similar architectures without the DT enabled in the config.
-
-Regards,
-Roman.
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index d7ebd9390b01..17fcf57d09cb 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -355,6 +355,28 @@
+ 		 */
+ 		ranges = <0 0 0 0x20000000>;
+ 
++		ehci0: usb@00a00000 {
++			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
++			reg = <0x00a00000 0x100>;
++			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&usb_mod_clk 1>;
++			resets = <&usb_mod_clk 17>;
++			phys = <&usbphy1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
++		ohci0: usb@00a00400 {
++			compatible = "allwinner,sun9i-a80-ohci", "generic-ohci";
++			reg = <0x00a00400 0x100>;
++			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&usb_mod_clk 1>, <&usb_mod_clk 2>;
++			resets = <&usb_mod_clk 17>;
++			phys = <&usbphy1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
+ 		usbphy1: phy@00a00800 {
+ 			compatible = "allwinner,sun9i-a80-usb-phy";
+ 			reg = <0x00a00800 0x4>;
+@@ -366,6 +388,17 @@
+ 			#phy-cells = <0>;
+ 		};
+ 
++		ehci1: usb@00a01000 {
++			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
++			reg = <0x00a01000 0x100>;
++			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&usb_mod_clk 3>;
++			resets = <&usb_mod_clk 18>;
++			phys = <&usbphy2>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
+ 		usbphy2: phy@00a01800 {
+ 			compatible = "allwinner,sun9i-a80-usb-phy";
+ 			reg = <0x00a01800 0x4>;
+@@ -380,6 +413,28 @@
+ 			phy_type = "hsic";
+ 		};
+ 
++		ehci2: usb@00a02000 {
++			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
++			reg = <0x00a02000 0x100>;
++			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&usb_mod_clk 5>;
++			resets = <&usb_mod_clk 19>;
++			phys = <&usbphy3>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
++		ohci2: usb@00a02400 {
++			compatible = "allwinner,sun9i-a80-ohci", "generic-ohci";
++			reg = <0x00a02400 0x100>;
++			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&usb_mod_clk 5>, <&usb_mod_clk 6>;
++			resets = <&usb_mod_clk 19>;
++			phys = <&usbphy3>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
+ 		usbphy3: phy@00a02800 {
+ 			compatible = "allwinner,sun9i-a80-usb-phy";
+ 			reg = <0x00a02800 0x4>;
+-- 
+2.1.4
