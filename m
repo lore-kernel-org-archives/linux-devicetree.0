@@ -1,108 +1,131 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/4] mtd: nand: atmel: Update DT documentation after
- splitting NFC and NAND
-Date: Mon, 2 Feb 2015 10:42:36 +0100
-Message-ID: <20150202104236.649f99ad@bbrezillon>
-References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1417732214-3292-3-git-send-email-boris.brezillon@free-electrons.com>
-	<20150202075737.GC3523@norris-Latitude-E6410>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: Reading /sys with side effects (was Re: [PATCH 1/2]
+ Documentation: leds: Add description of LED Flash class extension)
+Date: Mon, 2 Feb 2015 10:44:36 +0100
+Message-ID: <20150202094435.GA6686@amd>
+References: <1422346028-16739-1-git-send-email-j.anaszewski@samsung.com>
+ <20150127221958.GA18993@amd>
+ <54C8A130.8000807@samsung.com>
+ <20150129211420.GA21140@amd>
+ <54CB4702.1090508@samsung.com>
+ <20150130164027.GA25830@kroah.com>
+ <54CF3E36.9000108@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150202075737.GC3523@norris-Latitude-E6410>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54CF3E36.9000108@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Greg KH <greg@kroah.com>, kernel list <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
-On Sun, 1 Feb 2015 23:57:37 -0800
-Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> Hi Boris,
+On Mon 2015-02-02 10:07:02, Jacek Anaszewski wrote:
+> On 01/30/2015 05:40 PM, Greg KH wrote:
+> >On Fri, Jan 30, 2015 at 09:55:30AM +0100, Jacek Anaszewski wrote:
+> >>Hi Pavel,
+> >>
+> >>On 01/29/2015 10:14 PM, Pavel Machek wrote:
+> >>>Hi!
+> >>>
+> >>>>>>+	- flash_fault - list of flash faults that may have occurred:
+> >>>>>>+		* led-over-voltage - flash controller voltage to the flash LED
+> >>>>>>+			has exceededthe limit specific to the flash controller
+> >>>>>>+		* flash-timeout-exceeded - the flash strobe was still on when
+> >>>>>>+			the timeout set by the user has expired; not all flash
+> >>>>>>+			controllers may set this in all such conditions
+> >>>>>>+		* controller-over-temperature - the flash controller has
+> >>>>>>+			overheated
+> >>>>>>+		* controller-short-circuit - the short circuit protection
+> >>>>>>+			of the flash controller has been triggered
+> >>>>>>+		* led-power-supply-over-current - current in the LED power
+> >>>>>>+			supply has exceeded the limit specific to the flash
+> >>>>>>+			controller
+> >>>>>>+		* indicator-led-fault - the flash controller has detected
+> >>>>>>+			a short or open circuit condition on the indicator LED
+> >>>>>>+		* led-under-voltage - flash controller voltage to the flash
+> >>>>>>+			LED has been below the minimum limit specific to
+> >>>>>>+			the flash
+> >>>>>>+		* controller-under-voltage - the input voltage of the flash
+> >>>>>>+			controller is below the limit under which strobing the
+> >>>>>>+			flash at full current will not be possible. The condition
+> >>>>>>+			persists until this flag is no longer set
+> >>>>>>+		* led-over-temperature - the temperature of the LED has exceeded
+> >>>>>>+			its allowed upper limit
+> >>>>>>+
+> >>>>>>+		Flash faults are cleared, if possible, by reading the attribute.
+> >>>>>
+> >>>>>That's bad. Now you can no longer present flash_fault file as readable
+> >>>>>to non-root users, and grep -ri foo /sys will interfere with your
+> >>>>>camera application.
+> >>>>>
+> >>>>>Bad interface, just fix it.
+> >>>>
+> >>>>In my opinion it isn't crucial for the user to be aware of the
+> >>>>fact that some non-persistent fault happened right after strobing the
+> >>>>flash (e.g. over temperature).
+> >>>>
+> >>>>I cannot see anything harmful in the situation when someone does grep
+> >>>>on /sys and clears non-persistent fault on a flash LED device.
+> >>>
+> >>>So why export the faults at all?
+> >>
+> >>Faults may prevent strobing the flash in case of some devices.
+> >>The example of such a device is ADP1663 (drivers/media/i2c/adp1653.c).
+> >>This driver reads the faults before strobing the flash and if a
+> >>fault preventing strobing has occurred it returns -EBUSY.
+> >>
+> >>If this driver was made a LED Flash class driver, then it would
+> >>expose flash_faults attribute. The driver would probably need
+> >>redesigning - checking the faults before strobing would have to be
+> >>avoided and it should be left to the userspace.
+> >
+> >That's fine, but Pavel's point is that you shouldn't "clear a fault" by
+> >reading a sysfs file as you don't control who reads all sysfs files
+> >(hint, libudev might cache all attributes when they are found / change,
+> >which could prevent anyone else from seeing that fault.)
+> >
+> >So please fix this, make a write to clear a fault or some other such
+> >explicit action, not a simple read.  That's not an acceptable api.
 > 
-> BTW, this series has a few conflicts with other things I have queued, so
-> you'll need to refresh.
+> I am aware what Pavel'a point was, I just presented the arguments
+> justifying existence of the flash_faults attribute at all.
 
-Yes, that's not a problem, but I'd like to be sure this is the way we
-want to go before rebasing this series.
+Fine. Then, you should understand what you need to fix at this point.
 
+> In my opinion flash_faults attribute should report the current state of
+> the device. For the devices which clear the faults on I2C readout the
+> faults read would have to be cached in the driver, until they are
+> explicitly cleared, to keep the sysfs interface consistent.
+
+Yes, just do the caching.
+
+> Nonetheless, there can be also devices which don't require clearing the
+> faults - they are reported only when the actual condition occurs,
+> e.g. over temperature or under voltage. When the related value gets
+> back to the acceptable level the fault is no longer reported by the
+> device.
 > 
-> On Thu, Dec 04, 2014 at 11:30:12PM +0100, Boris Brezillon wrote:
-> > The NAND and NFC (NAND Flash Controller) were linked together with a
-> > parent <-> child relationship.
-> > 
-> > This model has several drawbacks:
-> > - it does not allow for multiple NAND chip handling while the controller
-> >   support multi-chip (even though the driver is not ready yet)
-> > - it mixes NAND partitions and NFC nodes at the same level (which is a bit
-> >   disturbing)
-> 
-> I agree that this is disturbing. (FWIW, it also seems a bit disturbing
-> that atmel_nand.c actually registers two different drivers and the tries
-> to synchronize them; this seems like it could be handled better, but I'm
-> not sure how at the moment.)
+> In this case some faults will remain unnoticed by the user space. This
+> is the argument in favour of my statement that caching the faults does
+> not make a sense and is not crucial. The user's vital interest is to
+> know whether the flash LED is operational right before strobing.
 
-Yep, that's my feeling too, but I'm not sure how this could/should be
-done.
-My problem here is that the pinmux should be requested by the EBI
-device because the EBI manages several type of devices and the data and
-address signals are shared by all the devices, hence the idea of
-defining the nand chip node under the EBI node.
-In the other hand, the NFC is not part of the EBI bus, and thus should
-not be defined under the EBI node.
+You can still do caching, exactly the same way. If you want current
+and previous faults, do the read. If you want currently active faults,
+you do write then read.
 
-This might lead to the NFC device being probed before the NAND chip,
-hence the need for this synchronization.
+> Since we cannot guarantee reporting all the faults that occurred for
+> all possible flash LED devices, the only sensible solution is to report
+> only the currently valid fault.
 
-> 
-> > - the introduction of the EBI bus implies defining NAND chips under the
-> >   EBI node, and the ranges available under the EBI node should be
-> >   restricted to EBI address space, while the NFC references several
-> >   registers outside of these EBI ranges.
-> 
-> That's an interesting bit. I've actually run across this sort of problem
-> on other SoCs, where we have a relationship between two pieces of
-> hardware--the NAND chip and the NAND controller--where the former might
-> be on one bus (like your EBI bus, with chip selects), and the latter is
-> part of the top-level MMIO register space.
-> 
-> But can you elaborate here a bit more? Does the NAND chip actually need
-> to be represented under your EBI bus?
+How do you propose to do that on devices that clear on read?
 
-Yes, as said above this is all about pinmux conflicts, the NAND
-controller has to request the appropriate pinmux for its NAND chips but
-it will conflict with the pinmux requested by the EBI bus (data and
-address signals are shared by all the devices connected on the EBI).
+[Actually, you could _always_ do two reads on those devices, discard
+first result, and return the second. But I'm not sure how hardware
+will like that.]
 
-> 
-> > Move the NFC node outside of the NAND node, to get a more future-proof
-> > model.
-> 
-> I'm curious if an alternative solution might work, maybe one like the
-> Allwiner NAND (sunxi-nand) DT, which just reverses the roles; the 'NFC'
-> is the parent of the NAND chip(s). We've seen this pattern in other
-> contexts too.
-
-I would have preferred this solution too, but the EBI/pinmux constraint
-explained above prevents this approach.
-What I can do though, is reverse the referencing: reference nand chips
-from the nand controller node.
-
-Josh, Brian, any idea to solve this EBI/nand-chip/nand-controller
-dependency problem is welcome.
-
-Best Regards,
-
-Boris
-
+									Pavel
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
