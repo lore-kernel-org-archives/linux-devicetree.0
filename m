@@ -1,47 +1,94 @@
-From: Karol Wrona <k.wrona@samsung.com>
-Subject: Re: [RFC PATCH 1/1] PM / domains: Add support for virtual power domains
-Date: Mon, 02 Feb 2015 13:14:36 +0100
-Message-ID: <54CF6A2C.5020808@samsung.com>
-References: <1422555176-13054-1-git-send-email-k.wrona@samsung.com>
- <1422555176-13054-2-git-send-email-k.wrona@samsung.com>
- <CADGdYn5E9P7cT-bndL4u9g9XRO=BvE5hb1+TEF0mkwkWOmK1VA@mail.gmail.com>
- <20150130115708.GE8787@red-moon>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
+Date: Mon, 2 Feb 2015 12:18:43 +0000
+Message-ID: <20150202121843.GD22661@e104818-lin.cambridge.arm.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
+ <1422052359-12384-4-git-send-email-m-karicheri2@ti.com>
+ <54C77616.80301@arm.com>
+ <54C7DF13.20402@ti.com>
+ <20150128110523.GC6646@e104818-lin.cambridge.arm.com>
+ <54C9068D.8050701@arm.com>
+ <20150128173048.GE31752@e104818-lin.cambridge.arm.com>
+ <54CBC823.3020905@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20150130115708.GE8787@red-moon>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, amit daniel kachhap <amit.daniel@samsung.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ulf Hansson <ulf.hansson@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Karol Wrona <wrona.vy@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54CBC823.3020905-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/30/2015 12:57 PM, Lorenzo Pieralisi wrote:
-> On Fri, Jan 30, 2015 at 08:43:22AM +0000, amit daniel kachhap wrote:
->> Hi Karol,
->>
->> I guess this patch series is not complete and use case implementation
->> will be more helpful for clarity. Also I can think of another way in
->> which this complete implementation can be done with pd name as
->> something "pd-virt". This pd can be handled differently inside the
->> platform specific exynos power off/on function.
+On Fri, Jan 30, 2015 at 06:06:27PM +0000, Murali Karicheri wrote:
+> On 01/28/2015 12:30 PM, Catalin Marinas wrote:
+> > I think we can remove this check altogether (we leaved without it for a
+> > while) but we need to add 1 when calculating the mask:
+> >
+> > 	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
+> > 				     DMA_BIT_MASK(ilog2(size + 1)));
+> >
+> For Keystone, the dma_addr is to be taken care as well to determine the 
+> mask. The above will not work.
+
+This was discussed before (not on this thread) and dma_addr should not
+affect the mask, it only affects the pfn offset.
+
+> Based on the discussion so far, this is the function I have come up with 
+> incorporating the suggestions. Please review this and see if I have 
+> missed out any. This works fine on Keystone.
 > 
-> Yes, it would be nice to provide an example to understand what this
-> patchset has to achieve. Is this supposed to be a power domain
-> used as a container to check for devices runtime state ie dependencies ?
+> void of_dma_configure(struct device *dev, struct device_node *np)
+> {
+> 	u64 dma_addr = 0, paddr, size;
+> 	int ret;
+> 	bool coherent;
+> 	unsigned long offset = 0;
+> 	struct iommu_ops *iommu;
 > 
-Yes, something like that.
+> 	/*
+> 	 * Set default size to cover the 32-bit. Drivers are expected to setup
+> 	 * the correct size and dma_mask.
+>    	 */
+> 	size = 1ULL << 32;
+> 
+> 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+> 	if (!ret) {
+> 		offset = PFN_DOWN(paddr - dma_addr);
+> 		if (!size) {
+> 			dev_err(dev, "Invalid size (%llx)\n",
+> 				size);
+> 			return;
+> 		}
+> 		if (size & 1) {
+> 			size = size + 1;
+> 			dev_warn(dev, "Incorrect usage of size (%llx)\n",
+> 				 size);
+> 		}
+> 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+> 	}
+> 	dev->dma_pfn_offset = offset;
+> 
+> 	/*
+> 	 * Coherent DMA masks larger than 32-bit must be explicitly set by the
+> 	 * driver.
+> 	 */
+> 	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
+> 				     DMA_BIT_MASK(ilog2(dma_addr + size)));
 
-In our case exynos do not enter LPD state with mmc host working and its is in
-"top" pd which is not managed in conventional way. If we know runtime status of
-the host we can decide what to do. Soon I will send full patchset.
+That's not correct, coherent_dma_mask should still be calculated solely
+based on size, not dma_addr.
 
+Functions like swiotlb_dma_supported() use phys_to_dma() which on ARM
+(32-bit) subtracts the dma_pfn_offset, so the mask based on size works
+fine.
 
-I thought about it as exynos specific but I wonder if that would be needed not
-only in exynos.
+In the arm64 tree, we haven't taken dma_pfn_offset into account for
+phys_to_dma() yet but if needed for a SoC, we'll add it.
 
-BR,
-Karol
-
-
-[...]
+-- 
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
