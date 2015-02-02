@@ -1,84 +1,138 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
-Date: Mon, 2 Feb 2015 09:19:12 +0900
-Message-ID: <20150202001910.GA29383@verge.net.au>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
- <1608366.HtA9yBksdO@wasted.cogentembedded.com>
- <20150131042143.GB7605@verge.net.au>
- <54CD1E79.6090700@cogentembedded.com>
+From: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH RFC v8 00/21] Add support for i.MX MIPI DSI DRM driver
+Date: Mon, 2 Feb 2015 10:17:45 +0800
+Message-ID: <20150202021743.GA32567@victor>
+References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54CD1E79.6090700-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1420014219-915-1-git-send-email-Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: stefan.wahren-eS4NqCHxEME@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zable-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi,
 
-On Sat, Jan 31, 2015 at 09:27:05PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 1/31/2015 7:21 AM, Simon Horman wrote:
-> 
-> >>Add the initial device tree for the R8A7794 SoC based SILK low cost board.
-> >>SCIF2 serial port support is included, so that the serial console can work.
-> 
-> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> 
-> >>---
-> >>This patch is against the 'renesas-devel-20150129-v3.19-rc6' tag of Simon
-> >>Horman's 'renesas.git' repo.
-> 
-> >>  arch/arm/boot/dts/Makefile         |    1
-> >>  arch/arm/boot/dts/r8a7794-silk.dts |   41 +++++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 42 insertions(+)
-> 
-> [...]
-> >>Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-> >>===================================================================
-> >>--- /dev/null
-> >>+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-> >>@@ -0,0 +1,41 @@
-> >>+/*
-> >>+ * Device Tree Source for the SILK board
-> >>+ *
-> >>+ * Copyright (C) 2014 Renesas Electronics Corporation
-> >>+ * Copyright (C) 2014-2015 Renesas Solutions Corp.
-> >>+ * Copyright (C) 2014-2015 Cogent Embedded, Inc.
-> >>+ *
-> >>+ * This file is licensed under the terms of the GNU General Public License
-> >>+ * version 2.  This program is licensed "as is" without any warranty of any
-> >>+ * kind, whether express or implied.
-> >>+ */
-> >>+
-> >>+/dts-v1/;
-> >>+#include "r8a7794.dtsi"
-> >>+
-> >>+/ {
-> >>+	model = "SILK";
-> >>+	compatible = "renesas,silk", "renesas,r8a7794";
-> >>+
-> >>+	aliases {
-> >>+		serial0 = &scif2;
-> >>+	};
-> >>+
-> >>+	chosen {
-> >>+		bootargs = "console=ttySC0,38400 ignore_loglevel";
-> 
-> >Please remove console= for consistency with other boards
-> >based on Renesas SoCs.
-> 
->    I can't, there will be no console at all.
+This version has been submitted for a while.
+And, it looks there is no comments on this version.
+Can the maintainers consider to take this?
 
-Its not clear to me why that should be the case when you also have:
+Mike, any comments on patch 01/21?  It's a clock driver change.
 
-		stdout-path = &scif2;
+Regards,
+Liu Ying
 
-Is this a baud issue? If so is it possible to set uboot to 115200 bps?
-This would be consistent with the way other boards are handled in mainline.
+On Wed, Dec 31, 2014 at 04:23:18PM +0800, Liu Ying wrote:
+> Hi,
+> 
+> This version mainly fixes the Kconfig for the Synopsys DesignWare MIPI DSI
+> host controller bridge driver so that we may pass the allmodconfig for ARM.
+> Also, this version contains a minor change for the Himax HX8369A panel
+> driver to remove several unnecessary headers included.
+> 
+> The i.MX MIPI DSI is a Synopsys DesignWare MIPI DSI host controller IP.
+> This series adds support for a Synopsys DesignWare MIPI DSI host controller
+> DRM bridge driver and a i.MX MIPI DSI specific DRM driver.
+> Currently, the MIPI DSI drivers only support the burst with sync pulse mode.
+> 
+> This series also includes a DRM panel driver for the Truly TFT480800-16-E panel
+> which is driven by the Himax HX8369A driver IC.  The driver IC data sheet could
+> be found at [1].  As mentioned by the data sheet, the driver IC supports several
+> interface modes.  Currently, the DRM panel driver only supports the MIPI DSI video
+> mode.  New interface modes could be added later(perhaps, just like the way the DRM
+> simple panel driver supports both MIPI DSI interface panels and simple(parallel)
+> interface panels).
+> 
+> The MIPI DSI feature is tested on i.MX6Q SabreSD board and i.MX6DL SabreSD board.
+> The MIPI DSI display could be enabled directly on i.MX6Q SabreSD board after
+> applying this series, because the 26.4MHz pixel clock the panel requires could be
+> derived from the IPU HSP clock(264MHz) with an integer divider.
+> On i.MX6DL SabreSD board, we need to manually disable the LVDS and HDMI displays in
+> the device tree blob, since the i.MX6DL IPU HSP clock is 198MHz at present, which
+> makes the pixel clock share the PLL5 video clock source with the LVDS and HDMI,
+> thus, the panel cannot get the pixel clock rate it wants.
+> 
+> Patch 01/21 is needed to get a precise pixel clock rate(26.4MHz) from the PLL5 video
+> clock.  If we don't have this patch, the pixel clock rate is about 20MHz, which
+> causes a horitonal shift on the display image.
+> 
+> This series can be applied on the drm-next branch.
+> 
+> [1] http://www.allshore.com/pdf/Himax_HX8369-A.pdf
+> 
+> Liu Ying (21):
+>   clk: divider: Correct parent clk round rate if no bestdiv is normally
+>     found
+>   of: Add vendor prefix for Himax Technologies Inc.
+>   of: Add vendor prefix for Truly Semiconductors Limited
+>   ARM: imx6q: Add GPR3 MIPI muxing control register field shift bits
+>     definition
+>   ARM: imx6q: clk: Add the video_27m clock
+>   ARM: imx6q: clk: Change hdmi_isfr clock's parent to be video_27m clock
+>   ARM: imx6q: clk: Change hsi_tx clock to be a shared clock gate
+>   ARM: imx6q: clk: Add support for mipi_core_cfg clock as a shared clock
+>     gate
+>   ARM: dts: imx6qdl: Move existing MIPI DSI ports into a new 'ports'
+>     node
+>   drm/dsi: Add a helper to get bits per pixel of MIPI DSI pixel format
+>   Documentation: dt-bindings: Add bindings for Synopsys DW MIPI DSI DRM
+>     bridge driver
+>   drm/bridge: Add Synopsys DesignWare MIPI DSI host controller driver
+>   Documentation: dt-bindings: Add bindings for i.MX specific Synopsys DW
+>     MIPI DSI driver
+>   drm: imx: Support Synopsys DesignWare MIPI DSI host controller
+>   Documentation: dt-bindings: Add bindings for Himax HX8369A DRM panel
+>     driver
+>   drm: panel: Add support for Himax HX8369A MIPI DSI panel
+>   ARM: dtsi: imx6qdl: Add support for MIPI DSI host controller
+>   ARM: dts: imx6qdl-sabresd: Add support for TRULY TFT480800-16-E MIPI
+>     DSI panel
+>   ARM: imx_v6_v7_defconfig: Cleanup for imx drm being moved out of
+>     staging
+>   ARM: imx_v6_v7_defconfig: Add support for MIPI DSI host controller
+>   ARM: imx_v6_v7_defconfig: Add support for Himax HX8369A panel
+> 
+>  .../devicetree/bindings/drm/bridge/dw_mipi_dsi.txt |  73 ++
+>  .../devicetree/bindings/drm/imx/mipi_dsi.txt       |  78 ++
+>  .../devicetree/bindings/panel/himax,hx8369a.txt    |  39 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |   2 +
+>  arch/arm/boot/dts/imx6q.dtsi                       |  20 +-
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi             |  20 +
+>  arch/arm/boot/dts/imx6qdl.dtsi                     |  29 +-
+>  arch/arm/configs/imx_v6_v7_defconfig               |  17 +-
+>  arch/arm/mach-imx/clk-imx6q.c                      |   7 +-
+>  drivers/clk/clk-divider.c                          |   3 +-
+>  drivers/gpu/drm/bridge/Kconfig                     |  10 +
+>  drivers/gpu/drm/bridge/Makefile                    |   1 +
+>  drivers/gpu/drm/bridge/dw_mipi_dsi.c               | 996 +++++++++++++++++++++
+>  drivers/gpu/drm/imx/Kconfig                        |   7 +
+>  drivers/gpu/drm/imx/Makefile                       |   1 +
+>  drivers/gpu/drm/imx/dw_mipi_dsi-imx.c              | 230 +++++
+>  drivers/gpu/drm/panel/Kconfig                      |   5 +
+>  drivers/gpu/drm/panel/Makefile                     |   1 +
+>  drivers/gpu/drm/panel/panel-himax-hx8369a.c        | 610 +++++++++++++
+>  include/drm/bridge/dw_mipi_dsi.h                   |  27 +
+>  include/drm/drm_mipi_dsi.h                         |  14 +
+>  include/dt-bindings/clock/imx6qdl-clock.h          |   4 +-
+>  include/linux/mfd/syscon/imx6q-iomuxc-gpr.h        |   1 +
+>  23 files changed, 2165 insertions(+), 30 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
+>  create mode 100644 Documentation/devicetree/bindings/drm/imx/mipi_dsi.txt
+>  create mode 100644 Documentation/devicetree/bindings/panel/himax,hx8369a.txt
+>  create mode 100644 drivers/gpu/drm/bridge/dw_mipi_dsi.c
+>  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx.c
+>  create mode 100644 drivers/gpu/drm/panel/panel-himax-hx8369a.c
+>  create mode 100644 include/drm/bridge/dw_mipi_dsi.h
+> 
+> -- 
+> 2.1.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
