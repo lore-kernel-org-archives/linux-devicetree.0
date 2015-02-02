@@ -1,98 +1,56 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt: paz00: define nvec as child of i2c bus
-Date: Mon, 02 Feb 2015 14:20:47 -0700
-Message-ID: <54CFEA2F.8040701@wwwdotorg.org>
-References: <1422516022-27161-1-git-send-email-danindrey@mail.ru> <1422516022-27161-4-git-send-email-danindrey@mail.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422516022-27161-4-git-send-email-danindrey-JGs/UdohzUI@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ac100-oU9gvf+ajcQ97yFScArB1dHuzzzSOjJt@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+From: Roman Volkov <v1ron@v1ros.org>
+Subject: [PATCH 1/5] i8042: intel-8042 DT documentation
+Date: Tue,  3 Feb 2015 00:48:46 +0300
+Message-ID: <1422913730-12663-1-git-send-email-v1ron@v1ros.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>, Wolfram Sang <wsa@the-dreams.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roman Volkov <v1ron@mail.ru>, Roman Volkov <v1ron@v1ros.org>, Tony Prisk <linux@prisktech.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2015 12:20 AM, Andrey Danin wrote:
-> NVEC driver was reimplemented to use tegra i2c. Use common i2c bindings
-> for NVEC node.
+Documentation for 'intel,8042' DT compatible node.
 
-> diff --git a/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
+Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+Signed-off-by: Roman Volkov <v1ron@v1ros.org>
+---
+ .../devicetree/bindings/input/intel-8042.txt       | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/intel-8042.txt
 
-The changes to this file make more sense either as a standalone patch 
-1/4, or as part of the driver changes.
-
-> @@ -2,20 +2,5 @@ NVIDIA compliant embedded controller
->
->   Required properties:
->   - compatible : should be "nvidia,nvec".
-> -- reg : the iomem of the i2c slave controller
-> -- interrupts : the interrupt line of the i2c slave controller
-> -- clock-frequency : the frequency of the i2c bus
-> -- gpios : the gpio used for ec request
-> -- slave-addr: the i2c address of the slave controller
-> -- clocks : Must contain an entry for each entry in clock-names.
-> -  See ../clocks/clock-bindings.txt for details.
-> -- clock-names : Must include the following entries:
-> -  Tegra20/Tegra30:
-> -  - div-clk
-> -  - fast-clk
-> -  Tegra114:
-> -  - div-clk
-> -- resets : Must contain an entry for each entry in reset-names.
-> -  See ../reset/reset.txt for details.
-> -- reset-names : Must include the following entries:
-> -  - i2c
-> +- request-gpios : the gpio used for ec request
-> +- reg: the i2c address of the slave controller
-
-This change breaks ABI.
-
-Instead of modifying the definition of the existing compatible value, I 
-think you should introduce a new compatible value to describe the 
-external NVEC chip.
-
-> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
-
-> -	nvec@7000c500 {
-> -		compatible = "nvidia,nvec";
-> -		reg = <0x7000c500 0x100>;
-> -		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> +	i2c@7000c500 {
-> +		status = "okay";
->   		clock-frequency = <80000>;
-> -		request-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
-> -		slave-addr = <138>;
-> -		clocks = <&tegra_car TEGRA20_CLK_I2C3>,
-> -		         <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;
-> -		clock-names = "div-clk", "fast-clk";
-> -		resets = <&tegra_car 67>;
-> -		reset-names = "i2c";
-> +
-> +		nvec: nvec@45 {
-
-This doesn't feel correct. There's nothing here to indicate that this 
-child device is a slave that is implemented by the host SoC rather than 
-something external attached to the I2C bus.
-
-Perhaps you can get away with this, since the driver for nvidia,nvec 
-only calls I2C APIs suitable for internal slaves rather than external 
-slaves? Even so though, I think the distinction needs to be clearly 
-marked in the DT so that any generic code outside the NVEC driver that 
-parses the DT can determine the difference.
-
-I would recommend the I2C controller having #address-cells=<2> with cell 
-0 being 0==master,1==slave, cell 1 being the I2C address. The I2C driver 
-would need to support #address-cells=<1> for backwards-compatibility.
-
-> +			compatible = "nvidia,nvec";
-> +			request-gpios = <&gpio TEGRA_GPIO(V, 2)
-> +				GPIO_ACTIVE_HIGH>;
-> +			reg = <0x45>;
-
-The order is typically compatible, reg, other properties.
-
-> +		};
->   	};
+diff --git a/Documentation/devicetree/bindings/input/intel-8042.txt b/Documentation/devicetree/bindings/input/intel-8042.txt
+new file mode 100644
+index 0000000..2aea7ec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/intel-8042.txt
+@@ -0,0 +1,29 @@
++* Intel 8042 Keyboard Controller
++
++Required properties:
++- compatible: should be "intel,8042"
++- regs: memory for keyboard controller
++- interrupts: two interrupts should be specified (keyboard and aux)
++- command-reg: offset in memory for command register
++- status-reg: offset in memory for status register
++- data-reg: offset in memory for data register
++
++Optional properties:
++- init-reset: Controller should be reset on init and cleanup
++
++Optional Linux-specific properties:
++- linux,kbd_phys_desc: defaults to i8042/serio0
++- linux,aux_phys_desc: defaults to i8042/serio1
++- linux,mux_phys_desc: defaults to i8042/serio%d
++
++
++Example:
++	keyboard@d8008800 {
++		compatible = "intel,8042";
++		reg = <0xd8008800 0x100>;
++		interrupts = <23 4>;
++		command-reg = <0x04>;
++		status-reg = <0x04>;
++		data-reg = <0x00>;
++		mux-ports = <2>;
++	};
+-- 
+2.2.2
