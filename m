@@ -1,139 +1,70 @@
-From: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH RFC v8 00/21] Add support for i.MX MIPI DSI DRM driver
-Date: Mon, 2 Feb 2015 10:17:45 +0800
-Message-ID: <20150202021743.GA32567@victor>
-References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: Re: [PATCH v2 1/4] tty: serial: Add 8250 earlycon to support
+ noinit option
+Date: Mon, 2 Feb 2015 10:45:04 +0800
+Message-ID: <1422845104.5512.18.camel@mtksdaap41>
+References: <1421068104-30463-1-git-send-email-eddie.huang@mediatek.com>
+ <1421068104-30463-2-git-send-email-eddie.huang@mediatek.com>
+ <54CE53F3.5040709@hurleysoftware.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420014219-915-1-git-send-email-Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: stefan.wahren-eS4NqCHxEME@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zable-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <54CE53F3.5040709@hurleysoftware.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jiri Slaby <jslaby@suse.cz>, Jonathan Corbet <corbet@lwn.net>, yh.chen@mediatek.com, Howard Chen <ibanezchen@gmail.com>, linux-serial@vger.kernel.org, "Joe.C" <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>, srv_heupstream@mediatek.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Peter,
 
-This version has been submitted for a while.
-And, it looks there is no comments on this version.
-Can the maintainers consider to take this?
+On Sun, 2015-02-01 at 11:27 -0500, Peter Hurley wrote:
+> Hi Eddie,
+> 
+> On 01/12/2015 08:08 AM, Eddie Huang wrote:
+> > Add earlycon support not only baudrate option, but also add noinit option.
+> > If use noinit option, 8250 earlycon will not init serial hardware and use
+> > loader setting.
+> 
+> I see this went into Greg's tty-testing branch.
+> 
+> The only point of this is to not program the divisor, right?
+In this case, yes.
 
-Mike, any comments on patch 01/21?  It's a clock driver change.
+> I ask because early_serial8250_setup() could already handle this without
+> extra options by simply not doing divisor programming if no baud option is
+> present.
+MTK support high speed UART, which means baudrate can be more than
+115200. You can reference mtk8250_set_termios() function in 8250_mtk.c.
+Unfortunately, the early_serial8250_setup() can not handle high speed
+case. This is why I add noinit parameter.
 
-Regards,
-Liu Ying
+Besides, I think "no baud option" is a little tricky, and maybe someday
+someone not only care about divisor, but also flow. Legacy earlyprintk
+and other uart drivers like msm_serial.c also don't init uart hardware.
 
-On Wed, Dec 31, 2014 at 04:23:18PM +0800, Liu Ying wrote:
-> Hi,
 > 
-> This version mainly fixes the Kconfig for the Synopsys DesignWare MIPI DSI
-> host controller bridge driver so that we may pass the allmodconfig for ARM.
-> Also, this version contains a minor change for the Himax HX8369A panel
-> driver to remove several unnecessary headers included.
+> And this blows up if the optional console= form is used:
+>     console=uart,mmio32,<addr>,noinit
+> because the ttyS console will expect line settings for console match.
 > 
-> The i.MX MIPI DSI is a Synopsys DesignWare MIPI DSI host controller IP.
-> This series adds support for a Synopsys DesignWare MIPI DSI host controller
-> DRM bridge driver and a i.MX MIPI DSI specific DRM driver.
-> Currently, the MIPI DSI drivers only support the burst with sync pulse mode.
+Yes, you are right. console parameter case will fail, I only consider
+earlycon parameter case.
+
 > 
-> This series also includes a DRM panel driver for the Truly TFT480800-16-E panel
-> which is driven by the Himax HX8369A driver IC.  The driver IC data sheet could
-> be found at [1].  As mentioned by the data sheet, the driver IC supports several
-> interface modes.  Currently, the DRM panel driver only supports the MIPI DSI video
-> mode.  New interface modes could be added later(perhaps, just like the way the DRM
-> simple panel driver supports both MIPI DSI interface panels and simple(parallel)
-> interface panels).
-> 
-> The MIPI DSI feature is tested on i.MX6Q SabreSD board and i.MX6DL SabreSD board.
-> The MIPI DSI display could be enabled directly on i.MX6Q SabreSD board after
-> applying this series, because the 26.4MHz pixel clock the panel requires could be
-> derived from the IPU HSP clock(264MHz) with an integer divider.
-> On i.MX6DL SabreSD board, we need to manually disable the LVDS and HDMI displays in
-> the device tree blob, since the i.MX6DL IPU HSP clock is 198MHz at present, which
-> makes the pixel clock share the PLL5 video clock source with the LVDS and HDMI,
-> thus, the panel cannot get the pixel clock rate it wants.
-> 
-> Patch 01/21 is needed to get a precise pixel clock rate(26.4MHz) from the PLL5 video
-> clock.  If we don't have this patch, the pixel clock rate is about 20MHz, which
-> causes a horitonal shift on the display image.
-> 
-> This series can be applied on the drm-next branch.
-> 
-> [1] http://www.allshore.com/pdf/Himax_HX8369-A.pdf
-> 
-> Liu Ying (21):
->   clk: divider: Correct parent clk round rate if no bestdiv is normally
->     found
->   of: Add vendor prefix for Himax Technologies Inc.
->   of: Add vendor prefix for Truly Semiconductors Limited
->   ARM: imx6q: Add GPR3 MIPI muxing control register field shift bits
->     definition
->   ARM: imx6q: clk: Add the video_27m clock
->   ARM: imx6q: clk: Change hdmi_isfr clock's parent to be video_27m clock
->   ARM: imx6q: clk: Change hsi_tx clock to be a shared clock gate
->   ARM: imx6q: clk: Add support for mipi_core_cfg clock as a shared clock
->     gate
->   ARM: dts: imx6qdl: Move existing MIPI DSI ports into a new 'ports'
->     node
->   drm/dsi: Add a helper to get bits per pixel of MIPI DSI pixel format
->   Documentation: dt-bindings: Add bindings for Synopsys DW MIPI DSI DRM
->     bridge driver
->   drm/bridge: Add Synopsys DesignWare MIPI DSI host controller driver
->   Documentation: dt-bindings: Add bindings for i.MX specific Synopsys DW
->     MIPI DSI driver
->   drm: imx: Support Synopsys DesignWare MIPI DSI host controller
->   Documentation: dt-bindings: Add bindings for Himax HX8369A DRM panel
->     driver
->   drm: panel: Add support for Himax HX8369A MIPI DSI panel
->   ARM: dtsi: imx6qdl: Add support for MIPI DSI host controller
->   ARM: dts: imx6qdl-sabresd: Add support for TRULY TFT480800-16-E MIPI
->     DSI panel
->   ARM: imx_v6_v7_defconfig: Cleanup for imx drm being moved out of
->     staging
->   ARM: imx_v6_v7_defconfig: Add support for MIPI DSI host controller
->   ARM: imx_v6_v7_defconfig: Add support for Himax HX8369A panel
-> 
->  .../devicetree/bindings/drm/bridge/dw_mipi_dsi.txt |  73 ++
->  .../devicetree/bindings/drm/imx/mipi_dsi.txt       |  78 ++
->  .../devicetree/bindings/panel/himax,hx8369a.txt    |  39 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   2 +
->  arch/arm/boot/dts/imx6q.dtsi                       |  20 +-
->  arch/arm/boot/dts/imx6qdl-sabresd.dtsi             |  20 +
->  arch/arm/boot/dts/imx6qdl.dtsi                     |  29 +-
->  arch/arm/configs/imx_v6_v7_defconfig               |  17 +-
->  arch/arm/mach-imx/clk-imx6q.c                      |   7 +-
->  drivers/clk/clk-divider.c                          |   3 +-
->  drivers/gpu/drm/bridge/Kconfig                     |  10 +
->  drivers/gpu/drm/bridge/Makefile                    |   1 +
->  drivers/gpu/drm/bridge/dw_mipi_dsi.c               | 996 +++++++++++++++++++++
->  drivers/gpu/drm/imx/Kconfig                        |   7 +
->  drivers/gpu/drm/imx/Makefile                       |   1 +
->  drivers/gpu/drm/imx/dw_mipi_dsi-imx.c              | 230 +++++
->  drivers/gpu/drm/panel/Kconfig                      |   5 +
->  drivers/gpu/drm/panel/Makefile                     |   1 +
->  drivers/gpu/drm/panel/panel-himax-hx8369a.c        | 610 +++++++++++++
->  include/drm/bridge/dw_mipi_dsi.h                   |  27 +
->  include/drm/drm_mipi_dsi.h                         |  14 +
->  include/dt-bindings/clock/imx6qdl-clock.h          |   4 +-
->  include/linux/mfd/syscon/imx6q-iomuxc-gpr.h        |   1 +
->  23 files changed, 2165 insertions(+), 30 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
->  create mode 100644 Documentation/devicetree/bindings/drm/imx/mipi_dsi.txt
->  create mode 100644 Documentation/devicetree/bindings/panel/himax,hx8369a.txt
->  create mode 100644 drivers/gpu/drm/bridge/dw_mipi_dsi.c
->  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx.c
->  create mode 100644 drivers/gpu/drm/panel/panel-himax-hx8369a.c
->  create mode 100644 include/drm/bridge/dw_mipi_dsi.h
-> 
-> -- 
-> 2.1.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+> > ---
+> >  drivers/tty/serial/8250/8250_early.c |  7 ++++---
+> >  drivers/tty/serial/earlycon.c        | 17 ++++++++++++-----
+> >  include/linux/serial_8250.h          |  2 ++
+> >  include/linux/serial_core.h          |  1 +
+> >  4 files changed, 19 insertions(+), 8 deletions(-)
+> > 
