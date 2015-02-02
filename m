@@ -1,183 +1,35 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] extcon: usb-gpio: Introduce gpio usb extcon driver
-Date: Mon, 02 Feb 2015 14:06:55 +0900
-Message-ID: <54CF05EF.1040002@samsung.com>
-References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
- <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
- <54CACC28.3050306@samsung.com> <54CB8F3A.7020903@ti.com>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH v2 1/4] tty: serial: Add 8250 earlycon to support noinit
+ option
+Date: Mon, 02 Feb 2015 00:15:31 -0500
+Message-ID: <54CF07F3.2040100@hurleysoftware.com>
+References: <1421068104-30463-1-git-send-email-eddie.huang@mediatek.com> <1421068104-30463-2-git-send-email-eddie.huang@mediatek.com> <54CE53F3.5040709@hurleysoftware.com> <54CE6FD9.5030606@hurleysoftware.com> <1422846994.5512.25.camel@mtksdaap41> <54CEF2C8.1050808@hurleysoftware.com> <20150202042843.GA24765@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <54CB8F3A.7020903-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150202042843.GA24765@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, yh.chen@mediatek.com, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, linux-serial@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Jiri Slaby <jslaby@suse.cz>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+On 02/01/2015 11:28 PM, Greg Kroah-Hartman wrote:
+> On Sun, Feb 01, 2015 at 10:45:12PM -0500, Peter Hurley wrote:
+>> On 02/01/2015 10:16 PM, Eddie Huang wrote:
 
-On 01/30/2015 11:03 PM, Roger Quadros wrote:
-> On 30/01/15 02:11, Chanwoo Choi wrote:
->> Hi Roger,
->>
->> On 01/28/2015 09:15 PM, Roger Quadros wrote:
->>> This driver observes the USB ID pin connected over a GPIO and
->>> updates the USB cable extcon states accordingly.
->>>
->>> The existing GPIO extcon driver is not suitable for this purpose
->>> as it needs to be taught to understand USB cable states and it
->>> can't handle more than one cable per instance.
->>>
->>> For the USB case we need to handle 2 cable states.
->>> 1) USB (attach/detach)
->>> 2) USB-Host (attach/detach)
->>>
->>> This driver can be easily updated in the future to handle VBUS
->>> events in case it happens to be available on GPIO for any platform.
->>>
->>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>> ---
->>> v3:
->>> - removed IRQF_NO_SUSPEND flag. Added IRQF_TRIGGER_RISING and
->>>   IRQF_TRIGGER_FALLING
->>> - Added disable_irq() to suspend() and enable_irq() to resume()
->>>
->>>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  18 ++
->>>  drivers/extcon/Kconfig                             |   7 +
->>>  drivers/extcon/Makefile                            |   1 +
->>>  drivers/extcon/extcon-usb-gpio.c                   | 233 +++++++++++++++++++++
->>>  4 files changed, 259 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>> new file mode 100644
->>> index 0000000..85fe6b0
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->>> @@ -0,0 +1,18 @@
->>> +USB GPIO Extcon device
->>> +
->>> +This is a virtual device used to generate USB cable states from the USB ID pin
->>> +connected to a GPIO pin.
->>> +
->>> +Required properties:
->>> +- compatible: Should be "linux,extcon-usb-gpio"
->>> +- id-gpio: gpio for USB ID pin. See gpio binding.
->>> +
->>> +Example:
->>> +	extcon_usb1 {
->>> +		compatible = "linux,extcon-usb-gpio";
->>> +		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
->>> +	}
->>> +
->>> +	&omap_dwc3_1 {
->>> +		extcon = <&extcon_usb1>;
->>> +	};
->>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
->>> index 6a1f7de..fd11536 100644
->>> --- a/drivers/extcon/Kconfig
->>> +++ b/drivers/extcon/Kconfig
->>> @@ -93,4 +93,11 @@ config EXTCON_SM5502
->>>  	  Silicon Mitus SM5502. The SM5502 is a USB port accessory
->>>  	  detector and switch.
->>>  
->>> +config EXTCON_USB_GPIO
->>> +	tristate "USB GPIO extcon support"
->>> +	select GPIOLIB
->>> +	help
->>> +	  Say Y here to enable GPIO based USB cable detection extcon support.
->>> +	  Used typically if GPIO is used for USB ID pin detection.
->>> +
->>>  endif # MULTISTATE_SWITCH
->>> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
->>> index 0370b42..6a08a98 100644
->>> --- a/drivers/extcon/Makefile
->>> +++ b/drivers/extcon/Makefile
->>> @@ -12,3 +12,4 @@ obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
->>>  obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
->>>  obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
->>>  obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
->>> +obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
->>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
->>> new file mode 100644
->>> index 0000000..99a58b2
->>> --- /dev/null
->>> +++ b/drivers/extcon/extcon-usb-gpio.c
->>> @@ -0,0 +1,233 @@
->>> +/**
->>> + * drivers/extcon/extcon-usb-gpio.c - USB GPIO extcon driver
->>> + *
->>> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
->>> + * Author: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + */
->>> +
->>> +#include <linux/extcon.h>
->>> +#include <linux/init.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/irq.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_gpio.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/workqueue.h>
->>> +
->>> +#define USB_GPIO_DEBOUNCE_MS	20	/* ms */
->>> +
->>> +struct usb_extcon_info {
->>> +	struct device *dev;
->>> +	struct extcon_dev *edev;
->>> +
->>> +	struct gpio_desc *id_gpiod;
->>> +	int id_irq;
->>> +	bool id_irqwake;		/* ID wakeup enabled flag */
->>> +
->>> +	unsigned long debounce_jiffies;
->>> +	struct delayed_work wq_detcable;
->>> +};
->>> +
->>> +/* List of detectable cables */
->>> +enum {
->>> +	EXTCON_CABLE_USB = 0,
->>> +	EXTCON_CABLE_USB_HOST,
->>> +
->>> +	EXTCON_CABLE_END,
->>> +};
->>> +
->>> +static const char *usb_extcon_cable[] = {
->>> +	[EXTCON_CABLE_USB] = "USB",
->>> +	[EXTCON_CABLE_USB_HOST] = "USB-Host",
->>
->> I'll use the defined name for extcon cable name as soon because 
->> it has potential isseu about the conflict of extcon cable name between subsystems.
->> So, I recommend to use a captical letter as "USB-HOST" instead of "USB-Host".
->> If other extcon driver don't use the captical letter, I'll fix it.
+>> I'll respin proper patches on top of Greg's tty-testing branch with reverts
+>> for the noinit options. I noticed that one of the noinit patches actually
+>> has the linkage for the mtk earlycon, so I'll be sure to preserve that.
 > 
-> Did you see patch 2 in this series?
-> In that I had fixed all instances to use "USB-Host" based on
-> http://lxr.free-electrons.com/source/drivers/extcon/extcon-class.c#L45
+> I can just drop the patches in the tty-testing branch, that's what it is
+> there for :)
 > 
-> What do you suggest?
-> Skip patch 2 and convert all "USB-Host" to "USB-HOST"?
+> Just let me know the specific patches and I will do so, thanks.
 
-I replied my opinion about this on following patch[1].
-[1] Re: [PATCH v2 2/7] usb: extcon: Fix USB-Host cable name
+Well that pretty much means dropping the 3 patches that add earlycon to
+8250_mtk and then applying my patch (needs fixed to apply cleanly, which
+I can do) and then applying a fixed-up replacement patch to add earlycon
+to 8250_mtk (which I can also supply).
 
-Thanks,
-Chanwoo Choi
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is that the way you want to go?
