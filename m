@@ -1,112 +1,56 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: Reading /sys with side effects (was Re: [PATCH 1/2] Documentation:
- leds: Add description of LED Flash class extension)
-Date: Mon, 02 Feb 2015 10:07:02 +0100
-Message-ID: <54CF3E36.9000108@samsung.com>
-References: <1422346028-16739-1-git-send-email-j.anaszewski@samsung.com>
- <20150127221958.GA18993@amd> <54C8A130.8000807@samsung.com>
- <20150129211420.GA21140@amd> <54CB4702.1090508@samsung.com>
- <20150130164027.GA25830@kroah.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 2/7] usb: extcon: Fix USB-Host cable name
+Date: Mon, 2 Feb 2015 11:09:59 +0200
+Message-ID: <54CF3EE7.2050705@ti.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com> <1422274532-9488-3-git-send-email-rogerq@ti.com> <54CB6539.1040703@ti.com> <54CB8FBD.6050701@ti.com> <54CF0555.4080004@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150130164027.GA25830@kroah.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Greg KH <greg@kroah.com>
-Cc: Pavel Machek <pavel@ucw.cz>, kernel list <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54CF0555.4080004@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: balbi@ti.com, tony@atomide.com, myungjoo.ham@samsung.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/30/2015 05:40 PM, Greg KH wrote:
-> On Fri, Jan 30, 2015 at 09:55:30AM +0100, Jacek Anaszewski wrote:
->> Hi Pavel,
+Chanwoo,
+
+On 02/02/15 07:04, Chanwoo Choi wrote:
+> Hi Roger,
+> 
+> On 01/30/2015 11:05 PM, Roger Quadros wrote:
+>> Hi,
 >>
->> On 01/29/2015 10:14 PM, Pavel Machek wrote:
->>> Hi!
+>> On 30/01/15 13:04, Roger Quadros wrote:
+>>> Felipe & Chanwoo,
 >>>
->>>>>> +	- flash_fault - list of flash faults that may have occurred:
->>>>>> +		* led-over-voltage - flash controller voltage to the flash LED
->>>>>> +			has exceededthe limit specific to the flash controller
->>>>>> +		* flash-timeout-exceeded - the flash strobe was still on when
->>>>>> +			the timeout set by the user has expired; not all flash
->>>>>> +			controllers may set this in all such conditions
->>>>>> +		* controller-over-temperature - the flash controller has
->>>>>> +			overheated
->>>>>> +		* controller-short-circuit - the short circuit protection
->>>>>> +			of the flash controller has been triggered
->>>>>> +		* led-power-supply-over-current - current in the LED power
->>>>>> +			supply has exceeded the limit specific to the flash
->>>>>> +			controller
->>>>>> +		* indicator-led-fault - the flash controller has detected
->>>>>> +			a short or open circuit condition on the indicator LED
->>>>>> +		* led-under-voltage - flash controller voltage to the flash
->>>>>> +			LED has been below the minimum limit specific to
->>>>>> +			the flash
->>>>>> +		* controller-under-voltage - the input voltage of the flash
->>>>>> +			controller is below the limit under which strobing the
->>>>>> +			flash at full current will not be possible. The condition
->>>>>> +			persists until this flag is no longer set
->>>>>> +		* led-over-temperature - the temperature of the LED has exceeded
->>>>>> +			its allowed upper limit
->>>>>> +
->>>>>> +		Flash faults are cleared, if possible, by reading the attribute.
->>>>>
->>>>> That's bad. Now you can no longer present flash_fault file as readable
->>>>> to non-root users, and grep -ri foo /sys will interfere with your
->>>>> camera application.
->>>>>
->>>>> Bad interface, just fix it.
+>>> On 26/01/15 14:15, Roger Quadros wrote:
+>>>> The recommended name for USB-Host cable state is "USB-Host" and not
+>>>> "USB-HOST" as per drivers/extcon/extcon-class.c extcon_cable_name.
 >>>>
->>>> In my opinion it isn't crucial for the user to be aware of the
->>>> fact that some non-persistent fault happened right after strobing the
->>>> flash (e.g. over temperature).
+>>>> Change all instances of "USB-HOST" to "USB-Host".
 >>>>
->>>> I cannot see anything harmful in the situation when someone does grep
->>>> on /sys and clears non-persistent fault on a flash LED device.
+>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>> Reviewed-by: Felipe Balbi <balbi@ti.com>
+>>>> Acked-by: Felipe Balbi <balbi@ti.com>
 >>>
->>> So why export the faults at all?
+>>> This patch has no dependency to the rest so can be picked up as soon as possible.
+>>>
+>>> Do you think it is better to go via the USB tree?
+>>> If yes then Chanwoo, can you please Ack this one? Thanks.
+>>>
+>>> This would mean that only the first patch needs to go through extcon tree as Tony
+>>> will pick the rest.
 >>
->> Faults may prevent strobing the flash in case of some devices.
->> The example of such a device is ADP1663 (drivers/media/i2c/adp1653.c).
->> This driver reads the faults before strobing the flash and if a
->> fault preventing strobing has occurred it returns -EBUSY.
->>
->> If this driver was made a LED Flash class driver, then it would
->> expose flash_faults attribute. The driver would probably need
->> redesigning - checking the faults before strobing would have to be
->> avoided and it should be left to the userspace.
->
-> That's fine, but Pavel's point is that you shouldn't "clear a fault" by
-> reading a sysfs file as you don't control who reads all sysfs files
-> (hint, libudev might cache all attributes when they are found / change,
-> which could prevent anyone else from seeing that fault.)
->
-> So please fix this, make a write to clear a fault or some other such
-> explicit action, not a simple read.  That's not an acceptable api.
+>> Hold on. Let's first decide what we really want to go ahead with
+>> "USB-Host" or "USB-HOST".
+> 
+> Currently, extcon driver have used the specific cable name(USB-Host or USB-HOST)
+> without any standard way. So, I have plan to define common cable name in extcon
+> header file by using capital letter.
 
-I am aware what Pavel'a point was, I just presented the arguments
-justifying existence of the flash_faults attribute at all.
+OK. In that case, this patch is not required.
+I will resend patch 1 with cable name corrected to "USB-HOST".
 
-In my opinion flash_faults attribute should report the current state of
-the device. For the devices which clear the faults on I2C readout the
-faults read would have to be cached in the driver, until they are
-explicitly cleared, to keep the sysfs interface consistent.
-
-Nonetheless, there can be also devices which don't require clearing the
-faults - they are reported only when the actual condition occurs,
-e.g. over temperature or under voltage. When the related value gets
-back to the acceptable level the fault is no longer reported by the
-device.
-
-In this case some faults will remain unnoticed by the user space. This
-is the argument in favour of my statement that caching the faults does
-not make a sense and is not crucial. The user's vital interest is to
-know whether the flash LED is operational right before strobing.
-
-Since we cannot guarantee reporting all the faults that occurred for
-all possible flash LED devices, the only sensible solution is to report
-only the currently valid fault.
-
--- 
-Best Regards,
-Jacek Anaszewski
+cheers,
+-roger
