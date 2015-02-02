@@ -1,42 +1,108 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH 03/14] drm/bridge: make bridge registration independent of
- drm flow
-Date: Mon, 2 Feb 2015 14:46:40 +0530
-Message-ID: <CAEC9eQMpRcoJxF_u6rOKw_68x441790r595xdPnBpwqc79AMRQ@mail.gmail.com>
-References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
- <1421771935-31618-4-git-send-email-ajaykumar.rs@samsung.com>
- <CAF6AEGs8GbgYMLmaPjGnXAv=Gsf6gMhNj+Zt0-2GKHOnHv4d4Q@mail.gmail.com>
- <20150130155927.GO26493@n2100.arm.linux.org.uk>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/4] mtd: nand: atmel: Update DT documentation after
+ splitting NFC and NAND
+Date: Mon, 2 Feb 2015 10:42:36 +0100
+Message-ID: <20150202104236.649f99ad@bbrezillon>
+References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1417732214-3292-3-git-send-email-boris.brezillon@free-electrons.com>
+	<20150202075737.GC3523@norris-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150130155927.GO26493@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Jingoo Han <jg1.han@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150202075737.GC3523@norris-Latitude-E6410>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmksIEphbiAzMCwgMjAxNSBhdCA5OjI5IFBNLCBSdXNzZWxsIEtpbmcgLSBBUk0g
-TGludXgKPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+IE9uIEZyaSwgSmFuIDMwLCAy
-MDE1IGF0IDEwOjM3OjE5QU0gLTA1MDAsIFJvYiBDbGFyayB3cm90ZToKPj4gT24gVHVlLCBKYW4g
-MjAsIDIwMTUgYXQgMTE6MzggQU0sIEFqYXkgS3VtYXIgPGFqYXlrdW1hci5yc0BzYW1zdW5nLmNv
-bT4gd3JvdGU6Cj4+IEknbGwgYWxzbyBuZWVkIHRvIHVwZGF0ZSB0aGUgbmV3IGJyaWRnZSBpbiB0
-aGUgbXNtIGVkcCBjb2RlLi4KPj4gYWx0aG91Z2ggdGhhdCBpc24ndCBzdWNoIGEgYmlnIGRlYWwg
-aWYgSSBrbmV3IGhvdyB0aGlzIHdhcyAqc3VwcG9zZWQqCj4+IHRvIHdvcmsuLiBzaW5jZSB3aGF0
-IGlzIHRoZXJlIG5vdyBhdCBsZWFzdCBkb2Vzbid0IGxvb2sgcmlnaHQuLgo+Cj4gSSB3b25kZXIg
-d2hldGhlciB0aGUgbmV3IGR3LWhkbWkgYnJpZGdlIGNvZGUgZ2V0IGZpeGVkIHVwIHRvby4uLgpJ
-IHRoaW5rIGl0cyBhbHJlYWR5IGZpeGVkLiBDaGVjayB0aGlzOgpodHRwOi8vY2dpdC5mcmVlZGVz
-a3RvcC5vcmcvfmFpcmxpZWQvbGludXgvY29tbWl0Lz9oPWRybS1uZXh0JmlkPWI1MjE3YmY0Njky
-MjE4ZDIwMmQzZDJjZDc3Mjg2NGZhMWUxMGJlNGQKClJlZ2FyZHMsCkFqYXkgS3VtYXIKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Brian,
+
+On Sun, 1 Feb 2015 23:57:37 -0800
+Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> Hi Boris,
+> 
+> BTW, this series has a few conflicts with other things I have queued, so
+> you'll need to refresh.
+
+Yes, that's not a problem, but I'd like to be sure this is the way we
+want to go before rebasing this series.
+
+> 
+> On Thu, Dec 04, 2014 at 11:30:12PM +0100, Boris Brezillon wrote:
+> > The NAND and NFC (NAND Flash Controller) were linked together with a
+> > parent <-> child relationship.
+> > 
+> > This model has several drawbacks:
+> > - it does not allow for multiple NAND chip handling while the controller
+> >   support multi-chip (even though the driver is not ready yet)
+> > - it mixes NAND partitions and NFC nodes at the same level (which is a bit
+> >   disturbing)
+> 
+> I agree that this is disturbing. (FWIW, it also seems a bit disturbing
+> that atmel_nand.c actually registers two different drivers and the tries
+> to synchronize them; this seems like it could be handled better, but I'm
+> not sure how at the moment.)
+
+Yep, that's my feeling too, but I'm not sure how this could/should be
+done.
+My problem here is that the pinmux should be requested by the EBI
+device because the EBI manages several type of devices and the data and
+address signals are shared by all the devices, hence the idea of
+defining the nand chip node under the EBI node.
+In the other hand, the NFC is not part of the EBI bus, and thus should
+not be defined under the EBI node.
+
+This might lead to the NFC device being probed before the NAND chip,
+hence the need for this synchronization.
+
+> 
+> > - the introduction of the EBI bus implies defining NAND chips under the
+> >   EBI node, and the ranges available under the EBI node should be
+> >   restricted to EBI address space, while the NFC references several
+> >   registers outside of these EBI ranges.
+> 
+> That's an interesting bit. I've actually run across this sort of problem
+> on other SoCs, where we have a relationship between two pieces of
+> hardware--the NAND chip and the NAND controller--where the former might
+> be on one bus (like your EBI bus, with chip selects), and the latter is
+> part of the top-level MMIO register space.
+> 
+> But can you elaborate here a bit more? Does the NAND chip actually need
+> to be represented under your EBI bus?
+
+Yes, as said above this is all about pinmux conflicts, the NAND
+controller has to request the appropriate pinmux for its NAND chips but
+it will conflict with the pinmux requested by the EBI bus (data and
+address signals are shared by all the devices connected on the EBI).
+
+> 
+> > Move the NFC node outside of the NAND node, to get a more future-proof
+> > model.
+> 
+> I'm curious if an alternative solution might work, maybe one like the
+> Allwiner NAND (sunxi-nand) DT, which just reverses the roles; the 'NFC'
+> is the parent of the NAND chip(s). We've seen this pattern in other
+> contexts too.
+
+I would have preferred this solution too, but the EBI/pinmux constraint
+explained above prevents this approach.
+What I can do though, is reverse the referencing: reference nand chips
+from the nand controller node.
+
+Josh, Brian, any idea to solve this EBI/nand-chip/nand-controller
+dependency problem is welcome.
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
