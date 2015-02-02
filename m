@@ -1,51 +1,85 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH v3] net/fsl_pq_mdio: Document supported compatibles
-Date: Sun, 1 Feb 2015 15:58:31 -0600
-Message-ID: <1422827911-32629-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
+Date: Mon, 2 Feb 2015 09:19:12 +0900
+Message-ID: <20150202001910.GA29383@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <1608366.HtA9yBksdO@wasted.cogentembedded.com>
+ <20150131042143.GB7605@verge.net.au>
+ <54CD1E79.6090700@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: scottwood@Freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: Shruti Kanetkar <Kanetkar.Shruti@gmail.com>, Emil Medve <Emilian.Medve@Freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54CD1E79.6090700-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU2hydXRpIEthbmV0a2FyIDxLYW5ldGthci5TaHJ1dGlAZ21haWwuY29tPgoKVGhlIGRl
-dmljZSB0cmVlIGJpbmRpbmcocykgZG9jdW1lbnQgaGFzIGZhbGxlbiBvdXQgb2Ygc3luYyB3aXRo
-IHRoZQpkcml2ZXIgY29kZS4gVXBkYXRlIHRoZSBsaXN0IG9mIHN1cHBvcnRlZCBkZXZpY2VzIHRv
-IHJlZmxlY3QgY3VycmVudApkcml2ZXIgY2FwYWJpbGl0aWVzCgpDaGFuZ2UtSWQ6IEk0NDBkOGRl
-MmVlMmQ5YzNiN2IyM2U2OWIzZGE4NTFjYWIxOGE0YzlhClNpZ25lZC1vZmYtYnk6IFNocnV0aSBL
-YW5ldGthciA8S2FuZXRrYXIuU2hydXRpQGdtYWlsLmNvbT4KU2lnbmVkLW9mZi1ieTogRW1pbCBN
-ZWR2ZSA8RW1pbGlhbi5NZWR2ZUBGcmVlc2NhbGUuY29tPgotLS0KCnYzOglTZXBhcmF0ZWQgZnJv
-bSB0aGUgRk1hbiBNRElPIGR0L2JpbmRpbmcgcGF0Y2hzZXQgaHR0cDovL3BhdGNod29yay5vemxh
-YnMub3JnL3BhdGNoLzM3MDg3MAoKIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9u
-ZXQvZnNsLXRzZWMtcGh5LnR4dCB8IDExICsrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgMTAg
-aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvZnNsLXRzZWMtcGh5LnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvZnNsLXRzZWMtcGh5LnR4dAppbmRleCBiZTZlYTg5Ni4u
-MWU5NzUzMiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25l
-dC9mc2wtdHNlYy1waHkudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9uZXQvZnNsLXRzZWMtcGh5LnR4dApAQCAtOCw3ICs4LDE2IEBAIG9mIGhvdyB0byBkZWZpbmUg
-YSBQSFkuCiBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogICAtIHJlZyA6IE9mZnNldCBhbmQgbGVuZ3Ro
-IG9mIHRoZSByZWdpc3RlciBzZXQgZm9yIHRoZSBkZXZpY2UKICAgLSBjb21wYXRpYmxlIDogU2hv
-dWxkIGRlZmluZSB0aGUgY29tcGF0aWJsZSBkZXZpY2UgdHlwZSBmb3IgdGhlCi0gICAgbWRpby4g
-IEN1cnJlbnRseSwgdGhpcyBpcyBtb3N0IGxpa2VseSB0byBiZSAiZnNsLGdpYW5mYXItbWRpbyIK
-KyAgICBtZGlvLiBDdXJyZW50bHkgc3VwcG9ydGVkIHN0cmluZ3MvZGV2aWNlcyBhcmU6CisJLSAi
-ZnNsLGdpYW5mYXItdGJpIgorCS0gImZzbCxnaWFuZmFyLW1kaW8iCisJLSAiZnNsLGV0c2VjMi10
-YmkiCisJLSAiZnNsLGV0c2VjMi1tZGlvIgorCS0gImZzbCx1Y2MtbWRpbyIKKwktICJmc2wsZm1h
-bi1tZGlvIgorICAgIFdoZW4gZGV2aWNlX3R5cGUgaXMgIm1kaW8iLCB0aGUgZm9sbG93aW5nIHN0
-cmluZ3MgYXJlIGFsc28gY29uc2lkZXJlZDoKKwktICJnaWFuZmFyIgorCS0gInVjY19nZXRoX3Bo
-eSIKIAogRXhhbXBsZToKIAotLSAKMi4yLjIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZA
-bGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhw
-cGMtZGV2
+Hi Sergei,
+
+On Sat, Jan 31, 2015 at 09:27:05PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 1/31/2015 7:21 AM, Simon Horman wrote:
+> 
+> >>Add the initial device tree for the R8A7794 SoC based SILK low cost board.
+> >>SCIF2 serial port support is included, so that the serial console can work.
+> 
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> >>---
+> >>This patch is against the 'renesas-devel-20150129-v3.19-rc6' tag of Simon
+> >>Horman's 'renesas.git' repo.
+> 
+> >>  arch/arm/boot/dts/Makefile         |    1
+> >>  arch/arm/boot/dts/r8a7794-silk.dts |   41 +++++++++++++++++++++++++++++++++++++
+> >>  2 files changed, 42 insertions(+)
+> 
+> [...]
+> >>Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
+> >>===================================================================
+> >>--- /dev/null
+> >>+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+> >>@@ -0,0 +1,41 @@
+> >>+/*
+> >>+ * Device Tree Source for the SILK board
+> >>+ *
+> >>+ * Copyright (C) 2014 Renesas Electronics Corporation
+> >>+ * Copyright (C) 2014-2015 Renesas Solutions Corp.
+> >>+ * Copyright (C) 2014-2015 Cogent Embedded, Inc.
+> >>+ *
+> >>+ * This file is licensed under the terms of the GNU General Public License
+> >>+ * version 2.  This program is licensed "as is" without any warranty of any
+> >>+ * kind, whether express or implied.
+> >>+ */
+> >>+
+> >>+/dts-v1/;
+> >>+#include "r8a7794.dtsi"
+> >>+
+> >>+/ {
+> >>+	model = "SILK";
+> >>+	compatible = "renesas,silk", "renesas,r8a7794";
+> >>+
+> >>+	aliases {
+> >>+		serial0 = &scif2;
+> >>+	};
+> >>+
+> >>+	chosen {
+> >>+		bootargs = "console=ttySC0,38400 ignore_loglevel";
+> 
+> >Please remove console= for consistency with other boards
+> >based on Renesas SoCs.
+> 
+>    I can't, there will be no console at all.
+
+Its not clear to me why that should be the case when you also have:
+
+		stdout-path = &scif2;
+
+Is this a baud issue? If so is it possible to set uboot to 115200 bps?
+This would be consistent with the way other boards are handled in mainline.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
