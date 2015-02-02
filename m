@@ -1,94 +1,160 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
-Date: Mon, 2 Feb 2015 12:18:43 +0000
-Message-ID: <20150202121843.GD22661@e104818-lin.cambridge.arm.com>
-References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
- <1422052359-12384-4-git-send-email-m-karicheri2@ti.com>
- <54C77616.80301@arm.com>
- <54C7DF13.20402@ti.com>
- <20150128110523.GC6646@e104818-lin.cambridge.arm.com>
- <54C9068D.8050701@arm.com>
- <20150128173048.GE31752@e104818-lin.cambridge.arm.com>
- <54CBC823.3020905@ti.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/8] Support for Fujitsu MB86S7X SoCs
+Date: Mon, 2 Feb 2015 18:51:58 +0530
+Message-ID: <CAJe_ZhdqsTwD0KxzVzCCHExsoepCkLR2hXUbjnnmvSFhhvmgdw@mail.gmail.com>
+References: <1421663016-1327-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54CBC823.3020905-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1421663016-1327-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Cc: Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 30, 2015 at 06:06:27PM +0000, Murali Karicheri wrote:
-> On 01/28/2015 12:30 PM, Catalin Marinas wrote:
-> > I think we can remove this check altogether (we leaved without it for a
-> > while) but we need to add 1 when calculating the mask:
-> >
-> > 	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
-> > 				     DMA_BIT_MASK(ilog2(size + 1)));
-> >
-> For Keystone, the dma_addr is to be taken care as well to determine the 
-> mask. The above will not work.
+Hi Arnd,  Hi Olof,
 
-This was discussed before (not on this thread) and dma_addr should not
-affect the mask, it only affects the pfn offset.
+  ... just a polite ping on the patchset.
 
-> Based on the discussion so far, this is the function I have come up with 
-> incorporating the suggestions. Please review this and see if I have 
-> missed out any. This works fine on Keystone.
-> 
-> void of_dma_configure(struct device *dev, struct device_node *np)
-> {
-> 	u64 dma_addr = 0, paddr, size;
-> 	int ret;
-> 	bool coherent;
-> 	unsigned long offset = 0;
-> 	struct iommu_ops *iommu;
-> 
-> 	/*
-> 	 * Set default size to cover the 32-bit. Drivers are expected to setup
-> 	 * the correct size and dma_mask.
->    	 */
-> 	size = 1ULL << 32;
-> 
-> 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-> 	if (!ret) {
-> 		offset = PFN_DOWN(paddr - dma_addr);
-> 		if (!size) {
-> 			dev_err(dev, "Invalid size (%llx)\n",
-> 				size);
-> 			return;
-> 		}
-> 		if (size & 1) {
-> 			size = size + 1;
-> 			dev_warn(dev, "Incorrect usage of size (%llx)\n",
-> 				 size);
-> 		}
-> 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
-> 	}
-> 	dev->dma_pfn_offset = offset;
-> 
-> 	/*
-> 	 * Coherent DMA masks larger than 32-bit must be explicitly set by the
-> 	 * driver.
-> 	 */
-> 	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
-> 				     DMA_BIT_MASK(ilog2(dma_addr + size)));
+Thanks.
 
-That's not correct, coherent_dma_mask should still be calculated solely
-based on size, not dma_addr.
+On 19 January 2015 at 15:53, Vincent Yang
+<vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hello,
+>
+>   Fujitsu have a series of SoC already shipping based around
+> variations of 2xCA7+2xCA15 big.LITTLE architecture, and we would like
+> to upstream the basic support in this series.
+>
+>   MB86S70 is a big.LITTLE platform with 2xCA7+2xCA15 and an additiona=
+l
+> CM3 as the master. MB86S73 is a simple 2xCA7 and an additional CM3
+> master.
+>
+>   The DT includes references to sdhci patches which are being sent to
+> the mmc list at the same time.
+>
+>   We welcome any comments or questions.
+>
+> Changes since v3:
+> * Identify platform, by checking presence of DT node
+> "fujitsu,mb86s70-scb-1.0" before populating cpu clocks and MCPM
+> support.
+> * Disable clock upon gpio module remove
+> * Lower init level of gpio driver from subsys_initcall to module_init
+> * Use managed device resource allocation in MHU driver
+>
+> Changes since v2:
+> * Minor cleanup of MCPM as suggested by Nicolas Pitre.
+>
+> Changes since v1:
+> * Thanks to Arnd, modified clock driver to populate clocks only when
+> some user need them. Node name changed from "fujitsu,mb86s70-clk" to
+> "fujitsu,mb86s70-crg11" . Controller+Domain+Port of a clock are now
+> three cells specified by the user node.
+> * aliases moved into board DTS files
+> * Voltage supply moved as per-board DT node.
+> * Removed default overly verbose loglevel=3D8
+> * Specify -march=3Darmv7-a flag for mcpm.c and smc.S that contain ARM=
+v7
+> specific code.
+> * Removed wrongly put outer_flush_all(), now using standard
+> v7_exit_coherency_flush() instead of platform specific macro.
+> * Simplified GPIO offset calculations in gpio-mb86s70.c driver. And
+> added .remove() for the driver
+> * ARM MHU driver provided a .remove() to enable module unloading.
+> * A few other misc cleanups suggested in v1 submission.
+>
+> Thanks.
+>
+> Jassi Brar (8):
+>   ARM: Add platform support for Fujitsu MB86S7X SoCs
+>   mailbox: arm_mhu: add driver for ARM MHU controller
+>   ARM: MB86S7X: Add MCPM support
+>   clk: Add clock driver for mb86s7x
+>   gpio: Add Fujitsu MB86S7x GPIO driver
+>   dt: mb86s7x: add dt files for MB86S7x evbs
+>   of: add Fujitsu vendor prefix
+>   ARM: MB86S7x: Add configs
+>
+>  Documentation/devicetree/bindings/arm/mb86s7x.txt  |   8 +
+>  .../bindings/clock/fujitsu,mb86s70-crg11.txt       |  26 +
+>  .../bindings/gpio/fujitsu,mb86s70-gpio.txt         |  20 +
+>  .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++
+>  .../devicetree/bindings/soc/mb86s7x/scb_mhu.txt    |  35 ++
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  MAINTAINERS                                        |   7 +
+>  arch/arm/Kconfig                                   |   2 +
+>  arch/arm/Makefile                                  |   1 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/mb86s70.dtsi                     |  91 ++++
+>  arch/arm/boot/dts/mb86s70eb.dts                    |  57 +++
+>  arch/arm/boot/dts/mb86s73.dtsi                     |  63 +++
+>  arch/arm/boot/dts/mb86s73eb.dts                    |  44 ++
+>  arch/arm/boot/dts/mb86s7x.dtsi                     | 140 ++++++
+>  arch/arm/configs/fujitsu_defconfig                 | 232 +++++++++
+>  arch/arm/configs/multi_v7_defconfig                |   5 +
+>  arch/arm/mach-mb86s7x/Kconfig                      |  19 +
+>  arch/arm/mach-mb86s7x/Makefile                     |   3 +
+>  arch/arm/mach-mb86s7x/board.c                      |  23 +
+>  arch/arm/mach-mb86s7x/mcpm.c                       | 318 +++++++++++=
+++
+>  arch/arm/mach-mb86s7x/smc.S                        |  27 ++
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/clk-mb86s7x.c                          | 386 +++++++++++=
+++++
+>  drivers/gpio/Kconfig                               |   6 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-mb86s7x.c                        | 232 +++++++++
+>  drivers/mailbox/Kconfig                            |   7 +
+>  drivers/mailbox/Makefile                           |   2 +
+>  drivers/mailbox/arm_mhu.c                          | 211 ++++++++
+>  drivers/soc/Makefile                               |   1 +
+>  drivers/soc/mb86s7x/Makefile                       |   4 +
+>  drivers/soc/mb86s7x/scb_mhu.c                      | 528 +++++++++++=
+++++++++++
+>  include/soc/mb86s7x/scb_mhu.h                      | 105 ++++
+>  34 files changed, 2640 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mb86s7x.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/fujitsu,m=
+b86s70-crg11.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/fujitsu,mb=
+86s70-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu=
+=2Etxt
+>  create mode 100644 Documentation/devicetree/bindings/soc/mb86s7x/scb=
+_mhu.txt
+>  create mode 100644 arch/arm/boot/dts/mb86s70.dtsi
+>  create mode 100644 arch/arm/boot/dts/mb86s70eb.dts
+>  create mode 100644 arch/arm/boot/dts/mb86s73.dtsi
+>  create mode 100644 arch/arm/boot/dts/mb86s73eb.dts
+>  create mode 100644 arch/arm/boot/dts/mb86s7x.dtsi
+>  create mode 100644 arch/arm/configs/fujitsu_defconfig
+>  create mode 100644 arch/arm/mach-mb86s7x/Kconfig
+>  create mode 100644 arch/arm/mach-mb86s7x/Makefile
+>  create mode 100644 arch/arm/mach-mb86s7x/board.c
+>  create mode 100644 arch/arm/mach-mb86s7x/mcpm.c
+>  create mode 100644 arch/arm/mach-mb86s7x/smc.S
+>  create mode 100644 drivers/clk/clk-mb86s7x.c
+>  create mode 100644 drivers/gpio/gpio-mb86s7x.c
+>  create mode 100644 drivers/mailbox/arm_mhu.c
+>  create mode 100644 drivers/soc/mb86s7x/Makefile
+>  create mode 100644 drivers/soc/mb86s7x/scb_mhu.c
+>  create mode 100644 include/soc/mb86s7x/scb_mhu.h
+>
+> --
+> 1.9.0
+>
 
-Functions like swiotlb_dma_supported() use phys_to_dma() which on ARM
-(32-bit) subtracts the dma_pfn_offset, so the mask based on size works
-fine.
 
-In the arm64 tree, we haven't taken dma_pfn_offset into account for
-phys_to_dma() yet but if needed for a SoC, we'll add it.
 
--- 
-Catalin
+--=20
+Linaro.org =E2=94=82 Open source software for ARM SoCs | Follow Linaro
+http://facebook.com/pages/Linaro/155974581091106  -
+http://twitter.com/#!/linaroorg - http://linaro.org/linaro-blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
