@@ -1,74 +1,60 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v4] thermal: Add QPNP PMIC temperature alarm driver
-Date: Mon, 02 Feb 2015 17:38:17 +0200
-Message-ID: <54CF99E9.10305@mm-sol.com>
-References: <1422890370-6914-1-git-send-email-iivanov@mm-sol.com>
+From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Subject: Re: SPDX-License-Identifier
+Date: Mon, 02 Feb 2015 16:43:14 +0100
+Message-ID: <54CF9B12.2070807@denx.de>
+References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local> <20140220182257.GF23217@saruman.home> <5306F458.9010706@monstr.eu> <20140221160442.GA17506@kroah.com> <5307790A.4050806@monstr.eu> <20140221161246.GM31902@saruman.home> <53077C5F.9000407@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1422890370-6914-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53077C5F.9000407-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/02/2015 05:19 PM, Ivan T. Ivanov wrote:
-> Add support for the temperature alarm peripheral found inside
-> Qualcomm plug-and-play (QPNP) PMIC chips. The temperature alarm
-> peripheral outputs a pulse on an interrupt line whenever the
-> thermal over temperature stage value changes.
-> 
-> Register a thermal sensor. The temperature reported by this thermal
-> sensor device should reflect the actual PMIC die temperature if an
-> ADC is present on the given PMIC. If no ADC is present, then the
-> reported temperature should be estimated from the over temperature
-> stage value.
-> 
-> Cc: David Collins <collinsd@codeaurora.org>
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> ---
-> 
+On 21.02.2014 17:18, Michal Simek wrote:
+> On 02/21/2014 05:12 PM, Felipe Balbi wrote:
+>> On Fri, Feb 21, 2014 at 05:04:26PM +0100, Michal Simek wrote:
+>>> On 02/21/2014 05:04 PM, Greg Kroah-Hartman wrote:
+>>>> On Fri, Feb 21, 2014 at 07:38:16AM +0100, Michal Simek wrote:
+>>>>> BTW: u-boot started to use SPDX-License-Identifier
+>>>>> which will be nice to start to use.
+>>>>
+>>>> I agree, feel free to start sending patches to use this type of
+>>>> identifier for drivers.
+>>>
+>>> But we probably need to add that Licenses to one location.
+>>> Documentation/Licenses?
+>>
+>> Just add to the drivers themselves, just like u-boot is doing. A simple:
+>>
+>> 	$ git grep -e SPDX-License-Identifier
+>>
+>> will tell you filename and license. Or did I misunderstand your question ?
+>
+> But for doing this it is probably necessary to have location where
+> you will place that licenses and you will explain what it is how
+> it is done by Wolfgang in this commit.
+>
+> http://git.denx.de/?p=u-boot.git;a=commitdiff;h=eca3aeb352c964bdb28b8e191d6326370245e03f
+>
+> Then yes, adding one line is enough.
+I would like to revive this thread regarding SPDX license identifiers in 
+the Linux kernel. And check how to best start / proceed with the 
+integration now.
 
-<snip>
+Greg, if you are open to patches adding this one-line SPDX license tag 
+to the source code, how should I begin with such a task in your opinion? 
+Should I add those tags for just one driver directory (e.g. 
+drivers/base/*) first? And send those patches to the list(s) for review. 
+Or do you have other suggestions on how to start with this task?
 
-> +
-> +	ret = qpnp_tm_init(chip);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "init failed\n");
-> +		goto fail;
-> +	}
-> +
-> +	chip->tz_dev = thermal_zone_of_sensor_register(&pdev->dev, 0, chip,
-> +							&qpnp_tm_sensor_ops);
-> +	if (IS_ERR(chip->tz_dev)) {
-> +		dev_err(&pdev->dev, "failed to register sensor\n");
-> +		ret = PTR_ERR(chip->tz_dev);
-> +		goto fail;
-> +	}
-> +
-> +	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, qpnp_tm_isr,
-> +					IRQF_ONESHOT, node->name, chip);
-> +	if (ret < 0)
-> +		goto unreg;
-> +
-> +	return 0;
-> +
-> +unreg:
-> +	thermal_zone_of_sensor_unregister(&pdev->dev, chip->tz_dev);
+Any comments and / or suggestions are really appreciated. Thanks!
 
-Any problem to request_irq before thermal_zone_of_sensor_register? It
-will avoid having thermal sensor unregister call.
-
-> +fail:
-> +	if (!IS_ERR(chip->adc))
-> +		iio_channel_release(chip->adc);
-> +
-> +	return ret;
-> +}
-
-<snip>
-
--- 
-regards,
-Stan
+Thanks,
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
