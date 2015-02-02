@@ -1,44 +1,189 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] mtd: nand: atmel: Rework DT representation of
- NFC/NAND
-Date: Mon, 2 Feb 2015 00:00:13 -0800
-Message-ID: <20150202080013.GD3523@norris-Latitude-E6410>
-References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/4] arm: mmp: make SOCes without DT use new timer driver
+Date: Mon, 2 Feb 2015 16:31:37 +0800
+Message-ID: <1422865899-8152-3-git-send-email-chao.xie@marvell.com>
+References: <1422865899-8152-1-git-send-email-chao.xie@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417732214-3292-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1422865899-8152-1-git-send-email-chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 04, 2014 at 11:30:10PM +0100, Boris Brezillon wrote:
-> While working on the EBI driver [1] I noticed that the relationship between
-> the NFC (NAND Flash Controller) and the NAND chip it is attached to would
-> make things harder to represent when moving the NAND node under the EBI bus
-> (another useless 'ranges' definition).
-> 
-> Actually this representation might be even more problematic if one wants
-> decide to connect two NAND chips on his sama5 based board, because the NFC
-> node is a child of the NAND chip node, and thus can only be attached to a
-> single NAND chip.
-> 
-> To address this problem the current series moves the NFC node outside of
-> the NAND chip device which then reference the NFC using the "atmel,nfc"
-> property.
-> 
-> The series does not implement multi-chip support, but at least the new
-> representation should make it possible.
+From: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-I made some comments on the DT binding. I'm not as familiar withi the
-hardware details here, so I may be off base. At any rate, the code looks
-OK, so if we settle the binding issue OK, then I'd be happy with a
-rebased version of this patch set.
+For no DT support, directly call new timer's APIs to initialize
+timer.
+It need to initialize the timer first, then initialize the clock
+event device or clock source which are based on counter.
 
-Regards,
-Brian
+Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/mach-mmp/common.h |  2 --
+ arch/arm/mach-mmp/mmp2.c   | 23 ++++++++++++++++++++++-
+ arch/arm/mach-mmp/pxa168.c | 23 ++++++++++++++++++++++-
+ arch/arm/mach-mmp/pxa910.c | 24 +++++++++++++++++++++++-
+ 4 files changed, 67 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/mach-mmp/common.h b/arch/arm/mach-mmp/common.h
+index cf445ba..015b209 100644
+--- a/arch/arm/mach-mmp/common.h
++++ b/arch/arm/mach-mmp/common.h
+@@ -1,8 +1,6 @@
+ #include <linux/reboot.h>
+ #define ARRAY_AND_SIZE(x)	(x), ARRAY_SIZE(x)
+ 
+-extern void timer_init(int irq);
+-
+ extern void __init mmp_map_io(void);
+ extern void mmp_restart(enum reboot_mode, const char *);
+ extern void __init pxa168_clk_init(void);
+diff --git a/arch/arm/mach-mmp/mmp2.c b/arch/arm/mach-mmp/mmp2.c
+index a70b553..12ba28a 100644
+--- a/arch/arm/mach-mmp/mmp2.c
++++ b/arch/arm/mach-mmp/mmp2.c
+@@ -16,12 +16,14 @@
+ #include <linux/irq.h>
+ #include <linux/irqchip/mmp.h>
+ #include <linux/platform_device.h>
++#include <linux/mmp_timer.h>
+ 
+ #include <asm/hardware/cache-tauros2.h>
+ 
+ #include <asm/mach/time.h>
+ #include <mach/addr-map.h>
+ #include <mach/regs-apbc.h>
++#include <mach/regs-timers.h>
+ #include <mach/cputype.h>
+ #include <mach/irqs.h>
+ #include <mach/dma.h>
+@@ -133,7 +135,26 @@ void __init mmp2_timer_init(void)
+ 	clk_rst = APBC_APBCLK | APBC_FNCLK | APBC_FNCLKSEL(1);
+ 	__raw_writel(clk_rst, APBC_TIMERS);
+ 
+-	timer_init(IRQ_MMP2_TIMER1);
++	/*
++	 * Make use of timer 1 which id is 0.
++	 * It has no shadow and crsr regsiters.
++	 * The fast lock is 6.5M.
++	 * apb bus is 26M.
++	 */
++	mmp_timer_init(0, TIMERS1_VIRT_BASE, 0, 6500000, 26000000);
++
++	/*
++	 * Enable counter 1 to be clock source.
++	 * The frequency is 32K.
++	 */
++	mmp_counter_clocksource_init(0, 1, 32768);
++
++	/*
++	 * Enable counter 0 to be clock event device.
++	 * The frequency is 32K.
++	 * Only one cpu and there is no broadcast timer.
++	 */
++	mmp_counter_clockevent_init(0, 0, IRQ_MMP2_TIMER1, 32768, 0, 0);
+ }
+ 
+ /* on-chip devices */
+diff --git a/arch/arm/mach-mmp/pxa168.c b/arch/arm/mach-mmp/pxa168.c
+index 144e997..bb65d8f 100644
+--- a/arch/arm/mach-mmp/pxa168.c
++++ b/arch/arm/mach-mmp/pxa168.c
+@@ -15,6 +15,7 @@
+ #include <linux/clk.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/mv_usb.h>
++#include <linux/mmp_timer.h>
+ 
+ #include <asm/mach/time.h>
+ #include <asm/system_misc.h>
+@@ -22,6 +23,7 @@
+ #include <mach/addr-map.h>
+ #include <mach/regs-apbc.h>
+ #include <mach/regs-apmu.h>
++#include <mach/regs-timers.h>
+ #include <mach/irqs.h>
+ #include <mach/dma.h>
+ #include <mach/devices.h>
+@@ -78,7 +80,26 @@ void __init pxa168_timer_init(void)
+ 	/* 3.25MHz, bus/functional clock enabled, release reset */
+ 	__raw_writel(TIMER_CLK_RST, APBC_TIMERS);
+ 
+-	timer_init(IRQ_PXA168_TIMER1);
++	/*
++	 * Make use of timer 1 which id is 0.
++	 * It has no shadow and crsr regsiters.
++	 * The fast lock is 3.25M.
++	 * apb bus is 26M.
++	 */
++	mmp_timer_init(0, TIMERS1_VIRT_BASE, 0, 3250000, 26000000);
++
++	/*
++	 * Enable counter 1 to be clock source.
++	 * The frequency is 32K.
++	 */
++	mmp_counter_clocksource_init(0, 1, 32768);
++
++	/*
++	 * Enable counter 0 to be clock event device.
++	 * The frequency is 32K.
++	 * Only one cpu and there is no broadcast timer.
++	 */
++	mmp_counter_clockevent_init(0, 0, IRQ_PXA168_TIMER1, 32768, 0, 0);
+ }
+ 
+ void pxa168_clear_keypad_wakeup(void)
+diff --git a/arch/arm/mach-mmp/pxa910.c b/arch/arm/mach-mmp/pxa910.c
+index eb57ee1..e8ae5b1 100644
+--- a/arch/arm/mach-mmp/pxa910.c
++++ b/arch/arm/mach-mmp/pxa910.c
+@@ -15,11 +15,13 @@
+ #include <linux/irq.h>
+ #include <linux/irqchip/mmp.h>
+ #include <linux/platform_device.h>
++#include <linux/mmp_timer.h>
+ 
+ #include <asm/hardware/cache-tauros2.h>
+ #include <asm/mach/time.h>
+ #include <mach/addr-map.h>
+ #include <mach/regs-apbc.h>
++#include <mach/regs-timers.h>
+ #include <mach/cputype.h>
+ #include <mach/irqs.h>
+ #include <mach/dma.h>
+@@ -114,7 +116,27 @@ void __init pxa910_timer_init(void)
+ 	__raw_writel(APBC_APBCLK | APBC_RST, APBC_TIMERS);
+ 	__raw_writel(TIMER_CLK_RST, APBC_TIMERS);
+ 
+-	timer_init(IRQ_PXA910_AP1_TIMER1);
++	/*
++	 * Make use of timer 1 which id is 0.
++	 * It has no shadow and crsr regsiters.
++	 * The fast lock is 3.25M.
++	 * apb bus is 26M.
++	 */
++	mmp_timer_init(0, TIMERS1_VIRT_BASE, 0, 3250000, 26000000);
++
++	/*
++	 * Enable counter 1 to be clock source.
++	 * The frequency is 32K.
++	 */
++	mmp_counter_clocksource_init(0, 1, 32768);
++
++	/*
++	 * Enable counter 0 to be clock event device.
++	 * The frequency is 32K.
++	 * Only one cpu and there is no broadcast timer.
++	 */
++	mmp_counter_clockevent_init(0, 0, IRQ_PXA910_AP1_TIMER1,
++				    32768, 0, 0);
+ }
+ 
+ /* on-chip devices */
+-- 
+1.8.3.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
