@@ -1,143 +1,43 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] mtd: nand: atmel: Update DT documentation after
- splitting NFC and NAND
-Date: Sun, 1 Feb 2015 23:57:37 -0800
-Message-ID: <20150202075737.GC3523@norris-Latitude-E6410>
+Subject: Re: [PATCH 0/4] mtd: nand: atmel: Rework DT representation of
+ NFC/NAND
+Date: Mon, 2 Feb 2015 00:00:13 -0800
+Message-ID: <20150202080013.GD3523@norris-Latitude-E6410>
 References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>
- <1417732214-3292-3-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1417732214-3292-3-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1417732214-3292-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-BTW, this series has a few conflicts with other things I have queued, so
-you'll need to refresh.
-
-On Thu, Dec 04, 2014 at 11:30:12PM +0100, Boris Brezillon wrote:
-> The NAND and NFC (NAND Flash Controller) were linked together with a
-> parent <-> child relationship.
+On Thu, Dec 04, 2014 at 11:30:10PM +0100, Boris Brezillon wrote:
+> While working on the EBI driver [1] I noticed that the relationship between
+> the NFC (NAND Flash Controller) and the NAND chip it is attached to would
+> make things harder to represent when moving the NAND node under the EBI bus
+> (another useless 'ranges' definition).
 > 
-> This model has several drawbacks:
-> - it does not allow for multiple NAND chip handling while the controller
->   support multi-chip (even though the driver is not ready yet)
-> - it mixes NAND partitions and NFC nodes at the same level (which is a bit
->   disturbing)
-
-I agree that this is disturbing. (FWIW, it also seems a bit disturbing
-that atmel_nand.c actually registers two different drivers and the tries
-to synchronize them; this seems like it could be handled better, but I'm
-not sure how at the moment.)
-
-> - the introduction of the EBI bus implies defining NAND chips under the
->   EBI node, and the ranges available under the EBI node should be
->   restricted to EBI address space, while the NFC references several
->   registers outside of these EBI ranges.
-
-That's an interesting bit. I've actually run across this sort of problem
-on other SoCs, where we have a relationship between two pieces of
-hardware--the NAND chip and the NAND controller--where the former might
-be on one bus (like your EBI bus, with chip selects), and the latter is
-part of the top-level MMIO register space.
-
-But can you elaborate here a bit more? Does the NAND chip actually need
-to be represented under your EBI bus?
-
-> Move the NFC node outside of the NAND node, to get a more future-proof
-> model.
-
-I'm curious if an alternative solution might work, maybe one like the
-Allwiner NAND (sunxi-nand) DT, which just reverses the roles; the 'NFC'
-is the parent of the NAND chip(s). We've seen this pattern in other
-contexts too.
-
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/mtd/atmel-nand.txt         | 46 ++++++++++++----------
->  1 file changed, 26 insertions(+), 20 deletions(-)
+> Actually this representation might be even more problematic if one wants
+> decide to connect two NAND chips on his sama5 based board, because the NFC
+> node is a child of the NAND chip node, and thus can only be attached to a
+> single NAND chip.
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> index 6edc3b6..8896850 100644
-> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> @@ -30,15 +30,19 @@ Optional properties:
->    sector size 1024.
->  - nand-bus-width : 8 or 16 bus width if not present 8
->  - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
-> -- Nand Flash Controller(NFC) is a slave driver under Atmel nand flash
-> -  - Required properties:
-> -    - compatible : "atmel,sama5d3-nfc".
-> -    - reg : should specify the address and size used for NFC command registers,
-> -            NFC registers and NFC Sram. NFC Sram address and size can be absent
-> -            if don't want to use it.
-> -    - clocks: phandle to the peripheral clock
-> -  - Optional properties:
-> -    - atmel,write-by-sram: boolean to enable NFC write by sram.
-> +- atmel,nfc: phandle referencing the NAND Flash Controller, if available.
+> To address this problem the current series moves the NFC node outside of
+> the NAND chip device which then reference the NFC using the "atmel,nfc"
+> property.
+> 
+> The series does not implement multi-chip support, but at least the new
+> representation should make it possible.
 
-So this seems to clarify one question I had: is the NAND flash
-controller required? The previous language didn't make it extremely
-clear that the NFC sub-node was optional. But it does appear your code
-makes it optional.
+I made some comments on the DT binding. I'm not as familiar withi the
+hardware details here, so I may be off base. At any rate, the code looks
+OK, so if we settle the binding issue OK, then I'd be happy with a
+rebased version of this patch set.
 
-> +
-> +The NAND Flash Controller (NFC) is an advanced NAND controller and should be
-> +used in conjunction with the NAND flash device.
-> +Required properties:
-> + - compatible : "atmel,sama5d3-nfc".
-> + - reg : should specify the address and size used for NFC command registers,
-> +         NFC registers and NFC Sram. NFC Sram address and size can be absent
-> +         if you don't want to use it.
-> + - clocks: phandle to the peripheral clock
-> +
-> +Optional properties:
-> + - atmel,write-by-sram: boolean to enable NFC write by sram.
->  
->  Examples:
->  nand0: nand@40000000,0 {
-> @@ -89,21 +93,23 @@ nand0: nand@40000000 {
->  };
->  
->  /* for NFC supported chips */
-> +nfc: nfc@70000000 {
-> +	compatible = "atmel,sama5d3-nfc";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	clocks = <&hsmc_clk>
-> +	reg = <
-> +		0x70000000 0x10000000	/* NFC Command Registers */
-> +		0xffffc000 0x00000070	/* NFC HSMC regs */
-> +		0x00200000 0x00100000	/* NFC SRAM banks */
-> +	>;
-> +};
-> +
->  nand0: nand@40000000 {
->  	compatible = "atmel,at91rm9200-nand";
->  	#address-cells = <1>;
->  	#size-cells = <1>;
->  	ranges;
-> +	atmel,nfc = <&nfc>;
->          ...
-> -        nfc@70000000 {
-> -		compatible = "atmel,sama5d3-nfc";
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		clocks = <&hsmc_clk>
-> -		reg = <
-> -			0x70000000 0x10000000	/* NFC Command Registers */
-> -			0xffffc000 0x00000070	/* NFC HSMC regs */
-> -			0x00200000 0x00100000	/* NFC SRAM banks */
-> -		>;
-> -	};
->  };
-
-
+Regards,
 Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
