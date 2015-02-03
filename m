@@ -1,71 +1,142 @@
 From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v3 3/4] pinctrl: cygnus: add initial IOMUX driver support
-Date: Mon, 2 Feb 2015 18:01:33 -0800
-Message-ID: <1422928894-20716-4-git-send-email-rjui@broadcom.com>
+Subject: [PATCH v3 1/4] pinctrl: bcm: consolidate Broadcom pinctrl drivers
+Date: Mon, 2 Feb 2015 18:01:31 -0800
+Message-ID: <1422928894-20716-2-git-send-email-rjui@broadcom.com>
 References: <Ray Jui <rjui@broadcom.com>
  <1422928894-20716-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1422928894-20716-1-git-send-email-rjui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>
 Cc: Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the initial driver support for the Broadcom Cygnus IOMUX
-controller. The Cygnus IOMUX controller supports group based mux
-configuration but allows certain pins to be muxed to GPIO individually
+Consolidate Broadcom pinctrl drivers into drivers/pinctrl/bcm/*
 
 Signed-off-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
 ---
- drivers/pinctrl/bcm/Kconfig              |   13 +
- drivers/pinctrl/bcm/Makefile             |    5 +-
- drivers/pinctrl/bcm/pinctrl-cygnus-mux.c | 1087 ++++++++++++++++++++++++++++++
- 3 files changed, 1103 insertions(+), 2 deletions(-)
- create mode 100644 drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
+ drivers/pinctrl/Kconfig                |   19 +-
+ drivers/pinctrl/Makefile               |    4 +-
+ drivers/pinctrl/bcm/Kconfig            |   21 +
+ drivers/pinctrl/bcm/Makefile           |    4 +
+ drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 1455 ++++++++++++++++++++++++++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c  | 1072 +++++++++++++++++++++++
+ drivers/pinctrl/pinctrl-bcm281xx.c     | 1455 --------------------------------
+ drivers/pinctrl/pinctrl-bcm2835.c      | 1072 -----------------------
+ 8 files changed, 2555 insertions(+), 2547 deletions(-)
+ create mode 100644 drivers/pinctrl/bcm/Kconfig
+ create mode 100644 drivers/pinctrl/bcm/Makefile
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm2835.c
+ delete mode 100644 drivers/pinctrl/pinctrl-bcm281xx.c
+ delete mode 100644 drivers/pinctrl/pinctrl-bcm2835.c
 
-diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-index bc6d048..eb13201 100644
---- a/drivers/pinctrl/bcm/Kconfig
-+++ b/drivers/pinctrl/bcm/Kconfig
-@@ -19,3 +19,16 @@ config PINCTRL_BCM2835
- 	bool
- 	select PINMUX
- 	select PINCONF
-+
-+config PINCTRL_CYGNUS_MUX
-+	bool "Broadcom Cygnus IOMUX driver"
-+	depends on (ARCH_BCM_CYGNUS || COMPILE_TEST)
-+	select PINMUX
-+	select GENERIC_PINCONF
-+	default ARCH_BCM_CYGNUS
-+	help
-+	  Say yes here to enable the Broadcom Cygnus IOMUX driver.
-+
-+	  The Broadcom Cygnus IOMUX driver supports group based IOMUX
-+	  configuration, with the exception that certain individual pins
-+	  can be overrided to GPIO function
-diff --git a/drivers/pinctrl/bcm/Makefile b/drivers/pinctrl/bcm/Makefile
-index 7ba80a3..bb6beb6 100644
---- a/drivers/pinctrl/bcm/Makefile
-+++ b/drivers/pinctrl/bcm/Makefile
-@@ -1,4 +1,5 @@
- # Broadcom pinctrl support
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index d014f22..6cfdad7 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -67,24 +67,6 @@ config PINCTRL_AT91
+ 	help
+ 	  Say Y here to enable the at91 pinctrl driver
  
--obj-$(CONFIG_PINCTRL_BCM281XX)	+= pinctrl-bcm281xx.o
+-config PINCTRL_BCM2835
+-	bool
+-	select PINMUX
+-	select PINCONF
+-
+-config PINCTRL_BCM281XX
+-	bool "Broadcom BCM281xx pinctrl driver"
+-	depends on OF && (ARCH_BCM_MOBILE || COMPILE_TEST)
+-	select PINMUX
+-	select PINCONF
+-	select GENERIC_PINCONF
+-	select REGMAP_MMIO
+-	help
+-	  Say Y here to support Broadcom BCM281xx pinctrl driver, which is used
+-	  for the BCM281xx SoC family, including BCM11130, BCM11140, BCM11351,
+-	  BCM28145, and BCM28155 SoCs.  This driver requires the pinctrl
+-	  framework.  GPIO is provided by a separate GPIO driver.
+-
+ config PINCTRL_LANTIQ
+ 	bool
+ 	depends on LANTIQ
+@@ -191,6 +173,7 @@ config PINCTRL_PALMAS
+ 	  open drain configuration for the Palmas series devices like
+ 	  TPS65913, TPS80036 etc.
+ 
++source "drivers/pinctrl/bcm/Kconfig"
+ source "drivers/pinctrl/berlin/Kconfig"
+ source "drivers/pinctrl/freescale/Kconfig"
+ source "drivers/pinctrl/intel/Kconfig"
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index c030b3d..c018bbf 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -14,8 +14,6 @@ obj-$(CONFIG_PINCTRL_AS3722)	+= pinctrl-as3722.o
+ obj-$(CONFIG_PINCTRL_BF54x)	+= pinctrl-adi2-bf54x.o
+ obj-$(CONFIG_PINCTRL_BF60x)	+= pinctrl-adi2-bf60x.o
+ obj-$(CONFIG_PINCTRL_AT91)	+= pinctrl-at91.o
 -obj-$(CONFIG_PINCTRL_BCM2835)	+= pinctrl-bcm2835.o
-+obj-$(CONFIG_PINCTRL_BCM281XX)		+= pinctrl-bcm281xx.o
-+obj-$(CONFIG_PINCTRL_BCM2835)		+= pinctrl-bcm2835.o
-+obj-$(CONFIG_PINCTRL_CYGNUS_MUX)	+= pinctrl-cygnus-mux.o
-diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
+-obj-$(CONFIG_PINCTRL_BCM281XX)	+= pinctrl-bcm281xx.o
+ obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
+ obj-$(CONFIG_PINCTRL_PALMAS)	+= pinctrl-palmas.o
+ obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
+@@ -36,6 +34,8 @@ obj-$(CONFIG_PINCTRL_LANTIQ)	+= pinctrl-lantiq.o
+ obj-$(CONFIG_PINCTRL_TB10X)	+= pinctrl-tb10x.o
+ obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
+ 
++obj-$(CONFIG_ARCH_BCM)		+= bcm/
++obj-$(CONFIG_ARCH_BCM2835)	+= bcm/
+ obj-$(CONFIG_ARCH_BERLIN)	+= berlin/
+ obj-y				+= freescale/
+ obj-$(CONFIG_X86)		+= intel/
+diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
 new file mode 100644
-index 0000000..33565b4
+index 0000000..bc6d048
 --- /dev/null
-+++ b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-@@ -0,0 +1,1087 @@
-+/* Copyright (C) 2014-2015 Broadcom Corporation
++++ b/drivers/pinctrl/bcm/Kconfig
+@@ -0,0 +1,21 @@
++#
++# Broadcom pinctrl drivers
++#
++
++config PINCTRL_BCM281XX
++	bool "Broadcom BCM281xx pinctrl driver"
++	depends on OF && (ARCH_BCM_MOBILE || COMPILE_TEST)
++	select PINMUX
++	select PINCONF
++	select GENERIC_PINCONF
++	select REGMAP_MMIO
++	help
++	  Say Y here to support Broadcom BCM281xx pinctrl driver, which is used
++	  for the BCM281xx SoC family, including BCM11130, BCM11140, BCM11351,
++	  BCM28145, and BCM28155 SoCs.  This driver requires the pinctrl
++	  framework.  GPIO is provided by a separate GPIO driver.
++
++config PINCTRL_BCM2835
++	bool
++	select PINMUX
++	select PINCONF
+diff --git a/drivers/pinctrl/bcm/Makefile b/drivers/pinctrl/bcm/Makefile
+new file mode 100644
+index 0000000..7ba80a3
+--- /dev/null
++++ b/drivers/pinctrl/bcm/Makefile
+@@ -0,0 +1,4 @@
++# Broadcom pinctrl support
++
++obj-$(CONFIG_PINCTRL_BCM281XX)	+= pinctrl-bcm281xx.o
++obj-$(CONFIG_PINCTRL_BCM2835)	+= pinctrl-bcm2835.o
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+new file mode 100644
+index 0000000..73d99076
+--- /dev/null
++++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+@@ -0,0 +1,1455 @@
++/*
++ * Copyright (C) 2013 Broadcom Corporation
 + *
 + * This program is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU General Public License as
@@ -75,1083 +146,5066 @@ index 0000000..33565b4
 + * kind, whether express or implied; without even the implied warranty
 + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
-+ *
-+ * This file contains the Cygnus IOMUX driver that supports group based PINMUX
-+ * configuration. Although PINMUX configuration is mainly group based, the
-+ * Cygnus IOMUX controller allows certain pins to be individually muxed to GPIO
-+ * function, and therefore be controlled by the Cygnus ASIU GPIO controller
 + */
-+
 +#include <linux/err.h>
 +#include <linux/io.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/slab.h>
 +#include <linux/platform_device.h>
 +#include <linux/pinctrl/pinctrl.h>
 +#include <linux/pinctrl/pinmux.h>
 +#include <linux/pinctrl/pinconf.h>
 +#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
 +#include "../core.h"
 +#include "../pinctrl-utils.h"
 +
-+#define CYGNUS_NUM_IOMUX_REGS     8
-+#define CYGNUS_NUM_MUX_PER_REG    8
-+#define CYGNUS_NUM_IOMUX          (CYGNUS_NUM_IOMUX_REGS * \
-+				   CYGNUS_NUM_MUX_PER_REG)
++/* BCM281XX Pin Control Registers Definitions */
 +
-+/*
-+ * Cygnus IOMUX register description
-+ *
-+ * @offset: register offset for mux configuration of a group
-+ * @shift: bit shift for mux configuration of a group
-+ * @alt: alternate function to set to
++/* Function Select bits are the same for all pin control registers */
++#define BCM281XX_PIN_REG_F_SEL_MASK		0x0700
++#define BCM281XX_PIN_REG_F_SEL_SHIFT		8
++
++/* Standard pin register */
++#define BCM281XX_STD_PIN_REG_DRV_STR_MASK	0x0007
++#define BCM281XX_STD_PIN_REG_DRV_STR_SHIFT	0
++#define BCM281XX_STD_PIN_REG_INPUT_DIS_MASK	0x0008
++#define BCM281XX_STD_PIN_REG_INPUT_DIS_SHIFT	3
++#define BCM281XX_STD_PIN_REG_SLEW_MASK		0x0010
++#define BCM281XX_STD_PIN_REG_SLEW_SHIFT		4
++#define BCM281XX_STD_PIN_REG_PULL_UP_MASK	0x0020
++#define BCM281XX_STD_PIN_REG_PULL_UP_SHIFT	5
++#define BCM281XX_STD_PIN_REG_PULL_DN_MASK	0x0040
++#define BCM281XX_STD_PIN_REG_PULL_DN_SHIFT	6
++#define BCM281XX_STD_PIN_REG_HYST_MASK		0x0080
++#define BCM281XX_STD_PIN_REG_HYST_SHIFT		7
++
++/* I2C pin register */
++#define BCM281XX_I2C_PIN_REG_INPUT_DIS_MASK	0x0004
++#define BCM281XX_I2C_PIN_REG_INPUT_DIS_SHIFT	2
++#define BCM281XX_I2C_PIN_REG_SLEW_MASK		0x0008
++#define BCM281XX_I2C_PIN_REG_SLEW_SHIFT		3
++#define BCM281XX_I2C_PIN_REG_PULL_UP_STR_MASK	0x0070
++#define BCM281XX_I2C_PIN_REG_PULL_UP_STR_SHIFT	4
++
++/* HDMI pin register */
++#define BCM281XX_HDMI_PIN_REG_INPUT_DIS_MASK	0x0008
++#define BCM281XX_HDMI_PIN_REG_INPUT_DIS_SHIFT	3
++#define BCM281XX_HDMI_PIN_REG_MODE_MASK		0x0010
++#define BCM281XX_HDMI_PIN_REG_MODE_SHIFT	4
++
++/**
++ * bcm281xx_pin_type - types of pin register
 + */
-+struct cygnus_mux {
-+	unsigned int offset;
-+	unsigned int shift;
-+	unsigned int alt;
++enum bcm281xx_pin_type {
++	BCM281XX_PIN_TYPE_UNKNOWN = 0,
++	BCM281XX_PIN_TYPE_STD,
++	BCM281XX_PIN_TYPE_I2C,
++	BCM281XX_PIN_TYPE_HDMI,
 +};
 +
-+/*
-+ * Keep track of Cygnus IOMUX configuration and prevent double configuration
-+ *
-+ * @cygnus_mux: Cygnus IOMUX register description
-+ * @is_configured: flag to indicate whether a mux setting has already been
-+ * configured
-+ */
-+struct cygnus_mux_log {
-+	struct cygnus_mux mux;
-+	bool is_configured;
-+};
++static enum bcm281xx_pin_type std_pin = BCM281XX_PIN_TYPE_STD;
++static enum bcm281xx_pin_type i2c_pin = BCM281XX_PIN_TYPE_I2C;
++static enum bcm281xx_pin_type hdmi_pin = BCM281XX_PIN_TYPE_HDMI;
 +
-+/*
-+ * Group based IOMUX configuration
-+ *
-+ * @name: name of the group
-+ * @pins: array of pins used by this group
-+ * @num_pins: total number of pins used by this group
-+ * @mux: Cygnus group based IOMUX configuration
++/**
++ * bcm281xx_pin_function- define pin function
 + */
-+struct cygnus_pin_group {
-+	const char *name;
-+	const unsigned *pins;
-+	const unsigned num_pins;
-+	const struct cygnus_mux mux;
-+};
-+
-+/*
-+ * Cygnus mux function and supported pin groups
-+ *
-+ * @name: name of the function
-+ * @groups: array of groups that can be supported by this function
-+ * @num_groups: total number of groups that can be supported by this function
-+ */
-+struct cygnus_pin_function {
++struct bcm281xx_pin_function {
 +	const char *name;
 +	const char * const *groups;
-+	const unsigned num_groups;
++	const unsigned ngroups;
++};
++
++/**
++ * bcm281xx_pinctrl_data - Broadcom-specific pinctrl data
++ * @reg_base - base of pinctrl registers
++ */
++struct bcm281xx_pinctrl_data {
++	void __iomem *reg_base;
++
++	/* List of all pins */
++	const struct pinctrl_pin_desc *pins;
++	const unsigned npins;
++
++	const struct bcm281xx_pin_function *functions;
++	const unsigned nfunctions;
++
++	struct regmap *regmap;
 +};
 +
 +/*
-+ * Cygnus IOMUX pinctrl core
-+ *
-+ * @pctl: pointer to pinctrl_dev
-+ * @dev: pointer to device
-+ * @base0: first I/O register base of the Cygnus IOMUX controller
-+ * @base1: second I/O register base
-+ * @groups: pointer to array of groups
-+ * @num_groups: total number of groups
-+ * @functions: pointer to array of functions
-+ * @num_functions: total number of functions
-+ * @mux_log: pointer to the array of mux logs
-+ * @lock: lock to protect register access
++ * Pin number definition.  The order here must be the same as defined in the
++ * PADCTRLREG block in the RDB.
 + */
-+struct cygnus_pinctrl {
-+	struct pinctrl_dev *pctl;
-+	struct device *dev;
-+	void __iomem *base0;
-+	void __iomem *base1;
++#define BCM281XX_PIN_ADCSYNC		0
++#define BCM281XX_PIN_BAT_RM		1
++#define BCM281XX_PIN_BSC1_SCL		2
++#define BCM281XX_PIN_BSC1_SDA		3
++#define BCM281XX_PIN_BSC2_SCL		4
++#define BCM281XX_PIN_BSC2_SDA		5
++#define BCM281XX_PIN_CLASSGPWR		6
++#define BCM281XX_PIN_CLK_CX8		7
++#define BCM281XX_PIN_CLKOUT_0		8
++#define BCM281XX_PIN_CLKOUT_1		9
++#define BCM281XX_PIN_CLKOUT_2		10
++#define BCM281XX_PIN_CLKOUT_3		11
++#define BCM281XX_PIN_CLKREQ_IN_0	12
++#define BCM281XX_PIN_CLKREQ_IN_1	13
++#define BCM281XX_PIN_CWS_SYS_REQ1	14
++#define BCM281XX_PIN_CWS_SYS_REQ2	15
++#define BCM281XX_PIN_CWS_SYS_REQ3	16
++#define BCM281XX_PIN_DIGMIC1_CLK	17
++#define BCM281XX_PIN_DIGMIC1_DQ		18
++#define BCM281XX_PIN_DIGMIC2_CLK	19
++#define BCM281XX_PIN_DIGMIC2_DQ		20
++#define BCM281XX_PIN_GPEN13		21
++#define BCM281XX_PIN_GPEN14		22
++#define BCM281XX_PIN_GPEN15		23
++#define BCM281XX_PIN_GPIO00		24
++#define BCM281XX_PIN_GPIO01		25
++#define BCM281XX_PIN_GPIO02		26
++#define BCM281XX_PIN_GPIO03		27
++#define BCM281XX_PIN_GPIO04		28
++#define BCM281XX_PIN_GPIO05		29
++#define BCM281XX_PIN_GPIO06		30
++#define BCM281XX_PIN_GPIO07		31
++#define BCM281XX_PIN_GPIO08		32
++#define BCM281XX_PIN_GPIO09		33
++#define BCM281XX_PIN_GPIO10		34
++#define BCM281XX_PIN_GPIO11		35
++#define BCM281XX_PIN_GPIO12		36
++#define BCM281XX_PIN_GPIO13		37
++#define BCM281XX_PIN_GPIO14		38
++#define BCM281XX_PIN_GPS_PABLANK	39
++#define BCM281XX_PIN_GPS_TMARK		40
++#define BCM281XX_PIN_HDMI_SCL		41
++#define BCM281XX_PIN_HDMI_SDA		42
++#define BCM281XX_PIN_IC_DM		43
++#define BCM281XX_PIN_IC_DP		44
++#define BCM281XX_PIN_KP_COL_IP_0	45
++#define BCM281XX_PIN_KP_COL_IP_1	46
++#define BCM281XX_PIN_KP_COL_IP_2	47
++#define BCM281XX_PIN_KP_COL_IP_3	48
++#define BCM281XX_PIN_KP_ROW_OP_0	49
++#define BCM281XX_PIN_KP_ROW_OP_1	50
++#define BCM281XX_PIN_KP_ROW_OP_2	51
++#define BCM281XX_PIN_KP_ROW_OP_3	52
++#define BCM281XX_PIN_LCD_B_0		53
++#define BCM281XX_PIN_LCD_B_1		54
++#define BCM281XX_PIN_LCD_B_2		55
++#define BCM281XX_PIN_LCD_B_3		56
++#define BCM281XX_PIN_LCD_B_4		57
++#define BCM281XX_PIN_LCD_B_5		58
++#define BCM281XX_PIN_LCD_B_6		59
++#define BCM281XX_PIN_LCD_B_7		60
++#define BCM281XX_PIN_LCD_G_0		61
++#define BCM281XX_PIN_LCD_G_1		62
++#define BCM281XX_PIN_LCD_G_2		63
++#define BCM281XX_PIN_LCD_G_3		64
++#define BCM281XX_PIN_LCD_G_4		65
++#define BCM281XX_PIN_LCD_G_5		66
++#define BCM281XX_PIN_LCD_G_6		67
++#define BCM281XX_PIN_LCD_G_7		68
++#define BCM281XX_PIN_LCD_HSYNC		69
++#define BCM281XX_PIN_LCD_OE		70
++#define BCM281XX_PIN_LCD_PCLK		71
++#define BCM281XX_PIN_LCD_R_0		72
++#define BCM281XX_PIN_LCD_R_1		73
++#define BCM281XX_PIN_LCD_R_2		74
++#define BCM281XX_PIN_LCD_R_3		75
++#define BCM281XX_PIN_LCD_R_4		76
++#define BCM281XX_PIN_LCD_R_5		77
++#define BCM281XX_PIN_LCD_R_6		78
++#define BCM281XX_PIN_LCD_R_7		79
++#define BCM281XX_PIN_LCD_VSYNC		80
++#define BCM281XX_PIN_MDMGPIO0		81
++#define BCM281XX_PIN_MDMGPIO1		82
++#define BCM281XX_PIN_MDMGPIO2		83
++#define BCM281XX_PIN_MDMGPIO3		84
++#define BCM281XX_PIN_MDMGPIO4		85
++#define BCM281XX_PIN_MDMGPIO5		86
++#define BCM281XX_PIN_MDMGPIO6		87
++#define BCM281XX_PIN_MDMGPIO7		88
++#define BCM281XX_PIN_MDMGPIO8		89
++#define BCM281XX_PIN_MPHI_DATA_0	90
++#define BCM281XX_PIN_MPHI_DATA_1	91
++#define BCM281XX_PIN_MPHI_DATA_2	92
++#define BCM281XX_PIN_MPHI_DATA_3	93
++#define BCM281XX_PIN_MPHI_DATA_4	94
++#define BCM281XX_PIN_MPHI_DATA_5	95
++#define BCM281XX_PIN_MPHI_DATA_6	96
++#define BCM281XX_PIN_MPHI_DATA_7	97
++#define BCM281XX_PIN_MPHI_DATA_8	98
++#define BCM281XX_PIN_MPHI_DATA_9	99
++#define BCM281XX_PIN_MPHI_DATA_10	100
++#define BCM281XX_PIN_MPHI_DATA_11	101
++#define BCM281XX_PIN_MPHI_DATA_12	102
++#define BCM281XX_PIN_MPHI_DATA_13	103
++#define BCM281XX_PIN_MPHI_DATA_14	104
++#define BCM281XX_PIN_MPHI_DATA_15	105
++#define BCM281XX_PIN_MPHI_HA0		106
++#define BCM281XX_PIN_MPHI_HAT0		107
++#define BCM281XX_PIN_MPHI_HAT1		108
++#define BCM281XX_PIN_MPHI_HCE0_N	109
++#define BCM281XX_PIN_MPHI_HCE1_N	110
++#define BCM281XX_PIN_MPHI_HRD_N		111
++#define BCM281XX_PIN_MPHI_HWR_N		112
++#define BCM281XX_PIN_MPHI_RUN0		113
++#define BCM281XX_PIN_MPHI_RUN1		114
++#define BCM281XX_PIN_MTX_SCAN_CLK	115
++#define BCM281XX_PIN_MTX_SCAN_DATA	116
++#define BCM281XX_PIN_NAND_AD_0		117
++#define BCM281XX_PIN_NAND_AD_1		118
++#define BCM281XX_PIN_NAND_AD_2		119
++#define BCM281XX_PIN_NAND_AD_3		120
++#define BCM281XX_PIN_NAND_AD_4		121
++#define BCM281XX_PIN_NAND_AD_5		122
++#define BCM281XX_PIN_NAND_AD_6		123
++#define BCM281XX_PIN_NAND_AD_7		124
++#define BCM281XX_PIN_NAND_ALE		125
++#define BCM281XX_PIN_NAND_CEN_0		126
++#define BCM281XX_PIN_NAND_CEN_1		127
++#define BCM281XX_PIN_NAND_CLE		128
++#define BCM281XX_PIN_NAND_OEN		129
++#define BCM281XX_PIN_NAND_RDY_0		130
++#define BCM281XX_PIN_NAND_RDY_1		131
++#define BCM281XX_PIN_NAND_WEN		132
++#define BCM281XX_PIN_NAND_WP		133
++#define BCM281XX_PIN_PC1		134
++#define BCM281XX_PIN_PC2		135
++#define BCM281XX_PIN_PMU_INT		136
++#define BCM281XX_PIN_PMU_SCL		137
++#define BCM281XX_PIN_PMU_SDA		138
++#define BCM281XX_PIN_RFST2G_MTSLOTEN3G	139
++#define BCM281XX_PIN_RGMII_0_RX_CTL	140
++#define BCM281XX_PIN_RGMII_0_RXC	141
++#define BCM281XX_PIN_RGMII_0_RXD_0	142
++#define BCM281XX_PIN_RGMII_0_RXD_1	143
++#define BCM281XX_PIN_RGMII_0_RXD_2	144
++#define BCM281XX_PIN_RGMII_0_RXD_3	145
++#define BCM281XX_PIN_RGMII_0_TX_CTL	146
++#define BCM281XX_PIN_RGMII_0_TXC	147
++#define BCM281XX_PIN_RGMII_0_TXD_0	148
++#define BCM281XX_PIN_RGMII_0_TXD_1	149
++#define BCM281XX_PIN_RGMII_0_TXD_2	150
++#define BCM281XX_PIN_RGMII_0_TXD_3	151
++#define BCM281XX_PIN_RGMII_1_RX_CTL	152
++#define BCM281XX_PIN_RGMII_1_RXC	153
++#define BCM281XX_PIN_RGMII_1_RXD_0	154
++#define BCM281XX_PIN_RGMII_1_RXD_1	155
++#define BCM281XX_PIN_RGMII_1_RXD_2	156
++#define BCM281XX_PIN_RGMII_1_RXD_3	157
++#define BCM281XX_PIN_RGMII_1_TX_CTL	158
++#define BCM281XX_PIN_RGMII_1_TXC	159
++#define BCM281XX_PIN_RGMII_1_TXD_0	160
++#define BCM281XX_PIN_RGMII_1_TXD_1	161
++#define BCM281XX_PIN_RGMII_1_TXD_2	162
++#define BCM281XX_PIN_RGMII_1_TXD_3	163
++#define BCM281XX_PIN_RGMII_GPIO_0	164
++#define BCM281XX_PIN_RGMII_GPIO_1	165
++#define BCM281XX_PIN_RGMII_GPIO_2	166
++#define BCM281XX_PIN_RGMII_GPIO_3	167
++#define BCM281XX_PIN_RTXDATA2G_TXDATA3G1	168
++#define BCM281XX_PIN_RTXEN2G_TXDATA3G2	169
++#define BCM281XX_PIN_RXDATA3G0		170
++#define BCM281XX_PIN_RXDATA3G1		171
++#define BCM281XX_PIN_RXDATA3G2		172
++#define BCM281XX_PIN_SDIO1_CLK		173
++#define BCM281XX_PIN_SDIO1_CMD		174
++#define BCM281XX_PIN_SDIO1_DATA_0	175
++#define BCM281XX_PIN_SDIO1_DATA_1	176
++#define BCM281XX_PIN_SDIO1_DATA_2	177
++#define BCM281XX_PIN_SDIO1_DATA_3	178
++#define BCM281XX_PIN_SDIO4_CLK		179
++#define BCM281XX_PIN_SDIO4_CMD		180
++#define BCM281XX_PIN_SDIO4_DATA_0	181
++#define BCM281XX_PIN_SDIO4_DATA_1	182
++#define BCM281XX_PIN_SDIO4_DATA_2	183
++#define BCM281XX_PIN_SDIO4_DATA_3	184
++#define BCM281XX_PIN_SIM_CLK		185
++#define BCM281XX_PIN_SIM_DATA		186
++#define BCM281XX_PIN_SIM_DET		187
++#define BCM281XX_PIN_SIM_RESETN		188
++#define BCM281XX_PIN_SIM2_CLK		189
++#define BCM281XX_PIN_SIM2_DATA		190
++#define BCM281XX_PIN_SIM2_DET		191
++#define BCM281XX_PIN_SIM2_RESETN	192
++#define BCM281XX_PIN_SRI_C		193
++#define BCM281XX_PIN_SRI_D		194
++#define BCM281XX_PIN_SRI_E		195
++#define BCM281XX_PIN_SSP_EXTCLK		196
++#define BCM281XX_PIN_SSP0_CLK		197
++#define BCM281XX_PIN_SSP0_FS		198
++#define BCM281XX_PIN_SSP0_RXD		199
++#define BCM281XX_PIN_SSP0_TXD		200
++#define BCM281XX_PIN_SSP2_CLK		201
++#define BCM281XX_PIN_SSP2_FS_0		202
++#define BCM281XX_PIN_SSP2_FS_1		203
++#define BCM281XX_PIN_SSP2_FS_2		204
++#define BCM281XX_PIN_SSP2_FS_3		205
++#define BCM281XX_PIN_SSP2_RXD_0		206
++#define BCM281XX_PIN_SSP2_RXD_1		207
++#define BCM281XX_PIN_SSP2_TXD_0		208
++#define BCM281XX_PIN_SSP2_TXD_1		209
++#define BCM281XX_PIN_SSP3_CLK		210
++#define BCM281XX_PIN_SSP3_FS		211
++#define BCM281XX_PIN_SSP3_RXD		212
++#define BCM281XX_PIN_SSP3_TXD		213
++#define BCM281XX_PIN_SSP4_CLK		214
++#define BCM281XX_PIN_SSP4_FS		215
++#define BCM281XX_PIN_SSP4_RXD		216
++#define BCM281XX_PIN_SSP4_TXD		217
++#define BCM281XX_PIN_SSP5_CLK		218
++#define BCM281XX_PIN_SSP5_FS		219
++#define BCM281XX_PIN_SSP5_RXD		220
++#define BCM281XX_PIN_SSP5_TXD		221
++#define BCM281XX_PIN_SSP6_CLK		222
++#define BCM281XX_PIN_SSP6_FS		223
++#define BCM281XX_PIN_SSP6_RXD		224
++#define BCM281XX_PIN_SSP6_TXD		225
++#define BCM281XX_PIN_STAT_1		226
++#define BCM281XX_PIN_STAT_2		227
++#define BCM281XX_PIN_SYSCLKEN		228
++#define BCM281XX_PIN_TRACECLK		229
++#define BCM281XX_PIN_TRACEDT00		230
++#define BCM281XX_PIN_TRACEDT01		231
++#define BCM281XX_PIN_TRACEDT02		232
++#define BCM281XX_PIN_TRACEDT03		233
++#define BCM281XX_PIN_TRACEDT04		234
++#define BCM281XX_PIN_TRACEDT05		235
++#define BCM281XX_PIN_TRACEDT06		236
++#define BCM281XX_PIN_TRACEDT07		237
++#define BCM281XX_PIN_TRACEDT08		238
++#define BCM281XX_PIN_TRACEDT09		239
++#define BCM281XX_PIN_TRACEDT10		240
++#define BCM281XX_PIN_TRACEDT11		241
++#define BCM281XX_PIN_TRACEDT12		242
++#define BCM281XX_PIN_TRACEDT13		243
++#define BCM281XX_PIN_TRACEDT14		244
++#define BCM281XX_PIN_TRACEDT15		245
++#define BCM281XX_PIN_TXDATA3G0		246
++#define BCM281XX_PIN_TXPWRIND		247
++#define BCM281XX_PIN_UARTB1_UCTS	248
++#define BCM281XX_PIN_UARTB1_URTS	249
++#define BCM281XX_PIN_UARTB1_URXD	250
++#define BCM281XX_PIN_UARTB1_UTXD	251
++#define BCM281XX_PIN_UARTB2_URXD	252
++#define BCM281XX_PIN_UARTB2_UTXD	253
++#define BCM281XX_PIN_UARTB3_UCTS	254
++#define BCM281XX_PIN_UARTB3_URTS	255
++#define BCM281XX_PIN_UARTB3_URXD	256
++#define BCM281XX_PIN_UARTB3_UTXD	257
++#define BCM281XX_PIN_UARTB4_UCTS	258
++#define BCM281XX_PIN_UARTB4_URTS	259
++#define BCM281XX_PIN_UARTB4_URXD	260
++#define BCM281XX_PIN_UARTB4_UTXD	261
++#define BCM281XX_PIN_VC_CAM1_SCL	262
++#define BCM281XX_PIN_VC_CAM1_SDA	263
++#define BCM281XX_PIN_VC_CAM2_SCL	264
++#define BCM281XX_PIN_VC_CAM2_SDA	265
++#define BCM281XX_PIN_VC_CAM3_SCL	266
++#define BCM281XX_PIN_VC_CAM3_SDA	267
 +
-+	const struct cygnus_pin_group *groups;
-+	unsigned num_groups;
-+
-+	const struct cygnus_pin_function *functions;
-+	unsigned num_functions;
-+
-+	struct cygnus_mux_log *mux_log;
-+
-+	spinlock_t lock;
-+};
++#define BCM281XX_PIN_DESC(a, b, c) \
++	{ .number = a, .name = b, .drv_data = &c##_pin }
 +
 +/*
-+ * Certain pins can be individually muxed to GPIO function
-+ *
-+ * @is_supported: flag to indicate GPIO mux is supported for this pin
-+ * @offset: register offset for GPIO mux override of a pin
-+ * @shift: bit shift for GPIO mux override of a pin
++ * Pin description definition.  The order here must be the same as defined in
++ * the PADCTRLREG block in the RDB, since the pin number is used as an index
++ * into this array.
 + */
-+struct cygnus_gpio_mux {
-+	int is_supported;
-+	unsigned int offset;
-+	unsigned int shift;
++static const struct pinctrl_pin_desc bcm281xx_pinctrl_pins[] = {
++	BCM281XX_PIN_DESC(BCM281XX_PIN_ADCSYNC, "adcsync", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BAT_RM, "bat_rm", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC1_SCL, "bsc1_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC1_SDA, "bsc1_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC2_SCL, "bsc2_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC2_SDA, "bsc2_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLASSGPWR, "classgpwr", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLK_CX8, "clk_cx8", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_0, "clkout_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_1, "clkout_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_2, "clkout_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_3, "clkout_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKREQ_IN_0, "clkreq_in_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKREQ_IN_1, "clkreq_in_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CWS_SYS_REQ1, "cws_sys_req1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CWS_SYS_REQ2, "cws_sys_req2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CWS_SYS_REQ3, "cws_sys_req3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC1_CLK, "digmic1_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC1_DQ, "digmic1_dq", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC2_CLK, "digmic2_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC2_DQ, "digmic2_dq", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPEN13, "gpen13", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPEN14, "gpen14", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPEN15, "gpen15", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO00, "gpio00", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO01, "gpio01", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO02, "gpio02", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO03, "gpio03", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO04, "gpio04", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO05, "gpio05", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO06, "gpio06", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO07, "gpio07", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO08, "gpio08", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO09, "gpio09", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO10, "gpio10", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO11, "gpio11", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO12, "gpio12", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO13, "gpio13", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO14, "gpio14", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPS_PABLANK, "gps_pablank", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPS_TMARK, "gps_tmark", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_HDMI_SCL, "hdmi_scl", hdmi),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_HDMI_SDA, "hdmi_sda", hdmi),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_IC_DM, "ic_dm", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_IC_DP, "ic_dp", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_0, "kp_col_ip_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_1, "kp_col_ip_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_2, "kp_col_ip_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_3, "kp_col_ip_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_0, "kp_row_op_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_1, "kp_row_op_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_2, "kp_row_op_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_3, "kp_row_op_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_0, "lcd_b_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_1, "lcd_b_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_2, "lcd_b_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_3, "lcd_b_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_4, "lcd_b_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_5, "lcd_b_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_6, "lcd_b_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_7, "lcd_b_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_0, "lcd_g_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_1, "lcd_g_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_2, "lcd_g_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_3, "lcd_g_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_4, "lcd_g_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_5, "lcd_g_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_6, "lcd_g_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_7, "lcd_g_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_HSYNC, "lcd_hsync", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_OE, "lcd_oe", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_PCLK, "lcd_pclk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_0, "lcd_r_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_1, "lcd_r_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_2, "lcd_r_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_3, "lcd_r_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_4, "lcd_r_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_5, "lcd_r_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_6, "lcd_r_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_7, "lcd_r_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_VSYNC, "lcd_vsync", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO0, "mdmgpio0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO1, "mdmgpio1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO2, "mdmgpio2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO3, "mdmgpio3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO4, "mdmgpio4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO5, "mdmgpio5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO6, "mdmgpio6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO7, "mdmgpio7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO8, "mdmgpio8", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_0, "mphi_data_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_1, "mphi_data_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_2, "mphi_data_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_3, "mphi_data_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_4, "mphi_data_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_5, "mphi_data_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_6, "mphi_data_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_7, "mphi_data_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_8, "mphi_data_8", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_9, "mphi_data_9", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_10, "mphi_data_10", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_11, "mphi_data_11", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_12, "mphi_data_12", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_13, "mphi_data_13", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_14, "mphi_data_14", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_15, "mphi_data_15", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HA0, "mphi_ha0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HAT0, "mphi_hat0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HAT1, "mphi_hat1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HCE0_N, "mphi_hce0_n", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HCE1_N, "mphi_hce1_n", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HRD_N, "mphi_hrd_n", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HWR_N, "mphi_hwr_n", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_RUN0, "mphi_run0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_RUN1, "mphi_run1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MTX_SCAN_CLK, "mtx_scan_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MTX_SCAN_DATA, "mtx_scan_data", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_0, "nand_ad_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_1, "nand_ad_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_2, "nand_ad_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_3, "nand_ad_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_4, "nand_ad_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_5, "nand_ad_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_6, "nand_ad_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_7, "nand_ad_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_ALE, "nand_ale", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_CEN_0, "nand_cen_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_CEN_1, "nand_cen_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_CLE, "nand_cle", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_OEN, "nand_oen", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_RDY_0, "nand_rdy_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_RDY_1, "nand_rdy_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_WEN, "nand_wen", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_WP, "nand_wp", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PC1, "pc1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PC2, "pc2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PMU_INT, "pmu_int", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PMU_SCL, "pmu_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PMU_SDA, "pmu_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RFST2G_MTSLOTEN3G, "rfst2g_mtsloten3g",
++		std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RX_CTL, "rgmii_0_rx_ctl", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXC, "rgmii_0_rxc", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_0, "rgmii_0_rxd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_1, "rgmii_0_rxd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_2, "rgmii_0_rxd_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_3, "rgmii_0_rxd_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TX_CTL, "rgmii_0_tx_ctl", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXC, "rgmii_0_txc", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_0, "rgmii_0_txd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_1, "rgmii_0_txd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_2, "rgmii_0_txd_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_3, "rgmii_0_txd_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RX_CTL, "rgmii_1_rx_ctl", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXC, "rgmii_1_rxc", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_0, "rgmii_1_rxd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_1, "rgmii_1_rxd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_2, "rgmii_1_rxd_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_3, "rgmii_1_rxd_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TX_CTL, "rgmii_1_tx_ctl", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXC, "rgmii_1_txc", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_0, "rgmii_1_txd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_1, "rgmii_1_txd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_2, "rgmii_1_txd_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_3, "rgmii_1_txd_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_0, "rgmii_gpio_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_1, "rgmii_gpio_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_2, "rgmii_gpio_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_3, "rgmii_gpio_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RTXDATA2G_TXDATA3G1,
++		"rtxdata2g_txdata3g1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RTXEN2G_TXDATA3G2, "rtxen2g_txdata3g2",
++		std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RXDATA3G0, "rxdata3g0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RXDATA3G1, "rxdata3g1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RXDATA3G2, "rxdata3g2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_CLK, "sdio1_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_CMD, "sdio1_cmd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_0, "sdio1_data_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_1, "sdio1_data_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_2, "sdio1_data_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_3, "sdio1_data_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_CLK, "sdio4_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_CMD, "sdio4_cmd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_0, "sdio4_data_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_1, "sdio4_data_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_2, "sdio4_data_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_3, "sdio4_data_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_CLK, "sim_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_DATA, "sim_data", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_DET, "sim_det", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_RESETN, "sim_resetn", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_CLK, "sim2_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_DATA, "sim2_data", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_DET, "sim2_det", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_RESETN, "sim2_resetn", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SRI_C, "sri_c", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SRI_D, "sri_d", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SRI_E, "sri_e", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP_EXTCLK, "ssp_extclk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_CLK, "ssp0_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_FS, "ssp0_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_RXD, "ssp0_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_TXD, "ssp0_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_CLK, "ssp2_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_0, "ssp2_fs_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_1, "ssp2_fs_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_2, "ssp2_fs_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_3, "ssp2_fs_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_RXD_0, "ssp2_rxd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_RXD_1, "ssp2_rxd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_TXD_0, "ssp2_txd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_TXD_1, "ssp2_txd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_CLK, "ssp3_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_FS, "ssp3_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_RXD, "ssp3_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_TXD, "ssp3_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_CLK, "ssp4_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_FS, "ssp4_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_RXD, "ssp4_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_TXD, "ssp4_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_CLK, "ssp5_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_FS, "ssp5_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_RXD, "ssp5_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_TXD, "ssp5_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_CLK, "ssp6_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_FS, "ssp6_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_RXD, "ssp6_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_TXD, "ssp6_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_STAT_1, "stat_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_STAT_2, "stat_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SYSCLKEN, "sysclken", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACECLK, "traceclk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT00, "tracedt00", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT01, "tracedt01", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT02, "tracedt02", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT03, "tracedt03", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT04, "tracedt04", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT05, "tracedt05", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT06, "tracedt06", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT07, "tracedt07", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT08, "tracedt08", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT09, "tracedt09", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT10, "tracedt10", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT11, "tracedt11", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT12, "tracedt12", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT13, "tracedt13", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT14, "tracedt14", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT15, "tracedt15", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TXDATA3G0, "txdata3g0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TXPWRIND, "txpwrind", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_UCTS, "uartb1_ucts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_URTS, "uartb1_urts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_URXD, "uartb1_urxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_UTXD, "uartb1_utxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB2_URXD, "uartb2_urxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB2_UTXD, "uartb2_utxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_UCTS, "uartb3_ucts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_URTS, "uartb3_urts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_URXD, "uartb3_urxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_UTXD, "uartb3_utxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_UCTS, "uartb4_ucts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_URTS, "uartb4_urts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_URXD, "uartb4_urxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_UTXD, "uartb4_utxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM1_SCL, "vc_cam1_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM1_SDA, "vc_cam1_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM2_SCL, "vc_cam2_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM2_SDA, "vc_cam2_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM3_SCL, "vc_cam3_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM3_SDA, "vc_cam3_sda", i2c),
 +};
 +
-+/*
-+ * Description of a pin in Cygnus
-+ *
-+ * @pin: pin number
-+ * @name: pin name
-+ * @gpio_mux: GPIO override related information
-+ */
-+struct cygnus_pin {
-+	unsigned pin;
-+	char *name;
-+	struct cygnus_gpio_mux gpio_mux;
++static const char * const bcm281xx_alt_groups[] = {
++	"adcsync",
++	"bat_rm",
++	"bsc1_scl",
++	"bsc1_sda",
++	"bsc2_scl",
++	"bsc2_sda",
++	"classgpwr",
++	"clk_cx8",
++	"clkout_0",
++	"clkout_1",
++	"clkout_2",
++	"clkout_3",
++	"clkreq_in_0",
++	"clkreq_in_1",
++	"cws_sys_req1",
++	"cws_sys_req2",
++	"cws_sys_req3",
++	"digmic1_clk",
++	"digmic1_dq",
++	"digmic2_clk",
++	"digmic2_dq",
++	"gpen13",
++	"gpen14",
++	"gpen15",
++	"gpio00",
++	"gpio01",
++	"gpio02",
++	"gpio03",
++	"gpio04",
++	"gpio05",
++	"gpio06",
++	"gpio07",
++	"gpio08",
++	"gpio09",
++	"gpio10",
++	"gpio11",
++	"gpio12",
++	"gpio13",
++	"gpio14",
++	"gps_pablank",
++	"gps_tmark",
++	"hdmi_scl",
++	"hdmi_sda",
++	"ic_dm",
++	"ic_dp",
++	"kp_col_ip_0",
++	"kp_col_ip_1",
++	"kp_col_ip_2",
++	"kp_col_ip_3",
++	"kp_row_op_0",
++	"kp_row_op_1",
++	"kp_row_op_2",
++	"kp_row_op_3",
++	"lcd_b_0",
++	"lcd_b_1",
++	"lcd_b_2",
++	"lcd_b_3",
++	"lcd_b_4",
++	"lcd_b_5",
++	"lcd_b_6",
++	"lcd_b_7",
++	"lcd_g_0",
++	"lcd_g_1",
++	"lcd_g_2",
++	"lcd_g_3",
++	"lcd_g_4",
++	"lcd_g_5",
++	"lcd_g_6",
++	"lcd_g_7",
++	"lcd_hsync",
++	"lcd_oe",
++	"lcd_pclk",
++	"lcd_r_0",
++	"lcd_r_1",
++	"lcd_r_2",
++	"lcd_r_3",
++	"lcd_r_4",
++	"lcd_r_5",
++	"lcd_r_6",
++	"lcd_r_7",
++	"lcd_vsync",
++	"mdmgpio0",
++	"mdmgpio1",
++	"mdmgpio2",
++	"mdmgpio3",
++	"mdmgpio4",
++	"mdmgpio5",
++	"mdmgpio6",
++	"mdmgpio7",
++	"mdmgpio8",
++	"mphi_data_0",
++	"mphi_data_1",
++	"mphi_data_2",
++	"mphi_data_3",
++	"mphi_data_4",
++	"mphi_data_5",
++	"mphi_data_6",
++	"mphi_data_7",
++	"mphi_data_8",
++	"mphi_data_9",
++	"mphi_data_10",
++	"mphi_data_11",
++	"mphi_data_12",
++	"mphi_data_13",
++	"mphi_data_14",
++	"mphi_data_15",
++	"mphi_ha0",
++	"mphi_hat0",
++	"mphi_hat1",
++	"mphi_hce0_n",
++	"mphi_hce1_n",
++	"mphi_hrd_n",
++	"mphi_hwr_n",
++	"mphi_run0",
++	"mphi_run1",
++	"mtx_scan_clk",
++	"mtx_scan_data",
++	"nand_ad_0",
++	"nand_ad_1",
++	"nand_ad_2",
++	"nand_ad_3",
++	"nand_ad_4",
++	"nand_ad_5",
++	"nand_ad_6",
++	"nand_ad_7",
++	"nand_ale",
++	"nand_cen_0",
++	"nand_cen_1",
++	"nand_cle",
++	"nand_oen",
++	"nand_rdy_0",
++	"nand_rdy_1",
++	"nand_wen",
++	"nand_wp",
++	"pc1",
++	"pc2",
++	"pmu_int",
++	"pmu_scl",
++	"pmu_sda",
++	"rfst2g_mtsloten3g",
++	"rgmii_0_rx_ctl",
++	"rgmii_0_rxc",
++	"rgmii_0_rxd_0",
++	"rgmii_0_rxd_1",
++	"rgmii_0_rxd_2",
++	"rgmii_0_rxd_3",
++	"rgmii_0_tx_ctl",
++	"rgmii_0_txc",
++	"rgmii_0_txd_0",
++	"rgmii_0_txd_1",
++	"rgmii_0_txd_2",
++	"rgmii_0_txd_3",
++	"rgmii_1_rx_ctl",
++	"rgmii_1_rxc",
++	"rgmii_1_rxd_0",
++	"rgmii_1_rxd_1",
++	"rgmii_1_rxd_2",
++	"rgmii_1_rxd_3",
++	"rgmii_1_tx_ctl",
++	"rgmii_1_txc",
++	"rgmii_1_txd_0",
++	"rgmii_1_txd_1",
++	"rgmii_1_txd_2",
++	"rgmii_1_txd_3",
++	"rgmii_gpio_0",
++	"rgmii_gpio_1",
++	"rgmii_gpio_2",
++	"rgmii_gpio_3",
++	"rtxdata2g_txdata3g1",
++	"rtxen2g_txdata3g2",
++	"rxdata3g0",
++	"rxdata3g1",
++	"rxdata3g2",
++	"sdio1_clk",
++	"sdio1_cmd",
++	"sdio1_data_0",
++	"sdio1_data_1",
++	"sdio1_data_2",
++	"sdio1_data_3",
++	"sdio4_clk",
++	"sdio4_cmd",
++	"sdio4_data_0",
++	"sdio4_data_1",
++	"sdio4_data_2",
++	"sdio4_data_3",
++	"sim_clk",
++	"sim_data",
++	"sim_det",
++	"sim_resetn",
++	"sim2_clk",
++	"sim2_data",
++	"sim2_det",
++	"sim2_resetn",
++	"sri_c",
++	"sri_d",
++	"sri_e",
++	"ssp_extclk",
++	"ssp0_clk",
++	"ssp0_fs",
++	"ssp0_rxd",
++	"ssp0_txd",
++	"ssp2_clk",
++	"ssp2_fs_0",
++	"ssp2_fs_1",
++	"ssp2_fs_2",
++	"ssp2_fs_3",
++	"ssp2_rxd_0",
++	"ssp2_rxd_1",
++	"ssp2_txd_0",
++	"ssp2_txd_1",
++	"ssp3_clk",
++	"ssp3_fs",
++	"ssp3_rxd",
++	"ssp3_txd",
++	"ssp4_clk",
++	"ssp4_fs",
++	"ssp4_rxd",
++	"ssp4_txd",
++	"ssp5_clk",
++	"ssp5_fs",
++	"ssp5_rxd",
++	"ssp5_txd",
++	"ssp6_clk",
++	"ssp6_fs",
++	"ssp6_rxd",
++	"ssp6_txd",
++	"stat_1",
++	"stat_2",
++	"sysclken",
++	"traceclk",
++	"tracedt00",
++	"tracedt01",
++	"tracedt02",
++	"tracedt03",
++	"tracedt04",
++	"tracedt05",
++	"tracedt06",
++	"tracedt07",
++	"tracedt08",
++	"tracedt09",
++	"tracedt10",
++	"tracedt11",
++	"tracedt12",
++	"tracedt13",
++	"tracedt14",
++	"tracedt15",
++	"txdata3g0",
++	"txpwrind",
++	"uartb1_ucts",
++	"uartb1_urts",
++	"uartb1_urxd",
++	"uartb1_utxd",
++	"uartb2_urxd",
++	"uartb2_utxd",
++	"uartb3_ucts",
++	"uartb3_urts",
++	"uartb3_urxd",
++	"uartb3_utxd",
++	"uartb4_ucts",
++	"uartb4_urts",
++	"uartb4_urxd",
++	"uartb4_utxd",
++	"vc_cam1_scl",
++	"vc_cam1_sda",
++	"vc_cam2_scl",
++	"vc_cam2_sda",
++	"vc_cam3_scl",
++	"vc_cam3_sda",
 +};
 +
-+#define CYGNUS_PIN_DESC(p, n, i, o, s)	\
-+{					\
-+	.pin = p,			\
-+	.name = n,			\
-+	.gpio_mux = {			\
-+		.is_supported = i,	\
-+		.offset = o,		\
-+		.shift = s,		\
-+	},				\
-+}
-+
-+/*
-+ * List of pins in Cygnus
-+ */
-+static struct cygnus_pin cygnus_pins[] = {
-+	CYGNUS_PIN_DESC(0, "ext_device_reset_n", 0, 0, 0),
-+	CYGNUS_PIN_DESC(1, "chip_mode0", 0, 0, 0),
-+	CYGNUS_PIN_DESC(2, "chip_mode1", 0, 0, 0),
-+	CYGNUS_PIN_DESC(3, "chip_mode2", 0, 0, 0),
-+	CYGNUS_PIN_DESC(4, "chip_mode3", 0, 0, 0),
-+	CYGNUS_PIN_DESC(5, "chip_mode4", 0, 0, 0),
-+	CYGNUS_PIN_DESC(6, "bsc0_scl", 0, 0, 0),
-+	CYGNUS_PIN_DESC(7, "bsc0_sda", 0, 0, 0),
-+	CYGNUS_PIN_DESC(8, "bsc1_scl", 0, 0, 0),
-+	CYGNUS_PIN_DESC(9, "bsc1_sda", 0, 0, 0),
-+	CYGNUS_PIN_DESC(10, "d1w_dq", 1, 0x28, 0),
-+	CYGNUS_PIN_DESC(11, "d1wowstz_l", 1, 0x4, 28),
-+	CYGNUS_PIN_DESC(12, "gpio0", 0, 0, 0),
-+	CYGNUS_PIN_DESC(13, "gpio1", 0, 0, 0),
-+	CYGNUS_PIN_DESC(14, "gpio2", 0, 0, 0),
-+	CYGNUS_PIN_DESC(15, "gpio3", 0, 0, 0),
-+	CYGNUS_PIN_DESC(16, "gpio4", 0, 0, 0),
-+	CYGNUS_PIN_DESC(17, "gpio5", 0, 0, 0),
-+	CYGNUS_PIN_DESC(18, "gpio6", 0, 0, 0),
-+	CYGNUS_PIN_DESC(19, "gpio7", 0, 0, 0),
-+	CYGNUS_PIN_DESC(20, "gpio8", 0, 0, 0),
-+	CYGNUS_PIN_DESC(21, "gpio9", 0, 0, 0),
-+	CYGNUS_PIN_DESC(22, "gpio10", 0, 0, 0),
-+	CYGNUS_PIN_DESC(23, "gpio11", 0, 0, 0),
-+	CYGNUS_PIN_DESC(24, "gpio12", 0, 0, 0),
-+	CYGNUS_PIN_DESC(25, "gpio13", 0, 0, 0),
-+	CYGNUS_PIN_DESC(26, "gpio14", 0, 0, 0),
-+	CYGNUS_PIN_DESC(27, "gpio15", 0, 0, 0),
-+	CYGNUS_PIN_DESC(28, "gpio16", 0, 0, 0),
-+	CYGNUS_PIN_DESC(29, "gpio17", 0, 0, 0),
-+	CYGNUS_PIN_DESC(30, "gpio18", 0, 0, 0),
-+	CYGNUS_PIN_DESC(31, "gpio19", 0, 0, 0),
-+	CYGNUS_PIN_DESC(32, "gpio20", 0, 0, 0),
-+	CYGNUS_PIN_DESC(33, "gpio21", 0, 0, 0),
-+	CYGNUS_PIN_DESC(34, "gpio22", 0, 0, 0),
-+	CYGNUS_PIN_DESC(35, "gpio23", 0, 0, 0),
-+	CYGNUS_PIN_DESC(36, "mdc", 0, 0, 0),
-+	CYGNUS_PIN_DESC(37, "mdio", 0, 0, 0),
-+	CYGNUS_PIN_DESC(38, "pwm0", 1, 0x10, 30),
-+	CYGNUS_PIN_DESC(39, "pwm1", 1, 0x10, 28),
-+	CYGNUS_PIN_DESC(40, "pwm2", 1, 0x10, 26),
-+	CYGNUS_PIN_DESC(41, "pwm3", 1, 0x10, 24),
-+	CYGNUS_PIN_DESC(42, "sc0_clk", 1, 0x10, 22),
-+	CYGNUS_PIN_DESC(43, "sc0_cmdvcc_l", 1, 0x10, 20),
-+	CYGNUS_PIN_DESC(44, "sc0_detect", 1, 0x10, 18),
-+	CYGNUS_PIN_DESC(45, "sc0_fcb", 1, 0x10, 16),
-+	CYGNUS_PIN_DESC(46, "sc0_io", 1, 0x10, 14),
-+	CYGNUS_PIN_DESC(47, "sc0_rst_l", 1, 0x10, 12),
-+	CYGNUS_PIN_DESC(48, "sc1_clk", 1, 0x10, 10),
-+	CYGNUS_PIN_DESC(49, "sc1_cmdvcc_l", 1, 0x10, 8),
-+	CYGNUS_PIN_DESC(50, "sc1_detect", 1, 0x10, 6),
-+	CYGNUS_PIN_DESC(51, "sc1_fcb", 1, 0x10, 4),
-+	CYGNUS_PIN_DESC(52, "sc1_io", 1, 0x10, 2),
-+	CYGNUS_PIN_DESC(53, "sc1_rst_l", 1, 0x10, 0),
-+	CYGNUS_PIN_DESC(54, "spi0_clk", 1, 0x18, 10),
-+	CYGNUS_PIN_DESC(55, "spi0_mosi", 1, 0x18, 6),
-+	CYGNUS_PIN_DESC(56, "spi0_miso", 1, 0x18, 8),
-+	CYGNUS_PIN_DESC(57, "spi0_ss", 1, 0x18, 4),
-+	CYGNUS_PIN_DESC(58, "spi1_clk", 1, 0x18, 2),
-+	CYGNUS_PIN_DESC(59, "spi1_mosi", 1, 0x1c, 30),
-+	CYGNUS_PIN_DESC(60, "spi1_miso", 1, 0x18, 0),
-+	CYGNUS_PIN_DESC(61, "spi1_ss", 1, 0x1c, 28),
-+	CYGNUS_PIN_DESC(62, "spi2_clk", 1, 0x1c, 26),
-+	CYGNUS_PIN_DESC(63, "spi2_mosi", 1, 0x1c, 22),
-+	CYGNUS_PIN_DESC(64, "spi2_miso", 1, 0x1c, 24),
-+	CYGNUS_PIN_DESC(65, "spi2_ss", 1, 0x1c, 20),
-+	CYGNUS_PIN_DESC(66, "spi3_clk", 1, 0x1c, 18),
-+	CYGNUS_PIN_DESC(67, "spi3_mosi", 1, 0x1c, 14),
-+	CYGNUS_PIN_DESC(68, "spi3_miso", 1, 0x1c, 16),
-+	CYGNUS_PIN_DESC(69, "spi3_ss", 1, 0x1c, 12),
-+	CYGNUS_PIN_DESC(70, "uart0_cts", 1, 0x1c, 10),
-+	CYGNUS_PIN_DESC(71, "uart0_rts", 1, 0x1c, 8),
-+	CYGNUS_PIN_DESC(72, "uart0_rx", 1, 0x1c, 6),
-+	CYGNUS_PIN_DESC(73, "uart0_tx", 1, 0x1c, 4),
-+	CYGNUS_PIN_DESC(74, "uart1_cts", 1, 0x1c, 2),
-+	CYGNUS_PIN_DESC(75, "uart1_dcd", 1, 0x1c, 0),
-+	CYGNUS_PIN_DESC(76, "uart1_dsr", 1, 0x20, 14),
-+	CYGNUS_PIN_DESC(77, "uart1_dtr", 1, 0x20, 12),
-+	CYGNUS_PIN_DESC(78, "uart1_ri", 1, 0x20, 10),
-+	CYGNUS_PIN_DESC(79, "uart1_rts", 1, 0x20, 8),
-+	CYGNUS_PIN_DESC(80, "uart1_rx", 1, 0x20, 6),
-+	CYGNUS_PIN_DESC(81, "uart1_tx", 1, 0x20, 4),
-+	CYGNUS_PIN_DESC(82, "uart3_rx", 1, 0x20, 2),
-+	CYGNUS_PIN_DESC(83, "uart3_tx", 1, 0x20, 0),
-+	CYGNUS_PIN_DESC(84, "sdio1_clk_sdcard", 1, 0x14, 6),
-+	CYGNUS_PIN_DESC(85, "sdio1_cmd", 1, 0x14, 4),
-+	CYGNUS_PIN_DESC(86, "sdio1_data0", 1, 0x14, 2),
-+	CYGNUS_PIN_DESC(87, "sdio1_data1", 1, 0x14, 0),
-+	CYGNUS_PIN_DESC(88, "sdio1_data2", 1, 0x18, 30),
-+	CYGNUS_PIN_DESC(89, "sdio1_data3", 1, 0x18, 28),
-+	CYGNUS_PIN_DESC(90, "sdio1_wp_n", 1, 0x18, 24),
-+	CYGNUS_PIN_DESC(91, "sdio1_card_rst", 1, 0x14, 10),
-+	CYGNUS_PIN_DESC(92, "sdio1_led_on", 1, 0x18, 26),
-+	CYGNUS_PIN_DESC(93, "sdio1_cd", 1, 0x14, 8),
-+	CYGNUS_PIN_DESC(94, "sdio0_clk_sdcard", 1, 0x14, 26),
-+	CYGNUS_PIN_DESC(95, "sdio0_cmd", 1, 0x14, 24),
-+	CYGNUS_PIN_DESC(96, "sdio0_data0", 1, 0x14, 22),
-+	CYGNUS_PIN_DESC(97, "sdio0_data1", 1, 0x14, 20),
-+	CYGNUS_PIN_DESC(98, "sdio0_data2", 1, 0x14, 18),
-+	CYGNUS_PIN_DESC(99, "sdio0_data3", 1, 0x14, 16),
-+	CYGNUS_PIN_DESC(100, "sdio0_wp_n", 1, 0x14, 12),
-+	CYGNUS_PIN_DESC(101, "sdio0_card_rst", 1, 0x14, 30),
-+	CYGNUS_PIN_DESC(102, "sdio0_led_on", 1, 0x14, 14),
-+	CYGNUS_PIN_DESC(103, "sdio0_cd", 1, 0x14, 28),
-+	CYGNUS_PIN_DESC(104, "sflash_clk", 1, 0x18, 22),
-+	CYGNUS_PIN_DESC(105, "sflash_cs_l", 1, 0x18, 20),
-+	CYGNUS_PIN_DESC(106, "sflash_mosi", 1, 0x18, 14),
-+	CYGNUS_PIN_DESC(107, "sflash_miso", 1, 0x18, 16),
-+	CYGNUS_PIN_DESC(108, "sflash_wp_n", 1, 0x18, 12),
-+	CYGNUS_PIN_DESC(109, "sflash_hold_n", 1, 0x18, 18),
-+	CYGNUS_PIN_DESC(110, "nand_ale", 1, 0xc, 30),
-+	CYGNUS_PIN_DESC(111, "nand_ce0_l", 1, 0xc, 28),
-+	CYGNUS_PIN_DESC(112, "nand_ce1_l", 1, 0xc, 26),
-+	CYGNUS_PIN_DESC(113, "nand_cle", 1, 0xc, 24),
-+	CYGNUS_PIN_DESC(114, "nand_dq0", 1, 0xc, 22),
-+	CYGNUS_PIN_DESC(115, "nand_dq1", 1, 0xc, 20),
-+	CYGNUS_PIN_DESC(116, "nand_dq2", 1, 0xc, 18),
-+	CYGNUS_PIN_DESC(117, "nand_dq3", 1, 0xc, 16),
-+	CYGNUS_PIN_DESC(118, "nand_dq4", 1, 0xc, 14),
-+	CYGNUS_PIN_DESC(119, "nand_dq5", 1, 0xc, 12),
-+	CYGNUS_PIN_DESC(120, "nand_dq6", 1, 0xc, 10),
-+	CYGNUS_PIN_DESC(121, "nand_dq7", 1, 0xc, 8),
-+	CYGNUS_PIN_DESC(122, "nand_rb_l", 1, 0xc, 6),
-+	CYGNUS_PIN_DESC(123, "nand_re_l", 1, 0xc, 4),
-+	CYGNUS_PIN_DESC(124, "nand_we_l", 1, 0xc, 2),
-+	CYGNUS_PIN_DESC(125, "nand_wp_l", 1, 0xc, 0),
-+	CYGNUS_PIN_DESC(126, "lcd_clac", 1, 0x4, 26),
-+	CYGNUS_PIN_DESC(127, "lcd_clcp", 1, 0x4, 24),
-+	CYGNUS_PIN_DESC(128, "lcd_cld0", 1, 0x4, 22),
-+	CYGNUS_PIN_DESC(129, "lcd_cld1", 1, 0x4, 0),
-+	CYGNUS_PIN_DESC(130, "lcd_cld10", 1, 0x4, 20),
-+	CYGNUS_PIN_DESC(131, "lcd_cld11", 1, 0x4, 18),
-+	CYGNUS_PIN_DESC(132, "lcd_cld12", 1, 0x4, 16),
-+	CYGNUS_PIN_DESC(133, "lcd_cld13", 1, 0x4, 14),
-+	CYGNUS_PIN_DESC(134, "lcd_cld14", 1, 0x4, 12),
-+	CYGNUS_PIN_DESC(135, "lcd_cld15", 1, 0x4, 10),
-+	CYGNUS_PIN_DESC(136, "lcd_cld16", 1, 0x4, 8),
-+	CYGNUS_PIN_DESC(137, "lcd_cld17", 1, 0x4, 6),
-+	CYGNUS_PIN_DESC(138, "lcd_cld18", 1, 0x4, 4),
-+	CYGNUS_PIN_DESC(139, "lcd_cld19", 1, 0x4, 2),
-+	CYGNUS_PIN_DESC(140, "lcd_cld2", 1, 0x8, 22),
-+	CYGNUS_PIN_DESC(141, "lcd_cld20", 1, 0x8, 30),
-+	CYGNUS_PIN_DESC(142, "lcd_cld21", 1, 0x8, 28),
-+	CYGNUS_PIN_DESC(143, "lcd_cld22", 1, 0x8, 26),
-+	CYGNUS_PIN_DESC(144, "lcd_cld23", 1, 0x8, 24),
-+	CYGNUS_PIN_DESC(145, "lcd_cld3", 1, 0x8, 20),
-+	CYGNUS_PIN_DESC(146, "lcd_cld4", 1, 0x8, 18),
-+	CYGNUS_PIN_DESC(147, "lcd_cld5", 1, 0x8, 16),
-+	CYGNUS_PIN_DESC(148, "lcd_cld6", 1, 0x8, 14),
-+	CYGNUS_PIN_DESC(149, "lcd_cld7", 1, 0x8, 12),
-+	CYGNUS_PIN_DESC(150, "lcd_cld8", 1, 0x8, 10),
-+	CYGNUS_PIN_DESC(151, "lcd_cld9", 1, 0x8, 8),
-+	CYGNUS_PIN_DESC(152, "lcd_clfp", 1, 0x8, 6),
-+	CYGNUS_PIN_DESC(153, "lcd_clle", 1, 0x8, 4),
-+	CYGNUS_PIN_DESC(154, "lcd_cllp", 1, 0x8, 2),
-+	CYGNUS_PIN_DESC(155, "lcd_clpower", 1, 0x8, 0),
-+	CYGNUS_PIN_DESC(156, "camera_vsync", 1, 0x4, 30),
-+	CYGNUS_PIN_DESC(157, "camera_trigger", 1, 0x0, 0),
-+	CYGNUS_PIN_DESC(158, "camera_strobe", 1, 0x0, 2),
-+	CYGNUS_PIN_DESC(159, "camera_standby", 1, 0x0, 4),
-+	CYGNUS_PIN_DESC(160, "camera_reset_n", 1, 0x0, 6),
-+	CYGNUS_PIN_DESC(161, "camera_pixdata9", 1, 0x0, 8),
-+	CYGNUS_PIN_DESC(162, "camera_pixdata8", 1, 0x0, 10),
-+	CYGNUS_PIN_DESC(163, "camera_pixdata7", 1, 0x0, 12),
-+	CYGNUS_PIN_DESC(164, "camera_pixdata6", 1, 0x0, 14),
-+	CYGNUS_PIN_DESC(165, "camera_pixdata5", 1, 0x0, 16),
-+	CYGNUS_PIN_DESC(166, "camera_pixdata4", 1, 0x0, 18),
-+	CYGNUS_PIN_DESC(167, "camera_pixdata3", 1, 0x0, 20),
-+	CYGNUS_PIN_DESC(168, "camera_pixdata2", 1, 0x0, 22),
-+	CYGNUS_PIN_DESC(169, "camera_pixdata1", 1, 0x0, 24),
-+	CYGNUS_PIN_DESC(170, "camera_pixdata0", 1, 0x0, 26),
-+	CYGNUS_PIN_DESC(171, "camera_pixclk", 1, 0x0, 28),
-+	CYGNUS_PIN_DESC(172, "camera_hsync", 1, 0x0, 30),
-+	CYGNUS_PIN_DESC(173, "camera_pll_ref_clk", 0, 0, 0),
-+	CYGNUS_PIN_DESC(174, "usb_id_indication", 0, 0, 0),
-+	CYGNUS_PIN_DESC(175, "usb_vbus_indication", 0, 0, 0),
-+	CYGNUS_PIN_DESC(176, "gpio0_3p3", 0, 0, 0),
-+	CYGNUS_PIN_DESC(177, "gpio1_3p3", 0, 0, 0),
-+	CYGNUS_PIN_DESC(178, "gpio2_3p3", 0, 0, 0),
-+	CYGNUS_PIN_DESC(179, "gpio3_3p3", 0, 0, 0),
-+};
-+
-+/*
-+ * List of groups of pins
-+ */
-+static const unsigned bsc1_pins[] = { 8, 9 };
-+static const unsigned pcie_clkreq_pins[] = { 8, 9 };
-+
-+static const unsigned i2s2_0_pins[] = { 12 };
-+static const unsigned i2s2_1_pins[] = { 13 };
-+static const unsigned i2s2_2_pins[] = { 14 };
-+static const unsigned i2s2_3_pins[] = { 15 };
-+static const unsigned i2s2_4_pins[] = { 16 };
-+
-+static const unsigned pwm4_pins[] = { 17 };
-+static const unsigned pwm5_pins[] = { 18 };
-+
-+static const unsigned key0_pins[] = { 20 };
-+static const unsigned key1_pins[] = { 21 };
-+static const unsigned key2_pins[] = { 22 };
-+static const unsigned key3_pins[] = { 23 };
-+static const unsigned key4_pins[] = { 24 };
-+static const unsigned key5_pins[] = { 25 };
-+
-+static const unsigned key6_pins[] = { 26 };
-+static const unsigned audio_dte0_pins[] = { 26 };
-+
-+static const unsigned key7_pins[] = { 27 };
-+static const unsigned audio_dte1_pins[] = { 27 };
-+
-+static const unsigned key8_pins[] = { 28 };
-+static const unsigned key9_pins[] = { 29 };
-+static const unsigned key10_pins[] = { 30 };
-+static const unsigned key11_pins[] = { 31 };
-+static const unsigned key12_pins[] = { 32 };
-+static const unsigned key13_pins[] = { 33 };
-+
-+static const unsigned key14_pins[] = { 34 };
-+static const unsigned audio_dte2_pins[] = { 34 };
-+
-+static const unsigned key15_pins[] = { 35 };
-+static const unsigned audio_dte3_pins[] = { 35 };
-+
-+static const unsigned pwm0_pins[] = { 38 };
-+static const unsigned pwm1_pins[] = { 39 };
-+static const unsigned pwm2_pins[] = { 40 };
-+static const unsigned pwm3_pins[] = { 41 };
-+
-+static const unsigned sdio0_pins[] = { 94, 95, 96, 97, 98, 99 };
-+
-+static const unsigned smart_card0_pins[] = { 42, 43, 44, 46, 47 };
-+static const unsigned i2s0_0_pins[] = { 42, 43, 44, 46 };
-+static const unsigned spdif_pins[] = { 47 };
-+
-+static const unsigned smart_card1_pins[] = { 48, 49, 50, 52, 53 };
-+static const unsigned i2s1_0_pins[] = { 48, 49, 50, 52 };
-+
-+static const unsigned spi0_pins[] = { 54, 55, 56, 57 };
-+
-+static const unsigned spi1_pins[] = { 58, 59, 60, 61 };
-+
-+static const unsigned spi2_pins[] = { 62, 63, 64, 65 };
-+
-+static const unsigned spi3_pins[] = { 66, 67, 68, 69 };
-+static const unsigned sw_led0_0_pins[] = { 66, 67, 68, 69 };
-+
-+static const unsigned d1w_pins[] = { 10, 11 };
-+static const unsigned uart4_pins[] = { 10, 11 };
-+static const unsigned sw_led2_0_pins[] = { 10, 11 };
-+
-+static const unsigned lcd_pins[] = { 126, 127, 128, 129, 130, 131, 132, 133,
-+	134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147,
-+	148, 149, 150, 151, 152, 153, 154, 155 };
-+static const unsigned sram_0_pins[] = { 126, 127, 128, 129, 130, 131, 132, 133,
-+	134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147,
-+	148, 149, 150, 151, 152, 153, 154, 155 };
-+static const unsigned spi5_pins[] = { 141, 142, 143, 144 };
-+
-+static const unsigned uart0_pins[] = { 70, 71, 72, 73 };
-+static const unsigned sw_led0_1_pins[] = { 70, 71, 72, 73 };
-+
-+static const unsigned uart1_dte_pins[] = { 75, 76, 77, 78 };
-+static const unsigned uart2_pins[] = { 75, 76, 77, 78 };
-+
-+static const unsigned uart1_pins[] = { 74, 79, 80, 81 };
-+
-+static const unsigned uart3_pins[] = { 82, 83 };
-+
-+static const unsigned qspi_0_pins[] = { 104, 105, 106, 107 };
-+
-+static const unsigned nand_pins[] = { 110, 111, 112, 113, 114, 115, 116, 117,
-+	118, 119, 120, 121, 122, 123, 124, 125 };
-+
-+static const unsigned sdio0_cd_pins[] = { 103 };
-+
-+static const unsigned sdio0_mmc_pins[] = { 100, 101, 102 };
-+
-+static const unsigned sdio1_data_0_pins[] = { 86, 87 };
-+static const unsigned can0_pins[] = { 86, 87 };
-+static const unsigned spi4_0_pins[] = { 86, 87 };
-+
-+static const unsigned sdio1_data_1_pins[] = { 88, 89 };
-+static const unsigned can1_pins[] = { 88, 89 };
-+static const unsigned spi4_1_pins[] = { 88, 89 };
-+
-+static const unsigned sdio1_cd_pins[] = { 93 };
-+
-+static const unsigned sdio1_led_pins[] = { 84, 85 };
-+static const unsigned sw_led2_1_pins[] = { 84, 85 };
-+
-+static const unsigned sdio1_mmc_pins[] = { 90, 91, 92 };
-+
-+static const unsigned cam_led_pins[] = { 156, 157, 158, 159, 160 };
-+static const unsigned sw_led1_pins[] = { 156, 157, 158, 159 };
-+
-+static const unsigned cam_0_pins[] = { 169, 170, 171, 169, 170 };
-+
-+static const unsigned cam_1_pins[] = { 161, 162, 163, 164, 165, 166, 167,
-+	168 };
-+static const unsigned sram_1_pins[] = { 161, 162, 163, 164, 165, 166, 167,
-+	168 };
-+
-+static const unsigned qspi_1_pins[] = { 108, 109 };
-+
-+static const unsigned smart_card0_fcb_pins[] = { 45 };
-+static const unsigned i2s0_1_pins[] = { 45 };
-+
-+static const unsigned smart_card1_fcb_pins[] = { 51 };
-+static const unsigned i2s1_1_pins[] = { 51 };
-+
-+static const unsigned gpio0_3p3_pins[] = { 176 };
-+static const unsigned usb0_oc_pins[] = { 176 };
-+
-+static const unsigned gpio1_3p3_pins[] = { 177 };
-+static const unsigned usb1_oc_pins[] = { 177 };
-+
-+static const unsigned gpio2_3p3_pins[] = { 178 };
-+static const unsigned usb2_oc_pins[] = { 178 };
-+
-+#define CYGNUS_PIN_GROUP(group_name, off, sh, al)	\
++/* Every pin can implement all ALT1-ALT4 functions */
++#define BCM281XX_PIN_FUNCTION(fcn_name)			\
 +{							\
-+	.name = #group_name"""_grp",			\
-+	.pins = group_name ## _pins,			\
-+	.num_pins = ARRAY_SIZE(group_name ## _pins),	\
-+	.mux = {					\
-+		.offset = off,				\
-+		.shift = sh,				\
-+		.alt = al,				\
-+	}						\
++	.name = #fcn_name,				\
++	.groups = bcm281xx_alt_groups,			\
++	.ngroups = ARRAY_SIZE(bcm281xx_alt_groups),	\
 +}
 +
-+/*
-+ * List of Cygnus pin groups
-+ */
-+static const struct cygnus_pin_group cygnus_pin_groups[] = {
-+	CYGNUS_PIN_GROUP(i2s2_0, 0x0, 0, 2),
-+	CYGNUS_PIN_GROUP(i2s2_1, 0x0, 4, 2),
-+	CYGNUS_PIN_GROUP(i2s2_2, 0x0, 8, 2),
-+	CYGNUS_PIN_GROUP(i2s2_3, 0x0, 12, 2),
-+	CYGNUS_PIN_GROUP(i2s2_4, 0x0, 16, 2),
-+	CYGNUS_PIN_GROUP(pwm4, 0x0, 20, 0),
-+	CYGNUS_PIN_GROUP(pwm5, 0x0, 24, 2),
-+	CYGNUS_PIN_GROUP(key0, 0x4, 0, 1),
-+	CYGNUS_PIN_GROUP(key1, 0x4, 4, 1),
-+	CYGNUS_PIN_GROUP(key2, 0x4, 8, 1),
-+	CYGNUS_PIN_GROUP(key3, 0x4, 12, 1),
-+	CYGNUS_PIN_GROUP(key4, 0x4, 16, 1),
-+	CYGNUS_PIN_GROUP(key5, 0x4, 20, 1),
-+	CYGNUS_PIN_GROUP(key6, 0x4, 24, 1),
-+	CYGNUS_PIN_GROUP(audio_dte0, 0x4, 24, 2),
-+	CYGNUS_PIN_GROUP(key7, 0x4, 28, 1),
-+	CYGNUS_PIN_GROUP(audio_dte1, 0x4, 28, 2),
-+	CYGNUS_PIN_GROUP(key8, 0x8, 0, 1),
-+	CYGNUS_PIN_GROUP(key9, 0x8, 4, 1),
-+	CYGNUS_PIN_GROUP(key10, 0x8, 8, 1),
-+	CYGNUS_PIN_GROUP(key11, 0x8, 12, 1),
-+	CYGNUS_PIN_GROUP(key12, 0x8, 16, 1),
-+	CYGNUS_PIN_GROUP(key13, 0x8, 20, 1),
-+	CYGNUS_PIN_GROUP(key14, 0x8, 24, 1),
-+	CYGNUS_PIN_GROUP(audio_dte2, 0x8, 24, 2),
-+	CYGNUS_PIN_GROUP(key15, 0x8, 28, 1),
-+	CYGNUS_PIN_GROUP(audio_dte3, 0x8, 28, 2),
-+	CYGNUS_PIN_GROUP(pwm0, 0xc, 0, 0),
-+	CYGNUS_PIN_GROUP(pwm1, 0xc, 4, 0),
-+	CYGNUS_PIN_GROUP(pwm2, 0xc, 8, 0),
-+	CYGNUS_PIN_GROUP(pwm3, 0xc, 12, 0),
-+	CYGNUS_PIN_GROUP(sdio0, 0xc, 16, 0),
-+	CYGNUS_PIN_GROUP(smart_card0, 0xc, 20, 0),
-+	CYGNUS_PIN_GROUP(i2s0_0, 0xc, 20, 1),
-+	CYGNUS_PIN_GROUP(spdif, 0xc, 20, 1),
-+	CYGNUS_PIN_GROUP(smart_card1, 0xc, 24, 0),
-+	CYGNUS_PIN_GROUP(i2s1_0, 0xc, 24, 1),
-+	CYGNUS_PIN_GROUP(spi0, 0x10, 0, 0),
-+	CYGNUS_PIN_GROUP(spi1, 0x10, 4, 0),
-+	CYGNUS_PIN_GROUP(spi2, 0x10, 8, 0),
-+	CYGNUS_PIN_GROUP(spi3, 0x10, 12, 0),
-+	CYGNUS_PIN_GROUP(sw_led0_0, 0x10, 12, 2),
-+	CYGNUS_PIN_GROUP(d1w, 0x10, 16, 0),
-+	CYGNUS_PIN_GROUP(uart4, 0x10, 16, 1),
-+	CYGNUS_PIN_GROUP(sw_led2_0, 0x10, 16, 2),
-+	CYGNUS_PIN_GROUP(lcd, 0x10, 20, 0),
-+	CYGNUS_PIN_GROUP(sram_0, 0x10, 20, 1),
-+	CYGNUS_PIN_GROUP(spi5, 0x10, 20, 2),
-+	CYGNUS_PIN_GROUP(uart0, 0x14, 0, 0),
-+	CYGNUS_PIN_GROUP(sw_led0_1, 0x14, 0, 2),
-+	CYGNUS_PIN_GROUP(uart1_dte, 0x14, 4, 0),
-+	CYGNUS_PIN_GROUP(uart2, 0x14, 4, 1),
-+	CYGNUS_PIN_GROUP(uart1, 0x14, 8, 0),
-+	CYGNUS_PIN_GROUP(uart3, 0x14, 12, 0),
-+	CYGNUS_PIN_GROUP(qspi_0, 0x14, 16, 0),
-+	CYGNUS_PIN_GROUP(nand, 0x14, 20, 0),
-+	CYGNUS_PIN_GROUP(sdio0_cd, 0x18, 0, 0),
-+	CYGNUS_PIN_GROUP(sdio0_mmc, 0x18, 4, 0),
-+	CYGNUS_PIN_GROUP(sdio1_data_0, 0x18, 8, 0),
-+	CYGNUS_PIN_GROUP(can0, 0x18, 8, 1),
-+	CYGNUS_PIN_GROUP(spi4_0, 0x18, 8, 2),
-+	CYGNUS_PIN_GROUP(sdio1_data_1, 0x18, 12, 0),
-+	CYGNUS_PIN_GROUP(can1, 0x18, 12, 1),
-+	CYGNUS_PIN_GROUP(spi4_1, 0x18, 12, 2),
-+	CYGNUS_PIN_GROUP(sdio1_cd, 0x18, 16, 0),
-+	CYGNUS_PIN_GROUP(sdio1_led, 0x18, 20, 0),
-+	CYGNUS_PIN_GROUP(sw_led2_1, 0x18, 20, 2),
-+	CYGNUS_PIN_GROUP(sdio1_mmc, 0x18, 24, 0),
-+	CYGNUS_PIN_GROUP(cam_led, 0x1c, 0, 0),
-+	CYGNUS_PIN_GROUP(sw_led1, 0x1c, 0, 1),
-+	CYGNUS_PIN_GROUP(cam_0, 0x1c, 4, 0),
-+	CYGNUS_PIN_GROUP(cam_1, 0x1c, 8, 0),
-+	CYGNUS_PIN_GROUP(sram_1, 0x1c, 8, 1),
-+	CYGNUS_PIN_GROUP(qspi_1, 0x1c, 12, 0),
-+	CYGNUS_PIN_GROUP(bsc1, 0x1c, 16, 0),
-+	CYGNUS_PIN_GROUP(pcie_clkreq, 0x1c, 16, 1),
-+	CYGNUS_PIN_GROUP(smart_card0_fcb, 0x20, 0, 0),
-+	CYGNUS_PIN_GROUP(i2s0_1, 0x20, 0, 1),
-+	CYGNUS_PIN_GROUP(smart_card1_fcb, 0x20, 4, 0),
-+	CYGNUS_PIN_GROUP(i2s1_1, 0x20, 4, 1),
-+	CYGNUS_PIN_GROUP(gpio0_3p3, 0x28, 0, 0),
-+	CYGNUS_PIN_GROUP(usb0_oc, 0x28, 0, 1),
-+	CYGNUS_PIN_GROUP(gpio1_3p3, 0x28, 4, 0),
-+	CYGNUS_PIN_GROUP(usb1_oc, 0x28, 4, 1),
-+	CYGNUS_PIN_GROUP(gpio2_3p3, 0x28, 8, 0),
-+	CYGNUS_PIN_GROUP(usb2_oc, 0x28, 8, 1),
++static const struct bcm281xx_pin_function bcm281xx_functions[] = {
++	BCM281XX_PIN_FUNCTION(alt1),
++	BCM281XX_PIN_FUNCTION(alt2),
++	BCM281XX_PIN_FUNCTION(alt3),
++	BCM281XX_PIN_FUNCTION(alt4),
 +};
 +
-+/*
-+ * List of groups supported by functions
-+ */
-+static const char * const i2s0_grps[] = { "i2s0_0_grp", "i2s0_1_grp" };
-+static const char * const i2s1_grps[] = { "i2s1_0_grp", "i2s1_1_grp" };
-+static const char * const i2s2_grps[] = { "i2s2_0_grp", "i2s2_1_grp",
-+	"i2s2_2_grp", "i2s2_3_grp", "i2s2_4_grp" };
-+static const char * const spdif_grps[] = { "spdif_grp" };
-+static const char * const pwm0_grps[] = { "pwm0_grp" };
-+static const char * const pwm1_grps[] = { "pwm1_grp" };
-+static const char * const pwm2_grps[] = { "pwm2_grp" };
-+static const char * const pwm3_grps[] = { "pwm3_grp" };
-+static const char * const pwm4_grps[] = { "pwm4_grp" };
-+static const char * const pwm5_grps[] = { "pwm5_grp" };
-+static const char * const key_grps[] = { "key0_grp", "key1_grp", "key2_grp",
-+	"key3_grp", "key4_grp", "key5_grp", "key6_grp", "key7_grp", "key8_grp",
-+	"key9_grp", "key10_grp", "key11_grp", "key12_grp", "key13_grp",
-+	"key14_grp", "key15_grp" };
-+static const char * const audio_dte_grps[] = { "audio_dte0_grp",
-+	"audio_dte1_grp", "audio_dte2_grp", "audio_dte3_grp" };
-+static const char * const smart_card0_grps[] = { "smart_card0_grp",
-+	"smart_card0_fcb_grp" };
-+static const char * const smart_card1_grps[] = { "smart_card1_grp",
-+	"smart_card1_fcb_grp" };
-+static const char * const spi0_grps[] = { "spi0_grp" };
-+static const char * const spi1_grps[] = { "spi1_grp" };
-+static const char * const spi2_grps[] = { "spi2_grp" };
-+static const char * const spi3_grps[] = { "spi3_grp" };
-+static const char * const spi4_grps[] = { "spi4_0_grp", "spi4_1_grp" };
-+static const char * const spi5_grps[] = { "spi5_grp" };
-+
-+static const char * const sw_led0_grps[] = { "sw_led0_0_grp",
-+	"sw_led0_1_grp" };
-+static const char * const sw_led1_grps[] = { "sw_led1_grp" };
-+static const char * const sw_led2_grps[] = { "sw_led2_0_grp",
-+	"sw_led2_1_grp" };
-+static const char * const d1w_grps[] = { "d1w_grp" };
-+static const char * const lcd_grps[] = { "lcd_grp" };
-+static const char * const sram_grps[] = { "sram_0_grp", "sram_1_grp" };
-+
-+static const char * const uart0_grps[] = { "uart0_grp" };
-+static const char * const uart1_grps[] = { "uart1_grp", "uart1_dte_grp" };
-+static const char * const uart2_grps[] = { "uart2_grp" };
-+static const char * const uart3_grps[] = { "uart3_grp" };
-+static const char * const uart4_grps[] = { "uart4_grp" };
-+static const char * const qspi_grps[] = { "qspi_0_grp", "qspi_1_grp" };
-+static const char * const nand_grps[] = { "nand_grp" };
-+static const char * const sdio0_grps[] = { "sdio0_grp", "sdio0_cd_grp",
-+	"sdio0_mmc_grp" };
-+static const char * const sdio1_grps[] = { "sdio1_data_0_grp",
-+	"sdio1_data_1_grp", "sdio1_cd_grp", "sdio1_led_grp", "sdio1_mmc_grp" };
-+static const char * const can0_grps[] = { "can0_grp" };
-+static const char * const can1_grps[] = { "can1_grp" };
-+static const char * const cam_grps[] = { "cam_led_grp", "cam_0_grp",
-+	"cam_1_grp" };
-+static const char * const bsc1_grps[] = { "bsc1_grp" };
-+static const char * const pcie_clkreq_grps[] = { "pcie_clkreq_grp" };
-+static const char * const usb0_oc_grps[] = { "usb0_oc_grp" };
-+static const char * const usb1_oc_grps[] = { "usb1_oc_grp" };
-+static const char * const usb2_oc_grps[] = { "usb2_oc_grp" };
-+
-+#define CYGNUS_PIN_FUNCTION(func)				\
-+{								\
-+	.name = #func,						\
-+	.groups = func ## _grps,				\
-+	.num_groups = ARRAY_SIZE(func ## _grps),		\
-+}
-+
-+/*
-+ * List of supported functions in Cygnus
-+ */
-+static const struct cygnus_pin_function cygnus_pin_functions[] = {
-+	CYGNUS_PIN_FUNCTION(i2s0),
-+	CYGNUS_PIN_FUNCTION(i2s1),
-+	CYGNUS_PIN_FUNCTION(i2s2),
-+	CYGNUS_PIN_FUNCTION(spdif),
-+	CYGNUS_PIN_FUNCTION(pwm0),
-+	CYGNUS_PIN_FUNCTION(pwm1),
-+	CYGNUS_PIN_FUNCTION(pwm2),
-+	CYGNUS_PIN_FUNCTION(pwm3),
-+	CYGNUS_PIN_FUNCTION(pwm4),
-+	CYGNUS_PIN_FUNCTION(pwm5),
-+	CYGNUS_PIN_FUNCTION(key),
-+	CYGNUS_PIN_FUNCTION(audio_dte),
-+	CYGNUS_PIN_FUNCTION(smart_card0),
-+	CYGNUS_PIN_FUNCTION(smart_card1),
-+	CYGNUS_PIN_FUNCTION(spi0),
-+	CYGNUS_PIN_FUNCTION(spi1),
-+	CYGNUS_PIN_FUNCTION(spi2),
-+	CYGNUS_PIN_FUNCTION(spi3),
-+	CYGNUS_PIN_FUNCTION(spi4),
-+	CYGNUS_PIN_FUNCTION(spi5),
-+	CYGNUS_PIN_FUNCTION(sw_led0),
-+	CYGNUS_PIN_FUNCTION(sw_led1),
-+	CYGNUS_PIN_FUNCTION(sw_led2),
-+	CYGNUS_PIN_FUNCTION(d1w),
-+	CYGNUS_PIN_FUNCTION(lcd),
-+	CYGNUS_PIN_FUNCTION(sram),
-+	CYGNUS_PIN_FUNCTION(uart0),
-+	CYGNUS_PIN_FUNCTION(uart1),
-+	CYGNUS_PIN_FUNCTION(uart2),
-+	CYGNUS_PIN_FUNCTION(uart3),
-+	CYGNUS_PIN_FUNCTION(uart4),
-+	CYGNUS_PIN_FUNCTION(qspi),
-+	CYGNUS_PIN_FUNCTION(nand),
-+	CYGNUS_PIN_FUNCTION(sdio0),
-+	CYGNUS_PIN_FUNCTION(sdio1),
-+	CYGNUS_PIN_FUNCTION(can0),
-+	CYGNUS_PIN_FUNCTION(can1),
-+	CYGNUS_PIN_FUNCTION(cam),
-+	CYGNUS_PIN_FUNCTION(bsc1),
-+	CYGNUS_PIN_FUNCTION(pcie_clkreq),
-+	CYGNUS_PIN_FUNCTION(usb0_oc),
-+	CYGNUS_PIN_FUNCTION(usb1_oc),
-+	CYGNUS_PIN_FUNCTION(usb2_oc),
++static struct bcm281xx_pinctrl_data bcm281xx_pinctrl = {
++	.pins = bcm281xx_pinctrl_pins,
++	.npins = ARRAY_SIZE(bcm281xx_pinctrl_pins),
++	.functions = bcm281xx_functions,
++	.nfunctions = ARRAY_SIZE(bcm281xx_functions),
 +};
 +
-+static int cygnus_get_groups_count(struct pinctrl_dev *pctrl_dev)
++static inline enum bcm281xx_pin_type pin_type_get(struct pinctrl_dev *pctldev,
++						  unsigned pin)
 +{
-+	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
 +
-+	return pinctrl->num_groups;
++	if (pin >= pdata->npins)
++		return BCM281XX_PIN_TYPE_UNKNOWN;
++
++	return *(enum bcm281xx_pin_type *)(pdata->pins[pin].drv_data);
 +}
 +
-+static const char *cygnus_get_group_name(struct pinctrl_dev *pctrl_dev,
-+					 unsigned selector)
-+{
-+	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
++#define BCM281XX_PIN_SHIFT(type, param) \
++	(BCM281XX_ ## type ## _PIN_REG_ ## param ## _SHIFT)
 +
-+	return pinctrl->groups[selector].name;
++#define BCM281XX_PIN_MASK(type, param) \
++	(BCM281XX_ ## type ## _PIN_REG_ ## param ## _MASK)
++
++/*
++ * This helper function is used to build up the value and mask used to write to
++ * a pin register, but does not actually write to the register.
++ */
++static inline void bcm281xx_pin_update(u32 *reg_val, u32 *reg_mask,
++				       u32 param_val, u32 param_shift,
++				       u32 param_mask)
++{
++	*reg_val &= ~param_mask;
++	*reg_val |= (param_val << param_shift) & param_mask;
++	*reg_mask |= param_mask;
 +}
 +
-+static int cygnus_get_group_pins(struct pinctrl_dev *pctrl_dev,
-+				 unsigned selector, const unsigned **pins,
-+				 unsigned *num_pins)
-+{
-+	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
++static struct regmap_config bcm281xx_pinctrl_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.max_register = BCM281XX_PIN_VC_CAM3_SDA,
++};
 +
-+	*pins = pinctrl->groups[selector].pins;
-+	*num_pins = pinctrl->groups[selector].num_pins;
++static int bcm281xx_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++
++	return pdata->npins;
++}
++
++static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
++						   unsigned group)
++{
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++
++	return pdata->pins[group].name;
++}
++
++static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
++					   unsigned group,
++					   const unsigned **pins,
++					   unsigned *num_pins)
++{
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++
++	*pins = &pdata->pins[group].number;
++	*num_pins = 1;
 +
 +	return 0;
 +}
 +
-+static void cygnus_pin_dbg_show(struct pinctrl_dev *pctrl_dev,
-+				struct seq_file *s, unsigned offset)
++static void bcm281xx_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
++					  struct seq_file *s,
++					  unsigned offset)
 +{
-+	seq_printf(s, " %s", dev_name(pctrl_dev->dev));
++	seq_printf(s, " %s", dev_name(pctldev->dev));
 +}
 +
-+static bool cygnus_function_is_valid(const char *function_name)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(cygnus_pin_functions); i++) {
-+		if (!strcmp(cygnus_pin_functions[i].name, function_name))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+/*
-+ * TODO: Use API from pinctrl framework once "groups" parsing is supported
-+ */
-+static int cygnus_dt_node_to_map(struct pinctrl_dev *pctrl_dev,
-+				 struct device_node *np,
-+				 struct pinctrl_map **map,
-+				 unsigned *num_maps)
-+{
-+	int ret, num_groups;
-+	unsigned reserved_maps = 0;
-+	struct property *prop;
-+	const char *group_name, *function_name;
-+
-+	*map = NULL;
-+	*num_maps = 0;
-+
-+	num_groups = of_property_count_strings(np, "groups");
-+	if (num_groups < 0) {
-+		dev_err(pctrl_dev->dev, "could not parse property groups\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_string(np, "function", &function_name);
-+	if (ret < 0) {
-+		dev_err(pctrl_dev->dev,	"could not parse property function\n");
-+		return -EINVAL;
-+	}
-+
-+	/* check if it's a valid function */
-+	if (!cygnus_function_is_valid(function_name)) {
-+		dev_warn(pctrl_dev->dev, "invalid function name: %s\n",
-+				function_name);
-+	}
-+
-+	ret = pinctrl_utils_reserve_map(pctrl_dev, map, &reserved_maps,
-+			num_maps, num_groups);
-+	if (ret) {
-+		dev_err(pctrl_dev->dev, "unable to reserve map\n");
-+		return ret;
-+	}
-+
-+	of_property_for_each_string(np, "groups", prop, group_name) {
-+		ret = pinctrl_utils_add_map_mux(pctrl_dev, map,
-+				&reserved_maps, num_maps, group_name,
-+				function_name);
-+		if (ret) {
-+			dev_err(pctrl_dev->dev, "can't add map: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct pinctrl_ops cygnus_pinctrl_ops = {
-+	.get_groups_count = cygnus_get_groups_count,
-+	.get_group_name = cygnus_get_group_name,
-+	.get_group_pins = cygnus_get_group_pins,
-+	.pin_dbg_show = cygnus_pin_dbg_show,
-+	.dt_node_to_map = cygnus_dt_node_to_map,
++static struct pinctrl_ops bcm281xx_pinctrl_ops = {
++	.get_groups_count = bcm281xx_pinctrl_get_groups_count,
++	.get_group_name = bcm281xx_pinctrl_get_group_name,
++	.get_group_pins = bcm281xx_pinctrl_get_group_pins,
++	.pin_dbg_show = bcm281xx_pinctrl_pin_dbg_show,
++	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
 +	.dt_free_map = pinctrl_utils_dt_free_map,
 +};
 +
-+static int cygnus_get_functions_count(struct pinctrl_dev *pctrl_dev)
++static int bcm281xx_pinctrl_get_fcns_count(struct pinctrl_dev *pctldev)
 +{
-+	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
 +
-+	return pinctrl->num_functions;
++	return pdata->nfunctions;
 +}
 +
-+static const char *cygnus_get_function_name(struct pinctrl_dev *pctrl_dev,
-+					    unsigned selector)
++static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
++						 unsigned function)
 +{
-+	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
 +
-+	return pinctrl->functions[selector].name;
++	return pdata->functions[function].name;
 +}
 +
-+static int cygnus_get_function_groups(struct pinctrl_dev *pctrl_dev,
-+				      unsigned selector,
-+				      const char * const **groups,
-+				      unsigned * const num_groups)
++static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
++					   unsigned function,
++					   const char * const **groups,
++					   unsigned * const num_groups)
 +{
-+	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
 +
-+	*groups = pinctrl->functions[selector].groups;
-+	*num_groups = pinctrl->functions[selector].num_groups;
++	*groups = pdata->functions[function].groups;
++	*num_groups = pdata->functions[function].ngroups;
 +
 +	return 0;
 +}
 +
-+static int cygnus_pinmux_set(struct cygnus_pinctrl *pinctrl,
-+			     const struct cygnus_pin_function *func,
-+			     const struct cygnus_pin_group *grp,
-+			     struct cygnus_mux_log *mux_log)
++static int bcm281xx_pinmux_set(struct pinctrl_dev *pctldev,
++			       unsigned function,
++			       unsigned group)
 +{
-+	const struct cygnus_mux *mux = &grp->mux;
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	const struct bcm281xx_pin_function *f = &pdata->functions[function];
++	u32 offset = 4 * pdata->pins[group].number;
++	int rc = 0;
++
++	dev_dbg(pctldev->dev,
++		"%s(): Enable function %s (%d) of pin %s (%d) @offset 0x%x.\n",
++		__func__, f->name, function, pdata->pins[group].name,
++		pdata->pins[group].number, offset);
++
++	rc = regmap_update_bits(pdata->regmap, offset,
++		BCM281XX_PIN_REG_F_SEL_MASK,
++		function << BCM281XX_PIN_REG_F_SEL_SHIFT);
++	if (rc)
++		dev_err(pctldev->dev,
++			"Error updating register for pin %s (%d).\n",
++			pdata->pins[group].name, pdata->pins[group].number);
++
++	return rc;
++}
++
++static struct pinmux_ops bcm281xx_pinctrl_pinmux_ops = {
++	.get_functions_count = bcm281xx_pinctrl_get_fcns_count,
++	.get_function_name = bcm281xx_pinctrl_get_fcn_name,
++	.get_function_groups = bcm281xx_pinctrl_get_fcn_groups,
++	.set_mux = bcm281xx_pinmux_set,
++};
++
++static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
++					   unsigned pin,
++					   unsigned long *config)
++{
++	return -ENOTSUPP;
++}
++
++
++/* Goes through the configs and update register val/mask */
++static int bcm281xx_std_pin_update(struct pinctrl_dev *pctldev,
++				   unsigned pin,
++				   unsigned long *configs,
++				   unsigned num_configs,
++				   u32 *val,
++				   u32 *mask)
++{
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
 +	int i;
-+	u32 val, mask = 0x7;
-+	unsigned long flags;
++	enum pin_config_param param;
++	u16 arg;
 +
-+	for (i = 0; i < CYGNUS_NUM_IOMUX; i++) {
-+		if (mux->offset != mux_log[i].mux.offset ||
-+		    mux->shift != mux_log[i].mux.shift)
-+			continue;
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
 +
-+		/* match found if we reach here */
-+
-+		/* if this is a new configuration, just do it! */
-+		if (!mux_log[i].is_configured)
++		switch (param) {
++		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
++			arg = (arg >= 1 ? 1 : 0);
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(STD, HYST),
++				BCM281XX_PIN_MASK(STD, HYST));
++			break;
++		/*
++		 * The pin bias can only be one of pull-up, pull-down, or
++		 * disable.  The user does not need to specify a value for the
++		 * property, and the default value from pinconf-generic is
++		 * ignored.
++		 */
++		case PIN_CONFIG_BIAS_DISABLE:
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(STD, PULL_UP),
++				BCM281XX_PIN_MASK(STD, PULL_UP));
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(STD, PULL_DN),
++				BCM281XX_PIN_MASK(STD, PULL_DN));
 +			break;
 +
-+		/*
-+		 * IOMUX has been configured previously and one is trying to
-+		 * configure it to a different function
-+		 */
-+		if (mux_log[i].mux.alt != mux->alt) {
-+			dev_err(pinctrl->dev,
-+				"double configuration error detected!\n");
-+			dev_err(pinctrl->dev, "func:%s grp:%s\n",
-+				func->name, grp->name);
++		case PIN_CONFIG_BIAS_PULL_UP:
++			bcm281xx_pin_update(val, mask, 1,
++				BCM281XX_PIN_SHIFT(STD, PULL_UP),
++				BCM281XX_PIN_MASK(STD, PULL_UP));
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(STD, PULL_DN),
++				BCM281XX_PIN_MASK(STD, PULL_DN));
++			break;
++
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(STD, PULL_UP),
++				BCM281XX_PIN_MASK(STD, PULL_UP));
++			bcm281xx_pin_update(val, mask, 1,
++				BCM281XX_PIN_SHIFT(STD, PULL_DN),
++				BCM281XX_PIN_MASK(STD, PULL_DN));
++			break;
++
++		case PIN_CONFIG_SLEW_RATE:
++			arg = (arg >= 1 ? 1 : 0);
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(STD, SLEW),
++				BCM281XX_PIN_MASK(STD, SLEW));
++			break;
++
++		case PIN_CONFIG_INPUT_ENABLE:
++			/* inversed since register is for input _disable_ */
++			arg = (arg >= 1 ? 0 : 1);
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(STD, INPUT_DIS),
++				BCM281XX_PIN_MASK(STD, INPUT_DIS));
++			break;
++
++		case PIN_CONFIG_DRIVE_STRENGTH:
++			/* Valid range is 2-16 mA, even numbers only */
++			if ((arg < 2) || (arg > 16) || (arg % 2)) {
++				dev_err(pctldev->dev,
++					"Invalid Drive Strength value (%d) for "
++					"pin %s (%d). Valid values are "
++					"(2..16) mA, even numbers only.\n",
++					arg, pdata->pins[pin].name, pin);
++				return -EINVAL;
++			}
++			bcm281xx_pin_update(val, mask, (arg/2)-1,
++				BCM281XX_PIN_SHIFT(STD, DRV_STR),
++				BCM281XX_PIN_MASK(STD, DRV_STR));
++			break;
++
++		default:
++			dev_err(pctldev->dev,
++				"Unrecognized pin config %d for pin %s (%d).\n",
++				param, pdata->pins[pin].name, pin);
 +			return -EINVAL;
-+		} else {
-+			/*
-+			 * One tries to configure it to the same function.
-+			 * Just quit and don't bother
-+			 */
-+			return 0;
-+		}
++
++		} /* switch config */
++	} /* for each config */
++
++	return 0;
++}
++
++/*
++ * The pull-up strength for an I2C pin is represented by bits 4-6 in the
++ * register with the following mapping:
++ *   0b000: No pull-up
++ *   0b001: 1200 Ohm
++ *   0b010: 1800 Ohm
++ *   0b011: 720 Ohm
++ *   0b100: 2700 Ohm
++ *   0b101: 831 Ohm
++ *   0b110: 1080 Ohm
++ *   0b111: 568 Ohm
++ * This array maps pull-up strength in Ohms to register values (1+index).
++ */
++static const u16 bcm281xx_pullup_map[] = {
++	1200, 1800, 720, 2700, 831, 1080, 568
++};
++
++/* Goes through the configs and update register val/mask */
++static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
++				   unsigned pin,
++				   unsigned long *configs,
++				   unsigned num_configs,
++				   u32 *val,
++				   u32 *mask)
++{
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	int i, j;
++	enum pin_config_param param;
++	u16 arg;
++
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_BIAS_PULL_UP:
++			for (j = 0; j < ARRAY_SIZE(bcm281xx_pullup_map); j++)
++				if (bcm281xx_pullup_map[j] == arg)
++					break;
++
++			if (j == ARRAY_SIZE(bcm281xx_pullup_map)) {
++				dev_err(pctldev->dev,
++					"Invalid pull-up value (%d) for pin %s "
++					"(%d). Valid values are 568, 720, 831, "
++					"1080, 1200, 1800, 2700 Ohms.\n",
++					arg, pdata->pins[pin].name, pin);
++				return -EINVAL;
++			}
++
++			bcm281xx_pin_update(val, mask, j+1,
++				BCM281XX_PIN_SHIFT(I2C, PULL_UP_STR),
++				BCM281XX_PIN_MASK(I2C, PULL_UP_STR));
++			break;
++
++		case PIN_CONFIG_BIAS_DISABLE:
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(I2C, PULL_UP_STR),
++				BCM281XX_PIN_MASK(I2C, PULL_UP_STR));
++			break;
++
++		case PIN_CONFIG_SLEW_RATE:
++			arg = (arg >= 1 ? 1 : 0);
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(I2C, SLEW),
++				BCM281XX_PIN_MASK(I2C, SLEW));
++			break;
++
++		case PIN_CONFIG_INPUT_ENABLE:
++			/* inversed since register is for input _disable_ */
++			arg = (arg >= 1 ? 0 : 1);
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(I2C, INPUT_DIS),
++				BCM281XX_PIN_MASK(I2C, INPUT_DIS));
++			break;
++
++		default:
++			dev_err(pctldev->dev,
++				"Unrecognized pin config %d for pin %s (%d).\n",
++				param, pdata->pins[pin].name, pin);
++			return -EINVAL;
++
++		} /* switch config */
++	} /* for each config */
++
++	return 0;
++}
++
++/* Goes through the configs and update register val/mask */
++static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
++				    unsigned pin,
++				    unsigned long *configs,
++				    unsigned num_configs,
++				    u32 *val,
++				    u32 *mask)
++{
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	int i;
++	enum pin_config_param param;
++	u16 arg;
++
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_SLEW_RATE:
++			arg = (arg >= 1 ? 1 : 0);
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(HDMI, MODE),
++				BCM281XX_PIN_MASK(HDMI, MODE));
++			break;
++
++		case PIN_CONFIG_INPUT_ENABLE:
++			/* inversed since register is for input _disable_ */
++			arg = (arg >= 1 ? 0 : 1);
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(HDMI, INPUT_DIS),
++				BCM281XX_PIN_MASK(HDMI, INPUT_DIS));
++			break;
++
++		default:
++			dev_err(pctldev->dev,
++				"Unrecognized pin config %d for pin %s (%d).\n",
++				param, pdata->pins[pin].name, pin);
++			return -EINVAL;
++
++		} /* switch config */
++	} /* for each config */
++
++	return 0;
++}
++
++static int bcm281xx_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
++					   unsigned pin,
++					   unsigned long *configs,
++					   unsigned num_configs)
++{
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	enum bcm281xx_pin_type pin_type;
++	u32 offset = 4 * pin;
++	u32 cfg_val, cfg_mask;
++	int rc;
++
++	cfg_val = 0;
++	cfg_mask = 0;
++	pin_type = pin_type_get(pctldev, pin);
++
++	/* Different pins have different configuration options */
++	switch (pin_type) {
++	case BCM281XX_PIN_TYPE_STD:
++		rc = bcm281xx_std_pin_update(pctldev, pin, configs,
++			num_configs, &cfg_val, &cfg_mask);
++		break;
++
++	case BCM281XX_PIN_TYPE_I2C:
++		rc = bcm281xx_i2c_pin_update(pctldev, pin, configs,
++			num_configs, &cfg_val, &cfg_mask);
++		break;
++
++	case BCM281XX_PIN_TYPE_HDMI:
++		rc = bcm281xx_hdmi_pin_update(pctldev, pin, configs,
++			num_configs, &cfg_val, &cfg_mask);
++		break;
++
++	default:
++		dev_err(pctldev->dev, "Unknown pin type for pin %s (%d).\n",
++			pdata->pins[pin].name, pin);
++		return -EINVAL;
++
++	} /* switch pin type */
++
++	if (rc)
++		return rc;
++
++	dev_dbg(pctldev->dev,
++		"%s(): Set pin %s (%d) with config 0x%x, mask 0x%x\n",
++		__func__, pdata->pins[pin].name, pin, cfg_val, cfg_mask);
++
++	rc = regmap_update_bits(pdata->regmap, offset, cfg_mask, cfg_val);
++	if (rc) {
++		dev_err(pctldev->dev,
++			"Error updating register for pin %s (%d).\n",
++			pdata->pins[pin].name, pin);
++		return rc;
 +	}
 +
-+	mux_log[i].mux.alt = mux->alt;
-+	mux_log[i].is_configured = true;
++	return 0;
++}
 +
-+	spin_lock_irqsave(&pinctrl->lock, flags);
++static struct pinconf_ops bcm281xx_pinctrl_pinconf_ops = {
++	.pin_config_get = bcm281xx_pinctrl_pin_config_get,
++	.pin_config_set = bcm281xx_pinctrl_pin_config_set,
++};
 +
-+	val = readl(pinctrl->base0 + grp->mux.offset);
-+	val &= ~(mask << grp->mux.shift);
-+	val |= grp->mux.alt << grp->mux.shift;
-+	writel(val, pinctrl->base0 + grp->mux.offset);
++static struct pinctrl_desc bcm281xx_pinctrl_desc = {
++	/* name, pins, npins members initialized in probe function */
++	.pctlops = &bcm281xx_pinctrl_ops,
++	.pmxops = &bcm281xx_pinctrl_pinmux_ops,
++	.confops = &bcm281xx_pinctrl_pinconf_ops,
++	.owner = THIS_MODULE,
++};
 +
-+	spin_unlock_irqrestore(&pinctrl->lock, flags);
++static int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
++{
++	struct bcm281xx_pinctrl_data *pdata = &bcm281xx_pinctrl;
++	struct resource *res;
++	struct pinctrl_dev *pctl;
++
++	/* So far We can assume there is only 1 bank of registers */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	pdata->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(pdata->reg_base)) {
++		dev_err(&pdev->dev, "Failed to ioremap MEM resource\n");
++		return -ENODEV;
++	}
++
++	/* Initialize the dynamic part of pinctrl_desc */
++	pdata->regmap = devm_regmap_init_mmio(&pdev->dev, pdata->reg_base,
++		&bcm281xx_pinctrl_regmap_config);
++	if (IS_ERR(pdata->regmap)) {
++		dev_err(&pdev->dev, "Regmap MMIO init failed.\n");
++		return -ENODEV;
++	}
++
++	bcm281xx_pinctrl_desc.name = dev_name(&pdev->dev);
++	bcm281xx_pinctrl_desc.pins = bcm281xx_pinctrl.pins;
++	bcm281xx_pinctrl_desc.npins = bcm281xx_pinctrl.npins;
++
++	pctl = pinctrl_register(&bcm281xx_pinctrl_desc,
++				&pdev->dev,
++				pdata);
++	if (!pctl) {
++		dev_err(&pdev->dev, "Failed to register pinctrl\n");
++		return -ENODEV;
++	}
++
++	platform_set_drvdata(pdev, pdata);
 +
 +	return 0;
 +}
 +
-+static int cygnus_pinmux_set_mux(struct pinctrl_dev *pctrl_dev,
-+				 unsigned func_select, unsigned grp_select)
++static struct of_device_id bcm281xx_pinctrl_of_match[] = {
++	{ .compatible = "brcm,bcm11351-pinctrl", },
++	{ },
++};
++
++static struct platform_driver bcm281xx_pinctrl_driver = {
++	.driver = {
++		.name = "bcm281xx-pinctrl",
++		.of_match_table = bcm281xx_pinctrl_of_match,
++	},
++};
++
++module_platform_driver_probe(bcm281xx_pinctrl_driver, bcm281xx_pinctrl_probe);
++
++MODULE_AUTHOR("Broadcom Corporation <bcm-kernel-feedback-list@broadcom.com>");
++MODULE_AUTHOR("Sherman Yin <syin@broadcom.com>");
++MODULE_DESCRIPTION("Broadcom BCM281xx pinctrl driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+new file mode 100644
+index 0000000..9aa8a3f
+--- /dev/null
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -0,0 +1,1072 @@
++/*
++ * Driver for Broadcom BCM2835 GPIO unit (pinctrl + GPIO)
++ *
++ * Copyright (C) 2012 Chris Boot, Simon Arlott, Stephen Warren
++ *
++ * This driver is inspired by:
++ * pinctrl-nomadik.c, please see original file for copyright information
++ * pinctrl-tegra.c, please see original file for copyright information
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/bitmap.h>
++#include <linux/bug.h>
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/irqdesc.h>
++#include <linux/irqdomain.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <linux/pinctrl/consumer.h>
++#include <linux/pinctrl/machine.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/platform_device.h>
++#include <linux/seq_file.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++
++#define MODULE_NAME "pinctrl-bcm2835"
++#define BCM2835_NUM_GPIOS 54
++#define BCM2835_NUM_BANKS 2
++
++#define BCM2835_PIN_BITMAP_SZ \
++	DIV_ROUND_UP(BCM2835_NUM_GPIOS, sizeof(unsigned long) * 8)
++
++/* GPIO register offsets */
++#define GPFSEL0		0x0	/* Function Select */
++#define GPSET0		0x1c	/* Pin Output Set */
++#define GPCLR0		0x28	/* Pin Output Clear */
++#define GPLEV0		0x34	/* Pin Level */
++#define GPEDS0		0x40	/* Pin Event Detect Status */
++#define GPREN0		0x4c	/* Pin Rising Edge Detect Enable */
++#define GPFEN0		0x58	/* Pin Falling Edge Detect Enable */
++#define GPHEN0		0x64	/* Pin High Detect Enable */
++#define GPLEN0		0x70	/* Pin Low Detect Enable */
++#define GPAREN0		0x7c	/* Pin Async Rising Edge Detect */
++#define GPAFEN0		0x88	/* Pin Async Falling Edge Detect */
++#define GPPUD		0x94	/* Pin Pull-up/down Enable */
++#define GPPUDCLK0	0x98	/* Pin Pull-up/down Enable Clock */
++
++#define FSEL_REG(p)		(GPFSEL0 + (((p) / 10) * 4))
++#define FSEL_SHIFT(p)		(((p) % 10) * 3)
++#define GPIO_REG_OFFSET(p)	((p) / 32)
++#define GPIO_REG_SHIFT(p)	((p) % 32)
++
++enum bcm2835_pinconf_param {
++	/* argument: bcm2835_pinconf_pull */
++	BCM2835_PINCONF_PARAM_PULL,
++};
++
++enum bcm2835_pinconf_pull {
++	BCM2835_PINCONFIG_PULL_NONE,
++	BCM2835_PINCONFIG_PULL_DOWN,
++	BCM2835_PINCONFIG_PULL_UP,
++};
++
++#define BCM2835_PINCONF_PACK(_param_, _arg_) ((_param_) << 16 | (_arg_))
++#define BCM2835_PINCONF_UNPACK_PARAM(_conf_) ((_conf_) >> 16)
++#define BCM2835_PINCONF_UNPACK_ARG(_conf_) ((_conf_) & 0xffff)
++
++struct bcm2835_gpio_irqdata {
++	struct bcm2835_pinctrl *pc;
++	int bank;
++};
++
++struct bcm2835_pinctrl {
++	struct device *dev;
++	void __iomem *base;
++	int irq[BCM2835_NUM_BANKS];
++
++	/* note: locking assumes each bank will have its own unsigned long */
++	unsigned long enabled_irq_map[BCM2835_NUM_BANKS];
++	unsigned int irq_type[BCM2835_NUM_GPIOS];
++
++	struct pinctrl_dev *pctl_dev;
++	struct irq_domain *irq_domain;
++	struct gpio_chip gpio_chip;
++	struct pinctrl_gpio_range gpio_range;
++
++	struct bcm2835_gpio_irqdata irq_data[BCM2835_NUM_BANKS];
++	spinlock_t irq_lock[BCM2835_NUM_BANKS];
++};
++
++static struct lock_class_key gpio_lock_class;
++
++/* pins are just named GPIO0..GPIO53 */
++#define BCM2835_GPIO_PIN(a) PINCTRL_PIN(a, "gpio" #a)
++static struct pinctrl_pin_desc bcm2835_gpio_pins[] = {
++	BCM2835_GPIO_PIN(0),
++	BCM2835_GPIO_PIN(1),
++	BCM2835_GPIO_PIN(2),
++	BCM2835_GPIO_PIN(3),
++	BCM2835_GPIO_PIN(4),
++	BCM2835_GPIO_PIN(5),
++	BCM2835_GPIO_PIN(6),
++	BCM2835_GPIO_PIN(7),
++	BCM2835_GPIO_PIN(8),
++	BCM2835_GPIO_PIN(9),
++	BCM2835_GPIO_PIN(10),
++	BCM2835_GPIO_PIN(11),
++	BCM2835_GPIO_PIN(12),
++	BCM2835_GPIO_PIN(13),
++	BCM2835_GPIO_PIN(14),
++	BCM2835_GPIO_PIN(15),
++	BCM2835_GPIO_PIN(16),
++	BCM2835_GPIO_PIN(17),
++	BCM2835_GPIO_PIN(18),
++	BCM2835_GPIO_PIN(19),
++	BCM2835_GPIO_PIN(20),
++	BCM2835_GPIO_PIN(21),
++	BCM2835_GPIO_PIN(22),
++	BCM2835_GPIO_PIN(23),
++	BCM2835_GPIO_PIN(24),
++	BCM2835_GPIO_PIN(25),
++	BCM2835_GPIO_PIN(26),
++	BCM2835_GPIO_PIN(27),
++	BCM2835_GPIO_PIN(28),
++	BCM2835_GPIO_PIN(29),
++	BCM2835_GPIO_PIN(30),
++	BCM2835_GPIO_PIN(31),
++	BCM2835_GPIO_PIN(32),
++	BCM2835_GPIO_PIN(33),
++	BCM2835_GPIO_PIN(34),
++	BCM2835_GPIO_PIN(35),
++	BCM2835_GPIO_PIN(36),
++	BCM2835_GPIO_PIN(37),
++	BCM2835_GPIO_PIN(38),
++	BCM2835_GPIO_PIN(39),
++	BCM2835_GPIO_PIN(40),
++	BCM2835_GPIO_PIN(41),
++	BCM2835_GPIO_PIN(42),
++	BCM2835_GPIO_PIN(43),
++	BCM2835_GPIO_PIN(44),
++	BCM2835_GPIO_PIN(45),
++	BCM2835_GPIO_PIN(46),
++	BCM2835_GPIO_PIN(47),
++	BCM2835_GPIO_PIN(48),
++	BCM2835_GPIO_PIN(49),
++	BCM2835_GPIO_PIN(50),
++	BCM2835_GPIO_PIN(51),
++	BCM2835_GPIO_PIN(52),
++	BCM2835_GPIO_PIN(53),
++};
++
++/* one pin per group */
++static const char * const bcm2835_gpio_groups[] = {
++	"gpio0",
++	"gpio1",
++	"gpio2",
++	"gpio3",
++	"gpio4",
++	"gpio5",
++	"gpio6",
++	"gpio7",
++	"gpio8",
++	"gpio9",
++	"gpio10",
++	"gpio11",
++	"gpio12",
++	"gpio13",
++	"gpio14",
++	"gpio15",
++	"gpio16",
++	"gpio17",
++	"gpio18",
++	"gpio19",
++	"gpio20",
++	"gpio21",
++	"gpio22",
++	"gpio23",
++	"gpio24",
++	"gpio25",
++	"gpio26",
++	"gpio27",
++	"gpio28",
++	"gpio29",
++	"gpio30",
++	"gpio31",
++	"gpio32",
++	"gpio33",
++	"gpio34",
++	"gpio35",
++	"gpio36",
++	"gpio37",
++	"gpio38",
++	"gpio39",
++	"gpio40",
++	"gpio41",
++	"gpio42",
++	"gpio43",
++	"gpio44",
++	"gpio45",
++	"gpio46",
++	"gpio47",
++	"gpio48",
++	"gpio49",
++	"gpio50",
++	"gpio51",
++	"gpio52",
++	"gpio53",
++};
++
++enum bcm2835_fsel {
++	BCM2835_FSEL_GPIO_IN = 0,
++	BCM2835_FSEL_GPIO_OUT = 1,
++	BCM2835_FSEL_ALT0 = 4,
++	BCM2835_FSEL_ALT1 = 5,
++	BCM2835_FSEL_ALT2 = 6,
++	BCM2835_FSEL_ALT3 = 7,
++	BCM2835_FSEL_ALT4 = 3,
++	BCM2835_FSEL_ALT5 = 2,
++	BCM2835_FSEL_COUNT = 8,
++	BCM2835_FSEL_MASK = 0x7,
++};
++
++static const char * const bcm2835_functions[BCM2835_FSEL_COUNT] = {
++	[BCM2835_FSEL_GPIO_IN] = "gpio_in",
++	[BCM2835_FSEL_GPIO_OUT] = "gpio_out",
++	[BCM2835_FSEL_ALT0] = "alt0",
++	[BCM2835_FSEL_ALT1] = "alt1",
++	[BCM2835_FSEL_ALT2] = "alt2",
++	[BCM2835_FSEL_ALT3] = "alt3",
++	[BCM2835_FSEL_ALT4] = "alt4",
++	[BCM2835_FSEL_ALT5] = "alt5",
++};
++
++static const char * const irq_type_names[] = {
++	[IRQ_TYPE_NONE] = "none",
++	[IRQ_TYPE_EDGE_RISING] = "edge-rising",
++	[IRQ_TYPE_EDGE_FALLING] = "edge-falling",
++	[IRQ_TYPE_EDGE_BOTH] = "edge-both",
++	[IRQ_TYPE_LEVEL_HIGH] = "level-high",
++	[IRQ_TYPE_LEVEL_LOW] = "level-low",
++};
++
++static inline u32 bcm2835_gpio_rd(struct bcm2835_pinctrl *pc, unsigned reg)
 +{
-+	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
-+	const struct cygnus_pin_function *func =
-+		&pinctrl->functions[func_select];
-+	const struct cygnus_pin_group *grp = &pinctrl->groups[grp_select];
-+
-+	dev_dbg(pctrl_dev->dev, "func:%u name:%s grp:%u name:%s\n",
-+		func_select, func->name, grp_select, grp->name);
-+
-+	dev_dbg(pctrl_dev->dev, "offset:0x%08x shift:%u alt:%u\n",
-+		grp->mux.offset, grp->mux.shift, grp->mux.alt);
-+
-+	return cygnus_pinmux_set(pinctrl, func, grp, pinctrl->mux_log);
++	return readl(pc->base + reg);
 +}
 +
-+static int cygnus_gpio_request_enable(struct pinctrl_dev *pctrl_dev,
-+				      struct pinctrl_gpio_range *range,
-+				      unsigned pin)
++static inline void bcm2835_gpio_wr(struct bcm2835_pinctrl *pc, unsigned reg,
++		u32 val)
 +{
-+	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
-+	struct cygnus_gpio_mux *mux = pctrl_dev->desc->pins[pin].drv_data;
-+	u32 val;
-+	unsigned long flags;
-+
-+	/* not all pins support GPIO pinmux override */
-+	if (!mux->is_supported)
-+		return -ENOTSUPP;
-+
-+	spin_lock_irqsave(&pinctrl->lock, flags);
-+
-+	val = readl(pinctrl->base1 + mux->offset);
-+	val |= 0x3 << mux->shift;
-+	writel(val, pinctrl->base1 + mux->offset);
-+
-+	spin_unlock_irqrestore(&pinctrl->lock, flags);
-+
-+	dev_dbg(pctrl_dev->dev,
-+		"gpio request enable pin=%u offset=0x%x shift=%u\n",
-+		pin, mux->offset, mux->shift);
-+
-+	return 0;
++	writel(val, pc->base + reg);
 +}
 +
-+static void cygnus_gpio_disable_free(struct pinctrl_dev *pctrl_dev,
-+				     struct pinctrl_gpio_range *range,
-+				     unsigned pin)
++static inline int bcm2835_gpio_get_bit(struct bcm2835_pinctrl *pc, unsigned reg,
++		unsigned bit)
 +{
-+	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
-+	struct cygnus_gpio_mux *mux = pctrl_dev->desc->pins[pin].drv_data;
-+	u32 val;
-+	unsigned long flags;
++	reg += GPIO_REG_OFFSET(bit) * 4;
++	return (bcm2835_gpio_rd(pc, reg) >> GPIO_REG_SHIFT(bit)) & 1;
++}
 +
-+	if (!mux->is_supported)
++/* note NOT a read/modify/write cycle */
++static inline void bcm2835_gpio_set_bit(struct bcm2835_pinctrl *pc,
++		unsigned reg, unsigned bit)
++{
++	reg += GPIO_REG_OFFSET(bit) * 4;
++	bcm2835_gpio_wr(pc, reg, BIT(GPIO_REG_SHIFT(bit)));
++}
++
++static inline enum bcm2835_fsel bcm2835_pinctrl_fsel_get(
++		struct bcm2835_pinctrl *pc, unsigned pin)
++{
++	u32 val = bcm2835_gpio_rd(pc, FSEL_REG(pin));
++	enum bcm2835_fsel status = (val >> FSEL_SHIFT(pin)) & BCM2835_FSEL_MASK;
++
++	dev_dbg(pc->dev, "get %08x (%u => %s)\n", val, pin,
++			bcm2835_functions[status]);
++
++	return status;
++}
++
++static inline void bcm2835_pinctrl_fsel_set(
++		struct bcm2835_pinctrl *pc, unsigned pin,
++		enum bcm2835_fsel fsel)
++{
++	u32 val = bcm2835_gpio_rd(pc, FSEL_REG(pin));
++	enum bcm2835_fsel cur = (val >> FSEL_SHIFT(pin)) & BCM2835_FSEL_MASK;
++
++	dev_dbg(pc->dev, "read %08x (%u => %s)\n", val, pin,
++			bcm2835_functions[cur]);
++
++	if (cur == fsel)
 +		return;
 +
-+	spin_lock_irqsave(&pinctrl->lock, flags);
++	if (cur != BCM2835_FSEL_GPIO_IN && fsel != BCM2835_FSEL_GPIO_IN) {
++		/* always transition through GPIO_IN */
++		val &= ~(BCM2835_FSEL_MASK << FSEL_SHIFT(pin));
++		val |= BCM2835_FSEL_GPIO_IN << FSEL_SHIFT(pin);
 +
-+	val = readl(pinctrl->base1 + mux->offset);
-+	val &= ~(0x3 << mux->shift);
-+	writel(val, pinctrl->base1 + mux->offset);
++		dev_dbg(pc->dev, "trans %08x (%u <= %s)\n", val, pin,
++				bcm2835_functions[BCM2835_FSEL_GPIO_IN]);
++		bcm2835_gpio_wr(pc, FSEL_REG(pin), val);
++	}
 +
-+	spin_unlock_irqrestore(&pinctrl->lock, flags);
++	val &= ~(BCM2835_FSEL_MASK << FSEL_SHIFT(pin));
++	val |= fsel << FSEL_SHIFT(pin);
 +
-+	dev_err(pctrl_dev->dev,
-+		"gpio disable free pin=%u offset=0x%x shift=%u\n",
-+		pin, mux->offset, mux->shift);
++	dev_dbg(pc->dev, "write %08x (%u <= %s)\n", val, pin,
++			bcm2835_functions[fsel]);
++	bcm2835_gpio_wr(pc, FSEL_REG(pin), val);
 +}
 +
-+static struct pinmux_ops cygnus_pinmux_ops = {
-+	.get_functions_count = cygnus_get_functions_count,
-+	.get_function_name = cygnus_get_function_name,
-+	.get_function_groups = cygnus_get_function_groups,
-+	.set_mux = cygnus_pinmux_set_mux,
-+	.gpio_request_enable = cygnus_gpio_request_enable,
-+	.gpio_disable_free = cygnus_gpio_disable_free,
-+};
-+
-+static struct pinctrl_desc cygnus_pinctrl_desc = {
-+	.name = "cygnus-pinmux",
-+	.pctlops = &cygnus_pinctrl_ops,
-+	.pmxops = &cygnus_pinmux_ops,
-+};
-+
-+static int cygnus_mux_log_init(struct cygnus_pinctrl *pinctrl)
++static int bcm2835_gpio_request(struct gpio_chip *chip, unsigned offset)
 +{
-+	struct cygnus_mux_log *log;
-+	unsigned int i, j;
++	return pinctrl_request_gpio(chip->base + offset);
++}
 +
-+	pinctrl->mux_log = devm_kcalloc(pinctrl->dev, CYGNUS_NUM_IOMUX,
-+					sizeof(struct cygnus_mux_log),
-+					GFP_KERNEL);
-+	if (!pinctrl->mux_log)
-+		return -ENOMEM;
++static void bcm2835_gpio_free(struct gpio_chip *chip, unsigned offset)
++{
++	pinctrl_free_gpio(chip->base + offset);
++}
 +
-+	log = pinctrl->mux_log;
-+	for (i = 0; i < CYGNUS_NUM_IOMUX_REGS; i++) {
-+		for (j = 0; j < CYGNUS_NUM_MUX_PER_REG; j++) {
-+			log = &pinctrl->mux_log[i * CYGNUS_NUM_MUX_PER_REG
-+				+ j];
-+			log->mux.offset = i * 4;
-+			log->mux.shift = j * 4;
-+			log->mux.alt = 0;
-+			log->is_configured = false;
-+		}
++static int bcm2835_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
++{
++	return pinctrl_gpio_direction_input(chip->base + offset);
++}
++
++static int bcm2835_gpio_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct bcm2835_pinctrl *pc = dev_get_drvdata(chip->dev);
++
++	return bcm2835_gpio_get_bit(pc, GPLEV0, offset);
++}
++
++static int bcm2835_gpio_direction_output(struct gpio_chip *chip,
++		unsigned offset, int value)
++{
++	return pinctrl_gpio_direction_output(chip->base + offset);
++}
++
++static void bcm2835_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct bcm2835_pinctrl *pc = dev_get_drvdata(chip->dev);
++
++	bcm2835_gpio_set_bit(pc, value ? GPSET0 : GPCLR0, offset);
++}
++
++static int bcm2835_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
++{
++	struct bcm2835_pinctrl *pc = dev_get_drvdata(chip->dev);
++
++	return irq_linear_revmap(pc->irq_domain, offset);
++}
++
++static struct gpio_chip bcm2835_gpio_chip = {
++	.label = MODULE_NAME,
++	.owner = THIS_MODULE,
++	.request = bcm2835_gpio_request,
++	.free = bcm2835_gpio_free,
++	.direction_input = bcm2835_gpio_direction_input,
++	.direction_output = bcm2835_gpio_direction_output,
++	.get = bcm2835_gpio_get,
++	.set = bcm2835_gpio_set,
++	.to_irq = bcm2835_gpio_to_irq,
++	.base = -1,
++	.ngpio = BCM2835_NUM_GPIOS,
++	.can_sleep = false,
++};
++
++static irqreturn_t bcm2835_gpio_irq_handler(int irq, void *dev_id)
++{
++	struct bcm2835_gpio_irqdata *irqdata = dev_id;
++	struct bcm2835_pinctrl *pc = irqdata->pc;
++	int bank = irqdata->bank;
++	unsigned long events;
++	unsigned offset;
++	unsigned gpio;
++	unsigned int type;
++
++	events = bcm2835_gpio_rd(pc, GPEDS0 + bank * 4);
++	events &= pc->enabled_irq_map[bank];
++	for_each_set_bit(offset, &events, 32) {
++		gpio = (32 * bank) + offset;
++		type = pc->irq_type[gpio];
++
++		/* ack edge triggered IRQs immediately */
++		if (!(type & IRQ_TYPE_LEVEL_MASK))
++			bcm2835_gpio_set_bit(pc, GPEDS0, gpio);
++
++		generic_handle_irq(irq_linear_revmap(pc->irq_domain, gpio));
++
++		/* ack level triggered IRQ after handling them */
++		if (type & IRQ_TYPE_LEVEL_MASK)
++			bcm2835_gpio_set_bit(pc, GPEDS0, gpio);
 +	}
++	return events ? IRQ_HANDLED : IRQ_NONE;
++}
++
++static inline void __bcm2835_gpio_irq_config(struct bcm2835_pinctrl *pc,
++	unsigned reg, unsigned offset, bool enable)
++{
++	u32 value;
++	reg += GPIO_REG_OFFSET(offset) * 4;
++	value = bcm2835_gpio_rd(pc, reg);
++	if (enable)
++		value |= BIT(GPIO_REG_SHIFT(offset));
++	else
++		value &= ~(BIT(GPIO_REG_SHIFT(offset)));
++	bcm2835_gpio_wr(pc, reg, value);
++}
++
++/* fast path for IRQ handler */
++static void bcm2835_gpio_irq_config(struct bcm2835_pinctrl *pc,
++	unsigned offset, bool enable)
++{
++	switch (pc->irq_type[offset]) {
++	case IRQ_TYPE_EDGE_RISING:
++		__bcm2835_gpio_irq_config(pc, GPREN0, offset, enable);
++		break;
++
++	case IRQ_TYPE_EDGE_FALLING:
++		__bcm2835_gpio_irq_config(pc, GPFEN0, offset, enable);
++		break;
++
++	case IRQ_TYPE_EDGE_BOTH:
++		__bcm2835_gpio_irq_config(pc, GPREN0, offset, enable);
++		__bcm2835_gpio_irq_config(pc, GPFEN0, offset, enable);
++		break;
++
++	case IRQ_TYPE_LEVEL_HIGH:
++		__bcm2835_gpio_irq_config(pc, GPHEN0, offset, enable);
++		break;
++
++	case IRQ_TYPE_LEVEL_LOW:
++		__bcm2835_gpio_irq_config(pc, GPLEN0, offset, enable);
++		break;
++	}
++}
++
++static void bcm2835_gpio_irq_enable(struct irq_data *data)
++{
++	struct bcm2835_pinctrl *pc = irq_data_get_irq_chip_data(data);
++	unsigned gpio = irqd_to_hwirq(data);
++	unsigned offset = GPIO_REG_SHIFT(gpio);
++	unsigned bank = GPIO_REG_OFFSET(gpio);
++	unsigned long flags;
++
++	spin_lock_irqsave(&pc->irq_lock[bank], flags);
++	set_bit(offset, &pc->enabled_irq_map[bank]);
++	bcm2835_gpio_irq_config(pc, gpio, true);
++	spin_unlock_irqrestore(&pc->irq_lock[bank], flags);
++}
++
++static void bcm2835_gpio_irq_disable(struct irq_data *data)
++{
++	struct bcm2835_pinctrl *pc = irq_data_get_irq_chip_data(data);
++	unsigned gpio = irqd_to_hwirq(data);
++	unsigned offset = GPIO_REG_SHIFT(gpio);
++	unsigned bank = GPIO_REG_OFFSET(gpio);
++	unsigned long flags;
++
++	spin_lock_irqsave(&pc->irq_lock[bank], flags);
++	bcm2835_gpio_irq_config(pc, gpio, false);
++	clear_bit(offset, &pc->enabled_irq_map[bank]);
++	spin_unlock_irqrestore(&pc->irq_lock[bank], flags);
++}
++
++static int __bcm2835_gpio_irq_set_type_disabled(struct bcm2835_pinctrl *pc,
++	unsigned offset, unsigned int type)
++{
++	switch (type) {
++	case IRQ_TYPE_NONE:
++	case IRQ_TYPE_EDGE_RISING:
++	case IRQ_TYPE_EDGE_FALLING:
++	case IRQ_TYPE_EDGE_BOTH:
++	case IRQ_TYPE_LEVEL_HIGH:
++	case IRQ_TYPE_LEVEL_LOW:
++		pc->irq_type[offset] = type;
++		break;
++
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++/* slower path for reconfiguring IRQ type */
++static int __bcm2835_gpio_irq_set_type_enabled(struct bcm2835_pinctrl *pc,
++	unsigned offset, unsigned int type)
++{
++	switch (type) {
++	case IRQ_TYPE_NONE:
++		if (pc->irq_type[offset] != type) {
++			bcm2835_gpio_irq_config(pc, offset, false);
++			pc->irq_type[offset] = type;
++		}
++		break;
++
++	case IRQ_TYPE_EDGE_RISING:
++		if (pc->irq_type[offset] == IRQ_TYPE_EDGE_BOTH) {
++			/* RISING already enabled, disable FALLING */
++			pc->irq_type[offset] = IRQ_TYPE_EDGE_FALLING;
++			bcm2835_gpio_irq_config(pc, offset, false);
++			pc->irq_type[offset] = type;
++		} else if (pc->irq_type[offset] != type) {
++			bcm2835_gpio_irq_config(pc, offset, false);
++			pc->irq_type[offset] = type;
++			bcm2835_gpio_irq_config(pc, offset, true);
++		}
++		break;
++
++	case IRQ_TYPE_EDGE_FALLING:
++		if (pc->irq_type[offset] == IRQ_TYPE_EDGE_BOTH) {
++			/* FALLING already enabled, disable RISING */
++			pc->irq_type[offset] = IRQ_TYPE_EDGE_RISING;
++			bcm2835_gpio_irq_config(pc, offset, false);
++			pc->irq_type[offset] = type;
++		} else if (pc->irq_type[offset] != type) {
++			bcm2835_gpio_irq_config(pc, offset, false);
++			pc->irq_type[offset] = type;
++			bcm2835_gpio_irq_config(pc, offset, true);
++		}
++		break;
++
++	case IRQ_TYPE_EDGE_BOTH:
++		if (pc->irq_type[offset] == IRQ_TYPE_EDGE_RISING) {
++			/* RISING already enabled, enable FALLING too */
++			pc->irq_type[offset] = IRQ_TYPE_EDGE_FALLING;
++			bcm2835_gpio_irq_config(pc, offset, true);
++			pc->irq_type[offset] = type;
++		} else if (pc->irq_type[offset] == IRQ_TYPE_EDGE_FALLING) {
++			/* FALLING already enabled, enable RISING too */
++			pc->irq_type[offset] = IRQ_TYPE_EDGE_RISING;
++			bcm2835_gpio_irq_config(pc, offset, true);
++			pc->irq_type[offset] = type;
++		} else if (pc->irq_type[offset] != type) {
++			bcm2835_gpio_irq_config(pc, offset, false);
++			pc->irq_type[offset] = type;
++			bcm2835_gpio_irq_config(pc, offset, true);
++		}
++		break;
++
++	case IRQ_TYPE_LEVEL_HIGH:
++	case IRQ_TYPE_LEVEL_LOW:
++		if (pc->irq_type[offset] != type) {
++			bcm2835_gpio_irq_config(pc, offset, false);
++			pc->irq_type[offset] = type;
++			bcm2835_gpio_irq_config(pc, offset, true);
++		}
++		break;
++
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static int bcm2835_gpio_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct bcm2835_pinctrl *pc = irq_data_get_irq_chip_data(data);
++	unsigned gpio = irqd_to_hwirq(data);
++	unsigned offset = GPIO_REG_SHIFT(gpio);
++	unsigned bank = GPIO_REG_OFFSET(gpio);
++	unsigned long flags;
++	int ret;
++
++	spin_lock_irqsave(&pc->irq_lock[bank], flags);
++
++	if (test_bit(offset, &pc->enabled_irq_map[bank]))
++		ret = __bcm2835_gpio_irq_set_type_enabled(pc, gpio, type);
++	else
++		ret = __bcm2835_gpio_irq_set_type_disabled(pc, gpio, type);
++
++	spin_unlock_irqrestore(&pc->irq_lock[bank], flags);
++
++	return ret;
++}
++
++static struct irq_chip bcm2835_gpio_irq_chip = {
++	.name = MODULE_NAME,
++	.irq_enable = bcm2835_gpio_irq_enable,
++	.irq_disable = bcm2835_gpio_irq_disable,
++	.irq_set_type = bcm2835_gpio_irq_set_type,
++};
++
++static int bcm2835_pctl_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(bcm2835_gpio_groups);
++}
++
++static const char *bcm2835_pctl_get_group_name(struct pinctrl_dev *pctldev,
++		unsigned selector)
++{
++	return bcm2835_gpio_groups[selector];
++}
++
++static int bcm2835_pctl_get_group_pins(struct pinctrl_dev *pctldev,
++		unsigned selector,
++		const unsigned **pins,
++		unsigned *num_pins)
++{
++	*pins = &bcm2835_gpio_pins[selector].number;
++	*num_pins = 1;
 +
 +	return 0;
 +}
 +
-+static int cygnus_pinmux_probe(struct platform_device *pdev)
++static void bcm2835_pctl_pin_dbg_show(struct pinctrl_dev *pctldev,
++		struct seq_file *s,
++		unsigned offset)
 +{
-+	struct cygnus_pinctrl *pinctrl;
-+	struct resource *res;
-+	int i, ret;
-+	struct pinctrl_pin_desc *pins;
-+	unsigned num_pins = ARRAY_SIZE(cygnus_pins);
++	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	enum bcm2835_fsel fsel = bcm2835_pinctrl_fsel_get(pc, offset);
++	const char *fname = bcm2835_functions[fsel];
++	int value = bcm2835_gpio_get_bit(pc, GPLEV0, offset);
++	int irq = irq_find_mapping(pc->irq_domain, offset);
 +
-+	pinctrl = devm_kzalloc(&pdev->dev, sizeof(*pinctrl), GFP_KERNEL);
-+	if (!pinctrl)
-+		return -ENOMEM;
++	seq_printf(s, "function %s in %s; irq %d (%s)",
++		fname, value ? "hi" : "lo",
++		irq, irq_type_names[pc->irq_type[offset]]);
++}
 +
-+	pinctrl->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, pinctrl);
-+	spin_lock_init(&pinctrl->lock);
++static void bcm2835_pctl_dt_free_map(struct pinctrl_dev *pctldev,
++		struct pinctrl_map *maps, unsigned num_maps)
++{
++	int i;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pinctrl->base0 = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(pinctrl->base0)) {
-+		dev_err(&pdev->dev, "unable to map I/O space\n");
-+		return PTR_ERR(pinctrl->base0);
-+	}
++	for (i = 0; i < num_maps; i++)
++		if (maps[i].type == PIN_MAP_TYPE_CONFIGS_PIN)
++			kfree(maps[i].data.configs.configs);
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	pinctrl->base1 = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(pinctrl->base1)) {
-+		dev_err(&pdev->dev, "unable to map I/O space\n");
-+		return PTR_ERR(pinctrl->base1);
-+	}
++	kfree(maps);
++}
 +
-+	ret = cygnus_mux_log_init(pinctrl);
-+	if (ret) {
-+		dev_err(&pdev->dev, "unable to initialize IOMUX log\n");
-+		return ret;
-+	}
++static int bcm2835_pctl_dt_node_to_map_func(struct bcm2835_pinctrl *pc,
++		struct device_node *np, u32 pin, u32 fnum,
++		struct pinctrl_map **maps)
++{
++	struct pinctrl_map *map = *maps;
 +
-+	pins = devm_kcalloc(&pdev->dev, num_pins, sizeof(*pins), GFP_KERNEL);
-+	if (!pins)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_pins; i++) {
-+		pins[i].number = cygnus_pins[i].pin;
-+		pins[i].name = cygnus_pins[i].name;
-+		pins[i].drv_data = &cygnus_pins[i].gpio_mux;
-+	}
-+
-+	pinctrl->groups = cygnus_pin_groups;
-+	pinctrl->num_groups = ARRAY_SIZE(cygnus_pin_groups);
-+	pinctrl->functions = cygnus_pin_functions;
-+	pinctrl->num_functions = ARRAY_SIZE(cygnus_pin_functions);
-+	cygnus_pinctrl_desc.pins = pins;
-+	cygnus_pinctrl_desc.npins = num_pins;
-+
-+	pinctrl->pctl = pinctrl_register(&cygnus_pinctrl_desc, &pdev->dev,
-+			pinctrl);
-+	if (!pinctrl->pctl) {
-+		dev_err(&pdev->dev, "unable to register Cygnus IOMUX pinctrl\n");
++	if (fnum >= ARRAY_SIZE(bcm2835_functions)) {
++		dev_err(pc->dev, "%s: invalid brcm,function %d\n",
++			of_node_full_name(np), fnum);
 +		return -EINVAL;
 +	}
 +
++	map->type = PIN_MAP_TYPE_MUX_GROUP;
++	map->data.mux.group = bcm2835_gpio_groups[pin];
++	map->data.mux.function = bcm2835_functions[fnum];
++	(*maps)++;
++
 +	return 0;
 +}
 +
-+static struct of_device_id cygnus_pinmux_of_match[] = {
-+	{ .compatible = "brcm,cygnus-pinmux" },
-+	{ }
-+};
-+
-+static struct platform_driver cygnus_pinmux_driver = {
-+	.driver = {
-+		.name = "cygnus-pinmux",
-+		.of_match_table = cygnus_pinmux_of_match,
-+	},
-+	.probe = cygnus_pinmux_probe,
-+};
-+
-+static int __init cygnus_pinmux_init(void)
++static int bcm2835_pctl_dt_node_to_map_pull(struct bcm2835_pinctrl *pc,
++		struct device_node *np, u32 pin, u32 pull,
++		struct pinctrl_map **maps)
 +{
-+	return platform_driver_register(&cygnus_pinmux_driver);
-+}
-+arch_initcall(cygnus_pinmux_init);
++	struct pinctrl_map *map = *maps;
++	unsigned long *configs;
 +
-+MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
-+MODULE_DESCRIPTION("Broadcom Cygnus IOMUX driver");
-+MODULE_LICENSE("GPL v2");
++	if (pull > 2) {
++		dev_err(pc->dev, "%s: invalid brcm,pull %d\n",
++			of_node_full_name(np), pull);
++		return -EINVAL;
++	}
++
++	configs = kzalloc(sizeof(*configs), GFP_KERNEL);
++	if (!configs)
++		return -ENOMEM;
++	configs[0] = BCM2835_PINCONF_PACK(BCM2835_PINCONF_PARAM_PULL, pull);
++
++	map->type = PIN_MAP_TYPE_CONFIGS_PIN;
++	map->data.configs.group_or_pin = bcm2835_gpio_pins[pin].name;
++	map->data.configs.configs = configs;
++	map->data.configs.num_configs = 1;
++	(*maps)++;
++
++	return 0;
++}
++
++static int bcm2835_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
++		struct device_node *np,
++		struct pinctrl_map **map, unsigned *num_maps)
++{
++	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	struct property *pins, *funcs, *pulls;
++	int num_pins, num_funcs, num_pulls, maps_per_pin;
++	struct pinctrl_map *maps, *cur_map;
++	int i, err;
++	u32 pin, func, pull;
++
++	pins = of_find_property(np, "brcm,pins", NULL);
++	if (!pins) {
++		dev_err(pc->dev, "%s: missing brcm,pins property\n",
++				of_node_full_name(np));
++		return -EINVAL;
++	}
++
++	funcs = of_find_property(np, "brcm,function", NULL);
++	pulls = of_find_property(np, "brcm,pull", NULL);
++
++	if (!funcs && !pulls) {
++		dev_err(pc->dev,
++			"%s: neither brcm,function nor brcm,pull specified\n",
++			of_node_full_name(np));
++		return -EINVAL;
++	}
++
++	num_pins = pins->length / 4;
++	num_funcs = funcs ? (funcs->length / 4) : 0;
++	num_pulls = pulls ? (pulls->length / 4) : 0;
++
++	if (num_funcs > 1 && num_funcs != num_pins) {
++		dev_err(pc->dev,
++			"%s: brcm,function must have 1 or %d entries\n",
++			of_node_full_name(np), num_pins);
++		return -EINVAL;
++	}
++
++	if (num_pulls > 1 && num_pulls != num_pins) {
++		dev_err(pc->dev,
++			"%s: brcm,pull must have 1 or %d entries\n",
++			of_node_full_name(np), num_pins);
++		return -EINVAL;
++	}
++
++	maps_per_pin = 0;
++	if (num_funcs)
++		maps_per_pin++;
++	if (num_pulls)
++		maps_per_pin++;
++	cur_map = maps = kzalloc(num_pins * maps_per_pin * sizeof(*maps),
++				GFP_KERNEL);
++	if (!maps)
++		return -ENOMEM;
++
++	for (i = 0; i < num_pins; i++) {
++		err = of_property_read_u32_index(np, "brcm,pins", i, &pin);
++		if (err)
++			goto out;
++		if (pin >= ARRAY_SIZE(bcm2835_gpio_pins)) {
++			dev_err(pc->dev, "%s: invalid brcm,pins value %d\n",
++				of_node_full_name(np), pin);
++			err = -EINVAL;
++			goto out;
++		}
++
++		if (num_funcs) {
++			err = of_property_read_u32_index(np, "brcm,function",
++					(num_funcs > 1) ? i : 0, &func);
++			if (err)
++				goto out;
++			err = bcm2835_pctl_dt_node_to_map_func(pc, np, pin,
++							func, &cur_map);
++			if (err)
++				goto out;
++		}
++		if (num_pulls) {
++			err = of_property_read_u32_index(np, "brcm,pull",
++					(num_funcs > 1) ? i : 0, &pull);
++			if (err)
++				goto out;
++			err = bcm2835_pctl_dt_node_to_map_pull(pc, np, pin,
++							pull, &cur_map);
++			if (err)
++				goto out;
++		}
++	}
++
++	*map = maps;
++	*num_maps = num_pins * maps_per_pin;
++
++	return 0;
++
++out:
++	kfree(maps);
++	return err;
++}
++
++static const struct pinctrl_ops bcm2835_pctl_ops = {
++	.get_groups_count = bcm2835_pctl_get_groups_count,
++	.get_group_name = bcm2835_pctl_get_group_name,
++	.get_group_pins = bcm2835_pctl_get_group_pins,
++	.pin_dbg_show = bcm2835_pctl_pin_dbg_show,
++	.dt_node_to_map = bcm2835_pctl_dt_node_to_map,
++	.dt_free_map = bcm2835_pctl_dt_free_map,
++};
++
++static int bcm2835_pmx_get_functions_count(struct pinctrl_dev *pctldev)
++{
++	return BCM2835_FSEL_COUNT;
++}
++
++static const char *bcm2835_pmx_get_function_name(struct pinctrl_dev *pctldev,
++		unsigned selector)
++{
++	return bcm2835_functions[selector];
++}
++
++static int bcm2835_pmx_get_function_groups(struct pinctrl_dev *pctldev,
++		unsigned selector,
++		const char * const **groups,
++		unsigned * const num_groups)
++{
++	/* every pin can do every function */
++	*groups = bcm2835_gpio_groups;
++	*num_groups = ARRAY_SIZE(bcm2835_gpio_groups);
++
++	return 0;
++}
++
++static int bcm2835_pmx_set(struct pinctrl_dev *pctldev,
++		unsigned func_selector,
++		unsigned group_selector)
++{
++	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++
++	bcm2835_pinctrl_fsel_set(pc, group_selector, func_selector);
++
++	return 0;
++}
++
++static void bcm2835_pmx_gpio_disable_free(struct pinctrl_dev *pctldev,
++		struct pinctrl_gpio_range *range,
++		unsigned offset)
++{
++	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++
++	/* disable by setting to GPIO_IN */
++	bcm2835_pinctrl_fsel_set(pc, offset, BCM2835_FSEL_GPIO_IN);
++}
++
++static int bcm2835_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
++		struct pinctrl_gpio_range *range,
++		unsigned offset,
++		bool input)
++{
++	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	enum bcm2835_fsel fsel = input ?
++		BCM2835_FSEL_GPIO_IN : BCM2835_FSEL_GPIO_OUT;
++
++	bcm2835_pinctrl_fsel_set(pc, offset, fsel);
++
++	return 0;
++}
++
++static const struct pinmux_ops bcm2835_pmx_ops = {
++	.get_functions_count = bcm2835_pmx_get_functions_count,
++	.get_function_name = bcm2835_pmx_get_function_name,
++	.get_function_groups = bcm2835_pmx_get_function_groups,
++	.set_mux = bcm2835_pmx_set,
++	.gpio_disable_free = bcm2835_pmx_gpio_disable_free,
++	.gpio_set_direction = bcm2835_pmx_gpio_set_direction,
++};
++
++static int bcm2835_pinconf_get(struct pinctrl_dev *pctldev,
++			unsigned pin, unsigned long *config)
++{
++	/* No way to read back config in HW */
++	return -ENOTSUPP;
++}
++
++static int bcm2835_pinconf_set(struct pinctrl_dev *pctldev,
++			unsigned pin, unsigned long *configs,
++			unsigned num_configs)
++{
++	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	enum bcm2835_pinconf_param param;
++	u16 arg;
++	u32 off, bit;
++	int i;
++
++	for (i = 0; i < num_configs; i++) {
++		param = BCM2835_PINCONF_UNPACK_PARAM(configs[i]);
++		arg = BCM2835_PINCONF_UNPACK_ARG(configs[i]);
++
++		if (param != BCM2835_PINCONF_PARAM_PULL)
++			return -EINVAL;
++
++		off = GPIO_REG_OFFSET(pin);
++		bit = GPIO_REG_SHIFT(pin);
++
++		bcm2835_gpio_wr(pc, GPPUD, arg & 3);
++		/*
++		 * Docs say to wait 150 cycles, but not of what. We assume a
++		 * 1 MHz clock here, which is pretty slow...
++		 */
++		udelay(150);
++		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), BIT(bit));
++		udelay(150);
++		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), 0);
++	} /* for each config */
++
++	return 0;
++}
++
++static const struct pinconf_ops bcm2835_pinconf_ops = {
++	.pin_config_get = bcm2835_pinconf_get,
++	.pin_config_set = bcm2835_pinconf_set,
++};
++
++static struct pinctrl_desc bcm2835_pinctrl_desc = {
++	.name = MODULE_NAME,
++	.pins = bcm2835_gpio_pins,
++	.npins = ARRAY_SIZE(bcm2835_gpio_pins),
++	.pctlops = &bcm2835_pctl_ops,
++	.pmxops = &bcm2835_pmx_ops,
++	.confops = &bcm2835_pinconf_ops,
++	.owner = THIS_MODULE,
++};
++
++static struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
++	.name = MODULE_NAME,
++	.npins = BCM2835_NUM_GPIOS,
++};
++
++static int bcm2835_pinctrl_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct bcm2835_pinctrl *pc;
++	struct resource iomem;
++	int err, i;
++	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) != BCM2835_NUM_GPIOS);
++	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_groups) != BCM2835_NUM_GPIOS);
++
++	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
++	if (!pc)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, pc);
++	pc->dev = dev;
++
++	err = of_address_to_resource(np, 0, &iomem);
++	if (err) {
++		dev_err(dev, "could not get IO memory\n");
++		return err;
++	}
++
++	pc->base = devm_ioremap_resource(dev, &iomem);
++	if (IS_ERR(pc->base))
++		return PTR_ERR(pc->base);
++
++	pc->gpio_chip = bcm2835_gpio_chip;
++	pc->gpio_chip.dev = dev;
++	pc->gpio_chip.of_node = np;
++
++	pc->irq_domain = irq_domain_add_linear(np, BCM2835_NUM_GPIOS,
++			&irq_domain_simple_ops, NULL);
++	if (!pc->irq_domain) {
++		dev_err(dev, "could not create IRQ domain\n");
++		return -ENOMEM;
++	}
++
++	for (i = 0; i < BCM2835_NUM_GPIOS; i++) {
++		int irq = irq_create_mapping(pc->irq_domain, i);
++		irq_set_lockdep_class(irq, &gpio_lock_class);
++		irq_set_chip_and_handler(irq, &bcm2835_gpio_irq_chip,
++				handle_simple_irq);
++		irq_set_chip_data(irq, pc);
++		set_irq_flags(irq, IRQF_VALID);
++	}
++
++	for (i = 0; i < BCM2835_NUM_BANKS; i++) {
++		unsigned long events;
++		unsigned offset;
++		int len;
++		char *name;
++
++		/* clear event detection flags */
++		bcm2835_gpio_wr(pc, GPREN0 + i * 4, 0);
++		bcm2835_gpio_wr(pc, GPFEN0 + i * 4, 0);
++		bcm2835_gpio_wr(pc, GPHEN0 + i * 4, 0);
++		bcm2835_gpio_wr(pc, GPLEN0 + i * 4, 0);
++		bcm2835_gpio_wr(pc, GPAREN0 + i * 4, 0);
++		bcm2835_gpio_wr(pc, GPAFEN0 + i * 4, 0);
++
++		/* clear all the events */
++		events = bcm2835_gpio_rd(pc, GPEDS0 + i * 4);
++		for_each_set_bit(offset, &events, 32)
++			bcm2835_gpio_wr(pc, GPEDS0 + i * 4, BIT(offset));
++
++		pc->irq[i] = irq_of_parse_and_map(np, i);
++		pc->irq_data[i].pc = pc;
++		pc->irq_data[i].bank = i;
++		spin_lock_init(&pc->irq_lock[i]);
++
++		len = strlen(dev_name(pc->dev)) + 16;
++		name = devm_kzalloc(pc->dev, len, GFP_KERNEL);
++		if (!name)
++			return -ENOMEM;
++		snprintf(name, len, "%s:bank%d", dev_name(pc->dev), i);
++
++		err = devm_request_irq(dev, pc->irq[i],
++			bcm2835_gpio_irq_handler, IRQF_SHARED,
++			name, &pc->irq_data[i]);
++		if (err) {
++			dev_err(dev, "unable to request IRQ %d\n", pc->irq[i]);
++			return err;
++		}
++	}
++
++	err = gpiochip_add(&pc->gpio_chip);
++	if (err) {
++		dev_err(dev, "could not add GPIO chip\n");
++		return err;
++	}
++
++	pc->pctl_dev = pinctrl_register(&bcm2835_pinctrl_desc, dev, pc);
++	if (!pc->pctl_dev) {
++		gpiochip_remove(&pc->gpio_chip);
++		return -EINVAL;
++	}
++
++	pc->gpio_range = bcm2835_pinctrl_gpio_range;
++	pc->gpio_range.base = pc->gpio_chip.base;
++	pc->gpio_range.gc = &pc->gpio_chip;
++	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
++
++	return 0;
++}
++
++static int bcm2835_pinctrl_remove(struct platform_device *pdev)
++{
++	struct bcm2835_pinctrl *pc = platform_get_drvdata(pdev);
++
++	pinctrl_unregister(pc->pctl_dev);
++	gpiochip_remove(&pc->gpio_chip);
++
++	return 0;
++}
++
++static struct of_device_id bcm2835_pinctrl_match[] = {
++	{ .compatible = "brcm,bcm2835-gpio" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, bcm2835_pinctrl_match);
++
++static struct platform_driver bcm2835_pinctrl_driver = {
++	.probe = bcm2835_pinctrl_probe,
++	.remove = bcm2835_pinctrl_remove,
++	.driver = {
++		.name = MODULE_NAME,
++		.of_match_table = bcm2835_pinctrl_match,
++	},
++};
++module_platform_driver(bcm2835_pinctrl_driver);
++
++MODULE_AUTHOR("Chris Boot, Simon Arlott, Stephen Warren");
++MODULE_DESCRIPTION("BCM2835 Pin control driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/pinctrl/pinctrl-bcm281xx.c b/drivers/pinctrl/pinctrl-bcm281xx.c
+deleted file mode 100644
+index fa2a00f..0000000
+--- a/drivers/pinctrl/pinctrl-bcm281xx.c
++++ /dev/null
+@@ -1,1455 +0,0 @@
+-/*
+- * Copyright (C) 2013 Broadcom Corporation
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation version 2.
+- *
+- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+- * kind, whether express or implied; without even the implied warranty
+- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
+-#include <linux/err.h>
+-#include <linux/io.h>
+-#include <linux/module.h>
+-#include <linux/of.h>
+-#include <linux/platform_device.h>
+-#include <linux/pinctrl/pinctrl.h>
+-#include <linux/pinctrl/pinmux.h>
+-#include <linux/pinctrl/pinconf.h>
+-#include <linux/pinctrl/pinconf-generic.h>
+-#include <linux/regmap.h>
+-#include <linux/slab.h>
+-#include "core.h"
+-#include "pinctrl-utils.h"
+-
+-/* BCM281XX Pin Control Registers Definitions */
+-
+-/* Function Select bits are the same for all pin control registers */
+-#define BCM281XX_PIN_REG_F_SEL_MASK		0x0700
+-#define BCM281XX_PIN_REG_F_SEL_SHIFT		8
+-
+-/* Standard pin register */
+-#define BCM281XX_STD_PIN_REG_DRV_STR_MASK	0x0007
+-#define BCM281XX_STD_PIN_REG_DRV_STR_SHIFT	0
+-#define BCM281XX_STD_PIN_REG_INPUT_DIS_MASK	0x0008
+-#define BCM281XX_STD_PIN_REG_INPUT_DIS_SHIFT	3
+-#define BCM281XX_STD_PIN_REG_SLEW_MASK		0x0010
+-#define BCM281XX_STD_PIN_REG_SLEW_SHIFT		4
+-#define BCM281XX_STD_PIN_REG_PULL_UP_MASK	0x0020
+-#define BCM281XX_STD_PIN_REG_PULL_UP_SHIFT	5
+-#define BCM281XX_STD_PIN_REG_PULL_DN_MASK	0x0040
+-#define BCM281XX_STD_PIN_REG_PULL_DN_SHIFT	6
+-#define BCM281XX_STD_PIN_REG_HYST_MASK		0x0080
+-#define BCM281XX_STD_PIN_REG_HYST_SHIFT		7
+-
+-/* I2C pin register */
+-#define BCM281XX_I2C_PIN_REG_INPUT_DIS_MASK	0x0004
+-#define BCM281XX_I2C_PIN_REG_INPUT_DIS_SHIFT	2
+-#define BCM281XX_I2C_PIN_REG_SLEW_MASK		0x0008
+-#define BCM281XX_I2C_PIN_REG_SLEW_SHIFT		3
+-#define BCM281XX_I2C_PIN_REG_PULL_UP_STR_MASK	0x0070
+-#define BCM281XX_I2C_PIN_REG_PULL_UP_STR_SHIFT	4
+-
+-/* HDMI pin register */
+-#define BCM281XX_HDMI_PIN_REG_INPUT_DIS_MASK	0x0008
+-#define BCM281XX_HDMI_PIN_REG_INPUT_DIS_SHIFT	3
+-#define BCM281XX_HDMI_PIN_REG_MODE_MASK		0x0010
+-#define BCM281XX_HDMI_PIN_REG_MODE_SHIFT	4
+-
+-/**
+- * bcm281xx_pin_type - types of pin register
+- */
+-enum bcm281xx_pin_type {
+-	BCM281XX_PIN_TYPE_UNKNOWN = 0,
+-	BCM281XX_PIN_TYPE_STD,
+-	BCM281XX_PIN_TYPE_I2C,
+-	BCM281XX_PIN_TYPE_HDMI,
+-};
+-
+-static enum bcm281xx_pin_type std_pin = BCM281XX_PIN_TYPE_STD;
+-static enum bcm281xx_pin_type i2c_pin = BCM281XX_PIN_TYPE_I2C;
+-static enum bcm281xx_pin_type hdmi_pin = BCM281XX_PIN_TYPE_HDMI;
+-
+-/**
+- * bcm281xx_pin_function- define pin function
+- */
+-struct bcm281xx_pin_function {
+-	const char *name;
+-	const char * const *groups;
+-	const unsigned ngroups;
+-};
+-
+-/**
+- * bcm281xx_pinctrl_data - Broadcom-specific pinctrl data
+- * @reg_base - base of pinctrl registers
+- */
+-struct bcm281xx_pinctrl_data {
+-	void __iomem *reg_base;
+-
+-	/* List of all pins */
+-	const struct pinctrl_pin_desc *pins;
+-	const unsigned npins;
+-
+-	const struct bcm281xx_pin_function *functions;
+-	const unsigned nfunctions;
+-
+-	struct regmap *regmap;
+-};
+-
+-/*
+- * Pin number definition.  The order here must be the same as defined in the
+- * PADCTRLREG block in the RDB.
+- */
+-#define BCM281XX_PIN_ADCSYNC		0
+-#define BCM281XX_PIN_BAT_RM		1
+-#define BCM281XX_PIN_BSC1_SCL		2
+-#define BCM281XX_PIN_BSC1_SDA		3
+-#define BCM281XX_PIN_BSC2_SCL		4
+-#define BCM281XX_PIN_BSC2_SDA		5
+-#define BCM281XX_PIN_CLASSGPWR		6
+-#define BCM281XX_PIN_CLK_CX8		7
+-#define BCM281XX_PIN_CLKOUT_0		8
+-#define BCM281XX_PIN_CLKOUT_1		9
+-#define BCM281XX_PIN_CLKOUT_2		10
+-#define BCM281XX_PIN_CLKOUT_3		11
+-#define BCM281XX_PIN_CLKREQ_IN_0	12
+-#define BCM281XX_PIN_CLKREQ_IN_1	13
+-#define BCM281XX_PIN_CWS_SYS_REQ1	14
+-#define BCM281XX_PIN_CWS_SYS_REQ2	15
+-#define BCM281XX_PIN_CWS_SYS_REQ3	16
+-#define BCM281XX_PIN_DIGMIC1_CLK	17
+-#define BCM281XX_PIN_DIGMIC1_DQ		18
+-#define BCM281XX_PIN_DIGMIC2_CLK	19
+-#define BCM281XX_PIN_DIGMIC2_DQ		20
+-#define BCM281XX_PIN_GPEN13		21
+-#define BCM281XX_PIN_GPEN14		22
+-#define BCM281XX_PIN_GPEN15		23
+-#define BCM281XX_PIN_GPIO00		24
+-#define BCM281XX_PIN_GPIO01		25
+-#define BCM281XX_PIN_GPIO02		26
+-#define BCM281XX_PIN_GPIO03		27
+-#define BCM281XX_PIN_GPIO04		28
+-#define BCM281XX_PIN_GPIO05		29
+-#define BCM281XX_PIN_GPIO06		30
+-#define BCM281XX_PIN_GPIO07		31
+-#define BCM281XX_PIN_GPIO08		32
+-#define BCM281XX_PIN_GPIO09		33
+-#define BCM281XX_PIN_GPIO10		34
+-#define BCM281XX_PIN_GPIO11		35
+-#define BCM281XX_PIN_GPIO12		36
+-#define BCM281XX_PIN_GPIO13		37
+-#define BCM281XX_PIN_GPIO14		38
+-#define BCM281XX_PIN_GPS_PABLANK	39
+-#define BCM281XX_PIN_GPS_TMARK		40
+-#define BCM281XX_PIN_HDMI_SCL		41
+-#define BCM281XX_PIN_HDMI_SDA		42
+-#define BCM281XX_PIN_IC_DM		43
+-#define BCM281XX_PIN_IC_DP		44
+-#define BCM281XX_PIN_KP_COL_IP_0	45
+-#define BCM281XX_PIN_KP_COL_IP_1	46
+-#define BCM281XX_PIN_KP_COL_IP_2	47
+-#define BCM281XX_PIN_KP_COL_IP_3	48
+-#define BCM281XX_PIN_KP_ROW_OP_0	49
+-#define BCM281XX_PIN_KP_ROW_OP_1	50
+-#define BCM281XX_PIN_KP_ROW_OP_2	51
+-#define BCM281XX_PIN_KP_ROW_OP_3	52
+-#define BCM281XX_PIN_LCD_B_0		53
+-#define BCM281XX_PIN_LCD_B_1		54
+-#define BCM281XX_PIN_LCD_B_2		55
+-#define BCM281XX_PIN_LCD_B_3		56
+-#define BCM281XX_PIN_LCD_B_4		57
+-#define BCM281XX_PIN_LCD_B_5		58
+-#define BCM281XX_PIN_LCD_B_6		59
+-#define BCM281XX_PIN_LCD_B_7		60
+-#define BCM281XX_PIN_LCD_G_0		61
+-#define BCM281XX_PIN_LCD_G_1		62
+-#define BCM281XX_PIN_LCD_G_2		63
+-#define BCM281XX_PIN_LCD_G_3		64
+-#define BCM281XX_PIN_LCD_G_4		65
+-#define BCM281XX_PIN_LCD_G_5		66
+-#define BCM281XX_PIN_LCD_G_6		67
+-#define BCM281XX_PIN_LCD_G_7		68
+-#define BCM281XX_PIN_LCD_HSYNC		69
+-#define BCM281XX_PIN_LCD_OE		70
+-#define BCM281XX_PIN_LCD_PCLK		71
+-#define BCM281XX_PIN_LCD_R_0		72
+-#define BCM281XX_PIN_LCD_R_1		73
+-#define BCM281XX_PIN_LCD_R_2		74
+-#define BCM281XX_PIN_LCD_R_3		75
+-#define BCM281XX_PIN_LCD_R_4		76
+-#define BCM281XX_PIN_LCD_R_5		77
+-#define BCM281XX_PIN_LCD_R_6		78
+-#define BCM281XX_PIN_LCD_R_7		79
+-#define BCM281XX_PIN_LCD_VSYNC		80
+-#define BCM281XX_PIN_MDMGPIO0		81
+-#define BCM281XX_PIN_MDMGPIO1		82
+-#define BCM281XX_PIN_MDMGPIO2		83
+-#define BCM281XX_PIN_MDMGPIO3		84
+-#define BCM281XX_PIN_MDMGPIO4		85
+-#define BCM281XX_PIN_MDMGPIO5		86
+-#define BCM281XX_PIN_MDMGPIO6		87
+-#define BCM281XX_PIN_MDMGPIO7		88
+-#define BCM281XX_PIN_MDMGPIO8		89
+-#define BCM281XX_PIN_MPHI_DATA_0	90
+-#define BCM281XX_PIN_MPHI_DATA_1	91
+-#define BCM281XX_PIN_MPHI_DATA_2	92
+-#define BCM281XX_PIN_MPHI_DATA_3	93
+-#define BCM281XX_PIN_MPHI_DATA_4	94
+-#define BCM281XX_PIN_MPHI_DATA_5	95
+-#define BCM281XX_PIN_MPHI_DATA_6	96
+-#define BCM281XX_PIN_MPHI_DATA_7	97
+-#define BCM281XX_PIN_MPHI_DATA_8	98
+-#define BCM281XX_PIN_MPHI_DATA_9	99
+-#define BCM281XX_PIN_MPHI_DATA_10	100
+-#define BCM281XX_PIN_MPHI_DATA_11	101
+-#define BCM281XX_PIN_MPHI_DATA_12	102
+-#define BCM281XX_PIN_MPHI_DATA_13	103
+-#define BCM281XX_PIN_MPHI_DATA_14	104
+-#define BCM281XX_PIN_MPHI_DATA_15	105
+-#define BCM281XX_PIN_MPHI_HA0		106
+-#define BCM281XX_PIN_MPHI_HAT0		107
+-#define BCM281XX_PIN_MPHI_HAT1		108
+-#define BCM281XX_PIN_MPHI_HCE0_N	109
+-#define BCM281XX_PIN_MPHI_HCE1_N	110
+-#define BCM281XX_PIN_MPHI_HRD_N		111
+-#define BCM281XX_PIN_MPHI_HWR_N		112
+-#define BCM281XX_PIN_MPHI_RUN0		113
+-#define BCM281XX_PIN_MPHI_RUN1		114
+-#define BCM281XX_PIN_MTX_SCAN_CLK	115
+-#define BCM281XX_PIN_MTX_SCAN_DATA	116
+-#define BCM281XX_PIN_NAND_AD_0		117
+-#define BCM281XX_PIN_NAND_AD_1		118
+-#define BCM281XX_PIN_NAND_AD_2		119
+-#define BCM281XX_PIN_NAND_AD_3		120
+-#define BCM281XX_PIN_NAND_AD_4		121
+-#define BCM281XX_PIN_NAND_AD_5		122
+-#define BCM281XX_PIN_NAND_AD_6		123
+-#define BCM281XX_PIN_NAND_AD_7		124
+-#define BCM281XX_PIN_NAND_ALE		125
+-#define BCM281XX_PIN_NAND_CEN_0		126
+-#define BCM281XX_PIN_NAND_CEN_1		127
+-#define BCM281XX_PIN_NAND_CLE		128
+-#define BCM281XX_PIN_NAND_OEN		129
+-#define BCM281XX_PIN_NAND_RDY_0		130
+-#define BCM281XX_PIN_NAND_RDY_1		131
+-#define BCM281XX_PIN_NAND_WEN		132
+-#define BCM281XX_PIN_NAND_WP		133
+-#define BCM281XX_PIN_PC1		134
+-#define BCM281XX_PIN_PC2		135
+-#define BCM281XX_PIN_PMU_INT		136
+-#define BCM281XX_PIN_PMU_SCL		137
+-#define BCM281XX_PIN_PMU_SDA		138
+-#define BCM281XX_PIN_RFST2G_MTSLOTEN3G	139
+-#define BCM281XX_PIN_RGMII_0_RX_CTL	140
+-#define BCM281XX_PIN_RGMII_0_RXC	141
+-#define BCM281XX_PIN_RGMII_0_RXD_0	142
+-#define BCM281XX_PIN_RGMII_0_RXD_1	143
+-#define BCM281XX_PIN_RGMII_0_RXD_2	144
+-#define BCM281XX_PIN_RGMII_0_RXD_3	145
+-#define BCM281XX_PIN_RGMII_0_TX_CTL	146
+-#define BCM281XX_PIN_RGMII_0_TXC	147
+-#define BCM281XX_PIN_RGMII_0_TXD_0	148
+-#define BCM281XX_PIN_RGMII_0_TXD_1	149
+-#define BCM281XX_PIN_RGMII_0_TXD_2	150
+-#define BCM281XX_PIN_RGMII_0_TXD_3	151
+-#define BCM281XX_PIN_RGMII_1_RX_CTL	152
+-#define BCM281XX_PIN_RGMII_1_RXC	153
+-#define BCM281XX_PIN_RGMII_1_RXD_0	154
+-#define BCM281XX_PIN_RGMII_1_RXD_1	155
+-#define BCM281XX_PIN_RGMII_1_RXD_2	156
+-#define BCM281XX_PIN_RGMII_1_RXD_3	157
+-#define BCM281XX_PIN_RGMII_1_TX_CTL	158
+-#define BCM281XX_PIN_RGMII_1_TXC	159
+-#define BCM281XX_PIN_RGMII_1_TXD_0	160
+-#define BCM281XX_PIN_RGMII_1_TXD_1	161
+-#define BCM281XX_PIN_RGMII_1_TXD_2	162
+-#define BCM281XX_PIN_RGMII_1_TXD_3	163
+-#define BCM281XX_PIN_RGMII_GPIO_0	164
+-#define BCM281XX_PIN_RGMII_GPIO_1	165
+-#define BCM281XX_PIN_RGMII_GPIO_2	166
+-#define BCM281XX_PIN_RGMII_GPIO_3	167
+-#define BCM281XX_PIN_RTXDATA2G_TXDATA3G1	168
+-#define BCM281XX_PIN_RTXEN2G_TXDATA3G2	169
+-#define BCM281XX_PIN_RXDATA3G0		170
+-#define BCM281XX_PIN_RXDATA3G1		171
+-#define BCM281XX_PIN_RXDATA3G2		172
+-#define BCM281XX_PIN_SDIO1_CLK		173
+-#define BCM281XX_PIN_SDIO1_CMD		174
+-#define BCM281XX_PIN_SDIO1_DATA_0	175
+-#define BCM281XX_PIN_SDIO1_DATA_1	176
+-#define BCM281XX_PIN_SDIO1_DATA_2	177
+-#define BCM281XX_PIN_SDIO1_DATA_3	178
+-#define BCM281XX_PIN_SDIO4_CLK		179
+-#define BCM281XX_PIN_SDIO4_CMD		180
+-#define BCM281XX_PIN_SDIO4_DATA_0	181
+-#define BCM281XX_PIN_SDIO4_DATA_1	182
+-#define BCM281XX_PIN_SDIO4_DATA_2	183
+-#define BCM281XX_PIN_SDIO4_DATA_3	184
+-#define BCM281XX_PIN_SIM_CLK		185
+-#define BCM281XX_PIN_SIM_DATA		186
+-#define BCM281XX_PIN_SIM_DET		187
+-#define BCM281XX_PIN_SIM_RESETN		188
+-#define BCM281XX_PIN_SIM2_CLK		189
+-#define BCM281XX_PIN_SIM2_DATA		190
+-#define BCM281XX_PIN_SIM2_DET		191
+-#define BCM281XX_PIN_SIM2_RESETN	192
+-#define BCM281XX_PIN_SRI_C		193
+-#define BCM281XX_PIN_SRI_D		194
+-#define BCM281XX_PIN_SRI_E		195
+-#define BCM281XX_PIN_SSP_EXTCLK		196
+-#define BCM281XX_PIN_SSP0_CLK		197
+-#define BCM281XX_PIN_SSP0_FS		198
+-#define BCM281XX_PIN_SSP0_RXD		199
+-#define BCM281XX_PIN_SSP0_TXD		200
+-#define BCM281XX_PIN_SSP2_CLK		201
+-#define BCM281XX_PIN_SSP2_FS_0		202
+-#define BCM281XX_PIN_SSP2_FS_1		203
+-#define BCM281XX_PIN_SSP2_FS_2		204
+-#define BCM281XX_PIN_SSP2_FS_3		205
+-#define BCM281XX_PIN_SSP2_RXD_0		206
+-#define BCM281XX_PIN_SSP2_RXD_1		207
+-#define BCM281XX_PIN_SSP2_TXD_0		208
+-#define BCM281XX_PIN_SSP2_TXD_1		209
+-#define BCM281XX_PIN_SSP3_CLK		210
+-#define BCM281XX_PIN_SSP3_FS		211
+-#define BCM281XX_PIN_SSP3_RXD		212
+-#define BCM281XX_PIN_SSP3_TXD		213
+-#define BCM281XX_PIN_SSP4_CLK		214
+-#define BCM281XX_PIN_SSP4_FS		215
+-#define BCM281XX_PIN_SSP4_RXD		216
+-#define BCM281XX_PIN_SSP4_TXD		217
+-#define BCM281XX_PIN_SSP5_CLK		218
+-#define BCM281XX_PIN_SSP5_FS		219
+-#define BCM281XX_PIN_SSP5_RXD		220
+-#define BCM281XX_PIN_SSP5_TXD		221
+-#define BCM281XX_PIN_SSP6_CLK		222
+-#define BCM281XX_PIN_SSP6_FS		223
+-#define BCM281XX_PIN_SSP6_RXD		224
+-#define BCM281XX_PIN_SSP6_TXD		225
+-#define BCM281XX_PIN_STAT_1		226
+-#define BCM281XX_PIN_STAT_2		227
+-#define BCM281XX_PIN_SYSCLKEN		228
+-#define BCM281XX_PIN_TRACECLK		229
+-#define BCM281XX_PIN_TRACEDT00		230
+-#define BCM281XX_PIN_TRACEDT01		231
+-#define BCM281XX_PIN_TRACEDT02		232
+-#define BCM281XX_PIN_TRACEDT03		233
+-#define BCM281XX_PIN_TRACEDT04		234
+-#define BCM281XX_PIN_TRACEDT05		235
+-#define BCM281XX_PIN_TRACEDT06		236
+-#define BCM281XX_PIN_TRACEDT07		237
+-#define BCM281XX_PIN_TRACEDT08		238
+-#define BCM281XX_PIN_TRACEDT09		239
+-#define BCM281XX_PIN_TRACEDT10		240
+-#define BCM281XX_PIN_TRACEDT11		241
+-#define BCM281XX_PIN_TRACEDT12		242
+-#define BCM281XX_PIN_TRACEDT13		243
+-#define BCM281XX_PIN_TRACEDT14		244
+-#define BCM281XX_PIN_TRACEDT15		245
+-#define BCM281XX_PIN_TXDATA3G0		246
+-#define BCM281XX_PIN_TXPWRIND		247
+-#define BCM281XX_PIN_UARTB1_UCTS	248
+-#define BCM281XX_PIN_UARTB1_URTS	249
+-#define BCM281XX_PIN_UARTB1_URXD	250
+-#define BCM281XX_PIN_UARTB1_UTXD	251
+-#define BCM281XX_PIN_UARTB2_URXD	252
+-#define BCM281XX_PIN_UARTB2_UTXD	253
+-#define BCM281XX_PIN_UARTB3_UCTS	254
+-#define BCM281XX_PIN_UARTB3_URTS	255
+-#define BCM281XX_PIN_UARTB3_URXD	256
+-#define BCM281XX_PIN_UARTB3_UTXD	257
+-#define BCM281XX_PIN_UARTB4_UCTS	258
+-#define BCM281XX_PIN_UARTB4_URTS	259
+-#define BCM281XX_PIN_UARTB4_URXD	260
+-#define BCM281XX_PIN_UARTB4_UTXD	261
+-#define BCM281XX_PIN_VC_CAM1_SCL	262
+-#define BCM281XX_PIN_VC_CAM1_SDA	263
+-#define BCM281XX_PIN_VC_CAM2_SCL	264
+-#define BCM281XX_PIN_VC_CAM2_SDA	265
+-#define BCM281XX_PIN_VC_CAM3_SCL	266
+-#define BCM281XX_PIN_VC_CAM3_SDA	267
+-
+-#define BCM281XX_PIN_DESC(a, b, c) \
+-	{ .number = a, .name = b, .drv_data = &c##_pin }
+-
+-/*
+- * Pin description definition.  The order here must be the same as defined in
+- * the PADCTRLREG block in the RDB, since the pin number is used as an index
+- * into this array.
+- */
+-static const struct pinctrl_pin_desc bcm281xx_pinctrl_pins[] = {
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_ADCSYNC, "adcsync", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_BAT_RM, "bat_rm", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC1_SCL, "bsc1_scl", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC1_SDA, "bsc1_sda", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC2_SCL, "bsc2_scl", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC2_SDA, "bsc2_sda", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CLASSGPWR, "classgpwr", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CLK_CX8, "clk_cx8", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_0, "clkout_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_1, "clkout_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_2, "clkout_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_3, "clkout_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKREQ_IN_0, "clkreq_in_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKREQ_IN_1, "clkreq_in_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CWS_SYS_REQ1, "cws_sys_req1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CWS_SYS_REQ2, "cws_sys_req2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_CWS_SYS_REQ3, "cws_sys_req3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC1_CLK, "digmic1_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC1_DQ, "digmic1_dq", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC2_CLK, "digmic2_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC2_DQ, "digmic2_dq", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPEN13, "gpen13", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPEN14, "gpen14", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPEN15, "gpen15", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO00, "gpio00", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO01, "gpio01", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO02, "gpio02", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO03, "gpio03", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO04, "gpio04", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO05, "gpio05", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO06, "gpio06", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO07, "gpio07", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO08, "gpio08", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO09, "gpio09", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO10, "gpio10", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO11, "gpio11", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO12, "gpio12", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO13, "gpio13", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO14, "gpio14", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPS_PABLANK, "gps_pablank", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_GPS_TMARK, "gps_tmark", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_HDMI_SCL, "hdmi_scl", hdmi),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_HDMI_SDA, "hdmi_sda", hdmi),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_IC_DM, "ic_dm", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_IC_DP, "ic_dp", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_0, "kp_col_ip_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_1, "kp_col_ip_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_2, "kp_col_ip_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_3, "kp_col_ip_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_0, "kp_row_op_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_1, "kp_row_op_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_2, "kp_row_op_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_3, "kp_row_op_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_0, "lcd_b_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_1, "lcd_b_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_2, "lcd_b_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_3, "lcd_b_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_4, "lcd_b_4", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_5, "lcd_b_5", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_6, "lcd_b_6", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_7, "lcd_b_7", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_0, "lcd_g_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_1, "lcd_g_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_2, "lcd_g_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_3, "lcd_g_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_4, "lcd_g_4", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_5, "lcd_g_5", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_6, "lcd_g_6", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_7, "lcd_g_7", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_HSYNC, "lcd_hsync", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_OE, "lcd_oe", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_PCLK, "lcd_pclk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_0, "lcd_r_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_1, "lcd_r_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_2, "lcd_r_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_3, "lcd_r_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_4, "lcd_r_4", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_5, "lcd_r_5", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_6, "lcd_r_6", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_7, "lcd_r_7", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_VSYNC, "lcd_vsync", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO0, "mdmgpio0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO1, "mdmgpio1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO2, "mdmgpio2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO3, "mdmgpio3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO4, "mdmgpio4", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO5, "mdmgpio5", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO6, "mdmgpio6", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO7, "mdmgpio7", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO8, "mdmgpio8", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_0, "mphi_data_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_1, "mphi_data_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_2, "mphi_data_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_3, "mphi_data_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_4, "mphi_data_4", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_5, "mphi_data_5", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_6, "mphi_data_6", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_7, "mphi_data_7", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_8, "mphi_data_8", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_9, "mphi_data_9", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_10, "mphi_data_10", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_11, "mphi_data_11", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_12, "mphi_data_12", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_13, "mphi_data_13", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_14, "mphi_data_14", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_15, "mphi_data_15", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HA0, "mphi_ha0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HAT0, "mphi_hat0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HAT1, "mphi_hat1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HCE0_N, "mphi_hce0_n", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HCE1_N, "mphi_hce1_n", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HRD_N, "mphi_hrd_n", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HWR_N, "mphi_hwr_n", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_RUN0, "mphi_run0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_RUN1, "mphi_run1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MTX_SCAN_CLK, "mtx_scan_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_MTX_SCAN_DATA, "mtx_scan_data", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_0, "nand_ad_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_1, "nand_ad_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_2, "nand_ad_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_3, "nand_ad_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_4, "nand_ad_4", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_5, "nand_ad_5", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_6, "nand_ad_6", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_7, "nand_ad_7", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_ALE, "nand_ale", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_CEN_0, "nand_cen_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_CEN_1, "nand_cen_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_CLE, "nand_cle", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_OEN, "nand_oen", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_RDY_0, "nand_rdy_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_RDY_1, "nand_rdy_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_WEN, "nand_wen", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_WP, "nand_wp", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_PC1, "pc1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_PC2, "pc2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_PMU_INT, "pmu_int", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_PMU_SCL, "pmu_scl", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_PMU_SDA, "pmu_sda", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RFST2G_MTSLOTEN3G, "rfst2g_mtsloten3g",
+-		std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RX_CTL, "rgmii_0_rx_ctl", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXC, "rgmii_0_rxc", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_0, "rgmii_0_rxd_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_1, "rgmii_0_rxd_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_2, "rgmii_0_rxd_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_3, "rgmii_0_rxd_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TX_CTL, "rgmii_0_tx_ctl", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXC, "rgmii_0_txc", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_0, "rgmii_0_txd_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_1, "rgmii_0_txd_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_2, "rgmii_0_txd_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_3, "rgmii_0_txd_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RX_CTL, "rgmii_1_rx_ctl", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXC, "rgmii_1_rxc", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_0, "rgmii_1_rxd_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_1, "rgmii_1_rxd_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_2, "rgmii_1_rxd_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_3, "rgmii_1_rxd_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TX_CTL, "rgmii_1_tx_ctl", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXC, "rgmii_1_txc", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_0, "rgmii_1_txd_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_1, "rgmii_1_txd_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_2, "rgmii_1_txd_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_3, "rgmii_1_txd_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_0, "rgmii_gpio_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_1, "rgmii_gpio_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_2, "rgmii_gpio_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_3, "rgmii_gpio_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RTXDATA2G_TXDATA3G1,
+-		"rtxdata2g_txdata3g1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RTXEN2G_TXDATA3G2, "rtxen2g_txdata3g2",
+-		std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RXDATA3G0, "rxdata3g0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RXDATA3G1, "rxdata3g1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_RXDATA3G2, "rxdata3g2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_CLK, "sdio1_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_CMD, "sdio1_cmd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_0, "sdio1_data_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_1, "sdio1_data_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_2, "sdio1_data_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_3, "sdio1_data_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_CLK, "sdio4_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_CMD, "sdio4_cmd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_0, "sdio4_data_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_1, "sdio4_data_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_2, "sdio4_data_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_3, "sdio4_data_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_CLK, "sim_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_DATA, "sim_data", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_DET, "sim_det", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_RESETN, "sim_resetn", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_CLK, "sim2_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_DATA, "sim2_data", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_DET, "sim2_det", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_RESETN, "sim2_resetn", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SRI_C, "sri_c", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SRI_D, "sri_d", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SRI_E, "sri_e", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP_EXTCLK, "ssp_extclk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_CLK, "ssp0_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_FS, "ssp0_fs", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_RXD, "ssp0_rxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_TXD, "ssp0_txd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_CLK, "ssp2_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_0, "ssp2_fs_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_1, "ssp2_fs_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_2, "ssp2_fs_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_3, "ssp2_fs_3", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_RXD_0, "ssp2_rxd_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_RXD_1, "ssp2_rxd_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_TXD_0, "ssp2_txd_0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_TXD_1, "ssp2_txd_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_CLK, "ssp3_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_FS, "ssp3_fs", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_RXD, "ssp3_rxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_TXD, "ssp3_txd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_CLK, "ssp4_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_FS, "ssp4_fs", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_RXD, "ssp4_rxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_TXD, "ssp4_txd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_CLK, "ssp5_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_FS, "ssp5_fs", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_RXD, "ssp5_rxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_TXD, "ssp5_txd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_CLK, "ssp6_clk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_FS, "ssp6_fs", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_RXD, "ssp6_rxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_TXD, "ssp6_txd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_STAT_1, "stat_1", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_STAT_2, "stat_2", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_SYSCLKEN, "sysclken", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACECLK, "traceclk", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT00, "tracedt00", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT01, "tracedt01", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT02, "tracedt02", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT03, "tracedt03", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT04, "tracedt04", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT05, "tracedt05", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT06, "tracedt06", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT07, "tracedt07", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT08, "tracedt08", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT09, "tracedt09", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT10, "tracedt10", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT11, "tracedt11", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT12, "tracedt12", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT13, "tracedt13", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT14, "tracedt14", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT15, "tracedt15", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TXDATA3G0, "txdata3g0", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_TXPWRIND, "txpwrind", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_UCTS, "uartb1_ucts", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_URTS, "uartb1_urts", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_URXD, "uartb1_urxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_UTXD, "uartb1_utxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB2_URXD, "uartb2_urxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB2_UTXD, "uartb2_utxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_UCTS, "uartb3_ucts", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_URTS, "uartb3_urts", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_URXD, "uartb3_urxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_UTXD, "uartb3_utxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_UCTS, "uartb4_ucts", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_URTS, "uartb4_urts", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_URXD, "uartb4_urxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_UTXD, "uartb4_utxd", std),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM1_SCL, "vc_cam1_scl", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM1_SDA, "vc_cam1_sda", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM2_SCL, "vc_cam2_scl", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM2_SDA, "vc_cam2_sda", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM3_SCL, "vc_cam3_scl", i2c),
+-	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM3_SDA, "vc_cam3_sda", i2c),
+-};
+-
+-static const char * const bcm281xx_alt_groups[] = {
+-	"adcsync",
+-	"bat_rm",
+-	"bsc1_scl",
+-	"bsc1_sda",
+-	"bsc2_scl",
+-	"bsc2_sda",
+-	"classgpwr",
+-	"clk_cx8",
+-	"clkout_0",
+-	"clkout_1",
+-	"clkout_2",
+-	"clkout_3",
+-	"clkreq_in_0",
+-	"clkreq_in_1",
+-	"cws_sys_req1",
+-	"cws_sys_req2",
+-	"cws_sys_req3",
+-	"digmic1_clk",
+-	"digmic1_dq",
+-	"digmic2_clk",
+-	"digmic2_dq",
+-	"gpen13",
+-	"gpen14",
+-	"gpen15",
+-	"gpio00",
+-	"gpio01",
+-	"gpio02",
+-	"gpio03",
+-	"gpio04",
+-	"gpio05",
+-	"gpio06",
+-	"gpio07",
+-	"gpio08",
+-	"gpio09",
+-	"gpio10",
+-	"gpio11",
+-	"gpio12",
+-	"gpio13",
+-	"gpio14",
+-	"gps_pablank",
+-	"gps_tmark",
+-	"hdmi_scl",
+-	"hdmi_sda",
+-	"ic_dm",
+-	"ic_dp",
+-	"kp_col_ip_0",
+-	"kp_col_ip_1",
+-	"kp_col_ip_2",
+-	"kp_col_ip_3",
+-	"kp_row_op_0",
+-	"kp_row_op_1",
+-	"kp_row_op_2",
+-	"kp_row_op_3",
+-	"lcd_b_0",
+-	"lcd_b_1",
+-	"lcd_b_2",
+-	"lcd_b_3",
+-	"lcd_b_4",
+-	"lcd_b_5",
+-	"lcd_b_6",
+-	"lcd_b_7",
+-	"lcd_g_0",
+-	"lcd_g_1",
+-	"lcd_g_2",
+-	"lcd_g_3",
+-	"lcd_g_4",
+-	"lcd_g_5",
+-	"lcd_g_6",
+-	"lcd_g_7",
+-	"lcd_hsync",
+-	"lcd_oe",
+-	"lcd_pclk",
+-	"lcd_r_0",
+-	"lcd_r_1",
+-	"lcd_r_2",
+-	"lcd_r_3",
+-	"lcd_r_4",
+-	"lcd_r_5",
+-	"lcd_r_6",
+-	"lcd_r_7",
+-	"lcd_vsync",
+-	"mdmgpio0",
+-	"mdmgpio1",
+-	"mdmgpio2",
+-	"mdmgpio3",
+-	"mdmgpio4",
+-	"mdmgpio5",
+-	"mdmgpio6",
+-	"mdmgpio7",
+-	"mdmgpio8",
+-	"mphi_data_0",
+-	"mphi_data_1",
+-	"mphi_data_2",
+-	"mphi_data_3",
+-	"mphi_data_4",
+-	"mphi_data_5",
+-	"mphi_data_6",
+-	"mphi_data_7",
+-	"mphi_data_8",
+-	"mphi_data_9",
+-	"mphi_data_10",
+-	"mphi_data_11",
+-	"mphi_data_12",
+-	"mphi_data_13",
+-	"mphi_data_14",
+-	"mphi_data_15",
+-	"mphi_ha0",
+-	"mphi_hat0",
+-	"mphi_hat1",
+-	"mphi_hce0_n",
+-	"mphi_hce1_n",
+-	"mphi_hrd_n",
+-	"mphi_hwr_n",
+-	"mphi_run0",
+-	"mphi_run1",
+-	"mtx_scan_clk",
+-	"mtx_scan_data",
+-	"nand_ad_0",
+-	"nand_ad_1",
+-	"nand_ad_2",
+-	"nand_ad_3",
+-	"nand_ad_4",
+-	"nand_ad_5",
+-	"nand_ad_6",
+-	"nand_ad_7",
+-	"nand_ale",
+-	"nand_cen_0",
+-	"nand_cen_1",
+-	"nand_cle",
+-	"nand_oen",
+-	"nand_rdy_0",
+-	"nand_rdy_1",
+-	"nand_wen",
+-	"nand_wp",
+-	"pc1",
+-	"pc2",
+-	"pmu_int",
+-	"pmu_scl",
+-	"pmu_sda",
+-	"rfst2g_mtsloten3g",
+-	"rgmii_0_rx_ctl",
+-	"rgmii_0_rxc",
+-	"rgmii_0_rxd_0",
+-	"rgmii_0_rxd_1",
+-	"rgmii_0_rxd_2",
+-	"rgmii_0_rxd_3",
+-	"rgmii_0_tx_ctl",
+-	"rgmii_0_txc",
+-	"rgmii_0_txd_0",
+-	"rgmii_0_txd_1",
+-	"rgmii_0_txd_2",
+-	"rgmii_0_txd_3",
+-	"rgmii_1_rx_ctl",
+-	"rgmii_1_rxc",
+-	"rgmii_1_rxd_0",
+-	"rgmii_1_rxd_1",
+-	"rgmii_1_rxd_2",
+-	"rgmii_1_rxd_3",
+-	"rgmii_1_tx_ctl",
+-	"rgmii_1_txc",
+-	"rgmii_1_txd_0",
+-	"rgmii_1_txd_1",
+-	"rgmii_1_txd_2",
+-	"rgmii_1_txd_3",
+-	"rgmii_gpio_0",
+-	"rgmii_gpio_1",
+-	"rgmii_gpio_2",
+-	"rgmii_gpio_3",
+-	"rtxdata2g_txdata3g1",
+-	"rtxen2g_txdata3g2",
+-	"rxdata3g0",
+-	"rxdata3g1",
+-	"rxdata3g2",
+-	"sdio1_clk",
+-	"sdio1_cmd",
+-	"sdio1_data_0",
+-	"sdio1_data_1",
+-	"sdio1_data_2",
+-	"sdio1_data_3",
+-	"sdio4_clk",
+-	"sdio4_cmd",
+-	"sdio4_data_0",
+-	"sdio4_data_1",
+-	"sdio4_data_2",
+-	"sdio4_data_3",
+-	"sim_clk",
+-	"sim_data",
+-	"sim_det",
+-	"sim_resetn",
+-	"sim2_clk",
+-	"sim2_data",
+-	"sim2_det",
+-	"sim2_resetn",
+-	"sri_c",
+-	"sri_d",
+-	"sri_e",
+-	"ssp_extclk",
+-	"ssp0_clk",
+-	"ssp0_fs",
+-	"ssp0_rxd",
+-	"ssp0_txd",
+-	"ssp2_clk",
+-	"ssp2_fs_0",
+-	"ssp2_fs_1",
+-	"ssp2_fs_2",
+-	"ssp2_fs_3",
+-	"ssp2_rxd_0",
+-	"ssp2_rxd_1",
+-	"ssp2_txd_0",
+-	"ssp2_txd_1",
+-	"ssp3_clk",
+-	"ssp3_fs",
+-	"ssp3_rxd",
+-	"ssp3_txd",
+-	"ssp4_clk",
+-	"ssp4_fs",
+-	"ssp4_rxd",
+-	"ssp4_txd",
+-	"ssp5_clk",
+-	"ssp5_fs",
+-	"ssp5_rxd",
+-	"ssp5_txd",
+-	"ssp6_clk",
+-	"ssp6_fs",
+-	"ssp6_rxd",
+-	"ssp6_txd",
+-	"stat_1",
+-	"stat_2",
+-	"sysclken",
+-	"traceclk",
+-	"tracedt00",
+-	"tracedt01",
+-	"tracedt02",
+-	"tracedt03",
+-	"tracedt04",
+-	"tracedt05",
+-	"tracedt06",
+-	"tracedt07",
+-	"tracedt08",
+-	"tracedt09",
+-	"tracedt10",
+-	"tracedt11",
+-	"tracedt12",
+-	"tracedt13",
+-	"tracedt14",
+-	"tracedt15",
+-	"txdata3g0",
+-	"txpwrind",
+-	"uartb1_ucts",
+-	"uartb1_urts",
+-	"uartb1_urxd",
+-	"uartb1_utxd",
+-	"uartb2_urxd",
+-	"uartb2_utxd",
+-	"uartb3_ucts",
+-	"uartb3_urts",
+-	"uartb3_urxd",
+-	"uartb3_utxd",
+-	"uartb4_ucts",
+-	"uartb4_urts",
+-	"uartb4_urxd",
+-	"uartb4_utxd",
+-	"vc_cam1_scl",
+-	"vc_cam1_sda",
+-	"vc_cam2_scl",
+-	"vc_cam2_sda",
+-	"vc_cam3_scl",
+-	"vc_cam3_sda",
+-};
+-
+-/* Every pin can implement all ALT1-ALT4 functions */
+-#define BCM281XX_PIN_FUNCTION(fcn_name)			\
+-{							\
+-	.name = #fcn_name,				\
+-	.groups = bcm281xx_alt_groups,			\
+-	.ngroups = ARRAY_SIZE(bcm281xx_alt_groups),	\
+-}
+-
+-static const struct bcm281xx_pin_function bcm281xx_functions[] = {
+-	BCM281XX_PIN_FUNCTION(alt1),
+-	BCM281XX_PIN_FUNCTION(alt2),
+-	BCM281XX_PIN_FUNCTION(alt3),
+-	BCM281XX_PIN_FUNCTION(alt4),
+-};
+-
+-static struct bcm281xx_pinctrl_data bcm281xx_pinctrl = {
+-	.pins = bcm281xx_pinctrl_pins,
+-	.npins = ARRAY_SIZE(bcm281xx_pinctrl_pins),
+-	.functions = bcm281xx_functions,
+-	.nfunctions = ARRAY_SIZE(bcm281xx_functions),
+-};
+-
+-static inline enum bcm281xx_pin_type pin_type_get(struct pinctrl_dev *pctldev,
+-						  unsigned pin)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-
+-	if (pin >= pdata->npins)
+-		return BCM281XX_PIN_TYPE_UNKNOWN;
+-
+-	return *(enum bcm281xx_pin_type *)(pdata->pins[pin].drv_data);
+-}
+-
+-#define BCM281XX_PIN_SHIFT(type, param) \
+-	(BCM281XX_ ## type ## _PIN_REG_ ## param ## _SHIFT)
+-
+-#define BCM281XX_PIN_MASK(type, param) \
+-	(BCM281XX_ ## type ## _PIN_REG_ ## param ## _MASK)
+-
+-/*
+- * This helper function is used to build up the value and mask used to write to
+- * a pin register, but does not actually write to the register.
+- */
+-static inline void bcm281xx_pin_update(u32 *reg_val, u32 *reg_mask,
+-				       u32 param_val, u32 param_shift,
+-				       u32 param_mask)
+-{
+-	*reg_val &= ~param_mask;
+-	*reg_val |= (param_val << param_shift) & param_mask;
+-	*reg_mask |= param_mask;
+-}
+-
+-static struct regmap_config bcm281xx_pinctrl_regmap_config = {
+-	.reg_bits = 32,
+-	.reg_stride = 4,
+-	.val_bits = 32,
+-	.max_register = BCM281XX_PIN_VC_CAM3_SDA,
+-};
+-
+-static int bcm281xx_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-
+-	return pdata->npins;
+-}
+-
+-static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
+-						   unsigned group)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-
+-	return pdata->pins[group].name;
+-}
+-
+-static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+-					   unsigned group,
+-					   const unsigned **pins,
+-					   unsigned *num_pins)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-
+-	*pins = &pdata->pins[group].number;
+-	*num_pins = 1;
+-
+-	return 0;
+-}
+-
+-static void bcm281xx_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
+-					  struct seq_file *s,
+-					  unsigned offset)
+-{
+-	seq_printf(s, " %s", dev_name(pctldev->dev));
+-}
+-
+-static struct pinctrl_ops bcm281xx_pinctrl_ops = {
+-	.get_groups_count = bcm281xx_pinctrl_get_groups_count,
+-	.get_group_name = bcm281xx_pinctrl_get_group_name,
+-	.get_group_pins = bcm281xx_pinctrl_get_group_pins,
+-	.pin_dbg_show = bcm281xx_pinctrl_pin_dbg_show,
+-	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
+-	.dt_free_map = pinctrl_utils_dt_free_map,
+-};
+-
+-static int bcm281xx_pinctrl_get_fcns_count(struct pinctrl_dev *pctldev)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-
+-	return pdata->nfunctions;
+-}
+-
+-static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
+-						 unsigned function)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-
+-	return pdata->functions[function].name;
+-}
+-
+-static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
+-					   unsigned function,
+-					   const char * const **groups,
+-					   unsigned * const num_groups)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-
+-	*groups = pdata->functions[function].groups;
+-	*num_groups = pdata->functions[function].ngroups;
+-
+-	return 0;
+-}
+-
+-static int bcm281xx_pinmux_set(struct pinctrl_dev *pctldev,
+-			       unsigned function,
+-			       unsigned group)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-	const struct bcm281xx_pin_function *f = &pdata->functions[function];
+-	u32 offset = 4 * pdata->pins[group].number;
+-	int rc = 0;
+-
+-	dev_dbg(pctldev->dev,
+-		"%s(): Enable function %s (%d) of pin %s (%d) @offset 0x%x.\n",
+-		__func__, f->name, function, pdata->pins[group].name,
+-		pdata->pins[group].number, offset);
+-
+-	rc = regmap_update_bits(pdata->regmap, offset,
+-		BCM281XX_PIN_REG_F_SEL_MASK,
+-		function << BCM281XX_PIN_REG_F_SEL_SHIFT);
+-	if (rc)
+-		dev_err(pctldev->dev,
+-			"Error updating register for pin %s (%d).\n",
+-			pdata->pins[group].name, pdata->pins[group].number);
+-
+-	return rc;
+-}
+-
+-static struct pinmux_ops bcm281xx_pinctrl_pinmux_ops = {
+-	.get_functions_count = bcm281xx_pinctrl_get_fcns_count,
+-	.get_function_name = bcm281xx_pinctrl_get_fcn_name,
+-	.get_function_groups = bcm281xx_pinctrl_get_fcn_groups,
+-	.set_mux = bcm281xx_pinmux_set,
+-};
+-
+-static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
+-					   unsigned pin,
+-					   unsigned long *config)
+-{
+-	return -ENOTSUPP;
+-}
+-
+-
+-/* Goes through the configs and update register val/mask */
+-static int bcm281xx_std_pin_update(struct pinctrl_dev *pctldev,
+-				   unsigned pin,
+-				   unsigned long *configs,
+-				   unsigned num_configs,
+-				   u32 *val,
+-				   u32 *mask)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-	int i;
+-	enum pin_config_param param;
+-	u16 arg;
+-
+-	for (i = 0; i < num_configs; i++) {
+-		param = pinconf_to_config_param(configs[i]);
+-		arg = pinconf_to_config_argument(configs[i]);
+-
+-		switch (param) {
+-		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+-			arg = (arg >= 1 ? 1 : 0);
+-			bcm281xx_pin_update(val, mask, arg,
+-				BCM281XX_PIN_SHIFT(STD, HYST),
+-				BCM281XX_PIN_MASK(STD, HYST));
+-			break;
+-		/*
+-		 * The pin bias can only be one of pull-up, pull-down, or
+-		 * disable.  The user does not need to specify a value for the
+-		 * property, and the default value from pinconf-generic is
+-		 * ignored.
+-		 */
+-		case PIN_CONFIG_BIAS_DISABLE:
+-			bcm281xx_pin_update(val, mask, 0,
+-				BCM281XX_PIN_SHIFT(STD, PULL_UP),
+-				BCM281XX_PIN_MASK(STD, PULL_UP));
+-			bcm281xx_pin_update(val, mask, 0,
+-				BCM281XX_PIN_SHIFT(STD, PULL_DN),
+-				BCM281XX_PIN_MASK(STD, PULL_DN));
+-			break;
+-
+-		case PIN_CONFIG_BIAS_PULL_UP:
+-			bcm281xx_pin_update(val, mask, 1,
+-				BCM281XX_PIN_SHIFT(STD, PULL_UP),
+-				BCM281XX_PIN_MASK(STD, PULL_UP));
+-			bcm281xx_pin_update(val, mask, 0,
+-				BCM281XX_PIN_SHIFT(STD, PULL_DN),
+-				BCM281XX_PIN_MASK(STD, PULL_DN));
+-			break;
+-
+-		case PIN_CONFIG_BIAS_PULL_DOWN:
+-			bcm281xx_pin_update(val, mask, 0,
+-				BCM281XX_PIN_SHIFT(STD, PULL_UP),
+-				BCM281XX_PIN_MASK(STD, PULL_UP));
+-			bcm281xx_pin_update(val, mask, 1,
+-				BCM281XX_PIN_SHIFT(STD, PULL_DN),
+-				BCM281XX_PIN_MASK(STD, PULL_DN));
+-			break;
+-
+-		case PIN_CONFIG_SLEW_RATE:
+-			arg = (arg >= 1 ? 1 : 0);
+-			bcm281xx_pin_update(val, mask, arg,
+-				BCM281XX_PIN_SHIFT(STD, SLEW),
+-				BCM281XX_PIN_MASK(STD, SLEW));
+-			break;
+-
+-		case PIN_CONFIG_INPUT_ENABLE:
+-			/* inversed since register is for input _disable_ */
+-			arg = (arg >= 1 ? 0 : 1);
+-			bcm281xx_pin_update(val, mask, arg,
+-				BCM281XX_PIN_SHIFT(STD, INPUT_DIS),
+-				BCM281XX_PIN_MASK(STD, INPUT_DIS));
+-			break;
+-
+-		case PIN_CONFIG_DRIVE_STRENGTH:
+-			/* Valid range is 2-16 mA, even numbers only */
+-			if ((arg < 2) || (arg > 16) || (arg % 2)) {
+-				dev_err(pctldev->dev,
+-					"Invalid Drive Strength value (%d) for "
+-					"pin %s (%d). Valid values are "
+-					"(2..16) mA, even numbers only.\n",
+-					arg, pdata->pins[pin].name, pin);
+-				return -EINVAL;
+-			}
+-			bcm281xx_pin_update(val, mask, (arg/2)-1,
+-				BCM281XX_PIN_SHIFT(STD, DRV_STR),
+-				BCM281XX_PIN_MASK(STD, DRV_STR));
+-			break;
+-
+-		default:
+-			dev_err(pctldev->dev,
+-				"Unrecognized pin config %d for pin %s (%d).\n",
+-				param, pdata->pins[pin].name, pin);
+-			return -EINVAL;
+-
+-		} /* switch config */
+-	} /* for each config */
+-
+-	return 0;
+-}
+-
+-/*
+- * The pull-up strength for an I2C pin is represented by bits 4-6 in the
+- * register with the following mapping:
+- *   0b000: No pull-up
+- *   0b001: 1200 Ohm
+- *   0b010: 1800 Ohm
+- *   0b011: 720 Ohm
+- *   0b100: 2700 Ohm
+- *   0b101: 831 Ohm
+- *   0b110: 1080 Ohm
+- *   0b111: 568 Ohm
+- * This array maps pull-up strength in Ohms to register values (1+index).
+- */
+-static const u16 bcm281xx_pullup_map[] = {
+-	1200, 1800, 720, 2700, 831, 1080, 568
+-};
+-
+-/* Goes through the configs and update register val/mask */
+-static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
+-				   unsigned pin,
+-				   unsigned long *configs,
+-				   unsigned num_configs,
+-				   u32 *val,
+-				   u32 *mask)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-	int i, j;
+-	enum pin_config_param param;
+-	u16 arg;
+-
+-	for (i = 0; i < num_configs; i++) {
+-		param = pinconf_to_config_param(configs[i]);
+-		arg = pinconf_to_config_argument(configs[i]);
+-
+-		switch (param) {
+-		case PIN_CONFIG_BIAS_PULL_UP:
+-			for (j = 0; j < ARRAY_SIZE(bcm281xx_pullup_map); j++)
+-				if (bcm281xx_pullup_map[j] == arg)
+-					break;
+-
+-			if (j == ARRAY_SIZE(bcm281xx_pullup_map)) {
+-				dev_err(pctldev->dev,
+-					"Invalid pull-up value (%d) for pin %s "
+-					"(%d). Valid values are 568, 720, 831, "
+-					"1080, 1200, 1800, 2700 Ohms.\n",
+-					arg, pdata->pins[pin].name, pin);
+-				return -EINVAL;
+-			}
+-
+-			bcm281xx_pin_update(val, mask, j+1,
+-				BCM281XX_PIN_SHIFT(I2C, PULL_UP_STR),
+-				BCM281XX_PIN_MASK(I2C, PULL_UP_STR));
+-			break;
+-
+-		case PIN_CONFIG_BIAS_DISABLE:
+-			bcm281xx_pin_update(val, mask, 0,
+-				BCM281XX_PIN_SHIFT(I2C, PULL_UP_STR),
+-				BCM281XX_PIN_MASK(I2C, PULL_UP_STR));
+-			break;
+-
+-		case PIN_CONFIG_SLEW_RATE:
+-			arg = (arg >= 1 ? 1 : 0);
+-			bcm281xx_pin_update(val, mask, arg,
+-				BCM281XX_PIN_SHIFT(I2C, SLEW),
+-				BCM281XX_PIN_MASK(I2C, SLEW));
+-			break;
+-
+-		case PIN_CONFIG_INPUT_ENABLE:
+-			/* inversed since register is for input _disable_ */
+-			arg = (arg >= 1 ? 0 : 1);
+-			bcm281xx_pin_update(val, mask, arg,
+-				BCM281XX_PIN_SHIFT(I2C, INPUT_DIS),
+-				BCM281XX_PIN_MASK(I2C, INPUT_DIS));
+-			break;
+-
+-		default:
+-			dev_err(pctldev->dev,
+-				"Unrecognized pin config %d for pin %s (%d).\n",
+-				param, pdata->pins[pin].name, pin);
+-			return -EINVAL;
+-
+-		} /* switch config */
+-	} /* for each config */
+-
+-	return 0;
+-}
+-
+-/* Goes through the configs and update register val/mask */
+-static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
+-				    unsigned pin,
+-				    unsigned long *configs,
+-				    unsigned num_configs,
+-				    u32 *val,
+-				    u32 *mask)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-	int i;
+-	enum pin_config_param param;
+-	u16 arg;
+-
+-	for (i = 0; i < num_configs; i++) {
+-		param = pinconf_to_config_param(configs[i]);
+-		arg = pinconf_to_config_argument(configs[i]);
+-
+-		switch (param) {
+-		case PIN_CONFIG_SLEW_RATE:
+-			arg = (arg >= 1 ? 1 : 0);
+-			bcm281xx_pin_update(val, mask, arg,
+-				BCM281XX_PIN_SHIFT(HDMI, MODE),
+-				BCM281XX_PIN_MASK(HDMI, MODE));
+-			break;
+-
+-		case PIN_CONFIG_INPUT_ENABLE:
+-			/* inversed since register is for input _disable_ */
+-			arg = (arg >= 1 ? 0 : 1);
+-			bcm281xx_pin_update(val, mask, arg,
+-				BCM281XX_PIN_SHIFT(HDMI, INPUT_DIS),
+-				BCM281XX_PIN_MASK(HDMI, INPUT_DIS));
+-			break;
+-
+-		default:
+-			dev_err(pctldev->dev,
+-				"Unrecognized pin config %d for pin %s (%d).\n",
+-				param, pdata->pins[pin].name, pin);
+-			return -EINVAL;
+-
+-		} /* switch config */
+-	} /* for each config */
+-
+-	return 0;
+-}
+-
+-static int bcm281xx_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
+-					   unsigned pin,
+-					   unsigned long *configs,
+-					   unsigned num_configs)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-	enum bcm281xx_pin_type pin_type;
+-	u32 offset = 4 * pin;
+-	u32 cfg_val, cfg_mask;
+-	int rc;
+-
+-	cfg_val = 0;
+-	cfg_mask = 0;
+-	pin_type = pin_type_get(pctldev, pin);
+-
+-	/* Different pins have different configuration options */
+-	switch (pin_type) {
+-	case BCM281XX_PIN_TYPE_STD:
+-		rc = bcm281xx_std_pin_update(pctldev, pin, configs,
+-			num_configs, &cfg_val, &cfg_mask);
+-		break;
+-
+-	case BCM281XX_PIN_TYPE_I2C:
+-		rc = bcm281xx_i2c_pin_update(pctldev, pin, configs,
+-			num_configs, &cfg_val, &cfg_mask);
+-		break;
+-
+-	case BCM281XX_PIN_TYPE_HDMI:
+-		rc = bcm281xx_hdmi_pin_update(pctldev, pin, configs,
+-			num_configs, &cfg_val, &cfg_mask);
+-		break;
+-
+-	default:
+-		dev_err(pctldev->dev, "Unknown pin type for pin %s (%d).\n",
+-			pdata->pins[pin].name, pin);
+-		return -EINVAL;
+-
+-	} /* switch pin type */
+-
+-	if (rc)
+-		return rc;
+-
+-	dev_dbg(pctldev->dev,
+-		"%s(): Set pin %s (%d) with config 0x%x, mask 0x%x\n",
+-		__func__, pdata->pins[pin].name, pin, cfg_val, cfg_mask);
+-
+-	rc = regmap_update_bits(pdata->regmap, offset, cfg_mask, cfg_val);
+-	if (rc) {
+-		dev_err(pctldev->dev,
+-			"Error updating register for pin %s (%d).\n",
+-			pdata->pins[pin].name, pin);
+-		return rc;
+-	}
+-
+-	return 0;
+-}
+-
+-static struct pinconf_ops bcm281xx_pinctrl_pinconf_ops = {
+-	.pin_config_get = bcm281xx_pinctrl_pin_config_get,
+-	.pin_config_set = bcm281xx_pinctrl_pin_config_set,
+-};
+-
+-static struct pinctrl_desc bcm281xx_pinctrl_desc = {
+-	/* name, pins, npins members initialized in probe function */
+-	.pctlops = &bcm281xx_pinctrl_ops,
+-	.pmxops = &bcm281xx_pinctrl_pinmux_ops,
+-	.confops = &bcm281xx_pinctrl_pinconf_ops,
+-	.owner = THIS_MODULE,
+-};
+-
+-static int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
+-{
+-	struct bcm281xx_pinctrl_data *pdata = &bcm281xx_pinctrl;
+-	struct resource *res;
+-	struct pinctrl_dev *pctl;
+-
+-	/* So far We can assume there is only 1 bank of registers */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pdata->reg_base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(pdata->reg_base)) {
+-		dev_err(&pdev->dev, "Failed to ioremap MEM resource\n");
+-		return -ENODEV;
+-	}
+-
+-	/* Initialize the dynamic part of pinctrl_desc */
+-	pdata->regmap = devm_regmap_init_mmio(&pdev->dev, pdata->reg_base,
+-		&bcm281xx_pinctrl_regmap_config);
+-	if (IS_ERR(pdata->regmap)) {
+-		dev_err(&pdev->dev, "Regmap MMIO init failed.\n");
+-		return -ENODEV;
+-	}
+-
+-	bcm281xx_pinctrl_desc.name = dev_name(&pdev->dev);
+-	bcm281xx_pinctrl_desc.pins = bcm281xx_pinctrl.pins;
+-	bcm281xx_pinctrl_desc.npins = bcm281xx_pinctrl.npins;
+-
+-	pctl = pinctrl_register(&bcm281xx_pinctrl_desc,
+-				&pdev->dev,
+-				pdata);
+-	if (!pctl) {
+-		dev_err(&pdev->dev, "Failed to register pinctrl\n");
+-		return -ENODEV;
+-	}
+-
+-	platform_set_drvdata(pdev, pdata);
+-
+-	return 0;
+-}
+-
+-static struct of_device_id bcm281xx_pinctrl_of_match[] = {
+-	{ .compatible = "brcm,bcm11351-pinctrl", },
+-	{ },
+-};
+-
+-static struct platform_driver bcm281xx_pinctrl_driver = {
+-	.driver = {
+-		.name = "bcm281xx-pinctrl",
+-		.of_match_table = bcm281xx_pinctrl_of_match,
+-	},
+-};
+-
+-module_platform_driver_probe(bcm281xx_pinctrl_driver, bcm281xx_pinctrl_probe);
+-
+-MODULE_AUTHOR("Broadcom Corporation <bcm-kernel-feedback-list@broadcom.com>");
+-MODULE_AUTHOR("Sherman Yin <syin@broadcom.com>");
+-MODULE_DESCRIPTION("Broadcom BCM281xx pinctrl driver");
+-MODULE_LICENSE("GPL v2");
+diff --git a/drivers/pinctrl/pinctrl-bcm2835.c b/drivers/pinctrl/pinctrl-bcm2835.c
+deleted file mode 100644
+index 9aa8a3f..0000000
+--- a/drivers/pinctrl/pinctrl-bcm2835.c
++++ /dev/null
+@@ -1,1072 +0,0 @@
+-/*
+- * Driver for Broadcom BCM2835 GPIO unit (pinctrl + GPIO)
+- *
+- * Copyright (C) 2012 Chris Boot, Simon Arlott, Stephen Warren
+- *
+- * This driver is inspired by:
+- * pinctrl-nomadik.c, please see original file for copyright information
+- * pinctrl-tegra.c, please see original file for copyright information
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
+-
+-#include <linux/bitmap.h>
+-#include <linux/bug.h>
+-#include <linux/delay.h>
+-#include <linux/device.h>
+-#include <linux/err.h>
+-#include <linux/gpio.h>
+-#include <linux/interrupt.h>
+-#include <linux/io.h>
+-#include <linux/irq.h>
+-#include <linux/irqdesc.h>
+-#include <linux/irqdomain.h>
+-#include <linux/module.h>
+-#include <linux/of_address.h>
+-#include <linux/of.h>
+-#include <linux/of_irq.h>
+-#include <linux/pinctrl/consumer.h>
+-#include <linux/pinctrl/machine.h>
+-#include <linux/pinctrl/pinconf.h>
+-#include <linux/pinctrl/pinctrl.h>
+-#include <linux/pinctrl/pinmux.h>
+-#include <linux/platform_device.h>
+-#include <linux/seq_file.h>
+-#include <linux/slab.h>
+-#include <linux/spinlock.h>
+-#include <linux/types.h>
+-
+-#define MODULE_NAME "pinctrl-bcm2835"
+-#define BCM2835_NUM_GPIOS 54
+-#define BCM2835_NUM_BANKS 2
+-
+-#define BCM2835_PIN_BITMAP_SZ \
+-	DIV_ROUND_UP(BCM2835_NUM_GPIOS, sizeof(unsigned long) * 8)
+-
+-/* GPIO register offsets */
+-#define GPFSEL0		0x0	/* Function Select */
+-#define GPSET0		0x1c	/* Pin Output Set */
+-#define GPCLR0		0x28	/* Pin Output Clear */
+-#define GPLEV0		0x34	/* Pin Level */
+-#define GPEDS0		0x40	/* Pin Event Detect Status */
+-#define GPREN0		0x4c	/* Pin Rising Edge Detect Enable */
+-#define GPFEN0		0x58	/* Pin Falling Edge Detect Enable */
+-#define GPHEN0		0x64	/* Pin High Detect Enable */
+-#define GPLEN0		0x70	/* Pin Low Detect Enable */
+-#define GPAREN0		0x7c	/* Pin Async Rising Edge Detect */
+-#define GPAFEN0		0x88	/* Pin Async Falling Edge Detect */
+-#define GPPUD		0x94	/* Pin Pull-up/down Enable */
+-#define GPPUDCLK0	0x98	/* Pin Pull-up/down Enable Clock */
+-
+-#define FSEL_REG(p)		(GPFSEL0 + (((p) / 10) * 4))
+-#define FSEL_SHIFT(p)		(((p) % 10) * 3)
+-#define GPIO_REG_OFFSET(p)	((p) / 32)
+-#define GPIO_REG_SHIFT(p)	((p) % 32)
+-
+-enum bcm2835_pinconf_param {
+-	/* argument: bcm2835_pinconf_pull */
+-	BCM2835_PINCONF_PARAM_PULL,
+-};
+-
+-enum bcm2835_pinconf_pull {
+-	BCM2835_PINCONFIG_PULL_NONE,
+-	BCM2835_PINCONFIG_PULL_DOWN,
+-	BCM2835_PINCONFIG_PULL_UP,
+-};
+-
+-#define BCM2835_PINCONF_PACK(_param_, _arg_) ((_param_) << 16 | (_arg_))
+-#define BCM2835_PINCONF_UNPACK_PARAM(_conf_) ((_conf_) >> 16)
+-#define BCM2835_PINCONF_UNPACK_ARG(_conf_) ((_conf_) & 0xffff)
+-
+-struct bcm2835_gpio_irqdata {
+-	struct bcm2835_pinctrl *pc;
+-	int bank;
+-};
+-
+-struct bcm2835_pinctrl {
+-	struct device *dev;
+-	void __iomem *base;
+-	int irq[BCM2835_NUM_BANKS];
+-
+-	/* note: locking assumes each bank will have its own unsigned long */
+-	unsigned long enabled_irq_map[BCM2835_NUM_BANKS];
+-	unsigned int irq_type[BCM2835_NUM_GPIOS];
+-
+-	struct pinctrl_dev *pctl_dev;
+-	struct irq_domain *irq_domain;
+-	struct gpio_chip gpio_chip;
+-	struct pinctrl_gpio_range gpio_range;
+-
+-	struct bcm2835_gpio_irqdata irq_data[BCM2835_NUM_BANKS];
+-	spinlock_t irq_lock[BCM2835_NUM_BANKS];
+-};
+-
+-static struct lock_class_key gpio_lock_class;
+-
+-/* pins are just named GPIO0..GPIO53 */
+-#define BCM2835_GPIO_PIN(a) PINCTRL_PIN(a, "gpio" #a)
+-static struct pinctrl_pin_desc bcm2835_gpio_pins[] = {
+-	BCM2835_GPIO_PIN(0),
+-	BCM2835_GPIO_PIN(1),
+-	BCM2835_GPIO_PIN(2),
+-	BCM2835_GPIO_PIN(3),
+-	BCM2835_GPIO_PIN(4),
+-	BCM2835_GPIO_PIN(5),
+-	BCM2835_GPIO_PIN(6),
+-	BCM2835_GPIO_PIN(7),
+-	BCM2835_GPIO_PIN(8),
+-	BCM2835_GPIO_PIN(9),
+-	BCM2835_GPIO_PIN(10),
+-	BCM2835_GPIO_PIN(11),
+-	BCM2835_GPIO_PIN(12),
+-	BCM2835_GPIO_PIN(13),
+-	BCM2835_GPIO_PIN(14),
+-	BCM2835_GPIO_PIN(15),
+-	BCM2835_GPIO_PIN(16),
+-	BCM2835_GPIO_PIN(17),
+-	BCM2835_GPIO_PIN(18),
+-	BCM2835_GPIO_PIN(19),
+-	BCM2835_GPIO_PIN(20),
+-	BCM2835_GPIO_PIN(21),
+-	BCM2835_GPIO_PIN(22),
+-	BCM2835_GPIO_PIN(23),
+-	BCM2835_GPIO_PIN(24),
+-	BCM2835_GPIO_PIN(25),
+-	BCM2835_GPIO_PIN(26),
+-	BCM2835_GPIO_PIN(27),
+-	BCM2835_GPIO_PIN(28),
+-	BCM2835_GPIO_PIN(29),
+-	BCM2835_GPIO_PIN(30),
+-	BCM2835_GPIO_PIN(31),
+-	BCM2835_GPIO_PIN(32),
+-	BCM2835_GPIO_PIN(33),
+-	BCM2835_GPIO_PIN(34),
+-	BCM2835_GPIO_PIN(35),
+-	BCM2835_GPIO_PIN(36),
+-	BCM2835_GPIO_PIN(37),
+-	BCM2835_GPIO_PIN(38),
+-	BCM2835_GPIO_PIN(39),
+-	BCM2835_GPIO_PIN(40),
+-	BCM2835_GPIO_PIN(41),
+-	BCM2835_GPIO_PIN(42),
+-	BCM2835_GPIO_PIN(43),
+-	BCM2835_GPIO_PIN(44),
+-	BCM2835_GPIO_PIN(45),
+-	BCM2835_GPIO_PIN(46),
+-	BCM2835_GPIO_PIN(47),
+-	BCM2835_GPIO_PIN(48),
+-	BCM2835_GPIO_PIN(49),
+-	BCM2835_GPIO_PIN(50),
+-	BCM2835_GPIO_PIN(51),
+-	BCM2835_GPIO_PIN(52),
+-	BCM2835_GPIO_PIN(53),
+-};
+-
+-/* one pin per group */
+-static const char * const bcm2835_gpio_groups[] = {
+-	"gpio0",
+-	"gpio1",
+-	"gpio2",
+-	"gpio3",
+-	"gpio4",
+-	"gpio5",
+-	"gpio6",
+-	"gpio7",
+-	"gpio8",
+-	"gpio9",
+-	"gpio10",
+-	"gpio11",
+-	"gpio12",
+-	"gpio13",
+-	"gpio14",
+-	"gpio15",
+-	"gpio16",
+-	"gpio17",
+-	"gpio18",
+-	"gpio19",
+-	"gpio20",
+-	"gpio21",
+-	"gpio22",
+-	"gpio23",
+-	"gpio24",
+-	"gpio25",
+-	"gpio26",
+-	"gpio27",
+-	"gpio28",
+-	"gpio29",
+-	"gpio30",
+-	"gpio31",
+-	"gpio32",
+-	"gpio33",
+-	"gpio34",
+-	"gpio35",
+-	"gpio36",
+-	"gpio37",
+-	"gpio38",
+-	"gpio39",
+-	"gpio40",
+-	"gpio41",
+-	"gpio42",
+-	"gpio43",
+-	"gpio44",
+-	"gpio45",
+-	"gpio46",
+-	"gpio47",
+-	"gpio48",
+-	"gpio49",
+-	"gpio50",
+-	"gpio51",
+-	"gpio52",
+-	"gpio53",
+-};
+-
+-enum bcm2835_fsel {
+-	BCM2835_FSEL_GPIO_IN = 0,
+-	BCM2835_FSEL_GPIO_OUT = 1,
+-	BCM2835_FSEL_ALT0 = 4,
+-	BCM2835_FSEL_ALT1 = 5,
+-	BCM2835_FSEL_ALT2 = 6,
+-	BCM2835_FSEL_ALT3 = 7,
+-	BCM2835_FSEL_ALT4 = 3,
+-	BCM2835_FSEL_ALT5 = 2,
+-	BCM2835_FSEL_COUNT = 8,
+-	BCM2835_FSEL_MASK = 0x7,
+-};
+-
+-static const char * const bcm2835_functions[BCM2835_FSEL_COUNT] = {
+-	[BCM2835_FSEL_GPIO_IN] = "gpio_in",
+-	[BCM2835_FSEL_GPIO_OUT] = "gpio_out",
+-	[BCM2835_FSEL_ALT0] = "alt0",
+-	[BCM2835_FSEL_ALT1] = "alt1",
+-	[BCM2835_FSEL_ALT2] = "alt2",
+-	[BCM2835_FSEL_ALT3] = "alt3",
+-	[BCM2835_FSEL_ALT4] = "alt4",
+-	[BCM2835_FSEL_ALT5] = "alt5",
+-};
+-
+-static const char * const irq_type_names[] = {
+-	[IRQ_TYPE_NONE] = "none",
+-	[IRQ_TYPE_EDGE_RISING] = "edge-rising",
+-	[IRQ_TYPE_EDGE_FALLING] = "edge-falling",
+-	[IRQ_TYPE_EDGE_BOTH] = "edge-both",
+-	[IRQ_TYPE_LEVEL_HIGH] = "level-high",
+-	[IRQ_TYPE_LEVEL_LOW] = "level-low",
+-};
+-
+-static inline u32 bcm2835_gpio_rd(struct bcm2835_pinctrl *pc, unsigned reg)
+-{
+-	return readl(pc->base + reg);
+-}
+-
+-static inline void bcm2835_gpio_wr(struct bcm2835_pinctrl *pc, unsigned reg,
+-		u32 val)
+-{
+-	writel(val, pc->base + reg);
+-}
+-
+-static inline int bcm2835_gpio_get_bit(struct bcm2835_pinctrl *pc, unsigned reg,
+-		unsigned bit)
+-{
+-	reg += GPIO_REG_OFFSET(bit) * 4;
+-	return (bcm2835_gpio_rd(pc, reg) >> GPIO_REG_SHIFT(bit)) & 1;
+-}
+-
+-/* note NOT a read/modify/write cycle */
+-static inline void bcm2835_gpio_set_bit(struct bcm2835_pinctrl *pc,
+-		unsigned reg, unsigned bit)
+-{
+-	reg += GPIO_REG_OFFSET(bit) * 4;
+-	bcm2835_gpio_wr(pc, reg, BIT(GPIO_REG_SHIFT(bit)));
+-}
+-
+-static inline enum bcm2835_fsel bcm2835_pinctrl_fsel_get(
+-		struct bcm2835_pinctrl *pc, unsigned pin)
+-{
+-	u32 val = bcm2835_gpio_rd(pc, FSEL_REG(pin));
+-	enum bcm2835_fsel status = (val >> FSEL_SHIFT(pin)) & BCM2835_FSEL_MASK;
+-
+-	dev_dbg(pc->dev, "get %08x (%u => %s)\n", val, pin,
+-			bcm2835_functions[status]);
+-
+-	return status;
+-}
+-
+-static inline void bcm2835_pinctrl_fsel_set(
+-		struct bcm2835_pinctrl *pc, unsigned pin,
+-		enum bcm2835_fsel fsel)
+-{
+-	u32 val = bcm2835_gpio_rd(pc, FSEL_REG(pin));
+-	enum bcm2835_fsel cur = (val >> FSEL_SHIFT(pin)) & BCM2835_FSEL_MASK;
+-
+-	dev_dbg(pc->dev, "read %08x (%u => %s)\n", val, pin,
+-			bcm2835_functions[cur]);
+-
+-	if (cur == fsel)
+-		return;
+-
+-	if (cur != BCM2835_FSEL_GPIO_IN && fsel != BCM2835_FSEL_GPIO_IN) {
+-		/* always transition through GPIO_IN */
+-		val &= ~(BCM2835_FSEL_MASK << FSEL_SHIFT(pin));
+-		val |= BCM2835_FSEL_GPIO_IN << FSEL_SHIFT(pin);
+-
+-		dev_dbg(pc->dev, "trans %08x (%u <= %s)\n", val, pin,
+-				bcm2835_functions[BCM2835_FSEL_GPIO_IN]);
+-		bcm2835_gpio_wr(pc, FSEL_REG(pin), val);
+-	}
+-
+-	val &= ~(BCM2835_FSEL_MASK << FSEL_SHIFT(pin));
+-	val |= fsel << FSEL_SHIFT(pin);
+-
+-	dev_dbg(pc->dev, "write %08x (%u <= %s)\n", val, pin,
+-			bcm2835_functions[fsel]);
+-	bcm2835_gpio_wr(pc, FSEL_REG(pin), val);
+-}
+-
+-static int bcm2835_gpio_request(struct gpio_chip *chip, unsigned offset)
+-{
+-	return pinctrl_request_gpio(chip->base + offset);
+-}
+-
+-static void bcm2835_gpio_free(struct gpio_chip *chip, unsigned offset)
+-{
+-	pinctrl_free_gpio(chip->base + offset);
+-}
+-
+-static int bcm2835_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+-{
+-	return pinctrl_gpio_direction_input(chip->base + offset);
+-}
+-
+-static int bcm2835_gpio_get(struct gpio_chip *chip, unsigned offset)
+-{
+-	struct bcm2835_pinctrl *pc = dev_get_drvdata(chip->dev);
+-
+-	return bcm2835_gpio_get_bit(pc, GPLEV0, offset);
+-}
+-
+-static int bcm2835_gpio_direction_output(struct gpio_chip *chip,
+-		unsigned offset, int value)
+-{
+-	return pinctrl_gpio_direction_output(chip->base + offset);
+-}
+-
+-static void bcm2835_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+-{
+-	struct bcm2835_pinctrl *pc = dev_get_drvdata(chip->dev);
+-
+-	bcm2835_gpio_set_bit(pc, value ? GPSET0 : GPCLR0, offset);
+-}
+-
+-static int bcm2835_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+-{
+-	struct bcm2835_pinctrl *pc = dev_get_drvdata(chip->dev);
+-
+-	return irq_linear_revmap(pc->irq_domain, offset);
+-}
+-
+-static struct gpio_chip bcm2835_gpio_chip = {
+-	.label = MODULE_NAME,
+-	.owner = THIS_MODULE,
+-	.request = bcm2835_gpio_request,
+-	.free = bcm2835_gpio_free,
+-	.direction_input = bcm2835_gpio_direction_input,
+-	.direction_output = bcm2835_gpio_direction_output,
+-	.get = bcm2835_gpio_get,
+-	.set = bcm2835_gpio_set,
+-	.to_irq = bcm2835_gpio_to_irq,
+-	.base = -1,
+-	.ngpio = BCM2835_NUM_GPIOS,
+-	.can_sleep = false,
+-};
+-
+-static irqreturn_t bcm2835_gpio_irq_handler(int irq, void *dev_id)
+-{
+-	struct bcm2835_gpio_irqdata *irqdata = dev_id;
+-	struct bcm2835_pinctrl *pc = irqdata->pc;
+-	int bank = irqdata->bank;
+-	unsigned long events;
+-	unsigned offset;
+-	unsigned gpio;
+-	unsigned int type;
+-
+-	events = bcm2835_gpio_rd(pc, GPEDS0 + bank * 4);
+-	events &= pc->enabled_irq_map[bank];
+-	for_each_set_bit(offset, &events, 32) {
+-		gpio = (32 * bank) + offset;
+-		type = pc->irq_type[gpio];
+-
+-		/* ack edge triggered IRQs immediately */
+-		if (!(type & IRQ_TYPE_LEVEL_MASK))
+-			bcm2835_gpio_set_bit(pc, GPEDS0, gpio);
+-
+-		generic_handle_irq(irq_linear_revmap(pc->irq_domain, gpio));
+-
+-		/* ack level triggered IRQ after handling them */
+-		if (type & IRQ_TYPE_LEVEL_MASK)
+-			bcm2835_gpio_set_bit(pc, GPEDS0, gpio);
+-	}
+-	return events ? IRQ_HANDLED : IRQ_NONE;
+-}
+-
+-static inline void __bcm2835_gpio_irq_config(struct bcm2835_pinctrl *pc,
+-	unsigned reg, unsigned offset, bool enable)
+-{
+-	u32 value;
+-	reg += GPIO_REG_OFFSET(offset) * 4;
+-	value = bcm2835_gpio_rd(pc, reg);
+-	if (enable)
+-		value |= BIT(GPIO_REG_SHIFT(offset));
+-	else
+-		value &= ~(BIT(GPIO_REG_SHIFT(offset)));
+-	bcm2835_gpio_wr(pc, reg, value);
+-}
+-
+-/* fast path for IRQ handler */
+-static void bcm2835_gpio_irq_config(struct bcm2835_pinctrl *pc,
+-	unsigned offset, bool enable)
+-{
+-	switch (pc->irq_type[offset]) {
+-	case IRQ_TYPE_EDGE_RISING:
+-		__bcm2835_gpio_irq_config(pc, GPREN0, offset, enable);
+-		break;
+-
+-	case IRQ_TYPE_EDGE_FALLING:
+-		__bcm2835_gpio_irq_config(pc, GPFEN0, offset, enable);
+-		break;
+-
+-	case IRQ_TYPE_EDGE_BOTH:
+-		__bcm2835_gpio_irq_config(pc, GPREN0, offset, enable);
+-		__bcm2835_gpio_irq_config(pc, GPFEN0, offset, enable);
+-		break;
+-
+-	case IRQ_TYPE_LEVEL_HIGH:
+-		__bcm2835_gpio_irq_config(pc, GPHEN0, offset, enable);
+-		break;
+-
+-	case IRQ_TYPE_LEVEL_LOW:
+-		__bcm2835_gpio_irq_config(pc, GPLEN0, offset, enable);
+-		break;
+-	}
+-}
+-
+-static void bcm2835_gpio_irq_enable(struct irq_data *data)
+-{
+-	struct bcm2835_pinctrl *pc = irq_data_get_irq_chip_data(data);
+-	unsigned gpio = irqd_to_hwirq(data);
+-	unsigned offset = GPIO_REG_SHIFT(gpio);
+-	unsigned bank = GPIO_REG_OFFSET(gpio);
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&pc->irq_lock[bank], flags);
+-	set_bit(offset, &pc->enabled_irq_map[bank]);
+-	bcm2835_gpio_irq_config(pc, gpio, true);
+-	spin_unlock_irqrestore(&pc->irq_lock[bank], flags);
+-}
+-
+-static void bcm2835_gpio_irq_disable(struct irq_data *data)
+-{
+-	struct bcm2835_pinctrl *pc = irq_data_get_irq_chip_data(data);
+-	unsigned gpio = irqd_to_hwirq(data);
+-	unsigned offset = GPIO_REG_SHIFT(gpio);
+-	unsigned bank = GPIO_REG_OFFSET(gpio);
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&pc->irq_lock[bank], flags);
+-	bcm2835_gpio_irq_config(pc, gpio, false);
+-	clear_bit(offset, &pc->enabled_irq_map[bank]);
+-	spin_unlock_irqrestore(&pc->irq_lock[bank], flags);
+-}
+-
+-static int __bcm2835_gpio_irq_set_type_disabled(struct bcm2835_pinctrl *pc,
+-	unsigned offset, unsigned int type)
+-{
+-	switch (type) {
+-	case IRQ_TYPE_NONE:
+-	case IRQ_TYPE_EDGE_RISING:
+-	case IRQ_TYPE_EDGE_FALLING:
+-	case IRQ_TYPE_EDGE_BOTH:
+-	case IRQ_TYPE_LEVEL_HIGH:
+-	case IRQ_TYPE_LEVEL_LOW:
+-		pc->irq_type[offset] = type;
+-		break;
+-
+-	default:
+-		return -EINVAL;
+-	}
+-	return 0;
+-}
+-
+-/* slower path for reconfiguring IRQ type */
+-static int __bcm2835_gpio_irq_set_type_enabled(struct bcm2835_pinctrl *pc,
+-	unsigned offset, unsigned int type)
+-{
+-	switch (type) {
+-	case IRQ_TYPE_NONE:
+-		if (pc->irq_type[offset] != type) {
+-			bcm2835_gpio_irq_config(pc, offset, false);
+-			pc->irq_type[offset] = type;
+-		}
+-		break;
+-
+-	case IRQ_TYPE_EDGE_RISING:
+-		if (pc->irq_type[offset] == IRQ_TYPE_EDGE_BOTH) {
+-			/* RISING already enabled, disable FALLING */
+-			pc->irq_type[offset] = IRQ_TYPE_EDGE_FALLING;
+-			bcm2835_gpio_irq_config(pc, offset, false);
+-			pc->irq_type[offset] = type;
+-		} else if (pc->irq_type[offset] != type) {
+-			bcm2835_gpio_irq_config(pc, offset, false);
+-			pc->irq_type[offset] = type;
+-			bcm2835_gpio_irq_config(pc, offset, true);
+-		}
+-		break;
+-
+-	case IRQ_TYPE_EDGE_FALLING:
+-		if (pc->irq_type[offset] == IRQ_TYPE_EDGE_BOTH) {
+-			/* FALLING already enabled, disable RISING */
+-			pc->irq_type[offset] = IRQ_TYPE_EDGE_RISING;
+-			bcm2835_gpio_irq_config(pc, offset, false);
+-			pc->irq_type[offset] = type;
+-		} else if (pc->irq_type[offset] != type) {
+-			bcm2835_gpio_irq_config(pc, offset, false);
+-			pc->irq_type[offset] = type;
+-			bcm2835_gpio_irq_config(pc, offset, true);
+-		}
+-		break;
+-
+-	case IRQ_TYPE_EDGE_BOTH:
+-		if (pc->irq_type[offset] == IRQ_TYPE_EDGE_RISING) {
+-			/* RISING already enabled, enable FALLING too */
+-			pc->irq_type[offset] = IRQ_TYPE_EDGE_FALLING;
+-			bcm2835_gpio_irq_config(pc, offset, true);
+-			pc->irq_type[offset] = type;
+-		} else if (pc->irq_type[offset] == IRQ_TYPE_EDGE_FALLING) {
+-			/* FALLING already enabled, enable RISING too */
+-			pc->irq_type[offset] = IRQ_TYPE_EDGE_RISING;
+-			bcm2835_gpio_irq_config(pc, offset, true);
+-			pc->irq_type[offset] = type;
+-		} else if (pc->irq_type[offset] != type) {
+-			bcm2835_gpio_irq_config(pc, offset, false);
+-			pc->irq_type[offset] = type;
+-			bcm2835_gpio_irq_config(pc, offset, true);
+-		}
+-		break;
+-
+-	case IRQ_TYPE_LEVEL_HIGH:
+-	case IRQ_TYPE_LEVEL_LOW:
+-		if (pc->irq_type[offset] != type) {
+-			bcm2835_gpio_irq_config(pc, offset, false);
+-			pc->irq_type[offset] = type;
+-			bcm2835_gpio_irq_config(pc, offset, true);
+-		}
+-		break;
+-
+-	default:
+-		return -EINVAL;
+-	}
+-	return 0;
+-}
+-
+-static int bcm2835_gpio_irq_set_type(struct irq_data *data, unsigned int type)
+-{
+-	struct bcm2835_pinctrl *pc = irq_data_get_irq_chip_data(data);
+-	unsigned gpio = irqd_to_hwirq(data);
+-	unsigned offset = GPIO_REG_SHIFT(gpio);
+-	unsigned bank = GPIO_REG_OFFSET(gpio);
+-	unsigned long flags;
+-	int ret;
+-
+-	spin_lock_irqsave(&pc->irq_lock[bank], flags);
+-
+-	if (test_bit(offset, &pc->enabled_irq_map[bank]))
+-		ret = __bcm2835_gpio_irq_set_type_enabled(pc, gpio, type);
+-	else
+-		ret = __bcm2835_gpio_irq_set_type_disabled(pc, gpio, type);
+-
+-	spin_unlock_irqrestore(&pc->irq_lock[bank], flags);
+-
+-	return ret;
+-}
+-
+-static struct irq_chip bcm2835_gpio_irq_chip = {
+-	.name = MODULE_NAME,
+-	.irq_enable = bcm2835_gpio_irq_enable,
+-	.irq_disable = bcm2835_gpio_irq_disable,
+-	.irq_set_type = bcm2835_gpio_irq_set_type,
+-};
+-
+-static int bcm2835_pctl_get_groups_count(struct pinctrl_dev *pctldev)
+-{
+-	return ARRAY_SIZE(bcm2835_gpio_groups);
+-}
+-
+-static const char *bcm2835_pctl_get_group_name(struct pinctrl_dev *pctldev,
+-		unsigned selector)
+-{
+-	return bcm2835_gpio_groups[selector];
+-}
+-
+-static int bcm2835_pctl_get_group_pins(struct pinctrl_dev *pctldev,
+-		unsigned selector,
+-		const unsigned **pins,
+-		unsigned *num_pins)
+-{
+-	*pins = &bcm2835_gpio_pins[selector].number;
+-	*num_pins = 1;
+-
+-	return 0;
+-}
+-
+-static void bcm2835_pctl_pin_dbg_show(struct pinctrl_dev *pctldev,
+-		struct seq_file *s,
+-		unsigned offset)
+-{
+-	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+-	enum bcm2835_fsel fsel = bcm2835_pinctrl_fsel_get(pc, offset);
+-	const char *fname = bcm2835_functions[fsel];
+-	int value = bcm2835_gpio_get_bit(pc, GPLEV0, offset);
+-	int irq = irq_find_mapping(pc->irq_domain, offset);
+-
+-	seq_printf(s, "function %s in %s; irq %d (%s)",
+-		fname, value ? "hi" : "lo",
+-		irq, irq_type_names[pc->irq_type[offset]]);
+-}
+-
+-static void bcm2835_pctl_dt_free_map(struct pinctrl_dev *pctldev,
+-		struct pinctrl_map *maps, unsigned num_maps)
+-{
+-	int i;
+-
+-	for (i = 0; i < num_maps; i++)
+-		if (maps[i].type == PIN_MAP_TYPE_CONFIGS_PIN)
+-			kfree(maps[i].data.configs.configs);
+-
+-	kfree(maps);
+-}
+-
+-static int bcm2835_pctl_dt_node_to_map_func(struct bcm2835_pinctrl *pc,
+-		struct device_node *np, u32 pin, u32 fnum,
+-		struct pinctrl_map **maps)
+-{
+-	struct pinctrl_map *map = *maps;
+-
+-	if (fnum >= ARRAY_SIZE(bcm2835_functions)) {
+-		dev_err(pc->dev, "%s: invalid brcm,function %d\n",
+-			of_node_full_name(np), fnum);
+-		return -EINVAL;
+-	}
+-
+-	map->type = PIN_MAP_TYPE_MUX_GROUP;
+-	map->data.mux.group = bcm2835_gpio_groups[pin];
+-	map->data.mux.function = bcm2835_functions[fnum];
+-	(*maps)++;
+-
+-	return 0;
+-}
+-
+-static int bcm2835_pctl_dt_node_to_map_pull(struct bcm2835_pinctrl *pc,
+-		struct device_node *np, u32 pin, u32 pull,
+-		struct pinctrl_map **maps)
+-{
+-	struct pinctrl_map *map = *maps;
+-	unsigned long *configs;
+-
+-	if (pull > 2) {
+-		dev_err(pc->dev, "%s: invalid brcm,pull %d\n",
+-			of_node_full_name(np), pull);
+-		return -EINVAL;
+-	}
+-
+-	configs = kzalloc(sizeof(*configs), GFP_KERNEL);
+-	if (!configs)
+-		return -ENOMEM;
+-	configs[0] = BCM2835_PINCONF_PACK(BCM2835_PINCONF_PARAM_PULL, pull);
+-
+-	map->type = PIN_MAP_TYPE_CONFIGS_PIN;
+-	map->data.configs.group_or_pin = bcm2835_gpio_pins[pin].name;
+-	map->data.configs.configs = configs;
+-	map->data.configs.num_configs = 1;
+-	(*maps)++;
+-
+-	return 0;
+-}
+-
+-static int bcm2835_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
+-		struct device_node *np,
+-		struct pinctrl_map **map, unsigned *num_maps)
+-{
+-	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+-	struct property *pins, *funcs, *pulls;
+-	int num_pins, num_funcs, num_pulls, maps_per_pin;
+-	struct pinctrl_map *maps, *cur_map;
+-	int i, err;
+-	u32 pin, func, pull;
+-
+-	pins = of_find_property(np, "brcm,pins", NULL);
+-	if (!pins) {
+-		dev_err(pc->dev, "%s: missing brcm,pins property\n",
+-				of_node_full_name(np));
+-		return -EINVAL;
+-	}
+-
+-	funcs = of_find_property(np, "brcm,function", NULL);
+-	pulls = of_find_property(np, "brcm,pull", NULL);
+-
+-	if (!funcs && !pulls) {
+-		dev_err(pc->dev,
+-			"%s: neither brcm,function nor brcm,pull specified\n",
+-			of_node_full_name(np));
+-		return -EINVAL;
+-	}
+-
+-	num_pins = pins->length / 4;
+-	num_funcs = funcs ? (funcs->length / 4) : 0;
+-	num_pulls = pulls ? (pulls->length / 4) : 0;
+-
+-	if (num_funcs > 1 && num_funcs != num_pins) {
+-		dev_err(pc->dev,
+-			"%s: brcm,function must have 1 or %d entries\n",
+-			of_node_full_name(np), num_pins);
+-		return -EINVAL;
+-	}
+-
+-	if (num_pulls > 1 && num_pulls != num_pins) {
+-		dev_err(pc->dev,
+-			"%s: brcm,pull must have 1 or %d entries\n",
+-			of_node_full_name(np), num_pins);
+-		return -EINVAL;
+-	}
+-
+-	maps_per_pin = 0;
+-	if (num_funcs)
+-		maps_per_pin++;
+-	if (num_pulls)
+-		maps_per_pin++;
+-	cur_map = maps = kzalloc(num_pins * maps_per_pin * sizeof(*maps),
+-				GFP_KERNEL);
+-	if (!maps)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < num_pins; i++) {
+-		err = of_property_read_u32_index(np, "brcm,pins", i, &pin);
+-		if (err)
+-			goto out;
+-		if (pin >= ARRAY_SIZE(bcm2835_gpio_pins)) {
+-			dev_err(pc->dev, "%s: invalid brcm,pins value %d\n",
+-				of_node_full_name(np), pin);
+-			err = -EINVAL;
+-			goto out;
+-		}
+-
+-		if (num_funcs) {
+-			err = of_property_read_u32_index(np, "brcm,function",
+-					(num_funcs > 1) ? i : 0, &func);
+-			if (err)
+-				goto out;
+-			err = bcm2835_pctl_dt_node_to_map_func(pc, np, pin,
+-							func, &cur_map);
+-			if (err)
+-				goto out;
+-		}
+-		if (num_pulls) {
+-			err = of_property_read_u32_index(np, "brcm,pull",
+-					(num_funcs > 1) ? i : 0, &pull);
+-			if (err)
+-				goto out;
+-			err = bcm2835_pctl_dt_node_to_map_pull(pc, np, pin,
+-							pull, &cur_map);
+-			if (err)
+-				goto out;
+-		}
+-	}
+-
+-	*map = maps;
+-	*num_maps = num_pins * maps_per_pin;
+-
+-	return 0;
+-
+-out:
+-	kfree(maps);
+-	return err;
+-}
+-
+-static const struct pinctrl_ops bcm2835_pctl_ops = {
+-	.get_groups_count = bcm2835_pctl_get_groups_count,
+-	.get_group_name = bcm2835_pctl_get_group_name,
+-	.get_group_pins = bcm2835_pctl_get_group_pins,
+-	.pin_dbg_show = bcm2835_pctl_pin_dbg_show,
+-	.dt_node_to_map = bcm2835_pctl_dt_node_to_map,
+-	.dt_free_map = bcm2835_pctl_dt_free_map,
+-};
+-
+-static int bcm2835_pmx_get_functions_count(struct pinctrl_dev *pctldev)
+-{
+-	return BCM2835_FSEL_COUNT;
+-}
+-
+-static const char *bcm2835_pmx_get_function_name(struct pinctrl_dev *pctldev,
+-		unsigned selector)
+-{
+-	return bcm2835_functions[selector];
+-}
+-
+-static int bcm2835_pmx_get_function_groups(struct pinctrl_dev *pctldev,
+-		unsigned selector,
+-		const char * const **groups,
+-		unsigned * const num_groups)
+-{
+-	/* every pin can do every function */
+-	*groups = bcm2835_gpio_groups;
+-	*num_groups = ARRAY_SIZE(bcm2835_gpio_groups);
+-
+-	return 0;
+-}
+-
+-static int bcm2835_pmx_set(struct pinctrl_dev *pctldev,
+-		unsigned func_selector,
+-		unsigned group_selector)
+-{
+-	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+-
+-	bcm2835_pinctrl_fsel_set(pc, group_selector, func_selector);
+-
+-	return 0;
+-}
+-
+-static void bcm2835_pmx_gpio_disable_free(struct pinctrl_dev *pctldev,
+-		struct pinctrl_gpio_range *range,
+-		unsigned offset)
+-{
+-	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+-
+-	/* disable by setting to GPIO_IN */
+-	bcm2835_pinctrl_fsel_set(pc, offset, BCM2835_FSEL_GPIO_IN);
+-}
+-
+-static int bcm2835_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
+-		struct pinctrl_gpio_range *range,
+-		unsigned offset,
+-		bool input)
+-{
+-	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+-	enum bcm2835_fsel fsel = input ?
+-		BCM2835_FSEL_GPIO_IN : BCM2835_FSEL_GPIO_OUT;
+-
+-	bcm2835_pinctrl_fsel_set(pc, offset, fsel);
+-
+-	return 0;
+-}
+-
+-static const struct pinmux_ops bcm2835_pmx_ops = {
+-	.get_functions_count = bcm2835_pmx_get_functions_count,
+-	.get_function_name = bcm2835_pmx_get_function_name,
+-	.get_function_groups = bcm2835_pmx_get_function_groups,
+-	.set_mux = bcm2835_pmx_set,
+-	.gpio_disable_free = bcm2835_pmx_gpio_disable_free,
+-	.gpio_set_direction = bcm2835_pmx_gpio_set_direction,
+-};
+-
+-static int bcm2835_pinconf_get(struct pinctrl_dev *pctldev,
+-			unsigned pin, unsigned long *config)
+-{
+-	/* No way to read back config in HW */
+-	return -ENOTSUPP;
+-}
+-
+-static int bcm2835_pinconf_set(struct pinctrl_dev *pctldev,
+-			unsigned pin, unsigned long *configs,
+-			unsigned num_configs)
+-{
+-	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+-	enum bcm2835_pinconf_param param;
+-	u16 arg;
+-	u32 off, bit;
+-	int i;
+-
+-	for (i = 0; i < num_configs; i++) {
+-		param = BCM2835_PINCONF_UNPACK_PARAM(configs[i]);
+-		arg = BCM2835_PINCONF_UNPACK_ARG(configs[i]);
+-
+-		if (param != BCM2835_PINCONF_PARAM_PULL)
+-			return -EINVAL;
+-
+-		off = GPIO_REG_OFFSET(pin);
+-		bit = GPIO_REG_SHIFT(pin);
+-
+-		bcm2835_gpio_wr(pc, GPPUD, arg & 3);
+-		/*
+-		 * Docs say to wait 150 cycles, but not of what. We assume a
+-		 * 1 MHz clock here, which is pretty slow...
+-		 */
+-		udelay(150);
+-		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), BIT(bit));
+-		udelay(150);
+-		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), 0);
+-	} /* for each config */
+-
+-	return 0;
+-}
+-
+-static const struct pinconf_ops bcm2835_pinconf_ops = {
+-	.pin_config_get = bcm2835_pinconf_get,
+-	.pin_config_set = bcm2835_pinconf_set,
+-};
+-
+-static struct pinctrl_desc bcm2835_pinctrl_desc = {
+-	.name = MODULE_NAME,
+-	.pins = bcm2835_gpio_pins,
+-	.npins = ARRAY_SIZE(bcm2835_gpio_pins),
+-	.pctlops = &bcm2835_pctl_ops,
+-	.pmxops = &bcm2835_pmx_ops,
+-	.confops = &bcm2835_pinconf_ops,
+-	.owner = THIS_MODULE,
+-};
+-
+-static struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
+-	.name = MODULE_NAME,
+-	.npins = BCM2835_NUM_GPIOS,
+-};
+-
+-static int bcm2835_pinctrl_probe(struct platform_device *pdev)
+-{
+-	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
+-	struct bcm2835_pinctrl *pc;
+-	struct resource iomem;
+-	int err, i;
+-	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) != BCM2835_NUM_GPIOS);
+-	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_groups) != BCM2835_NUM_GPIOS);
+-
+-	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+-	if (!pc)
+-		return -ENOMEM;
+-
+-	platform_set_drvdata(pdev, pc);
+-	pc->dev = dev;
+-
+-	err = of_address_to_resource(np, 0, &iomem);
+-	if (err) {
+-		dev_err(dev, "could not get IO memory\n");
+-		return err;
+-	}
+-
+-	pc->base = devm_ioremap_resource(dev, &iomem);
+-	if (IS_ERR(pc->base))
+-		return PTR_ERR(pc->base);
+-
+-	pc->gpio_chip = bcm2835_gpio_chip;
+-	pc->gpio_chip.dev = dev;
+-	pc->gpio_chip.of_node = np;
+-
+-	pc->irq_domain = irq_domain_add_linear(np, BCM2835_NUM_GPIOS,
+-			&irq_domain_simple_ops, NULL);
+-	if (!pc->irq_domain) {
+-		dev_err(dev, "could not create IRQ domain\n");
+-		return -ENOMEM;
+-	}
+-
+-	for (i = 0; i < BCM2835_NUM_GPIOS; i++) {
+-		int irq = irq_create_mapping(pc->irq_domain, i);
+-		irq_set_lockdep_class(irq, &gpio_lock_class);
+-		irq_set_chip_and_handler(irq, &bcm2835_gpio_irq_chip,
+-				handle_simple_irq);
+-		irq_set_chip_data(irq, pc);
+-		set_irq_flags(irq, IRQF_VALID);
+-	}
+-
+-	for (i = 0; i < BCM2835_NUM_BANKS; i++) {
+-		unsigned long events;
+-		unsigned offset;
+-		int len;
+-		char *name;
+-
+-		/* clear event detection flags */
+-		bcm2835_gpio_wr(pc, GPREN0 + i * 4, 0);
+-		bcm2835_gpio_wr(pc, GPFEN0 + i * 4, 0);
+-		bcm2835_gpio_wr(pc, GPHEN0 + i * 4, 0);
+-		bcm2835_gpio_wr(pc, GPLEN0 + i * 4, 0);
+-		bcm2835_gpio_wr(pc, GPAREN0 + i * 4, 0);
+-		bcm2835_gpio_wr(pc, GPAFEN0 + i * 4, 0);
+-
+-		/* clear all the events */
+-		events = bcm2835_gpio_rd(pc, GPEDS0 + i * 4);
+-		for_each_set_bit(offset, &events, 32)
+-			bcm2835_gpio_wr(pc, GPEDS0 + i * 4, BIT(offset));
+-
+-		pc->irq[i] = irq_of_parse_and_map(np, i);
+-		pc->irq_data[i].pc = pc;
+-		pc->irq_data[i].bank = i;
+-		spin_lock_init(&pc->irq_lock[i]);
+-
+-		len = strlen(dev_name(pc->dev)) + 16;
+-		name = devm_kzalloc(pc->dev, len, GFP_KERNEL);
+-		if (!name)
+-			return -ENOMEM;
+-		snprintf(name, len, "%s:bank%d", dev_name(pc->dev), i);
+-
+-		err = devm_request_irq(dev, pc->irq[i],
+-			bcm2835_gpio_irq_handler, IRQF_SHARED,
+-			name, &pc->irq_data[i]);
+-		if (err) {
+-			dev_err(dev, "unable to request IRQ %d\n", pc->irq[i]);
+-			return err;
+-		}
+-	}
+-
+-	err = gpiochip_add(&pc->gpio_chip);
+-	if (err) {
+-		dev_err(dev, "could not add GPIO chip\n");
+-		return err;
+-	}
+-
+-	pc->pctl_dev = pinctrl_register(&bcm2835_pinctrl_desc, dev, pc);
+-	if (!pc->pctl_dev) {
+-		gpiochip_remove(&pc->gpio_chip);
+-		return -EINVAL;
+-	}
+-
+-	pc->gpio_range = bcm2835_pinctrl_gpio_range;
+-	pc->gpio_range.base = pc->gpio_chip.base;
+-	pc->gpio_range.gc = &pc->gpio_chip;
+-	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+-
+-	return 0;
+-}
+-
+-static int bcm2835_pinctrl_remove(struct platform_device *pdev)
+-{
+-	struct bcm2835_pinctrl *pc = platform_get_drvdata(pdev);
+-
+-	pinctrl_unregister(pc->pctl_dev);
+-	gpiochip_remove(&pc->gpio_chip);
+-
+-	return 0;
+-}
+-
+-static struct of_device_id bcm2835_pinctrl_match[] = {
+-	{ .compatible = "brcm,bcm2835-gpio" },
+-	{}
+-};
+-MODULE_DEVICE_TABLE(of, bcm2835_pinctrl_match);
+-
+-static struct platform_driver bcm2835_pinctrl_driver = {
+-	.probe = bcm2835_pinctrl_probe,
+-	.remove = bcm2835_pinctrl_remove,
+-	.driver = {
+-		.name = MODULE_NAME,
+-		.of_match_table = bcm2835_pinctrl_match,
+-	},
+-};
+-module_platform_driver(bcm2835_pinctrl_driver);
+-
+-MODULE_AUTHOR("Chris Boot, Simon Arlott, Stephen Warren");
+-MODULE_DESCRIPTION("BCM2835 Pin control driver");
+-MODULE_LICENSE("GPL");
 -- 
 1.7.9.5
-
