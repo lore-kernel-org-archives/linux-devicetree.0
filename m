@@ -1,62 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 5/6] regulator: max77843: Add max77843 regulator driver
-Date: Tue, 3 Feb 2015 16:25:37 +0000
-Message-ID: <20150203162536.GQ21293@sirena.org.uk>
-References: <1422939846-29955-1-git-send-email-jaewon02.kim@samsung.com>
- <1422939846-29955-6-git-send-email-jaewon02.kim@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 01/10] ARM: tegra: Set the sound card model that alsaucm
+ expects
+Date: Tue, 03 Feb 2015 09:35:47 -0700
+Message-ID: <54D0F8E3.3020902@wwwdotorg.org>
+References: <1422442278-10405-1-git-send-email-tomeu.vizoso@collabora.com> <1422442278-10405-2-git-send-email-tomeu.vizoso@collabora.com> <54CFE754.7000500@wwwdotorg.org> <CAAObsKCm-9GOvis=MZ-nyA0N+g_ZuWYUfDSdEcVy5p5ykCmkcQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="PdA1PHnkxfF9WYwU"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422939846-29955-6-git-send-email-jaewon02.kim@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Beomho Seo <beomho.seo@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAObsKCm-9GOvis=MZ-nyA0N+g_ZuWYUfDSdEcVy5p5ykCmkcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 02/03/2015 06:13 AM, Tomeu Vizoso wrote:
+> On 2 February 2015 at 22:08, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 01/28/2015 03:50 AM, Tomeu Vizoso wrote:
+>>>
+>>> Patches are on its way to add a config file to alsaucm for the Nyan
+>>> boards. Use the same card ID that alsaucm will expect.
+>>
+>>
+>>> diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts
+>>> b/arch/arm/boot/dts/tegra124-nyan-big.dts
+>>
+>>
+>>>          sound {
+>>> -               compatible = "nvidia,tegra-audio-max98090-nyan-big",
+>>> +               compatible = "nvidia,tegra-audio-max98090-nyan",
+>>>                               "nvidia,tegra-audio-max98090";
+>>
+>>
+>> I'm not convinced that removing the board-specific compatible value is a
+>> great idea. What if we find we need to distinguish between different boards
+>> that use this same binding in the future. That situation is exactly why we
+>> have board-/SoC-specific values in compatible even if we don't immediately
+>> use them.
+>
+> I understand the need of naming each component variant so they can be
+> distinguished in the future, but in this case it's the exact same hw.
 
---PdA1PHnkxfF9WYwU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+That's not true. These are two different boards that are derived from 
+the same base design. The intent may be that they are the same, but the 
+whole point of board-specific compatible values is to cover the case 
+where mistakes and exceptions appear later.
 
-On Tue, Feb 03, 2015 at 02:04:05PM +0900, Jaewon Kim wrote:
-> This patch adds new regulator driver to support max77843
-> MFD(Multi Function Device) chip`s regulators.
-> The Max77843 has two voltage regulators for USB safeout.
+>>> -               nvidia,model = "Acer Chromebook 13";
+>>> +               nvidia,model = "GoogleNyan";
+>>
+>>
+>> I believe this also technically breaks ABI, since some user-space tools use
+>> the model to look up saved state. Can we not leave this as is, and just have
+>> the UCM files know about both names?
+>
+> Well, "A13" isn't a great card id. Given that there's no users yet, I
+> would prefer to take this chance to put a sane value in there. Btw,
+> alsa-lib has now a UCM config for this and it uses the GoogleNyan card
+> id (has been picked up already by OpenSUSE).
 
-This looks mostly good, a couple of very small things:
+"A13" didn't appear anywhere, did it? Perhaps that was a shorthand for 
+"Acer Chromebook 13". Yes, I agree we should use the user-visible model 
+number here; "Acer CB5" or perhaps "Acer CB5-xxx" whatever xxx actually is.
 
-> +static const struct regulator_desc max77843_supported_regulators[] = {
-> +	[MAX77843_SAFEOUT1] = {
-> +		.name		= "SAFEOUT1",
-> +		.id		= MAX77843_SAFEOUT1,
-> +		.ops		= &max77843_regulator_ops,
-> +		.of_match	= of_match_ptr("SAFEOUT1"),
-> +		.regulators_node = of_match_ptr("regulators"),
-> +		.type		= REGULATOR_VOLTAGE,
-> +		.owner		= THIS_MODULE,
-> +		.n_voltages	= MAX77843_SUPPORTED_VOLTAGE_NUM,
-> +		.volt_table	= max77843_regulator_table,
-
-It's better to make n_voltages be ARRAY_SIZE() for the table, that way
-there's no need to keep the define and array lined up if someone extends
-the driver.  A name like _safeout_voltage_table might be clearer too.
-
---PdA1PHnkxfF9WYwU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU0PaAAAoJECTWi3JdVIfQz8kH/ijvmoKtCPg7Ju1PeSNkLlTr
-k8Oy4+rK55JMvKEWE4F++7e6q6BLKMrKx98TV+VlrXnGt9POxadtRfJaGvYQrDS7
-coAocT8y5jtrEFzIMBIBxfq8QRoBSxORmaEjV+oyIT5w5gBvkH+Efd3KEGydQXRS
-KPjjdfYklBACgwnEhElUVz66McP1rwP++7ynS5JuFdfaP0pBSapfA1NEPi7F8ulh
-j6eOGqfKIXfN09QZA/jMzlIYF0szWV3FAa7YjEqiDpK6OQepZB3OfZaRXyq9Gr7U
-6l/vWQb2EZKlwJtELqTkom8/XgFKbKeJuCR26mfDbhnH5MmVW21w4w07bPVT/PQ=
-=mIjx
------END PGP SIGNATURE-----
-
---PdA1PHnkxfF9WYwU--
+> So in this case, I think it would be good to change the card id now
+> before people start to actually use it.
