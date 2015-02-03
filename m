@@ -1,72 +1,44 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH_V3 2/2] watchdog: jz4740: Add DT support
-Date: Tue, 3 Feb 2015 10:25:48 +0000
-Message-ID: <1422959148-38075-3-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1422959148-38075-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH_V4 1/3] dt: usb: jz4740: Add DT binding document for OHCI
+Date: Tue, 03 Feb 2015 11:32:36 +0100
+Message-ID: <54D0A3C4.6010100@metafoo.de>
+References: <1422958640-25723-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422958640-25723-2-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422959148-38075-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1422958640-25723-2-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT support to the jz4740 driver. Simple of_match_ptr. No other
-modification for probe needed
+On 02/03/2015 11:17 AM, Zubair Lutfullah Kakakhel wrote:
+[...]
+> V4 Changes
+> Removed clock binding because of pending work in clock tree. Will add
+> binding later. Rather than introduce a bad binding now and change later.
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+But this patch is introducing a bad binding. The part needs the clock to 
+work. The binding you are specifying right now says that it works fine 
+without any clocks.
 
----
-V3 Typo in Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+ > [...]
+> +Example for jz4740:
+> +
+> +/ {
+> +	ohci: jz4780-ohci@0x134a0000 {
 
-V2 changes
-Add module device table. Even though we are moving to non-dt for jz4740.
-Lets try and not break things while at it.
+s/jz4780/jz4740
 
-Renamed jz4740_of_match to jz4740_wdt_of_match
----
- drivers/watchdog/jz4740_wdt.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-index 18e41af..4c2cc09 100644
---- a/drivers/watchdog/jz4740_wdt.c
-+++ b/drivers/watchdog/jz4740_wdt.c
-@@ -24,6 +24,7 @@
- #include <linux/clk.h>
- #include <linux/slab.h>
- #include <linux/err.h>
-+#include <linux/of.h>
- 
- #include <asm/mach-jz4740/timer.h>
- 
-@@ -142,6 +143,14 @@ static const struct watchdog_ops jz4740_wdt_ops = {
- 	.set_timeout = jz4740_wdt_set_timeout,
- };
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id jz4740_wdt_of_matches[] = {
-+	{ .compatible = "ingenic,jz4740-watchdog", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, jz4740_wdt_of_matches)
-+#endif
-+
- static int jz4740_wdt_probe(struct platform_device *pdev)
- {
- 	struct jz4740_wdt_drvdata *drvdata;
-@@ -211,6 +220,7 @@ static struct platform_driver jz4740_wdt_driver = {
- 	.remove = jz4740_wdt_remove,
- 	.driver = {
- 		.name = "jz4740-wdt",
-+		.of_match_table = of_match_ptr(jz4740_wdt_of_matches),
- 	},
- };
- 
--- 
-1.9.1
+> +		compatible = "ingenic,jz4740-ohci";
+> +		reg = <0x134a0000 0x10000>;
+> +
+> +		interrupts = <5>;
+> +	};
+> +};
+> +
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
