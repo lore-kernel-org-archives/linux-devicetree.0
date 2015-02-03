@@ -1,43 +1,97 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH V3 13/15] ARM: dts: Exynos4 and Odroid X2/U3 sound device
- nodes update
-Date: Tue, 03 Feb 2015 12:04:16 +0100
-Message-ID: <54D0AB30.2010504@samsung.com>
-References: <1421260962-16892-1-git-send-email-s.nawrocki@samsung.com>
- <1421260962-16892-14-git-send-email-s.nawrocki@samsung.com>
- <20150114195452.GM3043@sirena.org.uk>
- <07a501d03f69$aba222b0$02e66810$@kernel.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/5] i8042: intel-8042 DT documentation
+Date: Tue, 3 Feb 2015 11:38:16 +0000
+Message-ID: <20150203113816.GA30866@leverpostej>
+References: <1422913730-12663-1-git-send-email-v1ron@v1ros.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <07a501d03f69$aba222b0$02e66810$@kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: 'Mark Brown' <broonie@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, padma.v@samsung.com, sbkim73@samsung.com, drake@endlessm.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1422913730-12663-1-git-send-email-v1ron@v1ros.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Roman Volkov <v1ron@v1ros.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>, Wolfram Sang <wsa@the-dreams.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Roman Volkov <v1ron@mail.ru>, Tony Prisk <linux@prisktech.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/15 05:27, Kukjin Kim wrote:
-> Mark Brown wrote:
->> On Wed, Jan 14, 2015 at 07:42:40PM +0100, Sylwester Nawrocki wrote:
->>> Clock related properties are added to the Exynos4 I2S device nodes
->>> so they can be referred to as clock providers. Missing i2s_opclk1
->>> clock is added to the I2S0 node and clock properties are added
->>> to the MAX98090 codec node to allow it to control/read frequency
->>> of the MCLK clock directly.
->>
->> Sorry, I should've said - I applied the ASoC patches, not these.
+On Mon, Feb 02, 2015 at 09:48:46PM +0000, Roman Volkov wrote:
+> Documentation for 'intel,8042' DT compatible node.
 > 
-> Shall I take 13 to 15 DT patches in Samsung tree?
+> Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+> Signed-off-by: Roman Volkov <v1ron@v1ros.org>
+> ---
+>  .../devicetree/bindings/input/intel-8042.txt       | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/intel-8042.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/intel-8042.txt b/Documentation/devicetree/bindings/input/intel-8042.txt
+> new file mode 100644
+> index 0000000..2aea7ec
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/intel-8042.txt
+> @@ -0,0 +1,29 @@
+> +* Intel 8042 Keyboard Controller
+> +
+> +Required properties:
+> +- compatible: should be "intel,8042"
+> +- regs: memory for keyboard controller
+> +- interrupts: two interrupts should be specified (keyboard and aux)
 
-Patches 13, 14 use macro definitions which are added in patch which is
-already in Mark's sound tree ("ASoC: samsung: i2s: Add clk provider DT
-binding documentation") [1]. We would need to consider that to avoid
-build breaks.
+Is it possible only one of these is wired up?
 
---
+It might be worth using interrupt-names.
+
+> +- command-reg: offset in memory for command register
+> +- status-reg: offset in memory for status register
+> +- data-reg: offset in memory for data register
+> +
+> +Optional properties:
+> +- init-reset: Controller should be reset on init and cleanup
+
+Why is this necessary? Can't we just always reset it?
+
+> +
+> +Optional Linux-specific properties:
+> +- linux,kbd_phys_desc: defaults to i8042/serio0
+> +- linux,aux_phys_desc: defaults to i8042/serio1
+> +- linux,mux_phys_desc: defaults to i8042/serio%d
+
+As a general note, s/_/-/ in property names please.
+
+That said, I don't follow why we should have these at all. I don't
+understand what the description is intended to mean.
+
+In general we want to avoid Linux-specific properties. If a DTB needs to
+know about the inernals of an OS it's likely to be fragile and broken
+over time.
+
+> +
+> +
+> +Example:
+> +	keyboard@d8008800 {
+> +		compatible = "intel,8042";
+> +		reg = <0xd8008800 0x100>;
+> +		interrupts = <23 4>;
+
+If this is intended to be two interrupts, please bracket them
+individually, e.g.
+
+	interrupts = <23>, <4>;
+
+> +		command-reg = <0x04>;
+> +		status-reg = <0x04>;
+
+Same address?
+
+> +		data-reg = <0x00>;
+> +		mux-ports = <2>;
+
+This wasn't documented above.
+
 Thanks,
-Sylwester
+Mark.
 
-[1]
-https://git.kernel.org/cgit/linux/kernel/git/broonie/sound.git/commit/?h=for-next&id=0d40c61279510b8ce2368e1c6adcc2c4dc1af279
+> +	};
+> -- 
+> 2.2.2
+> 
+> 
