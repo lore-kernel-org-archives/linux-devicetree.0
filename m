@@ -1,57 +1,62 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V3 13/15] ARM: dts: Exynos4 and Odroid X2/U3 sound device
- nodes update
-Date: Tue, 3 Feb 2015 16:19:54 +0000
-Message-ID: <20150203161954.GO21293@sirena.org.uk>
-References: <1421260962-16892-1-git-send-email-s.nawrocki@samsung.com>
- <1421260962-16892-14-git-send-email-s.nawrocki@samsung.com>
- <20150114195452.GM3043@sirena.org.uk>
- <07a501d03f69$aba222b0$02e66810$@kernel.org>
- <54D0AB30.2010504@samsung.com>
- <20150203131127.GM21293@sirena.org.uk>
- <54D0D5B0.20803@samsung.com>
+Subject: Re: [PATCH v2 5/6] regulator: max77843: Add max77843 regulator driver
+Date: Tue, 3 Feb 2015 16:25:37 +0000
+Message-ID: <20150203162536.GQ21293@sirena.org.uk>
+References: <1422939846-29955-1-git-send-email-jaewon02.kim@samsung.com>
+ <1422939846-29955-6-git-send-email-jaewon02.kim@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dNFEVADhXeTQXwXY"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="PdA1PHnkxfF9WYwU"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54D0D5B0.20803@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, padma.v@samsung.com, sbkim73@samsung.com, drake@endlessm.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1422939846-29955-6-git-send-email-jaewon02.kim@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jaewon Kim <jaewon02.kim@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Beomho Seo <beomho.seo@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
---dNFEVADhXeTQXwXY
+--PdA1PHnkxfF9WYwU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Feb 03, 2015 at 03:05:36PM +0100, Sylwester Nawrocki wrote:
-> On 03/02/15 14:11, Mark Brown wrote:
+On Tue, Feb 03, 2015 at 02:04:05PM +0900, Jaewon Kim wrote:
+> This patch adds new regulator driver to support max77843
+> MFD(Multi Function Device) chip`s regulators.
+> The Max77843 has two voltage regulators for USB safeout.
 
-> > OK, I can apply them if people want but I'd need a resend - I discarded
-> > them since they'd normally go via the arch tree.
+This looks mostly good, a couple of very small things:
 
-> I will resend the last 3 patches then. There also shouldn't be any issues
-> if 13, 14 are only merged through ASoC tree and patch 15 through Samsung
-> tree.
+> +static const struct regulator_desc max77843_supported_regulators[] = {
+> +	[MAX77843_SAFEOUT1] = {
+> +		.name		= "SAFEOUT1",
+> +		.id		= MAX77843_SAFEOUT1,
+> +		.ops		= &max77843_regulator_ops,
+> +		.of_match	= of_match_ptr("SAFEOUT1"),
+> +		.regulators_node = of_match_ptr("regulators"),
+> +		.type		= REGULATOR_VOLTAGE,
+> +		.owner		= THIS_MODULE,
+> +		.n_voltages	= MAX77843_SUPPORTED_VOLTAGE_NUM,
+> +		.volt_table	= max77843_regulator_table,
 
-OK.  Kukjin, are you OK with me applying some or all of these?
+It's better to make n_voltages be ARRAY_SIZE() for the table, that way
+there's no need to keep the define and array lined up if someone extends
+the driver.  A name like _safeout_voltage_table might be clearer too.
 
---dNFEVADhXeTQXwXY
+--PdA1PHnkxfF9WYwU
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJU0PUqAAoJECTWi3JdVIfQ674H/1lYhtUA5jW0jxVqW3jeU77Y
-mN0vgioa3zP0duZ9pgos6D3TaXzMkKt/an9V9qxbUJV+y0xzeajiRBOq7q+/b3Lo
-dONtQf+geehwVg1G3xydBPvF/E3yG+vP2diA7FVofxEnWMyevR2TiYCK7BVR9wmV
-+FOoQSQ+qn1byHCI7DIyaXrCAAIdb9cwtDj5qafEoO7T/E1Wj4Lgax6yyQDhdAqr
-qm9XaRBHsvdkGGarWPuDl5zvbqdlFlAhQUxeErQLjZ/tWI17mRZbk3jQTB6URG/W
-iOCt6GGRsii87J4QpimRotDM+DiPxmu/CJze1hn3Tu4MJbutYElkmNaycGGP+X8=
-=unA0
+iQEcBAEBCAAGBQJU0PaAAAoJECTWi3JdVIfQz8kH/ijvmoKtCPg7Ju1PeSNkLlTr
+k8Oy4+rK55JMvKEWE4F++7e6q6BLKMrKx98TV+VlrXnGt9POxadtRfJaGvYQrDS7
+coAocT8y5jtrEFzIMBIBxfq8QRoBSxORmaEjV+oyIT5w5gBvkH+Efd3KEGydQXRS
+KPjjdfYklBACgwnEhElUVz66McP1rwP++7ynS5JuFdfaP0pBSapfA1NEPi7F8ulh
+j6eOGqfKIXfN09QZA/jMzlIYF0szWV3FAa7YjEqiDpK6OQepZB3OfZaRXyq9Gr7U
+6l/vWQb2EZKlwJtELqTkom8/XgFKbKeJuCR26mfDbhnH5MmVW21w4w07bPVT/PQ=
+=mIjx
 -----END PGP SIGNATURE-----
 
---dNFEVADhXeTQXwXY--
+--PdA1PHnkxfF9WYwU--
