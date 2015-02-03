@@ -1,52 +1,57 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v3] ahci_xgene: Fix the dma state machine lockup for the
- ATA_CMD_SMART PIO mode command.
-Date: Tue, 3 Feb 2015 11:18:09 -0500
-Message-ID: <20150203161809.GG19463@htj.dyndns.org>
-References: <1422900439-5541-1-git-send-email-stripathi@apm.com>
- <1422900439-5541-2-git-send-email-stripathi@apm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V3 13/15] ARM: dts: Exynos4 and Odroid X2/U3 sound device
+ nodes update
+Date: Tue, 3 Feb 2015 16:19:54 +0000
+Message-ID: <20150203161954.GO21293@sirena.org.uk>
+References: <1421260962-16892-1-git-send-email-s.nawrocki@samsung.com>
+ <1421260962-16892-14-git-send-email-s.nawrocki@samsung.com>
+ <20150114195452.GM3043@sirena.org.uk>
+ <07a501d03f69$aba222b0$02e66810$@kernel.org>
+ <54D0AB30.2010504@samsung.com>
+ <20150203131127.GM21293@sirena.org.uk>
+ <54D0D5B0.20803@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dNFEVADhXeTQXwXY"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1422900439-5541-2-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
+In-Reply-To: <54D0D5B0.20803@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, padma.v@samsung.com, sbkim73@samsung.com, drake@endlessm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 02, 2015 at 11:37:19PM +0530, Suman Tripathi wrote:
-> This patch addresses the issue with ATA_CMD_SMART pio mode
-> command for enumeration and device detection with ATA devices.
-> The X-Gene AHCI controller has an errata in which it cannot clear
-> the BSY bit after the PIO setup FIS. The dma state machine enters
-> CMFatalErrorUpdate state and locks up. It is the same issue as
-> in the commit 2a0bdff6b958d1b2523d2754b6cd5e0ea4053016 (ahci-xgene:
 
-The right format is 2a0bdff6b958 ("ahci-xgene: fix the dma state
-machine lockup for the IDENTIFY DEVICE PIO mode command").
+--dNFEVADhXeTQXwXY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> fix the dma state machine lockup for the IDENTIFY DEVICE PIO mode
-> command).
-> 
-> For example :  without this patch it results in READ DMA command failure
-> as shown below :
-> 
->  [  126.700072] ata2.00: exception Emask 0x0 SAct 0x0
-> 		SErr 0x0 action 0x6 frozen
->  [  126.707089] ata2.00: failed command: READ DMA
->  [  126.711426] ata2.00: cmd c8/00:08:00:55:57/00:00:00:00:00/e1 tag 1
->                 dma 4096 in
->  [  126.711426]  res 40/00:ff:00:00:00/00:00:00:00:00/40 Emask
-> 		0x4 (timeout)
->  [  126.725956] ata2.00: status: { DRDY }
-> 
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> Reported-by:   Mark Langsdorf <mlangsdo@redhat.com>
+On Tue, Feb 03, 2015 at 03:05:36PM +0100, Sylwester Nawrocki wrote:
+> On 03/02/15 14:11, Mark Brown wrote:
 
-Applied to libata/for-3.19-fixes.
+> > OK, I can apply them if people want but I'd need a resend - I discarded
+> > them since they'd normally go via the arch tree.
 
-Thanks.
+> I will resend the last 3 patches then. There also shouldn't be any issues
+> if 13, 14 are only merged through ASoC tree and patch 15 through Samsung
+> tree.
 
--- 
-tejun
+OK.  Kukjin, are you OK with me applying some or all of these?
+
+--dNFEVADhXeTQXwXY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU0PUqAAoJECTWi3JdVIfQ674H/1lYhtUA5jW0jxVqW3jeU77Y
+mN0vgioa3zP0duZ9pgos6D3TaXzMkKt/an9V9qxbUJV+y0xzeajiRBOq7q+/b3Lo
+dONtQf+geehwVg1G3xydBPvF/E3yG+vP2diA7FVofxEnWMyevR2TiYCK7BVR9wmV
++FOoQSQ+qn1byHCI7DIyaXrCAAIdb9cwtDj5qafEoO7T/E1Wj4Lgax6yyQDhdAqr
+qm9XaRBHsvdkGGarWPuDl5zvbqdlFlAhQUxeErQLjZ/tWI17mRZbk3jQTB6URG/W
+iOCt6GGRsii87J4QpimRotDM+DiPxmu/CJze1hn3Tu4MJbutYElkmNaycGGP+X8=
+=unA0
+-----END PGP SIGNATURE-----
+
+--dNFEVADhXeTQXwXY--
