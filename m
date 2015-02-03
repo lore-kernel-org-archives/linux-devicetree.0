@@ -1,49 +1,79 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] ASoC: tlv320aic3x: Add support for tlv320aic3104
-Date: Tue, 3 Feb 2015 12:16:20 +0000
-Message-ID: <20150203121620.GI21293@sirena.org.uk>
-References: <54CF2CDA.3060607@ti.com>
- <1422888485-13626-1-git-send-email-jsarha@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="/g+HdBW4tzDpdEIu"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422888485-13626-1-git-send-email-jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, benoit.thebaudeau.dev@gmail.com, wlear@appliedlogix.com
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: qcom: Add SPMI PMIC Arbiter nodes for APQ8084 and MSM8974
+Date: Tue,  3 Feb 2015 14:17:58 +0200
+Message-ID: <1422965880-11047-2-git-send-email-iivanov@mm-sol.com>
+References: <1422965880-11047-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422965880-11047-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add SPMI PMIC Arbiter configuration nodes for APQ8084 and MSM8974.
 
---/g+HdBW4tzDpdEIu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/qcom-apq8084.dtsi | 16 ++++++++++++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 16 ++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-On Mon, Feb 02, 2015 at 04:48:05PM +0200, Jyri Sarha wrote:
+diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
+index 1f130bc..dbedf64 100644
+--- a/arch/arm/boot/dts/qcom-apq8084.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+@@ -226,5 +226,21 @@
+ 			clock-names = "core", "iface";
+ 			status = "disabled";
+ 		};
++
++		spmi_bus: spmi@fc4cf000 {
++			compatible = "qcom,spmi-pmic-arb";
++			reg-names = "core", "intr", "cnfg";
++			reg = <0xfc4cf000 0x1000>,
++			      <0xfc4cb000 0x1000>,
++			      <0xfc4ca000 0x1000>;
++			interrupt-names = "periph_irq";
++			interrupts = <0 190 0>;
++			qcom,ee = <0>;
++			qcom,channel = <0>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++			interrupt-controller;
++			#interrupt-cells = <4>;
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index e265ec1..2d11641 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -247,5 +247,21 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 		};
++
++		spmi_bus: spmi@fc4cf000 {
++			compatible = "qcom,spmi-pmic-arb";
++			reg-names = "core", "intr", "cnfg";
++			reg = <0xfc4cf000 0x1000>,
++			      <0xfc4cb000 0x1000>,
++			      <0xfc4ca000 0x1000>;
++			interrupt-names = "periph_irq";
++			interrupts = <0 190 0>;
++			qcom,ee = <0>;
++			qcom,channel = <0>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++			interrupt-controller;
++			#interrupt-cells = <4>;
++		};
+ 	};
+ };
+--
+1.9.1
 
-> Changes since the first version of the patch
->  - Added "ti,tlv320aic3104" to tlv320aic3x_of_match table
->  What surprises me is how come the code worked even before this change?
-
-Applied, thanks.  I2C has the interesting feature that it falls back to
-using regular I2C IDs if it can't match based on the DT ID table which
-masks lots of errors like this.
-
---/g+HdBW4tzDpdEIu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU0LwTAAoJECTWi3JdVIfQZ+0H/1wHWa6aJwQSSBYLfK22u9da
-npBM4e38gg0X86kn8BRYdcoadHOwbqseXrwfhu5Qt3bNegRK/arNfTPFcFCPQm9j
-BeRIzoe60ncthDSCN6hQivxlhrljYv4ZiYeZyJ1XlfbTmLdIRiWeJ4s+Xk4TAPKg
-g4e3L5Ltr2WNY91zv14pag82tMG1EpeLGTtenH8mOUQ6Y+uOiLnJn+iQdDHKPXdV
-eeqbTdVsUH+in+T6jTVvkqY0KpZLq3FlBiGVNWgWVUGul+L5M8n/Oi926qU++Pi3
-6D68b9ybpebJgrc7X9TG6Xa5ufz7HjFzJnRZ7OoaAljKlIs9s+3PhlSVX4Lnu9E=
-=MU6b
------END PGP SIGNATURE-----
-
---/g+HdBW4tzDpdEIu--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
