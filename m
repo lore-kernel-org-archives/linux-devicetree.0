@@ -1,84 +1,75 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH 2/2] ARM: dts: Add syscon phandle to the video-phy node for
- Exynos4
-Date: Tue, 03 Feb 2015 13:28:59 +0900
-Message-ID: <07a601d03f69$ee394130$caabc390$@kernel.org>
-References: <1421429438-32090-1-git-send-email-s.nawrocki@samsung.com>
- <1421429438-32090-2-git-send-email-s.nawrocki@samsung.com>
- <54CF53CB.3050100@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <54CF53CB.3050100@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, kgene@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kishon@ti.com, 'Mark Brown' <broonie@linaro.org>
+From: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/6] Add new MFD driver for MAX77843
+Date: Tue, 03 Feb 2015 14:04:00 +0900
+Message-ID: <1422939846-29955-1-git-send-email-jaewon02.kim@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, SangBae Lee <sangbae90.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sylwester Nawrocki wrote:
-> 
-> Hi Kukjin,
-> 
-Hi,
+This patch series adds MAX77843(Multi Function Device) driver.
+The MAX77843 includes MUIC(Micro USB Interface Circuit), Li+ Charger
+with Fuel Gauge and 2 safeout LDOs for USB device.
+It is interfaced to host controller using I2C.
 
-> On 16/01/15 18:30, Sylwester Nawrocki wrote:
-> > This is required to fix regression after introducing the PMU device
-> > nodes required for the PMU driver modified in commit
-> > 14fc8b93d47323561edf5d482d4a4b3ee1b90286
-> > ("ARM: EXYNOS: Add platform driver support for Exynos PMU").
-> > This change is needed to make MIPI DSI displays and MIPI CSI-2
-> > camera sensors working again on Exynos4 boards.
-> >
-> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > ---
-> >  arch/arm/boot/dts/exynos4.dtsi |    1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-> > index b8168f1..250ee50 100644
-> > --- a/arch/arm/boot/dts/exynos4.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4.dtsi
-> > @@ -76,6 +76,7 @@
-> >  		compatible = "samsung,s5pv210-mipi-video-phy";
-> >  		reg = <0x10020710 8>;
-> >  		#phy-cells = <1>;
-> > +		syscon = <&pmu_system_controller>;
-> >  	};
-> >
-> >  	pd_mfc: mfc-power-domain@10023C40 {
-> 
-Applied this.
+Changes in V2:
+MFD Core
+ - Fix charger regmap handle and typo.
+MUIC
+ - cleanup enum list.
+ - set path before send excon event.
+ - fix variable names and typos for readability.
+Charger
+ - Remove unnecessary header.
+ - Chnage error message more readable.
+ - Remove unnecessary lines.
+Fuelgauge
+ - Fix regmap_config and use regmap_read.
+ - Add i2c_unregister_device function on *_remove function.
+ - Fix typo in Kconfig.
+Doc
+ - Remove unnecessary lines.
+ - Add example of charger regulator.
 
-> I'd like to remind you about a few pending dts patches I send to you, except
-> the above one there are:
-> 
-> [PATCH V3 15/15] ARM: dts: Fix I2S1, I2S2 compatible for exynos4 SoCs
-I thought Mark applied the whole series including above patch.
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/316326.html
-And I knew he didn't when I checked his comment on 13/15 patch ;)
+Beomho Seo (2):
+  power: max77843_charger: Add Max77843 charger device driver
+  power: max77843_battery: Add Max77843 fuel gauge device driver
 
-> [PATCH] ARM: dts: Fix CLK_MOUT_CAMn parent clocks assignment for Trats2
-Done.
+Jaewon Kim (4):
+  mfd: max77843: Add max77843 MFD driver core driver
+  extcon: max77843: Add max77843 MUIC driver
+  regulator: max77843: Add max77843 regulator driver
+  Documentation: Add device tree bindings document for max77843
 
-> [PATCH] ARM: dts: Fix CLK_UART_ISP_SCLK clock assignment in exynos4x12.dtsi
-Done.
-> 
-> and
-> 
-> [PATCH v2 14/16] ARM: dts: Exynos4 and Odroid X2/U3 sound device nodes update
-> 
-> but this one depends on ASoC patch:
-> [PATCH V3 11/15] ASoC: samsung: i2s: Add clk provider DT binding documentation
-> 
-> hence it could be probably merged only after 3.20-rc1 release.
-> 
-+ Mark
+ Documentation/devicetree/bindings/mfd/max77843.txt |   90 ++
+ drivers/extcon/Kconfig                             |   10 +
+ drivers/extcon/Makefile                            |    1 +
+ drivers/extcon/extcon-max77843.c                   |  881 ++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   14 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/max77843.c                             |  247 ++++++
+ drivers/power/Kconfig                              |   16 +
+ drivers/power/Makefile                             |    2 +
+ drivers/power/max77843_battery.c                   |  286 +++++++
+ drivers/power/max77843_charger.c                   |  508 +++++++++++
+ drivers/regulator/Kconfig                          |    8 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/max77843.c                       |  229 +++++
+ include/linux/mfd/max77843-private.h               |  422 ++++++++++
+ 15 files changed, 2716 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77843.txt
+ create mode 100644 drivers/extcon/extcon-max77843.c
+ create mode 100644 drivers/mfd/max77843.c
+ create mode 100644 drivers/power/max77843_battery.c
+ create mode 100644 drivers/power/max77843_charger.c
+ create mode 100644 drivers/regulator/max77843.c
+ create mode 100644 include/linux/mfd/max77843-private.h
 
-I see. I'll take 13 to 15 in the series for late DT updates if Mark has no
-objection. (I commented about that on the mail thread.)
+-- 
+1.7.9.5
 
-Thanks for your reminder.
-
-- Kukjin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
