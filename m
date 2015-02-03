@@ -1,36 +1,40 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] dts: versatile: add sysregs node
-Date: Tue, 3 Feb 2015 14:23:57 +0100
-Message-ID: <CACRpkdaJ7Etuk0BGYuC0JwHR5Xp73dn96kOgDwM4+8+5EZ0jaA@mail.gmail.com>
-References: <1422467792-2065-1-git-send-email-robh@kernel.org>
-	<1422467792-2065-4-git-send-email-robh@kernel.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH V3 13/15] ARM: dts: Exynos4 and Odroid X2/U3 sound device
+ nodes update
+Date: Tue, 03 Feb 2015 15:05:36 +0100
+Message-ID: <54D0D5B0.20803@samsung.com>
+References: <1421260962-16892-1-git-send-email-s.nawrocki@samsung.com>
+ <1421260962-16892-14-git-send-email-s.nawrocki@samsung.com>
+ <20150114195452.GM3043@sirena.org.uk>
+ <07a501d03f69$aba222b0$02e66810$@kernel.org> <54D0AB30.2010504@samsung.com>
+ <20150203131127.GM21293@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422467792-2065-4-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20150203131127.GM21293@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, padma.v@samsung.com, sbkim73@samsung.com, drake@endlessm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 6:56 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-
-> The Versatile boards have the same sysregs as other ARM Ltd boards. Add
-> the nodes in order to enable support for 24MHz counter as sched_clock.
+On 03/02/15 14:11, Mark Brown wrote:
+> On Tue, Feb 03, 2015 at 12:04:16PM +0100, Sylwester Nawrocki wrote:
+> 
+>>>> > >> Sorry, I should've said - I applied the ASoC patches, not these.
+>>> > > Shall I take 13 to 15 DT patches in Samsung tree?
+>> > Patches 13, 14 use macro definitions which are added in patch which is
+>> > already in Mark's sound tree ("ASoC: samsung: i2s: Add clk provider DT
+>> > binding documentation") [1]. We would need to consider that to avoid
+>> > build breaks.
 >
-> This is a minimal node definition as the existing sub node definition
-> used on VExpress has some issues raised by Linus W.
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> OK, I can apply them if people want but I'd need a resend - I discarded
+> them since they'd normally go via the arch tree.
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+I will resend the last 3 patches then. There also shouldn't be any issues
+if 13, 14 are only merged through ASoC tree and patch 15 through Samsung
+tree.
 
-Yours,
-Linus Walleij
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sylwester
