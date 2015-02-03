@@ -1,120 +1,105 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power
- subsystem
-Date: Tue, 3 Feb 2015 21:41:27 +0100 (CET)
-Message-ID: <964800678.25817.1422996087477.JavaMail.open-xchange@oxbaltgw04.schlund.de>
-References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com> <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com> <20150121230148.GJ13715@earth.universe> <54C0AFE4.3020701@i2se.com> <20150125150431.GE2719@earth.universe> <1719204322.245040.1422301605670.JavaMail.open-xchange@oxbaltgw03.schlund.de> <20150127001629.GP21293@sirena.org.uk> <1954124242.301697.1422383709733.JavaMail.open-xchange@oxbaltgw09.schlund.de> <20150127194346.GN21293@sirena.org.uk> <443299280.47516.1422483725178.JavaMail.open-xchange@oxbaltgw03.schlund.de> <20150128225937.GA12749@earth.universe>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: =?UTF-8?Q?Beno=C3=AEt_Th=C3=A9baudeau?=
+	<benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ASoC: tlv320aic3x: Add support for tlv320aic3104
+Date: Tue, 3 Feb 2015 23:25:14 +0100
+Message-ID: <CA+sos78ar+MX2CvrjtzYN9MvtO9g=upMuOScXuXa2=zQ81qQwQ@mail.gmail.com>
+References: <54CF2CDA.3060607@ti.com> <1422888485-13626-1-git-send-email-jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150128225937.GA12749-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+In-Reply-To: <1422888485-13626-1-git-send-email-jsarha-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alsa-devel <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, wlear-uoOHlzqel7feqrA4Bvp/NA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Dear Jyri Sarha,
 
-> Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 28. Januar 2015 um 23:59
-> geschrieben:
+Sorry to come late.
+
+On Mon, Feb 2, 2015 at 3:48 PM, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> wrote:
+[...]
+> diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320=
+aic3x.c
+> index b7ebce0..cb92cdb 100644
+> --- a/sound/soc/codecs/tlv320aic3x.c
+> +++ b/sound/soc/codecs/tlv320aic3x.c
+[...]
+> @@ -550,6 +575,22 @@ static const struct snd_kcontrol_new aic3x_right=
+_pga_mixer_controls[] =3D {
+>         SOC_DAPM_SINGLE_AIC3X("Mic3R Switch", MIC3LR_2_RADC_CTRL, 0, =
+1, 1),
+>  };
 >
->
-> Hi,
->
-> On Wed, Jan 28, 2015 at 11:22:05PM +0100, Stefan Wahren wrote:
-> > > Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 27. Januar 2015 um 20:43
-> > > geschrieben:
-> > > On Tue, Jan 27, 2015 at 07:35:09PM +0100, Stefan Wahren wrote:
-> > >
-> > changing the switching frequency is not a common feature for this IC. In
-> > most
-> > cases the clock for the DC-DC switching frequency runs at 24 MHz (ref_xtal).
-> > Unfortunatelly this could cause interferences for example in UHF band. So
-> > switching to ref_pll and changing clock divider is a option to avoid such
-> > interferences without changing hardware.
-> >
-> > I decided to implement it as a module parameter, because i see it's a
-> > configuration option.
->
-> I think its best to use a DT property then. That way it can be set
-> appropiatly for boards known to use a band, which could have
-> interference problems.
->
-> So just add a simple property (without a subnode). If I understand
-> Mark correctly, there's a high chance more drivers will need to
-> describe the switching frequency, so I suggest to use a vendor
-> independent property name:
->
-> switching-frequency = <12345>;
+> +/* Left PGA Mixer for tlv320aic3104 */
+> +static const struct snd_kcontrol_new aic3104_left_pga_mixer_controls=
+[] =3D {
+> +       SOC_DAPM_SINGLE_AIC3X("Line1L Switch", LINE1L_2_LADC_CTRL, 3,=
+ 1, 1),
+> +       SOC_DAPM_SINGLE_AIC3X("Line1R Switch", LINE1R_2_LADC_CTRL, 3,=
+ 1, 1),
+> +       SOC_DAPM_SINGLE_AIC3X("Mic2L Switch", MIC3LR_2_LADC_CTRL, 4, =
+1, 1),
+> +       SOC_DAPM_SINGLE_AIC3X("Mic2R Switch", MIC3LR_2_LADC_CTRL, 0, =
+1, 1),
+> +};
+> +
+> +/* Right PGA Mixer for tlv320aic3104 */
+> +static const struct snd_kcontrol_new aic3104_right_pga_mixer_control=
+s[] =3D {
+> +       SOC_DAPM_SINGLE_AIC3X("Line1R Switch", LINE1R_2_RADC_CTRL, 3,=
+ 1, 1),
+> +       SOC_DAPM_SINGLE_AIC3X("Line1L Switch", LINE1L_2_RADC_CTRL, 3,=
+ 1, 1),
+> +       SOC_DAPM_SINGLE_AIC3X("Mic2L Switch", MIC3LR_2_RADC_CTRL, 4, =
+1, 1),
+> +       SOC_DAPM_SINGLE_AIC3X("Mic2R Switch", MIC3LR_2_RADC_CTRL, 0, =
+1, 1),
+> +};
+> +
 
-i'm not sure. So here is the complete current state (power and regulator binding
-from imx28.dtsi) including my suggestion for the new property:
+This part is wrong. All these controls should be turned into TLVs.
+Otherwise, because of the reset values of these registers, the
+reserved value 0b1110 is used for the corresponding bit-fields if
+their lsb is cleared using the controls above.
 
-	power: power@80044000 {
-		compatible = "fsl,imx28-power"; /* handled by mxs_power.c */
-		#address-cells = <1>;
-		#size-cells = <1>;
-		reg = <0x80044000 0x2000>;
-		interrupts = <6>;
-		switching-frequency = <24000000>; /* new property */
-		ranges;
+Generally speaking, you have tracked reserved registers, but you
+should also track reserved values.
 
-		reg_vddd: regulator@80044040 {
-			reg = <0x80044040 0x10>,
-			      <0x80044010 0x10>,
-			      <0x800440c0 0x10>;
-			reg-names = "base-address",
-				    "v5ctrl-address",
-				    "status-address";
-			compatible = "fsl,imx28-vddd"; /* handled by mxs-regulator.c */
-			regulator-name = "vddd";
-			regulator-min-microvolt = <1350000>;
-			regulator-max-microvolt = <1550000>;
-			vddd-supply = <&reg_vdda>;
-		};
+>  /* Left Line1 Mux */
+>  static const struct snd_kcontrol_new aic3x_left_line1l_mux_controls =
+=3D
+>  SOC_DAPM_ENUM("Route", aic3x_line1l_2_l_enum);
+[...]
+> @@ -839,6 +890,72 @@ static const struct snd_soc_dapm_route intercon[=
+] =3D {
+[...]
+> +/* For other than tlv320aic3104 */
 
-		reg_vdda: regulator@80044050 {
-			reg = <0x80044050 0x10>,
-			      <0x80044010 0x10>,
-			      <0x800440c0 0x10>;
-			reg-names = "base-address",
-				    "v5ctrl-address",
-				    "status-address";
-			compatible = "fsl,imx28-vdda"; /* handled by mxs-regulator.c */
-			regulator-name = "vdda";
-			regulator-min-microvolt = <1725000>;
-			regulator-max-microvolt = <1950000>;
-			vdda-supply = <&reg_vddio>;
-		};
+Typo above: not "other than" here.
 
-		reg_vddio: regulator@80044060 {
-			reg = <0x80044060 0x10>,
-			      <0x80044010 0x10>,
-			      <0x800440c0 0x10>;
-			reg-names = "base-address",
-				    "v5ctrl-address",
-				    "status-address";
-			compatible = "fsl,imx28-vddio"; /* handled by mxs-regulator.c */
-			regulator-name = "vddio";
-			regulator-min-microvolt = <3000000>;
-			regulator-max-microvolt = <3575000>;
-			regulator-microvolt-offset = <80000>;
-		};
-	};
+> +static const struct snd_soc_dapm_route intercon_extra_3104[] =3D {
+> +       /* Left Input */
+> +       {"Left PGA Mixer", "Mic2L Switch", "MIC2L"},
+> +       {"Left PGA Mixer", "Mic2R Switch", "MIC2R"},
+> +
+> +       /* Right Input */
+> +       {"Right PGA Mixer", "Mic2L Switch", "MIC2L"},
+> +       {"Right PGA Mixer", "Mic2R Switch", "MIC2R"},
+> +};
+> +
+>  static const struct snd_soc_dapm_route intercon_mono[] =3D {
+>         /* Mono Output */
+>         {"Mono Mixer", "Line2L Bypass Switch", "Left Line2L Mux"},
+[...]
 
-Please correct me if i'm wrong.
+The rest is good.
 
-Stefan
-
->
-> -- Sebastian
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Best regards,
+Beno=C3=AEt
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
