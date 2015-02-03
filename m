@@ -1,54 +1,40 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v3 3/4] pinctrl: cygnus: add initial IOMUX driver support
-Date: Tue, 3 Feb 2015 12:16:04 -0800
-Message-ID: <54D12C84.9020505@broadcom.com>
-References: <rjui@broadcom.com> <1422928894-20716-1-git-send-email-rjui@broadcom.com> <1422928894-20716-4-git-send-email-rjui@broadcom.com> <20150203174042.GA15969@dtor-ws> <54D121A0.6070602@broadcom.com> <20150203200009.GB15969@dtor-ws>
+From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add initial DT support for Qualcomm SPMI PMIC devices
+Date: Tue, 3 Feb 2015 12:38:48 -0800
+Message-ID: <CAJAp7OjL6+QLs45LM8pEsZ4tHQ2jgM9z2tg8pb6A=xAxBO7pGA@mail.gmail.com>
+References: <1422965880-11047-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150203200009.GB15969@dtor-ws>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Dmitry Torokhov <dtor@google.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422965880-11047-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 3, 2015 at 4:17 AM, Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
+> Following set of patches add initial DT support for PMIC devices
+> found on recent Quqalcomm chipsets. Details for SPMI bus and PMIC arbiter
+> could be found here [1].
+>
+> Regards,
+> Ivan
+>
+> [1] http://lwn.net/Articles/564637/
+>
+> Ivan T. Ivanov (3):
+>   ARM: dts: qcom: Add SPMI PMIC Arbiter nodes for APQ8084 and MSM8974
+>   ARM: dts: qcom: Add 8x74 chipset SPMI PMIC's nodes
+>   ARM: dts: qcom: Add APQ8084 chipset SPMI PMIC's nodes
+>
 
+Looks good.
 
-On 2/3/2015 12:00 PM, Dmitry Torokhov wrote:
-> On Tue, Feb 03, 2015 at 11:29:36AM -0800, Ray Jui wrote:
->> On 2/3/2015 9:40 AM, Dmitry Torokhov wrote:
->>> On Mon, Feb 02, 2015 at 06:01:33PM -0800, Ray Jui wrote:
->>>> +
->>>> +/*
->>>> + * List of pins in Cygnus
->>>> + */
->>>> +static struct cygnus_pin cygnus_pins[] = {
->>>
->>> const?
->>>
->> I cannot make it const here, since the address of "gpio_mux" is later
->> passed to pinctrl_pin_desc's private data:
->>
->> pins[i].drv_data = &cygnus_pins[i].gpio_mux;
-> 
-> The pinctrl code says:
-> 
-> "@drv_data: driver-defined per-pin data. pinctrl core does not touch
-> this"
-> 
-> so we could theoretically cast away the constness and restore it when
-> we access drv_data in pin control methods, but I won't insist. I am
-> not sure which way looks nicer.
-> 
-> Thanks.
-> 
-Yeah, I agreed that by declaring the cygnus_pins array const, it makes
-it more obvious that "we do not expect any of its parameters to change."
-But later if we cast &gpio_mux to void * before assigned to drv_data of
-pinctrl_pin_desc, we sort of break it up...I'll keep this part of code
-as it is for now.
+Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-Thanks,
-
-Ray
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
