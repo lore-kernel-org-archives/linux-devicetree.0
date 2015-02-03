@@ -1,163 +1,58 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/5] i8042: Add i8042_dt.h glue for DT support
-Date: Tue, 3 Feb 2015 11:52:50 +0000
-Message-ID: <20150203115249.GB30866@leverpostej>
-References: <1422913730-12663-1-git-send-email-v1ron@v1ros.org>
- <1422913730-12663-5-git-send-email-v1ron@v1ros.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH_V4 1/3] dt: usb: jz4740: Add DT binding document for OHCI
+Date: Tue, 03 Feb 2015 14:54:58 +0300
+Message-ID: <54D0B712.5020309@cogentembedded.com>
+References: <1422958640-25723-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422958640-25723-2-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1422913730-12663-5-git-send-email-v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1422958640-25723-2-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roman Volkov <v1ron-JGs/UdohzUI@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 02, 2015 at 09:48:50PM +0000, Roman Volkov wrote:
-> This header file designed to be similar to other glue layers found
-> for i8042. The difference is that interrupt numbers, device address,
-> and other information should be retrieved from the device tree.
-> 
-> Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-> Signed-off-by: Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>
-> ---
->  drivers/input/serio/i8042-dt.h | 112 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 112 insertions(+)
->  create mode 100644 drivers/input/serio/i8042-dt.h
-> 
-> diff --git a/drivers/input/serio/i8042-dt.h b/drivers/input/serio/i8042-dt.h
+Hello.
+
+On 2/3/2015 1:17 PM, Zubair Lutfullah Kakakhel wrote:
+
+> From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+
+> Add the binding documentation for the JZ4740 OHCI controller.
+
+> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+
+[...]
+
+> diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
 > new file mode 100644
-> index 0000000..0d1a344
+> index 0000000..29c1934
 > --- /dev/null
-> +++ b/drivers/input/serio/i8042-dt.h
-> @@ -0,0 +1,112 @@
-> +#ifndef _I8042_DT_H
-> +#define _I8042_DT_H
+> +++ b/Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
+> @@ -0,0 +1,21 @@
+> +Ingenic JZ4740 SoC OHCI controller binding
 > +
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
+> +The Ingenic JZ4740 SoC includes an OHCI compliant USB host controller
+> +interface for use with USB 1.1 devices.
 > +
-> +/*
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published by
-> + * the Free Software Foundation.
-> + */
+> +Required properties:
+> + - compatible: Should be "ingenic,jz4740-ohci"
+> + - reg: Should contain the address & size of the OHCI controller registers.
+> + - interrupts: Should specify the interrupt line number
 > +
-> +static void __iomem *i8042_base;
-> +static unsigned int i8042_command_reg;
-> +static unsigned int i8042_status_reg;
-> +static unsigned int i8042_data_reg;
-> +#define I8042_COMMAND_REG i8042_command_reg
-> +#define I8042_STATUS_REG i8042_status_reg
-> +#define I8042_DATA_REG i8042_data_reg
+> +Example for jz4740:
 > +
-> +/*
-> + * Names.
-> + */
-> +
-> +static const char *i8042_kbd_phys_desc;
-> +static const char *i8042_aux_phys_desc;
-> +static const char *i8042_mux_phys_desc;
-> +#define I8042_KBD_PHYS_DESC i8042_kbd_phys_desc
-> +#define I8042_AUX_PHYS_DESC i8042_aux_phys_desc
-> +#define I8042_MUX_PHYS_DESC i8042_mux_phys_desc
-> +
-> +/*
-> + * IRQs.
-> + */
-> +static int i8042_kbd_irq;
-> +static int i8042_aux_irq;
-> +#define I8042_KBD_IRQ i8042_kbd_irq
-> +#define I8042_AUX_IRQ i8042_aux_irq
+> +/ {
+> +	ohci: jz4780-ohci@0x134a0000 {
 
-That's a lot of static values. Surely nothing physically prevents the
-use of multiple i8042 chips?
+    The name should be "usb@134a0000", according to the ePAPR standard.
 
-> +
-> +static inline int i8042_read_data(void)
-> +{
-> +	return readb(i8042_base + i8042_data_reg);
-> +}
-> +
-> +static inline int i8042_read_status(void)
-> +{
-> +	return readb(i8042_base + i8042_status_reg);
-> +}
-> +
-> +static inline void i8042_write_data(int val)
-> +{
-> +	writeb(val, i8042_base + i8042_data_reg);
-> +}
-> +
-> +static inline void i8042_write_command(int val)
-> +{
-> +	writeb(val, i8042_base + i8042_command_reg);
-> +}
-> +
-> +static inline int i8042_platform_init(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	int status;
-> +
-> +	i8042_base = of_iomap(np, 0);
-> +	if (!i8042_base)
-> +		return -ENOMEM;
-> +
-> +	status = of_property_read_u32(np, "command-reg", &i8042_command_reg);
-> +	if (status)
-> +		return status;
-> +
-> +	status = of_property_read_u32(np, "status-reg", &i8042_status_reg);
-> +	if (status)
-> +		return status;
-> +
-> +	status = of_property_read_u32(np, "data-reg", &i8042_data_reg);
-> +	if (status)
-> +		return status;
+[...]
 
-You should probably validate that these are within the range provided in
-the reg property.
+WBR, Sergei
 
-You also need to clean up if you fail. It looks like here and below we
-leak the i8042_base mapping if we decide to fail.
-
-> +
-> +	i8042_kbd_irq = irq_of_parse_and_map(np, 0);
-> +	i8042_aux_irq = irq_of_parse_and_map(np, 1);
-
-You can use platform_get_irq(pdev, N) here, the IRQ will already have
-been parsed by the core.
-
-> +	status = of_property_read_string(np, "linux,kbd_phys_desc",
-> +						&i8042_kbd_phys_desc);
-> +	if (status)
-> +		i8042_kbd_phys_desc = "i8042/serio0";
-> +
-> +	status = of_property_read_string(np, "linux,aux_phys_desc",
-> +						&i8042_aux_phys_desc);
-> +	if (status)
-> +		i8042_aux_phys_desc = "i8042/serio1";
-> +
-> +	status = of_property_read_string(np, "linux,mux_phys_desc",
-> +						&i8042_mux_phys_desc);
-> +	if (status)
-> +		i8042_mux_phys_desc = "i8042/serio%d";
-
-User-provided values as format strings? Not a good idea.
-
-What exactly are these used for?
-
-> +
-> +	if (of_get_property(np, "init-reset", NULL))
-> +		i8042_reset = true;
-
-Use of_property_read_bool.
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
