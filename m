@@ -1,155 +1,108 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] mtd: nand: atmel: Update DT documentation after splitting
- NFC and NAND
-Date: Tue, 3 Feb 2015 16:46:15 +0800
-Message-ID: <54D08AD7.3050209@atmel.com>
-References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>	<1417732214-3292-3-git-send-email-boris.brezillon@free-electrons.com>	<20150202075737.GC3523@norris-Latitude-E6410> <20150202104236.649f99ad@bbrezillon>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCHv5 2/2] leds: tlc591xx: Driver for the TI 8/16 Channel
+ i2c LED driver
+Date: Tue, 3 Feb 2015 11:14:41 +0200
+Message-ID: <54D09181.9050206@ti.com>
+References: <1421879364-8573-1-git-send-email-andrew@lunn.ch> <1421879364-8573-3-git-send-email-andrew@lunn.ch> <54C62919.8000205@ti.com> <20150126171052.GC5015@lunn.ch> <54C7727D.70000@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150202104236.649f99ad@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <54C7727D.70000@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, vigneshr@ti.com, Matthew.Fatheree@belkin.com, linux-leds@vger.kernel.org, kaloz@openwrt.org, linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Boris, Brian
-
-On 2/2/2015 5:42 PM, Boris Brezillon wrote:
-> Hi Brian,
->
-> On Sun, 1 Feb 2015 23:57:37 -0800
-> Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> Hi Boris,
->>
->> BTW, this series has a few conflicts with other things I have queued, so
->> you'll need to refresh.
-> Yes, that's not a problem, but I'd like to be sure this is the way we
-> want to go before rebasing this series.
->
->> On Thu, Dec 04, 2014 at 11:30:12PM +0100, Boris Brezillon wrote:
->>> The NAND and NFC (NAND Flash Controller) were linked together with a
->>> parent <-> child relationship.
+On 01/27/2015 01:11 PM, Tomi Valkeinen wrote:
+> Hi,
+>=20
+> On 26/01/15 19:10, Andrew Lunn wrote:
+>>> So... To me it's still slightly unclear when should one write a PWM
+>>> driver and when a LED driver. But I would say that as the TLC591xx
+>>> outputs a PWM signal, it should be a PWM driver. Then the different
+>>> users of this PWM signal could be made on top of that (LED, backlig=
+ht, GPO).
 >>>
->>> This model has several drawbacks:
->>> - it does not allow for multiple NAND chip handling while the controller
->>>    support multi-chip (even though the driver is not ready yet)
->>> - it mixes NAND partitions and NFC nodes at the same level (which is a bit
->>>    disturbing)
->> I agree that this is disturbing. (FWIW, it also seems a bit disturbing
->> that atmel_nand.c actually registers two different drivers and the tries
->> to synchronize them; this seems like it could be handled better, but I'm
->> not sure how at the moment.)
-> Yep, that's my feeling too, but I'm not sure how this could/should be
-> done.
-> My problem here is that the pinmux should be requested by the EBI
-> device because the EBI manages several type of devices and the data and
-> address signals are shared by all the devices, hence the idea of
-> defining the nand chip node under the EBI node.
-> In the other hand, the NFC is not part of the EBI bus, and thus should
-> not be defined under the EBI node.
->
-> This might lead to the NFC device being probed before the NAND chip,
-> hence the need for this synchronization.
-
-OMHO, there is another way, which is change the NFC node to many NFC 
-properties, just like PMECC.
-As NFC, PMECC or hamming ecc HW could be part of current NAND node (in 
-sama5, HSMC maybe a better name for this node. )
-
-And this change can avoid the sync problem and avoid two drivers in 
-atmel_nand.c.
-
->
->>> - the introduction of the EBI bus implies defining NAND chips under the
->>>    EBI node, and the ranges available under the EBI node should be
->>>    restricted to EBI address space, while the NFC references several
->>>    registers outside of these EBI ranges.
->> That's an interesting bit. I've actually run across this sort of problem
->> on other SoCs, where we have a relationship between two pieces of
->> hardware--the NAND chip and the NAND controller--where the former might
->> be on one bus (like your EBI bus, with chip selects), and the latter is
->> part of the top-level MMIO register space.
+>>> What would be the technical drawbacks with having the TLC591xx driv=
+er as
+>>> a PWM, instead of LED?
+>> =20
+>> Hi Tomi
 >>
->> But can you elaborate here a bit more? Does the NAND chip actually need
->> to be represented under your EBI bus?
-> Yes, as said above this is all about pinmux conflicts, the NAND
-> controller has to request the appropriate pinmux for its NAND chips but
-> it will conflict with the pinmux requested by the EBI bus (data and
-> address signals are shared by all the devices connected on the EBI).
->
->>> Move the NFC node outside of the NAND node, to get a more future-proof
->>> model.
->> I'm curious if an alternative solution might work, maybe one like the
->> Allwiner NAND (sunxi-nand) DT, which just reverses the roles; the 'NFC'
->> is the parent of the NAND chip(s). We've seen this pattern in other
->> contexts too.
+>> We have been through this once, but the big technical drawback is th=
+at
+>> this hardware cannot do what the Linux Kernel defines as PWM.
+>>
+>> It cannot correctly implement the PMW call:
+>>
+>> int pwm_config(struct pwm_device *pwm, int duty_ns, int period_ns);
+>>
+>> This hardware has a fixed period, since it is clocked at 97-kHz.  So
+>> you cannot set the period. The duty is also somewhat restrictive, in
+>> that it only allows 1/256 increments of the 97Khz.
 
-I also prefer this. Then the dt node should looks like finally:
+The duty_ns and period_ns will give you the on and off time your user i=
+s
+asking for. If you can not change frequency, then you don't (97KHz that=
+ is).
+1/256 is the resolution you can configure the on/off times, nothing
+exceptional about it.
+The twl4030/5030's LED drivers have 128 clock cycle to play with while =
+twl6030
+has 256 clock cycles. These PMICs also have PWM drivers which has 128 s=
+teps.
+drivers/pwm/pwm-twl.c and pwm-twl-led.c
 
-nand (SMC may be more correct) node {
-     PMECC properties
-     NFC properties --> we can make the NFC not a node, just many NFC 
-properties.
+and these just work fine when used via pwm-led or the pwm backlight or
+whatever driver.
 
-     pinctrl-nand0
-     nand chip 0: {
-         partitions...
-     }
+There's no issue to have PWM driver for tlc591xx IMHO.
 
-     pinctrl-nand1
-     nand chip 1: {
-         partitions...
-     }
-}
+> Surely other PWM devices also have restrictions in the period or duty=
+ cycle?
+>=20
+>> This hardware does however perfectly fit the LED API:
+>>
+>> enum led_brightness {
+>>         LED_OFF         =3D 0,
+>>         LED_HALF        =3D 127,
+>>         LED_FULL        =3D 255,
+>> };
+>>
+>>         void            (*brightness_set)(struct led_classdev *led_c=
+dev,
+>>                                           enum led_brightness bright=
+ness);
+>>
+>> So we can model it perfectly as an LED driver, or badly as a PWM
+>> driver.
+>=20
+> Maybe so, but what does it mean in practice? If it's implemented as a
+> PWM driver, and the existing leds-pwm driver is used for the led
+> functionality, shall we miss some brightness values? Is the
+> configuration more difficult? Or what?
+>=20
+> So my point here is that it outputs a PWM signal, so it makes sense t=
+o
+> have it as a PWM driver. It has restricted configurability compared t=
+o
+> more versatile PWM hardware, but I so far don't see why that would be=
+ an
+> issue.
+>=20
+> If it is a PWM driver, we get backlight support for free via the
+> existing pwm_bl driver, and LED support via leds-pwm. And there has b=
+een
+> a clear acceptance on GPO functionality with PWM outputs (in the Pete=
+r's
+> mail thread), whereas I would bet that a LED based GPO functionality
+> would encounter resistance, because that doesn't quite make sense.
+>=20
+>  Tomi
+>=20
+>=20
 
-> I would have preferred this solution too, but the EBI/pinmux constraint
-> explained above prevents this approach.
-I am not very clear about the pinmux constraint.
-Maybe we just leave one DT node (either EBI or current nand node) to 
-take care the pins.
 
-> What I can do though, is reverse the referencing: reference nand chips
-> from the nand controller node.
-
-I guess the dt looks like: (correct me if I am wrong)
-
-EBI node {
-     pinctrl-nand0
-     nand chip 0: {
-         partitions...
-     }
-
-     pinctrl-nand1
-     nand chip 1: {
-         partitions...
-     }
-}
-
-nand (SMC/HSMC may be more correct) node {
-     PMECC properties
-     NFC properties --> we can make the NFC not a node, just many NFC 
-properties.
-
-     &nand chip0
-     &nand chip1
-}
-
-This is still looks nice to me.
-
->
-> Josh, Brian, any idea to solve this EBI/nand-chip/nand-controller
-> dependency problem is welcome.
->
-> Best Regards,
->
-> Boris
->
-Best Regards,
-Josh Wu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+P=E9ter
