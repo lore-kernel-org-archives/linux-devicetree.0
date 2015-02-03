@@ -1,63 +1,44 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v3 05/15] drm: bridge/dw_hdmi: combine hdmi_set_clock_regenerator_n() and hdmi_regenerate_cts()
-Date: Tue,  3 Feb 2015 10:12:20 -0500
-Message-ID: <1422976340-30118-1-git-send-email-ykk@rock-chips.com>
-References: <1422975418-13302-1-git-send-email-ykk@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422975418-13302-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Russell King <rmk+kernel@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Rob Clark <robdclark@gmail.com>, Mark Yao <mark.yao@rock-chips.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Sean Cross <xobs@kosagi.com>, Jyri Sarha <jsarha@ti.com>, Ben Zhang <benzh@chromium.org>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, djkurtz@chromium.org, mmind00@googlemail.com, dianders@chromium.org, marcheu@chromium.org, linux-rockchip@lists.infradead.org, Yakir Yang <ykk@rock-chips.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH_V4 1/3] dt: usb: jz4740: Add DT binding document for OHCI
+Date: Tue, 03 Feb 2015 16:13:11 +0100
+Message-ID: <54D0E587.3060001@metafoo.de>
+References: <1422958640-25723-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422958640-25723-2-git-send-email-Zubair.Kakakhel@imgtec.com> <54D0A3C4.6010100@metafoo.de> <54D0A8A6.5040805@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54D0A8A6.5040805-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
-Changes in v3:
-- Combine hdmi_set_clock_regenerator_n() and hdmi_regenerate_cts()
+On 02/03/2015 11:53 AM, Zubair Lutfullah Kakakhel wrote:
+>
+> On 03/02/15 10:32, Lars-Peter Clausen wrote:
+>> On 02/03/2015 11:17 AM, Zubair Lutfullah Kakakhel wrote:
+>> [...]
+>>> V4 Changes
+>>> Removed clock binding because of pending work in clock tree. Will add
+>>> binding later. Rather than introduce a bad binding now and change later.
+>>
+>> But this patch is introducing a bad binding. The part needs the clock to work. The binding you are specifying right now says that it works fine without any clocks.
+>
+> Facing a chicken and egg problem with these patches here..
+>
+> When the new clock driver gets in we can add the correct clock binding and replace
+> devm_clk_get(&pdev->dev, "uhc"); with devm_clk_get(&pdev->dev, NULL);
+>
+> Specifying the current binding got NAKed by Arnd who mentioned that clock names shouldn't be needed as required properties.
+> And even if needed, then it shouldn't be "uhc" and more close to what other ohci drivers have.
 
-Changes in v2: None
+It's not a chicken and egg problem. The order is very clear, first convert 
+the clock driver to the CCF, then update the driver to pass NULL instead of 
+"uhc", then add the devicetree bindings.
 
- drivers/gpu/drm/bridge/dw_hdmi.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+- Lars
 
-diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
-index 7b5b664..262163f 100644
---- a/drivers/gpu/drm/bridge/dw_hdmi.c
-+++ b/drivers/gpu/drm/bridge/dw_hdmi.c
-@@ -196,19 +196,16 @@ static void hdmi_mask_writeb(struct dw_hdmi *hdmi, u8 data, unsigned int reg,
- 	hdmi_modb(hdmi, data << shift, mask, reg);
- }
- 
--static void hdmi_set_clock_regenerator_n(struct dw_hdmi *hdmi,
--					 unsigned int value)
-+static void hdmi_set_clock_regenerator(struct dw_hdmi *hdmi,
-+				       unsigned int n, unsigned int cts)
- {
--	hdmi_writeb(hdmi, value & 0xff, HDMI_AUD_N1);
--	hdmi_writeb(hdmi, (value >> 8) & 0xff, HDMI_AUD_N2);
--	hdmi_writeb(hdmi, (value >> 16) & 0x0f, HDMI_AUD_N3);
-+	hdmi_writeb(hdmi, n & 0xff, HDMI_AUD_N1);
-+	hdmi_writeb(hdmi, (n >> 8) & 0xff, HDMI_AUD_N2);
-+	hdmi_writeb(hdmi, (n >> 16) & 0x0f, HDMI_AUD_N3);
- 
- 	/* nshift factor = 0 */
- 	hdmi_modb(hdmi, 0, HDMI_AUD_CTS3_N_SHIFT_MASK, HDMI_AUD_CTS3);
--}
- 
--static void hdmi_regenerate_cts(struct dw_hdmi *hdmi, unsigned int cts)
--{
- 	/* Must be set/cleared first */
- 	hdmi_modb(hdmi, 0, HDMI_AUD_CTS3_CTS_MANUAL, HDMI_AUD_CTS3);
- 
-@@ -374,8 +371,7 @@ static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
- 		__func__, hdmi->sample_rate, hdmi->ratio,
- 		pixel_clk, clk_n, clk_cts);
- 
--	hdmi_set_clock_regenerator_n(hdmi, clk_n);
--	hdmi_regenerate_cts(hdmi, clk_cts);
-+	hdmi_set_clock_regenerator(hdmi, clk_n, clk_cts);
- }
- 
- static void hdmi_init_clk_regenerator(struct dw_hdmi *hdmi)
--- 
-2.1.2
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
