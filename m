@@ -1,71 +1,53 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V4 1/3] dt: usb: jz4740: Add DT binding document for OHCI
-Date: Tue, 3 Feb 2015 10:17:18 +0000
-Message-ID: <1422958640-25723-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1422958640-25723-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V3 0/2] watchdog: jz4740: Add DT support
+Date: Tue, 3 Feb 2015 10:25:46 +0000
+Message-ID: <1422959148-38075-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422958640-25723-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stern@rowland.harvard.edu
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Zubair.Kakakhel@imgtec.com
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton@imgtec.com>
+Hi,
 
-Add the binding documentation for the JZ4740 OHCI controller.
+Here are two simple patches that add DT support to the jz4740 watchdog driver.
 
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Patches are based on 3.19-rc7. Quite disjoint and stay within jz4740
+so should apply easily on other trees.
 
----
-The jz4740 is platform only at the moment.
+If you would like to have them rebased to a different tree, please tell.
 
-But DT support is being added
+V3 Changed
+Added Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> 
+Typo in commit message.
+Rebased to rc7
 
-See http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
+V2 Changes
+Renamed binding to jz4740 instead of jz47xx
+Removed clk bindings. They can be added later when the clock tree is fixed.
+Rather than add bindings now and change later.
 
-V4 Changes
-Removed clock binding because of pending work in clock tree. Will add
-binding later. Rather than introduce a bad binding now and change later.
+Added MODULE_DEVICE_TABLE()
 
-V3 Changes: named binding jz4740 instead of confusing it with jz47xx.
-The driver name is jz4740. And will not be renamed
+Thank-you
 
-V2 Changes: Removed interrupt parent binding as that can be inherited.
-Forgot a binding for clock-names
----
- .../devicetree/bindings/usb/ingenic,jz4740-ohci.txt | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
+ZubairLK
 
-diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
-new file mode 100644
-index 0000000..29c1934
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
-@@ -0,0 +1,21 @@
-+Ingenic JZ4740 SoC OHCI controller binding
-+
-+The Ingenic JZ4740 SoC includes an OHCI compliant USB host controller
-+interface for use with USB 1.1 devices.
-+
-+Required properties:
-+ - compatible: Should be "ingenic,jz4740-ohci"
-+ - reg: Should contain the address & size of the OHCI controller registers.
-+ - interrupts: Should specify the interrupt line number
-+
-+Example for jz4740:
-+
-+/ {
-+	ohci: jz4780-ohci@0x134a0000 {
-+		compatible = "ingenic,jz4740-ohci";
-+		reg = <0x134a0000 0x10000>;
-+
-+		interrupts = <5>;
-+	};
-+};
-+
+Zubair Lutfullah Kakakhel (2):
+  dt: watchdog: Add DT binding documentation for jz4740 watchdog timer
+  watchdog: jz4740: Add DT support
+
+ .../devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt      | 12 ++++++++++++
+ drivers/watchdog/jz4740_wdt.c                                | 10 ++++++++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
+
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
