@@ -1,239 +1,79 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v3 4/9] clk: samsung: exynos5433: Add clocks for CMU_MFC domain
-Date: Tue, 03 Feb 2015 09:13:52 +0900
-Message-ID: <1422922437-7414-5-git-send-email-cw00.choi@samsung.com>
-References: <1422922437-7414-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1422922437-7414-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@linaro.org
-Cc: kgene@kernel.org, pankaj.dubey@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
+Date: Tue, 3 Feb 2015 09:36:10 +0900
+Message-ID: <20150203003610.GA17629@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <1608366.HtA9yBksdO@wasted.cogentembedded.com>
+ <20150202110557.GC7459@leverpostej>
+ <54CFE4CE.5090406@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54CFE4CE.5090406@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the mux/divider/gate clocks for CMU_MFC domain which
-generates the clocks for MFC(Multi-Format Codec) IP.
+On Mon, Feb 02, 2015 at 11:57:50PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 02/02/2015 02:05 PM, Mark Rutland wrote:
+> 
+> >>Add the initial device tree for the R8A7794 SoC based SILK low cost board.
+> >>SCIF2 serial port support is included, so that the serial console can work.
+> 
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> [...]
+> 
+> >>Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
+> >>===================================================================
+> >>--- /dev/null
+> >>+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+> >>@@ -0,0 +1,41 @@
+> >>+/*
+> >>+ * Device Tree Source for the SILK board
+> >>+ *
+> >>+ * Copyright (C) 2014 Renesas Electronics Corporation
+> >>+ * Copyright (C) 2014-2015 Renesas Solutions Corp.
+> >>+ * Copyright (C) 2014-2015 Cogent Embedded, Inc.
+> >>+ *
+> >>+ * This file is licensed under the terms of the GNU General Public License
+> >>+ * version 2.  This program is licensed "as is" without any warranty of any
+> >>+ * kind, whether express or implied.
+> >>+ */
+> >>+
+> >>+/dts-v1/;
+> >>+#include "r8a7794.dtsi"
+> >>+
+> >>+/ {
+> >>+	model = "SILK";
+> 
+> >Shouldn't that have a "Renesas" prefix or something like that?
+> 
+>    Historically. no SH-Mobile .dts has used the vendor name in the "model"
+> prop. I defer the decision to Simon but I think we should be at least
+> consistent.
 
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Inki Dae <inki.dae@samsung.com>
----
- .../devicetree/bindings/clock/exynos5433-clock.txt |  15 +++
- drivers/clk/samsung/clk-exynos5433.c               | 113 +++++++++++++++++++++
- include/dt-bindings/clock/exynos5433.h             |  27 ++++-
- 3 files changed, 154 insertions(+), 1 deletion(-)
+They are also my thoughts (except the bit about deferring to myself).
 
-diff --git a/Documentation/devicetree/bindings/clock/exynos5433-clock.txt b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
-index ecb9534..0f35167 100644
---- a/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
-@@ -39,6 +39,8 @@ Required Properties:
-     L2 cache controller.
-   - "samsung,exynos5433-cmu-mscl" - clock controller compatible for CMU_MSCL
-     which generates clocks for M2M (Memory to Memory) scaler and JPEG IPs.
-+  - "samsung,exynos5433-cmu-mfc"  - clock controller compatible for CMU_MFC
-+    which generates clocks for MFC(Multi-Format Codec) IP.
- 
- - reg: physical base address of the controller and length of memory mapped
-   region.
-@@ -125,6 +127,10 @@ Required Properties:
- 		- sclk_jpeg_mscl
- 		- aclk_mscl_400
- 
-+	Input clocks for mfc clock controller:
-+		- oscclk
-+		- aclk_mfc_400
-+
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume.
- 
-@@ -340,6 +346,15 @@ Example 2: Examples of clock controller nodes are listed below.
- 		       <&cmu_top CLK_ACLK_MSCL_400>;
- 	};
- 
-+	cmu_mfc: clock-controller@15280000 {
-+		compatible = "samsung,exynos5433-cmu-mfc";
-+		reg = <0x15280000 0x0b08>;
-+		#clock-cells = <1>;
-+
-+		clock-names = "oscclk", "aclk_mfc_400";
-+		clocks = <&xxti>, <&cmu_top CLK_ACLK_MFC_400>;
-+	};
-+
- Example 3: UART controller node that consumes the clock generated by the clock
- 	   controller.
- 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index a5238cd..2033b07 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -560,6 +560,9 @@ static struct samsung_gate_clock top_gate_clks[] __initdata = {
- 	GATE(CLK_ACLK_GSCL_333, "aclk_gscl_333", "div_aclk_gscl_333",
- 			ENABLE_ACLK_TOP, 14,
- 			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_MFC_400, "aclk_mfc_400", "div_aclk_mfc_400",
-+			ENABLE_ACLK_TOP, 3,
-+			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_ACLK_G2D_266, "aclk_g2d_266", "div_aclk_g2d_266",
- 			ENABLE_ACLK_TOP, 2,
- 			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
-@@ -3990,3 +3993,113 @@ static void __init exynos5433_cmu_mscl_init(struct device_node *np)
- }
- CLK_OF_DECLARE(exynos5433_cmu_mscl, "samsung,exynos5433-cmu-mscl",
- 		exynos5433_cmu_mscl_init);
-+
-+/*
-+ * Register offset definitions for CMU_MFC
-+ */
-+#define MUX_SEL_MFC				0x0200
-+#define MUX_ENABLE_MFC				0x0300
-+#define MUX_STAT_MFC				0x0400
-+#define DIV_MFC					0x0600
-+#define DIV_STAT_MFC				0x0700
-+#define ENABLE_ACLK_MFC				0x0800
-+#define ENABLE_ACLK_MFC_SECURE_SMMU_MFC		0x0804
-+#define ENABLE_PCLK_MFC				0x0900
-+#define ENABLE_PCLK_MFC_SECURE_SMMU_MFC		0x0904
-+#define ENABLE_IP_MFC0				0x0b00
-+#define ENABLE_IP_MFC1				0x0b04
-+#define ENABLE_IP_MFC_SECURE_SMMU_MFC		0x0b08
-+
-+static unsigned long mfc_clk_regs[] __initdata = {
-+	MUX_SEL_MFC,
-+	MUX_ENABLE_MFC,
-+	MUX_STAT_MFC,
-+	DIV_MFC,
-+	DIV_STAT_MFC,
-+	ENABLE_ACLK_MFC,
-+	ENABLE_ACLK_MFC_SECURE_SMMU_MFC,
-+	ENABLE_PCLK_MFC,
-+	ENABLE_PCLK_MFC_SECURE_SMMU_MFC,
-+	ENABLE_IP_MFC0,
-+	ENABLE_IP_MFC1,
-+	ENABLE_IP_MFC_SECURE_SMMU_MFC,
-+};
-+
-+PNAME(mout_aclk_mfc_400_user_p)		= { "oscclk", "aclk_mfc_400", };
-+
-+static struct samsung_mux_clock mfc_mux_clks[] __initdata = {
-+	/* MUX_SEL_MFC */
-+	MUX(CLK_MOUT_ACLK_MFC_400_USER, "mout_aclk_mfc_400_user",
-+			mout_aclk_mfc_400_user_p, MUX_SEL_MFC, 0, 0),
-+};
-+
-+static struct samsung_div_clock mfc_div_clks[] __initdata = {
-+	/* DIV_MFC */
-+	DIV(CLK_DIV_PCLK_MFC, "div_pclk_mfc", "mout_aclk_mfc_400_user",
-+			DIV_MFC, 0, 2),
-+};
-+
-+static struct samsung_gate_clock mfc_gate_clks[] __initdata = {
-+	/* ENABLE_ACLK_MFC */
-+	GATE(CLK_ACLK_BTS_MFC_1, "aclk_bts_mfc_1", "mout_aclk_mfc_400_user",
-+			ENABLE_ACLK_MFC, 6, 0, 0),
-+	GATE(CLK_ACLK_BTS_MFC_0, "aclk_bts_mfc_0", "mout_aclk_mfc_400_user",
-+			ENABLE_ACLK_MFC, 5, 0, 0),
-+	GATE(CLK_ACLK_AHB2APB_MFCP, "aclk_ahb2apb_mfcp", "div_pclk_mfc",
-+			ENABLE_ACLK_MFC, 4, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_XIU_MFCX, "aclk_xiu_mfcx", "mout_aclk_mfc_400_user",
-+			ENABLE_ACLK_MFC, 3, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_MFCNP_100, "aclk_mfcnp_100", "div_pclk_mfc",
-+			ENABLE_ACLK_MFC, 2, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_MFCND_400, "aclk_mfcnd_400", "mout_aclk_mfc_400_user",
-+			ENABLE_ACLK_MFC, 1, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_MFC, "aclk_mfc", "mout_aclk_mfc_400_user",
-+			ENABLE_ACLK_MFC, 0, 0, 0),
-+
-+	/* ENABLE_ACLK_MFC_SECURE_SMMU_MFC */
-+	GATE(CLK_ACLK_SMMU_MFC_1, "aclk_smmu_mfc_1", "mout_aclk_mfc_400_user",
-+			ENABLE_ACLK_MFC_SECURE_SMMU_MFC,
-+			1, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_SMMU_MFC_0, "aclk_smmu_mfc_0", "mout_aclk_mfc_400_user",
-+			ENABLE_ACLK_MFC_SECURE_SMMU_MFC,
-+			0, CLK_IGNORE_UNUSED, 0),
-+
-+	/* ENABLE_PCLK_MFC */
-+	GATE(CLK_PCLK_BTS_MFC_1, "pclk_bts_mfc_1", "div_pclk_mfc",
-+			ENABLE_PCLK_MFC, 4, 0, 0),
-+	GATE(CLK_PCLK_BTS_MFC_0, "pclk_bts_mfc_0", "div_pclk_mfc",
-+			ENABLE_PCLK_MFC, 3, 0, 0),
-+	GATE(CLK_PCLK_PMU_MFC, "pclk_pmu_mfc", "div_pclk_mfc",
-+			ENABLE_PCLK_MFC, 2, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_SYSREG_MFC, "pclk_sysreg_mfc", "div_pclk_mfc",
-+			ENABLE_PCLK_MFC, 1, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_MFC, "pclk_mfc", "div_pclk_mfc",
-+			ENABLE_PCLK_MFC, 4, CLK_IGNORE_UNUSED, 0),
-+
-+	/* ENABLE_PCLK_MFC_SECURE_SMMU_MFC */
-+	GATE(CLK_PCLK_SMMU_MFC_1, "pclk_smmu_mfc_1", "div_pclk_mfc",
-+			ENABLE_PCLK_MFC_SECURE_SMMU_MFC,
-+			1, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_SMMU_MFC_0, "pclk_smmu_mfc_0", "div_pclk_mfc",
-+			ENABLE_PCLK_MFC_SECURE_SMMU_MFC,
-+			0, CLK_IGNORE_UNUSED, 0),
-+};
-+
-+static struct samsung_cmu_info mfc_cmu_info __initdata = {
-+	.mux_clks		= mfc_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(mfc_mux_clks),
-+	.div_clks		= mfc_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(mfc_div_clks),
-+	.gate_clks		= mfc_gate_clks,
-+	.nr_gate_clks		= ARRAY_SIZE(mfc_gate_clks),
-+	.nr_clk_ids		= MFC_NR_CLK,
-+	.clk_regs		= mfc_clk_regs,
-+	.nr_clk_regs		= ARRAY_SIZE(mfc_clk_regs),
-+};
-+
-+static void __init exynos5433_cmu_mfc_init(struct device_node *np)
-+{
-+	samsung_cmu_register_one(np, &mfc_cmu_info);
-+}
-+CLK_OF_DECLARE(exynos5433_cmu_mfc, "samsung,exynos5433-cmu-mfc",
-+		exynos5433_cmu_mfc_init);
-diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
-index 757c419..dfeb9d6 100644
---- a/include/dt-bindings/clock/exynos5433.h
-+++ b/include/dt-bindings/clock/exynos5433.h
-@@ -153,8 +153,9 @@
- #define CLK_ACLK_GSCL_333		233
- #define CLK_SCLK_JPEG_MSCL		234
- #define CLK_ACLK_MSCL_400		235
-+#define CLK_ACLK_MFC_400		236
- 
--#define TOP_NR_CLK			236
-+#define TOP_NR_CLK			237
- 
- /* CMU_CPIF */
- #define CLK_FOUT_MPHY_PLL		1
-@@ -976,4 +977,28 @@
- 
- #define MSCL_NR_CLK					30
- 
-+/* CMU_MFC */
-+#define CLK_MOUT_ACLK_MFC_400_USER			1
-+
-+#define CLK_DIV_PCLK_MFC				2
-+
-+#define CLK_ACLK_BTS_MFC_1				3
-+#define CLK_ACLK_BTS_MFC_0				4
-+#define CLK_ACLK_AHB2APB_MFCP				5
-+#define CLK_ACLK_XIU_MFCX				6
-+#define CLK_ACLK_MFCNP_100				7
-+#define CLK_ACLK_MFCND_400				8
-+#define CLK_ACLK_MFC					9
-+#define CLK_ACLK_SMMU_MFC_1				10
-+#define CLK_ACLK_SMMU_MFC_0				11
-+#define CLK_PCLK_BTS_MFC_1				12
-+#define CLK_PCLK_BTS_MFC_0				13
-+#define CLK_PCLK_PMU_MFC				14
-+#define CLK_PCLK_SYSREG_MFC				15
-+#define CLK_PCLK_MFC					16
-+#define CLK_PCLK_SMMU_MFC_1				17
-+#define CLK_PCLK_SMMU_MFC_0				18
-+
-+#define MFC_NR_CLK					19
-+
- #endif /* _DT_BINDINGS_CLOCK_EXYNOS5433_H */
--- 
-1.8.5.5
+If there is a good motivation for a Renesas prefix then that is fine by me.
+But in that case it seems that it would be appropriate to update
+the existing renesas boards too.
+
+The only thing that stood out to me about "SILK" was that unlike
+other renesas boards names in .dtsi files it is all-capitals.
+Its not a bit deal but as we are on the topic: is that intentional?
+
+> >It's unlikely that there will be another board called "SILK", but it
+> >does make it hard for someone to get an idea of what the board is from
+> >the model string alone.
+> 
+>    Tend to agree here.
+> 
+> >Mark.
+> 
+> WBR, Sergei
+> 
