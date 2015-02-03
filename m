@@ -1,125 +1,113 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: add generic dt-card support
-Date: Tue, 3 Feb 2015 20:31:30 +0100
-Message-ID: <20150203203130.5d1cfc42@armhf>
-References: <cover.1421868426.git.moinejf@free.fr>
-	<d0c66c2e2f200119f9990fa52a503b1a4af6238f.1421868426.git.moinejf@free.fr>
-	<54C0088F.9070609@metafoo.de>
-	<20150122090723.50ac0156@armhf>
-	<54C14EB3.8080305@metafoo.de>
-	<20150123131554.623003f9@armhf>
-	<54C252F4.9000504@metafoo.de>
-	<20150123193456.276ea512@armhf>
-	<20150123191343.GW21293@sirena.org.uk>
-	<20150124083027.3b3a018f@armhf>
-	<20150203164748.GR21293@sirena.org.uk>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/5] i8042: intel-8042 DT documentation
+Date: Tue, 3 Feb 2015 11:32:02 -0800
+Message-ID: <20150203193202.GB20256@dtor-ws>
+References: <1422913730-12663-1-git-send-email-v1ron@v1ros.org>
+ <20150203113816.GA30866@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150203164748.GR21293-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150203113816.GA30866@leverpostej>
+Sender: linux-input-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Roman Volkov <v1ron@v1ros.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>, Wolfram Sang <wsa@the-dreams.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Roman Volkov <v1ron@mail.ru>, Tony Prisk <linux@prisktech.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 3 Feb 2015 16:47:48 +0000
-Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Tue, Feb 03, 2015 at 11:38:16AM +0000, Mark Rutland wrote:
+> On Mon, Feb 02, 2015 at 09:48:46PM +0000, Roman Volkov wrote:
+> > Documentation for 'intel,8042' DT compatible node.
+> > 
+> > Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+> > Signed-off-by: Roman Volkov <v1ron@v1ros.org>
+> > ---
+> >  .../devicetree/bindings/input/intel-8042.txt       | 29 ++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/intel-8042.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/intel-8042.txt b/Documentation/devicetree/bindings/input/intel-8042.txt
+> > new file mode 100644
+> > index 0000000..2aea7ec
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/intel-8042.txt
+> > @@ -0,0 +1,29 @@
+> > +* Intel 8042 Keyboard Controller
+> > +
+> > +Required properties:
+> > +- compatible: should be "intel,8042"
+> > +- regs: memory for keyboard controller
+> > +- interrupts: two interrupts should be specified (keyboard and aux)
+> 
+> Is it possible only one of these is wired up?
 
-> On Sat, Jan 24, 2015 at 08:30:27AM +0100, Jean-Francois Moine wrote:
-> > Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > > On Fri, Jan 23, 2015 at 07:34:56PM +0100, Jean-Francois Moine wro=
-te:
->=20
-> > > > The simple card builder, 'dt-card' (maybe a better name would h=
-ave been
-> > > > 'graph-card'), acts just like the simple-card except that it do=
-es not
-> > > > appear in the DT. Its creation is done by an audio controller.
->=20
-> > > Which audio controller?  There may be several CPU side audio inte=
-rfaces
-> > > in the same card.  For example people often want to have both low
-> > > latency and high latency audio paths from the CPU into the hardwa=
-re (low
-> > > latency tends to increase power burn).  SoC centric system design=
-s do
-> > > sometimes also have PDM I/O, expecting to be directly connected t=
-o DMICs
-> > > and so on, which results in a relatively large number of CPU inte=
-rfaces.
->=20
-> > The audio controller which creates the card depends on the complexi=
-ty
-> > of the card. When there are many controllers, it is up to the desig=
-ner
-> > to define either a master audio controller or to instantiate a 'car=
-d'
-> > device via the DT for doing the job.
->=20
-> So how does the simple controller interact with a more complex one gi=
-ven
-> that it's somehow picking some controller node to start from?
+Yes, and we should support this case. The core of i8042 does.
 
-A way to solve this problem could be to create only one card builder.
-This creation could be explicit (created by the first active audio
-controller) or implicit by the audio subsystem on the first controller =
-or
-CODEC creation.
 
-Then, the card builder could scan all the DT looking for the audio
-ports and create one or more cards according to the graph connectivity.
+> 
+> It might be worth using interrupt-names.
+> 
+> > +- command-reg: offset in memory for command register
+> > +- status-reg: offset in memory for status register
+> > +- data-reg: offset in memory for data register
+> > +
+> > +Optional properties:
+> > +- init-reset: Controller should be reset on init and cleanup
+> 
+> Why is this necessary? Can't we just always reset it?
 
-> > > > Well, forget about this. I never clearly understood why some wi=
-dgets
-> > > > and routes had to be defined at card level.
->=20
-> > > Please do try to understand the idea of representing simple compo=
-nents
-> > > on the board and analogue interconects between devices - it's rea=
-lly
-> > > important and not something that can be neglected.
->=20
-> > The problem is that this understanding would stay abstract: I have =
-no
-> > such a hardware. Anyway, if the representation can be done with the
-> > simple-card, it may also be done with a graph of ports.
->=20
-> If you have a device with any sort of speaker or microphone, or any s=
-ort
-> of external connector for interfacing with an external device like a
-> headphone jack, then you have something that could be a widget.
+We do not reset by default on x86 because BIOS takes care of this for us
+and quite often firmware that emulates i8042 gets confused if we try to
+reset it too. Non non-x86 we reset by default. I think we should do the
+same for OF case  (reset) and not use this property.
 
-I know what are the widgets and routes, I was just wondering why they
-(especially the widgets) need to appear at the card level instead of
-just being declared in the DAIs (from the platform or the DT).
-And the same question may also be raised about the audio formats, clock=
-s,
-tdm's...
+> 
+> > +
+> > +Optional Linux-specific properties:
+> > +- linux,kbd_phys_desc: defaults to i8042/serio0
+> > +- linux,aux_phys_desc: defaults to i8042/serio1
+> > +- linux,mux_phys_desc: defaults to i8042/serio%d
+> 
+> As a general note, s/_/-/ in property names please.
+> 
+> That said, I don't follow why we should have these at all. I don't
+> understand what the description is intended to mean.
+> 
+> In general we want to avoid Linux-specific properties. If a DTB needs to
+> know about the inernals of an OS it's likely to be fragile and broken
+> over time.
 
-> > > That DT binding was done entirely in the context of video applica=
-tions
-> > > IIRC, this is the first time it's been discussed in this context.
->=20
-> > http://mailman.alsa-project.org/pipermail/alsa-devel/2014-January/0=
-70622.html
-> > http://mailman.alsa-project.org/pipermail/alsa-devel/2015-January/0=
-86273.html
->=20
-> So there's been some in passing mentions, not really serious discussi=
-on
-> though...
+Right, the desc were carried over from older days to keep dmesg
+familiar. With OF it is new platforms so just settle on a generic
+description and use it instead of allowing to specify through DT.
 
-I may go back about the card builder, but Russell's idea about
-declaring the tda998x audio parameters by a port as declared in a graph
-of ports seems fine to me. This declaration should be compatible with
-the use of the simple-card.
+> 
+> > +
+> > +
+> > +Example:
+> > +	keyboard@d8008800 {
+> > +		compatible = "intel,8042";
+> > +		reg = <0xd8008800 0x100>;
+> > +		interrupts = <23 4>;
+> 
+> If this is intended to be two interrupts, please bracket them
+> individually, e.g.
+> 
+> 	interrupts = <23>, <4>;
+> 
+> > +		command-reg = <0x04>;
+> > +		status-reg = <0x04>;
+> 
+> Same address?
+> 
+> > +		data-reg = <0x00>;
+> > +		mux-ports = <2>;
+> 
+> This wasn't documented above.
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think active MUX is purely x86 concept, I have never heard of it being
+used anywhere else.
+
+Thanks.
+
+-- 
+Dmitry
