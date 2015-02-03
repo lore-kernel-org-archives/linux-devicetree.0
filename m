@@ -1,67 +1,57 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
-Date: Tue, 3 Feb 2015 10:53:01 +0100
-Message-ID: <CAMuHMdV1U9XV7diKYPwpxAqdzD7tst6e0k=bLgJQ27=YDndn=Q@mail.gmail.com>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
-	<1608366.HtA9yBksdO@wasted.cogentembedded.com>
-	<20150202110557.GC7459@leverpostej>
-	<54CFE4CE.5090406@cogentembedded.com>
-	<20150203003610.GA17629@verge.net.au>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V4 0/3] usb: ohci: jz4740: Add DT support and a fix
+Date: Tue, 3 Feb 2015 10:17:17 +0000
+Message-ID: <1422958640-25723-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150203003610.GA17629@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 3, 2015 at 1:36 AM, Simon Horman <horms@verge.net.au> wrote=
-:
-> The only thing that stood out to me about "SILK" was that unlike
-> other renesas boards names in .dtsi files it is all-capitals.
-> Its not a bit deal but as we are on the topic: is that intentional?
+Hi,
 
-Seems like we can use some consistency:
+Here are a few simple patches for the jz4740.
 
-$ git grep -w model -- $(git grep -l renesas, -- arch/arm/boot/dts)
-arch/arm/boot/dts/emev2-kzm9d.dts:      model =3D "EMEV2 KZM9D Board";
-arch/arm/boot/dts/r7s72100-genmai.dts:  model =3D "Genmai";
-arch/arm/boot/dts/r8a73a4-ape6evm.dts:  model =3D "APE6EVM";
-arch/arm/boot/dts/r8a7740-armadillo800eva.dts:  model =3D "armadillo 80=
-0 eva";
-arch/arm/boot/dts/r8a7778-bockw-reference.dts:  model =3D "bockw";
-arch/arm/boot/dts/r8a7778-bockw.dts:    model =3D "bockw";
-arch/arm/boot/dts/r8a7779-marzen.dts:   model =3D "marzen";
-arch/arm/boot/dts/r8a7790-lager.dts:    model =3D "Lager";
-arch/arm/boot/dts/r8a7791-henninger.dts:        model =3D "Henninger";
-arch/arm/boot/dts/r8a7791-koelsch.dts:  model =3D "Koelsch";
-arch/arm/boot/dts/r8a7794-alt.dts:      model =3D "Alt";
-arch/arm/boot/dts/sh73a0-kzm9g.dts:     model =3D "KZM-A9-GT";
-$
+First adds a simple DT binding.
+Seconds adds DT support.
+Third is a minor fix in clock enabling.
 
-ePAPR says:
+Patches are based on 3.19-rc7. Quite disjoint and stay within jz4740 
+so should apply easily on other trees.
 
-"The recommended format is: =E2=80=9Cmanufacturer,model=E2=80=9D, where=
- manufacturer is a
- string describing the name of the manufacturer (such as a stock ticker=
- symbol),
- and model specifies the model number.
+If you would like to have them rebased to a different tree, please tell.
 
- Example:
-         model =3D =E2=80=9Cfsl,MPC8349EMITX=E2=80=9D;"
+Thank-you
 
-Gr{oetje,eeting}s,
+V4 changes
+Removed clk bindings. They can be added later when the work on jz4740 clks
+is done. Rather than add bindings now and change later.
 
-                        Geert
+V3 changes
+DT corrections. Added ACKS for 2 and 3.
+
+V2 changes
+Removed an interrupt parent binding. Forgot a binding
+Unprepared clock when disabling
+
+ZubairLK
+
+Paul Burton (3):
+  dt: usb: jz4740: Add DT binding document for OHCI
+  usb: ohci: jz4740: add DT support
+  usb: ohci: jz4740: prepare the clock before enabling it
+
+ .../devicetree/bindings/usb/ingenic,jz4740-ohci.txt | 21 +++++++++++++++++++++
+ drivers/usb/host/ohci-jz4740.c                      | 15 ++++++++++++---
+ 2 files changed, 33 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4740-ohci.txt
+
+-- 
+1.9.1
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
