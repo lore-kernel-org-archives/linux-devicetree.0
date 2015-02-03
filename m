@@ -1,368 +1,535 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v4] thermal: Add QPNP PMIC temperature alarm driver
-Date: Tue, 3 Feb 2015 15:26:57 -0400
-Message-ID: <20150203192656.GB3486@developer.amazonguestwifi.org>
-References: <1422890370-6914-1-git-send-email-iivanov@mm-sol.com>
- <20150202181446.GE17425@developer.hsd1.ca.comcast.net>
- <1422955485.2177.31.camel@mm-sol.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v3 3/4] pinctrl: cygnus: add initial IOMUX driver support
+Date: Tue, 3 Feb 2015 11:29:36 -0800
+Message-ID: <54D121A0.6070602@broadcom.com>
+References: <rjui@broadcom.com> <1422928894-20716-1-git-send-email-rjui@broadcom.com> <1422928894-20716-4-git-send-email-rjui@broadcom.com> <20150203174042.GA15969@dtor-ws>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422955485.2177.31.camel@mm-sol.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150203174042.GA15969@dtor-ws>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Dmitry Torokhov <dtor@google.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---gatW/ieO32f1wygP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 03, 2015 at 11:24:45AM +0200, Ivan T. Ivanov wrote:
->=20
-> Hi Eduardo,
->=20
-> On Mon, 2015-02-02 at 14:14 -0400, Eduardo Valentin wrote:
-> > Ivan,
-> >=20
-> > On Mon, Feb 02, 2015 at 05:19:30PM +0200, Ivan T. Ivanov wrote:
-> > > Add support for the temperature alarm peripheral found inside
-> > > Qualcomm plug-and-play (QPNP) PMIC chips. The temperature alarm
-> > > peripheral outputs a pulse on an interrupt line whenever the
-> > > thermal over temperature stage value changes.
-> > >=20
-> > > Register a thermal sensor. The temperature reported by this thermal
-> > > sensor device should reflect the actual PMIC die temperature if an
-> > > ADC is present on the given PMIC. If no ADC is present, then the
-> > > reported temperature should be estimated from the over temperature
-> > > stage value.
-> > >=20
-> > > Cc: David Collins <collinsd@codeaurora.org>
-> > > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > > ---
-> > >=20
-> > > Changes since v3:
-> > >=20
-> > > - Driver register thermal sensor instead thermal zone. Device thermal=
- zone
-> > >   should be properly described in DT files according thermal.txt docu=
-ment.
-> >=20
-> > Thanks a lot for keeping this up. I believe the driver looks smaller and
-> > cleaner now, don't you agree?
->=20
-> Yep.
->=20
-> >=20
-> > > - Dropped support for software override PMIC shutdown sequence and re=
-lated
-> > >   bit definitions. If software did not take action for clean device s=
-hutdown,
-> > >   until critical temperature is reached, PMIC chip will execute inter=
-nal
-> > >   pre-programed shutdown sequence.
-> > >=20
-> >=20
-> > OK. Let me know if this functionality is crucial and needs further
-> > discussion.
->=20
-> Unless I miss something, I think that this functionality is
-> used only for the purpose of debugging.
+On 2/3/2015 9:40 AM, Dmitry Torokhov wrote:
+> Hi Ray,
+> 
+> On Mon, Feb 02, 2015 at 06:01:33PM -0800, Ray Jui wrote:
+>> This adds the initial driver support for the Broadcom Cygnus IOMUX
+>> controller. The Cygnus IOMUX controller supports group based mux
+>> configuration but allows certain pins to be muxed to GPIO individually
+>>
+>> Signed-off-by: Ray Jui <rjui@broadcom.com>
+>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> 
+> Just a few random nits/comments...
+> 
+>> ---
+>>  drivers/pinctrl/bcm/Kconfig              |   13 +
+>>  drivers/pinctrl/bcm/Makefile             |    5 +-
+>>  drivers/pinctrl/bcm/pinctrl-cygnus-mux.c | 1087 ++++++++++++++++++++++++++++++
+>>  3 files changed, 1103 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
+>>
+>> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
+>> index bc6d048..eb13201 100644
+>> --- a/drivers/pinctrl/bcm/Kconfig
+>> +++ b/drivers/pinctrl/bcm/Kconfig
+>> @@ -19,3 +19,16 @@ config PINCTRL_BCM2835
+>>  	bool
+>>  	select PINMUX
+>>  	select PINCONF
+>> +
+>> +config PINCTRL_CYGNUS_MUX
+>> +	bool "Broadcom Cygnus IOMUX driver"
+>> +	depends on (ARCH_BCM_CYGNUS || COMPILE_TEST)
+>> +	select PINMUX
+>> +	select GENERIC_PINCONF
+>> +	default ARCH_BCM_CYGNUS
+>> +	help
+>> +	  Say yes here to enable the Broadcom Cygnus IOMUX driver.
+>> +
+>> +	  The Broadcom Cygnus IOMUX driver supports group based IOMUX
+>> +	  configuration, with the exception that certain individual pins
+>> +	  can be overrided to GPIO function
+>> diff --git a/drivers/pinctrl/bcm/Makefile b/drivers/pinctrl/bcm/Makefile
+>> index 7ba80a3..bb6beb6 100644
+>> --- a/drivers/pinctrl/bcm/Makefile
+>> +++ b/drivers/pinctrl/bcm/Makefile
+>> @@ -1,4 +1,5 @@
+>>  # Broadcom pinctrl support
+>>  
+>> -obj-$(CONFIG_PINCTRL_BCM281XX)	+= pinctrl-bcm281xx.o
+>> -obj-$(CONFIG_PINCTRL_BCM2835)	+= pinctrl-bcm2835.o
+>> +obj-$(CONFIG_PINCTRL_BCM281XX)		+= pinctrl-bcm281xx.o
+>> +obj-$(CONFIG_PINCTRL_BCM2835)		+= pinctrl-bcm2835.o
+>> +obj-$(CONFIG_PINCTRL_CYGNUS_MUX)	+= pinctrl-cygnus-mux.o
+>> diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
+>> new file mode 100644
+>> index 0000000..33565b4
+>> --- /dev/null
+>> +++ b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
+>> @@ -0,0 +1,1087 @@
+>> +/* Copyright (C) 2014-2015 Broadcom Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * This file contains the Cygnus IOMUX driver that supports group based PINMUX
+>> + * configuration. Although PINMUX configuration is mainly group based, the
+>> + * Cygnus IOMUX controller allows certain pins to be individually muxed to GPIO
+>> + * function, and therefore be controlled by the Cygnus ASIU GPIO controller
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pinctrl/pinctrl.h>
+>> +#include <linux/pinctrl/pinmux.h>
+>> +#include <linux/pinctrl/pinconf.h>
+>> +#include <linux/pinctrl/pinconf-generic.h>
+>> +#include "../core.h"
+>> +#include "../pinctrl-utils.h"
+>> +
+>> +#define CYGNUS_NUM_IOMUX_REGS     8
+>> +#define CYGNUS_NUM_MUX_PER_REG    8
+>> +#define CYGNUS_NUM_IOMUX          (CYGNUS_NUM_IOMUX_REGS * \
+>> +				   CYGNUS_NUM_MUX_PER_REG)
+>> +
+>> +/*
+>> + * Cygnus IOMUX register description
+>> + *
+>> + * @offset: register offset for mux configuration of a group
+>> + * @shift: bit shift for mux configuration of a group
+>> + * @alt: alternate function to set to
+>> + */
+>> +struct cygnus_mux {
+>> +	unsigned int offset;
+>> +	unsigned int shift;
+>> +	unsigned int alt;
+>> +};
+>> +
+>> +/*
+>> + * Keep track of Cygnus IOMUX configuration and prevent double configuration
+>> + *
+>> + * @cygnus_mux: Cygnus IOMUX register description
+>> + * @is_configured: flag to indicate whether a mux setting has already been
+>> + * configured
+>> + */
+>> +struct cygnus_mux_log {
+>> +	struct cygnus_mux mux;
+>> +	bool is_configured;
+>> +};
+>> +
+>> +/*
+>> + * Group based IOMUX configuration
+>> + *
+>> + * @name: name of the group
+>> + * @pins: array of pins used by this group
+>> + * @num_pins: total number of pins used by this group
+>> + * @mux: Cygnus group based IOMUX configuration
+>> + */
+>> +struct cygnus_pin_group {
+>> +	const char *name;
+>> +	const unsigned *pins;
+>> +	const unsigned num_pins;
+>> +	const struct cygnus_mux mux;
+> 
+> Not: the last 2 consts are quite weird - if you want to make an instance
+> of cygnus_pin_group immutable you declare it as a const (and I see you
+> are already doing that below). With the structure as it laid out
+> currently you can only do static initializers.
+> 
+Right. I'll remove the last two const.
 
-OK Great!
+>> +};
+>> +
+>> +/*
+>> + * Cygnus mux function and supported pin groups
+>> + *
+>> + * @name: name of the function
+>> + * @groups: array of groups that can be supported by this function
+>> + * @num_groups: total number of groups that can be supported by this function
+>> + */
+>> +struct cygnus_pin_function {
+>> +	const char *name;
+>> +	const char * const *groups;
+>> +	const unsigned num_groups;
+> 
+> Here as well.
+> 
+> ...
+> 
+Yes. Will remove the last const.
 
->=20
-> >=20
-> >=20
-> > I have two very minor comments as follows.
-> >=20
-> >=20
-> > > v3: http://comments.gmane.org/gmane.linux.ports.arm.msm/10071
-> > >=20
-> > >  .../bindings/thermal/qcom-spmi-temp-alarm.txt      |  57 ++++
-> > >  drivers/thermal/Kconfig                            |  11 +
-> > >  drivers/thermal/Makefile                           |   1 +
-> > >  drivers/thermal/qcom-spmi-temp-alarm.c             | 311 +++++++++++=
-++++++++++
-> > >  4 files changed, 380 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/thermal/qcom-sp=
-mi-temp-alarm.txt
-> > >  create mode 100644 drivers/thermal/qcom-spmi-temp-alarm.c
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp=
--alarm.txt=20
-> > > b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
-> > > new file mode 100644
-> > > index 0000000..290ec06
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.=
-txt
-> > > @@ -0,0 +1,57 @@
-> > > +Qualcomm QPNP PMIC Temperature Alarm
-> > > +
-> > > +QPNP temperature alarm peripherals are found inside of Qualcomm PMIC=
- chips
-> > > +that utilize the Qualcomm SPMI implementation. These peripherals pro=
-vide an
-> > > +interrupt signal and status register to identify high PMIC die tempe=
-rature.
-> > > +
-> > > +Required properties:
-> > > +- compatible:      Should contain "qcom,spmi-temp-alarm".
-> > > +- reg:             Specifies the SPMI address and length of the cont=
-roller's
-> > > +                   registers.
-> > > +- interrupts:      PMIC temperature alarm interrupt.
-> > > +- #thermal-sensor-cells: Should be 0. See thermal.txt for a descript=
-ion.
-> > > +
-> > > +Optional properties:
-> > > +- io-channels:     Should contain IIO channel specifier for the ADC =
-channel,
-> > > +                   which report chip die temperature.
-> > > +- io-channel-names: Should contain "thermal".
-> > > +
-> > > +Example:
-> > > +
-> > > +       pm8941_temp: thermal-alarm@2400 {
-> > > +               compatible =3D "qcom,spmi-temp-alarm";
-> > > +               reg =3D <0x2400 0x100>;
-> > > +               interrupts =3D <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
-> > > +               #thermal-sensor-cells =3D <0>;
-> > > +
-> > > +               io-channels =3D <&pm8941_vadc VADC_DIE_TEMP>;
-> > > +               io-channel-names =3D "thermal";
-> > > +       };
-> > > +
-> > > +       thermal-zones {
-> > > +               pm8941 {
-> > > +                       polling-delay-passive =3D <250>;
-> > > +                       polling-delay =3D <1000>;
-> > > +
-> > > +                       thermal-sensors =3D <&pm8941_temp>;
-> > > +
-> > > +                       trips {
-> > > +                               passive {
-> > > +                                       temperature =3D <1050000>;
-> > > +                                       hysteresis =3D <2000>;
-> > > +                                       type =3D "passive";
-> > > +                               };
-> > > +                               alert {
-> > > +                                       temperature =3D <125000>;
-> > > +                                       hysteresis =3D <2000>;
-> > > +                                       type =3D "hot";
-> > > +                               };
-> > > +                               crit {
-> > > +                                       temperature =3D <145000>;
-> > > +                                       hysteresis =3D <2000>;
-> > > +                                       type =3D "critical";
-> > > +                               };
-> > > +                       };
-> > > +               };
-> > > +       };
-> >=20
-> > Do you have the appropriate DT changes under architecture code too?
-> >=20
-> > I mean, I am fine picking these changes, but should this series include
-> > also a minor inclusion under arch/arm/boot/dts too, given that you
-> > already did the hard part?
->=20
-> We don't have any DT files for these PMIC's upstream. Probably is time=20
-> to start adding them. I have waiting to have some drivers accepted=20
-> before pushing such changes. But not we have 2 types of ADC, RTC, GPIO's,=
-=20
-> MPP's and hopefully Thermal :-). I would like this to be a separate effor=
-t.
+>> +
+>> +/*
+>> + * List of pins in Cygnus
+>> + */
+>> +static struct cygnus_pin cygnus_pins[] = {
+> 
+> const?
+> 
+I cannot make it const here, since the address of "gpio_mux" is later
+passed to pinctrl_pin_desc's private data:
 
-I am fine if you take the approach of doing it in two steps. It is just
-that your series can be better reviewed if you include the DT changes.
+pins[i].drv_data = &cygnus_pins[i].gpio_mux;
 
->=20
->=20
-> > > + * This function updates the internal temp value based on the
-> > > + * current thermal stage and threshold as well as the previous stage
-> > > + */
-> > > +static int qpnp_tm_update_temp_no_adc(struct qpnp_tm_chip *chip)
-> > > +{
-> > > +       unsigned int stage;
-> > > +       int ret;
-> > > +       u8 reg =3D 0;
-> > > +
-> > > +       ret =3D qpnp_tm_read(chip, QPNP_TM_REG_STATUS, &reg);
-> > > +       if (ret < 0)
-> > > +               return ret;
-> > > +
-> > > +       stage =3D reg & STATUS_STAGE_MASK;
-> > > +
-> > > +       if (stage > chip->stage) {
-> > > +               /* increasing stage, use lower bound */
-> > > +               chip->temp =3D (stage - 1) * TEMP_STAGE_STEP +
-> > > +                                                               chip-=
->thresh * TEMP_THRESH_STEP=20
-> > > +
-> > > +                                                               TEMP_=
-STAGE_HYSTERESIS +=20
-> > > TEMP_THRESH_MIN;
-> > > +       } else if (stage < chip->stage) {
-> > > +               /* decreasing stage, use upper bound */
-> > > +               chip->temp =3D stage * TEMP_STAGE_STEP +
-> > > +                                                               chip-=
->thresh * TEMP_THRESH_STEP=20
-> > > -
-> > > +                                                               TEMP_=
-STAGE_HYSTERESIS +=20
-> > > TEMP_THRESH_MIN;
-> > > +       }
-> >=20
-> > For my own edification, no change in state means no change in
-> > temperature too, right?
->=20
-> More or less, just no way to estimate exact temperature
-> between stages.
+>> +	CYGNUS_PIN_DESC(0, "ext_device_reset_n", 0, 0, 0),
+>> +	CYGNUS_PIN_DESC(1, "chip_mode0", 0, 0, 0),
+> 
+> ...
+> 
+>> +#define CYGNUS_PIN_GROUP(group_name, off, sh, al)	\
+>> +{							\
+>> +	.name = #group_name"""_grp",			\
+> 
+> Why do we need extra pair of quotes? BTW we can also do
+> 
+> 	.name = __stringify(group_name) "_grp",
+> 
+Okay. I will change to use __stringify. Thanks.
 
-OK.
+>> +	.pins = group_name ## _pins,			\
+>> +	.num_pins = ARRAY_SIZE(group_name ## _pins),	\
+>> +	.mux = {					\
+>> +		.offset = off,				\
+>> +		.shift = sh,				\
+>> +		.alt = al,				\
+>> +	}						\
+>> +}
+> 
+> ...
+> 
+>> +
+>> +static struct pinctrl_ops cygnus_pinctrl_ops = {
+> 
+> const?
+> 
+Yes.
 
->=20
-> >=20
-> > > +
-> > > +       chip->stage =3D stage;
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
->=20
-> <snip>
->=20
-> > > +static int qpnp_tm_probe(struct platform_device *pdev)
-> > > +{
-> > > +       struct qpnp_tm_chip *chip;
-> > > +       struct device_node *node;
-> > > +       u8 type, subtype;
-> > > +       u32 res[2];
-> > > +       int ret, irq;
-> > > +
-> > > +       node =3D pdev->dev.of_node;
-> > > +
-> > > +       chip =3D devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-> > > +       if (!chip)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       dev_set_drvdata(&pdev->dev, chip);
-> > > +
-> > > +       chip->map =3D dev_get_regmap(pdev->dev.parent, NULL);
-> > > +       if (!chip->map)
-> > > +               return -ENXIO;
-> > > +
-> > > +       ret =3D of_property_read_u32_array(node, "reg", res, 2);
-> > > +       if (ret < 0)
-> > > +               return ret;
-> > > +
-> > > +       /* ADC based measurements are optional */
-> > > +       chip->adc =3D iio_channel_get(&pdev->dev, "thermal");
-> > > +       if (PTR_ERR(chip->adc) =3D=3D -EPROBE_DEFER)
-> > > +               return PTR_ERR(chip->adc);
-> > > +
-> > > +       irq =3D platform_get_irq(pdev, 0);
-> > > +       if (irq < 0)
-> > > +               return irq;
-> > > +
-> > > +       chip->base =3D res[0];
-> > > +
-> > > +       ret =3D qpnp_tm_read(chip, QPNP_TM_REG_TYPE, &type);
-> > > +       if (ret < 0) {
-> > > +               dev_err(&pdev->dev, "could not read type\n");
-> > > +               goto fail;
-> > > +       }
-> > > +
-> > > +       ret =3D qpnp_tm_read(chip, QPNP_TM_REG_SUBTYPE, &subtype);
-> > > +       if (ret < 0) {
-> > > +               dev_err(&pdev->dev, "could not read subtype\n");
-> > > +               goto fail;
-> > > +       }
-> > > +
-> > > +       if (type !=3D QPNP_TM_TYPE || subtype !=3D QPNP_TM_SUBTYPE) {
-> > > +               dev_err(&pdev->dev, "invalid type 0x%02x or subtype 0=
-x%02x\n",
-> > > +                       type, subtype);
-> > > +               ret =3D -ENODEV;
-> > > +               goto fail;
-> > > +       }
-> > > +
-> > > +       ret =3D qpnp_tm_init(chip);
-> > > +       if (ret < 0) {
-> > > +               dev_err(&pdev->dev, "init failed\n");
-> > > +               goto fail;
-> > > +       }
-> > > +
-> > > +       chip->tz_dev =3D thermal_zone_of_sensor_register(&pdev->dev, =
-0, chip,
-> > > +                                                       &qpnp_tm_sens=
-or_ops);
-> > > +       if (IS_ERR(chip->tz_dev)) {
-> > > +               dev_err(&pdev->dev, "failed to register sensor\n");
-> > > +               ret =3D PTR_ERR(chip->tz_dev);
-> > > +               goto fail;
-> > > +       }
-> > > +
-> > > +       ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL, qpnp=
-_tm_isr,
-> > > +                                       IRQF_ONESHOT, node->name, chi=
-p);
-> >=20
-> > What if we request this IRQ before registering the of thermal zone
-> > sensor? I believe it makes more sense conceptually, as you mean, you
-> > register into upper layers once your driver is fully ready to do so.
-> >=20
-> > Any objections changing the order?
->=20
-> Sure.
+>> +	.get_groups_count = cygnus_get_groups_count,
+>> +	.get_group_name = cygnus_get_group_name,
+>> +	.get_group_pins = cygnus_get_group_pins,
+>> +	.pin_dbg_show = cygnus_pin_dbg_show,
+>> +	.dt_node_to_map = cygnus_dt_node_to_map,
+>> +	.dt_free_map = pinctrl_utils_dt_free_map,
+>> +};
+>> +
+>> +static int cygnus_get_functions_count(struct pinctrl_dev *pctrl_dev)
+>> +{
+>> +	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
+>> +
+>> +	return pinctrl->num_functions;
+>> +}
+>> +
+>> +static const char *cygnus_get_function_name(struct pinctrl_dev *pctrl_dev,
+>> +					    unsigned selector)
+>> +{
+>> +	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
+>> +
+>> +	return pinctrl->functions[selector].name;
+>> +}
+>> +
+>> +static int cygnus_get_function_groups(struct pinctrl_dev *pctrl_dev,
+>> +				      unsigned selector,
+>> +				      const char * const **groups,
+>> +				      unsigned * const num_groups)
+>> +{
+>> +	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
+>> +
+>> +	*groups = pinctrl->functions[selector].groups;
+>> +	*num_groups = pinctrl->functions[selector].num_groups;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cygnus_pinmux_set(struct cygnus_pinctrl *pinctrl,
+>> +			     const struct cygnus_pin_function *func,
+>> +			     const struct cygnus_pin_group *grp,
+>> +			     struct cygnus_mux_log *mux_log)
+>> +{
+>> +	const struct cygnus_mux *mux = &grp->mux;
+>> +	int i;
+>> +	u32 val, mask = 0x7;
+>> +	unsigned long flags;
+>> +
+>> +	for (i = 0; i < CYGNUS_NUM_IOMUX; i++) {
+>> +		if (mux->offset != mux_log[i].mux.offset ||
+>> +		    mux->shift != mux_log[i].mux.shift)
+>> +			continue;
+>> +
+>> +		/* match found if we reach here */
+>> +
+>> +		/* if this is a new configuration, just do it! */
+>> +		if (!mux_log[i].is_configured)
+>> +			break;
+>> +
+>> +		/*
+>> +		 * IOMUX has been configured previously and one is trying to
+>> +		 * configure it to a different function
+>> +		 */
+>> +		if (mux_log[i].mux.alt != mux->alt) {
+>> +			dev_err(pinctrl->dev,
+>> +				"double configuration error detected!\n");
+>> +			dev_err(pinctrl->dev, "func:%s grp:%s\n",
+>> +				func->name, grp->name);
+>> +			return -EINVAL;
+>> +		} else {
+>> +			/*
+>> +			 * One tries to configure it to the same function.
+>> +			 * Just quit and don't bother
+>> +			 */
+>> +			return 0;
+>> +		}
+>> +	}
+>> +
+>> +	mux_log[i].mux.alt = mux->alt;
+>> +	mux_log[i].is_configured = true;
+>> +
+>> +	spin_lock_irqsave(&pinctrl->lock, flags);
+>> +
+>> +	val = readl(pinctrl->base0 + grp->mux.offset);
+>> +	val &= ~(mask << grp->mux.shift);
+>> +	val |= grp->mux.alt << grp->mux.shift;
+>> +	writel(val, pinctrl->base0 + grp->mux.offset);
+>> +
+>> +	spin_unlock_irqrestore(&pinctrl->lock, flags);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cygnus_pinmux_set_mux(struct pinctrl_dev *pctrl_dev,
+>> +				 unsigned func_select, unsigned grp_select)
+>> +{
+>> +	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
+>> +	const struct cygnus_pin_function *func =
+>> +		&pinctrl->functions[func_select];
+>> +	const struct cygnus_pin_group *grp = &pinctrl->groups[grp_select];
+>> +
+>> +	dev_dbg(pctrl_dev->dev, "func:%u name:%s grp:%u name:%s\n",
+>> +		func_select, func->name, grp_select, grp->name);
+>> +
+>> +	dev_dbg(pctrl_dev->dev, "offset:0x%08x shift:%u alt:%u\n",
+>> +		grp->mux.offset, grp->mux.shift, grp->mux.alt);
+>> +
+>> +	return cygnus_pinmux_set(pinctrl, func, grp, pinctrl->mux_log);
+>> +}
+>> +
+>> +static int cygnus_gpio_request_enable(struct pinctrl_dev *pctrl_dev,
+>> +				      struct pinctrl_gpio_range *range,
+>> +				      unsigned pin)
+>> +{
+>> +	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
+>> +	struct cygnus_gpio_mux *mux = pctrl_dev->desc->pins[pin].drv_data;
+> 
+> const?
+> 
+Yes.
 
+>> +	u32 val;
+>> +	unsigned long flags;
+>> +
+>> +	/* not all pins support GPIO pinmux override */
+>> +	if (!mux->is_supported)
+>> +		return -ENOTSUPP;
+>> +
+>> +	spin_lock_irqsave(&pinctrl->lock, flags);
+>> +
+>> +	val = readl(pinctrl->base1 + mux->offset);
+>> +	val |= 0x3 << mux->shift;
+>> +	writel(val, pinctrl->base1 + mux->offset);
+>> +
+>> +	spin_unlock_irqrestore(&pinctrl->lock, flags);
+>> +
+>> +	dev_dbg(pctrl_dev->dev,
+>> +		"gpio request enable pin=%u offset=0x%x shift=%u\n",
+>> +		pin, mux->offset, mux->shift);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void cygnus_gpio_disable_free(struct pinctrl_dev *pctrl_dev,
+>> +				     struct pinctrl_gpio_range *range,
+>> +				     unsigned pin)
+>> +{
+>> +	struct cygnus_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctrl_dev);
+>> +	struct cygnus_gpio_mux *mux = pctrl_dev->desc->pins[pin].drv_data;
+>> +	u32 val;
+>> +	unsigned long flags;
+>> +
+>> +	if (!mux->is_supported)
+>> +		return;
+>> +
+>> +	spin_lock_irqsave(&pinctrl->lock, flags);
+>> +
+>> +	val = readl(pinctrl->base1 + mux->offset);
+>> +	val &= ~(0x3 << mux->shift);
+>> +	writel(val, pinctrl->base1 + mux->offset);
+>> +
+>> +	spin_unlock_irqrestore(&pinctrl->lock, flags);
+>> +
+>> +	dev_err(pctrl_dev->dev,
+>> +		"gpio disable free pin=%u offset=0x%x shift=%u\n",
+>> +		pin, mux->offset, mux->shift);
+>> +}
+>> +
+>> +static struct pinmux_ops cygnus_pinmux_ops = {
+> 
+> const?
+> 
+Yes.
 
-Good!
+>> +	.get_functions_count = cygnus_get_functions_count,
+>> +	.get_function_name = cygnus_get_function_name,
+>> +	.get_function_groups = cygnus_get_function_groups,
+>> +	.set_mux = cygnus_pinmux_set_mux,
+>> +	.gpio_request_enable = cygnus_gpio_request_enable,
+>> +	.gpio_disable_free = cygnus_gpio_disable_free,
+>> +};
+>> +
+>> +static struct pinctrl_desc cygnus_pinctrl_desc = {
+>> +	.name = "cygnus-pinmux",
+>> +	.pctlops = &cygnus_pinctrl_ops,
+>> +	.pmxops = &cygnus_pinmux_ops,
+>> +};
+>> +
+>> +static int cygnus_mux_log_init(struct cygnus_pinctrl *pinctrl)
+>> +{
+>> +	struct cygnus_mux_log *log;
+>> +	unsigned int i, j;
+>> +
+>> +	pinctrl->mux_log = devm_kcalloc(pinctrl->dev, CYGNUS_NUM_IOMUX,
+>> +					sizeof(struct cygnus_mux_log),
+>> +					GFP_KERNEL);
+>> +	if (!pinctrl->mux_log)
+>> +		return -ENOMEM;
+>> +
+>> +	log = pinctrl->mux_log;
+>> +	for (i = 0; i < CYGNUS_NUM_IOMUX_REGS; i++) {
+>> +		for (j = 0; j < CYGNUS_NUM_MUX_PER_REG; j++) {
+>> +			log = &pinctrl->mux_log[i * CYGNUS_NUM_MUX_PER_REG
+>> +				+ j];
+>> +			log->mux.offset = i * 4;
+>> +			log->mux.shift = j * 4;
+>> +			log->mux.alt = 0;
+>> +			log->is_configured = false;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cygnus_pinmux_probe(struct platform_device *pdev)
+>> +{
+>> +	struct cygnus_pinctrl *pinctrl;
+>> +	struct resource *res;
+>> +	int i, ret;
+>> +	struct pinctrl_pin_desc *pins;
+>> +	unsigned num_pins = ARRAY_SIZE(cygnus_pins);
+>> +
+>> +	pinctrl = devm_kzalloc(&pdev->dev, sizeof(*pinctrl), GFP_KERNEL);
+>> +	if (!pinctrl)
+>> +		return -ENOMEM;
+>> +
+>> +	pinctrl->dev = &pdev->dev;
+>> +	platform_set_drvdata(pdev, pinctrl);
+>> +	spin_lock_init(&pinctrl->lock);
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	pinctrl->base0 = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(pinctrl->base0)) {
+>> +		dev_err(&pdev->dev, "unable to map I/O space\n");
+>> +		return PTR_ERR(pinctrl->base0);
+>> +	}
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>> +	pinctrl->base1 = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(pinctrl->base1)) {
+>> +		dev_err(&pdev->dev, "unable to map I/O space\n");
+>> +		return PTR_ERR(pinctrl->base1);
+>> +	}
+>> +
+>> +	ret = cygnus_mux_log_init(pinctrl);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "unable to initialize IOMUX log\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	pins = devm_kcalloc(&pdev->dev, num_pins, sizeof(*pins), GFP_KERNEL);
+>> +	if (!pins)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < num_pins; i++) {
+>> +		pins[i].number = cygnus_pins[i].pin;
+>> +		pins[i].name = cygnus_pins[i].name;
+>> +		pins[i].drv_data = &cygnus_pins[i].gpio_mux;
+>> +	}
+>> +
+>> +	pinctrl->groups = cygnus_pin_groups;
+>> +	pinctrl->num_groups = ARRAY_SIZE(cygnus_pin_groups);
+>> +	pinctrl->functions = cygnus_pin_functions;
+>> +	pinctrl->num_functions = ARRAY_SIZE(cygnus_pin_functions);
+>> +	cygnus_pinctrl_desc.pins = pins;
+>> +	cygnus_pinctrl_desc.npins = num_pins;
+>> +
+>> +	pinctrl->pctl = pinctrl_register(&cygnus_pinctrl_desc, &pdev->dev,
+>> +			pinctrl);
+>> +	if (!pinctrl->pctl) {
+>> +		dev_err(&pdev->dev, "unable to register Cygnus IOMUX pinctrl\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct of_device_id cygnus_pinmux_of_match[] = {
+>> +	{ .compatible = "brcm,cygnus-pinmux" },
+>> +	{ }
+>> +};
+>> +
+>> +static struct platform_driver cygnus_pinmux_driver = {
+>> +	.driver = {
+>> +		.name = "cygnus-pinmux",
+>> +		.of_match_table = cygnus_pinmux_of_match,
+>> +	},
+>> +	.probe = cygnus_pinmux_probe,
+> 
+> You also need to either provide remove() method or disallow unbinding
+> via sysfs by setting suppress_bind_attrs in platform driver.
+> 
+I do not expect this driver to ever be compiled as module and
+uninstalled at runtime. I'll add .suppress_bind_attrs = true, thanks!
+>> +};
+>> +
+>> +static int __init cygnus_pinmux_init(void)
+>> +{
+>> +	return platform_driver_register(&cygnus_pinmux_driver);
+>> +}
+>> +arch_initcall(cygnus_pinmux_init);
+>> +
+>> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
+>> +MODULE_DESCRIPTION("Broadcom Cygnus IOMUX driver");
+>> +MODULE_LICENSE("GPL v2");
+>> -- 
+>> 1.7.9.5
+>>
+> 
+> Thanks.
+> 
+Thanks for the review!
 
->=20
-> >=20
-> > > +       if (ret < 0)
-> > > +               goto unreg;
-> > > +
-> > > +       return 0;
-> > > +
-> > > +unreg:
-> > > +       thermal_zone_of_sensor_unregister(&pdev->dev, chip->tz_dev);
-> >=20
-> > As mentioned by Stanimir Varban, you may also remove the above, since
-> > the irq is devm.
->=20
-> Sure. s/Varban/Varbanov/ ;-)
-
-Ohh.. my bad. Sorry Varbanov. Fixing next time! :-)
-
->=20
-> Thank you.
-> Ivan
-
-BR,
-
-Eduardo Valentin
-
---gatW/ieO32f1wygP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJU0SD1AAoJEMLUO4d9pOJWf7wIAJq8nCoB1uTfcfG6tzUSO6ck
-SHN8XFwLKUoZuNw/RRZkRaZeDuYEAEpnXVJ0p4reKVnSA/I45SlB7jYW2+u3OFZ9
-tCSW9BUurvaDqM3690NQRs7JQDtx8sKxO/wEDIFOAVyd1Szr8xfJfdDkNwX81e8r
-7jKyVBCBRlWi1pabWPEIFhU8pXbXiSFLMRqaSTfGNT8ea+WLmzXQrKDR2S81u/kz
-HATzLkveEFN0DBT4hIasRP8QRHsaOxVnostI+oTZdPNG3WH7nuPFTUgEzBb/hWMM
-59MDfbUDqgCWwjchTNIDyTYTR20Jrqgu5TvGYZLGH0OAQ+hKjx70SAlaDoWHahA=
-=QxEB
------END PGP SIGNATURE-----
-
---gatW/ieO32f1wygP--
+Ray
