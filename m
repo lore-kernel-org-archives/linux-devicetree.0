@@ -1,61 +1,68 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 13/15] ARM: dts: Exynos4 and Odroid X2/U3 sound device
- nodes update
-Date: Tue, 3 Feb 2015 13:11:27 +0000
-Message-ID: <20150203131127.GM21293@sirena.org.uk>
-References: <1421260962-16892-1-git-send-email-s.nawrocki@samsung.com>
- <1421260962-16892-14-git-send-email-s.nawrocki@samsung.com>
- <20150114195452.GM3043@sirena.org.uk>
- <07a501d03f69$aba222b0$02e66810$@kernel.org>
- <54D0AB30.2010504@samsung.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v3 01/10] ARM: tegra: Set the sound card model that
+ alsaucm expects
+Date: Tue, 3 Feb 2015 14:13:28 +0100
+Message-ID: <CAAObsKCm-9GOvis=MZ-nyA0N+g_ZuWYUfDSdEcVy5p5ykCmkcQ@mail.gmail.com>
+References: <1422442278-10405-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1422442278-10405-2-git-send-email-tomeu.vizoso@collabora.com> <54CFE754.7000500@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MK0knf37bjPWw3rr"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54D0AB30.2010504-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54CFE754.7000500-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2 February 2015 at 22:08, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 01/28/2015 03:50 AM, Tomeu Vizoso wrote:
+>>
+>> Patches are on its way to add a config file to alsaucm for the Nyan
+>> boards. Use the same card ID that alsaucm will expect.
+>
+>
+>> diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts
+>> b/arch/arm/boot/dts/tegra124-nyan-big.dts
+>
+>
+>>         sound {
+>> -               compatible = "nvidia,tegra-audio-max98090-nyan-big",
+>> +               compatible = "nvidia,tegra-audio-max98090-nyan",
+>>                              "nvidia,tegra-audio-max98090";
+>
+>
+> I'm not convinced that removing the board-specific compatible value is a
+> great idea. What if we find we need to distinguish between different boards
+> that use this same binding in the future. That situation is exactly why we
+> have board-/SoC-specific values in compatible even if we don't immediately
+> use them.
 
---MK0knf37bjPWw3rr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I understand the need of naming each component variant so they can be
+distinguished in the future, but in this case it's the exact same hw.
 
-On Tue, Feb 03, 2015 at 12:04:16PM +0100, Sylwester Nawrocki wrote:
+>> -               nvidia,model = "Acer Chromebook 13";
+>> +               nvidia,model = "GoogleNyan";
+>
+>
+> I believe this also technically breaks ABI, since some user-space tools use
+> the model to look up saved state. Can we not leave this as is, and just have
+> the UCM files know about both names?
 
-> >> Sorry, I should've said - I applied the ASoC patches, not these.
+Well, "A13" isn't a great card id. Given that there's no users yet, I
+would prefer to take this chance to put a sane value in there. Btw,
+alsa-lib has now a UCM config for this and it uses the GoogleNyan card
+id (has been picked up already by OpenSUSE).
 
-> > Shall I take 13 to 15 DT patches in Samsung tree?
+So in this case, I think it would be good to change the card id now
+before people start to actually use it.
 
-> Patches 13, 14 use macro definitions which are added in patch which is
-> already in Mark's sound tree ("ASoC: samsung: i2s: Add clk provider DT
-> binding documentation") [1]. We would need to consider that to avoid
-> build breaks.
+Regards,
 
-OK, I can apply them if people want but I'd need a resend - I discarded
-them since they'd normally go via the arch tree.
+Tomeu
 
---MK0knf37bjPWw3rr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU0Mj+AAoJECTWi3JdVIfQJcYH/j7G75SDZ4YqBvg2mg+eUE1i
-dC5Sio9hI4pPqv/f5EJNGLVecLd3hd111gbmMz5t9ggAjzWTayUSLMOpkiNH/ld4
-C6gncG6apYtfTi4hYGnEUx1DlokxIHxQ1obABiClzJrPpLjK0Gqhr8YfGTDlYhud
-nqJiY8gH81YJPkGQoACjYxnB+kUSiDvzQ9Q3YHMXBTZR8UgMF71gff3Sv2o33HEx
-TcEhA9BoBTbgodFamepBpN4Qan6CvwOU7ZEPoHMFa5HK5T639qKgROFm35J+xTSv
-v4a4L9A3ekK4ZRYb2QUR0NINgVV3bEhiz5rPNVhuMmpQa2Vk8LwD9WlEdHO1ULY=
-=gr3c
------END PGP SIGNATURE-----
-
---MK0knf37bjPWw3rr--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Aside from that, I think the series looks OK at a quick glance.
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
