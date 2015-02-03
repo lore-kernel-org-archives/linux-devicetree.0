@@ -1,79 +1,98 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: qcom: Add SPMI PMIC Arbiter nodes for APQ8084 and MSM8974
-Date: Tue,  3 Feb 2015 14:17:58 +0200
-Message-ID: <1422965880-11047-2-git-send-email-iivanov@mm-sol.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [PATCH 2/3] ARM: dts: qcom: Add 8x74 chipset SPMI PMIC's nodes
+Date: Tue,  3 Feb 2015 14:17:59 +0200
+Message-ID: <1422965880-11047-3-git-send-email-iivanov@mm-sol.com>
 References: <1422965880-11047-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422965880-11047-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1422965880-11047-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add SPMI PMIC Arbiter configuration nodes for APQ8084 and MSM8974.
+PM8841 and PM8941 have 2 SPMI devices per physical package.
+Add their configuration nodes and include them in boards
+which are using 8x74 based chipset.
 
-Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
 ---
- arch/arm/boot/dts/qcom-apq8084.dtsi | 16 ++++++++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi | 16 ++++++++++++++++
- 2 files changed, 32 insertions(+)
+ arch/arm/boot/dts/qcom-apq8074-dragonboard.dts        |  2 ++
+ arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts |  2 ++
+ arch/arm/boot/dts/qcom-pm8841.dtsi                    | 18 ++++++++++++++++++
+ arch/arm/boot/dts/qcom-pm8941.dtsi                    | 18 ++++++++++++++++++
+ 4 files changed, 40 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-pm8841.dtsi
+ create mode 100644 arch/arm/boot/dts/qcom-pm8941.dtsi
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index 1f130bc..dbedf64 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -226,5 +226,21 @@
- 			clock-names = "core", "iface";
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+index 4737049..d484d08 100644
+--- a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
++++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+@@ -1,4 +1,6 @@
+ #include "qcom-msm8974.dtsi"
++#include "qcom-pm8841.dtsi"
++#include "qcom-pm8941.dtsi"
+
+ / {
+ 	model = "Qualcomm APQ8074 Dragonboard";
+diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+index cccc21b..bd35b06 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+@@ -1,4 +1,6 @@
+ #include "qcom-msm8974.dtsi"
++#include "qcom-pm8841.dtsi"
++#include "qcom-pm8941.dtsi"
+
+ / {
+ 	model = "Sony Xperia Z1";
+diff --git a/arch/arm/boot/dts/qcom-pm8841.dtsi b/arch/arm/boot/dts/qcom-pm8841.dtsi
+new file mode 100644
+index 0000000..73813cc
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-pm8841.dtsi
+@@ -0,0 +1,18 @@
++#include <dt-bindings/spmi/spmi.h>
 +
-+		spmi_bus: spmi@fc4cf000 {
-+			compatible = "qcom,spmi-pmic-arb";
-+			reg-names = "core", "intr", "cnfg";
-+			reg = <0xfc4cf000 0x1000>,
-+			      <0xfc4cb000 0x1000>,
-+			      <0xfc4ca000 0x1000>;
-+			interrupt-names = "periph_irq";
-+			interrupts = <0 190 0>;
-+			qcom,ee = <0>;
-+			qcom,channel = <0>;
-+			#address-cells = <2>;
-+			#size-cells = <0>;
-+			interrupt-controller;
-+			#interrupt-cells = <4>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index e265ec1..2d11641 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -247,5 +247,21 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
++&spmi_bus {
 +
-+		spmi_bus: spmi@fc4cf000 {
-+			compatible = "qcom,spmi-pmic-arb";
-+			reg-names = "core", "intr", "cnfg";
-+			reg = <0xfc4cf000 0x1000>,
-+			      <0xfc4cb000 0x1000>,
-+			      <0xfc4ca000 0x1000>;
-+			interrupt-names = "periph_irq";
-+			interrupts = <0 190 0>;
-+			qcom,ee = <0>;
-+			qcom,channel = <0>;
-+			#address-cells = <2>;
-+			#size-cells = <0>;
-+			interrupt-controller;
-+			#interrupt-cells = <4>;
-+		};
- 	};
- };
++	usid4: pm8841@4 {
++		compatible = "qcom,spmi-pmic";
++		reg = <0x4 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	usid5: pm8841@5 {
++		compatible = "qcom,spmi-pmic";
++		reg = <0x5 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
+diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
+new file mode 100644
+index 0000000..24c5088
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
+@@ -0,0 +1,18 @@
++#include <dt-bindings/spmi/spmi.h>
++
++&spmi_bus {
++
++	usid0: pm8941@0 {
++		compatible ="qcom,spmi-pmic";
++		reg = <0x0 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	usid1: pm8941@1 {
++		compatible ="qcom,spmi-pmic";
++		reg = <0x1 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
 --
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
