@@ -1,114 +1,73 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/2] clk: qcom: gcc-msm8960: add child devices support.
-Date: Tue, 03 Feb 2015 10:44:05 +0000
-Message-ID: <54D0A675.7040801@linaro.org>
-References: <1422613004-29802-1-git-send-email-srinivas.kandagatla@linaro.org>	<1422613060-29886-1-git-send-email-srinivas.kandagatla@linaro.org> <CAJAp7Oi_nxEyBZ0bTaQr6d-8sy8M4dFLJxOWCrniX6Pd9+_AGQ@mail.gmail.com> <54CBC82D.2050003@linaro.org> <54CBF4B4.6080208@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
+Date: Tue, 03 Feb 2015 13:48:41 +0300
+Message-ID: <54D0A789.5070707@cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com> <1608366.HtA9yBksdO@wasted.cogentembedded.com> <20150202110557.GC7459@leverpostej> <54CFE4CE.5090406@cogentembedded.com> <20150203003610.GA17629@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54CBF4B4.6080208@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>
-Cc: Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, edubezval@gmail.com, nrajan@codeaurora.com, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150203003610.GA17629-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
+On 2/3/2015 3:36 AM, Simon Horman wrote:
 
-On 30/01/15 21:16, Stephen Boyd wrote:
-> On 01/30/15 10:06, Srinivas Kandagatla wrote:
->>
->>
->> On 30/01/15 16:57, Bjorn Andersson wrote:
->>> On Fri, Jan 30, 2015 at 2:17 AM, Srinivas Kandagatla
->>> <srinivas.kandagatla@linaro.org> wrote:
->>>> This patch adds support to add child devices to gcc as some of the
->>>> registers mapped by gcc are used by drivers like thermal sensors.
->>>>
->>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>> ---
->>>>    drivers/clk/qcom/gcc-msm8960.c | 10 +++++++++-
->>>>    1 file changed, 9 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/clk/qcom/gcc-msm8960.c
->>>> b/drivers/clk/qcom/gcc-msm8960.c
->>>> index 0cd3e26..3ba77c5 100644
->>>> --- a/drivers/clk/qcom/gcc-msm8960.c
->>>> +++ b/drivers/clk/qcom/gcc-msm8960.c
->>>> @@ -15,6 +15,7 @@
->>>>    #include <linux/bitops.h>
->>>>    #include <linux/err.h>
->>>>    #include <linux/platform_device.h>
->>>> +#include <linux/of_platform.h>
->>>>    #include <linux/module.h>
->>>>    #include <linux/of.h>
->>>>    #include <linux/of_device.h>
->>>> @@ -3658,6 +3659,7 @@ static int gcc_msm8960_probe(struct
->>>> platform_device *pdev)
->>>>           struct clk *clk;
->>>>           struct device *dev = &pdev->dev;
->>>>           const struct of_device_id *match;
->>>> +       int ret;
->>>>
->>>>           match = of_match_device(gcc_msm8960_match_table, &pdev->dev);
->>>>           if (!match)
->>>> @@ -3677,12 +3679,18 @@ static int gcc_msm8960_probe(struct
->>>> platform_device *pdev)
->>>>           if (IS_ERR(clk))
->>>>                   return PTR_ERR(clk);
->>>>
->>>> -       return qcom_cc_probe(pdev, match->data);
->>>> +       ret = qcom_cc_probe(pdev, match->data);
->>>> +       if (ret)
->>>> +               return ret;
+>>>> Add the initial device tree for the R8A7794 SoC based SILK low cost board.
+>>>> SCIF2 serial port support is included, so that the serial console can work.
+
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+
+>> [...]
+
+>>>> Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
+>>>> ===================================================================
+>>>> --- /dev/null
+>>>> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+>>>> @@ -0,0 +1,41 @@
+>>>> +/*
+>>>> + * Device Tree Source for the SILK board
+>>>> + *
+>>>> + * Copyright (C) 2014 Renesas Electronics Corporation
+>>>> + * Copyright (C) 2014-2015 Renesas Solutions Corp.
+>>>> + * Copyright (C) 2014-2015 Cogent Embedded, Inc.
+>>>> + *
+>>>> + * This file is licensed under the terms of the GNU General Public License
+>>>> + * version 2.  This program is licensed "as is" without any warranty of any
+>>>> + * kind, whether express or implied.
+>>>> + */
 >>>> +
->>>> +       return of_platform_populate(pdev->dev.of_node, NULL, NULL,
->>>> &pdev->dev);
->>>
->>> How about calling of_syscon_register() instead? That would give us a
->>> handle to a regmap that can be consumed in e.g. the thermal driver.
->>
->> Two things:
->> - Are you sure, this looks like of_syscon_register() is a static function
->> - gcc node would be required to add "syscon" compatible
->>
->> Unless am missing some patches, Am not sure if going via syscon is
->> right thing here?
->>
->> Stephen Any comments?
->
-> I don't understand any of this. We should be making a specific tsens
-> device directly in the gcc driver probe and not doing any sort of
-> of_platform_populate(). This is what I had, but it probably could be
-> done better so that we can assign the struct device's of_node pointer
-> before registering on the platform bus.
->
->          platform_device_register_data(&pdev->dev, "tsens8960-tm", -1,
->                          &pdev->dev.of_node, sizeof(&pdev->dev.of_node));
->
-Yes this would work too, What are the advantages of doing this way over 
-the other? Except the fact that gcc and tsens do not have parent child 
-relation in hw p.o.v .
+>>>> +/dts-v1/;
+>>>> +#include "r8a7794.dtsi"
+>>>> +
+>>>> +/ {
+>>>> +	model = "SILK";
 
-If I get all this correct, we do not want to add a parent child 
-hierarchy in DT, but we are Ok doing that inside the gcc driver, that 
-seem not correct.
+>>> Shouldn't that have a "Renesas" prefix or something like that?
 
-TBH, All this looks bit fiddly, for below reasons
-- we re going to have a consolidated bindings for two different drivers 
-gcc and tsens.
-- Passing of_node as data to other drivers.
+>>     Historically. no SH-Mobile .dts has used the vendor name in the "model"
+>> prop. I defer the decision to Simon but I think we should be at least
+>> consistent.
 
-On the other hand can't we move a level up and make the common resource 
-a syscon node and let both gcc and tsens drivers access it?
-Which I think tsens originally attempted doing :-)
+> They are also my thoughts (except the bit about deferring to myself).
 
-??
+> If there is a good motivation for a Renesas prefix then that is fine by me.
+> But in that case it seems that it would be appropriate to update
+> the existing renesas boards too.
 
---srini
+> The only thing that stood out to me about "SILK" was that unlike
+> other renesas boards names in .dtsi files it is all-capitals.
+> Its not a bit deal but as we are on the topic: is that intentional?
 
+    Yes, it is all uppercase. See e.g. http://www.elinux.org/R-Car/Boards/SILK.
 
+WBR, Sergei
 
-> Then if we need to add any properties like #sensor-cells or coefficients
-> the tsens driver can use the same of_node that gcc is using.
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
