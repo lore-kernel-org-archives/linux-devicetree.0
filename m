@@ -1,62 +1,154 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v5 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Tue, 03 Feb 2015 16:25:11 +0100
-Message-ID: <4344803.3qsb2TUUaZ@wuerfel>
-References: <1422955310-6542-1-git-send-email-Vincent.Yang@tw.fujitsu.com> <CAJe_ZhdL6=4bMPRitFeCqrO2jeYQuDa9071estTBd3PTbmURYA@mail.gmail.com> <20150203144611.GS8656@n2100.arm.linux.org.uk>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: Re: [PATCH v3] ahci_xgene: Fix the dma state machine lockup for the
+ ATA_CMD_SMART PIO mode command.
+Date: Tue, 3 Feb 2015 21:42:48 +0530
+Message-ID: <CAOHikRCnDTQXrfZB6yYSvFpDpiRi68yM2WS8nw5PB0UEM9ZQZw@mail.gmail.com>
+References: <1422900439-5541-1-git-send-email-stripathi@apm.com>
+	<1422900439-5541-2-git-send-email-stripathi@apm.com>
+	<54CFCC28.6050609@cogentembedded.com>
+	<CAOHikRBMPbyS0q6814+Xkez7ToBwrC7Yzp4sy=NMmPDg-5wCBA@mail.gmail.com>
+	<54CFD38F.2060803@cogentembedded.com>
+	<CAOHikRDZ-xxBxT_jr44HmKiDHfn2Q1K0ihbNDH-6LvYaq08=gw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150203144611.GS8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <CAOHikRDZ-xxBxT_jr44HmKiDHfn2Q1K0ihbNDH-6LvYaq08=gw@mail.gmail.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 February 2015 14:46:11 Russell King - ARM Linux wrote:
-> On Tue, Feb 03, 2015 at 08:09:34PM +0530, Jassi Brar wrote:
-> > On 3 February 2015 at 18:02, Russell King - ARM Linux
-> > <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> > > On Tue, Feb 03, 2015 at 05:29:23PM +0800, Vincent Yang wrote:
-> > >> +static int mhu_send_data(struct mbox_chan *chan, void *data)
-> > >> +{
-> > >> +     struct mhu_link *mlink = chan->con_priv;
-> > >> +
-> > >> +     pr_debug("%s:%d\n", __func__, __LINE__);
-> > >> +     if (!mhu_last_tx_done(chan)) {
-> > >> +             dev_err(chan->mbox->dev, "Last TX(%d) pending!\n", mlink->irq);
-> > >> +             return -EBUSY;
-> > >> +     }
-> > >> +
-> > >> +     writel_relaxed((u32)data, mlink->tx_reg + INTR_SET_OFS);
-> > >
-> > > Doesn't that cause a GCC warning?
-> > >
-> > I don't see any, but I'll drop the cast.
-> 
-> A cast is probably needed.  You're right that GCC no longer warns about
-> this - I'm pretty sure it used to complain about casting pointers to
-> ints, and we used to need to cast to "unsigned long" first.
+   Ugh, please avoid using HTML when posting to the lists hosted on
+vger.kernel.org -- it's configured to ignore such mails AFAIK.
+Yeah forgot to set the plain text mode. Sorry for that
 
-It definitely warns about converting an u64 to pointer or back,
-and it warns on 64-bit machines about this conversion.
+>>>     This patch addresses the issue with ATA_CMD_SMART pio mode
+>>>     command for enumeration and device detection with ATA devices.
+>>>     The X-Gene AHCI controller has an errata in which it cannot clear
+>>>     the BSY bit after the PIO setup FIS. The dma state machine enters
 
-On a related note, I wonder why the driver actually converts a pointer to
-int. I believe we have discussed this in the past but don't remember the
-outcome. I had expected to see here something like:
 
-static int mhu_send_data(struct mbox_chan *chan, void *data)
-{
-	struct mhu_link *mlink = chan->con_priv;
-	u32 *arg = data;
+>>     Hum, if this happens after every PIO command (PIO setup FISes are not
+>> specific to the command, right?), perhaps it would make more sense to record
+>> the *protocol* used by the last command?
 
-	writel_relaxed(*arg, mlink->tx_reg + INTR_SET_OFS);
-}
 
-i.e. dereferencing the pointer instead of using the actual value.
+> No it happens for IDENTIFY DEVICE, ATA_CMD_PACKET and ATA_CMD_SMART commands .
+> It is actually the commands associated with a BSY bit clearing.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+   I don't understand that -- BSY bit is cleared for *every* command,
+either at the end of it, or along with setting the DRQ bit for PIO
+data transfer.
+BSY bit is cleared after the end of these commands by the controller.
+So due to the bug it doesn't clear it. When the DMA commands is issued
+, it check for the BSY bit cleared or not and finds not cleared and
+results in CMFatalErrorUpdate  and hangs.
+
+Ping ?? Any problem with this last posted version  Actually Mark from
+redhat reported this issue while using smartctl and we found that
+ATA_CMD_SMART also has BSY bit not clearing issue..
+
+On Tue, Feb 3, 2015 at 1:18 AM, Suman Tripathi <stripathi@apm.com> wrote:
+>    Ugh, please avoid using HTML when posting to the lists hosted on
+> vger.kernel.org -- it's configured to ignore such mails AFAIK.
+> Yeah forgot to set the plain text mode. Sorry for that
+>
+>>>>     This patch addresses the issue with ATA_CMD_SMART pio mode
+>>>>     command for enumeration and device detection with ATA devices.
+>>>>     The X-Gene AHCI controller has an errata in which it cannot clear
+>>>>     the BSY bit after the PIO setup FIS. The dma state machine enters
+>
+>
+>>>     Hum, if this happens after every PIO command (PIO setup FISes are not
+>>> specific to the command, right?), perhaps it would make more sense to record
+>>> the *protocol* used by the last command?
+>
+>
+>> No it happens for IDENTIFY DEVICE, ATA_CMD_PACKET and ATA_CMD_SMART commands .
+>> It is actually the commands associated with a BSY bit clearing.
+>
+>
+>    I don't understand that -- BSY bit is cleared for *every* command,
+> either at the end of it, or along with setting the DRQ bit for PIO
+> data transfer.
+> BSY bit is cleared after the end of these commands by the controller.
+> So due to the bug it doesn't clear it. When the DMA commands is issued
+> , it check for the BSY bit cleared or not and finds not cleared and
+> results in CMFatalErrorUpdate  and hangs.
+>
+>>>>     CMFatalErrorUpdate state and locks up. It is the same issue as
+>>>>     in the commit 2a0bdff6b958d1b2523d2754b6cd5e__0ea4053016 (ahci-xgene:
+>>>>     fix the dma state machine lockup for the IDENTIFY DEVICE PIO mode
+>>>>     command).
+>
+>
+>>> [...]
+>
+>
+>>>>     Signed-off-by: Suman Tripathi <stripathi@apm.com <mailto:stripathi@apm.com>>
+>>>>     Reported-by:   Mark Langsdorf <mlangsdo@redhat.com
+>>>>     <mailto:mlangsdo@redhat.com>>
+>>>>
+>
+> MBR, Sergei
+>
+> On Tue, Feb 3, 2015 at 1:14 AM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+>> On 02/02/2015 10:37 PM, Suman Tripathi wrote:
+>>
+>>    Ugh, please avoid using HTML when posting to the lists hosted on
+>> vger.kernel.org -- it's configured to ignore such mails AFAIK.
+>>
+>>>>>     This patch addresses the issue with ATA_CMD_SMART pio mode
+>>>>>     command for enumeration and device detection with ATA devices.
+>>>>>     The X-Gene AHCI controller has an errata in which it cannot clear
+>>>>>     the BSY bit after the PIO setup FIS. The dma state machine enters
+>>
+>>
+>>>>     Hum, if this happens after every PIO command (PIO setup FISes are not
+>>>> specific to the command, right?), perhaps it would make more sense to
+>>>> record
+>>>> the *protocol* used by the last command?
+>>
+>>
+>>> No it happens for IDENTIFY DEVICE, ATA_CMD_PACKET and ATA_CMD_SMART
+>>> commands .
+>>> It is actually the commands associated with a BSY bit clearing.
+>>
+>>
+>>    I don't understand that -- BSY bit is cleared for *every* command, either
+>> at the end of it, or along with setting the DRQ bit for PIO data transfer.
+>>
+>>>>>     CMFatalErrorUpdate state and locks up. It is the same issue as
+>>>>>     in the commit 2a0bdff6b958d1b2523d2754b6cd5e__0ea4053016
+>>>>> (ahci-xgene:
+>>>>>     fix the dma state machine lockup for the IDENTIFY DEVICE PIO mode
+>>>>>     command).
+>>
+>>
+>>>> [...]
+>>
+>>
+>>>>>     Signed-off-by: Suman Tripathi <stripathi@apm.com
+>>>>> <mailto:stripathi@apm.com>>
+>>>>>     Reported-by:   Mark Langsdorf <mlangsdo@redhat.com
+>>>>>     <mailto:mlangsdo@redhat.com>>
+>>>>>
+>>
+>> MBR, Sergei
+>>
+>
+>
+>
+> --
+> Thanks,
+> with regards,
+> Suman Tripathi
+
+
+
+-- 
+Thanks,
+with regards,
+Suman Tripathi
