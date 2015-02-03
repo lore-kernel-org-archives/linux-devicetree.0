@@ -1,58 +1,55 @@
 From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH_V4 1/3] dt: usb: jz4740: Add DT binding document for OHCI
-Date: Tue, 3 Feb 2015 10:53:26 +0000
-Message-ID: <54D0A8A6.5040805@imgtec.com>
-References: <1422958640-25723-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422958640-25723-2-git-send-email-Zubair.Kakakhel@imgtec.com> <54D0A3C4.6010100@metafoo.de>
+Subject: [PATCH_V4 0/3] sound:soc: jz4740: Add DT, dynamic sampling
+Date: Tue, 3 Feb 2015 10:55:56 +0000
+Message-ID: <1422960959-40403-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54D0A3C4.6010100@metafoo.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, stern@rowland.harvard.edu
-Cc: gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: tiwai@suse.de, perex@perex.cz
+Cc: broonie@kernel.org, lgirdwood@gmail.com, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 03/02/15 10:32, Lars-Peter Clausen wrote:
-> On 02/03/2015 11:17 AM, Zubair Lutfullah Kakakhel wrote:
-> [...]
->> V4 Changes
->> Removed clock binding because of pending work in clock tree. Will add
->> binding later. Rather than introduce a bad binding now and change later.
-> 
-> But this patch is introducing a bad binding. The part needs the clock to work. The binding you are specifying right now says that it works fine without any clocks.
+Here are a few simple patches for the jz4740.
 
-Facing a chicken and egg problem with these patches here..
+First adds dynamic sampling support to jz4740-i2s.
+Then two to add a simple binding and DT support.
+Then a patch to set the clock rate for i2s.
 
-When the new clock driver gets in we can add the correct clock binding and replace
-devm_clk_get(&pdev->dev, "uhc"); with devm_clk_get(&pdev->dev, NULL);
+These are in preparation for jz4780 and ci20 later on.
 
-Specifying the current binding got NAKed by Arnd who mentioned that clock names shouldn't be needed as required properties.
-And even if needed, then it shouldn't be "uhc" and more close to what other ohci drivers have.
+Patches are based on 3.19-rc7. Quite disjoint and stay within jz4740 
+so should apply easily on other trees.
 
-Hence rather than bad binding now, we'll add a binding later..
+If you would like to have them rebased to a different tree, please tell.
 
-> 
->> [...]
->> +Example for jz4740:
->> +
->> +/ {
->> +    ohci: jz4780-ohci@0x134a0000 {
-> 
-> s/jz4780/jz4740
+Thank-you
 
-Thanks
+V4 changes: 
+Added Acked-by: Lars-Peter Clausen <lars@metafoo.de> 
+Rebased on 3.19-rc7
+Removed patch 4 which was redundant
 
-ZubairLK
+V3 changes:
+Added dma binding to example but forgot to put it in required properties.
 
-> 
->> +        compatible = "ingenic,jz4740-ohci";
->> +        reg = <0x134a0000 0x10000>;
->> +
->> +        interrupts = <5>;
->> +    };
->> +};
->> +
->>
-> 
+V2 changes: 
+Removed a redundant #define
+Added #ifdef CONFIG_OF
+Added dma in binding document
+Removed a redundant call to clk_prepare_enable
+
+Zubair Lutfullah Kakakhel (3):
+  sound: soc: jz4740: Add dynamic sampling rate support to jz4740-i2s
+  dt: sound: jz4740: Add binding documentation for jz4740-i2s
+  sound: soc: jz4740: Add DT support to jz4740-i2s driver
+
+ .../bindings/sound/ingenic,jz4740-i2s.txt          | 23 ++++++++++++++++++++++
+ sound/soc/jz4740/jz4740-i2s.c                      | 21 +++++++++++++++++++-
+ 2 files changed, 43 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
+
+-- 
+1.9.1
