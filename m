@@ -1,105 +1,139 @@
-From: =?UTF-8?Q?Beno=C3=AEt_Th=C3=A9baudeau?=
-	<benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] ASoC: tlv320aic3x: Add support for tlv320aic3104
-Date: Tue, 3 Feb 2015 23:25:14 +0100
-Message-ID: <CA+sos78ar+MX2CvrjtzYN9MvtO9g=upMuOScXuXa2=zQ81qQwQ@mail.gmail.com>
-References: <54CF2CDA.3060607@ti.com> <1422888485-13626-1-git-send-email-jsarha@ti.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: [PATCH] powerpc/dts: Remove B4860 emulator support
+Date: Tue, 3 Feb 2015 17:16:48 -0600
+Message-ID: <1423005408-6103-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422888485-13626-1-git-send-email-jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alsa-devel <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, wlear-uoOHlzqel7feqrA4Bvp/NA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: scottwood@Freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
+Cc: Emil Medve <Emilian.Medve@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Jyri Sarha,
-
-Sorry to come late.
-
-On Mon, Feb 2, 2015 at 3:48 PM, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> wrote:
-[...]
-> diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320=
-aic3x.c
-> index b7ebce0..cb92cdb 100644
-> --- a/sound/soc/codecs/tlv320aic3x.c
-> +++ b/sound/soc/codecs/tlv320aic3x.c
-[...]
-> @@ -550,6 +575,22 @@ static const struct snd_kcontrol_new aic3x_right=
-_pga_mixer_controls[] =3D {
->         SOC_DAPM_SINGLE_AIC3X("Mic3R Switch", MIC3LR_2_RADC_CTRL, 0, =
-1, 1),
->  };
->
-> +/* Left PGA Mixer for tlv320aic3104 */
-> +static const struct snd_kcontrol_new aic3104_left_pga_mixer_controls=
-[] =3D {
-> +       SOC_DAPM_SINGLE_AIC3X("Line1L Switch", LINE1L_2_LADC_CTRL, 3,=
- 1, 1),
-> +       SOC_DAPM_SINGLE_AIC3X("Line1R Switch", LINE1R_2_LADC_CTRL, 3,=
- 1, 1),
-> +       SOC_DAPM_SINGLE_AIC3X("Mic2L Switch", MIC3LR_2_LADC_CTRL, 4, =
-1, 1),
-> +       SOC_DAPM_SINGLE_AIC3X("Mic2R Switch", MIC3LR_2_LADC_CTRL, 0, =
-1, 1),
-> +};
-> +
-> +/* Right PGA Mixer for tlv320aic3104 */
-> +static const struct snd_kcontrol_new aic3104_right_pga_mixer_control=
-s[] =3D {
-> +       SOC_DAPM_SINGLE_AIC3X("Line1R Switch", LINE1R_2_RADC_CTRL, 3,=
- 1, 1),
-> +       SOC_DAPM_SINGLE_AIC3X("Line1L Switch", LINE1L_2_RADC_CTRL, 3,=
- 1, 1),
-> +       SOC_DAPM_SINGLE_AIC3X("Mic2L Switch", MIC3LR_2_RADC_CTRL, 4, =
-1, 1),
-> +       SOC_DAPM_SINGLE_AIC3X("Mic2R Switch", MIC3LR_2_RADC_CTRL, 0, =
-1, 1),
-> +};
-> +
-
-This part is wrong. All these controls should be turned into TLVs.
-Otherwise, because of the reset values of these registers, the
-reserved value 0b1110 is used for the corresponding bit-fields if
-their lsb is cleared using the controls above.
-
-Generally speaking, you have tracked reserved registers, but you
-should also track reserved values.
-
->  /* Left Line1 Mux */
->  static const struct snd_kcontrol_new aic3x_left_line1l_mux_controls =
-=3D
->  SOC_DAPM_ENUM("Route", aic3x_line1l_2_l_enum);
-[...]
-> @@ -839,6 +890,72 @@ static const struct snd_soc_dapm_route intercon[=
-] =3D {
-[...]
-> +/* For other than tlv320aic3104 */
-
-Typo above: not "other than" here.
-
-> +static const struct snd_soc_dapm_route intercon_extra_3104[] =3D {
-> +       /* Left Input */
-> +       {"Left PGA Mixer", "Mic2L Switch", "MIC2L"},
-> +       {"Left PGA Mixer", "Mic2R Switch", "MIC2R"},
-> +
-> +       /* Right Input */
-> +       {"Right PGA Mixer", "Mic2L Switch", "MIC2L"},
-> +       {"Right PGA Mixer", "Mic2R Switch", "MIC2R"},
-> +};
-> +
->  static const struct snd_soc_dapm_route intercon_mono[] =3D {
->         /* Mono Output */
->         {"Mono Mixer", "Line2L Bypass Switch", "Left Line2L Mux"},
-[...]
-
-The rest is good.
-
-Best regards,
-Beno=C3=AEt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogRW1pbCBNZWR2ZSA8RW1pbGlhbi5NZWR2ZUBmcmVlc2NhbGUuY29tPgoKUHJvYmFibHkg
+d2Ugc2hvdWxkIGhhdmUgbm90IHVwc3RyZWFtZWQgdGhpcyBpbiB0aGUgZmlyc3QgcGxhY2UKClNp
+Z25lZC1vZmYtYnk6IEVtaWwgTWVkdmUgPEVtaWxpYW4uTWVkdmVARnJlZXNjYWxlLmNvbT4KLS0t
+CiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvYjQ4NjBlbXUuZHRzIHwgMjIzIC0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAyMjMgZGVsZXRpb25zKC0p
+CiBkZWxldGUgbW9kZSAxMDA2NDQgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2I0ODYwZW11LmR0cwoK
+ZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9iNDg2MGVtdS5kdHMgYi9hcmNoL3Bv
+d2VycGMvYm9vdC9kdHMvYjQ4NjBlbXUuZHRzCmRlbGV0ZWQgZmlsZSBtb2RlIDEwMDY0NAppbmRl
+eCAyYWE1Y2QzLi4wMDAwMDAwCi0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9iNDg2MGVtdS5k
+dHMKKysrIC9kZXYvbnVsbApAQCAtMSwyMjMgKzAsMCBAQAotLyoKLSAqIEI0ODYwIGVtdWxhdG9y
+IERldmljZSBUcmVlIFNvdXJjZQotICoKLSAqIENvcHlyaWdodCAyMDEzIEZyZWVzY2FsZSBTZW1p
+Y29uZHVjdG9yIEluYy4KLSAqCi0gKiBSZWRpc3RyaWJ1dGlvbiBhbmQgdXNlIGluIHNvdXJjZSBh
+bmQgYmluYXJ5IGZvcm1zLCB3aXRoIG9yIHdpdGhvdXQKLSAqIG1vZGlmaWNhdGlvbiwgYXJlIHBl
+cm1pdHRlZCBwcm92aWRlZCB0aGF0IHRoZSBmb2xsb3dpbmcgY29uZGl0aW9ucyBhcmUgbWV0Ogot
+ICogICAgICogUmVkaXN0cmlidXRpb25zIG9mIHNvdXJjZSBjb2RlIG11c3QgcmV0YWluIHRoZSBh
+Ym92ZSBjb3B5cmlnaHQKLSAqICAgICAgIG5vdGljZSwgdGhpcyBsaXN0IG9mIGNvbmRpdGlvbnMg
+YW5kIHRoZSBmb2xsb3dpbmcgZGlzY2xhaW1lci4KLSAqICAgICAqIFJlZGlzdHJpYnV0aW9ucyBp
+biBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0Ci0gKiAgICAg
+ICBub3RpY2UsIHRoaXMgbGlzdCBvZiBjb25kaXRpb25zIGFuZCB0aGUgZm9sbG93aW5nIGRpc2Ns
+YWltZXIgaW4gdGhlCi0gKiAgICAgICBkb2N1bWVudGF0aW9uIGFuZC9vciBvdGhlciBtYXRlcmlh
+bHMgcHJvdmlkZWQgd2l0aCB0aGUgZGlzdHJpYnV0aW9uLgotICogICAgICogTmVpdGhlciB0aGUg
+bmFtZSBvZiBGcmVlc2NhbGUgU2VtaWNvbmR1Y3RvciBub3IgdGhlCi0gKiAgICAgICBuYW1lcyBv
+ZiBpdHMgY29udHJpYnV0b3JzIG1heSBiZSB1c2VkIHRvIGVuZG9yc2Ugb3IgcHJvbW90ZSBwcm9k
+dWN0cwotICogICAgICAgZGVyaXZlZCBmcm9tIHRoaXMgc29mdHdhcmUgd2l0aG91dCBzcGVjaWZp
+YyBwcmlvciB3cml0dGVuIHBlcm1pc3Npb24uCi0gKgotICoKLSAqIEFMVEVSTkFUSVZFTFksIHRo
+aXMgc29mdHdhcmUgbWF5IGJlIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUKLSAq
+IEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlICgiR1BMIikgYXMgcHVibGlzaGVkIGJ5IHRoZSBG
+cmVlIFNvZnR3YXJlCi0gKiBGb3VuZGF0aW9uLCBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoYXQgTGlj
+ZW5zZSBvciAoYXQgeW91ciBvcHRpb24pIGFueQotICogbGF0ZXIgdmVyc2lvbi4KLSAqCi0gKiBU
+aGlzIHNvZnR3YXJlIGlzIHByb3ZpZGVkIGJ5IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yICJhcyBp
+cyIgYW5kIGFueQotICogZXhwcmVzcyBvciBpbXBsaWVkIHdhcnJhbnRpZXMsIGluY2x1ZGluZywg
+YnV0IG5vdCBsaW1pdGVkIHRvLCB0aGUgaW1wbGllZAotICogd2FycmFudGllcyBvZiBtZXJjaGFu
+dGFiaWxpdHkgYW5kIGZpdG5lc3MgZm9yIGEgcGFydGljdWxhciBwdXJwb3NlIGFyZQotICogZGlz
+Y2xhaW1lZC4gSW4gbm8gZXZlbnQgc2hhbGwgRnJlZXNjYWxlIFNlbWljb25kdWN0b3IgYmUgbGlh
+YmxlIGZvciBhbnkKLSAqIGRpcmVjdCwgaW5kaXJlY3QsIGluY2lkZW50YWwsIHNwZWNpYWwsIGV4
+ZW1wbGFyeSwgb3IgY29uc2VxdWVudGlhbCBkYW1hZ2VzCi0gKiAoaW5jbHVkaW5nLCBidXQgbm90
+IGxpbWl0ZWQgdG8sIHByb2N1cmVtZW50IG9mIHN1YnN0aXR1dGUgZ29vZHMgb3Igc2VydmljZXM7
+Ci0gKiBsb3NzIG9mIHVzZSwgZGF0YSwgb3IgcHJvZml0czsgb3IgYnVzaW5lc3MgaW50ZXJydXB0
+aW9uKSBob3dldmVyIGNhdXNlZCBhbmQKLSAqIG9uIGFueSB0aGVvcnkgb2YgbGlhYmlsaXR5LCB3
+aGV0aGVyIGluIGNvbnRyYWN0LCBzdHJpY3QgbGlhYmlsaXR5LCBvciB0b3J0Ci0gKiAoaW5jbHVk
+aW5nIG5lZ2xpZ2VuY2Ugb3Igb3RoZXJ3aXNlKSBhcmlzaW5nIGluIGFueSB3YXkgb3V0IG9mIHRo
+ZSB1c2Ugb2YKLSAqIHRoaXMgc29mdHdhcmUsIGV2ZW4gaWYgYWR2aXNlZCBvZiB0aGUgcG9zc2li
+aWxpdHkgb2Ygc3VjaCBkYW1hZ2UuCi0gKi8KLQotL2R0cy12MS87Ci0KLS9pbmNsdWRlLyAiZnNs
+L2U2NTAwX3Bvd2VyX2lzYS5kdHNpIgotCi0vIHsKLQljb21wYXRpYmxlID0gImZzbCxCNDg2MCI7
+Ci0JI2FkZHJlc3MtY2VsbHMgPSA8Mj47Ci0JI3NpemUtY2VsbHMgPSA8Mj47Ci0JaW50ZXJydXB0
+LXBhcmVudCA9IDwmbXBpYz47Ci0KLQlhbGlhc2VzIHsKLQkJY2NzciA9ICZzb2M7Ci0KLQkJc2Vy
+aWFsMCA9ICZzZXJpYWwwOwotCQlzZXJpYWwxID0gJnNlcmlhbDE7Ci0JCXNlcmlhbDIgPSAmc2Vy
+aWFsMjsKLQkJc2VyaWFsMyA9ICZzZXJpYWwzOwotCQlkbWEwID0gJmRtYTA7Ci0JCWRtYTEgPSAm
+ZG1hMTsKLQl9OwotCi0JY3B1cyB7Ci0JCSNhZGRyZXNzLWNlbGxzID0gPDE+OwotCQkjc2l6ZS1j
+ZWxscyA9IDwwPjsKLQotCQljcHUwOiBQb3dlclBDLGU2NTAwQDAgewotCQkJZGV2aWNlX3R5cGUg
+PSAiY3B1IjsKLQkJCXJlZyA9IDwwIDE+OwotCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmTDI+Owot
+CQkJZnNsLHBvcnRpZC1tYXBwaW5nID0gPDB4ODAwMDAwMDA+OwotCQl9OwotCQljcHUxOiBQb3dl
+clBDLGU2NTAwQDIgewotCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsKLQkJCXJlZyA9IDwyIDM+Owot
+CQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmTDI+OwotCQkJZnNsLHBvcnRpZC1tYXBwaW5nID0gPDB4
+ODAwMDAwMDA+OwotCQl9OwotCQljcHUyOiBQb3dlclBDLGU2NTAwQDQgewotCQkJZGV2aWNlX3R5
+cGUgPSAiY3B1IjsKLQkJCXJlZyA9IDw0IDU+OwotCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmTDI+
+OwotCQkJZnNsLHBvcnRpZC1tYXBwaW5nID0gPDB4ODAwMDAwMDA+OwotCQl9OwotCQljcHUzOiBQ
+b3dlclBDLGU2NTAwQDYgewotCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsKLQkJCXJlZyA9IDw2IDc+
+OwotCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmTDI+OwotCQkJZnNsLHBvcnRpZC1tYXBwaW5nID0g
+PDB4ODAwMDAwMDA+OwotCQl9OwotCX07Ci19OwotCi0vIHsKLQltb2RlbCA9ICJmc2wsQjQ4NjBR
+RFMiOwotCWNvbXBhdGlibGUgPSAiZnNsLEI0ODYwRU1VIiwgImZzbCxCNDg2MFFEUyI7Ci0JI2Fk
+ZHJlc3MtY2VsbHMgPSA8Mj47Ci0JI3NpemUtY2VsbHMgPSA8Mj47Ci0JaW50ZXJydXB0LXBhcmVu
+dCA9IDwmbXBpYz47Ci0KLQlpZmM6IGxvY2FsYnVzQGZmZTEyNDAwMCB7Ci0JCXJlZyA9IDwweGYg
+MHhmZTEyNDAwMCAwIDB4MjAwMD47Ci0JCXJhbmdlcyA9IDwwIDAgMHhmIDB4ZTgwMDAwMDAgMHgw
+ODAwMDAwMAotCQkJICAyIDAgMHhmIDB4ZmY4MDAwMDAgMHgwMDAxMDAwMAotCQkJICAzIDAgMHhm
+IDB4ZmZkZjAwMDAgMHgwMDAwODAwMD47Ci0KLQkJbm9yQDAsMCB7Ci0JCQkjYWRkcmVzcy1jZWxs
+cyA9IDwxPjsKLQkJCSNzaXplLWNlbGxzID0gPDE+OwotCQkJY29tcGF0aWJsZSA9ICJjZmktZmxh
+c2giOwotCQkJcmVnID0gPDB4MCAweDAgMHg4MDAwMDAwPjsKLQkJCWJhbmstd2lkdGggPSA8Mj47
+Ci0JCQlkZXZpY2Utd2lkdGggPSA8MT47Ci0JCX07Ci0JfTsKLQotCW1lbW9yeSB7Ci0JCWRldmlj
+ZV90eXBlID0gIm1lbW9yeSI7Ci0JfTsKLQotCXNvYzogc29jQGZmZTAwMDAwMCB7Ci0JCXJhbmdl
+cyA9IDwweDAwMDAwMDAwIDB4ZiAweGZlMDAwMDAwIDB4MTAwMDAwMD47Ci0JCXJlZyA9IDwweGYg
+MHhmZTAwMDAwMCAwIDB4MDAwMDEwMDA+OwotCX07Ci19OwotCi0maWZjIHsKLQkjYWRkcmVzcy1j
+ZWxscyA9IDwyPjsKLQkjc2l6ZS1jZWxscyA9IDwxPjsKLQljb21wYXRpYmxlID0gImZzbCxpZmMi
+LCAic2ltcGxlLWJ1cyI7Ci0JaW50ZXJydXB0cyA9IDwyNSAyIDAgMD47Ci19OwotCi0mc29jIHsK
+LQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKLQkjc2l6ZS1jZWxscyA9IDwxPjsKLQlkZXZpY2VfdHlw
+ZSA9ICJzb2MiOwotCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7Ci0KLQlzb2Mtc3JhbS1lcnJv
+ciB7Ci0JCWNvbXBhdGlibGUgPSAiZnNsLHNvYy1zcmFtLWVycm9yIjsKLQkJaW50ZXJydXB0cyA9
+IDwxNiAyIDEgMj47Ci0JfTsKLQotCWNvcmVuZXQtbGF3QDAgewotCQljb21wYXRpYmxlID0gImZz
+bCxjb3JlbmV0LWxhdyI7Ci0JCXJlZyA9IDwweDAgMHgxMDAwPjsKLQkJZnNsLG51bS1sYXdzID0g
+PDMyPjsKLQl9OwotCi0JZGRyMTogbWVtb3J5LWNvbnRyb2xsZXJAODAwMCB7Ci0JCWNvbXBhdGli
+bGUgPSAiZnNsLHFvcmlxLW1lbW9yeS1jb250cm9sbGVyLXY0LjUiLCAiZnNsLHFvcmlxLW1lbW9y
+eS1jb250cm9sbGVyIjsKLQkJcmVnID0gPDB4ODAwMCAweDEwMDA+OwotCQlpbnRlcnJ1cHRzID0g
+PDE2IDIgMSA4PjsKLQl9OwotCi0JZGRyMjogbWVtb3J5LWNvbnRyb2xsZXJAOTAwMCB7Ci0JCWNv
+bXBhdGlibGUgPSAiZnNsLHFvcmlxLW1lbW9yeS1jb250cm9sbGVyLXY0LjUiLCJmc2wscW9yaXEt
+bWVtb3J5LWNvbnRyb2xsZXIiOwotCQlyZWcgPSA8MHg5MDAwIDB4MTAwMD47Ci0JCWludGVycnVw
+dHMgPSA8MTYgMiAxIDk+OwotCX07Ci0KLQljcGM6IGwzLWNhY2hlLWNvbnRyb2xsZXJAMTAwMDAg
+ewotCQljb21wYXRpYmxlID0gImZzbCxiNC1sMy1jYWNoZS1jb250cm9sbGVyIiwgImNhY2hlIjsK
+LQkJcmVnID0gPDB4MTAwMDAgMHgxMDAwCi0JCSAgICAgICAweDExMDAwIDB4MTAwMD47Ci0JCWlu
+dGVycnVwdHMgPSA8MTYgMiAxIDQ+OwotCX07Ci0KLQljb3JlbmV0LWNmQDE4MDAwIHsKLQkJY29t
+cGF0aWJsZSA9ICJmc2wsY29yZW5ldDItY2YiLCAiZnNsLGNvcmVuZXQtY2YiOwotCQlyZWcgPSA8
+MHgxODAwMCAweDEwMDA+OwotCQlpbnRlcnJ1cHRzID0gPDE2IDIgMSAwPjsKLQkJZnNsLGNjZi1u
+dW0tY3NkaWRzID0gPDMyPjsKLQkJZnNsLGNjZi1udW0tc25vb3BpZHMgPSA8MzI+OwotCX07Ci0K
+LQlpb21tdUAyMDAwMCB7Ci0JCWNvbXBhdGlibGUgPSAiZnNsLHBhbXUtdjEuMCIsICJmc2wscGFt
+dSI7Ci0JCXJlZyA9IDwweDIwMDAwIDB4NDAwMD47Ci0JCWZzbCxwb3J0aWQtbWFwcGluZyA9IDww
+eDgwMDA+OwotCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKLQkJI3NpemUtY2VsbHMgPSA8MT47Ci0J
+CWludGVycnVwdHMgPSA8Ci0JCQkyNCAyIDAgMAotCQkJMTYgMiAxIDE+OwotCQlwYW11MDogcGFt
+dUAwIHsKLQkJCXJlZyA9IDwwIDB4MTAwMD47Ci0JCQlmc2wscHJpbWFyeS1jYWNoZS1nZW9tZXRy
+eSA9IDw4IDE+OwotCQkJZnNsLHNlY29uZGFyeS1jYWNoZS1nZW9tZXRyeSA9IDwzMiAyPjsKLQkJ
+fTsKLQl9OwotCi0vaW5jbHVkZS8gImZzbC9xb3JpcS1tcGljLmR0c2kiCi0KLQlndXRzOiBnbG9i
+YWwtdXRpbGl0aWVzQGUwMDAwIHsKLQkJY29tcGF0aWJsZSA9ICJmc2wsYjQtZGV2aWNlLWNvbmZp
+ZyI7Ci0JCXJlZyA9IDwweGUwMDAwIDB4ZTAwPjsKLQkJZnNsLGhhcy1yc3RjcjsKLQkJZnNsLGxp
+b2RuLWJpdHMgPSA8MTI+OwotCX07Ci0KLS9pbmNsdWRlLyAiZnNsL3FvcmlxLWNsb2NrZ2VuMi5k
+dHNpIgotCWdsb2JhbC11dGlsaXRpZXNAZTEwMDAgewotCQljb21wYXRpYmxlID0gImZzbCxiNC1j
+bG9ja2dlbiIsICJmc2wscW9yaXEtY2xvY2tnZW4tMi4wIjsKLQl9OwotCi0vaW5jbHVkZS8gImZz
+bC9xb3JpcS1kbWEtMC5kdHNpIgotCWRtYUAxMDAzMDAgewotCQlmc2wsaW9tbXUtcGFyZW50ID0g
+PCZwYW11MD47Ci0JCWZzbCxsaW9kbi1yZWcgPSA8Jmd1dHMgMHg1ODA+OyAvKiBETUExTElPRE5S
+ICovCi0JfTsKLQotL2luY2x1ZGUvICJmc2wvcW9yaXEtZG1hLTEuZHRzaSIKLQlkbWFAMTAxMzAw
+IHsKLQkJZnNsLGlvbW11LXBhcmVudCA9IDwmcGFtdTA+OwotCQlmc2wsbGlvZG4tcmVnID0gPCZn
+dXRzIDB4NTg0PjsgLyogRE1BMkxJT0ROUiAqLwotCX07Ci0KLS9pbmNsdWRlLyAiZnNsL3Fvcmlx
+LWkyYy0wLmR0c2kiCi0vaW5jbHVkZS8gImZzbC9xb3JpcS1pMmMtMS5kdHNpIgotL2luY2x1ZGUv
+ICJmc2wvcW9yaXEtZHVhcnQtMC5kdHNpIgotL2luY2x1ZGUvICJmc2wvcW9yaXEtZHVhcnQtMS5k
+dHNpIgotCi0JTDI6IGwyLWNhY2hlLWNvbnRyb2xsZXJAYzIwMDAwIHsKLQkJY29tcGF0aWJsZSA9
+ICJmc2wsYjQtbDItY2FjaGUtY29udHJvbGxlciI7Ci0JCXJlZyA9IDwweGMyMDAwMCAweDEwMDA+
+OwotCQluZXh0LWxldmVsLWNhY2hlID0gPCZjcGM+OwotCX07Ci19OwotLSAKMi4yLjIKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBt
+YWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
+emxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
