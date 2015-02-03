@@ -1,67 +1,95 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v5 08/13] clk: samsung: exynos5433: Add clocks for CMU_DISP
- domain
-Date: Tue, 03 Feb 2015 13:29:29 +0100
-Message-ID: <54D0BF29.9060002@samsung.com>
-References: <1422887047-30911-1-git-send-email-cw00.choi@samsung.com>
- <1422887047-30911-9-git-send-email-cw00.choi@samsung.com>
- <54D0BC6C.9020008@samsung.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/7] mailbox: arm_mhu: add driver for ARM MHU
+ controller
+Date: Tue, 3 Feb 2015 12:32:16 +0000
+Message-ID: <20150203123216.GO8656@n2100.arm.linux.org.uk>
+References: <1422955310-6542-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+ <1422955763-6630-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <54D0BC6C.9020008@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: tomasz.figa@gmail.com, mturquette@linaro.org, kgene@kernel.org, pankaj.dubey@samsung.com, sangbae90.lee@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422955763-6630-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/15 13:17, Sylwester Nawrocki wrote:
->> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
->> > index 3d6164e..cf3f0ac 100644
->> > --- a/drivers/clk/samsung/clk-exynos5433.c
->> > +++ b/drivers/clk/samsung/clk-exynos5433.c
->> > @@ -245,6 +245,8 @@ PNAME(mout_sclk_audio1_p)	= { "ioclk_audiocdclk1", "oscclk",
->> >  PNAME(mout_sclk_audio0_p)	= { "ioclk_audiocdclk0", "oscclk",
->> >  				    "mout_aud_pll_user_t",};
->> >  
->> > +PNAME(mout_sclk_hdmi_spdif_p)	= { "sclk_audio1", "ioclk_spdif_extclk", };
->> > +
->> >  static struct samsung_fixed_factor_clock top_fixed_factor_clks[] __initdata = {
->> >  	FFACTOR(0, "oscclk_efuse_common", "oscclk", 1, 1, 0),
->> >  };
->> > @@ -395,6 +397,10 @@ static struct samsung_mux_clock top_mux_clks[] __initdata = {
->> >  			MUX_SEL_TOP_PERIC1, 4, 2),
->> >  	MUX(CLK_MOUT_SCLK_AUDIO0, "mout_sclk_audio0", mout_sclk_audio0_p,
->> >  			MUX_SEL_TOP_PERIC1, 0, 2),
->> > +
->> > +	/* MUX_SEL_TOP_DISP */
->> > +	MUX(CLK_MOUT_SCLK_HDMI_SPDIF, "mout_sclk_hdmi_spdif",
->> > +			mout_sclk_hdmi_spdif_p, MUX_SEL_TOP_DISP, 0, 1),
->> >  };
->> >  
->> >  static struct samsung_div_clock top_div_clks[] __initdata = {
->> > @@ -1360,6 +1366,11 @@ static struct samsung_gate_clock mif_gate_clks[] __initdata = {
->> >  			ENABLE_SCLK_MIF, 1, CLK_IGNORE_UNUSED, 0),
->> >  	GATE(CLK_SCLK_BUS_PLL_ATLAS, "sclk_bus_pll_atlas", "sclk_bus_pll",
->> >  			ENABLE_SCLK_MIF, 0, CLK_IGNORE_UNUSED, 0),
->> > +
->> > +	/* ENABLE_SCLK_TOP_DISP */
->> > +	GATE(CLK_SCLK_HDMI_SPDIF_DISP, "sclk_hdmi_spdif_disp",
->> > +			"mout_sclk_hdmi_spdif", ENABLE_SCLK_TOP_DISP, 0,
->> > +			CLK_IGNORE_UNUSED, 0),
->
-> I think this clock should be added to top_gate_clks[] table instead, i.e.
-> it seems to belong to CMU_TOP, not CMU_MIF. Can you double check it ?
-> 
-> If you confirm this I will add following change when applying, no need
-> to resend again:
+On Tue, Feb 03, 2015 at 05:29:23PM +0800, Vincent Yang wrote:
+> +static int mhu_send_data(struct mbox_chan *chan, void *data)
+> +{
+> +	struct mhu_link *mlink = chan->con_priv;
+> +
+> +	pr_debug("%s:%d\n", __func__, __LINE__);
+> +	if (!mhu_last_tx_done(chan)) {
+> +		dev_err(chan->mbox->dev, "Last TX(%d) pending!\n", mlink->irq);
+> +		return -EBUSY;
+> +	}
+> +
+> +	writel_relaxed((u32)data, mlink->tx_reg + INTR_SET_OFS);
 
-I'm afraid you will need to resend if that change turns out to be
-needed, since the whole CMU_TOP clock indexing would need to be changed
-then :/. Or just send a fixup patch on top of both series, adding
-CLK_SCLK_HDMI_SPDIF_DISP as last CMU_TOP clk index.
+Doesn't that cause a GCC warning?
 
+> +static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+> +{
+> +	int i, err;
+> +	struct arm_mhu *mhu;
+> +	struct device *dev = &adev->dev;
+> +	int mhu_reg[3] = {0x0, 0x20, 0x200};
+> +
+> +	err = amba_request_regions(adev, NULL);
+> +	if (err)
+> +		return err;
+> +
+> +	/* Allocate memory for device */
+> +	mhu = devm_kzalloc(dev, sizeof(*mhu), GFP_KERNEL);
+> +	if (!mhu)
+> +		return -ENOMEM;
+> +
+> +	mhu->base = devm_ioremap(dev, adev->res.start,
+> +				 resource_size(&adev->res));
+> +	if (!mhu->base) {
+> +		dev_err(dev, "ioremap failed\n");
+> +		return -ENXIO;
+
+	mhu->base = devm_ioremap_resource(dev, &adev->res);
+	if (IS_ERR(mhu->base)) {
+		dev_err(dev, "ioremap failed\n");
+		return PTR_ERR(mhu->base);
+
+> +	}
+> +
+> +	for (i = 0; i < 3; i++) {
+> +		mhu->chan[i].con_priv = &mhu->mlink[i];
+> +		mhu->mlink[i].irq = adev->irq[i];
+> +		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
+> +		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + 0x100;
+> +	}
+> +
+> +	mhu->mbox.dev = dev;
+> +	mhu->mbox.chans = &mhu->chan[0];
+> +	mhu->mbox.num_chans = 3;
+> +	mhu->mbox.ops = &mhu_ops;
+> +	mhu->mbox.txdone_irq = false;
+> +	mhu->mbox.txdone_poll = true;
+> +	mhu->mbox.txpoll_period = 10;
+> +
+> +	amba_set_drvdata(adev, mhu);
+> +
+> +	err = mbox_controller_register(&mhu->mbox);
+> +	if (err) {
+> +		dev_err(dev, "Failed to register mailboxes %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	dev_err(dev, "ARM MHU Mailbox registered\n");
+
+Why is this an error?
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
