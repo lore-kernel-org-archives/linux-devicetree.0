@@ -1,44 +1,79 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH_V4 1/3] dt: usb: jz4740: Add DT binding document for OHCI
-Date: Tue, 03 Feb 2015 16:13:11 +0100
-Message-ID: <54D0E587.3060001@metafoo.de>
-References: <1422958640-25723-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422958640-25723-2-git-send-email-Zubair.Kakakhel@imgtec.com> <54D0A3C4.6010100@metafoo.de> <54D0A8A6.5040805@imgtec.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v3 06/15] drm: bridge/dw_hdmi: adjust n/cts
+	setting order
+Date: Tue,  3 Feb 2015 10:13:07 -0500
+Message-ID: <1422976387-30165-1-git-send-email-ykk@rock-chips.com>
+References: <1422975418-13302-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54D0A8A6.5040805-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1422975418-13302-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: David Airlie <airlied@linux.ie>, Russell King <rmk+kernel@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, djkurtz@chromium.org, dianders@chromium.org, Yakir Yang <ykk@rock-chips.com>, mmind00@googlemail.com, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Sean Cross <xobs@kosagi.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jyri Sarha <jsarha@ti.com>, Ben Zhang <benzh@chromium.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, marcheu@chromium.org, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>, Fabio Estevam <fabio.estevam@freescale.com>, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2015 11:53 AM, Zubair Lutfullah Kakakhel wrote:
->
-> On 03/02/15 10:32, Lars-Peter Clausen wrote:
->> On 02/03/2015 11:17 AM, Zubair Lutfullah Kakakhel wrote:
->> [...]
->>> V4 Changes
->>> Removed clock binding because of pending work in clock tree. Will add
->>> binding later. Rather than introduce a bad binding now and change later.
->>
->> But this patch is introducing a bad binding. The part needs the clock to work. The binding you are specifying right now says that it works fine without any clocks.
->
-> Facing a chicken and egg problem with these patches here..
->
-> When the new clock driver gets in we can add the correct clock binding and replace
-> devm_clk_get(&pdev->dev, "uhc"); with devm_clk_get(&pdev->dev, NULL);
->
-> Specifying the current binding got NAKed by Arnd who mentioned that clock names shouldn't be needed as required properties.
-> And even if needed, then it shouldn't be "uhc" and more close to what other ohci drivers have.
+This patch changes the order to:
+- write CTS3 CTS_manual = 0
+- write CTS3 N_shift = 0
+- write CTS3 CTS value
+- write CTS2 CTS value
+- write CTS1 CTS value
+- write N3 N value
+- write N2 N value
+- write N1 N value
 
-It's not a chicken and egg problem. The order is very clear, first convert 
-the clock driver to the CCF, then update the driver to pass NULL instead of 
-"uhc", then add the devicetree bindings.
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+---
+Changes in v3:
+- Only adjust the n/cts setting order
 
-- Lars
+Changes in v2: None
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ drivers/gpu/drm/bridge/dw_hdmi.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
+index 262163f..81309df 100644
+--- a/drivers/gpu/drm/bridge/dw_hdmi.c
++++ b/drivers/gpu/drm/bridge/dw_hdmi.c
+@@ -199,20 +199,20 @@ static void hdmi_mask_writeb(struct dw_hdmi *hdmi, u8 data, unsigned int reg,
+ static void hdmi_set_clock_regenerator(struct dw_hdmi *hdmi,
+ 				       unsigned int n, unsigned int cts)
+ {
+-	hdmi_writeb(hdmi, n & 0xff, HDMI_AUD_N1);
+-	hdmi_writeb(hdmi, (n >> 8) & 0xff, HDMI_AUD_N2);
+-	hdmi_writeb(hdmi, (n >> 16) & 0x0f, HDMI_AUD_N3);
++	/* Must be set/cleared first */
++	hdmi_modb(hdmi, 0, HDMI_AUD_CTS3_CTS_MANUAL, HDMI_AUD_CTS3);
+ 
+ 	/* nshift factor = 0 */
+ 	hdmi_modb(hdmi, 0, HDMI_AUD_CTS3_N_SHIFT_MASK, HDMI_AUD_CTS3);
+ 
+-	/* Must be set/cleared first */
+-	hdmi_modb(hdmi, 0, HDMI_AUD_CTS3_CTS_MANUAL, HDMI_AUD_CTS3);
+-
+-	hdmi_writeb(hdmi, cts & 0xff, HDMI_AUD_CTS1);
+-	hdmi_writeb(hdmi, (cts >> 8) & 0xff, HDMI_AUD_CTS2);
+ 	hdmi_writeb(hdmi, ((cts >> 16) & HDMI_AUD_CTS3_AUDCTS19_16_MASK) |
+ 		    HDMI_AUD_CTS3_CTS_MANUAL, HDMI_AUD_CTS3);
++	hdmi_writeb(hdmi, (cts >> 8) & 0xff, HDMI_AUD_CTS2);
++	hdmi_writeb(hdmi, cts & 0xff, HDMI_AUD_CTS1);
++
++	hdmi_writeb(hdmi, (n >> 16) & 0x0f, HDMI_AUD_N3);
++	hdmi_writeb(hdmi, (n >> 8) & 0xff, HDMI_AUD_N2);
++	hdmi_writeb(hdmi, n & 0xff, HDMI_AUD_N1);
+ }
+ 
+ static unsigned int hdmi_compute_n(unsigned int freq, unsigned long pixel_clk,
+-- 
+2.1.2
