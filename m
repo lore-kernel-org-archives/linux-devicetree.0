@@ -1,66 +1,88 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [1/3] powerpc/pmac: Fix DT refcount imbalance in
- pmac_pic_probe_oldstyle
-Date: Tue, 03 Feb 2015 12:12:32 +1100
-Message-ID: <1422925952.4625.3.camel@ellerman.id.au>
-References: <1421243519-6257-2-git-send-email-geert+renesas@glider.be>
-	 <20150130040904.8F89D1402A7@ozlabs.org>
-	 <CAMuHMdUwQ=K7SnFvpaHzL2dCyNXGR3w-_SzFOEWb3cYCiQJfHg@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 1/1] extcon: usb-gpio: Introduce gpio usb extcon driver
+Date: Tue, 03 Feb 2015 10:13:55 +0900
+Message-ID: <54D020D3.2030403@samsung.com>
+References: <1422274532-9488-1-git-send-email-rogerq@ti.com>
+ <1422274532-9488-2-git-send-email-rogerq@ti.com> <54C8D2F4.9050404@ti.com>
+ <54CF4FC7.2050309@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUwQ=K7SnFvpaHzL2dCyNXGR3w-_SzFOEWb3cYCiQJfHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <54CF4FC7.2050309@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: myungjoo.ham@samsung.com, balbi@ti.com, tony@atomide.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-01-30 at 10:00 +0100, Geert Uytterhoeven wrote:
-> Hi Michael,
+Hi Roger,
+
+Looks good to me. Applied it on v3.21 queue.
+
+Thanks,
+Chanwoo Choi
+
+On 02/02/2015 07:21 PM, Roger Quadros wrote:
+> This driver observes the USB ID pin connected over a GPIO and
+> updates the USB cable extcon states accordingly.
 > 
-> On Fri, Jan 30, 2015 at 5:09 AM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
-> > On Wed, 2015-14-01 at 13:51:57 UTC, Geert Uytterhoeven wrote:
-> >> of_find_node_by_name() calls of_node_put() on its "from" parameter,
-> >> which must not be done on "master", as it's still in use, and will be
-> >> released manually later.  This may cause a zero kref refcount.
-> >> Use of_get_child_by_name() instead to fix this.
-> >
-> > But of_find_node_by_name() searches *all* nodes, not just the children of the
-> > parameter.
+> The existing GPIO extcon driver is not suitable for this purpose
+> as it needs to be taught to understand USB cable states and it
+> can't handle more than one cable per instance.
 > 
-> That's correct. However, I guess the second mac-io will just be a direct child.
-
-Yeah OK, I don't have a system or an example device tree to check.
-
-> > So this is a logic change AFAICS, and I have no idea what machines we'd need to
-> > test on to check it.
+> For the USB case we need to handle 2 cable states.
+> 1) USB (attach/detach)
+> 2) USB-HOST (attach/detach)
 > 
-> Originally it comes from arch/ppc/platforms/pmac_pic.c, added in 2002 in
-> full-history-linux commit 5ea3254844ae344a
-> ("Import arch/ppc and include/asm-ppc changes from linuxppc_2_5 tree").
+> This driver can be easily updated in the future to handle VBUS
+> events in case it happens to be available on GPIO for any platform.
 > 
-> I've also checked my linuxppc mail archives from 1997-2002, but couldn't find
-> the actual patch and a description.
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+> v4:
+> - got rid of id_irqwake flag. Fail if enable/disable_irq_wake() fails
+> - changed host cable name to "USB-HOST"
+> - use 'depends on' instead of 'select' GPIOLIB
 > 
-> So I don't know on which machines it's needed.
-
-Yep. Ben or Paul might know, but even then their memory may not be perfect :)
- 
-> > So I think an of_node_get(master) would be safer and also fix the refcounting.
+>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  18 ++
+>  drivers/extcon/Kconfig                             |   7 +
+>  drivers/extcon/Makefile                            |   1 +
+>  drivers/extcon/extcon-usb-gpio.c                   | 237 +++++++++++++++++++++
+>  4 files changed, 263 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>  create mode 100644 drivers/extcon/extcon-usb-gpio.c
 > 
-> If no one can confirm the above, that may indeed be the best solution.
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> new file mode 100644
+> index 0000000..85fe6b0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> @@ -0,0 +1,18 @@
+> +USB GPIO Extcon device
+> +
+> +This is a virtual device used to generate USB cable states from the USB ID pin
+> +connected to a GPIO pin.
+> +
+> +Required properties:
+> +- compatible: Should be "linux,extcon-usb-gpio"
+> +- id-gpio: gpio for USB ID pin. See gpio binding.
+> +
+> +Example:
 
-I think so. Given how few of these machines are around it's easy to break them
-with an inadvertent change like this, so I think it's better to be safe.
+I add some description for example as following:
 
-Wanna send a patch for that?
++Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
 
-cheers
+> +	extcon_usb1 {
+> +		compatible = "linux,extcon-usb-gpio";
+> +		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
+> +	}
+> +
+> +	&omap_dwc3_1 {
+> +		extcon = <&extcon_usb1>;
+> +	};
 
+[snip]
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Chanwoo Choi
