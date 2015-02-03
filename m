@@ -1,53 +1,64 @@
 From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH_V3 0/2] watchdog: jz4740: Add DT support
-Date: Tue, 3 Feb 2015 10:25:46 +0000
-Message-ID: <1422959148-38075-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V3 1/2] dt: watchdog: Add DT binding documentation for jz4740 watchdog timer
+Date: Tue, 3 Feb 2015 10:25:47 +0000
+Message-ID: <1422959148-38075-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+References: <1422959148-38075-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422959148-38075-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add binding for jz4740 watchdog timer. It is a simple watchdog timer.
 
-Here are two simple patches that add DT support to the jz4740 watchdog driver.
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-Patches are based on 3.19-rc7. Quite disjoint and stay within jz4740
-so should apply easily on other trees.
+---
+The jz4740 is platform only at the moment.
 
-If you would like to have them rebased to a different tree, please tell.
+But DT support is being added
 
-V3 Changed
-Added Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> 
-Typo in commit message.
-Rebased to rc7
+See http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
+
+V3: Added Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
 V2 Changes
-Renamed binding to jz4740 instead of jz47xx
-Removed clk bindings. They can be added later when the clock tree is fixed.
-Rather than add bindings now and change later.
 
-Added MODULE_DEVICE_TABLE()
+Removed clock binding because of pending work in clock tree. Will add
+binding later. Rather than introduce a bad binding now and change later.
 
-Thank-you
-
-ZubairLK
-
-Zubair Lutfullah Kakakhel (2):
-  dt: watchdog: Add DT binding documentation for jz4740 watchdog timer
-  watchdog: jz4740: Add DT support
-
+Renamed to jz4740 instead of jz47xx.
+---
  .../devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt      | 12 ++++++++++++
- drivers/watchdog/jz4740_wdt.c                                | 10 ++++++++++
- 2 files changed, 22 insertions(+)
+ 1 file changed, 12 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
 
+diff --git a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
+new file mode 100644
+index 0000000..e27763e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
+@@ -0,0 +1,12 @@
++Ingenic Watchdog Timer (WDT) Controller for JZ4740
++
++Required properties:
++compatible: "ingenic,jz4740-watchdog"
++reg: Register address and length for watchdog registers
++
++Example:
++
++watchdog: jz4740-watchdog@0x10002000 {
++	compatible = "ingenic,jz4740-watchdog";
++	reg = <0x10002000 0x100>;
++};
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
