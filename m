@@ -1,33 +1,62 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v3] net/fsl_pq_mdio: Document supported compatibles
-Date: Tue, 03 Feb 2015 16:11:54 -0800 (PST)
-Message-ID: <20150203.161154.2192047603578577594.davem@davemloft.net>
-References: <1422827911-32629-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
+Date: Wed, 4 Feb 2015 09:28:59 +0900
+Message-ID: <20150204002858.GB29128@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <1608366.HtA9yBksdO@wasted.cogentembedded.com>
+ <20150202110557.GC7459@leverpostej>
+ <54CFE4CE.5090406@cogentembedded.com>
+ <20150203003610.GA17629@verge.net.au>
+ <CAMuHMdV1U9XV7diKYPwpxAqdzD7tst6e0k=bLgJQ27=YDndn=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422827911-32629-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org
-Cc: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kanetkar.Shruti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV1U9XV7diKYPwpxAqdzD7tst6e0k=bLgJQ27=YDndn=Q@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Date: Sun, 1 Feb 2015 15:58:31 -0600
+On Tue, Feb 03, 2015 at 10:53:01AM +0100, Geert Uytterhoeven wrote:
+> On Tue, Feb 3, 2015 at 1:36 AM, Simon Horman <horms@verge.net.au> wro=
+te:
+> > The only thing that stood out to me about "SILK" was that unlike
+> > other renesas boards names in .dtsi files it is all-capitals.
+> > Its not a bit deal but as we are on the topic: is that intentional?
+>=20
+> Seems like we can use some consistency:
+>=20
+> $ git grep -w model -- $(git grep -l renesas, -- arch/arm/boot/dts)
+> arch/arm/boot/dts/emev2-kzm9d.dts:      model =3D "EMEV2 KZM9D Board"=
+;
+> arch/arm/boot/dts/r7s72100-genmai.dts:  model =3D "Genmai";
+> arch/arm/boot/dts/r8a73a4-ape6evm.dts:  model =3D "APE6EVM";
+> arch/arm/boot/dts/r8a7740-armadillo800eva.dts:  model =3D "armadillo =
+800 eva";
+> arch/arm/boot/dts/r8a7778-bockw-reference.dts:  model =3D "bockw";
+> arch/arm/boot/dts/r8a7778-bockw.dts:    model =3D "bockw";
+> arch/arm/boot/dts/r8a7779-marzen.dts:   model =3D "marzen";
+> arch/arm/boot/dts/r8a7790-lager.dts:    model =3D "Lager";
+> arch/arm/boot/dts/r8a7791-henninger.dts:        model =3D "Henninger"=
+;
+> arch/arm/boot/dts/r8a7791-koelsch.dts:  model =3D "Koelsch";
+> arch/arm/boot/dts/r8a7794-alt.dts:      model =3D "Alt";
+> arch/arm/boot/dts/sh73a0-kzm9g.dts:     model =3D "KZM-A9-GT";
+> $
+>=20
+> ePAPR says:
+>=20
+> "The recommended format is: =E2=80=9Cmanufacturer,model=E2=80=9D, whe=
+re manufacturer is a
+>  string describing the name of the manufacturer (such as a stock tick=
+er symbol),
+>  and model specifies the model number.
+>=20
+>  Example:
+>          model =3D =E2=80=9Cfsl,MPC8349EMITX=E2=80=9D;"
 
-> From: Shruti Kanetkar <Kanetkar.Shruti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> The device tree binding(s) document has fallen out of sync with the
-> driver code. Update the list of supported devices to reflect current
-> driver capabilities
-> 
-> Change-Id: I440d8de2ee2d9c3b7b23e69b3da851cab18a4c9a
-> Signed-off-by: Shruti Kanetkar <Kanetkar.Shruti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-
-Applied to net-next, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Agree we could use some consistency but before we start cooking up name=
+s
+do we expect this to have any effect on compatibility for users?
