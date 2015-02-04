@@ -1,38 +1,46 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] Documentation: DT bindings: update DT binding docs
- with Tegra chips
-Date: Tue, 3 Feb 2015 20:36:32 -0600
-Message-ID: <CAL_Jsq+rq1Apna4P1YkcsPYhz4dnd7mKHvWXcb663+XYFGV1uQ@mail.gmail.com>
-References: <20150130221104.4761.50643.stgit@dusk.lan>
+Subject: Re: [PATCH V2 RESEND 0/4] ARM: bcm2835: DT improvements
+Date: Tue, 3 Feb 2015 20:47:52 -0600
+Message-ID: <CAL_JsqJubTomhUPbBck_cBJoiL2tuDRv++tANoLtBidmSdxUYQ@mail.gmail.com>
+References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150130221104.4761.50643.stgit-orwA252wQtA@public.gmane.org>
+In-Reply-To: <1422555050-28509-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 30, 2015 at 4:11 PM, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org> wrote:
+On Thu, Jan 29, 2015 at 12:10 PM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+> This patch series contains DT improvements for the Raspberry Pi.
 >
-> Update some of the DT binding documentation text files, per Mark's
-> comments at:
+> Patch 1,2: Add missing vendor prefix and root compatible properties
+> Patch 3,4: Use constants for pin function instead of error-prone numbers
 >
-> http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+> Changes in V2:
+> - add all currently known Raspberry Pi boards to binding documentation
+>   as suggested by Stephen Warren
 >
-> The primary goal with this series is to avoid checkpatch.pl warnings
-> and align to the policy that Mark described.  This series also updates
-> Documentation/devicetree/bindings/submitting-patches.txt to formally
-> document this policy.
+> Stefan Wahren (4):
+>   dt-bindings: Add vendor prefix for Raspberry Pi
+>   dt-bindings: Add root properties for Raspberry Pi
+>   ARM: bcm2835: Add header file for pinctrl constants
+>   ARM: bcm2835: Use pinctrl header
 >
-> These patches apply on next-20150123.
->
-> This second version incorporates some revisions based on feedback from
-> Rob Herring.
+>  Documentation/devicetree/bindings/arm/bcm2835.txt  |   31 ++++++++++++++++++--
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  arch/arm/boot/dts/bcm2835-rpi-b-plus.dts           |    4 +--
+>  arch/arm/boot/dts/bcm2835-rpi-b.dts                |    4 +--
+>  arch/arm/boot/dts/bcm2835-rpi.dtsi                 |    8 ++---
+>  arch/arm/boot/dts/bcm2835.dtsi                     |    3 +-
+>  include/dt-bindings/pinctrl/bcm2835.h              |   27 +++++++++++++++++
+>  7 files changed, 67 insertions(+), 11 deletions(-)
+>  create mode 100644 include/dt-bindings/pinctrl/bcm2835.h
 
-Looks good. I've applied the series.
+Who do you intend to apply this? For the DT binding parts:
 
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
