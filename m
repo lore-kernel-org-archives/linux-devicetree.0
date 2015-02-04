@@ -1,240 +1,228 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2] ASoC: tlv320aic3x: Add support for tlv320aic3104
-Date: Wed, 4 Feb 2015 14:35:39 +0200
-Message-ID: <54D2121B.3030200@ti.com>
-References: <54CF2CDA.3060607@ti.com> <1422888485-13626-1-git-send-email-jsarha@ti.com> <CA+sos78ar+MX2CvrjtzYN9MvtO9g=upMuOScXuXa2=zQ81qQwQ@mail.gmail.com> <54D1D80F.1090304@ti.com> <CA+sos797a7CT2KqCwrW5CaL1vF0GVCHQGxp3gDAB7PTFi4jZjQ@mail.gmail.com> <54D1EE24.3000309@ti.com> <CA+sos7_kRHru5_AZcVyhzYHtA3JkdcRVfq=bT3X=bMWjFvrd=Q@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v5 10/13] clk: samsung: exynos5433: Add clocks for
+ CMU_BUS{0|1|2} domains
+Date: Wed, 04 Feb 2015 14:02:05 +0100
+Message-ID: <54D2184D.8020400@samsung.com>
+References: <1422887047-30911-1-git-send-email-cw00.choi@samsung.com>
+ <1422887047-30911-11-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CA+sos7_kRHru5_AZcVyhzYHtA3JkdcRVfq=bT3X=bMWjFvrd=Q@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?B?QmVub8OudCBUaMOpYmF1ZGVhdQ==?= <benoit.thebaudeau.dev@gmail.com>
-Cc: Jyri Sarha <jsarha@ti.com>, linux-omap@vger.kernel.org, Alsa-devel <alsa-devel@alsa-project.org>, devicetree@vger.kernel.org, broonie@kernel.org, liam.r.girdwood@linux.intel.com, wlear@appliedlogix.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1422887047-30911-11-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, mturquette@linaro.org
+Cc: tomasz.figa@gmail.com, kgene@kernel.org, pankaj.dubey@samsung.com, sangbae90.lee@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2015 01:11 PM, Beno=C3=AEt Th=C3=A9baudeau wrote:
-> Dear Peter Ujfalusi,
->=20
-> On Wed, Feb 4, 2015 at 11:02 AM, Peter Ujfalusi <peter.ujfalusi@ti.co=
-m> wrote:
->> On 02/04/2015 11:33 AM, Beno=C3=AEt Th=C3=A9baudeau wrote:
->>> What I meant was to do the following instead:
->>>
->>> /*
->>>  * ADC PGA mix input volumes. From -12 to 0 dB in 1.5 dB steps. Dis=
-connected
->>>  * below -12 dB
->>>  */
->>> static const DECLARE_TLV_DB_SCALE(mix_tlv, -1350, 150, 1);
->>>
->>> /* Left PGA Mixer for tlv320aic3104 */
->>> static const struct snd_kcontrol_new aic3104_left_pga_mixer_control=
-s[] =3D {
->>>     SOC_DAPM_SINGLE_MUT_TLV("Line1L Volume",
->>>                 LINE1L_2_LADC_CTRL, 3, 7, 15, 1, mix_tlv),
->>
->> You mean SOC_DAPM_SINGLE_TLV() ?
->=20
-> No. It would not fit our needs here.
->=20
->> There is no _MUT_ variant AFAIK.
->=20
-> Indeed, but support could be added, for it, something like (might nee=
-d
-> updating and some other changes in DAPM):
->=20
-> #define SOC_DAPM_SINGLE_MUT_TLV(xname, reg, shift, min, max, invert,
-> tlv_array) \
-> {    .iface =3D SNDRV_CTL_ELEM_IFACE_MIXER, .name =3D xname, \
->     .info =3D snd_soc_info_volsw_mut, \
->     .access =3D SNDRV_CTL_ELEM_ACCESS_TLV_READ | SNDRV_CTL_ELEM_ACCES=
-S_READWRITE,\
->     .tlv.p =3D (tlv_array), \
->     .get =3D snd_soc_dapm_get_volsw_mut, .put =3D snd_soc_dapm_put_vo=
-lsw_mut, \
->     .private_value =3D SOC_SINGLE_MUT_VALUE(reg, shift, min, max, inv=
-ert) }
+Hi Chanwoo,
 
-We would need more than this for aic3x driver. Something which handles:
-valid field values: 0 - 8 (inverted or not)
-Plus when mute is asked we should write 0xf (mute value)
-0b1001 - 0b1110 is reserved value on all codecs.
+On 02/02/15 15:24, Chanwoo Choi wrote:
+> This patch adds the mux/divider/gate clocks for CMU_BUS{0|1|2} domains
+> which contain global data buses clocked at up the 400MHz. These blocks
+> transfer data between DRAM and various sub-blocks. These clock domains
+> also contain global peripheral buses clocked at 67/111/200/222/266/333/400
+> MHz and used for register accesses.
 
-#define SOC_DAPM_SINGLE_MUT_TLV(xname, reg, shift, min, max, mute_val,
-				invert, tlv_array)
+> +/*
+> + * Register offset definitions for CMU_BUS{0|1|2}
+> + */
+> +#define DIV_BUS				0x0600
+> +#define DIV_STAT_BUS			0x0700
+> +#define ENABLE_ACLK_BUS			0x0800
+> +#define ENABLE_PCLK_BUS			0x0900
+> +#define ENABLE_IP_BUS0			0x0b00
+> +#define ENABLE_IP_BUS1			0x0b04
+> +
+> +#define MUX_SEL_BUS2			0x0200	/* Only for CMU_BUS2 */
+> +#define MUX_ENABLE_BUS2			0x0300	/* Only for CMU_BUS2 */
+> +#define MUX_STAT_BUS2			0x0400	/* Only for CMU_BUS2 */
+> +
+> +/* list of all parent clock list */
+> +PNAME(mout_aclk_bus2_400_p)	= { "oscclk", "aclk_bus2_400", };
+> +
+> +#define CMU_BUS_COMMON_CLK_REGS	\
+> +	DIV_BUS,		\
+> +	DIV_STAT_BUS,		\
+> +	ENABLE_ACLK_BUS,	\
+> +	ENABLE_PCLK_BUS,	\
+> +	ENABLE_IP_BUS0,		\
+> +	ENABLE_IP_BUS1
+> +
+> +static unsigned long bus01_clk_regs[] __initdata = {
+> +	CMU_BUS_COMMON_CLK_REGS,
+> +};
+> +
+> +static unsigned long bus2_clk_regs[] __initdata = {
+> +	MUX_SEL_BUS2,
+> +	MUX_ENABLE_BUS2,
+> +	MUX_STAT_BUS2,
+> +	CMU_BUS_COMMON_CLK_REGS,
+> +};
+> +
+> +static struct samsung_div_clock bus0_div_clks[] __initdata = {
+> +	/* DIV_BUS0 */
+> +	DIV(CLK_DIV_PCLK_BUS_133, "div_pclk_bus0_133", "aclk_bus0_400",
+> +			DIV_BUS, 0, 3),
+> +};
+> +
+> +/* CMU_BUS0 clocks */
+> +static struct samsung_gate_clock bus0_gate_clks[] __initdata = {
+> +	/* ENABLE_ACLK_BUS0 */
+> +	GATE(CLK_ACLK_AHB2APB_BUSP, "aclk_ahb2apb_bus0p", "div_pclk_bus0_133",
+> +			ENABLE_ACLK_BUS, 4, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_ACLK_BUSNP_133, "aclk_bus0np_133", "div_pclk_bus0_133",
+> +			ENABLE_ACLK_BUS, 2, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_ACLK_BUSND_400, "aclk_bus0nd_400", "aclk_bus0_400",
+> +			ENABLE_ACLK_BUS, 0, CLK_IGNORE_UNUSED, 0),
+> +
+> +	/* ENABLE_PCLK_BUS0 */
+> +	GATE(CLK_PCLK_BUSSRVND_133, "pclk_bus0srvnd_133", "div_pclk_bus0_133",
+> +			ENABLE_PCLK_BUS, 2, 0, 0),
+> +	GATE(CLK_PCLK_PMU_BUS, "pclk_pmu_bus0", "div_pclk_bus0_133",
+> +			ENABLE_PCLK_BUS, 1, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_PCLK_SYSREG_BUS, "pclk_sysreg_bus0", "div_pclk_bus0_133",
+> +			ENABLE_PCLK_BUS, 0, CLK_IGNORE_UNUSED, 0),
+> +};
+> +
+> +/* CMU_BUS1 clocks */
+> +static struct samsung_div_clock bus1_div_clks[] __initdata = {
+> +	/* DIV_BUS1 */
+> +	DIV(CLK_DIV_PCLK_BUS_133, "div_pclk_bus1_133", "aclk_bus1_400",
+> +			DIV_BUS, 0, 3),
+> +};
+> +
+> +static struct samsung_gate_clock bus1_gate_clks[] __initdata = {
+> +	/* ENABLE_ACLK_BUS1 */
+> +	GATE(CLK_ACLK_AHB2APB_BUSP, "aclk_ahb2apb_bus1p", "div_pclk_bus1_133",
+> +			ENABLE_ACLK_BUS, 4, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_ACLK_BUSNP_133, "aclk_bus1np_133", "div_pclk_bus1_133",
+> +			ENABLE_ACLK_BUS, 2, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_ACLK_BUSND_400, "aclk_bus1nd_400", "aclk_bus1_400",
+> +			ENABLE_ACLK_BUS, 0, CLK_IGNORE_UNUSED, 0),
+> +
+> +	/* ENABLE_PCLK_BUS1 */
+> +	GATE(CLK_PCLK_BUSSRVND_133, "pclk_bus1srvnd_133", "div_pclk_bus1_133",
+> +			ENABLE_PCLK_BUS, 2, 0, 0),
+> +	GATE(CLK_PCLK_PMU_BUS, "pclk_pmu_bus1", "div_pclk_bus1_133",
+> +			ENABLE_PCLK_BUS, 1, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_PCLK_SYSREG_BUS, "pclk_sysreg_bus1", "div_pclk_bus1_133",
+> +			ENABLE_PCLK_BUS, 0, CLK_IGNORE_UNUSED, 0),
+> +};
+> +
+> +/* CMU_BUS2 clocks */
+> +static struct samsung_mux_clock bus2_mux_clks[] __initdata = {
+> +	/* MUX_SEL_BUS2 */
+> +	MUX(CLK_MOUT_ACLK_BUS2_400_USER, "mout_aclk_bus2_400_user",
+> +			mout_aclk_bus2_400_p, MUX_SEL_BUS2, 0, 1),
+> +};
+> +
+> +static struct samsung_div_clock bus2_div_clks[] __initdata = {
+> +	/* DIV_BUS2 */
+> +	DIV(CLK_DIV_PCLK_BUS_133, "div_pclk_bus2_133",
+> +			"mout_aclk_bus2_400_user", DIV_BUS, 0, 3),
+> +};
+> +
+> +static struct samsung_gate_clock bus2_gate_clks[] __initdata = {
+> +	/* ENABLE_ACLK_BUS2 */
+> +	GATE(CLK_ACLK_AHB2APB_BUSP, "aclk_ahb2apb_bus2p", "div_pclk_bus2_133",
+> +			ENABLE_ACLK_BUS, 3, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_ACLK_BUSNP_133, "aclk_bus2np_133", "div_pclk_bus2_133",
+> +			ENABLE_ACLK_BUS, 2, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_ACLK_BUS2BEND_400, "aclk_bus2bend_400",
+> +			"mout_aclk_bus2_400_user", ENABLE_ACLK_BUS,
+> +			1, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_ACLK_BUS2RTND_400, "aclk_bus2rtnd_400",
+> +			"mout_aclk_bus2_400_user", ENABLE_ACLK_BUS,
+> +			0, CLK_IGNORE_UNUSED, 0),
+> +
+> +	/* ENABLE_PCLK_BUS2 */
+> +	GATE(CLK_PCLK_BUSSRVND_133, "pclk_bus2srvnd_133", "div_pclk_bus2_133",
+> +			ENABLE_PCLK_BUS, 2, 0, 0),
+> +	GATE(CLK_PCLK_PMU_BUS, "pclk_pmu_bus2", "div_pclk_bus2_133",
+> +			ENABLE_PCLK_BUS, 1, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_PCLK_SYSREG_BUS, "pclk_sysreg_bus2", "div_pclk_bus2_133",
+> +			ENABLE_PCLK_BUS, 0, CLK_IGNORE_UNUSED, 0),
+> +};
+> +
+> +#define CMU_BUS_INFO_CLKS(id)						\
+> +	.div_clks		= bus##id##_div_clks,			\
+> +	.nr_div_clks		= ARRAY_SIZE(bus##id##_div_clks),	\
+> +	.gate_clks		= bus##id##_gate_clks,			\
+> +	.nr_gate_clks		= ARRAY_SIZE(bus##id##_gate_clks),	\
+> +	.nr_clk_ids		= BUSx_NR_CLK
+> +
+> +static struct samsung_cmu_info bus0_cmu_info __initdata = {
+> +	CMU_BUS_INFO_CLKS(0),
+> +	.clk_regs		= bus01_clk_regs,
+> +	.nr_clk_regs		= ARRAY_SIZE(bus01_clk_regs),
+> +};
+> +
+> +static struct samsung_cmu_info bus1_cmu_info __initdata = {
+> +	CMU_BUS_INFO_CLKS(1),
+> +	.clk_regs		= bus01_clk_regs,
+> +	.nr_clk_regs		= ARRAY_SIZE(bus01_clk_regs),
+> +};
+> +
+> +static struct samsung_cmu_info bus2_cmu_info __initdata = {
+> +	CMU_BUS_INFO_CLKS(2),
+> +	.mux_clks		= bus2_mux_clks,
+> +	.nr_mux_clks		= ARRAY_SIZE(bus2_mux_clks),
+> +	.clk_regs		= bus2_clk_regs,
+> +	.nr_clk_regs		= ARRAY_SIZE(bus2_clk_regs),
+> +};
+> +
+> +#define exynos5433_cmu_bus_init(id)					\
+> +static void __init exynos5433_cmu_bus##id##_init(struct device_node *np)\
+> +{									\
+> +	samsung_cmu_register_one(np, &bus##id##_cmu_info);		\
+> +}									\
+> +CLK_OF_DECLARE(exynos5433_cmu_bus##id,					\
+> +		"samsung,exynos5433-cmu-bus"#id,			\
+> +		exynos5433_cmu_bus##id##_init)
+> +
+> +exynos5433_cmu_bus_init(0);
+> +exynos5433_cmu_bus_init(1);
+> +exynos5433_cmu_bus_init(2);
 
-> /**
->  * snd_soc_dapm_get_volsw_mut - dapm mixer get callback
->  * @kcontrol: mixer control
->  * @ucontrol: control element information
->  *
->  * Callback to get the value of a dapm mixer control with a hole sepa=
-rating the
->  * mute value from the other valid values.
->  *
->  * Returns 0 for success.
->  */
-> int snd_soc_dapm_get_volsw_mut(struct snd_kcontrol *kcontrol,
->     struct snd_ctl_elem_value *ucontrol)
-> {
->     struct snd_soc_dapm_widget_list *wlist =3D snd_kcontrol_chip(kcon=
-trol);
->     struct snd_soc_dapm_widget *widget =3D wlist->widgets[0];
->     struct soc_mixer_control *mc =3D
->         (struct soc_mixer_control *)kcontrol->private_value;
->     unsigned int reg =3D mc->reg;
->     unsigned int shift =3D mc->shift;
->     unsigned int rshift =3D mc->rshift;
->     int min =3D mc->min;
->     int max =3D mc->max;
->     unsigned int invert =3D mc->invert;
->     unsigned int mask =3D (1 << fls(max)) - 1;
->=20
->     ucontrol->value.integer.value[0] =3D
->         (snd_soc_read(widget->codec, reg) >> shift) & mask;
->     if (shift !=3D rshift)
->         ucontrol->value.integer.value[1] =3D
->             (snd_soc_read(widget->codec, reg) >> rshift) & mask;
->     if (invert) {
->         ucontrol->value.integer.value[0] =3D
->             mask - ucontrol->value.integer.value[0];
->         if (shift !=3D rshift)
->             ucontrol->value.integer.value[1] =3D
->                 mask - ucontrol->value.integer.value[1];
->     }
->     if (ucontrol->value.integer.value[0] > 0)
->         ucontrol->value.integer.value[0] -=3D min - 1;
->     if (shift !=3D rshift)
->         if (ucontrol->value.integer.value[1] > 0)
->             ucontrol->value.integer.value[1] -=3D min - 1;
->=20
->     return 0;
-> }
-> EXPORT_SYMBOL_GPL(snd_soc_dapm_get_volsw_mut);
->=20
-> /**
->  * snd_soc_dapm_put_volsw_mut - dapm mixer set callback
->  * @kcontrol: mixer control
->  * @ucontrol: control element information
->  *
->  * Callback to set the value of a dapm mixer control with a hole sepa=
-rating the
->  * mute value from the other valid values.
->  *
->  * Returns 0 for success.
->  */
-> int snd_soc_dapm_put_volsw_mut(struct snd_kcontrol *kcontrol,
->     struct snd_ctl_elem_value *ucontrol)
-> {
->     struct snd_soc_dapm_widget_list *wlist =3D snd_kcontrol_chip(kcon=
-trol);
->     struct snd_soc_dapm_widget *widget =3D wlist->widgets[0];
->     struct snd_soc_codec *codec =3D widget->codec;
->     struct soc_mixer_control *mc =3D
->         (struct soc_mixer_control *)kcontrol->private_value;
->     unsigned int reg =3D mc->reg;
->     unsigned int shift =3D mc->shift;
->     int min =3D mc->min;
->     int max =3D mc->max;
->     unsigned int mask =3D (1 << fls(max)) - 1;
->     unsigned int invert =3D mc->invert;
->     unsigned int val;
->     int connect, change;
->     struct snd_soc_dapm_update update;
->     int wi;
->=20
->     val =3D (ucontrol->value.integer.value[0] & mask);
->     connect =3D !!val;
->=20
->     if (val)
->         val +=3D min - 1;
->     if (invert)
->         val =3D mask - val;
->     mask =3D mask << shift;
->     val =3D val << shift;
->=20
->     mutex_lock(&codec->mutex);
->=20
->     change =3D snd_soc_test_bits(widget->codec, reg, mask, val);
->     if (change) {
->         for (wi =3D 0; wi < wlist->num_widgets; wi++) {
->             widget =3D wlist->widgets[wi];
->=20
->             widget->value =3D val;
->=20
->             update.kcontrol =3D kcontrol;
->             update.widget =3D widget;
->             update.reg =3D reg;
->             update.mask =3D mask;
->             update.val =3D val;
->             widget->dapm->update =3D &update;
->=20
->             dapm_mixer_update_power(widget, kcontrol, connect);
->=20
->             widget->dapm->update =3D NULL;
->         }
->     }
->=20
->     mutex_unlock(&codec->mutex);
->     return 0;
-> }
-> EXPORT_SYMBOL_GPL(snd_soc_dapm_put_volsw_mut);
->=20
->> According to the datasheets of aic3106, aic3104:
->> 0b0000 - 0b1000 is valid (0 - -12 dB)
->> 0b1001 - 0b1110 is reserved, do not write these sequences to the reg=
-ister
->> 0b1111 is disconnected.
->>
->> And for fun the aic3007's reg20 for example:
->> 0b0000 - 0dB
->> 0b0001 - 0b0011 - reserved
->> 0b0100 - -6dB
->> 0b0101 - 0b0111 - reserved
->> 0b1000 - -12dB
->> 0b1001 - 0b1110 - reserved
->> 0b1111 - disconnected
->>
->> Note that the driver never had control for these gains and the aic31=
-04 support
->> is following this behavior, but if we do it for aic3104 we should do=
- it for
->> all other support codecs as well as a followup patch or series. IMHO=
-=2E
->=20
-> I had not checked the other CODECs. So for all these CODECs, toggling
-> either as 0b0000/0b0001 or as 0b1110/0b1111 (like the driver currentl=
-y
-> does) is wrong.
+I picked up all the exynos5433 patches, however I don't quite like
+how we re defining 3 almost identical sets of data for CMU_BUS0/1/2.
 
-The driver toggles between 0b0000 and 0b1111 currently, which is correc=
-t:
-# amixer sset 'Left PGA Mixer Line1L' off
-snd_soc_dapm_put_volsw_aic3x 1: reg: 0x13, val: 0x00
-snd_soc_dapm_put_volsw_aic3x 2: val: 0x78, mask: 0x78
+We already have the parent clocks to CMU_BUSn specified in DT, then
+we could list the CMU_BUSn output clock names using clock-output-names
+property.  We could also differentiate CMU_BUS instances with an OF
+alias id, which could be used to create the CMU_BUS internal divider
+clock names (div_pclk_bus{0,1,2}_133).
 
-# amixer sset 'Left PGA Mixer Line1L' on
-snd_soc_dapm_put_volsw_aic3x 1: reg: 0x13, val: 0x01
-snd_soc_dapm_put_volsw_aic3x 2: val: 0x00, mask: 0x78
+This would require new data structures to store the register bit fields
+for each clock, clk names would be filled from DT.  It likely wouldn't
+be much less code this way, if not more.  And we would need to handle
+various clock types somehow, thus this would imply changes in the common
+samsung clk code.  I guess it's worth to try something like this in
+future (for any new SoCs) though, because repeating data as is done
+above doesn't look like a pattern we'd like to stay with.
 
-> I agree that they should be fixed too. But for them,
-> it's even more complicated because of the multiple reserved value
-> ranges. Or maybe we could just ignore these reserved ranges and handl=
-e
-> the mute value, but that would mean relying on the user not to use
-> reserved values. So maybe use TLV_DB_RANGE_HEAD() and
-> TLV_DB_SCALE_ITEM() to define mix_tlv, then use
-> SOC_(DAPM_)SINGLE_TLV().
+> diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
+> index 4828e02..6bc7f51 100644
+> --- a/include/dt-bindings/clock/exynos5433.h
+> +++ b/include/dt-bindings/clock/exynos5433.h
 
-I myself also wondered time to time why the driver was written the way =
-it has
-been regarding to these gain controls.
+> +/* CMU_BUS{0|1|2} */
+> +#define CLK_DIV_PCLK_BUS_133				1
+> +
+> +#define CLK_ACLK_AHB2APB_BUSP				2
+> +#define CLK_ACLK_BUSNP_133				3
+> +#define CLK_ACLK_BUSND_400				4
+> +#define CLK_PCLK_BUSSRVND_133				5
+> +#define CLK_PCLK_PMU_BUS				6
+> +#define CLK_PCLK_SYSREG_BUS				7
+> +
+> +#define CLK_MOUT_ACLK_BUS2_400_USER			8  /* Only CMU_BUS2 */
+> +#define CLK_ACLK_BUS2BEND_400				9  /* Only CMU_BUS2 */
+> +#define CLK_ACLK_BUS2RTND_400				10 /* Only CMU_BUS2 */
+> +
+> +#define BUSx_NR_CLK					11
 
---=20
-P=C3=A9ter
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sylwester
