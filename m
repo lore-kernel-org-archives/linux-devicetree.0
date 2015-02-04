@@ -1,66 +1,55 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH_V2 25/34] serial: 8250_jz47xx: support for Ingenic
- jz47xx UARTs
-Date: Wed, 04 Feb 2015 22:02:57 +0100
-Message-ID: <1423083777.27378.8.camel@x220>
-References: <1423063323-19419-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-	 <1423063323-19419-26-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH_V4 0/3] sound:soc: jz4740: Add DT, dynamic sampling
+Date: Wed, 4 Feb 2015 21:13:22 +0000
+Message-ID: <20150204211322.GP21293@sirena.org.uk>
+References: <1422960959-40403-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423063323-19419-26-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, mturquette@linaro.org, sboyd@codeaurora.org, ralf@linux-mips.org, jslaby@suse.cz, tglx@linutronix.de, jason@lakedaemon.net, lars@metafoo.de, paul.burton@imgtec.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cveWy1lHDZPvR+aK"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422960959-40403-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-02-04 at 15:21 +0000, Zubair Lutfullah Kakakhel wrote:
-> From: Paul Burton <paul.burton@imgtec.com>
-> 
-> Introduce a driver suitable for use with the UARTs present in
-> Ingenic jz47xx series SoCs. These are described as being ns16550
-> compatible but aren't quite - they require the setting of an extra bit
-> in the FCR register to enable the UART module. The serial_out
-> implementation is the same as that in arch/mips/jz4740/serial.c - which
-> will shortly be removed.
-> 
-> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: linux-serial@vger.kernel.org
-> 
-> ---
-> V2 changes
-> Removed FSF address
-> Added select SERIAL_CORE_CONSOLE to fix a build error
-> ---
->  drivers/tty/serial/8250/8250_jz47xx.c | 225 ++++++++++++++++++++++++++++++++++
->  drivers/tty/serial/8250/Kconfig       |   9 ++
->  drivers/tty/serial/8250/Makefile      |   1 +
->  3 files changed, 235 insertions(+)
->  create mode 100644 drivers/tty/serial/8250/8250_jz47xx.c
-> 
->[...]
-> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-> index 0fcbcd2..ebb298e 100644
-> --- a/drivers/tty/serial/8250/Kconfig
-> +++ b/drivers/tty/serial/8250/Kconfig
-> @@ -322,3 +322,12 @@ config SERIAL_8250_MT6577
->  	help
->  	  If you have a Mediatek based board and want to use the
->  	  serial port, say Y to this option. If unsure, say N.
-> +
-> +config SERIAL_8250_JZ47XX
-> +	tristate "Support for Ingenic jz47xx series serial ports"
-> +	depends on SERIAL_8250
-> +	select SERIAL_EARLYCON
-> +	select SERIAL_CORE_CONSOLE
-> +	help
-> +	  If you have a system using an Ingenic jz47xx series SoC and wish to
-> +	  make use of its UARTs, say Y to this option. If unsure, say N.
 
-Nit: should people never say M?
+--cveWy1lHDZPvR+aK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 03, 2015 at 10:55:56AM +0000, Zubair Lutfullah Kakakhel wrote:
+> Hi,
+>=20
+> Here are a few simple patches for the jz4740.
+>=20
+> First adds dynamic sampling support to jz4740-i2s.
+> Then two to add a simple binding and DT support.
+> Then a patch to set the clock rate for i2s.
 
-Paul Bolle
+Applied all, but as I think has been mentioned before please use subject
+lines matching the usual style for the subsystem.
+
+--cveWy1lHDZPvR+aK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU0otxAAoJECTWi3JdVIfQHikH/Rc7W7B8TZPTHKdZhjq0uC/q
+KjXJhZ6LiW1vz0cXkMN4m7yKvveoJe9qGuMzaCky0JSE4Ha0BLhVRiwB2+hSyK8f
+JjZAuqEJ3No+sUMjrtWLPIQPyUTwsuk8DJSVBXp8EyqbzLIcjQUG/j0H0HVHfRJP
+m5Z33OUox8lpndZ5O1+tBTcjmBXu5j2hHTP4FvjB1yxKWpw8i+wl+LtynkfIslee
+MMOkhqH9xmVOxLHfOMj6yekHxEK8m+IdF0gLw1WxYYnvzi66RBNJKvgcg8pAmxsW
+rvjw0VygVpLPFn2M4cg5C8aHZIMj0s9l3ft6+s1oTrhSNv9K3dcC9YDxksaPVx8=
+=Y2CI
+-----END PGP SIGNATURE-----
+
+--cveWy1lHDZPvR+aK--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
