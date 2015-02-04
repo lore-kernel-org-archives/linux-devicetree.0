@@ -1,57 +1,119 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V2 RESEND 0/4] ARM: bcm2835: DT improvements
-Date: Wed, 04 Feb 2015 08:27:05 +0100
-Message-ID: <54D1C9C9.9040702@i2se.com>
-References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com> <CAL_JsqJubTomhUPbBck_cBJoiL2tuDRv++tANoLtBidmSdxUYQ@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2] ASoC: tlv320aic3x: Add support for tlv320aic3104
+Date: Wed, 4 Feb 2015 10:27:59 +0200
+Message-ID: <54D1D80F.1090304@ti.com>
+References: <54CF2CDA.3060607@ti.com> <1422888485-13626-1-git-send-email-jsarha@ti.com> <CA+sos78ar+MX2CvrjtzYN9MvtO9g=upMuOScXuXa2=zQ81qQwQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJubTomhUPbBck_cBJoiL2tuDRv++tANoLtBidmSdxUYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CA+sos78ar+MX2CvrjtzYN9MvtO9g=upMuOScXuXa2=zQ81qQwQ@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?B?QmVub8OudCBUaMOpYmF1ZGVhdQ==?= <benoit.thebaudeau.dev@gmail.com>, Jyri Sarha <jsarha@ti.com>
+Cc: linux-omap@vger.kernel.org, Alsa-devel <alsa-devel@alsa-project.org>, devicetree@vger.kernel.org, broonie@kernel.org, liam.r.girdwood@linux.intel.com, wlear@appliedlogix.com
 List-Id: devicetree@vger.kernel.org
 
-Am 04.02.2015 um 03:47 schrieb Rob Herring:
-> On Thu, Jan 29, 2015 at 12:10 PM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
->> This patch series contains DT improvements for the Raspberry Pi.
+On 02/04/2015 12:25 AM, Beno=C3=AEt Th=C3=A9baudeau wrote:
+> Dear Jyri Sarha,
+>=20
+> Sorry to come late.
+>=20
+> On Mon, Feb 2, 2015 at 3:48 PM, Jyri Sarha <jsarha@ti.com> wrote:
+> [...]
+>> diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv32=
+0aic3x.c
+>> index b7ebce0..cb92cdb 100644
+>> --- a/sound/soc/codecs/tlv320aic3x.c
+>> +++ b/sound/soc/codecs/tlv320aic3x.c
+> [...]
+>> @@ -550,6 +575,22 @@ static const struct snd_kcontrol_new aic3x_righ=
+t_pga_mixer_controls[] =3D {
+>>         SOC_DAPM_SINGLE_AIC3X("Mic3R Switch", MIC3LR_2_RADC_CTRL, 0,=
+ 1, 1),
+>>  };
 >>
->> Patch 1,2: Add missing vendor prefix and root compatible properties
->> Patch 3,4: Use constants for pin function instead of error-prone numbers
->>
->> Changes in V2:
->> - add all currently known Raspberry Pi boards to binding documentation
->>   as suggested by Stephen Warren
->>
->> Stefan Wahren (4):
->>   dt-bindings: Add vendor prefix for Raspberry Pi
->>   dt-bindings: Add root properties for Raspberry Pi
->>   ARM: bcm2835: Add header file for pinctrl constants
->>   ARM: bcm2835: Use pinctrl header
->>
->>  Documentation/devicetree/bindings/arm/bcm2835.txt  |   31 ++++++++++++++++++--
->>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->>  arch/arm/boot/dts/bcm2835-rpi-b-plus.dts           |    4 +--
->>  arch/arm/boot/dts/bcm2835-rpi-b.dts                |    4 +--
->>  arch/arm/boot/dts/bcm2835-rpi.dtsi                 |    8 ++---
->>  arch/arm/boot/dts/bcm2835.dtsi                     |    3 +-
->>  include/dt-bindings/pinctrl/bcm2835.h              |   27 +++++++++++++++++
->>  7 files changed, 67 insertions(+), 11 deletions(-)
->>  create mode 100644 include/dt-bindings/pinctrl/bcm2835.h
-> Who do you intend to apply this? 
+>> +/* Left PGA Mixer for tlv320aic3104 */
+>> +static const struct snd_kcontrol_new aic3104_left_pga_mixer_control=
+s[] =3D {
+>> +       SOC_DAPM_SINGLE_AIC3X("Line1L Switch", LINE1L_2_LADC_CTRL, 3=
+, 1, 1),
+>> +       SOC_DAPM_SINGLE_AIC3X("Line1R Switch", LINE1R_2_LADC_CTRL, 3=
+, 1, 1),
+>> +       SOC_DAPM_SINGLE_AIC3X("Mic2L Switch", MIC3LR_2_LADC_CTRL, 4,=
+ 1, 1),
+>> +       SOC_DAPM_SINGLE_AIC3X("Mic2R Switch", MIC3LR_2_LADC_CTRL, 0,=
+ 1, 1),
+>> +};
+>> +
+>> +/* Right PGA Mixer for tlv320aic3104 */
+>> +static const struct snd_kcontrol_new aic3104_right_pga_mixer_contro=
+ls[] =3D {
+>> +       SOC_DAPM_SINGLE_AIC3X("Line1R Switch", LINE1R_2_RADC_CTRL, 3=
+, 1, 1),
+>> +       SOC_DAPM_SINGLE_AIC3X("Line1L Switch", LINE1L_2_RADC_CTRL, 3=
+, 1, 1),
+>> +       SOC_DAPM_SINGLE_AIC3X("Mic2L Switch", MIC3LR_2_RADC_CTRL, 4,=
+ 1, 1),
+>> +       SOC_DAPM_SINGLE_AIC3X("Mic2R Switch", MIC3LR_2_RADC_CTRL, 0,=
+ 1, 1),
+>> +};
+>> +
+>=20
+> This part is wrong. All these controls should be turned into TLVs.
+> Otherwise, because of the reset values of these registers, the
+> reserved value 0b1110 is used for the corresponding bit-fields if
+> their lsb is cleared using the controls above.
 
-I thought of Stephen and Lee.
+These mixers are using  custom put callbacks via SOC_DAPM_SINGLE_AIC3X(=
+):
+snd_soc_dapm_put_volsw_aic3x, this will make sure that the input level =
+control
+bits are handled right.
+The driver does not have means to handle the gain on these registers, i=
+t is
+either 0db (connected) or not connected.
 
-> For the DT binding parts:
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Generally speaking, you have tracked reserved registers, but you
+> should also track reserved values.
+>=20
+>>  /* Left Line1 Mux */
+>>  static const struct snd_kcontrol_new aic3x_left_line1l_mux_controls=
+ =3D
+>>  SOC_DAPM_ENUM("Route", aic3x_line1l_2_l_enum);
+> [...]
+>> @@ -839,6 +890,72 @@ static const struct snd_soc_dapm_route intercon=
+[] =3D {
+> [...]
+>> +/* For other than tlv320aic3104 */
+>=20
+> Typo above: not "other than" here.
+>=20
+>> +static const struct snd_soc_dapm_route intercon_extra_3104[] =3D {
+>> +       /* Left Input */
+>> +       {"Left PGA Mixer", "Mic2L Switch", "MIC2L"},
+>> +       {"Left PGA Mixer", "Mic2R Switch", "MIC2R"},
+>> +
+>> +       /* Right Input */
+>> +       {"Right PGA Mixer", "Mic2L Switch", "MIC2L"},
+>> +       {"Right PGA Mixer", "Mic2R Switch", "MIC2R"},
+>> +};
+>> +
+>>  static const struct snd_soc_dapm_route intercon_mono[] =3D {
+>>         /* Mono Output */
+>>         {"Mono Mixer", "Line2L Bypass Switch", "Left Line2L Mux"},
+> [...]
+>=20
+> The rest is good.
+>=20
+> Best regards,
+> Beno=C3=AEt
+>=20
 
-Thanks
 
-Stefan
-
+--=20
+P=C3=A9ter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
