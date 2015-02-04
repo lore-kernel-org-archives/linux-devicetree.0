@@ -1,59 +1,102 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/5] ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
-Date: Wed, 4 Feb 2015 19:40:09 +0100
-Message-ID: <CAMuHMdVX1xn01HcV=E2bC+bmLppKYCbyCxq2QBkssN_mmcYzLw@mail.gmail.com>
-References: <1423059315-28519-1-git-send-email-geert+renesas@glider.be>
-	<3598552.qKIyokxIlF@wuerfel>
-	<CAMuHMdU-GahSaQj6v2Yhmxsj8gmt1sbwrPfqm=ydMCc=uDcenA@mail.gmail.com>
-	<2328848.sGW6KXzxun@wuerfel>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 2/8] ARM: dt: Binding documentation for imx25 GCQ
+Date: Wed, 04 Feb 2015 16:48:32 +0000
+Message-ID: <54D24D60.2030009@kernel.org>
+References: <1422540556-14828-1-git-send-email-mpa@pengutronix.de> <1422540556-14828-3-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2328848.sGW6KXzxun@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <rmk@arm.linux.org.uk>, Simon Horman <horms+renesas@verge.net.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1422540556-14828-3-git-send-email-mpa@pengutronix.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Fabio Estevam <festevam@gmail.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>
+Cc: Denis Carikli <denis@eukrea.com>, =?windows-1252?Q?Eric_B=E9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 29/01/15 14:09, Markus Pargmann wrote:
+> The documentation describes the bindings for the imx25 GCQ unit which is
+> essentially a generic conversion queue using the imx25 ADC.
+> 
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> ---
+> 
+> Notes:
+>     Changes in v6:
+>      - Moved the raw_read code out to a different function to cleanup the code
+To be picky, that's in a later patch rather than this one...
+>      - Changed bindings to use adc-refp and adc-refn. Also a bit of cleanup in the
+>        setup routine.
+>      - Added defines for a complete list of references in the dt binding macros
+>     
+>     Changes in v5:
+>      - Fixed locking
+>      - Removed module owner
+> 
+>  .../devicetree/bindings/iio/adc/fsl,imx25-gcq.txt  | 54 ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt b/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
+> new file mode 100644
+> index 000000000000..9f7c08990034
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
+> @@ -0,0 +1,54 @@
+> +Freescale i.MX25 ADC GCQ device
+> +
+> +This is a generic conversion queue device that can convert any of the
+> +analog inputs using the ADC unit of the i.MX25.
+> +
+> +Required properties:
+> + - compatible: Should be "fsl,imx25-gcq".
+> + - reg: Should be the register range of the module.
+> + - interrupts: Should be the interrupt number of the module.
+> +   Typically this is <1>.
+> + - interrupt-parent: phandle to the tsadc module of the i.MX25.
+> + - #address-cells: Should be <1> (setting for the subnodes)
+> + - #size-cells: Should be <0> (setting for the subnodes)
+> +
+> +Optional properties:
+> + - vref-supply: The regulator supplying the ADC reference voltage.
+> +   Required when at least one subnode uses the external reference.
+Note, as commented on next patch, the regulator request should reflect
+this dependency.
+> +
+> +Sub-nodes:
+> +Optionally you can define subnodes which define the reference voltage
+> +for the analog inputs.
+> +
+> +Required properties for subnodes:
+> + - reg: Should be the number of the analog input.
+> +     0: xp
+> +     1: yp
+> +     2: xn
+> +     3: yn
+> +     4: wiper
+> +     5: inaux0
+> +     6: inaux1
+> +     7: inaux2
+> +Optional properties for subnodes:
+> + - fsl,adc-refp: specifies the positive reference input as defined in
+> +     <dt-bindings/iio/adc/fsl-imx25-gcq.h>
+> + - fsl,adc-refn: specifies the negative reference input as defined in
+> +     <dt-bindings/iio/adc/fsl-imx25-gcq.h>
+> +
+> +Example:
+> +
+> +	adc: adc@50030800 {
+> +		compatible = "fsl,imx25-gcq";
+> +		reg = <0x50030800 0x60>;
+> +		interrupt-parent = <&tscadc>;
+> +		interrupts = <1>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		inaux@5 {
+> +			reg = <5>;
+> +			fsl,adc-refp = <MX25_ADC_REF_INT>;
+> +			fsl,adc-refn = <MX25_ADC_REF_NGND>;
+> +		};
+> +	};
+> 
 
-On Wed, Feb 4, 2015 at 7:33 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 04 February 2015 18:04:57 Geert Uytterhoeven wrote:
->> On Wed, Feb 4, 2015 at 5:36 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Wednesday 04 February 2015 15:43:43 Geert Uytterhoeven wrote:
->> >>
->> >> Indeed. Note that I only try to preserve the register value before and after
->> >> migrating to generic l2c OF initialization. I did read (part of) the pl310
->> >> documentation, but it's still not clear to me if we really need
->> >> L2C_AUX_CTRL_SHARED_OVERRIDE. Perhaps this was just copied from
->> >> somewhere else without much afterthought?
->> >
->> > Have you checked what the hardware/bootloader actually sets in that bit?
->>
->> Yes, it boots with 0x02040000, i.e. L2C_AUX_CTRL_SHARED_OVERRIDE
->> (bit 22) is not set.
->>
->> After the l2c driver is finished with it, it contains 0x46440001.
->
-> I see. I guess someone understand the effect of this flag.
-> Does it make a difference on the machine you are looking at?
-
-Nope. I booted it without, too. No obvious differences.
-
-> I've read the spec at http://infocenter.arm.com/help/topic/com.arm.doc.ddi0246a/DDI0246A_l2cc_pl310_r0p0_trm.pdf
-> on the topic but couldn't make sense of it to understand whether a
-> particular setting might be required for specific hardware or might
-> be a performance optimization.
-
-Thanks! Ah, so I'm not alone...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
