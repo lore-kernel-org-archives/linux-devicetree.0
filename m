@@ -1,63 +1,66 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 1/5] ARM: shmobile: r8a7740 dtsi: Add cache-controller node
-Date: Wed,  4 Feb 2015 15:15:11 +0100
-Message-ID: <1423059315-28519-2-git-send-email-geert+renesas@glider.be>
-References: <1423059315-28519-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423059315-28519-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 0/5] ARM: shmobile: r8a7740/armadillo: Migrate to generic l2c OF
+Date: Wed,  4 Feb 2015 15:15:10 +0100
+Message-ID: <1423059315-28519-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add the missing cache-controller node. This will allow migration to the
+	Hi Simon, Magnus,
+
+This patch series migrates the DT-based generic r8a7740 platform and
+the armadillo legacy platform from calling l2x0_of_init() to the
 generic l2c OF initialization.
 
-The L2 cache is an ARM L2C-310 (r3p1-150rel0), of size 256 KiB (32 KiB x
-8 ways).
+Changes in v2:
+  - Fix interrupt reference in DT,
+  - Describe L2 better in DT,
+  - Keep only {,~}L2C_AUX_CTRL_SHARED_OVERRIDE in
+    machine_desc.l2c_aux_{val,mask}, as there's no DT property for
+    this.
+  - Add L1 cache to DT.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-This depends on "ARM: shmobile: r8a7740 dtsi: Add PM domain support"
-due to the pd_a3sm reference.
+Dependencies:
+  - The first patch depends on r8a7740 DT PM Domain support (tag
+    renesas-dt2-for-v3.20 in Simon's repository),
+  - Although there are separate patches for dtsi, SoC code, and board code,
+    there are dependencies among the individual patches:
+      - patches 2, 3, and 5 depend on patch 1,
+      - patch 4 depends on patches 2 and 3 (and thus 1).
 
-v2:
-  - Fix interrupt (should be 3 cells, not 1),
-  - Describe cache better.
----
- arch/arm/boot/dts/r8a7740.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Note that this conversion should be done on sh73a0, r8a7778, and r8a7779,
+too.
 
-diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-index 83c1c3ca1b8f1400..c84a99931e30304c 100644
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -37,6 +37,21 @@
- 		      <0xc2000000 0x1000>;
- 	};
- 
-+	L2: cache-controller {
-+		compatible = "arm,pl310-cache";
-+		reg = <0xf0100000 0x1000>;
-+		interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&pd_a3sm>;
-+		arm,data-latency = <3 3 3>;
-+		arm,tag-latency = <2 2 2>;
-+		cache-unified;
-+		cache-level = <2>;
-+		cache-size = <0x40000>;
-+		cache-sets = <1024>;
-+		cache-block-size = <32>;
-+		cache-line-size = <32>;
-+	};
-+
- 	dbsc3: memory-controller@fe400000 {
- 		compatible = "renesas,dbsc3-r8a7740";
- 		reg = <0xfe400000 0x400>;
+This was tested on armadillo-legacy and armadillo-multiplatform.
+
+Thanks!
+
+Geert Uytterhoeven (5):
+  ARM: shmobile: r8a7740 dtsi: Add cache-controller node
+  ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
+  ARM: shmobile: armadillo legacy: Migrate to generic l2c OF
+    initialization
+  ARM: shmobile: r8a7740: Remove mapping of L2 cache controller
+    registers
+  ARM: shmobile: r8a7740: Add L1 cache information to CPU node
+
+ arch/arm/boot/dts/r8a7740.dtsi                 | 24 ++++++++++++++++++++++++
+ arch/arm/mach-shmobile/board-armadillo800eva.c |  8 ++------
+ arch/arm/mach-shmobile/setup-r8a7740.c         | 18 ++----------------
+ 3 files changed, 28 insertions(+), 22 deletions(-)
+
 -- 
 1.9.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
