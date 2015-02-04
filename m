@@ -1,47 +1,362 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: tlv320aic3x: Fix bad comment before
- intercon_extra_3104 definition
-Date: Wed, 4 Feb 2015 10:36:54 +0000
-Message-ID: <20150204103654.GT21293@sirena.org.uk>
-References: <1423044946-22043-1-git-send-email-jsarha@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/4] mtd: nand: atmel: Update DT documentation after
+ splitting NFC and NAND
+Date: Wed, 4 Feb 2015 11:47:14 +0100
+Message-ID: <20150204114714.4dc36d84@bbrezillon>
+References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1417732214-3292-3-git-send-email-boris.brezillon@free-electrons.com>
+	<20150202075737.GC3523@norris-Latitude-E6410>
+	<20150202104236.649f99ad@bbrezillon>
+	<54D08AD7.3050209@atmel.com>
+	<20150203103736.3bcc222e@bbrezillon>
+	<54D1EF2D.7000108@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="17ZoW5S/Habmc9qe"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1423044946-22043-1-git-send-email-jsarha-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <54D1EF2D.7000108-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wlear-uoOHlzqel7feqrA4Bvp/NA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Josh,
 
---17ZoW5S/Habmc9qe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, 4 Feb 2015 18:06:37 +0800
+Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
 
-On Wed, Feb 04, 2015 at 12:15:46PM +0200, Jyri Sarha wrote:
-> The intercon_extra_3104 is obviously for tlv320aic3104.
+> Hi, Boris
+> 
+> Thanks a lot for your explanation, check my reply for more description 
+> for my suggestion.
+> 
+> On 2/3/2015 5:37 PM, Boris Brezillon wrote:
+> > On Tue, 3 Feb 2015 16:46:15 +0800
+> > Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> >
+> >> Hi, Boris, Brian
+> >>
+> >> On 2/2/2015 5:42 PM, Boris Brezillon wrote:
+> >>> Hi Brian,
+> >>>
+> >>> On Sun, 1 Feb 2015 23:57:37 -0800
+> >>> Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>>
+> >>>> Hi Boris,
+> >>>>
+> >>>> BTW, this series has a few conflicts with other things I have queued, so
+> >>>> you'll need to refresh.
+> >>> Yes, that's not a problem, but I'd like to be sure this is the way we
+> >>> want to go before rebasing this series.
+> >>>
+> >>>> On Thu, Dec 04, 2014 at 11:30:12PM +0100, Boris Brezillon wrote:
+> >>>>> The NAND and NFC (NAND Flash Controller) were linked together with a
+> >>>>> parent <-> child relationship.
+> >>>>>
+> >>>>> This model has several drawbacks:
+> >>>>> - it does not allow for multiple NAND chip handling while the controller
+> >>>>>     support multi-chip (even though the driver is not ready yet)
+> >>>>> - it mixes NAND partitions and NFC nodes at the same level (which is a bit
+> >>>>>     disturbing)
+> >>>> I agree that this is disturbing. (FWIW, it also seems a bit disturbing
+> >>>> that atmel_nand.c actually registers two different drivers and the tries
+> >>>> to synchronize them; this seems like it could be handled better, but I'm
+> >>>> not sure how at the moment.)
+> >>> Yep, that's my feeling too, but I'm not sure how this could/should be
+> >>> done.
+> >>> My problem here is that the pinmux should be requested by the EBI
+> >>> device because the EBI manages several type of devices and the data and
+> >>> address signals are shared by all the devices, hence the idea of
+> >>> defining the nand chip node under the EBI node.
+> >>> In the other hand, the NFC is not part of the EBI bus, and thus should
+> >>> not be defined under the EBI node.
+> >>>
+> >>> This might lead to the NFC device being probed before the NAND chip,
+> >>> hence the need for this synchronization.
+> >> OMHO, there is another way, which is change the NFC node to many NFC
+> >> properties, just like PMECC.
+> >> As NFC, PMECC or hamming ecc HW could be part of current NAND node (in
+> >> sama5, HSMC maybe a better name for this node. )
+> >>
+> >> And this change can avoid the sync problem and avoid two drivers in
+> >> atmel_nand.c.
+> > Sorry I don't get it...
+> > You gave a pseudo DT example in your following answers but I still
+> > don't understand how you'll link the NFC and its associated NAND chips.
+> >
+> >>>>> - the introduction of the EBI bus implies defining NAND chips under the
+> >>>>>     EBI node, and the ranges available under the EBI node should be
+> >>>>>     restricted to EBI address space, while the NFC references several
+> >>>>>     registers outside of these EBI ranges.
+> >>>> That's an interesting bit. I've actually run across this sort of problem
+> >>>> on other SoCs, where we have a relationship between two pieces of
+> >>>> hardware--the NAND chip and the NAND controller--where the former might
+> >>>> be on one bus (like your EBI bus, with chip selects), and the latter is
+> >>>> part of the top-level MMIO register space.
+> >>>>
+> >>>> But can you elaborate here a bit more? Does the NAND chip actually need
+> >>>> to be represented under your EBI bus?
+> >>> Yes, as said above this is all about pinmux conflicts, the NAND
+> >>> controller has to request the appropriate pinmux for its NAND chips but
+> >>> it will conflict with the pinmux requested by the EBI bus (data and
+> >>> address signals are shared by all the devices connected on the EBI).
+> >>>
+> >>>>> Move the NFC node outside of the NAND node, to get a more future-proof
+> >>>>> model.
+> >>>> I'm curious if an alternative solution might work, maybe one like the
+> >>>> Allwiner NAND (sunxi-nand) DT, which just reverses the roles; the 'NFC'
+> >>>> is the parent of the NAND chip(s). We've seen this pattern in other
+> >>>> contexts too.
+> >> I also prefer this. Then the dt node should looks like finally:
+> >>
+> >> nand (SMC may be more correct) node {
+> > This nand node contains nand chip nodes, so 'nand' is definitely not
+> > the appropriate name for this node.
+> > We could name it SMC, but I'd like to keep EBI (External Bus
+> > Interface), because the only thing that can register child devices in
+> > linux are busses (or MFD devices :-)).
+> > The SMC (Static Memory Controller) is just a additional control logic
+> > acting on top of the EBI.
+> 
+> After further thought, It seems the SMC should be correct name for nand 
+> chips' parent.
+> 
+> Before SAMA5 chips, the PMECC/ECC registers address is out of SMC address.
+> 
+> In SAMA5 chips, the PMECC/NFC-hw registers address is in SMC address.
+> take sama5d3 for example:
+>      NFC regs: 0xffffc000 0x00000070
+>      PMECC regs: 0xffffc070 0x00000490
+>      PMECC error regs: 0xffffc500 0x00000100
+> 
+> And the HSMC regs is: 0xffffc000 0x00000700
+> which include PMECC/NFC-hw registers.
 
-Applied, thanks.
+Hmm, it only includes part of the NFC registers, AFAIR, another region
+is reserved for the NFC IP.
 
---17ZoW5S/Habmc9qe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+For those shared registers (all embedded in the SMC memory region), I
+recommend using the regmap provided by the SMC syscon device, but
+that's another story ;-).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+My point is that I don't think nand chip nodes should be under the SMC
+node, but under the EBI one instead.
 
-iQEcBAEBCAAGBQJU0fZFAAoJECTWi3JdVIfQ9VgH/0ZmkpG2xyNL5H6jyQt/rkG9
-WrDdqI92xiXD0YF/bGLNcXMGnNCQWzPFlsa3IMBOuEeBjtth+qVJqEvJi1/Oq3Qk
-Bs4M+JgHGLh765XjWVDd8vHaa/6f1zOHXKXfOB9f+dxDsV2GXFo3RVFyCtu9JflS
-lTTNmC82K3dKR4tUI+vzciYvaG2qaS1M1OCyx9UC/dS+0ZQ3lPFQGRE0aHw71kTX
-fsvuq5fkl6ZFLR9j2PQxrPhThyiNXXWviEu9J8uY5bm7Nkr8yCnLCIq6QQj7h02Y
-fQms09KlYgh97uv6fPbd0vEyOVJD7indJygBwOaPdQZhcUu9B8uXCfR4xDp78pk=
-=5kiI
------END PGP SIGNATURE-----
+Anyway, wherever we decide to put those NAND chip nodes, the problem
+remains: we'll have to link the NAND chips with their controller (the
+NFC).
 
---17ZoW5S/Habmc9qe--
+> 
+> >
+> >>       PMECC properties
+> >>       NFC properties --> we can make the NFC not a node, just many NFC
+> >> properties.
+> > But all NAND chips will have to point to the same nfc struct, and I'd
+> > rather represent the NFC IP in the DT than hide it into the driver's
+> > logic.
+> > Moreover, the NFC IP is not part of the EBI memory range, so I'd prefer
+> > to keep it outside of the EBI node (though I'm not sure you're trying to
+> > represent the EBI bus here).
+> >
+> >>       pinctrl-nand0
+> >>       nand chip 0: {
+> >>           partitions...
+> >>       }
+> >>
+> >>       pinctrl-nand1
+> >>       nand chip 1: {
+> >>           partitions...
+> >>       }
+> >> }
+> >
+> > Could you give a real DT example instead of a pseudo DT representation,
+> > maybe I'll understand what you're suggesting then.
+> >
+> >>> I would have preferred this solution too, but the EBI/pinmux constraint
+> >>> explained above prevents this approach.
+> >> I am not very clear about the pinmux constraint.
+> >> Maybe we just leave one DT node (either EBI or current nand node) to
+> >> take care the pins.
+> >>
+> >>> What I can do though, is reverse the referencing: reference nand chips
+> >>> from the nand controller node.
+> >> I guess the dt looks like: (correct me if I am wrong)
+> >>
+> >> EBI node {
+> >>       pinctrl-nand0
+> >>       nand chip 0: {
+> >>           partitions...
+> >>       }
+> >>
+> >>       pinctrl-nand1
+> >>       nand chip 1: {
+> >>           partitions...
+> >>       }
+> >> }
+> > Well, that's more someting like:
+> >
+> > ebi@xxxx {
+> > 	pinctrl-0 = <&ebi_data_bus_pins &ebi_addr_bus_pins
+> > 		     &ebi_nand_cs0_pin &ebi_nand_rb0_pin ...>;
+> >
+> > 	nand@0,xxxx {
+> > 		/* ../ */
+> > 	};
+> >
+> > 	nand@1,xxxx {
+> > 		/* ../ */
+> > 	}
+> > }
+> 
+> well, so nand driver should be probed after this ebi node probed, since 
+> ebi will configure the nand pins.
+> There should be a sync issue to solve. or maybe I miss something?
+
+Absolutely, we have to synchronize the NAND chips with their NAND
+controller.
+
+> 
+> 
+> >
+> >> nand (SMC/HSMC may be more correct) node {
+> >>       PMECC properties
+> >>       NFC properties --> we can make the NFC not a node, just many NFC
+> >> properties.
+> >>
+> >>       &nand chip0
+> >>       &nand chip1
+> >> }
+> > Okay, I guess I understand what you were talking about in your previous
+> > suggestion, and I'm not a big fan of this representation.
+> >
+> > The SMC IP provides a set of registers to configure external devices
+> > timings (and other related stuff).
+> > Here you're representing NAND chip devices under the SMC node, which is
+> > not exactly how I would represent them.
+> > The IP controlling the available NAND chips is actually the NFC (NAND
+> > Flash Controller).
+> > How about this representation instead ?
+> >
+> > nfc@xxxxx {
+> > 	nand-chips = <&nand0 &nand1>;
+> > }
+> 
+> This should be ok, but this nfc@xxxxx should be a logic block. As the 
+> real NFC hardware only appeared since SAMA5 chips.
+
+No need to define a NFC node if the hardware does not embed one...
+Or, are you suggesting to define a NAND controller node for all at91
+SoCs ?
+That might be a good idea if other SoCs also support multiple NAND chips
+sharing the same PMECC block.
+
+> And we can disabled it. Without the real hardware NFC the nand should 
+> also works well.
+> 
+> >
+> > Josh, could you rework your proposal with a real DT representation so
+> > that I'll be sure to understand what you're suggesting ?
+> 
+> Okay, first I prefer to remove the atmel_nand_nfc driver, the work that 
+> be done in atmel_nand_nfc_probe() function will move to atmel_nand_probe().
+> The dt should looks like:
+>          nand0: nand@80000000 {
+>              compatible = "atmel,sama5d4-nand", "atmel,at91rm9200-nand";
+>              #address-cells = <1>;
+>              #size-cells = <1>;
+>              ranges;
+>              reg = <    0x80000000 0x08000000    /* EBI CS3 */
+>                  0xfc05c070 0x00000490    /* SMC PMECC regs */
+>                  0xfc05c500 0x00000100    /* SMC PMECC Error Location 
+> regs */
+>                  0x90000000 0x08000000    /* NFC Command Registers */
+>                  0xfc05c000 0x00000070    /* NFC HSMC regs */
+>                  0x00100000 0x00100000    /* NFC SRAM banks */
+>                  >;
+
+These registers should be owned by the NFC not each NAND chip.
+
+>              interrupts = <22 IRQ_TYPE_LEVEL_HIGH 6>;
+
+I'm not sure, but I think the same goes for this irq.
+
+>              atmel,nand-addr-offset = <21>;
+>              atmel,nand-cmd-offset = <22>;
+>              atmel,nand-has-dma;
+>              pinctrl-names = "default";
+>              pinctrl-0 = <&pinctrl_nand>;
+
+I'm trying to move those pinctrl requests into EBI.
+
+>              status = "disabled";
+>              clocks = <&hsmc_clk>;
+>              atmel,write-by-sram;
+
+Those 2 properties (clocks and atmel,write-by-sram) should be part of
+the NFC node too.
+
+>          };
+> 
+> The &hsmc_clk & atmel,write-by-sram will move to uplayer.
+> And the hardware NFC can be disabled in menuconfig some options. or add 
+> some dt properties like atmel,enable-nfc.
+
+Hm, how about enabling/disabling it with the status property ?
+
+> 
+> Then we can make use of EBI/SMC node,
+> 
+> nfc@xxxxx {
+> 	compatible = "atmel,sama5d4-nand", "atmel,at91rm9200-nand";
+
+How about "atmel,sama5d4-nand-controller" ?
+
+> 	#address-cells = <1>;
+> 	#size-cells = <1>;
+> 	ranges;
+> 	reg = <
+>                  0xfc05c070 0x00000490    /* SMC PMECC regs */
+>                  0xfc05c500 0x00000100    /* SMC PMECC Error Location regs */
+>                  0xfc05c000 0x00000070    /* NFC HSMC regs */
+> 		/* all above address will be overlay with smc regs, maybe we can use it from smc? */
+> 
+>                  0x00100000 0x00100000    /* NFC SRAM banks */
+>                  0x90000000 0x08000000    /* NFC Command Registers */
+>                  >;
+> 	interrupts = <22 IRQ_TYPE_LEVEL_HIGH 6>;
+> 	atmel,nand-addr-offset = <21>;
+> 	atmel,nand-cmd-offset = <22>;
+
+Those 2 propoerties (atmel,nand-addr-offset and atmel,nand-cmd-offset)
+are purely NAND chip related, and thus should not be part of the NAND
+controller node.
+
+> 	atmel,nand-has-dma;
+> 	clocks = <&hsmc_clk>;	/* needed for all smc components, like pmecc, nfc hardware */
+> 
+> 	atmel,nfc-disabled;	/* disabled hw NFC */
+> 	atmel,nfc-write-by-sram;
+> 	status = "disabled";
+> 
+> 	nand-chips = <&nand0 &nand1>;
+>   }
+> 
+> I am not familiar with the EBI/SMC dt node, so above should have errors, 
+> but it's just a draft for us to discuss.
+
+You can have a look at my EBI series [1] if you want more details on
+the proposed DT binding.
+
+Best Regards,
+
+Boris
+
+[1]http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/308469.html
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
