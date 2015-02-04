@@ -1,62 +1,93 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
-Date: Wed, 4 Feb 2015 09:28:59 +0900
-Message-ID: <20150204002858.GB29128@verge.net.au>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
- <1608366.HtA9yBksdO@wasted.cogentembedded.com>
- <20150202110557.GC7459@leverpostej>
- <54CFE4CE.5090406@cogentembedded.com>
- <20150203003610.GA17629@verge.net.au>
- <CAMuHMdV1U9XV7diKYPwpxAqdzD7tst6e0k=bLgJQ27=YDndn=Q@mail.gmail.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: [PATCH v7 0/4] Add gpio/pinconf support to Broadcom Cygnus SoC
+Date: Tue, 3 Feb 2015 17:09:04 -0800
+Message-ID: <1423012148-22560-1-git-send-email-rjui@broadcom.com>
+References: <Ray Jui <rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV1U9XV7diKYPwpxAqdzD7tst6e0k=bLgJQ27=YDndn=Q@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <Ray Jui <rjui@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 03, 2015 at 10:53:01AM +0100, Geert Uytterhoeven wrote:
-> On Tue, Feb 3, 2015 at 1:36 AM, Simon Horman <horms@verge.net.au> wro=
-te:
-> > The only thing that stood out to me about "SILK" was that unlike
-> > other renesas boards names in .dtsi files it is all-capitals.
-> > Its not a bit deal but as we are on the topic: is that intentional?
->=20
-> Seems like we can use some consistency:
->=20
-> $ git grep -w model -- $(git grep -l renesas, -- arch/arm/boot/dts)
-> arch/arm/boot/dts/emev2-kzm9d.dts:      model =3D "EMEV2 KZM9D Board"=
-;
-> arch/arm/boot/dts/r7s72100-genmai.dts:  model =3D "Genmai";
-> arch/arm/boot/dts/r8a73a4-ape6evm.dts:  model =3D "APE6EVM";
-> arch/arm/boot/dts/r8a7740-armadillo800eva.dts:  model =3D "armadillo =
-800 eva";
-> arch/arm/boot/dts/r8a7778-bockw-reference.dts:  model =3D "bockw";
-> arch/arm/boot/dts/r8a7778-bockw.dts:    model =3D "bockw";
-> arch/arm/boot/dts/r8a7779-marzen.dts:   model =3D "marzen";
-> arch/arm/boot/dts/r8a7790-lager.dts:    model =3D "Lager";
-> arch/arm/boot/dts/r8a7791-henninger.dts:        model =3D "Henninger"=
-;
-> arch/arm/boot/dts/r8a7791-koelsch.dts:  model =3D "Koelsch";
-> arch/arm/boot/dts/r8a7794-alt.dts:      model =3D "Alt";
-> arch/arm/boot/dts/sh73a0-kzm9g.dts:     model =3D "KZM-A9-GT";
-> $
->=20
-> ePAPR says:
->=20
-> "The recommended format is: =E2=80=9Cmanufacturer,model=E2=80=9D, whe=
-re manufacturer is a
->  string describing the name of the manufacturer (such as a stock tick=
-er symbol),
->  and model specifies the model number.
->=20
->  Example:
->          model =3D =E2=80=9Cfsl,MPC8349EMITX=E2=80=9D;"
+This patchset contains the initial GPIO/PINCONF support for the Broadcom
+Cygnus SoC.
 
-Agree we could use some consistency but before we start cooking up name=
-s
-do we expect this to have any effect on compatibility for users?
+Cygnus has 3 GPIO controllers: 1) the ASIU GPIO; 2) the chipCommonG GPIO;
+and 3) the ALWAYS-ON GPIO. All 3 types of GPIO controllers are supported by
+the this driver.
+
+All 3 Cygnus GPIO controllers support basic PINCONF functions such as bias
+pull up, pull down, and drive strength configurations, when these pins are
+muxed to GPIO.
+
+Pins from the ASIU GPIO can be individually muxed to GPIO function, through
+interaction with the Cygnus IOMUX controller.
+
+Note this patchset has a dependency on the other patchset "Add pinctrl support
+to Broadcom Cygnus SoC" that is also under review
+
+Changes from v6:
+ - Move the driver from drivers/gpio/* to drivers/pinctrl/* since this driver
+   supports both GPIO and some basic PINCONF features
+ - Support PINCONF features through standard DT subnodes properties including
+   "bias-disable", "bias-pull-up", "bias-pull-down", and "drive-strength", by
+   creating local PINCONF controller
+ - Add support to allow individual ASIU GPIO pins to be muxed as GPIO, through
+   interactions with the Cygnus IOMUX driver
+ - Convert the driver to use standard GPIOCHIP_IRQ APIs. This helps to reduce
+   customized code in the driver
+ - Other miscellaneous imrpovements in the driver
+ - Enable GPIO based phone hook detection support for BCM911360 phone factor
+   board
+
+Changes from v5:
+ - Get rid of DT property "linux,gpio-base". Use dynamic allocation for GPIO base
+   number
+
+Changes from v4:
+ - Use DT property "linux,gpio-base" to define GPIO base number
+ - factorize common code to improve code readability and reduce code size
+ - remove "bcm_" prefix on function and struct names
+ - improve debugging prints
+ - default GPIO_BCM_CYGNUS to y in Kconfig (it still depends on
+   ARCH_BCM_CYGNUS). This way we do not need to select it from the
+   arch/arm/mach-bcm/Kconfig
+ - Get rid of redundant MAINTAINER entry for this driver. It will be maintained
+   by Broadcom iProc/Cygnus maintainers
+ - Update device tree document based on driver changes
+
+Changes from v3:
+ - Fix dt property tpyo
+ - Fix incorrect GPIO compatible ID in device tree binding document example
+
+Changes from v2:
+ - Consolidate different compatible IDs into "brcm,cygnus-gpio"
+ - Get rid of redundant "no-interrupt" property
+
+Changes from v1:
+ - Get rid of inline qualifier
+ - Get rid of redundant check in the ISR
+ - Other minor fixes to imrove code readability
+
+Ray Jui (4):
+  pinctrl: Cygnus: define Broadcom Cygnus GPIO/PINCONF binding
+  pinctrl: cygnus: add gpio/pinconf driver
+  ARM: dts: enable GPIO for Broadcom Cygnus
+  ARM: dts: cygnus: enable GPIO based hook detection
+
+ .../bindings/pinctrl/brcm,cygnus-gpio.txt          |  102 +++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   33 +
+ arch/arm/boot/dts/bcm911360_entphn.dts             |   13 +
+ drivers/pinctrl/bcm/Kconfig                        |   22 +
+ drivers/pinctrl/bcm/Makefile                       |    1 +
+ drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c          |  920 ++++++++++++++++++++
+ 6 files changed, 1091 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
+
+-- 
+1.7.9.5
+
