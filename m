@@ -1,86 +1,44 @@
 From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v8 1/4] pinctrl: Cygnus: define Broadcom Cygnus GPIO/PINCONF binding
-Date: Wed, 4 Feb 2015 09:21:00 -0800
-Message-ID: <1423070463-24483-2-git-send-email-rjui@broadcom.com>
+Subject: [PATCH v8 3/4] ARM: dts: enable GPIO for Broadcom Cygnus
+Date: Wed, 4 Feb 2015 09:21:02 -0800
+Message-ID: <1423070463-24483-4-git-send-email-rjui@broadcom.com>
 References: <Ray Jui <rjui@broadcom.com>
  <1423070463-24483-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1423070463-24483-1-git-send-email-rjui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>
 Cc: Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the GPIO/PINCONF device tree binding for Broadcom Cygnus SoC
+This enables all 3 GPIO controllers including the ASIU GPIO, the
+chipcommonG GPIO, and the ALWAYS-ON GPIO, for Broadcom Cygnus SoC
 
 Signed-off-by: Ray Jui <rjui@broadcom.com>
 Reviewed-by: Scott Branden <sbranden@broadcom.com>
 ---
- .../bindings/pinctrl/brcm,cygnus-gpio.txt          |  102 ++++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+ arch/arm/boot/dts/bcm-cygnus.dtsi |   33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
-new file mode 100644
-index 0000000..9b9196c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
-@@ -0,0 +1,102 @@
-+Broadcom Cygnus GPIO/PINCONF Controller
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index b014ce5..a3b8621 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -60,6 +60,39 @@
+ 		      <0x0301d24c 0x2c>;
+ 	};
+ 
++	gpio_crmu: gpio@03024800 {
++		compatible = "brcm,cygnus-gpio";
++		reg = <0x03024800 0x50>,
++		      <0x03024008 0x18>;
++		ngpios = <6>;
++		#gpio-cells = <2>;
++		gpio-controller;
++	};
 +
-+Required properties:
-+
-+- compatible:
-+    Must be "brcm,cygnus-gpio"
-+
-+- reg:
-+    Define the base and range of the I/O address space that contains the Cygnus
-+GPIO/PINCONF controller registers
-+
-+- ngpios:
-+    Total number of GPIOs the controller provides
-+
-+- #gpio-cells:
-+    Must be two. The first cell is the GPIO pin number (within the
-+controller's pin space) and the second cell is used for the following:
-+    bit[0]: polarity (0 for active high and 1 for active low)
-+
-+- gpio-controller:
-+    Specifies that the node is a GPIO controller
-+
-+Optional properties:
-+
-+- interrupts:
-+    Interrupt ID
-+
-+- interrupt-controller:
-+    Specifies that the node is an interrupt controller
-+
-+- pinmux:
-+    Specifies the phandle to the IOMUX device, where pins can be individually
-+muxed to GPIO
-+
-+Supported generic PINCONF properties in child nodes:
-+
-+- pins:
-+    The list of pins (within the controller's own pin space) that properties
-+in the node apply to. Pin names are "gpio-<pin>"
-+
-+- bias-disable:
-+    Disable pin bias
-+
-+- bias-pull-up:
-+    Enable internal pull up resistor
-+
-+- bias-pull-down:
-+    Enable internal pull down resistor
-+
-+- drive-strength:
-+    Valid drive strength values include 2, 4, 6, 8, 10, 12, 14, 16 (mA)
-+
-+Example:
 +	gpio_ccm: gpio@1800a000 {
 +		compatible = "brcm,cygnus-gpio";
 +		reg = <0x1800a000 0x50>,
@@ -90,18 +48,6 @@ index 0000000..9b9196c
 +		gpio-controller;
 +		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
 +		interrupt-controller;
-+
-+		touch_pins: touch_pins {
-+			pwr: pwr {
-+				pins = "gpio-0";
-+				drive-strength = <16>;
-+			};
-+
-+			event: event {
-+				pins = "gpio-1";
-+				bias-pull-up;
-+			};
-+		};
 +	};
 +
 +	gpio_asiu: gpio@180a5000 {
@@ -110,25 +56,16 @@ index 0000000..9b9196c
 +		ngpios = <146>;
 +		#gpio-cells = <2>;
 +		gpio-controller;
-+		interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++
++		pinmux = <&pinctrl>;
++
 +		interrupt-controller;
++		interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
 +	};
 +
-+	/*
-+	 * Touchscreen that uses the CCM GPIO 0 and 1
-+	 */
-+	tsc {
-+		...
-+		...
-+		gpio-pwr = <&gpio_ccm 0 0>;
-+		gpio-event = <&gpio_ccm 1 0>;
-+	};
-+
-+	/* Bluetooth that uses the ASIU GPIO 5, with polarity inverted */
-+	bluetooth {
-+		...
-+		...
-+		bcm,rfkill-bank-sel = <&gpio_asiu 5 1>
-+	}
+ 	amba {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 1.7.9.5
+
