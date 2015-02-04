@@ -1,363 +1,215 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/4] mtd: nand: atmel: Update DT documentation after
- splitting NFC and NAND
-Date: Wed, 4 Feb 2015 11:47:14 +0100
-Message-ID: <20150204114714.4dc36d84@bbrezillon>
-References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1417732214-3292-3-git-send-email-boris.brezillon@free-electrons.com>
-	<20150202075737.GC3523@norris-Latitude-E6410>
-	<20150202104236.649f99ad@bbrezillon>
-	<54D08AD7.3050209@atmel.com>
-	<20150203103736.3bcc222e@bbrezillon>
-	<54D1EF2D.7000108@atmel.com>
+From: =?UTF-8?Q?Beno=C3=AEt_Th=C3=A9baudeau?=
+	<benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ASoC: tlv320aic3x: Add support for tlv320aic3104
+Date: Wed, 4 Feb 2015 12:11:13 +0100
+Message-ID: <CA+sos7_kRHru5_AZcVyhzYHtA3JkdcRVfq=bT3X=bMWjFvrd=Q@mail.gmail.com>
+References: <54CF2CDA.3060607@ti.com> <1422888485-13626-1-git-send-email-jsarha@ti.com>
+ <CA+sos78ar+MX2CvrjtzYN9MvtO9g=upMuOScXuXa2=zQ81qQwQ@mail.gmail.com>
+ <54D1D80F.1090304@ti.com> <CA+sos797a7CT2KqCwrW5CaL1vF0GVCHQGxp3gDAB7PTFi4jZjQ@mail.gmail.com>
+ <54D1EE24.3000309@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54D1EF2D.7000108-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <54D1EE24.3000309-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alsa-devel <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, wlear-uoOHlzqel7feqrA4Bvp/NA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
+Dear Peter Ujfalusi,
 
-On Wed, 4 Feb 2015 18:06:37 +0800
-Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+On Wed, Feb 4, 2015 at 11:02 AM, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>=
+ wrote:
+> On 02/04/2015 11:33 AM, Beno=C3=AEt Th=C3=A9baudeau wrote:
+>> What I meant was to do the following instead:
+>>
+>> /*
+>>  * ADC PGA mix input volumes. From -12 to 0 dB in 1.5 dB steps. Disc=
+onnected
+>>  * below -12 dB
+>>  */
+>> static const DECLARE_TLV_DB_SCALE(mix_tlv, -1350, 150, 1);
+>>
+>> /* Left PGA Mixer for tlv320aic3104 */
+>> static const struct snd_kcontrol_new aic3104_left_pga_mixer_controls=
+[] =3D {
+>>     SOC_DAPM_SINGLE_MUT_TLV("Line1L Volume",
+>>                 LINE1L_2_LADC_CTRL, 3, 7, 15, 1, mix_tlv),
+>
+> You mean SOC_DAPM_SINGLE_TLV() ?
 
-> Hi, Boris
-> 
-> Thanks a lot for your explanation, check my reply for more description 
-> for my suggestion.
-> 
-> On 2/3/2015 5:37 PM, Boris Brezillon wrote:
-> > On Tue, 3 Feb 2015 16:46:15 +0800
-> > Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> >> Hi, Boris, Brian
-> >>
-> >> On 2/2/2015 5:42 PM, Boris Brezillon wrote:
-> >>> Hi Brian,
-> >>>
-> >>> On Sun, 1 Feb 2015 23:57:37 -0800
-> >>> Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>>
-> >>>> Hi Boris,
-> >>>>
-> >>>> BTW, this series has a few conflicts with other things I have queued, so
-> >>>> you'll need to refresh.
-> >>> Yes, that's not a problem, but I'd like to be sure this is the way we
-> >>> want to go before rebasing this series.
-> >>>
-> >>>> On Thu, Dec 04, 2014 at 11:30:12PM +0100, Boris Brezillon wrote:
-> >>>>> The NAND and NFC (NAND Flash Controller) were linked together with a
-> >>>>> parent <-> child relationship.
-> >>>>>
-> >>>>> This model has several drawbacks:
-> >>>>> - it does not allow for multiple NAND chip handling while the controller
-> >>>>>     support multi-chip (even though the driver is not ready yet)
-> >>>>> - it mixes NAND partitions and NFC nodes at the same level (which is a bit
-> >>>>>     disturbing)
-> >>>> I agree that this is disturbing. (FWIW, it also seems a bit disturbing
-> >>>> that atmel_nand.c actually registers two different drivers and the tries
-> >>>> to synchronize them; this seems like it could be handled better, but I'm
-> >>>> not sure how at the moment.)
-> >>> Yep, that's my feeling too, but I'm not sure how this could/should be
-> >>> done.
-> >>> My problem here is that the pinmux should be requested by the EBI
-> >>> device because the EBI manages several type of devices and the data and
-> >>> address signals are shared by all the devices, hence the idea of
-> >>> defining the nand chip node under the EBI node.
-> >>> In the other hand, the NFC is not part of the EBI bus, and thus should
-> >>> not be defined under the EBI node.
-> >>>
-> >>> This might lead to the NFC device being probed before the NAND chip,
-> >>> hence the need for this synchronization.
-> >> OMHO, there is another way, which is change the NFC node to many NFC
-> >> properties, just like PMECC.
-> >> As NFC, PMECC or hamming ecc HW could be part of current NAND node (in
-> >> sama5, HSMC maybe a better name for this node. )
-> >>
-> >> And this change can avoid the sync problem and avoid two drivers in
-> >> atmel_nand.c.
-> > Sorry I don't get it...
-> > You gave a pseudo DT example in your following answers but I still
-> > don't understand how you'll link the NFC and its associated NAND chips.
-> >
-> >>>>> - the introduction of the EBI bus implies defining NAND chips under the
-> >>>>>     EBI node, and the ranges available under the EBI node should be
-> >>>>>     restricted to EBI address space, while the NFC references several
-> >>>>>     registers outside of these EBI ranges.
-> >>>> That's an interesting bit. I've actually run across this sort of problem
-> >>>> on other SoCs, where we have a relationship between two pieces of
-> >>>> hardware--the NAND chip and the NAND controller--where the former might
-> >>>> be on one bus (like your EBI bus, with chip selects), and the latter is
-> >>>> part of the top-level MMIO register space.
-> >>>>
-> >>>> But can you elaborate here a bit more? Does the NAND chip actually need
-> >>>> to be represented under your EBI bus?
-> >>> Yes, as said above this is all about pinmux conflicts, the NAND
-> >>> controller has to request the appropriate pinmux for its NAND chips but
-> >>> it will conflict with the pinmux requested by the EBI bus (data and
-> >>> address signals are shared by all the devices connected on the EBI).
-> >>>
-> >>>>> Move the NFC node outside of the NAND node, to get a more future-proof
-> >>>>> model.
-> >>>> I'm curious if an alternative solution might work, maybe one like the
-> >>>> Allwiner NAND (sunxi-nand) DT, which just reverses the roles; the 'NFC'
-> >>>> is the parent of the NAND chip(s). We've seen this pattern in other
-> >>>> contexts too.
-> >> I also prefer this. Then the dt node should looks like finally:
-> >>
-> >> nand (SMC may be more correct) node {
-> > This nand node contains nand chip nodes, so 'nand' is definitely not
-> > the appropriate name for this node.
-> > We could name it SMC, but I'd like to keep EBI (External Bus
-> > Interface), because the only thing that can register child devices in
-> > linux are busses (or MFD devices :-)).
-> > The SMC (Static Memory Controller) is just a additional control logic
-> > acting on top of the EBI.
-> 
-> After further thought, It seems the SMC should be correct name for nand 
-> chips' parent.
-> 
-> Before SAMA5 chips, the PMECC/ECC registers address is out of SMC address.
-> 
-> In SAMA5 chips, the PMECC/NFC-hw registers address is in SMC address.
-> take sama5d3 for example:
->      NFC regs: 0xffffc000 0x00000070
->      PMECC regs: 0xffffc070 0x00000490
->      PMECC error regs: 0xffffc500 0x00000100
-> 
-> And the HSMC regs is: 0xffffc000 0x00000700
-> which include PMECC/NFC-hw registers.
+No. It would not fit our needs here.
 
-Hmm, it only includes part of the NFC registers, AFAIR, another region
-is reserved for the NFC IP.
+> There is no _MUT_ variant AFAIK.
 
-For those shared registers (all embedded in the SMC memory region), I
-recommend using the regmap provided by the SMC syscon device, but
-that's another story ;-).
+Indeed, but support could be added, for it, something like (might need
+updating and some other changes in DAPM):
 
-My point is that I don't think nand chip nodes should be under the SMC
-node, but under the EBI one instead.
+#define SOC_DAPM_SINGLE_MUT_TLV(xname, reg, shift, min, max, invert,
+tlv_array) \
+{    .iface =3D SNDRV_CTL_ELEM_IFACE_MIXER, .name =3D xname, \
+    .info =3D snd_soc_info_volsw_mut, \
+    .access =3D SNDRV_CTL_ELEM_ACCESS_TLV_READ | SNDRV_CTL_ELEM_ACCESS_=
+READWRITE,\
+    .tlv.p =3D (tlv_array), \
+    .get =3D snd_soc_dapm_get_volsw_mut, .put =3D snd_soc_dapm_put_vols=
+w_mut, \
+    .private_value =3D SOC_SINGLE_MUT_VALUE(reg, shift, min, max, inver=
+t) }
 
-Anyway, wherever we decide to put those NAND chip nodes, the problem
-remains: we'll have to link the NAND chips with their controller (the
-NFC).
+/**
+ * snd_soc_dapm_get_volsw_mut - dapm mixer get callback
+ * @kcontrol: mixer control
+ * @ucontrol: control element information
+ *
+ * Callback to get the value of a dapm mixer control with a hole separa=
+ting the
+ * mute value from the other valid values.
+ *
+ * Returns 0 for success.
+ */
+int snd_soc_dapm_get_volsw_mut(struct snd_kcontrol *kcontrol,
+    struct snd_ctl_elem_value *ucontrol)
+{
+    struct snd_soc_dapm_widget_list *wlist =3D snd_kcontrol_chip(kcontr=
+ol);
+    struct snd_soc_dapm_widget *widget =3D wlist->widgets[0];
+    struct soc_mixer_control *mc =3D
+        (struct soc_mixer_control *)kcontrol->private_value;
+    unsigned int reg =3D mc->reg;
+    unsigned int shift =3D mc->shift;
+    unsigned int rshift =3D mc->rshift;
+    int min =3D mc->min;
+    int max =3D mc->max;
+    unsigned int invert =3D mc->invert;
+    unsigned int mask =3D (1 << fls(max)) - 1;
 
-> 
-> >
-> >>       PMECC properties
-> >>       NFC properties --> we can make the NFC not a node, just many NFC
-> >> properties.
-> > But all NAND chips will have to point to the same nfc struct, and I'd
-> > rather represent the NFC IP in the DT than hide it into the driver's
-> > logic.
-> > Moreover, the NFC IP is not part of the EBI memory range, so I'd prefer
-> > to keep it outside of the EBI node (though I'm not sure you're trying to
-> > represent the EBI bus here).
-> >
-> >>       pinctrl-nand0
-> >>       nand chip 0: {
-> >>           partitions...
-> >>       }
-> >>
-> >>       pinctrl-nand1
-> >>       nand chip 1: {
-> >>           partitions...
-> >>       }
-> >> }
-> >
-> > Could you give a real DT example instead of a pseudo DT representation,
-> > maybe I'll understand what you're suggesting then.
-> >
-> >>> I would have preferred this solution too, but the EBI/pinmux constraint
-> >>> explained above prevents this approach.
-> >> I am not very clear about the pinmux constraint.
-> >> Maybe we just leave one DT node (either EBI or current nand node) to
-> >> take care the pins.
-> >>
-> >>> What I can do though, is reverse the referencing: reference nand chips
-> >>> from the nand controller node.
-> >> I guess the dt looks like: (correct me if I am wrong)
-> >>
-> >> EBI node {
-> >>       pinctrl-nand0
-> >>       nand chip 0: {
-> >>           partitions...
-> >>       }
-> >>
-> >>       pinctrl-nand1
-> >>       nand chip 1: {
-> >>           partitions...
-> >>       }
-> >> }
-> > Well, that's more someting like:
-> >
-> > ebi@xxxx {
-> > 	pinctrl-0 = <&ebi_data_bus_pins &ebi_addr_bus_pins
-> > 		     &ebi_nand_cs0_pin &ebi_nand_rb0_pin ...>;
-> >
-> > 	nand@0,xxxx {
-> > 		/* ../ */
-> > 	};
-> >
-> > 	nand@1,xxxx {
-> > 		/* ../ */
-> > 	}
-> > }
-> 
-> well, so nand driver should be probed after this ebi node probed, since 
-> ebi will configure the nand pins.
-> There should be a sync issue to solve. or maybe I miss something?
+    ucontrol->value.integer.value[0] =3D
+        (snd_soc_read(widget->codec, reg) >> shift) & mask;
+    if (shift !=3D rshift)
+        ucontrol->value.integer.value[1] =3D
+            (snd_soc_read(widget->codec, reg) >> rshift) & mask;
+    if (invert) {
+        ucontrol->value.integer.value[0] =3D
+            mask - ucontrol->value.integer.value[0];
+        if (shift !=3D rshift)
+            ucontrol->value.integer.value[1] =3D
+                mask - ucontrol->value.integer.value[1];
+    }
+    if (ucontrol->value.integer.value[0] > 0)
+        ucontrol->value.integer.value[0] -=3D min - 1;
+    if (shift !=3D rshift)
+        if (ucontrol->value.integer.value[1] > 0)
+            ucontrol->value.integer.value[1] -=3D min - 1;
 
-Absolutely, we have to synchronize the NAND chips with their NAND
-controller.
+    return 0;
+}
+EXPORT_SYMBOL_GPL(snd_soc_dapm_get_volsw_mut);
 
-> 
-> 
-> >
-> >> nand (SMC/HSMC may be more correct) node {
-> >>       PMECC properties
-> >>       NFC properties --> we can make the NFC not a node, just many NFC
-> >> properties.
-> >>
-> >>       &nand chip0
-> >>       &nand chip1
-> >> }
-> > Okay, I guess I understand what you were talking about in your previous
-> > suggestion, and I'm not a big fan of this representation.
-> >
-> > The SMC IP provides a set of registers to configure external devices
-> > timings (and other related stuff).
-> > Here you're representing NAND chip devices under the SMC node, which is
-> > not exactly how I would represent them.
-> > The IP controlling the available NAND chips is actually the NFC (NAND
-> > Flash Controller).
-> > How about this representation instead ?
-> >
-> > nfc@xxxxx {
-> > 	nand-chips = <&nand0 &nand1>;
-> > }
-> 
-> This should be ok, but this nfc@xxxxx should be a logic block. As the 
-> real NFC hardware only appeared since SAMA5 chips.
+/**
+ * snd_soc_dapm_put_volsw_mut - dapm mixer set callback
+ * @kcontrol: mixer control
+ * @ucontrol: control element information
+ *
+ * Callback to set the value of a dapm mixer control with a hole separa=
+ting the
+ * mute value from the other valid values.
+ *
+ * Returns 0 for success.
+ */
+int snd_soc_dapm_put_volsw_mut(struct snd_kcontrol *kcontrol,
+    struct snd_ctl_elem_value *ucontrol)
+{
+    struct snd_soc_dapm_widget_list *wlist =3D snd_kcontrol_chip(kcontr=
+ol);
+    struct snd_soc_dapm_widget *widget =3D wlist->widgets[0];
+    struct snd_soc_codec *codec =3D widget->codec;
+    struct soc_mixer_control *mc =3D
+        (struct soc_mixer_control *)kcontrol->private_value;
+    unsigned int reg =3D mc->reg;
+    unsigned int shift =3D mc->shift;
+    int min =3D mc->min;
+    int max =3D mc->max;
+    unsigned int mask =3D (1 << fls(max)) - 1;
+    unsigned int invert =3D mc->invert;
+    unsigned int val;
+    int connect, change;
+    struct snd_soc_dapm_update update;
+    int wi;
 
-No need to define a NFC node if the hardware does not embed one...
-Or, are you suggesting to define a NAND controller node for all at91
-SoCs ?
-That might be a good idea if other SoCs also support multiple NAND chips
-sharing the same PMECC block.
+    val =3D (ucontrol->value.integer.value[0] & mask);
+    connect =3D !!val;
 
-> And we can disabled it. Without the real hardware NFC the nand should 
-> also works well.
-> 
-> >
-> > Josh, could you rework your proposal with a real DT representation so
-> > that I'll be sure to understand what you're suggesting ?
-> 
-> Okay, first I prefer to remove the atmel_nand_nfc driver, the work that 
-> be done in atmel_nand_nfc_probe() function will move to atmel_nand_probe().
-> The dt should looks like:
->          nand0: nand@80000000 {
->              compatible = "atmel,sama5d4-nand", "atmel,at91rm9200-nand";
->              #address-cells = <1>;
->              #size-cells = <1>;
->              ranges;
->              reg = <    0x80000000 0x08000000    /* EBI CS3 */
->                  0xfc05c070 0x00000490    /* SMC PMECC regs */
->                  0xfc05c500 0x00000100    /* SMC PMECC Error Location 
-> regs */
->                  0x90000000 0x08000000    /* NFC Command Registers */
->                  0xfc05c000 0x00000070    /* NFC HSMC regs */
->                  0x00100000 0x00100000    /* NFC SRAM banks */
->                  >;
+    if (val)
+        val +=3D min - 1;
+    if (invert)
+        val =3D mask - val;
+    mask =3D mask << shift;
+    val =3D val << shift;
 
-These registers should be owned by the NFC not each NAND chip.
+    mutex_lock(&codec->mutex);
 
->              interrupts = <22 IRQ_TYPE_LEVEL_HIGH 6>;
+    change =3D snd_soc_test_bits(widget->codec, reg, mask, val);
+    if (change) {
+        for (wi =3D 0; wi < wlist->num_widgets; wi++) {
+            widget =3D wlist->widgets[wi];
 
-I'm not sure, but I think the same goes for this irq.
+            widget->value =3D val;
 
->              atmel,nand-addr-offset = <21>;
->              atmel,nand-cmd-offset = <22>;
->              atmel,nand-has-dma;
->              pinctrl-names = "default";
->              pinctrl-0 = <&pinctrl_nand>;
+            update.kcontrol =3D kcontrol;
+            update.widget =3D widget;
+            update.reg =3D reg;
+            update.mask =3D mask;
+            update.val =3D val;
+            widget->dapm->update =3D &update;
 
-I'm trying to move those pinctrl requests into EBI.
+            dapm_mixer_update_power(widget, kcontrol, connect);
 
->              status = "disabled";
->              clocks = <&hsmc_clk>;
->              atmel,write-by-sram;
+            widget->dapm->update =3D NULL;
+        }
+    }
 
-Those 2 properties (clocks and atmel,write-by-sram) should be part of
-the NFC node too.
+    mutex_unlock(&codec->mutex);
+    return 0;
+}
+EXPORT_SYMBOL_GPL(snd_soc_dapm_put_volsw_mut);
 
->          };
-> 
-> The &hsmc_clk & atmel,write-by-sram will move to uplayer.
-> And the hardware NFC can be disabled in menuconfig some options. or add 
-> some dt properties like atmel,enable-nfc.
+> According to the datasheets of aic3106, aic3104:
+> 0b0000 - 0b1000 is valid (0 - -12 dB)
+> 0b1001 - 0b1110 is reserved, do not write these sequences to the regi=
+ster
+> 0b1111 is disconnected.
+>
+> And for fun the aic3007's reg20 for example:
+> 0b0000 - 0dB
+> 0b0001 - 0b0011 - reserved
+> 0b0100 - -6dB
+> 0b0101 - 0b0111 - reserved
+> 0b1000 - -12dB
+> 0b1001 - 0b1110 - reserved
+> 0b1111 - disconnected
+>
+> Note that the driver never had control for these gains and the aic310=
+4 support
+> is following this behavior, but if we do it for aic3104 we should do =
+it for
+> all other support codecs as well as a followup patch or series. IMHO.
 
-Hm, how about enabling/disabling it with the status property ?
+I had not checked the other CODECs. So for all these CODECs, toggling
+either as 0b0000/0b0001 or as 0b1110/0b1111 (like the driver currently
+does) is wrong. I agree that they should be fixed too. But for them,
+it's even more complicated because of the multiple reserved value
+ranges. Or maybe we could just ignore these reserved ranges and handle
+the mute value, but that would mean relying on the user not to use
+reserved values. So maybe use TLV_DB_RANGE_HEAD() and
+TLV_DB_SCALE_ITEM() to define mix_tlv, then use
+SOC_(DAPM_)SINGLE_TLV().
 
-> 
-> Then we can make use of EBI/SMC node,
-> 
-> nfc@xxxxx {
-> 	compatible = "atmel,sama5d4-nand", "atmel,at91rm9200-nand";
-
-How about "atmel,sama5d4-nand-controller" ?
-
-> 	#address-cells = <1>;
-> 	#size-cells = <1>;
-> 	ranges;
-> 	reg = <
->                  0xfc05c070 0x00000490    /* SMC PMECC regs */
->                  0xfc05c500 0x00000100    /* SMC PMECC Error Location regs */
->                  0xfc05c000 0x00000070    /* NFC HSMC regs */
-> 		/* all above address will be overlay with smc regs, maybe we can use it from smc? */
-> 
->                  0x00100000 0x00100000    /* NFC SRAM banks */
->                  0x90000000 0x08000000    /* NFC Command Registers */
->                  >;
-> 	interrupts = <22 IRQ_TYPE_LEVEL_HIGH 6>;
-> 	atmel,nand-addr-offset = <21>;
-> 	atmel,nand-cmd-offset = <22>;
-
-Those 2 propoerties (atmel,nand-addr-offset and atmel,nand-cmd-offset)
-are purely NAND chip related, and thus should not be part of the NAND
-controller node.
-
-> 	atmel,nand-has-dma;
-> 	clocks = <&hsmc_clk>;	/* needed for all smc components, like pmecc, nfc hardware */
-> 
-> 	atmel,nfc-disabled;	/* disabled hw NFC */
-> 	atmel,nfc-write-by-sram;
-> 	status = "disabled";
-> 
-> 	nand-chips = <&nand0 &nand1>;
->   }
-> 
-> I am not familiar with the EBI/SMC dt node, so above should have errors, 
-> but it's just a draft for us to discuss.
-
-You can have a look at my EBI series [1] if you want more details on
-the proposed DT binding.
-
-Best Regards,
-
-Boris
-
-[1]http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/308469.html
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Best regards,
+Beno=C3=AEt
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
