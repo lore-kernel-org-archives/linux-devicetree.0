@@ -1,1047 +1,568 @@
-From: Dmitry Torokhov <dtor@google.com>
-Subject: Re: [PATCH v7 2/4] pinctrl: cygnus: add gpio/pinconf driver
-Date: Tue, 3 Feb 2015 17:41:52 -0800
-Message-ID: <20150204014152.GD15969@dtor-ws>
-References: <rjui@broadcom.com>
- <1423012148-22560-1-git-send-email-rjui@broadcom.com>
- <1423012148-22560-3-git-send-email-rjui@broadcom.com>
+From: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] mfd: max77843: Add max77843 MFD driver core driver
+Date: Wed, 04 Feb 2015 11:06:39 +0900
+Message-ID: <54D17EAF.7040008@samsung.com>
+References: <1422939846-29955-1-git-send-email-jaewon02.kim@samsung.com>
+ <1422939846-29955-2-git-send-email-jaewon02.kim@samsung.com>
+ <54D16054.6070806@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1423012148-22560-3-git-send-email-rjui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <54D16054.6070806-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, SangBae Lee <sangbae90.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 03, 2015 at 05:09:06PM -0800, Ray Jui wrote:
-> This adds the initial support of the Broadcom Cygnus GPIO/PINCONF driver
-> that supports all 3 GPIO controllers on Cygnus including the ASIU GPIO
-> controller, the chipCommonG GPIO controller, and the always-on GPIO
-> controller. Basic PINCONF configurations such as bias pull up/down, and
-> drive strength are also supported in this driver.
-> 
-> Pins from the ASIU GPIO controller can be individually muxed to GPIO
-> function, through interaction with the Cygnus IOMUX controller
-> 
-> Signed-off-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
-> ---
->  drivers/pinctrl/bcm/Kconfig               |   22 +
->  drivers/pinctrl/bcm/Makefile              |    1 +
->  drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c |  920 +++++++++++++++++++++++++++++
->  3 files changed, 943 insertions(+)
->  create mode 100644 drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
-> 
-> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-> index eb13201..cd11d4d 100644
-> --- a/drivers/pinctrl/bcm/Kconfig
-> +++ b/drivers/pinctrl/bcm/Kconfig
-> @@ -20,6 +20,28 @@ config PINCTRL_BCM2835
->  	select PINMUX
->  	select PINCONF
->  
-> +config PINCTRL_CYGNUS_GPIO
-> +	bool "Broadcom Cygnus GPIO (with PINCONF) driver"
-> +	depends on OF_GPIO && ARCH_BCM_CYGNUS
-> +	select GPIOLIB_IRQCHIP
-> +	select PINCONF
-> +	select GENERIC_PINCONF
-> +	default ARCH_BCM_CYGNUS
-> +	help
-> +	  Say yes here to enable the Broadcom Cygnus GPIO driver.
-> +
-> +	  The Broadcom Cygnus SoC has 3 GPIO controllers including the ASIU
-> +	  GPIO controller (ASIU), the chipCommonG GPIO controller (CCM), and
-> +	  the always-ON GPIO controller (CRMU/AON). All 3 GPIO controllers are
-> +	  supported by this driver.
-> +
-> +	  All 3 Cygnus GPIO controllers support basic PINCONF functions such
-> +	  as bias pull up, pull down, and drive strength configurations, when
-> +	  these pins are muxed to GPIO.
-> +
-> +	  Pins from the ASIU GPIO can be individually muxed to GPIO function,
-> +	  through interaction with the Cygnus IOMUX controller.
-> +
->  config PINCTRL_CYGNUS_MUX
->  	bool "Broadcom Cygnus IOMUX driver"
->  	depends on (ARCH_BCM_CYGNUS || COMPILE_TEST)
-> diff --git a/drivers/pinctrl/bcm/Makefile b/drivers/pinctrl/bcm/Makefile
-> index bb6beb6..2b2f70e 100644
-> --- a/drivers/pinctrl/bcm/Makefile
-> +++ b/drivers/pinctrl/bcm/Makefile
-> @@ -2,4 +2,5 @@
->  
->  obj-$(CONFIG_PINCTRL_BCM281XX)		+= pinctrl-bcm281xx.o
->  obj-$(CONFIG_PINCTRL_BCM2835)		+= pinctrl-bcm2835.o
-> +obj-$(CONFIG_PINCTRL_CYGNUS_GPIO)	+= pinctrl-cygnus-gpio.o
->  obj-$(CONFIG_PINCTRL_CYGNUS_MUX)	+= pinctrl-cygnus-mux.o
-> diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c b/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
-> new file mode 100644
-> index 0000000..cfe4478
-> --- /dev/null
-> +++ b/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
-> @@ -0,0 +1,920 @@
-> +/*
-> + * Copyright (C) 2014-2015 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * This file contains the Broadcom Cygnus GPIO driver that supports 3
-> + * GPIO controllers on Cygnus including the ASIU GPIO controller, the
-> + * chipCommonG GPIO controller, and the always-on GPIO controller. Basic
-> + * PINCONF such as bias pull up/down, and drive strength are also supported
-> + * in this driver.
-> + *
-> + * Pins from the ASIU GPIO can be individually muxed to GPIO function,
-> + * through the interaction with the Cygnus IOMUX controller
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/module.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/gpio.h>
-> +#include <linux/ioport.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +
-> +#include "../pinctrl-utils.h"
-> +
-> +#define CYGNUS_GPIO_DATA_IN_OFFSET   0x00
-> +#define CYGNUS_GPIO_DATA_OUT_OFFSET  0x04
-> +#define CYGNUS_GPIO_OUT_EN_OFFSET    0x08
-> +#define CYGNUS_GPIO_IN_TYPE_OFFSET   0x0c
-> +#define CYGNUS_GPIO_INT_DE_OFFSET    0x10
-> +#define CYGNUS_GPIO_INT_EDGE_OFFSET  0x14
-> +#define CYGNUS_GPIO_INT_MSK_OFFSET   0x18
-> +#define CYGNUS_GPIO_INT_STAT_OFFSET  0x1c
-> +#define CYGNUS_GPIO_INT_MSTAT_OFFSET 0x20
-> +#define CYGNUS_GPIO_INT_CLR_OFFSET   0x24
-> +#define CYGNUS_GPIO_PAD_RES_OFFSET   0x34
-> +#define CYGNUS_GPIO_RES_EN_OFFSET    0x38
-> +
-> +/* drive strength control for ASIU GPIO */
-> +#define CYGNUS_GPIO_ASIU_DRV0_CTRL_OFFSET 0x58
-> +
-> +/* drive strength control for CCM/CRMU (AON) GPIO */
-> +#define CYGNUS_GPIO_DRV0_CTRL_OFFSET  0x00
-> +
-> +#define GPIO_BANK_SIZE 0x200
-> +#define NGPIOS_PER_BANK 32
-> +#define GPIO_BANK(pin) ((pin) / NGPIOS_PER_BANK)
-> +
-> +#define CYGNUS_GPIO_REG(pin, reg) (GPIO_BANK(pin) * GPIO_BANK_SIZE + (reg))
-> +#define CYGNUS_GPIO_SHIFT(pin) ((pin) % NGPIOS_PER_BANK)
-> +
-> +#define GPIO_DRV_STRENGTH_BIT_SHIFT  20
-> +#define GPIO_DRV_STRENGTH_BITS       3
-> +#define GPIO_DRV_STRENGTH_BIT_MASK   ((1 << GPIO_DRV_STRENGTH_BITS) - 1)
-> +
-> +/*
-> + * Cygnus GPIO core
-> + *
-> + * @dev: pointer to device
-> + * @base: I/O register base for Cygnus GPIO controller
-> + * @io_ctrl: I/O register base for certain type of Cygnus GPIO controller that
-> + * has the PINCONF support implemented outside of the GPIO block
-> + * @lock: lock to protect access to I/O registers
-> + * @gc: GPIO chip
-> + * @num_banks: number of GPIO banks, each bank supports up to 32 GPIOs
-> + * @pinmux_is_supported: flag to indicate this GPIO controller contains pins
-> + * that can be individually muxed to GPIO
-> + * @pctl: pointer to pinctrl_dev
-> + * @pctldesc: pinctrl descriptor
-> + * @pins: pointer to array of pins
-> + */
-> +struct cygnus_gpio {
-> +	struct device *dev;
-> +
-> +	void __iomem *base;
-> +	void __iomem *io_ctrl;
-> +
-> +	spinlock_t lock;
-> +
-> +	struct gpio_chip gc;
-> +	unsigned num_banks;
-> +
-> +	int pinmux_is_supported;
+Hi Chanwoo,
 
-bool?
 
-> +
-> +	struct pinctrl_dev *pctl;
-> +	struct pinctrl_desc pctldesc;
-> +	struct pinctrl_pin_desc *pins;
-> +};
-> +
-> +static struct cygnus_gpio *to_cygnus_gpio(struct gpio_chip *gc)
-> +{
-> +	return container_of(gc, struct cygnus_gpio, gc);
-> +}
-> +
-> +/*
-> + * Mapping from PINCONF pins to GPIO pins is 1-to-1
-> + */
-> +static unsigned cygnus_pin_to_gpio(unsigned pin)
-> +{
-> +	return pin;
-> +}
-> +
-> +static u32 cygnus_readl(struct cygnus_gpio *chip, unsigned int offset)
-> +{
-> +	return readl(chip->base + offset);
-> +}
-> +
-> +static void cygnus_writel(struct cygnus_gpio *chip, unsigned int offset,
-> +			  u32 val)
-> +{
-> +	writel(val, chip->base + offset);
-> +}
-> +
-> +/**
-> + *  cygnus_set_bit - set or clear one bit (corresponding to the GPIO pin) in a
-> + *  Cygnus GPIO register
-> + *
-> + *  @cygnus_gpio: Cygnus GPIO device
-> + *  @reg: register offset
-> + *  @gpio: GPIO pin
-> + *  @set: set or clear. 1 - set; 0 -clear
-> + */
-> +static void cygnus_set_bit(struct cygnus_gpio *chip, unsigned int reg,
-> +			   unsigned gpio, int set)
-> +{
-> +	unsigned int offset = CYGNUS_GPIO_REG(gpio, reg);
-> +	unsigned int shift = CYGNUS_GPIO_SHIFT(gpio);
-> +	u32 val;
-> +
-> +	val = cygnus_readl(chip, offset);
-> +	if (set)
-> +		val |= BIT(shift);
-> +	else
-> +		val &= ~BIT(shift);
-> +	cygnus_writel(chip, offset, val);
-> +}
-> +
-> +static int cygnus_get_bit(struct cygnus_gpio *chip, unsigned int reg,
-> +			  unsigned gpio)
-> +{
-> +	unsigned int offset = CYGNUS_GPIO_REG(gpio, reg);
-> +	unsigned int shift = CYGNUS_GPIO_SHIFT(gpio);
-> +	u32 val;
-> +
-> +	val = cygnus_readl(chip, offset) & BIT(shift);
-> +	if (val)
-> +		return 1;
-> +	else
-> +		return 0;
-> +}
-> +
-> +static void cygnus_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
-> +{
-> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	struct irq_chip *irq_chip = irq_desc_get_chip(desc);
-> +	int i, bit;
-> +
-> +	chained_irq_enter(irq_chip, desc);
-> +
-> +	/* go through the entire GPIO banks and handle all interrupts */
-> +	for (i = 0; i < chip->num_banks; i++) {
-> +		unsigned long val = cygnus_readl(chip,
-> +				(i * GPIO_BANK_SIZE) +
-> +				CYGNUS_GPIO_INT_MSTAT_OFFSET);
-> +
-> +		for_each_set_bit(bit, &val, NGPIOS_PER_BANK) {
-> +			unsigned pin = NGPIOS_PER_BANK * i + bit;
-> +			int child_irq = irq_find_mapping(gc->irqdomain, pin);
-> +
-> +			/*
-> +			 * Clear the interrupt before invoking the
-> +			 * handler, so we do not leave any window
-> +			 */
-> +			cygnus_writel(chip, (i * GPIO_BANK_SIZE) +
-> +				      CYGNUS_GPIO_INT_CLR_OFFSET, BIT(bit));
-> +
-> +			generic_handle_irq(child_irq);
-> +		}
-> +	}
-> +
-> +	chained_irq_exit(irq_chip, desc);
-> +}
-> +
-> +
-> +static void cygnus_gpio_irq_ack(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned gpio = d->hwirq;
-> +	unsigned int offset = CYGNUS_GPIO_REG(gpio,
-> +			CYGNUS_GPIO_INT_CLR_OFFSET);
-> +	unsigned int shift = CYGNUS_GPIO_SHIFT(gpio);
-> +	u32 val = BIT(shift);
-> +
-> +	cygnus_writel(chip, offset, val);
-> +}
-> +
-> +/**
-> + *  cygnus_gpio_irq_set_mask - mask/unmask a GPIO interrupt
-> + *
-> + *  @d: IRQ chip data
-> + *  @mask: mask/unmask GPIO interrupt. 0 - mask (disable); 1 - unmask (enable)
-> + */
-> +static void cygnus_gpio_irq_set_mask(struct irq_data *d, int mask)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned gpio = d->hwirq;
-> +
-> +	cygnus_set_bit(chip, CYGNUS_GPIO_INT_MSK_OFFSET, gpio, mask);
-> +}
-> +
-> +static void cygnus_gpio_irq_mask(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	cygnus_gpio_irq_set_mask(d, 0);
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +}
-> +
-> +static void cygnus_gpio_irq_unmask(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	cygnus_gpio_irq_set_mask(d, 1);
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +}
-> +
-> +static int cygnus_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned gpio = d->hwirq;
-> +	int int_type = 0, dual_edge = 0, edge_lvl = 0;
-> +	unsigned long flags;
-> +
-> +	switch (type & IRQ_TYPE_SENSE_MASK) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		edge_lvl = 1;
-> +		break;
-> +
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		break;
-> +
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +		dual_edge = 1;
-> +		break;
-> +
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		int_type = 1;
-> +		edge_lvl = 1;
-> +		break;
-> +
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		int_type = 1;
-> +		break;
-> +
-> +	default:
-> +		dev_err(chip->dev, "invalid GPIO IRQ type 0x%x\n",
-> +			type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	cygnus_set_bit(chip, CYGNUS_GPIO_IN_TYPE_OFFSET, gpio, int_type);
-> +	cygnus_set_bit(chip, CYGNUS_GPIO_INT_DE_OFFSET, gpio, dual_edge);
-> +	cygnus_set_bit(chip, CYGNUS_GPIO_INT_EDGE_OFFSET, gpio,
-> +		       edge_lvl);
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +
-> +	dev_dbg(chip->dev,
-> +		"gpio:%u set int_type:%d dual_edge:%d edge_lvl:%d\n",
-> +		gpio, int_type, dual_edge, edge_lvl);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct irq_chip cygnus_gpio_irq_chip = {
-> +	.name = "bcm-cygnus-gpio",
-> +	.irq_ack = cygnus_gpio_irq_ack,
-> +	.irq_mask = cygnus_gpio_irq_mask,
-> +	.irq_unmask = cygnus_gpio_irq_unmask,
-> +	.irq_set_type = cygnus_gpio_irq_set_type,
-> +};
-> +
-> +/*
-> + * Request the Cygnus IOMUX pinmux controller to mux individual pins to GPIO
-> + */
-> +static int cygnus_gpio_request(struct gpio_chip *gc, unsigned offset)
-> +{
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned gpio = gc->base + offset;
-> +
-> +	/* not all Cygnus GPIO pins can be muxed individually */
-> +	if (!chip->pinmux_is_supported)
-> +		return 0;
-> +
-> +	return pinctrl_request_gpio(gpio);
-> +}
-> +
-> +static void cygnus_gpio_free(struct gpio_chip *gc, unsigned offset)
-> +{
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned gpio = gc->base + offset;
-> +
-> +	if (!chip->pinmux_is_supported)
-> +		return;
-> +
-> +	pinctrl_free_gpio(gpio);
-> +}
-> +
-> +static int cygnus_gpio_direction_input(struct gpio_chip *gc, unsigned gpio)
-> +{
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	cygnus_set_bit(chip, CYGNUS_GPIO_OUT_EN_OFFSET, gpio, 0);
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +
-> +	dev_dbg(chip->dev, "gpio:%u set input\n", gpio);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cygnus_gpio_direction_output(struct gpio_chip *gc, unsigned gpio,
-> +					int value)
-> +{
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	cygnus_set_bit(chip, CYGNUS_GPIO_OUT_EN_OFFSET, gpio, 1);
-> +	cygnus_set_bit(chip, CYGNUS_GPIO_DATA_OUT_OFFSET, gpio, value);
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +
-> +	dev_dbg(chip->dev, "gpio:%u set output, value:%d\n", gpio, value);
-> +
-> +	return 0;
-> +}
-> +
-> +static void cygnus_gpio_set(struct gpio_chip *gc, unsigned gpio, int value)
-> +{
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	cygnus_set_bit(chip, CYGNUS_GPIO_DATA_OUT_OFFSET, gpio, value);
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +
-> +	dev_dbg(chip->dev, "gpio:%u set, value:%d\n", gpio, value);
-> +}
-> +
-> +static int cygnus_gpio_get(struct gpio_chip *gc, unsigned gpio)
-> +{
-> +	struct cygnus_gpio *chip = to_cygnus_gpio(gc);
-> +	unsigned int offset = CYGNUS_GPIO_REG(gpio,
-> +					      CYGNUS_GPIO_DATA_IN_OFFSET);
-> +	unsigned int shift = CYGNUS_GPIO_SHIFT(gpio);
-> +
-> +	return !!(cygnus_readl(chip, offset) & BIT(shift));
-> +}
-> +
-> +static int cygnus_get_groups_count(struct pinctrl_dev *pctldev)
-> +{
-> +	return 1;
-> +}
-> +
-> +/*
-> + * Only one group: "gpio_grp", since this local pinctrl device only performs
-> + * GPIO specific PINCONF configurations
-> + */
-> +static const char *cygnus_get_group_name(struct pinctrl_dev *pctldev,
-> +					 unsigned selector)
-> +{
-> +
+2015=EB=85=84 02=EC=9B=94 04=EC=9D=BC 08:57=EC=97=90 Chanwoo Choi =EC=9D=
+=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+> Hi Jaewon and Beomho,
+>
+> On 02/03/2015 02:04 PM, Jaewon Kim wrote:
+>> This patch adds MAX77843 core/irq driver to support PMIC,
+>> MUIC(Micro USB Interface Controller), Charger, Fuel Gauge,
+>> LED and Haptic device.
+>>
+>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   drivers/mfd/Kconfig                  |   14 ++
+>>   drivers/mfd/Makefile                 |    1 +
+>>   drivers/mfd/max77843.c               |  247 ++++++++++++++++++++
+>>   include/linux/mfd/max77843-private.h |  422 ++++++++++++++++++++++=
+++++++++++++
+>>   4 files changed, 684 insertions(+)
+>>   create mode 100644 drivers/mfd/max77843.c
+>>   create mode 100644 include/linux/mfd/max77843-private.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 2e6b731..0c67c79 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -442,6 +442,20 @@ config MFD_MAX77693
+>>   	  additional drivers must be enabled in order to use the function=
+ality
+>>   	  of the device.
+>>  =20
+> [snip]
+>
+>> +
+>> +	ret =3D regmap_read(max77843->regmap,
+>> +			MAX77843_SYS_REG_PMICID, &reg_data);
+>> +	if (ret < 0) {
+>> +		dev_err(&i2c->dev, "Failed to read PMIC ID\n");
+>> +		goto err_pmic_id;
+>> +	}
+>> +	dev_info(&i2c->dev, "device ID: 0x%x\n", reg_data);
+>> +
+>> +	ret =3D max77843_chg_init(max77843);
+>> +	if (ret) {
+>> +		dev_err(&i2c->dev, "Failed to init Charger\n");
+>> +		goto err_pmic_id;
+>> +	}
+>> +
+>> +	reg =3D MAX77843_INTSRC_MASK_MASK;
+>> +	ret =3D regmap_update_bits(max77843->regmap,
+>> +			MAX77843_SYS_REG_INTSRCMASK,
+>> +			MAX77843_INTSRC_MASK_MASK,
+>> +			(unsigned int)~reg);
+> I think that you don't need to allocate MAX77843_INTSRC_MASK_MASK to =
+'reg' variable.
+> You can use MAX77843_INTSRC_MASK_MASK directly without any variable.
 
-Extra blank line.
+Okay, I will use MAX77843_INTSRC_MASK_MASK directly in next version.
+>
+>> +	if (ret < 0) {
+>> +		dev_err(&i2c->dev, "Failed to unmask interrupt source\n");
+>> +		goto err_pmic_id;
+>> +	}
+>> +
+>> +	ret =3D mfd_add_devices(max77843->dev, -1, max77843_devs,
+>> +			ARRAY_SIZE(max77843_devs), NULL, 0, NULL);
+>> +	if (ret < 0) {
+>> +		dev_err(&i2c->dev, "Failed to add mfd device\n");
+>> +		goto err_pmic_id;
+>> +	}
+>> +
+>> +	device_init_wakeup(max77843->dev, 1);
+>> +
+>> +	return 0;
+>> +
+>> +err_pmic_id:
+>> +	regmap_del_irq_chip(max77843->irq, max77843->irq_data);
+>> +
+>> +	return ret;
+>> +}
+> [snip]
+>
+>> +MODULE_AUTHOR("Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+>> +MODULE_AUTHOR("Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+>> +MODULE_DESCRIPTION("Maxim MAX77843 multi-function core driver");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/include/linux/mfd/max77843-private.h b/include/linux/mf=
+d/max77843-private.h
+>> new file mode 100644
+>> index 0000000..0f4cfa4
+>> --- /dev/null
+>> +++ b/include/linux/mfd/max77843-private.h
+>> @@ -0,0 +1,422 @@
+>> +/*
+>> + * max77843-private.h - Common API for the Maxim MAX77843 internal =
+sub chip
+> API?
+I will change it.
+>
+>> + *
+>> + * Copyright (C) 2014 Samsung Electrnoics
+> s/2014/2015
+ditto.
+>
+>> + * Author: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> + * Author: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or mo=
+dify
+>> + * it under the terms of the GNU General Public License as publishe=
+d by
+>> + * the Free Software Foundation; either version 2 of the License, o=
+r
+>> + * (at your option) any later version.
+>> + */
+>> +
+>> +#ifndef __MAX77843_PRIVATE_H_
+>> +#define __MAX77843_PRIVATE_H_
+>> +
+>> +#include <linux/i2c.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#define I2C_ADDR_TOPSYS	(0xCC >> 1)
+>> +#define I2C_ADDR_CHG	(0xD2 >> 1)
+>> +#define I2C_ADDR_FG	(0x6C >> 1)
+>> +#define I2C_ADDR_MUIC	(0x4A >> 1)
+>> +
+>> +/* Topsys, Haptic and LED registers */
+>> +enum max77843_sys_reg {
+>> +	MAX77843_SYS_REG_PMICID		=3D 0x00,
+>> +	MAX77843_SYS_REG_PMICREV	=3D 0x01,
+>> +	MAX77843_SYS_REG_MAINCTRL1	=3D 0x02,
+>> +	MAX77843_SYS_REG_INTSRC		=3D 0x22,
+>> +	MAX77843_SYS_REG_INTSRCMASK	=3D 0x23,
+>> +	MAX77843_SYS_REG_SYSINTSRC	=3D 0x24,
+>> +	MAX77843_SYS_REG_SYSINTMASK	=3D 0x26,
+>> +	MAX77843_SYS_REG_TOPSYS_STAT	=3D 0x28,
+>> +	MAX77843_SYS_REG_SAFEOUTCTRL	=3D 0xC6,
+>> +
+>> +	MAX77843_SYS_REG_END,
+>> +};
+>> +
+>> +enum max77843_haptic_reg {
+>> +	MAX77843_HAP_REG_MCONFIG	=3D 0x10,
+>> +
+>> +	MAX77843_HAP_REG_END,
+>> +};
+>> +
+>> +enum max77843_led_reg {
+>> +	MAX77843_LED_REG_LEDEN		=3D 0x30,
+>> +	MAX77843_LED_REG_LED0BRT	=3D 0x31,
+>> +	MAX77843_LED_REG_LED1BRT	=3D 0x32,
+>> +	MAX77843_LED_REG_LED2BRT	=3D 0x33,
+>> +	MAX77843_LED_REG_LED3BRT	=3D 0x34,
+>> +	MAX77843_LED_REG_LEDBLNK	=3D 0x38,
+>> +	MAX77843_LED_REG_LEDRAMP	=3D 0x36,
+>> +
+>> +	MAX77843_LED_REG_END,
+>> +};
+>> +
+>> +/* Charger registers */
+>> +enum max77843_charger_reg {
+>> +	MAX77843_CHG_REG_CHG_INT	=3D 0xB0,
+>> +	MAX77843_CHG_REG_CHG_INT_MASK	=3D 0xB1,
+>> +	MAX77843_CHG_REG_CHG_INT_OK	=3D 0xB2,
+>> +	MAX77843_CHG_REG_CHG_DTLS_00	=3D 0xB3,
+>> +	MAX77843_CHG_REG_CHG_DTLS_01	=3D 0xB4,
+>> +	MAX77843_CHG_REG_CHG_DTLS_02	=3D 0xB5,
+>> +	MAX77843_CHG_REG_CHG_CNFG_00	=3D 0xB7,
+>> +	MAX77843_CHG_REG_CHG_CNFG_01	=3D 0xB8,
+>> +	MAX77843_CHG_REG_CHG_CNFG_02	=3D 0xB9,
+>> +	MAX77843_CHG_REG_CHG_CNFG_03	=3D 0xBA,
+>> +	MAX77843_CHG_REG_CHG_CNFG_04	=3D 0xBB,
+>> +	MAX77843_CHG_REG_CHG_CNFG_06	=3D 0xBD,
+>> +	MAX77843_CHG_REG_CHG_CNFG_07	=3D 0xBE,
+>> +	MAX77843_CHG_REG_CHG_CNFG_09	=3D 0xC0,
+>> +	MAX77843_CHG_REG_CHG_CNFG_10	=3D 0xC1,
+>> +	MAX77843_CHG_REG_CHG_CNFG_11	=3D 0xC2,
+>> +	MAX77843_CHG_REG_CHG_CNFG_12	=3D 0xC3,
+>> +
+>> +	MAX77843_CHG_REG_END,
+>> +};
+>> +
+>> +/* Fuel gauge registers */
+>> +enum max77843_fuelgauge {
+>> +	MAX77843_FG_REG_STATUS		=3D 0x00,
+>> +	MAX77843_FG_REG_VALRT_TH	=3D 0x01,
+>> +	MAX77843_FG_REG_TALRT_TH	=3D 0x02,
+>> +	MAX77843_FG_REG_SALRT_TH	=3D 0x03,
+>> +	MAX77843_FG_RATE_AT_RATE	=3D 0x04,
+>> +	MAX77843_FG_REG_REMCAP_REP	=3D 0x05,
+>> +	MAX77843_FG_REG_SOCREP		=3D 0x06,
+>> +	MAX77843_FG_REG_AGE		=3D 0x07,
+>> +	MAX77843_FG_REG_TEMP		=3D 0x08,
+>> +	MAX77843_FG_REG_VCELL		=3D 0x09,
+>> +	MAX77843_FG_REG_CURRENT		=3D 0x0A,
+>> +	MAX77843_FG_REG_AVG_CURRENT	=3D 0x0B,
+>> +	MAX77843_FG_REG_SOCMIX		=3D 0x0D,
+>> +	MAX77843_FG_REG_SOCAV		=3D 0x0E,
+>> +	MAX77843_FG_REG_REMCAP_MIX	=3D 0x0F,
+>> +	MAX77843_FG_REG_FULLCAP		=3D 0x10,
+>> +	MAX77843_FG_REG_AVG_TEMP	=3D 0x16,
+>> +	MAX77843_FG_REG_CYCLES		=3D 0x17,
+>> +	MAX77843_FG_REG_AVG_VCELL	=3D 0x19,
+>> +	MAX77843_FG_REG_CONFIG		=3D 0x1D,
+>> +	MAX77843_FG_REG_REMCAP_AV	=3D 0x1F,
+>> +	MAX77843_FG_REG_FULLCAP_NOM	=3D 0x23,
+>> +	MAX77843_FG_REG_MISCCFG		=3D 0x2B,
+>> +	MAX77843_FG_REG_RCOMP		=3D 0x38,
+>> +	MAX77843_FG_REG_FSTAT		=3D 0x3D,
+>> +	MAX77843_FG_REG_DQACC		=3D 0x45,
+>> +	MAX77843_FG_REG_DPACC		=3D 0x46,
+>> +	MAX77843_FG_REG_OCV		=3D 0xEE,
+>> +	MAX77843_FG_REG_VFOCV		=3D 0xFB,
+>> +	MAX77843_FG_SOCVF		=3D 0xFF,
+>> +
+>> +	MAX77843_FG_END,
+>> +};
+>> +
+>> +/* Muic registers */
+> Use capital letter (s/Muic/MUIC)
+ditto.
+>
+>> +enum max77843_muic_reg {
+>> +	MAX77843_MUIC_REG_ID		=3D 0x00,
+>> +	MAX77843_MUIC_REG_INT1		=3D 0x01,
+>> +	MAX77843_MUIC_REG_INT2		=3D 0x02,
+>> +	MAX77843_MUIC_REG_INT3		=3D 0x03,
+>> +	MAX77843_MUIC_REG_STATUS1	=3D 0x04,
+>> +	MAX77843_MUIC_REG_STATUS2	=3D 0x05,
+>> +	MAX77843_MUIC_REG_STATUS3	=3D 0x06,
+>> +	MAX77843_MUIC_REG_INTMASK1	=3D 0x07,
+>> +	MAX77843_MUIC_REG_INTMASK2	=3D 0x08,
+>> +	MAX77843_MUIC_REG_INTMASK3	=3D 0x09,
+>> +	MAX77843_MUIC_REG_CDETCTRL1	=3D 0x0A,
+>> +	MAX77843_MUIC_REG_CDETCTRL2	=3D 0x0B,
+>> +	MAX77843_MUIC_REG_CONTROL1	=3D 0x0C,
+>> +	MAX77843_MUIC_REG_CONTROL2	=3D 0x0D,
+>> +	MAX77843_MUIC_REG_CONTROL3	=3D 0x0E,
+>> +	MAX77843_MUIC_REG_CONTROL4	=3D 0x16,
+>> +	MAX77843_MUIC_REG_HVCONTROL1	=3D 0x17,
+>> +	MAX77843_MUIC_REG_HVCONTROL2	=3D 0x18,
+>> +
+>> +	MAX77843_MUIC_REG_END,
+>> +};
+>> +
+>> +enum max77843_irq {
+>> +	/* Topsys: SYSTEM */
+>> +	MAX77843_SYS_IRQ_SYSINTSRC_SYSUVLO_INT,
+>> +	MAX77843_SYS_IRQ_SYSINTSRC_SYSOVLO_INT,
+>> +	MAX77843_SYS_IRQ_SYSINTSRC_TSHDN_INT,
+>> +	MAX77843_SYS_IRQ_SYSINTSRC_TM_INT,
+>> +
+>> +	/* Charger: CHG_INT */
+>> +	MAX77843_CHG_IRQ_CHG_INT_BYP_I,
+>> +	MAX77843_CHG_IRQ_CHG_INT_BATP_I,
+>> +	MAX77843_CHG_IRQ_CHG_INT_BAT_I,
+>> +	MAX77843_CHG_IRQ_CHG_INT_CHG_I,
+>> +	MAX77843_CHG_IRQ_CHG_INT_WCIN_I,
+>> +	MAX77843_CHG_IRQ_CHG_INT_CHGIN_I,
+>> +	MAX77843_CHG_IRQ_CHG_INT_AICL_I,
+>> +
+>> +	MAX77843_IRQ_NUM,
+>> +};
+>> +
+>> +enum max77843_irq_muic {
+>> +	/* MUIC: INT1 */
+>> +	MAX77843_MUIC_IRQ_INT1_ADC,
+>> +	MAX77843_MUIC_IRQ_INT1_ADCERROR,
+>> +	MAX77843_MUIC_IRQ_INT1_ADC1K,
+>> +
+>> +	/* MUIC: INT2 */
+>> +	MAX77843_MUIC_IRQ_INT2_CHGTYP,
+>> +	MAX77843_MUIC_IRQ_INT2_CHGDETRUN,
+>> +	MAX77843_MUIC_IRQ_INT2_DCDTMR,
+>> +	MAX77843_MUIC_IRQ_INT2_DXOVP,
+>> +	MAX77843_MUIC_IRQ_INT2_VBVOLT,
+>> +
+>> +	/* MUIC: INT3 */
+>> +	MAX77843_MUIC_IRQ_INT3_VBADC,
+>> +	MAX77843_MUIC_IRQ_INT3_VDNMON,
+>> +	MAX77843_MUIC_IRQ_INT3_DNRES,
+>> +	MAX77843_MUIC_IRQ_INT3_MPNACK,
+>> +	MAX77843_MUIC_IRQ_INT3_MRXBUFOW,
+>> +	MAX77843_MUIC_IRQ_INT3_MRXTRF,
+>> +	MAX77843_MUIC_IRQ_INT3_MRXPERR,
+>> +	MAX77843_MUIC_IRQ_INT3_MRXRDY,
+>> +
+>> +	MAX77843_MUIC_IRQ_NUM,
+>> +};
+>> +
+>> +/* MAX77843 interrupts */
+>> +#define MAX77843_SYS_IRQ_SYSUVLO_INT		BIT(0)
+>> +#define MAX77843_SYS_IRQ_SYSOVLO_INT		BIT(1)
+>> +#define MAX77843_SYS_IRQ_TSHDN_INT		BIT(2)
+>> +#define MAX77843_SYS_IRQ_TM_INT			BIT(3)
+>> +
+>> +/* Max77843 charger insterrupts */
+>> +#define MAX77843_CHG_BYP_I			BIT(0)
+>> +#define MAX77843_CHG_BATP_I			BIT(2)
+>> +#define MAX77843_CHG_BAT_I			BIT(3)
+>> +#define MAX77843_CHG_CHG_I			BIT(4)
+>> +#define MAX77843_CHG_WCIN_I			BIT(5)
+>> +#define MAX77843_CHG_CHGIN_I			BIT(6)
+>> +#define MAX77843_CHG_AICL_I			BIT(7)
+>> +
+>> +/* MAX77843 CHG_INT_OK register */
+>> +#define MAX77843_CHG_BYP_OK			BIT(0)
+>> +#define MAX77843_CHG_BATP_OK			BIT(2)
+>> +#define MAX77843_CHG_BAT_OK			BIT(3)
+>> +#define MAX77843_CHG_CHG_OK			BIT(4)
+>> +#define MAX77843_CHG_WCIN_OK			BIT(5)
+>> +#define MAX77843_CHG_CHGIN_OK			BIT(6)
+>> +#define MAX77843_CHG_AICL_OK			BIT(7)
+>> +
+>> +/* MAX77843 CHG_DETAILS_00 register */
+>> +#define MAX77843_CHG_BAT_DTLS			BIT(0)
+>> +
+>> +/* MAX77843 CHG_DETAILS_01 register */
+>> +#define MAX77843_CHG_DTLS_MASK			0x0f
+>> +#define MAX77843_CHG_PQ_MODE			0x00
+>> +#define MAX77843_CHG_CC_MODE			0x01
+>> +#define MAX77843_CHG_CV_MODE			0x02
+>> +#define MAX77843_CHG_TO_MODE			0x03
+>> +#define MAX77843_CHG_DO_MODE			0x04
+>> +#define MAX77843_CHG_HT_MODE			0x05
+>> +#define MAX77843_CHG_TF_MODE			0x06
+>> +#define MAX77843_CHG_TS_MODE			0x07
+>> +#define MAX77843_CHG_OFF_MODE			0x08
+>> +
+>> +#define MAX77843_CHG_BAT_DTLS_MASK		0xf0
+>> +#define MAX77843_CHG_NO_BAT			(0x00 << 4)
+>> +#define MAX77843_CHG_LOW_VOLT_BAT		(0x01 << 4)
+>> +#define MAX77843_CHG_LONG_BAT_TIME		(0x02 << 4)
+>> +#define MAX77843_CHG_OK_BAT			(0x03 << 4)
+>> +#define MAX77843_CHG_OK_LOW_VOLT_BAT		(0x04 << 4)
+>> +#define MAX77843_CHG_OVER_VOLT_BAT		(0x05 << 4)
+>> +#define MAX77843_CHG_OVER_CURRENT_BAT		(0x06 << 4)
+>> +
+>> +/* MAX77843 CHG_CNFG_00 register */
+>> +#define MAX77843_CHG_DISABLE			0x00
+>> +#define MAX77843_CHG_ENABLE			0x05
+>> +#define MAX77843_CHG_MASK			0x01
+>> +#define MAX77843_CHG_BUCK_MASK			0x04
+>> +
+>> +/* MAX77843 CHG_CNFG_01 register */
+>> +#define MAX77843_CHG_RESTART_THRESHOLD_100	0x00
+>> +#define MAX77843_CHG_RESTART_THRESHOLD_150	0x10
+>> +#define MAX77843_CHG_RESTART_THRESHOLD_200	0x20
+>> +#define MAX77843_CHG_RESTART_THRESHOLD_DISABLE	0x30
+>> +
+>> +/* MAX77843 CHG_CNFG_02 register */
+>> +#define MAX77843_CHG_FAST_CHG_CURRENT_MIN	100000
+>> +#define MAX77843_CHG_FAST_CHG_CURRENT_MAX	3150000
+>> +#define MAX77843_CHG_FAST_CHG_CURRENT_STEP	50000
+>> +#define MAX77843_CHG_FAST_CHG_CURRENT_MASK	0x3f
+>> +#define MAX77843_CHG_OTG_ILIMIT_500		(0x00 << 6)
+>> +#define MAX77843_CHG_OTG_ILIMIT_900		(0x01 << 6)
+>> +#define MAX77843_CHG_OTG_ILIMIT_1200		(0x02 << 6)
+>> +#define MAX77843_CHG_OTG_ILIMIT_1500		(0x03 << 6)
+>> +#define MAX77843_CHG_OTG_ILIMIT_MASK		0xc0
+>> +
+>> +/* MAX77843 CHG_CNFG_03 register */
+>> +#define MAX77843_CHG_TOP_OFF_CURRENT_MIN	125000
+>> +#define MAX77843_CHG_TOP_OFF_CURRENT_MAX	650000
+>> +#define MAX77843_CHG_TOP_OFF_CURRENT_STEP	75000
+>> +#define MAX77843_CHG_TOP_OFF_CURRENT_MASK	0x07
+>> +
+>> +/* MAX77843 CHG_CNFG_06 register */
+>> +#define MAX77843_CHG_WRITE_CAP_BLOCK		0x10
+>> +#define MAX77843_CHG_WRITE_CAP_UNBLOCK		0x0C
+>> +
+>> +/* MAX77843_CHG_CNFG_09_register */
+>> +#define MAX77843_CHG_INPUT_CURRENT_LIMIT_MIN	100000
+>> +#define MAX77843_CHG_INPUT_CURRENT_LIMIT_MAX	4000000
+>> +#define MAX77843_CHG_INPUT_CURRENT_LIMIT_REF	3367000
+>> +#define MAX77843_CHG_INPUT_CURRENT_LIMIT_STEP	33000
+>> +
+>> +#define MAX77843_MUIC_ADC			BIT(0)
+>> +#define MAX77843_MUIC_ADCERROR			BIT(2)
+>> +#define MAX77843_MUIC_ADC1K			BIT(3)
+>> +
+>> +#define MAX77843_MUIC_CHGTYP			BIT(0)
+>> +#define MAX77843_MUIC_CHGDETRUN			BIT(1)
+>> +#define MAX77843_MUIC_DCDTMR			BIT(2)
+>> +#define MAX77843_MUIC_DXOVP			BIT(3)
+>> +#define MAX77843_MUIC_VBVOLT			BIT(4)
+>> +
+>> +#define MAX77843_MUIC_VBADC			BIT(0)
+>> +#define MAX77843_MUIC_VDNMON			BIT(1)
+>> +#define MAX77843_MUIC_DNRES			BIT(2)
+>> +#define MAX77843_MUIC_MPNACK			BIT(3)
+>> +#define MAX77843_MUIC_MRXBUFOW			BIT(4)
+>> +#define MAX77843_MUIC_MRXTRF			BIT(5)
+>> +#define MAX77843_MUIC_MRXPERR			BIT(6)
+>> +#define MAX77843_MUIC_MRXRDY			BIT(7)
+>> +
+>> +/* MAX77843 INTSRCMASK register */
+>> +#define MAX77843_INTSRCMASK_CHGR		0
+>> +#define MAX77843_INTSRCMASK_SYS			1
+>> +#define MAX77843_INTSRCMASK_FG			2
+>> +#define MAX77843_INTSRCMASK_MUIC		3
+>> +
+>> +#define MAX77843_INTSRCMASK_CHGR_MASK          BIT(MAX77843_INTSRCM=
+ASK_CHGR)
+>> +#define MAX77843_INTSRCMASK_SYS_MASK           BIT(MAX77843_INTSRCM=
+ASK_SYS)
+>> +#define MAX77843_INTSRCMASK_FG_MASK            BIT(MAX77843_INTSRCM=
+ASK_FG)
+>> +#define MAX77843_INTSRCMASK_MUIC_MASK          BIT(MAX77843_INTSRCM=
+ASK_MUIC)
+>> +
+>> +#define MAX77843_INTSRC_MASK_MASK \
+>> +		(MAX77843_INTSRCMASK_MUIC_MASK | MAX77843_INTSRCMASK_FG_MASK | \
+>> +		MAX77843_INTSRCMASK_SYS_MASK | MAX77843_INTSRCMASK_CHGR_MASK)
+>> +
+>> +/* MAX77843 STATUS register*/
+>> +#define STATUS1_ADC_SHIFT			0
+>> +#define STATUS1_ADCERROR_SHIFT			6
+>> +#define STATUS1_ADC1K_SHIFT			7
+>> +#define STATUS2_CHGTYP_SHIFT			0
+>> +#define STATUS2_CHGDETRUN_SHIFT			3
+>> +#define STATUS2_DCDTMR_SHIFT			4
+>> +#define STATUS2_DXOVP_SHIFT			5
+>> +#define STATUS2_VBVOLT_SHIFT			6
+>> +#define STATUS3_VBADC_SHIFT			0
+>> +#define STATUS3_VDNMON_SHIFT			4
+>> +#define STATUS3_DNRES_SHIFT			5
+>> +#define STATUS3_MPNACK_SHIFT			6
+>> +
+>> +#define MAX77843_MUIC_STATUS1_ADC_MASK		(0x1f << STATUS1_ADC_SHIFT)
+>> +#define MAX77843_MUIC_STATUS1_ADCERROR_MASK	BIT(STATUS1_ADCERROR_SH=
+IFT)
+>> +#define MAX77843_MUIC_STATUS1_ADC1K_MASK	BIT(STATUS1_ADC1K_SHIFT)
+>> +#define MAX77843_MUIC_STATUS2_CHGTYP_MASK	(0x7 << STATUS2_CHGTYP_SH=
+IFT)
+>> +#define MAX77843_MUIC_STATUS2_CHGDETRUN_MASK	BIT(STATUS2_CHGDETRUN_=
+SHIFT)
+>> +#define MAX77843_MUIC_STATUS2_DCDTMR_MASK	BIT(STATUS2_DCDTMR_SHIFT)
+>> +#define MAX77843_MUIC_STATUS2_DXOVP_MASK	BIT(STATUS2_DXOVP_SHIFT)
+>> +#define MAX77843_MUIC_STATUS2_VBVOLT_MASK	BIT(STATUS2_VBVOLT_SHIFT)
+>> +#define MAX77843_MUIC_STATUS3_VBADC_MASK	(0xf << STATUS3_VBADC_SHIF=
+T)
+>> +#define MAX77843_MUIC_STATUS3_VDNMON_MASK	BIT(STATUS3_VDNMON_SHIFT)
+>> +#define MAX77843_MUIC_STATUS3_DNRES_MASK	BIT(STATUS3_DNRES_SHIFT)
+>> +#define MAX77843_MUIC_STATUS3_MPNACK_MASK	BIT(STATUS3_MPNACK_SHIFT)
+>> +
+>> +/* MAX77843 CONTROL register */
+>> +#define CONTROL1_COMP1SW_SHIFT			0
+>> +#define CONTROL1_COMP2SW_SHIFT			3
+>> +#define CONTROL1_IDBEN_SHIFT			7
+>> +#define CONTROL2_LOWPWR_SHIFT			0
+>> +#define CONTROL2_ADCEN_SHIFT			1
+>> +#define CONTROL2_CPEN_SHIFT			2
+>> +#define CONTROL2_ACC_DET_SHIFT			5
+>> +#define CONTROL2_USBCPINT_SHIFT			6
+>> +#define CONTROL2_RCPS_SHIFT			7
+>> +#define CONTROL3_JIGSET_SHIFT			0
+>> +#define CONTROL4_ADCDBSET_SHIFT			0
+>> +#define CONTROL4_USBAUTO_SHIFT			4
+>> +#define CONTROL4_FCTAUTO_SHIFT			5
+>> +#define CONTROL4_ADCMODE_SHIFT			6
+>> +
+>> +#define MAX77843_MUIC_CONTROL1_COMP1SW_MASK	(0x7 << CONTROL1_COMP1S=
+W_SHIFT)
+>> +#define MAX77843_MUIC_CONTROL1_COMP2SW_MASK	(0x7 << CONTROL1_COMP2S=
+W_SHIFT)
+>> +#define MAX77843_MUIC_CONTROL1_IDBEN_MASK	BIT(CONTROL1_IDBEN_SHIFT)
+>> +#define MAX77843_MUIC_CONTROL2_LOWPWR_MASK	BIT(CONTROL2_LOWPWR_SHIF=
+T)
+>> +#define MAX77843_MUIC_CONTROL2_ADCEN_MASK	BIT(CONTROL2_ADCEN_SHIFT)
+>> +#define MAX77843_MUIC_CONTROL2_CPEN_MASK	BIT(CONTROL2_CPEN_SHIFT)
+>> +#define MAX77843_MUIC_CONTROL2_ACC_DET_MASK	BIT(CONTROL2_ACC_DET_SH=
+IFT)
+>> +#define MAX77843_MUIC_CONTROL2_USBCPINT_MASK	BIT(CONTROL2_USBCPINT_=
+SHIFT)
+>> +#define MAX77843_MUIC_CONTROL2_RCPS_MASK	BIT(CONTROL2_RCPS_SHIFT)
+>> +#define MAX77843_MUIC_CONTROL3_JIGSET_MASK	(0x3 << CONTROL3_JIGSET_=
+SHIFT)
+>> +#define MAX77843_MUIC_CONTROL4_ADCDBSET_MASK	(0x3 << CONTROL4_ADCDB=
+SET_SHIFT)
+>> +#define MAX77843_MUIC_CONTROL4_USBAUTO_MASK	BIT(CONTROL4_USBAUTO_SH=
+IFT)
+>> +#define MAX77843_MUIC_CONTROL4_FCTAUTO_MASK	BIT(CONTROL4_FCTAUTO_SH=
+IFT)
+>> +#define MAX77843_MUIC_CONTROL4_ADCMODE_MASK	(0x3 << CONTROL4_ADCMOD=
+E_SHIFT)
+>> +
+>> +/* MAX77843 switch port */
+>> +#define CONTROL1_COM_SW \
+>> +(MAX77843_MUIC_CONTROL1_COMP1SW_MASK | MAX77843_MUIC_CONTROL1_COMP2=
+SW_MASK)
+> You need to add a tab for indentation.
+ditto.
+>
+>> +
+>> +#define CONTROL1_SW_OPEN \
+>> +		(0 << CONTROL1_COMP1SW_SHIFT | 0 << CONTROL1_COMP2SW_SHIFT)
+>> +#define CONTROL1_SW_USB \
+>> +		(1 << CONTROL1_COMP1SW_SHIFT | 1 << CONTROL1_COMP2SW_SHIFT)
+>> +#define CONTROL1_SW_AUDIO \
+>> +		(2 << CONTROL1_COMP1SW_SHIFT | 2 << CONTROL1_COMP2SW_SHIFT)
+>> +#define CONTROL1_SW_UART \
+>> +		(3 << CONTROL1_COMP1SW_SHIFT | 3 << CONTROL1_COMP2SW_SHIFT)
+>> +#define CONTROL1_SW_AUX_USB \
+>> +		(4 << CONTROL1_COMP1SW_SHIFT | 4 << CONTROL1_COMP2SW_SHIFT)
+>> +#define CONTROL1_SW_AUX_UART \
+>> +		(5 << CONTROL1_COMP1SW_SHIFT | 5 << CONTROL1_COMP2SW_SHIFT)
+> You have to define some definition variable for 0, 1, 2, 3, 4, 5.
+> If you don' define some variable, we could catch the meaning of 0, 1,=
+ 2, 3, 4, 5.
+>
+>> +
+>> +#define CONTROL4_AUTO_DISABLE \
+>> +		(0 << CONTROL4_USBAUTO_SHIFT) | (0 << CONTROL4_FCTAUTO_SHIFT)
+>> +#define CONTROL4_AUTO_ENABLE \
+>> +		(1 << CONTROL4_USBAUTO_SHIFT) | (1 << CONTROL4_FCTAUTO_SHIFT)
+> ditto.
+>
+>> +
+>> +/* MAX77843 SAFEOUT LDO Control register */
+>> +#define SAFEOUTCTRL_SAFEOUT1_SHIFT		0
+>> +#define SAFEOUTCTRL_SAFEOUT2_SHIFT		2
+>> +#define SAFEOUTCTRL_ENSAFEOUT1_SHIFT		6
+>> +#define SAFEOUTCTRL_ENSAFEOUT2_SHIFT		7
+> [snip]
+>
+> Thanks,
+> Chanwoo Choi
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" i=
+n
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
-> +	return "gpio_grp";
-> +}
-> +
-> +static const struct pinctrl_ops cygnus_pctrl_ops = {
-> +	.get_groups_count = cygnus_get_groups_count,
-> +	.get_group_name = cygnus_get_group_name,
-> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-> +	.dt_free_map = pinctrl_utils_dt_free_map,
-> +};
-> +
-> +static int cygnus_gpio_set_pull(struct cygnus_gpio *chip, unsigned gpio,
-> +				int disable, int pull_up)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +
-> +	if (disable) {
-> +		cygnus_set_bit(chip, CYGNUS_GPIO_RES_EN_OFFSET, gpio, 0);
-> +	} else {
-> +		cygnus_set_bit(chip, CYGNUS_GPIO_PAD_RES_OFFSET, gpio,
-> +			       pull_up);
-> +		cygnus_set_bit(chip, CYGNUS_GPIO_RES_EN_OFFSET, gpio, 1);
-> +	}
-> +
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +
-> +	dev_dbg(chip->dev, "gpio:%u set pullup:%d\n", gpio, pull_up);
-> +
-> +	return 0;
-> +}
-> +
-> +static void cygnus_gpio_get_pull(struct cygnus_gpio *chip, unsigned gpio,
-> +				 int *disable, int *pull_up)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	*disable = !cygnus_get_bit(chip, CYGNUS_GPIO_RES_EN_OFFSET, gpio);
-> +	*pull_up = cygnus_get_bit(chip, CYGNUS_GPIO_PAD_RES_OFFSET, gpio);
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +}
-> +
-> +static int cygnus_gpio_set_strength(struct cygnus_gpio *chip, unsigned gpio,
-> +				    unsigned strength)
-> +{
-> +	void __iomem *base;
-> +	unsigned int i, offset, shift;
-> +	u32 val;
-> +	unsigned long flags;
-> +
-> +	/* make sure drive strength is supported */
-> +	if (strength < 2 ||  strength > 16 || (strength % 2))
-> +		return -ENOTSUPP;
-> +
-> +	if (chip->io_ctrl) {
-> +		base = chip->io_ctrl;
-> +		offset = CYGNUS_GPIO_DRV0_CTRL_OFFSET;
-> +	} else {
-> +		base = chip->base;
-> +		offset = CYGNUS_GPIO_REG(gpio,
-> +					 CYGNUS_GPIO_ASIU_DRV0_CTRL_OFFSET);
-> +	}
-> +
-> +	shift = CYGNUS_GPIO_SHIFT(gpio);
-> +
-> +	dev_dbg(chip->dev, "gpio:%u set drive strength:%d mA\n", gpio,
-> +		strength);
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	strength = (strength / 2) - 1;
-> +	for (i = 0; i < GPIO_DRV_STRENGTH_BITS; i++) {
-> +		val = readl(base + offset);
-> +		val &= ~BIT(shift);
-> +		val |= ((strength >> i) & 0x1) << shift;
-> +		writel(val, base + offset);
-> +		offset += 4;
-> +	}
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cygnus_gpio_get_strength(struct cygnus_gpio *chip, unsigned gpio,
-> +				    u16 *strength)
-> +{
-> +	void __iomem *base;
-> +	unsigned int i, offset, shift;
-> +	u32 val;
-> +	unsigned long flags;
-> +
-> +	if (chip->io_ctrl) {
-> +		base = chip->io_ctrl;
-> +		offset = CYGNUS_GPIO_DRV0_CTRL_OFFSET;
-> +	} else {
-> +		base = chip->base;
-> +		offset = CYGNUS_GPIO_REG(gpio,
-> +					 CYGNUS_GPIO_ASIU_DRV0_CTRL_OFFSET);
-> +	}
-> +
-> +	shift = CYGNUS_GPIO_SHIFT(gpio);
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	*strength = 0;
-> +	for (i = 0; i < GPIO_DRV_STRENGTH_BITS; i++) {
-> +		val = readl(base + offset) & BIT(shift);
-> +		val >>= shift;
-> +		*strength += (val << i);
-> +		offset += 4;
-> +	}
-> +
-> +	/* convert to mA */
-> +	*strength = (*strength + 1) * 2;
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cygnus_pin_config_get(struct pinctrl_dev *pctldev, unsigned pin,
-> +				 unsigned long *config)
-> +{
-> +	struct cygnus_gpio *chip = pinctrl_dev_get_drvdata(pctldev);
-> +	enum pin_config_param param = pinconf_to_config_param(*config);
-> +	unsigned gpio = cygnus_pin_to_gpio(pin);
-> +	u16 arg;
-> +	int disable, pull_up, ret;
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_DISABLE:
-> +		cygnus_gpio_get_pull(chip, gpio, &disable, &pull_up);
-> +		if (disable)
-> +			return 0;
-> +		else
-> +			return -EINVAL;
-> +
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		cygnus_gpio_get_pull(chip, gpio, &disable, &pull_up);
-> +		if (!disable && pull_up)
-> +			return 0;
-> +		else
-> +			return -EINVAL;
-> +
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		cygnus_gpio_get_pull(chip, gpio, &disable, &pull_up);
-> +		if (!disable && !pull_up)
-> +			return 0;
-> +		else
-> +			return -EINVAL;
-> +
-> +	case PIN_CONFIG_DRIVE_STRENGTH:
-> +		ret = cygnus_gpio_get_strength(chip, gpio, &arg);
-> +		if (ret)
-> +			return ret;
-> +		else
-> +			*config = pinconf_to_config_packed(param, arg);
-> +
-> +		return 0;
-> +
-> +	default:
-> +		return -ENOTSUPP;
-> +	}
-> +
-> +	return -ENOTSUPP;
-> +}
-> +
-> +static int cygnus_pin_config_set(struct pinctrl_dev *pctldev, unsigned pin,
-> +				 unsigned long *configs, unsigned num_configs)
-> +{
-> +	struct cygnus_gpio *chip = pinctrl_dev_get_drvdata(pctldev);
-> +	enum pin_config_param param;
-> +	u16 arg;
-> +	unsigned i, gpio = cygnus_pin_to_gpio(pin);
-> +	int ret = -ENOTSUPP;
-> +
-> +	for (i = 0; i < num_configs; i++) {
-> +		param = pinconf_to_config_param(configs[i]);
-> +		arg = pinconf_to_config_argument(configs[i]);
-> +
-> +		switch (param) {
-> +		case PIN_CONFIG_BIAS_DISABLE:
-> +			ret = cygnus_gpio_set_pull(chip, gpio, 1, 0);
-> +			if (ret < 0)
-> +				goto out;
-> +			break;
-> +
-> +		case PIN_CONFIG_BIAS_PULL_UP:
-> +			ret = cygnus_gpio_set_pull(chip, gpio, 0, 1);
-> +			if (ret < 0)
-> +				goto out;
-> +			break;
-> +
-> +		case PIN_CONFIG_BIAS_PULL_DOWN:
-> +			ret = cygnus_gpio_set_pull(chip, gpio, 0, 0);
-> +			if (ret < 0)
-> +				goto out;
-> +			break;
-> +
-> +		case PIN_CONFIG_DRIVE_STRENGTH:
-> +			ret = cygnus_gpio_set_strength(chip, gpio, arg);
-> +			if (ret < 0)
-> +				goto out;
-> +			break;
-> +
-> +		default:
-> +			dev_err(chip->dev, "invalid configuration\n");
-> +			return -ENOTSUPP;
-> +		}
-> +	} /* for each config */
-> +
-> +out:
-> +	return ret;
-> +}
-> +
-> +static const struct pinconf_ops cygnus_pconf_ops = {
-> +	.is_generic = true,
-> +	.pin_config_get = cygnus_pin_config_get,
-> +	.pin_config_set = cygnus_pin_config_set,
-> +};
-> +
-> +/*
-> + * Map a GPIO in the local gpio_chip pin space to a pin in the Cygnus IOMUX
-> + * pinctrl pin space
-> + */
-> +struct cygnus_gpio_pin_range {
-> +	unsigned offset;
-> +	unsigned pin_base;
-> +	unsigned num_pins;
-> +};
-> +
-> +#define CYGNUS_PINRANGE(o, p, n) { .offset = o, .pin_base = p, .num_pins = n }
-> +
-> +/*
-> + * Pin mapping table for mapping local GPIO pins to Cygnus IOMUX pinctrl pins
-> + */
-> +static const struct cygnus_gpio_pin_range cygnus_gpio_pintable[] = {
-> +	CYGNUS_PINRANGE(0, 42, 1),
-> +	CYGNUS_PINRANGE(1, 44, 3),
-> +	CYGNUS_PINRANGE(4, 48, 1),
-> +	CYGNUS_PINRANGE(5, 50, 3),
-> +	CYGNUS_PINRANGE(8, 126, 1),
-> +	CYGNUS_PINRANGE(9, 155, 1),
-> +	CYGNUS_PINRANGE(10, 152, 1),
-> +	CYGNUS_PINRANGE(11, 154, 1),
-> +	CYGNUS_PINRANGE(12, 153, 1),
-> +	CYGNUS_PINRANGE(13, 127, 3),
-> +	CYGNUS_PINRANGE(16, 140, 1),
-> +	CYGNUS_PINRANGE(17, 145, 7),
-> +	CYGNUS_PINRANGE(24, 130, 10),
-> +	CYGNUS_PINRANGE(34, 141, 4),
-> +	CYGNUS_PINRANGE(38, 54, 1),
-> +	CYGNUS_PINRANGE(39, 56, 3),
-> +	CYGNUS_PINRANGE(42, 60, 3),
-> +	CYGNUS_PINRANGE(45, 64, 3),
-> +	CYGNUS_PINRANGE(48, 68, 2),
-> +	CYGNUS_PINRANGE(50, 84, 6),
-> +	CYGNUS_PINRANGE(56, 94, 6),
-> +	CYGNUS_PINRANGE(62, 72, 1),
-> +	CYGNUS_PINRANGE(63, 70, 1),
-> +	CYGNUS_PINRANGE(64, 80, 1),
-> +	CYGNUS_PINRANGE(65, 74, 3),
-> +	CYGNUS_PINRANGE(68, 78, 1),
-> +	CYGNUS_PINRANGE(69, 82, 1),
-> +	CYGNUS_PINRANGE(70, 156, 17),
-> +	CYGNUS_PINRANGE(87, 104, 12),
-> +	CYGNUS_PINRANGE(99, 102, 2),
-> +	CYGNUS_PINRANGE(101, 90, 4),
-> +	CYGNUS_PINRANGE(105, 116, 10),
-> +	CYGNUS_PINRANGE(123, 11, 1),
-> +	CYGNUS_PINRANGE(124, 38, 4),
-> +	CYGNUS_PINRANGE(128, 43, 1),
-> +	CYGNUS_PINRANGE(129, 47, 1),
-> +	CYGNUS_PINRANGE(130, 49, 1),
-> +	CYGNUS_PINRANGE(131, 53, 1),
-> +	CYGNUS_PINRANGE(132, 55, 1),
-> +	CYGNUS_PINRANGE(133, 59, 1),
-> +	CYGNUS_PINRANGE(134, 63, 1),
-> +	CYGNUS_PINRANGE(135, 67, 1),
-> +	CYGNUS_PINRANGE(136, 71, 1),
-> +	CYGNUS_PINRANGE(137, 73, 1),
-> +	CYGNUS_PINRANGE(138, 77, 1),
-> +	CYGNUS_PINRANGE(139, 79, 1),
-> +	CYGNUS_PINRANGE(140, 81, 1),
-> +	CYGNUS_PINRANGE(141, 83, 1),
-> +	CYGNUS_PINRANGE(142, 10, 1)
-> +};
-> +
-> +/*
-> + * The Cygnus IOMUX controller mainly supports group based mux configuration,
-> + * but certain pins can be muxed to GPIO individually. Only the ASIU GPIO
-> + * controller can support this, so it's an optional configuration
-> + *
-> + * Return -ENODEV means no support and that's fine
-> + */
-> +static int cygnus_gpio_pinmux_add_range(struct cygnus_gpio *chip)
-> +{
-> +	struct device_node *node = chip->dev->of_node;
-> +	struct device_node *pinmux_node;
-> +	struct platform_device *pinmux_pdev;
-> +	struct gpio_chip *gc = &chip->gc;
-> +	int i, ret;
-> +
-> +	/* parse DT to find the phandle to the pinmux controller */
-> +	pinmux_node = of_parse_phandle(node, "pinmux", 0);
-> +	if (!pinmux_node)
-> +		return -ENODEV;
-> +
-> +	pinmux_pdev = of_find_device_by_node(pinmux_node);
-> +	if (!pinmux_pdev) {
-> +		dev_err(chip->dev, "failed to get pinmux device\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* now need to create the mapping between local GPIO and PINMUX pins */
-> +	for (i = 0; i < ARRAY_SIZE(cygnus_gpio_pintable); i++) {
-> +		ret = gpiochip_add_pin_range(gc, dev_name(&pinmux_pdev->dev),
-> +					     cygnus_gpio_pintable[i].offset,
-> +					     cygnus_gpio_pintable[i].pin_base,
-> +					     cygnus_gpio_pintable[i].num_pins);
-> +		if (ret) {
-> +			dev_err(chip->dev, "unable to add GPIO pin range\n");
-> +			goto err_rm_pin_range;
-> +		}
-> +	}
-> +
-> +	chip->pinmux_is_supported = 1;
+Thanks to review my patchs.
 
-	chip->pinmux_is_supported = true;
+Thanks,
+Jaewon Kim
 
-?
-
-> +	return 0;
-> +
-> +err_rm_pin_range:
-> +	gpiochip_remove_pin_ranges(gc);
-
-I think you need:
-
-	put_dveice(&pinmux_pdev->dev);
-
-since of_find_device_by_node calls bus_find_device() that takes
-reference to found device.
-
-... And now that I look at this majority of users of
-of_find_device_by_node() is broken like that :(
-
-BTW, it looks like you only need pinmux_dev for it's name so you
-probably need to drop reference in success path as well.
-
-> +	return ret;
-> +}
-> +
-> +static void cygnus_gpio_pinmux_remove_range(struct cygnus_gpio *chip)
-> +{
-> +	struct gpio_chip *gc = &chip->gc;
-> +
-> +	if (chip->pinmux_is_supported)
-> +		gpiochip_remove_pin_ranges(gc);
-> +}
-> +
-> +/*
-> + * Cygnus GPIO controller supports some PINCONF related configurations such as
-> + * pull up, pull down, and drive strength, when the pin is configured to GPIO
-> + *
-> + * Here a local pinctrl device is created with simple 1-to-1 pin mapping to the
-> + * local GPIO pins
-> + */
-> +static int cygnus_gpio_register_pinconf(struct cygnus_gpio *chip)
-> +{
-> +	struct pinctrl_desc *pctldesc = &chip->pctldesc;
-> +	struct pinctrl_pin_desc *pins;
-> +	struct gpio_chip *gc = &chip->gc;
-> +	int i, ret;
-> +
-> +	pins = devm_kcalloc(chip->dev, gc->ngpio, sizeof(*pins), GFP_KERNEL);
-> +	if (!pins)
-> +		return -ENOMEM;
-> +	chip->pins = pins;
-> +
-> +	for (i = 0; i < gc->ngpio; i++) {
-> +		pins[i].number = i;
-> +		pins[i].name = kasprintf(GFP_KERNEL, "gpio-%d", i);
-
-We have devm_kasprintf().
-
-> +		if (!pins[i].name) {
-> +			ret = -ENOMEM;
-> +			goto err_kfree;
-> +		}
-> +	}
-> +
-> +	pctldesc->name = dev_name(chip->dev);
-> +	pctldesc->pctlops = &cygnus_pctrl_ops;
-> +	pctldesc->pins = pins;
-> +	pctldesc->npins = gc->ngpio;
-> +	pctldesc->confops = &cygnus_pconf_ops;
-> +
-> +	chip->pctl = pinctrl_register(pctldesc, chip->dev, chip);
-> +	if (!chip->pctl) {
-> +		dev_err(chip->dev, "unable to register pinctrl device\n");
-> +		ret = -EINVAL;
-> +		goto err_kfree;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_kfree:
-> +	for (i = 0; i < gc->ngpio; i++)
-> +		kfree(pins[i].name);
-> +
-> +	return ret;
-> +}
-> +
-> +static void cygnus_gpio_unregister_pinconf(struct cygnus_gpio *chip)
-> +{
-> +	struct gpio_chip *gc = &chip->gc;
-> +	int i;
-> +
-> +	if (chip->pctl)
-> +		pinctrl_unregister(chip->pctl);
-> +
-> +	for (i = 0; i < gc->ngpio; i++)
-> +		kfree(chip->pins[i].name);
-
-Should not be needed if you use devm_kasprintf.
-
-> +}
-> +
-> +static const struct of_device_id cygnus_gpio_of_match[] = {
-> +	{ .compatible = "brcm,cygnus-gpio" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, cygnus_gpio_of_match);
-> +
-> +static int cygnus_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct cygnus_gpio *chip;
-> +	struct gpio_chip *gc;
-> +	u32 ngpios;
-> +	int irq, ret;
-> +
-> +	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-> +	if (!chip)
-> +		return -ENOMEM;
-> +
-> +	chip->dev = dev;
-> +	platform_set_drvdata(pdev, chip);
-> +
-> +	if (of_property_read_u32(dev->of_node, "ngpios", &ngpios)) {
-> +		dev_err(dev, "missing ngpios DT property\n");
-> +		return -ENODEV;
-> +	}
-> +	chip->num_banks = (ngpios + NGPIOS_PER_BANK - 1) / NGPIOS_PER_BANK;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	chip->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(chip->base)) {
-> +		dev_err(dev, "unable to map I/O memory\n");
-> +		return PTR_ERR(chip->base);
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (res) {
-> +		chip->io_ctrl = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(chip->io_ctrl)) {
-> +			dev_err(dev, "unable to map I/O memory\n");
-> +			return PTR_ERR(chip->io_ctrl);
-> +		}
-> +	}
-> +
-> +	spin_lock_init(&chip->lock);
-> +
-> +	gc = &chip->gc;
-> +	gc->base = -1;
-> +	gc->ngpio = ngpios;
-> +	gc->label = dev_name(dev);
-> +	gc->dev = dev;
-> +	gc->of_node = dev->of_node;
-> +	gc->request = cygnus_gpio_request;
-> +	gc->free = cygnus_gpio_free;
-> +	gc->direction_input = cygnus_gpio_direction_input;
-> +	gc->direction_output = cygnus_gpio_direction_output;
-> +	gc->set = cygnus_gpio_set;
-> +	gc->get = cygnus_gpio_get;
-> +
-> +	ret = gpiochip_add(gc);
-> +	if (ret < 0) {
-> +		dev_err(dev, "unable to add GPIO chip\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = cygnus_gpio_pinmux_add_range(chip);
-> +	if (ret && ret != -ENODEV) {
-> +		dev_err(dev, "unable to add GPIO pin range\n");
-> +		goto err_rm_gpiochip;
-> +	}
-> +
-> +	ret = cygnus_gpio_register_pinconf(chip);
-> +	if (ret) {
-> +		dev_err(dev, "unable to register pinconf\n");
-> +		goto err_rm_range;
-> +	}
-> +
-> +	/* optional GPIO interrupt support */
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq) {
-> +		ret = gpiochip_irqchip_add(gc, &cygnus_gpio_irq_chip, 0,
-> +					   handle_simple_irq, IRQ_TYPE_NONE);
-> +		if (ret) {
-> +			dev_err(dev, "no GPIO irqchip\n");
-> +			goto err_unregister_pinconf;
-> +		}
-> +
-> +		gpiochip_set_chained_irqchip(gc, &cygnus_gpio_irq_chip, irq,
-> +					     cygnus_gpio_irq_handler);
-> +	}
-> +
-> +	return 0;
-> +
-> +err_unregister_pinconf:
-> +	cygnus_gpio_unregister_pinconf(chip);
-> +
-> +err_rm_range:
-> +	cygnus_gpio_pinmux_remove_range(chip);
-> +
-> +err_rm_gpiochip:
-> +	gpiochip_remove(gc);
-> +
-> +	return ret;
-> +}
-> +
-> +static struct platform_driver cygnus_gpio_driver = {
-> +	.driver = {
-> +		.name = "cygnus-gpio",
-> +		.of_match_table = cygnus_gpio_of_match,
-> +	},
-> +	.probe = cygnus_gpio_probe,
-
-The same comment about suppress_bind_attrs.
-
-> +};
-> +
-> +static int __init cygnus_gpio_init(void)
-> +{
-> +	return platform_driver_probe(&cygnus_gpio_driver, cygnus_gpio_probe);
-> +}
-> +arch_initcall_sync(cygnus_gpio_init);
-> +
-> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
-> +MODULE_DESCRIPTION("Broadcom Cygnus GPIO Driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 1.7.9.5
-> 
-
-Thanks.
-
--- 
-Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
