@@ -1,57 +1,34 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 RESEND 0/4] ARM: bcm2835: DT improvements
-Date: Wed, 04 Feb 2015 09:51:55 -0700
-Message-ID: <54D24E2B.9070006@wwwdotorg.org>
-References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com> <CAL_JsqJubTomhUPbBck_cBJoiL2tuDRv++tANoLtBidmSdxUYQ@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] media: i2c: add support for omnivision's ov2659 sensor
+Date: Wed, 4 Feb 2015 10:52:53 -0600
+Message-ID: <CAL_JsqJ9oxgKsCSeNaPFANFq_rzCGYNg+oZEfgy2gmY7SYGt2A@mail.gmail.com>
+References: <1421365163-29394-1-git-send-email-prabhakar.csengg@gmail.com>
+ <CAL_Jsq+Yk1sDT+KfxRfR3ue74KtKxDB3Aj0BS2=sfYwzMcQtDw@mail.gmail.com> <CAOMZO5D5QQQj6u7av4TTAY7gbRXXx7AF_eYJiQxuPtgo9zsQtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJubTomhUPbBck_cBJoiL2tuDRv++tANoLtBidmSdxUYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5D5QQQj6u7av4TTAY7gbRXXx7AF_eYJiQxuPtgo9zsQtQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2015 07:47 PM, Rob Herring wrote:
-> On Thu, Jan 29, 2015 at 12:10 PM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
->> This patch series contains DT improvements for the Raspberry Pi.
->>
->> Patch 1,2: Add missing vendor prefix and root compatible properties
->> Patch 3,4: Use constants for pin function instead of error-prone numbers
->>
->> Changes in V2:
->> - add all currently known Raspberry Pi boards to binding documentation
->>    as suggested by Stephen Warren
->>
->> Stefan Wahren (4):
->>    dt-bindings: Add vendor prefix for Raspberry Pi
->>    dt-bindings: Add root properties for Raspberry Pi
->>    ARM: bcm2835: Add header file for pinctrl constants
->>    ARM: bcm2835: Use pinctrl header
->>
->>   Documentation/devicetree/bindings/arm/bcm2835.txt  |   31 ++++++++++++++++++--
->>   .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->>   arch/arm/boot/dts/bcm2835-rpi-b-plus.dts           |    4 +--
->>   arch/arm/boot/dts/bcm2835-rpi-b.dts                |    4 +--
->>   arch/arm/boot/dts/bcm2835-rpi.dtsi                 |    8 ++---
->>   arch/arm/boot/dts/bcm2835.dtsi                     |    3 +-
->>   include/dt-bindings/pinctrl/bcm2835.h              |   27 +++++++++++++++++
->>   7 files changed, 67 insertions(+), 11 deletions(-)
->>   create mode 100644 include/dt-bindings/pinctrl/bcm2835.h
+On Wed, Feb 4, 2015 at 9:23 AM, Fabio Estevam <festevam@gmail.com> wrote:
+> Rob,
 >
-> Who do you intend to apply this? For the DT binding parts:
+> On Wed, Feb 4, 2015 at 12:55 PM, Rob Herring <robherring2@gmail.com> wrote:
 >
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> I'm surprised there are not already compatible strings with
+>> OmniVision. There are some examples using "omnivision", but no dts
+>> files and examples don't count.
+>>
+>> The stock ticker is ovti, so please use that.
+>
+> That's what I sent:
+> http://patchwork.ozlabs.org/patch/416685/
+>
+> Could you apply it?
 
-I assume Lee Jones will take this through the Tegra tree, to avoid any 
-potential conflicts with other changes to these files in that tree.
+Yes. Now applied.
 
-I do still want to double-check with the Pi Foundation's downstream tree 
-what compatible values they use. If they already have board-specific 
-values, and they're sane, it'd be nice to align with those. 
-Unfortunately, I haven't got around to that yet:-(
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
