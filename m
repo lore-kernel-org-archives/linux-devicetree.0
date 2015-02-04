@@ -1,115 +1,30 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC 0/2] of/unittest: Add reference count tests
-Date: Wed, 4 Feb 2015 10:14:14 -0600
-Message-ID: <CAL_Jsq+7rDCvNQoGVpnjAWwB6Yma6fkiY3YXOso+92iiLU7rEg@mail.gmail.com>
-References: <1422029405-9353-1-git-send-email-geert+renesas@glider.be>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH_V2 11/34] MIPS: jz4740: register an irq_domain for the interrupt controller
+Date: Wed, 04 Feb 2015 17:19:01 +0100
+Message-ID: <27674856.cQPkonRYdW@wuerfel>
+References: <1423063323-19419-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1423063323-19419-12-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422029405-9353-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1423063323-19419-12-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 23, 2015 at 10:10 AM, Geert Uytterhoeven
-<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
->         Hi Grant, Rob,
->
-> This patch series adds tests to detect reference count imbalances.
-> The tests use a fixed list of paths to devices nodes (required device
-> nodes in a minimal DTS, and device nodes present in unittest-data).
-> I considered scanning for all present device node instead, but these
-> are more likely to change while running the test.
->
-> These tests are executed only if CONFIG_OF_DYNAMIC=y.
->
-> Patches are against devicetree/next, with "[PATCH] of: Add missing
-> of_node_put() in of_find_node_by_path()" (or the alternative proposed
-> by Grant) applied.
->
-> Note that it shows 44 failures, which I haven't investigated yet:
+On Wednesday 04 February 2015 15:21:40 Zubair Lutfullah Kakakhel wrote:
+> +       domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
+> +                                      &irq_domain_simple_ops, NULL);
+> +       if (!domain)
+> +               pr_warn("unable to register IRQ domain\n");
+> +
+>         setup_irq(parent_irq, &jz4740_cascade_action);
 
-Do you plan to?
+Can you use the linear domain instead, or do you still require devices
+that are hardcoded in the platform code rather than DT?
 
-While this could find problems in the unittests or the core OF code,
-the vast majority of the problems are likely in the users and this
-doesn't help with those. This whole issue of ref counts has been
-discussed some and probably needs to be redesigned or instrumented in
-a way that users can validate. But then it is pretty low priority
-given that ref counts only matter on pseries.
-
-Rob
-
->
-> ### dt-test ### start of selftest - you will see error messages
-> ### dt-test ### FAIL of_selftest_refcnt():1512 /testcase-data/duplicate-name#1: not found
-> ### dt-test ### FAIL of_selftest_refcnt():1512 /testcase-data/duplicate-name#1: not found
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data: expected:23 got:25
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/interrupts/intc0: expected:2 got:19
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/interrupts/intc1: expected:2 got:9
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/interrupts/intc2: expected:2 got:8
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/interrupts/intmap0: expected:4 got:7
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/interrupts/intmap1: expected:4 got:5
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/platform-tests: expected:4 got:5
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/phandle-tests/consumer-a: expected:4 got:6
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/phandle-tests/provider0: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/phandle-tests/provider1: expected:2 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/phandle-tests/provider2: expected:2 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/phandle-tests/provider3: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/a/name2: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/b/name2: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/c/name2: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/name0: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/name1: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/name3: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/name4: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/name5: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/name6: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/name7: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/name8: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/match-node/name9: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay-node/test-bus: expected:12 got:16
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay-node/test-bus/test-selftest100: expected:2 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay-node/test-bus/test-selftest0: expected:2 got:6
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay-node/test-bus/test-selftest1: expected:2 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay-node/test-bus/test-selftest2: expected:2 got:6
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay-node/test-bus/test-selftest3: expected:2 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay0/fragment@0/__overlay__: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay1/fragment@0/__overlay__: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay2/fragment@0/__overlay__: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay3/fragment@0/__overlay__: expected:2 got:3
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay4/fragment@0/__overlay__: expected:3 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay6: expected:3 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay7: expected:3 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay8: expected:3 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/overlay9: expected:3 got:4
-> ### dt-test ### FAIL of_selftest_refcnt():1512 /testcase-data/duplicate-name#1: not found
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/testcase-device1: expected:4 got:6
-> ### dt-test ### FAIL of_selftest_refcnt():1522 /testcase-data/testcase-device2: expected:4 got:6
-> ### dt-test ### end of selftest - 619 passed, 44 failed
->
-> Geert Uytterhoeven (2):
->   of: Allow selection of OF_DYNAMIC and OF_OVERLAY if OF_UNITTEST
->   of/unittest: Add reference count tests
->
->  drivers/of/Kconfig    |  13 ++++-
->  drivers/of/unittest.c | 155 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 166 insertions(+), 2 deletions(-)
->
-> --
-> 1.9.1
->
-> Gr{oetje,eeting}s,
->
->                                                 Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                                             -- Linus Torvalds
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
