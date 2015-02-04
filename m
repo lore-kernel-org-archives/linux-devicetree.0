@@ -1,54 +1,34 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 4/5] ARM: shmobile: r8a7740: Remove mapping of L2 cache controller registers
-Date: Wed,  4 Feb 2015 15:15:14 +0100
-Message-ID: <1423059315-28519-5-git-send-email-geert+renesas@glider.be>
-References: <1423059315-28519-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423059315-28519-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/5] ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
+Date: Wed, 04 Feb 2015 15:34:03 +0100
+Message-ID: <7800327.b3sMA1XGtZ@wuerfel>
+References: <1423059315-28519-1-git-send-email-geert+renesas@glider.be> <1423059315-28519-3-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1423059315-28519-3-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Russell King <rmk@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Now all r8a7740-based platforms have been migrated to the generic l2c OF
-initialization, it's no longer needed to map the L2 cache controller
-registers from .map_io().
+On Wednesday 04 February 2015 15:15:12 Geert Uytterhoeven wrote:
+>  DT_MACHINE_START(R8A7740_DT, "Generic R8A7740 (Flattened Device Tree)")
+> +       .l2c_aux_val    = L2C_AUX_CTRL_SHARED_OVERRIDE,
+> +       .l2c_aux_mask   = ~L2C_AUX_CTRL_SHARED_OVERRIDE,
+>         .map_io         = r8a7740_map_io,
+>         .init_early     = shmobile_init_delay,
+>         .init_irq       = r8a7740_init_irq_of,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-v2:
-  - No changes.
----
- arch/arm/mach-shmobile/setup-r8a7740.c | 12 ------------
- 1 file changed, 12 deletions(-)
++Russell
 
-diff --git a/arch/arm/mach-shmobile/setup-r8a7740.c b/arch/arm/mach-shmobile/setup-r8a7740.c
-index 3ebd4dfc8e853a9b..ab005e2a0cde6892 100644
---- a/arch/arm/mach-shmobile/setup-r8a7740.c
-+++ b/arch/arm/mach-shmobile/setup-r8a7740.c
-@@ -51,18 +51,6 @@ static struct map_desc r8a7740_io_desc[] __initdata = {
- 		.length		= 160 << 20,
- 		.type		= MT_DEVICE_NONSHARED
- 	},
--#ifdef CONFIG_CACHE_L2X0
--	/*
--	 * for l2x0_init()
--	 * 0xf0100000-0xf0101000 -> 0xf0002000-0xf0003000
--	 */
--	{
--		.virtual	= 0xf0002000,
--		.pfn		= __phys_to_pfn(0xf0100000),
--		.length		= PAGE_SIZE,
--		.type		= MT_DEVICE_NONSHARED
--	},
--#endif
- };
- 
- void __init r8a7740_map_io(void)
--- 
-1.9.1
+I'd hope we could avoid having any overrides in here that are not
+specified in DT. I can never remember what we discussed about particular
+bits in the past though. Is this bit something we could add a binding
+for, or could we make it enabled by default?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I assume you have to add it because the boot loader sets the wrong
+default, right?
+
+	Arnd
