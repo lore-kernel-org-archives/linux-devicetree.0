@@ -1,57 +1,102 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH_V2 09/34] MIPS: jz4740: probe interrupt controller via
- DT
-Date: Wed, 04 Feb 2015 20:09:38 +0300
-Message-ID: <54D25252.2010406@cogentembedded.com>
-References: <1423063323-19419-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1423063323-19419-10-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: [PATCH v8 0/4] Add gpio/pinconf support to Broadcom Cygnus SoC
+Date: Wed, 4 Feb 2015 09:20:59 -0800
+Message-ID: <1423070463-24483-1-git-send-email-rjui@broadcom.com>
+References: <Ray Jui <rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423063323-19419-10-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, mturquette@linaro.org, sboyd@codeaurora.org, ralf@linux-mips.org, jslaby@suse.cz, tglx@linutronix.de, jason@lakedaemon.net, lars@metafoo.de, paul.burton@imgtec.com
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <Ray Jui <rjui@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2015 06:21 PM, Zubair Lutfullah Kakakhel wrote:
+This patchset contains the initial GPIO/PINCONF support for the Broadcom
+Cygnus SoC.
 
-> From: Paul Burton <paul.burton@imgtec.com>
+Cygnus has 3 GPIO controllers: 1) the ASIU GPIO; 2) the chipCommonG GPIO;
+and 3) the ALWAYS-ON GPIO. All 3 types of GPIO controllers are supported by
+the this driver.
 
-> Add the appropriate DT node to probe the interrupt controller driver
-> using the devicetree, and remove the call to jz4740_intc_init.
+All 3 Cygnus GPIO controllers support basic PINCONF functions such as bias
+pull up, pull down, and drive strength configurations, when these pins are
+muxed to GPIO.
 
-> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> ---
->   arch/mips/boot/dts/jz4740.dtsi | 11 +++++++++++
->   arch/mips/jz4740/setup.c       |  2 --
->   2 files changed, 11 insertions(+), 2 deletions(-)
+Pins from the ASIU GPIO can be individually muxed to GPIO function, through
+interaction with the Cygnus IOMUX controller.
 
-> diff --git a/arch/mips/boot/dts/jz4740.dtsi b/arch/mips/boot/dts/jz4740.dtsi
-> index 2d64765c..3841024 100644
-> --- a/arch/mips/boot/dts/jz4740.dtsi
-> +++ b/arch/mips/boot/dts/jz4740.dtsi
-> @@ -9,4 +9,15 @@
->   		interrupt-controller;
->   		compatible = "mti,cpu-interrupt-controller";
->   	};
-> +
-> +	intc: intc@10001000 {
+Note this patchset has a dependency on the other patchset "Add pinctrl support
+to Broadcom Cygnus SoC" that is also under review
 
-    Name it "interrupt-controller@10001000", please. I have faint memories of 
-already telling you to do this...
+Changes from v7:
+ - Use 'bool' instead of 'int' for flag that indicates pinmux support in the
+   driver
+ - Call put_device to drop reference to the pinmux dev after call to
+   of_find_device_by_node
+ - Replace kasprintf with devm_kasprintf and remove memory deallocation logic
+   in the driver
+ - Set suppress_bind_attrs to true for the driver
 
-> +		compatible = "ingenic,jz4740-intc";
-> +		reg = <0x10001000 0x14>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +
-> +		interrupt-parent = <&cpuintc>;
-> +		interrupts = <2>;
-> +	};
->   };
-[...]
+Changes from v6:
+ - Move the driver from drivers/gpio/* to drivers/pinctrl/* since this driver
+   supports both GPIO and some basic PINCONF features
+ - Support PINCONF features through standard DT subnodes properties including
+   "bias-disable", "bias-pull-up", "bias-pull-down", and "drive-strength", by
+   creating local PINCONF controller
+ - Add support to allow individual ASIU GPIO pins to be muxed as GPIO, through
+   interactions with the Cygnus IOMUX driver
+ - Convert the driver to use standard GPIOCHIP_IRQ APIs. This helps to reduce
+   customized code in the driver
+ - Other miscellaneous imrpovements in the driver
+ - Enable GPIO based phone hook detection support for BCM911360 phone factor
+   board
 
-WBR, Sergei
+Changes from v5:
+ - Get rid of DT property "linux,gpio-base". Use dynamic allocation for GPIO base
+   number
+
+Changes from v4:
+ - Use DT property "linux,gpio-base" to define GPIO base number
+ - factorize common code to improve code readability and reduce code size
+ - remove "bcm_" prefix on function and struct names
+ - improve debugging prints
+ - default GPIO_BCM_CYGNUS to y in Kconfig (it still depends on
+   ARCH_BCM_CYGNUS). This way we do not need to select it from the
+   arch/arm/mach-bcm/Kconfig
+ - Get rid of redundant MAINTAINER entry for this driver. It will be maintained
+   by Broadcom iProc/Cygnus maintainers
+ - Update device tree document based on driver changes
+
+Changes from v3:
+ - Fix dt property tpyo
+ - Fix incorrect GPIO compatible ID in device tree binding document example
+
+Changes from v2:
+ - Consolidate different compatible IDs into "brcm,cygnus-gpio"
+ - Get rid of redundant "no-interrupt" property
+
+Changes from v1:
+ - Get rid of inline qualifier
+ - Get rid of redundant check in the ISR
+ - Other minor fixes to imrove code readability
+
+Ray Jui (4):
+  pinctrl: Cygnus: define Broadcom Cygnus GPIO/PINCONF binding
+  pinctrl: cygnus: add gpio/pinconf driver
+  ARM: dts: enable GPIO for Broadcom Cygnus
+  ARM: dts: cygnus: enable GPIO based hook detection
+
+ .../bindings/pinctrl/brcm,cygnus-gpio.txt          |  102 +++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   33 +
+ arch/arm/boot/dts/bcm911360_entphn.dts             |   13 +
+ drivers/pinctrl/bcm/Kconfig                        |   22 +
+ drivers/pinctrl/bcm/Makefile                       |    1 +
+ drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c          |  907 ++++++++++++++++++++
+ 6 files changed, 1078 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
+
+-- 
+1.7.9.5
+
