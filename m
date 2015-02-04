@@ -1,75 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of/unittest: Remove obsolete code
-Date: Tue, 3 Feb 2015 21:24:58 -0600
-Message-ID: <CAL_Jsq+0XqNLzminK-+360F-ccoY_UZ94r5LWfNwmRQacAD-vw@mail.gmail.com>
-References: <1421946610-6609-1-git-send-email-grant.likely@linaro.org>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
+Date: Wed, 4 Feb 2015 08:57:43 +0530
+Message-ID: <CAJe_Zhfyr9ts=k_=kyXqC=aGtQdrq9MtrRXt6LQKR7iofKjqKg@mail.gmail.com>
+References: <1422955310-6542-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<CAJe_ZhdL6=4bMPRitFeCqrO2jeYQuDa9071estTBd3PTbmURYA@mail.gmail.com>
+	<20150203144611.GS8656@n2100.arm.linux.org.uk>
+	<4344803.3qsb2TUUaZ@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421946610-6609-1-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Gaurav Minocha <gaurav.minocha.os@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4344803.3qsb2TUUaZ@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 22, 2015 at 11:10 AM, Grant Likely <grant.likely@linaro.org> wrote:
-> Commit 3ce04b4a9, "Removes OF_UNITTEST dependency on OF_DYNAMIC config
-> symbol" removes a bunch of code, but missed a few minor bits. Clean it
-> up by removing the node removal cache and flag.
+On 3 February 2015 at 20:55, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Tuesday 03 February 2015 14:46:11 Russell King - ARM Linux wrote:
+>> On Tue, Feb 03, 2015 at 08:09:34PM +0530, Jassi Brar wrote:
+>> > On 3 February 2015 at 18:02, Russell King - ARM Linux
+>> > <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+>> > > On Tue, Feb 03, 2015 at 05:29:23PM +0800, Vincent Yang wrote:
+>> > >> +static int mhu_send_data(struct mbox_chan *chan, void *data)
+>> > >> +{
+>> > >> +     struct mhu_link *mlink = chan->con_priv;
+>> > >> +
+>> > >> +     pr_debug("%s:%d\n", __func__, __LINE__);
+>> > >> +     if (!mhu_last_tx_done(chan)) {
+>> > >> +             dev_err(chan->mbox->dev, "Last TX(%d) pending!\n", mlink->irq);
+>> > >> +             return -EBUSY;
+>> > >> +     }
+>> > >> +
+>> > >> +     writel_relaxed((u32)data, mlink->tx_reg + INTR_SET_OFS);
+>> > >
+>> > > Doesn't that cause a GCC warning?
+>> > >
+>> > I don't see any, but I'll drop the cast.
+>>
+>> A cast is probably needed.  You're right that GCC no longer warns about
+>> this - I'm pretty sure it used to complain about casting pointers to
+>> ints, and we used to need to cast to "unsigned long" first.
 >
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> Cc: Gaurav Minocha <gaurav.minocha.os@gmail.com>
-> Cc: Rob Herring <robh@kernel.org>
+> It definitely warns about converting an u64 to pointer or back,
+> and it warns on 64-bit machines about this conversion.
+>
+> On a related note, I wonder why the driver actually converts a pointer to
+> int. I believe we have discussed this in the past but don't remember the
+> outcome.
+We never discussed this (MHU) driver. It was the generic mailbox API
+where, IIRC, I did take into account all your comments. The API does
+do what you had asked.
 
-Doesn't look like you have updated your tree, so I've applied this.
+> I had expected to see here something like:
+>
+> static int mhu_send_data(struct mbox_chan *chan, void *data)
+> {
+>         struct mhu_link *mlink = chan->con_priv;
+>         u32 *arg = data;
+>
+>         writel_relaxed(*arg, mlink->tx_reg + INTR_SET_OFS);
+> }
+>
+> i.e. dereferencing the pointer instead of using the actual value.
+>
+OK, just curious how is this (dereferencing to the u32 variable on
+stack of the client driver) better?
 
-Rob
-
-> ---
->  drivers/of/unittest.c | 15 ---------------
->  1 file changed, 15 deletions(-)
->
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 139363af5c88..7aa1d6dae5ba 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -27,11 +27,6 @@ static struct selftest_results {
->         int failed;
->  } selftest_results;
->
-> -#define NO_OF_NODES 3
-> -static struct device_node *nodes[NO_OF_NODES];
-> -static int last_node_index;
-> -static bool selftest_live_tree;
-> -
->  #define selftest(result, fmt, ...) ({ \
->         bool failed = !(result); \
->         if (failed) { \
-> @@ -830,13 +825,6 @@ static int attach_node_and_children(struct device_node *np)
->                 return 0;
->         }
->
-> -       /* Children of the root need to be remembered for removal */
-> -       if (np->parent == of_root) {
-> -               if (WARN_ON(last_node_index >= NO_OF_NODES))
-> -                       return -EINVAL;
-> -               nodes[last_node_index++] = np;
-> -       }
-> -
->         child = np->child;
->         np->child = NULL;
->
-> @@ -899,10 +887,7 @@ static int __init selftest_data_add(void)
->         }
->
->         if (!of_root) {
-> -               /* enabling flag for removing nodes */
-> -               selftest_live_tree = true;
->                 of_root = selftest_data_node;
-> -
->                 for_each_of_allnodes(np)
->                         __of_attach_node_sysfs(np);
->                 of_aliases = of_find_node_by_path("/aliases");
-> --
-> 2.1.0
->
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
