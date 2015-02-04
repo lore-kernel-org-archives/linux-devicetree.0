@@ -1,54 +1,47 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH_V4 0/3] sound:soc: jz4740: Add DT, dynamic sampling
-Date: Wed, 4 Feb 2015 21:13:22 +0000
-Message-ID: <20150204211322.GP21293@sirena.org.uk>
-References: <1422960959-40403-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cveWy1lHDZPvR+aK"
+From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH v3 0/6] Convert twl4030_madc_battery to IIO consumer and add DT aupport
+Date: Wed,  4 Feb 2015 23:14:29 +0100
+Message-ID: <1423088075-10025-1-git-send-email-marek@goldelico.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1422960959-40403-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patches adding support for twl4030_madc_battery to use twl4030_madc iio framework + DT support.
+Patches was tested on gta04 board. twl4030_madc_battery driver is converted in
+first patch to iio consumer and in next patches is added support for devicetree
++ some small fixes for module autoloading.
 
---cveWy1lHDZPvR+aK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes from V2:
+- fix property names
+- add MODULE_DEVICE_TABLE and MODULE_ALIAS
 
-On Tue, Feb 03, 2015 at 10:55:56AM +0000, Zubair Lutfullah Kakakhel wrote:
-> Hi,
->=20
-> Here are a few simple patches for the jz4740.
->=20
-> First adds dynamic sampling support to jz4740-i2s.
-> Then two to add a simple binding and DT support.
-> Then a patch to set the clock rate for i2s.
+Changes from V1:
+- use iio_read_channel_processed instead iio_read_channel_processed
+- convert probe to use devm_ as part of adding error handling for iio
+- free iio channels on error and on module removal
 
-Applied all, but as I think has been mentioned before please use subject
-lines matching the usual style for the subsystem.
+[1] - https://lkml.org/lkml/2014/2/26/482dd
 
---cveWy1lHDZPvR+aK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Marek Belisko (6):
+  power: twl4030-madc-battery: Convert to iio consumer.
+  power: twl4030_madc_battery: Add device tree support
+  Documentation: DT: Document twl4030-madc-battery bindings
+  ARM: dts: omap3-gta04: Add battery support
+  power: twl4030_madc_battery: Add of_twl4030_madc_match to
+    MODULE_DEVICE_TABLE
+  power: twl4030_madc_battery: Add missing MODULE_ALIAS
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ .../bindings/power_supply/twl4030_madc_battery.txt |  43 +++++
+ arch/arm/boot/dts/omap3-gta04.dtsi                 |  30 ++++
+ drivers/power/twl4030_madc_battery.c               | 183 +++++++++++++++++----
+ 3 files changed, 221 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
 
-iQEcBAEBCAAGBQJU0otxAAoJECTWi3JdVIfQHikH/Rc7W7B8TZPTHKdZhjq0uC/q
-KjXJhZ6LiW1vz0cXkMN4m7yKvveoJe9qGuMzaCky0JSE4Ha0BLhVRiwB2+hSyK8f
-JjZAuqEJ3No+sUMjrtWLPIQPyUTwsuk8DJSVBXp8EyqbzLIcjQUG/j0H0HVHfRJP
-m5Z33OUox8lpndZ5O1+tBTcjmBXu5j2hHTP4FvjB1yxKWpw8i+wl+LtynkfIslee
-MMOkhqH9xmVOxLHfOMj6yekHxEK8m+IdF0gLw1WxYYnvzi66RBNJKvgcg8pAmxsW
-rvjw0VygVpLPFn2M4cg5C8aHZIMj0s9l3ft6+s1oTrhSNv9K3dcC9YDxksaPVx8=
-=Y2CI
------END PGP SIGNATURE-----
+-- 
+1.9.1
 
---cveWy1lHDZPvR+aK--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
