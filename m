@@ -1,82 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
-Date: Thu, 05 Feb 2015 01:46:59 +0300
-Message-ID: <54D2A163.3010207@cogentembedded.com>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com> <1608366.HtA9yBksdO@wasted.cogentembedded.com> <20150131042143.GB7605@verge.net.au> <54CD1E79.6090700@cogentembedded.com> <20150202001910.GA29383@verge.net.au>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 2/5] clk: iproc: add initial common clock support
+Date: Wed, 04 Feb 2015 15:13:59 -0800
+Message-ID: <54D2A7B7.6020007@codeaurora.org>
+References: <Ray Jui <rjui@broadcom.com> <1422988390-24369-1-git-send-email-rjui@broadcom.com> <1422988390-24369-3-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150202001910.GA29383@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1422988390-24369-3-git-send-email-rjui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>, Mike Turquette <mturquette@linaro.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/02/2015 03:19 AM, Simon Horman wrote:
+On 02/03/15 10:33, Ray Jui wrote:
+> +/*
+> + * Get the clock rate based on name
+> + */
+> +static unsigned long __get_rate(const char *clk_name)
+> +{
+> +	struct clk *clk;
+> +
+> +	clk = __clk_lookup(clk_name);
+> +	if (!clk) {
+> +		pr_err("%s: unable to find clock by name: %s\n", __func__,
+> +				clk_name);
+> +		return 0;
+> +	}
+> +
+> +	return clk_get_rate(clk);
+> +}
+> +
 
->>>> Add the initial device tree for the R8A7794 SoC based SILK low cost board.
->>>> SCIF2 serial port support is included, so that the serial console can work.
+This looks like something we should be providing in the core framework.
+Care to make it into an of_clk_get_parent_rate() API?
 
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> +extern void __init iproc_armpll_setup(struct device_node *node);
+> +extern void __init iproc_pll_setup(struct device_node *node,
+> +		const struct iproc_pll_ctrl *ctrl,
+> +		const struct iproc_pll_vco_freq_param *vco_param,
+> +		unsigned int num_freqs);
+> +extern void __init iproc_clk_setup(struct device_node *node,
+> +		const struct iproc_clk_ctrl *ctrl, unsigned int num_clks);
+> +extern void __init iproc_asiu_setup(struct device_node *node,
+> +		const struct iproc_asiu_div *div,
+> +		const struct iproc_asiu_gate *gate, unsigned int num_clks);
 
->>>> ---
->>>> This patch is against the 'renesas-devel-20150129-v3.19-rc6' tag of Simon
->>>> Horman's 'renesas.git' repo.
+__init is not necessary in header files.
 
->>>>   arch/arm/boot/dts/Makefile         |    1
->>>>   arch/arm/boot/dts/r8a7794-silk.dts |   41 +++++++++++++++++++++++++++++++++++++
->>>>   2 files changed, 42 insertions(+)
-
->> [...]
->>>> Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
->>>> ===================================================================
->>>> --- /dev/null
->>>> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
->>>> @@ -0,0 +1,41 @@
->>>> +/*
->>>> + * Device Tree Source for the SILK board
->>>> + *
->>>> + * Copyright (C) 2014 Renesas Electronics Corporation
->>>> + * Copyright (C) 2014-2015 Renesas Solutions Corp.
->>>> + * Copyright (C) 2014-2015 Cogent Embedded, Inc.
->>>> + *
->>>> + * This file is licensed under the terms of the GNU General Public License
->>>> + * version 2.  This program is licensed "as is" without any warranty of any
->>>> + * kind, whether express or implied.
->>>> + */
->>>> +
->>>> +/dts-v1/;
->>>> +#include "r8a7794.dtsi"
->>>> +
->>>> +/ {
->>>> +	model = "SILK";
->>>> +	compatible = "renesas,silk", "renesas,r8a7794";
->>>> +
->>>> +	aliases {
->>>> +		serial0 = &scif2;
->>>> +	};
->>>> +
->>>> +	chosen {
->>>> +		bootargs = "console=ttySC0,38400 ignore_loglevel";
-
->>> Please remove console= for consistency with other boards
->>> based on Renesas SoCs.
-
->>     I can't, there will be no console at all.
-
-> Its not clear to me why that should be the case when you also have:
-
-> 		stdout-path = &scif2;
-
-> Is this a baud issue?
-
-    Don't think so, I would have seen at least some garbage on the console.
-There was nothing. I'm still not sure what the problem was...
-
-> If so is it possible to set uboot to 115200 bps?
-
-    Possible with the new board.
-
-WBR, Sergei
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
