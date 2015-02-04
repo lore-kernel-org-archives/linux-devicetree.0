@@ -1,32 +1,29 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH_V2 27/34] MIPS: jz4740: use jz47xx-uart & DT for UART output
-Date: Wed, 04 Feb 2015 17:32:51 +0100
-Message-ID: <3911455.CfbmuRjhZB@wuerfel>
-References: <1423063323-19419-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1423063323-19419-28-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/5] ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
+Date: Wed, 04 Feb 2015 17:36:09 +0100
+Message-ID: <3598552.qKIyokxIlF@wuerfel>
+References: <1423059315-28519-1-git-send-email-geert+renesas@glider.be> <7800327.b3sMA1XGtZ@wuerfel> <CAMuHMdVi3kq2p30cNFYW2WCM-OvMSFC1W0r5nYkaN5Np=zW4_Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423063323-19419-28-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVi3kq2p30cNFYW2WCM-OvMSFC1W0r5nYkaN5Np=zW4_Q@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Russell King <rmk@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 February 2015 15:21:56 Zubair Lutfullah Kakakhel wrote:
-> +#ifndef __JZ4740_SERIAL_H__
-> +#define __JZ4740_SERIAL_H__
-> +
-> +#define BASE_BAUD (12000000 / 16)
-> +
-> +#endif /* __JZ4740_SERIAL_H__ */
+On Wednesday 04 February 2015 15:43:43 Geert Uytterhoeven wrote:
 > 
+> Indeed. Note that I only try to preserve the register value before and after
+> migrating to generic l2c OF initialization. I did read (part of) the pl310
+> documentation, but it's still not clear to me if we really need
+> L2C_AUX_CTRL_SHARED_OVERRIDE. Perhaps this was just copied from
+> somewhere else without much afterthought?
 
-This looks wrong: You should not need to hardcode this number when
-you can get it from DT.
+Have you checked what the hardware/bootloader actually sets in that bit?
+
+Maybe you can remove that override completely and the initial Linux
+default was just set to the same that is already set on powerup?
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
