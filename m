@@ -1,58 +1,57 @@
-From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] media: i2c: add support for omnivision's ov2659 sensor
-Date: Wed, 4 Feb 2015 15:01:43 +0000
-Message-ID: <CA+V-a8u4Zp8Ab4xkrG=+=fQkV8_RtGMiTuYbizyEAL8qbmafgQ@mail.gmail.com>
-References: <1421365163-29394-1-git-send-email-prabhakar.csengg@gmail.com> <CAL_Jsq+Yk1sDT+KfxRfR3ue74KtKxDB3Aj0BS2=sfYwzMcQtDw@mail.gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v3 0/6] Add multiple GPIO and external clock to MMC pwrseq_simple
+Date: Wed, 04 Feb 2015 16:06:57 +0100
+Message-ID: <54D23591.7050208@collabora.co.uk>
+References: <1422543608-24704-1-git-send-email-javier.martinez@collabora.co.uk> <CAPDyKFqx-dhhVmtGnP2YpmR63Y20Ns=YyxnYrE2ewTuNXPA7Ag@mail.gmail.com> <54CB81EF.8030603@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+Yk1sDT+KfxRfR3ue74KtKxDB3Aj0BS2=sfYwzMcQtDw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <54CB81EF.8030603@collabora.co.uk>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Arend van Spriel <arend@broadcom.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello Kukjin,
 
-Thanks for the review.
-
-On Wed, Feb 4, 2015 at 2:55 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jan 15, 2015 at 5:39 PM, Lad, Prabhakar
-> <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+On 01/30/2015 02:06 PM, Javier Martinez Canillas wrote:
+> On 01/30/2015 12:13 PM, Ulf Hansson wrote:
+>>>
+>>> Patch #1 extends the simple MMC power sequence DT binding to support more
+>>> than one GPIO and patch #2 adds the actual implementation.
+>>>
+>>> In the same way, patch #3 and #4 extend the simple MMC power sequence DT
+>>> binding and pwrseq_simple driver to support an optional external clock.
+>>>
+>>> Finally as an example, patch #5 and patch #6 adds support for the wifi
+>>> chip in the Exynos5250 Snow that needs all these resources. These two
+>>> patches were added to the series only for completeness and should be
+>>> picked by Kukjin through his linux-samsung tree.
+>>>
+>>> Best regards,
+>>> Javier
+>> 
+>> Thanks Javier! I have applied patch 1 -> 4 for my next branch.
+>> 
+>> I made some minor fix to patch4, I send a separate response to that
+>> patch so you know.
 >>
->> this patch adds support for omnivision's ov2659
->> sensor.
->>
->> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
+> 
+> Great, thanks a lot!
+> 
+> Kukjin,
+> 
+> Could you please pick patches #5 and #6 then now that Ulf picked the others?
 >
-> [...]
->
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index b1df0ad..153cd92 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -118,6 +118,7 @@ nvidia      NVIDIA
->>  nxp    NXP Semiconductors
->>  onnn   ON Semiconductor Corp.
->>  opencores      OpenCores.org
->> +ovt    OmniVision Technologies
->
-> I'm surprised there are not already compatible strings with
-> OmniVision. There are some examples using "omnivision", but no dts
-> files and examples don't count.
->
-> The stock ticker is ovti, so please use that.
->
-OK will update in the v2 version, I went with website which was ovt [1].
 
-[1] http://www.ovt.com/
+I noticed that you are applying patches to your Samsung tree, do you want me to
+re-send patches #5 and #6 or is OK for you to pick them from from this series?
 
-Regards,
---Prabhakar Lad
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
+
+
+
+
+
