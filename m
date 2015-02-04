@@ -1,34 +1,87 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] media: i2c: add support for omnivision's ov2659 sensor
-Date: Wed, 4 Feb 2015 10:52:53 -0600
-Message-ID: <CAL_JsqJ9oxgKsCSeNaPFANFq_rzCGYNg+oZEfgy2gmY7SYGt2A@mail.gmail.com>
-References: <1421365163-29394-1-git-send-email-prabhakar.csengg@gmail.com>
- <CAL_Jsq+Yk1sDT+KfxRfR3ue74KtKxDB3Aj0BS2=sfYwzMcQtDw@mail.gmail.com> <CAOMZO5D5QQQj6u7av4TTAY7gbRXXx7AF_eYJiQxuPtgo9zsQtQ@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 01/10] ARM: tegra: Set the sound card model that alsaucm
+ expects
+Date: Wed, 04 Feb 2015 09:56:26 -0700
+Message-ID: <54D24F3A.5000206@wwwdotorg.org>
+References: <1422442278-10405-1-git-send-email-tomeu.vizoso@collabora.com> <1422442278-10405-2-git-send-email-tomeu.vizoso@collabora.com> <54CFE754.7000500@wwwdotorg.org> <CAAObsKCm-9GOvis=MZ-nyA0N+g_ZuWYUfDSdEcVy5p5ykCmkcQ@mail.gmail.com> <54D0F8E3.3020902@wwwdotorg.org> <54D1E2B6.4050004@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5D5QQQj6u7av4TTAY7gbRXXx7AF_eYJiQxuPtgo9zsQtQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54D1E2B6.4050004-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 4, 2015 at 9:23 AM, Fabio Estevam <festevam@gmail.com> wrote:
-> Rob,
->
-> On Wed, Feb 4, 2015 at 12:55 PM, Rob Herring <robherring2@gmail.com> wrote:
->
->> I'm surprised there are not already compatible strings with
->> OmniVision. There are some examples using "omnivision", but no dts
->> files and examples don't count.
+On 02/04/2015 02:13 AM, Tomeu Vizoso wrote:
+> On 02/03/2015 05:35 PM, Stephen Warren wrote:
+>> On 02/03/2015 06:13 AM, Tomeu Vizoso wrote:
+>>> On 2 February 2015 at 22:08, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>> On 01/28/2015 03:50 AM, Tomeu Vizoso wrote:
+>>>>>
+>>>>> Patches are on its way to add a config file to alsaucm for the Nyan
+>>>>> boards. Use the same card ID that alsaucm will expect.
+>>>>
+>>>>
+>>>>> diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts
+>>>>> b/arch/arm/boot/dts/tegra124-nyan-big.dts
+>>>>
+>>>>
+>>>>>           sound {
+>>>>> -               compatible = "nvidia,tegra-audio-max98090-nyan-big",
+>>>>> +               compatible = "nvidia,tegra-audio-max98090-nyan",
+>>>>>                                "nvidia,tegra-audio-max98090";
+>>>>
+>>>>
+>>>> I'm not convinced that removing the board-specific compatible value is a
+>>>> great idea. What if we find we need to distinguish between different boards
+>>>> that use this same binding in the future. That situation is exactly why we
+>>>> have board-/SoC-specific values in compatible even if we don't immediately
+>>>> use them.
+>>>
+>>> I understand the need of naming each component variant so they can be
+>>> distinguished in the future, but in this case it's the exact same hw.
 >>
->> The stock ticker is ovti, so please use that.
+>> That's not true. These are two different boards that are derived from
+>> the same base design. The intent may be that they are the same, but the
+>> whole point of board-specific compatible values is to cover the case
+>> where mistakes and exceptions appear later.
 >
-> That's what I sent:
-> http://patchwork.ozlabs.org/patch/416685/
+> Fair enough.
 >
-> Could you apply it?
+>>>>> -               nvidia,model = "Acer Chromebook 13";
+>>>>> +               nvidia,model = "GoogleNyan";
+>>>>
+>>>>
+>>>> I believe this also technically breaks ABI, since some user-space tools use
+>>>> the model to look up saved state. Can we not leave this as is, and just have
+>>>> the UCM files know about both names?
+>>>
+>>> Well, "A13" isn't a great card id. Given that there's no users yet, I
+>>> would prefer to take this chance to put a sane value in there. Btw,
+>>> alsa-lib has now a UCM config for this and it uses the GoogleNyan card
+>>> id (has been picked up already by OpenSUSE).
+>>
+>> "A13" didn't appear anywhere, did it? Perhaps that was a shorthand for
+>> "Acer Chromebook 13". Yes, I agree we should use the user-visible model
+>> number here; "Acer CB5" or perhaps "Acer CB5-xxx" whatever xxx actually is.
+>
+> Ok, so we can go with Acer-CB5-311 for the nyan big.
+>
+> Unfortunately there doesn't exist a single product id that corresponds
+> with the nyan blaze, but at least four: K4K83UA, K4K11UA, K4K78UA and
+> K4K23UA. The commercial name of the series that contain a blaze board is
+> "HP Chromebook 14 G3", but that doesn't fit in the card id field (16 byte).
 
-Yes. Now applied.
+Oh, the 16-byte limit is rather annoying:-( Some of our existing DT 
+files don't fit into that limit.
 
-Rob
+> What do you think of using GoogleNyanBig and GoogleNyanBlaze? Or maybe
+> just NyanBig and NyanBlaze? IMO it's more important that the card ids
+> correspond 1-to-1 to the hw than their recognizability, as it's not
+> something that end users will be messing with.
+
+I'm not entirely sure that the user won't ever see those values; don't 
+some X11 GUI tools display them? Still, as you say there isn't too much 
+we can do, so since these names are unique/complete I figure they're OK.
