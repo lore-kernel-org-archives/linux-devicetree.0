@@ -1,143 +1,73 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH v3 2/6] power: twl4030_madc_battery: Add device tree support
-Date: Wed,  4 Feb 2015 23:14:31 +0100
-Message-ID: <1423088075-10025-3-git-send-email-marek@goldelico.com>
-References: <1423088075-10025-1-git-send-email-marek@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1423088075-10025-1-git-send-email-marek@goldelico.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, tony@atomide.com, hns@goldelico.com, linux-kernel@vger.kernel.org, gta04-owner@goldelico.com, Marek Belisko <marek@goldelico.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: mathieu.poirier@linaro.org
+Subject: [PATCH] coresight-stm: Bindings for System Trace Macrocell
+Date: Wed,  4 Feb 2015 15:18:53 -0700
+Message-ID: <1423088333-14914-1-git-send-email-mathieu.poirier@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, al.grant@arm.com, liviu.dudau@arm.com, kaixu.xia@linaro.org, jeenu.viswambharan@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- drivers/power/twl4030_madc_battery.c | 81 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-diff --git a/drivers/power/twl4030_madc_battery.c b/drivers/power/twl4030_madc_battery.c
-index 6af28b5..ec14bc6 100644
---- a/drivers/power/twl4030_madc_battery.c
-+++ b/drivers/power/twl4030_madc_battery.c
-@@ -20,6 +20,7 @@
- #include <linux/i2c/twl4030-madc.h>
- #include <linux/power/twl4030_madc_battery.h>
- #include <linux/iio/consumer.h>
-+#include <linux/of.h>
+The System Trace Macrocell (STM) is an IP block falling under the
+CoreSight umbrella.  It's main purpose it so expose stimulus channels
+to any system component for the purpose of information logging.
+
+Bindings for this IP block adds a couple of items to the current
+mandatory definition for CoreSight components.
+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ .../devicetree/bindings/arm/coresight.txt          | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index a3089359aaa6..854127578718 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -17,6 +17,7 @@ its hardware characteristcs.
+ 		- "arm,coresight-tmc", "arm,primecell";
+ 		- "arm,coresight-funnel", "arm,primecell";
+ 		- "arm,coresight-etm3x", "arm,primecell";
++		- "arm,coresight-stm", "arm,primecell";
  
- struct twl4030_madc_battery {
- 	struct power_supply psy;
-@@ -183,6 +184,82 @@ static int twl4030_cmp(const void *a, const void *b)
- 		((struct twl4030_madc_bat_calibration *)a)->voltage;
- }
+ 	* reg: physical base address and length of the register
+ 	  set(s) of the component.
+@@ -31,6 +32,14 @@ its hardware characteristcs.
+ 	  layout using the generic DT graph presentation found in
+ 	  "bindings/graph.txt".
  
-+#ifdef CONFIG_OF
-+static struct twl4030_madc_bat_platform_data *
-+	twl4030_madc_dt_probe(struct platform_device *pdev)
-+{
-+	struct twl4030_madc_bat_platform_data *pdata;
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+	int i, proplen;
++* Additional required properly for System Trace Macrocells (STM):
++	* reg: along with the physical base address and length of the register
++	  set as described above, another entry is required to describe the
++	  mapping of the extended stimulus port area.
 +
-+	pdata = devm_kzalloc(&pdev->dev,
-+			sizeof(struct twl4030_madc_bat_platform_data),
-+			GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
++	* reg-names: the only acceptable values are "stm-base" and
++	  "stm-channel-base", each corresponding to the areas defined in "reg".
 +
-+	ret = of_property_read_u32(np, "capacity-uah", &pdata->capacity);
-+	if (ret != 0)
-+		return ERR_PTR(-EINVAL);
-+
-+	/* parse and prepare charging data */
-+	proplen = of_property_count_u32_elems(np, "volt-to-capacity-charging-map");
-+	if (proplen < 0) {
-+		dev_warn(&pdev->dev, "No 'volt-to-capacity-charging-map' property found\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	pdata->charging = devm_kzalloc(&pdev->dev,
-+		sizeof(struct twl4030_madc_bat_calibration) * (proplen / 2),
-+		GFP_KERNEL);
-+
-+	for (i = 0; i < proplen / 2; i++) {
-+		of_property_read_u32_index(np, "volt-to-capacity-charging-map",
-+					   i * 2,
-+					   (u32 *)&pdata->charging[i].voltage);
-+		of_property_read_u32_index(np, "volt-to-capacity-charging-map",
-+					  i * 2 + 1,
-+					  (u32 *)&pdata->charging[i].level);
-+	}
-+
-+	/* parse and prepare discharging data */
-+	proplen = of_property_count_u32_elems(np,
-+			"volt-to-capacity-discharging-map");
-+	if (proplen < 0) {
-+		dev_warn(&pdev->dev, "No 'volt-to-capacity-discharging-map' property found\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	pdata->discharging = devm_kzalloc(&pdev->dev,
-+		sizeof(struct twl4030_madc_bat_calibration) * (proplen / 2),
-+		GFP_KERNEL);
-+
-+	for (i = 0; i < proplen / 2; i++) {
-+		of_property_read_u32_index(np, "volt-to-capacity-discharging-map",
-+					   i * 2,
-+					   (u32 *)&pdata->discharging[i].voltage);
-+		of_property_read_u32_index(np, "volt-to-capacity-discharging-map",
-+					   i * 2 + 1,
-+					   (u32 *)&pdata->discharging[i].level);
-+	}
-+
-+	return pdata;
-+}
-+
-+static const struct of_device_id of_twl4030_madc_match[] = {
-+	{ .compatible = "ti,twl4030-madc-battery", },
-+	{},
-+};
-+
-+#else
-+static struct twl4030_madc_bat_platform_data *
-+	twl4030_madc_dt_probe(struct platform_device *pdev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+#endif
-+
- static int twl4030_madc_battery_probe(struct platform_device *pdev)
- {
- 	struct twl4030_madc_battery *twl4030_madc_bat;
-@@ -194,6 +271,9 @@ static int twl4030_madc_battery_probe(struct platform_device *pdev)
- 	if (!twl4030_madc_bat)
- 		return -ENOMEM;
+ * Required properties for devices that don't show up on the AMBA bus, such as
+   non-configurable replicators:
  
-+	if (!pdata)
-+		pdata = twl4030_madc_dt_probe(pdev);
+@@ -198,3 +207,19 @@ Example:
+ 			};
+ 		};
+ 	};
 +
- 	twl4030_madc_bat->psy.name = "twl4030_battery";
- 	twl4030_madc_bat->psy.type = POWER_SUPPLY_TYPE_BATTERY;
- 	twl4030_madc_bat->psy.properties = twl4030_madc_bat_props;
-@@ -263,6 +343,7 @@ static int twl4030_madc_battery_remove(struct platform_device *pdev)
- static struct platform_driver twl4030_madc_battery_driver = {
- 	.driver = {
- 		.name = "twl4030_madc_battery",
-+		.of_match_table = of_match_ptr(of_twl4030_madc_match),
- 	},
- 	.probe  = twl4030_madc_battery_probe,
- 	.remove = twl4030_madc_battery_remove,
++4. STM
++	stm@20100000 {
++		compatible = "arm,coresight-stm", "arm,primecell";
++		reg = <0 0x20100000 0 0x1000>,
++		      <0 0x28000000 0 0x180000>;
++		reg-names = "stm-base", "stm-channel-base";
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		port {
++			stm_out_port: endpoint {
++				remote-endpoint = <&main_funnel_in_port2>;
++			};
++		};
++	};
 -- 
 1.9.1
