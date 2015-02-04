@@ -1,192 +1,57 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [PATCH_V2 00/34] jz4780 & CI20 support
-Date: Wed, 4 Feb 2015 16:47:39 +0000
-Message-ID: <20150204164739.GJ1024@NP-P-BURTON>
-References: <1423063323-19419-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 RESEND 0/4] ARM: bcm2835: DT improvements
+Date: Wed, 04 Feb 2015 09:51:55 -0700
+Message-ID: <54D24E2B.9070006@wwwdotorg.org>
+References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com> <CAL_JsqJubTomhUPbBck_cBJoiL2tuDRv++tANoLtBidmSdxUYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1423063323-19419-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, mturquette@linaro.org, sboyd@codeaurora.org, ralf@linux-mips.org, jslaby@suse.cz, tglx@linutronix.de, jason@lakedaemon.net, lars@metafoo.de
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJubTomhUPbBck_cBJoiL2tuDRv++tANoLtBidmSdxUYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 04, 2015 at 03:21:29PM +0000, Zubair Lutfullah Kakakhel wrote:
-> Hi,
-> 
-> This series introduces initial support for the Ingenic jz4780 SoC & the
-> MIPS Creator CI20 board which is based upon it.
-> 
-> The jz4780 shares aspects with jz4740. But jz4740 is platform only.
-> 
-> So, the jz4740 & qi_lb60 (Ben NanoNote) are converted to use DT
-> for some things in order to ease the process of sharing code.
-> 
-> Series is based on 3.19-rc7.
-> 
-> ACKS from various subsystems are welcome so that the series can
-> go via mips if that is OK with everyone.
-> 
-> Alternative suggestions welcome.
-> 
-> Changes in V2
-> - Removed FSF addresses. 
-> - Removed 2 patches for binding docs that
->   were consolidated in the same binding for jz4740.
-> - Bug fix in error handling in cgu
-> - Rebase on 3.19-rc7
-> - Updated defconfig with jz47xx serial and removed initramfs
-> - Renames in binding from intc to interrupt-controller
-> - Fix in jz47xx serial for build error on x86 in one config option
-> - Removed interupt-parent bindings from required bindings
-> - Fixed imgtec prefix to img
-> - Added jz47xx config for qi_lb60_defconfig
-> 
-> Regards,
-> ZubairLK
+On 02/03/2015 07:47 PM, Rob Herring wrote:
+> On Thu, Jan 29, 2015 at 12:10 PM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+>> This patch series contains DT improvements for the Raspberry Pi.
+>>
+>> Patch 1,2: Add missing vendor prefix and root compatible properties
+>> Patch 3,4: Use constants for pin function instead of error-prone numbers
+>>
+>> Changes in V2:
+>> - add all currently known Raspberry Pi boards to binding documentation
+>>    as suggested by Stephen Warren
+>>
+>> Stefan Wahren (4):
+>>    dt-bindings: Add vendor prefix for Raspberry Pi
+>>    dt-bindings: Add root properties for Raspberry Pi
+>>    ARM: bcm2835: Add header file for pinctrl constants
+>>    ARM: bcm2835: Use pinctrl header
+>>
+>>   Documentation/devicetree/bindings/arm/bcm2835.txt  |   31 ++++++++++++++++++--
+>>   .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>>   arch/arm/boot/dts/bcm2835-rpi-b-plus.dts           |    4 +--
+>>   arch/arm/boot/dts/bcm2835-rpi-b.dts                |    4 +--
+>>   arch/arm/boot/dts/bcm2835-rpi.dtsi                 |    8 ++---
+>>   arch/arm/boot/dts/bcm2835.dtsi                     |    3 +-
+>>   include/dt-bindings/pinctrl/bcm2835.h              |   27 +++++++++++++++++
+>>   7 files changed, 67 insertions(+), 11 deletions(-)
+>>   create mode 100644 include/dt-bindings/pinctrl/bcm2835.h
+>
+> Who do you intend to apply this? For the DT binding parts:
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Hi Zubair,
+I assume Lee Jones will take this through the Tegra tree, to avoid any 
+potential conflicts with other changes to these files in that tree.
 
-So first of all, thanks. I've been rather busy & haven't had time to
-revise this patchset myself yet so I appreciate your effort.
-
-Having said that, I do find it at best rather rude to take someone elses
-patches, modify them & submit them without first:
-
-  - Asking the author if that's ok.
-
-  - Allowing the author to look over the changes you've made to their
-    patches.
-
-  - Making it clear in the commit message for each patch which
-    modifications you have made.
-
-As is I now have to go and retroactively check each patch against mine
-to find out what's different, since you didn't indicate that in each
-patch, and then hope I agree with the changes that you made but which
-the patches indicate I authored.
-
-So please, if you should see fit to modify any of my patches in the
-future, do the above things first.
-
-Thanks,
-    Paul
-
-> Paul Burton (34):
->   dt: Add Ingenic Semiconductor vendor prefix
->   MIPS: jz4740: require & include DT
->   MIPS: irq_cpu: declare irqchip table entry
->   MIPS: jz4740: probe CPU interrupt controller via DT
->   MIPS: jz4740: use generic plat_irq_dispatch
->   MIPS: jz4740: move arch_init_irq out of arch/mips/jz4740/irq.c
->   dt: interrupt-controller: Add ingenic,jz4740-intc binding doc
->   MIPS: jz4740: allow interrupt controller probe via DT
->   MIPS: jz4740: probe interrupt controller via DT
->   MIPS: jz4740: remove non-DT interrupt controller init
->   MIPS: jz4740: register an irq_domain for the interrupt controller
->   MIPS: jz4740: call jz4740_clock_init earlier
->   MIPS: jz4740: replace use of jz4740_clock_bdata
->   clk: jz47xx-cgu: add driver for Ingenic jz47xx series CGU clocks
->   dt: clk: Add ingenic,jz4740-cgu binding documentation
->   MIPS: clk: migrate jz4740 to common clock framework
->   MIPS: clk: move jz4740_clock_set_wait_mode to jz4740-cgu
->   MIPS: clk: move jz4740 UDC auto suspend functions to jz4740-cgu
->   MIPS: clk: move jz4740 clock suspend, resume functions to jz4740-cgu
->   MIPS: jz4740: remove clock.h
->   MIPS: jz4740: only detect RAM size if not specified in DT
->   MIPS: jz4740: support >32 interrupts
->   MIPS: jz4740: define IRQ numbers based on number of intc IRQs
->   dt: serial: Add ingenic,jz4740-uart binding
->   serial: 8250_jz47xx: support for Ingenic jz47xx UARTs
->   MIPS: allow mach-provided serial.h
->   MIPS: jz4740: use jz47xx-uart & DT for UART output
->   dt: clk: Add ingenic,jz4780-cgu binding documentation
->   clk: add Ingenic jz4780 CGU driver
->   MIPS: jz4740: add jz4780 interrupt controller support
->   MIPS: add jz4780 Ingenic vendor ID
->   MIPS: initial Ingenic jz4780 support
->   MIPS: initial MIPS Creator CI20 board support
->   MIPS: allow jz4780 to be selected in Kconfig
-> 
->  .../bindings/clock/ingenic,jz4740-cgu.txt          |  52 ++
->  .../bindings/clock/ingenic,jz4780-cgu.txt          |  52 ++
->  .../interrupt-controller/ingenic,jz4740-intc.txt   |  26 +
->  .../bindings/serial/ingenic,jz4740-uart.txt        |  22 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  arch/mips/Kconfig                                  |  22 +-
->  arch/mips/boot/dts/Makefile                        |   2 +
->  arch/mips/boot/dts/ci20.dts                        |  21 +
->  arch/mips/boot/dts/jz4740.dtsi                     |  68 ++
->  arch/mips/boot/dts/jz4780.dtsi                     | 101 +++
->  arch/mips/boot/dts/qi_lb60.dts                     |  15 +
->  arch/mips/configs/ci20_defconfig                   | 127 +++
->  arch/mips/configs/qi_lb60_defconfig                |   1 +
->  arch/mips/include/asm/Kbuild                       |   1 -
->  arch/mips/include/asm/cpu.h                        |   1 +
->  arch/mips/include/asm/mach-generic/serial.h        |  21 +
->  arch/mips/include/asm/mach-jz4740/clock.h          |   3 +
->  arch/mips/include/asm/mach-jz4740/irq.h            |  15 +-
->  arch/mips/include/asm/mach-jz4740/platform.h       |   2 -
->  arch/mips/include/asm/mach-jz4740/serial.h         |  27 +
->  arch/mips/include/asm/serial.h                     |  21 +
->  arch/mips/jz4740/Kconfig                           |  10 +
->  arch/mips/jz4740/Makefile                          |   6 +-
->  arch/mips/jz4740/Platform                          |   4 +
->  arch/mips/jz4740/board-qi_lb60.c                   |   7 -
->  arch/mips/jz4740/clock-debugfs.c                   | 108 ---
->  arch/mips/jz4740/clock.c                           | 924 ---------------------
->  arch/mips/jz4740/clock.h                           |  76 --
->  arch/mips/jz4740/irq.c                             | 103 ++-
->  arch/mips/jz4740/platform.c                        |  37 +-
->  arch/mips/jz4740/pm.c                              |   2 -
->  arch/mips/jz4740/prom.c                            |  13 -
->  arch/mips/jz4740/reset.c                           |  13 +-
->  arch/mips/jz4740/serial.c                          |  33 -
->  arch/mips/jz4740/serial.h                          |  23 -
->  arch/mips/jz4740/setup.c                           |  33 +-
->  arch/mips/jz4740/time.c                            |  19 +-
->  arch/mips/kernel/cpu-probe.c                       |   1 +
->  arch/mips/kernel/irq_cpu.c                         |   3 +
->  drivers/clk/Makefile                               |   2 +
->  drivers/clk/jz47xx/Makefile                        |   3 +
->  drivers/clk/jz47xx/jz4740-cgu.c                    | 295 +++++++
->  drivers/clk/jz47xx/jz4780-cgu.c                    | 742 +++++++++++++++++
->  drivers/clk/jz47xx/jz47xx-cgu.c                    | 723 ++++++++++++++++
->  drivers/clk/jz47xx/jz47xx-cgu.h                    | 205 +++++
->  drivers/tty/serial/8250/8250_jz47xx.c              | 225 +++++
->  drivers/tty/serial/8250/Kconfig                    |   9 +
->  drivers/tty/serial/8250/Makefile                   |   1 +
->  include/dt-bindings/clock/jz4740-cgu.h             |  37 +
->  include/dt-bindings/clock/jz4780-cgu.h             |  88 ++
->  50 files changed, 3070 insertions(+), 1276 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/ingenic,jz4740-cgu.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/ingenic,jz4780-cgu.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/ingenic,jz4740-uart.txt
->  create mode 100644 arch/mips/boot/dts/ci20.dts
->  create mode 100644 arch/mips/boot/dts/jz4740.dtsi
->  create mode 100644 arch/mips/boot/dts/jz4780.dtsi
->  create mode 100644 arch/mips/boot/dts/qi_lb60.dts
->  create mode 100644 arch/mips/configs/ci20_defconfig
->  create mode 100644 arch/mips/include/asm/mach-generic/serial.h
->  create mode 100644 arch/mips/include/asm/mach-jz4740/serial.h
->  create mode 100644 arch/mips/include/asm/serial.h
->  delete mode 100644 arch/mips/jz4740/clock-debugfs.c
->  delete mode 100644 arch/mips/jz4740/clock.c
->  delete mode 100644 arch/mips/jz4740/clock.h
->  delete mode 100644 arch/mips/jz4740/serial.c
->  delete mode 100644 arch/mips/jz4740/serial.h
->  create mode 100644 drivers/clk/jz47xx/Makefile
->  create mode 100644 drivers/clk/jz47xx/jz4740-cgu.c
->  create mode 100644 drivers/clk/jz47xx/jz4780-cgu.c
->  create mode 100644 drivers/clk/jz47xx/jz47xx-cgu.c
->  create mode 100644 drivers/clk/jz47xx/jz47xx-cgu.h
->  create mode 100644 drivers/tty/serial/8250/8250_jz47xx.c
->  create mode 100644 include/dt-bindings/clock/jz4740-cgu.h
->  create mode 100644 include/dt-bindings/clock/jz4780-cgu.h
-> 
-> -- 
-> 1.9.1
-> 
+I do still want to double-check with the Pi Foundation's downstream tree 
+what compatible values they use. If they already have board-specific 
+values, and they're sane, it'd be nice to align with those. 
+Unfortunately, I haven't got around to that yet:-(
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
