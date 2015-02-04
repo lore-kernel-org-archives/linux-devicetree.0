@@ -1,72 +1,65 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH_V2 07/34] dt: interrupt-controller: Add ingenic,jz4740-intc
- binding doc
-Date: Wed, 04 Feb 2015 20:07:38 +0300
-Message-ID: <54D251DA.1020807@cogentembedded.com>
-References: <1423063323-19419-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1423063323-19419-8-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH RFC 0/2] of/unittest: Add reference count tests
+Date: Wed, 4 Feb 2015 18:08:37 +0100
+Message-ID: <CAMuHMdXUbD=4cOa-2Dwzhpz9vYVzjpewx4Z2tcMhccVyrJbVHg@mail.gmail.com>
+References: <1422029405-9353-1-git-send-email-geert+renesas@glider.be>
+	<CAL_Jsq+7rDCvNQoGVpnjAWwB6Yma6fkiY3YXOso+92iiLU7rEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423063323-19419-8-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, mturquette@linaro.org, sboyd@codeaurora.org, ralf@linux-mips.org, jslaby@suse.cz, tglx@linutronix.de, jason@lakedaemon.net, lars@metafoo.de, paul.burton@imgtec.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+7rDCvNQoGVpnjAWwB6Yma6fkiY3YXOso+92iiLU7rEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Rob,
 
-On 02/04/2015 06:21 PM, Zubair Lutfullah Kakakhel wrote:
+On Wed, Feb 4, 2015 at 5:14 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Jan 23, 2015 at 10:10 AM, Geert Uytterhoeven
+> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+>> This patch series adds tests to detect reference count imbalances.
+>> The tests use a fixed list of paths to devices nodes (required device
+>> nodes in a minimal DTS, and device nodes present in unittest-data).
+>> I considered scanning for all present device node instead, but these
+>> are more likely to change while running the test.
+>>
+>> These tests are executed only if CONFIG_OF_DYNAMIC=y.
+>>
+>> Patches are against devicetree/next, with "[PATCH] of: Add missing
+>> of_node_put() in of_find_node_by_path()" (or the alternative proposed
+>> by Grant) applied.
+>>
+>> Note that it shows 44 failures, which I haven't investigated yet:
+>
+> Do you plan to?
 
-> From: Paul Burton <paul.burton@imgtec.com>
+Maybe. It doesn't have such a high priority in my task list...
 
-> Add binding documentation for the Ingenic jz4740 interrupt controller.
+> While this could find problems in the unittests or the core OF code,
+> the vast majority of the problems are likely in the users and this
+> doesn't help with those. This whole issue of ref counts has been
+> discussed some and probably needs to be redesigned or instrumented in
+> a way that users can validate. But then it is pretty low priority
+> given that ref counts only matter on pseries.
 
-> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: devicetree@vger.kernel.org
-> ---
->   .../interrupt-controller/ingenic,jz4740-intc.txt   | 26 ++++++++++++++++++++++
->   1 file changed, 26 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
+I agree most issues are in the users.
+However, I did find one issue in the core code.
 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
-> new file mode 100644
-> index 0000000..5e7f4bb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
-> @@ -0,0 +1,26 @@
-> +Ingenic jz4740 SoC Interrupt Controller
+Note that the reference counts may become more important in the future,
+as OF_OVERLAY selects OF_DYNAMIC.
 
-    JZ4740?
+Gr{oetje,eeting}s,
 
-> +
-> +Required properties:
-> +
-> +- compatible : should be "ingenic,jz4740-intc" or "ingenic,jz4780-intc"
-> +- reg : Specifies base physical address and size of the registers.
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source. The value shall be 1.
-> +- interrupts - Specifies the CPU interrupt the controller is connected to.
-> +
-> +Optional properties:
-> +- interrupt-parent: phandle of the CPU interrupt controller.
-> +
-> +Example:
-> +
-> +intc: intc@10001000 {
+                        Geert
 
-    Name it "interrupt-controller@10001000", please.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-> +	compatible = "ingenic,jz4740-intc";
-> +	reg = <0x10001000 0x14>;
-> +
-> +	interrupt-controller;
-> +	#interrupt-cells = <1>;
-> +
-> +	interrupt-parent = <&cpuintc>;
-> +	interrupts = <2>;
-> +};
-
-WBR, Sergei
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
