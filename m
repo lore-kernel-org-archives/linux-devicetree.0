@@ -1,50 +1,47 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v5 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Wed, 04 Feb 2015 11:29:55 +0100
-Message-ID: <4418090.U8XOXMKsEU@wuerfel>
-References: <1422955310-6542-1-git-send-email-Vincent.Yang@tw.fujitsu.com> <4344803.3qsb2TUUaZ@wuerfel> <CAJe_Zhfyr9ts=k_=kyXqC=aGtQdrq9MtrRXt6LQKR7iofKjqKg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: tlv320aic3x: Fix bad comment before
+ intercon_extra_3104 definition
+Date: Wed, 4 Feb 2015 10:36:54 +0000
+Message-ID: <20150204103654.GT21293@sirena.org.uk>
+References: <1423044946-22043-1-git-send-email-jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="17ZoW5S/Habmc9qe"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_Zhfyr9ts=k_=kyXqC=aGtQdrq9MtrRXt6LQKR7iofKjqKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1423044946-22043-1-git-send-email-jsarha-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wlear-uoOHlzqel7feqrA4Bvp/NA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 February 2015 08:57:43 Jassi Brar wrote:
-> On 3 February 2015 at 20:55, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Tuesday 03 February 2015 14:46:11 Russell King - ARM Linux wrote:
-> >> On Tue, Feb 03, 2015 at 08:09:34PM +0530, Jassi Brar wrote:
 
-> > I had expected to see here something like:
-> >
-> > static int mhu_send_data(struct mbox_chan *chan, void *data)
-> > {
-> >         struct mhu_link *mlink = chan->con_priv;
-> >         u32 *arg = data;
-> >
-> >         writel_relaxed(*arg, mlink->tx_reg + INTR_SET_OFS);
-> > }
-> >
-> > i.e. dereferencing the pointer instead of using the actual value.
-> >
-> OK, just curious how is this (dereferencing to the u32 variable on
-> stack of the client driver) better?
+--17ZoW5S/Habmc9qe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The API as I understand is defined to use the pointer to point to
-a chunk of data of fixed size, with the size being known to both
-the client driver and the mailbox driver. This is the reason for
-having a pointer in the first place.
+On Wed, Feb 04, 2015 at 12:15:46PM +0200, Jyri Sarha wrote:
+> The intercon_extra_3104 is obviously for tlv320aic3104.
 
-Using the bits of the pointer as the message instead of pointing
-to the message feels like an abuse of the API.
+Applied, thanks.
 
-Maybe it would have been better to pass the size explictly as 
-a third argument in the API to make that clear.
+--17ZoW5S/Habmc9qe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-	Arnd
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU0fZFAAoJECTWi3JdVIfQ9VgH/0ZmkpG2xyNL5H6jyQt/rkG9
+WrDdqI92xiXD0YF/bGLNcXMGnNCQWzPFlsa3IMBOuEeBjtth+qVJqEvJi1/Oq3Qk
+Bs4M+JgHGLh765XjWVDd8vHaa/6f1zOHXKXfOB9f+dxDsV2GXFo3RVFyCtu9JflS
+lTTNmC82K3dKR4tUI+vzciYvaG2qaS1M1OCyx9UC/dS+0ZQ3lPFQGRE0aHw71kTX
+fsvuq5fkl6ZFLR9j2PQxrPhThyiNXXWviEu9J8uY5bm7Nkr8yCnLCIq6QQj7h02Y
+fQms09KlYgh97uv6fPbd0vEyOVJD7indJygBwOaPdQZhcUu9B8uXCfR4xDp78pk=
+=5kiI
+-----END PGP SIGNATURE-----
+
+--17ZoW5S/Habmc9qe--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
