@@ -1,41 +1,70 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Wed, 4 Feb 2015 21:03:50 +0530
-Message-ID: <CAJe_ZhceTfWnSWmR+_T+G-BM00hAhTbn5OGwNiOZQFxy6f5QSw@mail.gmail.com>
-References: <1422955310-6542-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<4418090.U8XOXMKsEU@wuerfel>
-	<CAJe_Zhe_d-H10J8cH-fxcbusoJV8jMUW-pruXVkEKY7PnLMGFA@mail.gmail.com>
-	<3593142.nVgVfPmW1o@wuerfel>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v8 02/21] of: Add vendor prefix for Himax Technologies Inc.
+Date: Wed, 4 Feb 2015 10:02:53 -0600
+Message-ID: <CAL_JsqJQuVSBQ73v45GEy+-OR74iZ+AT-R8vaExqJfpSMupAWA@mail.gmail.com>
+References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com> <1420014219-915-3-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3593142.nVgVfPmW1o@wuerfel>
+In-Reply-To: <1420014219-915-3-git-send-email-Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+To: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 February 2015 at 20:18, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 04 February 2015 20:04:21 Jassi Brar wrote:
->>
->> > Using the bits of the pointer as the message instead of pointing
->> > to the message feels like an abuse of the API.
->> >
->> I can see your POV.
->> Now consider a client, like mine, that sends a u32 value as the data.
->> But unlike me, the client uses the mailbox api in 'async' mode i.e,
->> register a callback function, submit a 32bit message and move on. It
->> is perfectly doable, but doesn't kalloc'ing a u32 for each submission,
->> seem overkill?
->
-> That could easily be done by dereferencing the message data in the
-> function that queues the asynchronous message: instead of queuing
-> the pointer, you queue the data in the driver.
->
-The 'void *data' is not queued in the driver, but in the API code. Or
-do I not get your point?
+On Wed, Dec 31, 2014 at 2:23 AM, Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> Signed-off-by: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Thanks.
+I don't know what the status is for the rest of the series, but I'm
+applying this and patch 3 so you don't have to keep sending them.
+
+Rob
+
+> ---
+> v7->v8:
+>  * None.
+>
+> v6->v7:
+>  * None.
+>
+> v5->v6:
+>  * None.
+>
+> v4->v5:
+>  * None.
+>
+> v3->v4:
+>  * Fix an ordering issue to address Stefan Wahren's comment.
+>
+> v2->v3:
+>  * None.
+>
+> v1->v2:
+>  * None.
+>
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 78efebb..f46adb2 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -67,6 +67,7 @@ gumstix       Gumstix, Inc.
+>  gw     Gateworks Corporation
+>  hannstar       HannStar Display Corporation
+>  haoyu  Haoyu Microelectronic Co. Ltd.
+> +himax  Himax Technologies, Inc.
+>  hisilicon      Hisilicon Limited.
+>  hit    Hitachi Ltd.
+>  honeywell      Honeywell
+> --
+> 2.1.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
