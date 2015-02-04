@@ -1,46 +1,174 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 5/6] regulator: max77843: Add max77843 regulator driver
-Date: Wed, 4 Feb 2015 20:26:45 +0000
-Message-ID: <20150204202645.GG21293@sirena.org.uk>
-References: <1423025771-4139-1-git-send-email-jaewon02.kim@samsung.com>
- <1423025771-4139-6-git-send-email-jaewon02.kim@samsung.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH mtd] mtd:devices: Add Altera EPCQ Driver
+Date: Wed, 4 Feb 2015 12:37:10 -0800
+Message-ID: <20150204203710.GC4434@norris-Latitude-E6410>
+References: <CAN1oZWxB5N=YMQcsJppZgp7TXodcR4tKZM+LNFXS7PSx3F-Yag@mail.gmail.com>
+ <CAN1oZWzeev-1uE7gxPnJA=L4Th65CRj8C_LQ7hMJLPHGssDjNQ@mail.gmail.com>
+ <CAN1oZWzOfUrYSBEx=M0p0Dz4HHcaz-FtYOF5ON12oeG_WHPa-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="m5HNjMGSgJ9Rmrrn"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1423025771-4139-6-git-send-email-jaewon02.kim@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Beomho Seo <beomho.seo@samsung.com>
+In-Reply-To: <CAN1oZWzOfUrYSBEx=M0p0Dz4HHcaz-FtYOF5ON12oeG_WHPa-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nga_chi86 <ngachi86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 27, 2015 at 02:53:59PM +0800, Viet Nga Dao wrote:
+> On Tue, Jan 20, 2015 at 10:05 AM, Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org> wrote:
+> > On Thu, Jan 15, 2015 at 5:27 PM, Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org> wrote:
+> >> On Tue, Jan 13, 2015 at 11:33 AM, Brian Norris
+> >> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>> On Thu, Dec 18, 2014 at 12:23:16AM -0800, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> >>>> From: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
---m5HNjMGSgJ9Rmrrn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> >> That is why if rewrite the drivers to follow spi-nor structure, it
+> >> will require extra decoding works for the only few used opcodes.
+> >>
+> >I think you'd only have some very trivial work here.
+> >
+> >There would be some small work to reintroduce a properly-replaceable ID
+> >table, and callbacks like ->lock() and ->unlock(), but those should be
+> >implemented in spi-nor.c sooner or later anyway.
+> >
+> 
+> I am trying to modify the code to follow your recommendation. However,
+> for lock and unlock functions, i have to implement it in spi_nor.c ,
+> am i right? If yes, currently we already have existing spi_nor_lock
+> and spi_nor_unlock functions but they could not apply for my driver.
+> Should i create a new functions named altera_epcq_lock and unlock and
+> then map it to callback functions or i should the put  those code
+> sunder existing spi_nor_lock/unlock?
 
-On Wed, Feb 04, 2015 at 01:56:10PM +0900, Jaewon Kim wrote:
-> This patch adds new regulator driver to support max77843
-> MFD(Multi Function Device) chip`s regulators.
-> The Max77843 has two voltage regulators for USB safeout.
+We probably want a replaceable spi_nor callback that does the
+flash-specific unlock. spi_nor_lock/unlock would then call the
+nor->unlock() / nor->lock() functions for you, when present.
+Some of the existing code should move into their own spi_nor_st_lock() /
+spi_nor_st_unlock() functions.
 
-Applied, thanks.
+> >>>> diff --git a/Documentation/devicetree/bindings/mtd/altera_epcq.txt b/Documentation/devicetree/bindings/mtd/altera_epcq.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..d14f50e
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/mtd/altera_epcq.txt
+> >>>> @@ -0,0 +1,45 @@
+> >>>> +* MTD Altera EPCQ driver
+> >>>> +
+> >>>> +Required properties:
+> >>>> +- compatible: Should be "altr,epcq-1.0"
+> >>>> +- reg: Address and length of the register set  for the device. It contains
+> >>>> +  the information of registers in the same order as described by reg-names
+> >>>> +- reg-names: Should contain the reg names
+> >>>> +  "csr_base": Should contain the register configuration base address
+> >>>> +  "data_base": Should contain the data base address
+> >>>> +- is-epcs: boolean type.
+> >>>> +             If present, the device contains EPCS flashes.
+> >>>> +             Otherwise, it contains EPCQ flashes.
+> >>>> +- #address-cells: Must be <1>.
+> >>>> +- #size-cells: Must be <0>.
+> >>>> +- flash device tree subnode, there must be a node with the following fields:
+> >>>
+> >>> These subnodes definitely require a 'compatible' string. Perhaps they
+> >>> should be used to differentiate EPCS vs. EPCQ. Does "is-epcs" really
+> >>> need to be in the top-level controller node?
+> >>>
+> >>>> +     - reg: Should contain the flash id
+> >>>
+> >>> Should, or must? (This question is relevant, because you seem to make it
+> >>> optional in your code.) And what does the "flash ID" mean? It seems like
+> >>> you're using as a chip-select or bank index.
+> >>>
+> Yes, this is used for chip select. It is required, not optional. This
+> to ID for each flash in the device
 
---m5HNjMGSgJ9Rmrrn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+OK, so correct the language here and enforce this in your driver. Right
+now, you don't fail gracefully if this is missing.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> >>>> +             if (sector_start < num_sectors-(num_sectors / 4))
+> >>>> +                     sr_bp = __ilog2_u32(num_sectors);
+> >>>> +             else if (sector_start < num_sectors-(num_sectors / 8))
+> >>>> +                     sr_bp = __ilog2_u32(num_sectors) - 1;
+> >>>> +             else if (sector_start < num_sectors-(num_sectors / 16))
+> >>>> +                     sr_bp = __ilog2_u32(num_sectors) - 2;
+> >>>> +             else if (sector_start < num_sectors-(num_sectors / 32))
+> >>>> +                     sr_bp = __ilog2_u32(num_sectors) - 3;
+> >>>> +             else if (sector_start < num_sectors-(num_sectors / 64))
+> >>>> +                     sr_bp = __ilog2_u32(num_sectors) - 4;
+> >>>> +             else if (sector_start < num_sectors-(num_sectors / 128))
+> >>>> +                     sr_bp = __ilog2_u32(num_sectors) - 5;
+> >>>> +             else if (sector_start < num_sectors-(num_sectors / 256))
+> >>>> +                     sr_bp = __ilog2_u32(num_sectors) - 6;
+> >>>> +             else if (sector_start < num_sectors-(num_sectors / 512))
+> >>>> +                     sr_bp = __ilog2_u32(num_sectors) - 7;
+> >>>> +             else if (sector_start < num_sectors-(num_sectors / 1024))
+> >>>> +                     sr_bp = __ilog2_u32(num_sectors) - 8;
+> >>>> +             else
+> >>>> +                     sr_bp = 0;  /* non area protected */
+> >>>
+> >>> Yikes, that's ugly! And I'm not sure it matches the EPCQ doc I found.
+> >>> I'm pretty sure you can rewrite this if/else-if/else block in about 1
+> >>> line though.
+> >>>
+> Yes, i understand that it looks ugly. But it is the best i can do
+> since this function has to satisfy for all the supported devices
+> (http://www.altera.com.my/literature/hb/cfg/cfg_cf52012.pdf, start
+> from page 19)
 
-iQEcBAEBCAAGBQJU0oCEAAoJECTWi3JdVIfQU2wIAIMnYXnqytxjfO3r46DMNmOD
-YAsnu6FTtPmYTXIEbPKJz3Aqr8RR1hH2HsqKUQVaRQ3c9OgGBFrvrUtk+ZF4FFvC
-YnhwPZqK1Dk0OcHetrRdoC1j12HDtshnWy8+E4wJFAnWKlafqLrYMvGuewlWE6cK
-exwPzYvZftI3sAUISbyCkIV4h/2LLMJQ8EFVaSxfsgJ9HQUwLiXvBSaKgR2hj7mu
-TBaZWPAnADgG+Oi8wVabRZ5q/uhPbZvdjOSSLc1aAII65+ccWyWeV2heVuH9MpM0
-U15Ea1U1KG5z7pE/qPjsgmORtJuVseYBl65auLxnc/MCWS59ENOdilvvzsfY7DU=
-=I45u
------END PGP SIGNATURE-----
+Did you even try? It was possible to simplify the other case, and I'm
+pretty sure this case can be simplified too. How about this? I hacked
+this together and it seems to match:
 
---m5HNjMGSgJ9Rmrrn--
+        if (sector_start <= num_sectors / 2)
+		sr_bp = __ilog2_u32(num_sectors);
+	else
+		sr_bp = fls(num_sectors - 1 - sector_start) + 1;
+
+> >>>> +
+> >>>> +             if (sr_bp < 0) {
+> >>>
+> >>> sr_bp is unsigned, so this is never true.
+> >>>
+> Ok.  I will change to int type.
+
+Are there ever negative values?
+
+> >>>> +static int altera_epcq_probe_config_dt(struct platform_device *pdev,
+> >>>> +                                    struct device_node *np,
+> >>>> +                                    struct altera_epcq_plat_data *pdata)
+> >>>> +{
+> >>>> +     struct device_node *pp = NULL;
+> >>>> +     struct resource *epcq_res;
+> >>>> +     int i = 0;
+> >>>> +     u32 id;
+...
+> >>>> +             pdata->np[i] = pp;
+> >>>> +
+> >>>> +             /* Read bank id from DT */
+> >>>> +             if (of_get_property(pp, "reg", &id))
+
+I just realized; you're not using this correctly. of_get_property()
+returns the *length* in the third parameter, so you're not actually
+saving the bank ID here. You probably want of_property_read_u32()
+instead.
+
+> >>>
+> >>> Is this property optional? Your DT binding doc doesn't make it clear,
+> >>> but it seems like a property which would be wise to require (i.e., not
+> >>> optional).
+
+^^^ so there should be a failure case, where you return failure if the
+property is missing.
+
+> >>>> +                     pdata->board_flash_info[i].bank = id;
+> >>>> +             i++;
+> >>>> +     }
+> >>>> +     pdata->num_flashes = i;
+> >>>> +     return 0;
+> >>>> +}
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
