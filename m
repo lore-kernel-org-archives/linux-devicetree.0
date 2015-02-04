@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 2/5] ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
-Date: Wed,  4 Feb 2015 15:15:12 +0100
-Message-ID: <1423059315-28519-3-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 5/5] ARM: shmobile: r8a7740: Add L1 cache information to CPU node
+Date: Wed,  4 Feb 2015 15:15:15 +0100
+Message-ID: <1423059315-28519-6-git-send-email-geert+renesas@glider.be>
 References: <1423059315-28519-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1423059315-28519-1-git-send-email-geert+renesas@glider.be>
@@ -10,41 +10,40 @@ To: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.co
 Cc: Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Migrate the generic r8a7740 platform from calling l2x0_of_init() to the
-generic l2c OF initialization.
+Describe the L1 cache in the CPU node:
+  - L1 instruction cache: 32 KiB (8 KiB x 4 ways),
+  - L1 data cache: 32 KiB (8 KiB x 4 ways).
+
+Add a link to the L2 cache.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-v2
-  - Keep only {,~}L2C_AUX_CTRL_SHARED_OVERRIDE
+v2:
+  - New.
 ---
- arch/arm/mach-shmobile/setup-r8a7740.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/r8a7740.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/mach-shmobile/setup-r8a7740.c b/arch/arm/mach-shmobile/setup-r8a7740.c
-index d191cf4197313482..3ebd4dfc8e853a9b 100644
---- a/arch/arm/mach-shmobile/setup-r8a7740.c
-+++ b/arch/arm/mach-shmobile/setup-r8a7740.c
-@@ -835,10 +835,6 @@ static void __init r8a7740_generic_init(void)
- {
- 	r8a7740_meram_workaround();
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index c84a99931e30304c..81c26cf63ba0e78d 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -26,6 +26,15 @@
+ 			reg = <0x0>;
+ 			clock-frequency = <800000000>;
+ 			power-domains = <&pd_a3sm>;
++			i-cache-size = <0x8000>;
++			i-cache-sets = <256>;
++			i-cache-block-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <256>;
++			d-cache-block-size = <32>;
++			d-cache-line-size = <32>;
++			next-level-cache = <&L2>;
+ 		};
+ 	};
  
--#ifdef CONFIG_CACHE_L2X0
--	/* Shared attribute override enable, 32K*8way */
--	l2x0_init(IOMEM(0xf0002000), 0x00400000, 0xc20f0fff);
--#endif
- 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
- }
- 
-@@ -855,6 +851,8 @@ static const char *r8a7740_boards_compat_dt[] __initdata = {
- };
- 
- DT_MACHINE_START(R8A7740_DT, "Generic R8A7740 (Flattened Device Tree)")
-+	.l2c_aux_val	= L2C_AUX_CTRL_SHARED_OVERRIDE,
-+	.l2c_aux_mask	= ~L2C_AUX_CTRL_SHARED_OVERRIDE,
- 	.map_io		= r8a7740_map_io,
- 	.init_early	= shmobile_init_delay,
- 	.init_irq	= r8a7740_init_irq_of,
 -- 
 1.9.1
 
