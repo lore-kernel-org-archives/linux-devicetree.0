@@ -1,59 +1,91 @@
-From: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v5 0/3] dmaengine: APM X-Gene SoC DMA engine driver support
-Date: Wed, 4 Feb 2015 15:08:31 +0530
-Message-ID: <CAFd313zotqiG7rVDVthwRp=XiCOcgsRwQSmwpXyb8coSKnZYFg@mail.gmail.com>
-References: <1422968107-23125-1-git-send-email-rsahu@apm.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [RFC/PATCH] pinctrl: sh-pfc: Accept standard function, pins and groups properties
+Date: Wed, 04 Feb 2015 11:53:34 +0200
+Message-ID: <12938873.nmb8Ng8mNb@avalon>
+References: <CACRpkda4SBof0EaZVWtEYaeb6j_BGAVj39kje+mBz90eB3qAwQ@mail.gmail.com> <1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CACRpkda6H7hbgXhmSbgtwOC_8PbHnES5syp-YEp1+V6s5Ym6Cw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422968107-23125-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <CACRpkda6H7hbgXhmSbgtwOC_8PbHnES5syp-YEp1+V6s5Ym6Cw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niso-UNjuZkX4dYU@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Hi Linus,
 
-Can you please review this patch set.
+On Wednesday 04 February 2015 09:40:48 Linus Walleij wrote:
+> On Tue, Jan 27, 2015 at 9:31 PM, Laurent Pinchart wrote:
+> > The "function", "pins" and "groups" pinmux and pinctrl properties have
+> > been standardized. Support them in addition to the custom "renesas,*"
+> > properties. New-style and old-style properties can't be mixed in DT.
+> > 
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> 
+> (...)
+> 
+> >> Would be nice if the PFC driver could be augmented to also accept the
+> >> now standard bindings "groups" and "function" simply :) we're adding
+> >> parse functions for those to the core.
+> > 
+> > Something like this ?
+> 
+> Yes :)
+> 
+> > Please note two differences between the Renesas PFC bindings and the
+> > standard bindings:
+> > 
+> > - The standard bindings state that a pinctrl node must contain either a
+> >   "pins" property or a "groups" property, while the Renesas bindings
+> >   allows for both to coexist in the same node.
+> 
+> Sascha also says this makes sense for him so I guess I'm getting a bit
+> soft on the issue.
+> 
+> > - The standard bindings don't allow a pinmux node to contain a "pins"
+> >   property, while the Renesas bindings do.
+> 
+> Does that mean "pins" affect the muxing or that "pins" is about some per-pin
+> config shoveled into the same node?
+> 
+> The former is not OK, the latter is.
 
+It means "pins" affect the muxing. The sh-pfc driver supports both muxing 
+groups and muxing individual pins.
 
-Thanks,
-with regards,
-Ram
+> >                 mmcif_pins: mmcif {
+> >                 
+> >                         mux {
+> > -                               renesas,groups = "mmc0_data8_0",
+> > "mmc0_ctrl_0";
+> > -                               renesas,function = "mmc0";
+> > +                               groups = "mmc0_data8_0", "mmc0_ctrl_0";
+> > +                               function = "mmc0";
+> >                         };
+> 
+> So that looks just very nice.
+> 
+> >                         cfg {
+> > -                               renesas,groups = "mmc0_data8_0";
+> > -                               renesas,pins = "PORT279";
+> > +                               groups = "mmc0_data8_0";
+> > +                               pins = "PORT279";
+> >                                 bias-pull-up;
+> 
+> And here I can't see the use of "groups" in this node since it
+> doesn't match a function. It's a bit ambiguous what "groups"
+> mean when you run into it like this.
 
+It means that the bias-pull-up configuration is applied to all pins of the 
+"mmc0_data8_0" group, as well as to pin 279.
 
-On Tue, Feb 3, 2015 at 6:25 PM, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org> wrote:
-> This patch set implements the APM X-Gene SoC DMA driver
-> support to offload the DMA operations such as memory copy(memcpy),
-> scatter gathering.
->
-> v5 changes:
->         1. Minor changes in coding style.
->         2. Added DMA_CTRL_ACK flag initialization
-> v4 changes:
->         1. Fixed dma-ranges property on DTS.
->
-> Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-> ---
->
-> Rameshwar Prasad Sahu (3):
->   dmaengine: Add support for APM X-Gene SoC DMA engine driver
->   arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
->   Documentation: dma: Add APM X-Gene SoC DMA engine driver documentation
->
->  .../devicetree/bindings/dma/apm-xgene-dma.txt      |   49 +
->  arch/arm64/boot/dts/apm/apm-storm.dtsi             |   26 +
->  drivers/dma/Kconfig                                |    8 +
->  drivers/dma/Makefile                               |    1 +
->  drivers/dma/xgene-dma.c                            | 1597 ++++++++++++++++++++
->  5 files changed, 1681 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
->  create mode 100755 drivers/dma/xgene-dma.c
->
-> --
-> 1.8.2.1
->
+-- 
+Regards,
+
+Laurent Pinchart
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
