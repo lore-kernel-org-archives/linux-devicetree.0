@@ -1,116 +1,82 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: shmobile: alt dts: Drop console= bootargs parameter
-Date: Thu, 05 Feb 2015 01:43:01 +0300
-Message-ID: <54D2A075.3020904@cogentembedded.com>
-References: <1415075018-27529-1-git-send-email-horms+renesas@verge.net.au> <54CBFC63.4070808@cogentembedded.com> <20150131041731.GA7605@verge.net.au> <54CFF5F1.2040007@cogentembedded.com> <20150203004146.GB17629@verge.net.au>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: silk: initial device tree
+Date: Thu, 05 Feb 2015 01:46:59 +0300
+Message-ID: <54D2A163.3010207@cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com> <1608366.HtA9yBksdO@wasted.cogentembedded.com> <20150131042143.GB7605@verge.net.au> <54CD1E79.6090700@cogentembedded.com> <20150202001910.GA29383@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150203004146.GB17629-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150202001910.GA29383@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 02/02/2015 03:19 AM, Simon Horman wrote:
 
-On 02/03/2015 03:41 AM, Simon Horman wrote:
+>>>> Add the initial device tree for the R8A7794 SoC based SILK low cost board.
+>>>> SCIF2 serial port support is included, so that the serial console can work.
 
->>>>> Alt is booted from DT, so chosen/stdout-path is
->>>>> always used, and we can drop the "console=" parameter from chosen/bootargs.
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
->>>>> This change has a side-effect of changing the console speed from 38400
->>>>> to 115200. This is intentional as 115200 is consistently used on
->>>>> all other shmobile boards.
+>>>> ---
+>>>> This patch is against the 'renesas-devel-20150129-v3.19-rc6' tag of Simon
+>>>> Horman's 'renesas.git' repo.
 
->>>>     I'd say it's not very practical to change the console's baud rate from
->>>> U-Boot's default
+>>>>   arch/arm/boot/dts/Makefile         |    1
+>>>>   arch/arm/boot/dts/r8a7794-silk.dts |   41 +++++++++++++++++++++++++++++++++++++
+>>>>   2 files changed, 42 insertions(+)
 
->>> It is consistent with the handling of all other boards with
->>> renesas SoCs that are present in mainline.
+>> [...]
+>>>> Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
+>>>> ===================================================================
+>>>> --- /dev/null
+>>>> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+>>>> @@ -0,0 +1,41 @@
+>>>> +/*
+>>>> + * Device Tree Source for the SILK board
+>>>> + *
+>>>> + * Copyright (C) 2014 Renesas Electronics Corporation
+>>>> + * Copyright (C) 2014-2015 Renesas Solutions Corp.
+>>>> + * Copyright (C) 2014-2015 Cogent Embedded, Inc.
+>>>> + *
+>>>> + * This file is licensed under the terms of the GNU General Public License
+>>>> + * version 2.  This program is licensed "as is" without any warranty of any
+>>>> + * kind, whether express or implied.
+>>>> + */
+>>>> +
+>>>> +/dts-v1/;
+>>>> +#include "r8a7794.dtsi"
+>>>> +
+>>>> +/ {
+>>>> +	model = "SILK";
+>>>> +	compatible = "renesas,silk", "renesas,r8a7794";
+>>>> +
+>>>> +	aliases {
+>>>> +		serial0 = &scif2;
+>>>> +	};
+>>>> +
+>>>> +	chosen {
+>>>> +		bootargs = "console=ttySC0,38400 ignore_loglevel";
 
->>     Well, not quite: Henninger/Porter is still using 38400.
+>>> Please remove console= for consistency with other boards
+>>> based on Renesas SoCs.
 
->  From my point of view that is an oversight which I would have
-> resolved had I ever obtained access to the hardware.
+>>     I can't, there will be no console at all.
 
-    I'll look into that when I have time.
+> Its not clear to me why that should be the case when you also have:
 
->>>> (AFAIR changing baud rate in U-Boot didn't work)...
+> 		stdout-path = &scif2;
 
->>     That was a recollection from the other board though, I haven't yet tried
->> to do it on the SILK board (and I'm unable to currently as the power supply
->> seems dead).
+> Is this a baud issue?
 
->>> Perhaps that relates to the version of built of uboot.
->>> On the board I have access to I see:
+    Don't think so, I would have seen at least some garbage on the console.
+There was nothing. I'm still not sure what the problem was...
 
->>> ver=U-Boot 2013.01.01-g5df9446 (Oct 01 2014 - 14:59:23)
+> If so is it possible to set uboot to 115200 bps?
 
->> U-Boot 2013.01.01 (Oct 17 2014 - 20:59:18)
-
-> It looks like my version has some extra patches (the g5df9446 bit).
-> But I could be reading things wrong.
-
->>> And the following setting altered the baud rate of u-boot (IIRC).
-
->>> baudrate=115200
-
->>     I was going to try that but the board just didn't power up.
-
-    I have switched to another board now (with newer U-Boot flashed),
-and I was able to change the baud rate in U-Boot. However, SPL and U-Boot
-still start at 38400 and now I'm having garbage instead of the version and 
-hardware info. :-(
-
->>>>> Cc: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>>> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
->>>>> ---
->>>>>   arch/arm/boot/dts/r8a7794-alt.dts | 2 +-
->>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
-
->>>>> diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
->>>>> index 8aec512..f2cf757 100644
->>>>> --- a/arch/arm/boot/dts/r8a7794-alt.dts
->>>>> +++ b/arch/arm/boot/dts/r8a7794-alt.dts
->>>>> @@ -20,7 +20,7 @@
->>>>>   	};
->>>>>
->>>>>   	chosen {
->>>>> -		bootargs = "console=ttySC0,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp";
->>>>> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
-
->>>>     Hm, does this even work as intended? I've tried to boot another R8A7794
->>>> based board and I couldn't get any output with alike command line. Booting
->>>> with 'earlyprintk=serial' has shown that tty0 was enabled as a console which
->>>> is not what we wanted.
-
-    The kernel console started working automagically for me at 115200 on the 
-new board.
-
->>> If you are backporting this change then I believe it has some dependencies
->>> that I can follow up on if it is useful to you.
-
->>     Contrariwise, I'm forward-porting.
-
->>> If you are using mainline (e.g. next or renesas-next) then yes,
->>> it works. I have tested it numerous times since the patch was merged.
-
->>     I'm traditionally using the 'renesas-devel-*' tags.
-
-> If you are using 'renesas-devel-*' tags (and forward porting) then
-> you should be in good shape. But if you would like me to verify a particular
-> tag I'm happy to do so. It is not unheard of for different instances of
-> the same board behave in different ways.
-
-    Thank you, looks like there's no need now.
+    Possible with the new board.
 
 WBR, Sergei
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
