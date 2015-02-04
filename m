@@ -1,48 +1,38 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: EXPORT_SYMBOL_GPL of_property_read_u64_array
-Date: Tue, 3 Feb 2015 20:34:28 -0600
-Message-ID: <CAL_JsqLSfL9HXbd=6rqB0WwSbWXmFbzgQHtx8EzSxs5o11=kSg@mail.gmail.com>
-References: <1422354395-29473-1-git-send-email-sakari.ailus@iki.fi>
+Subject: Re: [PATCH v2 0/3] Documentation: DT bindings: update DT binding docs
+ with Tegra chips
+Date: Tue, 3 Feb 2015 20:36:32 -0600
+Message-ID: <CAL_Jsq+rq1Apna4P1YkcsPYhz4dnd7mKHvWXcb663+XYFGV1uQ@mail.gmail.com>
+References: <20150130221104.4761.50643.stgit@dusk.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422354395-29473-1-git-send-email-sakari.ailus-X3B1VOXEql0@public.gmane.org>
+In-Reply-To: <20150130221104.4761.50643.stgit-orwA252wQtA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 27, 2015 at 4:26 AM, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> wrote:
-> Make of_property_read_u64_array() available for modules as well. This was
-> missing from the patch which originally added the function.
+On Fri, Jan 30, 2015 at 4:11 PM, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org> wrote:
 >
-> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> Update some of the DT binding documentation text files, per Mark's
+> comments at:
+>
+> http://marc.info/?l=linux-tegra&m=142201349727836&w=2
+>
+> The primary goal with this series is to avoid checkpatch.pl warnings
+> and align to the policy that Mark described.  This series also updates
+> Documentation/devicetree/bindings/submitting-patches.txt to formally
+> document this policy.
+>
+> These patches apply on next-20150123.
+>
+> This second version incorporates some revisions based on feedback from
+> Rob Herring.
 
-Applied. Thanks.
+Looks good. I've applied the series.
 
-> ---
->  drivers/of/base.c |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 36536b6..0a8aeb8 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1303,6 +1303,7 @@ int of_property_read_u64_array(const struct device_node *np,
->         }
->         return 0;
->  }
-> +EXPORT_SYMBOL_GPL(of_property_read_u64_array);
->
->  /**
->   * of_property_read_string - Find and read a string from a property
-> --
-> 1.7.10.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
