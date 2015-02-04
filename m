@@ -1,48 +1,56 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/5] ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
-Date: Wed, 4 Feb 2015 18:04:57 +0100
-Message-ID: <CAMuHMdU-GahSaQj6v2Yhmxsj8gmt1sbwrPfqm=ydMCc=uDcenA@mail.gmail.com>
-References: <1423059315-28519-1-git-send-email-geert+renesas@glider.be>
-	<7800327.b3sMA1XGtZ@wuerfel>
-	<CAMuHMdVi3kq2p30cNFYW2WCM-OvMSFC1W0r5nYkaN5Np=zW4_Q@mail.gmail.com>
-	<3598552.qKIyokxIlF@wuerfel>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH_V2 04/34] MIPS: jz4740: probe CPU interrupt controller
+ via DT
+Date: Wed, 04 Feb 2015 20:05:18 +0300
+Message-ID: <54D2514E.3020409@cogentembedded.com>
+References: <1423063323-19419-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1423063323-19419-5-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <3598552.qKIyokxIlF@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Russell King <rmk@arm.linux.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1423063323-19419-5-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, linux-mips@linux-mips.org
+Cc: devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, mturquette@linaro.org, sboyd@codeaurora.org, ralf@linux-mips.org, jslaby@suse.cz, tglx@linutronix.de, jason@lakedaemon.net, lars@metafoo.de, paul.burton@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hello.
 
-On Wed, Feb 4, 2015 at 5:36 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 04 February 2015 15:43:43 Geert Uytterhoeven wrote:
->>
->> Indeed. Note that I only try to preserve the register value before and after
->> migrating to generic l2c OF initialization. I did read (part of) the pl310
->> documentation, but it's still not clear to me if we really need
->> L2C_AUX_CTRL_SHARED_OVERRIDE. Perhaps this was just copied from
->> somewhere else without much afterthought?
->
-> Have you checked what the hardware/bootloader actually sets in that bit?
+On 02/04/2015 06:21 PM, Zubair Lutfullah Kakakhel wrote:
 
-Yes, it boots with 0x02040000, i.e. L2C_AUX_CTRL_SHARED_OVERRIDE
-(bit 22) is not set.
+> From: Paul Burton <paul.burton@imgtec.com>
 
-After the l2c driver is finished with it, it contains 0x46440001.
+> Use the generic irqchip_init function to probe irqchip drivers using DT,
+> and add the appropriate node to the jz4740 devicetree in place of the
+> call to mips_cpu_irq_init.
 
-> Maybe you can remove that override completely and the initial Linux
-> default was just set to the same that is already set on powerup?
+> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> ---
+>   arch/mips/boot/dts/jz4740.dtsi | 7 +++++++
+>   arch/mips/jz4740/irq.c         | 4 ++--
+>   2 files changed, 9 insertions(+), 2 deletions(-)
 
-Gr{oetje,eeting}s,
+> diff --git a/arch/mips/boot/dts/jz4740.dtsi b/arch/mips/boot/dts/jz4740.dtsi
+> index c538691f..2d64765c 100644
+> --- a/arch/mips/boot/dts/jz4740.dtsi
+> +++ b/arch/mips/boot/dts/jz4740.dtsi
+> @@ -2,4 +2,11 @@
+>   	#address-cells = <1>;
+>   	#size-cells = <1>;
+>   	compatible = "ingenic,jz4740";
+> +
+> +	cpuintc: cpuintc@0 {
 
-                        Geert
+    Please name it "interrupt-controller". And why there's <unit-address> if 
+there's no "reg" prop?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> +		#address-cells = <0>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-controller;
+> +		compatible = "mti,cpu-interrupt-controller";
+> +	};
+>   };
+[...]
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+WBR, Sergei
