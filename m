@@ -1,29 +1,29 @@
-From: Nga Chi <ngachi86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Viet Nga Dao <vndao@altera.com>
 Subject: Re: [PATCH mtd] mtd:devices: Add Altera EPCQ Driver
-Date: Thu, 5 Feb 2015 12:13:35 +0800
-Message-ID: <CAN1oZWw=vvAy07VUGoJg8VHeZ7J7ESwK_-UE-Vox5xMy6oijmg@mail.gmail.com>
+Date: Thu, 5 Feb 2015 12:15:00 +0800
+Message-ID: <CAN1oZWxxg-q9VACZkqiPxXGi_SO8HyA0YXqDVPy7zypaQVmX3g@mail.gmail.com>
 References: <CAN1oZWxB5N=YMQcsJppZgp7TXodcR4tKZM+LNFXS7PSx3F-Yag@mail.gmail.com>
 	<CAN1oZWzeev-1uE7gxPnJA=L4Th65CRj8C_LQ7hMJLPHGssDjNQ@mail.gmail.com>
 	<CAN1oZWzOfUrYSBEx=M0p0Dz4HHcaz-FtYOF5ON12oeG_WHPa-g@mail.gmail.com>
 	<20150204203710.GC4434@norris-Latitude-E6410>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20150204203710.GC4434@norris-Latitude-E6410>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Viet Nga Dao <vndao@altera.com>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Feb 5, 2015 at 4:37 AM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+<computersforpeace@gmail.com> wrote:
 > On Tue, Jan 27, 2015 at 02:53:59PM +0800, Viet Nga Dao wrote:
->> On Tue, Jan 20, 2015 at 10:05 AM, Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org> wrote:
->> > On Thu, Jan 15, 2015 at 5:27 PM, Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org> wrote:
+>> On Tue, Jan 20, 2015 at 10:05 AM, Viet Nga Dao <vndao@altera.com> wrote:
+>> > On Thu, Jan 15, 2015 at 5:27 PM, Viet Nga Dao <vndao@altera.com> wrote:
 >> >> On Tue, Jan 13, 2015 at 11:33 AM, Brian Norris
->> >> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> >>> On Thu, Dec 18, 2014 at 12:23:16AM -0800, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
->> >>>> From: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>> >> <computersforpeace@gmail.com> wrote:
+>> >>> On Thu, Dec 18, 2014 at 12:23:16AM -0800, vndao@altera.com wrote:
+>> >>>> From: Viet Nga Dao <vndao@altera.com>
 >
 >> >> That is why if rewrite the drivers to follow spi-nor structure, it
 >> >> will require extra decoding works for the only few used opcodes.
@@ -49,7 +49,9 @@ On Thu, Feb 5, 2015 at 4:37 AM, Brian Norris
 > Some of the existing code should move into their own spi_nor_st_lock() /
 > spi_nor_st_unlock() functions.
 >
-When this will be implemented? For this time being, what i should do then?
+
+When this will be implemented? As for time being, what should i do for
+these 2 functions?
 
 >> >>>> diff --git a/Documentation/devicetree/bindings/mtd/altera_epcq.txt b/Documentation/devicetree/bindings/mtd/altera_epcq.txt
 >> >>>> new file mode 100644
@@ -172,12 +174,3 @@ When this will be implemented? For this time being, what i should do then?
 >> >>>> +}
 >
 > Brian
-
-
-
--- 
-Nga
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
