@@ -1,45 +1,120 @@
-Return-Path: <jchandra@broadcom.com>
-Date: Mon, 9 Feb 2015 21:45:50 +0530
-From: Jayachandran C. <jchandra@broadcom.com>
-Subject: Re: [PATCH 2/2] i2c: Support for Netlogic XLP9XX/5XX I2C controller.
-Message-ID: <20150209161549.GA2787@jayachandranc.netlogicmicro.com>
-References: <1421393020-18807-1-git-send-email-jchandra@broadcom.com>
- <1421393020-18807-2-git-send-email-jchandra@broadcom.com>
- <20150209152805.GC8024@katana>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20150209152805.GC8024@katana>
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Kumar Gala  <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Subhendu Sekhar Behera" <sbehera@broadcom.com>, Ray Jui <rjui@broadcom.com>
+In-Reply-To: <20150205045910.GA4234@jack-ThinkPad-T520>
+References: <1421994515-3070-1-git-send-email-jack.yoo@skyworksinc.com>
+	<1421994515-3070-5-git-send-email-jack.yoo@skyworksinc.com>
+	<CAL_JsqJHvpmBY4RDBWFA3RqQ9h_Yf25iSFxQe9oTNdSPybi87g@mail.gmail.com>
+	<20150205045910.GA4234@jack-ThinkPad-T520>
+Date: Thu, 5 Feb 2015 07:22:55 -0600
+Message-ID: <CAL_JsqJ+2F9pAuUPR46F7B+YypaG_jbsinSpXOWurqb3Ya2YFg@mail.gmail.com>
+Subject: Re: [PATCH v10 4/6] devicetree: Add new SKY81452 backlight binding
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Kosina <trivial@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jonathan Cameron <jic23@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, ktsai@capellamicro.com, hs@denx.de, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>, matti.vaittinen@nsn.com, Mark Brown <broonie@kernel.org>, Jason Cooper <jason@lakedaemon.net>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Shawn Guo <shawn.guo@freescale.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Andrew Lunn <andrew@lunn.ch>, Antony Pavlov <antonynpavlov@gmail.com>, Hayato Suzuki <hytszk@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, jack.yoo@skyworksinc.com, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Feb 09, 2015 at 04:28:06PM +0100, Wolfram Sang wrote:
-> On Fri, Jan 16, 2015 at 12:53:40PM +0530, Jayachandran C wrote:
-> > From: Subhendu Sekhar Behera <sbehera@broadcom.com>
-> > 
-> > Add an I2C bus driver i2c-xlp9xx.c to support the I2C block in the
-> > XLP9xx/XLP5xx MIPS SoC. Update Kconfig and Makefile to add the
-> > CONFIG_I2C_XLP9XX option.
-> > 
-> > Also add document Documentation/devicetree/bindings/i2c/i2c-xlp9xx.txt
-> > for DT compatible string "netlogic,xlp9xx-i2c".
-> > 
-> > Signed-off-by: Subhendu Sekhar Behera <sbehera@broadcom.com>
-> > Signed-off-by: Jayachandran C <jchandra@broadcom.com>
-> 
-> I would like to request some in-house teaching here. Ray Jui (also from
-> Broadcom and on CC now) just got his i2c driver applied. He should be
-> able to help you and spot a few issues which he had to solve just
-> recently, too. That would save me some bandwidth which would go into
-> other I2C maintenance. OK, guys?
-
-Given that we have already have i2c/busses/i2c-xlr.c upstream (and updates
-to i2c-ocores.c for our earlier chip), I was hoping that we have got things
-right this time.
-
-Anyway, I will forward it internally to Ray for review, and if necessary
-submit another patch.
-
-Thanks,
-JC.
+On Wed, Feb 4, 2015 at 10:59 PM, Gyungoh Yoo <gyungoh@gmail.com> wrote:
+> On Wed, Feb 04, 2015 at 09:11:22AM -0600, Rob Herring wrote:
+>> On Fri, Jan 23, 2015 at 12:28 AM,  <gyungoh@gmail.com> wrote:
+>> > From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+>> >
+>> > Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+>> > Acked-by: Bryan Wu <cooloney@gmail.com>
+>> > ---
+>> > Changes v10:
+>> > Nothing
+>> >
+>> > Changes v9:
+>> > Nothing
+>> >
+>> > Changes v8:
+>> > Renamed property names for backlight with vendor prefix
+>> > Modified gpio-enable property to generic property for GPIO
+>> > Made up the example for backlight DT
+>> >
+>> > Changes v7:
+>> > Nothing
+>> >
+>> > Changes v6:
+>> > Nothing
+>> >
+>> > Changes v5:
+>> > Nothing
+>> >
+>> > Changes v4:
+>> > Nothing
+>> >
+>> > Changes v3:
+>> > Nothing
+>> >
+>> > Changes v2:
+>> > Added reg attribute for I2C slave address
+>>
+>> You did? Where is it?
+>
+> It was just changes on version 2.
+> Since that version, the patch series was separted.
+>
+>>
+>> >  .../video/backlight/sky81452-backlight.txt         | 29 ++++++++++++++++++++++
+>> >  1 file changed, 29 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+>> > new file mode 100644
+>> > index 0000000..8daebf5
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+>> > @@ -0,0 +1,29 @@
+>> > +SKY81452-backlight bindings
+>> > +
+>> > +Required properties:
+>> > +- compatible           : Must be "skyworks,sky81452-backlight"
+>> > +
+>> > +Optional properties:
+>> > +- name                 : Name of backlight device. Default is 'lcd-backlight'.
+>> > +- gpios                        : GPIO to use to EN pin.
+>> > +                       See Documentation/devicetree/bindings/gpio/gpio.txt
+>> > +- skyworks,en-channels : Enable mask for current sink channel 1 to 6.
+>>
+>> Does led-sources property being added in 3.20 work for this?
+>
+> I think so. I will modify it.
+>
+>>
+>> > +- skyworks,ignore-pwm  : Ignore both PWM input
+>> > +- skyworks,dpwm-mode   : Enable DPWM dimming mode, otherwise Analog dimming.
+>> > +- skyworks,phase-shift : Enable phase shift mode
+>> > +- skyworks,ovp-level   : Over-voltage protection level.
+>> > +                       Should be between 14 or 28V.
+>>
+>> Please append units (-volt)
+>
+> I will append it and resubmit the patch.
+>
+> Thanks.
+>
+>>
+>> > +- skyworks,short-detection-threshold   : It should be one of 4, 5, 6 and 7V.
+>>
+>> Please append units (-volt)
+>>
+>> > +- skyworks,current-limit       : It should be 2300mA or 2750mA.
+>>
+>> Please append units (-mA)
+>>
+>> > +
+>> > +Example:
+>> > +
+>> > +       backlight {
+>> > +               compatible = "skyworks,sky81452-backlight";
+>> > +               name = "pwm-backlight";
+>> > +               skyworks,en-channels = <0x3f>;
+>> > +               skyworks,ignore-pwm;
+>> > +               skyworks,phase-shift;
+>> > +               skyworks,ovp-level = <20>;
+>> > +               skyworks,current-limit = <2300>;
+>> > +       };
+>> > --
+>> > 1.9.1
+>> >
