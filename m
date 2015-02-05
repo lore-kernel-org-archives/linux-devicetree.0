@@ -1,115 +1,81 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] PCI: get DMA configuration from parent device
-Date: Thu, 5 Feb 2015 16:59:03 -0500
-Message-ID: <54D3E7A7.1030208@ti.com>
-References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
+Date: Thu, 05 Feb 2015 23:13:58 +0100
+Message-ID: <54D3EB26.9020909@gmail.com>
+References: <E1YH5bU-0005mG-3L@bombadil.infradead.org> <54CB5267.5060004@gmail.com> <20150130113118.5523ed68@armhf> <54CB6440.1010002@gmail.com> <20150130124144.501cf81d@armhf> <54CB732F.7010409@gmail.com> <20150130133913.083d1ade@armhf> <54CB7E33.3080909@gmail.com> <54CE354F.5090106@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1423173179-10227-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54CE354F.5090106@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel Dobato <dobatog@gmail.com>, Jean-Francois Moine <moinejf@free.fr>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd & Bjorn,
+On 01.02.2015 15:16, Gabriel Dobato wrote:
+>> I'd be happy to take over, but I admit that my current lack of spare
+>> time would only allow me to support Gabriel and you.
+>>
+>> Let's wait for Gabriel's response on how he can help improving
+>> Dove mainline with his cm-a510 and baseboard.
+>
+> First of all, I would like to give thanks all people like you for all
+> your help and support. I really appreciate it.
+>
+> DT is new for me, I have never worked using this kind of hardware
+> description, so I am involving in many issues due to my lack of skills
+> in this kind of structure.
+>
+> At this moment, I am focusing in the update of the version of the kernel
+> on the CM-A510 board (from 2.6 to 3.1x)in order to give more features to
+> the system, but as I said before, I have lots of problems.
+>
+> Thanks to the help and support of Jean-Francois Moine, I have achieved
+> to boot the kernel completely and to mount the rootfs via NFS. I have a
+> prompt, what has been a very big step for me.
 
-I believe this is ready to be merged so that it becomes available in 
-v3.20. Not sure which subsystem will pick this up. Could you respond?
+Gabriel,
 
-I am working on another patch to address the size based dma mask 
-calculation as suggested in this thread and don't want to delay merge of 
-this series because of that for reason I have mentioned below in the 
-cover letter. So if this looks good, please merge this to the 
-appropriate subsystem.
+great you can boot a recent kernel. I guess you had to quite heavily
+modify current dove-cm-a510.dts? Can you upload the one you use now
+to any pastebin and send the link?
 
-Thanks a lot for the review and comments.
+>> Nope. One dove.dtsi, one dove-cm-a510.dtsi, and one baseboard.dts
+>> including dove-cm-a510.dtsi for every baseboard we stumble upon.
+>
+> In reference to the structure of .dts and .dtsi files, I agree with this
+> kind of structure, of course, nobody as you can consider it better. I
+> think the idea of make a dove-cm-a510.dtsi file and different
+> baseboards.dts depending of the peripherals used is great. But as I say,
+> maybe I am not the right person to decide it, Jean-Froncois Moine and
+> you have better criteria.So, whatever you decide I would very happy to help.
 
-Murali
+You didn't mention if you really use the sb-a510, i.e. the Compulab
+reference baseboard. Is it what you are using with your cm-a510?
 
-On 02/05/2015 04:52 PM, Murali Karicheri wrote:
-> This patch add an important capability to PCI driver on Keystone. I hope to
-> have this merged to the upstream branch so that it is available for v3.20.
-> Also would like thank everyone for the contribution.
->
-> PCI devices on Keystone doesn't have correct dma_pfn_offset set. This patch
-> add capability to set the dma configuration such as dma-mask, dma_pfn_offset,
-> and dma ops etc using the information from DT. The prior RFCs and discussions
-> are available at [1] and [2] below.
->
-> [2] : https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg790244.html
-> [1] : http://www.gossamer-threads.com/lists/linux/kernel/2024591
->
-> Change history:
-> 	v6 - Rebased to v3.19-v7
-> 	   - Addressed some minor comments about node name and DT size validation.
-> 	   - Pulled out 8/8 of v5 and plan to send a patch for enhancing
-> 	     of_dma_configure() to use size to calculate dma mask.
-> 	   - Added Acks from reviewers.
-> 	v5 - moved the dma_mask update in device from ARM specific API to
-> 	     of_dma_configure to allow this across other architecture as well
-> 	   - improved sanity check for DT dma-range size in of_dma_configure()
-> 	   - moved API to get parent bridge device to PCI (host-bridge.c)
-> 	v4 - moved size adjustments in of_iommu_configure() to a separate patch
-> 	   - consistent node name comment from Rob
-> 	   - patch 6 added for dma_mask adjustment and iommu mapping size
-> 	     limiting.
-> 	v3 - addressed comments to re-use of_dma_configure() for PCI
-> 	   - To help re-use, change of_iommu_configure() function argument
-> 		- Move of_dma_configure to of/device.c
-> 		- Limit the of_iommu_configure to non pci devices
-> 	v2 - update size to coherent_dma_mask + 1 if dma-range info is missing
-> 	   - also check the np for null.
-> 	v1 - updates based on the comments against initial RFC.
-> 	   - Added a helper function to get the OF node of the parent
-> 	   - Added an API in of_pci.c to update DMA configuration of the pci
-> 	     device.
->
-> Cc: Joerg Roedel<joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Cc: Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Cc: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Suravee Suthikulpanit<Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->
-> Acked-by: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
->
-> Murali Karicheri (7):
->    of: iommu: add ptr to OF node arg to of_iommu_configure()
->    of: move of_dma_configure() to device.c to help re-use
->    of: fix size when dma-range is not used
->    PCI: add helper functions pci_get[put]_host_bridge_device()
->    of/pci: add of_pci_dma_configure() update dma configuration
->    PCI: update dma configuration from DT
->    arm: dma-mapping: limit iommu mapping size
->
->   arch/arm/mm/dma-mapping.c |    7 +++++
->   drivers/iommu/of_iommu.c  |   10 ++++--
->   drivers/of/device.c       |   74 +++++++++++++++++++++++++++++++++++++++++++++
->   drivers/of/of_pci.c       |   19 ++++++++++++
->   drivers/of/platform.c     |   58 ++---------------------------------
->   drivers/pci/host-bridge.c |   14 +++++++++
->   drivers/pci/probe.c       |    2 ++
->   include/linux/of_device.h |    2 ++
->   include/linux/of_iommu.h  |    6 ++--
->   include/linux/of_pci.h    |    5 +++
->   include/linux/pci.h       |    3 ++
->   11 files changed, 140 insertions(+), 60 deletions(-)
->
+> At this moment, I am trying to configure the framebuffer, but as Moine
+> told me,it seems there is not video driver support for this board in
+> DT... :( .
 
+Not quite true. Video is made up of at least 4 different devices:
+Framebuffer, GPU, Decode engine, and usually DVI/HDMI transmitter or
+VGA.
 
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+We do have a driver for the framebuffer (armada_drm) and there is great
+work from Russell King and others on the GPU and Decode engine (IIRC).
+
+If you are using the sb-a510, I can see from the manual, that DVI
+transmitter is SIL164.. AFAIS there is a driver for it, that maybe
+needs some polishing. Nobody ever tested VGA, but it shouldn't be too
+hard to add support for it as it is directly supported by the
+framebuffer HW.
+
+One quite important driver at least for Dove is a clock source for
+video. Internal clock generators for video are way to limited with
+respect to frequencies to allow any useful resolution.
+
+I'll see if I can have a look at the dts stuff this weekend.. that
+way we'll have at least the basic done before moving to the other
+devices.
+
+Sebastian
