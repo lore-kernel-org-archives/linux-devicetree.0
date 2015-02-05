@@ -1,459 +1,291 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5] thermal: Add QPNP PMIC temperature alarm driver
-Date: Thu,  5 Feb 2015 19:12:56 +0200
-Message-ID: <1423156376-16041-1-git-send-email-iivanov@mm-sol.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] clk: Add common clock support for Mediatek MT8135
+ and MT8173.
+Date: Thu, 5 Feb 2015 18:24:54 +0100
+Message-ID: <CABuKBeJSH3WzG3QC=9OoPzXE6fd9W2U67V4c19NzWcPxWR7VDg@mail.gmail.com>
+References: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422594798-13375-1-git-send-email-henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the temperature alarm peripheral found inside
-Qualcomm plug-and-play (QPNP) PMIC chips. The temperature alarm
-peripheral outputs a pulse on an interrupt line whenever the
-thermal over temperature stage value changes.
+Hi Henry,
 
-Register a thermal sensor. The temperature reported by this thermal
-sensor device should reflect the actual PMIC die temperature if an
-ADC is present on the given PMIC. If no ADC is present, then the
-reported temperature should be estimated from the over temperature
-stage value.
+2015-01-30 6:13 GMT+01:00 Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> This patchset contains the initial common clock support for Mediatek SoCs.
+> Mediatek SoC's clock architecture comprises of various PLLs, dividers, muxes and clock gates.
+>
+> This patchset also contains a basic clock support for Mediatek MT8135 and MT8173.
+>
+> This driver is based on 3.19-rc1 + MT8135 and MT8173 basic support.
+>
+> Changes in v2:
+> - Re-ordered patchset. Fold include/dt-bindings and DT document in 1st patch.
+>
+> Changes in v3:
+> - Rebase to 3.19-rc1.
+> - Refine code. Remove unneed functions, debug logs and comments, and fine tune error logs.
+>
+> Changes in v4:
+> - Support MT8173 platform.
+> - Re-ordered patchset. driver/clk/Makefile in 2nd patch.
+> - Extract the common part definition(mtk_gate/mtk_pll/mtk_mux) from clk-mt8135.c/clk-mt8173.c to clk-mtk.c.
+> - Refine code. Rmove unnessacary debug information and unsed defines, add prefix "mtk_" for static functions.
+> - Remove flag CLK_IGNORE_UNUSED and set flag CLK_SET_RATE_PARENT on gate/mux/fixed-factor.
+> - Use spin_lock_irqsave(&clk_ops_lock, flags) instead of mtk_clk_lock.
+> - Example above include a node for the clock controller itself, followed by the i2c controller example above.
 
-Cc: David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
----
+You use pericfg and infracfg which will be used by other drivers as
+well. So please use syscon for this driver. As it is no longer a
+platform device it is present early in boot.
+The changes should look something like the patch beneath. Please
+beware that it does only show the general concept and may not even
+compile. I asked Sascha to implement the reset controller as part of
+the clk driver, as the registers addresses are mixed between both,
+clock and reset controller. Please coordinate with him to get them
+integrated (even as one series or as incremental series).
 
-Changes since v4:
+diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+index 76562ba..886a816 100644
+--- a/arch/arm/boot/dts/mt8135.dtsi
++++ b/arch/arm/boot/dts/mt8135.dtsi
+@@ -128,7 +128,7 @@
+         infracfg: infracfg@10001000 {
+             #address-cells = <1>;
+             #size-cells = <1>;
+-            compatible = "mediatek,mt8135-infracfg";
++            compatible = "mediatek,mt8135-infracfg", "syscon";
+             reg = <0 0x10001000 0 0x1000>;
+             #clock-cells = <1>;
+         };
+@@ -136,7 +136,7 @@
+         pericfg: pericfg@10003000 {
+             #address-cells = <1>;
+             #size-cells = <1>;
+-            compatible = "mediatek,mt8135-pericfg";
++            compatible = "mediatek,mt8135-pericfg", "syscon";
+             reg = <0 0x10003000 0 0x1000>;
+             #clock-cells = <1>;
+         };
+diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
+index f05507a..8af91d9 100644
+--- a/drivers/clk/mediatek/clk-gate.c
++++ b/drivers/clk/mediatek/clk-gate.c
+@@ -28,11 +28,15 @@ static int mtk_cg_bit_is_cleared(struct clk_hw *hw)
+     struct mtk_clk_gate *cg = to_clk_gate(hw);
+     u32 mask;
+     u32 val;
++    int ret;
 
-- Reorder IRQ platform get and IIO channel get, this
-  fixes error exit path.
+     mask = BIT(cg->bit);
+-    val = mask & readl(cg->sta_addr);
++    ret = regmap_read(cg->base, cg->sta_addr, &val);
 
-- Reorder IRQ request and sensor register calls, this
-  simplify error exit path.
+-    return val == 0;
++    if (ret < 0)
++        return ret;
++
++    return (val & mask) == 0;
+ }
 
-v4: https://lkml.org/lkml/2015/2/2/413
+ static int mtk_cg_bit_is_set(struct clk_hw *hw)
+@@ -40,25 +44,29 @@ static int mtk_cg_bit_is_set(struct clk_hw *hw)
+     struct mtk_clk_gate *cg = to_clk_gate(hw);
+     u32 mask;
+     u32 val;
++    int ret;
 
- .../bindings/thermal/qcom-spmi-temp-alarm.txt      |  57 ++++
- drivers/thermal/Kconfig                            |  11 +
- drivers/thermal/Makefile                           |   1 +
- drivers/thermal/qcom-spmi-temp-alarm.c             | 309 +++++++++++++++++++++
- 4 files changed, 378 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
- create mode 100644 drivers/thermal/qcom-spmi-temp-alarm.c
+     mask = BIT(cg->bit);
+-    val = mask & readl(cg->sta_addr);
++    ret = regmap_read(cg->base, cg->sta_addr, &val);
++
++    if (ret < 0)
++        return ret;
 
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
-new file mode 100644
-index 0000000..290ec06
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
-@@ -0,0 +1,57 @@
-+Qualcomm QPNP PMIC Temperature Alarm
-+
-+QPNP temperature alarm peripherals are found inside of Qualcomm PMIC chips
-+that utilize the Qualcomm SPMI implementation. These peripherals provide an
-+interrupt signal and status register to identify high PMIC die temperature.
-+
-+Required properties:
-+- compatible:      Should contain "qcom,spmi-temp-alarm".
-+- reg:             Specifies the SPMI address and length of the controller's
-+                   registers.
-+- interrupts:      PMIC temperature alarm interrupt.
-+- #thermal-sensor-cells: Should be 0. See thermal.txt for a description.
-+
-+Optional properties:
-+- io-channels:     Should contain IIO channel specifier for the ADC channel,
-+                   which report chip die temperature.
-+- io-channel-names: Should contain "thermal".
-+
-+Example:
-+
-+	pm8941_temp: thermal-alarm@2400 {
-+		compatible = "qcom,spmi-temp-alarm";
-+		reg = <0x2400 0x100>;
-+		interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
-+		#thermal-sensor-cells = <0>;
-+
-+		io-channels = <&pm8941_vadc VADC_DIE_TEMP>;
-+		io-channel-names = "thermal";
-+	};
-+
-+	thermal-zones {
-+		pm8941 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&pm8941_temp>;
-+
-+			trips {
-+				passive {
-+					temperature = <1050000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				alert {
-+					temperature = <125000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+				crit {
-+					temperature = <145000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index af40db0..30aee81 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -299,4 +299,15 @@ depends on ARCH_STI && OF
- source "drivers/thermal/st/Kconfig"
- endmenu
- 
-+config QCOM_SPMI_TEMP_ALARM
-+	tristate "Qualcomm SPMI PMIC Temperature Alarm"
-+	depends on OF && SPMI && IIO
-+	select REGMAP_SPMI
-+	help
-+	  This enables a thermal sysfs driver for Qualcomm plug-and-play (QPNP)
-+	  PMIC devices. It shows up in sysfs as a thermal sensor with multiple
-+	  trip points. The temperature reported by the thermal sensor reflects the
-+	  real time die temperature if an ADC is present or an estimate of the
-+	  temperature based upon the over temperature stage value.
-+
- endif
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index fa0dc48..1fe8665 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -22,6 +22,7 @@ thermal_sys-$(CONFIG_CPU_THERMAL)	+= cpu_cooling.o
- thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
- 
- # platform thermal drivers
-+obj-$(CONFIG_QCOM_SPMI_TEMP_ALARM)	+= qcom-spmi-temp-alarm.o
- obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
- obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
- obj-$(CONFIG_RCAR_THERMAL)	+= rcar_thermal.o
-diff --git a/drivers/thermal/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom-spmi-temp-alarm.c
-new file mode 100644
-index 0000000..c8d27b8
---- /dev/null
-+++ b/drivers/thermal/qcom-spmi-temp-alarm.c
-@@ -0,0 +1,309 @@
-+/*
-+ * Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/thermal.h>
-+
-+#define QPNP_TM_REG_TYPE		0x04
-+#define QPNP_TM_REG_SUBTYPE		0x05
-+#define QPNP_TM_REG_STATUS		0x08
-+#define QPNP_TM_REG_SHUTDOWN_CTRL1	0x40
-+#define QPNP_TM_REG_ALARM_CTRL		0x46
-+
-+#define QPNP_TM_TYPE			0x09
-+#define QPNP_TM_SUBTYPE			0x08
-+
-+#define STATUS_STAGE_MASK		0x03
-+
-+#define SHUTDOWN_CTRL1_THRESHOLD_MASK	0x03
-+
-+#define ALARM_CTRL_FORCE_ENABLE		0x80
-+
-+/*
-+ * Trip point values based on threshold control
-+ * 0 = {105 C, 125 C, 145 C}
-+ * 1 = {110 C, 130 C, 150 C}
-+ * 2 = {115 C, 135 C, 155 C}
-+ * 3 = {120 C, 140 C, 160 C}
-+*/
-+#define TEMP_STAGE_STEP			20000	/* Stage step: 20.000 C */
-+#define TEMP_STAGE_HYSTERESIS		2000
-+
-+#define TEMP_THRESH_MIN			105000	/* Threshold Min: 105 C */
-+#define TEMP_THRESH_STEP		5000	/* Threshold step: 5 C */
-+
-+#define THRESH_MIN			0
-+
-+/* Temperature in Milli Celsius reported during stage 0 if no ADC is present */
-+#define DEFAULT_TEMP			37000
-+
-+struct qpnp_tm_chip {
-+	struct regmap			*map;
-+	struct thermal_zone_device	*tz_dev;
-+	long				temp;
-+	unsigned int			thresh;
-+	unsigned int			stage;
-+	unsigned int			prev_stage;
-+	unsigned int			base;
-+	struct iio_channel		*adc;
-+};
-+
-+static int qpnp_tm_read(struct qpnp_tm_chip *chip, u16 addr, u8 *data)
-+{
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(chip->map, chip->base + addr, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	*data = val;
-+	return 0;
-+}
-+
-+static int qpnp_tm_write(struct qpnp_tm_chip *chip, u16 addr, u8 data)
-+{
-+	return regmap_write(chip->map, chip->base + addr, data);
-+}
-+
-+/*
-+ * This function updates the internal temp value based on the
-+ * current thermal stage and threshold as well as the previous stage
-+ */
-+static int qpnp_tm_update_temp_no_adc(struct qpnp_tm_chip *chip)
-+{
-+	unsigned int stage;
-+	int ret;
-+	u8 reg = 0;
-+
-+	ret = qpnp_tm_read(chip, QPNP_TM_REG_STATUS, &reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	stage = reg & STATUS_STAGE_MASK;
-+
-+	if (stage > chip->stage) {
-+		/* increasing stage, use lower bound */
-+		chip->temp = (stage - 1) * TEMP_STAGE_STEP +
-+			     chip->thresh * TEMP_THRESH_STEP +
-+			     TEMP_STAGE_HYSTERESIS + TEMP_THRESH_MIN;
-+	} else if (stage < chip->stage) {
-+		/* decreasing stage, use upper bound */
-+		chip->temp = stage * TEMP_STAGE_STEP +
-+			     chip->thresh * TEMP_THRESH_STEP -
-+			     TEMP_STAGE_HYSTERESIS + TEMP_THRESH_MIN;
-+	}
-+
-+	chip->stage = stage;
-+
-+	return 0;
-+}
-+
-+static int qpnp_tm_get_temp(void *data, long *temp)
-+{
-+	struct qpnp_tm_chip *chip = data;
-+	int ret, mili_celsius;
-+
-+	if (!temp)
-+		return -EINVAL;
-+
-+	if (IS_ERR(chip->adc)) {
-+		ret = qpnp_tm_update_temp_no_adc(chip);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		ret = iio_read_channel_processed(chip->adc, &mili_celsius);
-+		if (ret < 0)
-+			return ret;
-+
-+		chip->temp = mili_celsius;
-+	}
-+
-+	*temp = chip->temp < 0 ? 0 : chip->temp;
-+
-+	return 0;
-+}
-+
-+static const struct thermal_zone_of_device_ops qpnp_tm_sensor_ops = {
-+	.get_temp = qpnp_tm_get_temp,
-+};
-+
-+static irqreturn_t qpnp_tm_isr(int irq, void *data)
-+{
-+	struct qpnp_tm_chip *chip = data;
-+
-+	thermal_zone_device_update(chip->tz_dev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * This function initializes the internal temp value based on only the
-+ * current thermal stage and threshold. Setup threshold control and
-+ * disable shutdown override.
-+ */
-+static int qpnp_tm_init(struct qpnp_tm_chip *chip)
-+{
-+	int ret;
-+	u8 reg;
-+
-+	chip->thresh = THRESH_MIN;
-+	chip->temp = DEFAULT_TEMP;
-+
-+	ret = qpnp_tm_read(chip, QPNP_TM_REG_STATUS, &reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	chip->stage = reg & STATUS_STAGE_MASK;
-+
-+	if (chip->stage)
-+		chip->temp = chip->thresh * TEMP_THRESH_STEP +
-+			     (chip->stage - 1) * TEMP_STAGE_STEP +
-+			     TEMP_THRESH_MIN;
-+
-+	/*
-+	 * Set threshold and disable software override of stage 2 and 3
-+	 * shutdowns.
-+	 */
-+	reg = chip->thresh & SHUTDOWN_CTRL1_THRESHOLD_MASK;
-+	ret = qpnp_tm_write(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Enable the thermal alarm PMIC module in always-on mode. */
-+	reg = ALARM_CTRL_FORCE_ENABLE;
-+	ret = qpnp_tm_write(chip, QPNP_TM_REG_ALARM_CTRL, reg);
-+
-+	return ret;
-+}
-+
-+static int qpnp_tm_probe(struct platform_device *pdev)
-+{
-+	struct qpnp_tm_chip *chip;
-+	struct device_node *node;
-+	u8 type, subtype;
-+	u32 res[2];
-+	int ret, irq;
-+
-+	node = pdev->dev.of_node;
-+
-+	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&pdev->dev, chip);
-+
-+	chip->map = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!chip->map)
-+		return -ENXIO;
-+
-+	ret = of_property_read_u32_array(node, "reg", res, 2);
-+	if (ret < 0)
-+		return ret;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	/* ADC based measurements are optional */
-+	chip->adc = iio_channel_get(&pdev->dev, "thermal");
-+	if (PTR_ERR(chip->adc) == -EPROBE_DEFER)
-+		return PTR_ERR(chip->adc);
-+
-+	chip->base = res[0];
-+
-+	ret = qpnp_tm_read(chip, QPNP_TM_REG_TYPE, &type);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "could not read type\n");
-+		goto fail;
-+	}
-+
-+	ret = qpnp_tm_read(chip, QPNP_TM_REG_SUBTYPE, &subtype);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "could not read subtype\n");
-+		goto fail;
-+	}
-+
-+	if (type != QPNP_TM_TYPE || subtype != QPNP_TM_SUBTYPE) {
-+		dev_err(&pdev->dev, "invalid type 0x%02x or subtype 0x%02x\n",
-+			type, subtype);
-+		ret = -ENODEV;
-+		goto fail;
-+	}
-+
-+	ret = qpnp_tm_init(chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "init failed\n");
-+		goto fail;
-+	}
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, qpnp_tm_isr,
-+					IRQF_ONESHOT, node->name, chip);
-+	if (ret < 0)
-+		goto fail;
-+
-+	chip->tz_dev = thermal_zone_of_sensor_register(&pdev->dev, 0, chip,
-+							&qpnp_tm_sensor_ops);
-+	if (IS_ERR(chip->tz_dev)) {
-+		dev_err(&pdev->dev, "failed to register sensor\n");
-+		ret = PTR_ERR(chip->tz_dev);
-+		goto fail;
-+	}
-+
-+	return 0;
-+
-+fail:
-+	if (!IS_ERR(chip->adc))
-+		iio_channel_release(chip->adc);
-+
-+	return ret;
-+}
-+
-+static int qpnp_tm_remove(struct platform_device *pdev)
-+{
-+	struct qpnp_tm_chip *chip = dev_get_drvdata(&pdev->dev);
-+
-+	thermal_zone_of_sensor_unregister(&pdev->dev, chip->tz_dev);
-+	if (!IS_ERR(chip->adc))
-+		iio_channel_release(chip->adc);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id qpnp_tm_match_table[] = {
-+	{ .compatible = "qcom,spmi-temp-alarm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, qpnp_tm_match_table);
-+
-+static struct platform_driver qpnp_tm_driver = {
-+	.driver = {
-+		.name = "spmi-temp-alarm",
-+		.of_match_table = qpnp_tm_match_table,
-+	},
-+	.probe  = qpnp_tm_probe,
-+	.remove = qpnp_tm_remove,
-+};
-+module_platform_driver(qpnp_tm_driver);
-+
-+MODULE_ALIAS("platform:spmi-temp-alarm");
-+MODULE_DESCRIPTION("QPNP PMIC Temperature Alarm driver");
-+MODULE_LICENSE("GPL v2");
+-    return val != 0;
++    return (val & mask) != 0;
+ }
+
+ static void mtk_cg_set_bit(struct clk_hw *hw)
+ {
+     struct mtk_clk_gate *cg = to_clk_gate(hw);
+
+-    writel_relaxed(BIT(cg->bit), cg->set_addr);
++    regmap_write(cg->base, cg->set_addr, BIT(cg->bit));
+ }
+
+ static void mtk_cg_clr_bit(struct clk_hw *hw)
+ {
+     struct mtk_clk_gate *cg = to_clk_gate(hw);
+
+-    writel_relaxed(BIT(cg->bit), cg->clr_addr);
++    regmap_write(cg->base, cg->clr_addr, BIT(cg->bit));
+ }
+
+ static int mtk_cg_enable(struct clk_hw *hw)
+@@ -100,9 +108,10 @@ const struct clk_ops mtk_clk_gate_ops_setclr_inv = {
+ struct clk *mtk_clk_register_gate(
+         const char *name,
+         const char *parent_name,
+-        void __iomem *set_addr,
+-        void __iomem *clr_addr,
+-        void __iomem *sta_addr,
++        struct regmap *base,
++        int set_addr,
++        int clr_addr,
++        int sta_addr,
+         u8 bit,
+         const struct clk_ops *ops,
+         spinlock_t *lock)
+@@ -124,6 +133,7 @@ struct clk *mtk_clk_register_gate(
+     init.num_parents = parent_name ? 1 : 0;
+     init.ops = ops;
+
++    cg->base = base;
+     cg->set_addr = set_addr;
+     cg->clr_addr = clr_addr;
+     cg->sta_addr = sta_addr;
+diff --git a/drivers/clk/mediatek/clk-gate.h b/drivers/clk/mediatek/clk-gate.h
+index d67a574..75fcb6709 100644
+--- a/drivers/clk/mediatek/clk-gate.h
++++ b/drivers/clk/mediatek/clk-gate.h
+@@ -24,9 +24,10 @@
+
+ struct mtk_clk_gate {
+     struct clk_hw    hw;
+-    void __iomem    *set_addr;
+-    void __iomem    *clr_addr;
+-    void __iomem    *sta_addr;
++    struct regmap *base;
++    int set_addr;
++    int clr_addr;
++    int sta_addr;
+     u8        bit;
+     spinlock_t    *lock;
+ };
+diff --git a/drivers/clk/mediatek/clk-mt8135.c
+b/drivers/clk/mediatek/clk-mt8135.c
+index e212bfd..d24dd3b 100644
+--- a/drivers/clk/mediatek/clk-mt8135.c
++++ b/drivers/clk/mediatek/clk-mt8135.c
+@@ -844,13 +844,13 @@ CLK_OF_DECLARE(mtk_infrasys,
+"mediatek,mt8135-infracfg", mtk_infrasys_init);
+ static void __init mtk_pericfg_init(struct device_node *node)
+ {
+     struct clk_onecell_data *clk_data;
+-    void __iomem *base;
++    static struct regmap *base;
+     int r;
+
+-    base = of_iomap(node, 0);
+-    if (!base) {
+-        pr_err("%s(): ioremap failed\n", __func__);
+-        return;
++    base = syscon_node_to_regmap(node);
++    if (IS_ERR(base)) {
++        pr_err("%s(): failed to retrieve gpbr regmap, aborting.\n", __func__);
++        return -ENOMEM;
+     }
+
+     clk_data = mtk_alloc_clk_data(PERI_NR_CLK);
+@@ -862,5 +862,6 @@ static void __init mtk_pericfg_init(struct
+device_node *node)
+     if (r)
+         pr_err("%s(): could not register clock provider: %d\n",
+             __func__, r);
++    mtk_register_softrst(np, 12, base, RK3288_SOFTRST);
+ }
+ CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt8135-pericfg", mtk_pericfg_init);
+diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
+index ce4f2ac..0923a3a 100644
+--- a/drivers/clk/mediatek/clk-mtk.c
++++ b/drivers/clk/mediatek/clk-mtk.c
+@@ -46,7 +46,7 @@ void mtk_init_factors(struct mtk_fixed_factor *clks, int num,
+     }
+ }
+
+-void mtk_init_clk_gates(void __iomem *reg_base,
++void mtk_init_clk_gates(struct regmap *base,
+         struct mtk_gate *clks, int num,
+         struct clk_onecell_data *clk_data, spinlock_t *lock)
+ {
+@@ -57,9 +57,10 @@ void mtk_init_clk_gates(void __iomem *reg_base,
+         struct mtk_gate *gate = &clks[i];
+
+         clk = mtk_clk_register_gate(gate->name, gate->parent_name,
+-                reg_base + gate->regs->set_ofs,
+-                reg_base + gate->regs->clr_ofs,
+-                reg_base + gate->regs->sta_ofs,
++                base,
++                gate->regs->set_ofs,
++                gate->regs->clr_ofs,
++                gate->regs->sta_ofs,
+                 gate->shift, gate->ops, lock);
+
+         if (IS_ERR(clk)) {
+
+
+>
+> James Liao (7):
+>   clk: dts: mediatek: add Mediatek MT8135 clock bindings
+>   clk: mediatek: Add initial common clock support for Mediatek SoCs.
+>   clk: mediatek: Add basic clocks for Mediatek MT8135.
+>   dts: mediatek: Enable clock support for Mediatek MT8135.
+>   clk: dts: mediatek: add Mediatek MT8173 clock bindings
+>   clk: mediatek: Add basic clocks for Mediatek MT8173.
+>   dts: mediatek: Enable clock support for Mediatek MT8173.
+>
+>  .../bindings/clock/mediatek,mt8135-clock.txt       |   44 +
+>  .../bindings/clock/mediatek,mt8173-clock.txt       |   42 +
+>  arch/arm/boot/dts/mt8135.dtsi                      |   47 +
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   46 +
+>  drivers/clk/Makefile                               |    1 +
+>  drivers/clk/mediatek/Makefile                      |    3 +
+>  drivers/clk/mediatek/clk-gate.c                    |  140 +++
+>  drivers/clk/mediatek/clk-gate.h                    |   49 +
+>  drivers/clk/mediatek/clk-mt8135-pll.c              |  860 ++++++++++++++++
+>  drivers/clk/mediatek/clk-mt8135-pll.h              |   28 +
+>  drivers/clk/mediatek/clk-mt8135.c                  |  866 +++++++++++++++++
+>  drivers/clk/mediatek/clk-mt8173-pll.c              |  807 +++++++++++++++
+>  drivers/clk/mediatek/clk-mt8173-pll.h              |   14 +
+>  drivers/clk/mediatek/clk-mt8173.c                  | 1028 ++++++++++++++++++++
+>  drivers/clk/mediatek/clk-mtk.c                     |  154 +++
+>  drivers/clk/mediatek/clk-mtk.h                     |  132 +++
+>  drivers/clk/mediatek/clk-pll.c                     |   63 ++
+>  drivers/clk/mediatek/clk-pll.h                     |   52 +
+>  include/dt-bindings/clock/mt8135-clk.h             |  190 ++++
+>  include/dt-bindings/clock/mt8173-clk.h             |  214 ++++
+>  20 files changed, 4780 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8135-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8173-clock.txt
+>  create mode 100644 drivers/clk/mediatek/Makefile
+>  create mode 100644 drivers/clk/mediatek/clk-gate.c
+>  create mode 100644 drivers/clk/mediatek/clk-gate.h
+>  create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.h
+>  create mode 100644 drivers/clk/mediatek/clk-mt8135.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt8173-pll.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt8173-pll.h
+>  create mode 100644 drivers/clk/mediatek/clk-mt8173.c
+>  create mode 100644 drivers/clk/mediatek/clk-mtk.c
+>  create mode 100644 drivers/clk/mediatek/clk-mtk.h
+>  create mode 100644 drivers/clk/mediatek/clk-pll.c
+>  create mode 100644 drivers/clk/mediatek/clk-pll.h
+>  create mode 100644 include/dt-bindings/clock/mt8135-clk.h
+>  create mode 100644 include/dt-bindings/clock/mt8173-clk.h
+>
+> --
+> 1.8.1.1.dirty
+>
+
+
+
 -- 
-1.9.1
-
+motzblog.wordpress.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
