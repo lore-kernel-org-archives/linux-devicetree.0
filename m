@@ -1,53 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v5 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Thu, 05 Feb 2015 13:31:51 +0100
-Message-ID: <5765997.dBPa4LUUq1@wuerfel>
-References: <1422955310-6542-1-git-send-email-Vincent.Yang@tw.fujitsu.com> <CAJe_Zhf_WuRK2EE0Sj9ksXDDe5VA=DJ+H3eS4YRKpDZLdRRfow@mail.gmail.com> <20150205120829.GO8656@n2100.arm.linux.org.uk>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [RFC PATCH 0/3] Fix power domains handling on exynos542x
+Date: Thu, 05 Feb 2015 13:35:36 +0100
+Message-ID: <1423139739-19881-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150205120829.GO8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Liquid.Acid@gmx.net, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, javier.martinez@collabora.co.uk, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 05 February 2015 12:08:29 Russell King - ARM Linux wrote:
-> On Thu, Feb 05, 2015 at 05:32:39PM +0530, Jassi Brar wrote:
-> > On Feb 5, 2015 5:13 PM, "Arnd Bergmann" <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > >
-> > > >
-> > > > I know typedef's are frowned upon, but how bad is the following option?
-> > > >        typedef void*  mbox_data_info
-> > > >        int mbox_send_message(struct mbox_chan *chan, mbox_data_info
-> > data);
-> > >
-> > > I don't see how that would help.
-> > >
-> > If it's abuse because the argument is a void*... What if we called it
-> > mbox_data_info?  To say platforms are free to pass data as a pointer or a
-> > value 
-
-I misunderstood then, I thought you were trying to enforce that
-people use a proper pointer.
-
-> Using a typedef really doesn't change anything.  If you read the kernel
-> coding style, you'll realise that typedefs are a reason to reject
-> patches - especially to use them in the way you are proposing.
-
-Agreed, using a typedef here would add an extra problem rather than
-solve the one we already have.
-
-> Try the solution I suggested (which I notice was seemingly totally
-> ignored.)
-
-As I understood, Jassi doesn't even have this problem, because his
-driver uses a synchronous call rather than an asynchronous one
-and he can just pass the data on the stack.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpFeHlub3MgY2hpcHNldHMgc2luY2UgNTQyeCBoYXZlIGFzeW5jaHJvbm91cyBicmlkZ2Vz
+IGNvbm5lY3RpbmcgZGlmZmVyZW50IElQcy4KVGhlc2UgYnJpZGdlcyBzaG91bGQgYmUgb3BlcmF0
+aW9uYWwgZHVyaW5nIHBvd2VyIGRvbWFpbiBzd2l0Y2hpbmcsIGllIGFzc29jaWF0ZWQKY2xvY2tz
+IGNhbm5vdCBiZSBnYXRlZC4KVGhpcyBwYXRjaHNldCBhZGRzIGJpbmRpbmcgdG8gcHJvdmlkZSBz
+dWNoIGNsb2NrcyBwZXIgcG93ZXIgZG9tYWluIGFuZCBhZGRzIGNvZGUKd2hpY2ggZW5hYmxlcyB0
+aGVtIGR1cmluZyBkb21haW4gb24vb2ZmIG9wZXJhdGlvbi4KClRoaXMgcGF0Y2hzZXQgZml4ZXMg
+cG93ZXIgZG9tYWluIGlzc3VlcyB3aXRoIGRpc3AxIGRvbWFpbiBhbmQgSERNSSAoc29tZSBvZiB0
+aGVtKQpvbiBPZHJvaWQgWFUzOgotIGRpc3AxIHBvd2VyIGRvbWFpbiBjYW4gYmUgdHVybmVkIG9m
+ZiwKLSBubyBtb3JlICJpbXByZWNpc2UgZXh0ZXJuYWwgYWJvcnQiIGZhdWx0cy4KClRoZSBwYXRj
+aHNldCBpcyBiYXNlZCBvbiAnW1BBVENIIHY1IDAvOV0gRW5hYmxlIEhETUkgc3VwcG9ydCBvbiBF
+eHlub3MgcGxhdGZvcm1zJyBbMV0uCgpJdCB3YXMgc3VjY2Vzc2Z1bGx5IHRlc3RlZCBvbiBPZHJv
+aWRYVTMuCgpbMV06IGh0dHA6Ly9wZXJtYWxpbmsuZ21hbmUub3JnL2dtYW5lLmxpbnV4Lmtlcm5l
+bC5zYW1zdW5nLXNvYy80Mjc0MwoKUmVnYXJkcwpBbmRyemVqCgoKQW5kcnplaiBIYWpkYSAoMyk6
+CiAgYXJtL2V4eW5vczogYWRkIGFzeW5jaHJvbm91cyBicmlkZ2UgY2xvY2sgYmluZGluZ3MKICBh
+cm0vZXh5bm9zL3BtX2RvbWFpbnM6IGFkZCBzdXBwb3J0IGZvciBhc3luYy1icmlkZ2UgY2xvY2tz
+CiAgQVJNOiBkdHM6IGV4eW5vczU0MjA6IGFkZCBhc3luYy1icmlkZ2UgY2xvY2sgdG8gZGlzcDEg
+cG93ZXIgZG9tYWluCgogLi4uL2JpbmRpbmdzL2FybS9leHlub3MvcG93ZXJfZG9tYWluLnR4dCAg
+ICAgICAgICAgfCAgMyArKysKIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAuZHRzaSAgICAg
+ICAgICAgICAgICAgIHwgIDYgKysrLS0KIGFyY2gvYXJtL21hY2gtZXh5bm9zL3BtX2RvbWFpbnMu
+YyAgICAgICAgICAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrLS0tLQogMyBmaWxlcyBj
+aGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQoKLS0gCjEuOS4xCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
