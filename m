@@ -1,220 +1,312 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v5 2/6] clk: iproc: define Broadcom iProc clock binding
-Date: Wed, 4 Feb 2015 16:55:01 -0800
-Message-ID: <1423097705-22939-3-git-send-email-rjui@broadcom.com>
-References: <Ray Jui <rjui@broadcom.com>
- <1423097705-22939-1-git-send-email-rjui@broadcom.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] dmaengine: Add support for APM X-Gene SoC DMA
+ engine driver
+Date: Wed, 4 Feb 2015 17:50:31 -0800
+Message-ID: <20150205015031.GK4489@intel.com>
+References: <1422968107-23125-1-git-send-email-rsahu@apm.com>
+ <1422968107-23125-2-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1423097705-22939-1-git-send-email-rjui@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Anatol Pomazau <anatol@google.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Dmitry Torokhov <dtor@google.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422968107-23125-2-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree binding for Broadcom iProc architecture based
-clock controller
+On Tue, Feb 03, 2015 at 06:25:05PM +0530, Rameshwar Prasad Sahu wrote:
+> +/* Applied Micro X-Gene SoC DMA engine Driver
+> + *
+> + * Copyright (c) 2014, Applied Micro Circuits Corporation
+not 2015?
+> + * Authors: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+> + *	    Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+> + *
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
----
- brcm,iproc-clocks.txt |  178 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 178 insertions(+)
- create mode 100644 brcm,iproc-clocks.txt
+> +/* DMA ring csr registers and bit definations */
+> +#define RING_CONFIG		0x04
+> +#define RING_ENABLE		BIT(31)
+> +#define RING_ID			0x08
+> +#define RING_ID_SETUP(v)	((v) | BIT(31))
+> +#define RING_ID_BUF		0x0C
+> +#define RING_ID_BUF_SETUP(v)	(((v) << 9) | BIT(21))
+> +#define RING_THRESLD0_SET1	0x30
+> +#define RING_THRESLD0_SET1_VAL	0X64
+> +#define RING_THRESLD1_SET1	0x34
+> +#define RING_THRESLD1_SET1_VAL	0xC8
+> +#define RING_HYSTERESIS		0x68
+> +#define RING_HYSTERESIS_VAL	0xFFFFFFFF
+> +#define RING_STATE		0x6C
+> +#define RING_STATE_WR_BASE	0x70
+> +#define RING_NE_INT_MODE	0x017C
+> +#define RING_NE_INT_MODE_SET(m, v)	\
+> +	((m) = ((m) & ~BIT(31 - (v))) | BIT(31 - (v)))
+> +#define RING_NE_INT_MODE_RESET(m, v)	\
+> +	((m) &= (~BIT(31 - (v))))
+> +#define RING_CLKEN		0xC208
+> +#define RING_SRST		0xC200
+> +#define RING_MEM_RAM_SHUTDOWN	0xD070
+> +#define RING_BLK_MEM_RDY	0xD074
+> +#define RING_BLK_MEM_RDY_VAL	0xFFFFFFFF
+> +#define RING_ID_GET(owner, num)	(((owner) << 6) | (num))
+> +#define RING_DST_RING_ID(v)	((1 << 10) | (v))
+> +#define RING_CMD_OFFSET(v)	(((v) << 6) + 0x2C)
+> +#define RING_COHERENT_SET(m)	(((u32 *)(m))[2] |= BIT(4))
+> +#define RING_ADDRL_SET(m, v)	(((u32 *)(m))[2] |= (((v) >> 8) << 5))
+> +#define RING_ADDRH_SET(m, v)	(((u32 *)(m))[3] |= ((v) >> 35))
+> +#define RING_ACCEPTLERR_SET(m)	(((u32 *)(m))[3] |= BIT(19))
+> +#define RING_SIZE_SET(m, v)	(((u32 *)(m))[3] |= ((v) << 23))
+> +#define RING_RECOMBBUF_SET(m)	(((u32 *)(m))[3] |= BIT(27))
+> +#define RING_RECOMTIMEOUTL_SET(m)	\
+> +	(((u32 *)(m))[3] |= (0x7 << 28))
+> +#define RING_RECOMTIMEOUTH_SET(m)	\
+> +	(((u32 *)(m))[4] |= 0x3)
+> +#define RING_SELTHRSH_SET(m)	(((u32 *)(m))[4] |= BIT(3))
+> +#define RING_TYPE_SET(m, v)	(((u32 *)(m))[4] |= ((v) << 19))a
+these defines and the ones which follow need to be namespace aptly
 
-diff --git a/brcm,iproc-clocks.txt b/brcm,iproc-clocks.txt
-new file mode 100644
-index 0000000..cc64fd2
---- /dev/null
-+++ b/brcm,iproc-clocks.txt
-@@ -0,0 +1,178 @@
-+Broadcom iProc Family Clocks
-+
-+This binding uses the common clock binding:
-+    Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+The iProc clock controller manages clocks that are common to the iProc family.
-+An SoC from the iProc family may have several PPLs, e.g., ARMPLL, GENPLL,
-+LCPLL0, MIPIPLL, and etc., all derived from an onboard crystal. Each PLL
-+comprises of several leaf clocks
-+
-+Required properties for PLLs:
-+- compatible:
-+    Should have a value of the form "brcm,<soc>-<pll>". For example, GENPLL on
-+Cygnus has a compatible string of "brcm,cygnus-genpll"
-+
-+- #clock-cells:
-+    Must be <0>
-+
-+- reg:
-+    Define the base and range of the I/O address space that contain the iProc
-+clock control registers required for the PLL
-+
-+- clocks:
-+    The input parent clock phandle for the PLL. For all iProc PLLs, this is an
-+onboard crystal with a fixed rate
-+
-+Optional Properties for PLLs:
-+- clock-frequency:
-+    PLL frequency in Hz. If specified, PLL will be configured to run at
-+<clock-frequency> instead of the default frequency after chip reset, provided
-+that <clock-frequency> and its parameters are defined in the SoC specific
-+frequency parameter table
-+
-+Example:
-+
-+	osc: oscillator {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <25000000>;
-+	};
-+
-+	genpll: genpll {
-+		#clock-cells = <0>;
-+		compatible = "brcm,cygnus-genpll";
-+		reg = <0x0301d000 0x2c>,
-+			<0x0301c020 0x4>;
-+		clocks = <&osc>;
-+	};
-+
-+Required properties for leaf clocks of a PLL:
-+
-+- compatible:
-+    Should have a value of the form "brcm,<soc>-<pll>-clk". For example, leaf
-+clocks derived from the GENPLL on Cygnus SoC have a compatible string of
-+"brcm,cygnus-genpll-clk"
-+
-+- #clock-cells:
-+    Have a value of <1> since there are more than 1 leaf clock of a
-+given PLL
-+
-+- reg:
-+    Define the base and range of the I/O address space that contain the iProc
-+clock control registers required for the PLL leaf clocks
-+
-+- clocks:
-+    The input parent PLL phandle for the leaf clock
-+
-+- clock-output-names:
-+    An ordered list of strings defining the names of the leaf clocks
-+
-+Example:
-+
-+	genpll: genpll {
-+		#clock-cells = <0>;
-+		compatible = "brcm,cygnus-genpll";
-+		reg = <0x0301d000 0x2c>,
-+			<0x0301c020 0x4>;
-+		clocks = <&osc>;
-+	};
-+
-+	genpll_clks: genpll_clks {
-+		#clock-cells = <1>;
-+		compatible = "brcm,cygnus-genpll-clk";
-+		reg = <0x0301d000 0x2c>;
-+		clocks = <&genpll>;
-+		clock-output-names = "axi21", "250mhz", "ihost_sys",
-+			"enet_sw", "audio_125", "can";
-+	};
-+
-+Required properties for ASIU clocks:
-+
-+ASIU clocks are a special case. These clocks are derived directly from the
-+reference clock of the onboard crystal
-+
-+- compatible:
-+    Should have a value of the form "brcm,<soc>-asiu-clk". For example, ASIU
-+clocks for Cygnus have a compatible string of "brcm,cygnus-asiu-clk"
-+
-+- #clock-cells:
-+    Have a value of <1> since there are more than 1 ASIU clocks
-+
-+- reg:
-+    Define the base and range of the I/O address space that contain the iProc
-+clock control registers required for ASIU clocks
-+
-+- clocks:
-+    The input parent clock phandle for the ASIU clock, i.e., the onboard
-+crystal
-+
-+- clock-output-names:
-+    An ordered list of strings defining the names of the ASIU clocks
-+
-+Example:
-+
-+	osc: oscillator {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <25000000>;
-+	};
-+
-+	asiu_clks: asiu_clks {
-+		#clock-cells = <1>;
-+		compatible = "brcm,cygnus-asiu-clk";
-+		reg = <0x0301d048 0xc>,
-+			<0x180aa024 0x4>;
-+		clocks = <&osc>;
-+		clock-output-names = "keypad", "adc/touch", "pwm";
-+	};
-+
-+Cygnus
-+------
-+PLL and leaf clock compatible strings for Cygnus are:
-+    "brcm,cygnus-armpll"
-+    "brcm,cygnus-genpll"
-+    "brcm,cygnus-lcpll0"
-+    "brcm,cygnus-mipipll"
-+    "brcm,cygnus-genpll-clk"
-+    "brcm,cygnus-lcpll0-clk"
-+    "brcm,cygnus-mipipll-clk"
-+    "brcm,cygnus-asiu-clk"
-+
-+The following table defines the set of PLL/clock index and ID for Cygnus.
-+These clock IDs are defined in:
-+    "include/dt-bindings/clock/bcm-cygnus.h"
-+
-+    Clock      Source           Index   ID
-+    ---        -----            -----   ---------
-+    crystal    N/A              N/A     N/A
-+
-+    armpll     crystal          N/A     N/A
-+    genpll     crystal          N/A     N/A
-+    lcpll0     crystal          N/A     N/A
-+    mipipll    crystal          N/A     N/A
-+
-+    keypad     crystal (ASIU)   0       BCM_CYGNUS_ASIU_KEYPAD_CLK
-+    adc/tsc    crystal (ASIU)   1       BCM_CYGNUS_ASIU_ADC_CLK
-+    pwm        crystal (ASIU)   2       BCM_CYGNUS_ASIU_PWM_CLK
-+
-+    axi21      genpll           0       BCM_CYGNUS_GENPLL_AXI21_CLK
-+    250mhz     genpll           1       BCM_CYGNUS_GENPLL_250MHZ_CLK
-+    ihost_sys  genpll           2       BCM_CYGNUS_GENPLL_IHOST_SYS_CLK
-+    enet_sw    genpll           3       BCM_CYGNUS_GENPLL_ENET_SW_CLK
-+    audio_125  genpll           4       BCM_CYGNUS_GENPLL_AUDIO_125_CLK
-+    can        genpll           5       BCM_CYGNUS_GENPLL_CAN_CLK
-+
-+    pcie_phy   lcpll0           0       BCM_CYGNUS_LCPLL0_PCIE_PHY_REF_CLK
-+    ddr_phy    lcpll0           1       BCM_CYGNUS_LCPLL0_DDR_PHY_CLK
-+    sdio       lcpll0           2       BCM_CYGNUS_LCPLL0_SDIO_CLK
-+    usb_phy    lcpll0           3       BCM_CYGNUS_LCPLL0_USB_PHY_REF_CLK
-+    smart_card lcpll0           4       BCM_CYGNUS_LCPLL0_SMART_CARD_CLK
-+    ch5        lcpll0           5       BCM_CYGNUS_LCPLL0_CH5_UNUSED
-+
-+    ch0_unused mipipll          0       BCM_CYGNUS_MIPIPLL_CH0_UNUSED
-+    ch1_lcd    mipipll          1       BCM_CYGNUS_MIPIPLL_CH1_LCD
-+    ch2_unused mipipll          2       BCM_CYGNUS_MIPIPLL_CH2_UNUSED
-+    ch3_unused mipipll          3       BCM_CYGNUS_MIPIPLL_CH3_UNUSED
-+    ch4_unused mipipll          4       BCM_CYGNUS_MIPIPLL_CH4_UNUSED
-+    ch5_unused mipipll          5       BCM_CYGNUS_MIPIPLL_CH5_UNUSED
+> +static void xgene_dma_cpu_to_le64(u64 *desc, int count)
+why is this endian specific?
+
+> +
+> +static irqreturn_t xgene_dma_ring_isr(int irq, void *id)
+> +{
+> +	struct xgene_dma_chan *chan = (struct xgene_dma_chan *)id;
+> +
+> +	BUG_ON(!chan);
+> +
+> +	/* Disable DMA channel IRQ */
+> +	disable_irq_nosync(chan->rx_irq);
+> +
+> +	/* Schedule tasklet */
+> +	tasklet_schedule(&chan->rx_tasklet);
+> +
+Ideally you should submit next txn here, but...
+
+> +
+> +static int xgene_dma_alloc_chan_resources(struct dma_chan *channel)
+> +{
+> +	struct xgene_dma_chan *chan = to_xgene_dma_chan(channel);
+> +	int i;
+> +
+> +	/* Check if we have already allcated resources */
+> +	if (chan->slots)
+> +		return DMA_SLOT_PER_CHANNEL;
+> +
+> +	spin_lock_bh(&chan->lock);
+> +
+> +	chan->slots = devm_kzalloc(chan->pdma->dev,
+> +				   sizeof(struct xgene_dma_slot) *
+> +				   DMA_SLOT_PER_CHANNEL, GFP_ATOMIC);
+GFP_NOWAIT pls
+
+> +
+> +static enum dma_status xgene_dma_tx_status(struct dma_chan *channel,
+> +					   dma_cookie_t cookie,
+> +					   struct dma_tx_state *txstate)
+> +{
+> +	return dma_cookie_status(channel, cookie, txstate);
+why no residue calculation
+
+> +}
+> +
+> +static void xgene_dma_issue_pending(struct dma_chan *channel)
+> +{
+> +	/* Nothing to do */
+> +}
+What do you mean by nothing to do here
+See Documentation/dmaengine/client.txt Section 4 & 5
+
+
+> +static dma_cookie_t xgene_dma_tx_memcpy_submit(
+> +	struct dma_async_tx_descriptor *tx)
+> +{
+> +	struct xgene_dma_chan *chan = to_xgene_dma_chan(tx->chan);
+> +	struct xgene_dma_slot *slot = to_xgene_dma_slot(tx);
+> +	dma_addr_t dst = slot->dst;
+> +	dma_addr_t src = slot->src;
+> +	size_t len = slot->len;
+> +	size_t copy;
+> +	dma_cookie_t cookie;
+> +
+> +	spin_lock_bh(&chan->lock);
+> +
+> +	chan->tx_cmd = 0;
+> +	slot->desc_cnt = 0;
+> +
+> +	/* Run until we are out of length */
+> +	do {
+> +		/* Create the largest transaction possible */
+> +		copy = min_t(size_t, len, DMA_MAX_64BDSC_BYTE_CNT);
+> +
+> +		/* Prepare DMA descriptor */
+> +		xgene_dma_prep_cpy_desc(chan, slot, dst, src, copy);
+> +
+This is wrong. The descriptor is supposed to be already prepared and now it
+has to be submitted to queue
+
+
+> +static struct dma_async_tx_descriptor *xgene_dma_prep_memcpy(
+> +	struct dma_chan *channel, dma_addr_t dst, dma_addr_t src,
+> +	size_t len, unsigned long flags)
+> +{
+> +	struct xgene_dma_chan *chan = to_xgene_dma_chan(channel);
+> +	struct xgene_dma_slot *slot;
+> +
+> +	/* Sanity check */
+> +	BUG_ON(len > DMA_MAX_MEMCPY_BYTE_CNT);
+> +
+> +	spin_lock_bh(&chan->lock);
+> +
+> +	slot = xgene_dma_get_channel_slot(chan);
+> +	if (!slot) {
+> +		spin_unlock_bh(&chan->lock);
+> +		return NULL;
+> +	}
+> +
+> +	dev_dbg(chan->pdma->dev,
+> +		"MEMCPY channel %d slot %d len 0x%zX dst 0x%llX src 0x%llX\n",
+> +		chan->index, slot->index, len, dst, src);
+> +
+> +	/* Setup slot variables */
+> +	slot->flags = FLAG_SLOT_IN_USE;
+> +	slot->txd.flags = flags;
+> +	slot->txd.tx_submit = xgene_dma_tx_memcpy_submit;
+> +
+> +	/*
+> +	 * Due to the race in tx_submit call from the client,
+> +	 * need to serialize the submission of H/W DMA descriptors.
+> +	 * So make shadow copy to prepare DMA descriptor during
+> +	 * tx_submit call.
+> +	 */
+> +	slot->dst = dst;
+> +	slot->src = src;
+> +	slot->len = len;
+> +
+> +	spin_unlock_bh(&chan->lock);
+> +
+> +	return &slot->txd;
+Nope, you are supposed to allocate and populate a descriptor here
+> +}
+> +
+> +static dma_cookie_t xgene_dma_tx_sgcpy_submit(
+> +	struct dma_async_tx_descriptor *tx)
+> +{
+> +	struct xgene_dma_chan *chan = to_xgene_dma_chan(tx->chan);
+> +	struct xgene_dma_slot *slot = to_xgene_dma_slot(tx);
+> +	struct scatterlist *dst_sg, *src_sg;
+> +	size_t dst_avail, src_avail;
+> +	dma_addr_t dst, src;
+> +	size_t len;
+> +	dma_cookie_t cookie;
+> +	size_t nbytes  = slot->len;
+> +
+> +	spin_lock_bh(&chan->lock);
+> +
+> +	dst_sg = slot->srcdst_list + slot->src_nents;
+> +	src_sg = slot->srcdst_list;
+> +
+> +	chan->tx_cmd = 0;
+> +	slot->desc_cnt = 0;
+> +
+> +	/* Get prepared for the loop */
+> +	dst_avail = sg_dma_len(dst_sg);
+> +	src_avail = sg_dma_len(src_sg);
+> +
+> +	/* Run until we are out of length */
+> +	do {
+> +		/* Create the largest transaction possible */
+> +		len = min_t(size_t, src_avail, dst_avail);
+> +		len = min_t(size_t, len, DMA_MAX_64BDSC_BYTE_CNT);
+> +		if (len == 0)
+> +			goto fetch;
+> +
+> +		dst = sg_dma_address(dst_sg) + sg_dma_len(dst_sg) - dst_avail;
+> +		src = sg_dma_address(src_sg) + sg_dma_len(src_sg) - src_avail;
+> +
+> +		/* Prepare DMA descriptor */
+> +		xgene_dma_prep_cpy_desc(chan, slot, dst, src, len);
+again this wrong, also you should ideally have single submit. Why does it
+have to be transfer type dependent.
+
+> +
+> +static void xgene_dma_set_caps(struct xgene_dma_chan *chan,
+> +			       struct dma_device *dma_dev)
+> +{
+> +	/* Initialize DMA device capability mask */
+> +	dma_cap_zero(dma_dev->cap_mask);
+> +
+> +	/* Set DMA device capability */
+> +	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
+> +	dma_cap_set(DMA_SG, dma_dev->cap_mask);
+> +
+> +	/* Set base and prep routines */
+> +	dma_dev->dev = chan->pdma->dev;
+> +	dma_dev->device_alloc_chan_resources = xgene_dma_alloc_chan_resources;
+> +	dma_dev->device_free_chan_resources = xgene_dma_free_chan_resources;
+> +	dma_dev->device_issue_pending = xgene_dma_issue_pending;
+> +	dma_dev->device_tx_status = xgene_dma_tx_status;
+> +
+> +	if (dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask))
+> +		dma_dev->device_prep_dma_memcpy = xgene_dma_prep_memcpy;
+> +
+> +	if (dma_has_cap(DMA_SG, dma_dev->cap_mask))
+> +		dma_dev->device_prep_dma_sg = xgene_dma_prep_sg;
+these two if conditions dont make any sense
+> +static int xgene_dma_runtime_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct xgene_dma *pdma = platform_get_drvdata(pdev);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(pdma->dma_clk);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable clk %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+This should be under runtime pm flag. people can run kernels with these
+disabled
+
+> +
+> +static int xgene_dma_remove(struct platform_device *pdev)
+> +{
+> +	struct xgene_dma *pdma = platform_get_drvdata(pdev);
+> +	struct xgene_dma_chan *chan;
+> +	int i;
+> +
+> +	for (i = 0; i < DMA_MAX_CHANNEL; i++) {
+> +		chan = &pdma->channels[i];
+> +
+> +		/* Delete DMA ring descriptors */
+> +		xgene_dma_delete_chan_rings(chan);
+> +
+> +		/* Kill the DMA channel tasklet */
+> +		tasklet_kill(&chan->rx_tasklet);
+> +
+But your irq is still active and can be triggered!
+
+> +		/* Unregister DMA device */
+> +		dma_async_device_unregister(&pdma->dma_dev[i]);
+> +	}
+> +
+> +	pm_runtime_disable(&pdev->dev);
+> +	if (!pm_runtime_status_suspended(&pdev->dev))
+> +		xgene_dma_runtime_suspend(&pdev->dev);
+> +
+> +	return 0;
+> +}
+Okay we need some good work here. First cleanup the usage of dmaengine APIs.
+Second I would like to see cookie management and descriptor management
+cleaned by using helpers available
+
 -- 
-1.7.9.5
+~Vinod
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
