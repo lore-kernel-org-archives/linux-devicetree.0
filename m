@@ -1,91 +1,67 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
-Date: Thu, 5 Feb 2015 15:01:06 -0800
-Message-ID: <CAJAp7OiHfaMrVqaZ1r6ZN0aMMpE4OUnvLhODHQJeb6EJMa+o8A@mail.gmail.com>
-References: <1421269101-51105-1-git-send-email-s-anna@ti.com>
-	<1421269101-51105-2-git-send-email-s-anna@ti.com>
-	<20150115135201.GG16217@leverpostej>
-	<20150115135556.GH16217@leverpostej>
-	<CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
-	<CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com>
-	<20150116101746.GA21809@leverpostej>
-	<CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
-	<CAJAp7Og+-KQd7bygWQjTS72Kye3fkp3s3ry+2bw7Gcv7aPF5AQ@mail.gmail.com>
-	<CAK=WgbZ2986xxuAFvMSoyQLaPAxdUpZ8e5g-mSjyETfvd4KKHw@mail.gmail.com>
-	<CAJAp7OjVULNRd113TtOEwaa6QO-XCDa0oxBm2H5NPvp_kLTSpA@mail.gmail.com>
-	<54CFE71E.20905@ti.com>
+From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] arm64,hi6220: Enable Hisilicon Hi6220 SoC
+Date: Thu, 5 Feb 2015 15:52:49 -0800
+Message-ID: <CANMBJr7wx=BwDK9inc-2LdXQhyv-tZZry86Ojr=oH8z53Un76Q@mail.gmail.com>
+References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com>
+	<CANMBJr685FzZzQ660Z1aNJX+Kzkw1OqM6RJAviARbL+5a=MJ2A@mail.gmail.com>
+	<CAOesGMgjv9iLnLmpLADQYoAw=oUkJDAJs72Q5q=DQ75paQ+A-g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54CFE71E.20905@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMgjv9iLnLmpLADQYoAw=oUkJDAJs72Q5q=DQ75paQ+A-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Haifeng Yan <yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.orgT
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 2, 2015 at 1:07 PM, Suman Anna <s-anna@ti.com> wrote:
-> On 02/01/2015 11:55 AM, Bjorn Andersson wrote:
->> On Fri, Jan 30, 2015 at 9:41 PM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
->>> On Sat, Jan 31, 2015 at 1:29 AM, Bjorn Andersson <bjorn@kryo.se> wrote:
->>>> In a system where you have two hwlock blocks lckA and lckB, each
->>>> consisting of 8 locks and you have dspB that can only access lckB
+On 5 February 2015 at 11:02, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Thu, Feb 5, 2015 at 10:46 AM, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Hi Bintian,
+>>
+>> On 5 February 2015 at 01:24, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>>> Hello,
 >>>
->>> This is a good example - thanks. To be able to cope with such cases we
->>> will have to pass a hwlock block reference and its relative lock id.
+>>> Hi6220 is one mobile solution of Hisilicon, this patchset contains
+>>> initial support for Hi6220 SoC and HiKey development board, which
+>>> is based on ARM Cortex A53 architecture. Initial support is minimal
+>>> and includes just the arch configuration, clock driver, device tree
+>>> configuration.
 >>>
->>
->> Correct, so the #hwlock-cells and hwlock part from the proposal are
->> the important one. Having an optional hwlock-names will make things
->> easier to read as well, but is not necessary.
->
-> Right, if anything, it would be useful only for the clients, but the
-> hwspinlock core itself would not need it. So, I would forgo adding the
-> hwlock-names for now.
->
->>
->>> The DT binding should definitely be prepared for such cases (just kill
->>> the base-id field?), but let's see what it means about the Linux
->>> implementation.
+>>> Many peripheral drivers will be submitted later.
 >>>
+>>> Any comments will be appreciated!
+>>>
+>>> Thanks,
+>>>
+>>> Bintian Wang (3):
+>>>   arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
+>>>   clk: hi6220: Clock driver support for Hisilicon hi6220 SoC
+>>>   arm64: dts: Add dts files for Hisilicon Hi6220 SoC
 >>
->> From the dt binding PoV, we should be able to skip num-locks as well.
->> It seems most hwlock blocks have a fixed amount of locks provided and
->> the drivers are reporting this to the core when registering.
+>> Thanks for posting these! I've applied this series on top of
+>> next-20150204, however there was some fuzz that needed to be cleaned
+>> up on 3/3 [1]. I've confirmed the platform is booting to a basic user
+>> space without issue.
 >
-> I added this originally based on the initial MSM HW Mutex block bindings.
+> From ramdisk only, right?
+
+Correct, ramdisk only.
+
+> Given the timing of the posting of this
+> patch set, I'm not going to merge it for 3.20. Hopefully for 3.21
+> there will be some more peripheral support as well -- at least some
+> sort of storage device.
+
+Seem fair to me. I also hope to see more patches posted shortly.
+
 >
-
-It's not entirely correct to have this in DT for the MSM HW, as the
-hardware has a fixed number of mutexes. As soon as we have the binding
-sorted out I will follow up with a new revision of the tcsr/sfpb-mutex
-driver.
-
->>
->> So I think we can reduce the binding to:
->>
->> Providers:
->> #hwlock-cells
->>
->> Consumers:
->> hwlocks
->> hwlock-names
->>
->> For the hardware where number of locks is actually variable (e.g.
->> different variants of same block) there can be driver specific entries
->> for this.
 >
-> Right, we should be able to drop this and use the driver match data. As
-> it is, the field is used during registration of the block with the
-> hwspinlock core.
->
+> -Olof
 
-If we have certain systems where it actually is a property to be
-configured then they can have individual properties, extending the
-standard set. Either way, it's not a dynamic property shared by all
-hwlock drivers, so it should not be in the common binding.
+Cheers,
 
-Will you send out a new revision of the binding? I would love to get
-this integrated so I can move on with the dependents.
-
-Regards,
-Bjorn
+Tyler
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
