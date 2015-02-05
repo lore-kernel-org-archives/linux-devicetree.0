@@ -1,113 +1,173 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: define DT bindings for system
- suspend
-Date: Thu, 05 Feb 2015 13:49:43 +0000
-Message-ID: <54D374F7.90307@arm.com>
-References: <1421840155-18990-1-git-send-email-sudeep.holla@arm.com> <1421840155-18990-2-git-send-email-sudeep.holla@arm.com> <20150204161006.GD6592@leverpostej> <54D37000.8000006@arm.com> <20150205133230.GM11344@leverpostej>
+From: Jon Loeliger <jdl@jdl.com>
+Subject: Re: [PATCH 1/4] arm64: dts: fix PMU IRQ ordering for Juno
+Date: Thu, 05 Feb 2015 08:33:38 -0600
+Message-ID: <E1YJNUw-00009i-28@mylo>
+References: <1422294858-28100-1-git-send-email-will.deacon@arm.com>
+ <20150205114642.GG11344@leverpostej> <20150205115416.GE23241@arm.com>
+ <20150205115933.GI11344@leverpostej> <20150205120920.GF23241@arm.com>
+ <20150205122048.GJ11344@leverpostej> <20150205124833.GV25675@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150205133230.GM11344@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20150205124833.GV25675@voom.fritz.box>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+So, like, David Gibson said:
+> 
+> On Thu, Feb 05, 2015 at 12:20:48PM +0000, Mark Rutland wrote:
+> > [Adding dtc folk]
+> > 
+> > On Thu, Feb 05, 2015 at 12:09:20PM +0000, Will Deacon wrote:
+> > > On Thu, Feb 05, 2015 at 11:59:33AM +0000, Mark Rutland wrote:
+> > > > On Thu, Feb 05, 2015 at 11:54:16AM +0000, Will Deacon wrote:
+> > > > > On Thu, Feb 05, 2015 at 11:46:42AM +0000, Mark Rutland wrote:
+> > > > > > On Mon, Jan 26, 2015 at 05:54:15PM +0000, Will Deacon wrote:
+> > > > > > > diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+> > > > > > > index cb3073e4e7a8..4ed9287aaef1 100644
+> > > > > > > --- a/arch/arm64/boot/dts/arm/juno.dts
+> > > > > > > +++ b/arch/arm64/boot/dts/arm/juno.dts
+> > > > > > > @@ -107,11 +107,11 @@
+> > > > > > >  	pmu {
+> > > > > > >  		compatible = "arm,armv8-pmuv3";
+> > > > > > >  		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> > > > > > > +			     <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
+> > > > > > > +			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>,
+> > > > > > >  			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> > > > > > >  			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+> > > > > > > -			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+> > > > > > > -			     <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
+> > > > > > > -			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > > +			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > >  	};
+> > > > > > 
+> > > > > > I am very much not keen on this. While this may get things working
+> > > > > > today, it completely relies on Linux-internal details (the order of CPU
+> > > > > > bringup, which in this case is different from the order of entries in
+> > > > > > /cpus).
+> > > > > > 
+> > > > > > In all other dts that I am aware of, the order of entries in /cpus
+> > > > > > aligns with the order of interrupts in the PMU node, and the first entry
+> > > > > > is the boot CPU.
+> > > > > > 
+> > > > > > I think that we should ensure that the ordering of CPU nodes matches the
+> > > > > > order of interrupts here. That way we can fall back to that ordering (if
+> > > > > > not explicitly overridden), and even after an arbitrary logical
+> > > > > > renumbering (e.g. after a kexec) the relationship should stay intact.
+> > > > > 
+> > > > > There are a few problems with reordering the CPU nodes:
+> > > > > 
+> > > > >   (1) It breaks any existing users of taskset to pin on big/little
+> > > > >       clusters.
+> > > > 
+> > > > This is unfortunate, but this is also the case if the boot CPU is
+> > > > different.
+> > > 
+> > > Right, so don't change the boot CPU. In that vain, we also shouldn't change
+> > > the CPU order in the .dts -- the current .dts is working for taskset and
+> > > we shouldn't break people's scripts just because they want to use the PMU.
+> > 
+> > I think this is an orthogonal discussion. If Linux is booted on a
+> > different CPU, it's not the fault of Linux that CPU0 is different.
+> > 
+> > > > >   (2) It's not generally possible if, for example, the bootloader decides
+> > > > >       to boot Linux on a different CPU then we have no choice but to
+> > > > >       change the PMU interrupt order.
+> > > > 
+> > > > In that case _this_ patch is broken.
+> > > 
+> > > Why? I'm not denying that changing the boot CPU causes problems, I'm saying
+> > > that you *can't* fix that by changing the CPU node order. You still have
+> > > to change the interrupt order in that case, so why not just localise the
+> > > changes there in the first place?
+> > 
+> > If we're going to try to maintain support for these DTs long-term (with
+> > kexec and whatever logical renumbering can occur there), then we need a
+> > consistent invariant that we can rely on to associate interrupts and
+> > CPUs correctly.
+> > 
+> > The Linux logical ordering is not invariant, so we know that this _will_
+> > break.
+> > 
+> > As far as I am aware, every other DT lists the boot CPU first, and the
+> > order of entries in /cpus mathes the logical order. Using the order of
+> > entries in /cpus will remain consistent in the face of arbitrary
+> > renumbering, and is (currently) consistent with logical numbering.
+> > 
+> > So keeping the CPU nodes and interrupt entries in the same order
+> > provides us with a long-term consistent order, regardless of which CPU
+> > is the boot CPU.
+> > 
+> > This DT is currently broken. If we're going to make it work we should do
+> > so in a manner that will continue to work. Anything else is a broken
+> > bodge that hurts us in the long-term as we'll have to hack around it.
+> > 
+> > > > If we associate the interrupt with a CPU by node order, the relationship
+> > > > is preserved regardless of which CPU is the boot CPU (whether it was the
+> > > > bootloader's choice, kexec, or whatever).
+> > > 
+> > > Sure, and that requires code changes. If we're going to change the code,
+> > > then I'd much rather we make the binding explicit, like I did in the
+> > > follow-up patches to this one. As I mentioned before, this is a .dts fix
+> > > to get things working with the current code. It's really too late to argue
+> > > about the existing binding, even if it sucks.
+> > 
+> > Sure, the binding sucks.
+> > 
+> > This DT has also _never_ worked.
+> > 
+> > If we're going to fix things, let's not introduce a middle step that's
+> > broken in a different way.
+> > 
+> > > > >   (3) I didn't think that the ordering of CPU nodes was guaranteed to be
+> > > > >       preserved by dtc, whereas the order of the interrupts will be.
+> > > > 
+> > > > The order of nodes is presently preserved.
+> > > 
+> > > It's not about the present behaviour; I need a _guarantee_ that dtc/libfdt
+> > > will *never* reorder CPU nodes. Today's working .dts file needs to continue
+> > > to work with future tools.
+> >
+> > Jon, David, Grant, thoughts?
+> 
+> As a general rule, neither dtc nor libfdt will re-order any nodes
+> unless you explicitly ask them to (e.g. dtc's "-s" option).  That
+> said, you should try not to rely on dt order.
 
 
-On 05/02/15 13:32, Mark Rutland wrote:
-> On Thu, Feb 05, 2015 at 01:28:32PM +0000, Sudeep Holla wrote:
->>
->>
->> On 04/02/15 16:10, Mark Rutland wrote:
->>> Hi Sudeep,
->>>
->>> On Wed, Jan 21, 2015 at 11:35:54AM +0000, Sudeep Holla wrote:
->>>> ARM based platforms implement unique ways to enter system suspend
->>>> (i.e. Suspend to RAM). The mechanism and the parameters defining the
->>>> system state vary on a per-platform basis forcing the OS to handle it
->>>> in very platform specific way.
->>>>
->>>> Since ARM 32-bit systems had machine specific code, no attempts to
->>>> standardize are being made as it provides easy way to implement suspend
->>>> operations in a platform specific manner. However, this approach not
->>>> only makes maintainance more difficult as the number of platforms
->>>> supported increases but also not feasible for ARM64.
->>>>
->>>> This DT binding aims at standardizing the system suspend for ARM
->>>> platforms. ARM64 platforms mandates entry-method property in DT for
->>>> this system suspend node.
->>>>
->>>> On system implementing PSCI as an enable-method to enter system suspend,
->>>> the PSCI CPU suspend method is used on versions upto v0.2 and requires
->>>> the power_state parameter to be passed to the PSCI CPU suspend function.
->>>>
->>>> This parameter is platform specific, therefore must be provided by
->>>> firmware to the OS in order to enable proper call sequence.
->>>>
->>>> This ARM system suspend DT bindings rely on a property
->>>> (i.e. arm,psci-suspend-param) in the PSCI DT bindings that describes
->>>> how the PSCI CPU suspend power_state parameter should be defined in DT.
->>>
->>> A short while ago (after this posting), the PSCI 1.0 spec [1] was
->>> released, featuring the new (optional) SYSTEM_SUSPEND mechanism intended
->>> for suspend to RAM. This has a standard ID, and its presence can be
->>> detected via the new standard PSCI_FEATURES call.
->>>
->>> The fundamental mechanism is identical. We would hot unplug all but one
->>> CPU, and from this remaining CPU we would make a SYSTEM_SUSPEND call.
->>> The major differences are that SYSTEM_SUSPEND can be detected via
->>> PSCI_FEATURES, and doesn't need a state parameter.
->>>
->>> Given that the only mandatory addition in PSCI 1.0 over PSCI 0.2 is the
->>> PSCI_FEATURES call (used to detect the presence of SYSTEM_SUSPEND), I do
->>> not believe that implementing this should be a signficant overhead
->>> compared to implementing the CPU_SUSPEND based approach with PSCI 0.2.
->>>
->>> So I'd very much prefer that we require a minimal PSCI 1.0 with
->>> SYSTEM_SUSPEND rather than extending CPU_SUSPEND in this manner. Is
->>> anyone attempting to implement suspend to RAM with PSCI 0.1?
->>>
->>
->> I too prefer have PSCI v1.0 for SYSTEM SUSPEND support, which eliminates
->> the need for this binding. But the question is: are silicon vendors
->> ready to upgrade their firmware to PSCI v1.0 for system system feature
->> especially since it's one of the fundamental feature needed in Android
->> systems.
->
-> Sure. That's the question I'd like to know the answer to.
->
+Hi guys,
 
-Right, I too hope to get response here.
+As you explicitly solicited my opinion, I will tell you what I think.
 
-> If they're bringing up PSCIv0.2 now, the delta to PSCIv0.1 is not large.
->
+First, I agree with David: DTC and libfdt are not gratuitously
+re-ordering the nodes within the tree.  But nothing should rely
+on that behaviour either.  It is a tree, and the children of a
+particular node are unordered.  There *are* manipulation primitives
+that can cause a restructuring of the tree, and DTS consumers should
+be prepared to accomodate that.
 
-That's true.
+Second, that Linux assumes an ordering on nodes from the tree is
+really unfortunate.  I think we should try to remoce any such
+dependency or accomodate a more relaxed DTB read.
 
-> If they already have an implementation baked, then that's a different
-> scenario.
->
-> Regardless, what constitutes a wakeup device is a fundamental question
+Finally, remember that the DTS is supposed describe the hardware.
+The hardware doesn't (*usually*) require an ordering on its
+components.  In a true SMP, it is S -- symmetric -- and shouldn't
+rely on one Core being more first than another.  That one is treated
+as a special entity is entirely a SW description.  As such, it
+really shouldn't be represented as some tacit or hidden fact within
+the DTS.
 
-IIUC individual devices can expose if they are wake-up capable. E.g.
-RTC can be wakeup capable and if it's enabled(sysfs entry exists, I did
-use it to test on Juno), it's interrupt is kept unmasked in suspend path
-while other devices keep their interrupts masked(can be both at GIC and
-source).
-
-> to answer, along with what in the system (e.g.  peripherals) the kernel
-> must save/restore the state of.
->
-
-Ideally individual drivers need to take care of saving and restoring 
-their state. However there will be always exceptions :)
-
-Regards,
-Sudeep
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+HTH,
+jdl
