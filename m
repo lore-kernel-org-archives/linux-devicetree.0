@@ -1,113 +1,76 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] media: i2c: add support for omnivision's ov2659 sensor
-Date: Thu, 05 Feb 2015 13:53:16 +0200
-Message-ID: <3110055.vYzQi51GtK@avalon>
-References: <1421365163-29394-1-git-send-email-prabhakar.csengg@gmail.com> <2517945.eGhlRo2yDj@avalon> <CA+V-a8uTzo3DL+rCGK2wPHtwqQTDxfzNOBXB+RVszJnThSBMqQ@mail.gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/4] arm64: dts: fix PMU IRQ ordering for Juno
+Date: Thu, 5 Feb 2015 11:54:16 +0000
+Message-ID: <20150205115416.GE23241@arm.com>
+References: <1422294858-28100-1-git-send-email-will.deacon@arm.com>
+ <20150205114642.GG11344@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+V-a8uTzo3DL+rCGK2wPHtwqQTDxfzNOBXB+RVszJnThSBMqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150205114642.GG11344@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+On Thu, Feb 05, 2015 at 11:46:42AM +0000, Mark Rutland wrote:
+> On Mon, Jan 26, 2015 at 05:54:15PM +0000, Will Deacon wrote:
+> > diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+> > index cb3073e4e7a8..4ed9287aaef1 100644
+> > --- a/arch/arm64/boot/dts/arm/juno.dts
+> > +++ b/arch/arm64/boot/dts/arm/juno.dts
+> > @@ -107,11 +107,11 @@
+> >  	pmu {
+> >  		compatible = "arm,armv8-pmuv3";
+> >  		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> > +			     <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
+> > +			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>,
+> >  			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> >  			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+> > -			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+> > -			     <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
+> > -			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>;
+> > +			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> >  	};
+> 
+> I am very much not keen on this. While this may get things working
+> today, it completely relies on Linux-internal details (the order of CPU
+> bringup, which in this case is different from the order of entries in
+> /cpus).
+> 
+> In all other dts that I am aware of, the order of entries in /cpus
+> aligns with the order of interrupts in the PMU node, and the first entry
+> is the boot CPU.
+> 
+> I think that we should ensure that the ordering of CPU nodes matches the
+> order of interrupts here. That way we can fall back to that ordering (if
+> not explicitly overridden), and even after an arbitrary logical
+> renumbering (e.g. after a kexec) the relationship should stay intact.
 
-On Wednesday 04 February 2015 20:55:02 Lad, Prabhakar wrote:
-> On Wed, Feb 4, 2015 at 5:03 PM, Laurent Pinchart wrote:
-> > On Thursday 15 January 2015 23:39:23 Lad, Prabhakar wrote:
-> >> From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-> >> 
-> >> this patch adds support for omnivision's ov2659
-> >> sensor.
-> >> 
-> >> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/media/i2c/ov2659.txt       |   33 +
-> >>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
-> >>  MAINTAINERS                                        |   10 +
-> >>  drivers/media/i2c/Kconfig                          |   11 +
-> >>  drivers/media/i2c/Makefile                         |    1 +
-> >>  drivers/media/i2c/ov2659.c                         | 1623
-> >>  +++++++++++++++++
-> >>  include/media/ov2659.h                             |   33 +
-> >>  7 files changed, 1712 insertions(+)
-> >>  create mode 100644
-> >>  Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> >>  create mode 100644 drivers/media/i2c/ov2659.c
-> >>  create mode 100644 include/media/ov2659.h
+There are a few problems with reordering the CPU nodes:
 
-[snip]
+  (1) It breaks any existing users of taskset to pin on big/little
+      clusters.
 
-> >> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-> >> new file mode 100644
-> >> index 0000000..ce8ec8d
-> >> --- /dev/null
-> >> +++ b/drivers/media/i2c/ov2659.c
-> >> @@ -0,0 +1,1623 @@
+  (2) It's not generally possible if, for example, the bootloader decides
+      to boot Linux on a different CPU then we have no choice but to
+      change the PMU interrupt order.
 
-[snip]
+  (3) I didn't think that the ordering of CPU nodes was guaranteed to be
+      preserved by dtc, whereas the order of the interrupts will be.
 
-> >> +static const struct ov2659_framesize ov2659_framesizes[] = {
-> >> +     { /* QVGA */
-> >> +             .width          = 320,
-> >> +             .height         = 240,
-> >> +             .regs           = ov2659_qvga,
-> >> +             .max_exp_lines  = 248,
-> >> +     }, { /* VGA */
-> >> +             .width          = 640,
-> >> +             .height         = 480,
-> >> +             .regs           = ov2659_vga,
-> >> +             .max_exp_lines  = 498,
-> >> +     }, { /* SVGA */
-> >> +             .width          = 800,
-> >> +             .height         = 600,
-> >> +             .regs           = ov2659_svga,
-> >> +             .max_exp_lines  = 498,
-> >> +     }, { /* XGA */
-> >> +             .width          = 1024,
-> >> +             .height         = 768,
-> >> +             .regs           = ov2659_xga,
-> >> +             .max_exp_lines  = 498,
-> >> +     }, { /* 720P */
-> >> +             .width          = 1280,
-> >> +             .height         = 720,
-> >> +             .regs           = ov2659_720p,
-> >> +             .max_exp_lines  = 498,
-> >> +     }, { /* SXGA */
-> >> +             .width          = 1280,
-> >> +             .height         = 1024,
-> >> +             .regs           = ov2659_sxga,
-> >> +             .max_exp_lines  = 1048,
-> >> +     }, { /* UXGA */
-> >> +             .width          = 1600,
-> >> +             .height         = 1200,
-> >> +             .regs           = ov2659_uxga,
-> >> +             .max_exp_lines  = 498,
-> >> +     },
-> >> +};
-> > 
-> > That's what bothers me the most about drivers for Omnivision sensors. For
-> > some reason (I'd bet on lack of proper documentation) they list a couple
-> > of supported resolutions with corresponding register values, instead of
-> > computing the register values from the format configured by userspace.
-> > That's not the way we want to go. Prabhakar, do you have enough
-> > documentation to fix that ?
->
-> I am afraid I have limited documentation here.
+> This DT has clearly never worked (nor been tested), and I think having
+> this as an intermediary step only adds to the long term support burden
+> by having the juno dts arbitrarily different to all other dts files (by
+> relying on a logical order that's different to the /cpus order).
+> 
+> Longer term we must ensure we have a more explicit ordering, as with
+> your later patches.
 
-How limited ? :-) I assume someone has documentation, given that the patch 
-contains a larger number of #define's with register names.
+Agreed. This is intended as something simpler for -stable.
 
--- 
-Regards,
-
-Laurent Pinchart
-
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
