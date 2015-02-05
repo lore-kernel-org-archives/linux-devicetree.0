@@ -1,188 +1,175 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/4] arm64: dts: fix PMU IRQ ordering for Juno
-Date: Thu, 5 Feb 2015 15:38:57 +0000
-Message-ID: <20150205153857.GA20735@leverpostej>
-References: <1422294858-28100-1-git-send-email-will.deacon@arm.com>
- <20150205114642.GG11344@leverpostej>
- <20150205115416.GE23241@arm.com>
- <20150205115933.GI11344@leverpostej>
- <20150205120920.GF23241@arm.com>
- <20150205122048.GJ11344@leverpostej>
- <20150205124833.GV25675@voom.fritz.box>
- <E1YJNUw-00009i-28@mylo>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 04/15] drm: bridge/dw_hdmi: add indentification
+ registers parse and record
+Date: Thu, 5 Feb 2015 23:46:29 +0800
+Message-ID: <CAGS+omCiGh0-4BbPjPS+KqMW9-OpJ8Je7o37Web06w1CR7RPgw@mail.gmail.com>
+References: <1422975418-13302-1-git-send-email-ykk@rock-chips.com> <1422976283-30071-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1YJNUw-00009i-28@mylo>
+In-Reply-To: <1422976283-30071-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Ben Zhang <benzh-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, open list:OPEN FIRMW
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 05, 2015 at 02:33:38PM +0000, Jon Loeliger wrote:
-> So, like, David Gibson said:
-> > 
-> > On Thu, Feb 05, 2015 at 12:20:48PM +0000, Mark Rutland wrote:
-> > > [Adding dtc folk]
-> > > 
-> > > On Thu, Feb 05, 2015 at 12:09:20PM +0000, Will Deacon wrote:
-> > > > On Thu, Feb 05, 2015 at 11:59:33AM +0000, Mark Rutland wrote:
-> > > > > On Thu, Feb 05, 2015 at 11:54:16AM +0000, Will Deacon wrote:
-> > > > > > On Thu, Feb 05, 2015 at 11:46:42AM +0000, Mark Rutland wrote:
-> > > > > > > On Mon, Jan 26, 2015 at 05:54:15PM +0000, Will Deacon wrote:
-> > > > > > > > diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-> > > > > > > > index cb3073e4e7a8..4ed9287aaef1 100644
-> > > > > > > > --- a/arch/arm64/boot/dts/arm/juno.dts
-> > > > > > > > +++ b/arch/arm64/boot/dts/arm/juno.dts
-> > > > > > > > @@ -107,11 +107,11 @@
-> > > > > > > >  	pmu {
-> > > > > > > >  		compatible = "arm,armv8-pmuv3";
-> > > > > > > >  		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-> > > > > > > > +			     <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
-> > > > > > > > +			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>,
-> > > > > > > >  			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-> > > > > > > >  			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-> > > > > > > > -			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-> > > > > > > > -			     <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
-> > > > > > > > -			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > > > > +			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > > > >  	};
-> > > > > > > 
-> > > > > > > I am very much not keen on this. While this may get things working
-> > > > > > > today, it completely relies on Linux-internal details (the order of CPU
-> > > > > > > bringup, which in this case is different from the order of entries in
-> > > > > > > /cpus).
-> > > > > > > 
-> > > > > > > In all other dts that I am aware of, the order of entries in /cpus
-> > > > > > > aligns with the order of interrupts in the PMU node, and the first entry
-> > > > > > > is the boot CPU.
-> > > > > > > 
-> > > > > > > I think that we should ensure that the ordering of CPU nodes matches the
-> > > > > > > order of interrupts here. That way we can fall back to that ordering (if
-> > > > > > > not explicitly overridden), and even after an arbitrary logical
-> > > > > > > renumbering (e.g. after a kexec) the relationship should stay intact.
-> > > > > > 
-> > > > > > There are a few problems with reordering the CPU nodes:
-> > > > > > 
-> > > > > >   (1) It breaks any existing users of taskset to pin on big/little
-> > > > > >       clusters.
-> > > > > 
-> > > > > This is unfortunate, but this is also the case if the boot CPU is
-> > > > > different.
-> > > > 
-> > > > Right, so don't change the boot CPU. In that vain, we also shouldn't change
-> > > > the CPU order in the .dts -- the current .dts is working for taskset and
-> > > > we shouldn't break people's scripts just because they want to use the PMU.
-> > > 
-> > > I think this is an orthogonal discussion. If Linux is booted on a
-> > > different CPU, it's not the fault of Linux that CPU0 is different.
-> > > 
-> > > > > >   (2) It's not generally possible if, for example, the bootloader decides
-> > > > > >       to boot Linux on a different CPU then we have no choice but to
-> > > > > >       change the PMU interrupt order.
-> > > > > 
-> > > > > In that case _this_ patch is broken.
-> > > > 
-> > > > Why? I'm not denying that changing the boot CPU causes problems, I'm saying
-> > > > that you *can't* fix that by changing the CPU node order. You still have
-> > > > to change the interrupt order in that case, so why not just localise the
-> > > > changes there in the first place?
-> > > 
-> > > If we're going to try to maintain support for these DTs long-term (with
-> > > kexec and whatever logical renumbering can occur there), then we need a
-> > > consistent invariant that we can rely on to associate interrupts and
-> > > CPUs correctly.
-> > > 
-> > > The Linux logical ordering is not invariant, so we know that this _will_
-> > > break.
-> > > 
-> > > As far as I am aware, every other DT lists the boot CPU first, and the
-> > > order of entries in /cpus mathes the logical order. Using the order of
-> > > entries in /cpus will remain consistent in the face of arbitrary
-> > > renumbering, and is (currently) consistent with logical numbering.
-> > > 
-> > > So keeping the CPU nodes and interrupt entries in the same order
-> > > provides us with a long-term consistent order, regardless of which CPU
-> > > is the boot CPU.
-> > > 
-> > > This DT is currently broken. If we're going to make it work we should do
-> > > so in a manner that will continue to work. Anything else is a broken
-> > > bodge that hurts us in the long-term as we'll have to hack around it.
-> > > 
-> > > > > If we associate the interrupt with a CPU by node order, the relationship
-> > > > > is preserved regardless of which CPU is the boot CPU (whether it was the
-> > > > > bootloader's choice, kexec, or whatever).
-> > > > 
-> > > > Sure, and that requires code changes. If we're going to change the code,
-> > > > then I'd much rather we make the binding explicit, like I did in the
-> > > > follow-up patches to this one. As I mentioned before, this is a .dts fix
-> > > > to get things working with the current code. It's really too late to argue
-> > > > about the existing binding, even if it sucks.
-> > > 
-> > > Sure, the binding sucks.
-> > > 
-> > > This DT has also _never_ worked.
-> > > 
-> > > If we're going to fix things, let's not introduce a middle step that's
-> > > broken in a different way.
-> > > 
-> > > > > >   (3) I didn't think that the ordering of CPU nodes was guaranteed to be
-> > > > > >       preserved by dtc, whereas the order of the interrupts will be.
-> > > > > 
-> > > > > The order of nodes is presently preserved.
-> > > > 
-> > > > It's not about the present behaviour; I need a _guarantee_ that dtc/libfdt
-> > > > will *never* reorder CPU nodes. Today's working .dts file needs to continue
-> > > > to work with future tools.
-> > >
-> > > Jon, David, Grant, thoughts?
-> > 
-> > As a general rule, neither dtc nor libfdt will re-order any nodes
-> > unless you explicitly ask them to (e.g. dtc's "-s" option).  That
-> > said, you should try not to rely on dt order.
-> 
-> 
-> Hi guys,
-> 
-> As you explicitly solicited my opinion, I will tell you what I think.
-> 
-> First, I agree with David: DTC and libfdt are not gratuitously
-> re-ordering the nodes within the tree.  But nothing should rely
-> on that behaviour either.  It is a tree, and the children of a
-> particular node are unordered.  There *are* manipulation primitives
-> that can cause a restructuring of the tree, and DTS consumers should
-> be prepared to accomodate that.
-> 
-> Second, that Linux assumes an ordering on nodes from the tree is
-> really unfortunate.  I think we should try to remoce any such
-> dependency or accomodate a more relaxed DTB read.
+On Tue, Feb 3, 2015 at 11:11 PM, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> By parsing the indentification registers we can know what functions
+> are present on the hdmi ip.
+>
+> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> Changes in v3:
+> - Add ID registers parse and record
+>
+> Changes in v2: None
+>
+>  drivers/gpu/drm/bridge/dw_hdmi.c | 59 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/bridge/dw_hdmi.h | 23 ++++++++++++++++
+>  2 files changed, 82 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
+> index 08f10da..7b5b664 100644
+> --- a/drivers/gpu/drm/bridge/dw_hdmi.c
+> +++ b/drivers/gpu/drm/bridge/dw_hdmi.c
+> @@ -79,6 +79,23 @@ static const u16 csc_coeff_rgb_in_eitu709[3][4] = {
+>         { 0x6756, 0x78ab, 0x2000, 0x0200 }
+>  };
+>
+> +struct hdmi_id {
+> +       u8 design;
+> +       u8 revision;
+> +
+> +       bool prepen;
+> +       bool audspdif;
+> +       bool audi2s;
+> +       bool hdmi14;
+> +       bool csc;
+> +       bool hdcp;
+> +       bool hdmi20;
+> +       bool confapb;
+> +       bool ahbauddma;
+> +       bool gpaud;
+> +       u8 phy_type;
+> +};
+> +
+>  struct hdmi_vmode {
+>         bool mdvi;
+>         bool mhsyncpolarity;
+> @@ -111,6 +128,8 @@ struct dw_hdmi {
+>         struct clk *isfr_clk;
+>         struct clk *iahb_clk;
+>
+> +       struct hdmi_id id;
+> +
+>         struct hdmi_data_info hdmi_data;
+>         const struct dw_hdmi_plat_data *plat_data;
+>
+> @@ -1259,6 +1278,36 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+>         return 0;
+>  }
+>
+> +static void hdmi_parse_id(struct dw_hdmi *hdmi)
+> +{
+> +       u8 config0_id, config1_id, config2_id, config3_id;
+> +
+> +       config0_id = hdmi_readb(hdmi, HDMI_CONFIG0_ID);
+> +       config1_id = hdmi_readb(hdmi, HDMI_CONFIG1_ID);
+> +       config2_id = hdmi_readb(hdmi, HDMI_CONFIG2_ID);
+> +       config3_id = hdmi_readb(hdmi, HDMI_CONFIG3_ID);
+> +
+> +       hdmi->id.prepen = config0_id & HDMI_CONFIG0_ID_PREPEN ? true : false;
 
-I agree. Will's later patch will do this by describing the relationship
-between interrupts and CPUs explciitly:
+These could all be "!!(A & B)", but perhaps that is just a matter of
+personal preference.
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/319899.html
+> +       hdmi->id.audi2s = config0_id & HDMI_CONFIG0_ID_AUDI2S ? true : false;
+> +       hdmi->id.hdmi14 = config0_id & HDMI_CONFIG0_ID_HDMI14 ? true : false;
+> +       hdmi->id.hdcp = config0_id & HDMI_CONFIG0_ID_HDCP ? true : false;
+> +       hdmi->id.csc = config0_id & HDMI_CONFIG0_ID_CSC ? true : false;
+> +       hdmi->id.audspdif = config0_id & HDMI_CONFIG0_ID_AUDSPDIF ?
+> +                           true : false;
+> +
+> +       hdmi->id.confapb = config1_id & HDMI_CONFIG1_ID_CONFAPB ? true : false;
+> +       hdmi->id.hdmi20 = config1_id & HDMI_CONFIG1_ID_HDMI20 ? true : false;
+> +
+> +       hdmi->id.phy_type = config2_id & HDMI_CONFIG2_ID;
 
-> Finally, remember that the DTS is supposed describe the hardware.
-> The hardware doesn't (*usually*) require an ordering on its
-> components.  In a true SMP, it is S -- symmetric -- and shouldn't
-> rely on one Core being more first than another.  That one is treated
-> as a special entity is entirely a SW description.  As such, it
-> really shouldn't be represented as some tacit or hidden fact within
-> the DTS.
+HDMI_CONFIG2_ID is a register offset, not a mask.
 
-I completely agree with this, which is why I'm opposed to relyiong on
-the order Linux probes CPUs (as this has no guaranteed relationship with
-the DTB).
+> +
+> +       hdmi->id.gpaud = config3_id & HDMI_CONFIG3_ID_GPAUD ? true : false;
+> +       hdmi->id.ahbauddma = config3_id & HDMI_CONFIG3_ID_AHBAUDDMA ?
+> +                            true : false;
+> +
+> +       hdmi->id.design = hdmi_readb(hdmi, HDMI_DESIGN_ID);
+> +       hdmi->id.revision = hdmi_readb(hdmi, HDMI_REVISION_ID);
+> +}
+> +
+>  /* Wait until we are registered to enable interrupts */
+>  static int dw_hdmi_fb_registered(struct dw_hdmi *hdmi)
+>  {
+> @@ -1670,6 +1719,16 @@ int dw_hdmi_bind(struct device *dev, struct device *master,
+>                  hdmi_readb(hdmi, HDMI_PRODUCT_ID0),
+>                  hdmi_readb(hdmi, HDMI_PRODUCT_ID1));
+>
+> +       /* Config IDs */
+> +       dev_info(dev,
+> +                "Detected HDMI config_id 0x%x:0x%x:0x%x:0x%x\n",
+> +                hdmi_readb(hdmi, HDMI_CONFIG0_ID),
+> +                hdmi_readb(hdmi, HDMI_CONFIG1_ID),
+> +                hdmi_readb(hdmi, HDMI_CONFIG2_ID),
+> +                hdmi_readb(hdmi, HDMI_CONFIG3_ID));
+> +
+> +       hdmi_parse_id(hdmi);
 
-While relying on the order of CPU nodes is not something I want to do,
-it's at least contained within the DTB and has some chance of
-functioning when Linux aribtrarily renumbers CPUs.
+It seems a bit silly to read the regs once to print them, and then
+again in hdmi_parse_id().
+Perhaps move the dev_info() inside hdmi_parse_id().
+It would also be nice to print a full summary of all of the parsed fields.
 
-Does that make sense?
-
-Thanks,
-Mark.
+> +
+>         initialize_hdmi_ih_mutes(hdmi);
+>
+>         ret = devm_request_threaded_irq(dev, irq, dw_hdmi_hardirq,
+> diff --git a/drivers/gpu/drm/bridge/dw_hdmi.h b/drivers/gpu/drm/bridge/dw_hdmi.h
+> index 175dbc8..e4ba634 100644
+> --- a/drivers/gpu/drm/bridge/dw_hdmi.h
+> +++ b/drivers/gpu/drm/bridge/dw_hdmi.h
+> @@ -545,6 +545,29 @@
+>  #define HDMI_I2CM_FS_SCL_LCNT_0_ADDR            0x7E12
+>
+>  enum {
+> +/* HDMI_CONFIG0_ID */
+> +       HDMI_CONFIG0_ID_PREPEN = 0x80,
+> +       HDMI_CONFIG0_ID_AUDSPDIF = 0x20,
+> +       HDMI_CONFIG0_ID_AUDI2S = 0x10,
+> +       HDMI_CONFIG0_ID_HDMI14 = 0x08,
+> +       HDMI_CONFIG0_ID_CSC = 0x04,
+> +       HDMI_CONFIG0_ID_HDCP = 0x01,
+> +
+> +/* HDMI_CONFIG1_ID */
+> +       HDMI_CONFIG1_ID_HDMI20 = 0x20,
+> +       HDMI_CONFIG1_ID_CONFAPB = 0x02,
+> +
+> +/* HDMI_CONFIG2_ID */
+> +       HDMI_CONFIG2_ID_PHY_GEN2 = 0xf2,
+> +       HDMI_CONFIG2_ID_PHY_GEN2_HECA = 0xe2,
+> +       HDMI_CONFIG2_ID_PHY_HDMI_MHL = 0xc2,
+> +       HDMI_CONFIG2_ID_PHY_HDMI_MHL_HECA = 0xb2,
+> +       HDMI_CONFIG2_ID_LEGACY_PHY = 0x00,
+> +
+> +/* HDMI_CONFIG3_ID */
+> +       HDMI_CONFIG3_ID_AHBAUDDMA = 0x02,
+> +       HDMI_CONFIG3_ID_GPAUD = 0x01,
+> +
+>  /* IH_FC_INT2 field values */
+>         HDMI_IH_FC_INT2_OVERFLOW_MASK = 0x03,
+>         HDMI_IH_FC_INT2_LOW_PRIORITY_OVERFLOW = 0x02,
+> --
+> 2.1.2
+>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
