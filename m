@@ -1,63 +1,89 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] Documentation: DT bindings: add more Tegra chip
- compatible strings
-Date: Thu, 5 Feb 2015 20:25:22 +0100
-Message-ID: <20150205192521.GF15307@katana>
-References: <20150130221104.4761.50643.stgit@dusk.lan>
- <20150130221104.4761.4534.stgit@dusk.lan>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/3] clk: hi6220: Clock driver support for Hisilicon
+ hi6220 SoC
+Date: Thu, 5 Feb 2015 19:25:33 +0000
+Message-ID: <20150205192533.GE20735@leverpostej>
+References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com>
+ <1423128277-10297-3-git-send-email-bintian.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Pql/uPZNXIm1JCle"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150130221104.4761.4534.stgit-orwA252wQtA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>l
+In-Reply-To: <1423128277-10297-3-git-send-email-bintian.wang@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bintian Wang <bintian.wang@huawei.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "khilman@linaro.org" <khilman@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "olof@lixom.net" <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 05, 2015 at 09:24:36AM +0000, Bintian Wang wrote:
+> Add clock drivers for hi6220 SoC, this driver controls the SoC
+> registers to supply different clocks to different IPs in the SoC.
+> 
+> We add one divider clock for hi6220 because the divider in hi6220
+> also has a mask bit but it doesnot obey the rule defined by flag
+> "CLK_DIVIDER_HIWORD_MASK", we can not get index of the mask bit by
+> left shift fixed bits (e.g. 16 bits), so we add this divider clock
+> to handle it.
+> 
+> This patch also enables this clock driver for ARCH_HISI and document
+> devicetree bindings.
+> 
+> Signed-off-by: Bintian Wang <bintian.wang@huawei.com>
+> Reviewed-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+> Reviewed-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>  .../devicetree/bindings/clock/hi6220-clock.txt     |   30 +++
+>  arch/arm64/Kconfig                                 |    1 +
+>  drivers/clk/Kconfig                                |    2 +
+>  drivers/clk/Makefile                               |    4 +-
+>  drivers/clk/hisilicon/Kconfig                      |    5 +
+>  drivers/clk/hisilicon/Makefile                     |    1 +
+>  drivers/clk/hisilicon/clk-hi6220.c                 |  284 ++++++++++++++++++++
+>  drivers/clk/hisilicon/clk.c                        |   29 ++
+>  drivers/clk/hisilicon/clk.h                        |   17 ++
+>  drivers/clk/hisilicon/clkdivider-hi6220.c          |  273 +++++++++++++++++++
+>  include/dt-bindings/clock/hi6220-clock.h           |  172 ++++++++++++
+>  11 files changed, 815 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/hi6220-clock.txt
+>  create mode 100644 drivers/clk/hisilicon/Kconfig
+>  create mode 100644 drivers/clk/hisilicon/clk-hi6220.c
+>  create mode 100644 drivers/clk/hisilicon/clkdivider-hi6220.c
+>  create mode 100644 include/dt-bindings/clock/hi6220-clock.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/hi6220-clock.txt b/Documentation/devicetree/bindings/clock/hi6220-clock.txt
+> new file mode 100644
+> index 0000000..a3ddda1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/hi6220-clock.txt
+> @@ -0,0 +1,30 @@
+> +* Hisilicon Hi6220 Clock Controller
+> +
+> +The hi6220 clock controller generates and supplies clock to various
+> +controllers within the hi6220 SoC.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be one of the following:
+> +  - "hisilicon,hi6220-clock-ao" - controller for those clocks under SoC
+> +     power always on(AO) domain, it is the sub node of SoC power AO
+> +     controller in dts file.
+> +  - "hisilicon,hi6220-clock-sys" - controller for those clocks under SoC
+> +     system control domain, it is the sub node of SoC system controller
+> +     in dts file.
+> +  - "hisilicon,hi6220-clock-media" - controller for those clocks under
+> +     SoC media control domain, it is the sub node of SoC media controller
+> +     in dts file.
+> +  - "hisilicon,hi6220-clock-power" - controller for those clocks under
+> +     SoC power control domain, it is the sub node of SoC power controller
+> +     in dts file.
 
---Pql/uPZNXIm1JCle
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+These all refer to things which aren't documented (yet).
 
-Hi Paul!
+Please sort out your patches so that any documentation you depend on
+comes earlier.
 
-On Fri, Jan 30, 2015 at 03:11:04PM -0700, Paul Walmsley wrote:
-> Align compatible strings for several IP blocks present on Tegra chips
-> with the latest doctrine from the DT maintainers:
->=20
-> http://marc.info/?l=3Ddevicetree&m=3D142255654213019&w=3D2
+Please also separate documentation from code. Note that dt includes are
+_bindings_ and should be added with the relevant documentation.
 
-OK, I am not sure if I like the direction, but having a rule of thumb
-here is definately a good thing. Thanks for the pointer!
-
-So, for the I2C part:
-
-Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-
-
---Pql/uPZNXIm1JCle
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU08OhAAoJEBQN5MwUoCm211kP/1gwSZCg1BcLlL4f03sgSP7g
-43ow1o5erCEDXawaJrwocF5h/w5itymPrTl0V4pFTr2isis7jsaZvt+aBXtfKbeb
-gaKuqiMWxmw3iSbClMkT7rWSrM+BaLs2oJqLD6lAEW4F3YDHS0j1Rl0k5It5J230
-qNgO2mCar0l7pY7QWsv5vTPBtvNDa/VUaFn+nqzGRCheobMLOiTCaFe11KTnUT2G
-Fks0y8yqe5eAmd6kXSylFrp72IORLGpk+mjkZZw5PNmVF3iwcW+HhW4WGLVtdFJv
-C3haV/XZ+0Vx0+E0FZslvGZJFljo2bNWhX3zqIhOX4ZEHa0xBKL7KH8+4h9Y9pkN
-TGta6Gr9vsByPZbc8kIsPEvELZW0T61dYkkVs5FHnSgFa1iBxOrxxn1rVP22dyHp
-koVCrWFrG0A8NLUDrv2msO4RTU7INmO7mpwTGmpcRyDWjIn0OfMPwyISjw4T4pZL
-lh4tMOWsTQBboi1itXAhMk8xa97TR9qbyUwOvud/MwqVHiY8ZkQBawXGIoW+y+pO
-9qLpccLwI79/l7yl7xpSQpCtylxPAESeXAulTHRYTffoAREWKQwmhPeqe4awoiZg
-XGYjKiVlJBnSEYUgVXCkZi5tsqikfBH3p0VY1sKIrW5MhE2by22TTzoDVyvD2y/z
-6ov2grGmesT2m3keN2oH
-=5LNo
------END PGP SIGNATURE-----
-
---Pql/uPZNXIm1JCle--
+Thanks,
+Mark.
