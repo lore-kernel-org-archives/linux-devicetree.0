@@ -1,36 +1,41 @@
 From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH_V4 0/3] sound:soc: jz4740: Add DT, dynamic sampling
-Date: Thu, 5 Feb 2015 08:53:08 +0000
-Message-ID: <54D32F74.5070707@imgtec.com>
-References: <1422960959-40403-1-git-send-email-Zubair.Kakakhel@imgtec.com> <20150204211322.GP21293@sirena.org.uk>
+Subject: Re: [PATCH_V3 0/2] watchdog: jz4740: Add DT support
+Date: Thu, 5 Feb 2015 08:54:47 +0000
+Message-ID: <54D32FD7.2060503@imgtec.com>
+References: <1422959148-38075-1-git-send-email-Zubair.Kakakhel@imgtec.com> <20150203190449.GF2875@spo001.leaseweb.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150204211322.GP21293@sirena.org.uk>
+In-Reply-To: <20150203190449.GF2875@spo001.leaseweb.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: tiwai@suse.de, perex@perex.cz, lgirdwood@gmail.com, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+To: Wim Van Sebroeck <wim@iguana.be>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, paul@crapouillou.net
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 04/02/15 21:13, Mark Brown wrote:
-> On Tue, Feb 03, 2015 at 10:55:56AM +0000, Zubair Lutfullah Kakakhel wrote:
->> Hi,
+On 03/02/15 19:04, Wim Van Sebroeck wrote:
+> Hi Zubair,
+...
+>> Zubair Lutfullah Kakakhel (2):
+>>   dt: watchdog: Add DT binding documentation for jz4740 watchdog timer
+>>   watchdog: jz4740: Add DT support
 >>
->> Here are a few simple patches for the jz4740.
->>
->> First adds dynamic sampling support to jz4740-i2s.
->> Then two to add a simple binding and DT support.
->> Then a patch to set the clock rate for i2s.
+>>  .../devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt      | 12 ++++++++++++
+>>  drivers/watchdog/jz4740_wdt.c                                | 10 ++++++++++
+>>  2 files changed, 22 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
 > 
-> Applied all, but as I think has been mentioned before please use subject
-> lines matching the usual style for the subsystem.
+> Both patches have been added to linux-watchdog-next.
 > 
 
-Thank-you very much. 
+Thank-you very much.
 
-I'll try to be more careful in the future.
-
+Regards
 ZubairLK
+
+> Kind regards,
+> Wim.
+> 
+> 
