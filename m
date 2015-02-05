@@ -1,590 +1,114 @@
-From: Kenneth Westfield <kwestfie@codeaurora.org>
-Subject: [Patch V4 06/10] ASoC: ipq806x: Add LPASS CPU DAI driver
-Date: Thu,  5 Feb 2015 12:53:42 -0800
-Message-ID: <1423169626-22166-7-git-send-email-kwestfie@codeaurora.org>
-References: <1423169626-22166-1-git-send-email-kwestfie@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1423169626-22166-1-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
-Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Kenneth Westfield <kwestfie@codeaurora.org>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
+Date: Thu, 5 Feb 2015 16:42:27 -0500
+Message-ID: <54D3E3C3.1040104@ti.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com> <1422052359-12384-4-git-send-email-m-karicheri2@ti.com> <54C77616.80301@arm.com> <54C7DF13.20402@ti.com> <20150128110523.GC6646@e104818-lin.cambridge.arm.com> <54C9068D.8050701@arm.com> <20150128173048.GE31752@e104818-lin.cambridge.arm.com> <54CBC823.3020905@ti.com> <20150202121843.GD22661@e104818-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150202121843.GD22661@e104818-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Robin Murphy <Robin.Murphy@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kenneth Westfield <kwestfie@codeaurora.org>
+On 02/02/2015 07:18 AM, Catalin Marinas wrote:
+> On Fri, Jan 30, 2015 at 06:06:27PM +0000, Murali Karicheri wrote:
+>> On 01/28/2015 12:30 PM, Catalin Marinas wrote:
+>>> I think we can remove this check altogether (we leaved without it for a
+>>> while) but we need to add 1 when calculating the mask:
+>>>
+>>> 	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
+>>> 				     DMA_BIT_MASK(ilog2(size + 1)));
+>>>
+>> For Keystone, the dma_addr is to be taken care as well to determine the
+>> mask. The above will not work.
+>
+> This was discussed before (not on this thread) and dma_addr should not
+> affect the mask, it only affects the pfn offset.
+>
+>> Based on the discussion so far, this is the function I have come up with
+>> incorporating the suggestions. Please review this and see if I have
+>> missed out any. This works fine on Keystone.
+>>
+>> void of_dma_configure(struct device *dev, struct device_node *np)
+>> {
+>> 	u64 dma_addr = 0, paddr, size;
+>> 	int ret;
+>> 	bool coherent;
+>> 	unsigned long offset = 0;
+>> 	struct iommu_ops *iommu;
+>>
+>> 	/*
+>> 	 * Set default size to cover the 32-bit. Drivers are expected to setup
+>> 	 * the correct size and dma_mask.
+>>     	 */
+>> 	size = 1ULL<<  32;
+>>
+>> 	ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
+>> 	if (!ret) {
+>> 		offset = PFN_DOWN(paddr - dma_addr);
+>> 		if (!size) {
+>> 			dev_err(dev, "Invalid size (%llx)\n",
+>> 				size);
+>> 			return;
+>> 		}
+>> 		if (size&  1) {
+>> 			size = size + 1;
+>> 			dev_warn(dev, "Incorrect usage of size (%llx)\n",
+>> 				 size);
+>> 		}
+>> 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>> 	}
+>> 	dev->dma_pfn_offset = offset;
+>>
+>> 	/*
+>> 	 * Coherent DMA masks larger than 32-bit must be explicitly set by the
+>> 	 * driver.
+>> 	 */
+>> 	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
+>> 				     DMA_BIT_MASK(ilog2(dma_addr + size)));
+>
+> That's not correct, coherent_dma_mask should still be calculated solely
+> based on size, not dma_addr.
+>
+> Functions like swiotlb_dma_supported() use phys_to_dma() which on ARM
+> (32-bit) subtracts the dma_pfn_offset, so the mask based on size works
+> fine.
+>
+> In the arm64 tree, we haven't taken dma_pfn_offset into account for
+> phys_to_dma() yet but if needed for a SoC, we'll add it.
+>
+Catalin,
 
-Add the CPU DAI driver for the Qualcomm
-Technologies low-power audio subsystem (LPASS).
+The size based dma mask calculation itself can be a separate topic 
+patch. This series is adding important fix to get the PCI driver 
+functional and I would like to get this merged as soon as possible. I 
+also want to hear from Arnd about yout comment as we had discussed this 
+in the initial discussion of this patch series and 8/8 is essentially 
+added based on that discussion. I will add a simple check to catch and 
+warn the incorrect size setting in DT for dma-range as suggested by Rob 
+Herring and create a new patch to for size based mask calculation. I 
+will be sending v6 (expected to be merged soon) today and will work to 
+add a new patch. Before that we need to agree on what is the content of 
+the patch.
 
-Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
-Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
----
- sound/soc/qcom/lpass-cpu.c | 557 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 557 insertions(+)
- create mode 100644 sound/soc/qcom/lpass-cpu.c
+1. On keystone, DMA address start at 0x8000_0000 and DMA-able memory is 
+2G from the above base address. So without taking into account the 
+dma_addr, mask calculated will be 0x7fff_ffff where as we need that to 
+be 0xffff_ffff for keystone. So need to use this in the calculation.
 
-diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..8e58fa628667eca058bfbf35e29085b202f471f6
---- /dev/null
-+++ b/sound/soc/qcom/lpass-cpu.c
-@@ -0,0 +1,557 @@
-+/*
-+ * Copyright (c) 2010-2011,2013-2015 The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/clk.h>
-+#include <sound/soc.h>
-+#include <sound/pcm_params.h>
-+#include "lpass-lpaif-ipq806x.h"
-+#include "lpass.h"
-+
-+#define DRV_NAME			"lpass-cpu"
-+
-+static int lpass_cpu_daiops_set_sysclk(struct snd_soc_dai *dai, int clk_id,
-+		unsigned int freq, int dir)
-+{
-+	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-+
-+	drvdata->default_sysclk_freq = freq;
-+
-+	return 0;
-+}
-+
-+static int lpass_cpu_daiops_startup(struct snd_pcm_substream *substream,
-+		struct snd_soc_dai *dai)
-+{
-+	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-+	int ret;
-+
-+	ret = clk_prepare_enable(drvdata->mi2s_osr_clk);
-+	if (ret) {
-+		dev_err(dai->dev, "%s() error in enabling mi2s osr clk: %d\n",
-+				__func__, ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(drvdata->mi2s_bit_clk);
-+	if (ret) {
-+		dev_err(dai->dev, "%s() error in enabling mi2s bit clk: %d\n",
-+				__func__, ret);
-+		clk_disable_unprepare(drvdata->mi2s_osr_clk);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void lpass_cpu_daiops_shutdown(struct snd_pcm_substream *substream,
-+		struct snd_soc_dai *dai)
-+{
-+	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-+
-+	clk_disable_unprepare(drvdata->mi2s_bit_clk);
-+	clk_disable_unprepare(drvdata->mi2s_osr_clk);
-+}
-+
-+static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
-+		struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
-+{
-+	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-+	snd_pcm_format_t format = params_format(params);
-+	unsigned int channels = params_channels(params);
-+	unsigned int rate = params_rate(params);
-+	unsigned long bclk_freq, oclk_freq;
-+	unsigned int regval;
-+	int bitwidth, ret;
-+
-+	bitwidth = snd_pcm_format_width(format);
-+	if (bitwidth < 0) {
-+		dev_err(dai->dev, "%s() invalid bit width given\n", __func__);
-+		return bitwidth;
-+	}
-+
-+	regval = 0;
-+	regval |= LPAIF_I2SCTL_LOOPBACK_DISABLE;
-+	regval |= LPAIF_I2SCTL_WSSRC_INTERNAL;
-+
-+	switch (bitwidth) {
-+	case 16:
-+		regval |= LPAIF_I2SCTL_BITWIDTH_16;
-+		break;
-+	case 24:
-+		regval |= LPAIF_I2SCTL_BITWIDTH_24;
-+		break;
-+	case 32:
-+		regval |= LPAIF_I2SCTL_BITWIDTH_32;
-+		break;
-+	default:
-+		dev_err(dai->dev, "%s() invalid bitwidth given: %u\n",
-+				__func__, bitwidth);
-+		return -EINVAL;
-+	}
-+
-+	switch (channels) {
-+	case 1:
-+		regval |= LPAIF_I2SCTL_SPKMODE_SD0;
-+		regval |= LPAIF_I2SCTL_SPKMONO_MONO;
-+		break;
-+	case 2:
-+		regval |= LPAIF_I2SCTL_SPKMODE_SD0;
-+		regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-+		break;
-+	case 4:
-+		regval |= LPAIF_I2SCTL_SPKMODE_QUAD01;
-+		regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-+		break;
-+	case 6:
-+		regval |= LPAIF_I2SCTL_SPKMODE_6CH;
-+		regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-+		break;
-+	case 8:
-+		regval |= LPAIF_I2SCTL_SPKMODE_8CH;
-+		regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-+		break;
-+	default:
-+		dev_err(dai->dev, "%s() invalid channels given: %u\n",
-+				__func__, channels);
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_write(drvdata->lpaif_map,
-+			LPAIF_I2SCTL_REG(LPAIF_I2S_PORT_MI2S), regval);
-+	if (ret) {
-+		dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
-+				__func__, ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * adjust the OSR clock so that the BIT clock can successfully be
-+	 * derived from it by the hardware
-+	 */
-+	bclk_freq = rate * bitwidth * 2;
-+	if (bitwidth == drvdata->alt_sysclk_enable_bitwidth &&
-+			drvdata->alt_sysclk_enable)
-+		oclk_freq = drvdata->alt_sysclk_freq;
-+	else if (!drvdata->sysclk_shift_enable)
-+		oclk_freq = drvdata->default_sysclk_freq;
-+	else if (bclk_freq >= drvdata->default_sysclk_freq >>
-+			drvdata->sysclk_shift_compare)
-+		oclk_freq = drvdata->default_sysclk_freq;
-+	else
-+		oclk_freq = drvdata->default_sysclk_freq >>
-+				drvdata->sysclk_shift_amount;
-+
-+	ret = clk_set_rate(drvdata->mi2s_osr_clk, oclk_freq);
-+	if (ret) {
-+		dev_err(dai->dev, "%s() error setting mi2s osrclk to %lu: %d\n",
-+				__func__, oclk_freq, ret);
-+		return ret;
-+	}
-+
-+	ret = clk_set_rate(drvdata->mi2s_bit_clk, bclk_freq);
-+	if (ret) {
-+		dev_err(dai->dev, "%s() error setting mi2s bitclk to %lu: %d\n",
-+				__func__, bclk_freq, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream *substream,
-+		struct snd_soc_dai *dai)
-+{
-+	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-+	int ret;
-+
-+	ret = regmap_write(drvdata->lpaif_map,
-+			LPAIF_I2SCTL_REG(LPAIF_I2S_PORT_MI2S), 0);
-+	if (ret)
-+		dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
-+				__func__, ret);
-+
-+	return ret;
-+}
-+
-+static int lpass_cpu_daiops_prepare(struct snd_pcm_substream *substream,
-+		struct snd_soc_dai *dai)
-+{
-+	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-+	unsigned int reg, mask, val;
-+	int ret;
-+
-+	reg = LPAIF_I2SCTL_REG(LPAIF_I2S_PORT_MI2S);
-+	mask = LPAIF_I2SCTL_SPKEN_MASK;
-+	val = LPAIF_I2SCTL_SPKEN_ENABLE;
-+	ret = regmap_update_bits(drvdata->lpaif_map, reg, mask, val);
-+	if (ret)
-+		dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
-+				__func__, ret);
-+
-+	return ret;
-+}
-+
-+static int lpass_cpu_daiops_trigger(struct snd_pcm_substream *substream,
-+		int cmd, struct snd_soc_dai *dai)
-+{
-+	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-+	unsigned int reg, mask, val;
-+	int ret;
-+
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		reg = LPAIF_I2SCTL_REG(LPAIF_I2S_PORT_MI2S);
-+		mask = LPAIF_I2SCTL_SPKEN_MASK;
-+		val = LPAIF_I2SCTL_SPKEN_ENABLE;
-+		ret = regmap_update_bits(drvdata->lpaif_map, reg, mask, val);
-+		if (ret)
-+			dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
-+					__func__, ret);
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		reg = LPAIF_I2SCTL_REG(LPAIF_I2S_PORT_MI2S);
-+		mask = LPAIF_I2SCTL_SPKEN_MASK;
-+		val = LPAIF_I2SCTL_SPKEN_DISABLE;
-+		ret = regmap_update_bits(drvdata->lpaif_map, reg, mask, val);
-+		if (ret)
-+			dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
-+					__func__, ret);
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static struct snd_soc_dai_ops lpass_cpu_dai_ops = {
-+	.set_sysclk	= lpass_cpu_daiops_set_sysclk,
-+	.startup	= lpass_cpu_daiops_startup,
-+	.shutdown	= lpass_cpu_daiops_shutdown,
-+	.hw_params	= lpass_cpu_daiops_hw_params,
-+	.hw_free	= lpass_cpu_daiops_hw_free,
-+	.prepare	= lpass_cpu_daiops_prepare,
-+	.trigger	= lpass_cpu_daiops_trigger,
-+};
-+
-+static int lpass_cpu_dai_probe(struct snd_soc_dai *dai)
-+{
-+	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-+	int ret;
-+
-+	/* ensure audio hardware is disabled */
-+	ret = regmap_write(drvdata->lpaif_map,
-+			LPAIF_I2SCTL_REG(LPAIF_I2S_PORT_MI2S), 0);
-+	if (ret)
-+		dev_err(dai->dev, "%s() error writing to i2sctl reg: %d\n",
-+				__func__, ret);
-+
-+	return ret;
-+}
-+
-+static struct snd_soc_dai_driver lpass_cpu_dai_driver = {
-+	.playback = {
-+		.stream_name	= DRV_NAME "-playback",
-+		.formats	= SNDRV_PCM_FMTBIT_S16 |
-+					SNDRV_PCM_FMTBIT_S24 |
-+					SNDRV_PCM_FMTBIT_S32,
-+		.rates		= SNDRV_PCM_RATE_8000 |
-+					SNDRV_PCM_RATE_16000 |
-+					SNDRV_PCM_RATE_32000 |
-+					SNDRV_PCM_RATE_48000 |
-+					SNDRV_PCM_RATE_96000,
-+		.rate_min	= 8000,
-+		.rate_max	= 96000,
-+		.channels_min	= 1,
-+		.channels_max	= 8,
-+	},
-+	.probe	= &lpass_cpu_dai_probe,
-+	.ops    = &lpass_cpu_dai_ops,
-+};
-+
-+static const struct snd_soc_component_driver lpass_cpu_comp_driver = {
-+	.name = DRV_NAME,
-+};
-+
-+static bool lpass_cpu_regmap_writeable(struct device *dev, unsigned int reg)
-+{
-+	int i;
-+
-+	for (i = 0; i < LPAIF_I2S_PORT_NUM; ++i)
-+		if (reg == LPAIF_I2SCTL_REG(i))
-+			return true;
-+
-+	for (i = 0; i < LPAIF_IRQ_PORT_NUM; ++i) {
-+		if (reg == LPAIF_IRQEN_REG(i))
-+			return true;
-+		if (reg == LPAIF_IRQCLEAR_REG(i))
-+			return true;
-+	}
-+
-+	for (i = 0; i < LPAIF_RDMA_CHAN_NUM; ++i) {
-+		if (reg == LPAIF_RDMACTL_REG(i))
-+			return true;
-+		if (reg == LPAIF_RDMABASE_REG(i))
-+			return true;
-+		if (reg == LPAIF_RDMABUFF_REG(i))
-+			return true;
-+		if (reg == LPAIF_RDMAPER_REG(i))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static bool lpass_cpu_regmap_readable(struct device *dev, unsigned int reg)
-+{
-+	int i;
-+
-+	for (i = 0; i < LPAIF_I2S_PORT_NUM; ++i)
-+		if (reg == LPAIF_I2SCTL_REG(i))
-+			return true;
-+
-+	for (i = 0; i < LPAIF_IRQ_PORT_NUM; ++i) {
-+		if (reg == LPAIF_IRQEN_REG(i))
-+			return true;
-+		if (reg == LPAIF_IRQSTAT_REG(i))
-+			return true;
-+	}
-+
-+	for (i = 0; i < LPAIF_RDMA_CHAN_NUM; ++i) {
-+		if (reg == LPAIF_RDMACTL_REG(i))
-+			return true;
-+		if (reg == LPAIF_RDMABASE_REG(i))
-+			return true;
-+		if (reg == LPAIF_RDMABUFF_REG(i))
-+			return true;
-+		if (reg == LPAIF_RDMACURR_REG(i))
-+			return true;
-+		if (reg == LPAIF_RDMAPER_REG(i))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static bool lpass_cpu_regmap_volatile(struct device *dev, unsigned int reg)
-+{
-+	int i;
-+
-+	for (i = 0; i < LPAIF_IRQ_PORT_NUM; ++i)
-+		if (reg == LPAIF_IRQSTAT_REG(i))
-+			return true;
-+
-+	for (i = 0; i < LPAIF_RDMA_CHAN_NUM; ++i)
-+		if (reg == LPAIF_RDMACURR_REG(i))
-+			return true;
-+
-+	return false;
-+}
-+
-+static const struct regmap_config lpass_cpu_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = LPAIF_RDMAPER_REG(LPAIF_RDMA_CHAN_MAX),
-+	.writeable_reg = lpass_cpu_regmap_writeable,
-+	.readable_reg = lpass_cpu_regmap_readable,
-+	.volatile_reg = lpass_cpu_regmap_volatile,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+static int lpass_cpu_parse_of(struct device *dev, struct lpass_data *drvdata)
-+{
-+	struct device_node *np = dev->of_node;
-+	int ret;
-+
-+	if (!np || !of_device_is_available(np)) {
-+		dev_err(dev, "%s() no available info for %s\n", __func__,
-+				DRV_NAME);
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_bool(np, "qcom,system-clock-shift")) {
-+		ret = of_property_read_u32(np,
-+				"qcom,system-clock-shift-compare",
-+				&drvdata->sysclk_shift_compare);
-+		if (ret) {
-+			dev_err(dev, "%s() qcom,system-clock-shift-compare not found: %d\n",
-+					__func__, ret);
-+			return -EINVAL;
-+		}
-+		ret = of_property_read_u32(np,
-+				"qcom,system-clock-shift-amount",
-+				&drvdata->sysclk_shift_amount);
-+		if (ret) {
-+			dev_err(dev, "%s() qcom,system-clock-shift-amount not found: %d\n",
-+					__func__, ret);
-+			return -EINVAL;
-+		}
-+		drvdata->sysclk_shift_enable = true;
-+	} else {
-+		drvdata->sysclk_shift_enable = false;
-+	}
-+
-+	if (of_property_read_bool(np, "qcom,alternate-sysclk")) {
-+		ret = of_property_read_u32(np,
-+				"qcom,alternate-sysclk-bitwidth",
-+				&drvdata->alt_sysclk_enable_bitwidth);
-+		if (ret) {
-+			dev_err(dev, "%s() qcom,alternate-sysclk-bitwidth not found: %d\n",
-+					__func__, ret);
-+			return -EINVAL;
-+		}
-+		ret = of_property_read_u32(np,
-+				"qcom,alternate-sysclk-frequency",
-+				&drvdata->alt_sysclk_freq);
-+		if (ret) {
-+			dev_err(dev, "%s() qcom,alternate-sysclk-frequency not found: %d\n",
-+					__func__, ret);
-+			return -EINVAL;
-+		}
-+		drvdata->alt_sysclk_enable = true;
-+	} else {
-+		drvdata->alt_sysclk_enable = false;
-+	}
-+
-+	return 0;
-+}
-+
-+static int lpass_cpu_platform_probe(struct platform_device *pdev)
-+{
-+	struct lpass_data *drvdata;
-+	struct resource *res;
-+	int ret;
-+
-+	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct lpass_data),
-+			GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, drvdata);
-+
-+	ret = lpass_cpu_parse_of(&pdev->dev, drvdata);
-+	if (ret)
-+		return ret;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpass-lpaif");
-+	if (!res) {
-+		dev_err(&pdev->dev, "%s() error getting resource\n", __func__);
-+		return -ENODEV;
-+	}
-+
-+	drvdata->lpaif = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR((void const __force *)drvdata->lpaif)) {
-+		dev_err(&pdev->dev, "%s() error mapping reg resource: %ld\n",
-+				__func__,
-+				PTR_ERR((void const __force *)drvdata->lpaif));
-+		return PTR_ERR((void const __force *)drvdata->lpaif);
-+	}
-+
-+	drvdata->lpaif_map = devm_regmap_init_mmio(&pdev->dev, drvdata->lpaif,
-+			&lpass_cpu_regmap_config);
-+	if (IS_ERR(drvdata->lpaif_map)) {
-+		dev_err(&pdev->dev, "%s() error initializing regmap: %ld\n",
-+				__func__, PTR_ERR(drvdata->lpaif_map));
-+		return PTR_ERR(drvdata->lpaif_map);
-+	}
-+
-+	drvdata->mi2s_osr_clk = devm_clk_get(&pdev->dev, "mi2s-osr-clk");
-+	if (IS_ERR(drvdata->mi2s_osr_clk)) {
-+		dev_err(&pdev->dev, "%s() error getting mi2s-osr-clk: %ld\n",
-+				__func__, PTR_ERR(drvdata->mi2s_osr_clk));
-+		return PTR_ERR(drvdata->mi2s_osr_clk);
-+	}
-+
-+	drvdata->mi2s_bit_clk = devm_clk_get(&pdev->dev, "mi2s-bit-clk");
-+	if (IS_ERR(drvdata->mi2s_bit_clk)) {
-+		dev_err(&pdev->dev, "%s() error getting mi2s-bit-clk: %ld\n",
-+				__func__, PTR_ERR(drvdata->mi2s_bit_clk));
-+		return PTR_ERR(drvdata->mi2s_bit_clk);
-+	}
-+
-+	drvdata->ahbix_clk = devm_clk_get(&pdev->dev, "ahbix-clk");
-+	if (IS_ERR(drvdata->ahbix_clk)) {
-+		dev_err(&pdev->dev, "%s() error getting ahbix-clk: %ld\n",
-+				__func__, PTR_ERR(drvdata->ahbix_clk));
-+		return PTR_ERR(drvdata->ahbix_clk);
-+	}
-+
-+	ret = clk_set_rate(drvdata->ahbix_clk, LPASS_AHBIX_CLOCK_FREQUENCY);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s() error setting rate on ahbix_clk: %d\n",
-+				__func__, ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(drvdata->ahbix_clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s() Error enabling ahbix_clk: %d\n",
-+				__func__, ret);
-+		return ret;
-+	}
-+
-+	ret = devm_snd_soc_register_component(&pdev->dev,
-+			&lpass_cpu_comp_driver, &lpass_cpu_dai_driver, 1);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s() error registering cpu driver: %d\n",
-+				__func__, ret);
-+		goto err_clk;
-+	}
-+
-+	ret = asoc_qcom_lpass_platform_register(pdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s() error registering platform driver: %d\n",
-+				__func__, ret);
-+		goto err_clk;
-+	}
-+
-+	return 0;
-+
-+err_clk:
-+	clk_disable_unprepare(drvdata->ahbix_clk);
-+	return ret;
-+}
-+
-+static int lpass_cpu_platform_remove(struct platform_device *pdev)
-+{
-+	struct lpass_data *drvdata = platform_get_drvdata(pdev);
-+
-+	clk_disable_unprepare(drvdata->ahbix_clk);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id lpass_cpu_device_id[] = {
-+	{.compatible = "qcom," DRV_NAME},
-+	{}
-+};
-+#endif
-+
-+static struct platform_driver lpass_cpu_platform_driver = {
-+	.driver	= {
-+		.name		= DRV_NAME,
-+		.of_match_table	= of_match_ptr(lpass_cpu_device_id),
-+	},
-+	.probe	= lpass_cpu_platform_probe,
-+	.remove	= lpass_cpu_platform_remove,
-+};
-+module_platform_driver(lpass_cpu_platform_driver);
-+
-+MODULE_DESCRIPTION("QTi LPASS CPU Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_DEVICE_TABLE(of, lpass_cpu_device_id);
+2. W.r.t arm_pfn_offset, this was added to support Keystone as the DDR 
+physical address for LPAE startes at 0x8_0000_0000 and the pfn offset is 
+calculated as the PFN of (0x8_0000_0000 - 0x8000_0000) to do the dma 
+address to DDR address translation. I haven't looked at 
+swiotlb_dma_supported() but will do so.
+
+Murali
+
+
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Murali Karicheri
+Linux Kernel, Texas Instruments
