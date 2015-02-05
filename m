@@ -1,110 +1,292 @@
-From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 0/6] Add Skyworks SKY81452 device drivers
-Date: Thu, 5 Feb 2015 15:34:39 +0900
-Message-ID: <20150205063439.GA30718@jack-ThinkPad-T520>
-References: <1423117786-30610-1-git-send-email-jack.yoo@skyworksinc.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1423117786-30610-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, matti.vaittinen-OYasijW0DpE@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jaewon Kim <jaewon02.kim@samsung.com>
+Subject: [PATCH v4] regulator: max77843: Add max77843 regulator driver
+Date: Thu, 05 Feb 2015 15:35:58 +0900
+Message-ID: <1423118158-7266-1-git-send-email-jaewon02.kim@samsung.com>
+References: <1423025771-4139-6-git-send-email-jaewon02.kim@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1423025771-4139-6-git-send-email-jaewon02.kim@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>, Beomho Seo <beomho.seo@samsung.com>, Jaewon Kim <jaewon02.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 05, 2015 at 03:29:40PM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+This patch adds new regulator driver to support max77843
+MFD(Multi Function Device) chip`s regulators.
+The Max77843 has two voltage regulators for USB safeout.
 
-Please ignore this patch serial v10.
-Sorry for my mistake
+Cc: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+---
+ drivers/regulator/Kconfig    |    8 ++
+ drivers/regulator/Makefile   |    1 +
+ drivers/regulator/max77843.c |  227 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 236 insertions(+)
+ create mode 100644 drivers/regulator/max77843.c
 
-> From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> 
-> This patch set includes regulator and backlight driver for SKY81452.
-> Also it includes documents for device tree and module.
-> sky81452-regulator was already applied. So this series doesn't
-> include it.
-> 
-> v10:
-> Removed trivial get_brightness implementations for sky81452-backlight
-> 
-> v9:
-> Removed the change to remove MODULE_VERSION() for sky81452-regulator
-> 
-> v8:
-> Renamed property names for backlight with vendor prefix
-> Modified gpio-enable property to generic property for GPIO
-> Made up the example for backlight DT
-> Changed the DT parsing of regulator using regulator_node and of_match
-> 
-> v7:
-> Modified licensing text to GPLv2
-> Splitted Kconfig renaming from DT patch
-> 
-> v6:
-> Added new line character at the end of line of dev_err()
-> 
-> v5:
-> Changed DT for regulator : 'lout' node should be defined under 'regulator'
-> Removed compatible string from sky81452-regulator driver
-> Modified sky81452-regulator to return EINVAL when of_node is NULL
-> Move sky81452-backlight.h to include/linux/platform_data
-> 
-> v4:
-> Removed MODULE_VERSION()
-> Modified license to GPLv2
-> Removed calling to backlight_device_unregister() in sky81452-backlight
-> 
-> v3:
-> Cleaned-up DBG messages
-> Cleaned-up DT
-> Fixed the backlight name from 'sky81452-bl' to 'sky81452-backlight'
-> Assigned mfd_cell.of_compatible for binding device node
-> Modified error messages
-> Modified sky81452-regulator to return ENODATA when of_node is NULL
-> 
-> v2:
-> Split the patches for each sub-system
-> Added 'reg' attribute for I2C address in device tree documents
-> Added 'compatible' attribute in child drivers
-> Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
-> Changed the dependency from I2C=y to I2C, for CONFIG_MFD_SKY81452
-> Added message for exception or errors.
-> Added vendor prefix for Skyworks Solutions, Inc.
-> Add SKY81452 to the Trivial Devices list
-> 
-> Gyungoh Yoo (6):
->   mfd: Add support for Skyworks SKY81452 driver
->   backlight: Add support Skyworks SKY81452 backlight driver
->   devicetree: mfd: Add new SKY81452 mfd binding
->   devicetree: backlight: Add new SKY81452 backlight binding
->   devicetree: Add vendor prefix for Skyworks Solutions, Inc.
->   devicetree: i2c: Add SKY81452 to the Trivial Devices list
-> 
->  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
->  Documentation/devicetree/bindings/mfd/sky81452.txt |  36 +++
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  .../video/backlight/sky81452-backlight.txt         |  29 ++
->  drivers/mfd/Kconfig                                |  12 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/sky81452.c                             | 108 +++++++
->  drivers/video/backlight/Kconfig                    |  10 +
->  drivers/video/backlight/Makefile                   |   1 +
->  drivers/video/backlight/sky81452-backlight.c       | 334 +++++++++++++++++++++
->  include/linux/mfd/sky81452.h                       |  31 ++
->  include/linux/platform_data/sky81452-backlight.h   |  46 +++
->  12 files changed, 610 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.txt
->  create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
->  create mode 100644 drivers/mfd/sky81452.c
->  create mode 100644 drivers/video/backlight/sky81452-backlight.c
->  create mode 100644 include/linux/mfd/sky81452.h
->  create mode 100644 include/linux/platform_data/sky81452-backlight.h
-> 
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index c3a60b5..c1f9c33 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -414,6 +414,14 @@ config REGULATOR_MAX77802
+ 	  Exynos5420/Exynos5800 SoCs to control various voltages.
+ 	  It includes support for control of voltage and ramp speed.
+ 
++config REGULATOR_MAX77843
++	tristate "Maxim 77843 regulator"
++	depends on MFD_MAX77843
++	help
++	  This driver controls a Maxim 77843 regulator.
++	  The regulator include two 'SAFEOUT' for USB(Universal Serial Bus)
++	  This is suitable for Exynos5433 SoC chips.
++
+ config REGULATOR_MC13XXX_CORE
+ 	tristate
+ 
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 1f28ebf..12408d6 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -55,6 +55,7 @@ obj-$(CONFIG_REGULATOR_MAX8998) += max8998.o
+ obj-$(CONFIG_REGULATOR_MAX77686) += max77686.o
+ obj-$(CONFIG_REGULATOR_MAX77693) += max77693.o
+ obj-$(CONFIG_REGULATOR_MAX77802) += max77802.o
++obj-$(CONFIG_REGULATOR_MAX77843) += max77843.o
+ obj-$(CONFIG_REGULATOR_MC13783) += mc13783-regulator.o
+ obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
+ obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
+diff --git a/drivers/regulator/max77843.c b/drivers/regulator/max77843.c
+new file mode 100644
+index 0000000..c132ef5
+--- /dev/null
++++ b/drivers/regulator/max77843.c
+@@ -0,0 +1,227 @@
++/*
++ * max77843.c - Regulator driver for the Maxim MAX77843
++ *
++ * Copyright (C) 2015 Samsung Electronics
++ * Author: Jaewon Kim <jaewon02.kim@samsung.com>
++ * Author: Beomho Seo <beomho.seo@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/mfd/max77843-private.h>
++#include <linux/regulator/of_regulator.h>
++
++enum max77843_regulator_type {
++	MAX77843_SAFEOUT1 = 0,
++	MAX77843_SAFEOUT2,
++	MAX77843_CHARGER,
++
++	MAX77843_NUM,
++};
++
++static const unsigned int max77843_safeout_voltage_table[] = {
++	4850000,
++	4900000,
++	4950000,
++	3300000,
++};
++
++static int max77843_reg_is_enabled(struct regulator_dev *rdev)
++{
++	struct regmap *regmap = rdev->regmap;
++	int ret;
++	unsigned int reg;
++
++	ret = regmap_read(regmap, rdev->desc->enable_reg, &reg);
++	if (ret) {
++		dev_err(&rdev->dev, "Fialed to read charger register\n");
++		return ret;
++	}
++
++	return (reg & rdev->desc->enable_mask) == rdev->desc->enable_mask;
++}
++
++static int max77843_reg_get_current_limit(struct regulator_dev *rdev)
++{
++	struct regmap *regmap = rdev->regmap;
++	unsigned int chg_min_uA = rdev->constraints->min_uA;
++	unsigned int chg_max_uA = rdev->constraints->max_uA;
++	unsigned int val;
++	int ret;
++	unsigned int reg, sel;
++
++	ret = regmap_read(regmap, MAX77843_CHG_REG_CHG_CNFG_02, &reg);
++	if (ret) {
++		dev_err(&rdev->dev, "Failed to read charger register\n");
++		return ret;
++	}
++
++	sel = reg & MAX77843_CHG_FAST_CHG_CURRENT_MASK;
++
++	if (sel < 0x03)
++		sel = 0;
++	else
++		sel -= 2;
++
++	val = chg_min_uA + MAX77843_CHG_FAST_CHG_CURRENT_STEP * sel;
++	if (val > chg_max_uA)
++		return -EINVAL;
++
++	return val;
++}
++
++static int max77843_reg_set_current_limit(struct regulator_dev *rdev,
++		int min_uA, int max_uA)
++{
++	struct regmap *regmap = rdev->regmap;
++	unsigned int chg_min_uA = rdev->constraints->min_uA;
++	int sel = 0;
++
++	while (chg_min_uA + MAX77843_CHG_FAST_CHG_CURRENT_STEP * sel < min_uA)
++		sel++;
++
++	if (chg_min_uA + MAX77843_CHG_FAST_CHG_CURRENT_STEP * sel > max_uA)
++		return -EINVAL;
++
++	sel += 2;
++
++	return regmap_write(regmap, MAX77843_CHG_REG_CHG_CNFG_02, sel);
++}
++
++static struct regulator_ops max77843_charger_ops = {
++	.is_enabled		= max77843_reg_is_enabled,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.get_current_limit	= max77843_reg_get_current_limit,
++	.set_current_limit	= max77843_reg_set_current_limit,
++};
++
++static struct regulator_ops max77843_regulator_ops = {
++	.is_enabled             = regulator_is_enabled_regmap,
++	.enable                 = regulator_enable_regmap,
++	.disable                = regulator_disable_regmap,
++	.list_voltage		= regulator_list_voltage_table,
++	.get_voltage_sel        = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel        = regulator_set_voltage_sel_regmap,
++};
++
++static const struct regulator_desc max77843_supported_regulators[] = {
++	[MAX77843_SAFEOUT1] = {
++		.name		= "SAFEOUT1",
++		.id		= MAX77843_SAFEOUT1,
++		.ops		= &max77843_regulator_ops,
++		.of_match	= of_match_ptr("SAFEOUT1"),
++		.regulators_node = of_match_ptr("regulators"),
++		.type		= REGULATOR_VOLTAGE,
++		.owner		= THIS_MODULE,
++		.n_voltages	= ARRAY_SIZE(max77843_safeout_voltage_table),
++		.volt_table	= max77843_safeout_voltage_table,
++		.enable_reg	= MAX77843_SYS_REG_SAFEOUTCTRL,
++		.enable_mask	= MAX77843_REG_SAFEOUTCTRL_ENSAFEOUT1,
++		.vsel_reg	= MAX77843_SYS_REG_SAFEOUTCTRL,
++		.vsel_mask	= MAX77843_REG_SAFEOUTCTRL_SAFEOUT1_MASK,
++	},
++	[MAX77843_SAFEOUT2] = {
++		.name           = "SAFEOUT2",
++		.id             = MAX77843_SAFEOUT2,
++		.ops            = &max77843_regulator_ops,
++		.of_match	= of_match_ptr("SAFEOUT2"),
++		.regulators_node = of_match_ptr("regulators"),
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.n_voltages	= ARRAY_SIZE(max77843_safeout_voltage_table),
++		.volt_table	= max77843_safeout_voltage_table,
++		.enable_reg     = MAX77843_SYS_REG_SAFEOUTCTRL,
++		.enable_mask    = MAX77843_REG_SAFEOUTCTRL_ENSAFEOUT2,
++		.vsel_reg	= MAX77843_SYS_REG_SAFEOUTCTRL,
++		.vsel_mask	= MAX77843_REG_SAFEOUTCTRL_SAFEOUT2_MASK,
++	},
++	[MAX77843_CHARGER] = {
++		.name		= "CHARGER",
++		.id		= MAX77843_CHARGER,
++		.ops		= &max77843_charger_ops,
++		.of_match	= of_match_ptr("CHARGER"),
++		.regulators_node = of_match_ptr("regulators"),
++		.type		= REGULATOR_CURRENT,
++		.owner		= THIS_MODULE,
++		.enable_reg	= MAX77843_CHG_REG_CHG_CNFG_00,
++		.enable_mask	= MAX77843_CHG_MASK,
++	},
++};
++
++static struct regmap *max77843_get_regmap(struct max77843 *max77843, int reg_id)
++{
++	switch (reg_id) {
++	case MAX77843_SAFEOUT1:
++	case MAX77843_SAFEOUT2:
++		return max77843->regmap;
++	case MAX77843_CHARGER:
++		return max77843->regmap_chg;
++	default:
++		return max77843->regmap;
++	}
++}
++
++static int max77843_regulator_probe(struct platform_device *pdev)
++{
++	struct max77843 *max77843 = dev_get_drvdata(pdev->dev.parent);
++	struct regulator_config config = {};
++	int i;
++
++	config.dev = max77843->dev;
++	config.driver_data = max77843;
++
++	for (i = 0; i < ARRAY_SIZE(max77843_supported_regulators); i++) {
++		struct regulator_dev *regulator;
++
++		config.regmap = max77843_get_regmap(max77843,
++				max77843_supported_regulators[i].id);
++
++		regulator = devm_regulator_register(&pdev->dev,
++				&max77843_supported_regulators[i], &config);
++		if (IS_ERR(regulator)) {
++			dev_err(&pdev->dev,
++					"Failed to regiser regulator-%d\n", i);
++			return PTR_ERR(regulator);
++		}
++	}
++
++	return 0;
++}
++
++static const struct platform_device_id max77843_regulator_id[] = {
++	{ "max77843-regulator", },
++	{ /* sentinel */ },
++};
++
++static struct platform_driver max77843_regulator_driver = {
++	.driver	= {
++		.name = "max77843-regulator",
++	},
++	.probe		= max77843_regulator_probe,
++	.id_table	= max77843_regulator_id,
++};
++
++static int __init max77843_regulator_init(void)
++{
++	return platform_driver_register(&max77843_regulator_driver);
++}
++subsys_initcall(max77843_regulator_init);
++
++static void __exit max77843_regulator_exit(void)
++{
++	platform_driver_unregister(&max77843_regulator_driver);
++}
++module_exit(max77843_regulator_exit);
++
++MODULE_AUTHOR("Jaewon Kim <jaewon02.kim@samsung.com>");
++MODULE_AUTHOR("Beomho Seo <beomho.seo@samsung.com>");
++MODULE_DESCRIPTION("Maxim MAX77843 regulator driver");
++MODULE_LICENSE("GPL");
+-- 
+1.7.9.5
