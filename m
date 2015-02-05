@@ -1,74 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/4] Documentation: dt-bindings: add dt binding info for
- hi6220
-Date: Thu, 05 Feb 2015 21:24:01 +0300
-Message-ID: <54D3B541.1070404@cogentembedded.com>
-References: <1423147620-5760-1-git-send-email-zhangfei.gao@linaro.org> <1423147620-5760-3-git-send-email-zhangfei.gao@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC/PATCH 2/2] of: allow for boolean flags to have value
+Date: Thu, 5 Feb 2015 10:34:12 -0800
+Message-ID: <20150205183411.GC25235@atomide.com>
+References: <1423159266-25561-1-git-send-email-balbi@ti.com>
+ <1423159266-25561-2-git-send-email-balbi@ti.com>
+ <20150205182240.GD20735@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423147620-5760-3-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150205182240.GD20735@leverpostej>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Felipe Balbi <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+* Mark Rutland <mark.rutland@arm.com> [150205 10:26]:
+> On Thu, Feb 05, 2015 at 06:01:06PM +0000, Felipe Balbi wrote:
+> > allowing values to boolean flags lets us setup
+> > defaults on DTSI which can get disabled later
+> > at board DTS if, for whatever reason, board can't
+> > use that default.
+> > 
+> > One such example is DM81xx EVM where we can't use
+> > MUSB's multipoint feature even though SoC supports
+> > it. Something at the board level prevents us from
+> > using the feature.
+> > 
+> > Instead of removing "multipoint;" from DTSI and
+> > adding it to all board DTS just so we can remove
+> > it from our quirky board seems like overkill when
+> > we could just add:
+> > 
+> > 	multipoint = <0>;
+> > 
+> > to that quirky board's DTS.
+> > 
+> > Note that the description here is but one example
+> > and it's likely many others have faced something
+> > similar.
+> > 
+> 
+> While I appreciate that adding and removing properties in this way is
+> painful, I think that this must be dealt with at DTB compile-time rather
+> than kernel run-time.
+> 
+> There are codebases other than Linux which parse DTs, and not all
+> drivers call of_property_read_bool to parse boolean properties, an awful
+> lot still just check of_find_property. Additionally, some bindings
+> _explicitly_ state boolean properties are empty and have no value, which
+> this extension would break.
+> 
+> I think that this patch only adds to the inconsistency we currently
+> have, and given that, I would rather not have this extension to
+> of_property_read_bool.
+> 
+> Arguably of_proeprty_read_bool should warn if it encounters a non-empty
+> property.
 
-On 02/05/2015 05:46 PM, Zhangfei Gao wrote:
+How about a WARN_ON there as in that case the value will always
+be set to 1 in kernel even if specified as 0 in the .dts file?
 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->   .../devicetree/bindings/usb/hi6220-usb.txt         | 50 ++++++++++++++++++++++
->   1 file changed, 50 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/usb/hi6220-usb.txt
+Regards,
 
-> diff --git a/Documentation/devicetree/bindings/usb/hi6220-usb.txt b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
-> new file mode 100644
-> index 0000000..e926364
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
-> @@ -0,0 +1,50 @@
-> +Hisilicon hi6220  SoC USB controlle
-
-    Controller.
-
-> +-----------------------------
-> +
-> +usb controller is inherited from dwc2, refer dwc2.txt
-> +-----
-> +
-> +Required properties:
-> +- compatible: "hisilicon,hi6220-usb-phy"
-
-    PHY? I thought you were describing the USB controller.
-
-> +Refer to dwc2.txt for dwc2 usb properties
-> +
-> +
-> +phy:
-> +-----
-> +
-> +Required properties:
-> +- compatible: "hisilicon,hi6220-usb-phy"
-> +- vcc-supply: phandle to the regulator that provides power to the PHY.
-> +- clocks: phandle to the PHY clock. Use as per Documentation/devicetree
-
-    Actually, it's phandle and clock specifier.
-
-> +  /bindings/clock/clock-bindings.txt
-> +- hisilicon,peripheral-syscon: phandle of syscon used to control peripheral.
-> +- hisilicon,gpio_vbus_det: gpio of detecting vbus.
-> +- hisilicon,gpio_id_det: gpio of detecting id.
-
-    Hyphens are preferred over underscores in the prop names.
-
-[...]
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
