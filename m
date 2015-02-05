@@ -1,43 +1,85 @@
-From: Roman Volkov <v1ron@v1ros.org>
-Subject: [PATCH v2 RESEND] dts: vt8500: Add SDHC node to DTS file for WM8650
-Date: Thu,  5 Feb 2015 13:07:58 +0300
-Message-ID: <1423130878-3894-1-git-send-email-v1ron@v1ros.org>
-References: <1423130066-3666-1-git-send-email-v1ron@v1ros.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423130066-3666-1-git-send-email-v1ron@v1ros.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexey Charkov <alchark@gmail.com>, Roman Volkov <v1ron@v1ros.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH RFC v8 11/21] Documentation: dt-bindings: Add bindings
+ for Synopsys DW MIPI DSI DRM bridge driver
+Date: Thu, 05 Feb 2015 11:10:04 +0100
+Message-ID: <1423131004.3207.27.camel@pengutronix.de>
+References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
+ <1420014219-915-12-git-send-email-Ying.Liu@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1420014219-915-12-git-send-email-Ying.Liu@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liu Ying <Ying.Liu@freescale.com>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, andyshrk@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There is no DT node for SDHC controller for WM8650, while the driver already
-exists. Add missing node to make the controller working by default.
-
-Signed-off-by: Roman Volkov <v1ron@v1ros.org>
-Reviewed-by: Alexey Charkov <alchark@gmail.com>
----
- arch/arm/boot/dts/wm8650.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm/boot/dts/wm8650.dtsi b/arch/arm/boot/dts/wm8650.dtsi
-index b1c59a7..e12213d 100644
---- a/arch/arm/boot/dts/wm8650.dtsi
-+++ b/arch/arm/boot/dts/wm8650.dtsi
-@@ -187,6 +187,15 @@
- 			interrupts = <43>;
- 		};
- 
-+		sdhc@d800a000 {
-+			compatible = "wm,wm8505-sdhc";
-+			reg = <0xd800a000 0x400>;
-+			interrupts = <20>, <21>;
-+			clocks = <&clksdhc>;
-+			bus-width = <4>;
-+			sdon-inverted;
-+		};
-+
- 		fb: fb@d8050800 {
- 			compatible = "wm,wm8505-fb";
- 			reg = <0xd8050800 0x200>;
--- 
-2.2.2
+QW0gTWl0dHdvY2gsIGRlbiAzMS4xMi4yMDE0LCAxNjoyMyArMDgwMCBzY2hyaWViIExpdSBZaW5n
+Ogo+IFRoaXMgcGF0Y2ggYWRkcyBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgU3lub3BzeXMgRGVz
+aWduV2FyZSBNSVBJIERTSQo+IGhvc3QgY29udHJvbGxlciBEUk0gYnJpZGdlIGRyaXZlci4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBMaXUgWWluZyA8WWluZy5MaXVAZnJlZXNjYWxlLmNvbT4KPiAtLS0K
+PiB2Ny0+djg6Cj4gICogTm9uZS4KPiAKPiB2Ni0+djc6Cj4gICogTm9uZS4KPiAKPiB2NS0+djY6
+Cj4gICogQWRkIHRoZSAjYWRkcmVzcy1jZWxscyBhbmQgI3NpemUtY2VsbHMgcHJvcGVydGllcyBp
+biB0aGUgZXhhbXBsZSAncG9ydHMnCj4gICAgbm9kZS4KPiAgKiBSZW1vdmUgdGhlIHVzZWxlc3Mg
+aW5wdXQtcG9ydCBwcm9wZXJ0aWVzIGZyb20gdGhlIGV4YW1wbGUgcG9ydEAwIGFuZCBwb3J0QDEK
+PiAgICBub2Rlcy4KPiAKPiB2NC0+djU6Cj4gICogTm9uZS4KPiAKPiB2My0+djQ6Cj4gICogTmV3
+bHkgaW50cm9kdWNlZCBpbiB2NC4gIFRoaXMgaXMgc2VwYXJhdGVkIGZyb20gdGhlIHJlbGV2YW50
+IGRyaXZlciBwYXRjaAo+ICAgIGluIHYzIHRvIGFkZHJlc3MgU3RlZmFuIFdhaHJlbidzIGNvbW1l
+bnQuCj4gCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfbWlwaV9kc2ku
+dHh0IHwgNzMgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNzMgaW5z
+ZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfbWlwaV9kc2kudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X21pcGlf
+ZHNpLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uZjg4YThkNgo+
+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZHJtL2JyaWRnZS9kd19taXBpX2RzaS50eHQKPiBAQCAtMCwwICsxLDczIEBACj4gK0RldmljZS1U
+cmVlIGJpbmRpbmdzIGZvciBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QgY29udHJv
+bGxlcgo+ICsKPiArVGhlIGNvbnRyb2xsZXIgaXMgYSBkaWdpdGFsIGNvcmUgdGhhdCBpbXBsZW1l
+bnRzIGFsbCBwcm90b2NvbCBmdW5jdGlvbnMKPiArZGVmaW5lZCBpbiB0aGUgTUlQSSBEU0kgc3Bl
+Y2lmaWNhdGlvbiwgcHJvdmlkaW5nIGFuIGludGVyZmFjZSBiZXR3ZWVuCj4gK3RoZSBzeXN0ZW0g
+YW5kIHRoZSBNSVBJIERQSFksIGFuZCBhbGxvd2luZyBjb21tdW5pY2F0aW9uIHdpdGggYSBNSVBJ
+IERTSQo+ICtjb21wbGlhbnQgZGlzcGxheS4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
+KyAtICNhZGRyZXNzLWNlbGxzOiBTaG91bGQgYmUgPDE+Lgo+ICsgLSAjc2l6ZS1jZWxsczogU2hv
+dWxkIGJlIDwwPi4KPiArIC0gY29tcGF0aWJsZTogVGhlIGNvbXBhdGlibGUgc3RyaW5nIHNob3Vs
+ZCBiZSAiZnNsLGlteDZxLW1pcGktZHNpIiBmb3IKPiArICAgaS5NWDZxL3NkbCBTb0NzLiAgRm9y
+IG90aGVyIFNvQ3MsIHBsZWFzZSByZWZlciB0byB0aGVpciBzcGVjaWZpYwo+ICsgICBkZXZpY2Ug
+dHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb25zLgoKSSB0aGluayB0aGUgY29tcGF0aWJsZSBwcm9w
+ZXJ0eSBzaG91bGQgYWRkaXRpb25hbGx5IGNvbnRhaW4KInNucHMsZHctbWlwaS1kc2kiLiBBbHNv
+IEkgdGhpbmsgb3RoZXIgU29DcyB1c2luZyB0aGUgc2FtZSBJUCBjb3JlCnNob3VsZCBldmVudHVh
+bGx5IGxpc3QgdGhlaXIgY29tcGF0aWJsZXMgaGVyZSwgYnV0IHRoYXQncyBmb3IgbGF0ZXIuCgpI
+b3cgYWJvdXQ6CisgLSBjb21wYXRpYmxlOiBUaGUgY29tcGF0aWJsZSBzdHJpbmcgY29udGFpbiAi
+ZnNsLGlteDZxLW1pcGktZHNpIiBmb3IKKyAgIGkuTVg2cS9zZGwgU29Dcy4gIEZvciBvdGhlciBT
+b0NzLCBwbGVhc2UgcmVmZXIgdG8gdGhlaXIgc3BlY2lmaWMKKyAgIGRldmljZSB0cmVlIGJpbmRp
+bmcgZG9jdW1lbnRhdGlvbnMuIEEgY29tbW9uIGNvbXBhdGlibGUgc3RyaW5nCisgICAic25wcyxk
+dy1taXBpLWRzaSIgc2hvdWxkIGJlIGFwcGVuZGVkIGZvciBhbGwgU29Dcy4KCj4gKyAtIHJlZzog
+UmVwcmVzZW50IHRoZSBwaHlzaWNhbCBhZGRyZXNzIHJhbmdlIG9mIHRoZSBjb250cm9sbGVyLgo+
+ICsgLSBpbnRlcnJ1cHRzOiBSZXByZXNlbnQgdGhlIGNvbnRyb2xsZXIncyBpbnRlcnJ1cHQgdG8g
+dGhlIENQVShzKS4KPiArIC0gY2xvY2tzLCBjbG9jay1uYW1lczogUGhhbmRsZXMgdG8gdGhlIGNv
+bnRyb2xsZXIgcGxsIHJlZmVyZW5jZSBhbmQKPiArICAgY29yZSBjb25maWd1cmF0aW9uIGNsb2Nr
+cywgYXMgZGVzY3JpYmVkIGluIFsxXS4KCkZyb20gdGhlIE1JUEkgQ1NJLTIgZGF0YXNoZWV0cyBp
+dCBsb29rcyBsaWtlIHRoZSBELVBIWSBoYXMgYSByZWZjbGsgYW5kCmEgY2ZnX2NsayBpbnB1dC4g
+U28gSSBzdXNwZWN0IGZyb20gdGhlIG5hbWUgb2YgdGhlICJjb3JlX2NmZyIgY2xvY2ssCnRoYXQg
+aXQgYWN0dWFsbHkgcmVwcmVzZW50cyB0d28gY2xvY2sgaW5wdXRzLCB0aGUgImNmZ19jbGsiIHdp
+cmVkIHRvIHRoZQpELVBIWSBhbmQgYSBjb3JlIGNsb2NrIHdpcmVkIHRvIHRoZSBNSVBJIERTSSBo
+b3N0IGNvbnRyb2xsZXIuIEkgYW0gbm90CnN1cmUgaWYgdGhlcmUgYXJlIGRlc2lnbnMgdGhhdCBj
+b250cm9sIHRob3NlIGNsb2NrcyBzZXBhcmF0ZWx5LCBidXQgSQp0aGluayBpdCdkIGJlIHNhZmVy
+IHRvIHNwbGl0IHRoaXMgaW50byB0d28gY2xvY2tzIGluIHRoZSBkZXZpY2UgdHJlZS4KCkFsc28g
+SSBhbSBub3Qgc3VyZSB3aGljaCBpbnB1dCB0byB0aGUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVy
+IHRoZSBjb3JlCmNsb2NrIHJlcHJlc2VudHMuIFRoZSBpLk1YNkRRIFJlZmVyZW5jZSBNYW51YWwg
+djIgY2FsbHMgdGhlIHJlbWFpbmluZwpjbG9jayBpbnB1dHMgZ2F0ZWQgYnkgbWlwaV9jb3JlX2Nm
+Z19jbGtfZW5hYmxlICJhY19jbGtfMTI1bSIgYW5kCiJpcHNfY2xrIiAoSSB0aGluayB0aGUgbGF0
+dGVyIGlzIHRoZSBBQlAgY2xvY2sgZHJpdmluZyB0aGUgcmVnaXN0ZXIKYmFuaywganVzdCBjYWxs
+ZWQgInBjbGsiIGluIHRoZSBNSVBJIENTSS0yIGRvY3VtZW50YXRpb24pLgoKcmVnYXJkcwpQaGls
+aXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
