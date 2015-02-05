@@ -1,51 +1,43 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [v3,1/9] clk: samsung: exynos5433: Add clocks for CMU_APOLLO domain
-Date: Thu, 05 Feb 2015 10:56:54 +0100
-Message-ID: <54D33E66.30909@samsung.com>
-References: <1422922437-7414-2-git-send-email-cw00.choi@samsung.com>
- <54D31F67.1050701@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Roman Volkov <v1ron@v1ros.org>
+Subject: [PATCH v2 RESEND] dts: vt8500: Add SDHC node to DTS file for WM8650
+Date: Thu,  5 Feb 2015 13:07:58 +0300
+Message-ID: <1423130878-3894-1-git-send-email-v1ron@v1ros.org>
+References: <1423130066-3666-1-git-send-email-v1ron@v1ros.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <54D31F67.1050701@samsung.com>
+In-Reply-To: <1423130066-3666-1-git-send-email-v1ron@v1ros.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, mturquette@linaro.org
-Cc: tomasz.figa@gmail.com, kgene@kernel.org, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexey Charkov <alchark@gmail.com>, Roman Volkov <v1ron@v1ros.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/15 08:44, Pankaj Dubey wrote:
->> +static struct samsung_gate_clock apollo_gate_clks[] __initdata = {
+There is no DT node for SDHC controller for WM8650, while the driver already
+exists. Add missing node to make the controller working by default.
 
->> > +
->> > +	/* ENABLE_PCLK_APOLLO */
->> > +	GATE(CLK_PCLK_ASAPBMST_CSSYS_APOLLO, "pclk_asapbmst_cssys_apollo",
->> > +			"div_pclk_dbg_apollo", ENABLE_PCLK_APOLLO,
->> > +			2, CLK_IGNORE_UNUSED, 0),
->> > +	GATE(CLK_PCLK_PMU_APOLLO, "pclk_pmu_apollo", "div_pclk_apollo",
->> > +			ENABLE_PCLK_APOLLO, 1, CLK_IGNORE_UNUSED, 0),
->> > +	GATE(CLK_PCLK_SYSREG_APOLLO, "pclk_pmu_sysreg_apollo",
->
-> Isn't "pclk_pmu_sysreg_apollo" be named as "pclk_sysreg_apollo" to match 
-> with UM?
+Signed-off-by: Roman Volkov <v1ron@v1ros.org>
+Reviewed-by: Alexey Charkov <alchark@gmail.com>
+---
+ arch/arm/boot/dts/wm8650.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Sounds reasonable, Chanwoo, if you agree I'll squash following change
-to this patch before sending upstream:
-
-diff --git a/drivers/clk/samsung/clk-exynos5433.c
-b/drivers/clk/samsung/clk-exynos5433.c
-index 7a024cd..387e3e3 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -3656,7 +3656,7 @@ static struct samsung_gate_clock apollo_gate_clks[]
-__initdata = {
-                        2, CLK_IGNORE_UNUSED, 0),
-        GATE(CLK_PCLK_PMU_APOLLO, "pclk_pmu_apollo", "div_pclk_apollo",
-                        ENABLE_PCLK_APOLLO, 1, CLK_IGNORE_UNUSED, 0),
--       GATE(CLK_PCLK_SYSREG_APOLLO, "pclk_pmu_sysreg_apollo",
-+       GATE(CLK_PCLK_SYSREG_APOLLO, "pclk_sysreg_apollo",
-                        "div_pclk_apollo", ENABLE_PCLK_APOLLO,
-                        0, CLK_IGNORE_UNUSED, 0),
---
-Thanks,
-Sylwester
+diff --git a/arch/arm/boot/dts/wm8650.dtsi b/arch/arm/boot/dts/wm8650.dtsi
+index b1c59a7..e12213d 100644
+--- a/arch/arm/boot/dts/wm8650.dtsi
++++ b/arch/arm/boot/dts/wm8650.dtsi
+@@ -187,6 +187,15 @@
+ 			interrupts = <43>;
+ 		};
+ 
++		sdhc@d800a000 {
++			compatible = "wm,wm8505-sdhc";
++			reg = <0xd800a000 0x400>;
++			interrupts = <20>, <21>;
++			clocks = <&clksdhc>;
++			bus-width = <4>;
++			sdon-inverted;
++		};
++
+ 		fb: fb@d8050800 {
+ 			compatible = "wm,wm8505-fb";
+ 			reg = <0xd8050800 0x200>;
+-- 
+2.2.2
