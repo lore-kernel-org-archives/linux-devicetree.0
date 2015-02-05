@@ -1,81 +1,136 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
-Date: Thu, 05 Feb 2015 23:13:58 +0100
-Message-ID: <54D3EB26.9020909@gmail.com>
-References: <E1YH5bU-0005mG-3L@bombadil.infradead.org> <54CB5267.5060004@gmail.com> <20150130113118.5523ed68@armhf> <54CB6440.1010002@gmail.com> <20150130124144.501cf81d@armhf> <54CB732F.7010409@gmail.com> <20150130133913.083d1ade@armhf> <54CB7E33.3080909@gmail.com> <54CE354F.5090106@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] of: fix size when dma-range is not used
+Date: Thu, 5 Feb 2015 22:44:40 +0000
+Message-ID: <20150205224439.GA19250@e104818-lin.cambridge.arm.com>
+References: <1422052359-12384-1-git-send-email-m-karicheri2@ti.com>
+	<1422052359-12384-4-git-send-email-m-karicheri2@ti.com>
+	<54C77616.80301@arm.com> <54C7DF13.20402@ti.com>
+	<20150128110523.GC6646@e104818-lin.cambridge.arm.com>
+	<54C9068D.8050701@arm.com>
+	<20150128173048.GE31752@e104818-lin.cambridge.arm.com>
+	<54CBC823.3020905@ti.com>
+	<20150202121843.GD22661@e104818-lin.cambridge.arm.com>
+	<54D3E3C3.1040104@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54CE354F.5090106@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel Dobato <dobatog@gmail.com>, Jean-Francois Moine <moinejf@free.fr>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54D3E3C3.1040104-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01.02.2015 15:16, Gabriel Dobato wrote:
->> I'd be happy to take over, but I admit that my current lack of spare
->> time would only allow me to support Gabriel and you.
->>
->> Let's wait for Gabriel's response on how he can help improving
->> Dove mainline with his cm-a510 and baseboard.
->
-> First of all, I would like to give thanks all people like you for all
-> your help and support. I really appreciate it.
->
-> DT is new for me, I have never worked using this kind of hardware
-> description, so I am involving in many issues due to my lack of skills
-> in this kind of structure.
->
-> At this moment, I am focusing in the update of the version of the kernel
-> on the CM-A510 board (from 2.6 to 3.1x)in order to give more features to
-> the system, but as I said before, I have lots of problems.
->
-> Thanks to the help and support of Jean-Francois Moine, I have achieved
-> to boot the kernel completely and to mount the rootfs via NFS. I have a
-> prompt, what has been a very big step for me.
+Murali,
 
-Gabriel,
+On Thu, Feb 05, 2015 at 09:42:27PM +0000, Murali Karicheri wrote:
+> On 02/02/2015 07:18 AM, Catalin Marinas wrote:
+> > On Fri, Jan 30, 2015 at 06:06:27PM +0000, Murali Karicheri wrote:
+> >> On 01/28/2015 12:30 PM, Catalin Marinas wrote:
+> >>> I think we can remove this check altogether (we leaved without it for a
+> >>> while) but we need to add 1 when calculating the mask:
+> >>>
+> >>> 	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
+> >>> 				     DMA_BIT_MASK(ilog2(size + 1)));
+> >>>
+> >> For Keystone, the dma_addr is to be taken care as well to determine the
+> >> mask. The above will not work.
+> >
+> > This was discussed before (not on this thread) and dma_addr should not
+> > affect the mask, it only affects the pfn offset.
+> >
+> >> Based on the discussion so far, this is the function I have come up with
+> >> incorporating the suggestions. Please review this and see if I have
+> >> missed out any. This works fine on Keystone.
+> >>
+> >> void of_dma_configure(struct device *dev, struct device_node *np)
+> >> {
+> >> 	u64 dma_addr = 0, paddr, size;
+> >> 	int ret;
+> >> 	bool coherent;
+> >> 	unsigned long offset = 0;
+> >> 	struct iommu_ops *iommu;
+> >>
+> >> 	/*
+> >> 	 * Set default size to cover the 32-bit. Drivers are expected to setup
+> >> 	 * the correct size and dma_mask.
+> >>     	 */
+> >> 	size = 1ULL<<  32;
+> >>
+> >> 	ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
+> >> 	if (!ret) {
+> >> 		offset = PFN_DOWN(paddr - dma_addr);
+> >> 		if (!size) {
+> >> 			dev_err(dev, "Invalid size (%llx)\n",
+> >> 				size);
+> >> 			return;
+> >> 		}
+> >> 		if (size&  1) {
+> >> 			size = size + 1;
+> >> 			dev_warn(dev, "Incorrect usage of size (%llx)\n",
+> >> 				 size);
+> >> 		}
+> >> 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+> >> 	}
+> >> 	dev->dma_pfn_offset = offset;
+> >>
+> >> 	/*
+> >> 	 * Coherent DMA masks larger than 32-bit must be explicitly set by the
+> >> 	 * driver.
+> >> 	 */
+> >> 	dev->coherent_dma_mask = min(DMA_BIT_MASK(32),
+> >> 				     DMA_BIT_MASK(ilog2(dma_addr + size)));
+> >
+> > That's not correct, coherent_dma_mask should still be calculated solely
+> > based on size, not dma_addr.
+> >
+> > Functions like swiotlb_dma_supported() use phys_to_dma() which on ARM
+> > (32-bit) subtracts the dma_pfn_offset, so the mask based on size works
+> > fine.
+> >
+> > In the arm64 tree, we haven't taken dma_pfn_offset into account for
+> > phys_to_dma() yet but if needed for a SoC, we'll add it.
+> 
+> The size based dma mask calculation itself can be a separate topic 
+> patch. This series is adding important fix to get the PCI driver 
+> functional and I would like to get this merged as soon as possible.
 
-great you can boot a recent kernel. I guess you had to quite heavily
-modify current dove-cm-a510.dts? Can you upload the one you use now
-to any pastebin and send the link?
+Well as long as you don't break the existing users of
+of_dma_configure() ;).
 
->> Nope. One dove.dtsi, one dove-cm-a510.dtsi, and one baseboard.dts
->> including dove-cm-a510.dtsi for every baseboard we stumble upon.
->
-> In reference to the structure of .dts and .dtsi files, I agree with this
-> kind of structure, of course, nobody as you can consider it better. I
-> think the idea of make a dove-cm-a510.dtsi file and different
-> baseboards.dts depending of the peripherals used is great. But as I say,
-> maybe I am not the right person to decide it, Jean-Froncois Moine and
-> you have better criteria.So, whatever you decide I would very happy to help.
+> I also want to hear from Arnd about yout comment as we had discussed
+> this in the initial discussion of this patch series and 8/8 is
+> essentially added based on that discussion. I will add a simple check
+> to catch and warn the incorrect size setting in DT for dma-range as
+> suggested by Rob Herring and create a new patch to for size based mask
+> calculation. I will be sending v6 (expected to be merged soon) today
+> and will work to add a new patch. Before that we need to agree on what
+> is the content of the patch.
+> 
+> 1. On keystone, DMA address start at 0x8000_0000 and DMA-able memory is 
+> 2G from the above base address. So without taking into account the
+> dma_addr, mask calculated will be 0x7fff_ffff where as we need that to 
+> be 0xffff_ffff for keystone. So need to use this in the calculation.
 
-You didn't mention if you really use the sb-a510, i.e. the Compulab
-reference baseboard. Is it what you are using with your cm-a510?
+Ah, you are right. I confused dma_addr in your patch with the offset.
 
-> At this moment, I am trying to configure the framebuffer, but as Moine
-> told me,it seems there is not video driver support for this board in
-> DT... :( .
+> 2. W.r.t arm_pfn_offset, this was added to support Keystone as the DDR 
+> physical address for LPAE startes at 0x8_0000_0000 and the pfn offset is 
+> calculated as the PFN of (0x8_0000_0000 - 0x8000_0000) to do the dma 
+> address to DDR address translation.
 
-Not quite true. Video is made up of at least 4 different devices:
-Framebuffer, GPU, Decode engine, and usually DVI/HDMI transmitter or
-VGA.
+Indeed.
 
-We do have a driver for the framebuffer (armada_drm) and there is great
-work from Russell King and others on the GPU and Decode engine (IIRC).
+I'll look at your patches again tomorrow.
 
-If you are using the sb-a510, I can see from the manual, that DVI
-transmitter is SIL164.. AFAIS there is a driver for it, that maybe
-needs some polishing. Nobody ever tested VGA, but it shouldn't be too
-hard to add support for it as it is directly supported by the
-framebuffer HW.
-
-One quite important driver at least for Dove is a clock source for
-video. Internal clock generators for video are way to limited with
-respect to frequencies to allow any useful resolution.
-
-I'll see if I can have a look at the dts stuff this weekend.. that
-way we'll have at least the basic done before moving to the other
-devices.
-
-Sebastian
+-- 
+Catalin
