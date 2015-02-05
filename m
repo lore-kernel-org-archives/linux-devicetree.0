@@ -1,37 +1,38 @@
 From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/4] add usb support for hi6220
-Date: Thu,  5 Feb 2015 22:46:56 +0800
-Message-ID: <1423147620-5760-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 1/4] Documentation: dt-bindings: add dt binding info for hi6220 dwc2
+Date: Thu,  5 Feb 2015 22:46:57 +0800
+Message-ID: <1423147620-5760-2-git-send-email-zhangfei.gao@linaro.org>
+References: <1423147620-5760-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423147620-5760-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-hi6220 usb controller is inherited from dwc2
-add phy accordingly
-support otg gadget/host
+Add necessary dwc2 binding documentation for Hisilicon soc: hi6220
 
-Zhangfei Gao (4):
-  Documentation: dt-bindings: add dt binding info for hi6220 dwc2
-  Documentation: dt-bindings: add dt binding info for hi6220
-  usb: dwc2: platform: add hi6220 support
-  usb: phy: add phy-hi6220
+Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/usb/dwc2.txt     |   1 +
- .../devicetree/bindings/usb/hi6220-usb.txt         |  50 ++++
- drivers/usb/dwc2/platform.c                        |  29 +++
- drivers/usb/phy/Kconfig                            |   8 +
- drivers/usb/phy/Makefile                           |   1 +
- drivers/usb/phy/phy-hi6220.c                       | 290 +++++++++++++++++++++
- 6 files changed, 379 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/hi6220-usb.txt
- create mode 100644 drivers/usb/phy/phy-hi6220.c
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index fd132cb..2213682 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -4,6 +4,7 @@ Platform DesignWare HS OTG USB 2.0 controller
+ Required properties:
+ - compatible : One of:
+   - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
++  - hisilicon,hi6220-usb: The DWC2 USB controller instance in the hi6220 SoC.
+   - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
+   - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
+   - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
