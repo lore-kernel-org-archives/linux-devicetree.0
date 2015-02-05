@@ -1,44 +1,36 @@
-From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [v3,3/9] clk: samsung: exynos5433: Add clocks for CMU_MSCL domain
-Date: Thu, 05 Feb 2015 14:00:18 +0530
-Message-ID: <54D32A1A.8020202@samsung.com>
-References: <1422922437-7414-4-git-send-email-cw00.choi@samsung.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: Re: [PATCH_V4 0/3] sound:soc: jz4740: Add DT, dynamic sampling
+Date: Thu, 5 Feb 2015 08:53:08 +0000
+Message-ID: <54D32F74.5070707@imgtec.com>
+References: <1422960959-40403-1-git-send-email-Zubair.Kakakhel@imgtec.com> <20150204211322.GP21293@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1422922437-7414-4-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150204211322.GP21293@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: tiwai@suse.de, perex@perex.cz, lgirdwood@gmail.com, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
 
-On Tuesday 03 February 2015 05:43 AM, Chanwoo Choi wrote:
-> This patch adds the mux/divider/gate clocks for CMU_MSCL domain which
-> generates the clocks for M2M (Memory to Memory) scaler, JPEG IPs.
->
-> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> ---
-> .../devicetree/bindings/clock/exynos5433-clock.txt |  20 +++
->   drivers/clk/samsung/clk-exynos5433.c               | 185 +++++++++++++++++++++
->   include/dt-bindings/clock/exynos5433.h             |  41 ++++-
->   3 files changed, 245 insertions(+), 1 deletion(-)
->
 
-Verified clock tree, clock register and bitfield settings against UM.
-Changes looks OK to me.
+On 04/02/15 21:13, Mark Brown wrote:
+> On Tue, Feb 03, 2015 at 10:55:56AM +0000, Zubair Lutfullah Kakakhel wrote:
+>> Hi,
+>>
+>> Here are a few simple patches for the jz4740.
+>>
+>> First adds dynamic sampling support to jz4740-i2s.
+>> Then two to add a simple binding and DT support.
+>> Then a patch to set the clock rate for i2s.
+> 
+> Applied all, but as I think has been mentioned before please use subject
+> lines matching the usual style for the subsystem.
+> 
 
-Reviewed-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Thank-you very much. 
 
-Thanks,
-Pankaj Dubey
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll try to be more careful in the future.
+
+ZubairLK
