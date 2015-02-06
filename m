@@ -1,71 +1,127 @@
 From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH 3/3] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Fri, 6 Feb 2015 10:31:12 +0000
-Message-ID: <20150206103111.GA9921@leverpostej>
+Date: Fri, 6 Feb 2015 10:44:20 +0000
+Message-ID: <20150206104420.GB9921@leverpostej>
 References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com>
  <1423128277-10297-4-git-send-email-bintian.wang@huawei.com>
  <20150205193017.GF20735@leverpostej>
  <CAAS=xmgsuY=c8-n_pDiZjLe2u+SPX7msRje7h0sNkRtT3HLfQA@mail.gmail.com>
- <54D4843E.7060201@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54D4843E.7060201@arm.com>
+In-Reply-To: <CAAS=xmgsuY=c8-n_pDiZjLe2u+SPX7msRje7h0sNkRtT3HLfQA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Brent Wang <wangbintian@gmail.com>
-Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f@huawei.com>
+To: Brent Wang <wangbintian@gmail.com>
+Cc: Bintian Wang <bintian.wang@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "khilman@linaro.org" <khilman@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>"olof@lixom.net" <o>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 06, 2015 at 09:07:10AM +0000, Marc Zyngier wrote:
-> On 06/02/15 08:42, Brent Wang wrote:
+On Fri, Feb 06, 2015 at 08:42:22AM +0000, Brent Wang wrote:
+> Hello Mark,
 > 
-> [...]
-> 
+> 2015-02-06 3:30 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
+> > On Thu, Feb 05, 2015 at 09:24:37AM +0000, Bintian Wang wrote:
+> >> Add initial dtsi file to support Hisilicon Hi6220 SoC with
+> >> support of Octal core CPUs in two clusters and each cluster
+> >> has quard Cortex-A53.
 > >>
-> >>> +                   <0x0 0xf6802000 0x0 0x2000>, /* GICC */
-> >>> +                   <0x0 0xf6804000 0x0 0x2000>, /* GICH */
-> >>> +                   <0x0 0xf6806000 0x0 0x2000>; /* GICV */
-> >>
-> >> I guess no-one's bothered to consider 64k pages?
-> >>
-> >> Given GICH and GICV, I hope that this platform is booted at EL2?
-> > Transfer from EL3 to EL1 directly, keep these two just for future use.
-> 
-> That's a real shame, as it keeps users away from some key aspects of the
-> ARMv8 architecture.
+> >> We now use the "spin-table" method for SMP, and it will be
+> >> changed to PSCI later.
+> >
+> > If that's the case, please don't place the enable-method and related
+> > properties in this file. Get your bootloader to add the appropriate
+> > properties for its boot protocol.
+> >
+> > When is PSCI likely to appear?
+> PSCI is under development.
 
-More importantly (and regardless of whether you wish to use the features
-provided by EL2), booting at EL2 means that the FW/bootloader needs to
-set up far less, and that the kernel can fix up some issues that might
-not be immediately apparent...
+Sure. Do you have an estimate as to when it will appear?
+
+What are you using for your PSCI implementation? The ARM Trusted
+Firmware?
+
+How are you testing it?
+
+> > Are we certain of the split between components the PSCI implementation
+> > must touch and those the kernel must touch?
+> >
+> >> Also add dts file to support HiKey development board which
+> >> based on Hi6220 SoC and document the devicetree bindings.
+> >>
+> >> These dts files will be changed later and more nodes will be
+> >> added to describe other devices.
+> >
+> > How is this going to be changed other than the addition of nodes?
+> >
+> > Will this DTB continue to work in future? Or do you intend to make
+> > changes that will break support?
+> My original idea is: use spin-table for SMP now, when firmware is OK to
+> support PSCI, we submit another patch to replace the spin-table with PSCI.
+
+For any users who have not updated their FW, this will break booting.
+
+This is why I suggest having hte bootloader/FW fill this in as it should
+know what enable-method the FW supports.
+
+> If DTB should continue to work in the future, we really need to remove
+> the spin-table
+> from current dts file, how about just enable one core now?
+> 
+> Which one do you favor or any other suggestion?
+
+If spin-table is just for testing while you await PSCI, drop spin-table
+from the dts for now.
 
 [...]
 
-> >>> +     timer {
-> >>> +             compatible = "arm,armv8-timer";
-> >>> +             interrupt-parent = <&gic>;
-> >>> +             interrupts = <1 13 0xff08>,
-> >>> +                          <1 14 0xff08>,
-> >>> +                          <1 11 0xff08>,
-> >>> +                          <1 10 0xff08>;
-> >>> +             clock-frequency = <1200000>;
-> >>> +     };
-> >>
-> >> NAK. Fix your firmware to configure CNTFRQ, on all CPUs.
-> > Fix in next version, maybe it will take some time to change firmware.
-> 
-> While you're at it, make sure CNTVOFF_EL2 is set to zero on all CPUs
-> before dropping to EL1. This tends to be overlooked.
+> >> +     timer {
+> >> +             compatible = "arm,armv8-timer";
+> >> +             interrupt-parent = <&gic>;
+> >> +             interrupts = <1 13 0xff08>,
+> >> +                          <1 14 0xff08>,
+> >> +                          <1 11 0xff08>,
+> >> +                          <1 10 0xff08>;
+> >> +             clock-frequency = <1200000>;
+> >> +     };
+> >
+> > NAK. Fix your firmware to configure CNTFRQ, on all CPUs.
+> Fix in next version, maybe it will take some time to change firmware.
 
-...like differing values of CNTVOFF_EL2.
+Thanks. This _must_ be fixed.
 
-There seems to be a common misconception that booting at EL2 is a bad
-thing to do, when in reality booting at EL1 is more likely to result in
-bugs we can't work around.
+[...]
 
-Is there any reason that you do not wish to boot at EL2, or were you
-simply unaware that booting at EL2 was possible/preferred?
+> >> +             pm_ctrl: pm_ctrl {
+> >> +                     compatible = "hisilicon,pmctrl", "syscon";
+> >> +                     #address-cells = <1>;
+> >> +                     #size-cells = <1>;
+> >> +                     reg = <0x0 0xf7032000 0x0 0x1000>;
+> >> +                     ranges = <0 0x0 0xf7032000 0x1000>;
+> >> +
+> >> +                     clock_power: clock3@0 {
+> >> +                             compatible = "hisilicon,hi6220-clock-power";
+> >> +                             reg = <0 0x1000>;
+> >> +                             #clock-cells = <1>;
+> >> +                     };
+> >> +             };
+> >
+> > I really doesn't see the point in having a sub-device that covers the
+> > entirely of the register space of the containing node, and that being
+> > the case I am extremely concerned that the containers are marked as
+> > syscon compatible.
+> The SoC clocks are designed and placed under different system controllers,
+> so I define corresponding nodes under different controllers for clock operation.
+
+What I'm concerned wit hhere is that the pm_ctrl node and the clock3@0
+sub-node have the _exact_ same register space.
+
+Given this should mean that the clock3@0 node owns that register space,
+having the container node export this as syscon does not make sense. And
+the split between pm_ctrl and clock3@) doesn't seem to make sense given
+they cover the same space.
+
+As I asked before, why is pm_ctrl marked as a syscon, and what's the
+point of the separate sub-node?
 
 Thanks,
 Mark.
