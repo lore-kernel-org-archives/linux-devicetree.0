@@ -1,72 +1,53 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] input: gpio-joy - GPIO joystick driver
-Date: Fri, 6 Feb 2015 11:02:57 +0000
-Message-ID: <20150206110257.GB10324@leverpostej>
-References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
- <1423215122-19947-3-git-send-email-hans.holmberg@intel.com>
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [RFC PATCH v2 3/3] ARM: dts: exynos5420: add async-bridge clocks
+ to disp1 power domain
+Date: Fri, 06 Feb 2015 12:27:48 +0100
+Message-ID: <54D4A534.8060004@collabora.co.uk>
+References: <54D48701.10105@collabora.co.uk> <1423220154-5333-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1423215122-19947-3-git-send-email-hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1423220154-5333-1-git-send-email-a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Holmberg <hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liquid.Acid-hi6Y0CQ0nG0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 06, 2015 at 09:32:02AM +0000, Hans Holmberg wrote:
-> This is an interrupt-driven driver for digital joysticks
-> connected to GPIOs. Supports any digital joystick with
-> signals for up, down, left, right and one signal for
-> trigger button press, i.e. C64/Atari joysticks.
+Hello Andrzej,
+
+On 02/06/2015 11:55 AM, Andrzej Hajda wrote:
+> FIMD and MIXER IPs in disp1 power domain have async-bridges (to GSCALER),
+> therefore their clocks should be enabled during power domain switch.
 > 
-> Signed-off-by: Hans Holmberg <hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  drivers/input/joystick/Kconfig    |  10 ++
->  drivers/input/joystick/Makefile   |   1 +
->  drivers/input/joystick/gpio_joy.c | 208 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 219 insertions(+)
->  create mode 100644 drivers/input/joystick/gpio_joy.c
+> Hi,
+> 
+> This is 2nd version of the patch. After decrypting manual and discussion
+> with Marek I guess this set of clocks is more apropriate - async-bridges
+> are present in MIXER and FIMD, so their clocks should be enabled.
+>
 
-[...]
+I just tested this version on my Exynos5420 Peach Pit and the power domain
+failed error does not happen anymore even after enabling and disabling the
+HDMI display several times.
 
-> +static int gpio_joy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct input_dev *input;
-> +	struct gpio_joy_drvdata *ddata;
-> +	int i, err;
-> +	unsigned int debounce_ms;
+Thanks a lot for fixing this since the dependency was not clear to me from
+reading the manual.
 
-This should be a u32 given you pass it to a function expecting a u32
-pointer.
+> The 1st version worked for me due to fact I have forgot to remove
+> clk_ignore_unused kernel boot option during tests ;)
+>
 
-> +
-> +	ddata = devm_kzalloc(dev, sizeof(struct gpio_joy_drvdata), GFP_KERNEL);
+Yes, that has bitten me too many times as well :)
 
-Use sizeof(*ddata)
+> Regards
+> Andrzej
+> ---
 
-[...]
-
-> +	return 0;
-> +fail:
-> +	return err;
-> +}
-
-Given there's no cleanup, the fail path seems redundant.
-
-[...]
-
-> +static const struct of_device_id gpio_joy_of_match[] = {
-> +	{ .compatible = DRV_NAME, },
-> +	{ },
-> +};
-
-The compatible string should be independent of DRV_NAME, because it must
-match the binding. The driver can be arbitrarily and independently renamed.
-
-Thanks,
-Mark.
+Best regards,
+Javier
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
