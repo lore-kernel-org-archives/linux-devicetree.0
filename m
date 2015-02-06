@@ -1,70 +1,69 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
-Date: Fri, 06 Feb 2015 11:05:39 +0100
-Message-ID: <54D491F3.9060004@gmail.com>
-References: <E1YH5bU-0005mG-3L@bombadil.infradead.org> <54CB5267.5060004@gmail.com> <20150130113118.5523ed68@armhf> <54CB6440.1010002@gmail.com> <20150130124144.501cf81d@armhf> <54CB732F.7010409@gmail.com> <20150130133913.083d1ade@armhf> <54CB7E33.3080909@gmail.com> <54CE354F.5090106@gmail.com> <54D3EB26.9020909@gmail.com> <20150206085855.7b8d494b@armhf>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] clk: Add common clock support for Mediatek MT8135
+ and MT8173.
+Date: Fri, 6 Feb 2015 11:30:33 +0100
+Message-ID: <20150206103033.GS18908@pengutronix.de>
+References: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
+ <CABuKBeJSH3WzG3QC=9OoPzXE6fd9W2U67V4c19NzWcPxWR7VDg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150206085855.7b8d494b@armhf>
+Content-Disposition: inline
+In-Reply-To: <CABuKBeJSH3WzG3QC=9OoPzXE6fd9W2U67V4c19NzWcPxWR7VDg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06.02.2015 08:58, Jean-Francois Moine wrote:
-> On Thu, 05 Feb 2015 23:13:58 +0100
-> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> At this moment, I am trying to configure the framebuffer, but as Moine
->>> told me,it seems there is not video driver support for this board in
->>> DT... :( .
->>
->> Not quite true. Video is made up of at least 4 different devices:
->> Framebuffer, GPU, Decode engine, and usually DVI/HDMI transmitter or
->> VGA.
->>
->> We do have a driver for the framebuffer (armada_drm) and there is great
->> work from Russell King and others on the GPU and Decode engine (IIRC).
->
-> Yes, but it has no DT support. Mine has.
+On Thu, Feb 05, 2015 at 06:24:54PM +0100, Matthias Brugger wrote:
+> Hi Henry,
+> 
+> 2015-01-30 6:13 GMT+01:00 Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> > This patchset contains the initial common clock support for Mediatek SoCs.
+> > Mediatek SoC's clock architecture comprises of various PLLs, dividers, muxes and clock gates.
+> >
+> > This patchset also contains a basic clock support for Mediatek MT8135 and MT8173.
+> >
+> > This driver is based on 3.19-rc1 + MT8135 and MT8173 basic support.
+> >
+> > Changes in v2:
+> > - Re-ordered patchset. Fold include/dt-bindings and DT document in 1st patch.
+> >
+> > Changes in v3:
+> > - Rebase to 3.19-rc1.
+> > - Refine code. Remove unneed functions, debug logs and comments, and fine tune error logs.
+> >
+> > Changes in v4:
+> > - Support MT8173 platform.
+> > - Re-ordered patchset. driver/clk/Makefile in 2nd patch.
+> > - Extract the common part definition(mtk_gate/mtk_pll/mtk_mux) from clk-mt8135.c/clk-mt8173.c to clk-mtk.c.
+> > - Refine code. Rmove unnessacary debug information and unsed defines, add prefix "mtk_" for static functions.
+> > - Remove flag CLK_IGNORE_UNUSED and set flag CLK_SET_RATE_PARENT on gate/mux/fixed-factor.
+> > - Use spin_lock_irqsave(&clk_ops_lock, flags) instead of mtk_clk_lock.
+> > - Example above include a node for the clock controller itself, followed by the i2c controller example above.
+> 
+> You use pericfg and infracfg which will be used by other drivers as
+> well. So please use syscon for this driver. As it is no longer a
+> platform device it is present early in boot.
+> The changes should look something like the patch beneath. Please
+> beware that it does only show the general concept and may not even
+> compile. I asked Sascha to implement the reset controller as part of
+> the clk driver, as the registers addresses are mixed between both,
+> clock and reset controller. Please coordinate with him to get them
+> integrated (even as one series or as incremental series).
 
-Yeah, it would be nice if you two stick together once again and work
-that out for mainline?
+I don't really understand the "as part of the clk driver part". I now
+have replaced the devm_regmap_init_mmio with syscon_node_to_regmap
+in the pericfg / infracfg drivers. Is that all that you want or do you
+want me to move the source code to drivers/clk/mediatek?
 
->> If you are using the sb-a510, I can see from the manual, that DVI
->> transmitter is SIL164.. AFAIS there is a driver for it, that maybe
->> needs some polishing. Nobody ever tested VGA, but it shouldn't be too
->> hard to add support for it as it is directly supported by the
->> framebuffer HW.
->
-> This asks for some VGA encoder/connector module.
+Sascha
 
-Hmm, maybe it is just enough to tell the DRM driver to switch to
-VGA and what i2c to use for DDC. I'll have to catch up with DRM
-and DT.
-
-> Actually, as Gabriel told me that his screen is directly connected to
-> the RGB LCD output, I wrote a simple panel for him. This module just
-> gets the display timings from the DT.
-
-Ok. That makes it less complicated as there already should be support
-for dumb RGB anyway.
-
->> One quite important driver at least for Dove is a clock source for
->> video. Internal clock generators for video are way to limited with
->> respect to frequencies to allow any useful resolution.
->
->  From my previous tests with the si5351 in the Cubox, most video modes
-> should work without external clocks.
-
-Well, this is not about a working corner case.. video modes are (more or
-less) standardized and so is the clock frequency. Monitors are allowed
-to reject any non-standard modes and it gets worse with TVs.
-
-Ergo, we do want to hit the frequency as close as possible and Dove's
-internal PLL simply cannot.
-
-Sebastian
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
