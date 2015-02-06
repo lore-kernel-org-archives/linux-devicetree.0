@@ -1,163 +1,57 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv6 5/5] arm: dts: Add Altera L2 Cache and OCRAM EDAC
- entries
-Date: Fri, 6 Feb 2015 19:24:44 +0000
-Message-ID: <20150206192444.GF10324@leverpostej>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv6 0/5] Add Altera peripheral memories to EDAC framework
+Date: Fri, 6 Feb 2015 19:29:25 +0000
+Message-ID: <20150206192925.GG10324@leverpostej>
 References: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com>
- <1420772036-3112-6-git-send-email-tthayer@opensource.altera.com>
+ <54CA9DB2.4070109@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1420772036-3112-6-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <54CA9DB2.4070109@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "m.chehab@samsung.com" <m.chehab@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tthayer.linux@gmail.com" <tthayer.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 09, 2015 at 02:53:56AM +0000, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Thu, Jan 29, 2015 at 08:53:06PM +0000, Thor Thayer wrote:
+> Hi Device Tree Maintainers,
+
+Hi Thor,
+
+Apologies for being silent for so long on this.
+
+> On 01/08/2015 08:53 PM, tthayer@opensource.altera.com wrote:
+> > From: Thor Thayer <tthayer@opensource.altera.com>
+> >
+> > This patch adds the L2 cache and OCRAM peripherals to the EDAC framework
+> > using the EDAC device framework. The ECC is enabled early in the boot
+> > process in the platform specific code.
+> >
 > 
-> Adding the device tree entries and bindings needed to support
-> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
-> an earlier patch to declare and setup On-chip RAM properly.
-> http://www.spinics.net/lists/devicetree/msg51117.html
+> The changes in this patch series revision were mainly to address device 
+> tree concerns. There were changes in other areas of the code to address 
+> these changes but I believe the other maintainers are waiting to see if 
+> these changes are accepted before they will review (they had approved 
+> the previous patch changes).
 > 
-> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
-> v2: Remove OCRAM declaration and reference prior patch.
-> 
-> v3-5: No Change
-> 
-> v6: Change to nested EDAC device nodes based on community
->     feedback. Remove L2 syscon. Use consolidated binding.
-> ---
->  .../bindings/arm/altera/socfpga-edac.txt           |   46 ++++++++++++++++++++
->  arch/arm/boot/dts/socfpga.dtsi                     |   20 +++++++++
->  2 files changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
-> new file mode 100644
-> index 0000000..4bf32e1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
-> @@ -0,0 +1,46 @@
-> +Altera SoCFPGA Error Detection and Correction [EDAC]
-> +
-> +Required Properties:
-> +- compatible : Should be "altr,edac"
+> How does the this patch series appear from a device tree perspective?
 
-Is there a single large EDAC block that happens to perform EDAC
-functions for various components, or various small EDAC blocks that
-happen to be close to each other in the MMIO space?
+While this looks better than before (thank you for no longer treating
+the PL310 registers as a syscon), I have a couple of quibbles with the
+binding:
 
-> +- #address-cells: must be 1
-> +- #size-cells: must be 1
-> +- ranges : standard definition, should translate from local addresses
+* It's not clear to me whether the L2 and OCRAM EDACs are fundamentally
+  different in interface, or whether they simply happen to be monitoring
+  different memories. The former would mean a common compatible string
+  for both EDAC block instances, and another property to determine
+  what the other end was.
 
-Surely these just need to be suitable for mapping the child nodes, and
-you shouldn't care about their precise values?
-
-> +
-> +Subcomponents:
-> +
-> +L2 Cache ECC
-> +Required Properties:
-> +- compatible : Should be "altr,l2-edac"
-> +- reg : Address and size for ECC error interrupt clear registers.
-> +- interrupts : Should be single bit error interrupt, then double bit error
-> +	interrupt. Note the rising edge type.
-> +
-> +On Chip RAM ECC
-> +Required Properties:
-> +- compatible : Should be "altr,ocram-edac"
-> +- reg : Address and size for ECC error interrupt clear registers.
-> +- iram : phandle to On-Chip RAM definition.
-> +- interrupts : Should be single bit error interrupt, then double bit error
-> +	interrupt. Note the rising edge type.
-
-Do these actually differ in programming interface, or just w.r.t. the
-component they are used to monitor?
-
-It would be good to have an explicit link to what they monitor rather
-than relying on there being single instances with particular compatible
-strings. That will make this easier to generalise for multiple instances
-in future SoCs that may reuse the EDAC block.
-
-This doesn't look too bad, but I'd like to hear some response to this
-and my other queries before I can say whether this is a good way of
-describing the hardware; it all looks a bit vague.
-
-As an aside, please place the documentation at the start of the series,
-before the driver rework. The dts patches can come after the docs and
-code patches.
+* It relies on a single instance of OCRAM or L2 existing, rather than
+  describing the relationship with the particular memory explicitly. In
+  general it's better to be explicit -- this means it can more easily be
+  generalised to multiple OCRAMs as might occur in a later SoC (in
+  addition to the reasons laid out in the first point.
 
 Thanks,
 Mark.
-
-> +
-> +Example:
-> +
-> +	soc_ecc {
-> +		compatible = "altr,edac";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		l2edac@ffd08140 {
-> +			compatible = "altr,l2-edac";
-> +			reg = <0xffd08140 0x4>;
-> +			interrupts = <0 36 1>, <0 37 1>;
-> +		};
-> +
-> +		ocramedac@ffd08144 {
-> +			compatible = "altr,ocram-edac";
-> +			reg = <0xffd08144 0x4>;
-> +			iram = <&ocram>;
-> +			interrupts = <0 178 1>, <0 179 1>;
-> +		};
-> +	};
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 252c3d1..e546e47 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -618,6 +618,26 @@
->  			interrupts = <0 39 4>;
->  		};
->  
-> +		soc_ecc {
-> +			compatible = "altr,edac";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +
-> +			l2edac@ffd08140 {
-> +				compatible = "altr,l2-edac";
-> +				reg = <0xffd08140 0x4>;
-> +				interrupts = <0 36 1>, <0 37 1>;
-> +			};
-> +
-> +			ocramedac@ffd08144 {
-> +				compatible = "altr,ocram-edac";
-> +				reg = <0xffd08144 0x4>;
-> +				iram = <&ocram>;
-> +				interrupts = <0 178 1>, <0 179 1>;
-> +			};
-> +		};
-> +
->  		L2: l2-cache@fffef000 {
->  			compatible = "arm,pl310-cache";
->  			reg = <0xfffef000 0x1000>;
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
