@@ -1,70 +1,71 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] clk: Add common clock support for Mediatek MT8135
- and MT8173.
-Date: Fri, 6 Feb 2015 11:30:33 +0100
-Message-ID: <20150206103033.GS18908@pengutronix.de>
-References: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
- <CABuKBeJSH3WzG3QC=9OoPzXE6fd9W2U67V4c19NzWcPxWR7VDg@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 3/3] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Fri, 6 Feb 2015 10:31:12 +0000
+Message-ID: <20150206103111.GA9921@leverpostej>
+References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com>
+ <1423128277-10297-4-git-send-email-bintian.wang@huawei.com>
+ <20150205193017.GF20735@leverpostej>
+ <CAAS=xmgsuY=c8-n_pDiZjLe2u+SPX7msRje7h0sNkRtT3HLfQA@mail.gmail.com>
+ <54D4843E.7060201@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABuKBeJSH3WzG3QC=9OoPzXE6fd9W2U67V4c19NzWcPxWR7VDg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <54D4843E.7060201@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Brent Wang <wangbintian@gmail.com>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 05, 2015 at 06:24:54PM +0100, Matthias Brugger wrote:
-> Hi Henry,
+On Fri, Feb 06, 2015 at 09:07:10AM +0000, Marc Zyngier wrote:
+> On 06/02/15 08:42, Brent Wang wrote:
 > 
-> 2015-01-30 6:13 GMT+01:00 Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> > This patchset contains the initial common clock support for Mediatek SoCs.
-> > Mediatek SoC's clock architecture comprises of various PLLs, dividers, muxes and clock gates.
-> >
-> > This patchset also contains a basic clock support for Mediatek MT8135 and MT8173.
-> >
-> > This driver is based on 3.19-rc1 + MT8135 and MT8173 basic support.
-> >
-> > Changes in v2:
-> > - Re-ordered patchset. Fold include/dt-bindings and DT document in 1st patch.
-> >
-> > Changes in v3:
-> > - Rebase to 3.19-rc1.
-> > - Refine code. Remove unneed functions, debug logs and comments, and fine tune error logs.
-> >
-> > Changes in v4:
-> > - Support MT8173 platform.
-> > - Re-ordered patchset. driver/clk/Makefile in 2nd patch.
-> > - Extract the common part definition(mtk_gate/mtk_pll/mtk_mux) from clk-mt8135.c/clk-mt8173.c to clk-mtk.c.
-> > - Refine code. Rmove unnessacary debug information and unsed defines, add prefix "mtk_" for static functions.
-> > - Remove flag CLK_IGNORE_UNUSED and set flag CLK_SET_RATE_PARENT on gate/mux/fixed-factor.
-> > - Use spin_lock_irqsave(&clk_ops_lock, flags) instead of mtk_clk_lock.
-> > - Example above include a node for the clock controller itself, followed by the i2c controller example above.
+> [...]
 > 
-> You use pericfg and infracfg which will be used by other drivers as
-> well. So please use syscon for this driver. As it is no longer a
-> platform device it is present early in boot.
-> The changes should look something like the patch beneath. Please
-> beware that it does only show the general concept and may not even
-> compile. I asked Sascha to implement the reset controller as part of
-> the clk driver, as the registers addresses are mixed between both,
-> clock and reset controller. Please coordinate with him to get them
-> integrated (even as one series or as incremental series).
+> >>
+> >>> +                   <0x0 0xf6802000 0x0 0x2000>, /* GICC */
+> >>> +                   <0x0 0xf6804000 0x0 0x2000>, /* GICH */
+> >>> +                   <0x0 0xf6806000 0x0 0x2000>; /* GICV */
+> >>
+> >> I guess no-one's bothered to consider 64k pages?
+> >>
+> >> Given GICH and GICV, I hope that this platform is booted at EL2?
+> > Transfer from EL3 to EL1 directly, keep these two just for future use.
+> 
+> That's a real shame, as it keeps users away from some key aspects of the
+> ARMv8 architecture.
 
-I don't really understand the "as part of the clk driver part". I now
-have replaced the devm_regmap_init_mmio with syscon_node_to_regmap
-in the pericfg / infracfg drivers. Is that all that you want or do you
-want me to move the source code to drivers/clk/mediatek?
+More importantly (and regardless of whether you wish to use the features
+provided by EL2), booting at EL2 means that the FW/bootloader needs to
+set up far less, and that the kernel can fix up some issues that might
+not be immediately apparent...
 
-Sascha
+[...]
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >>> +     timer {
+> >>> +             compatible = "arm,armv8-timer";
+> >>> +             interrupt-parent = <&gic>;
+> >>> +             interrupts = <1 13 0xff08>,
+> >>> +                          <1 14 0xff08>,
+> >>> +                          <1 11 0xff08>,
+> >>> +                          <1 10 0xff08>;
+> >>> +             clock-frequency = <1200000>;
+> >>> +     };
+> >>
+> >> NAK. Fix your firmware to configure CNTFRQ, on all CPUs.
+> > Fix in next version, maybe it will take some time to change firmware.
+> 
+> While you're at it, make sure CNTVOFF_EL2 is set to zero on all CPUs
+> before dropping to EL1. This tends to be overlooked.
+
+...like differing values of CNTVOFF_EL2.
+
+There seems to be a common misconception that booting at EL2 is a bad
+thing to do, when in reality booting at EL1 is more likely to result in
+bugs we can't work around.
+
+Is there any reason that you do not wish to boot at EL2, or were you
+simply unaware that booting at EL2 was possible/preferred?
+
+Thanks,
+Mark.
