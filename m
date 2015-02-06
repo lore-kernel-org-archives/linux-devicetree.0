@@ -1,53 +1,73 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [RFC PATCH v2 3/3] ARM: dts: exynos5420: add async-bridge clocks to
- disp1 power domain
-Date: Fri, 06 Feb 2015 11:55:54 +0100
-Message-ID: <1423220154-5333-1-git-send-email-a.hajda@samsung.com>
-References: <54D48701.10105@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <54D48701.10105@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, javier.martinez@collabora.co.uk, Liquid.Acid@gmx.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] input: gpio-joy - GPIO joystick driver
+Date: Fri, 6 Feb 2015 11:02:57 +0000
+Message-ID: <20150206110257.GB10324@leverpostej>
+References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
+ <1423215122-19947-3-git-send-email-hans.holmberg@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1423215122-19947-3-git-send-email-hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Holmberg <hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-FIMD and MIXER IPs in disp1 power domain have async-bridges (to GSCALER),
-therefore their clocks should be enabled during power domain switch.
+On Fri, Feb 06, 2015 at 09:32:02AM +0000, Hans Holmberg wrote:
+> This is an interrupt-driven driver for digital joysticks
+> connected to GPIOs. Supports any digital joystick with
+> signals for up, down, left, right and one signal for
+> trigger button press, i.e. C64/Atari joysticks.
+> 
+> Signed-off-by: Hans Holmberg <hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/input/joystick/Kconfig    |  10 ++
+>  drivers/input/joystick/Makefile   |   1 +
+>  drivers/input/joystick/gpio_joy.c | 208 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 219 insertions(+)
+>  create mode 100644 drivers/input/joystick/gpio_joy.c
 
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
----
-Hi,
+[...]
 
-This is 2nd version of the patch. After decrypting manual and discussion
-with Marek I guess this set of clocks is more apropriate - async-bridges
-are present in MIXER and FIMD, so their clocks should be enabled.
+> +static int gpio_joy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct input_dev *input;
+> +	struct gpio_joy_drvdata *ddata;
+> +	int i, err;
+> +	unsigned int debounce_ms;
 
-The 1st version worked for me due to fact I have forgot to remove
-clk_ignore_unused kernel boot option during tests ;)
+This should be a u32 given you pass it to a function expecting a u32
+pointer.
 
-Regards
-Andrzej
----
- arch/arm/boot/dts/exynos5420.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> +
+> +	ddata = devm_kzalloc(dev, sizeof(struct gpio_joy_drvdata), GFP_KERNEL);
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index e1fa800..58579f5 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -293,9 +293,11 @@
- 			 <&clock CLK_MOUT_SW_ACLK300>,
- 			 <&clock CLK_MOUT_USER_ACLK300_DISP1>,
- 			 <&clock CLK_MOUT_SW_ACLK400>,
--			 <&clock CLK_MOUT_USER_ACLK400_DISP1>;
-+			 <&clock CLK_MOUT_USER_ACLK400_DISP1>,
-+			 <&clock CLK_FIMD1>, <&clock CLK_MIXER>;
- 		clock-names = "oscclk", "pclk0", "clk0",
--			      "pclk1", "clk1", "pclk2", "clk2";
-+			      "pclk1", "clk1", "pclk2", "clk2",
-+			      "asb0", "asb1";
- 	};
- 
- 	pinctrl_0: pinctrl@13400000 {
--- 
-1.9.1
+Use sizeof(*ddata)
+
+[...]
+
+> +	return 0;
+> +fail:
+> +	return err;
+> +}
+
+Given there's no cleanup, the fail path seems redundant.
+
+[...]
+
+> +static const struct of_device_id gpio_joy_of_match[] = {
+> +	{ .compatible = DRV_NAME, },
+> +	{ },
+> +};
+
+The compatible string should be independent of DRV_NAME, because it must
+match the binding. The driver can be arbitrarily and independently renamed.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
