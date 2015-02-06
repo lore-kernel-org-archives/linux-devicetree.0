@@ -1,135 +1,281 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: Re: [PATCH RFC v8 11/21] Documentation: dt-bindings: Add bindings
- for Synopsys DW MIPI DSI DRM bridge driver
-Date: Fri, 6 Feb 2015 16:13:20 +0800
-Message-ID: <20150206081318.GA15088@victor>
-References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
- <1420014219-915-12-git-send-email-Ying.Liu@freescale.com>
- <1423131004.3207.27.camel@pengutronix.de>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: at91: dts: sama5d4: add dts for sama5d4 xplained board
+Date: Fri, 6 Feb 2015 16:39:35 +0800
+Message-ID: <1423211976-10324-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1423131004.3207.27.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org, stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, airlied@linux.ie, linux-kernel@vger.kernel.org, a.hajda@samsung.com, thierry.reding@gmail.com, mturquette@linaro.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, andyshrk@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 05, 2015 at 11:10:04AM +0100, Philipp Zabel wrote:
-> Am Mittwoch, den 31.12.2014, 16:23 +0800 schrieb Liu Ying:
-> > This patch adds device tree bindings for Synopsys DesignWare MIPI DSI
-> > host controller DRM bridge driver.
-> > 
-> > Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
-> > ---
-> > v7->v8:
-> >  * None.
-> > 
-> > v6->v7:
-> >  * None.
-> > 
-> > v5->v6:
-> >  * Add the #address-cells and #size-cells properties in the example 'ports'
-> >    node.
-> >  * Remove the useless input-port properties from the example port@0 and port@1
-> >    nodes.
-> > 
-> > v4->v5:
-> >  * None.
-> > 
-> > v3->v4:
-> >  * Newly introduced in v4.  This is separated from the relevant driver patch
-> >    in v3 to address Stefan Wahren's comment.
-> > 
-> >  .../devicetree/bindings/drm/bridge/dw_mipi_dsi.txt | 73 ++++++++++++++++++++++
-> >  1 file changed, 73 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
-> > new file mode 100644
-> > index 0000000..f88a8d6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
-> > @@ -0,0 +1,73 @@
-> > +Device-Tree bindings for Synopsys DesignWare MIPI DSI host controller
-> > +
-> > +The controller is a digital core that implements all protocol functions
-> > +defined in the MIPI DSI specification, providing an interface between
-> > +the system and the MIPI DPHY, and allowing communication with a MIPI DSI
-> > +compliant display.
-> > +
-> > +Required properties:
-> > + - #address-cells: Should be <1>.
-> > + - #size-cells: Should be <0>.
-> > + - compatible: The compatible string should be "fsl,imx6q-mipi-dsi" for
-> > +   i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
-> > +   device tree binding documentations.
-> 
-> I think the compatible property should additionally contain
-> "snps,dw-mipi-dsi". Also I think other SoCs using the same IP core
-> should eventually list their compatibles here, but that's for later.
-> 
-> How about:
-> + - compatible: The compatible string contain "fsl,imx6q-mipi-dsi" for
-> +   i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
-> +   device tree binding documentations. A common compatible string
-> +   "snps,dw-mipi-dsi" should be appended for all SoCs.
+add at91 sama5d4 xplained board support.
 
-I'm not sure if "snps,dw-mipi-dsi" should be appended.
+Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
 
-Is it a compatible string that SoC specific drivers should actually use to
-bind a device?
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts | 234 ++++++++++++++++++++++++++++
+ 2 files changed, 235 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91-sama5d4_xplained.dts
 
-As Andy mentioned in [1], DW MIPI DSI embedded in RK618 is configured via I2C
-bus, while i.MX6Q/DL is configured via ARM bus...
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 38c89ca..4994052 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -49,6 +49,7 @@ dtb-$(CONFIG_ARCH_AT91)	+= sama5d34ek.dtb
+ dtb-$(CONFIG_ARCH_AT91)	+= sama5d35ek.dtb
+ dtb-$(CONFIG_ARCH_AT91)	+= sama5d36ek.dtb
+ # sama5d4
++dtb-$(CONFIG_ARCH_AT91)	+= at91-sama5d4_xplained.dtb
+ dtb-$(CONFIG_ARCH_AT91)	+= at91-sama5d4ek.dtb
+ 
+ dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
+diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+new file mode 100644
+index 0000000..04a9679
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+@@ -0,0 +1,234 @@
++/*
++ * at91-sama5d4_xplained.dts - Device Tree file for SAMA5D4 Xplained board
++ *
++ *  Copyright (C) 2015 Atmel,
++ *                2015 Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++/dts-v1/;
++#include "sama5d4.dtsi"
++
++/ {
++	model = "Atmel SAMA5D4 Xplained";
++	compatible = "atmel,sama5d4-xplained", "atmel,sama5d4", "atmel,sama5";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 ignore_loglevel earlyprintk";
++	};
++
++	memory {
++		reg = <0x20000000 0x20000000>;
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		main_clock: clock@0 {
++			compatible = "atmel,osc", "fixed-clock";
++			clock-frequency = <12000000>;
++		};
++
++		slow_xtal {
++			clock-frequency = <32768>;
++		};
++
++		main_xtal {
++			clock-frequency = <12000000>;
++		};
++	};
++
++	ahb {
++		apb {
++			adc0: adc@fc034000 {
++				/* The vref depends on JP22 of EK. If connect 1-2 then use 3.3V. connect 2-3 use 3.0V */
++				atmel,adc-vref = <3300>;
++				/*atmel,adc-ts-wires = <4>;*/	/* Set up ADC touch screen */
++				status = "okay";		/* Enable ADC IIO support */
++			};
++
++			spi0: spi@f8010000 {
++				cs-gpios = <&pioC 3 0>, <0>, <0>, <0>;
++				status = "okay";
++				m25p80@0 {
++					compatible = "atmel,at25df321a";
++					spi-max-frequency = <50000000>;
++					reg = <0>;
++				};
++			};
++
++			macb0: ethernet@f8020000 {
++				phy-mode = "rmii";
++				status = "okay";
++			};
++
++			mmc1: mmc@fc000000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3 &pinctrl_mmc1_cd>;
++				status = "okay";
++				slot@0 {
++					reg = <0>;
++					bus-width = <4>;
++					cd-gpios = <&pioE 3 0>;
++				};
++			};
++
++			usart3: serial@fc00c000 {
++				status = "okay";
++			};
++
++			usart4: serial@fc010000 {
++				status = "okay";
++			};
++
++			watchdog@fc068640 {
++				status = "okay";
++			};
++
++			pinctrl@fc06a000 {
++				board {
++					pinctrl_mmc1_cd: mmc1_cd {
++						atmel,pins =
++							<AT91_PIOE 3 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
++					};
++					pinctrl_usba_vbus: usba_vbus {
++						atmel,pins =
++							<AT91_PIOE 31 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;
++					};
++					pinctrl_key_gpio: key_gpio_0 {
++						atmel,pins =
++							<AT91_PIOE 8 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>; /* PE13 gpio */
++					};
++				};
++			};
++		};
++
++		usb0: gadget@00400000 {
++			atmel,vbus-gpio = <&pioE 31 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_usba_vbus>;
++			status = "okay";
++		};
++
++		usb1: ohci@00500000 {
++			num-ports = <3>;
++			atmel,vbus-gpio = <0
++					   &pioE 11 GPIO_ACTIVE_HIGH
++					   &pioE 14 GPIO_ACTIVE_HIGH
++					  >;
++			status = "okay";
++		};
++
++		usb2: ehci@00600000 {
++			status = "okay";
++		};
++
++		nand0: nand@80000000 {
++			nand-bus-width = <8>;
++			nand-ecc-mode = "hw";
++			nand-on-flash-bbt;
++			atmel,has-pmecc;
++			status = "okay";
++
++			at91bootstrap@0 {
++				label = "at91bootstrap";
++				reg = <0x0 0x40000>;
++			};
++
++			bootloader@40000 {
++				label = "bootloader";
++				reg = <0x40000 0x80000>;
++			};
++
++			bootloaderenv@c0000 {
++				label = "bootloader env";
++				reg = <0xc0000 0xc0000>;
++			};
++
++			dtb@180000 {
++				label = "device tree";
++				reg = <0x180000 0x80000>;
++			};
++
++			kernel@200000 {
++				label = "kernel";
++				reg = <0x200000 0x600000>;
++			};
++
++			rootfs@800000 {
++				label = "rootfs";
++				reg = <0x800000 0x0f800000>;
++			};
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_key_gpio>;
++
++		pb_user1 {
++			label = "pb_user1";
++			gpios = <&pioE 8 GPIO_ACTIVE_HIGH>;
++			linux,code = <0x100>;
++			gpio-key,wakeup;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		status = "okay";
++
++		d8 {
++			label = "d8";
++			gpios = <&pioE 15 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		d10 {
++			label = "d10";
++			gpios = <&pioD 30 GPIO_ACTIVE_HIGH>;
++		};
++	};
++};
+-- 
+1.9.1
 
-Another concern is that if users only specify "snps,dw-mipi-dsi" in their
-device tree sources and use a kernel which supports multiple platforms,
-say ARM multi v7 platforms, could several enabled SoC specific drivers be
-probed for a single DW MIPI DSI device?
-
-[1] http://lists.freedesktop.org/archives/dri-devel/2014-December/074344.html
-
-> 
-> > + - reg: Represent the physical address range of the controller.
-> > + - interrupts: Represent the controller's interrupt to the CPU(s).
-> > + - clocks, clock-names: Phandles to the controller pll reference and
-> > +   core configuration clocks, as described in [1].
-> 
-> From the MIPI CSI-2 datasheets it looks like the D-PHY has a refclk and
-> a cfg_clk input. So I suspect from the name of the "core_cfg" clock,
-> that it actually represents two clock inputs, the "cfg_clk" wired to the
-> D-PHY and a core clock wired to the MIPI DSI host controller. I am not
-> sure if there are designs that control those clocks separately, but I
-> think it'd be safer to split this into two clocks in the device tree.
-
-What MIPI CSI-2 datasheets do you refer to?
-I don't find the refclk and cfg_clk in the MIPI CSI chapter of the i.MX6DQ
-Reference Manual v2[2].
-
-I think we need to know the design philosophy of DW MIPI DSI clock sources
-to settle down the documentation here.  I've asked our internal MIPI DSI
-SoC owner for ideas.  But, someone from Synopsys might be the right
-person, perhaps.
-
-[2] http://cache.freescale.com/files/32bit/doc/ref_manual/IMX6DQRM.pdf?fasp=1&WT_TYPE=Reference%20Manuals&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation&fileExt=.pdf
-
-> 
-> Also I am not sure which input to the MIPI DSI host controller the core
-> clock represents. The i.MX6DQ Reference Manual v2 calls the remaining
-> clock inputs gated by mipi_core_cfg_clk_enable "ac_clk_125m" and
-> "ips_clk" (I think the latter is the ABP clock driving the register
-> bank, just called "pclk" in the MIPI CSI-2 documentation).
-
-The same MIPI CSI-2 documentation you mentioned above?
-
-I'm also puzzled about the clocks.
-
-Regards,
-Liu Ying
-
-> 
-> regards
-> Philipp
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
