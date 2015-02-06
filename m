@@ -1,47 +1,94 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 08/10] ARM: mvebu: add core support for Armada 39x
-Date: Fri, 06 Feb 2015 11:57:58 -0800
-Message-ID: <54D51CC6.2070908@codeaurora.org>
-References: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com> <1423238276-9206-9-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH] of: calculate masks of the device based on dma-range size
+Date: Fri, 6 Feb 2015 15:15:20 -0500
+Message-ID: <1423253720-2785-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1423238276-9206-9-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/15 07:57, Thomas Petazzoni wrote:
-> diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
-> index 89a139e..d88438f 100644
-> --- a/arch/arm/mach-mvebu/board-v7.c
-> +++ b/arch/arm/mach-mvebu/board-v7.c
-> @@ -232,3 +232,17 @@ DT_MACHINE_START(ARMADA_38X_DT, "Marvell Armada 380/385 (Device Tree)")
->  	.restart	= mvebu_restart,
->  	.dt_compat	= armada_38x_dt_compat,
->  MACHINE_END
-> +
-> +static const char * const armada_39x_dt_compat[] = {
+This patch update of_dma_configure() API to calculate the
+masks (dma_mask and coherent_dma_mask) based on the dma-range
+values set in DT for the device. Also limit the mask to lower
+of the default mask and mask calculated.
 
- __initconst?
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
-> +	"marvell,armada390",
-> +	"marvell,armada398",
-> +	NULL,
-> +};
-> +
-> +DT_MACHINE_START(ARMADA_39X_DT, "Marvell Armada 39x (Device Tree)")
-> +	.l2c_aux_val	= 0,
-> +	.l2c_aux_mask	= ~0,
-> +	.init_irq       = mvebu_init_irq,
-> +	.restart	= mvebu_restart,
-> +	.dt_compat	= armada_39x_dt_compat,
-> +MACHINE_END
->
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ drivers/of/device.c |   27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 314c8a9..44209fa 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -83,17 +83,18 @@ int of_device_add(struct platform_device *ofdev)
+  */
+ void of_dma_configure(struct device *dev, struct device_node *np)
+ {
+-	u64 dma_addr, paddr, size;
++	u64 dma_addr = 0, paddr, size;
+ 	int ret;
+ 	bool coherent;
+-	unsigned long offset;
++	unsigned long offset = 0;
+ 	struct iommu_ops *iommu;
+ 
+ 	/*
+ 	 * Set default dma-mask to 32 bit. Drivers are expected to setup
+ 	 * the correct supported dma_mask.
+ 	 */
+-	dev->coherent_dma_mask = DMA_BIT_MASK(32);
++	if (!dev->coherent_dma_mask)
++		dev->coherent_dma_mask = DMA_BIT_MASK(32);
+ 
+ 	/*
+ 	 * Set it to coherent_dma_mask by default if the architecture
+@@ -102,11 +103,14 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+ 	if (!dev->dma_mask)
+ 		dev->dma_mask = &dev->coherent_dma_mask;
+ 
++	/*
++	 * Set default size to cover the 32-bit. Drivers are expected to setup
++	 * the correct size and dma_mask.
++	 */
++	size = 1ULL << 32;
++
+ 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+-	if (ret < 0) {
+-		dma_addr = offset = 0;
+-		size = dev->coherent_dma_mask + 1;
+-	} else {
++	if (!ret) {
+ 		offset = PFN_DOWN(paddr - dma_addr);
+ 
+ 		/*
+@@ -128,6 +132,15 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+ 
+ 	dev->dma_pfn_offset = offset;
+ 
++	/*
++	 * Limit coherent and dma mask based on size and default mask
++	 * set by the driver.
++	 */
++	dev->coherent_dma_mask = min(dev->coherent_dma_mask,
++				     DMA_BIT_MASK(ilog2(dma_addr + size)));
++	*dev->dma_mask = min((*dev->dma_mask),
++			     DMA_BIT_MASK(ilog2(dma_addr + size)));
++
+ 	coherent = of_dma_is_coherent(np);
+ 	dev_dbg(dev, "device is%sdma coherent\n",
+ 		coherent ? " " : " not ");
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+1.7.9.5
