@@ -1,68 +1,75 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv6 2/5] arm: socfpga: Enable OCRAM ECC on startup.
-Date: Fri, 6 Feb 2015 18:45:44 +0000
-Message-ID: <20150206184544.GC10324@leverpostej>
+Subject: Re: [PATCHv6 1/5] arm: socfpga: Enable L2 Cache ECC on startup.
+Date: Fri, 6 Feb 2015 18:52:02 +0000
+Message-ID: <20150206185202.GD10324@leverpostej>
 References: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com>
- <1420772036-3112-3-git-send-email-tthayer@opensource.altera.com>
+ <1420772036-3112-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1420772036-3112-3-git-send-email-tthayer@opensource.altera.com>
+In-Reply-To: <1420772036-3112-2-git-send-email-tthayer@opensource.altera.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: "tthayer@opensource.altera.com" <tthayer@opensource.altera.com>
 Cc: "bp@alien8.de" <bp@alien8.de>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "m.chehab@samsung.com" <m.chehab@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tthayer.linux@gmail.com" <tthayer.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 09, 2015 at 02:53:53AM +0000, tthayer@opensource.altera.com wrote:
+On Fri, Jan 09, 2015 at 02:53:52AM +0000, tthayer@opensource.altera.com wrote:
 > From: Thor Thayer <tthayer@opensource.altera.com>
 > 
-> This patch enables the ECC for On-Chip RAM on machine
+> This patch enables the ECC for L2 cache on machine
 > startup.  The ECC has to be enabled before data is
 > is stored in memory otherwise the ECC will fail on
 > reads.
 
-Where else is this OCRAM used?
-
-If we need the ECC to be enabled before use, a module_init call that
-seems to be unrelated to any other usage doesn't seem right to me.
-Hopefully I've just misunderstood something here.
+I take it you mean before the L2 cache is enabled (and its memories are
+used), rather than before main memory is in use?
 
 > 
 > Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 > ---
-> v2: Split OCRAM ECC portion separately. Addition of iounmap()
->     and reorganization of gen_pool_free. Remove defconfig from patch.
+> v2: Split OCRAM initialization into separate patch.
 > 
 > v3/4: No change
 > 
-> v5: Remove ocram.h, use io.h instead of clk-provider.h
->     Check prop in correct place. Add ECC EN defines.
+> v5: Remove l2cache.h, use io.h instead of clk-provider.h
+>     Make copyright header inclusive. Remove MAINTAINERS entry.
 > 
-> v6: Implement OCRAM discovery changes from community. Add
->     of_node_put(). Remove be32_to_cpup(). Use __init() which
->     allows removal of .init_machine(). Update year in header.
+> v6: Remove pr_debug() & update year in header.
 > ---
->  arch/arm/mach-socfpga/Makefile |    1 +
->  arch/arm/mach-socfpga/ocram.c  |   97 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 98 insertions(+)
->  create mode 100644 arch/arm/mach-socfpga/ocram.c
+>  arch/arm/mach-socfpga/Makefile   |    1 +
+>  arch/arm/mach-socfpga/core.h     |    2 ++
+>  arch/arm/mach-socfpga/l2_cache.c |   39 ++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-socfpga/socfpga.c  |    4 +++-
+>  4 files changed, 45 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/mach-socfpga/l2_cache.c
 > 
 > diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
-> index 142609e..1552ca5 100644
+> index 6dd7a93..142609e 100644
 > --- a/arch/arm/mach-socfpga/Makefile
 > +++ b/arch/arm/mach-socfpga/Makefile
-> @@ -5,3 +5,4 @@
+> @@ -4,3 +4,4 @@
+>  
 >  obj-y					:= socfpga.o
 >  obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
->  obj-$(CONFIG_EDAC_ALTERA_L2C) += l2_cache.o
-> +obj-$(CONFIG_EDAC_ALTERA_OCRAM) += ocram.o
-> diff --git a/arch/arm/mach-socfpga/ocram.c b/arch/arm/mach-socfpga/ocram.c
+> +obj-$(CONFIG_EDAC_ALTERA_L2C) += l2_cache.o
+> diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
+> index 483cb46..28c8a15 100644
+> --- a/arch/arm/mach-socfpga/core.h
+> +++ b/arch/arm/mach-socfpga/core.h
+> @@ -47,4 +47,6 @@ extern unsigned long socfpga_cpu1start_addr;
+>  
+>  #define SOCFPGA_SCU_VIRT_BASE   0xfffec000
+>  
+> +void socfpga_init_l2_ecc(void);
+> +
+>  #endif
+> diff --git a/arch/arm/mach-socfpga/l2_cache.c b/arch/arm/mach-socfpga/l2_cache.c
 > new file mode 100644
-> index 0000000..1f12a38
+> index 0000000..047759d
 > --- /dev/null
-> +++ b/arch/arm/mach-socfpga/ocram.c
-> @@ -0,0 +1,97 @@
+> +++ b/arch/arm/mach-socfpga/l2_cache.c
+> @@ -0,0 +1,39 @@
 > +/*
 > + * Copyright Altera Corporation (C) 2015. All rights reserved.
 > + *
@@ -79,101 +86,33 @@ Hopefully I've just misunderstood something here.
 > + * this program.  If not, see <http://www.gnu.org/licenses/>.
 > + */
 > +#include <linux/io.h>
-> +#include <linux/genalloc.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
 > +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
 > +
-> +#define ALTR_OCRAM_CLEAR_ECC          0x00000018
-> +#define ALTR_OCRAM_ECC_EN             0x00000019
-> +
-> +static int __init socfpga_init_ocram_ecc(void)
+> +void socfpga_init_l2_ecc(void)
 > +{
 > +	struct device_node *np;
-> +	struct resource    res;
-> +	u32                iram_addr;
-> +	void __iomem       *mapped_ocr_edac_addr;
-> +	resource_size_t    size;
-> +	struct gen_pool    *gp;
-> +	int                ret;
+> +	void __iomem  *mapped_l2_edac_addr;
 > +
-> +	/* Get the size of the on-chip RAM */
-> +	np = of_find_compatible_node(NULL, NULL, "mmio-sram");
+> +	np = of_find_compatible_node(NULL, NULL, "altr,l2-edac");
 > +	if (!np) {
-> +		pr_err("%s: Unable to find mmio-sram in dtb\n", __func__);
-> +		return -ENODEV;
+> +		pr_err("SOCFPGA: Unable to find altr,l2-edac in dtb\n");
+> +		return;
 > +	}
 > +
-> +	ret = of_address_to_resource(np, 0, &res);
-> +	if (ret) {
-> +		of_node_put(np);
-> +		pr_err("%s: Problem getting SRAM address in dtb\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +	size = resource_size(&res);
-> +	of_node_put(np);
-> +
-> +	/* Find the OCRAM EDAC device tree node */
-> +	np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
-> +	if (!np) {
-> +		pr_err("%s: Unable to find altr,ocram-edac\n", __func__);
-> +		return -ENODEV;
+> +	mapped_l2_edac_addr = of_iomap(np, 0);
+> +	if (!mapped_l2_edac_addr) {
+> +		pr_err("SOCFPGA: Unable to find L2 ECC mapping in dtb\n");
+> +		return;
 > +	}
 > +
-> +	mapped_ocr_edac_addr = of_iomap(np, 0);
-> +	if (!mapped_ocr_edac_addr) {
-> +		of_node_put(np);
-> +		pr_err("%s: Unable to map OCRAM ecc regs.\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +
-> +	gp = of_get_named_gen_pool(np, "iram", 0);
-> +	if (!gp) {
-> +		of_node_put(np);
-> +		pr_err("%s: OCRAM cannot find gen pool\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +	of_node_put(np);
-> +
-> +	iram_addr = gen_pool_alloc(gp, size / sizeof(size_t));
+> +	/* Enable ECC */
+> +	writel(0x01, mapped_l2_edac_addr);
 
-Why divide by sizeof(size_t) here? As far as I am aware, resource_size
-gives you a size in bytes...
+Missing of_node_put(np)?
 
-> +	if (iram_addr == 0) {
-> +		pr_err("%s: cannot alloc from gen pool\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Clear any pending OCRAM ECC interrupts, then enable ECC */
-> +	writel(ALTR_OCRAM_CLEAR_ECC, mapped_ocr_edac_addr);
-> +	writel(ALTR_OCRAM_ECC_EN, mapped_ocr_edac_addr);
-> +
-> +	memset((void *)iram_addr, 0, size);
-
-...and here we write size bytes, not (size / sizeof(size_t)) bytes, so
-we're poking memory we weren't allocated.
-
-How is this memory mapped exactly? Is memset safe?
+Surely you're leaking the mapping here? It's locally scoped and you
+never unmap it.
 
 Thanks,
 Mark.
-
-> +
-> +	gen_pool_free(gp, iram_addr, size / sizeof(size_t));
-> +
-> +	iounmap(mapped_ocr_edac_addr);
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit socfpga_exit_ocram_ecc(void)
-> +{
-> +}
-> +
-> +module_init(socfpga_init_ocram_ecc);
-> +module_exit(socfpga_exit_ocram_ecc);
-> -- 
-> 1.7.9.5
-> 
-> 
