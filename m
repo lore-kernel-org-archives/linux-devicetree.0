@@ -1,80 +1,68 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 0/7] clk: Add common clock support for Mediatek MT8135
- and MT8173.
-Date: Fri, 6 Feb 2015 15:20:35 +0100
-Message-ID: <CABuKBeJBp115aD_xb7_2471h=iyr5Wc33m2EX715MxNc=_1p2A@mail.gmail.com>
-References: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
-	<CABuKBeJSH3WzG3QC=9OoPzXE6fd9W2U67V4c19NzWcPxWR7VDg@mail.gmail.com>
-	<20150206103033.GS18908@pengutronix.de>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v6 3/7] of: fix size when dma-range is not used
+Date: Fri, 6 Feb 2015 14:38:12 +0000
+Message-ID: <20150206143812.GB20549@localhost>
+References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
+ <1423173179-10227-4-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150206103033.GS18908@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <1423173179-10227-4-git-send-email-m-karicheri2@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Henry Chen <henryc.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, James Liao <jamesjj.liao@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-02-06 11:30 GMT+01:00 Sascha Hauer <s.hauer@pengutronix.de>:
-> On Thu, Feb 05, 2015 at 06:24:54PM +0100, Matthias Brugger wrote:
->> Hi Henry,
->>
->> 2015-01-30 6:13 GMT+01:00 Henry Chen <henryc.chen@mediatek.com>:
->> > This patchset contains the initial common clock support for Mediatek SoCs.
->> > Mediatek SoC's clock architecture comprises of various PLLs, dividers, muxes and clock gates.
->> >
->> > This patchset also contains a basic clock support for Mediatek MT8135 and MT8173.
->> >
->> > This driver is based on 3.19-rc1 + MT8135 and MT8173 basic support.
->> >
->> > Changes in v2:
->> > - Re-ordered patchset. Fold include/dt-bindings and DT document in 1st patch.
->> >
->> > Changes in v3:
->> > - Rebase to 3.19-rc1.
->> > - Refine code. Remove unneed functions, debug logs and comments, and fine tune error logs.
->> >
->> > Changes in v4:
->> > - Support MT8173 platform.
->> > - Re-ordered patchset. driver/clk/Makefile in 2nd patch.
->> > - Extract the common part definition(mtk_gate/mtk_pll/mtk_mux) from clk-mt8135.c/clk-mt8173.c to clk-mtk.c.
->> > - Refine code. Rmove unnessacary debug information and unsed defines, add prefix "mtk_" for static functions.
->> > - Remove flag CLK_IGNORE_UNUSED and set flag CLK_SET_RATE_PARENT on gate/mux/fixed-factor.
->> > - Use spin_lock_irqsave(&clk_ops_lock, flags) instead of mtk_clk_lock.
->> > - Example above include a node for the clock controller itself, followed by the i2c controller example above.
->>
->> You use pericfg and infracfg which will be used by other drivers as
->> well. So please use syscon for this driver. As it is no longer a
->> platform device it is present early in boot.
->> The changes should look something like the patch beneath. Please
->> beware that it does only show the general concept and may not even
->> compile. I asked Sascha to implement the reset controller as part of
->> the clk driver, as the registers addresses are mixed between both,
->> clock and reset controller. Please coordinate with him to get them
->> integrated (even as one series or as incremental series).
->
-> I don't really understand the "as part of the clk driver part". I now
-> have replaced the devm_regmap_init_mmio with syscon_node_to_regmap
-> in the pericfg / infracfg drivers. Is that all that you want or do you
-> want me to move the source code to drivers/clk/mediatek?
+On Thu, Feb 05, 2015 at 09:52:55PM +0000, Murali Karicheri wrote:
+> Fix the dma-range size when the DT attribute is missing. i.e  set size to
+> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. Also add
+> code to check invalid values of size configured in DT and log error.
+> 
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> 
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
+>  drivers/of/device.c |   17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 2de320d..314c8a9 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -105,9 +105,24 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>  	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>  	if (ret < 0) {
+>  		dma_addr = offset = 0;
+> -		size = dev->coherent_dma_mask;
+> +		size = dev->coherent_dma_mask + 1;
+>  	} else {
+>  		offset = PFN_DOWN(paddr - dma_addr);
+> +
+> +		/*
+> +		 * Add a work around to treat the size as mask + 1 in case
+> +		 * it is defined in DT as a mask.
+> +		 */
+> +		if (size & 1) {
+> +			dev_warn(dev, "Invalid size 0x%llx for dma-range\n",
+> +				 size);
+> +			size = size + 1;
+> +		}
+> +
+> +		if (!size) {
+> +			dev_err(dev, "Adjusted size 0x%llx invalid\n", size);
+> +			return;
+> +		}
 
-Yes, I propose to move the source code to drivers/clk/mediatek.
-Please have a look on other clock drivers which implement the reset
-controller, e.g. rockchip.
-
-Thanks,
-Matthias
-
->
-> Sascha
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
-
+Would it make sense to set coherent_dma_mask to 0 here to make this more
+noticeable? It can be done together with the mask calculation from size.
 
 -- 
-motzblog.wordpress.com
+Catalin
