@@ -1,24 +1,73 @@
-From: "Antonio Vinal" <ferderodcal-yLk5BpCQSzA@public.gmane.org>
-Subject: Please respond!!!
-Date: Thu, 5 Feb 2015 17:26:38 -0000
-Message-ID: <201502052023.t15KNsib068436@ufps.kuban.su>
-Reply-To: <barr.antoniovinal-/E1597aS9LTXPF5Rlphj1Q@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
+From: Hans Holmberg <hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] GPIO joystick driver
+Date: Fri,  6 Feb 2015 10:32:00 +0100
+Message-ID: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Holmberg <hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello friend!
+This series adds a driver for digital joysticks connected
+via GPIOs.
 
-I would like to contact you personally for an important proposal that could of interest to you.
-I send this email only to know if this email address is functional.
-I have something very important to discuss with you. Contact me for details by:  Email: fernrodyup12-yLk5BpCQSzA@public.gmane.org with your direct contacts.
+Tested on Rasperry Pi and Minnowboard MAX using evtest.
 
-Kind regards.
-Antonio Vi?al.
+The DSDT AML-code snippet below illustrates how to configure a joystick
+on the Minnowboard MAX, using the new _DSD support in the kernel.
+
+
+Scope (_SB)
+{
+        Device (JOY)
+        {
+            Name (_HID, "PRP0001")
+            Name (_CRS, ResourceTemplate () {
+               GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+                  "\\_SB.GPO2", 0, ResourceConsumer) {1}
+               GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+                  "\\_SB.GPO2", 0, ResourceConsumer) {0}
+               GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+                  "\\_SB.GPO0", 0, ResourceConsumer) {95}
+               GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+                  "\\_SB.GPO0", 0, ResourceConsumer) {94}
+               GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+                  "\\_SB.GPO2", 0, ResourceConsumer) {2}
+            })
+
+            Name (_DSD, Package () {
+                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+                Package () {
+                    Package () {"compatible", "gpio-joy"},
+                    Package () {"debounce-interval-ms", 15},
+                    Package () {"left-gpio",    Package () {^JOY, 0, 0, 1}},
+                    Package () {"right-gpio",   Package () {^JOY, 1, 0, 1}},
+                    Package () {"up-gpio",      Package () {^JOY, 2, 0, 1}},
+                    Package () {"down-gpio",    Package () {^JOY, 3, 0, 1}},
+                    Package () {"button-gpio",  Package () {^JOY, 4, 0, 1}},
+               }
+            })
+        }
+}
+
+Best regards,
+Hans
+
+Hans Holmberg (2):
+  Documentation: Device Tree binding information for gpio-joy driver
+  input: gpio-joy - GPIO joystick driver
+
+ .../devicetree/bindings/input/gpio-joy.txt         |  29 +++
+ drivers/input/joystick/Kconfig                     |  10 +
+ drivers/input/joystick/Makefile                    |   1 +
+ drivers/input/joystick/gpio_joy.c                  | 208 +++++++++++++++++++++
+ 4 files changed, 248 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/gpio-joy.txt
+ create mode 100644 drivers/input/joystick/gpio_joy.c
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
