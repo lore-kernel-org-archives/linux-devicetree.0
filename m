@@ -1,72 +1,142 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: [PATCH v3 4/8] ARM: dts: Add pwm-fan node to the Odroid-U3 board
-Date: Fri, 06 Feb 2015 17:59:04 +0100
-Message-ID: <1423241948-31981-5-git-send-email-l.majewski@samsung.com>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1423241948-31981-1-git-send-email-l.majewski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1423241948-31981-1-git-send-email-l.majewski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>
-Cc: lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: [RESEND PATCHv6 5/5] arm: dts: Add Altera L2 Cache and OCRAM EDAC
+ entries
+Date: Fri, 6 Feb 2015 11:03:32 -0600
+Message-ID: <54D4F3E4.9040700@opensource.altera.com>
+References: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com> <1420772036-3112-6-git-send-email-tthayer@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420772036-3112-6-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Kamil Debski <k.debski@samsung.com>
+Hi Device Tree Maintainers,
 
-Add pwm-fan node to the Odroid-U3 board file to enable PWM control of the
-cooling fan. In addition, add the "pwm" label to the pwm@139D0000 node
-in the exynos4412.dtsi.
+On 01/08/2015 08:53 PM, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+>
+> Adding the device tree entries and bindings needed to support
+> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+> an earlier patch to declare and setup On-chip RAM properly.
+> http://www.spinics.net/lists/devicetree/msg51117.html
+>
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v2: Remove OCRAM declaration and reference prior patch.
+>
+> v3-5: No Change
+>
+> v6: Change to nested EDAC device nodes based on community
+>      feedback. Remove L2 syscon. Use consolidated binding.
 
-Signed-off-by: Kamil Debski <k.debski@samsung.com>
-[Rebased on the newest mainline by l.majewski@samsung.com]
----
-Changes since v1:
-- added pwm label to the pwm@139D0000 node in exynos4.dtsi
-- use the pwm label in the exynos4412-odroidu3.dts
-- change order or properties in the pwn-fan node, to be sorted
-  in alphabetical order
+I'm requesting comments on this patch series. The changes in this patch 
+series are based upon feedback from Mark Rutland for patch series 
+version 5 on December 2, 2014.
 
----
- arch/arm/boot/dts/exynos4.dtsi            |  2 +-
- arch/arm/boot/dts/exynos4412-odroidu3.dts | 13 +++++++++++++
- 2 files changed, 14 insertions(+), 1 deletion(-)
+I believe this patch set addresses the concerns that Mark had with my 
+previous patch. Primarily, syscon was removed from the L2 cache and a 
+top level device tree node with L2 and OCRAM children is used instead of 
+individual top level nodes. Some concerns were addressed in an email 
+reply on December 2, 2014.
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index f18d746..75266e3 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -582,7 +582,7 @@
- 		status = "disabled";
- 	};
- 
--	pwm@139D0000 {
-+	pwm: pwm@139D0000 {
- 		compatible = "samsung,exynos4210-pwm";
- 		reg = <0x139D0000 0x1000>;
- 		interrupts = <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>, <0 41 0>;
-diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-index c8a64be..60bd1e4 100644
---- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-@@ -31,6 +31,19 @@
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
-+
-+	pwm-fan {
-+		compatible = "pwm-fan";
-+		pwms = <&pwm 0 10000 0>;
-+		status = "okay";
-+	};
-+};
-+
-+&pwm {
-+	pinctrl-0 = <&pwm0_out>;
-+	pinctrl-names = "default";
-+	samsung,pwm-outputs = <0>;
-+	status = "okay";
- };
- 
- &usb3503 {
--- 
-2.0.0.rc2
+This change also created a new edac parent probe function which is in 
+[PATCHv6 4/5] which should be reviewed along with this device tree change.
+
+Thanks,
+
+Thor
+
+> ---
+>   .../bindings/arm/altera/socfpga-edac.txt           |   46 ++++++++++++++++++++
+>   arch/arm/boot/dts/socfpga.dtsi                     |   20 +++++++++
+>   2 files changed, 66 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
+> new file mode 100644
+> index 0000000..4bf32e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
+> @@ -0,0 +1,46 @@
+> +Altera SoCFPGA Error Detection and Correction [EDAC]
+> +
+> +Required Properties:
+> +- compatible : Should be "altr,edac"
+> +- #address-cells: must be 1
+> +- #size-cells: must be 1
+> +- ranges : standard definition, should translate from local addresses
+> +
+> +Subcomponents:
+> +
+> +L2 Cache ECC
+> +Required Properties:
+> +- compatible : Should be "altr,l2-edac"
+> +- reg : Address and size for ECC error interrupt clear registers.
+> +- interrupts : Should be single bit error interrupt, then double bit error
+> +	interrupt. Note the rising edge type.
+> +
+> +On Chip RAM ECC
+> +Required Properties:
+> +- compatible : Should be "altr,ocram-edac"
+> +- reg : Address and size for ECC error interrupt clear registers.
+> +- iram : phandle to On-Chip RAM definition.
+> +- interrupts : Should be single bit error interrupt, then double bit error
+> +	interrupt. Note the rising edge type.
+> +
+> +Example:
+> +
+> +	soc_ecc {
+> +		compatible = "altr,edac";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		l2edac@ffd08140 {
+> +			compatible = "altr,l2-edac";
+> +			reg = <0xffd08140 0x4>;
+> +			interrupts = <0 36 1>, <0 37 1>;
+> +		};
+> +
+> +		ocramedac@ffd08144 {
+> +			compatible = "altr,ocram-edac";
+> +			reg = <0xffd08144 0x4>;
+> +			iram = <&ocram>;
+> +			interrupts = <0 178 1>, <0 179 1>;
+> +		};
+> +	};
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 252c3d1..e546e47 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -618,6 +618,26 @@
+>   			interrupts = <0 39 4>;
+>   		};
+>
+> +		soc_ecc {
+> +			compatible = "altr,edac";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			l2edac@ffd08140 {
+> +				compatible = "altr,l2-edac";
+> +				reg = <0xffd08140 0x4>;
+> +				interrupts = <0 36 1>, <0 37 1>;
+> +			};
+> +
+> +			ocramedac@ffd08144 {
+> +				compatible = "altr,ocram-edac";
+> +				reg = <0xffd08144 0x4>;
+> +				iram = <&ocram>;
+> +				interrupts = <0 178 1>, <0 179 1>;
+> +			};
+> +		};
+> +
+>   		L2: l2-cache@fffef000 {
+>   			compatible = "arm,pl310-cache";
+>   			reg = <0xfffef000 0x1000>;
+>
