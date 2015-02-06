@@ -1,90 +1,179 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 7/8] hwmon: pwm-fan: Read PWM FAN configuration from
- device tree
-Date: Fri, 6 Feb 2015 10:36:57 -0800
-Message-ID: <20150206183657.GB25410@roeck-us.net>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1423241948-31981-1-git-send-email-l.majewski@samsung.com>
- <1423241948-31981-8-git-send-email-l.majewski@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv6 2/5] arm: socfpga: Enable OCRAM ECC on startup.
+Date: Fri, 6 Feb 2015 18:45:44 +0000
+Message-ID: <20150206184544.GC10324@leverpostej>
+References: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com>
+ <1420772036-3112-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1423241948-31981-8-git-send-email-l.majewski@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+In-Reply-To: <1420772036-3112-3-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "tthayer@opensource.altera.com" <tthayer@opensource.altera.com>
+Cc: "bp@alien8.de" <bp@alien8.de>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "m.chehab@samsung.com" <m.chehab@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tthayer.linux@gmail.com" <tthayer.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 06, 2015 at 05:59:07PM +0100, Lukasz Majewski wrote:
-> This patch provides code for reading PWM FAN configuration data via
-> device tree. The pwm-fan can work with full speed when configuration
-> is not provided. However, errors are propagated when wrong DT bindings
-> are found.
-> Additionally the struct pwm_fan_ctx has been extended.
+On Fri, Jan 09, 2015 at 02:53:53AM +0000, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
 > 
-> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> ---
-> Changes for v2:
-> - Rename pwm_fan_max_states to pwm_fan_cooling_levels
-> - Moving pwm_fan_of_get_cooling_data() call after setting end enabling PWM FAN
-> - pwm_fan_of_get_cooling_data() now can fail - preserving old behaviour
-> - Remove unnecessary dev_err() call
-> Changes for v3:
-> - Patch's headline has been reedited
-> - pwm_fan_of_get_cooling_data() return code is now being checked.
-> - of_property_count_elems_of_size() is now used instead of_find_property()
-> - More verbose patch description added
-> ---
->  drivers/hwmon/pwm-fan.c | 54 ++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 53 insertions(+), 1 deletion(-)
+> This patch enables the ECC for On-Chip RAM on machine
+> startup.  The ECC has to be enabled before data is
+> is stored in memory otherwise the ECC will fail on
+> reads.
+
+Where else is this OCRAM used?
+
+If we need the ECC to be enabled before use, a module_init call that
+seems to be unrelated to any other usage doesn't seem right to me.
+Hopefully I've just misunderstood something here.
+
 > 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 870e100..f3f5843 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -30,7 +30,10 @@
->  struct pwm_fan_ctx {
->  	struct mutex lock;
->  	struct pwm_device *pwm;
-> -	unsigned char pwm_value;
-> +	unsigned int pwm_value;
-> +	unsigned int pwm_fan_state;
-> +	unsigned int pwm_fan_max_state;
-> +	unsigned int *pwm_fan_cooling_levels;
->  };
->  
->  static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
-> @@ -100,6 +103,50 @@ static struct attribute *pwm_fan_attrs[] = {
->  
->  ATTRIBUTE_GROUPS(pwm_fan);
->  
-> +int pwm_fan_of_get_cooling_data(struct device *dev, struct pwm_fan_ctx *ctx)
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v2: Split OCRAM ECC portion separately. Addition of iounmap()
+>     and reorganization of gen_pool_free. Remove defconfig from patch.
+> 
+> v3/4: No change
+> 
+> v5: Remove ocram.h, use io.h instead of clk-provider.h
+>     Check prop in correct place. Add ECC EN defines.
+> 
+> v6: Implement OCRAM discovery changes from community. Add
+>     of_node_put(). Remove be32_to_cpup(). Use __init() which
+>     allows removal of .init_machine(). Update year in header.
+> ---
+>  arch/arm/mach-socfpga/Makefile |    1 +
+>  arch/arm/mach-socfpga/ocram.c  |   97 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 98 insertions(+)
+>  create mode 100644 arch/arm/mach-socfpga/ocram.c
+> 
+> diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
+> index 142609e..1552ca5 100644
+> --- a/arch/arm/mach-socfpga/Makefile
+> +++ b/arch/arm/mach-socfpga/Makefile
+> @@ -5,3 +5,4 @@
+>  obj-y					:= socfpga.o
+>  obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
+>  obj-$(CONFIG_EDAC_ALTERA_L2C) += l2_cache.o
+> +obj-$(CONFIG_EDAC_ALTERA_OCRAM) += ocram.o
+> diff --git a/arch/arm/mach-socfpga/ocram.c b/arch/arm/mach-socfpga/ocram.c
+> new file mode 100644
+> index 0000000..1f12a38
+> --- /dev/null
+> +++ b/arch/arm/mach-socfpga/ocram.c
+> @@ -0,0 +1,97 @@
+> +/*
+> + * Copyright Altera Corporation (C) 2015. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#include <linux/io.h>
+> +#include <linux/genalloc.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +
+> +#define ALTR_OCRAM_CLEAR_ECC          0x00000018
+> +#define ALTR_OCRAM_ECC_EN             0x00000019
+> +
+> +static int __init socfpga_init_ocram_ecc(void)
 > +{
-> +	struct device_node *np = dev->of_node;
-> +	int num, i, ret;
+> +	struct device_node *np;
+> +	struct resource    res;
+> +	u32                iram_addr;
+> +	void __iomem       *mapped_ocr_edac_addr;
+> +	resource_size_t    size;
+> +	struct gen_pool    *gp;
+> +	int                ret;
 > +
-> +	ret = of_property_count_elems_of_size(np, "cooling-levels",
-> +					      sizeof(u32));
-> +
-> +	if (ret == -EINVAL) {
-> +		dev_err(dev, "Property 'cooling-levels' not found\n");
-> +		return 0;
-
-Returning 0 is obviously not an error, otherwise you would not return 0 here.
-So dev_err is wrong. Also, the message itself is wrong; the property may
-well be there but have a wrong size.
-
+> +	/* Get the size of the on-chip RAM */
+> +	np = of_find_compatible_node(NULL, NULL, "mmio-sram");
+> +	if (!np) {
+> +		pr_err("%s: Unable to find mmio-sram in dtb\n", __func__);
+> +		return -ENODEV;
 > +	}
 > +
-> +	if (ret <= 0) {
-> +		dev_err(dev, "Wrong data!\n");
-> +		return ret;
+> +	ret = of_address_to_resource(np, 0, &res);
+> +	if (ret) {
+> +		of_node_put(np);
+> +		pr_err("%s: Problem getting SRAM address in dtb\n", __func__);
+> +		return -ENODEV;
 > +	}
+> +	size = resource_size(&res);
+> +	of_node_put(np);
+> +
+> +	/* Find the OCRAM EDAC device tree node */
+> +	np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
+> +	if (!np) {
+> +		pr_err("%s: Unable to find altr,ocram-edac\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	mapped_ocr_edac_addr = of_iomap(np, 0);
+> +	if (!mapped_ocr_edac_addr) {
+> +		of_node_put(np);
+> +		pr_err("%s: Unable to map OCRAM ecc regs.\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	gp = of_get_named_gen_pool(np, "iram", 0);
+> +	if (!gp) {
+> +		of_node_put(np);
+> +		pr_err("%s: OCRAM cannot find gen pool\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +	of_node_put(np);
+> +
+> +	iram_addr = gen_pool_alloc(gp, size / sizeof(size_t));
 
-This will result in the driver failing to load if devicetree is not configured
-(of_property_count_elems_of_size will return -ENOSYS). This is not acceptable.
-Also, if the call returns 0 you don't return an error but display a "Wrong data!"
-error message. Either it is an error or it is not, but not both.
+Why divide by sizeof(size_t) here? As far as I am aware, resource_size
+gives you a size in bytes...
 
-Guenter
+> +	if (iram_addr == 0) {
+> +		pr_err("%s: cannot alloc from gen pool\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* Clear any pending OCRAM ECC interrupts, then enable ECC */
+> +	writel(ALTR_OCRAM_CLEAR_ECC, mapped_ocr_edac_addr);
+> +	writel(ALTR_OCRAM_ECC_EN, mapped_ocr_edac_addr);
+> +
+> +	memset((void *)iram_addr, 0, size);
+
+...and here we write size bytes, not (size / sizeof(size_t)) bytes, so
+we're poking memory we weren't allocated.
+
+How is this memory mapped exactly? Is memset safe?
+
+Thanks,
+Mark.
+
+> +
+> +	gen_pool_free(gp, iram_addr, size / sizeof(size_t));
+> +
+> +	iounmap(mapped_ocr_edac_addr);
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit socfpga_exit_ocram_ecc(void)
+> +{
+> +}
+> +
+> +module_init(socfpga_init_ocram_ecc);
+> +module_exit(socfpga_exit_ocram_ecc);
+> -- 
+> 1.7.9.5
+> 
+> 
