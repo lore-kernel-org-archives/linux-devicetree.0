@@ -1,99 +1,45 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH 08/10] ARM: mvebu: add core support for Armada 39x
-Date: Fri,  6 Feb 2015 16:57:54 +0100
-Message-ID: <1423238276-9206-9-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 10/10] Documentation: arm: update supported Marvell EBU processors
+Date: Fri,  6 Feb 2015 16:57:56 +0100
+Message-ID: <1423238276-9206-11-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423238276-9206-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the core support for Armada 39x, which is quite
-simple:
+Now that we support Armada 39x, let's add this family of SoC to the
+Marvell documentation, and a reference to a link with more details
+about those processors. Unfortunately, no datasheet is publicly
+available at this time.
 
- - a new Kconfig option which selects the appropriate clock and
-   pinctrl drivers as well as other common features (GIC, L2 cache,
-   SMP, etc.)
-
- - a new DT_MACHINE_START which references the top-level compatible
-   strings supported for the Marvell Armada 39x.
-
- - a new SMP enable-method. The mechanism to enable CPUs for Armada
-   39x appears to be the same as Armada 38x. However, we do want to
-   use marvell,armada-380-smp in the Device Tree, in the case of the
-   discovery of a subtle difference in the future, which would require
-   changing the Device Tree. And the enable-method isn't a compatible
-   string: you can't specify several values and expect a fallback on
-   the second string if the first one isn't supported. Therefore, we
-   simply declare the SMP enable method "marvell,armada-390-smp" as
-   doing the same thing as the "marvell,armada-380-smp" one.
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/mach-mvebu/Kconfig      | 14 ++++++++++++++
- arch/arm/mach-mvebu/board-v7.c   | 14 ++++++++++++++
- arch/arm/mach-mvebu/platsmp-a9.c |  2 ++
- 3 files changed, 30 insertions(+)
+ Documentation/arm/Marvell/README | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
-index c1e4567..9747316 100644
---- a/arch/arm/mach-mvebu/Kconfig
-+++ b/arch/arm/mach-mvebu/Kconfig
-@@ -64,6 +64,20 @@ config MACH_ARMADA_38X
- 	  Say 'Y' here if you want your kernel to support boards based
- 	  on the Marvell Armada 380/385 SoC with device tree.
+diff --git a/Documentation/arm/Marvell/README b/Documentation/arm/Marvell/README
+index 1745379..18a775d 100644
+--- a/Documentation/arm/Marvell/README
++++ b/Documentation/arm/Marvell/README
+@@ -96,6 +96,11 @@ EBU Armada family
+ 	88F6820
+ 	88F6828
  
-+config MACH_ARMADA_39X
-+	bool "Marvell Armada 39x boards" if ARCH_MULTI_V7
-+	select ARM_GIC
-+	select ARMADA_39X_CLK
-+	select CACHE_L2X0
-+	select HAVE_ARM_SCU
-+	select HAVE_ARM_TWD if SMP
-+	select HAVE_SMP
-+	select MACH_MVEBU_V7
-+	select PINCTRL_ARMADA_39X
-+	help
-+	  Say 'Y' here if you want your kernel to support boards based
-+	  on the Marvell Armada 39x SoC with device tree.
++  Armada 390/398 Flavors:
++	88F6920
++	88F6928
++    Product infos: http://www.marvell.com/embedded-processors/armada-39x/
 +
- config MACH_ARMADA_XP
- 	bool "Marvell Armada XP boards" if ARCH_MULTI_V7
- 	select ARMADA_XP_CLK
-diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
-index 89a139e..d88438f 100644
---- a/arch/arm/mach-mvebu/board-v7.c
-+++ b/arch/arm/mach-mvebu/board-v7.c
-@@ -232,3 +232,17 @@ DT_MACHINE_START(ARMADA_38X_DT, "Marvell Armada 380/385 (Device Tree)")
- 	.restart	= mvebu_restart,
- 	.dt_compat	= armada_38x_dt_compat,
- MACHINE_END
-+
-+static const char * const armada_39x_dt_compat[] = {
-+	"marvell,armada390",
-+	"marvell,armada398",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(ARMADA_39X_DT, "Marvell Armada 39x (Device Tree)")
-+	.l2c_aux_val	= 0,
-+	.l2c_aux_mask	= ~0,
-+	.init_irq       = mvebu_init_irq,
-+	.restart	= mvebu_restart,
-+	.dt_compat	= armada_39x_dt_compat,
-+MACHINE_END
-diff --git a/arch/arm/mach-mvebu/platsmp-a9.c b/arch/arm/mach-mvebu/platsmp-a9.c
-index 2ec1a42..df0a9cc 100644
---- a/arch/arm/mach-mvebu/platsmp-a9.c
-+++ b/arch/arm/mach-mvebu/platsmp-a9.c
-@@ -110,3 +110,5 @@ CPU_METHOD_OF_DECLARE(mvebu_armada_375_smp, "marvell,armada-375-smp",
- 		      &mvebu_cortex_a9_smp_ops);
- CPU_METHOD_OF_DECLARE(mvebu_armada_380_smp, "marvell,armada-380-smp",
- 		      &armada_38x_smp_ops);
-+CPU_METHOD_OF_DECLARE(mvebu_armada_390_smp, "marvell,armada-390-smp",
-+		      &armada_38x_smp_ops);
+   Armada XP Flavors:
+         MV78230
+         MV78260
 -- 
 2.1.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
