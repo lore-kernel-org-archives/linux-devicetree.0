@@ -1,97 +1,90 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] PCI: get DMA configuration from parent device
-Date: Fri, 6 Feb 2015 13:36:57 -0500
-Message-ID: <54D509C9.9010204@ti.com>
-References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
-	<20150206151542.GD23190@e104818-lin.cambridge.arm.com>
-	<54D4DD95.7000303@ti.com>
-	<CAErSpo6GOXHeKKfU8s5jCS3+Mui=HupZd=jpkLEyWAE94Ory5w@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 7/8] hwmon: pwm-fan: Read PWM FAN configuration from
+ device tree
+Date: Fri, 6 Feb 2015 10:36:57 -0800
+Message-ID: <20150206183657.GB25410@roeck-us.net>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1423241948-31981-1-git-send-email-l.majewski@samsung.com>
+ <1423241948-31981-8-git-send-email-l.majewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAErSpo6GOXHeKKfU8s5jCS3+Mui=HupZd=jpkLEyWAE94Ory5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1423241948-31981-8-git-send-email-l.majewski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2015 12:53 PM, Bjorn Helgaas wrote:
-> On Fri, Feb 6, 2015 at 9:28 AM, Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>  wrote:
->> On 02/06/2015 10:15 AM, Catalin Marinas wrote:
->>>
->>> On Thu, Feb 05, 2015 at 09:52:52PM +0000, Murali Karicheri wrote:
->>>>
->>>> This patch add an important capability to PCI driver on Keystone. I hope
->>>> to
->>>> have this merged to the upstream branch so that it is available for
->>>> v3.20.
->>>
->>> It's very late for 3.20 and the code hasn't been in linux-next at all
->>> (but it's not me who's merging this code), unless you can squeeze it in
->>> as a bug-fix.
->>
->> This is in fact a bug fix as PCI on Keystone is broken without this.
->
-> Oh, sorry, I didn't realize that this was so urgent.  I guess I read
-> "this adds an important capability" in the cover letter and concluded
-> that it was new functionality.
-Bjorn,
+On Fri, Feb 06, 2015 at 05:59:07PM +0100, Lukasz Majewski wrote:
+> This patch provides code for reading PWM FAN configuration data via
+> device tree. The pwm-fan can work with full speed when configuration
+> is not provided. However, errors are propagated when wrong DT bindings
+> are found.
+> Additionally the struct pwm_fan_ctx has been extended.
+> 
+> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> ---
+> Changes for v2:
+> - Rename pwm_fan_max_states to pwm_fan_cooling_levels
+> - Moving pwm_fan_of_get_cooling_data() call after setting end enabling PWM FAN
+> - pwm_fan_of_get_cooling_data() now can fail - preserving old behaviour
+> - Remove unnecessary dev_err() call
+> Changes for v3:
+> - Patch's headline has been reedited
+> - pwm_fan_of_get_cooling_data() return code is now being checked.
+> - of_property_count_elems_of_size() is now used instead of_find_property()
+> - More verbose patch description added
+> ---
+>  drivers/hwmon/pwm-fan.c | 54 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 53 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 870e100..f3f5843 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -30,7 +30,10 @@
+>  struct pwm_fan_ctx {
+>  	struct mutex lock;
+>  	struct pwm_device *pwm;
+> -	unsigned char pwm_value;
+> +	unsigned int pwm_value;
+> +	unsigned int pwm_fan_state;
+> +	unsigned int pwm_fan_max_state;
+> +	unsigned int *pwm_fan_cooling_levels;
+>  };
+>  
+>  static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
+> @@ -100,6 +103,50 @@ static struct attribute *pwm_fan_attrs[] = {
+>  
+>  ATTRIBUTE_GROUPS(pwm_fan);
+>  
+> +int pwm_fan_of_get_cooling_data(struct device *dev, struct pwm_fan_ctx *ctx)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	int num, i, ret;
+> +
+> +	ret = of_property_count_elems_of_size(np, "cooling-levels",
+> +					      sizeof(u32));
+> +
+> +	if (ret == -EINVAL) {
+> +		dev_err(dev, "Property 'cooling-levels' not found\n");
+> +		return 0;
 
-Thanks for responding.
+Returning 0 is obviously not an error, otherwise you would not return 0 here.
+So dev_err is wrong. Also, the message itself is wrong; the property may
+well be there but have a wrong size.
 
-Let me give you some context on this without which my explanation won't 
-be complete. For using PCI driver on Keystone, I had submitted patches 
-related to machine and DTS to the arm mailing list to enable the driver 
-on Keystone. Subsequenty one of the patch from my series  was Nack-ed 
-and I was asked to implememented in a different way and started this 
-series. You can refer to the discussion of this at
+> +	}
+> +
+> +	if (ret <= 0) {
+> +		dev_err(dev, "Wrong data!\n");
+> +		return ret;
+> +	}
 
-http://www.gossamer-threads.com/lists/linux/kernel/2024591
+This will result in the driver failing to load if devicetree is not configured
+(of_property_count_elems_of_size will return -ENOSYS). This is not acceptable.
+Also, if the call returns 0 you don't return an error but display a "Wrong data!"
+error message. Either it is an error or it is not, but not both.
 
-The PCI driver enablement on Keystone is still a working in progress and 
-I am trying to get it fully functional on the upstream. Another missing 
-piece is the SerDes phy driver patch. We have started working on the 
-other part (SerDes phy driver) already as the initial one was not 
-accepted. So it is fine if we are too late for the v3.20 merge window to 
-merge this series and this can be applied to the next branch for v3.21.
-
->
-> Anyway, if it's broken, presumably PCI on Keystone *did* work at one
-> point.  Can you identify the commit that broke it and requires these
-> fixes, so we can figure out how far the fixes need to be backported?
->
-
-I am trying to get this driver enabled on Keystone by adding the missing 
-pieces as described above. So I guess we don't have to back port 
-anything here.
-
-> If I merge it, I would like to get into my for-linus branch and get a
-> little time in -next before asking Linus to pull it.  The merge window
-> is a little wrinkle there -- I don't like to add new things to the mix
-> during the window.  But if it's an important fix we can still get it
-> in before the final v3.20.
-
-Please apply this to next branch for v3.21. It currently apply cleanly 
-to v3.19-rc7. If you want me rebase to another branch, let me know I can 
-apply and send you an updated patch.
-
-Thanks
-
-Murali
-
->
-> Bjorn
-
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+Guenter
