@@ -1,157 +1,110 @@
-From: Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Fri, 6 Feb 2015 23:37:52 +0800
-Message-ID: <CAAS=xmhcfeQjfyizJa38k+08pbY5WFOZH0a1wEx+gwqgVe0MXw@mail.gmail.com>
-References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com>
-	<1423128277-10297-4-git-send-email-bintian.wang@huawei.com>
-	<20150205193017.GF20735@leverpostej>
-	<CAAS=xmgsuY=c8-n_pDiZjLe2u+SPX7msRje7h0sNkRtT3HLfQA@mail.gmail.com>
-	<20150206104420.GB9921@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150206104420.GB9921@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>"olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <o>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 03/10] devicetree: bindings: add Device Tree bindings for Armada 39x pin-muxing controller
+Date: Fri,  6 Feb 2015 16:57:49 +0100
+Message-ID: <1423238276-9206-4-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+This commit adds the Device Tree binding documentation to describe the
+pin-muxing controller of the Marvell Armada 39x processors. Two
+variants are supported for the moment: the 88F6920 (Armada 390) and
+88F6928 (Armada 398).
 
-2015-02-06 18:44 GMT+08:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> On Fri, Feb 06, 2015 at 08:42:22AM +0000, Brent Wang wrote:
->> Hello Mark,
->>
->> 2015-02-06 3:30 GMT+08:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
->> > On Thu, Feb 05, 2015 at 09:24:37AM +0000, Bintian Wang wrote:
->> >> Add initial dtsi file to support Hisilicon Hi6220 SoC with
->> >> support of Octal core CPUs in two clusters and each cluster
->> >> has quard Cortex-A53.
->> >>
->> >> We now use the "spin-table" method for SMP, and it will be
->> >> changed to PSCI later.
->> >
->> > If that's the case, please don't place the enable-method and related
->> > properties in this file. Get your bootloader to add the appropriate
->> > properties for its boot protocol.
->> >
->> > When is PSCI likely to appear?
->> PSCI is under development.
->
-> Sure. Do you have an estimate as to when it will appear?
-Another team will do the job, I can not give my estimation now.
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+---
+ .../pinctrl/marvell,armada-39x-pinctrl.txt         | 78 ++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-39x-pinctrl.txt
 
-> What are you using for your PSCI implementation? The ARM Trusted
-> Firmware?
-Yes, ATF.
->
-> How are you testing it?
-I think cpu hotplug can test it.
-
->
->> > Are we certain of the split between components the PSCI implementation
->> > must touch and those the kernel must touch?
->> >
->> >> Also add dts file to support HiKey development board which
->> >> based on Hi6220 SoC and document the devicetree bindings.
->> >>
->> >> These dts files will be changed later and more nodes will be
->> >> added to describe other devices.
->> >
->> > How is this going to be changed other than the addition of nodes?
->> >
->> > Will this DTB continue to work in future? Or do you intend to make
->> > changes that will break support?
->> My original idea is: use spin-table for SMP now, when firmware is OK to
->> support PSCI, we submit another patch to replace the spin-table with PSCI.
->
-> For any users who have not updated their FW, this will break booting.
->
-> This is why I suggest having hte bootloader/FW fill this in as it should
-> know what enable-method the FW supports.
->
->> If DTB should continue to work in the future, we really need to remove
->> the spin-table
->> from current dts file, how about just enable one core now?
->>
->> Which one do you favor or any other suggestion?
->
-> If spin-table is just for testing while you await PSCI, drop spin-table
-> from the dts for now.
-So, just booting one core may be the right choice now, right?
-
->
-> [...]
->
->> >> +     timer {
->> >> +             compatible = "arm,armv8-timer";
->> >> +             interrupt-parent = <&gic>;
->> >> +             interrupts = <1 13 0xff08>,
->> >> +                          <1 14 0xff08>,
->> >> +                          <1 11 0xff08>,
->> >> +                          <1 10 0xff08>;
->> >> +             clock-frequency = <1200000>;
->> >> +     };
->> >
->> > NAK. Fix your firmware to configure CNTFRQ, on all CPUs.
->> Fix in next version, maybe it will take some time to change firmware.
->
-> Thanks. This _must_ be fixed.
->
-> [...]
->
->> >> +             pm_ctrl: pm_ctrl {
->> >> +                     compatible = "hisilicon,pmctrl", "syscon";
->> >> +                     #address-cells = <1>;
->> >> +                     #size-cells = <1>;
->> >> +                     reg = <0x0 0xf7032000 0x0 0x1000>;
->> >> +                     ranges = <0 0x0 0xf7032000 0x1000>;
->> >> +
->> >> +                     clock_power: clock3@0 {
->> >> +                             compatible = "hisilicon,hi6220-clock-power";
->> >> +                             reg = <0 0x1000>;
->> >> +                             #clock-cells = <1>;
->> >> +                     };
->> >> +             };
->> >
->> > I really doesn't see the point in having a sub-device that covers the
->> > entirely of the register space of the containing node, and that being
->> > the case I am extremely concerned that the containers are marked as
->> > syscon compatible.
->> The SoC clocks are designed and placed under different system controllers,
->> so I define corresponding nodes under different controllers for clock operation.
->
-> What I'm concerned wit hhere is that the pm_ctrl node and the clock3@0
-> sub-node have the _exact_ same register space.
->
-> Given this should mean that the clock3@0 node owns that register space,
-> having the container node export this as syscon does not make sense. And
-> the split between pm_ctrl and clock3@) doesn't seem to make sense given
-> they cover the same space.
-I understand your worry and will find the max offset of those clocks
-under this controller.
-
->
-> As I asked before, why is pm_ctrl marked as a syscon, and what's the
-> point of the separate sub-node?
-There is no big difference between pm_ctrl and other controller,  they
-are all designed as
-the base address to control some functions of other modules (certainly
-include some clock gates).
-
-Maybe only one node is enough, not one node plus one sub-node ?
-
->
-> Thanks,
-> Mark.
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-39x-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-39x-pinctrl.txt
+new file mode 100644
+index 0000000..5b1a9dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-39x-pinctrl.txt
+@@ -0,0 +1,78 @@
++* Marvell Armada 39x SoC pinctrl driver for mpp
++
++Please refer to marvell,mvebu-pinctrl.txt in this directory for common binding
++part and usage.
++
++Required properties:
++- compatible: "marvell,88f6920-pinctrl", "marvell,88f6928-pinctrl"
++  depending on the specific variant of the SoC being used.
++- reg: register specifier of MPP registers
++
++Available mpp pins/groups and functions:
++Note: brackets (x) are not part of the mpp name for marvell,function and given
++only for more detailed description in this document.
++
++name    pins    functions
++================================================================================
++mpp0	0	gpio, ua0(rxd)
++mpp1	1	gpio, ua0(txd)
++mpp2	2	gpio, i2c0(sck)
++mpp3	3	gpio, i2c0(sda)
++mpp4	4	gpio, ua1(txd), ua0(rts), smi(mdc)
++mpp5	5	gpio, ua1(rxd), ua0(cts), smi(mdio)
++mpp6	6	gpio, dev(cs3), xsmi(mdio)
++mpp7	7	gpio, dev(ad9), xsmi(mdc)
++mpp8	8	gpio, dev(ad10), ptp(trig)
++mpp9	9	gpio, dev(ad11), ptp(clk)
++mpp10	10	gpio, dev(ad12), ptp(event)
++mpp11	11	gpio, dev(ad13), led(clk)
++mpp12	12	gpio, pcie0(rstout), dev(ad14), led(stb)
++mpp13	13	gpio, dev(ad15), led(data)
++mpp14	14	gpio, m(vtt), dev(wen1), ua1(txd)
++mpp15	15	gpio, pcie0(rstout), spi0(mosi), i2c1(sck)
++mpp16	16	gpio, m(decc), spi0(miso), i2c1(sda)
++mpp17	17	gpio, ua1(rxd), spi0(sck), smi(mdio)
++mpp18	18	gpio, ua1(txd), spi0(cs0), i2c2(sck)
++mpp19	19	gpio, sata1(present) [1], ua0(cts), ua1(rxd), i2c2(sda)
++mpp20	20	gpio, sata0(present) [1], ua0(rts), ua1(txd), smi(mdc)
++mpp21	21	gpio, spi0(cs1), sata0(present) [1], sd(cmd), dev(bootcs), ge(rxd0)
++mpp22	22	gpio, spi0(mosi), dev(ad0)
++mpp23	23	gpio, spi0(sck), dev(ad2)
++mpp24	24	gpio, spi0(miso), ua0(cts), ua1(rxd), sd(d4), dev(readyn)
++mpp25	25	gpio, spi0(cs0), ua0(rts), ua1(txd), sd(d5), dev(cs0)
++mpp26	26	gpio, spi0(cs2), i2c1(sck), sd(d6), dev(cs1)
++mpp27	27	gpio, spi0(cs3), i2c1(sda), sd(d7), dev(cs2), ge(txclkout)
++mpp28	28	gpio, sd(clk), dev(ad5), ge(txd0)
++mpp29	29	gpio, dev(ale0), ge(txd1)
++mpp30	30	gpio, dev(oen), ge(txd2)
++mpp31	31	gpio, dev(ale1), ge(txd3)
++mpp32	32	gpio, dev(wen0), ge(txctl)
++mpp33	33	gpio, m(decc), dev(ad3)
++mpp34	34	gpio, dev(ad1)
++mpp35	35	gpio, ref(clk), dev(a1)
++mpp36	36	gpio, dev(a0)
++mpp37	37	gpio, sd(d3), dev(ad8), ge(rxclk)
++mpp38	38	gpio, ref(clk), sd(d0), dev(ad4), ge(rxd1)
++mpp39	39	gpio, i2c1(sck), ua0(cts), sd(d1), dev(a2), ge(rxd2)
++mpp40	40	gpio, i2c1(sda), ua0(rts), sd(d2), dev(ad6), ge(rxd3)
++mpp41	41	gpio, ua1(rxd), ua0(cts), spi1(cs3), dev(burstn), nd(rbn0), ge(rxctl)
++mpp42	42	gpio, ua1(txd), ua0(rts), dev(ad7)
++mpp43	43	gpio, pcie0(clkreq), m(vtt), m(decc), spi1(cs2), dev(clkout), nd(rbn1)
++mpp44	44	gpio, sata0(present) [1], sata1(present) [1], led(clk)
++mpp45	45	gpio, ref(clk), pcie0(rstout), ua1(rxd)
++mpp46	46	gpio, ref(clk), pcie0(rstout), ua1(txd), led(stb)
++mpp47	47	gpio, sata0(present) [1], sata1(present) [1], led(data)
++mpp48	48	gpio, sata0(present) [1], m(vtt), tdm(pclk) [1], audio(mclk) [1], sd(d4), pcie0(clkreq), ua1(txd)
++mpp49	49	gpio, tdm(fsync) [1], audio(lrclk) [1], sd(d5), ua2(rxd)
++mpp50	50	gpio, pcie0(rstout), tdm(drx) [1], audio(extclk) [1], sd(cmd), ua2(rxd)
++mpp51	51	gpio, tdm(dtx) [1], audio(sdo) [1], m(decc), ua2(txd)
++mpp52	52	gpio, pcie0(rstout), tdm(intn) [1], audio(sdi) [1], sd(d6), i2c3(sck)
++mpp53	53	gpio, sata1(present) [1], sata0(present) [1], tdm(rstn) [1], audio(bclk) [1], sd(d7), i2c3(sda)
++mpp54	54	gpio, sata0(present) [1], sata1(present) [1], pcie0(rstout), sd(d3), ua3(txd)
++mpp55	55	gpio, ua1(cts), spi1(cs1), sd(d0), ua1(rxd), ua3(rxd)
++mpp56	56	gpio, ua1(rts), m(decc), spi1(mosi), ua1(txd)
++mpp57	57	gpio, spi1(sck), sd(clk), ua1(txd)
++mpp58	58	gpio, i2c1(sck), pcie2(clkreq), spi1(miso), sd(d1), ua1(rxd)
++mpp59	59	gpio, pcie0(rstout), i2c1(sda), spi1(cs0), sd(d2)
++
++[1]: only available on 88F6928
 -- 
-Best Regards,
+2.1.0
 
-Bintian
-===========================
-Don't be nervous, just be happy!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
