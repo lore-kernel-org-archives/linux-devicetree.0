@@ -1,107 +1,75 @@
-From: Brent Wang <wangbintian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] clk: hi6220: Clock driver support for Hisilicon
- hi6220 SoC
-Date: Fri, 6 Feb 2015 15:32:13 +0800
-Message-ID: <CAAS=xmjURtR6Nhubg7JptXgtUGtZs8090FHJutnCaau4GzqZzg@mail.gmail.com>
-References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com>
-	<1423128277-10297-3-git-send-email-bintian.wang@huawei.com>
-	<20150205192533.GE20735@leverpostej>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
+Date: Fri, 6 Feb 2015 08:58:55 +0100
+Message-ID: <20150206085855.7b8d494b@armhf>
+References: <E1YH5bU-0005mG-3L@bombadil.infradead.org>
+	<54CB5267.5060004@gmail.com>
+	<20150130113118.5523ed68@armhf>
+	<54CB6440.1010002@gmail.com>
+	<20150130124144.501cf81d@armhf>
+	<54CB732F.7010409@gmail.com>
+	<20150130133913.083d1ade@armhf>
+	<54CB7E33.3080909@gmail.com>
+	<54CE354F.5090106@gmail.com>
+	<54D3EB26.9020909@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150205192533.GE20735@leverpostej>
+In-Reply-To: <54D3EB26.9020909-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>"olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <o>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Thu, 05 Feb 2015 23:13:58 +0100
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-2015-02-06 3:25 GMT+08:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> On Thu, Feb 05, 2015 at 09:24:36AM +0000, Bintian Wang wrote:
->> Add clock drivers for hi6220 SoC, this driver controls the SoC
->> registers to supply different clocks to different IPs in the SoC.
->>
->> We add one divider clock for hi6220 because the divider in hi6220
->> also has a mask bit but it doesnot obey the rule defined by flag
->> "CLK_DIVIDER_HIWORD_MASK", we can not get index of the mask bit by
->> left shift fixed bits (e.g. 16 bits), so we add this divider clock
->> to handle it.
->>
->> This patch also enables this clock driver for ARCH_HISI and document
->> devicetree bindings.
->>
->> Signed-off-by: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Reviewed-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/clock/hi6220-clock.txt     |   30 +++
->>  arch/arm64/Kconfig                                 |    1 +
->>  drivers/clk/Kconfig                                |    2 +
->>  drivers/clk/Makefile                               |    4 +-
->>  drivers/clk/hisilicon/Kconfig                      |    5 +
->>  drivers/clk/hisilicon/Makefile                     |    1 +
->>  drivers/clk/hisilicon/clk-hi6220.c                 |  284 ++++++++++++++++++++
->>  drivers/clk/hisilicon/clk.c                        |   29 ++
->>  drivers/clk/hisilicon/clk.h                        |   17 ++
->>  drivers/clk/hisilicon/clkdivider-hi6220.c          |  273 +++++++++++++++++++
->>  include/dt-bindings/clock/hi6220-clock.h           |  172 ++++++++++++
->>  11 files changed, 815 insertions(+), 3 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/clock/hi6220-clock.txt
->>  create mode 100644 drivers/clk/hisilicon/Kconfig
->>  create mode 100644 drivers/clk/hisilicon/clk-hi6220.c
->>  create mode 100644 drivers/clk/hisilicon/clkdivider-hi6220.c
->>  create mode 100644 include/dt-bindings/clock/hi6220-clock.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/hi6220-clock.txt b/Documentation/devicetree/bindings/clock/hi6220-clock.txt
->> new file mode 100644
->> index 0000000..a3ddda1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/hi6220-clock.txt
->> @@ -0,0 +1,30 @@
->> +* Hisilicon Hi6220 Clock Controller
->> +
->> +The hi6220 clock controller generates and supplies clock to various
->> +controllers within the hi6220 SoC.
->> +
->> +Required Properties:
->> +
->> +- compatible: should be one of the following:
->> +  - "hisilicon,hi6220-clock-ao" - controller for those clocks under SoC
->> +     power always on(AO) domain, it is the sub node of SoC power AO
->> +     controller in dts file.
->> +  - "hisilicon,hi6220-clock-sys" - controller for those clocks under SoC
->> +     system control domain, it is the sub node of SoC system controller
->> +     in dts file.
->> +  - "hisilicon,hi6220-clock-media" - controller for those clocks under
->> +     SoC media control domain, it is the sub node of SoC media controller
->> +     in dts file.
->> +  - "hisilicon,hi6220-clock-power" - controller for those clocks under
->> +     SoC power control domain, it is the sub node of SoC power controller
->> +     in dts file.
->
-> These all refer to things which aren't documented (yet).
->
-> Please sort out your patches so that any documentation you depend on
-> comes earlier.
->
-> Please also separate documentation from code. Note that dt includes are
-> _bindings_ and should be added with the relevant documentation.
-Thanks for help to review, I also think separate documentation from
-code is better
-way, it will be fixed in next version.
+> > At this moment, I am trying to configure the framebuffer, but as Mo=
+ine
+> > told me,it seems there is not video driver support for this board i=
+n
+> > DT... :( . =20
+>=20
+> Not quite true. Video is made up of at least 4 different devices:
+> Framebuffer, GPU, Decode engine, and usually DVI/HDMI transmitter or
+> VGA.
+>=20
+> We do have a driver for the framebuffer (armada_drm) and there is gre=
+at
+> work from Russell King and others on the GPU and Decode engine (IIRC)=
+=2E
 
-Thanks,
+Yes, but it has no DT support. Mine has.
 
-Bintian
-> Thanks,
-> Mark.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> If you are using the sb-a510, I can see from the manual, that DVI
+> transmitter is SIL164.. AFAIS there is a driver for it, that maybe
+> needs some polishing. Nobody ever tested VGA, but it shouldn't be too
+> hard to add support for it as it is directly supported by the
+> framebuffer HW.
+
+This asks for some VGA encoder/connector module.
+
+Actually, as Gabriel told me that his screen is directly connected to
+the RGB LCD output, I wrote a simple panel for him. This module just
+gets the display timings from the DT.
+
+> One quite important driver at least for Dove is a clock source for
+> video. Internal clock generators for video are way to limited with
+> respect to frequencies to allow any useful resolution.
+
+=46rom my previous tests with the si5351 in the Cubox, most video modes
+should work without external clocks.
+
+> I'll see if I can have a look at the dts stuff this weekend.. that
+> way we'll have at least the basic done before moving to the other
+> devices.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
