@@ -1,54 +1,46 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v4 02/10] mtd: st_spi_fsm: Fetch boot device locations
- from DT match tables
-Date: Thu, 5 Feb 2015 20:27:44 -0800
-Message-ID: <20150206042744.GK18140@ld-irv-0074>
-References: <1421853868-8262-1-git-send-email-lee.jones@linaro.org>
- <1421853868-8262-3-git-send-email-lee.jones@linaro.org>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v6 0/2] ARM: hip04: add GPIO support
+Date: Fri, 6 Feb 2015 12:57:03 +0800
+Message-ID: <54D4499F.30008@hisilicon.com>
+References: <1421046312-22170-1-git-send-email-wangzhou1@hisilicon.com> <54C9A63F.4040508@hisilicon.com> <CACRpkdaRqK6GZ+3vW640b2zvmfGDwEQbNE54vEiE4+YP9YMx3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421853868-8262-3-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdaRqK6GZ+3vW640b2zvmfGDwEQbNE54vEiE4+YP9YMx3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 21, 2015 at 03:24:20PM +0000, Lee Jones wrote:
-> To trim down on the amount of properties used by this driver and to conform
-> to the newly agreed method of acquiring syscfg registers/offsets, we now
-> obtain this information using match tables.
+On 2015/2/4 16:47, Linus Walleij wrote:
+> On Thu, Jan 29, 2015 at 4:17 AM, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
+> 
+>> Hi Linus, Hi Haojian,
+>>
+>> Any comments about this patch?
+> 
+> As it only patches arch/arm it's really an ARM SoC business,
+> but for what it's worth:
+> 
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Yours,
+> Linus Walleij
 
-Where did this agreement happen? Are you only referring to the previous
-patch?
+Thanks Linus, I will resend after v3.20-rc1
 
-I think I asked this previously, and I didn't get an answer.
+Yours,
+Zhou Wang
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
 
-Also, I realized that all this boot device / syscfg gymnastics is just
-for one simple fact; your driver is trying to hide the fact that your
-system can't reliably handle 4-byte addressing for the boot device. Even
-if you try your best at toggling 4-byte addressing before/after each
-read/write/erase, you still are vulnerable to power cuts during the
-operation. This is a bad design, and we have consistently agreed that we
-aren't going to work around that in Linux.
 
-Better solutions: hook up a reset line to your flash; improve your boot
-ROM / bootloader to handle 4-byte addressing for large flash.
-
-What's the possibility of dropping all this 4-byte address toggling
-shenanigans? This will be a blocker to merging with spi-nor.c.
-
-> In the process we are deprecating the old generic compatible string and
-> providing 3 shiny new ones for each of the support platforms.  The
-> deprecated compatible string will be removed in due course.
-
-Aren't you already removing the compatible string? (You changed this in
-the latest revision.)
-
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-
-[snip]
-
-Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
