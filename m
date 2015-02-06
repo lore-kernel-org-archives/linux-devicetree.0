@@ -1,56 +1,47 @@
-From: "Holmberg, Hans" <hans.holmberg@intel.com>
-Subject: RE: [PATCH 2/2] input: gpio-joy - GPIO joystick driver
-Date: Sat, 7 Feb 2015 07:53:02 +0000
-Message-ID: <4B6D6D87A8FB62428BE0A3E38461A1AB18D6AF38@irsmsx105.ger.corp.intel.com>
-References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
- <1423215122-19947-3-git-send-email-hans.holmberg@intel.com>
- <20150206110257.GB10324@leverpostej>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [Patch V4 04/10] ASoC: codec: Add MAX98357A codec driver
+Date: Sat, 7 Feb 2015 06:13:01 +0800
+Message-ID: <20150206221301.GE31311@finisterre.sirena.org.uk>
+References: <1423169626-22166-1-git-send-email-kwestfie@codeaurora.org>
+ <1423169626-22166-5-git-send-email-kwestfie@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150206110257.GB10324@leverpostej>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BQPnanjtCNWHyqYD"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1423169626-22166-5-git-send-email-kwestfie@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>
+Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
-> > +static int gpio_joy_probe(struct platform_device *pdev) {
-> > +	struct device *dev = &pdev->dev;
-> > +	struct input_dev *input;
-> > +	struct gpio_joy_drvdata *ddata;
-> > +	int i, err;
-> > +	unsigned int debounce_ms;
-> 
-> This should be a u32 given you pass it to a function expecting a u32 pointer.
-> 
-> > +
-> > +	ddata = devm_kzalloc(dev, sizeof(struct gpio_joy_drvdata),
-> > +GFP_KERNEL);
-> 
-> Use sizeof(*ddata)
-> 
-> [...]
-> 
-> > +	return 0;
-> > +fail:
-> > +	return err;
-> > +}
-> 
-> Given there's no cleanup, the fail path seems redundant.
-> 
-> [...]
-> 
-> > +static const struct of_device_id gpio_joy_of_match[] = {
-> > +	{ .compatible = DRV_NAME, },
-> > +	{ },
-> > +};
-> 
-> The compatible string should be independent of DRV_NAME, because it must
-> match the binding. The driver can be arbitrarily and independently renamed.
-> 
+--BQPnanjtCNWHyqYD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll address all of these comments, thanks for reviewing!
-Hans
+On Thu, Feb 05, 2015 at 12:53:40PM -0800, Kenneth Westfield wrote:
+> From: Kenneth Westfield <kwestfie@codeaurora.org>
+>=20
+> Add codec driver for the Maxim MAX98357A DAC.
+
+Applied, thanks.
+
+--BQPnanjtCNWHyqYD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU1TxsAAoJECTWi3JdVIfQAy8H/2YExWG1TbDi3rv2410k5L1O
+JS7WELQT/rm6sPanYd96hjv03dLWk4WoT8EV8j6h7kshS/s+hOKbE3z7TRwUB8Y+
+J551lpeHxL7Jcoiqp6k8HhFAh5ZqbwfIBhc+25I3d8dRW8xnEoNx/nIkIeMo5Rp2
+vvs1E0PSNt9bADewMurNgkt6zWFuYPYx4ZJ9IxKXkUxDuY1NV7LwAcUaRYNnwxti
+cK10qUohSy5bQ3igGLLwcxjvPTHONELc7kq7asbPYyWuNsydszBeRLnuAmyut0/Z
+W+/Y4VLqVPrmcAlTuiF376P+7IrefKyW1fdzst8oJoRm8uCnm+mXkt9t0W5nKl8=
+=W6F8
+-----END PGP SIGNATURE-----
+
+--BQPnanjtCNWHyqYD--
