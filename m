@@ -1,48 +1,63 @@
-From: Gordon Bos <gordon-PMRpws9CsXpfxmBXdGbrbQ@public.gmane.org>
-Subject: [PATCH 1/1] arm: Fix unavailable MTD userland devices on Excito B3 boards
-Date: Fri,  6 Feb 2015 09:45:11 +0100
-Message-ID: <1423212311-10793-1-git-send-email-gordon@bosvangennip.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gordon Bos <gordon-PMRpws9CsXpfxmBXdGbrbQ@public.gmane.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 3/3] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+Date: Fri, 06 Feb 2015 09:07:10 +0000
+Message-ID: <54D4843E.7060201@arm.com>
+References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com> <1423128277-10297-4-git-send-email-bintian.wang@huawei.com> <20150205193017.GF20735@leverpostej> <CAAS=xmgsuY=c8-n_pDiZjLe2u+SPX7msRje7h0sNkRtT3HLfQA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAS=xmgsuY=c8-n_pDiZjLe2u+SPX7msRje7h0sNkRtT3HLfQA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brent Wang <wangbintian@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: "dan.zhao@hisilicon.com" <dan.zhao@hisilicon.com>, "btw@mail.itp.ac.cn" <btw@mail.itp.ac.cn>, Catalin Marinas <Catalin.Marinas@arm.com>, "wangbinghui@hisilicon.com" <wangbinghui@hisilicon.com>, Will Deacon <Will.Deacon@arm.com>, "huxinwei@huawei.com" <huxinwei@huawei.com>, "khilman@linaro.org" <khilman@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "yanhaifeng@gmail.com" <yanhaifeng@gmail.com>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "victor.lixin@hisilicon.com" <victor.lixin@hisilicon.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "sledge.yanwei@huawei.com" <sledge.yanwei@huawei.com>, "kong.kongxinwei@hisilicon.com" <kong.kongxinwei@hisilicon.com>, "heyunlei@huawei.com" <heyunlei@huawei.com>, "w.f@huawei.com" <w.f@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Excito B3 boards use SPI flash for booting and several userland
-functions require access to this flash memory, including power down
-control. However /proc/mtd shows an empty list and the userland
-tools respond with "device not found".
+On 06/02/15 08:42, Brent Wang wrote:
 
-Change driver reference for spi@10600 to M25P80
+[...]
 
-Verified on my own Excito B3
+>>
+>>> +                   <0x0 0xf6802000 0x0 0x2000>, /* GICC */
+>>> +                   <0x0 0xf6804000 0x0 0x2000>, /* GICH */
+>>> +                   <0x0 0xf6806000 0x0 0x2000>; /* GICV */
+>>
+>> I guess no-one's bothered to consider 64k pages?
+>>
+>> Given GICH and GICV, I hope that this platform is booted at EL2?
+> Transfer from EL3 to EL1 directly, keep these two just for future use.
 
-Signed-off-by: Gordon Bos <gordon-PMRpws9CsXpfxmBXdGbrbQ@public.gmane.org>
----
- arch/arm/boot/dts/kirkwood-b3.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+That's a real shame, as it keeps users away from some key aspects of the
+ARMv8 architecture.
 
-diff --git a/arch/arm/boot/dts/kirkwood-b3.dts b/arch/arm/boot/dts/kirkwood-b3.dts
-index c9247f8..4b1e414 100644
---- a/arch/arm/boot/dts/kirkwood-b3.dts
-+++ b/arch/arm/boot/dts/kirkwood-b3.dts
-@@ -71,10 +71,10 @@
- 		spi@10600 {
- 			status = "okay";
- 
--			m25p16@0 {
-+			m25p80@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "st,m25p16";
-+				compatible = "st,m25p80";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>;
- 				mode = <0>;
+>>
+>>> +             #interrupt-cells = <3>;
+>>> +             #address-cells = <0>;
+>>> +             interrupt-controller;
+
+And if you're keeping GICH/GICV, where is the maintenance interrupt?
+
+>>> +     };
+>>> +
+>>> +
+>>> +     timer {
+>>> +             compatible = "arm,armv8-timer";
+>>> +             interrupt-parent = <&gic>;
+>>> +             interrupts = <1 13 0xff08>,
+>>> +                          <1 14 0xff08>,
+>>> +                          <1 11 0xff08>,
+>>> +                          <1 10 0xff08>;
+>>> +             clock-frequency = <1200000>;
+>>> +     };
+>>
+>> NAK. Fix your firmware to configure CNTFRQ, on all CPUs.
+> Fix in next version, maybe it will take some time to change firmware.
+
+While you're at it, make sure CNTVOFF_EL2 is set to zero on all CPUs
+before dropping to EL1. This tends to be overlooked.
+
+Thanks,
+
+	M.
 -- 
-2.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jazz is not dead. It just smells funny...
