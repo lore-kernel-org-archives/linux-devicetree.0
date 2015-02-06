@@ -1,104 +1,171 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 6/8] hwmon: pwm-fan: Extract __set_pwm() function to
- only modify PWM duty cycle
-Date: Fri, 6 Feb 2015 10:27:25 -0800
-Message-ID: <20150206182725.GA25410@roeck-us.net>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1423241948-31981-1-git-send-email-l.majewski@samsung.com>
- <1423241948-31981-7-git-send-email-l.majewski@samsung.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH/RFC 4/4] iommu/arm-smmu: Support deferred probing
+Date: Fri, 06 Feb 2015 18:31:02 +0000
+Message-ID: <54D50866.8000505@arm.com>
+References: <1423182722-16646-1-git-send-email-lauraa@codeaurora.org> <1423182722-16646-5-git-send-email-lauraa@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1423241948-31981-7-git-send-email-l.majewski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423182722-16646-5-git-send-email-lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joreg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 06, 2015 at 05:59:06PM +0100, Lukasz Majewski wrote:
-> It was necessary to decouple code handling writing to sysfs from the one
-> responsible for setting PWM of the fan.
-> Due to that, new __set_pwm() method was extracted, which is responsible for
-> only setting new PWM duty cycle.
-> 
-> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> ---
-> Changes for v2:
-> - None
-> Changes for v3:
-> - The commit headline has been reedited.
-> ---
->  drivers/hwmon/pwm-fan.c | 35 ++++++++++++++++++++++-------------
->  1 file changed, 22 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 1991d903..870e100 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -33,21 +33,15 @@ struct pwm_fan_ctx {
->  	unsigned char pwm_value;
->  };
->  
-> -static ssize_t set_pwm(struct device *dev, struct device_attribute *attr,
-> -		       const char *buf, size_t count)
-> +static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
->  {
-> -	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> -	unsigned long pwm, duty;
-> -	ssize_t ret;
-> -
-> -	if (kstrtoul(buf, 10, &pwm) || pwm > MAX_PWM)
-> -		return -EINVAL;
-> -
-> -	mutex_lock(&ctx->lock);
-> +	unsigned long duty;
-> +	int ret;
->  
->  	if (ctx->pwm_value == pwm)
-> -		goto exit_set_pwm_no_change;
-> +		return 0;
->  
-Why did you move this check outside the lock ? With this change there 
-is no guarantee that pwm_value wasn't changed while waiting for the lock.
+Hi Laura,
 
-Guenter
+As a heads up, I'm still vainly hoping to move the ARM SMMU driver 
+entirely over to the generic framework - there's an iommu/dev branch on 
+top of the iommu/dma branch I pushed earlier[1] which you might want to 
+take a peek at to check if we're likely to end up pulling in different 
+directions.
 
-> +	mutex_lock(&ctx->lock);
->  	if (pwm == 0) {
->  		pwm_disable(ctx->pwm);
->  		goto exit_set_pwm;
-> @@ -66,13 +60,28 @@ static ssize_t set_pwm(struct device *dev, struct device_attribute *attr,
->  
->  exit_set_pwm:
->  	ctx->pwm_value = pwm;
-> -exit_set_pwm_no_change:
-> -	ret = count;
->  exit_set_pwm_err:
->  	mutex_unlock(&ctx->lock);
->  	return ret;
->  }
->  
-> +static ssize_t set_pwm(struct device *dev, struct device_attribute *attr,
-> +		       const char *buf, size_t count)
+[1]:http://article.gmane.org/gmane.linux.kernel.iommu/8773
+
+On 06/02/15 00:32, Laura Abbott wrote:
+>
+> With the addition of clocks in the SMMU driver, the driver
+> now may need to be deferred if the clocks are not ready. Apart from
+> just the probe function though, we may need to defer attachment as
+> well. Support both of these.
+>
+> Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+> I went with the simplest approach ('started_probe') to indicate
+> we should defer probing. Another possibility I considered was to have
+> a 'masters added before probe completed' list and keep all masters
+> there until probe completes at which point we can bind the masters
+> to the SMMUs.
+
+I think this looks OK for the single-distributed-SMMU case MMU-500 
+allows; the Juno case with multiple MMU-401 instances is more awkward, 
+but I have a feeling there's a really neat way to slot this approach to 
+deferral into my per-instance stuff. I'll give this series a spin and 
+see what falls out.
+
+Thanks,
+Robin.
+
+> ---
+>   drivers/iommu/arm-smmu.c | 37 +++++++++++++++++++++++++++++++++++--
+>   1 file changed, 35 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index d9f7cf48..7e8194c 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -43,6 +43,8 @@
+>   #include <linux/platform_device.h>
+>   #include <linux/slab.h>
+>   #include <linux/spinlock.h>
+> +#include <linux/of_iommu.h>
+> +#include <linux/of_platform.h>
+>
+>   #include <linux/amba/bus.h>
+>
+> @@ -330,6 +332,7 @@ static int force_stage;
+>   module_param_named(force_stage, force_stage, int, S_IRUGO | S_IWUSR);
+>   MODULE_PARM_DESC(force_stage,
+>   	"Force SMMU mappings to be installed at a particular stage of translation. A value of '1' or '2' forces the corresponding stage. All other values are ignored (i.e. no stage is forced). Note that selecting a specific stage will disable support for nested translation.");
+> +static bool started_probe;
+>
+>   enum arm_smmu_arch_version {
+>   	ARM_SMMU_V1 = 1,
+> @@ -1284,7 +1287,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>   	smmu = find_smmu_for_device(dev);
+>   	if (!smmu) {
+>   		dev_err(dev, "cannot attach to SMMU, is it on the same bus?\n");
+> -		return -ENXIO;
+> +		return started_probe ? -EPROBE_DEFER : -ENXIO;
+>   	}
+>
+>   	if (dev->archdata.iommu) {
+> @@ -1677,7 +1680,7 @@ static int arm_smmu_add_device(struct device *dev)
+>
+>   	smmu = find_smmu_for_device(dev);
+>   	if (!smmu)
+> -		return -ENODEV;
+> +		return started_probe ? -EPROBE_DEFER : -ENODEV;
+>
+>   	group = iommu_group_alloc();
+>   	if (IS_ERR(group)) {
+> @@ -1761,6 +1764,11 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+>   	}
+>   }
+>
+> +static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *spec)
 > +{
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +	unsigned long pwm;
-> +	int ret;
-> +
-> +	if (kstrtoul(buf, 10, &pwm) || pwm > MAX_PWM)
-> +		return -EINVAL;
-> +
-> +	ret = __set_pwm(ctx, pwm);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
+> +	return arm_smmu_add_device(dev);
 > +}
 > +
->  static ssize_t show_pwm(struct device *dev,
->  			struct device_attribute *attr, char *buf)
->  {
-> -- 
-> 2.0.0.rc2
-> 
+>   static int arm_smmu_enable_resources(struct iommu_domain *domain)
+>   {
+>   	struct arm_smmu_domain *smmu_domain = domain->priv;
+> @@ -1814,6 +1822,7 @@ static const struct iommu_ops arm_smmu_ops = {
+>   	.pgsize_bitmap		= (SECTION_SIZE |
+>   				   ARM_SMMU_PTE_CONT_SIZE |
+>   				   PAGE_SIZE),
+> +	.of_xlate		= arm_smmu_of_xlate,
+>   	.enable_resources	= arm_smmu_enable_resources,
+>   	.disable_resources	= arm_smmu_disable_resources,
+>   };
+> @@ -2108,6 +2117,8 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
+>   	struct of_phandle_args masterspec;
+>   	int num_irqs, i, err;
+>
+> +	started_probe = true;
+> +
+>   	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
+>   	if (!smmu) {
+>   		dev_err(dev, "failed to allocate arm_smmu_device\n");
+> @@ -2282,6 +2293,8 @@ static struct platform_driver arm_smmu_driver = {
+>   	.remove	= arm_smmu_device_remove,
+>   };
+>
+> +static int init_done;
+> +
+>   static int __init arm_smmu_init(void)
+>   {
+>   	struct device_node *np;
+> @@ -2316,6 +2329,7 @@ static int __init arm_smmu_init(void)
+>   		bus_set_iommu(&pci_bus_type, &arm_smmu_ops);
+>   #endif
+>
+> +	init_done = true;
+>   	return 0;
+>   }
+>
+> @@ -2327,6 +2341,25 @@ static void __exit arm_smmu_exit(void)
+>   subsys_initcall(arm_smmu_init);
+>   module_exit(arm_smmu_exit);
+>
+> +static int __init arm_smmu_of_setup(struct device_node *np)
+> +{
+> +	struct platform_device *pdev;
+> +
+> +	if (!init_done)
+> +		arm_smmu_init();
+> +
+> +	pdev = of_platform_device_create(np, NULL, platform_bus_type.dev_root);
+> +	if (IS_ERR(pdev))
+> +		return PTR_ERR(pdev);
+> +
+> +	of_iommu_set_ops(np, &arm_smmu_ops);
+> +	return 0;
+> +}
+> +
+> +IOMMU_OF_DECLARE(arm_smmu_of, "arm,mmu-500",
+> +		 arm_smmu_of_setup);
+> +
+> +
+>   MODULE_DESCRIPTION("IOMMU API for ARM architected SMMU implementations");
+>   MODULE_AUTHOR("Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>");
+>   MODULE_LICENSE("GPL v2");
+>
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
