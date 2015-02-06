@@ -1,178 +1,190 @@
-Return-Path: <mcoquelin.stm32@gmail.com>
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH 10/14] ARM: Add STM32 family machine
-Date: Thu, 12 Feb 2015 18:46:00 +0100
-Message-Id: <1423763164-5606-11-git-send-email-mcoquelin.stm32@gmail.com>
-In-Reply-To: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal Marek <mmarek@suse.cz>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-arch@vger.kernel.org, linux-api@vger.kernel.org
+Return-Path: <wangbintian@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CANMBJr7wx=BwDK9inc-2LdXQhyv-tZZry86Ojr=oH8z53Un76Q@mail.gmail.com>
+References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com>
+	<CANMBJr685FzZzQ660Z1aNJX+Kzkw1OqM6RJAviARbL+5a=MJ2A@mail.gmail.com>
+	<CAOesGMgjv9iLnLmpLADQYoAw=oUkJDAJs72Q5q=DQ75paQ+A-g@mail.gmail.com>
+	<CANMBJr7wx=BwDK9inc-2LdXQhyv-tZZry86Ojr=oH8z53Un76Q@mail.gmail.com>
+Date: Fri, 6 Feb 2015 12:21:43 +0800
+Message-ID: <CAAS=xmhj8UMwooYrXQBqzR=J5ernj+EWGV1AqEtHHoWiBgw8gA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] arm64,hi6220: Enable Hisilicon Hi6220 SoC
+From: Brent Wang <wangbintian@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7bdc14380bfa8d050e63c2ef
+To: Tyler Baker <tyler.baker@linaro.org>
+Cc: Olof Johansson <olof@lixom.net>, Bintian Wang <bintian.wang@huawei.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Jaehoon Chung <jh80.chung@samsung.com>, Haifeng Yan <yanhaifeng@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, xuejiancheng@huawei.com, sledge.yanwei@huawei.com, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Guodong Xu <guodong.xu@linaro.org>, dan.zhao@hisilicon.com, "huxinwei@huawei.com" <huxinwei@huawei.com>, xuyiping@hisilicon.com, victor.lixin@hisilicon.com, btw@mail.itp.ac.cn, puck.chen@hisilicon.com, wangbinghui@hisilicon.com, zhenwei.wang@hisilicon.com, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, heyunlei@huawei.com, w.f@huawei.com, z.liuxinliang@huawei.com
 List-ID: <devicetree@vger.kernel.org>
 
-STMicrolectronics's STM32 series is a family of Cortex-M
-microcontrollers. It is used in various applications, and
-proposes a wide range of peripherals.
+--047d7bdc14380bfa8d050e63c2ef
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- Documentation/arm/stm32/overview.txt           | 32 ++++++++++++++++++++++++++
- Documentation/arm/stm32/stm32f429-overview.txt | 22 ++++++++++++++++++
- arch/arm/Kconfig                               | 22 ++++++++++++++++++
- arch/arm/Makefile                              |  1 +
- arch/arm/mach-stm32/Makefile                   |  1 +
- arch/arm/mach-stm32/Makefile.boot              |  0
- arch/arm/mach-stm32/board-dt.c                 | 19 +++++++++++++++
- 7 files changed, 97 insertions(+)
- create mode 100644 Documentation/arm/stm32/overview.txt
- create mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
- create mode 100644 arch/arm/mach-stm32/Makefile
- create mode 100644 arch/arm/mach-stm32/Makefile.boot
- create mode 100644 arch/arm/mach-stm32/board-dt.c
+Hello Olof and Tyler,
 
-diff --git a/Documentation/arm/stm32/overview.txt b/Documentation/arm/stm32/overview.txt
-new file mode 100644
-index 0000000..d8bf6bb
---- /dev/null
-+++ b/Documentation/arm/stm32/overview.txt
-@@ -0,0 +1,32 @@
-+			STM32 ARM Linux Overview
-+			==========================
-+
-+Introduction
-+------------
-+
-+  The STMicroelectronics family of Cortex-M based MCUs are supported by the
-+  'STM32' platform of ARM Linux. Currently only the STM32F429 is supported.
-+
-+
-+Configuration
-+-------------
-+
-+  A generic configuration is provided for STM32 family, and can be used as the
-+  default by
-+	make stm32_defconfig
-+
-+Layout
-+------
-+
-+  All the files for multiple machine families are located in the platform code
-+  contained in arch/arm/mach-stm32
-+
-+  There is a generic board board-dt.c in the mach folder which support
-+  Flattened Device Tree, which means, It works with any compatible board with
-+  Device Trees.
-+
-+
-+Document Author
-+---------------
-+
-+  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-diff --git a/Documentation/arm/stm32/stm32f429-overview.txt b/Documentation/arm/stm32/stm32f429-overview.txt
-new file mode 100644
-index 0000000..5206822
---- /dev/null
-+++ b/Documentation/arm/stm32/stm32f429-overview.txt
-@@ -0,0 +1,22 @@
-+			STM32F429 Overview
-+			==================
-+
-+  Introduction
-+  ------------
-+	The STM32F429 is a Cortex-M4 MCU aimed at various applications.
-+	It features:
-+	- ARM Cortex-M4 up to 180MHz with FPU
-+	- 2MB internal Flash Memory
-+	- External memory support through FMC controller (PSRAM, SDRAM, NOR, NAND)
-+	- I2C, SPI, SAI, CAN, USB OTG, Ethernet controllers
-+	- LCD controller & Camera interface
-+	- Cryptographic processor
-+
-+  Resources
-+  ---------
-+	Datasheet and reference manual are publicly available on ST website:
-+	- http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1577/LN1806?ecmp=stm32f429-439_pron_pr-ces2014_nov2013
-+
-+  Document Author
-+  ---------------
-+	Maxime Coquelin <mcoquelin.stm32@gmail.com>
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 97d07ed..fd803a4 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -774,6 +774,28 @@ config ARCH_OMAP1
- 	help
- 	  Support for older TI OMAP1 (omap7xx, omap15xx or omap16xx)
- 
-+config ARCH_STM32
-+	bool "STMicrolectronics STM32"
-+	depends on !MMU
-+	select ARCH_REQUIRE_GPIOLIB
-+	select ARM_NVIC
-+	select AUTO_ZRELADDR
-+	select ARCH_HAS_RESET_CONTROLLER
-+	select RESET_CONTROLLER
-+	select PINCTRL
-+	select PINCTRL_STM32
-+	select CLKSRC_OF
-+	select ARM_SYSTEM_TIMER
-+	select COMMON_CLK
-+	select CPU_V7M
-+	select GENERIC_CLOCKEVENTS
-+	select NO_DMA
-+	select NO_IOPORT_MAP
-+	select SPARSE_IRQ
-+	select USE_OF
-+	help
-+	  Support for STMicorelectronics STM32 processors.
-+
- endchoice
- 
- menu "Multiple platform selection"
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index c1785ee..7d00659 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -196,6 +196,7 @@ machine-$(CONFIG_ARCH_SHMOBILE) 	+= shmobile
- machine-$(CONFIG_ARCH_SIRF)		+= prima2
- machine-$(CONFIG_ARCH_SOCFPGA)		+= socfpga
- machine-$(CONFIG_ARCH_STI)		+= sti
-+machine-$(CONFIG_ARCH_STM32)		+= stm32
- machine-$(CONFIG_ARCH_SUNXI)		+= sunxi
- machine-$(CONFIG_ARCH_TEGRA)		+= tegra
- machine-$(CONFIG_ARCH_U300)		+= u300
-diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
-new file mode 100644
-index 0000000..bd0b7b5
---- /dev/null
-+++ b/arch/arm/mach-stm32/Makefile
-@@ -0,0 +1 @@
-+obj-y += board-dt.o
-diff --git a/arch/arm/mach-stm32/Makefile.boot b/arch/arm/mach-stm32/Makefile.boot
-new file mode 100644
-index 0000000..e69de29
-diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-dt.c
-new file mode 100644
-index 0000000..f2ad772
---- /dev/null
-+++ b/arch/arm/mach-stm32/board-dt.c
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright (C) Maxime Coquelin 2015
-+ * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+#include <linux/kernel.h>
-+#include <asm/v7m.h>
-+#include <asm/mach/arch.h>
-+
-+static const char *const stm32_compat[] __initconst = {
-+	"st,stm32f429",
-+	NULL
-+};
-+
-+DT_MACHINE_START(STM32DT, "STM32 (Device Tree Support)")
-+	.dt_compat = stm32_compat,
-+	.restart = armv7m_restart,
-+MACHINE_END
+2015-02-06 7:52 GMT+08:00 Tyler Baker <tyler.baker@linaro.org>:
+
+> On 5 February 2015 at 11:02, Olof Johansson <olof@lixom.net> wrote:
+> > On Thu, Feb 5, 2015 at 10:46 AM, Tyler Baker <tyler.baker@linaro.org>
+> wrote:
+> >> Hi Bintian,
+> >>
+> >> On 5 February 2015 at 01:24, Bintian Wang <bintian.wang@huawei.com>
+> wrote:
+> >>> Hello,
+> >>>
+> >>> Hi6220 is one mobile solution of Hisilicon, this patchset contains
+> >>> initial support for Hi6220 SoC and HiKey development board, which
+> >>> is based on ARM Cortex A53 architecture. Initial support is minimal
+> >>> and includes just the arch configuration, clock driver, device tree
+> >>> configuration.
+> >>>
+> >>> Many peripheral drivers will be submitted later.
+> >>>
+> >>> Any comments will be appreciated!
+> >>>
+> >>> Thanks,
+> >>>
+> >>> Bintian Wang (3):
+> >>>   arm64: Enable Hisilicon ARMv8 SoC family in Kconfig and defconfig
+> >>>   clk: hi6220: Clock driver support for Hisilicon hi6220 SoC
+> >>>   arm64: dts: Add dts files for Hisilicon Hi6220 SoC
+> >>
+> >> Thanks for posting these! I've applied this series on top of
+> >> next-20150204, however there was some fuzz that needed to be cleaned
+> >> up on 3/3 [1]. I've confirmed the platform is booting to a basic user
+> >> space without issue.
+> >
+> > From ramdisk only, right?
+>
+> Correct, ramdisk only.
+>
+> > Given the timing of the posting of this
+> > patch set, I'm not going to merge it for 3.20. Hopefully for 3.21
+> > there will be some more peripheral support as well -- at least some
+> > sort of storage device.
+>
+> Seem fair to me. I also hope to see more patches posted shortly.
+>
+Yes, the mmc and sd drivers will be submitted soon, should they be included
+in this patchset?  I have thought submitting this patch first for review,
+if there
+is no problem for this patchset and then submit other drivers, you know,
+other
+drivers will depend on this patchset.
+
+Thanks,
+
+>
+> >
+> > -Olof
+>
+> Cheers,
+>
+> Tyler
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+>
+
+
 -- 
-1.9.1
+Best Regards,
+
+Bintian
+===========================
+Don't be nervous, just be happy!
+
+--047d7bdc14380bfa8d050e63c2ef
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hello Olof and Tyler,<br><div class=3D"gmail_extra"><br><d=
+iv class=3D"gmail_quote">2015-02-06 7:52 GMT+08:00 Tyler Baker <span dir=3D=
+"ltr">&lt;<a href=3D"mailto:tyler.baker@linaro.org" target=3D"_blank">tyler=
+.baker@linaro.org</a>&gt;</span>:<br><blockquote class=3D"gmail_quote" styl=
+e=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span c=
+lass=3D"">On 5 February 2015 at 11:02, Olof Johansson &lt;<a href=3D"mailto=
+:olof@lixom.net">olof@lixom.net</a>&gt; wrote:<br>
+&gt; On Thu, Feb 5, 2015 at 10:46 AM, Tyler Baker &lt;<a href=3D"mailto:tyl=
+er.baker@linaro.org">tyler.baker@linaro.org</a>&gt; wrote:<br>
+&gt;&gt; Hi Bintian,<br>
+&gt;&gt;<br>
+&gt;&gt; On 5 February 2015 at 01:24, Bintian Wang &lt;<a href=3D"mailto:bi=
+ntian.wang@huawei.com">bintian.wang@huawei.com</a>&gt; wrote:<br>
+&gt;&gt;&gt; Hello,<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Hi6220 is one mobile solution of Hisilicon, this patchset cont=
+ains<br>
+&gt;&gt;&gt; initial support for Hi6220 SoC and HiKey development board, wh=
+ich<br>
+&gt;&gt;&gt; is based on ARM Cortex A53 architecture. Initial support is mi=
+nimal<br>
+&gt;&gt;&gt; and includes just the arch configuration, clock driver, device=
+ tree<br>
+&gt;&gt;&gt; configuration.<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Many peripheral drivers will be submitted later.<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Any comments will be appreciated!<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Thanks,<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Bintian Wang (3):<br>
+&gt;&gt;&gt;=C2=A0 =C2=A0arm64: Enable Hisilicon ARMv8 SoC family in Kconfi=
+g and defconfig<br>
+&gt;&gt;&gt;=C2=A0 =C2=A0clk: hi6220: Clock driver support for Hisilicon hi=
+6220 SoC<br>
+&gt;&gt;&gt;=C2=A0 =C2=A0arm64: dts: Add dts files for Hisilicon Hi6220 SoC=
+<br>
+&gt;&gt;<br>
+&gt;&gt; Thanks for posting these! I&#39;ve applied this series on top of<b=
+r>
+&gt;&gt; next-20150204, however there was some fuzz that needed to be clean=
+ed<br>
+&gt;&gt; up on 3/3 [1]. I&#39;ve confirmed the platform is booting to a bas=
+ic user<br>
+&gt;&gt; space without issue.<br>
+&gt;<br>
+&gt; From ramdisk only, right?<br>
+<br>
+</span>Correct, ramdisk only.<br>
+<span class=3D""><br>
+&gt; Given the timing of the posting of this<br>
+&gt; patch set, I&#39;m not going to merge it for 3.20. Hopefully for 3.21<=
+br>
+&gt; there will be some more peripheral support as well -- at least some<br=
+>
+&gt; sort of storage device.<br>
+<br>
+</span>Seem fair to me. I also hope to see more patches posted shortly.<br>=
+</blockquote><div>Yes, the mmc and sd drivers will be submitted soon, shoul=
+d they be included<br></div><div>in this patchset?=C2=A0 I have thought sub=
+mitting this patch first for review, if there<br>is no problem for this pat=
+chset and then submit other drivers, you know, other<br></div><div>drivers =
+will depend on this patchset. <br></div><div><br></div><div>Thanks,<br><br>=
+</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-l=
+eft:1px #ccc solid;padding-left:1ex">
+&gt;<br>
+&gt;<br>
+&gt; -Olof<br>
+<br>
+Cheers,<br>
+<br>
+Tyler<br>
+<div class=3D"HOEnZb"><div class=3D"h5">--<br>
+To unsubscribe from this list: send the line &quot;unsubscribe linux-kernel=
+&quot; in<br>
+the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org">major=
+domo@vger.kernel.org</a><br>
+More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordomo-in=
+fo.html" target=3D"_blank">http://vger.kernel.org/majordomo-info.html</a><b=
+r>
+Please read the FAQ at=C2=A0 <a href=3D"http://www.tux.org/lkml/" target=3D=
+"_blank">http://www.tux.org/lkml/</a><br>
+</div></div></blockquote></div><br><br>-- <br><div class=3D"gmail_signature=
+">Best Regards,<br><br>Bintian<br>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D<br>Don&#39;t be nervous, just be=
+ happy! <br></div>
+</div></div>
+
+--047d7bdc14380bfa8d050e63c2ef--
