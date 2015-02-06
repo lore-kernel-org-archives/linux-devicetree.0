@@ -1,94 +1,113 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH] of: calculate masks of the device based on dma-range size
-Date: Fri, 6 Feb 2015 15:15:20 -0500
-Message-ID: <1423253720-2785-1-git-send-email-m-karicheri2@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: shmobile: r8a73a4: Move pfc node to work around probe ordering bug
+Date: Fri,  6 Feb 2015 21:22:53 +0100
+Message-ID: <1423254173-31852-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-This patch update of_dma_configure() API to calculate the
-masks (dma_mask and coherent_dma_mask) based on the dma-range
-values set in DT for the device. Also limit the mask to lower
-of the default mask and mask calculated.
+Currently the pin function controller (which is also a GPIO controller)
+is instantiated before the interrupt controllers due to the order in the
+DTS. At that time, the irq domains for the interrupt controllers
+referenced by its interrupts-extended property cannot be found yet:
 
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+    irq: no irq domain found for /interrupt-controller@e61c0000 !
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Nevertheless, the core OF probing code ignores this failure, besides a
+debug message that's not normally printed:
+
+    not all legacy IRQ resources mapped for pfc
+
+and continues initialization of the device. Then, the sh-pfc driver
+cannot find any IRQ resources, and thinks no interrupts are available,
+causing gpio-keys to fail later:
+
+    gpio-keys keyboard: Unable to claim irq 0; error -22
+    gpio-keys: probe of keyboard failed with error -22
+
+Move the pin function controller node after the interrupt controller
+nodes it references to work around the bug in the core OF probing code.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/of/device.c |   27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+Notes:
+  - It seems several people tried to solve this in the core OF probing
+    code before, but the final solution never went in?
+  - This can be reproduced on other SoCs (e.g. sh73a0 and r8a7740) by
+    moving their pfc nodes before their interrupt controller nodes.
+  - This patch is against my working tree, so it doesn't apply to
+    Simon's repository, but you get the idea....
+---
+ arch/arm/boot/dts/r8a73a4.dtsi | 48 +++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 314c8a9..44209fa 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -83,17 +83,18 @@ int of_device_add(struct platform_device *ofdev)
-  */
- void of_dma_configure(struct device *dev, struct device_node *np)
- {
--	u64 dma_addr, paddr, size;
-+	u64 dma_addr = 0, paddr, size;
- 	int ret;
- 	bool coherent;
--	unsigned long offset;
-+	unsigned long offset = 0;
- 	struct iommu_ops *iommu;
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 8a23442f0c70359d..47b657de4f68f56c 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -259,30 +259,6 @@
+ 		};
+ 	};
  
- 	/*
- 	 * Set default dma-mask to 32 bit. Drivers are expected to setup
- 	 * the correct supported dma_mask.
- 	 */
--	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-+	if (!dev->coherent_dma_mask)
-+		dev->coherent_dma_mask = DMA_BIT_MASK(32);
+-	pfc: pfc@e6050000 {
+-		compatible = "renesas,pfc-r8a73a4";
+-		reg = <0 0xe6050000 0 0x9000>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupts-extended =
+-			<&irqc0  0 0>, <&irqc0  1 0>, <&irqc0  2 0>, <&irqc0  3 0>,
+-			<&irqc0  4 0>, <&irqc0  5 0>, <&irqc0  6 0>, <&irqc0  7 0>,
+-			<&irqc0  8 0>, <&irqc0  9 0>, <&irqc0 10 0>, <&irqc0 11 0>,
+-			<&irqc0 12 0>, <&irqc0 13 0>, <&irqc0 14 0>, <&irqc0 15 0>,
+-			<&irqc0 16 0>, <&irqc0 17 0>, <&irqc0 18 0>, <&irqc0 19 0>,
+-			<&irqc0 20 0>, <&irqc0 21 0>, <&irqc0 22 0>, <&irqc0 23 0>,
+-			<&irqc0 24 0>, <&irqc0 25 0>, <&irqc0 26 0>, <&irqc0 27 0>,
+-			<&irqc0 28 0>, <&irqc0 29 0>, <&irqc0 30 0>, <&irqc0 31 0>,
+-			<&irqc1  0 0>, <&irqc1  1 0>, <&irqc1  2 0>, <&irqc1  3 0>,
+-			<&irqc1  4 0>, <&irqc1  5 0>, <&irqc1  6 0>, <&irqc1  7 0>,
+-			<&irqc1  8 0>, <&irqc1  9 0>, <&irqc1 10 0>, <&irqc1 11 0>,
+-			<&irqc1 12 0>, <&irqc1 13 0>, <&irqc1 14 0>, <&irqc1 15 0>,
+-			<&irqc1 16 0>, <&irqc1 17 0>, <&irqc1 18 0>, <&irqc1 19 0>,
+-			<&irqc1 20 0>, <&irqc1 21 0>, <&irqc1 22 0>, <&irqc1 23 0>,
+-			<&irqc1 24 0>, <&irqc1 25 0>;
+-		power-domains = <&pd_c5>;
+-	};
+-
+ 	i2c5: i2c@e60b0000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -382,6 +358,30 @@
+ 		power-domains = <&pd_c4>;
+ 	};
  
- 	/*
- 	 * Set it to coherent_dma_mask by default if the architecture
-@@ -102,11 +103,14 @@ void of_dma_configure(struct device *dev, struct device_node *np)
- 	if (!dev->dma_mask)
- 		dev->dma_mask = &dev->coherent_dma_mask;
- 
-+	/*
-+	 * Set default size to cover the 32-bit. Drivers are expected to setup
-+	 * the correct size and dma_mask.
-+	 */
-+	size = 1ULL << 32;
++	pfc: pfc@e6050000 {
++		compatible = "renesas,pfc-r8a73a4";
++		reg = <0 0xe6050000 0 0x9000>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupts-extended =
++			<&irqc0  0 0>, <&irqc0  1 0>, <&irqc0  2 0>, <&irqc0  3 0>,
++			<&irqc0  4 0>, <&irqc0  5 0>, <&irqc0  6 0>, <&irqc0  7 0>,
++			<&irqc0  8 0>, <&irqc0  9 0>, <&irqc0 10 0>, <&irqc0 11 0>,
++			<&irqc0 12 0>, <&irqc0 13 0>, <&irqc0 14 0>, <&irqc0 15 0>,
++			<&irqc0 16 0>, <&irqc0 17 0>, <&irqc0 18 0>, <&irqc0 19 0>,
++			<&irqc0 20 0>, <&irqc0 21 0>, <&irqc0 22 0>, <&irqc0 23 0>,
++			<&irqc0 24 0>, <&irqc0 25 0>, <&irqc0 26 0>, <&irqc0 27 0>,
++			<&irqc0 28 0>, <&irqc0 29 0>, <&irqc0 30 0>, <&irqc0 31 0>,
++			<&irqc1  0 0>, <&irqc1  1 0>, <&irqc1  2 0>, <&irqc1  3 0>,
++			<&irqc1  4 0>, <&irqc1  5 0>, <&irqc1  6 0>, <&irqc1  7 0>,
++			<&irqc1  8 0>, <&irqc1  9 0>, <&irqc1 10 0>, <&irqc1 11 0>,
++			<&irqc1 12 0>, <&irqc1 13 0>, <&irqc1 14 0>, <&irqc1 15 0>,
++			<&irqc1 16 0>, <&irqc1 17 0>, <&irqc1 18 0>, <&irqc1 19 0>,
++			<&irqc1 20 0>, <&irqc1 21 0>, <&irqc1 22 0>, <&irqc1 23 0>,
++			<&irqc1 24 0>, <&irqc1 25 0>;
++		power-domains = <&pd_c5>;
++	};
 +
- 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
--	if (ret < 0) {
--		dma_addr = offset = 0;
--		size = dev->coherent_dma_mask + 1;
--	} else {
-+	if (!ret) {
- 		offset = PFN_DOWN(paddr - dma_addr);
- 
- 		/*
-@@ -128,6 +132,15 @@ void of_dma_configure(struct device *dev, struct device_node *np)
- 
- 	dev->dma_pfn_offset = offset;
- 
-+	/*
-+	 * Limit coherent and dma mask based on size and default mask
-+	 * set by the driver.
-+	 */
-+	dev->coherent_dma_mask = min(dev->coherent_dma_mask,
-+				     DMA_BIT_MASK(ilog2(dma_addr + size)));
-+	*dev->dma_mask = min((*dev->dma_mask),
-+			     DMA_BIT_MASK(ilog2(dma_addr + size)));
-+
- 	coherent = of_dma_is_coherent(np);
- 	dev_dbg(dev, "device is%sdma coherent\n",
- 		coherent ? " " : " not ");
+ 	thermal@e61f0000 {
+ 		compatible = "renesas,thermal-r8a73a4", "renesas,rcar-thermal";
+ 		reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>,
 -- 
-1.7.9.5
+1.9.1
