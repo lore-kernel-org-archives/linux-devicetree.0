@@ -1,57 +1,89 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv6 0/5] Add Altera peripheral memories to EDAC framework
-Date: Fri, 6 Feb 2015 19:29:25 +0000
-Message-ID: <20150206192925.GG10324@leverpostej>
-References: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com>
- <54CA9DB2.4070109@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54CA9DB2.4070109@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "m.chehab@samsung.com" <m.chehab@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tthayer.linux@gmail.com" <tthayer.linux@gmail.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v5 0/3] irqchip: vf610-mscm: add support for MSCM interrupt router
+Date: Fri,  6 Feb 2015 20:51:23 +0100
+Message-ID: <1423252286-17814-1-git-send-email-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: marc.zyngier-5wv7dgnIgG8@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 29, 2015 at 08:53:06PM +0000, Thor Thayer wrote:
-> Hi Device Tree Maintainers,
+So far the MSCM interrupt router was initialized by the boot loader
+and configured all interrupts for the Cortex-A5 CPU. There are two
+use cases where a proper driver is necessary:
+- To run Linux on the Cortex-M4. When the kernel is running on the
+  non-preconfigured CPU, the interrupt router need to be configured
+  properly.
+- To support deeper sleep modes: LPSTOP clears the interrupt router
+  configuration, hence a driver needs to restore the configuration
+  on resume.
 
-Hi Thor,
+Due to the concernes of using "syscon" for the interrupt router
+this 4th version uses device tree bindings which split the MSCM
+module into sub-modules.
 
-Apologies for being silent for so long on this.
+In detail, the registers inside the MSCM module are grouped:
+- 0x40001000-0x4000105C: Processor information e.g. CPU ID
+- 0x40001800-0x40001820: CPU2CPU directed interrupt registers
+- 0x40001880-0x4000195E: The interrupt router registers
+- 0x40001C00-0x40001DDC: ACTZS TrustZone registers
 
-> On 01/08/2015 08:53 PM, tthayer@opensource.altera.com wrote:
-> > From: Thor Thayer <tthayer@opensource.altera.com>
-> >
-> > This patch adds the L2 cache and OCRAM peripherals to the EDAC framework
-> > using the EDAC device framework. The ECC is enabled early in the boot
-> > process in the platform specific code.
-> >
-> 
-> The changes in this patch series revision were mainly to address device 
-> tree concerns. There were changes in other areas of the code to address 
-> these changes but I believe the other maintainers are waiting to see if 
-> these changes are accepted before they will review (they had approved 
-> the previous patch changes).
-> 
-> How does the this patch series appear from a device tree perspective?
+This version of the patchset defines bindings for the first submodule
+and combines the second and third submodule into one block. However,
+the driver currently does not support the CPU2CPU interrupts. The
+fourth submodule is completely left out for now.
 
-While this looks better than before (thank you for no longer treating
-the PL310 registers as a syscon), I have a couple of quibbles with the
-binding:
+Due to this and the better documentation the patchset grew by ~40
+lines. I think this bindings honer the quite individual functionality
+inside the MSCM better.
 
-* It's not clear to me whether the L2 and OCRAM EDACs are fundamentally
-  different in interface, or whether they simply happen to be monitoring
-  different memories. The former would mean a common compatible string
-  for both EDAC block instances, and another property to determine
-  what the other end was.
+Still looking for an ack by device tree folks...
 
-* It relies on a single instance of OCRAM or L2 existing, rather than
-  describing the relationship with the particular memory explicitly. In
-  general it's better to be explicit -- this means it can more easily be
-  generalised to multiple OCRAMs as might occur in a later SoC (in
-  addition to the reasons laid out in the first point.
+Changes since v4
+- Fix config selection in SOC_VF610 (VF610_MSCM => VF610_MSCM_IR)
 
-Thanks,
-Mark.
+Changes since v3
+- Splitted MSCM bindings: MSCM CPU configuration and interrupt router
+- Use syscon to access the CPU configuration registers
+- Renamed the driver (irq-vf610-mscm => irq-vf610-mscm-ir)
+- Extended general and property description of the bindings
+- Rebased on v3.19-rc6
+
+Changes since v2
+- Use two cell layout for MSCM interrupt router
+- Move peripheral interrupt properties to base device tree vfxxx.dtsi
+- Use generic two cell xlate (irq_domain_xlate_twocell)
+- Add syscon to compatible string
+- Remove some line breaks for better readability
+
+Changes since v1 (part of Vybrid Cortex-M4 support)
+- Rewrite with irqdomain hierarchy
+- Implemented as proper irqchip and move to driver/irqchip/
+- Doesn't work on Cortex-M4 anymore (NVIC as parent is not yet
+  implemented)
+
+Stefan Agner (3):
+  irqchip: vf610-mscm-ir: add support for MSCM interrupt router
+  irqchip: vf610-mscm: dt-bindings: add MSCM bindings
+  ARM: dts: vf610: add Miscellaneous System Control Module (MSCM)
+
+ .../arm/freescale/fsl,vf610-mscm-cpucfg.txt        |  14 ++
+ .../bindings/arm/freescale/fsl,vf610-mscm-ir.txt   |  33 ++++
+ arch/arm/boot/dts/vf500.dtsi                       | 128 +------------
+ arch/arm/boot/dts/vfxxx.dtsi                       |  48 +++++
+ arch/arm/mach-imx/Kconfig                          |   1 +
+ drivers/irqchip/Kconfig                            |  11 ++
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-vf610-mscm-ir.c                | 206 +++++++++++++++++++++
+ 8 files changed, 318 insertions(+), 124 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
+ create mode 100644 drivers/irqchip/irq-vf610-mscm-ir.c
+
+-- 
+2.3.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
