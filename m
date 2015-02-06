@@ -1,100 +1,84 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v6 3/7] of: fix size when dma-range is not used
-Date: Fri, 6 Feb 2015 15:26:55 -0500
-Message-ID: <54D5238F.4030608@ti.com>
-References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com> <1423173179-10227-4-git-send-email-m-karicheri2@ti.com> <20150206143812.GB20549@localhost> <54D4D59F.6050408@ti.com> <20150206151210.GC23190@e104818-lin.cambridge.arm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 08/10] ARM: mvebu: add core support for Armada 39x
+Date: Fri, 6 Feb 2015 21:31:37 +0100
+Message-ID: <20150206203137.GH2079@lukather>
+References: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1423238276-9206-9-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150206151210.GC23190@e104818-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BXr400anF0jyguTS"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1423238276-9206-9-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2015 10:12 AM, Catalin Marinas wrote:
-> On Fri, Feb 06, 2015 at 02:54:23PM +0000, Murali Karicheri wrote:
->> On 02/06/2015 09:38 AM, Catalin Marinas wrote:
->>> On Thu, Feb 05, 2015 at 09:52:55PM +0000, Murali Karicheri wrote:
->>>> Fix the dma-range size when the DT attribute is missing. i.e  set size to
->>>> dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask. Also add
->>>> code to check invalid values of size configured in DT and log error.
->>>>
->>>> Cc: Joerg Roedel<joro@8bytes.org>
->>>> Cc: Grant Likely<grant.likely@linaro.org>
->>>> Cc: Rob Herring<robh+dt@kernel.org>
->>>> Cc: Bjorn Helgaas<bhelgaas@google.com>
->>>> Cc: Will Deacon<will.deacon@arm.com>
->>>> Cc: Russell King<linux@arm.linux.org.uk>
->>>> Cc: Arnd Bergmann<arnd@arndb.de>
->>>> Cc: Suravee Suthikulpanit<Suravee.Suthikulpanit@amd.com>
->>>>
->>>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
->>>> ---
->>>>    drivers/of/device.c |   17 ++++++++++++++++-
->>>>    1 file changed, 16 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/of/device.c b/drivers/of/device.c
->>>> index 2de320d..314c8a9 100644
->>>> --- a/drivers/of/device.c
->>>> +++ b/drivers/of/device.c
->>>> @@ -105,9 +105,24 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->>>>    	ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
->>>>    	if (ret<   0) {
->>>>    		dma_addr = offset = 0;
->>>> -		size = dev->coherent_dma_mask;
->>>> +		size = dev->coherent_dma_mask + 1;
->>>>    	} else {
->>>>    		offset = PFN_DOWN(paddr - dma_addr);
->>>> +
->>>> +		/*
->>>> +		 * Add a work around to treat the size as mask + 1 in case
->>>> +		 * it is defined in DT as a mask.
->>>> +		 */
->>>> +		if (size&   1) {
->>>> +			dev_warn(dev, "Invalid size 0x%llx for dma-range\n",
->>>> +				 size);
->>>> +			size = size + 1;
->>>> +		}
->>>> +
->>>> +		if (!size) {
->>>> +			dev_err(dev, "Adjusted size 0x%llx invalid\n", size);
->>>> +			return;
->>>> +		}
->>>
->>> Would it make sense to set coherent_dma_mask to 0 here to make this more
->>> noticeable? It can be done together with the mask calculation from size.
->>
->> I guess you are the following in the code.
->>
->> if (!size) {
->> 		dev->coherent_dma_mask = 0;
->> 		dev_err(dev, "Adjusted size 0x%llx invalid\n", size);
->> 		return;
->> }
->>
->> Not sure how this is going to help and how this get handled by the
->> caller and subsequent logic. Probably it will cause probe to fail, with
->> some helpful error code.
->
-> Not sure how it will fail, maybe the driver figures out that DMA isn't
-> available and say something or switch to PIO. I guess you can leave it
-> as 32-bit mask by default for now even in case of size == 0.
->
-> BTW, since pci_device_add() already sets coherent_dma_mask, you could
-> add another check at the beginning of of_dma_configure():
->
-> 	if (!dev->coherent_dma_mask)
-> 		dev->coherent_dma_mask = DMA_BIT_MASK(32);
->
-> That's more of a nitpick as the values are both the same.
->
-Catalin,
 
-Just posted a patch for size based dma mask with title "of: calculate 
-masks of the device based on dma-range size". Please review and comment
+--BXr400anF0jyguTS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+Hi Thomas,
+
+On Fri, Feb 06, 2015 at 04:57:54PM +0100, Thomas Petazzoni wrote:
+> This commit adds the core support for Armada 39x, which is quite
+> simple:
+>=20
+>  - a new Kconfig option which selects the appropriate clock and
+>    pinctrl drivers as well as other common features (GIC, L2 cache,
+>    SMP, etc.)
+>=20
+>  - a new DT_MACHINE_START which references the top-level compatible
+>    strings supported for the Marvell Armada 39x.
+>=20
+>  - a new SMP enable-method. The mechanism to enable CPUs for Armada
+>    39x appears to be the same as Armada 38x. However, we do want to
+
+                                                              ^ not?
+
+>    use marvell,armada-380-smp in the Device Tree, in the case of the
+>    discovery of a subtle difference in the future, which would require
+>    changing the Device Tree. And the enable-method isn't a compatible
+>    string: you can't specify several values and expect a fallback on
+>    the second string if the first one isn't supported. Therefore, we
+>    simply declare the SMP enable method "marvell,armada-390-smp" as
+>    doing the same thing as the "marvell,armada-380-smp" one.
+>=20
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--BXr400anF0jyguTS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU1SSpAAoJEBx+YmzsjxAggyIQAMI92aUAgZ4/yZfqXAzUAbCE
+Y/fzYAGHpdw3v5kMLtEfglPiZdQxwHDRmj1ToIJryU2UcQQ19L0FaP3ciKZeznHo
+kJ0DNDfQMHoDAos3zcxCY+SQ0wwyuwPWpEXPFPe5/zXTIvtUaU5Pbx+d5fdbOwiW
+vwghYLW22S1NKkZiMz+sm58gfOjlN6ae+bXrGIRuMXSZY9Dw1pKjVw1Bgex9X4MM
+tyV2pS/vrgvOPm4ReHeb67S89cjUkoyAVZ2T8RVtKbR8wjVy2wnwLr3n4JvynrcX
+6Wq6NzpkgktVecD7R5Zt98qgO2nYA4KLx0FRDOhB46VXpn9dA8NV/iqApDZ7uHVI
+4z6zoH1rrlMOJfpQzLRyFVO33pjx5BZnQzHc15EAc7OjxUMOMhPCq125uBUWF2jm
+940DBUFP3h0ylQXlgYrXGgpvLpg3udqqYhLSriPIBUq1JlmDrRJ85XfZ5wiRlY2u
+/Y31ghadKjCr6PbQAYAtUWZT5TEPpjVkrxFWQzaJ9+i78Axxdg3r7Kj/QJRibW93
+xTB4uYQsufIZv+Mba2fqZM3vweYi5HdGoI6iNh/QBQvRTMSZKbr0KUPPnviJsZxs
+H+zQ+XHJ2chruG040D7W9Q6R3mzSlO1KR09j3XSV90u9UjdCzr41crvI6RNP8AKw
+g33JKthxMnrT3nwF7oqW
+=fQg7
+-----END PGP SIGNATURE-----
+
+--BXr400anF0jyguTS--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
