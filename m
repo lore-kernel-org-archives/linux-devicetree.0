@@ -1,75 +1,135 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: mvebu: add ethernet to the cm-a510 board
-Date: Fri, 6 Feb 2015 08:58:55 +0100
-Message-ID: <20150206085855.7b8d494b@armhf>
-References: <E1YH5bU-0005mG-3L@bombadil.infradead.org>
-	<54CB5267.5060004@gmail.com>
-	<20150130113118.5523ed68@armhf>
-	<54CB6440.1010002@gmail.com>
-	<20150130124144.501cf81d@armhf>
-	<54CB732F.7010409@gmail.com>
-	<20150130133913.083d1ade@armhf>
-	<54CB7E33.3080909@gmail.com>
-	<54CE354F.5090106@gmail.com>
-	<54D3EB26.9020909@gmail.com>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH RFC v8 11/21] Documentation: dt-bindings: Add bindings
+ for Synopsys DW MIPI DSI DRM bridge driver
+Date: Fri, 6 Feb 2015 16:13:20 +0800
+Message-ID: <20150206081318.GA15088@victor>
+References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
+ <1420014219-915-12-git-send-email-Ying.Liu@freescale.com>
+ <1423131004.3207.27.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54D3EB26.9020909-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1423131004.3207.27.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: dri-devel@lists.freedesktop.org, stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, airlied@linux.ie, linux-kernel@vger.kernel.org, a.hajda@samsung.com, thierry.reding@gmail.com, mturquette@linaro.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, andyshrk@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 05 Feb 2015 23:13:58 +0100
-Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Thu, Feb 05, 2015 at 11:10:04AM +0100, Philipp Zabel wrote:
+> Am Mittwoch, den 31.12.2014, 16:23 +0800 schrieb Liu Ying:
+> > This patch adds device tree bindings for Synopsys DesignWare MIPI DSI
+> > host controller DRM bridge driver.
+> > 
+> > Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+> > ---
+> > v7->v8:
+> >  * None.
+> > 
+> > v6->v7:
+> >  * None.
+> > 
+> > v5->v6:
+> >  * Add the #address-cells and #size-cells properties in the example 'ports'
+> >    node.
+> >  * Remove the useless input-port properties from the example port@0 and port@1
+> >    nodes.
+> > 
+> > v4->v5:
+> >  * None.
+> > 
+> > v3->v4:
+> >  * Newly introduced in v4.  This is separated from the relevant driver patch
+> >    in v3 to address Stefan Wahren's comment.
+> > 
+> >  .../devicetree/bindings/drm/bridge/dw_mipi_dsi.txt | 73 ++++++++++++++++++++++
+> >  1 file changed, 73 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
+> > new file mode 100644
+> > index 0000000..f88a8d6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
+> > @@ -0,0 +1,73 @@
+> > +Device-Tree bindings for Synopsys DesignWare MIPI DSI host controller
+> > +
+> > +The controller is a digital core that implements all protocol functions
+> > +defined in the MIPI DSI specification, providing an interface between
+> > +the system and the MIPI DPHY, and allowing communication with a MIPI DSI
+> > +compliant display.
+> > +
+> > +Required properties:
+> > + - #address-cells: Should be <1>.
+> > + - #size-cells: Should be <0>.
+> > + - compatible: The compatible string should be "fsl,imx6q-mipi-dsi" for
+> > +   i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
+> > +   device tree binding documentations.
+> 
+> I think the compatible property should additionally contain
+> "snps,dw-mipi-dsi". Also I think other SoCs using the same IP core
+> should eventually list their compatibles here, but that's for later.
+> 
+> How about:
+> + - compatible: The compatible string contain "fsl,imx6q-mipi-dsi" for
+> +   i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
+> +   device tree binding documentations. A common compatible string
+> +   "snps,dw-mipi-dsi" should be appended for all SoCs.
 
-> > At this moment, I am trying to configure the framebuffer, but as Mo=
-ine
-> > told me,it seems there is not video driver support for this board i=
-n
-> > DT... :( . =20
->=20
-> Not quite true. Video is made up of at least 4 different devices:
-> Framebuffer, GPU, Decode engine, and usually DVI/HDMI transmitter or
-> VGA.
->=20
-> We do have a driver for the framebuffer (armada_drm) and there is gre=
-at
-> work from Russell King and others on the GPU and Decode engine (IIRC)=
-=2E
+I'm not sure if "snps,dw-mipi-dsi" should be appended.
 
-Yes, but it has no DT support. Mine has.
+Is it a compatible string that SoC specific drivers should actually use to
+bind a device?
 
-> If you are using the sb-a510, I can see from the manual, that DVI
-> transmitter is SIL164.. AFAIS there is a driver for it, that maybe
-> needs some polishing. Nobody ever tested VGA, but it shouldn't be too
-> hard to add support for it as it is directly supported by the
-> framebuffer HW.
+As Andy mentioned in [1], DW MIPI DSI embedded in RK618 is configured via I2C
+bus, while i.MX6Q/DL is configured via ARM bus...
 
-This asks for some VGA encoder/connector module.
+Another concern is that if users only specify "snps,dw-mipi-dsi" in their
+device tree sources and use a kernel which supports multiple platforms,
+say ARM multi v7 platforms, could several enabled SoC specific drivers be
+probed for a single DW MIPI DSI device?
 
-Actually, as Gabriel told me that his screen is directly connected to
-the RGB LCD output, I wrote a simple panel for him. This module just
-gets the display timings from the DT.
+[1] http://lists.freedesktop.org/archives/dri-devel/2014-December/074344.html
 
-> One quite important driver at least for Dove is a clock source for
-> video. Internal clock generators for video are way to limited with
-> respect to frequencies to allow any useful resolution.
+> 
+> > + - reg: Represent the physical address range of the controller.
+> > + - interrupts: Represent the controller's interrupt to the CPU(s).
+> > + - clocks, clock-names: Phandles to the controller pll reference and
+> > +   core configuration clocks, as described in [1].
+> 
+> From the MIPI CSI-2 datasheets it looks like the D-PHY has a refclk and
+> a cfg_clk input. So I suspect from the name of the "core_cfg" clock,
+> that it actually represents two clock inputs, the "cfg_clk" wired to the
+> D-PHY and a core clock wired to the MIPI DSI host controller. I am not
+> sure if there are designs that control those clocks separately, but I
+> think it'd be safer to split this into two clocks in the device tree.
 
-=46rom my previous tests with the si5351 in the Cubox, most video modes
-should work without external clocks.
+What MIPI CSI-2 datasheets do you refer to?
+I don't find the refclk and cfg_clk in the MIPI CSI chapter of the i.MX6DQ
+Reference Manual v2[2].
 
-> I'll see if I can have a look at the dts stuff this weekend.. that
-> way we'll have at least the basic done before moving to the other
-> devices.
+I think we need to know the design philosophy of DW MIPI DSI clock sources
+to settle down the documentation here.  I've asked our internal MIPI DSI
+SoC owner for ideas.  But, someone from Synopsys might be the right
+person, perhaps.
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[2] http://cache.freescale.com/files/32bit/doc/ref_manual/IMX6DQRM.pdf?fasp=1&WT_TYPE=Reference%20Manuals&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation&fileExt=.pdf
+
+> 
+> Also I am not sure which input to the MIPI DSI host controller the core
+> clock represents. The i.MX6DQ Reference Manual v2 calls the remaining
+> clock inputs gated by mipi_core_cfg_clk_enable "ac_clk_125m" and
+> "ips_clk" (I think the latter is the ABP clock driving the register
+> bank, just called "pclk" in the MIPI CSI-2 documentation).
+
+The same MIPI CSI-2 documentation you mentioned above?
+
+I'm also puzzled about the clocks.
+
+Regards,
+Liu Ying
+
+> 
+> regards
+> Philipp
+> 
