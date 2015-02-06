@@ -1,56 +1,44 @@
-From: Tyler Hall <tylerwhall@gmail.com>
-Subject: gpio-pxa: getting GPIOs by devicetree phandle broken
-Date: Fri, 6 Feb 2015 16:28:09 -0500
-Message-ID: <CAOjnSCajhwdRVZUO99KL-9PF6HitZen04MoLKoDUDr_5=iS7kw@mail.gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: Delays, clocks, timers, hrtimers, etc
+Date: Fri, 06 Feb 2015 22:31:41 +0100
+Message-ID: <266c7b1ff2d1a8ba0ae4866f4fb4eca5@agner.ch>
+References: <54C8E125.3070905@free.fr>
+ <e028a4eb604a491f4438557f4a1373ef@agner.ch> <54D52F84.9050600@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Daniel Mack <zonque@gmail.com>, Hans Holmberg <hans.holmberg@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, Howard Cochran <cochran@lexmark.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <54D52F84.9050600@free.fr>
+Sender: cpufreq-owner@vger.kernel.org
+To: Mason <mpeg.blue@free.fr>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, cpufreq <cpufreq@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 2015-02-06 22:17, Mason wrote:
+> Stefan Agner wrote:
+> 
+>> Just recently I added support of ARM global timer as clocksource for
+>> Vybrid SoC. This SoC doesn't use cpufreq, hence it is safe to use the
+>> ARM global timer. The nice thing of device tree is, the patch to add
+>> support for that did not change a single line of code:
+>>
+>> http://thread.gmane.org/gmane.linux.kernel/1794460
+> 
+> Hello Stefan,
+> 
+> Your changes are not yet accepted in mainline, are they?
+> (I don't see them in 3.18.5)
 
-Commit 7b8792b ("gpiolib: of: Correct error handling in
-of_get_named_gpiod_flags") seems to break the ability to use DT
-bindings to reference this driver's GPIOs by phandle for banks above
-the first.
+The changes have been accepted and went upstream in the 3.19 merge
+window, see
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=81c4831907fb00efdc97093b09e333009a57d005
 
-The issue is that gpio-pxa registers multiple gpio chips - one for
-each bank - but they're all associated with the same DT node. The new
-behavior in of_gpiochip_find_and_xlate() causes gpiochip_find() to
-bail after the first chip matches and its xlate function fails.
-Previously it would try all chips associated with the phandle and
-pxa_gpio_of_xlate() would fail until it was called with the correct
-gpiochip.
+> Do you also use the ARM local timers in your port?
+> Is there generic code to handle them?
 
-I think the new behavior of of_gpiochip_find_and_xlate() is reasonable,
-so I see a couple ways of fixing gpio-pxa.
+It seems that there has been support for local timers once, but has been
+removed. But I'm not aware of the details:
+https://lkml.org/lkml/2013/2/22/49
 
-1. Require child nodes in DT for each bank
-2. Refactor gpio-pxa to only register one gpiochip
-
-There was a previously undocumented binding that required child nodes
-but it was removed by 5dbb7c6 ("gpio: pxa: remove dead code"). It's
-still present in the DT files that use "marvell,mmp-gpio." Here's an
-example from pxa168.dtsi.
-
-            gpio@d4019000 {
-                compatible = "marvell,mmp-gpio";
-                #address-cells = <1>;
-                #size-cells = <1>;
-
-                ...
-
-                gcb0: gpio@d4019000 {
-                    reg = <0xd4019000 0x4>;
-                };
-                ...
-            };
-
-I may proceed with option 1 since there's some precedent, but I'd
-appreciate any input.
-
-Thanks,
-Tyler
+--
+Stefan
