@@ -1,203 +1,135 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] usb: phy: add phy-hi6220
-Date: Fri, 6 Feb 2015 19:47:12 +0800
-Message-ID: <CABQgh9GfmoeLo-HnhM=sk-XBw1KoLMsa=RZZWkHu-hGPpMK+=A@mail.gmail.com>
-References: <1423147620-5760-1-git-send-email-zhangfei.gao@linaro.org>
-	<1423147620-5760-5-git-send-email-zhangfei.gao@linaro.org>
-	<20150206084141.GE5007@shlinux2>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] Input: pixcir_i2c_ts - Add RESET gpio
+Date: Fri, 6 Feb 2015 14:53:10 +0200
+Message-ID: <1423227190-10943-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150206084141.GE5007@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, rydberg@bitmath.org
+Cc: mugunthanvnm@ti.com, jg1.han@samsung.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6 February 2015 at 16:41, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Thu, Feb 05, 2015 at 10:47:00PM +0800, Zhangfei Gao wrote:
+The controller has a RESET pin which is usually controlled over
+a GPIO line. If such a GPIO is provided, perform a RESET
+during probe.
 
->> @@ -18,6 +18,7 @@ obj-$(CONFIG_SAMSUNG_USBPHY)                += phy-samsung-usb.o
->>  obj-$(CONFIG_TWL6030_USB)            += phy-twl6030-usb.o
->>  obj-$(CONFIG_USB_EHCI_TEGRA)         += phy-tegra-usb.o
->>  obj-$(CONFIG_USB_GPIO_VBUS)          += phy-gpio-vbus-usb.o
->> +obj-$(CONFIG_USB_HI6220_PHY)         += phy-hi6220.o
->
-> To align the naming method, phy-hi6220-usb is better.
-Sure,
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ .../bindings/input/touchscreen/pixcir_i2c_ts.txt   |  3 ++
+ drivers/input/touchscreen/pixcir_i2c_ts.c          | 37 ++++++++++++++++++++--
+ include/linux/input/pixcir_ts.h                    |  1 +
+ 3 files changed, 38 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+index 6e55109..8eb240a 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+@@ -8,6 +8,9 @@ Required properties:
+ - touchscreen-size-x: horizontal resolution of touchscreen (in pixels)
+ - touchscreen-size-y: vertical resolution of touchscreen (in pixels)
+ 
++Optional properties:
++- reset-gpio: GPIO connected to the RESET line of the chip
++
+ Example:
+ 
+ 	i2c@00000000 {
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 4fb5537..610ce0b 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -51,6 +51,19 @@ struct pixcir_report_data {
+ 	struct pixcir_touch touches[PIXCIR_MAX_SLOTS];
+ };
+ 
++static void pixcir_reset(struct pixcir_i2c_ts_data *tsdata)
++{
++	const struct pixcir_ts_platform_data *pdata = tsdata->pdata;
++
++	if (gpio_is_valid(pdata->gpio_reset)) {
++		gpio_set_value(pdata->gpio_reset, 1);
++		ndelay(80);
++		gpio_set_value(pdata->gpio_reset, 0);
++		/* wait as controller might not immediately respond */
++		msleep(100);
++	}
++}
++
+ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
+ 			    struct pixcir_report_data *report)
+ {
+@@ -428,7 +441,8 @@ static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
+ 	pdata->chip = *(const struct pixcir_i2c_chip_data *)match->data;
+ 
+ 	pdata->gpio_attb = of_get_named_gpio(np, "attb-gpio", 0);
+-	/* gpio_attb validity is checked in probe */
++	pdata->gpio_reset = of_get_named_gpio(np, "reset-gpio", 0);
++	/* gpio validity is checked in probe */
+ 
+ 	if (of_property_read_u32(np, "touchscreen-size-x", &pdata->x_max)) {
+ 		dev_err(dev, "Failed to get touchscreen-size-x property\n");
+@@ -442,8 +456,9 @@ static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
+ 	}
+ 	pdata->y_max -= 1;
+ 
+-	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
+-		pdata->x_max + 1, pdata->y_max + 1, pdata->gpio_attb);
++	dev_dbg(dev, "%s: x %d, y %d, ATTB gpio %d, RESET gpio %d\n", __func__,
++		pdata->x_max + 1, pdata->y_max + 1, pdata->gpio_attb,
++		pdata->gpio_reset);
+ 
+ 	return pdata;
+ }
+@@ -481,6 +496,10 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 		return -EINVAL;
+ 	}
+ 
++	/* RESET gpio is optional */
++	if (!gpio_is_valid(pdata->gpio_reset))
++		dev_info(dev, "Invalid gpio_reset in pdata\n");
++
+ 	if (!pdata->chip.max_fingers) {
+ 		dev_err(dev, "Invalid max_fingers in pdata\n");
+ 		return -EINVAL;
+@@ -530,6 +549,16 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 
+ 	input_set_drvdata(input, tsdata);
+ 
++	if (gpio_is_valid(pdata->gpio_reset)) {
++		error = devm_gpio_request_one(dev, pdata->gpio_reset,
++					      GPIOF_OUT_INIT_LOW,
++					      "pixcir_i2c_reset");
++		if (error) {
++			dev_err(dev, "Failed to request RESET gpio\n");
++			return error;
++		}
++	}
++
+ 	error = devm_gpio_request_one(dev, pdata->gpio_attb,
+ 				      GPIOF_DIR_IN, "pixcir_i2c_attb");
+ 	if (error) {
+@@ -545,6 +574,8 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
++	pixcir_reset(tsdata);
++
+ 	/* Always be in IDLE mode to save power, device supports auto wake */
+ 	error = pixcir_set_power_mode(tsdata, PIXCIR_POWER_IDLE);
+ 	if (error) {
+diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
+index 7bae83b..9e91fd3 100644
+--- a/include/linux/input/pixcir_ts.h
++++ b/include/linux/input/pixcir_ts.h
+@@ -58,6 +58,7 @@ struct pixcir_ts_platform_data {
+ 	int x_max;
+ 	int y_max;
+ 	int gpio_attb;		/* GPIO connected to ATTB line */
++	int gpio_reset;		/* GPIO connected to RESET line */
+ 	struct pixcir_i2c_chip_data chip;
+ };
+ 
+-- 
+2.1.0
 
->> +enum usb_mode {
->> +     USB_EMPTY,
->> +     GADGET_DEVICE,
->> +     OTG_HOST,
->> +};
->
-> This usb_mode is a little strange, what state you would like to
-> use?
-
-it is internal state machine, to distinguish otg gadget mode and host mode.
-There are two gpio, we use gpio_vbus interrupt as well as gpio_id
-status to distinguish gadget or host.
-
->> +static irqreturn_t hiusb_gpio_intr(int irq, void *data)
->> +{
->> +     struct hi6220_priv *priv = (struct hi6220_priv *)data;
->> +
->> +     /* add debounce time */
->> +     schedule_delayed_work(&priv->work, msecs_to_jiffies(100));
->> +     return IRQ_HANDLED;
->> +}
->> +
->> +static int mv_otg_set_peripheral(struct usb_otg *otg,
->
-> mv? You may want to use hi
-Yes, my bad.
-
-
->> +static void hi6220_phy_setup(struct hi6220_priv *priv)
->> +{
->> +     u32 val, mask;
->> +     int ret;
->> +
->> +     if (priv->reg == NULL)
->> +             return;
->> +
->> +     val = PERIPH_RSTDIS0_USBOTG_BUS | PERIPH_RSTDIS0_POR_PICOPHY |
->> +           PERIPH_RSTDIS0_USBOTG | PERIPH_RSTDIS0_USBOTG_32K;
->> +     mask = val;
->> +     ret = regmap_update_bits(priv->reg, SC_PERIPH_RSTDIS0, mask, val);
->> +     if (ret)
->> +             return;
->> +
->> +     ret = regmap_read(priv->reg, SC_PERIPH_CTRL5, &val);
->> +     val = PERIPH_CTRL5_USBOTG_RES_SEL | PERIPH_CTRL5_PICOPHY_ACAENB;
->> +     mask = val | PERIPH_CTRL5_PICOPHY_BC_MODE;
->> +     ret = regmap_update_bits(priv->reg, SC_PERIPH_CTRL5, mask, val);
->> +     if (ret)
->> +             return;
->> +
->> +     val =  PERIPH_CTRL4_PICO_VBUSVLDEXT | PERIPH_CTRL4_PICO_VBUSVLDEXTSEL |
->> +            PERIPH_CTRL4_OTG_PHY_SEL;
->> +     mask = val | PERIPH_CTRL4_PICO_SIDDQ | PERIPH_CTRL4_PICO_OGDISABLE;
->> +     ret = regmap_update_bits(priv->reg, SC_PERIPH_CTRL4, mask, val);
->> +     if (ret)
->> +             return;
->> +
->> +     ret = regmap_write(priv->reg, SC_PERIPH_CTRL8, EYE_PATTERN_PARA);
->> +     if (ret)
->> +             return;
->> +}
->> +
->> +static int hi6220_phy_probe(struct platform_device *pdev)
->> +{
->> +     struct hi6220_priv *priv;
->> +     struct usb_otg *otg;
->> +     struct device_node *np = pdev->dev.of_node;
->> +     int ret, irq;
->> +
->> +     priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->> +     if (!priv)
->> +             return -ENOMEM;
->> +
->> +     otg = devm_kzalloc(&pdev->dev, sizeof(*otg), GFP_KERNEL);
->> +     if (!otg)
->> +             return -ENOMEM;
->> +
->> +     priv->phy.dev = &pdev->dev;
->> +     priv->phy.otg = otg;
->> +     priv->phy.label = "hi6220";
->> +     platform_set_drvdata(pdev, priv);
->> +     otg->set_peripheral = mv_otg_set_peripheral;
->> +
->> +     priv->gpio_vbus_det = of_get_named_gpio(np, "hisilicon,gpio_vbus_det", 0);
->> +     if (priv->gpio_vbus_det == -EPROBE_DEFER)
->> +             return -EPROBE_DEFER;
->> +     if (!gpio_is_valid(priv->gpio_vbus_det)) {
->> +             dev_err(&pdev->dev, "invalid gpio %d\n", priv->gpio_vbus_det);
->> +             return -ENODEV;
->> +     }
->> +
->> +     priv->gpio_id_det = of_get_named_gpio(np, "hisilicon,gpio_id_det", 0);
->> +     if (priv->gpio_id_det == -EPROBE_DEFER)
->> +             return -EPROBE_DEFER;
->> +     if (!gpio_is_valid(priv->gpio_id_det)) {
->> +             dev_err(&pdev->dev, "invalid gpio %d\n", priv->gpio_id_det);
->> +             return -ENODEV;
->> +     }
->> +
->> +     priv->reg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
->> +                                     "hisilicon,peripheral-syscon");
->> +     if (IS_ERR(priv->reg))
->> +             priv->reg = NULL;
->
-> You may differentiate -ENODEV and other errors, for other errors, you
-> can show an error, and return directly.
-
-Here I want to set this property as optional, in case other platform
-do not need this property.
-So phy_setup also add protection if (priv->reg == NULL) return;
-
->
->> +
->> +     INIT_DELAYED_WORK(&priv->work, hi6220_detect_work);
->> +
->> +     ret = devm_gpio_request_one(&pdev->dev, priv->gpio_vbus_det,
->> +                                 GPIOF_IN, "gpio_vbus_det");
->> +     if (ret < 0) {
->> +             dev_err(&pdev->dev, "gpio request failed for gpio_vbus_det\n");
->> +             return ret;
->> +     }
->> +
->> +     ret = devm_gpio_request_one(&pdev->dev, priv->gpio_id_det,
->> +                                 GPIOF_IN, "gpio_id_det");
->> +     if (ret < 0) {
->> +             dev_err(&pdev->dev, "gpio request failed for gpio_id_det\n");
->> +             return ret;
->> +     }
->> +
->> +     priv->vcc = devm_regulator_get(&pdev->dev, "vcc");
->> +     if (!IS_ERR(priv->vcc)) {
->> +             ret = regulator_enable(priv->vcc);
->> +             if (ret) {
->> +                     dev_err(&pdev->dev, "Failed to enable regulator\n");
->> +                     return -ENODEV;
->> +             }
->> +     }
->> +
->> +     priv->clk = devm_clk_get(&pdev->dev, NULL);
->> +     if (IS_ERR(priv->clk)) {
->> +             regulator_disable(priv->vcc);
->> +             return PTR_ERR(priv->clk);
->> +     }
->> +     clk_prepare_enable(priv->clk);
->> +
->> +     irq = gpio_to_irq(priv->gpio_vbus_det);
->> +     ret = devm_request_irq(&pdev->dev, gpio_to_irq(priv->gpio_vbus_det),
->> +                            hiusb_gpio_intr, IRQF_NO_SUSPEND |
->> +                            IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
->> +                            "vbus_gpio_intr", priv);
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "request gpio irq failed.\n");
->> +             goto err_irq;
->> +     }
->
-> You may put the devm_request_irq to the last, in case, the unexpected
-> interrupt occurs during the setup.
-It does not matter, since otg->gadget = NULL.
-In fact we manually call schedule_delayed_work to get the gpio status
-for setting internal state machine
-
->
->> +
->> +     hi6220_phy_setup(priv);
->> +     ret = usb_add_phy(&priv->phy, USB_PHY_TYPE_USB2);
->
-> Use usb_add_phy_dev please, see the doc for usb_add_phy.
-OK, got it.
-
-Thanks Peter for the review.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
