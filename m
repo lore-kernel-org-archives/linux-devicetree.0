@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH 06/10] clk: mvebu: add Marvell Armada 39x driver
-Date: Fri,  6 Feb 2015 16:57:52 +0100
-Message-ID: <1423238276-9206-7-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 07/10] pinctrl: mvebu: add pinctrl driver for Marvell Armada 39x
+Date: Fri,  6 Feb 2015 16:57:53 +0100
+Message-ID: <1423238276-9206-8-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -10,211 +10,485 @@ To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian
 Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds a new clock driver for the Marvell Armada 39x family
-of processors. This driver is fairly similar to the ones already used
-on other Marvell EBU processors, with the following main differences:
-
- * Different set of ratios
- * Different set of core clocks
- * Configurable reference clock in frequency
+This commit adds a new pinctrl driver for the Marvell Armada 39x
+family of processors, which hooks into the existing infrastructure to
+support pin-muxing on Marvell EBU processors. Two variants of the
+Armada 39x are supported: 88F6920 (Armada 390) and 88F6928 (Armada
+398), which have a few differences in the available functions for
+certain pins.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- drivers/clk/mvebu/Kconfig      |   4 ++
- drivers/clk/mvebu/Makefile     |   1 +
- drivers/clk/mvebu/armada-39x.c | 156 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 161 insertions(+)
- create mode 100644 drivers/clk/mvebu/armada-39x.c
+ drivers/pinctrl/mvebu/Kconfig              |   4 +
+ drivers/pinctrl/mvebu/Makefile             |   1 +
+ drivers/pinctrl/mvebu/pinctrl-armada-39x.c | 432 +++++++++++++++++++++++++++++
+ 3 files changed, 437 insertions(+)
+ create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-39x.c
 
-diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
-index 3b34dba..2769625 100644
---- a/drivers/clk/mvebu/Kconfig
-+++ b/drivers/clk/mvebu/Kconfig
-@@ -21,6 +21,10 @@ config ARMADA_38X_CLK
+diff --git a/drivers/pinctrl/mvebu/Kconfig b/drivers/pinctrl/mvebu/Kconfig
+index d6dd835..1706024 100644
+--- a/drivers/pinctrl/mvebu/Kconfig
++++ b/drivers/pinctrl/mvebu/Kconfig
+@@ -26,6 +26,10 @@ config PINCTRL_ARMADA_38X
  	bool
- 	select MVEBU_CLK_COMMON
+ 	select PINCTRL_MVEBU
  
-+config ARMADA_39X_CLK
++config PINCTRL_ARMADA_39X
 +	bool
-+	select MVEBU_CLK_COMMON
++	select PINCTRL_MVEBU
 +
- config ARMADA_XP_CLK
+ config PINCTRL_ARMADA_XP
  	bool
- 	select MVEBU_CLK_COMMON
-diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
-index a9a56fc..645ac7e 100644
---- a/drivers/clk/mvebu/Makefile
-+++ b/drivers/clk/mvebu/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_MVEBU_CLK_COREDIV)	+= clk-corediv.o
- obj-$(CONFIG_ARMADA_370_CLK)	+= armada-370.o
- obj-$(CONFIG_ARMADA_375_CLK)	+= armada-375.o
- obj-$(CONFIG_ARMADA_38X_CLK)	+= armada-38x.o
-+obj-$(CONFIG_ARMADA_39X_CLK)	+= armada-39x.o
- obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o
- obj-$(CONFIG_DOVE_CLK)		+= dove.o
- obj-$(CONFIG_KIRKWOOD_CLK)	+= kirkwood.o
-diff --git a/drivers/clk/mvebu/armada-39x.c b/drivers/clk/mvebu/armada-39x.c
+ 	select PINCTRL_MVEBU
+diff --git a/drivers/pinctrl/mvebu/Makefile b/drivers/pinctrl/mvebu/Makefile
+index a0818e9..554d8af 100644
+--- a/drivers/pinctrl/mvebu/Makefile
++++ b/drivers/pinctrl/mvebu/Makefile
+@@ -4,5 +4,6 @@ obj-$(CONFIG_PINCTRL_KIRKWOOD)	+= pinctrl-kirkwood.o
+ obj-$(CONFIG_PINCTRL_ARMADA_370) += pinctrl-armada-370.o
+ obj-$(CONFIG_PINCTRL_ARMADA_375) += pinctrl-armada-375.o
+ obj-$(CONFIG_PINCTRL_ARMADA_38X) += pinctrl-armada-38x.o
++obj-$(CONFIG_PINCTRL_ARMADA_39X) += pinctrl-armada-39x.o
+ obj-$(CONFIG_PINCTRL_ARMADA_XP)  += pinctrl-armada-xp.o
+ obj-$(CONFIG_PINCTRL_ORION)  += pinctrl-orion.o
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-39x.c b/drivers/pinctrl/mvebu/pinctrl-armada-39x.c
 new file mode 100644
-index 0000000..efb974d
+index 0000000..5963411
 --- /dev/null
-+++ b/drivers/clk/mvebu/armada-39x.c
-@@ -0,0 +1,156 @@
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-39x.c
+@@ -0,0 +1,432 @@
 +/*
-+ * Marvell Armada 39x SoC clocks
++ * Marvell Armada 39x pinctrl driver based on mvebu pinctrl core
 + *
 + * Copyright (C) 2015 Marvell
 + *
-+ * Gregory CLEMENT <gregory.clement@free-electrons.com>
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ * Andrew Lunn <andrew@lunn.ch>
 + * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 + *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + */
 +
-+#include <linux/kernel.h>
-+#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/init.h>
 +#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
 +#include <linux/of.h>
-+#include "common.h"
++#include <linux/of_device.h>
++#include <linux/pinctrl/pinctrl.h>
 +
-+/*
-+ * SARL[14:10] : Ratios between CPU, NBCLK, HCLK and DCLK.
-+ *
-+ * SARL[15]    : TCLK frequency
-+ *		 0 = 250 MHz
-+ *		 1 = 200 MHz
-+ *
-+ * SARH[0]     : Reference clock frequency
-+ *               0 = 25 Mhz
-+ *               1 = 40 Mhz
-+ */
++#include "pinctrl-mvebu.h"
 +
-+#define SARL 					0
-+#define  SARL_A390_TCLK_FREQ_OPT		15
-+#define  SARL_A390_TCLK_FREQ_OPT_MASK		0x1
-+#define  SARL_A390_CPU_DDR_L2_FREQ_OPT		10
-+#define  SARL_A390_CPU_DDR_L2_FREQ_OPT_MASK	0x1F
-+#define SARH					4
-+#define  SARH_A390_REFCLK_FREQ			BIT(0)
++static void __iomem *mpp_base;
 +
-+static const u32 armada_39x_tclk_frequencies[] __initconst = {
-+	250000000,
-+	200000000,
++static int armada_39x_mpp_ctrl_get(unsigned pid, unsigned long *config)
++{
++	return default_mpp_ctrl_get(mpp_base, pid, config);
++}
++
++static int armada_39x_mpp_ctrl_set(unsigned pid, unsigned long config)
++{
++	return default_mpp_ctrl_set(mpp_base, pid, config);
++}
++
++enum {
++	V_88F6920 = BIT(0),
++	V_88F6928 = BIT(1),
++	V_88F6920_PLUS = (V_88F6920 | V_88F6928),
 +};
 +
-+static u32 __init armada_39x_get_tclk_freq(void __iomem *sar)
-+{
-+	u8 tclk_freq_select;
-+
-+	tclk_freq_select = ((readl(sar + SARL) >> SARL_A390_TCLK_FREQ_OPT) &
-+			    SARL_A390_TCLK_FREQ_OPT_MASK);
-+	return armada_39x_tclk_frequencies[tclk_freq_select];
-+}
-+
-+static const u32 armada_39x_cpu_frequencies[] __initconst = {
-+	[0x0] = 666 * 1000 * 1000,
-+	[0x2] = 800 * 1000 * 1000,
-+	[0x3] = 800 * 1000 * 1000,
-+	[0x4] = 1066 * 1000 * 1000,
-+	[0x5] = 1066 * 1000 * 1000,
-+	[0x6] = 1200 * 1000 * 1000,
-+	[0x8] = 1332 * 1000 * 1000,
-+	[0xB] = 1600 * 1000 * 1000,
-+	[0xC] = 1600 * 1000 * 1000,
-+	[0x12] = 1800 * 1000 * 1000,
-+	[0x1E] = 1800 * 1000 * 1000,
++static struct mvebu_mpp_mode armada_39x_mpp_modes[] = {
++	MPP_MODE(0,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "ua0",     "rxd",      V_88F6920_PLUS)),
++	MPP_MODE(1,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "ua0",     "txd",      V_88F6920_PLUS)),
++	MPP_MODE(2,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "i2c0",    "sck",      V_88F6920_PLUS)),
++	MPP_MODE(3,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "i2c0",    "sda",      V_88F6920_PLUS)),
++	MPP_MODE(4,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "ua1",     "txd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua0",     "rts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "smi",     "mdc",      V_88F6920_PLUS)),
++	MPP_MODE(5,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "ua1",     "rxd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua0",     "cts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "smi",     "mdio",     V_88F6920_PLUS)),
++	MPP_MODE(6,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "cs3",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "xsmi",    "mdio",     V_88F6920_PLUS)),
++	MPP_MODE(7,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad9",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "xsmi",    "mdc",      V_88F6920_PLUS)),
++	MPP_MODE(8,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad10",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ptp",     "trig",     V_88F6920_PLUS)),
++	MPP_MODE(9,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad11",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ptp",     "clk",      V_88F6920_PLUS)),
++	MPP_MODE(10,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad12",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ptp",     "event",    V_88F6920_PLUS)),
++	MPP_MODE(11,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad13",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "led",     "clk",      V_88F6920_PLUS)),
++	MPP_MODE(12,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "pcie0",   "rstout",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad14",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "led",     "stb",      V_88F6920_PLUS)),
++	MPP_MODE(13,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad15",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "led",     "data",     V_88F6920_PLUS)),
++	MPP_MODE(14,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "m",       "vtt",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "wen1",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ua1",     "txd",      V_88F6920_PLUS)),
++	MPP_MODE(15,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "pcie0",   "rstout",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi0",    "mosi",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "i2c1",    "sck",      V_88F6920_PLUS)),
++	MPP_MODE(16,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "m",       "decc",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi0",    "miso",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "i2c1",    "sda",      V_88F6920_PLUS)),
++	MPP_MODE(17,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua1",     "rxd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi0",    "sck",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "smi",     "mdio",     V_88F6920_PLUS)),
++	MPP_MODE(18,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua1",     "txd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi0",    "cs0",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "i2c2",    "sck",      V_88F6920_PLUS)),
++	MPP_MODE(19,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sata1",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(5, "ua0",     "cts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",     "rxd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "i2c2",    "sda",      V_88F6920_PLUS)),
++	MPP_MODE(20,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sata0",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(5, "ua0",     "rts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",     "txd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "smi",     "mdc",      V_88F6920_PLUS)),
++	MPP_MODE(21,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "spi0",    "cs1",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "sata0",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(4, "sd",      "cmd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "bootcs",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "rxd0",     V_88F6920_PLUS)),
++	MPP_MODE(22,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "spi0",    "mosi",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad0",      V_88F6920_PLUS)),
++	MPP_MODE(23,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "spi0",    "sck",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad2",      V_88F6920_PLUS)),
++	MPP_MODE(24,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "spi0",    "miso",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "ua0",     "cts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua1",     "rxd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sd",      "d4",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "readyn",   V_88F6920_PLUS)),
++	MPP_MODE(25,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "spi0",    "cs0",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "ua0",     "rts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua1",     "txd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sd",      "d5",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "cs0",      V_88F6920_PLUS)),
++	MPP_MODE(26,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "spi0",    "cs2",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "i2c1",    "sck",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sd",      "d6",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "cs1",      V_88F6920_PLUS)),
++	MPP_MODE(27,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "spi0",    "cs3",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "i2c1",    "sda",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sd",      "d7",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "cs2",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "txclkout", V_88F6920_PLUS)),
++	MPP_MODE(28,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sd",      "clk",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad5",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "txd0",     V_88F6920_PLUS)),
++	MPP_MODE(29,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ale0",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "txd1",     V_88F6920_PLUS)),
++	MPP_MODE(30,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "oen",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "txd2",     V_88F6920_PLUS)),
++	MPP_MODE(31,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ale1",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "txd3",     V_88F6920_PLUS)),
++	MPP_MODE(32,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "wen0",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "txctl",    V_88F6920_PLUS)),
++	MPP_MODE(33,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "m",       "decc",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad3",      V_88F6920_PLUS)),
++	MPP_MODE(34,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad1",      V_88F6920_PLUS)),
++	MPP_MODE(35,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "ref",     "clk",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "a1",       V_88F6920_PLUS)),
++	MPP_MODE(36,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "a0",       V_88F6920_PLUS)),
++	MPP_MODE(37,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sd",      "d3",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad8",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "rxclk",    V_88F6920_PLUS)),
++	MPP_MODE(38,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ref",     "clk",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sd",      "d0",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad4",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "rxd1",     V_88F6920_PLUS)),
++	MPP_MODE(39,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "i2c1",    "sck",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua0",     "cts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sd",      "d1",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "a2",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "rxd2",     V_88F6920_PLUS)),
++	MPP_MODE(40,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "i2c1",    "sda",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua0",     "rts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "sd",      "d2",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad6",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "rxd3",     V_88F6920_PLUS)),
++	MPP_MODE(41,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "ua1",     "rxd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua0",     "cts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi1",    "cs3",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "burstn",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "nd",      "rbn0",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(8, "ge",      "rxctl",    V_88F6920_PLUS)),
++	MPP_MODE(42,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "ua1",     "txd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "ua0",     "rts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "ad7",      V_88F6920_PLUS)),
++	MPP_MODE(43,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "pcie0",   "clkreq",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "m",       "vtt",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "m",       "decc",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi1",    "cs2",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "dev",     "clkout",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "nd",      "rbn1",     V_88F6920_PLUS)),
++	MPP_MODE(44,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "sata0",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(2, "sata1",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(7, "led",     "clk",      V_88F6920_PLUS)),
++	MPP_MODE(45,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "ref",     "clk",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "pcie0",   "rstout",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",     "rxd",      V_88F6920_PLUS)),
++	MPP_MODE(46,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "ref",     "clk",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "pcie0",   "rstout",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",     "txd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "led",     "stb",      V_88F6920_PLUS)),
++	MPP_MODE(47,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "sata0",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(2, "sata1",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(7, "led",     "data",     V_88F6920_PLUS)),
++	MPP_MODE(48,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "sata0",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(2, "m",       "vtt",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "tdm",     "pclk",     V_88F6928),
++		 MPP_VAR_FUNCTION(4, "audio",   "mclk",     V_88F6928),
++		 MPP_VAR_FUNCTION(5, "sd",      "d4",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "pcie0",   "clkreq",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ua1",     "txd",      V_88F6920_PLUS)),
++	MPP_MODE(49,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "tdm",     "fsync",    V_88F6928),
++		 MPP_VAR_FUNCTION(4, "audio",   "lrclk",    V_88F6928),
++		 MPP_VAR_FUNCTION(5, "sd",      "d5",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ua2",     "rxd",      V_88F6920_PLUS)),
++	MPP_MODE(50,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "pcie0",   "rstout",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "tdm",     "drx",      V_88F6928),
++		 MPP_VAR_FUNCTION(4, "audio",   "extclk",   V_88F6928),
++		 MPP_VAR_FUNCTION(5, "sd",      "cmd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ua2",     "rxd",      V_88F6920_PLUS)),
++	MPP_MODE(51,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "tdm",     "dtx",      V_88F6928),
++		 MPP_VAR_FUNCTION(4, "audio",   "sdo",      V_88F6928),
++		 MPP_VAR_FUNCTION(5, "m",       "decc",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ua2",     "txd",      V_88F6920_PLUS)),
++	MPP_MODE(52,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "pcie0",   "rstout",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "tdm",     "intn",     V_88F6928),
++		 MPP_VAR_FUNCTION(4, "audio",   "sdi",      V_88F6928),
++		 MPP_VAR_FUNCTION(5, "sd",      "d6",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "i2c3",    "sck",      V_88F6920_PLUS)),
++	MPP_MODE(53,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "sata1",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(2, "sata0",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(3, "tdm",     "rstn",     V_88F6928),
++		 MPP_VAR_FUNCTION(4, "audio",   "bclk",     V_88F6928),
++		 MPP_VAR_FUNCTION(5, "sd",      "d7",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "i2c3",    "sda",      V_88F6920_PLUS)),
++	MPP_MODE(54,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "sata0",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(2, "sata1",   "present",  V_88F6928),
++		 MPP_VAR_FUNCTION(3, "pcie0",   "rstout",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "sd",      "d3",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ua3",     "txd",      V_88F6920_PLUS)),
++	MPP_MODE(55,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "ua1",     "cts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi1",    "cs1",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "sd",      "d0",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",     "rxd",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(7, "ua3",     "rxd",      V_88F6920_PLUS)),
++	MPP_MODE(56,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "ua1",     "rts",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "m",       "decc",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi1",    "mosi",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",     "txd",      V_88F6920_PLUS)),
++	MPP_MODE(57,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi1",    "sck",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "sd",      "clk",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",     "txd",      V_88F6920_PLUS)),
++	MPP_MODE(58,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "i2c1",    "sck",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(3, "pcie2",   "clkreq",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi1",    "miso",     V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "sd",      "d1",       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",     "rxd",      V_88F6920_PLUS)),
++	MPP_MODE(59,
++		 MPP_VAR_FUNCTION(0, "gpio",    NULL,       V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(1, "pcie0",   "rstout",   V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(2, "i2c1",    "sda",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(4, "spi1",    "cs0",      V_88F6920_PLUS),
++		 MPP_VAR_FUNCTION(5, "sd",      "d2",       V_88F6920_PLUS)),
 +};
 +
-+static u32 __init armada_39x_get_cpu_freq(void __iomem *sar)
-+{
-+	u8 cpu_freq_select;
++static struct mvebu_pinctrl_soc_info armada_39x_pinctrl_info;
 +
-+	cpu_freq_select = ((readl(sar + SARL) >> SARL_A390_CPU_DDR_L2_FREQ_OPT) &
-+			   SARL_A390_CPU_DDR_L2_FREQ_OPT_MASK);
-+	if (cpu_freq_select >= ARRAY_SIZE(armada_39x_cpu_frequencies)) {
-+		pr_err("Selected CPU frequency (%d) unsupported\n",
-+			cpu_freq_select);
-+		return 0;
-+	}
-+
-+	return armada_39x_cpu_frequencies[cpu_freq_select];
-+}
-+
-+enum { A390_CPU_TO_NBCLK, A390_CPU_TO_HCLK, A390_CPU_TO_DCLK };
-+
-+static const struct coreclk_ratio armada_39x_coreclk_ratios[] __initconst = {
-+	{ .id = A390_CPU_TO_NBCLK, .name = "nbclk" },
-+	{ .id = A390_CPU_TO_HCLK, .name = "hclk" },
-+	{ .id = A390_CPU_TO_DCLK, .name = "dclk" },
++static struct of_device_id armada_39x_pinctrl_of_match[] = {
++	{
++		.compatible = "marvell,mv88f6920-pinctrl",
++		.data       = (void *) V_88F6920,
++	},
++	{
++		.compatible = "marvell,mv88f6928-pinctrl",
++		.data       = (void *) V_88F6928,
++	},
++	{ },
 +};
 +
-+static void __init armada_39x_get_clk_ratio(
-+	void __iomem *sar, int id, int *mult, int *div)
-+{
-+	switch (id) {
-+	case A390_CPU_TO_NBCLK:
-+		*mult = 1;
-+		*div = 2;
-+		break;
-+	case A390_CPU_TO_HCLK:
-+		*mult = 1;
-+		*div = 4;
-+		break;
-+	case A390_CPU_TO_DCLK:
-+		*mult = 1;
-+		*div = 2;
-+		break;
-+	}
-+}
-+
-+static u32 __init armada_39x_refclk_ratio(void __iomem *sar)
-+{
-+	if (readl(sar + SARH) & SARH_A390_REFCLK_FREQ)
-+		return 40 * 1000 * 1000;
-+	else
-+		return 25 * 1000 * 1000;
-+}
-+
-+static const struct coreclk_soc_desc armada_39x_coreclks = {
-+	.get_tclk_freq = armada_39x_get_tclk_freq,
-+	.get_cpu_freq = armada_39x_get_cpu_freq,
-+	.get_clk_ratio = armada_39x_get_clk_ratio,
-+	.get_refclk_freq = armada_39x_refclk_ratio,
-+	.ratios = armada_39x_coreclk_ratios,
-+	.num_ratios = ARRAY_SIZE(armada_39x_coreclk_ratios),
++static struct mvebu_mpp_ctrl armada_39x_mpp_controls[] = {
++	MPP_FUNC_CTRL(0, 59, NULL, armada_39x_mpp_ctrl),
 +};
 +
-+static void __init armada_39x_coreclk_init(struct device_node *np)
-+{
-+	mvebu_coreclk_setup(np, &armada_39x_coreclks);
-+}
-+CLK_OF_DECLARE(armada_39x_core_clk, "marvell,armada-390-core-clock",
-+	       armada_39x_coreclk_init);
-+
-+/*
-+ * Clock Gating Control
-+ */
-+static const struct clk_gating_soc_desc armada_39x_gating_desc[] __initconst = {
-+	{ "pex1", NULL, 5 },
-+	{ "pex2", NULL, 6 },
-+	{ "pex3", NULL, 7 },
-+	{ "pex0", NULL, 8 },
-+	{ "usb3h0", NULL, 9 },
-+	{ "sdio", NULL, 17 },
-+	{ "xor0", NULL, 22 },
-+	{ "xor1", NULL, 28 },
-+	{ }
++static struct pinctrl_gpio_range armada_39x_mpp_gpio_ranges[] = {
++	MPP_GPIO_RANGE(0,   0,  0, 32),
++	MPP_GPIO_RANGE(1,  32, 32, 27),
 +};
 +
-+static void __init armada_39x_clk_gating_init(struct device_node *np)
++static int armada_39x_pinctrl_probe(struct platform_device *pdev)
 +{
-+	mvebu_clk_gating_setup(np, armada_39x_gating_desc);
++	struct mvebu_pinctrl_soc_info *soc = &armada_39x_pinctrl_info;
++	const struct of_device_id *match =
++		of_match_device(armada_39x_pinctrl_of_match, &pdev->dev);
++	struct resource *res;
++
++	if (!match)
++		return -ENODEV;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	mpp_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(mpp_base))
++		return PTR_ERR(mpp_base);
++
++	soc->variant = (unsigned) match->data & 0xff;
++	soc->controls = armada_39x_mpp_controls;
++	soc->ncontrols = ARRAY_SIZE(armada_39x_mpp_controls);
++	soc->gpioranges = armada_39x_mpp_gpio_ranges;
++	soc->ngpioranges = ARRAY_SIZE(armada_39x_mpp_gpio_ranges);
++	soc->modes = armada_39x_mpp_modes;
++	soc->nmodes = armada_39x_mpp_controls[0].npins;
++
++	pdev->dev.platform_data = soc;
++
++	return mvebu_pinctrl_probe(pdev);
 +}
-+CLK_OF_DECLARE(armada_39x_clk_gating, "marvell,armada-390-gating-clock",
-+	       armada_39x_clk_gating_init);
++
++static int armada_39x_pinctrl_remove(struct platform_device *pdev)
++{
++	return mvebu_pinctrl_remove(pdev);
++}
++
++static struct platform_driver armada_39x_pinctrl_driver = {
++	.driver = {
++		.name = "armada-39x-pinctrl",
++		.of_match_table = of_match_ptr(armada_39x_pinctrl_of_match),
++	},
++	.probe = armada_39x_pinctrl_probe,
++	.remove = armada_39x_pinctrl_remove,
++};
++
++module_platform_driver(armada_39x_pinctrl_driver);
++
++MODULE_AUTHOR("Thomas Petazzoni <thomas.petazzoni@free-electrons.com>");
++MODULE_DESCRIPTION("Marvell Armada 39x pinctrl driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.1.0
 
