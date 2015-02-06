@@ -1,86 +1,47 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v5 2/3] irqchip: vf610-mscm: dt-bindings: add MSCM bindings
-Date: Fri,  6 Feb 2015 20:51:25 +0100
-Message-ID: <1423252286-17814-3-git-send-email-stefan@agner.ch>
-References: <1423252286-17814-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423252286-17814-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com
-Cc: marc.zyngier@arm.com, u.kleine-koenig@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan@agner.ch
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 08/10] ARM: mvebu: add core support for Armada 39x
+Date: Fri, 06 Feb 2015 11:57:58 -0800
+Message-ID: <54D51CC6.2070908@codeaurora.org>
+References: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com> <1423238276-9206-9-git-send-email-thomas.petazzoni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1423238276-9206-9-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for CPU configuration and interrupt router
-submodule of the Miscellaneous System Control Module. The MSCM is
-used in all variants of Freescale Vybrid SoC's.
+On 02/06/15 07:57, Thomas Petazzoni wrote:
+> diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
+> index 89a139e..d88438f 100644
+> --- a/arch/arm/mach-mvebu/board-v7.c
+> +++ b/arch/arm/mach-mvebu/board-v7.c
+> @@ -232,3 +232,17 @@ DT_MACHINE_START(ARMADA_38X_DT, "Marvell Armada 380/385 (Device Tree)")
+>  	.restart	= mvebu_restart,
+>  	.dt_compat	= armada_38x_dt_compat,
+>  MACHINE_END
+> +
+> +static const char * const armada_39x_dt_compat[] = {
 
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- .../arm/freescale/fsl,vf610-mscm-cpucfg.txt        | 14 +++++++++
- .../bindings/arm/freescale/fsl,vf610-mscm-ir.txt   | 33 ++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
+ __initconst?
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
-new file mode 100644
-index 0000000..44aa3c4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
-@@ -0,0 +1,14 @@
-+Freescale Vybrid Miscellaneous System Control - CPU Configuration
-+
-+The MSCM IP contains multiple sub modules, this binding describes the first
-+block of registers which contains CPU configuration information.
-+
-+Required properties:
-+- compatible:	"fsl,vf610-mscm-cpucfg", "syscon"
-+- reg:		the register range of the MSCM CPU configuration registers
-+
-+Example:
-+	mscm_cpucfg: cpucfg@40001000 {
-+		compatible = "fsl,vf610-mscm-cpucfg", "syscon";
-+		reg = <0x40001000 0x800>;
-+	}
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
-new file mode 100644
-index 0000000..669808b2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
-@@ -0,0 +1,33 @@
-+Freescale Vybrid Miscellaneous System Control - Interrupt Router
-+
-+The MSCM IP contains multiple sub modules, this binding describes the second
-+block of registers which control the interrupt router. The interrupt router
-+allows to configure the recipient of each peripheral interrupt. Furthermore
-+it controls the directed processor interrupts. The module is available in all
-+Vybrid SoC's but is only really useful in dual core configurations (VF6xx
-+which comes with a Cortex-A5/Cortex-M4 combination).
-+
-+Required properties:
-+- compatible:		"fsl,vf610-mscm-ir"
-+- reg:			the register range of the MSCM Interrupt Router
-+- fsl,cpucfg:		The handle to the MSCM CPU configuration node, required
-+			to get the current CPU ID
-+- interrupt-controller:	Identifies the node as an interrupt controller
-+- #interrupt-cells:	Two cells, interrupt number and cells.
-+			The hardware interrupt number according to interrupt
-+			assignment of the interrupt router is required.
-+			Flags get passed only when using GIC as parent. Flags
-+			encoding as documented by the GIC bindings.
-+- interrupt-parent:	Should be the phandle for the interrupt controller of
-+			the CPU the device tree is intended to be used on. This
-+			is either the node of the GIC or NVIC controller.
-+
-+Example:
-+	mscm_ir: interrupt-controller@40001800 {
-+		compatible = "fsl,vf610-mscm-ir";
-+		reg = <0x40001800 0x400>;
-+		fsl,cpucfg = <&mscm_cpucfg>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&intc>;
-+	}
+> +	"marvell,armada390",
+> +	"marvell,armada398",
+> +	NULL,
+> +};
+> +
+> +DT_MACHINE_START(ARMADA_39X_DT, "Marvell Armada 39x (Device Tree)")
+> +	.l2c_aux_val	= 0,
+> +	.l2c_aux_mask	= ~0,
+> +	.init_irq       = mvebu_init_irq,
+> +	.restart	= mvebu_restart,
+> +	.dt_compat	= armada_39x_dt_compat,
+> +MACHINE_END
+>
+
 -- 
-2.3.0
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
