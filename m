@@ -1,105 +1,35 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] irqchip: vf610-mscm-ir: add support for MSCM
- interrupt router
-Date: Sat, 07 Feb 2015 11:56:57 +0100
-Message-ID: <1423306617.2246.23.camel@x220>
-References: <1423252286-17814-1-git-send-email-stefan@agner.ch>
-	 <1423252286-17814-2-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/4] drm/exynos: use syscon framework to enable mipi phy
+Date: Sat, 07 Feb 2015 20:53:04 +0900
+Message-ID: <1423309988-11793-1-git-send-email-inki.dae@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423252286-17814-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-02-06 at 20:51 +0100, Stefan Agner wrote:
-> This adds support for Vybrid's interrupt router. On VF6xx models,
-> almost all peripherals can be used by either of the two CPU's,
-> the Cortex-A5 or the Cortex-M4. The interrupt router routes the
-> peripheral interrupts to the configured CPU.
-> 
-> This IRQ chip driver configures the interrupt router to route
-> the requested interrupt to the CPU the kernel is running on.
-> The driver makes use of the irqdomain hierarchy support. The
-> parent is given by the device tree. This should be one of the
-> two possible parents either ARM GIC or the ARM NVIC interrupt
-> controller. The latter is currently not yet supported.
-> 
-> Note that there is no resource control mechnism implemented to
-> avoid concurrent access of the same peripheral. The user needs
-> to make sure to use device trees which assign the peripherals
-> orthogonally. However, this driver warns the user in case the
-> interrupt is already configured for the other CPU. This provides
-> a poor man's resource controller.
-> 
-> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
->  arch/arm/mach-imx/Kconfig           |   1 +
->  drivers/irqchip/Kconfig             |  11 ++
->  drivers/irqchip/Makefile            |   1 +
->  drivers/irqchip/irq-vf610-mscm-ir.c | 206 ++++++++++++++++++++++++++++++++++++
->  4 files changed, 219 insertions(+)
->  create mode 100644 drivers/irqchip/irq-vf610-mscm-ir.c
-> 
-> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-> index e8627e0..bf91a59 100644
-> --- a/arch/arm/mach-imx/Kconfig
-> +++ b/arch/arm/mach-imx/Kconfig
-> @@ -631,6 +631,7 @@ config SOC_IMX6SX
->  
->  config SOC_VF610
->  	bool "Vybrid Family VF610 support"
-> +	select VF610_MSCM_IR
->  	select ARM_GIC
->  	select PINCTRL_VF610
->  	select PL310_ERRATA_769419 if CACHE_L2X0
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index cc79d2a..9c13d81 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -136,6 +136,17 @@ config IRQ_CROSSBAR
->  	  a free irq and configures the IP. Thus the peripheral interrupts are
->  	  routed to one of the free irqchip interrupt lines.
->  
-> +config VF610_MSCM_IR
-> +	bool
-> +	help
-> +	  Support for MSCM interrupt router available on Vybrid SoC's. The
-> +	  interrupt router is between the CPU's interrupt controller and the
-> +	  peripheral. The router allows to route the peripheral interrupts to
-> +	  one of the two available CPU's on Vybrid VF6xx SoC's (Cortex-A5 or
-> +	  Cortex-M4). The router will be configured transparently on a IRQ
-> +	  request.
-> +	select IRQ_DOMAIN_HIERARCHY
-> +
+This patch series makes syscon framework to be used
+instead of phy framework.
 
-As far as I can tell this new Kconfig symbol operates in lockstep with
-SOC_VF610: if SOC_VF610 is set, this will also be set, and if SOC_VF610
-is not set, this won't be set either. Is a separate symbol needed?
+For this, I adds syscon support to mipi dsi driver and
+the relevant device tree properties to each dtsi files,
+Exynos4, Exynos3250 and Exynos5420.
 
-If you decide to keep it, I have two minor nits.
+Inki Dae (4):
+  drm/exynos: dsim: fix to control mipi phy register
+  ARM: dts: exynos4: use pmureg device node to enable mipi phy
+  ARM: dts: exynos3250: use pmureg device node to enable mipi phy
+  ARM: dts: exynos5420: use pmureg device node to enable mipi phy
 
-1) Make the help text the last option of the Kconfig entry. It's legal
-to put Kconfig options in any order that you'd like. But with very few
-exceptions, the help text is always the last. Please use that pattern.
+ .../devicetree/bindings/video/exynos_dsim.txt      |    9 ++--
+ arch/arm/boot/dts/exynos3250.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos4.dtsi                     |    3 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |    3 +-
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            |   54 ++++++++++++++++++--
+ 5 files changed, 59 insertions(+), 13 deletions(-)
 
-2) This Kconfig entry has no prompt, so I'm not aware of a way that
-people ever can read this help text when running "make *configure". So
-this help text is basically a comment. You might as well format it as a
-comment then.
-
->  config KEYSTONE_IRQ
->  	tristate "Keystone 2 IRQ controller IP"
->  	depends on ARCH_KEYSTONE
-
-Thanks,
-
-
-Paul Bolle
+-- 
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
