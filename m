@@ -1,181 +1,42 @@
-From: yakir <ykk@rock-chips.com>
-Subject: Re: [PATCH v3 04/15] drm: bridge/dw_hdmi: add indentification registers
- parse and record
-Date: Sat, 07 Feb 2015 11:33:27 +0800
-Message-ID: <54D58787.8040400@rock-chips.com>
-References: <1422975418-13302-1-git-send-email-ykk@rock-chips.com> <1422976283-30071-1-git-send-email-ykk@rock-chips.com> <CAGS+omCiGh0-4BbPjPS+KqMW9-OpJ8Je7o37Web06w1CR7RPgw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omCiGh0-4BbPjPS+KqMW9-OpJ8Je7o37Web06w1CR7RPgw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: David Airlie <airlied@linux.ie>, Russell King <rmk+kernel@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, Fabio Estevam <fabio.estevam@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Rob Clark <robdclark@gmail.com>, Mark Yao <mark.yao@rock-chips.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sean Cross <xobs@kosagi.com>, Jyri Sarha <jsarha@ti.com>, Ben Zhang <benzh@chromium.org>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list:OPEN FIRMW
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/4] add usb support for hi6220
+Date: Sat,  7 Feb 2015 12:56:02 +0800
+Message-ID: <1423284966-3485-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+v2:
+address comments from Sergei and Peter
+add hi6220_phy_setup(false) code
 
-On 02/05/2015 11:46 PM, Daniel Kurtz wrote:
-> On Tue, Feb 3, 2015 at 11:11 PM, Yakir Yang <ykk@rock-chips.com> wrote:
->> By parsing the indentification registers we can know what functions
->> are present on the hdmi ip.
->>
->> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
->> ---
->> Changes in v3:
->> - Add ID registers parse and record
->>
->> Changes in v2: None
->>
->>   drivers/gpu/drm/bridge/dw_hdmi.c | 59 ++++++++++++++++++++++++++++++++++++++++
->>   drivers/gpu/drm/bridge/dw_hdmi.h | 23 ++++++++++++++++
->>   2 files changed, 82 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
->> index 08f10da..7b5b664 100644
->> --- a/drivers/gpu/drm/bridge/dw_hdmi.c
->> +++ b/drivers/gpu/drm/bridge/dw_hdmi.c
->> @@ -79,6 +79,23 @@ static const u16 csc_coeff_rgb_in_eitu709[3][4] = {
->>          { 0x6756, 0x78ab, 0x2000, 0x0200 }
->>   };
->>
->> +struct hdmi_id {
->> +       u8 design;
->> +       u8 revision;
->> +
->> +       bool prepen;
->> +       bool audspdif;
->> +       bool audi2s;
->> +       bool hdmi14;
->> +       bool csc;
->> +       bool hdcp;
->> +       bool hdmi20;
->> +       bool confapb;
->> +       bool ahbauddma;
->> +       bool gpaud;
->> +       u8 phy_type;
->> +};
->> +
->>   struct hdmi_vmode {
->>          bool mdvi;
->>          bool mhsyncpolarity;
->> @@ -111,6 +128,8 @@ struct dw_hdmi {
->>          struct clk *isfr_clk;
->>          struct clk *iahb_clk;
->>
->> +       struct hdmi_id id;
->> +
->>          struct hdmi_data_info hdmi_data;
->>          const struct dw_hdmi_plat_data *plat_data;
->>
->> @@ -1259,6 +1278,36 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
->>          return 0;
->>   }
->>
->> +static void hdmi_parse_id(struct dw_hdmi *hdmi)
->> +{
->> +       u8 config0_id, config1_id, config2_id, config3_id;
->> +
->> +       config0_id = hdmi_readb(hdmi, HDMI_CONFIG0_ID);
->> +       config1_id = hdmi_readb(hdmi, HDMI_CONFIG1_ID);
->> +       config2_id = hdmi_readb(hdmi, HDMI_CONFIG2_ID);
->> +       config3_id = hdmi_readb(hdmi, HDMI_CONFIG3_ID);
->> +
->> +       hdmi->id.prepen = config0_id & HDMI_CONFIG0_ID_PREPEN ? true : false;
-> These could all be "!!(A & B)", but perhaps that is just a matter of
-> personal preference.
-Okay, "!!(A & B)" looks good, I will modify it.
+v1:
+hi6220 usb controller is inherited from dwc2
+add phy accordingly
+support otg gadget/host
 
-Thanks.  : )
->> +       hdmi->id.audi2s = config0_id & HDMI_CONFIG0_ID_AUDI2S ? true : false;
->> +       hdmi->id.hdmi14 = config0_id & HDMI_CONFIG0_ID_HDMI14 ? true : false;
->> +       hdmi->id.hdcp = config0_id & HDMI_CONFIG0_ID_HDCP ? true : false;
->> +       hdmi->id.csc = config0_id & HDMI_CONFIG0_ID_CSC ? true : false;
->> +       hdmi->id.audspdif = config0_id & HDMI_CONFIG0_ID_AUDSPDIF ?
->> +                           true : false;
->> +
->> +       hdmi->id.confapb = config1_id & HDMI_CONFIG1_ID_CONFAPB ? true : false;
->> +       hdmi->id.hdmi20 = config1_id & HDMI_CONFIG1_ID_HDMI20 ? true : false;
->> +
->> +       hdmi->id.phy_type = config2_id & HDMI_CONFIG2_ID;
-> HDMI_CONFIG2_ID is a register offset, not a mask.
+Zhangfei Gao (4):
+  Documentation: dt-bindings: add dt binding info for hi6220 dwc2
+  Documentation: dt-bindings: add dt binding info for hi6220
+  usb: dwc2: platform: add hi6220 support
+  usb: phy: add phy-hi6220-usb
 
-Thanks, I will correct it.
+ Documentation/devicetree/bindings/usb/dwc2.txt     |   1 +
+ .../devicetree/bindings/usb/hi6220-usb.txt         |  49 ++++
+ drivers/usb/dwc2/platform.c                        |  30 +++
+ drivers/usb/phy/Kconfig                            |   9 +
+ drivers/usb/phy/Makefile                           |   1 +
+ drivers/usb/phy/phy-hi6220-usb.c                   | 297 +++++++++++++++++++++
+ 6 files changed, 387 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/hi6220-usb.txt
+ create mode 100644 drivers/usb/phy/phy-hi6220-usb.c
 
->> +
->> +       hdmi->id.gpaud = config3_id & HDMI_CONFIG3_ID_GPAUD ? true : false;
->> +       hdmi->id.ahbauddma = config3_id & HDMI_CONFIG3_ID_AHBAUDDMA ?
->> +                            true : false;
->> +
->> +       hdmi->id.design = hdmi_readb(hdmi, HDMI_DESIGN_ID);
->> +       hdmi->id.revision = hdmi_readb(hdmi, HDMI_REVISION_ID);
->> +}
->> +
->>   /* Wait until we are registered to enable interrupts */
->>   static int dw_hdmi_fb_registered(struct dw_hdmi *hdmi)
->>   {
->> @@ -1670,6 +1719,16 @@ int dw_hdmi_bind(struct device *dev, struct device *master,
->>                   hdmi_readb(hdmi, HDMI_PRODUCT_ID0),
->>                   hdmi_readb(hdmi, HDMI_PRODUCT_ID1));
->>
->> +       /* Config IDs */
->> +       dev_info(dev,
->> +                "Detected HDMI config_id 0x%x:0x%x:0x%x:0x%x\n",
->> +                hdmi_readb(hdmi, HDMI_CONFIG0_ID),
->> +                hdmi_readb(hdmi, HDMI_CONFIG1_ID),
->> +                hdmi_readb(hdmi, HDMI_CONFIG2_ID),
->> +                hdmi_readb(hdmi, HDMI_CONFIG3_ID));
->> +
->> +       hdmi_parse_id(hdmi);
-> It seems a bit silly to read the regs once to print them, and then
-> again in hdmi_parse_id().
-> Perhaps move the dev_info() inside hdmi_parse_id().
-> It would also be nice to print a full summary of all of the parsed fields.
-Okay, I will warp them into hdmi_parse_id().
+-- 
+1.9.1
 
-Thanks.  : )
-
->> +
->>          initialize_hdmi_ih_mutes(hdmi);
->>
->>          ret = devm_request_threaded_irq(dev, irq, dw_hdmi_hardirq,
->> diff --git a/drivers/gpu/drm/bridge/dw_hdmi.h b/drivers/gpu/drm/bridge/dw_hdmi.h
->> index 175dbc8..e4ba634 100644
->> --- a/drivers/gpu/drm/bridge/dw_hdmi.h
->> +++ b/drivers/gpu/drm/bridge/dw_hdmi.h
->> @@ -545,6 +545,29 @@
->>   #define HDMI_I2CM_FS_SCL_LCNT_0_ADDR            0x7E12
->>
->>   enum {
->> +/* HDMI_CONFIG0_ID */
->> +       HDMI_CONFIG0_ID_PREPEN = 0x80,
->> +       HDMI_CONFIG0_ID_AUDSPDIF = 0x20,
->> +       HDMI_CONFIG0_ID_AUDI2S = 0x10,
->> +       HDMI_CONFIG0_ID_HDMI14 = 0x08,
->> +       HDMI_CONFIG0_ID_CSC = 0x04,
->> +       HDMI_CONFIG0_ID_HDCP = 0x01,
->> +
->> +/* HDMI_CONFIG1_ID */
->> +       HDMI_CONFIG1_ID_HDMI20 = 0x20,
->> +       HDMI_CONFIG1_ID_CONFAPB = 0x02,
->> +
->> +/* HDMI_CONFIG2_ID */
->> +       HDMI_CONFIG2_ID_PHY_GEN2 = 0xf2,
->> +       HDMI_CONFIG2_ID_PHY_GEN2_HECA = 0xe2,
->> +       HDMI_CONFIG2_ID_PHY_HDMI_MHL = 0xc2,
->> +       HDMI_CONFIG2_ID_PHY_HDMI_MHL_HECA = 0xb2,
->> +       HDMI_CONFIG2_ID_LEGACY_PHY = 0x00,
->> +
->> +/* HDMI_CONFIG3_ID */
->> +       HDMI_CONFIG3_ID_AHBAUDDMA = 0x02,
->> +       HDMI_CONFIG3_ID_GPAUD = 0x01,
->> +
->>   /* IH_FC_INT2 field values */
->>          HDMI_IH_FC_INT2_OVERFLOW_MASK = 0x03,
->>          HDMI_IH_FC_INT2_LOW_PRIORITY_OVERFLOW = 0x02,
->> --
->> 2.1.2
->>
->>
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
