@@ -1,44 +1,120 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v3 5/5] ARM: dts: pxa: add pxa-timer to pxa27x
-Date: Sat,  7 Feb 2015 13:39:20 +0100
-Message-ID: <1423312760-15871-5-git-send-email-robert.jarzmik@free.fr>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v3 2/5] ARM: dts: pxa: add clocks
+Date: Sat,  7 Feb 2015 13:39:17 +0100
+Message-ID: <1423312760-15871-2-git-send-email-robert.jarzmik@free.fr>
 References: <1423312760-15871-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423312760-15871-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423312760-15871-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Each pxa has an embedded OS Timers IP. The kernel cannot work without a
-valid clocksource, and this adds the OS Timers to the pxa device-tree
-description.
+Add clocks to the IPs already described in the pxa device-tree
+files. There are more clocks in the clock tree than IPs described in the
+current pxa device-tree.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+This patch ensures that :
+ - the current description is correct
+ - the clocks are actually claimed, so that clock framework doesn't
+   disable them automatically (unused clocks shutdown)
+
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 ---
-Since v1: removed clocksource node, pxa-timer being directly under
-          pxabus (Rob's comment).
-Since v2: renamed pxa-timer to timer (Sergei's comment)
----
- arch/arm/boot/dts/pxa27x.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/pxa27x.dtsi | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 6ecf1a6..fb0abad 100644
+index 98b560e..e8d5097 100644
 --- a/arch/arm/boot/dts/pxa27x.dtsi
 +++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -101,4 +101,12 @@
+@@ -1,6 +1,6 @@
+ /* The pxa3xx skeleton simply augments the 2xx version */
+ #include "pxa2xx.dtsi"
+-#include "dt-bindings/clock/pxa2xx-clock.h"
++#include "dt-bindings/clock/pxa-clock.h"
+ 
+ / {
+ 	model = "Marvell PXA27x familiy SoC";
+@@ -12,36 +12,62 @@
+ 			marvell,intc-nr-irqs = <34>;
+ 		};
+ 
++		gpio: gpio@40e00000 {
++			compatible = "intel,pxa27x-gpio";
++			clocks = <&pxa2xx_clks CLK_NONE>;
++		};
++
++		ffuart: uart@40100000 {
++			clocks = <&pxa2xx_clks CLK_FFUART>;
++		};
++
++		btuart: uart@40200000 {
++			clocks = <&pxa2xx_clks CLK_BTUART>;
++		};
++
++		stuart: uart@40700000 {
++			clocks = <&pxa2xx_clks CLK_STUART>;
++		};
++
+ 		pwm0: pwm@40b00000 {
+ 			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
+ 			reg = <0x40b00000 0x10>;
+ 			#pwm-cells = <1>;
++			clocks = <&pxa2xx_clks CLK_PWM0>;
+ 		};
+ 
+ 		pwm1: pwm@40b00010 {
+ 			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
+ 			reg = <0x40b00010 0x10>;
+ 			#pwm-cells = <1>;
++			clocks = <&pxa2xx_clks CLK_PWM1>;
+ 		};
+ 
+ 		pwm2: pwm@40c00000 {
+ 			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
+ 			reg = <0x40c00000 0x10>;
+ 			#pwm-cells = <1>;
++			clocks = <&pxa2xx_clks CLK_PWM0>;
+ 		};
+ 
+ 		pwm3: pwm@40c00010 {
+ 			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
+ 			reg = <0x40c00010 0x10>;
+ 			#pwm-cells = <1>;
++			clocks = <&pxa2xx_clks CLK_PWM1>;
+ 		};
+ 
+ 		pwri2c: i2c@40f000180 {
+ 			compatible = "mrvl,pxa-i2c";
+ 			reg = <0x40f00180 0x24>;
+ 			interrupts = <6>;
++			clocks = <&pxa2xx_clks CLK_PWRI2C>;
+ 			status = "disabled";
+ 		};
++
++		pxai2c1: i2c@40301680 {
++			clocks = <&pxa2xx_clks CLK_I2C>;
++		};
+ 	};
+ 
+ 	clocks {
+@@ -54,10 +80,9 @@
+ 		ranges;
+ 
+ 		pxa2xx_clks: pxa2xx_clks@41300004 {
+-			compatible = "marvell,pxa-clocks";
++			compatible = "marvell,pxa270-clocks";
+ 			#clock-cells = <1>;
  			status = "okay";
  		};
  	};
-+
-+	timer@40a00000 {
-+		compatible = "marvell,pxa-timer";
-+		reg = <0x40a00000 0x20>;
-+		interrupts = <26>;
-+		clocks = <&pxa2xx_clks CLK_OSTIMER>;
-+		status = "okay";
-+	};
+-
  };
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
