@@ -1,51 +1,55 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm: Fix unavailable MTD userland devices on Excito
- B3 boards
-Date: Sat, 7 Feb 2015 21:25:51 +0100
-Message-ID: <20150207202551.GA23581@lunn.ch>
-References: <1423212311-10793-1-git-send-email-gordon@bosvangennip.nl>
- <54D484D8.8090801@free-electrons.com>
- <54D6299B.70707@bosvangennip.nl>
- <20150207160945.GA22306@lunn.ch>
- <54D64820.7020002@bosvangennip.nl>
- <20150207173642.GI25985@lunn.ch>
- <54D657D5.3010709@bosvangennip.nl>
- <20150207184024.GB22306@lunn.ch>
- <54D66EB2.2030006@bosvangennip.nl>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] GPIO joystick driver
+Date: Sat, 7 Feb 2015 12:46:58 -0800
+Message-ID: <20150207204658.GA29015@dtor-ws>
+References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
+ <1AA6C46C-36D9-4243-9DC5-254A7202D339@gmail.com>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6AF04@irsmsx105.ger.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54D66EB2.2030006-PMRpws9CsXpfxmBXdGbrbQ@public.gmane.org>
+In-Reply-To: <4B6D6D87A8FB62428BE0A3E38461A1AB18D6AF04-pww93C2UFcwu0RiL9chJVbfspsVTdybXVpNB7YpNyf8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gordon Bos <gordon-PMRpws9CsXpfxmBXdGbrbQ@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: "Holmberg, Hans" <hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 07, 2015 at 08:59:46PM +0100, Gordon Bos wrote:
-> Hi Andrew,
-> 
-> There is a difference, and apparently it somewhere got solved:
-> 
-> From running kernel 3.17.1
-> 
->      ~ # dmesg | grep spi
-> 
-> Running an upgraded kernel 3.18.5 with the same DT blob
-> 
->      ~ # dmesg | grep spi
->    [    0.928832] m25p80 spi0.0: found m25p16, expected m25p80
->    [    0.934124] m25p80 spi0.0: m25p16 (2048 Kbytes)
+Hi Hans,
 
-So this is with your patch applied. You can see the driver is
-complaining the DT says there should be a m25p80, but it actually
-found a m25p16. If you remove your change, this warning will go away.
+On Sat, Feb 07, 2015 at 07:35:46AM +0000, Holmberg, Hans wrote:
+> Hi Dmitry,
+> 
+> > Why do we need this new driver when we have gpio-keys driver that can be
+> > configured to emit ABS_* events?
+> > 
+> 
+> As far as I can tell, there is no way to specify values for ABS-"keys" in the
+> device tree binding. 
 
-> You may therefore consider the MTD issue as solved.
+It may mot be present in device tree binding, but the driver does
+support it, so I would rather extend the binding than have a brand new
+driver.
 
-Great.
- 
- Andrew
+> 
+> While both the device tree binding and the gpio-keys driver could possibly be adapted to 
+> support this, it makes sense to me to describe joysticks in a separate binding and keep
+> the driver implementations apart.
+
+Why? From the input core perspective there is no difference. It is just
+a device that emits set of events.
+
+> 
+> In addition to this,  auto-repeat and the sys fs disable interface for individual keys 
+> does not make sense for joysticks.
+
+You do not need to use it when you describe the device (BTW autorepeat
+for trigger might be a good thing).
+
+Thanks.
+
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
