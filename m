@@ -1,128 +1,40 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCHv6 4/5] edac: altera: Add Altera L2 Cache and OCRAM EDAC
- Support
-Date: Sat, 7 Feb 2015 10:02:25 +0000
-Message-ID: <20150207100225.GC8656@n2100.arm.linux.org.uk>
-References: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com>
- <1420772036-3112-5-git-send-email-tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1420772036-3112-5-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+From: Inki Dae <inki.dae@samsung.com>
+Subject: [PATCH] ARM: dts: exynos4412-trats2: set display clock correctly
+Date: Sat, 07 Feb 2015 19:49:08 +0900
+Message-ID: <1423306148-22212-1-git-send-email-inki.dae@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, Inki Dae <inki.dae@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 08, 2015 at 08:53:55PM -0600, tthayer@opensource.altera.com wrote:
-> +static int altr_edac_device_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *dci;
-> +	struct altr_edac_device_dev *drvdata;
-> +	struct resource *r;
-> +	int res = 0;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	char *ecc_name = (char *)np->name;
-> +	static int dev_instance;
-> +
-> +	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
-> +		edac_printk(KERN_ERR, EDAC_DEVICE,
-> +			    "Unable to open devm\n");
-> +		return -ENOMEM;
-> +	}
+This patch sets display clock correctly.
 
-Why are you opening a devres group here?  The device model already opens
-a devres group ready for the ->probe callback, which is released when
-the device is unbound... hmm, see below though...
+If Display clock isn't set correctly then you would find below messages
+and Display controller doesn't work correctly since a patch[1]
 
-> +
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!r) {
-> +		edac_printk(KERN_ERR, EDAC_DEVICE,
-> +			    "Unable to get mem resource\n");
-> +		return -EPROBE_DEFER;
+   exynos-drm: No connectors reported connected with modes
+   [drm] Cannot find any crtc or sizes - going 1024x768
 
-Why EPROBE_DEFER for a missing resource?
+[1] commit abc0b1447d49 ("drm: Perform basic sanity checks on probed modes")
 
-> +	}
-> +
-> +	if (!devm_request_mem_region(&pdev->dev, r->start, resource_size(r),
-> +				     dev_name(&pdev->dev))) {
-> +		edac_printk(KERN_ERR, EDAC_DEVICE,
-> +			    "%s:Error requesting mem region\n", ecc_name);
-> +		return -EBUSY;
-> +	}
-> +
-> +	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), ecc_name,
-> +					 1, ecc_name, 1, 0, NULL, 0,
-> +					 dev_instance++);
-> +
-> +	if (!dci) {
-> +		edac_printk(KERN_ERR, EDAC_DEVICE,
-> +			    "%s: Unable to allocate EDAC device\n", ecc_name);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	drvdata = dci->pvt_info;
-> +	dci->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, dci);
-> +	drvdata->edac_dev_name = ecc_name;
-> +
-> +	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
-> +	if (!drvdata->base)
-> +		goto err;
+Signed-off-by: Inki Dae <inki.dae@samsung.com>
+---
+ arch/arm/boot/dts/exynos4412-trats2.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You could use devm_ioremap_resource() to simplify the mapping, resource
-allocation and resource error handling.
-
-> +
-> +	/* Get driver specific data for this EDAC device */
-> +	drvdata->data = of_match_node(altr_edac_device_of_match, np)->data;
-> +
-> +	/* Check specific dependencies for the module */
-> +	if (drvdata->data->setup) {
-> +		res = drvdata->data->setup(pdev, drvdata->base);
-> +		if (res < 0)
-> +			goto err;
-> +	}
-> +
-> +	drvdata->sb_irq = platform_get_irq(pdev, 0);
-> +	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
-> +			       altr_edac_device_handler,
-> +			       0, dev_name(&pdev->dev), dci);
-> +	if (res < 0)
-> +		goto err;
-> +
-> +	drvdata->db_irq = platform_get_irq(pdev, 1);
-> +	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
-> +			       altr_edac_device_handler,
-> +			       0, dev_name(&pdev->dev), dci);
-> +	if (res < 0)
-> +		goto err;
-> +
-> +	dci->mod_name = "Altera EDAC Memory";
-> +	dci->dev_name = drvdata->edac_dev_name;
-> +
-> +	altr_set_sysfs_attr(dci, drvdata->data);
-> +
-> +	if (edac_device_add_device(dci))
-> +		goto err;
-> +
-> +	devres_close_group(&pdev->dev, NULL);
-> +
-> +	return 0;
-> +err:
-> +	edac_printk(KERN_ERR, EDAC_DEVICE,
-> +		    "%s:Error setting up EDAC device: %d\n", ecc_name, res);
-> +	devres_release_group(&pdev->dev, NULL);
-> +	edac_device_free_ctl_info(dci);
-
-Hmm, I guess this is why you're using devm groups - it seems like
-edac allocation/freeing needs to be improved to work cooperatively
-with devm_* APIs rather than having to add devm group complexity
-into drivers.
-
+diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+index 29231b4..1ec4d33 100644
+--- a/arch/arm/boot/dts/exynos4412-trats2.dts
++++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+@@ -691,7 +691,7 @@
+ 
+ 			display-timings {
+ 				timing-0 {
+-					clock-frequency = <0>;
++					clock-frequency = <57153600>;
+ 					hactive = <720>;
+ 					vactive = <1280>;
+ 					hfront-porch = <5>;
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+1.7.9.5
