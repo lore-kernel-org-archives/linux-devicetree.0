@@ -1,72 +1,104 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [Patch V4 00/10] ASoC: QCOM: Add support for ipq806x SOC
-Date: Sat, 7 Feb 2015 06:32:29 +0800
-Message-ID: <20150206223229.GG31311@finisterre.sirena.org.uk>
-References: <1423169626-22166-1-git-send-email-kwestfie@codeaurora.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: add generic dt-card support
+Date: Sat, 7 Feb 2015 16:33:55 +0800
+Message-ID: <20150207083355.GA8054@finisterre.sirena.org.uk>
+References: <54C0088F.9070609@metafoo.de>
+ <20150122090723.50ac0156@armhf>
+ <54C14EB3.8080305@metafoo.de>
+ <20150123131554.623003f9@armhf>
+ <54C252F4.9000504@metafoo.de>
+ <20150123193456.276ea512@armhf>
+ <20150123191343.GW21293@sirena.org.uk>
+ <20150124083027.3b3a018f@armhf>
+ <20150203164748.GR21293@sirena.org.uk>
+ <20150203203130.5d1cfc42@armhf>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FwyhczKCDPOVeYh6"
+	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1423169626-22166-1-git-send-email-kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20150203203130.5d1cfc42@armhf>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ALSA Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MSM Mailing List <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---FwyhczKCDPOVeYh6
+--AqsLC8rIMeq19msA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Feb 05, 2015 at 12:53:36PM -0800, Kenneth Westfield wrote:
+On Tue, Feb 03, 2015 at 08:31:30PM +0100, Jean-Francois Moine wrote:
+> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-> This patch series adds support for I2S audio playback on the Qualcomm
-> Technologies ipq806x SOC.
+> > So how does the simple controller interact with a more complex one given
+> > that it's somehow picking some controller node to start from?
 
-> The ipq806x SOC has audio-related hardware blocks in its low-power audio
-> subsystem (or LPASS).  One of the relevant blocks in the LPASS is its low-power
-> audio interface (or LPAIF).  This contains an MI2S port, which is what these
-> drivers are configured to use.  The LPAIF also contains a DMA engine that is
-> dedicated to moving audio samples into the transmit FIFO of the MI2S port.  In
-> addition, there is also low-power memory (LPM) within the audio subsystem, which
-> is used for buffering the audio samples.
+> A way to solve this problem could be to create only one card builder.
+> This creation could be explicit (created by the first active audio
+> controller) or implicit by the audio subsystem on the first controller or
+> CODEC creation.
 
-This is implementing an AP centric audio system design where the AP
-directly programs all the audio hardware.  Given that pretty much all
-public Qualcomm systems use a DSP centric model where the AP interacts
-only with a DSP which deals with DMA and the physical interfaces it
-seems reasonable to suppose that this system also has a DSP which at
-some future point people are likely to want to use.
+> Then, the card builder could scan all the DT looking for the audio
+> ports and create one or more cards according to the graph
+> connectivity.
 
-I'd really like to see some discussion as to how this is all supposed to
-be handled - how will these direct hardware access drivers and device
-trees work when someone does want to use the DSP (without causing
-problems), and how will we transition from one to the other.  This is
-particularly pressing if there are use cases where people will want to
-switch between the two modes at runtime.
+How is this going to work with dynamically instantiated hardware like DT
+overlays?
 
-What I'm trying to avoid here is being in a situation where we have
-existing stable DT bindings which we have to support but which conflict
-with the way that people want to use the systems.
+> > If you have a device with any sort of speaker or microphone, or any sort
+> > of external connector for interfacing with an external device like a
+> > headphone jack, then you have something that could be a widget.
 
---FwyhczKCDPOVeYh6
+> I know what are the widgets and routes, I was just wondering why they
+> (especially the widgets) need to appear at the card level instead of
+> just being declared in the DAIs (from the platform or the DT).
+
+As previously and repeatedly discussed DAIs have no special place in
+a general audio system and we can't base the entire system off them.
+Which DAI should have the headphone jack connected to the analogue only
+headphone driver in my system (there may not even be a way to route
+digital audio to it)?  How does this work for off-SoC audio hubs where
+there is a device with multiple DAIs connected to both one or more other
+digital devices and the analogue?
+
+Please go and research this if you're intending to work on generic
+bindings, it gets extremely repetitive to have to go over this again and
+again.  We already have simple-card to provide a binding for trivial
+systems and don't want to end up with a never ending series of slightly
+more complicated bindings which each cover slightly different sets of
+systems in ways that users struggle to differentiate between.
+
+> And the same question may also be raised about the audio formats, clocks,
+> tdm's...
+
+Similar things here - which of the two or more devices on a digital
+audio link (yes, they're buses not point to point links) has the
+configuration and how do we stitch them together?  How do we figure out
+when and how to do runtime reconfiguration of the clock tree (which is
+needed by some systems)?
+
+Again, please do some research on this.  If you are trying to define
+generic device tree bindings it is really important that you understand
+what you are trying to model with those bindings.
+
+--AqsLC8rIMeq19msA
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJU1UD9AAoJECTWi3JdVIfQOwsH/joETxcnABrs5tfDLiWiAomH
-FxzdO40vtat/WLhzus/mPY10v03xQ8c90SYGsANP8hbeqYAmB5WjCX6MzpUCzVW2
-s1g/iUNQ84gKEtuOa0HepcHrF5hVWvjKQ/ODjQsLTQoB7jWqGtZCbVrU8BGQNDsL
-XlW/vevJWt6dE5wtxAjc9cTwkn4UKaEgg41MFk0fx34z0Al+7ZOunVhrDkVhJeRc
-vyoPcYyYWBEbxU5WPPzSraw7CrPDL8FRz03qAFsH96k15PDz6mfOfSP2tLZFiJfG
-3qowYRn/rf9Inalz+ImOVCdCQQP43iqNVamyk6aw7wcJCuTjwT4ccSfgwqi078Q=
-=4QTN
+iQEcBAEBCAAGBQJU1c3yAAoJECTWi3JdVIfQXqgH/1ywVBEroswu6tqEUJ30frry
+lHFCs0pB971s168y4uZXH5U/3tFt7f7EcCOLM4/ySA4meG5hLi7lVru5N3+/tChK
+DgbnYnAjLdKpGDBpMrJR3sQ0KtiYG1jbci7evGE73xoysifSUibEz70SZI4hs/++
+h7nCWPjUY8jSzqpShacXzjWRUyR9sG7PI7HnrZchfSzYDPhs486a9o/HW59a47/Q
+94xXdTr4Rm6vHl1rXvOKXGEbZwbuqF2q6A6CcFoxqpkhGatad7vFmyO/p582c9W/
+SydNSBkmAkXjNyLHJLjg0TelmgfpObf6Pj7UYozFNKIgBIGoNQCkjnKbzrkYKBk=
+=DGKe
 -----END PGP SIGNATURE-----
 
---FwyhczKCDPOVeYh6--
+--AqsLC8rIMeq19msA--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
