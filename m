@@ -1,105 +1,128 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: add generic dt-card support
-Date: Sat, 7 Feb 2015 16:33:55 +0800
-Message-ID: <20150207083355.GA8054@finisterre.sirena.org.uk>
-References: <54C0088F.9070609@metafoo.de>
- <20150122090723.50ac0156@armhf>
- <54C14EB3.8080305@metafoo.de>
- <20150123131554.623003f9@armhf>
- <54C252F4.9000504@metafoo.de>
- <20150123193456.276ea512@armhf>
- <20150123191343.GW21293@sirena.org.uk>
- <20150124083027.3b3a018f@armhf>
- <20150203164748.GR21293@sirena.org.uk>
- <20150203203130.5d1cfc42@armhf>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCHv6 4/5] edac: altera: Add Altera L2 Cache and OCRAM EDAC
+ Support
+Date: Sat, 7 Feb 2015 10:02:25 +0000
+Message-ID: <20150207100225.GC8656@n2100.arm.linux.org.uk>
+References: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com>
+ <1420772036-3112-5-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150203203130.5d1cfc42@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1420772036-3112-5-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 08, 2015 at 08:53:55PM -0600, tthayer@opensource.altera.com wrote:
+> +static int altr_edac_device_probe(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *dci;
+> +	struct altr_edac_device_dev *drvdata;
+> +	struct resource *r;
+> +	int res = 0;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	char *ecc_name = (char *)np->name;
+> +	static int dev_instance;
+> +
+> +	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
+> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+> +			    "Unable to open devm\n");
+> +		return -ENOMEM;
+> +	}
 
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Why are you opening a devres group here?  The device model already opens
+a devres group ready for the ->probe callback, which is released when
+the device is unbound... hmm, see below though...
 
-On Tue, Feb 03, 2015 at 08:31:30PM +0100, Jean-Francois Moine wrote:
-> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> +
+> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!r) {
+> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+> +			    "Unable to get mem resource\n");
+> +		return -EPROBE_DEFER;
 
-> > So how does the simple controller interact with a more complex one given
-> > that it's somehow picking some controller node to start from?
+Why EPROBE_DEFER for a missing resource?
 
-> A way to solve this problem could be to create only one card builder.
-> This creation could be explicit (created by the first active audio
-> controller) or implicit by the audio subsystem on the first controller or
-> CODEC creation.
+> +	}
+> +
+> +	if (!devm_request_mem_region(&pdev->dev, r->start, resource_size(r),
+> +				     dev_name(&pdev->dev))) {
+> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+> +			    "%s:Error requesting mem region\n", ecc_name);
+> +		return -EBUSY;
+> +	}
+> +
+> +	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), ecc_name,
+> +					 1, ecc_name, 1, 0, NULL, 0,
+> +					 dev_instance++);
+> +
+> +	if (!dci) {
+> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+> +			    "%s: Unable to allocate EDAC device\n", ecc_name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	drvdata = dci->pvt_info;
+> +	dci->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, dci);
+> +	drvdata->edac_dev_name = ecc_name;
+> +
+> +	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+> +	if (!drvdata->base)
+> +		goto err;
 
-> Then, the card builder could scan all the DT looking for the audio
-> ports and create one or more cards according to the graph
-> connectivity.
+You could use devm_ioremap_resource() to simplify the mapping, resource
+allocation and resource error handling.
 
-How is this going to work with dynamically instantiated hardware like DT
-overlays?
+> +
+> +	/* Get driver specific data for this EDAC device */
+> +	drvdata->data = of_match_node(altr_edac_device_of_match, np)->data;
+> +
+> +	/* Check specific dependencies for the module */
+> +	if (drvdata->data->setup) {
+> +		res = drvdata->data->setup(pdev, drvdata->base);
+> +		if (res < 0)
+> +			goto err;
+> +	}
+> +
+> +	drvdata->sb_irq = platform_get_irq(pdev, 0);
+> +	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
+> +			       altr_edac_device_handler,
+> +			       0, dev_name(&pdev->dev), dci);
+> +	if (res < 0)
+> +		goto err;
+> +
+> +	drvdata->db_irq = platform_get_irq(pdev, 1);
+> +	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
+> +			       altr_edac_device_handler,
+> +			       0, dev_name(&pdev->dev), dci);
+> +	if (res < 0)
+> +		goto err;
+> +
+> +	dci->mod_name = "Altera EDAC Memory";
+> +	dci->dev_name = drvdata->edac_dev_name;
+> +
+> +	altr_set_sysfs_attr(dci, drvdata->data);
+> +
+> +	if (edac_device_add_device(dci))
+> +		goto err;
+> +
+> +	devres_close_group(&pdev->dev, NULL);
+> +
+> +	return 0;
+> +err:
+> +	edac_printk(KERN_ERR, EDAC_DEVICE,
+> +		    "%s:Error setting up EDAC device: %d\n", ecc_name, res);
+> +	devres_release_group(&pdev->dev, NULL);
+> +	edac_device_free_ctl_info(dci);
 
-> > If you have a device with any sort of speaker or microphone, or any sort
-> > of external connector for interfacing with an external device like a
-> > headphone jack, then you have something that could be a widget.
+Hmm, I guess this is why you're using devm groups - it seems like
+edac allocation/freeing needs to be improved to work cooperatively
+with devm_* APIs rather than having to add devm group complexity
+into drivers.
 
-> I know what are the widgets and routes, I was just wondering why they
-> (especially the widgets) need to appear at the card level instead of
-> just being declared in the DAIs (from the platform or the DT).
-
-As previously and repeatedly discussed DAIs have no special place in
-a general audio system and we can't base the entire system off them.
-Which DAI should have the headphone jack connected to the analogue only
-headphone driver in my system (there may not even be a way to route
-digital audio to it)?  How does this work for off-SoC audio hubs where
-there is a device with multiple DAIs connected to both one or more other
-digital devices and the analogue?
-
-Please go and research this if you're intending to work on generic
-bindings, it gets extremely repetitive to have to go over this again and
-again.  We already have simple-card to provide a binding for trivial
-systems and don't want to end up with a never ending series of slightly
-more complicated bindings which each cover slightly different sets of
-systems in ways that users struggle to differentiate between.
-
-> And the same question may also be raised about the audio formats, clocks,
-> tdm's...
-
-Similar things here - which of the two or more devices on a digital
-audio link (yes, they're buses not point to point links) has the
-configuration and how do we stitch them together?  How do we figure out
-when and how to do runtime reconfiguration of the clock tree (which is
-needed by some systems)?
-
-Again, please do some research on this.  If you are trying to define
-generic device tree bindings it is really important that you understand
-what you are trying to model with those bindings.
-
---AqsLC8rIMeq19msA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU1c3yAAoJECTWi3JdVIfQXqgH/1ywVBEroswu6tqEUJ30frry
-lHFCs0pB971s168y4uZXH5U/3tFt7f7EcCOLM4/ySA4meG5hLi7lVru5N3+/tChK
-DgbnYnAjLdKpGDBpMrJR3sQ0KtiYG1jbci7evGE73xoysifSUibEz70SZI4hs/++
-h7nCWPjUY8jSzqpShacXzjWRUyR9sG7PI7HnrZchfSzYDPhs486a9o/HW59a47/Q
-94xXdTr4Rm6vHl1rXvOKXGEbZwbuqF2q6A6CcFoxqpkhGatad7vFmyO/p582c9W/
-SydNSBkmAkXjNyLHJLjg0TelmgfpObf6Pj7UYozFNKIgBIGoNQCkjnKbzrkYKBk=
-=DGKe
------END PGP SIGNATURE-----
-
---AqsLC8rIMeq19msA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
