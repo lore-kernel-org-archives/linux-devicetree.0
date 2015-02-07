@@ -1,49 +1,44 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v3 1/5] ARM: dts: pxa: add pwri2c to pxa device-tree
-Date: Sat,  7 Feb 2015 13:39:16 +0100
-Message-ID: <1423312760-15871-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v3 5/5] ARM: dts: pxa: add pxa-timer to pxa27x
+Date: Sat,  7 Feb 2015 13:39:20 +0100
+Message-ID: <1423312760-15871-5-git-send-email-robert.jarzmik@free.fr>
+References: <1423312760-15871-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1423312760-15871-1-git-send-email-robert.jarzmik@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-pxa27x variant has 2 I2C busses on the SoC :
- - the casual I2C
- - the power I2C, normally driving power regulators, and capable of
- receiving orders on core frequency modifications
+Each pxa has an embedded OS Timers IP. The kernel cannot work without a
+valid clocksource, and this adds the OS Timers to the pxa device-tree
+description.
 
-Add the missing pwri2c to pxa27x description.
-
-Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
-Since v2: as Dmitry pointed out, no pwri2c on pxa25x, only pxa27x
+Since v1: removed clocksource node, pxa-timer being directly under
+          pxabus (Rob's comment).
+Since v2: renamed pxa-timer to timer (Sergei's comment)
 ---
- arch/arm/boot/dts/pxa27x.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/pxa27x.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 80fc5d7..98b560e 100644
+index 6ecf1a6..fb0abad 100644
 --- a/arch/arm/boot/dts/pxa27x.dtsi
 +++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -35,6 +35,13 @@
- 			reg = <0x40c00010 0x10>;
- 			#pwm-cells = <1>;
+@@ -101,4 +101,12 @@
+ 			status = "okay";
  		};
-+
-+		pwri2c: i2c@40f000180 {
-+			compatible = "mrvl,pxa-i2c";
-+			reg = <0x40f00180 0x24>;
-+			interrupts = <6>;
-+			status = "disabled";
-+		};
  	};
- 
- 	clocks {
++
++	timer@40a00000 {
++		compatible = "marvell,pxa-timer";
++		reg = <0x40a00000 0x20>;
++		interrupts = <26>;
++		clocks = <&pxa2xx_clks CLK_OSTIMER>;
++		status = "okay";
++	};
+ };
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
