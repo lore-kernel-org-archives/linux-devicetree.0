@@ -1,8 +1,8 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Subject: Re: [PATCH 1/1] arm: Fix unavailable MTD userland devices on Excito
  B3 boards
-Date: Sat, 7 Feb 2015 17:09:45 +0100
-Message-ID: <20150207160945.GA22306@lunn.ch>
+Date: Sat, 7 Feb 2015 17:37:44 +0100
+Message-ID: <20150207163744.GG25985@lunn.ch>
 References: <1423212311-10793-1-git-send-email-gordon@bosvangennip.nl>
  <54D484D8.8090801@free-electrons.com>
  <54D6299B.70707@bosvangennip.nl>
@@ -26,13 +26,39 @@ On Sat, Feb 07, 2015 at 04:04:59PM +0100, Gordon Bos wrote:
 
 Hi Gordon
 
-I need to reboot my B3 in order to see what it says. However, with the
-current DT i do have access to the MTD devices.
+Here is what my B3 says during boot:
 
-What problems are you actually having?
+m25p80 spi0.0: m25p16 (2048 Kbytes)
+3 ofpart partitions found on MTD device spi0.0
+Creating 3 MTD partitions on "spi0.0":
+0x000000000000-0x0000000c0000 : "u-boot"
+0x0000000c0000-0x0000000e0000 : "u-boot env"
+0x0000000e0000-0x000000200000 : "data"
+
+m25p80 is the driver being used. The device is an m25p16.
+
+>  			m25p16@0 {
+>  				#address-cells = <1>;
+>  				#size-cells = <1>;
+> -				compatible = "st,m25p16";
+> +				compatible = "st,m25p80";
+
+Here, compatibility indicates what the device is. The kernel will then
+find a driver for that device. If you look in
+drivers/mtd/devices/m25p80.c you see a long list of devices this
+driver supports, of which m25p16.
+
+Also, if you specify the wrong device here, the kernel will complain
+when it asks the device to identify itself and find it is different:
+
+http://lxr.free-electrons.com/source/drivers/mtd/spi-nor/spi-nor.c#L915
+
+it will print a message: "found %s, expected %s\n"
+
+Are you seeing such a message? Maybe your B3 has a different device
+than mine?
 
 Thanks
-
 	Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
