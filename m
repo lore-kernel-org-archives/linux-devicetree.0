@@ -1,42 +1,149 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH] staging: iio: adc: mxs-lradc: Change type in printf format
- string
-Date: Sun, 08 Feb 2015 12:07:48 +0000
-Message-ID: <54D75194.40201@kernel.org>
-References: <1422397413-9447-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <201501272359.59011.marex@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <201501272359.59011.marex@denx.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Marek Vasut <marex@denx.de>, Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, devel@driverdev.osuosl.org, Brian Vandre <bvandre@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Vaishali Thakkar <vthakkar1994@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Grant Likely <grant.likely@linaro.org>, Robert Hodaszi <robert.hodaszi@digi.com>, Darshana Padmadas <darshanapadmadas@gmail.com>
+From: Rabin Vincent <rabin@rab.in>
+Subject: [PATCH 1/4] CRIS: add device tree support
+Date: Sun,  8 Feb 2015 16:35:42 +0100
+Message-ID: <1423409745-2230-1-git-send-email-rabin@rab.in>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jesper.nilsson@axis.com
+Cc: linux-cris-kernel@axis.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rabin Vincent <rabin@rab.in>
 List-Id: devicetree@vger.kernel.org
 
-On 27/01/15 22:59, Marek Vasut wrote:
-> On Tuesday, January 27, 2015 at 11:23:33 PM, Rickard Strandqvist wrote:
->> Wrong type in printf format string, requires 'int'
->> but the argument type is 'unsigned int'
->>
->> This was found using a static code analysis program called cppcheck
->>
->> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-> 
-> Makes sense, thanks!
-> 
-> Reviewed-by: Marek Vasut <marex@denx.de>
-Applied.
-> 
-> Best regards,
-> Marek Vasut
-> 
+Add support for booting CRIS with a built-in device tree.
+
+Signed-off-by: Rabin Vincent <rabin@rab.in>
+---
+ arch/cris/Kconfig             |  6 ++++++
+ arch/cris/Makefile            |  4 ++++
+ arch/cris/boot/dts/Makefile   |  6 ++++++
+ arch/cris/kernel/Makefile     |  1 +
+ arch/cris/kernel/devicetree.c | 14 ++++++++++++++
+ arch/cris/kernel/setup.c      | 13 +++++++++++++
+ 6 files changed, 44 insertions(+)
+ create mode 100644 arch/cris/boot/dts/Makefile
+ create mode 100644 arch/cris/kernel/devicetree.c
+
+diff --git a/arch/cris/Kconfig b/arch/cris/Kconfig
+index 8474c66..cbbc2dc 100644
+--- a/arch/cris/Kconfig
++++ b/arch/cris/Kconfig
+@@ -53,11 +53,17 @@ config CRIS
+ 	select OLD_SIGSUSPEND
+ 	select OLD_SIGACTION
+ 	select ARCH_REQUIRE_GPIOLIB
++	select OF
++	select OF_EARLY_FLATTREE
+ 
+ config HZ
+ 	int
+ 	default 100
+ 
++config BUILTIN_DTB
++	string "DTB to build into the kernel image"
++	depends on OF
++
+ source "init/Kconfig"
+ 
+ source "kernel/Kconfig.freezer"
+diff --git a/arch/cris/Makefile b/arch/cris/Makefile
+index 39dc7d0..4a5404b 100644
+--- a/arch/cris/Makefile
++++ b/arch/cris/Makefile
+@@ -40,6 +40,10 @@ else
+ MACH :=
+ endif
+ 
++ifneq ($(CONFIG_BUILTIN_DTB),"")
++core-$(CONFIG_OF) += arch/cris/boot/dts/
++endif
++
+ LD = $(CROSS_COMPILE)ld -mcrislinux
+ 
+ OBJCOPYFLAGS := -O binary -R .note -R .comment -S
+diff --git a/arch/cris/boot/dts/Makefile b/arch/cris/boot/dts/Makefile
+new file mode 100644
+index 0000000..faf69fb
+--- /dev/null
++++ b/arch/cris/boot/dts/Makefile
+@@ -0,0 +1,6 @@
++BUILTIN_DTB := $(patsubst "%",%,$(CONFIG_BUILTIN_DTB)).dtb.o
++ifneq ($(CONFIG_BUILTIN_DTB),"")
++obj-$(CONFIG_OF) += $(BUILTIN_DTB)
++endif
++
++clean-files := *.dtb.S
+diff --git a/arch/cris/kernel/Makefile b/arch/cris/kernel/Makefile
+index b45640b..edef71f 100644
+--- a/arch/cris/kernel/Makefile
++++ b/arch/cris/kernel/Makefile
+@@ -7,6 +7,7 @@ CPPFLAGS_vmlinux.lds := -DDRAM_VIRTUAL_BASE=0x$(CONFIG_ETRAX_DRAM_VIRTUAL_BASE)
+ extra-y	:= vmlinux.lds
+ 
+ obj-y   := process.o traps.o irq.o ptrace.o setup.o time.o sys_cris.o
++obj-y += devicetree.o
+ 
+ obj-$(CONFIG_MODULES)    += crisksyms.o
+ obj-$(CONFIG_MODULES)	 += module.o
+diff --git a/arch/cris/kernel/devicetree.c b/arch/cris/kernel/devicetree.c
+new file mode 100644
+index 0000000..53ff8d7
+--- /dev/null
++++ b/arch/cris/kernel/devicetree.c
+@@ -0,0 +1,14 @@
++#include <linux/init.h>
++#include <linux/bootmem.h>
++#include <linux/printk.h>
++
++void __init early_init_dt_add_memory_arch(u64 base, u64 size)
++{
++	pr_err("%s(%llx, %llx)\n",
++	       __func__, base, size);
++}
++
++void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
++{
++	return alloc_bootmem_align(size, align);
++}
+diff --git a/arch/cris/kernel/setup.c b/arch/cris/kernel/setup.c
+index 905b70e..f11538e 100644
+--- a/arch/cris/kernel/setup.c
++++ b/arch/cris/kernel/setup.c
+@@ -19,6 +19,9 @@
+ #include <linux/utsname.h>
+ #include <linux/pfn.h>
+ #include <linux/cpu.h>
++#include <linux/of.h>
++#include <linux/of_fdt.h>
++#include <linux/of_platform.h>
+ #include <asm/setup.h>
+ #include <arch/system.h>
+ 
+@@ -64,6 +67,8 @@ void __init setup_arch(char **cmdline_p)
+ 	unsigned long start_pfn, max_pfn;
+ 	unsigned long memory_start;
+ 
++	early_init_dt_scan(__dtb_start);
++
+ 	/* register an initial console printing routine for printk's */
+ 
+ 	init_etrax_debug();
+@@ -141,6 +146,8 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	reserve_bootmem(PFN_PHYS(start_pfn), bootmap_size, BOOTMEM_DEFAULT);
+ 
++	unflatten_and_copy_device_tree();
++
+ 	/* paging_init() sets up the MMU and marks all pages as reserved */
+ 
+ 	paging_init();
+@@ -204,3 +211,9 @@ static int __init topology_init(void)
+ 
+ subsys_initcall(topology_init);
+ 
++static int __init cris_of_init(void)
++{
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++	return 0;
++}
++core_initcall(cris_of_init);
+-- 
+2.1.4
