@@ -1,58 +1,136 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] ARM: DTS: omap3-n900.dts: fix i2c bus numbering
-Date: Sun, 8 Feb 2015 19:37:13 +0100
-Message-ID: <201502081937.13632@pali>
-References: <1423410536-16579-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+From: Lukasz Majewski <l.majewski@majess.pl>
+Subject: Re: [PATCH v3 6/8] hwmon: pwm-fan: Extract __set_pwm() function to
+ only modify PWM duty cycle
+Date: Sun, 8 Feb 2015 21:52:43 +0100
+Message-ID: <20150208215243.22085c97@jawa>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+	<1423241948-31981-1-git-send-email-l.majewski@samsung.com>
+	<1423241948-31981-7-git-send-email-l.majewski@samsung.com>
+	<20150206182725.GA25410@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2086823.SrgNrtFezx";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1423410536-16579-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: tony@atomide.com, pavel@ucw.cz, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/BPabe_PY5yHylU13fGbDcaU"; protocol="application/pgp-signature"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150206182725.GA25410@roeck-us.net>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---nextPart2086823.SrgNrtFezx
-Content-Type: Text/Plain;
-  charset="utf-8"
+--Sig_/BPabe_PY5yHylU13fGbDcaU
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Sunday 08 February 2015 16:48:56 Ivaylo Dimitrov wrote:
-> With legacy boot i2c buses on Nokia N900 are numbered i2c1,
-> i2c2 and i2c3. Commit 20b80942ef4e ("ARM: dts: OMAP3+: Add
-> i2c aliases") fixed the numbering with DT boot, but
-> introduced a regression on N900 - aliases become i2c0, i2c1
-> and i2c2. Fix that by providing the correct aliases in the
-> board dts.
+On Fri, 6 Feb 2015 10:27:25 -0800
+Guenter Roeck <linux@roeck-us.net> wrote:
+
+> On Fri, Feb 06, 2015 at 05:59:06PM +0100, Lukasz Majewski wrote:
+> > It was necessary to decouple code handling writing to sysfs from
+> > the one responsible for setting PWM of the fan.
+> > Due to that, new __set_pwm() method was extracted, which is
+> > responsible for only setting new PWM duty cycle.
+> >=20
+> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > ---
+> > Changes for v2:
+> > - None
+> > Changes for v3:
+> > - The commit headline has been reedited.
+> > ---
+> >  drivers/hwmon/pwm-fan.c | 35 ++++++++++++++++++++++-------------
+> >  1 file changed, 22 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> > index 1991d903..870e100 100644
+> > --- a/drivers/hwmon/pwm-fan.c
+> > +++ b/drivers/hwmon/pwm-fan.c
+> > @@ -33,21 +33,15 @@ struct pwm_fan_ctx {
+> >  	unsigned char pwm_value;
+> >  };
+> > =20
+> > -static ssize_t set_pwm(struct device *dev, struct device_attribute
+> > *attr,
+> > -		       const char *buf, size_t count)
+> > +static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
+> >  {
+> > -	struct pwm_fan_ctx *ctx =3D dev_get_drvdata(dev);
+> > -	unsigned long pwm, duty;
+> > -	ssize_t ret;
+> > -
+> > -	if (kstrtoul(buf, 10, &pwm) || pwm > MAX_PWM)
+> > -		return -EINVAL;
+> > -
+> > -	mutex_lock(&ctx->lock);
+> > +	unsigned long duty;
+> > +	int ret;
+> > =20
+> >  	if (ctx->pwm_value =3D=3D pwm)
+> > -		goto exit_set_pwm_no_change;
+> > +		return 0;
+> > =20
+> Why did you move this check outside the lock ? With this change there=20
+> is no guarantee that pwm_value wasn't changed while waiting for the
+> lock.
+
+Grrr. You are obviously right here. I will fix this. Thanks for spotting
+
+Best regards,
+Lukasz Majewski
+
 >=20
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> ---
->  arch/arm/boot/dts/omap3-n900.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
+> Guenter
 >=20
+> > +	mutex_lock(&ctx->lock);
+> >  	if (pwm =3D=3D 0) {
+> >  		pwm_disable(ctx->pwm);
+> >  		goto exit_set_pwm;
+> > @@ -66,13 +60,28 @@ static ssize_t set_pwm(struct device *dev,
+> > struct device_attribute *attr,=20
+> >  exit_set_pwm:
+> >  	ctx->pwm_value =3D pwm;
+> > -exit_set_pwm_no_change:
+> > -	ret =3D count;
+> >  exit_set_pwm_err:
+> >  	mutex_unlock(&ctx->lock);
+> >  	return ret;
+> >  }
+> > =20
+> > +static ssize_t set_pwm(struct device *dev, struct device_attribute
+> > *attr,
+> > +		       const char *buf, size_t count)
+> > +{
+> > +	struct pwm_fan_ctx *ctx =3D dev_get_drvdata(dev);
+> > +	unsigned long pwm;
+> > +	int ret;
+> > +
+> > +	if (kstrtoul(buf, 10, &pwm) || pwm > MAX_PWM)
+> > +		return -EINVAL;
+> > +
+> > +	ret =3D __set_pwm(ctx, pwm);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return count;
+> > +}
+> > +
+> >  static ssize_t show_pwm(struct device *dev,
+> >  			struct device_attribute *attr, char *buf)
+> >  {
+> > --=20
+> > 2.0.0.rc2
+> >=20
 
-Works fine,
 
-Tested-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart2086823.SrgNrtFezx
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+--Sig_/BPabe_PY5yHylU13fGbDcaU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Version: GnuPG v2
 
-iEYEABECAAYFAlTXrNkACgkQi/DJPQPkQ1JSMACfRBrcKSxJLHfD72IqbklgB7HO
-PzcAoMaSCvmCgq+39EfqTkuhrhuexIKe
-=htY9
+iEYEARECAAYFAlTXzKEACgkQf9/hG2YwgjHPugCcCxRGEjB5x5p9qUUvPITaXmeO
+hZMAoKxxfV0eHZqPvPfA1EPQ3mxFT2+r
+=jamh
 -----END PGP SIGNATURE-----
 
---nextPart2086823.SrgNrtFezx--
+--Sig_/BPabe_PY5yHylU13fGbDcaU--
