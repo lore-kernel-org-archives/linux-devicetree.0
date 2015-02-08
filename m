@@ -1,95 +1,116 @@
-From: Rabin Vincent <rabin@rab.in>
-Subject: [PATCH 2/4] CRISv32: add irq domains support
-Date: Sun,  8 Feb 2015 16:35:43 +0100
-Message-ID: <1423409745-2230-2-git-send-email-rabin@rab.in>
-References: <1423409745-2230-1-git-send-email-rabin@rab.in>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423409745-2230-1-git-send-email-rabin@rab.in>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jesper.nilsson@axis.com
-Cc: linux-cris-kernel@axis.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rabin Vincent <rabin@rab.in>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] irqchip: vf610-mscm-ir: add support for MSCM
+ interrupt router
+Date: Sun, 08 Feb 2015 16:45:52 +0100
+Message-ID: <4ba5a546aba95bb0948c8a070648bb45@agner.ch>
+References: <1423252286-17814-1-git-send-email-stefan@agner.ch>
+ <1423252286-17814-2-git-send-email-stefan@agner.ch>
+ <1423306617.2246.23.camel@x220>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423306617.2246.23.camel@x220>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for IRQ domains to the CRISv32 interrupt controller.
+On 2015-02-07 11:56, Paul Bolle wrote:
+> On Fri, 2015-02-06 at 20:51 +0100, Stefan Agner wrote:
+>> This adds support for Vybrid's interrupt router. On VF6xx models,
+>> almost all peripherals can be used by either of the two CPU's,
+>> the Cortex-A5 or the Cortex-M4. The interrupt router routes the
+>> peripheral interrupts to the configured CPU.
+>>
+>> This IRQ chip driver configures the interrupt router to route
+>> the requested interrupt to the CPU the kernel is running on.
+>> The driver makes use of the irqdomain hierarchy support. The
+>> parent is given by the device tree. This should be one of the
+>> two possible parents either ARM GIC or the ARM NVIC interrupt
+>> controller. The latter is currently not yet supported.
+>>
+>> Note that there is no resource control mechnism implemented to
+>> avoid concurrent access of the same peripheral. The user needs
+>> to make sure to use device trees which assign the peripherals
+>> orthogonally. However, this driver warns the user in case the
+>> interrupt is already configured for the other CPU. This provides
+>> a poor man's resource controller.
+>>
+>> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>> ---
+>>  arch/arm/mach-imx/Kconfig           |   1 +
+>>  drivers/irqchip/Kconfig             |  11 ++
+>>  drivers/irqchip/Makefile            |   1 +
+>>  drivers/irqchip/irq-vf610-mscm-ir.c | 206 ++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 219 insertions(+)
+>>  create mode 100644 drivers/irqchip/irq-vf610-mscm-ir.c
+>>
+>> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+>> index e8627e0..bf91a59 100644
+>> --- a/arch/arm/mach-imx/Kconfig
+>> +++ b/arch/arm/mach-imx/Kconfig
+>> @@ -631,6 +631,7 @@ config SOC_IMX6SX
+>>
+>>  config SOC_VF610
+>>  	bool "Vybrid Family VF610 support"
+>> +	select VF610_MSCM_IR
+>>  	select ARM_GIC
+>>  	select PINCTRL_VF610
+>>  	select PL310_ERRATA_769419 if CACHE_L2X0
+>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+>> index cc79d2a..9c13d81 100644
+>> --- a/drivers/irqchip/Kconfig
+>> +++ b/drivers/irqchip/Kconfig
+>> @@ -136,6 +136,17 @@ config IRQ_CROSSBAR
+>>  	  a free irq and configures the IP. Thus the peripheral interrupts are
+>>  	  routed to one of the free irqchip interrupt lines.
+>>
+>> +config VF610_MSCM_IR
+>> +	bool
+>> +	help
+>> +	  Support for MSCM interrupt router available on Vybrid SoC's. The
+>> +	  interrupt router is between the CPU's interrupt controller and the
+>> +	  peripheral. The router allows to route the peripheral interrupts to
+>> +	  one of the two available CPU's on Vybrid VF6xx SoC's (Cortex-A5 or
+>> +	  Cortex-M4). The router will be configured transparently on a IRQ
+>> +	  request.
+>> +	select IRQ_DOMAIN_HIERARCHY
+>> +
+> 
+> As far as I can tell this new Kconfig symbol operates in lockstep with
+> SOC_VF610: if SOC_VF610 is set, this will also be set, and if SOC_VF610
+> is not set, this won't be set either. Is a separate symbol needed?
 
-Signed-off-by: Rabin Vincent <rabin@rab.in>
----
- arch/cris/Kconfig               |  1 +
- arch/cris/arch-v32/kernel/irq.c | 28 +++++++++++++++++++++++++---
- 2 files changed, 26 insertions(+), 3 deletions(-)
+Theoretically, this could be used by other SoC's. However, afaik the
+i.MX6 SoloX, which one could see as something like the successor of
+Vybrid, implements the interrupt routing differently. So I would be fine
+to just use the SOC_VF610 symbol instead.
 
-diff --git a/arch/cris/Kconfig b/arch/cris/Kconfig
-index cbbc2dc..66f71df 100644
---- a/arch/cris/Kconfig
-+++ b/arch/cris/Kconfig
-@@ -55,6 +55,7 @@ config CRIS
- 	select ARCH_REQUIRE_GPIOLIB
- 	select OF
- 	select OF_EARLY_FLATTREE
-+	select IRQ_DOMAIN if ETRAX_ARCH_V32
- 
- config HZ
- 	int
-diff --git a/arch/cris/arch-v32/kernel/irq.c b/arch/cris/arch-v32/kernel/irq.c
-index 25437ae..bc871d2 100644
---- a/arch/cris/arch-v32/kernel/irq.c
-+++ b/arch/cris/arch-v32/kernel/irq.c
-@@ -10,6 +10,8 @@
- #include <linux/errno.h>
- #include <linux/init.h>
- #include <linux/profile.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
- #include <linux/threads.h>
-@@ -431,6 +433,19 @@ crisv32_do_multiple(struct pt_regs* regs)
- 	irq_exit();
- }
- 
-+static int crisv32_irq_map(struct irq_domain *h, unsigned int virq,
-+			   irq_hw_number_t hw_irq_num)
-+{
-+	irq_set_chip_and_handler(virq, &crisv32_irq_type, handle_simple_irq);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops crisv32_irq_ops = {
-+	.map	= crisv32_irq_map,
-+	.xlate	= irq_domain_xlate_onecell,
-+};
-+
- /*
-  * This is called by start_kernel. It fixes the IRQ masks and setup the
-  * interrupt vector table to point to bad_interrupt pointers.
-@@ -441,6 +456,8 @@ init_IRQ(void)
- 	int i;
- 	int j;
- 	reg_intr_vect_rw_mask vect_mask = {0};
-+	struct device_node *np;
-+	struct irq_domain *domain;
- 
- 	/* Clear all interrupts masks. */
- 	for (i = 0; i < NBR_REGS; i++)
-@@ -449,10 +466,15 @@ init_IRQ(void)
- 	for (i = 0; i < 256; i++)
- 		etrax_irv->v[i] = weird_irq;
- 
--	/* Point all IRQ's to bad handlers. */
-+	np = of_find_compatible_node(NULL, NULL, "axis,crisv32-intc");
-+	domain = irq_domain_add_legacy(np, NR_IRQS - FIRST_IRQ,
-+				       FIRST_IRQ, FIRST_IRQ,
-+				       &crisv32_irq_ops, NULL);
-+	BUG_ON(!domain);
-+	irq_set_default_host(domain);
-+	of_node_put(np);
-+
- 	for (i = FIRST_IRQ, j = 0; j < NR_IRQS; i++, j++) {
--		irq_set_chip_and_handler(j, &crisv32_irq_type,
--					 handle_simple_irq);
- 		set_exception_vector(i, interrupt[j]);
- 	}
- 
--- 
-2.1.4
+The only thing which I would rather prefer to keep is the comment what
+this is all about (the help text). But I guess I could move that as
+comment into the source file...
+
+> 
+> If you decide to keep it, I have two minor nits.
+> 
+> 1) Make the help text the last option of the Kconfig entry. It's legal
+> to put Kconfig options in any order that you'd like. But with very few
+> exceptions, the help text is always the last. Please use that pattern.
+> 
+> 2) This Kconfig entry has no prompt, so I'm not aware of a way that
+> people ever can read this help text when running "make *configure". So
+> this help text is basically a comment. You might as well format it as a
+> comment then.
+> 
+>>  config KEYSTONE_IRQ
+>>  	tristate "Keystone 2 IRQ controller IP"
+>>  	depends on ARCH_KEYSTONE
+
+--
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
