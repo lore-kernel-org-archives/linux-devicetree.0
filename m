@@ -1,41 +1,58 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v8 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
-Date: Sun, 8 Feb 2015 10:10:28 -0800
-Message-ID: <54D7A694.4000903@broadcom.com>
-References: <rjui@broadcom.com> <1423272507-18459-1-git-send-email-rjui@broadcom.com> <1423272507-18459-3-git-send-email-rjui@broadcom.com> <20150207175039.GB6263@katana> <54D6EF3D.4030302@broadcom.com> <20150208110325.GA2750@katana>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] ARM: DTS: omap3-n900.dts: fix i2c bus numbering
+Date: Sun, 8 Feb 2015 19:37:13 +0100
+Message-ID: <201502081937.13632@pali>
+References: <1423410536-16579-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: multipart/signed;
+  boundary="nextPart2086823.SrgNrtFezx";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150208110325.GA2750@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Arend van Spriel <arend@broadcom.com>, Kevin Cernekee <cernekee@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1423410536-16579-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: tony@atomide.com, pavel@ucw.cz, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+--nextPart2086823.SrgNrtFezx
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sunday 08 February 2015 16:48:56 Ivaylo Dimitrov wrote:
+> With legacy boot i2c buses on Nokia N900 are numbered i2c1,
+> i2c2 and i2c3. Commit 20b80942ef4e ("ARM: dts: OMAP3+: Add
+> i2c aliases") fixed the numbering with DT boot, but
+> introduced a regression on N900 - aliases become i2c0, i2c1
+> and i2c2. Fix that by providing the correct aliases in the
+> board dts.
+>=20
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> ---
+>  arch/arm/boot/dts/omap3-n900.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
 
-On 2/8/2015 3:03 AM, Wolfram Sang wrote:
-> 
->>> Is it really a HW limitation? Could the driver later be extended to
->>> continue filling the FIFO if a certain threshold is reached?
->>>
->>
->> Will return -EOPNOTSUPP. This really depends on whether or not we expect
->> one sequence of START + SLV ADDR + DATA + STOP per i2c message. I can
->> later extend the driver to refill/re-drain the FIFO for data size >= 64
->> bytes, if one sequence of SATRT...STOP per message is not a requirement.
-> 
-> It is important to have the terminology clear here: One transfer can
-> consist of multiple messages. The transfer uses START/STOP at the
-> beginning/end, the messages within the transfer only REPEATED_START.
-> 
-Okay. Let me check with our ASIC engineer to see if there's a way to get
-the driver extended to support the case when data size is larger than
-the FIFO size. From my understanding based on the data sheet I have, I
-don't think that can be done with this controller. But if the ASIC
-engineers tells me the opposite, I'll add it as a separate patch later.
+Works fine,
 
-Thanks,
+Tested-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
 
-Ray
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2086823.SrgNrtFezx
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlTXrNkACgkQi/DJPQPkQ1JSMACfRBrcKSxJLHfD72IqbklgB7HO
+PzcAoMaSCvmCgq+39EfqTkuhrhuexIKe
+=htY9
+-----END PGP SIGNATURE-----
+
+--nextPart2086823.SrgNrtFezx--
