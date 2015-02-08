@@ -1,216 +1,63 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 1/2] mtd: hisilicon: add a new NAND controller driver
- for hisilicon hip04 Soc
-Date: Sun, 8 Feb 2015 00:42:25 -0800
-Message-ID: <20150208084225.GE3670@norris-Latitude-E6410>
-References: <1422183194-10148-1-git-send-email-wangzhou1@hisilicon.com>
- <1422183194-10148-2-git-send-email-wangzhou1@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Niklas Cassel <nks-l8MkAr6ANHBAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH 2/2] serial: add device tree binding documentation for ETRAX FS UART
+Date: Sun,  8 Feb 2015 09:31:52 +0100
+Message-ID: <1423384312-6185-1-git-send-email-nks@flawful.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1422183194-10148-2-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Niklas Cassel <nks-l8MkAr6ANHBAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhou,
+Signed-off-by: Niklas Cassel <nks-l8MkAr6ANHBAfugRpC6u6w@public.gmane.org>
+---
+[PATCH 1/2] of this patch series has been applied to gregkh's tty-testing branch.
+However he expected someone else to pick up [PATCH 2/2] (this commit).
 
-On Sun, Jan 25, 2015 at 06:53:13PM +0800, Zhou Wang wrote:
-> diff --git a/drivers/mtd/nand/hisi504_nand.c b/drivers/mtd/nand/hisi504_nand.c
-> new file mode 100644
-> index 0000000..484e1db
-> --- /dev/null
-> +++ b/drivers/mtd/nand/hisi504_nand.c
-...
-> +static uint8_t hisi_nfc_read_byte(struct mtd_info *mtd)
-> +{
-> +	struct nand_chip *chip = mtd->priv;
-> +	struct hinfc_host *host = chip->priv;
-> +
-> +	if (host->command == NAND_CMD_STATUS)
-> +		return *(uint8_t *)(host->mmio);
-> +
-> +	host->offset++;
-> +
-> +	if (host->command == NAND_CMD_READID)
-> +		return *(uint8_t *)(host->mmio + host->offset - 1);
-> +
-> +	return *(uint8_t *)(host->buffer + host->offset - 1);
-> +}
-> +
-> +static u16 hisi_nfc_read_word(struct mtd_info *mtd)
-> +{
-> +	struct nand_chip *chip = mtd->priv;
-> +	struct hinfc_host *host = chip->priv;
-> +
-> +	host->offset += 2;
-> +	return *(u16 *)(host->buffer + host->offset - 2);
-> +}
-> +
-> +static void
-> +hisi_nfc_write_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
-> +{
-> +	struct nand_chip *chip = mtd->priv;
-> +	struct hinfc_host *host = chip->priv;
-> +
-> +	memcpy(host->buffer + host->offset, buf, len);
-> +	host->offset += len;
-> +}
-> +
-> +static void hisi_nfc_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
-> +{
-> +	struct nand_chip *chip = mtd->priv;
-> +	struct hinfc_host *host = chip->priv;
-> +
-> +	memcpy(buf, host->buffer + host->offset, len);
-> +	host->offset += len;
-> +}
+ .../devicetree/bindings/serial/axis,etraxfs-uart.txt  | 19 +++++++++++++++++++
+ Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
+ 2 files changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
 
-...
+diff --git a/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt b/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
+new file mode 100644
+index 0000000..ebcbb62
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
+@@ -0,0 +1,19 @@
++ETRAX FS UART
++
++Required properties:
++- compatible : "axis,etraxfs-uart"
++- reg: offset and length of the register set for the device.
++- interrupts: device interrupt
++
++Optional properties:
++- {dtr,dsr,ri,cd}-gpios: specify a GPIO for DTR/DSR/RI/CD
++  line respectively.
++
++Example:
++
++serial@b00260000 {
++	compatible = "axis,etraxfs-uart";
++	reg = <0xb0026000 0x1000>;
++	interrupts = <68>;
++	status = "disabled";
++};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index d6bad12..f8d088e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -27,6 +27,7 @@ atmel	Atmel Corporation
+ auo	AU Optronics Corporation
+ avago	Avago Technologies
+ avic	Shanghai AVIC Optoelectronics Co., Ltd.
++axis	Axis Communications AB
+ bosch	Bosch Sensortec GmbH
+ brcm	Broadcom Corporation
+ buffalo	Buffalo, Inc.
+-- 
+2.2.2
 
-> +static int hisi_nfc_probe(struct platform_device *pdev)
-> +{
-> +	int ret = 0, irq, buswidth, flag, max_chips = HINFC504_MAX_CHIP;
-> +	struct device *dev = &pdev->dev;
-> +	struct hinfc_host *host;
-> +	struct nand_chip  *chip;
-> +	struct mtd_info   *mtd;
-> +	struct resource	  *res;
-> +	struct device_node *np = dev->of_node;
-> +	struct mtd_part_parser_data ppdata;
-> +
-> +	host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
-> +	if (!host)
-> +		return -ENOMEM;
-> +	host->dev = dev;
-> +
-> +	platform_set_drvdata(pdev, host);
-> +	chip = &host->chip;
-> +	mtd  = &host->mtd;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "no IRQ resource defined\n");
-> +		ret = -ENXIO;
-> +		goto err_res;
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	host->iobase = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(host->iobase)) {
-> +		ret = PTR_ERR(host->iobase);
-> +		goto err_res;
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	host->mmio = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(host->mmio)) {
-> +		ret = PTR_ERR(host->mmio);
-> +		dev_err(dev, "devm_ioremap_resource[1] fail\n");
-> +		goto err_res;
-> +	}
-> +
-> +	mtd->priv		= chip;
-> +	mtd->owner		= THIS_MODULE;
-> +	mtd->name		= "hisi_nand";
-> +	mtd->dev.parent         = &pdev->dev;
-> +
-> +	chip->priv		= host;
-> +	chip->cmdfunc		= hisi_nfc_cmdfunc;
-> +	chip->select_chip	= hisi_nfc_select_chip;
-> +	chip->read_byte		= hisi_nfc_read_byte;
-> +	chip->read_word		= hisi_nfc_read_word;
-> +	chip->write_buf		= hisi_nfc_write_buf;
-> +	chip->read_buf		= hisi_nfc_read_buf;
-> +	chip->chip_delay	= HINFC504_CHIP_DELAY;
-> +
-> +	chip->ecc.mode = of_get_nand_ecc_mode(np);
-> +
-> +	buswidth = of_get_nand_bus_width(np);
-> +	if (buswidth == 16)
-> +		chip->options |= NAND_BUSWIDTH_16;
-> +
-> +	hisi_nfc_host_init(host);
-> +
-> +	ret = devm_request_irq(dev, irq, hinfc_irq_handle, IRQF_DISABLED,
-> +				"nandc", host);
-> +	if (ret) {
-> +		dev_err(dev, "failed to request IRQ\n");
-> +		goto err_res;
-> +	}
-> +
-> +	ret = nand_scan_ident(mtd, max_chips, NULL);
-> +	if (ret) {
-> +		ret = -ENODEV;
-> +		goto err_res;
-> +	}
-> +
-> +	host->buffer = dmam_alloc_coherent(dev, mtd->writesize + mtd->oobsize,
-> +		&host->dma_buffer, GFP_KERNEL);
-
-You allocate this buffer after nand_scan_ident() (which is necessary, if
-you want to use the page and OOB size), but note that this buffer is
-used for everything but the READ_ID and STATUS commands, right? So there
-is some potential for a NULL dereference in read_byte/read_buf, above.
-Fortunately, there aren't many other commands used in nand_scan_ident(),
-but I think you might run across one problem; what if an ONFI or JEDEC
-compatible NAND is used? Then nand_scan_ident() might run a
-PARAMETER_READ command.
-
-Anyway, I see that PARAMETER_READ is not implemented in this driver, so
-I guess that's not a big deal. Just FYI.
-
-> +	if (!host->buffer) {
-> +		ret = -ENOMEM;
-> +		goto err_res;
-> +	}
-> +
-> +	host->dma_oob = host->dma_buffer + mtd->writesize;
-> +	memset(host->buffer, 0xff, mtd->writesize + mtd->oobsize);
-> +
-> +	flag = hinfc_read(host, HINFC504_CON);
-> +	flag &= ~(HINFC504_CON_PAGESIZE_MASK << HINFC504_CON_PAGEISZE_SHIFT);
-> +	switch (mtd->writesize) {
-> +	case 2048:
-> +		flag |= (0x001 << HINFC504_CON_PAGEISZE_SHIFT); break;
-> +	/*
-> +	 * TODO: add more pagesize support,
-> +	 * default pagesize has been set in hisi_nfc_host_init
-> +	 */
-> +	default:
-> +		dev_err(dev, "NON-2KB page size nand flash\n");
-> +		ret = -EINVAL;
-> +		goto err_res;
-> +	}
-> +	hinfc_write(host, flag, HINFC504_CON);
-> +
-> +	if (chip->ecc.mode == NAND_ECC_HW)
-> +		hisi_nfc_ecc_probe(host);
-> +
-> +	ret = nand_scan_tail(mtd);
-> +	if (ret) {
-> +		dev_err(dev, "nand_scan_tail failed: %d\n", ret);
-> +		goto err_res;
-> +	}
-> +
-> +	ppdata.of_node = np;
-> +	ret = mtd_device_parse_register(mtd, NULL, &ppdata, NULL, 0);
-> +	if (ret) {
-> +		dev_err(dev, "Err MTD partition=%d\n", ret);
-> +		goto err_mtd;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_mtd:
-> +	nand_release(mtd);
-> +err_res:
-> +	return ret;
-> +}
-
-Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
