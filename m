@@ -1,141 +1,79 @@
-From: Lukasz Majewski <l.majewski@majess.pl>
-Subject: Re: [PATCH v3 7/8] hwmon: pwm-fan: Read PWM FAN configuration from
- device tree
-Date: Sun, 8 Feb 2015 22:36:40 +0100
-Message-ID: <20150208223640.2bcab3f4@jawa>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
-	<1423241948-31981-1-git-send-email-l.majewski@samsung.com>
-	<1423241948-31981-8-git-send-email-l.majewski@samsung.com>
-	<20150206183657.GB25410@roeck-us.net>
+From: =?big5?B?SGVucnlDIENoZW4gKLOvq9i7qCk=?= <HenryC.Chen@mediatek.com>
+Subject: RE: [PATCH v4 0/7] clk: Add common clock support for Mediatek
+ MT8135 and MT8173.
+Date: Mon, 9 Feb 2015 03:05:41 +0000
+Message-ID: <973C649EAEADCC47B3D0BEB0BD37EB2F0495E9A3@mtkmbs08n1>
+References: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
+ <CABuKBeJSH3WzG3QC=9OoPzXE6fd9W2U67V4c19NzWcPxWR7VDg@mail.gmail.com>
+ <20150206103033.GS18908@pengutronix.de>
+ <CABuKBeJBp115aD_xb7_2471h=iyr5Wc33m2EX715MxNc=_1p2A@mail.gmail.com>
+ <20150206151542.GO12209@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/+hMmTFW8Us69PM6y8Y9dwAP"; protocol="application/pgp-signature"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20150206183657.GB25410@roeck-us.net>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150206151542.GO12209@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?big5?B?SmFtZXNKSiBMaWFvICi5+avYtLwp?= <jamesjj.liao@mediatek.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, srv_heupstream <srv_heupstream@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?big5?B?WWluZ2pvZSBDaGVuICizr61erHcp?= <Yingjoe.Chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, =?big5?B?RWRkaWUgSHVhbmcgKLbAtLyzxyk=?= <eddie.huang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/+hMmTFW8Us69PM6y8Y9dwAP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 6 Feb 2015 10:36:57 -0800
-Guenter Roeck <linux@roeck-us.net> wrote:
-
-> On Fri, Feb 06, 2015 at 05:59:07PM +0100, Lukasz Majewski wrote:
-> > This patch provides code for reading PWM FAN configuration data via
-> > device tree. The pwm-fan can work with full speed when configuration
-> > is not provided. However, errors are propagated when wrong DT
-> > bindings are found.
-> > Additionally the struct pwm_fan_ctx has been extended.
-> >=20
-> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> > ---
-> > Changes for v2:
-> > - Rename pwm_fan_max_states to pwm_fan_cooling_levels
-> > - Moving pwm_fan_of_get_cooling_data() call after setting end
-> > enabling PWM FAN
-> > - pwm_fan_of_get_cooling_data() now can fail - preserving old
-> > behaviour
-> > - Remove unnecessary dev_err() call
-> > Changes for v3:
-> > - Patch's headline has been reedited
-> > - pwm_fan_of_get_cooling_data() return code is now being checked.
-> > - of_property_count_elems_of_size() is now used instead
-> > of_find_property()
-> > - More verbose patch description added
-> > ---
-> >  drivers/hwmon/pwm-fan.c | 54
-> > ++++++++++++++++++++++++++++++++++++++++++++++++- 1 file changed,
-> > 53 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> > index 870e100..f3f5843 100644
-> > --- a/drivers/hwmon/pwm-fan.c
-> > +++ b/drivers/hwmon/pwm-fan.c
-> > @@ -30,7 +30,10 @@
-> >  struct pwm_fan_ctx {
-> >  	struct mutex lock;
-> >  	struct pwm_device *pwm;
-> > -	unsigned char pwm_value;
-> > +	unsigned int pwm_value;
-> > +	unsigned int pwm_fan_state;
-> > +	unsigned int pwm_fan_max_state;
-> > +	unsigned int *pwm_fan_cooling_levels;
-> >  };
-> > =20
-> >  static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
-> > @@ -100,6 +103,50 @@ static struct attribute *pwm_fan_attrs[] =3D {
-> > =20
-> >  ATTRIBUTE_GROUPS(pwm_fan);
-> > =20
-> > +int pwm_fan_of_get_cooling_data(struct device *dev, struct
-> > pwm_fan_ctx *ctx) +{
-> > +	struct device_node *np =3D dev->of_node;
-> > +	int num, i, ret;
-> > +
-> > +	ret =3D of_property_count_elems_of_size(np, "cooling-levels",
-> > +					      sizeof(u32));
-> > +
-> > +	if (ret =3D=3D -EINVAL) {
-> > +		dev_err(dev, "Property 'cooling-levels' not
-> > found\n");
-> > +		return 0;
->=20
-> Returning 0 is obviously not an error, otherwise you would not return
-> 0 here. So dev_err is wrong.
-
-pr_info would be more appropriate here.
-
-> Also, the message itself is wrong; the
-> property may well be there but have a wrong size.
-
-As fair as I remember the -EINVAL is set only when the property is not
-defined. Such situation is correct and our pwm-fan driver should work
-with or without it.
-
->=20
-> > +	}
-> > +
-> > +	if (ret <=3D 0) {
-> > +		dev_err(dev, "Wrong data!\n");
-> > +		return ret;
-> > +	}
->=20
-> This will result in the driver failing to load if devicetree is not
-> configured (of_property_count_elems_of_size will return -ENOSYS).
-
-As you pointed out in the comment to v2:
-
-It is OK if the "cooling-levels" is not defined in DT. However, if it
-has broken definition, then we should return error. This is what we do
-here.
-
-> This is not acceptable. Also, if the call returns 0 you don't return
-> an error but display a "Wrong data!" error message. Either it is an
-> error or it is not, but not both.
-
-This is an error. "cooling-levels" with zero elements is regarded as a
-broken property.
-
->=20
-> Guenter
-
-Best regards,
-Lukasz Majewski
-
---Sig_/+hMmTFW8Us69PM6y8Y9dwAP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlTX1u0ACgkQf9/hG2YwgjHNCwCgmdzCrtrrTrc04aWadFadgw0U
-6xkAn02yLnUrvgoGRrwd1YaewWk6yRfL
-=livi
------END PGP SIGNATURE-----
-
---Sig_/+hMmTFW8Us69PM6y8Y9dwAP--
+SGkgU2FzY2hhLA0KDQpJdCdzIG9rYXkgZm9yIG1lLCB0aGFua3MuDQoNCkhlbnJ5DQoNCj4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2FzY2hhIEhhdWVyIFttYWlsdG86cy5o
+YXVlckBwZW5ndXRyb25peC5kZV0NCj4gU2VudDogRnJpZGF5LCBGZWJydWFyeSAwNiwgMjAxNSAx
+MToxNiBQTQ0KPiBUbzogTWF0dGhpYXMgQnJ1Z2dlcg0KPiBDYzogSGVucnlDIENoZW4gKLOvq9i7
+qCk7IFJvYiBIZXJyaW5nOyBNaWtlIFR1cnF1ZXR0ZTsgc3J2X2hldXBzdHJlYW07DQo+IFNhc2No
+YSBIYXVlcjsgSmFtZXNKSiBMaWFvICi5+avYtLwpOyBFZGRpZSBIdWFuZyAotsC0vLPHKTsgUGF3
+ZWwgTW9sbDsNCj4gTWFyayBSdXRsYW5kOyBJYW4gQ2FtcGJlbGw7IEt1bWFyIEdhbGE7IFJ1c3Nl
+bGwgS2luZzsgQ2F0YWxpbiBNYXJpbmFzOw0KPiBWbGFkaW1pciBNdXJ6aW47IEFzaHdpbiBDaGF1
+Z3VsZTsgWWluZ2pvZSBDaGVuICizr61erHcpOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZzsgbGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBT
+dWJqZWN0OiBSZTogW1BBVENIIHY0IDAvN10gY2xrOiBBZGQgY29tbW9uIGNsb2NrIHN1cHBvcnQg
+Zm9yIE1lZGlhdGVrDQo+IE1UODEzNSBhbmQgTVQ4MTczLg0KPiANCj4gT24gRnJpLCBGZWIgMDYs
+IDIwMTUgYXQgMDM6MjA6MzVQTSArMDEwMCwgTWF0dGhpYXMgQnJ1Z2dlciB3cm90ZToNCj4gPiA+
+IEkgZG9uJ3QgcmVhbGx5IHVuZGVyc3RhbmQgdGhlICJhcyBwYXJ0IG9mIHRoZSBjbGsgZHJpdmVy
+IHBhcnQiLiBJDQo+ID4gPiBub3cgaGF2ZSByZXBsYWNlZCB0aGUgZGV2bV9yZWdtYXBfaW5pdF9t
+bWlvIHdpdGgNCj4gPiA+IHN5c2Nvbl9ub2RlX3RvX3JlZ21hcCBpbiB0aGUgcGVyaWNmZyAvIGlu
+ZnJhY2ZnIGRyaXZlcnMuIElzIHRoYXQNCj4gYWxsDQo+ID4gPiB0aGF0IHlvdSB3YW50IG9yIGRv
+IHlvdSB3YW50IG1lIHRvIG1vdmUgdGhlIHNvdXJjZSBjb2RlIHRvDQo+IGRyaXZlcnMvY2xrL21l
+ZGlhdGVrPw0KPiA+DQo+ID4gWWVzLCBJIHByb3Bvc2UgdG8gbW92ZSB0aGUgc291cmNlIGNvZGUg
+dG8gZHJpdmVycy9jbGsvbWVkaWF0ZWsuDQo+ID4gUGxlYXNlIGhhdmUgYSBsb29rIG9uIG90aGVy
+IGNsb2NrIGRyaXZlcnMgd2hpY2ggaW1wbGVtZW50IHRoZSByZXNldA0KPiA+IGNvbnRyb2xsZXIs
+IGUuZy4gcm9ja2NoaXAuDQo+IA0KPiBPaywgSSdtIGhhbGZ3YXkgdGhyb3VnaCBpbXBsZW1lbnRp
+bmcgdGhpcywgYnV0IGxldCdzIGhhdmUgd2Vla2VuZCBmaXJzdC4NCj4gDQo+IEhlbnJ5LCBJZiB5
+b3UncmUgZmluZSB3aXRoIHRoaXMgSSdsbCBjaGFuZ2UgeW91ciBjbG9jayBzZXJpZXMgYWNjb3Jk
+aW5nDQo+IHRvIE1hdHRoaWFzIHN1Z2dlc3Rpb25zLg0KPiANCj4gU2FzY2hhDQo+IA0KPiAtLQ0K
+PiBQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KPiB8DQo+IElu
+ZHVzdHJpYWwgTGludXggU29sdXRpb25zICAgICAgICAgICAgICAgICB8IGh0dHA6Ly93d3cucGVu
+Z3V0cm9uaXguZGUvDQo+IHwNCj4gUGVpbmVyIFN0ci4gNi04LCAzMTEzNyBIaWxkZXNoZWltLCBH
+ZXJtYW55IHwgUGhvbmU6ICs0OS01MTIxLTIwNjkxNy0wDQo+IHwNCj4gQW10c2dlcmljaHQgSGls
+ZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAgIHwgRmF4OiAgICs0OS01MTIxLTIwNjkxNy0NCj4g
+NTU1NSB8DQoNCioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGljZSAqKioq
+KioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0aGlzIGUtbWFp
+bCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0YWNobWVudHMpIG1heSBiZSBjb25maWRlbnRp
+YWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhlcndpc2UNCmV4ZW1wdCBmcm9tIGRp
+c2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRlbmRlZCB0byBiZSANCmNv
+bnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQgcmVjaXBpZW50KHMpLiBBbnkgdXNlLCBkaXNz
+ZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJldGFpbmluZyBvciBjb3B5aW5n
+IG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIA0KYXR0YWNobWVudHMpIGJ5IHVuaW50ZW5k
+ZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0ZWQgYW5kIG1heSANCmJlIHVubGF3
+ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRlZCByZWNpcGllbnQgb2YgdGhpcyBlLW1haWws
+IG9yIGJlbGlldmUgDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVycm9y
+LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcgdG8g
+dGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhpcyBlLW1haWwg
+KGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QN
+CmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24u
+IFRoYW5rIHlvdSENCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWFybS1rZXJuZWwK
