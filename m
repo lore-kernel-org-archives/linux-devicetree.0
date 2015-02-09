@@ -1,51 +1,66 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: gpio-pxa: getting GPIOs by devicetree phandle broken
-Date: Mon, 09 Feb 2015 09:02:51 +0100
-Message-ID: <87r3tz7bro.fsf@free.fr>
-References: <CAOjnSCajhwdRVZUO99KL-9PF6HitZen04MoLKoDUDr_5=iS7kw@mail.gmail.com>
-	<CAAVeFu+yf6Wf6MspiDLiWwQkMwMvimNa0SpMK_yO_9X07UecEw@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [Patch V4 03/10] ASoC: qcom: Document LPASS CPU bindings
+Date: Mon, 9 Feb 2015 16:08:44 +0800
+Message-ID: <20150209080844.GB2593@finisterre.sirena.org.uk>
+References: <1423169626-22166-1-git-send-email-kwestfie@codeaurora.org>
+ <1423169626-22166-4-git-send-email-kwestfie@codeaurora.org>
+ <20150206221823.GF31311@finisterre.sirena.org.uk>
+ <20150209063822.GA19870@kwestfie-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAAVeFu+yf6Wf6MspiDLiWwQkMwMvimNa0SpMK_yO_9X07UecEw@mail.gmail.com>
-	(Alexandre Courbot's message of "Mon, 9 Feb 2015 15:11:23 +0900")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Tyler Hall <tylerwhall@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Mack <zonque@gmail.com>, Hans Holmberg <hans.holmberg@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Howard Cochran <cochran@lexmark.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150209063822.GA19870-VfhoOQ2zEbNBVvN7MMdr1KRtKmQZhJ7pQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ALSA Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MSM Mailing List <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Alexandre Courbot <gnurou@gmail.com> writes:
 
-> Adding Robert who reported the same thing.
->
-> On Sat, Feb 7, 2015 at 6:28 AM, Tyler Hall <tylerwhall@gmail.com> wrote:
->> 1. Require child nodes in DT for each bank
->
-> This would break DT compatibility.
-Agreed.
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
->> 2. Refactor gpio-pxa to only register one gpiochip
->
-> Sounds better, especially since this would reflect the hardware more
-> accurately. One DT node should translate into one GPIO chip.
-Could I know where "should translate into _one_ GPIO chip" comes from ? Is it a
-specification, or is it a new rule we're creating ?
+On Sun, Feb 08, 2015 at 10:38:23PM -0800, Kenneth Westfield wrote:
 
-And if it's a new rule, I'd like to know what backs it up .
+> So I add a machine driver that selects the clocking freq in hw_params
+> and calls set_sysclk in the DAIs.
 
-> problem is that I'm afraid several other drivers are doing the same
-> thing and thus are now similarly broken.
-That's also what I'm afraid of.
+> The DT node for the machine driver would look something like:
+>         default_system_clock_frequency = < xxxxxx >;
+>         alternate_system_clock_frequency = < xxxxxx >;
+>         cpu_dai = < &cpu >;
+>         codec_dai = < &codec >;
+>         pinctrl... ?
 
-> The following is also likely to work as a workaround, but I would not
-> go as far as saying this should be taken as a fix. Hans, since you
-> wrote 7b8792b, could we have your input on this?
-I was going to suggest the very same approach. If this one (or a similar one)
-doesn't meet success, then my weekend of revert queries is not over ... and I
-don't like reverts.
+Why are the system clock frequencies being specified in the DT at all -
+can't we either figure out the constraints from something else or just
+set the rates to something sensible that the driver knows (allowing for
+improvements in the driver in the future).
 
-Cheers.
+> Does this sound ok?  Also, would it make sense to move the pinctrl back
+> to the machine driver?
 
--- 
-Robert
+Why would we want to do that?
+
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU2GsLAAoJECTWi3JdVIfQpbwH/jr9XJAh7m+JsbMEksYi34eJ
+ztZb4tetzS8+37MtvQ3YaD9qVv+vAHCkCAHwvt99I+jA/1gfQ4Sr1Pw9nEJDjA4U
+BaA29lK0k6Ylu05Z7evuZxTZMd/liwzy96iAAytkX1/MWIIzt7ZqaSx7jtewdYu1
+7UodBPwp10+NOENlJR8TcmxFahdxRJkXfqftQLbDCyjDC7hHAvPwrotEScLv50h1
+2vLrhUhgbu08DL5wkIS5+4NfksubFeAfQmgNLHCEFR0R7vSlf9QtAINKcEBteBSs
+D/x73oMvhUL4vxsczRAE/vkjBPSuJcMoi55lgDY5d3pF4urYQD1RkVElZYlwylI=
+=Hrvj
+-----END PGP SIGNATURE-----
+
+--ZfOjI3PrQbgiZnxM--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
