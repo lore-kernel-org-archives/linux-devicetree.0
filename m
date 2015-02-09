@@ -1,131 +1,101 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 7/8] hwmon: pwm-fan: Read PWM FAN configuration from
- device tree
-Date: Sun, 08 Feb 2015 20:40:11 -0800
-Message-ID: <54D83A2B.3070601@roeck-us.net>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>	<1423241948-31981-1-git-send-email-l.majewski@samsung.com>	<1423241948-31981-8-git-send-email-l.majewski@samsung.com>	<20150206183657.GB25410@roeck-us.net> <20150208223640.2bcab3f4@jawa>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mmc: dw_mmc: fix bug that cause 'Timeout sending command'
+Date: Mon, 9 Feb 2015 05:51:27 +0100
+Message-ID: <CAPDyKFpxYcRu1s8jwtoV5SVCANwX90yEYxED+w45eVuwZJUGEQ@mail.gmail.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150208223640.2bcab3f4@jawa>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@majess.pl>
-Cc: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423134801-23219-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWPdpHbCvnp+Ag@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2015 01:36 PM, Lukasz Majewski wrote:
-> On Fri, 6 Feb 2015 10:36:57 -0800
-> Guenter Roeck <linux@roeck-us.net> wrote:
+On 5 February 2015 at 12:13, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
 >
->> On Fri, Feb 06, 2015 at 05:59:07PM +0100, Lukasz Majewski wrote:
->>> This patch provides code for reading PWM FAN configuration data via
->>> device tree. The pwm-fan can work with full speed when configuration
->>> is not provided. However, errors are propagated when wrong DT
->>> bindings are found.
->>> Additionally the struct pwm_fan_ctx has been extended.
->>>
->>> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
->>> ---
->>> Changes for v2:
->>> - Rename pwm_fan_max_states to pwm_fan_cooling_levels
->>> - Moving pwm_fan_of_get_cooling_data() call after setting end
->>> enabling PWM FAN
->>> - pwm_fan_of_get_cooling_data() now can fail - preserving old
->>> behaviour
->>> - Remove unnecessary dev_err() call
->>> Changes for v3:
->>> - Patch's headline has been reedited
->>> - pwm_fan_of_get_cooling_data() return code is now being checked.
->>> - of_property_count_elems_of_size() is now used instead
->>> of_find_property()
->>> - More verbose patch description added
->>> ---
->>>   drivers/hwmon/pwm-fan.c | 54
->>> ++++++++++++++++++++++++++++++++++++++++++++++++- 1 file changed,
->>> 53 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
->>> index 870e100..f3f5843 100644
->>> --- a/drivers/hwmon/pwm-fan.c
->>> +++ b/drivers/hwmon/pwm-fan.c
->>> @@ -30,7 +30,10 @@
->>>   struct pwm_fan_ctx {
->>>   	struct mutex lock;
->>>   	struct pwm_device *pwm;
->>> -	unsigned char pwm_value;
->>> +	unsigned int pwm_value;
->>> +	unsigned int pwm_fan_state;
->>> +	unsigned int pwm_fan_max_state;
->>> +	unsigned int *pwm_fan_cooling_levels;
->>>   };
->>>
->>>   static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
->>> @@ -100,6 +103,50 @@ static struct attribute *pwm_fan_attrs[] = {
->>>
->>>   ATTRIBUTE_GROUPS(pwm_fan);
->>>
->>> +int pwm_fan_of_get_cooling_data(struct device *dev, struct
->>> pwm_fan_ctx *ctx) +{
->>> +	struct device_node *np = dev->of_node;
->>> +	int num, i, ret;
->>> +
->>> +	ret = of_property_count_elems_of_size(np, "cooling-levels",
->>> +					      sizeof(u32));
->>> +
->>> +	if (ret == -EINVAL) {
->>> +		dev_err(dev, "Property 'cooling-levels' not
->>> found\n");
->>> +		return 0;
->>
->> Returning 0 is obviously not an error, otherwise you would not return
->> 0 here. So dev_err is wrong.
+> Because of some uncertain factors, such as worse card or worse hardware,
+> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+> will be in busy state. This should not happend when mmc controller
+> send command to update card clocks. If this happends, mci_send_cmd will
+> be failed and we will get 'Timeout sending command', and then system will
+> be blocked. To avoid this, we need reset mmc controller.
 >
-> pr_info would be more appropriate here.
->
->> Also, the message itself is wrong; the
->> property may well be there but have a wrong size.
->
-> As fair as I remember the -EINVAL is set only when the property is not
-> defined. Such situation is correct and our pwm-fan driver should work
-> with or without it.
->
+> Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-of_property_count_elems_of_size returns -EINVAL if np is NULL or if
-there is no peoperty or prop->length % elem_size != 0, and -ENODATA
-if there is no value associated with the property.
 
-If -EINVAL is not an error, please no message. Noisy drivers are
-just that, noisy.
+Hi Addy,
 
->>
->>> +	}
->>> +
->>> +	if (ret <= 0) {
->>> +		dev_err(dev, "Wrong data!\n");
->>> +		return ret;
->>> +	}
->>
->> This will result in the driver failing to load if devicetree is not
->> configured (of_property_count_elems_of_size will return -ENOSYS).
->
-> As you pointed out in the comment to v2:
->
-> It is OK if the "cooling-levels" is not defined in DT. However, if it
-> has broken definition, then we should return error. This is what we do
-> here.
->
-You don't return an error, you return 0, at least in some circumstances.
+Should I consider $subject patch as a better option to the one below?
 
->> This is not acceptable. Also, if the call returns 0 you don't return
->> an error but display a "Wrong data!" error message. Either it is an
->> error or it is not, but not both.
->
-> This is an error. "cooling-levels" with zero elements is regarded as a
-> broken property.
->
-It returns -ENOSYS if DT is not configured, which is still unacceptable.
-And, again, if ret == 0 is an error, you should return an error code,
-not display an error message and return 0.
+[PATCH] mmc: dw_mmc: rockchip: Add DW_MCI_QUIRK_RETRY_DELAY
+https://lkml.org/lkml/2015/1/13/562
 
-Guenter
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/host/dw_mmc.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 4d2e3c2..b1d6dfb 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -100,6 +100,7 @@ struct idmac_desc {
+>  };
+>  #endif /* CONFIG_MMC_DW_IDMAC */
+>
+> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>  static bool dw_mci_reset(struct dw_mci *host);
+>  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>
+> @@ -888,6 +889,26 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>                 cmd, arg, cmd_status);
+>  }
+>
+> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+> +{
+> +       struct dw_mci *host = slot->host;
+> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
+> +
+> +       while (time_before(jiffies, timeout)) {
+> +               if (!dw_mci_card_busy(slot->mmc))
+> +                       return;
+> +       }
+> +       dev_err(host->dev, "Data busy (status %#x)\n",
+> +               mci_readl(slot->host, STATUS));
+> +
+> +       /*
+> +        * Data busy, this should not happend when mmc controller send command
+> +        * to update card clocks in non-volt-switch state. If it happends, we
+> +        * should reset controller to avoid getting "Timeout sending command".
+> +        */
+> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+> +}
+> +
+>  static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>  {
+>         struct dw_mci *host = slot->host;
+> @@ -899,6 +920,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>         /* We must continue to set bit 28 in CMD until the change is complete */
+>         if (host->state == STATE_WAITING_CMD11_DONE)
+>                 sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+> +       else
+> +               dw_mci_wait_busy(slot);
+>
+>         if (!clock) {
+>                 mci_writel(host, CLKENA, 0);
+> --
+> 1.8.3.2
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
