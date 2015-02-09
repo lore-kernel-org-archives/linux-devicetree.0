@@ -1,158 +1,219 @@
+Return-Path: <ulf.hansson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20150219111325.GG12212@x1>
-References: <20150218215435.GA32415@x1>
-	<CAMuHMdU6DpZoi-q3pUFUX8xjnXGfTqfEYyzajZZm=-qZTk1qHQ@mail.gmail.com>
-	<20150219094200.GB12212@x1>
-	<CAMuHMdW+np0_zUhBOXVBN_7ztM5Z=xN5-mE-P_wR35BggQxerQ@mail.gmail.com>
-	<20150219101106.GD12212@x1>
-	<CAMuHMdW=kV+zx=Uq7y7SyrH3eQyWsdfWjuLFMAKQjPhX-QaPPA@mail.gmail.com>
-	<20150219102810.GE12212@x1>
-	<CAMuHMdXYT6HvKhpi1mxF7SJBDyLVHw2W2Rxe1poDrdwKR0nu=w@mail.gmail.com>
-	<20150219104332.GF12212@x1>
-	<CAMuHMdXY5+Sm0LUsbrPraUJSNS7PsuRHaaLY--DBVt3adZ-+Cw@mail.gmail.com>
-	<20150219111325.GG12212@x1>
-Date: Thu, 19 Feb 2015 10:53:45 -0600
-Message-ID: <CAL_JsqJ5obm0++a1kfYMc3YWbXs=-NAD2X5TBTE08yku_GNz5g@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] clk: dt: Introduce always-on clock domain documentation
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, kernel@stlinux.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
+Date: Mon, 9 Feb 2015 05:48:08 +0100
+Message-ID: <CAPDyKFqQ9qjpyJEF11djwcEa3RXAHCutk_VvbXJH=bsw+8iepg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: dw_mmc: fix bug that cause 'Timeout sending command'
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: multipart/alternative; boundary=001a11c135d80912ba050ea07a39
+To: Addy Ke <addy.ke@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "zhenfu.fang" <zhenfu.fang@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, lintao <lintao@rock-chips.com>, chenfen <chenfen@rock-chips.com>, zyf <zyf@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, Han Jiang <hj@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, Lin Huang <hl@rock-chips.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Feb 19, 2015 at 5:13 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
->> On Thu, Feb 19, 2015 at 11:43 AM, Lee Jones <lee.jones@linaro.org> wrote=
-:
->> > On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
->> >> On Thu, Feb 19, 2015 at 11:28 AM, Lee Jones <lee.jones@linaro.org> wr=
-ote:
->> >> > On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
->> >> >> On Thu, Feb 19, 2015 at 11:11 AM, Lee Jones <lee.jones@linaro.org>=
- wrote:
->> >> >> > On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
->> >> >> >> On Thu, Feb 19, 2015 at 10:42 AM, Lee Jones <lee.jones@linaro.o=
-rg> wrote:
->> >> >> >> >> What kind of clocks are these? What do they control?
->> >> >> >> >> Memory controllers? Bus controllers?
->> >> >> >> >>
->> >> >> >> >> They must control some device(s), so there should be one or =
-more device
->> >> >> >> >> nodes in DT that reference these clocks.
->> >> >> >> >> As soon as that information is in DT, support can be added t=
-o Linux to
->> >> >> >> >> make sure the "critical" clocks stay enabled, either through=
- a real driver,
->> >> >> >> >> or through platform code.
->> >> >> >> >
->> >> >> >> > Some do, some don't.  For instance, we have one clock which c=
-ontrols
->> >> >> >> > SPI and I2C that must not be turned off.  We discovered this =
-then when
->> >> >> >> > a suspend was attempted and the board refused to resume.  Thi=
-s clock
->> >> >> >> > also runs one of the critical interconnects that runs from th=
-e a9.  It
->> >> >> >> > would be wrong to remove the clk_disable() attempt from the S=
-PI/I2C
->> >> >> >> > drivers because the same IP on another board might be control=
-led by a
->> >> >> >> > different clock which is able to be gated.
->> >> >> >> >
->> >> >> >> > There are also clocks which control other interconnects that =
-are not
->> >> >> >> > connected to any device drivers.  If we fail to take referenc=
-es for
->> >> >> >> > them before clk_disable_unused() is called, again the board h=
-angs.  We
->> >> >> >> > even lose JTAG support.
->> >> >> >>
->> >> >> >> Interconnects are buses. Can't you represent those buses in the=
- DT
->> >> >> >> hierarchy, and give them clocks properties?
->> >> >> >
->> >> >> > So instead of this nice succinct, simple, cover all bases
->> >> >> > (interconnects was just an example, there are bound to be others=
-),
->> >> >> > generic framework, you are suggesting to write drivers for devic=
-es
->> >> >> > which other than "don't turn my clocks off", Linux can't actuall=
-y see
->> >> >> > or control?
->> >> >>
->> >> >> DT describes the hardware, not behavior.
->> >> >
->> >> > Okay so ...
->> >> >
->> >> > /*
->> >> >  * ICNs are not visible/controllable in Linux, but references to th=
-eir
->> >> >  * clocks must be obtained and retained or the platform will become
->> >> >  * irrecoverably unresponsive.
->> >> >  */
->> >> > interconnects@0 {
->> >> >        compatible =3D "always-on-clk-domain";
->> >>
->> >> st,...flexgen...
->> >>
->> >> >        clocks =3D <&clk_s_c0_flexgen CLK_ICN_SBC>,
->> >> >                 <&clk_s_c0_flexgen CLK_ICN_LMI>,
->> >> >                 <&clk_s_c0_flexgen CLK_ICN_CPU>,
->> >> >                 <&clk_s_c0_flexgen CLK_TX_ICN_DMU>;
->> >> > };
->> >>
->> >> And then you can have platform code that binds against st,...flexgen.=
-..,
->> >> and enables all referenced clocks.
->> >
->> > Flexgen isn't a device, it's a clk source.  a) writing a device driver
->>
->> Sorry, I'm not familiar with ST nomenclature.
->> So that should become the name of the interconnect/bus.
+--001a11c135d80912ba050ea07a39
+Content-Type: text/plain; charset=UTF-8
+
+On 5 February 2015 at 12:13, Addy Ke <addy.ke@rock-chips.com> wrote:
+
+> Because of some uncertain factors, such as worse card or worse hardware,
+> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+> will be in busy state. This should not happend when mmc controller
+> send command to update card clocks. If this happends, mci_send_cmd will
+> be failed and we will get 'Timeout sending command', and then system will
+> be blocked. To avoid this, we need reset mmc controller.
 >
-> You're still talking about writing function-less drivers for multiple
-> pieces of h/w.  We would have a few for ST alone, then multiply that
-> by the number of silicon vendors with similar issues -- which is
-> likely to be most of them.
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
 >
-> I can understand Rob's "DT has to match h/w" point, but to insist we
-> write lots of empty drivers just to stop some clocks from being gated
-> is barking mad.
+
+Hi Addy,
+
+Should I consider $subject patch as a better option to the one below?
+
+[PATCH] mmc: dw_mmc: rockchip: Add DW_MCI_QUIRK_RETRY_DELAY
+https://lkml.org/lkml/2015/1/13/562
+
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/host/dw_mmc.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 >
->> > for a clk source seems wrong b) what if on another platform a
->> > different clock source supplied the clock?  Write another driver?  And
->> > what if the ICNs are connected to different clock sources?  More
->> > drivers?  c) all of these drivers will only do one thing -- pull a
->> > reference and keep hold of it.  You want 50 drivers (across all
->> > platforms) doing only that?  Or, more sanely, do you want this one
->> > generic framework driver doing that?
->> >
->> >> Alternatively, if you have power domains, you can add a reference to
->> >> the power domain, and let the power domain driver handle it.
->> >
->> > I'm not sure what a power domain driver will do?  We need a driver to
->> > _not_ give up references, that is all. :)
->>
->> A power domain driver can do anything it wants.
->> That includes enabling your interconnect clocks, and keeping them enable=
-d.
->>
->> Now, if flexgen is the name of the clock source, then all devices connec=
-ted
->> to flexgen are part of the flexgen clock domain, which can be represente=
-d
->> in Linux using the generic PM domain. Do all devices connected to flexge=
-n
->> need to be handled similarly w.r.t. clocks? If yes, the genpd may be the=
- place
->> to implement that.
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 4d2e3c2..b1d6dfb 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -100,6 +100,7 @@ struct idmac_desc {
+>  };
+>  #endif /* CONFIG_MMC_DW_IDMAC */
 >
-> Most of the FLEXGEN clocks are fully gateable.  It's only a select few
-> which are critical to the running of the system.
+> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>  static bool dw_mci_reset(struct dw_mci *host);
+>  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>
+> @@ -888,6 +889,26 @@ static void mci_send_cmd(struct dw_mci_slot *slot,
+> u32 cmd, u32 arg)
+>                 cmd, arg, cmd_status);
+>  }
+>
+> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+> +{
+> +       struct dw_mci *host = slot->host;
+> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
+> +
+> +       while (time_before(jiffies, timeout)) {
+> +               if (!dw_mci_card_busy(slot->mmc))
+> +                       return;
+> +       }
+> +       dev_err(host->dev, "Data busy (status %#x)\n",
+> +               mci_readl(slot->host, STATUS));
+> +
+> +       /*
+> +        * Data busy, this should not happend when mmc controller send
+> command
+> +        * to update card clocks in non-volt-switch state. If it happends,
+> we
+> +        * should reset controller to avoid getting "Timeout sending
+> command".
+> +        */
+> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+> +}
+> +
+>  static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>  {
+>         struct dw_mci *host = slot->host;
+> @@ -899,6 +920,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot,
+> bool force_clkinit)
+>         /* We must continue to set bit 28 in CMD until the change is
+> complete */
+>         if (host->state == STATE_WAITING_CMD11_DONE)
+>                 sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+> +       else
+> +               dw_mci_wait_busy(slot);
+>
+>         if (!clock) {
+>                 mci_writel(host, CLKENA, 0);
+> --
+> 1.8.3.2
+>
 >
 > --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
+--001a11c135d80912ba050ea07a39
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On 5 February 2015 at 12:13, Addy Ke <span dir=3D"ltr">&lt;<a href=3D"m=
+ailto:addy.ke@rock-chips.com" target=3D"_blank">addy.ke@rock-chips.com</a>&=
+gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px =
+0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">Beca=
+use of some uncertain factors, such as worse card or worse hardware,<br>
+DAT[3:0](the data lines) may be pulled down by card, and mmc controller<br>
+will be in busy state. This should not happend when mmc controller<br>
+send command to update card clocks. If this happends, mci_send_cmd will<br>
+be failed and we will get &#39;Timeout sending command&#39;, and then syste=
+m will<br>
+be blocked. To avoid this, we need reset mmc controller.<br>
+<br>
+Signed-off-by: Addy Ke &lt;<a href=3D"mailto:addy.ke@rock-chips.com" target=
+=3D"_blank">addy.ke@rock-chips.com</a>&gt;<br></blockquote><div><br></div><=
+div>Hi Addy,<br></div><div><br>Should I consider $subject patch as a better=
+ option to the one below?<br><br>[PATCH] mmc: dw_mmc: rockchip: Add DW_MCI_=
+QUIRK_RETRY_DELAY<br>
+<a href=3D"https://lkml.org/lkml/2015/1/13/562" target=3D"_blank">https://l=
+kml.org/lkml/2015/1/13/562</a><br><br></div><div>Kind regards<br></div><div=
+>Uffe<br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"=
+margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-lef=
+t:1ex">
+---<br>
+=C2=A0drivers/mmc/host/dw_mmc.c | 23 +++++++++++++++++++++++<br>
+=C2=A01 file changed, 23 insertions(+)<br>
+<br>
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c<br>
+index 4d2e3c2..b1d6dfb 100644<br>
+--- a/drivers/mmc/host/dw_mmc.c<br>
++++ b/drivers/mmc/host/dw_mmc.c<br>
+@@ -100,6 +100,7 @@ struct idmac_desc {<br>
+=C2=A0};<br>
+=C2=A0#endif /* CONFIG_MMC_DW_IDMAC */<br>
+<br>
++static int dw_mci_card_busy(struct mmc_host *mmc);<br>
+=C2=A0static bool dw_mci_reset(struct dw_mci *host);<br>
+=C2=A0static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);<br>
+<br>
+@@ -888,6 +889,26 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32=
+ cmd, u32 arg)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 cmd, arg, cmd_statu=
+s);<br>
+=C2=A0}<br>
+<br>
++static void dw_mci_wait_busy(struct dw_mci_slot *slot)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct dw_mci *host =3D slot-&gt;host;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned long timeout =3D jiffies + msecs_to_ji=
+ffies(500);<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0while (time_before(jiffies, timeout)) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (!dw_mci_card_bu=
+sy(slot-&gt;mmc))<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0return;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(host-&gt;dev, &quot;Data busy (status %=
+#x)\n&quot;,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mci_readl(slot-&gt;=
+host, STATUS));<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0/*<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Data busy, this should not happend when mmc =
+controller send command<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * to update card clocks in non-volt-switch sta=
+te. If it happends, we<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * should reset controller to avoid getting &qu=
+ot;Timeout sending command&quot;.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 */<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FL=
+AGS);<br>
++}<br>
++<br>
+=C2=A0static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clk=
+init)<br>
+=C2=A0{<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 struct dw_mci *host =3D slot-&gt;host;<br>
+@@ -899,6 +920,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, =
+bool force_clkinit)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 /* We must continue to set bit 28 in CMD until =
+the change is complete */<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (host-&gt;state =3D=3D STATE_WAITING_CMD11_D=
+ONE)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 sdmmc_cmd_bits |=3D=
+ SDMMC_CMD_VOLT_SWITCH;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dw_mci_wait_busy(sl=
+ot);<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!clock) {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mci_writel(host, CL=
+KENA, 0);<br>
+<span><font color=3D"#888888">--<br>
+1.8.3.2<br>
+<br>
+<br>
+--<br>
+To unsubscribe from this list: send the line &quot;unsubscribe linux-mmc&qu=
+ot; in<br>
+the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org" targe=
+t=3D"_blank">majordomo@vger.kernel.org</a><br>
+More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordomo-in=
+fo.html" target=3D"_blank">http://vger.kernel.org/majordomo-info.html</a><b=
+r>
+</font></span></blockquote></div><br></div></div>
+
+--001a11c135d80912ba050ea07a39--
