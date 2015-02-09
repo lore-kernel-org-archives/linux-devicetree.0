@@ -1,79 +1,201 @@
-From: =?big5?B?SGVucnlDIENoZW4gKLOvq9i7qCk=?= <HenryC.Chen@mediatek.com>
-Subject: RE: [PATCH v4 0/7] clk: Add common clock support for Mediatek
- MT8135 and MT8173.
-Date: Mon, 9 Feb 2015 03:05:41 +0000
-Message-ID: <973C649EAEADCC47B3D0BEB0BD37EB2F0495E9A3@mtkmbs08n1>
-References: <1422594798-13375-1-git-send-email-henryc.chen@mediatek.com>
- <CABuKBeJSH3WzG3QC=9OoPzXE6fd9W2U67V4c19NzWcPxWR7VDg@mail.gmail.com>
- <20150206103033.GS18908@pengutronix.de>
- <CABuKBeJBp115aD_xb7_2471h=iyr5Wc33m2EX715MxNc=_1p2A@mail.gmail.com>
- <20150206151542.GO12209@pengutronix.de>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 4/4] usb: phy: add phy-hi6220
+Date: Mon, 9 Feb 2015 09:57:35 +0800
+Message-ID: <20150209015734.GA3045@shlinux2>
+References: <1423147620-5760-1-git-send-email-zhangfei.gao@linaro.org>
+ <1423147620-5760-5-git-send-email-zhangfei.gao@linaro.org>
+ <20150206084141.GE5007@shlinux2>
+ <CABQgh9GfmoeLo-HnhM=sk-XBw1KoLMsa=RZZWkHu-hGPpMK+=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150206151542.GO12209@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?big5?B?SmFtZXNKSiBMaWFvICi5+avYtLwp?= <jamesjj.liao@mediatek.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, srv_heupstream <srv_heupstream@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?big5?B?WWluZ2pvZSBDaGVuICizr61erHcp?= <Yingjoe.Chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, =?big5?B?RWRkaWUgSHVhbmcgKLbAtLyzxyk=?= <eddie.huang@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CABQgh9GfmoeLo-HnhM=sk-XBw1KoLMsa=RZZWkHu-hGPpMK+=A@mail.gmail.com>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FzY2hhLA0KDQpJdCdzIG9rYXkgZm9yIG1lLCB0aGFua3MuDQoNCkhlbnJ5DQoNCj4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2FzY2hhIEhhdWVyIFttYWlsdG86cy5o
-YXVlckBwZW5ndXRyb25peC5kZV0NCj4gU2VudDogRnJpZGF5LCBGZWJydWFyeSAwNiwgMjAxNSAx
-MToxNiBQTQ0KPiBUbzogTWF0dGhpYXMgQnJ1Z2dlcg0KPiBDYzogSGVucnlDIENoZW4gKLOvq9i7
-qCk7IFJvYiBIZXJyaW5nOyBNaWtlIFR1cnF1ZXR0ZTsgc3J2X2hldXBzdHJlYW07DQo+IFNhc2No
-YSBIYXVlcjsgSmFtZXNKSiBMaWFvICi5+avYtLwpOyBFZGRpZSBIdWFuZyAotsC0vLPHKTsgUGF3
-ZWwgTW9sbDsNCj4gTWFyayBSdXRsYW5kOyBJYW4gQ2FtcGJlbGw7IEt1bWFyIEdhbGE7IFJ1c3Nl
-bGwgS2luZzsgQ2F0YWxpbiBNYXJpbmFzOw0KPiBWbGFkaW1pciBNdXJ6aW47IEFzaHdpbiBDaGF1
-Z3VsZTsgWWluZ2pvZSBDaGVuICizr61erHcpOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsgbGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBT
-dWJqZWN0OiBSZTogW1BBVENIIHY0IDAvN10gY2xrOiBBZGQgY29tbW9uIGNsb2NrIHN1cHBvcnQg
-Zm9yIE1lZGlhdGVrDQo+IE1UODEzNSBhbmQgTVQ4MTczLg0KPiANCj4gT24gRnJpLCBGZWIgMDYs
-IDIwMTUgYXQgMDM6MjA6MzVQTSArMDEwMCwgTWF0dGhpYXMgQnJ1Z2dlciB3cm90ZToNCj4gPiA+
-IEkgZG9uJ3QgcmVhbGx5IHVuZGVyc3RhbmQgdGhlICJhcyBwYXJ0IG9mIHRoZSBjbGsgZHJpdmVy
-IHBhcnQiLiBJDQo+ID4gPiBub3cgaGF2ZSByZXBsYWNlZCB0aGUgZGV2bV9yZWdtYXBfaW5pdF9t
-bWlvIHdpdGgNCj4gPiA+IHN5c2Nvbl9ub2RlX3RvX3JlZ21hcCBpbiB0aGUgcGVyaWNmZyAvIGlu
-ZnJhY2ZnIGRyaXZlcnMuIElzIHRoYXQNCj4gYWxsDQo+ID4gPiB0aGF0IHlvdSB3YW50IG9yIGRv
-IHlvdSB3YW50IG1lIHRvIG1vdmUgdGhlIHNvdXJjZSBjb2RlIHRvDQo+IGRyaXZlcnMvY2xrL21l
-ZGlhdGVrPw0KPiA+DQo+ID4gWWVzLCBJIHByb3Bvc2UgdG8gbW92ZSB0aGUgc291cmNlIGNvZGUg
-dG8gZHJpdmVycy9jbGsvbWVkaWF0ZWsuDQo+ID4gUGxlYXNlIGhhdmUgYSBsb29rIG9uIG90aGVy
-IGNsb2NrIGRyaXZlcnMgd2hpY2ggaW1wbGVtZW50IHRoZSByZXNldA0KPiA+IGNvbnRyb2xsZXIs
-IGUuZy4gcm9ja2NoaXAuDQo+IA0KPiBPaywgSSdtIGhhbGZ3YXkgdGhyb3VnaCBpbXBsZW1lbnRp
-bmcgdGhpcywgYnV0IGxldCdzIGhhdmUgd2Vla2VuZCBmaXJzdC4NCj4gDQo+IEhlbnJ5LCBJZiB5
-b3UncmUgZmluZSB3aXRoIHRoaXMgSSdsbCBjaGFuZ2UgeW91ciBjbG9jayBzZXJpZXMgYWNjb3Jk
-aW5nDQo+IHRvIE1hdHRoaWFzIHN1Z2dlc3Rpb25zLg0KPiANCj4gU2FzY2hhDQo+IA0KPiAtLQ0K
-PiBQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KPiB8DQo+IElu
-ZHVzdHJpYWwgTGludXggU29sdXRpb25zICAgICAgICAgICAgICAgICB8IGh0dHA6Ly93d3cucGVu
-Z3V0cm9uaXguZGUvDQo+IHwNCj4gUGVpbmVyIFN0ci4gNi04LCAzMTEzNyBIaWxkZXNoZWltLCBH
-ZXJtYW55IHwgUGhvbmU6ICs0OS01MTIxLTIwNjkxNy0wDQo+IHwNCj4gQW10c2dlcmljaHQgSGls
-ZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAgIHwgRmF4OiAgICs0OS01MTIxLTIwNjkxNy0NCj4g
-NTU1NSB8DQoNCioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGljZSAqKioq
-KioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0aGlzIGUtbWFp
-bCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0YWNobWVudHMpIG1heSBiZSBjb25maWRlbnRp
-YWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhlcndpc2UNCmV4ZW1wdCBmcm9tIGRp
-c2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRlbmRlZCB0byBiZSANCmNv
-bnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQgcmVjaXBpZW50KHMpLiBBbnkgdXNlLCBkaXNz
-ZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJldGFpbmluZyBvciBjb3B5aW5n
-IG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIA0KYXR0YWNobWVudHMpIGJ5IHVuaW50ZW5k
-ZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0ZWQgYW5kIG1heSANCmJlIHVubGF3
-ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRlZCByZWNpcGllbnQgb2YgdGhpcyBlLW1haWws
-IG9yIGJlbGlldmUgDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVycm9y
-LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcgdG8g
-dGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhpcyBlLW1haWwg
-KGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QN
-CmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24u
-IFRoYW5rIHlvdSENCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Feb 06, 2015 at 07:47:12PM +0800, Zhangfei Gao wrote:
+> On 6 February 2015 at 16:41, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > On Thu, Feb 05, 2015 at 10:47:00PM +0800, Zhangfei Gao wrote:
+> 
+> >> @@ -18,6 +18,7 @@ obj-$(CONFIG_SAMSUNG_USBPHY)                += phy-samsung-usb.o
+> >>  obj-$(CONFIG_TWL6030_USB)            += phy-twl6030-usb.o
+> >>  obj-$(CONFIG_USB_EHCI_TEGRA)         += phy-tegra-usb.o
+> >>  obj-$(CONFIG_USB_GPIO_VBUS)          += phy-gpio-vbus-usb.o
+> >> +obj-$(CONFIG_USB_HI6220_PHY)         += phy-hi6220.o
+> >
+> > To align the naming method, phy-hi6220-usb is better.
+> Sure,
+> 
+> 
+> >> +enum usb_mode {
+> >> +     USB_EMPTY,
+> >> +     GADGET_DEVICE,
+> >> +     OTG_HOST,
+> >> +};
+> >
+> > This usb_mode is a little strange, what state you would like to
+> > use?
+> 
+> it is internal state machine, to distinguish otg gadget mode and host mode.
+> There are two gpio, we use gpio_vbus interrupt as well as gpio_id
+> status to distinguish gadget or host.
+> 
+> >> +static irqreturn_t hiusb_gpio_intr(int irq, void *data)
+> >> +{
+> >> +     struct hi6220_priv *priv = (struct hi6220_priv *)data;
+> >> +
+> >> +     /* add debounce time */
+> >> +     schedule_delayed_work(&priv->work, msecs_to_jiffies(100));
+> >> +     return IRQ_HANDLED;
+> >> +}
+> >> +
+> >> +static int mv_otg_set_peripheral(struct usb_otg *otg,
+> >
+> > mv? You may want to use hi
+> Yes, my bad.
+> 
+> 
+> >> +static void hi6220_phy_setup(struct hi6220_priv *priv)
+> >> +{
+> >> +     u32 val, mask;
+> >> +     int ret;
+> >> +
+> >> +     if (priv->reg == NULL)
+> >> +             return;
+> >> +
+> >> +     val = PERIPH_RSTDIS0_USBOTG_BUS | PERIPH_RSTDIS0_POR_PICOPHY |
+> >> +           PERIPH_RSTDIS0_USBOTG | PERIPH_RSTDIS0_USBOTG_32K;
+> >> +     mask = val;
+> >> +     ret = regmap_update_bits(priv->reg, SC_PERIPH_RSTDIS0, mask, val);
+> >> +     if (ret)
+> >> +             return;
+> >> +
+> >> +     ret = regmap_read(priv->reg, SC_PERIPH_CTRL5, &val);
+> >> +     val = PERIPH_CTRL5_USBOTG_RES_SEL | PERIPH_CTRL5_PICOPHY_ACAENB;
+> >> +     mask = val | PERIPH_CTRL5_PICOPHY_BC_MODE;
+> >> +     ret = regmap_update_bits(priv->reg, SC_PERIPH_CTRL5, mask, val);
+> >> +     if (ret)
+> >> +             return;
+> >> +
+> >> +     val =  PERIPH_CTRL4_PICO_VBUSVLDEXT | PERIPH_CTRL4_PICO_VBUSVLDEXTSEL |
+> >> +            PERIPH_CTRL4_OTG_PHY_SEL;
+> >> +     mask = val | PERIPH_CTRL4_PICO_SIDDQ | PERIPH_CTRL4_PICO_OGDISABLE;
+> >> +     ret = regmap_update_bits(priv->reg, SC_PERIPH_CTRL4, mask, val);
+> >> +     if (ret)
+> >> +             return;
+> >> +
+> >> +     ret = regmap_write(priv->reg, SC_PERIPH_CTRL8, EYE_PATTERN_PARA);
+> >> +     if (ret)
+> >> +             return;
+> >> +}
+> >> +
+> >> +static int hi6220_phy_probe(struct platform_device *pdev)
+> >> +{
+> >> +     struct hi6220_priv *priv;
+> >> +     struct usb_otg *otg;
+> >> +     struct device_node *np = pdev->dev.of_node;
+> >> +     int ret, irq;
+> >> +
+> >> +     priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> >> +     if (!priv)
+> >> +             return -ENOMEM;
+> >> +
+> >> +     otg = devm_kzalloc(&pdev->dev, sizeof(*otg), GFP_KERNEL);
+> >> +     if (!otg)
+> >> +             return -ENOMEM;
+> >> +
+> >> +     priv->phy.dev = &pdev->dev;
+> >> +     priv->phy.otg = otg;
+> >> +     priv->phy.label = "hi6220";
+> >> +     platform_set_drvdata(pdev, priv);
+> >> +     otg->set_peripheral = mv_otg_set_peripheral;
+> >> +
+> >> +     priv->gpio_vbus_det = of_get_named_gpio(np, "hisilicon,gpio_vbus_det", 0);
+> >> +     if (priv->gpio_vbus_det == -EPROBE_DEFER)
+> >> +             return -EPROBE_DEFER;
+> >> +     if (!gpio_is_valid(priv->gpio_vbus_det)) {
+> >> +             dev_err(&pdev->dev, "invalid gpio %d\n", priv->gpio_vbus_det);
+> >> +             return -ENODEV;
+> >> +     }
+> >> +
+> >> +     priv->gpio_id_det = of_get_named_gpio(np, "hisilicon,gpio_id_det", 0);
+> >> +     if (priv->gpio_id_det == -EPROBE_DEFER)
+> >> +             return -EPROBE_DEFER;
+> >> +     if (!gpio_is_valid(priv->gpio_id_det)) {
+> >> +             dev_err(&pdev->dev, "invalid gpio %d\n", priv->gpio_id_det);
+> >> +             return -ENODEV;
+> >> +     }
+> >> +
+> >> +     priv->reg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> >> +                                     "hisilicon,peripheral-syscon");
+> >> +     if (IS_ERR(priv->reg))
+> >> +             priv->reg = NULL;
+> >
+> > You may differentiate -ENODEV and other errors, for other errors, you
+> > can show an error, and return directly.
+> 
+> Here I want to set this property as optional, in case other platform
+> do not need this property.
+> So phy_setup also add protection if (priv->reg == NULL) return;
+> 
+
+If syscon_regmap_lookup_by_phandle returns -EPROBE_DEFER, you may want
+to try later.
+
+Peter
+> >
+> >> +
+> >> +     INIT_DELAYED_WORK(&priv->work, hi6220_detect_work);
+> >> +
+> >> +     ret = devm_gpio_request_one(&pdev->dev, priv->gpio_vbus_det,
+> >> +                                 GPIOF_IN, "gpio_vbus_det");
+> >> +     if (ret < 0) {
+> >> +             dev_err(&pdev->dev, "gpio request failed for gpio_vbus_det\n");
+> >> +             return ret;
+> >> +     }
+> >> +
+> >> +     ret = devm_gpio_request_one(&pdev->dev, priv->gpio_id_det,
+> >> +                                 GPIOF_IN, "gpio_id_det");
+> >> +     if (ret < 0) {
+> >> +             dev_err(&pdev->dev, "gpio request failed for gpio_id_det\n");
+> >> +             return ret;
+> >> +     }
+> >> +
+> >> +     priv->vcc = devm_regulator_get(&pdev->dev, "vcc");
+> >> +     if (!IS_ERR(priv->vcc)) {
+> >> +             ret = regulator_enable(priv->vcc);
+> >> +             if (ret) {
+> >> +                     dev_err(&pdev->dev, "Failed to enable regulator\n");
+> >> +                     return -ENODEV;
+> >> +             }
+> >> +     }
+> >> +
+> >> +     priv->clk = devm_clk_get(&pdev->dev, NULL);
+> >> +     if (IS_ERR(priv->clk)) {
+> >> +             regulator_disable(priv->vcc);
+> >> +             return PTR_ERR(priv->clk);
+> >> +     }
+> >> +     clk_prepare_enable(priv->clk);
+> >> +
+> >> +     irq = gpio_to_irq(priv->gpio_vbus_det);
+> >> +     ret = devm_request_irq(&pdev->dev, gpio_to_irq(priv->gpio_vbus_det),
+> >> +                            hiusb_gpio_intr, IRQF_NO_SUSPEND |
+> >> +                            IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
+> >> +                            "vbus_gpio_intr", priv);
+> >> +     if (ret) {
+> >> +             dev_err(&pdev->dev, "request gpio irq failed.\n");
+> >> +             goto err_irq;
+> >> +     }
+> >
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
