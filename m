@@ -1,335 +1,61 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64, ft-1500a: Add initial dts for Phytium
- FT-1500A SoC
-Date: Mon, 9 Feb 2015 12:02:05 +0000
-Message-ID: <20150209120205.GE4250@leverpostej>
-References: <1423285636-8623-1-git-send-email-cbz@baozis.org>
- <1423285636-8623-3-git-send-email-cbz@baozis.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v9 1/3] i2c: iProc: define Broadcom iProc I2C binding
+Date: Mon, 9 Feb 2015 13:09:52 +0100
+Message-ID: <20150209120952.GA2491@katana>
+References: <rjui@broadcom.com>
+ <1423373126-30024-1-git-send-email-rjui@broadcom.com>
+ <1423373126-30024-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1423285636-8623-3-git-send-email-cbz-ynxlTSF4AQodnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1423373126-30024-2-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen Baozi <cbz-ynxlTSF4AQodnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 07, 2015 at 05:07:15AM +0000, Chen Baozi wrote:
-> Add initial device tree nodes for Phytium FT-1500A SoC with support of
-> 16 cores, gicv3 interrupt controller, serial port, PCIe host and
-> on-chip GMAC ethernet controller.
-> 
-> Signed-off-by: Chen Baozi <chenbaozi-UOlijcLmZ/JtrwSWzY7KCg@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/Makefile                      |   1 +
->  arch/arm64/boot/dts/phytium/Makefile              |   5 +
->  arch/arm64/boot/dts/phytium/ft-1500a.dtsi         | 269 ++++++++++++++++++++++
->  arch/arm64/boot/dts/phytium/ft1500a-v2-dsk-v2.dts |  39 ++++
->  4 files changed, 314 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/phytium/Makefile
->  create mode 100644 arch/arm64/boot/dts/phytium/ft-1500a.dtsi
->  create mode 100644 arch/arm64/boot/dts/phytium/ft1500a-v2-dsk-v2.dts
-> 
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index c62b0f4..e7e9e3d 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -2,5 +2,6 @@ dts-dirs += amd
->  dts-dirs += apm
->  dts-dirs += arm
->  dts-dirs += cavium
-> +dts-dirs += phytium
->  
->  subdir-y	:= $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/phytium/Makefile b/arch/arm64/boot/dts/phytium/Makefile
-> new file mode 100644
-> index 0000000..12a22c6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/phytium/Makefile
-> @@ -0,0 +1,5 @@
-> +dtb-$(CONFIG_ARCH_PHYTIUM) += ft1500a-v2-dsk-v2.dtb
-> +
-> +always		:= $(dtb-y)
-> +subdir-y	:= $(dts-dirs)
-> +clean-files	:= *.dtb
-> diff --git a/arch/arm64/boot/dts/phytium/ft-1500a.dtsi b/arch/arm64/boot/dts/phytium/ft-1500a.dtsi
-> new file mode 100644
-> index 0000000..9005389
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/phytium/ft-1500a.dtsi
-> @@ -0,0 +1,269 @@
-> +/*
-> + * DTS file for Phytium FT-1500A SoC
-> + *
-> + * Copyright (C) 2015, Phytium Technology Co., Ltd.
-> + *
-> + * This file is licensed under a dual GPLv2 or BSD license.
-> + */
-> +
-> +/memreserve/    0x80000000 0x100000;
 
-Please add a comment describing what this protects. It looks like it's
-for the spin-table implementation?
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +/ {
-> +	compatible = "phytium,ft-1500a";
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	aliases {
-> +		ethernet0 = &gmac0;
-> +		ethernet1 = &gmac1;
-> +	};
+On Sat, Feb 07, 2015 at 09:25:24PM -0800, Ray Jui wrote:
+> Document the I2C device tree binding for Broadcom iProc family of
+> SoCs
+>=20
+> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-No serial aliases? With a serial0 alias here, it would allow you to
-have: /chosen/stdout-path = "serial0:${RATE}";
+Applied to for-next, thanks!
 
-That would make the user's experience with serial _far_ nicer as the
-rate would be guaranteed to be consistent, and you can get earlycon
-really easily.
 
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Please prepend the compatible string for the actual CPU you are using.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> +			reg = <0x0 0x000>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8007fff0>;
-> +		};
+iQIcBAEBAgAGBQJU2KOQAAoJEBQN5MwUoCm2f58P/j9wKo9UcVY2Pz0AwOJ/dkaj
+42bCl0OIKr9WjCeljruxVBLw2GyhXi1oDvdta617ghBWLtFylQ5GXANmwNLxx2S2
+fGgSYg2WA4b50v6tv/87pUqke93rJZI2QaPNzYyBoA2JJ4l/IRgV0r4CotiKuUXw
+H4Rghmb9lGsWA4EbAkkj9n0x/E1eLGwmRgvb5g4cZekdhE1Ah8My0s1b+o7fyAoZ
+YAkH5YYSPrtVSuLPxvIFIhxwJj1z2j1sgTR0JrQQc8c+FzOy/cmLRPt1ALC/f7lu
+GMcwnSbEme+RcN9AFyl0wxA1UbyDXIQz5UoPwrSkJF9bgXc+37P1ugzq6AjeXgJV
+R3f97clrCkN5D83Mn6FYN0+mq8ukx3WTddBTsRi+oL3S8LjrlFVY7Sq3ctBQAjM6
+0sxeZOdKcfzLvC9pqQi7p6TFdAatXXWDt6tE1NImoyBjZSuOW50Dq3t5GOsprDnM
+gRNXji9gSzfRqBBhjw4Hej/P09MFLpfVcBnINDFr/Z9+9V+TFjAJxp3K/jLmHunV
+3eOOSSl4SPHhvgW2qmixVN6C/jv6FIPFFhXX+wxf0PGSk+EJ9L2wasDYZzdvtC8i
+wIYfC/7aVpJioYhpQHxpxa/HiAlPXMV5pIHdWK6crhXjHjlzyBPjy13YBL8IlUHi
+P6xorcaRrZF4bQbkUpb3
+=Y/M2
+-----END PGP SIGNATURE-----
 
-It's a shame that you are using spin-table. Is there no chance of PSCI?
-
-It's also a great shame that every CPU shares the same release address;
-it was a mistake that we made with the early model bringup, and not
-something that should be copied where possible to avoid.
-
-[...]
-
-> +		cpu@15 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x303>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8007fff0>;
-> +		};
-
-The unit-address should match the reg, so this should be cpu@303
-(likewise the other CPU nodes need to be updated).
-
-> +	};
-> +
-> +	gic: interrupt-controller@29800000 {
-> +		compatible = "arm,gic-v3";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		interrupt-controller;
-> +		reg = <0x0 0x29800000 0 0x10000>,	/* GICD */
-> +		      <0x0 0x29a00000 0 0x200000>,	/* GICR */
-> +		      <0x0 0x29c00000 0 0x10000>,	/* GICC */
-> +		      <0x0 0x29c10000 0 0x10000>,	/* GICH */
-> +		      <0x0 0x29c20000 0 0x10000>;	/* GICV */
-> +		interrupts = <1 9 4>;
-> +
-> +		its: gic-its@29820000 {
-> +			compatible = "arm,gic-v3-its";
-> +			msi-controller;
-> +			reg = <0x0 0x29820000 0x0 0x20000>;
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <1 13 8>,
-> +			     <1 14 8>,
-> +			     <1 11 8>,
-> +			     <1 10 8>;
-> +		clock-frequency = <50000000>;
-
-Please fix your firmware to configure CNTFRQ on _all_ CPUs.
-
-Are CPUs booted at EL2, or at EL1?
-
-If you're booting at EL2, virtualisation will not function correctly
-unless you configure CNTFRQ.
-
-If you're booting at EL1, you must configure CNTVOFF to a consistent
-value on all CPUs.
-
-Where possible, please boot at EL2. It means less work for the
-bootloader (as the kernel can configure more CPU state), and shouldn't
-result in any overhead.
-
-> +	};
-> +
-> +	soc {
-> +		compatible = "arm,amba-bus", "simple-bus";
-
-This should be either an AMBA bus or a simple-bus, not both.
-
-As far as I can tell, "simple-bus" alone should be sufficient.
-
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		gmac_clk: clk_csr {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <250000000>;
-> +		};
-> +
-> +		uart0: serial@28000000 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x0 0x28000000 0x0 0x1000>;
-> +			clock-frequency = <50000000>;
-> +			interrupts = <0 34 4>;
-> +			reg-shift = <2>;
-> +			reg-io-width = <4>;
-> +			status = "disable";
-
-s/disable/disabled/ (please fix this for other nodes too).
-
-> +		};
-> +
-> +		uart1: serial@28001000 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x0 0x28001000 0x0 0x1000>;
-> +			clock-frequency = <50000000>;
-> +			interrupts = <0 35 4>;
-> +			reg-shift = <2>;
-> +			reg-io-width = <4>;
-> +			status = "disable";
-> +		};
-> +
-> +		gmac0: ethernet@28c00000 {
-> +			compatible = "snps,dwmac";
-> +			reg = <0 0x28c00000 0x0 0x2000>;
-> +			interrupts = <0 44 4>;
-> +			interrupt-names = "macirq";
-> +			clocks = <&gmac_clk>;
-> +			clock-names = "stmmaceth";
-> +			snps,pbl = <16>;
-> +			snps,abl = <32>;
-> +			snps,fixed-burst;
-> +			snps,force_sf_dma_mode;
-> +			snps,multicast-filter-bins = <64>;
-> +			snps,perfect-filter-entries = <1>;
-> +			max-frame-size = <9000>;
-> +			status = "disable";
-> +		};
-> +
-> +		gmac1: ethernet@28c02000 {
-> +			compatible = "snps,dwmac";
-> +			reg = <0 0x28c02000 0x0 0x2000>;
-> +			interrupts = <0 45 4>;
-> +			interrupt-names = "macirq";
-> +			clocks = <&gmac_clk>;
-> +			clock-names = "stmmaceth";
-> +			snps,pbl = <16>;
-> +			snps,abl = <32>;
-> +			snps,fixed-burst;
-> +			snps,force_sf_dma_mode;
-> +			snps,multicast-filter-bins = <64>;
-> +			snps,perfect-filter-entries = <1>;
-> +			max-frame-size = <9000>;
-> +			status = "disable";
-> +		};
-> +
-> +		pcie0: pcie-controller {
-> +			compatible = "pci-host-ecam-generic";
-> +			device_type = "pci";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			#interrupt-cells = <1>;
-> +			reg = <0 0x40000000 0 0x10000000>;
-> +			dma-coherent;
-> +			msi-parent = <&its>;
-> +			interrupt-map-mask = <0x0000 0x0 0x0 0x7>;
-> +			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0x0 0x0 0x33 0x4>,
-> +					<0x0 0x0 0x0 0x2 &gic 0x0 0x0 0x0 0x34 0x4>,
-> +					<0x0 0x0 0x0 0x3 &gic 0x0 0x0 0x0 0x35 0x4>,
-> +					<0x0 0x0 0x0 0x4 &gic 0x0 0x0 0x0 0x36 0x4>;
-> +			ranges = <0x01000000 0x00 0x00000000 0x00 0x50000000 0x00 0x1000000>,
-> +				 <0x02000000 0x00 0x60000000 0x00 0x60000000 0x00 0x20000000>,
-> +				 <0x03000000 0x01 0x00000000 0x01 0x00000000 0x01 0x00000000>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/phytium/ft1500a-v2-dsk-v2.dts b/arch/arm64/boot/dts/phytium/ft1500a-v2-dsk-v2.dts
-> new file mode 100644
-> index 0000000..7717112
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/phytium/ft1500a-v2-dsk-v2.dts
-> @@ -0,0 +1,39 @@
-> +/*
-> + * DTS file for Phytium FT1500A-V2-DSK-V2 board
-> + *
-> + * Copyright (C) 2015, Phytium Technology Co., Ltd.
-> + *
-> + * This file is licensed under a dual GPLv2 or BSD license.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/include/ "ft-1500a.dtsi"
-> +
-> +/ {
-> +	model = "Phytium ft1500a-v2-dsk-v2 board";
-> +	compatible = "phytium,ft-1500a";
-> +
-> +	chosen {
-> +		linux,pci-probe-only;
-
-We should really update Linux to be able to handle this per root
-complex. It's not so much something we've chosen taht the kernel should
-do so much as a fundamental property of the integration of the root
-complex in the system.
-
-As mentioned above, it would be good to have stdout-path set here.
-
-Thanks,
-Mark.
-
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000 0x0 0x80000000>;	/* Updated by bootloader */
-> +	};
-> +};
-> +
-> +&uart1 {
-> +	status = "ok";
-> +};
-> +
-> +&gmac0 {
-> +	phy-mode = "gmii";
-> +	status = "ok";
-> +};
-> +
-> +&gmac1 {
-> +	phy-mode = "gmii";
-> +	status = "ok";
-> +};
-> -- 
-> 2.1.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--d6Gm4EdcadzBjdND--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
