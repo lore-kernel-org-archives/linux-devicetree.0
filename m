@@ -1,28 +1,40 @@
-From: yoshihiro shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 0/2] ARM: shmobile: r8a7790: add for USB-DMAC
-Date: Mon, 9 Feb 2015 08:41:18 +0000
-Message-ID: <HKNPR06MB3220948E3FFE862FA05A180D8270@HKNPR06MB322.apcprd06.prod.outlook.com>
-References: <1423470279-6340-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH 3/3] ARM: at91: dt: at91sam9n12ek: enable udp
+Date: Mon, 9 Feb 2015 17:02:52 +0800
+Message-ID: <1423472572-19824-4-git-send-email-voice.shen@atmel.com>
+References: <1423472572-19824-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423470279-6340-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Content-Language: ja-JP
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1423472572-19824-1-git-send-email-voice.shen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com, nicolas.ferre@atmel.com
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: [PATCH 0/2] ARM: shmobile: r8a7790: add for USB-DMAC
+Enable usb device port on at91sam9n12ek board.
 
-Oops, I mistook this subject of cover-letter.
-However, actual patches are correct.
+Signed-off-by: Bo Shen <voice.shen@atmel.com>
+---
 
-Best regards,
-Yoshihiro Shimoda
+ arch/arm/boot/dts/at91sam9n12ek.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
+index 13bb24e..3e572e5 100644
+--- a/arch/arm/boot/dts/at91sam9n12ek.dts
++++ b/arch/arm/boot/dts/at91sam9n12ek.dts
+@@ -120,6 +120,11 @@
+ 				};
+ 			};
+ 
++			usb1: gadget@f803c000 {
++				atmel,vbus-gpio = <&pioB 16 GPIO_ACTIVE_HIGH>;
++				status = "okay";
++			};
++
+ 			watchdog@fffffe40 {
+ 				status = "okay";
+ 			};
+-- 
+2.3.0.rc0
