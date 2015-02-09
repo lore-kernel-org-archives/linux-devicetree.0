@@ -1,63 +1,47 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v2] ARM: dts: exynos5420: Add maudio power domain
-Date: Mon, 09 Feb 2015 14:57:23 +0100
-Message-ID: <1423490243-7675-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCHv6 0/2] Driver for TI tlc591xx 8/16 Channel i2c LED driver
+Date: Mon, 9 Feb 2015 15:13:43 +0100
+Message-ID: <20150209141343.GA5631@lunn.ch>
+References: <1422367161-16487-1-git-send-email-andrew@lunn.ch>
+ <20150206031048.GA9614@lunn.ch>
+ <54D89F0D.9050506@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54D89F0D.9050506-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, Matthew.Fatheree-REUqjI8E1xrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add maudio power domain to Exynos 5420 DTSI file so its state could be
-tracked. This actually won't power down this domain because the pl330
-dmaengine driver (for adma channel) uses IRQ safe runtime PM. Thus the
-patch should not introduce any functional change except of visibility of
-this domain to the system.
+On Mon, Feb 09, 2015 at 01:50:37PM +0200, Tomi Valkeinen wrote:
+> On 06/02/15 05:10, Andrew Lunn wrote:
+> > On Tue, Jan 27, 2015 at 02:59:19PM +0100, Andrew Lunn wrote:
+> >> This patchset is a driver for the TI tlc59116 16 Channel i2c LED
+> >> driver and tlc59108 8 Channel i2c LED driver. This driver is used on
+> >> the Belkin WRT1900AC access point and the C code is derived from code
+> >> Belkin contributed to OpenWRT.  However it has been extensively
+> >> re-written, and a device tree binding added to replace platform data.
+> > 
+> > Hi Bryan
+> > 
+> > Do you have any further comments on this driver? Are you likely to
+> > queue it up for the next merge window?
+> 
+> Hi Andrew,
+> 
+> You didn't comment anything on my and Peter's questions on v5 thread
+> about this being a PWM driver.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Hi Tomi
 
----
+I don't comment, because it is not our decision to make any more. We
+have been around this argument many times, so we are not going to
+resolve it. The LED and PWM maintainers need to decide, not us.
 
-Changes sinve v1:
-1. Use generic power domain bindings (suggested by Javier).
-2. Add Javier's reviewed-by.
----
- arch/arm/boot/dts/exynos5420.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 9dc2e9773b30..28c4a2f4b991 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -288,6 +288,12 @@
- 			      "pclk1", "clk1", "pclk2", "clk2";
- 	};
- 
-+	mau_pd: power-domain@100440E0 {
-+		compatible = "samsung,exynos4210-pd";
-+		reg = <0x100440E0 0x20>;
-+		#power-domain-cells = <0>;
-+	};
-+
- 	pinctrl_0: pinctrl@13400000 {
- 		compatible = "samsung,exynos5420-pinctrl";
- 		reg = <0x13400000 0x1000>;
-@@ -346,6 +352,7 @@
- 			#dma-cells = <1>;
- 			#dma-channels = <6>;
- 			#dma-requests = <16>;
-+			power-domains = <&mau_pd>;
- 		};
- 
- 		pdma0: pdma@121A0000 {
-@@ -415,6 +422,7 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2s0_bus>;
- 		status = "disabled";
-+		power-domains = <&mau_pd>;
- 	};
- 
- 	i2s1: i2s@12D60000 {
--- 
-1.9.1
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
