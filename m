@@ -1,173 +1,42 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] usb: phy: add phy-hi6220-usb
-Date: Mon, 09 Feb 2015 22:26:25 +0800
-Message-ID: <54D8C391.1080603@linaro.org>
-References: <1423284966-3485-1-git-send-email-zhangfei.gao@linaro.org> <1423284966-3485-5-git-send-email-zhangfei.gao@linaro.org> <20150209021133.GB3045@shlinux2>
+From: Tyler Hall <tylerwhall@gmail.com>
+Subject: Re: gpio-pxa: getting GPIOs by devicetree phandle broken
+Date: Mon, 9 Feb 2015 09:41:17 -0500
+Message-ID: <CAOjnSCZgx5H75t8QrXj1WQ_SaU_4HDYeK+_XdBRmwUXzHW=iJw@mail.gmail.com>
+References: <CAOjnSCajhwdRVZUO99KL-9PF6HitZen04MoLKoDUDr_5=iS7kw@mail.gmail.com>
+ <CAAVeFu+yf6Wf6MspiDLiWwQkMwMvimNa0SpMK_yO_9X07UecEw@mail.gmail.com> <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B200@irsmsx105.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150209021133.GB3045@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B200@irsmsx105.ger.corp.intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Holmberg, Hans" <hans.holmberg@intel.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Mack <zonque@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Howard Cochran <cochran@lexmark.com>, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/09/2015 10:11 AM, Peter Chen wrote:
-
->> +static void hi6220_detect_work(struct work_struct *work)
->> +{
->> +	struct hi6220_priv *priv =
->> +		container_of(work, struct hi6220_priv, work.work);
->> +	int gpio_id, gpio_vubs;
+> The issue with multiple gpiochips per of-node could be worked around as followed I believe, comments?
 >
-> %s/gpio_vubs/gpio_vbus
-
-Yes, typo
-
->> +static void hi6220_phy_setup(struct hi6220_priv *priv, bool on)
->> +{
->> +	struct regmap *reg = priv->reg;
->> +	u32 val, mask;
->> +	int ret;
->> +
->> +	if (priv->reg == NULL)
->> +		return;
->> +
->> +	if (on) {
->> +		val = RST0_USBOTG_BUS | RST0_POR_PICOPHY |
->> +		      RST0_USBOTG | RST0_USBOTG_32K;
->> +		mask = val;
->> +		ret = regmap_update_bits(reg, SC_PERIPH_RSTDIS0, mask, val);
->> +		if (ret)
->> +			return;
->> +
->> +		ret = regmap_read(reg, SC_PERIPH_CTRL5, &val);
->> +		val = CTRL5_USBOTG_RES_SEL | CTRL5_PICOPHY_ACAENB;
->> +		mask = val | CTRL5_PICOPHY_BC_MODE;
->> +		ret = regmap_update_bits(reg, SC_PERIPH_CTRL5, mask, val);
->> +		if (ret)
->> +			return;
->> +
->> +		val =  CTRL4_PICO_VBUSVLDEXT | CTRL4_PICO_VBUSVLDEXTSEL |
->> +		       CTRL4_OTG_PHY_SEL;
->> +		mask = val | CTRL4_PICO_SIDDQ | CTRL4_PICO_OGDISABLE;
->> +		ret = regmap_update_bits(reg, SC_PERIPH_CTRL4, mask, val);
->> +		if (ret)
->> +			return;
->> +
->> +		ret = regmap_write(reg, SC_PERIPH_CTRL8, EYE_PATTERN_PARA);
->> +		if (ret)
->> +			return;
->> +	} else {
->> +		val = CTRL4_PICO_SIDDQ;
->> +		mask = val;
->> +		ret = regmap_update_bits(reg, SC_PERIPH_CTRL4, mask, val);
->> +		if (ret)
->> +			return;
->> +
->> +		ret = regmap_read(reg, SC_PERIPH_CTRL4, &val);
->> +
->> +		val = RST0_USBOTG_BUS | RST0_POR_PICOPHY |
->> +		      RST0_USBOTG | RST0_USBOTG_32K;
->> +		mask = val;
->> +		ret = regmap_update_bits(reg, SC_PERIPH_RSTEN0, mask, val);
->> +		if (ret)
->> +			return;
->> +	}
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 08261f2..43984ab 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -47,11 +47,12 @@ static int of_gpiochip_find_and_xlate(struct gpio_chip *gc, void *data)
+>         ret = gc->of_xlate(gc, &gg_data->gpiospec, gg_data->flags);
+>         if (ret < 0) {
+>                 /* We've found the gpio chip, but the translation failed.
+> -                * Return true to stop looking and return the translation
+> -                * error via out_gpio
+> +                * Store translation error in out_gpio.
+> +                * Return false to keep looking, as more than one GPIO chip
+> +                * could be registered per of-node.
+>                  */
+>                 gg_data->out_gpio = ERR_PTR(ret);
+> -               return true;
+> +               return false;
+>          }
 >
-> You have return value check for regmap API, but no error message or
-> return value for hi6220_phy_setup, it looks strange.
+>         gg_data->out_gpio = gpiochip_get_desc(gc, ret);
 
-There was dev_err(priv->dev, "failed to setup phy\n");
-Then I found priv->dev is the only one place to use, so I remove this 
-for simple.
-
->
->> +}
->> +
->> +static int hi6220_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct hi6220_priv *priv;
->> +	struct usb_otg *otg;
->> +	struct device_node *np = pdev->dev.of_node;
->> +	int ret, irq;
->> +
->> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	otg = devm_kzalloc(&pdev->dev, sizeof(*otg), GFP_KERNEL);
->> +	if (!otg)
->> +		return -ENOMEM;
->> +
->> +	priv->phy.dev = &pdev->dev;
->> +	priv->phy.otg = otg;
->> +	priv->phy.label = "hi6220";
->> +	priv->phy.type = USB_PHY_TYPE_USB2;
->> +	otg->set_peripheral = hi6220_set_peripheral;
->> +	platform_set_drvdata(pdev, priv);
->> +
->> +	priv->gpio_vbus = of_get_named_gpio(np, "hisilicon,gpio-vbus", 0);
->> +	if (priv->gpio_vbus == -EPROBE_DEFER)
->> +		return -EPROBE_DEFER;
->> +	if (!gpio_is_valid(priv->gpio_vbus)) {
->> +		dev_err(&pdev->dev, "invalid gpio %d\n", priv->gpio_vbus);
->> +		return -ENODEV;
->> +	}
->> +
->> +	priv->gpio_id = of_get_named_gpio(np, "hisilicon,gpio-id", 0);
->> +	if (priv->gpio_id == -EPROBE_DEFER)
->> +		return -EPROBE_DEFER;
->> +	if (!gpio_is_valid(priv->gpio_id)) {
->> +		dev_err(&pdev->dev, "invalid gpio %d\n", priv->gpio_id);
->> +		return -ENODEV;
->> +	}
->> +
->> +	priv->reg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
->> +					"hisilicon,peripheral-syscon");
->> +	if (IS_ERR(priv->reg))
->> +		priv->reg = NULL;
->> +
->
-> see my comments at your v1.
-As replied in v1, EPROBE_DEFER does not needed.
-syscon is register far earlier.
-
->
->> +	INIT_DELAYED_WORK(&priv->work, hi6220_detect_work);
->> +
->> +	ret = devm_gpio_request_one(&pdev->dev, priv->gpio_vbus,
->> +				    GPIOF_IN, "gpio_vbus");
->> +	if (ret < 0) {
->> +		dev_err(&pdev->dev, "gpio request failed for gpio_vbus\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = devm_gpio_request_one(&pdev->dev, priv->gpio_id,
->> +				    GPIOF_IN, "gpio_id");
->> +	if (ret < 0) {
->> +		dev_err(&pdev->dev, "gpio request failed for gpio_id\n");
->> +		return ret;
->> +	}
->> +
->> +	priv->vcc = devm_regulator_get(&pdev->dev, "vcc");
->> +	if (!IS_ERR(priv->vcc)) {
->
-> EPROBE_DEFER?
-No, this is not needed, since regulator is registered earlier than device.
-
-drivers/Makefile
-# regulators early, since some subsystems rely on them to initialize
-obj-$(CONFIG_REGULATOR)         += regulator/
-
-EPROBE_DEFER should be the last option we rely on.
-
-
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As long as we're ok with multiple gpiochips per of-node, this would
+work for me. It'll change the preference of which chip returns the
+error in the case of multiple chips, but that's already undefined
+behavior.
