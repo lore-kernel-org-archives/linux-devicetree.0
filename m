@@ -1,34 +1,69 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [PATCH] ARM: DTS: omap3-n900.dts: fix i2c bus numbering
-Date: Mon, 09 Feb 2015 18:03:34 +0200
-Message-ID: <54D8DA56.8060400@gmail.com>
-References: <1423410536-16579-1-git-send-email-ivo.g.dimitrov.75@gmail.com> <20150209150245.GC21362@kahuna>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: shmobile: r8a73a4: Move pfc node to work around
+ probe ordering bug
+Date: Mon, 9 Feb 2015 08:24:29 -0800
+Message-ID: <20150209162428.GG25235@atomide.com>
+References: <1423254173-31852-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150209150245.GC21362@kahuna>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: tony@atomide.com, pali.rohar@gmail.com, pavel@ucw.cz, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1423254173-31852-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+* Geert Uytterhoeven <geert+renesas@glider.be> [150206 12:26]:
+> Currently the pin function controller (which is also a GPIO controller)
+> is instantiated before the interrupt controllers due to the order in the
+> DTS. At that time, the irq domains for the interrupt controllers
+> referenced by its interrupts-extended property cannot be found yet:
+> 
+>     irq: no irq domain found for /interrupt-controller@e61c0000 !
+> 
+> Nevertheless, the core OF probing code ignores this failure, besides a
+> debug message that's not normally printed:
+> 
+>     not all legacy IRQ resources mapped for pfc
+> 
+> and continues initialization of the device. Then, the sh-pfc driver
+> cannot find any IRQ resources, and thinks no interrupts are available,
+> causing gpio-keys to fail later:
+> 
+>     gpio-keys keyboard: Unable to claim irq 0; error -22
+>     gpio-keys: probe of keyboard failed with error -22
+> 
+> Move the pin function controller node after the interrupt controller
+> nodes it references to work around the bug in the core OF probing code.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Notes:
+>   - It seems several people tried to solve this in the core OF probing
+>     code before, but the final solution never went in?
+>   - This can be reproduced on other SoCs (e.g. sh73a0 and r8a7740) by
+>     moving their pfc nodes before their interrupt controller nodes.
+>   - This patch is against my working tree, so it doesn't apply to
+>     Simon's repository, but you get the idea....
 
+No issues with the patch, but here are few comments on the core
+reasons (without looking at the code in this case) that might help
+fix similar issues.
 
-On  9.02.2015 17:02, Nishanth Menon wrote:
-> On 17:48-20150208, Ivaylo Dimitrov wrote:
->> With legacy boot i2c buses on Nokia N900 are numbered i2c1, i2c2 and i2c3.
->> Commit 20b80942ef4e ("ARM: dts: OMAP3+: Add i2c aliases") fixed the
->> numbering with DT boot, but introduced a regression on N900 - aliases
->> become i2c0, i2c1 and i2c2. Fix that by providing the correct aliases in
->> the board dts.
->>
->> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
->> ---
-> I suppose this is due to some legacy userspace breakage?
-> if yes, we do not intend to break userspace :), So:
+In all the cases I've seen these errors are caused by non-standard
+custom initcall levels for drivers like i2c bus. The real solution
+is to initialize drivers later with standard module_init, and stop
+the race to the bottom with custom initcall levels.
 
-Yes, legacy userspace breakage :)
+If there is legacy board specific platofrm init code that needs
+i2c gpios early, that code can probably be moved to initialize
+later on.
+
+Also, there should not be any need for custom driver initcall
+levels from Linux generic framework point of view as for example
+irqchip implementing drivers work just fine as a loadable module.
 
 Regards,
-Ivo
+
+Tony
