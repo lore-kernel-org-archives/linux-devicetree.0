@@ -1,89 +1,53 @@
 From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v3 3/6] ARM: DT: apq8064: Add TCSR support
-Date: Mon,  9 Feb 2015 16:01:08 -0600
-Message-ID: <1423519271-4238-4-git-send-email-agross@codeaurora.org>
+Subject: [Patch v3 2/6] mfd: qcom,tcsr: Add device tree binding for TCSR
+Date: Mon,  9 Feb 2015 16:01:07 -0600
+Message-ID: <1423519271-4238-3-git-send-email-agross@codeaurora.org>
 References: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-msm@vger.kernel.org
 Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds TCSR support for use by the GSBI to automatically configure ADM
-CRCI values based on the GSBI port configuration.
+This patch adds the device tree binding for the Qualcomm Top Control and
+Status Register device.  The TCSR is comprised of a set of registers that
+provide various control and status functions for attached peripherals.
 
 Signed-off-by: Andy Gross <agross@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-apq8064.dtsi |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../devicetree/bindings/mfd/qcom,tcsr.txt          |   22 ++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index b3154c0..f607900 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -166,6 +166,7 @@
- 		gsbi1: gsbi@12440000 {
- 			status = "disabled";
- 			compatible = "qcom,gsbi-v1.0.0";
-+			cell-index = <1>;
- 			reg = <0x12440000 0x100>;
- 			clocks = <&gcc GSBI1_H_CLK>;
- 			clock-names = "iface";
-@@ -173,6 +174,8 @@
- 			#size-cells = <1>;
- 			ranges;
- 
-+			syscon-tcsr = <&tcsr>;
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt b/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
+new file mode 100644
+index 0000000..e90519d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
+@@ -0,0 +1,22 @@
++QCOM Top Control and Status Register
 +
- 			i2c1: i2c@12460000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
- 				reg = <0x12460000 0x1000>;
-@@ -187,6 +190,7 @@
- 		gsbi2: gsbi@12480000 {
- 			status = "disabled";
- 			compatible = "qcom,gsbi-v1.0.0";
-+			cell-index = <2>;
- 			reg = <0x12480000 0x100>;
- 			clocks = <&gcc GSBI2_H_CLK>;
- 			clock-names = "iface";
-@@ -194,6 +198,8 @@
- 			#size-cells = <1>;
- 			ranges;
- 
-+			syscon-tcsr = <&tcsr>;
++Qualcomm devices have a set of registers that provide various control and status
++functions for their peripherals.  This node is intended to allow access to these
++registers via syscon.
 +
- 			i2c2: i2c@124a0000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
- 				reg = <0x124a0000 0x1000>;
-@@ -208,6 +214,7 @@
- 		gsbi7: gsbi@16600000 {
- 			status = "disabled";
- 			compatible = "qcom,gsbi-v1.0.0";
-+			cell-index = <7>;
- 			reg = <0x16600000 0x100>;
- 			clocks = <&gcc GSBI7_H_CLK>;
- 			clock-names = "iface";
-@@ -215,6 +222,8 @@
- 			#size-cells = <1>;
- 			ranges;
- 
-+			syscon-tcsr = <&tcsr>;
++Required properties:
++- compatible:	Should contain:
++		"qcom,tcsr-ipq8064", "syscon" for IPQ8064
++		"qcom,tcsr-apq8064", "syscon" for APQ8064
++		"qcom,tcsr-msm8660", "syscon" for MSM8660
++		"qcom,tcsr-msm8960", "syscon" for MSM8960
++		"qcom,tcsr-msm8974", "syscon" for MSM8974
++		"qcom,tcsr-apq8084", "syscon" for APQ8084
++		"qcom,tcsr-msm8916", "syscon" for MSM8916
++- reg: Address range for TCSR registers
 +
- 			serial@16640000 {
- 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
- 				reg = <0x16640000 0x1000>,
-@@ -349,5 +358,10 @@
- 				pinctrl-0 = <&sdc4_gpios>;
- 			};
- 		};
-+
-+		tcsr: syscon@1a400000 {
-+			compatible = "qcom,tcsr-apq8064", "syscon";
-+			reg = <0x1a400000 0x100>;
-+		};
- 	};
- };
++Example:
++	tcsr: syscon@1a400000 {
++		compatible = "qcom,tcsr-msm8960", "syscon";
++		reg = <0x1a400000 0x100>;
++	};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
