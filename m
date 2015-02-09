@@ -1,77 +1,80 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 1/4] drm/exynos: dsim: fix to control mipi phy register
-Date: Mon, 09 Feb 2015 11:57:17 +0100
-Message-ID: <54D8928D.9000008@samsung.com>
-References: <1423309988-11793-1-git-send-email-inki.dae@samsung.com>
- <1423309988-11793-2-git-send-email-inki.dae@samsung.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 1/3] USB: gadget: at91_udc: add at91sam9n12 support
+Date: Mon, 9 Feb 2015 12:14:34 +0100
+Message-ID: <20150209111434.GN3715@piout.net>
+References: <1423472572-19824-1-git-send-email-voice.shen@atmel.com>
+ <1423472572-19824-2-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1423309988-11793-2-git-send-email-inki.dae@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, devicetree@vger.kernel.org
-Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, a.hajda@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1423472572-19824-2-git-send-email-voice.shen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: balbi@ti.com, nicolas.ferre@atmel.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/15 12:53, Inki Dae wrote:
-> This patch fixes the issue that the try to get a phy object is failed
-> to enable mipi phy.
+Hi Bo,
+
+On 09/02/2015 at 17:02:50 +0800, Bo Shen wrote :
+> Add at91sam9n12 SoC support.
 > 
-> System and power management unit registers should be controlled by
-> syscon framework. So this patch removes existing phy framework based
-> codes and adds syscon support instead. However, we should support
-> legacy device tree binding so consider the legacy binding for compatibility.
+> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+> ---
 > 
-> In addition, we need to remove below device node and relevant properties,
-> 	mipi_phy: video-phy@10020710 {
-> 		compatible = "samsung,s5pv210-mipi-video-phy";
-> 		reg = <0x10020710 8>;
-> 		#phy-cells = <1>;
-> 	};
+>  drivers/usb/gadget/udc/at91_udc.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> Now camera device node uses mipi_phy node relevant properties like below,
-> 	camera {
-> 		...
-> 		csis_0: csis@11880000 {
-> 			...
-> 			phys = <&mipi_phy 0>;
-> 			phy-names = "csis";
-> 			...
-> 		};
-> 		csis_1: csis@11890000 {
-> 			...
-> 			phys = <&mipi_phy 2>;
-> 			phy-names = "csis";
-> 			...
-> 		};
-> 		...
-> 	};
+> diff --git a/drivers/usb/gadget/udc/at91_udc.c b/drivers/usb/gadget/udc/at91_udc.c
+> index c862656..f4c785f 100644
+> --- a/drivers/usb/gadget/udc/at91_udc.c
+> +++ b/drivers/usb/gadget/udc/at91_udc.c
+> @@ -931,7 +931,8 @@ static void pullup(struct at91_udc *udc, int is_on)
+>  		at91_udp_write(udc, AT91_UDP_TXVC, 0);
+>  		if (cpu_is_at91rm9200())
+>  			gpio_set_value(udc->board.pullup_pin, active);
+> -		else if (cpu_is_at91sam9260() || cpu_is_at91sam9263() || cpu_is_at91sam9g20()) {
+> +		else if (cpu_is_at91sam9260() || cpu_is_at91sam9263() ||
+> +			 cpu_is_at91sam9g20() || cpu_is_at91sam9n12()) {
+
+cpu_is_at91xx have been removed from the kernel, using the correct
+compatible should be enough, see
+http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/drivers/usb/gadget/udc/at91_udc.c?id=f0bceab4e3b528e799aba8fda8d2936fcfd41f1f
+
+
+>  			u32	txvc = at91_udp_read(udc, AT91_UDP_TXVC);
+>  
+>  			txvc |= AT91_UDP_TXVC_PUON;
+> @@ -949,7 +950,8 @@ static void pullup(struct at91_udc *udc, int is_on)
+>  		at91_udp_write(udc, AT91_UDP_TXVC, AT91_UDP_TXVC_TXVDIS);
+>  		if (cpu_is_at91rm9200())
+>  			gpio_set_value(udc->board.pullup_pin, !active);
+> -		else if (cpu_is_at91sam9260() || cpu_is_at91sam9263() || cpu_is_at91sam9g20()) {
+> +		else if (cpu_is_at91sam9260() || cpu_is_at91sam9263() ||
+> +			 cpu_is_at91sam9g20() || cpu_is_at91sam9n12()) {
+>  			u32	txvc = at91_udp_read(udc, AT91_UDP_TXVC);
+>  
+>  			txvc &= ~AT91_UDP_TXVC_PUON;
+> @@ -1758,7 +1760,8 @@ static int at91udc_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/* newer chips have more FIFO memory than rm9200 */
+> -	if (cpu_is_at91sam9260() || cpu_is_at91sam9g20()) {
+> +	if (cpu_is_at91sam9260() || cpu_is_at91sam9g20() ||
+> +	    cpu_is_at91sam9n12()) {
+>  		udc->ep[0].maxpacket = 64;
+>  		udc->ep[3].maxpacket = 64;
+>  		udc->ep[4].maxpacket = 512;
+> -- 
+> 2.3.0.rc0
 > 
-> With above, we will find below message while booting,
->      can't request region for resource [mem 0x10020710-0x10020717]
-
-I'm afraid this approach won't work because MIPI DSI Master and MIPI CSI
-Slave devices share a control bit in the register and it seems impossible
-to ensure proper locking with current regmap/syscon API.
-
-I have submitted patches to fix this issue [1] and they should be already
-available in linux-next and can be found on linux-samsung-soc ML:
-
-[PATCH 1/2] phy: exynos-video-mipi: Fix regression by adding support for PMU regmap
-[PATCH 2/2] ARM: dts: Add syscon phandle to the video-phy node for Exynos4
-
-The other issue with your approach is that we are moving the PMU details
-to the MIPI DSIM driver and similar changes would need to be done in
-the MIPI CSIS driver.
-
-Instead I just added syscon support to the PHY layer, it's not perfect
-but fixes the issue for both DSI and CSI and  doesn't strip the PHY layer
-which could potentially be useful.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
-Thanks,
-Sylwester
-
-[1] https://patchwork.ozlabs.org/patch/429948/
-    http://www.spinics.net/lists/linux-samsung-soc/msg41210.html
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
