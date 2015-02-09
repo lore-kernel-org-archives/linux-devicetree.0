@@ -1,40 +1,37 @@
 From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH 3/3] ARM: at91: dt: at91sam9n12ek: enable udp
-Date: Mon, 9 Feb 2015 17:02:52 +0800
-Message-ID: <1423472572-19824-4-git-send-email-voice.shen@atmel.com>
-References: <1423472572-19824-1-git-send-email-voice.shen@atmel.com>
+Subject: [PATCH 0/3] ARM: at91: at91sam9n12ek: enable usb gadget support
+Date: Mon, 9 Feb 2015 17:02:49 +0800
+Message-ID: <1423472572-19824-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423472572-19824-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: balbi@ti.com, nicolas.ferre@atmel.com
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
+Cc: devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable usb device port on at91sam9n12ek board.
+This patch series enable the usb gadget support on at91sam9n12ek
+board. On at91sam9n12 SoC which integrate the full speed udc device.
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
----
 
+Bo Shen (3):
+  USB: gadget: at91_udc: add at91sam9n12 support
+  ARM: at91: dt: at91sam9n12: add udp device node
+  ARM: at91: dt: at91sam9n12ek: enable udp
+
+ arch/arm/boot/dts/at91sam9n12.dtsi  | 9 +++++++++
  arch/arm/boot/dts/at91sam9n12ek.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/gadget/udc/at91_udc.c   | 9 ++++++---
+ 3 files changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index 13bb24e..3e572e5 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -120,6 +120,11 @@
- 				};
- 			};
- 
-+			usb1: gadget@f803c000 {
-+				atmel,vbus-gpio = <&pioB 16 GPIO_ACTIVE_HIGH>;
-+				status = "okay";
-+			};
-+
- 			watchdog@fffffe40 {
- 				status = "okay";
- 			};
 -- 
 2.3.0.rc0
