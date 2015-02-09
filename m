@@ -1,80 +1,51 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending command'
-Date: Mon,  9 Feb 2015 15:25:25 +0800
-Message-ID: <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
-References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
- <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org, djkurtz@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: gpio-pxa: getting GPIOs by devicetree phandle broken
+Date: Mon, 09 Feb 2015 09:02:51 +0100
+Message-ID: <87r3tz7bro.fsf@free.fr>
+References: <CAOjnSCajhwdRVZUO99KL-9PF6HitZen04MoLKoDUDr_5=iS7kw@mail.gmail.com>
+	<CAAVeFu+yf6Wf6MspiDLiWwQkMwMvimNa0SpMK_yO_9X07UecEw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFu+yf6Wf6MspiDLiWwQkMwMvimNa0SpMK_yO_9X07UecEw@mail.gmail.com>
+	(Alexandre Courbot's message of "Mon, 9 Feb 2015 15:11:23 +0900")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Tyler Hall <tylerwhall@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Mack <zonque@gmail.com>, Hans Holmberg <hans.holmberg@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Howard Cochran <cochran@lexmark.com>
 List-Id: devicetree@vger.kernel.org
 
-Because of some uncertain factors, such as worse card or worse hardware,
-DAT[3:0](the data lines) may be pulled down by card, and mmc controller
-will be in busy state. This should not happend when mmc controller
-send command to update card clocks. If this happends, mci_send_cmd will
-be failed and we will get 'Timeout sending command', and then system will
-be blocked. To avoid this, we need reset mmc controller.
+Alexandre Courbot <gnurou@gmail.com> writes:
 
-Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
----
- drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+> Adding Robert who reported the same thing.
+>
+> On Sat, Feb 7, 2015 at 6:28 AM, Tyler Hall <tylerwhall@gmail.com> wrote:
+>> 1. Require child nodes in DT for each bank
+>
+> This would break DT compatibility.
+Agreed.
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 4d2e3c2..b0b57e3 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -100,6 +100,7 @@ struct idmac_desc {
- };
- #endif /* CONFIG_MMC_DW_IDMAC */
- 
-+static int dw_mci_card_busy(struct mmc_host *mmc);
- static bool dw_mci_reset(struct dw_mci *host);
- static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
- 
-@@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
- 		cmd, arg, cmd_status);
- }
- 
-+static void dw_mci_wait_busy(struct dw_mci_slot *slot)
-+{
-+	struct dw_mci *host = slot->host;
-+	unsigned long timeout = jiffies + msecs_to_jiffies(500);
-+
-+	do {
-+		if (!dw_mci_card_busy(slot->mmc))
-+			return;
-+		cpu_relax();
-+	} while (time_before(jiffies, timeout));
-+
-+	dev_err(host->dev, "Data busy (status %#x)\n",
-+		mci_readl(slot->host, STATUS));
-+
-+	/*
-+	 * Data busy, this should not happend when mmc controller send command
-+	 * to update card clocks in non-volt-switch state. If it happends, we
-+	 * should reset controller to avoid getting "Timeout sending command".
-+	 */
-+	dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
-+
-+	/* Fail to reset controller or still data busy, WARN_ON! */
-+	WARN_ON(dw_mci_card_busy(slot->mmc));
-+}
-+
- static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
- {
- 	struct dw_mci *host = slot->host;
-@@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
- 	/* We must continue to set bit 28 in CMD until the change is complete */
- 	if (host->state == STATE_WAITING_CMD11_DONE)
- 		sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
-+	else
-+		dw_mci_wait_busy(slot);
- 
- 	if (!clock) {
- 		mci_writel(host, CLKENA, 0);
+>
+>> 2. Refactor gpio-pxa to only register one gpiochip
+>
+> Sounds better, especially since this would reflect the hardware more
+> accurately. One DT node should translate into one GPIO chip.
+Could I know where "should translate into _one_ GPIO chip" comes from ? Is it a
+specification, or is it a new rule we're creating ?
+
+And if it's a new rule, I'd like to know what backs it up .
+
+> problem is that I'm afraid several other drivers are doing the same
+> thing and thus are now similarly broken.
+That's also what I'm afraid of.
+
+> The following is also likely to work as a workaround, but I would not
+> go as far as saying this should be taken as a fix. Hans, since you
+> wrote 7b8792b, could we have your input on this?
+I was going to suggest the very same approach. If this one (or a similar one)
+doesn't meet success, then my weekend of revert queries is not over ... and I
+don't like reverts.
+
+Cheers.
+
 -- 
-1.8.3.2
+Robert
