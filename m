@@ -1,53 +1,50 @@
 From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v3 2/6] mfd: qcom,tcsr: Add device tree binding for TCSR
-Date: Mon,  9 Feb 2015 16:01:07 -0600
-Message-ID: <1423519271-4238-3-git-send-email-agross@codeaurora.org>
-References: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
+Subject: [Patch v3 0/6] GSBI CRCI Autoconfiguration Support
+Date: Mon,  9 Feb 2015 16:01:05 -0600
+Message-ID: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-msm@vger.kernel.org
 Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree binding for the Qualcomm Top Control and
-Status Register device.  The TCSR is comprised of a set of registers that
-provide various control and status functions for attached peripherals.
+This patch set adds support for automatic configuration of GSBI DMA CRCI values.
 
-Signed-off-by: Andy Gross <agross@codeaurora.org>
----
- .../devicetree/bindings/mfd/qcom,tcsr.txt          |   22 ++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+DMA operations require that the ADM CRCI mux values be properly configured in
+the TCSR (Top Control and Status Register) block.  During probing of a GSBI
+device, the client mode must be declared and this can be used to lookup the
+correct TCSR ADM CRCI MUX settings and then program them so that they are
+correct before any clients are populated.
+
+These patches add the TCSR as a syscon device and that allows the GSBI to
+access and manipulate the ADM CRCI MUX registers to correctly configure the
+values based on the GSBI port configuration.
+
+Changes since v2:
+  - Use cell-index instead of alias to denote GSBI instance
+
+Changes since v1:
+  - Fixed various review comments
+
+Andy Gross (6):
+  soc: qcom: gsbi: Add support for ADM CRCI muxing
+  mfd: qcom,tcsr: Add device tree binding for TCSR
+  ARM: DT: apq8064: Add TCSR support
+  ARM: DT: ipq8064: Add TCSR support
+  ARM: DT: msm8660: Add TCSR support
+  ARM: DT: msm8960: Add TCSR support
+
+ .../devicetree/bindings/mfd/qcom,tcsr.txt          |   22 +++
+ .../devicetree/bindings/soc/qcom/qcom,gsbi.txt     |   14 +-
+ arch/arm/boot/dts/qcom-apq8064.dtsi                |   14 ++
+ arch/arm/boot/dts/qcom-ipq8064.dtsi                |   14 ++
+ arch/arm/boot/dts/qcom-msm8660.dtsi                |    8 ++
+ arch/arm/boot/dts/qcom-msm8960.dtsi                |    8 ++
+ drivers/soc/qcom/Kconfig                           |    1 +
+ drivers/soc/qcom/qcom_gsbi.c                       |  152 ++++++++++++++++++++
+ 8 files changed, 232 insertions(+), 1 deletion(-)
  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt b/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
-new file mode 100644
-index 0000000..e90519d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
-@@ -0,0 +1,22 @@
-+QCOM Top Control and Status Register
-+
-+Qualcomm devices have a set of registers that provide various control and status
-+functions for their peripherals.  This node is intended to allow access to these
-+registers via syscon.
-+
-+Required properties:
-+- compatible:	Should contain:
-+		"qcom,tcsr-ipq8064", "syscon" for IPQ8064
-+		"qcom,tcsr-apq8064", "syscon" for APQ8064
-+		"qcom,tcsr-msm8660", "syscon" for MSM8660
-+		"qcom,tcsr-msm8960", "syscon" for MSM8960
-+		"qcom,tcsr-msm8974", "syscon" for MSM8974
-+		"qcom,tcsr-apq8084", "syscon" for APQ8084
-+		"qcom,tcsr-msm8916", "syscon" for MSM8916
-+- reg: Address range for TCSR registers
-+
-+Example:
-+	tcsr: syscon@1a400000 {
-+		compatible = "qcom,tcsr-msm8960", "syscon";
-+		reg = <0x1a400000 0x100>;
-+	};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
