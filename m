@@ -1,110 +1,195 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v4 0/5] ARM: at91: fix irq_pm_install_action WARNING
-Date: Mon, 9 Feb 2015 16:47:56 +0100
-Message-ID: <20150209164756.0a4ed146@bbrezillon>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] usb: phy: add phy-hi6220-usb
+Date: Tue, 10 Feb 2015 00:00:16 +0800
+Message-ID: <CABQgh9FVYN8dbg=bx8OyPmRo+atPUT7Qr6YK3+ATe4QXgw8nJQ@mail.gmail.com>
+References: <1423284966-3485-1-git-send-email-zhangfei.gao@linaro.org>
+	<1423284966-3485-5-git-send-email-zhangfei.gao@linaro.org>
+	<20150209021133.GB3045@shlinux2>
+	<54D8C391.1080603@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54D8C391.1080603-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On 9 February 2015 at 22:26, zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>
+> On 02/09/2015 10:11 AM, Peter Chen wrote:
+>
+>>> +static void hi6220_detect_work(struct work_struct *work)
+>>> +{
+>>> +       struct hi6220_priv *priv =
+>>> +               container_of(work, struct hi6220_priv, work.work);
+>>> +       int gpio_id, gpio_vubs;
+>>
+>>
+>> %s/gpio_vubs/gpio_vbus
+>
+>
+> Yes, typo
+>
+>
+>>> +static void hi6220_phy_setup(struct hi6220_priv *priv, bool on)
+>>> +{
+>>> +       struct regmap *reg = priv->reg;
+>>> +       u32 val, mask;
+>>> +       int ret;
+>>> +
+>>> +       if (priv->reg == NULL)
+>>> +               return;
+>>> +
+>>> +       if (on) {
+>>> +               val = RST0_USBOTG_BUS | RST0_POR_PICOPHY |
+>>> +                     RST0_USBOTG | RST0_USBOTG_32K;
+>>> +               mask = val;
+>>> +               ret = regmap_update_bits(reg, SC_PERIPH_RSTDIS0, mask,
+>>> val);
+>>> +               if (ret)
+>>> +                       return;
+>>> +
+>>> +               ret = regmap_read(reg, SC_PERIPH_CTRL5, &val);
+>>> +               val = CTRL5_USBOTG_RES_SEL | CTRL5_PICOPHY_ACAENB;
+>>> +               mask = val | CTRL5_PICOPHY_BC_MODE;
+>>> +               ret = regmap_update_bits(reg, SC_PERIPH_CTRL5, mask,
+>>> val);
+>>> +               if (ret)
+>>> +                       return;
+>>> +
+>>> +               val =  CTRL4_PICO_VBUSVLDEXT | CTRL4_PICO_VBUSVLDEXTSEL |
+>>> +                      CTRL4_OTG_PHY_SEL;
+>>> +               mask = val | CTRL4_PICO_SIDDQ | CTRL4_PICO_OGDISABLE;
+>>> +               ret = regmap_update_bits(reg, SC_PERIPH_CTRL4, mask,
+>>> val);
+>>> +               if (ret)
+>>> +                       return;
+>>> +
+>>> +               ret = regmap_write(reg, SC_PERIPH_CTRL8,
+>>> EYE_PATTERN_PARA);
+>>> +               if (ret)
+>>> +                       return;
+>>> +       } else {
+>>> +               val = CTRL4_PICO_SIDDQ;
+>>> +               mask = val;
+>>> +               ret = regmap_update_bits(reg, SC_PERIPH_CTRL4, mask,
+>>> val);
+>>> +               if (ret)
+>>> +                       return;
+>>> +
+>>> +               ret = regmap_read(reg, SC_PERIPH_CTRL4, &val);
+>>> +
+>>> +               val = RST0_USBOTG_BUS | RST0_POR_PICOPHY |
+>>> +                     RST0_USBOTG | RST0_USBOTG_32K;
+>>> +               mask = val;
+>>> +               ret = regmap_update_bits(reg, SC_PERIPH_RSTEN0, mask,
+>>> val);
+>>> +               if (ret)
+>>> +                       return;
+>>> +       }
+>>
+>>
+>> You have return value check for regmap API, but no error message or
+>> return value for hi6220_phy_setup, it looks strange.
+>
+>
+> There was dev_err(priv->dev, "failed to setup phy\n");
+> Then I found priv->dev is the only one place to use, so I remove this for
+> simple.
+>
+>
+>>
+>>> +}
+>>> +
+>>> +static int hi6220_phy_probe(struct platform_device *pdev)
+>>> +{
+>>> +       struct hi6220_priv *priv;
+>>> +       struct usb_otg *otg;
+>>> +       struct device_node *np = pdev->dev.of_node;
+>>> +       int ret, irq;
+>>> +
+>>> +       priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>>> +       if (!priv)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       otg = devm_kzalloc(&pdev->dev, sizeof(*otg), GFP_KERNEL);
+>>> +       if (!otg)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       priv->phy.dev = &pdev->dev;
+>>> +       priv->phy.otg = otg;
+>>> +       priv->phy.label = "hi6220";
+>>> +       priv->phy.type = USB_PHY_TYPE_USB2;
+>>> +       otg->set_peripheral = hi6220_set_peripheral;
+>>> +       platform_set_drvdata(pdev, priv);
+>>> +
+>>> +       priv->gpio_vbus = of_get_named_gpio(np, "hisilicon,gpio-vbus",
+>>> 0);
+>>> +       if (priv->gpio_vbus == -EPROBE_DEFER)
+>>> +               return -EPROBE_DEFER;
+>>> +       if (!gpio_is_valid(priv->gpio_vbus)) {
+>>> +               dev_err(&pdev->dev, "invalid gpio %d\n",
+>>> priv->gpio_vbus);
+>>> +               return -ENODEV;
+>>> +       }
+>>> +
+>>> +       priv->gpio_id = of_get_named_gpio(np, "hisilicon,gpio-id", 0);
+>>> +       if (priv->gpio_id == -EPROBE_DEFER)
+>>> +               return -EPROBE_DEFER;
+>>> +       if (!gpio_is_valid(priv->gpio_id)) {
+>>> +               dev_err(&pdev->dev, "invalid gpio %d\n", priv->gpio_id);
+>>> +               return -ENODEV;
+>>> +       }
+>>> +
+>>> +       priv->reg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+>>> +                                       "hisilicon,peripheral-syscon");
+>>> +       if (IS_ERR(priv->reg))
+>>> +               priv->reg = NULL;
+>>> +
+>>
+>>
+>> see my comments at your v1.
+>
+> As replied in v1, EPROBE_DEFER does not needed.
+> syscon is register far earlier.
+>
+>>
+>>> +       INIT_DELAYED_WORK(&priv->work, hi6220_detect_work);
+>>> +
+>>> +       ret = devm_gpio_request_one(&pdev->dev, priv->gpio_vbus,
+>>> +                                   GPIOF_IN, "gpio_vbus");
+>>> +       if (ret < 0) {
+>>> +               dev_err(&pdev->dev, "gpio request failed for
+>>> gpio_vbus\n");
+>>> +               return ret;
+>>> +       }
+>>> +
+>>> +       ret = devm_gpio_request_one(&pdev->dev, priv->gpio_id,
+>>> +                                   GPIOF_IN, "gpio_id");
+>>> +       if (ret < 0) {
+>>> +               dev_err(&pdev->dev, "gpio request failed for gpio_id\n");
+>>> +               return ret;
+>>> +       }
+>>> +
+>>> +       priv->vcc = devm_regulator_get(&pdev->dev, "vcc");
+>>> +       if (!IS_ERR(priv->vcc)) {
+>>
+>>
+>> EPROBE_DEFER?
+>
+> No, this is not needed, since regulator is registered earlier than device.
+>
+> drivers/Makefile
+> # regulators early, since some subsystems rely on them to initialize
+> obj-$(CONFIG_REGULATOR)         += regulator/
+>
 
-Any chance this could go in the next kernel release ?
-More and more people are complaining about this backtrace :-/.
+After reconsideration, EPROBE_DEFER should be added here in case of module.
 
-Regards,
-
-Boris
-
-On Thu, 29 Jan 2015 11:33:35 +0100
-Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
-> Commit cab303be91dc47942bc25de33dc1140123540800 [1] introduced a WARN_ON
-> test which triggers a WARNING backtrace on at91 platforms.
-> While this WARN_ON is absolutely necessary to warn users that they should
-> not mix request with and without IRQF_NO_SUSPEND flags on shared IRQs,
-> there is no easy way to solve this issue on at91 platforms.
-> 
-> The main reason is that the init timer is often using a shared irq line
-> and thus request this irq with IRQF_NO_SUSPEND flag set, while other
-> peripherals request the same irq line without this flag.
-> 
-> As suggested by Thomas, the first 3 patches of this series add a dumb
-> demultiplexer irqchip implementation.
-> This demuxer registers to a source interrupt and then forwards all received
-> interrupts to its children (it they are enabled).
-> 
-> The last two patches rework at91 DTs and config to make use of this dumb
-> demuxer implementation.
-> 
-> Rob, I know you were not in favor of exposing this in the DT but we really
-> need to quickly a solution: more and more people complain about this warning.
-> If you see a better way to handle this case please share it.
-> 
-> Best Regards,
-> 
-> Boris
-> 
-> Changes since v3:
->  - replace dumb by virt
-> 
-> Changes since v2:
->  - removed unneeded dumb demux flags passed to irq_alloc_dumb_demux_chip
->  - set nested lockdep class for all requested irqs
->  - add some explanation to the DT binding doc
->  - change the compatible string to clearly show that this chip is purely
->    virtual
->  - added dumb demuxer to all at91 impacted SoCs
-> 
-> Changes since v1:
->  - went for an dumb irq demuxer approach instead of trying to fix the
->    current shared irq code
-> 
-> Boris Brezillon (5):
->   genirq: Authorize chained handlers to remain disabled when initialized
->   irqchip: add virtual demultiplexer implementation
->   irqchip: Add DT binding doc for the virtual irq demuxer chip
->   ARM: at91/dt: select VIRT_IRQ_DEMUX for all at91 SoCs
->   ARM: at91/dt: define a virtual irq demultiplexer chip connected on
->     irq1
-> 
->  .../bindings/interrupt-controller/dumb-demux.txt   |  41 ++++++
->  arch/arm/boot/dts/at91rm9200.dtsi                  |  20 ++-
->  arch/arm/boot/dts/at91sam9260.dtsi                 |  26 +++-
->  arch/arm/boot/dts/at91sam9261.dtsi                 |  26 +++-
->  arch/arm/boot/dts/at91sam9263.dtsi                 |  29 ++++-
->  arch/arm/boot/dts/at91sam9g45.dtsi                 |  29 ++++-
->  arch/arm/boot/dts/at91sam9n12.dtsi                 |  25 +++-
->  arch/arm/boot/dts/at91sam9rl.dtsi                  |  29 ++++-
->  arch/arm/boot/dts/at91sam9x5.dtsi                  |  26 +++-
->  arch/arm/mach-at91/Kconfig                         |   2 +
->  drivers/irqchip/Kconfig                            |   4 +
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-virt-demux.c                   |  72 +++++++++++
->  include/linux/irq.h                                |  64 +++++++++-
->  include/linux/irqdomain.h                          |   1 +
->  kernel/irq/Kconfig                                 |   5 +
->  kernel/irq/Makefile                                |   1 +
->  kernel/irq/chip.c                                  |  53 +++++++-
->  kernel/irq/handle.c                                |  31 ++++-
->  kernel/irq/internals.h                             |   3 +
->  kernel/irq/irqdomain.c                             |   2 +-
->  kernel/irq/msi.c                                   |   3 +-
->  kernel/irq/virt-demux-chip.c                       | 140 +++++++++++++++++++++
->  23 files changed, 580 insertions(+), 53 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
->  create mode 100644 drivers/irqchip/irq-virt-demux.c
->  create mode 100644 kernel/irq/virt-demux-chip.c
-> 
-
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
