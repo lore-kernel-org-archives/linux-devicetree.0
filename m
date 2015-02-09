@@ -1,51 +1,82 @@
-From: "Holmberg, Hans" <hans.holmberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH 0/2] GPIO joystick driver
-Date: Mon, 9 Feb 2015 10:19:07 +0000
-Message-ID: <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B24F@irsmsx105.ger.corp.intel.com>
-References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
- <1AA6C46C-36D9-4243-9DC5-254A7202D339@gmail.com>
- <4B6D6D87A8FB62428BE0A3E38461A1AB18D6AF04@irsmsx105.ger.corp.intel.com>
- <20150207204658.GA29015@dtor-ws>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: at91: dt: at91sam9n12ek: enable udp
+Date: Mon, 9 Feb 2015 18:23:29 +0800
+Message-ID: <54D88AA1.3020402@atmel.com>
+References: <1423472572-19824-1-git-send-email-voice.shen@atmel.com> <1423472572-19824-4-git-send-email-voice.shen@atmel.com> <20150209100404.GA17242@gradator.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150207204658.GA29015@dtor-ws>
-Content-Language: en-US
+In-Reply-To: <20150209100404.GA17242-XWGZPxRNpGHk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylvain,
 
-> > As far as I can tell, there is no way to specify values for ABS-"keys"
-> > in the device tree binding.
-> 
-> It may not be present in device tree binding, but the driver does support it,
-> so I would rather extend the binding than have a brand new driver.
+On 02/09/2015 06:04 PM, Sylvain Rochet wrote:
+> Hello Bo,
+>
+> On Mon, Feb 09, 2015 at 05:02:52PM +0800, Bo Shen wrote:
+>> Enable usb device port on at91sam9n12ek board.
+>>
+>> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>
+>>   arch/arm/boot/dts/at91sam9n12ek.dts | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts=
+/at91sam9n12ek.dts
+>> index 13bb24e..3e572e5 100644
+>> --- a/arch/arm/boot/dts/at91sam9n12ek.dts
+>> +++ b/arch/arm/boot/dts/at91sam9n12ek.dts
+>> @@ -120,6 +120,11 @@
+>>   				};
+>>   			};
+>>
+>> +			usb1: gadget@f803c000 {
+>> +				atmel,vbus-gpio =3D <&pioB 16 GPIO_ACTIVE_HIGH>;
+>> +				status =3D "okay";
+>> +			};
+>> +
+>
+> There is an external resistor divider on PB16, acting like a pull-dow=
+n
+> (R22+R23). PB16 reset state is input, pull-up, schmitt trigger, you n=
+eed
+> to disable the pull-up in pinctrl this way:
+>
+> usb1: gadget@f803c000 {
+> 	pinctrl-names =3D "default";
+> 	pinctrl-0 =3D <&pinctrl_board_usb1>;
+> 	=E2=80=A6
+> }
+>
+> pinctrl =E2=80=A6 {
+> 	usb1 {
+> 		pinctrl_board_usb1: usb1-board {
+> 			atmel,pins =3D <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITC=
+H>;    /* PB16, no pull up and deglitch */
+> 		};
+> 	};
+> };
 
-All right, I find it a bit like whacking a round peg down a square hole, but I'll head down that path and see where it leads.
+Thanks.
 
-> > While both the device tree binding and the gpio-keys driver could
-> > possibly be adapted to support this, it makes sense to me to describe
-> > joysticks in a separate binding and keep the driver implementations apart.
-> 
-> Why? From the input core perspective there is no difference. It is just a
-> device that emits set of events.
-> 
+I will add it in next version.
 
->From a hardware-description/devicee-tree binding perspective its confusing (at least to me) to describe joysticks as keyboards.
+>
+> Sylvain
+>
 
-> > In addition to this,  auto-repeat and the sys fs disable interface for
-> > individual keys does not make sense for joysticks.
-> 
-> You do not need to use it when you describe the device (BTW autorepeat for
-> trigger might be a good thing).
+Best Regards,
+Bo Shen
 
-Ah, yes. autofire. 
-
-Thanks!
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
