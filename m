@@ -1,103 +1,64 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending
- command'
-Date: Mon, 09 Feb 2015 19:01:04 +0900
-Message-ID: <54D88560.4050808@samsung.com>
-References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
- <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com>
- <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
+Date: Mon, 9 Feb 2015 11:03:33 +0100
+Message-ID: <20150209100332.GA1002@katana>
+References: <rjui@broadcom.com>
+ <1423272507-18459-1-git-send-email-rjui@broadcom.com>
+ <1423272507-18459-3-git-send-email-rjui@broadcom.com>
+ <20150207175039.GB6263@katana>
+ <54D6EF3D.4030302@broadcom.com>
+ <20150208110325.GA2750@katana>
+ <54D7A694.4000903@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org, djkurtz@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54D7A694.4000903-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Addy.
 
-On 02/09/2015 04:25 PM, Addy Ke wrote:
-> Because of some uncertain factors, such as worse card or worse hardware,
-> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
-> will be in busy state. This should not happend when mmc controller
-> send command to update card clocks. If this happends, mci_send_cmd will
-> be failed and we will get 'Timeout sending command', and then system will
-> be blocked. To avoid this, we need reset mmc controller.
-> 
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
-> ---
->  drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index 4d2e3c2..b0b57e3 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -100,6 +100,7 @@ struct idmac_desc {
->  };
->  #endif /* CONFIG_MMC_DW_IDMAC */
->  
-> +static int dw_mci_card_busy(struct mmc_host *mmc);
->  static bool dw_mci_reset(struct dw_mci *host);
->  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
->  
-> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
->  		cmd, arg, cmd_status);
->  }
->  
-> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
-> +{
-> +	struct dw_mci *host = slot->host;
-> +	unsigned long timeout = jiffies + msecs_to_jiffies(500);
-> +
-> +	do {
-> +		if (!dw_mci_card_busy(slot->mmc))
-> +			return;
-> +		cpu_relax();
-> +	} while (time_before(jiffies, timeout));
-> +
-> +	dev_err(host->dev, "Data busy (status %#x)\n",
-> +		mci_readl(slot->host, STATUS));
-> +
-> +	/*
-> +	 * Data busy, this should not happend when mmc controller send command
-> +	 * to update card clocks in non-volt-switch state. If it happends, we
-> +	 * should reset controller to avoid getting "Timeout sending command".
-> +	 */
-> +	dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
-
-If reset is failed, then dw_mci_ctrl_reset should return "false".
-
-	ret = dw_mci_ctrl_reset();
-
-	WARN_ON(!ret || dw_mci_card_busy(slot->mmc));
-
-Is it right?
-
-In my experiment, if reset is failed or card is busy, eMMC can't work anymore..right?
-I think this patch is reasonable to prevent blocking issue.
-
-Best Regards,
-Jaehoon Chung
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
-> +
-> +	/* Fail to reset controller or still data busy, WARN_ON! */
-> +	WARN_ON(dw_mci_card_busy(slot->mmc));
-> +}
-> +
->  static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
->  {
->  	struct dw_mci *host = slot->host;
-> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
->  	/* We must continue to set bit 28 in CMD until the change is complete */
->  	if (host->state == STATE_WAITING_CMD11_DONE)
->  		sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
-> +	else
-> +		dw_mci_wait_busy(slot);
->  
->  	if (!clock) {
->  		mci_writel(host, CLKENA, 0);
-> 
+> Okay. Let me check with our ASIC engineer to see if there's a way to get
+> the driver extended to support the case when data size is larger than
+> the FIFO size. From my understanding based on the data sheet I have, I
+> don't think that can be done with this controller. But if the ASIC
+> engineers tells me the opposite, I'll add it as a separate patch later.
+
+Perfect, thanks!
+
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU2IX0AAoJEBQN5MwUoCm2b4cQAJmM6k2vVlxlwCHUt9ATo3LD
+rv142P4Rsc3UYfm56bkmDuM4pDxnuuVfHGJTZcTyfKsTWpeGLJ8kGOksSBkEEmik
+6vwl56bWIwoo7WZwV34sVlEumiDOwb4KVmzrIywjY8lzplhOE8hkOSCPMg/oOqFM
+qEpTIOb8Jg54KFUvX+g3TaroGJY+3JeI8XVpXYF7uJAr7vO6UxWCY9yN2muU+3rW
+fxrKr7zH9YRJ1BvlkUW8O7I4uaHpGlmeTIGn5wkxtN4qD4UIwwIcrMndpSn2mbKz
+/vzcIEky9IL5paULoF3vNbBoPcpvJt9epN/iWs9CmmgPe/0osEy4dyD0fZwwbamr
+iNHH4WTz3EBWRuJmQZNB4Q/QbgkVc6xH6pjAhZCQ4tltR47XDLPV7JWo69eIcu9W
+Cy0pz375726kgekTy8Z+QPpTRULNPH6wx1MvTPN++jpcS9QdZjQEe3b4kVHoYGV+
+SwdgauCRR/o9Jx1flRTBMwCLAXAJIGwrF8kSXCNhs4j8g8nGK09olZh+7p10LlFL
+N9lOshw0q7alvWzwDE3G6lKKFkYYiin7J+1X3+AFV+hjn5+Yj4+CcFZrGn2nlL6l
+esXdS6c7b/sp9n5VU/Jn+rA+cP0P4VB+wOp0d6U8sFEi2TIv0tKdlY1dE1zJ2e0t
+Cd3FUzbY1x5XFo6sqIy9
+=1Tce
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
