@@ -1,60 +1,68 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v9 3/3] ARM: dts: add I2C device nodes for Broadcom Cygnus
-Date: Mon, 9 Feb 2015 13:11:03 +0100
-Message-ID: <20150209121103.GC2491@katana>
-References: <rjui@broadcom.com>
- <1423373126-30024-1-git-send-email-rjui@broadcom.com>
- <1423373126-30024-4-git-send-email-rjui@broadcom.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 1/4] drm/exynos: dsim: fix to control mipi phy register
+Date: Mon, 09 Feb 2015 21:17:35 +0900
+Message-ID: <54D8A55F.8020001@samsung.com>
+References: <1423309988-11793-1-git-send-email-inki.dae@samsung.com>
+ <1423309988-11793-2-git-send-email-inki.dae@samsung.com>
+ <54D8928D.9000008@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="raC6veAxrt5nqIoY"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1423373126-30024-4-git-send-email-rjui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Arend van Spriel <arend@broadcom.com>, Kevin Cernekee <cernekee@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <54D8928D.9000008@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-
---raC6veAxrt5nqIoY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Feb 07, 2015 at 09:25:26PM -0800, Ray Jui wrote:
-> Add I2C device nodes and its properties in bcm-cygnus.dtsi but keep
-> them disabled there. Individual I2C devices can be enabled in board
-> specific dts file when I2C slave devices are enabled in the future
->=20
-> Signed-off-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
-> Reviewed-by: Kevin Cernekee <cernekee@chromium.org>
-
-I usually don't take DTS patches. They should go via arm-soc. Please say
-so if there are reasons I should take them.
-
-
---raC6veAxrt5nqIoY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU2KPXAAoJEBQN5MwUoCm2G/QQAIrn/SC0DC02xmTkaPKvdgnn
-KOvx3/szr2rxsEVcBU9QvESvngKLmbwHppFQW5TULBljhg43Ws/EoC/wb4O5ySKo
-Gr7UzZBvZIS7FZJRtyA1YVGCJRIkY+2Da/wGmygkO3vjU9Ly4KHxR/guKwlpFMWe
-2Sgrt7pqpNVdWoQgeIndt4E8ac1D6aIa3plUxkLeD7LlQ0FDUK2LdMntNOEt3nii
-r0rK5pU/o/tmViMYJXeBlG9UC50HitLVV5JJLQnNsymaLBIHjzcKZ0xj8aik8Uet
-MyYXpYZvcVOgx/DBsuxh0SVaxisyXK2tgZ61mKM6CnYQgvkk+CVWoFJEQBojEVcV
-puNm9N+eO4jQWK/28UUZ27FqKgQ0NOSbCPUe6oShky6MAt6e4ejBYQs90On35P8q
-G9bToCJlfHlCZSLHwYWY6ub7xBj8k/7hGoUGX1YBAE0yKWKCLxv57y7C024f3Suk
-ur3gz2i2mi8xxvg6UonJK5Urz99GdvwBkVQmdfe5c919DnnOyNO6IooeBaNIimnx
-jExv6ZtVujv7DJGlAlC/PUI2OSJe53dRqCuOvQU5jRmy60k5/vZ0ZOETurYvtKfB
-El+Ef/897RQVU+h6tjjzDFEVnMrYJ/wt6IAOcsfS6gO+5wLRnrsUOr4ZNZxnfBc1
-UxV0lZ8C5jaYzKBNzdj0
-=EEwA
------END PGP SIGNATURE-----
-
---raC6veAxrt5nqIoY--
+T24gMjAxNeuFhCAwMuyblCAwOeydvCAxOTo1NywgU3lsd2VzdGVyIE5hd3JvY2tpIHdyb3RlOgo+
+IE9uIDA3LzAyLzE1IDEyOjUzLCBJbmtpIERhZSB3cm90ZToKPj4gVGhpcyBwYXRjaCBmaXhlcyB0
+aGUgaXNzdWUgdGhhdCB0aGUgdHJ5IHRvIGdldCBhIHBoeSBvYmplY3QgaXMgZmFpbGVkCj4+IHRv
+IGVuYWJsZSBtaXBpIHBoeS4KPj4KPj4gU3lzdGVtIGFuZCBwb3dlciBtYW5hZ2VtZW50IHVuaXQg
+cmVnaXN0ZXJzIHNob3VsZCBiZSBjb250cm9sbGVkIGJ5Cj4+IHN5c2NvbiBmcmFtZXdvcmsuIFNv
+IHRoaXMgcGF0Y2ggcmVtb3ZlcyBleGlzdGluZyBwaHkgZnJhbWV3b3JrIGJhc2VkCj4+IGNvZGVz
+IGFuZCBhZGRzIHN5c2NvbiBzdXBwb3J0IGluc3RlYWQuIEhvd2V2ZXIsIHdlIHNob3VsZCBzdXBw
+b3J0Cj4+IGxlZ2FjeSBkZXZpY2UgdHJlZSBiaW5kaW5nIHNvIGNvbnNpZGVyIHRoZSBsZWdhY3kg
+YmluZGluZyBmb3IgY29tcGF0aWJpbGl0eS4KPj4KPj4gSW4gYWRkaXRpb24sIHdlIG5lZWQgdG8g
+cmVtb3ZlIGJlbG93IGRldmljZSBub2RlIGFuZCByZWxldmFudCBwcm9wZXJ0aWVzLAo+PiAJbWlw
+aV9waHk6IHZpZGVvLXBoeUAxMDAyMDcxMCB7Cj4+IAkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM1
+cHYyMTAtbWlwaS12aWRlby1waHkiOwo+PiAJCXJlZyA9IDwweDEwMDIwNzEwIDg+Owo+PiAJCSNw
+aHktY2VsbHMgPSA8MT47Cj4+IAl9Owo+Pgo+PiBOb3cgY2FtZXJhIGRldmljZSBub2RlIHVzZXMg
+bWlwaV9waHkgbm9kZSByZWxldmFudCBwcm9wZXJ0aWVzIGxpa2UgYmVsb3csCj4+IAljYW1lcmEg
+ewo+PiAJCS4uLgo+PiAJCWNzaXNfMDogY3Npc0AxMTg4MDAwMCB7Cj4+IAkJCS4uLgo+PiAJCQlw
+aHlzID0gPCZtaXBpX3BoeSAwPjsKPj4gCQkJcGh5LW5hbWVzID0gImNzaXMiOwo+PiAJCQkuLi4K
+Pj4gCQl9Owo+PiAJCWNzaXNfMTogY3Npc0AxMTg5MDAwMCB7Cj4+IAkJCS4uLgo+PiAJCQlwaHlz
+ID0gPCZtaXBpX3BoeSAyPjsKPj4gCQkJcGh5LW5hbWVzID0gImNzaXMiOwo+PiAJCQkuLi4KPj4g
+CQl9Owo+PiAJCS4uLgo+PiAJfTsKPj4KPj4gV2l0aCBhYm92ZSwgd2Ugd2lsbCBmaW5kIGJlbG93
+IG1lc3NhZ2Ugd2hpbGUgYm9vdGluZywKPj4gICAgICBjYW4ndCByZXF1ZXN0IHJlZ2lvbiBmb3Ig
+cmVzb3VyY2UgW21lbSAweDEwMDIwNzEwLTB4MTAwMjA3MTddCj4gCj4gSSdtIGFmcmFpZCB0aGlz
+IGFwcHJvYWNoIHdvbid0IHdvcmsgYmVjYXVzZSBNSVBJIERTSSBNYXN0ZXIgYW5kIE1JUEkgQ1NJ
+Cj4gU2xhdmUgZGV2aWNlcyBzaGFyZSBhIGNvbnRyb2wgYml0IGluIHRoZSByZWdpc3RlciBhbmQg
+aXQgc2VlbXMgaW1wb3NzaWJsZQo+IHRvIGVuc3VyZSBwcm9wZXIgbG9ja2luZyB3aXRoIGN1cnJl
+bnQgcmVnbWFwL3N5c2NvbiBBUEkuCj4gCj4gSSBoYXZlIHN1Ym1pdHRlZCBwYXRjaGVzIHRvIGZp
+eCB0aGlzIGlzc3VlIFsxXSBhbmQgdGhleSBzaG91bGQgYmUgYWxyZWFkeQo+IGF2YWlsYWJsZSBp
+biBsaW51eC1uZXh0IGFuZCBjYW4gYmUgZm91bmQgb24gbGludXgtc2Ftc3VuZy1zb2MgTUw6Cj4g
+Cj4gW1BBVENIIDEvMl0gcGh5OiBleHlub3MtdmlkZW8tbWlwaTogRml4IHJlZ3Jlc3Npb24gYnkg
+YWRkaW5nIHN1cHBvcnQgZm9yIFBNVSByZWdtYXAKPiBbUEFUQ0ggMi8yXSBBUk06IGR0czogQWRk
+IHN5c2NvbiBwaGFuZGxlIHRvIHRoZSB2aWRlby1waHkgbm9kZSBmb3IgRXh5bm9zNAo+IAo+IFRo
+ZSBvdGhlciBpc3N1ZSB3aXRoIHlvdXIgYXBwcm9hY2ggaXMgdGhhdCB3ZSBhcmUgbW92aW5nIHRo
+ZSBQTVUgZGV0YWlscwo+IHRvIHRoZSBNSVBJIERTSU0gZHJpdmVyIGFuZCBzaW1pbGFyIGNoYW5n
+ZXMgd291bGQgbmVlZCB0byBiZSBkb25lIGluCj4gdGhlIE1JUEkgQ1NJUyBkcml2ZXIuCj4gCj4g
+SW5zdGVhZCBJIGp1c3QgYWRkZWQgc3lzY29uIHN1cHBvcnQgdG8gdGhlIFBIWSBsYXllciwgaXQn
+cyBub3QgcGVyZmVjdAo+IGJ1dCBmaXhlcyB0aGUgaXNzdWUgZm9yIGJvdGggRFNJIGFuZCBDU0kg
+YW5kICBkb2Vzbid0IHN0cmlwIHRoZSBQSFkgbGF5ZXIKPiB3aGljaCBjb3VsZCBwb3RlbnRpYWxs
+eSBiZSB1c2VmdWwuCgpBaCwgUmlnaHQuIEkgZGlkbid0IGNoZWNrIHlvdXIgcGF0Y2ggc2V0LiBZ
+b3VyIHdheSBpcyBhIGJldHRlciBpZGVhIHRoYW4KbXkgb25lLiBXaXRoIHRoaXMsIHdlIGRvbid0
+IG5lZWQgdG8gY2hhbmdlIGRldmljZSBkcml2ZXJzLCBNSVBJIERTSSBhbmQgQ1NJLgoKVGhlbiwg
+d2hhdCBpcyB0aGUgbWVhbmluZyB0aGF0IGl0J3Mgbm90IHBlcmZlY3Q/CgpUaGFua3MsCklua2kg
+RGFlCgo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
