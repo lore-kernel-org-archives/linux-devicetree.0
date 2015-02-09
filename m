@@ -1,93 +1,66 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] of: calculate masks of the device based on dma-range size
-Date: Mon, 9 Feb 2015 11:27:39 +0000
-Message-ID: <20150209112739.GC16587@e104818-lin.cambridge.arm.com>
-References: <1423253720-2785-1-git-send-email-m-karicheri2@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCHv6 0/2] Driver for TI tlc591xx 8/16 Channel i2c LED driver
+Date: Mon, 9 Feb 2015 13:50:37 +0200
+Message-ID: <54D89F0D.9050506@ti.com>
+References: <1422367161-16487-1-git-send-email-andrew@lunn.ch> <20150206031048.GA9614@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1423253720-2785-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="g9MdToEW9sw8u6JiCQDtSpkAxKJIQAXc8"
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20150206031048.GA9614@lunn.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux ARM <linux-arm-kernel@lists.infradead.org>, kaloz@openwrt.org, vigneshr@ti.com, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 06, 2015 at 03:15:20PM -0500, Murali Karicheri wrote:
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 314c8a9..44209fa 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -83,17 +83,18 @@ int of_device_add(struct platform_device *ofdev)
->   */
->  void of_dma_configure(struct device *dev, struct device_node *np)
->  {
-> -	u64 dma_addr, paddr, size;
-> +	u64 dma_addr = 0, paddr, size;
->  	int ret;
->  	bool coherent;
-> -	unsigned long offset;
-> +	unsigned long offset = 0;
->  	struct iommu_ops *iommu;
->  
->  	/*
->  	 * Set default dma-mask to 32 bit. Drivers are expected to setup
->  	 * the correct supported dma_mask.
->  	 */
-> -	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> +	if (!dev->coherent_dma_mask)
-> +		dev->coherent_dma_mask = DMA_BIT_MASK(32);
->  
->  	/*
->  	 * Set it to coherent_dma_mask by default if the architecture
-> @@ -102,11 +103,14 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->  	if (!dev->dma_mask)
->  		dev->dma_mask = &dev->coherent_dma_mask;
->  
-> +	/*
-> +	 * Set default size to cover the 32-bit. Drivers are expected to setup
-> +	 * the correct size and dma_mask.
-> +	 */
+--g9MdToEW9sw8u6JiCQDtSpkAxKJIQAXc8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Nitpick: drivers don't set up the size, just the mask. We read the size
-from DT.
+On 06/02/15 05:10, Andrew Lunn wrote:
+> On Tue, Jan 27, 2015 at 02:59:19PM +0100, Andrew Lunn wrote:
+>> This patchset is a driver for the TI tlc59116 16 Channel i2c LED
+>> driver and tlc59108 8 Channel i2c LED driver. This driver is used on
+>> the Belkin WRT1900AC access point and the C code is derived from code
+>> Belkin contributed to OpenWRT.  However it has been extensively
+>> re-written, and a device tree binding added to replace platform data.
+>=20
+> Hi Bryan
+>=20
+> Do you have any further comments on this driver? Are you likely to
+> queue it up for the next merge window?
 
-> +	size = 1ULL << 32;
-> +
->  	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-> -	if (ret < 0) {
-> -		dma_addr = offset = 0;
-> -		size = dev->coherent_dma_mask + 1;
+Hi Andrew,
 
-Do you assume that, on error, of_dma_get_range() does not touch any of
-the dma_addr/paddr/size? It looks safer to me to leave it as the
-original.
+You didn't comment anything on my and Peter's questions on v5 thread
+about this being a PWM driver.
 
-> -	} else {
-> +	if (!ret) {
->  		offset = PFN_DOWN(paddr - dma_addr);
->  
->  		/*
-> @@ -128,6 +132,15 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->  
->  	dev->dma_pfn_offset = offset;
->  
-> +	/*
-> +	 * Limit coherent and dma mask based on size and default mask
-> +	 * set by the driver.
-> +	 */
-> +	dev->coherent_dma_mask = min(dev->coherent_dma_mask,
-> +				     DMA_BIT_MASK(ilog2(dma_addr + size)));
+ Tomi
 
-Do we need to cover the case where size is incorrectly set to 0 in the
-DT? At least some warning and leaving the mask unchanged.
 
-> +	*dev->dma_mask = min((*dev->dma_mask),
-> +			     DMA_BIT_MASK(ilog2(dma_addr + size)));
-> +
->  	coherent = of_dma_is_coherent(np);
->  	dev_dbg(dev, "device is%sdma coherent\n",
->  		coherent ? " " : " not ");
 
--- 
-Catalin
+--g9MdToEW9sw8u6JiCQDtSpkAxKJIQAXc8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU2J8UAAoJEPo9qoy8lh71+k0P/1fgEgL7wgEj6fn24hGUJwR5
+JrfjpAbuheB5DccFy5RF9k3i/nAhxB71ilz+g2PLabrBaze8tyuszgKCANrDP7k4
+iPE2h1ETjo35ZTRndFWRtSFBb1XukRzuU266ugwM7vwqM3I4DTu6mDJKQH9D4ntC
+2p63E9HUiDcZFiHuBYPJbhz0hVckG44ENbFmT/pSKPiVUDsouFiwuk2HW4piW46T
+7h6vlrvizzLQvPX7KI8gVf7i9J7cSiYGOmlEGz+IfW53fa7jymANDhbiuk/zDykh
+0WGHQsmHf6eFh2P9+oUPfyZsqi0puioEgOmGkAsw1a31ima4LVjJSuhS3+STsuQX
+7sID7y1nsbMExsX7kDFUYd+0H9OLVhvE2BsNH+oTQKRZEaLz9lzoXui9yjDLwSm3
+B2n1L59DvvcoiWmA4eeKxE0s4yjp4K+e5GNRKyBtiN6yVhTTUlcp9Fhu1o582Swu
+FHc5/JeqfQUCjWsIiKkz1FRmlgpZrJ3Ns1qv3NMOGt2COe2AQczHsrW6ZKMOjakj
+VYUTBfocK8g3+I7zVZoIfdYVwQFwp+v1rFynj/txwCcLiR7wYmcuyLl+o6kkrB1u
+3nxOVnEBTvN0RPcg1Kw4erLAcqQrErsOyBlWtKqXDPTPRMnowFC642wpx14sN4vP
+pdJTNpai23OEwaIuI6uE
+=t7bh
+-----END PGP SIGNATURE-----
+
+--g9MdToEW9sw8u6JiCQDtSpkAxKJIQAXc8--
