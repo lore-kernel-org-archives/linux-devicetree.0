@@ -1,44 +1,49 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v2 2/4] gpio: add parameter to allow the use named gpios
-Date: Mon, 9 Feb 2015 14:24:22 +0900
-Message-ID: <CAAVeFu+7oEz75DdJ0ENAVnRQqUBQGBTKsjccxpGmELdHQH-2Wg@mail.gmail.com>
-References: <1421876028-22799-1-git-send-email-o.schinagl@ultimaker.com>
- <1421876028-22799-3-git-send-email-o.schinagl@ultimaker.com> <CACRpkdbywy3Nrg+d8YAGTYH_Z-AB=UDB7zyq85rD8WoCwAk5eA@mail.gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 0/7] PCI: get DMA configuration from parent device
+Date: Mon, 9 Feb 2015 05:48:55 +0000
+Message-ID: <20150209054854.GF13969@arm.com>
+References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbywy3Nrg+d8YAGTYH_Z-AB=UDB7zyq85rD8WoCwAk5eA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Olliver Schinagl <o.schinagl@ultimaker.com>, Bryan Wu <cooloney@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Alexander Shiyan <shc_work@mail.ru>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, linux-l
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1423173179-10227-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 30, 2015 at 10:46 PM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> On Wed, Jan 21, 2015 at 10:33 PM, Olliver Schinagl
-> <o.schinagl@ultimaker.com> wrote:
->
->> From: Olliver Schinagl <oliver@schinagl.nl>
->>
->> The gpio binding document says that new code should always use named
->> gpios. Patch 40b73183 added support to parse a list of gpios from child
->> nodes, but does not make it possible to use named gpios. This patch adds
->> the con_id property and implements it is done in gpiolib.c, where the
->> old-style of using unnamed gpios still works.
->>
->> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
->> ---
->>  drivers/gpio/devres.c                     | 18 +++++++++++++++++-
->>  drivers/input/keyboard/gpio_keys_polled.c |  2 +-
->>  drivers/leds/leds-gpio.c                  |  2 +-
->>  include/linux/gpio/consumer.h             |  1 +
->
-> Alexandre: does this match your vision of how it should work, i.e. ACK?
+On Thu, Feb 05, 2015 at 09:52:52PM +0000, Murali Karicheri wrote:
+> This patch add an important capability to PCI driver on Keystone. I hope to
+> have this merged to the upstream branch so that it is available for v3.20.
+> Also would like thank everyone for the contribution.
+> 
+> PCI devices on Keystone doesn't have correct dma_pfn_offset set. This patch
+> add capability to set the dma configuration such as dma-mask, dma_pfn_offset,
+> and dma ops etc using the information from DT. The prior RFCs and discussions
+> are available at [1] and [2] below.
+> 
+> [2] : https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg790244.html
+> [1] : http://www.gossamer-threads.com/lists/linux/kernel/2024591
+> 
+> Change history:
+> 	v6 - Rebased to v3.19-v7
+> 	   - Addressed some minor comments about node name and DT size validation.
+> 	   - Pulled out 8/8 of v5 and plan to send a patch for enhancing
+> 	     of_dma_configure() to use size to calculate dma mask.
+> 	   - Added Acks from reviewers.
 
-Pretty much, yes - as I mentioned in the previous versions there may
-be shortcomings for ACPI, but we need a refactor of the whole thing -
-nothing that this patch should address by itself.
+This series looks fine to me:
 
-So this patch:
+  Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+Will
