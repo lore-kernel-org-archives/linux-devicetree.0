@@ -1,129 +1,58 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] PCI: get DMA configuration from parent device
-Date: Mon, 9 Feb 2015 12:26:32 -0500
-Message-ID: <54D8EDC8.2060908@ti.com>
-References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
-	<54D84456.8050509@amd.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: gpio-pxa: getting GPIOs by devicetree phandle broken
+Date: Mon, 09 Feb 2015 18:38:39 +0100
+Message-ID: <87mw4n6l40.fsf@free.fr>
+References: <CAOjnSCajhwdRVZUO99KL-9PF6HitZen04MoLKoDUDr_5=iS7kw@mail.gmail.com>
+	<CAAVeFu+yf6Wf6MspiDLiWwQkMwMvimNa0SpMK_yO_9X07UecEw@mail.gmail.com>
+	<4B6D6D87A8FB62428BE0A3E38461A1AB18D6B200@irsmsx105.ger.corp.intel.com>
+	<CAOjnSCZgx5H75t8QrXj1WQ_SaU_4HDYeK+_XdBRmwUXzHW=iJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <54D84456.8050509-5C7GfCeVMHo@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOjnSCZgx5H75t8QrXj1WQ_SaU_4HDYeK+_XdBRmwUXzHW=iJw@mail.gmail.com>
+	(Tyler Hall's message of "Mon, 9 Feb 2015 09:41:17 -0500")
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Holmberg, Hans" <hans.holmberg@intel.com>, Tyler Hall <tylerwhall@gmail.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Mack <zonque@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Howard Cochran <cochran@lexmark.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/2015 12:23 AM, Suravee Suthikulpanit wrote:
-> Sorry for delay response. I have also tested this on AMD Seattle 
-> platform w/ PCI Generic Host Controller, and I can see that the PCI 
-> endpoint devices are getting proper dma_map_ops as set in the host 
-> bridge.
->
-> <Tested-by>: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Suravee,
+Tyler Hall <tylerwhall@gmail.com> writes:
 
-Thanks for testing this patch.
-
-Murali
+>> The issue with multiple gpiochips per of-node could be worked around as followed I believe, comments?
+>>
+>> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+>> index 08261f2..43984ab 100644
+>> --- a/drivers/gpio/gpiolib-of.c
+>> +++ b/drivers/gpio/gpiolib-of.c
+>> @@ -47,11 +47,12 @@ static int of_gpiochip_find_and_xlate(struct gpio_chip *gc, void *data)
+>>         ret = gc->of_xlate(gc, &gg_data->gpiospec, gg_data->flags);
+>>         if (ret < 0) {
+>>                 /* We've found the gpio chip, but the translation failed.
+>> -                * Return true to stop looking and return the translation
+>> -                * error via out_gpio
+>> +                * Store translation error in out_gpio.
+>> +                * Return false to keep looking, as more than one GPIO chip
+>> +                * could be registered per of-node.
+>>                  */
+>>                 gg_data->out_gpio = ERR_PTR(ret);
+>> -               return true;
+>> +               return false;
+>>          }
+>>
+>>         gg_data->out_gpio = gpiochip_get_desc(gc, ret);
 >
-> Thanks,
-> Suravee
->
-> On 02/06/2015 05:52 AM, Murali Karicheri wrote:
->> This patch add an important capability to PCI driver on Keystone. I 
->> hope to
->> have this merged to the upstream branch so that it is available for 
->> v3.20.
->> Also would like thank everyone for the contribution.
->>
->> PCI devices on Keystone doesn't have correct dma_pfn_offset set. This 
->> patch
->> add capability to set the dma configuration such as dma-mask, 
->> dma_pfn_offset,
->> and dma ops etc using the information from DT. The prior RFCs and 
->> discussions
->> are available at [1] and [2] below.
->>
->> [2] : 
->> https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg790244.html
->> [1] : http://www.gossamer-threads.com/lists/linux/kernel/2024591
->>
->> Change history:
->>     v6 - Rebased to v3.19-v7
->>        - Addressed some minor comments about node name and DT size 
->> validation.
->>        - Pulled out 8/8 of v5 and plan to send a patch for enhancing
->>          of_dma_configure() to use size to calculate dma mask.
->>        - Added Acks from reviewers.
->>     v5 - moved the dma_mask update in device from ARM specific API to
->>          of_dma_configure to allow this across other architecture as 
->> well
->>        - improved sanity check for DT dma-range size in 
->> of_dma_configure()
->>        - moved API to get parent bridge device to PCI (host-bridge.c)
->>     v4 - moved size adjustments in of_iommu_configure() to a separate 
->> patch
->>        - consistent node name comment from Rob
->>        - patch 6 added for dma_mask adjustment and iommu mapping size
->>          limiting.
->>     v3 - addressed comments to re-use of_dma_configure() for PCI
->>        - To help re-use, change of_iommu_configure() function argument
->>         - Move of_dma_configure to of/device.c
->>         - Limit the of_iommu_configure to non pci devices
->>     v2 - update size to coherent_dma_mask + 1 if dma-range info is 
->> missing
->>        - also check the np for null.
->>     v1 - updates based on the comments against initial RFC.
->>        - Added a helper function to get the OF node of the parent
->>        - Added an API in of_pci.c to update DMA configuration of the pci
->>          device.
->>
->> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
->> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->>
->> Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> Acked-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
->>
->> Murali Karicheri (7):
->>    of: iommu: add ptr to OF node arg to of_iommu_configure()
->>    of: move of_dma_configure() to device.c to help re-use
->>    of: fix size when dma-range is not used
->>    PCI: add helper functions pci_get[put]_host_bridge_device()
->>    of/pci: add of_pci_dma_configure() update dma configuration
->>    PCI: update dma configuration from DT
->>    arm: dma-mapping: limit iommu mapping size
->>
->>   arch/arm/mm/dma-mapping.c |    7 +++++
->>   drivers/iommu/of_iommu.c  |   10 ++++--
->>   drivers/of/device.c       |   74 
->> +++++++++++++++++++++++++++++++++++++++++++++
->>   drivers/of/of_pci.c       |   19 ++++++++++++
->>   drivers/of/platform.c     |   58 ++---------------------------------
->>   drivers/pci/host-bridge.c |   14 +++++++++
->>   drivers/pci/probe.c       |    2 ++
->>   include/linux/of_device.h |    2 ++
->>   include/linux/of_iommu.h  |    6 ++--
->>   include/linux/of_pci.h    |    5 +++
->>   include/linux/pci.h       |    3 ++
->>   11 files changed, 140 insertions(+), 60 deletions(-)
->>
+> As long as we're ok with multiple gpiochips per of-node, this would
+> work for me. It'll change the preference of which chip returns the
+> error in the case of multiple chips, but that's already undefined
+> behavior.
 
+Looks good to me too, this will solve my issue, and the global behavior would be
+consistent with the former one.
+
+Would you care submitting a proper patch so that we can apply our Reviewed-by,
+Tested-by etc ... ?
+
+Cheers.
 
 -- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+Robert
