@@ -1,106 +1,103 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: at91: dts: sama5d4: add dts for sama5d4 xplained
- board
-Date: Mon, 9 Feb 2015 17:49:04 +0800
-Message-ID: <54D88290.6030501@atmel.com>
-References: <1423473423-17798-1-git-send-email-josh.wu@atmel.com> <20150209102435.56f39b81@bbrezillon>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending
+ command'
+Date: Mon, 09 Feb 2015 19:01:04 +0900
+Message-ID: <54D88560.4050808@samsung.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
+ <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com>
+ <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150209102435.56f39b81@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org, djkurtz@chromium.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi, Boris
+Hi, Addy.
 
-On 2/9/2015 5:24 PM, Boris Brezillon wrote:
-> Hi Josh,
->
-> On Mon, 9 Feb 2015 17:17:03 +0800
-> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
->
->> Add at91 sama5d4 xplained board support.
->>
->> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> ---
->>
->> Changes in v2:
->> - to be sorted by memory address, put the adc dt node after usart4.
->>
->>   arch/arm/boot/dts/Makefile                  |   1 +
->>   arch/arm/boot/dts/at91-sama5d4_xplained.dts | 232 ++++++++++++++++++++++++++++
->>   2 files changed, 233 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/at91-sama5d4_xplained.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 91bd5bd..bbfbad6 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -49,6 +49,7 @@ dtb-$(CONFIG_ARCH_AT91)	+= sama5d34ek.dtb
->>   dtb-$(CONFIG_ARCH_AT91)	+= sama5d35ek.dtb
->>   dtb-$(CONFIG_ARCH_AT91)	+= sama5d36ek.dtb
->>   # sama5d4
->> +dtb-$(CONFIG_ARCH_AT91)	+= at91-sama5d4_xplained.dtb
->>   dtb-$(CONFIG_ARCH_AT91)	+= at91-sama5d4ek.dtb
->>   
->>   dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
->> diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
->> new file mode 100644
->> index 0000000..a04c3c8
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
->> @@ -0,0 +1,232 @@
->> +/*
->> + * at91-sama5d4_xplained.dts - Device Tree file for SAMA5D4 Xplained board
->> + *
->> + *  Copyright (C) 2015 Atmel,
->> + *                2015 Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> + *
-> [...]
->
->> +	ahb {
->> +		apb {
->> +			spi0: spi@f8010000 {
->> +				cs-gpios = <&pioC 3 0>, <0>, <0>, <0>;
->> +				status = "okay";
->> +				m25p80@0 {
->> +					compatible = "atmel,at25df321a";
->> +					spi-max-frequency = <50000000>;
->> +					reg = <0>;
->> +				};
->> +			};
->> +
->> +			macb0: ethernet@f8020000 {
->> +				phy-mode = "rmii";
->> +				status = "okay";
-> Could you define the PHY device attached to this ethernet MAC IP ?
->
->
->                                  ethernet-phy@1 {
->                                          reg = <0x1>;
->                                          /*
-> 					 * interrupt-parent = <&pioB>;
-> 					 * interrupts = <25
-> 					 *	   IRQ_TYPE_EDGE_FALLING>;
-> 					 */
-> 					/* ... */
-> 				};
-Ok, I will add this in next version. Thanks.
+On 02/09/2015 04:25 PM, Addy Ke wrote:
+> Because of some uncertain factors, such as worse card or worse hardware,
+> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+> will be in busy state. This should not happend when mmc controller
+> send command to update card clocks. If this happends, mci_send_cmd will
+> be failed and we will get 'Timeout sending command', and then system will
+> be blocked. To avoid this, we need reset mmc controller.
+> 
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+> ---
+>  drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 4d2e3c2..b0b57e3 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -100,6 +100,7 @@ struct idmac_desc {
+>  };
+>  #endif /* CONFIG_MMC_DW_IDMAC */
+>  
+> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>  static bool dw_mci_reset(struct dw_mci *host);
+>  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>  
+> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>  		cmd, arg, cmd_status);
+>  }
+>  
+> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+> +{
+> +	struct dw_mci *host = slot->host;
+> +	unsigned long timeout = jiffies + msecs_to_jiffies(500);
+> +
+> +	do {
+> +		if (!dw_mci_card_busy(slot->mmc))
+> +			return;
+> +		cpu_relax();
+> +	} while (time_before(jiffies, timeout));
+> +
+> +	dev_err(host->dev, "Data busy (status %#x)\n",
+> +		mci_readl(slot->host, STATUS));
+> +
+> +	/*
+> +	 * Data busy, this should not happend when mmc controller send command
+> +	 * to update card clocks in non-volt-switch state. If it happends, we
+> +	 * should reset controller to avoid getting "Timeout sending command".
+> +	 */
+> +	dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+
+If reset is failed, then dw_mci_ctrl_reset should return "false".
+
+	ret = dw_mci_ctrl_reset();
+
+	WARN_ON(!ret || dw_mci_card_busy(slot->mmc));
+
+Is it right?
+
+In my experiment, if reset is failed or card is busy, eMMC can't work anymore..right?
+I think this patch is reasonable to prevent blocking issue.
 
 Best Regards,
-Josh Wu
+Jaehoon Chung
 
->
->
-> Best Regards,
->
-> Boris
->
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +	/* Fail to reset controller or still data busy, WARN_ON! */
+> +	WARN_ON(dw_mci_card_busy(slot->mmc));
+> +}
+> +
+>  static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>  {
+>  	struct dw_mci *host = slot->host;
+> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>  	/* We must continue to set bit 28 in CMD until the change is complete */
+>  	if (host->state == STATE_WAITING_CMD11_DONE)
+>  		sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+> +	else
+> +		dw_mci_wait_busy(slot);
+>  
+>  	if (!clock) {
+>  		mci_writel(host, CLKENA, 0);
+> 
