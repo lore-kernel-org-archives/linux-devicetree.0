@@ -1,79 +1,89 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 8/9] bus: brcmstb_gisb: Honor the "big-endian" and "native-endian"
- DT properties
-Date: Mon, 09 Feb 2015 13:59:42 -0800
-Message-ID: <54D92DCE.8090100@gmail.com>
-References: <1416962994-27095-1-git-send-email-cernekee@gmail.com> <1416962994-27095-9-git-send-email-cernekee@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1416962994-27095-9-git-send-email-cernekee@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, arnd@arndb.de, linux@prisktech.co.nz, stern@rowland.harvard.edu, gregkh@linuxfoundation.org
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, computersforpeace@gmail.com, marc.ceeeee@gmail.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mips@linux-mips.org
+From: Andy Gross <agross@codeaurora.org>
+Subject: [Patch v3 3/6] ARM: DT: apq8064: Add TCSR support
+Date: Mon,  9 Feb 2015 16:01:08 -0600
+Message-ID: <1423519271-4238-4-git-send-email-agross@codeaurora.org>
+References: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25/11/14 16:49, Kevin Cernekee wrote:
-> On chips strapped for BE, we'll need to use ioread32be/iowrite32be instead of
-> ioread32/iowrite32.
+This patch adds TCSR support for use by the GSBI to automatically configure ADM
+CRCI values based on the GSBI port configuration.
 
-Has of_device_is_big_endian() been merged in a tree now, I am not seeing
-it in Linus' tree, but have not look at Grant's tree yet. Thanks
+Signed-off-by: Andy Gross <agross@codeaurora.org>
+---
+ arch/arm/boot/dts/qcom-apq8064.dtsi |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> 
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> ---
->  drivers/bus/brcmstb_gisb.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-> index 172908d..969b992 100644
-> --- a/drivers/bus/brcmstb_gisb.c
-> +++ b/drivers/bus/brcmstb_gisb.c
-> @@ -90,6 +90,7 @@ static const int gisb_offsets_bcm7445[] = {
->  struct brcmstb_gisb_arb_device {
->  	void __iomem	*base;
->  	const int	*gisb_offsets;
-> +	bool		big_endian;
->  	struct mutex	lock;
->  	struct list_head next;
->  	u32 valid_mask;
-> @@ -106,7 +107,10 @@ static u32 gisb_read(struct brcmstb_gisb_arb_device *gdev, int reg)
->  	if (offset == -1)
->  		return 1;
->  
-> -	return ioread32(gdev->base + offset);
-> +	if (gdev->big_endian)
-> +		return ioread32be(gdev->base + offset);
-> +	else
-> +		return ioread32(gdev->base + offset);
->  }
->  
->  static void gisb_write(struct brcmstb_gisb_arb_device *gdev, u32 val, int reg)
-> @@ -115,7 +119,11 @@ static void gisb_write(struct brcmstb_gisb_arb_device *gdev, u32 val, int reg)
->  
->  	if (offset == -1)
->  		return;
-> -	iowrite32(val, gdev->base + reg);
-> +
-> +	if (gdev->big_endian)
-> +		iowrite32be(val, gdev->base + reg);
-> +	else
-> +		iowrite32(val, gdev->base + reg);
->  }
->  
->  static ssize_t gisb_arb_get_timeout(struct device *dev,
-> @@ -300,6 +308,7 @@ static int brcmstb_gisb_arb_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  	gdev->gisb_offsets = of_id->data;
-> +	gdev->big_endian = of_device_is_big_endian(dn);
->  
->  	err = devm_request_irq(&pdev->dev, timeout_irq,
->  				brcmstb_gisb_timeout_handler, 0, pdev->name,
-> 
-
-
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index b3154c0..f607900 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -166,6 +166,7 @@
+ 		gsbi1: gsbi@12440000 {
+ 			status = "disabled";
+ 			compatible = "qcom,gsbi-v1.0.0";
++			cell-index = <1>;
+ 			reg = <0x12440000 0x100>;
+ 			clocks = <&gcc GSBI1_H_CLK>;
+ 			clock-names = "iface";
+@@ -173,6 +174,8 @@
+ 			#size-cells = <1>;
+ 			ranges;
+ 
++			syscon-tcsr = <&tcsr>;
++
+ 			i2c1: i2c@12460000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+ 				reg = <0x12460000 0x1000>;
+@@ -187,6 +190,7 @@
+ 		gsbi2: gsbi@12480000 {
+ 			status = "disabled";
+ 			compatible = "qcom,gsbi-v1.0.0";
++			cell-index = <2>;
+ 			reg = <0x12480000 0x100>;
+ 			clocks = <&gcc GSBI2_H_CLK>;
+ 			clock-names = "iface";
+@@ -194,6 +198,8 @@
+ 			#size-cells = <1>;
+ 			ranges;
+ 
++			syscon-tcsr = <&tcsr>;
++
+ 			i2c2: i2c@124a0000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+ 				reg = <0x124a0000 0x1000>;
+@@ -208,6 +214,7 @@
+ 		gsbi7: gsbi@16600000 {
+ 			status = "disabled";
+ 			compatible = "qcom,gsbi-v1.0.0";
++			cell-index = <7>;
+ 			reg = <0x16600000 0x100>;
+ 			clocks = <&gcc GSBI7_H_CLK>;
+ 			clock-names = "iface";
+@@ -215,6 +222,8 @@
+ 			#size-cells = <1>;
+ 			ranges;
+ 
++			syscon-tcsr = <&tcsr>;
++
+ 			serial@16640000 {
+ 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+ 				reg = <0x16640000 0x1000>,
+@@ -349,5 +358,10 @@
+ 				pinctrl-0 = <&sdc4_gpios>;
+ 			};
+ 		};
++
++		tcsr: syscon@1a400000 {
++			compatible = "qcom,tcsr-apq8064", "syscon";
++			reg = <0x1a400000 0x100>;
++		};
+ 	};
+ };
 -- 
-Florian
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
