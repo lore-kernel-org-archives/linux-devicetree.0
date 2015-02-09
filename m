@@ -1,195 +1,34 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] usb: phy: add phy-hi6220-usb
-Date: Tue, 10 Feb 2015 00:00:16 +0800
-Message-ID: <CABQgh9FVYN8dbg=bx8OyPmRo+atPUT7Qr6YK3+ATe4QXgw8nJQ@mail.gmail.com>
-References: <1423284966-3485-1-git-send-email-zhangfei.gao@linaro.org>
-	<1423284966-3485-5-git-send-email-zhangfei.gao@linaro.org>
-	<20150209021133.GB3045@shlinux2>
-	<54D8C391.1080603@linaro.org>
+From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Subject: Re: [PATCH] ARM: DTS: omap3-n900.dts: fix i2c bus numbering
+Date: Mon, 09 Feb 2015 18:03:34 +0200
+Message-ID: <54D8DA56.8060400@gmail.com>
+References: <1423410536-16579-1-git-send-email-ivo.g.dimitrov.75@gmail.com> <20150209150245.GC21362@kahuna>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54D8C391.1080603-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150209150245.GC21362@kahuna>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: tony@atomide.com, pali.rohar@gmail.com, pavel@ucw.cz, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 February 2015 at 22:26, zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->
-> On 02/09/2015 10:11 AM, Peter Chen wrote:
->
->>> +static void hi6220_detect_work(struct work_struct *work)
->>> +{
->>> +       struct hi6220_priv *priv =
->>> +               container_of(work, struct hi6220_priv, work.work);
->>> +       int gpio_id, gpio_vubs;
->>
->>
->> %s/gpio_vubs/gpio_vbus
->
->
-> Yes, typo
->
->
->>> +static void hi6220_phy_setup(struct hi6220_priv *priv, bool on)
->>> +{
->>> +       struct regmap *reg = priv->reg;
->>> +       u32 val, mask;
->>> +       int ret;
->>> +
->>> +       if (priv->reg == NULL)
->>> +               return;
->>> +
->>> +       if (on) {
->>> +               val = RST0_USBOTG_BUS | RST0_POR_PICOPHY |
->>> +                     RST0_USBOTG | RST0_USBOTG_32K;
->>> +               mask = val;
->>> +               ret = regmap_update_bits(reg, SC_PERIPH_RSTDIS0, mask,
->>> val);
->>> +               if (ret)
->>> +                       return;
->>> +
->>> +               ret = regmap_read(reg, SC_PERIPH_CTRL5, &val);
->>> +               val = CTRL5_USBOTG_RES_SEL | CTRL5_PICOPHY_ACAENB;
->>> +               mask = val | CTRL5_PICOPHY_BC_MODE;
->>> +               ret = regmap_update_bits(reg, SC_PERIPH_CTRL5, mask,
->>> val);
->>> +               if (ret)
->>> +                       return;
->>> +
->>> +               val =  CTRL4_PICO_VBUSVLDEXT | CTRL4_PICO_VBUSVLDEXTSEL |
->>> +                      CTRL4_OTG_PHY_SEL;
->>> +               mask = val | CTRL4_PICO_SIDDQ | CTRL4_PICO_OGDISABLE;
->>> +               ret = regmap_update_bits(reg, SC_PERIPH_CTRL4, mask,
->>> val);
->>> +               if (ret)
->>> +                       return;
->>> +
->>> +               ret = regmap_write(reg, SC_PERIPH_CTRL8,
->>> EYE_PATTERN_PARA);
->>> +               if (ret)
->>> +                       return;
->>> +       } else {
->>> +               val = CTRL4_PICO_SIDDQ;
->>> +               mask = val;
->>> +               ret = regmap_update_bits(reg, SC_PERIPH_CTRL4, mask,
->>> val);
->>> +               if (ret)
->>> +                       return;
->>> +
->>> +               ret = regmap_read(reg, SC_PERIPH_CTRL4, &val);
->>> +
->>> +               val = RST0_USBOTG_BUS | RST0_POR_PICOPHY |
->>> +                     RST0_USBOTG | RST0_USBOTG_32K;
->>> +               mask = val;
->>> +               ret = regmap_update_bits(reg, SC_PERIPH_RSTEN0, mask,
->>> val);
->>> +               if (ret)
->>> +                       return;
->>> +       }
->>
->>
->> You have return value check for regmap API, but no error message or
->> return value for hi6220_phy_setup, it looks strange.
->
->
-> There was dev_err(priv->dev, "failed to setup phy\n");
-> Then I found priv->dev is the only one place to use, so I remove this for
-> simple.
->
->
->>
->>> +}
->>> +
->>> +static int hi6220_phy_probe(struct platform_device *pdev)
->>> +{
->>> +       struct hi6220_priv *priv;
->>> +       struct usb_otg *otg;
->>> +       struct device_node *np = pdev->dev.of_node;
->>> +       int ret, irq;
->>> +
->>> +       priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->>> +       if (!priv)
->>> +               return -ENOMEM;
->>> +
->>> +       otg = devm_kzalloc(&pdev->dev, sizeof(*otg), GFP_KERNEL);
->>> +       if (!otg)
->>> +               return -ENOMEM;
->>> +
->>> +       priv->phy.dev = &pdev->dev;
->>> +       priv->phy.otg = otg;
->>> +       priv->phy.label = "hi6220";
->>> +       priv->phy.type = USB_PHY_TYPE_USB2;
->>> +       otg->set_peripheral = hi6220_set_peripheral;
->>> +       platform_set_drvdata(pdev, priv);
->>> +
->>> +       priv->gpio_vbus = of_get_named_gpio(np, "hisilicon,gpio-vbus",
->>> 0);
->>> +       if (priv->gpio_vbus == -EPROBE_DEFER)
->>> +               return -EPROBE_DEFER;
->>> +       if (!gpio_is_valid(priv->gpio_vbus)) {
->>> +               dev_err(&pdev->dev, "invalid gpio %d\n",
->>> priv->gpio_vbus);
->>> +               return -ENODEV;
->>> +       }
->>> +
->>> +       priv->gpio_id = of_get_named_gpio(np, "hisilicon,gpio-id", 0);
->>> +       if (priv->gpio_id == -EPROBE_DEFER)
->>> +               return -EPROBE_DEFER;
->>> +       if (!gpio_is_valid(priv->gpio_id)) {
->>> +               dev_err(&pdev->dev, "invalid gpio %d\n", priv->gpio_id);
->>> +               return -ENODEV;
->>> +       }
->>> +
->>> +       priv->reg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
->>> +                                       "hisilicon,peripheral-syscon");
->>> +       if (IS_ERR(priv->reg))
->>> +               priv->reg = NULL;
->>> +
->>
->>
->> see my comments at your v1.
->
-> As replied in v1, EPROBE_DEFER does not needed.
-> syscon is register far earlier.
->
->>
->>> +       INIT_DELAYED_WORK(&priv->work, hi6220_detect_work);
->>> +
->>> +       ret = devm_gpio_request_one(&pdev->dev, priv->gpio_vbus,
->>> +                                   GPIOF_IN, "gpio_vbus");
->>> +       if (ret < 0) {
->>> +               dev_err(&pdev->dev, "gpio request failed for
->>> gpio_vbus\n");
->>> +               return ret;
->>> +       }
->>> +
->>> +       ret = devm_gpio_request_one(&pdev->dev, priv->gpio_id,
->>> +                                   GPIOF_IN, "gpio_id");
->>> +       if (ret < 0) {
->>> +               dev_err(&pdev->dev, "gpio request failed for gpio_id\n");
->>> +               return ret;
->>> +       }
->>> +
->>> +       priv->vcc = devm_regulator_get(&pdev->dev, "vcc");
->>> +       if (!IS_ERR(priv->vcc)) {
->>
->>
->> EPROBE_DEFER?
->
-> No, this is not needed, since regulator is registered earlier than device.
->
-> drivers/Makefile
-> # regulators early, since some subsystems rely on them to initialize
-> obj-$(CONFIG_REGULATOR)         += regulator/
->
 
-After reconsideration, EPROBE_DEFER should be added here in case of module.
 
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On  9.02.2015 17:02, Nishanth Menon wrote:
+> On 17:48-20150208, Ivaylo Dimitrov wrote:
+>> With legacy boot i2c buses on Nokia N900 are numbered i2c1, i2c2 and i2c3.
+>> Commit 20b80942ef4e ("ARM: dts: OMAP3+: Add i2c aliases") fixed the
+>> numbering with DT boot, but introduced a regression on N900 - aliases
+>> become i2c0, i2c1 and i2c2. Fix that by providing the correct aliases in
+>> the board dts.
+>>
+>> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+>> ---
+> I suppose this is due to some legacy userspace breakage?
+> if yes, we do not intend to break userspace :), So:
+
+Yes, legacy userspace breakage :)
+
+Regards,
+Ivo
