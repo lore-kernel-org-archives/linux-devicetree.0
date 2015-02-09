@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/2] ARM: shmobile: r8a7791: add USB-DMAC device nodes
-Date: Mon, 9 Feb 2015 17:24:38 +0900
-Message-ID: <1423470279-6340-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/2] ARM: shmobile: r8a7791: Enable DMA for HSUSB
+Date: Mon, 9 Feb 2015 17:24:39 +0900
+Message-ID: <1423470279-6340-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1423470279-6340-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,44 +12,27 @@ To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8Avxtiu
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add DMA properties to the HSUSB node.
+
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7791.dtsi |   22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/boot/dts/r8a7791.dtsi |    3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index afba8af..9343548 100644
+index 9343548..9c6d174 100644
 --- a/arch/arm/boot/dts/r8a7791.dtsi
 +++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -364,6 +364,28 @@
- 		reg = <0 0xec740000 0 0x200>;
+@@ -723,6 +723,9 @@
+ 		renesas,buswait = <4>;
+ 		phys = <&usb0 1>;
+ 		phy-names = "usb";
++		dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
++		       <&usb_dmac1 0>, <&usb_dmac1 1>;
++		dma-names = "rx0", "tx1", "rx2", "tx3";
+ 		status = "disabled";
  	};
  
-+	usb_dmac0: dma-controller@e65a0000 {
-+		compatible = "renesas,usb-dmac";
-+		reg = <0 0xe65a0000 0 0x100>;
-+		interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
-+			      0 109 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "ch0", "ch1";
-+		clocks = <&mstp3_clks R8A7791_CLK_USBDMAC0>;
-+		#dma-cells = <1>;
-+		dma-channels = <2>;
-+	};
-+
-+	usb_dmac1: dma-controller@e65b0000 {
-+		compatible = "renesas,usb-dmac";
-+		reg = <0 0xe65b0000 0 0x100>;
-+		interrupts = <0 110 IRQ_TYPE_LEVEL_HIGH
-+			      0 110 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "ch0", "ch1";
-+		clocks = <&mstp3_clks R8A7791_CLK_USBDMAC1>;
-+		#dma-cells = <1>;
-+		dma-channels = <2>;
-+	};
-+
- 	/* The memory map in the User's Manual maps the cores to bus numbers */
- 	i2c0: i2c@e6508000 {
- 		#address-cells = <1>;
 -- 
 1.7.9.5
 
