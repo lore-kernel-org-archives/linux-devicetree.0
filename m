@@ -1,49 +1,74 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] PCI: get DMA configuration from parent device
-Date: Mon, 9 Feb 2015 05:48:55 +0000
-Message-ID: <20150209054854.GF13969@arm.com>
-References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: gpio-pxa: getting GPIOs by devicetree phandle broken
+Date: Mon, 9 Feb 2015 15:11:23 +0900
+Message-ID: <CAAVeFu+yf6Wf6MspiDLiWwQkMwMvimNa0SpMK_yO_9X07UecEw@mail.gmail.com>
+References: <CAOjnSCajhwdRVZUO99KL-9PF6HitZen04MoLKoDUDr_5=iS7kw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1423173179-10227-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAOjnSCajhwdRVZUO99KL-9PF6HitZen04MoLKoDUDr_5=iS7kw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tyler Hall <tylerwhall@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Mack <zonque@gmail.com>, Hans Holmberg <hans.holmberg@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Howard Cochran <cochran@lexmark.com>, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 05, 2015 at 09:52:52PM +0000, Murali Karicheri wrote:
-> This patch add an important capability to PCI driver on Keystone. I hope to
-> have this merged to the upstream branch so that it is available for v3.20.
-> Also would like thank everyone for the contribution.
-> 
-> PCI devices on Keystone doesn't have correct dma_pfn_offset set. This patch
-> add capability to set the dma configuration such as dma-mask, dma_pfn_offset,
-> and dma ops etc using the information from DT. The prior RFCs and discussions
-> are available at [1] and [2] below.
-> 
-> [2] : https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg790244.html
-> [1] : http://www.gossamer-threads.com/lists/linux/kernel/2024591
-> 
-> Change history:
-> 	v6 - Rebased to v3.19-v7
-> 	   - Addressed some minor comments about node name and DT size validation.
-> 	   - Pulled out 8/8 of v5 and plan to send a patch for enhancing
-> 	     of_dma_configure() to use size to calculate dma mask.
-> 	   - Added Acks from reviewers.
+Adding Robert who reported the same thing.
 
-This series looks fine to me:
+On Sat, Feb 7, 2015 at 6:28 AM, Tyler Hall <tylerwhall@gmail.com> wrote:
+> Hi,
+>
+> Commit 7b8792b ("gpiolib: of: Correct error handling in
+> of_get_named_gpiod_flags") seems to break the ability to use DT
+> bindings to reference this driver's GPIOs by phandle for banks above
+> the first.
+>
+> The issue is that gpio-pxa registers multiple gpio chips - one for
+> each bank - but they're all associated with the same DT node. The new
+> behavior in of_gpiochip_find_and_xlate() causes gpiochip_find() to
+> bail after the first chip matches and its xlate function fails.
+> Previously it would try all chips associated with the phandle and
+> pxa_gpio_of_xlate() would fail until it was called with the correct
+> gpiochip.
+>
+> I think the new behavior of of_gpiochip_find_and_xlate() is reasonable,
+> so I see a couple ways of fixing gpio-pxa.
+>
+> 1. Require child nodes in DT for each bank
 
-  Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+This would break DT compatibility.
 
-Will
+> 2. Refactor gpio-pxa to only register one gpiochip
+
+Sounds better, especially since this would reflect the hardware more
+accurately. One DT node should translate into one GPIO chip. The
+problem is that I'm afraid several other drivers are doing the same
+thing and thus are now similarly broken.
+
+The following is also likely to work as a workaround, but I would not
+go as far as saying this should be taken as a fix. Hans, since you
+wrote 7b8792b, could we have your input on this?
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 08261f2b3a82..a09095531b00 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -45,14 +45,16 @@ static int of_gpiochip_find_and_xlate(struct
+gpio_chip *gc, void *data)
+                return false;
+
+        ret = gc->of_xlate(gc, &gg_data->gpiospec, gg_data->flags);
+-       if (ret < 0) {
++       if (ret == -EPROBE_DEFER) {
+                /* We've found the gpio chip, but the translation failed.
+                 * Return true to stop looking and return the translation
+                 * error via out_gpio
+                 */
+                gg_data->out_gpio = ERR_PTR(ret);
+                return true;
+-        }
++       } else if (ret < 0) {
++               return false;
++       }
+
+        gg_data->out_gpio = gpiochip_get_desc(gc, ret);
+        return true;
