@@ -1,53 +1,63 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v3 2/5] ARM: dts: pxa: add clocks
-Date: Mon, 09 Feb 2015 20:56:12 +0100
-Message-ID: <87egpy7tb7.fsf@free.fr>
-References: <1423312760-15871-1-git-send-email-robert.jarzmik@free.fr>
-	<1423312760-15871-2-git-send-email-robert.jarzmik@free.fr>
-	<54D60B79.5060206@cogentembedded.com> <87a90p9815.fsf@free.fr>
-	<54D64BBE.9080704@cogentembedded.com>
+From: Laura Abbott <lauraa@codeaurora.org>
+Subject: Re: [PATCH/RFC 0/4] Probe deferral for IOMMU DT integration
+Date: Mon, 09 Feb 2015 13:27:58 -0800
+Message-ID: <54D9265E.1030403@codeaurora.org>
+References: <1423182722-16646-1-git-send-email-lauraa@codeaurora.org>
+ <2115835102.210232.1423348884955.JavaMail.open-xchange@oxbaltgw04.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54D64BBE.9080704@cogentembedded.com> (Sergei Shtylyov's message
-	of "Sat, 07 Feb 2015 20:30:38 +0300")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2115835102.210232.1423348884955.JavaMail.open-xchange@oxbaltgw04.schlund.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "arnd@arndb.de" <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Joreg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Grant Likely <grant.likely@linaro.org>, Mitchel Humpherys <mitchelh@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-> +		ffuart: uart@40100000 {
-> +			clocks = <&pxa2xx_clks CLK_FFUART>;
-> +		};
-> +
+On 2/7/2015 2:41 PM, arnd@arndb.de wrote:
+> Laura Abbott <lauraa@codeaurora.org> hat am 6. Februar 2015 um 01:31
+> geschrieben:
+>>
+>> The requirement for this is based on a previous patch to add clock
+>> support to the ARM SMMU driver[2]. Once we have clock support, it's
+>> possible that the driver itself may need to be defered which breaks
+>> a bunch of assumptions about how SMMU probing is supposed to work.
+>
+> Hi Laura,
+>
+> I was hoping that we would not need this, and instead treat the iommu in
+> the same way as timers and SMP initialization, both
+> of which need to be run early at boot time but may rely on clock controllers
+> to be initialized first.
+>
+> Is there a specific requirement that makes this impossible here, or is your
+> intention to solve the problem more nicely by allowing deferred probing
+> over forcing the input clocks of the iommu to be early?
+>
+>        Arnd
+>
 
-After another thought about your "one line" node, I think this can be even
-improved, so that :
- - uart clocks are put into pxa2xx.dtsi instead of pxa27x.dtsi
- - replace all pxa2xx_clks by clks
- - let pxa27x.dtsi, pxa3xx.dtsi declare the clks label
+The current clock driver for qcom targets doesn't support the early
+initialization needed for timers and SMP because neither of those depend
+on the clocksources. I discussed this with Stephen some and adding the
+early support would not mesh well with the device/driver design of the
+current clock driver so that's not really an option right now.
 
-This way we'll have :
- - pxa2xx.dtsi
-		ffuart: uart@40100000 {
-                        compatible = ...
-                        ...
-			clocks = <&clks CLK_FFUART>;
-		};
- - pxa27x.dtsi
-                clks: pxa2xx_clks@41300004 {
-                        compatible = "marvell,pxa270-clocks";
-                        #clock-cells = <1>;
-                        status = "okay";
-                };
- - pxa3xx.dtsi
-                clks: pxa3xx_clks@41300004 {
-                        compatible = "marvell,pxa300-clocks";
-                        #clock-cells = <1>;
-                        status = "okay";
-                };
+I do think the deferred probing design is cleaner. Even cleaner would
+be a proper bus type but that's a different can of worms.
 
-Cheers.
+Thanks,
+Laura
 
 -- 
-Robert
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
