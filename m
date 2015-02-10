@@ -1,282 +1,314 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v3 1/6] soc: qcom: gsbi: Add support for ADM CRCI muxing
-Date: Mon,  9 Feb 2015 16:01:06 -0600
-Message-ID: <1423519271-4238-2-git-send-email-agross@codeaurora.org>
-References: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>
+From: Scott Branden <sbranden@broadcom.com>
+Subject: [PATCH 3/4] mmc: sdhci-iproc: add IPROC SDHCI driver
+Date: Mon, 9 Feb 2015 16:06:30 -0800
+Message-ID: <1423526791-29453-4-git-send-email-sbranden@broadcom.com>
+References: <Scott Branden <sbranden@broadcom.com>
+ <1423526791-29453-1-git-send-email-sbranden@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1423526791-29453-1-git-send-email-sbranden@broadcom.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: bcm-kernel-feedback-list@broadcom.com, Ulf Hansson <ulf.hansson@linaro.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Scott Branden <sbranden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds automatic configuration for the ADM CRCI muxing required to
-support DMA operations for GSBI clients.  The GSBI mode and instance determine
-the correct TCSR ADM CRCI MUX value that must be programmed so that the DMA
-works properly.
+Add IPROC SDHCI driver for IPROC family of Broadcom devices.
 
-Signed-off-by: Andy Gross <agross@codeaurora.org>
+Acked-by: Ray Jui <rjui@broadcom.com>
+Signed-off-by: Corneliu Doban <cdoban@broadcom.com>
+Signed-off-by: Scott Branden <sbranden@broadcom.com>
 ---
- .../devicetree/bindings/soc/qcom/qcom,gsbi.txt     |   14 +-
- drivers/soc/qcom/Kconfig                           |    1 +
- drivers/soc/qcom/qcom_gsbi.c                       |  152 ++++++++++++++++++++
- 3 files changed, 166 insertions(+), 1 deletion(-)
+ drivers/mmc/host/Kconfig       |  14 +++
+ drivers/mmc/host/Makefile      |   1 +
+ drivers/mmc/host/sdhci-iproc.c | 241 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 256 insertions(+)
+ create mode 100644 drivers/mmc/host/sdhci-iproc.c
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
-index 4ce24d4..186e5f4 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
-@@ -6,7 +6,8 @@ configuration settings.  The mode setting will govern the input/output mode of
- the 4 GSBI IOs.
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 2d6fbdd..d6a2ff1 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -292,6 +292,20 @@ config MMC_SDHCI_BCM2835
  
- Required properties:
--- compatible: must contain "qcom,gsbi-v1.0.0" for APQ8064/IPQ8064
-+- compatible:	Should contain "qcom,gsbi-v1.0.0"
-+- cell-index:	Should contain the GSBI index
- - reg: Address range for GSBI registers
- - clocks: required clock
- - clock-names: must contain "iface" entry
-@@ -16,6 +17,8 @@ Required properties:
- Optional properties:
- - qcom,crci : indicates CRCI MUX value for QUP CRCI ports.  Please reference
-   dt-bindings/soc/qcom,gsbi.h for valid CRCI mux values.
-+- syscon-tcsr: indicates phandle of TCSR syscon node.  Required if child uses
-+  dma.
+ 	  If unsure, say N.
  
- Required properties if child node exists:
- - #address-cells: Must be 1
-@@ -39,6 +42,7 @@ Example for APQ8064:
++config MMC_SDHCI_IPROC
++	tristate "SDHCI platform support for the iProc SD/MMC Controller"
++	depends on ARCH_BCM_IPROC || COMPILE_TEST
++	depends on MMC_SDHCI_PLTFM
++	default ARCH_BCM_IPROC
++	select MMC_SDHCI_IO_ACCESSORS
++	help
++	  This selects the iProc SD/MMC controller.
++
++	  If you have an IPROC platform with SD or MMC devices,
++	  say Y or M here.
++
++	  If unsure, say N.
++
+ config MMC_MOXART
+ 	tristate "MOXART SD/MMC Host Controller support"
+ 	depends on ARCH_MOXART && MMC
+diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+index f7b0a77..32f24bd 100644
+--- a/drivers/mmc/host/Makefile
++++ b/drivers/mmc/host/Makefile
+@@ -70,6 +70,7 @@ obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
+ obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
+ obj-$(CONFIG_MMC_SDHCI_BCM_KONA)	+= sdhci-bcm-kona.o
+ obj-$(CONFIG_MMC_SDHCI_BCM2835)		+= sdhci-bcm2835.o
++obj-$(CONFIG_MMC_SDHCI_IPROC)		+= sdhci-iproc.o
+ obj-$(CONFIG_MMC_SDHCI_MSM)		+= sdhci-msm.o
+ obj-$(CONFIG_MMC_SDHCI_ST)		+= sdhci-st.o
  
- 	gsbi4@16300000 {
- 		compatible = "qcom,gsbi-v1.0.0";
-+		cell-index = <4>;
- 		reg = <0x16300000 0x100>;
- 		clocks = <&gcc GSBI4_H_CLK>;
- 		clock-names = "iface";
-@@ -48,6 +52,8 @@ Example for APQ8064:
- 		qcom,mode = <GSBI_PROT_I2C_UART>;
- 		qcom,crci = <GSBI_CRCI_QUP>;
- 
-+		syscon-tcsr = <&tcsr>;
+diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+new file mode 100644
+index 0000000..4139d34
+--- /dev/null
++++ b/drivers/mmc/host/sdhci-iproc.c
+@@ -0,0 +1,241 @@
++/*
++ * Copyright (C) 2014 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
- 		/* child nodes go under here */
- 
- 		i2c_qup4: i2c@16380000 {
-@@ -76,3 +82,9 @@ Example for APQ8064:
- 		};
- 	};
- 
-+	tcsr: syscon@1a400000 {
-+		compatible = "qcom,apq8064-tcsr", "syscon";
-+		reg = <0x1a400000 0x100>;
-+	};
++/*
++ * iProc SDHCI platform driver
++ */
 +
++#include <linux/delay.h>
++#include <linux/module.h>
++#include <linux/mmc/host.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include "sdhci-pltfm.h"
 +
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 7bd2c94..460b2db 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -4,6 +4,7 @@
- config QCOM_GSBI
-         tristate "QCOM General Serial Bus Interface"
-         depends on ARCH_QCOM
-+        select MFD_SYSCON
-         help
-           Say y here to enable GSBI support.  The GSBI provides control
-           functions for connecting the underlying serial UART, SPI, and I2C
-diff --git a/drivers/soc/qcom/qcom_gsbi.c b/drivers/soc/qcom/qcom_gsbi.c
-index 729425d..09c669e 100644
---- a/drivers/soc/qcom/qcom_gsbi.c
-+++ b/drivers/soc/qcom/qcom_gsbi.c
-@@ -18,22 +18,129 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include <dt-bindings/soc/qcom,gsbi.h>
- 
- #define GSBI_CTRL_REG		0x0000
- #define GSBI_PROTOCOL_SHIFT	4
-+#define MAX_GSBI		12
-+
-+#define TCSR_ADM_CRCI_BASE	0x70
-+
-+struct crci_config {
-+	u32 num_rows;
-+	const u32 (*array)[MAX_GSBI];
++struct sdhci_iproc_data {
++	const struct sdhci_pltfm_data *pdata;
++	u32 caps;
++	u32 caps1;
 +};
 +
-+static const u32 crci_ipq8064[][MAX_GSBI] = {
-+	{
-+		0x000003, 0x00000c, 0x000030, 0x0000c0,
-+		0x000300, 0x000c00, 0x003000, 0x00c000,
-+		0x030000, 0x0c0000, 0x300000, 0xc00000
-+	},
-+	{
-+		0x000003, 0x00000c, 0x000030, 0x0000c0,
-+		0x000300, 0x000c00, 0x003000, 0x00c000,
-+		0x030000, 0x0c0000, 0x300000, 0xc00000
-+	},
++struct sdhci_iproc_host {
++	const struct sdhci_iproc_data *data;
++	u32 shadow_cmd;
++	u32 shadow_blk;
 +};
 +
-+static const struct crci_config config_ipq8064 = {
-+	.num_rows = ARRAY_SIZE(crci_ipq8064),
-+	.array = crci_ipq8064,
++#define REG_OFFSET_IN_BITS(reg) ((reg) << 3 & 0x18)
++
++static inline u32 sdhci_iproc_readl(struct sdhci_host *host, int reg)
++{
++	u32 val = readl(host->ioaddr + reg);
++
++	pr_debug("%s: readl [0x%02x] 0x%08x\n",
++		 mmc_hostname(host->mmc), reg, val);
++	return val;
++}
++
++static u16 sdhci_iproc_readw(struct sdhci_host *host, int reg)
++{
++	u32 val = sdhci_iproc_readl(host, (reg & ~3));
++	u16 word = val >> REG_OFFSET_IN_BITS(reg) & 0xffff;
++	return word;
++}
++
++static u8 sdhci_iproc_readb(struct sdhci_host *host, int reg)
++{
++	u32 val = sdhci_iproc_readl(host, (reg & ~3));
++	u8 byte = val >> REG_OFFSET_IN_BITS(reg) & 0xff;
++	return byte;
++}
++
++static inline void sdhci_iproc_writel(struct sdhci_host *host, u32 val, int reg)
++{
++	pr_debug("%s: writel [0x%02x] 0x%08x\n",
++		 mmc_hostname(host->mmc), reg, val);
++
++	writel(val, host->ioaddr + reg);
++
++	if (host->clock <= 400000) {
++		/* Round up to micro-second four SD clock delay */
++		if (host->clock)
++			udelay((4 * 1000000 + host->clock - 1) / host->clock);
++		else
++			udelay(10);
++	}
++}
++
++/*
++ * The Arasan has a bugette whereby it may lose the content of successive
++ * writes to the same register that are within two SD-card clock cycles of
++ * each other (a clock domain crossing problem). The data
++ * register does not have this problem, which is just as well - otherwise we'd
++ * have to nobble the DMA engine too.
++ *
++ * This wouldn't be a problem with the code except that we can only write the
++ * controller with 32-bit writes.  So two different 16-bit registers are
++ * written back to back creates the problem.
++ *
++ * In reality, this only happens when SDHCI_BLOCK_SIZE and SDHCI_BLOCK_COUNT
++ * are written followed by SDHCI_TRANSFER_MODE and SDHCI_COMMAND.
++ * The BLOCK_SIZE and BLOCK_COUNT are meaningless until a command issued so
++ * the work around can be further optimized. We can keep shadow values of
++ * BLOCK_SIZE, BLOCK_COUNT, and TRANSFER_MODE until a COMMAND is issued.
++ * Then, write the BLOCK_SIZE+BLOCK_COUNT in a single 32-bit write followed
++ * by the TRANSFER+COMMAND in another 32-bit write.
++ */
++static void sdhci_iproc_writew(struct sdhci_host *host, u16 val, int reg)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_iproc_host *iproc_host = pltfm_host->priv;
++	u32 word_shift = REG_OFFSET_IN_BITS(reg);
++	u32 mask = 0xffff << word_shift;
++	u32 oldval, newval;
++
++	if (reg == SDHCI_COMMAND) {
++		/* Write the block now as we are issuing a command */
++		if (iproc_host->shadow_blk != 0) {
++			sdhci_iproc_writel(host, iproc_host->shadow_blk,
++				SDHCI_BLOCK_SIZE);
++			iproc_host->shadow_blk = 0;
++		}
++		oldval = iproc_host->shadow_cmd;
++	} else if (reg == SDHCI_BLOCK_SIZE || reg == SDHCI_BLOCK_COUNT) {
++		/* Block size and count are stored in shadow reg */
++		oldval = iproc_host->shadow_blk;
++	} else {
++		/* Read reg, all other registers are not shadowed */
++		oldval = sdhci_iproc_readl(host, (reg & ~3));
++	}
++	newval = (oldval & ~mask) | (val << word_shift);
++
++	if (reg == SDHCI_TRANSFER_MODE) {
++		/* Save the transfer mode until the command is issued */
++		iproc_host->shadow_cmd = newval;
++	} else if (reg == SDHCI_BLOCK_SIZE || reg == SDHCI_BLOCK_COUNT) {
++		/* Save the block info until the command is issued */
++		iproc_host->shadow_blk = newval;
++	} else {
++		/* Command or other regular 32-bit write */
++		sdhci_iproc_writel(host, newval, reg & ~3);
++	}
++}
++
++static void sdhci_iproc_writeb(struct sdhci_host *host, u8 val, int reg)
++{
++	u32 oldval = sdhci_iproc_readl(host, (reg & ~3));
++	u32 byte_shift = REG_OFFSET_IN_BITS(reg);
++	u32 mask = 0xff << byte_shift;
++	u32 newval = (oldval & ~mask) | (val << byte_shift);
++
++	sdhci_iproc_writel(host, newval, reg & ~3);
++}
++
++static const struct sdhci_ops sdhci_iproc_ops = {
++	.read_l = sdhci_iproc_readl,
++	.read_w = sdhci_iproc_readw,
++	.read_b = sdhci_iproc_readb,
++	.write_l = sdhci_iproc_writel,
++	.write_w = sdhci_iproc_writew,
++	.write_b = sdhci_iproc_writeb,
++	.set_clock = sdhci_set_clock,
++	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
++	.set_bus_width = sdhci_set_bus_width,
++	.reset = sdhci_reset,
++	.set_uhs_signaling = sdhci_set_uhs_signaling,
 +};
 +
-+static const unsigned int crci_apq8064[][MAX_GSBI] = {
-+	{
-+		0x001800, 0x006000, 0x000030, 0x0000c0,
-+		0x000300, 0x000400, 0x000000, 0x000000,
-+		0x000000, 0x000000, 0x000000, 0x000000
-+	},
-+	{
-+		0x000000, 0x000000, 0x000000, 0x000000,
-+		0x000000, 0x000020, 0x0000c0, 0x000000,
-+		0x000000, 0x000000, 0x000000, 0x000000
-+	},
++static const struct sdhci_pltfm_data sdhci_iproc_pltfm_data = {
++	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
++	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN,
++	.ops = &sdhci_iproc_ops,
 +};
 +
-+static const struct crci_config config_apq8064 = {
-+	.num_rows = ARRAY_SIZE(crci_apq8064),
-+	.array = crci_apq8064,
++static const struct sdhci_iproc_data iproc_data = {
++	.pdata = &sdhci_iproc_pltfm_data,
++	.caps = 0x05E90000,
++	.caps1 = 0x00000064,
 +};
 +
-+static const unsigned int crci_msm8960[][MAX_GSBI] = {
-+	{
-+		0x000003, 0x00000c, 0x000030, 0x0000c0,
-+		0x000300, 0x000400, 0x000000, 0x000000,
-+		0x000000, 0x000000, 0x000000, 0x000000
-+	},
-+	{
-+		0x000000, 0x000000, 0x000000, 0x000000,
-+		0x000000, 0x000020, 0x0000c0, 0x000300,
-+		0x001800, 0x006000, 0x000000, 0x000000
-+	},
++static const struct of_device_id sdhci_iproc_of_match[] = {
++	{ .compatible = "brcm,sdhci-iproc-cygnus", .data = &iproc_data },
++	{ }
 +};
++MODULE_DEVICE_TABLE(of, sdhci_iproc_of_match);
 +
-+static const struct crci_config config_msm8960 = {
-+	.num_rows = ARRAY_SIZE(crci_msm8960),
-+	.array = crci_msm8960,
-+};
-+
-+static const unsigned int crci_msm8660[][MAX_GSBI] = {
-+	{	/* ADM 0 - B */
-+		0x000003, 0x00000c, 0x000030, 0x0000c0,
-+		0x000300, 0x000c00, 0x003000, 0x00c000,
-+		0x030000, 0x0c0000, 0x300000, 0xc00000
-+	},
-+	{	/* ADM 0 - B */
-+		0x000003, 0x00000c, 0x000030, 0x0000c0,
-+		0x000300, 0x000c00, 0x003000, 0x00c000,
-+		0x030000, 0x0c0000, 0x300000, 0xc00000
-+	},
-+	{	/* ADM 1 - A */
-+		0x000003, 0x00000c, 0x000030, 0x0000c0,
-+		0x000300, 0x000c00, 0x003000, 0x00c000,
-+		0x030000, 0x0c0000, 0x300000, 0xc00000
-+	},
-+	{	/* ADM 1 - B */
-+		0x000003, 0x00000c, 0x000030, 0x0000c0,
-+		0x000300, 0x000c00, 0x003000, 0x00c000,
-+		0x030000, 0x0c0000, 0x300000, 0xc00000
-+	},
-+};
-+
-+static const struct crci_config config_msm8660 = {
-+	.num_rows = ARRAY_SIZE(crci_msm8660),
-+	.array = crci_msm8660,
-+};
- 
- struct gsbi_info {
- 	struct clk *hclk;
- 	u32 mode;
- 	u32 crci;
-+	struct regmap *tcsr;
-+};
-+
-+static const struct of_device_id tcsr_dt_match[] = {
-+	{ .compatible = "qcom,tcsr-ipq8064", .data = &config_ipq8064},
-+	{ .compatible = "qcom,tcsr-apq8064", .data = &config_apq8064},
-+	{ .compatible = "qcom,tcsr-msm8960", .data = &config_msm8960},
-+	{ .compatible = "qcom,tcsr-msm8660", .data = &config_msm8660},
-+	{ },
- };
- 
- static int gsbi_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *tcsr_node;
++static int sdhci_iproc_probe(struct platform_device *pdev)
++{
 +	const struct of_device_id *match;
- 	struct resource *res;
- 	void __iomem *base;
- 	struct gsbi_info *gsbi;
-+	int i;
-+	u32 mask, gsbi_num;
-+	const struct crci_config *config = NULL;
- 
- 	gsbi = devm_kzalloc(&pdev->dev, sizeof(*gsbi), GFP_KERNEL);
- 
-@@ -45,6 +152,32 @@ static int gsbi_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
-+	/* get the tcsr node and setup the config and regmap */
-+	gsbi->tcsr = syscon_regmap_lookup_by_phandle(node, "syscon-tcsr");
++	const struct sdhci_iproc_data *iproc_data;
++	struct sdhci_host *host;
++	struct sdhci_iproc_host *iproc_host;
++	struct sdhci_pltfm_host *pltfm_host;
++	int ret;
 +
-+	if (!IS_ERR(gsbi->tcsr)) {
-+		tcsr_node = of_parse_phandle(node, "syscon-tcsr", 0);
-+		if (tcsr_node) {
-+			match = of_match_node(tcsr_dt_match, tcsr_node);
-+			if (match)
-+				config = match->data;
-+			else
-+				dev_warn(&pdev->dev, "no matching TCSR\n");
-+
-+			of_node_put(tcsr_node);
-+		}
-+	}
-+
-+	if (of_property_read_u32(node, "cell-index", &gsbi_num)) {
-+		dev_err(&pdev->dev, "missing cell-index\n");
++	match = of_match_device(sdhci_iproc_of_match, &pdev->dev);
++	if (!match)
 +		return -EINVAL;
++	iproc_data = match->data;
++
++	host = sdhci_pltfm_init(pdev, iproc_data->pdata, sizeof(*iproc_host));
++	if (IS_ERR(host))
++		return PTR_ERR(host);
++
++	pltfm_host = sdhci_priv(host);
++	iproc_host = sdhci_pltfm_priv(pltfm_host);
++
++	iproc_host->data = iproc_data;
++
++	mmc_of_parse(host->mmc);
++	sdhci_get_of_property(pdev);
++
++	/* Enable EMMC 1/8V DDR capable */
++	host->mmc->caps |= MMC_CAP_1_8V_DDR;
++
++	pltfm_host->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(pltfm_host->clk)) {
++		ret = PTR_ERR(pltfm_host->clk);
++		goto err;
 +	}
 +
-+	if (gsbi_num < 1 || gsbi_num > MAX_GSBI) {
-+		dev_err(&pdev->dev, "invalid cell-index\n");
-+		return -EINVAL;
++	if (iproc_host->data->pdata->quirks & SDHCI_QUIRK_MISSING_CAPS) {
++		host->caps = iproc_host->data->caps;
++		host->caps1 = iproc_host->data->caps1;
 +	}
 +
- 	if (of_property_read_u32(node, "qcom,mode", &gsbi->mode)) {
- 		dev_err(&pdev->dev, "missing mode configuration\n");
- 		return -EINVAL;
-@@ -64,6 +197,25 @@ static int gsbi_probe(struct platform_device *pdev)
- 	writel_relaxed((gsbi->mode << GSBI_PROTOCOL_SHIFT) | gsbi->crci,
- 				base + GSBI_CTRL_REG);
- 
-+	/*
-+	 * modify tcsr to reflect mode and ADM CRCI mux
-+	 * Each gsbi contains a pair of bits, one for RX and one for TX
-+	 * SPI mode requires both bits cleared, otherwise they are set
-+	 */
-+	if (config) {
-+		for (i = 0; i < config->num_rows; i++) {
-+			mask = config->array[i][gsbi_num - 1];
++	return sdhci_add_host(host);
 +
-+			if (gsbi->mode == GSBI_PROT_SPI)
-+				regmap_update_bits(gsbi->tcsr,
-+					TCSR_ADM_CRCI_BASE + 4 * i, mask, 0);
-+			else
-+				regmap_update_bits(gsbi->tcsr,
-+					TCSR_ADM_CRCI_BASE + 4 * i, mask, mask);
++err:
++	sdhci_pltfm_free(pdev);
++	return ret;
++}
 +
-+		}
-+	}
++static int sdhci_iproc_remove(struct platform_device *pdev)
++{
++	return sdhci_pltfm_unregister(pdev);
++}
 +
- 	/* make sure the gsbi control write is not reordered */
- 	wmb();
- 
++static struct platform_driver sdhci_iproc_driver = {
++	.driver = {
++		.name = "sdhci-iproc",
++		.of_match_table = sdhci_iproc_of_match,
++		.pm = SDHCI_PLTFM_PMOPS,
++	},
++	.probe = sdhci_iproc_probe,
++	.remove = sdhci_iproc_remove,
++};
++module_platform_driver(sdhci_iproc_driver);
++
++MODULE_AUTHOR("Broadcom");
++MODULE_DESCRIPTION("IPROC SDHCI driver");
++MODULE_LICENSE("GPL v2");
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+2.2.2
+
