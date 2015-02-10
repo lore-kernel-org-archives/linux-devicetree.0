@@ -1,45 +1,295 @@
-From: yoshihiro shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 0/2] ARM: shmobile: r8a7790: add for USB-DMAC
-Date: Tue, 10 Feb 2015 02:11:22 +0000
-Message-ID: <HKNPR06MB322BD375AA62B56D905EF3AD8240@HKNPR06MB322.apcprd06.prod.outlook.com>
-References: <1423470279-6340-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <HKNPR06MB3220948E3FFE862FA05A180D8270@HKNPR06MB322.apcprd06.prod.outlook.com>
- <20150210001221.GA32167@verge.net.au>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 2/2] ARM: at91: dts: sama5d4: add dts for sama5d4 xplained board
+Date: Tue, 10 Feb 2015 11:24:30 +0800
+Message-ID: <1423538670-22300-2-git-send-email-josh.wu@atmel.com>
+References: <1423538670-22300-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150210001221.GA32167-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: ja-JP
+In-Reply-To: <1423538670-22300-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon-san,
+Add at91 sama5d4 xplained board support.
 
-> 
-> On Mon, Feb 09, 2015 at 08:41:18AM +0000, yoshihiro shimoda wrote:
-> > > Subject: [PATCH 0/2] ARM: shmobile: r8a7790: add for USB-DMAC
-> >
-> > Oops, I mistook this subject of cover-letter.
-> > However, actual patches are correct.
-> 
-> Thanks,
-> 
-> I think it would be best if you resubmitted this series, which is for the
-> r8a7791, and the other similar series for the r8a7790 once the relevant
-> driver changes have been accepted by their subsystem maintainer.
+Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
 
-Thank you for the reply. I got it.
+Changes in v3:
+- add phy0 child node under macb0
+- rebase on top of linux next, re-formated the arch/arm/boot/dts/Makefile
 
-Best regards,
-Yoshihiro Shimoda
+Changes in v2:
+- to be sorted by memory address, put the adc dt node after usart4.
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/boot/dts/Makefile                  |   3 +-
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts | 238 ++++++++++++++++++++++++++++
+ 2 files changed, 240 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/at91-sama5d4_xplained.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a1c776b..5c189a5 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -42,7 +42,8 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
+ 	sama5d34ek.dtb \
+ 	sama5d35ek.dtb \
+ 	sama5d36ek.dtb \
+-	at91-sama5d4ek.dtb
++	at91-sama5d4ek.dtb \
++	at91-sama5d4_xplained.dtb
+ dtb-$(CONFIG_ARCH_ATLAS6) += \
+ 	atlas6-evb.dtb
+ dtb-$(CONFIG_ARCH_ATLAS7) += \
+diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+new file mode 100644
+index 0000000..9464e4a
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+@@ -0,0 +1,238 @@
++/*
++ * at91-sama5d4_xplained.dts - Device Tree file for SAMA5D4 Xplained board
++ *
++ *  Copyright (C) 2015 Atmel,
++ *                2015 Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++/dts-v1/;
++#include "sama5d4.dtsi"
++
++/ {
++	model = "Atmel SAMA5D4 Xplained";
++	compatible = "atmel,sama5d4-xplained", "atmel,sama5d4", "atmel,sama5";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 ignore_loglevel earlyprintk";
++	};
++
++	memory {
++		reg = <0x20000000 0x20000000>;
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		main_clock: clock@0 {
++			compatible = "atmel,osc", "fixed-clock";
++			clock-frequency = <12000000>;
++		};
++
++		slow_xtal {
++			clock-frequency = <32768>;
++		};
++
++		main_xtal {
++			clock-frequency = <12000000>;
++		};
++	};
++
++	ahb {
++		apb {
++			spi0: spi@f8010000 {
++				cs-gpios = <&pioC 3 0>, <0>, <0>, <0>;
++				status = "okay";
++				m25p80@0 {
++					compatible = "atmel,at25df321a";
++					spi-max-frequency = <50000000>;
++					reg = <0>;
++				};
++			};
++
++			macb0: ethernet@f8020000 {
++				phy-mode = "rmii";
++				status = "okay";
++
++				phy0: ethernet-phy@1 {
++					interrupt-parent = <&pioE>;
++					interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
++					reg = <1>;
++				};
++			};
++
++			mmc1: mmc@fc000000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3 &pinctrl_mmc1_cd>;
++				status = "okay";
++				slot@0 {
++					reg = <0>;
++					bus-width = <4>;
++					cd-gpios = <&pioE 3 0>;
++				};
++			};
++
++			usart3: serial@fc00c000 {
++				status = "okay";
++			};
++
++			usart4: serial@fc010000 {
++				status = "okay";
++			};
++
++			adc0: adc@fc034000 {
++				atmel,adc-vref = <3300>;
++				status = "okay";
++			};
++
++			watchdog@fc068640 {
++				status = "okay";
++			};
++
++			pinctrl@fc06a000 {
++				board {
++					pinctrl_mmc1_cd: mmc1_cd {
++						atmel,pins =
++							<AT91_PIOE 3 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
++					};
++					pinctrl_usba_vbus: usba_vbus {
++						atmel,pins =
++							<AT91_PIOE 31 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;
++					};
++					pinctrl_key_gpio: key_gpio_0 {
++						atmel,pins =
++							<AT91_PIOE 8 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>; /* PE13 gpio */
++					};
++				};
++			};
++		};
++
++		usb0: gadget@00400000 {
++			atmel,vbus-gpio = <&pioE 31 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_usba_vbus>;
++			status = "okay";
++		};
++
++		usb1: ohci@00500000 {
++			num-ports = <3>;
++			atmel,vbus-gpio = <0
++					   &pioE 11 GPIO_ACTIVE_HIGH
++					   &pioE 14 GPIO_ACTIVE_HIGH
++					  >;
++			status = "okay";
++		};
++
++		usb2: ehci@00600000 {
++			status = "okay";
++		};
++
++		nand0: nand@80000000 {
++			nand-bus-width = <8>;
++			nand-ecc-mode = "hw";
++			nand-on-flash-bbt;
++			atmel,has-pmecc;
++			status = "okay";
++
++			at91bootstrap@0 {
++				label = "at91bootstrap";
++				reg = <0x0 0x40000>;
++			};
++
++			bootloader@40000 {
++				label = "bootloader";
++				reg = <0x40000 0x80000>;
++			};
++
++			bootloaderenv@c0000 {
++				label = "bootloader env";
++				reg = <0xc0000 0xc0000>;
++			};
++
++			dtb@180000 {
++				label = "device tree";
++				reg = <0x180000 0x80000>;
++			};
++
++			kernel@200000 {
++				label = "kernel";
++				reg = <0x200000 0x600000>;
++			};
++
++			rootfs@800000 {
++				label = "rootfs";
++				reg = <0x800000 0x0f800000>;
++			};
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_key_gpio>;
++
++		pb_user1 {
++			label = "pb_user1";
++			gpios = <&pioE 8 GPIO_ACTIVE_HIGH>;
++			linux,code = <0x100>;
++			gpio-key,wakeup;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		status = "okay";
++
++		d8 {
++			label = "d8";
++			gpios = <&pioE 15 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		d10 {
++			label = "d10";
++			gpios = <&pioD 30 GPIO_ACTIVE_HIGH>;
++		};
++	};
++};
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
