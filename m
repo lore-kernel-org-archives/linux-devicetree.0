@@ -1,38 +1,50 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH 0/4] Add support for IPROC SDHCI controller
-Date: Mon, 9 Feb 2015 16:06:27 -0800
-Message-ID: <1423526791-29453-1-git-send-email-sbranden@broadcom.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/2] hwrng: iproc-rng200 - Add device tree bindings
+Date: Mon, 9 Feb 2015 16:07:10 -0800
+Message-ID: <1423526830-29516-3-git-send-email-sbranden@broadcom.com>
 References: <Scott Branden <sbranden@broadcom.com>
+ <1423526830-29516-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <Scott Branden <sbranden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcm-kernel-feedback-list@broadcom.com, Ulf Hansson <ulf.hansson@linaro.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
-Cc: Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Scott Branden <sbranden@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423526830-29516-1-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series of patchsets contains the IPROC SDHCI driver used
-in a series of Broadcom SoCs
-Quirks are also added to support this controller.
+Documents the IPROC random number generator device tree bindings
+used in some Broadcom chipsets.
 
-Corneliu Doban (1):
-  mmc: sdhci: do not set AUTO_CMD12 for multi-block CMD53
+Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/hwrng/brcm,iproc-rng200.txt          | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwrng/brcm,iproc-rng200.txt
 
-Scott Branden (3):
-  mmc: sdhci: add quirk for ACMD23 broken
-  mmc: sdhci-iproc: add IPROC SDHCI driver
-  mmc: sdhci-iproc: add device tree bindings
-
- .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  23 ++
- drivers/mmc/host/Kconfig                           |  14 ++
- drivers/mmc/host/Makefile                          |   1 +
- drivers/mmc/host/sdhci-iproc.c                     | 241 +++++++++++++++++++++
- drivers/mmc/host/sdhci.c                           |   7 +-
- include/linux/mmc/sdhci.h                          |   2 +
- 6 files changed, 286 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
- create mode 100644 drivers/mmc/host/sdhci-iproc.c
-
+diff --git a/Documentation/devicetree/bindings/hwrng/brcm,iproc-rng200.txt b/Documentation/devicetree/bindings/hwrng/brcm,iproc-rng200.txt
+new file mode 100644
+index 0000000..e25a456
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwrng/brcm,iproc-rng200.txt
+@@ -0,0 +1,12 @@
++HWRNG support for the iproc-rng200 driver
++
++Required properties:
++- compatible : "brcm,iproc-rng200"
++- reg : base address and size of control register block
++
++Example:
++
++rng {
++        compatible = "brcm,iproc-rng200";
++        reg = <0x18032000 0x28>;
++};
 -- 
 2.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
