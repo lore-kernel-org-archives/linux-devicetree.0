@@ -1,39 +1,56 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v9 3/3] ARM: dts: add I2C device nodes for Broadcom Cygnus
-Date: Mon, 9 Feb 2015 21:24:22 -0800
-Message-ID: <54D99606.9070309@broadcom.com>
-References: <rjui@broadcom.com> <1423373126-30024-1-git-send-email-rjui@broadcom.com> <1423373126-30024-4-git-send-email-rjui@broadcom.com> <20150209121103.GC2491@katana>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: gpio-pxa: getting GPIOs by devicetree phandle broken
+Date: Tue, 10 Feb 2015 14:33:04 +0900
+Message-ID: <CAAVeFu+yjQ5tcef1BM4Vu9qXxk7uvrkPz2LhhcdL_KcrEusctA@mail.gmail.com>
+References: <CAOjnSCajhwdRVZUO99KL-9PF6HitZen04MoLKoDUDr_5=iS7kw@mail.gmail.com>
+ <CAAVeFu+yf6Wf6MspiDLiWwQkMwMvimNa0SpMK_yO_9X07UecEw@mail.gmail.com>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B200@irsmsx105.ger.corp.intel.com>
+ <CAOjnSCZgx5H75t8QrXj1WQ_SaU_4HDYeK+_XdBRmwUXzHW=iJw@mail.gmail.com> <87mw4n6l40.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150209121103.GC2491@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <87mw4n6l40.fsf@free.fr>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: "Holmberg, Hans" <hans.holmberg@intel.com>, Tyler Hall <tylerwhall@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Mack <zonque@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Howard Cochran <cochran@lexmark.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2/9/2015 4:11 AM, Wolfram Sang wrote:
-> On Sat, Feb 07, 2015 at 09:25:26PM -0800, Ray Jui wrote:
->> Add I2C device nodes and its properties in bcm-cygnus.dtsi but keep
->> them disabled there. Individual I2C devices can be enabled in board
->> specific dts file when I2C slave devices are enabled in the future
+On Tue, Feb 10, 2015 at 2:38 AM, Robert Jarzmik <robert.jarzmik@free.fr> wrote:
+> Tyler Hall <tylerwhall@gmail.com> writes:
+>
+>>> The issue with multiple gpiochips per of-node could be worked around as followed I believe, comments?
+>>>
+>>> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+>>> index 08261f2..43984ab 100644
+>>> --- a/drivers/gpio/gpiolib-of.c
+>>> +++ b/drivers/gpio/gpiolib-of.c
+>>> @@ -47,11 +47,12 @@ static int of_gpiochip_find_and_xlate(struct gpio_chip *gc, void *data)
+>>>         ret = gc->of_xlate(gc, &gg_data->gpiospec, gg_data->flags);
+>>>         if (ret < 0) {
+>>>                 /* We've found the gpio chip, but the translation failed.
+>>> -                * Return true to stop looking and return the translation
+>>> -                * error via out_gpio
+>>> +                * Store translation error in out_gpio.
+>>> +                * Return false to keep looking, as more than one GPIO chip
+>>> +                * could be registered per of-node.
+>>>                  */
+>>>                 gg_data->out_gpio = ERR_PTR(ret);
+>>> -               return true;
+>>> +               return false;
+>>>          }
+>>>
+>>>         gg_data->out_gpio = gpiochip_get_desc(gc, ret);
 >>
->> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> 
-> I usually don't take DTS patches. They should go via arm-soc. Please say
-> so if there are reasons I should take them.
-> 
-Okay. I'll send this as an individual patch to arm-soc.
+>> As long as we're ok with multiple gpiochips per of-node, this would
+>> work for me. It'll change the preference of which chip returns the
+>> error in the case of multiple chips, but that's already undefined
+>> behavior.
+>
+> Looks good to me too, this will solve my issue, and the global behavior would be
+> consistent with the former one.
+>
+> Would you care submitting a proper patch so that we can apply our Reviewed-by,
+> Tested-by etc ... ?
 
-Thanks,
-
-Ray
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Looks ok to me too, if only a little bit hackish. A patch would be
+appreciated so we can send it for -fixes as well.
