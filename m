@@ -1,43 +1,34 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 1/2] dt-bindings: add disable-wakeup property for gpio-charger
-Date: Tue, 10 Feb 2015 16:12:24 +0800
-Message-ID: <1423555945-24289-2-git-send-email-zyw@rock-chips.com>
-References: <1423555945-24289-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423555945-24289-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, dianders@chromium.org, dtor@chromium.org, djkurtz@chromium.org, sonnyrao@chromium.org
-Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko.stuebner@bq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 5/5] ARM: dts: mt8135: Add pinctrl/GPIO/EINT node for mt8135.
+Date: Tue, 10 Feb 2015 16:13:22 +0800
+Message-ID: <CACRpkdYqYg1p+FHq2e-1iQA8hQfbnLBde2_0XkD9=s=Zpv5UJA@mail.gmail.com>
+References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
+	<1421818097-9281-6-git-send-email-hongzhou.yang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421818097-9281-6-git-send-email-hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, alan.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, toby.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, maoguang.meng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean-Christophe
 List-Id: devicetree@vger.kernel.org
 
-add disable-wakeup for gpio-charger, if you set this property, system
-will not wakeup by gpio-charger.
+On Wed, Jan 21, 2015 at 1:28 PM, Hongzhou Yang
+<hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
----
+> From: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>
+> Add pinctrl,GPIO and EINT node to mt8135.dtsi.
+>
+> Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
- Documentation/devicetree/bindings/power_supply/gpio-charger.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/power_supply/gpio-charger.txt b/Documentation/devicetree/bindings/power_supply/gpio-charger.txt
-index adbb5dc..a46e9bc 100644
---- a/Documentation/devicetree/bindings/power_supply/gpio-charger.txt
-+++ b/Documentation/devicetree/bindings/power_supply/gpio-charger.txt
-@@ -4,6 +4,7 @@ Required properties :
-  - compatible : "gpio-charger"
-  - gpios : GPIO indicating the charger presence.
-    See GPIO binding in bindings/gpio/gpio.txt .
-+ - gpio-charger,disable-wakeup : Boolean, charger does not wake-up the system.
-  - charger-type : power supply type, one of
-      unknown
-      battery
-@@ -20,6 +21,7 @@ Example:
- 		compatible = "gpio-charger";
- 		charger-type = "usb-sdp";
- 		gpios = <&gpf0 2 0 0 0>;
-+		gpio-charger,disable-wakeup;
- 	}
- 
- 	battery {
--- 
-1.9.1
+The pinctrl driver portions are merged to the pin control tree.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
