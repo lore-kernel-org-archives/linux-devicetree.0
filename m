@@ -1,260 +1,133 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Tue, 10 Feb 2015 20:48:36 +0000
-Message-ID: <20150210204835.GL9432@leverpostej>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
- <1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
- <20150210153628.GF9432@leverpostej>
- <20150210165201.634bc04b@bbrezillon>
+From: Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH 1/5] i8042: intel-8042 DT documentation
+Date: Wed, 11 Feb 2015 00:01:25 +0300
+Message-ID: <20150211000125.5d66bfb5@v1ron-s7>
+References: <1422913730-12663-1-git-send-email-v1ron@v1ros.org>
+	<20150203113816.GA30866@leverpostej>
+	<20150203193202.GB20256@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150210165201.634bc04b@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150203193202.GB20256@dtor-ws>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roman Volkov <v1ron-JGs/UdohzUI@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 10, 2015 at 03:52:01PM +0000, Boris Brezillon wrote:
-> Hi Mark,
-> 
-> On Tue, 10 Feb 2015 15:36:28 +0000
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> 
-> > Hi Boris,
-> > 
-> > On Thu, Jan 29, 2015 at 10:33:38AM +0000, Boris Brezillon wrote:
-> > > Add documentation for the virtual irq demuxer.
-> > > 
-> > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > > Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+=D0=92 Tue, 3 Feb 2015 11:32:02 -0800
+Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+
+> On Tue, Feb 03, 2015 at 11:38:16AM +0000, Mark Rutland wrote:
+> > On Mon, Feb 02, 2015 at 09:48:46PM +0000, Roman Volkov wrote:
+> > > Documentation for 'intel,8042' DT compatible node.
+> > >=20
+> > > Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+> > > Signed-off-by: Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>
 > > > ---
-> > >  .../bindings/interrupt-controller/dumb-demux.txt   | 41 ++++++++++++++++++++++
-> > >  1 file changed, 41 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
-> > > new file mode 100644
-> > > index 0000000..b9a7830
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
-> > > @@ -0,0 +1,41 @@
-> > > +* Virtual Interrupt Demultiplexer
+> > >  .../devicetree/bindings/input/intel-8042.txt       | 29
+> > > ++++++++++++++++++++++ 1 file changed, 29 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/input/intel-8042.txt
+> > >=20
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/input/intel-8042.txt
+> > > b/Documentation/devicetree/bindings/input/intel-8042.txt new file
+> > > mode 100644 index 0000000..2aea7ec --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/input/intel-8042.txt
+> > > @@ -0,0 +1,29 @@
+> > > +* Intel 8042 Keyboard Controller
 > > > +
-> > > +This virtual demultiplexer simply forward all incoming interrupts to its
-> > > +enabled/unmasked children.
-> > > +It is only intended to be used by hardware that do not provide a proper way
-> > > +to demultiplex a source interrupt, and thus have to wake all their children
-> > > +up so that they can possibly handle the interrupt (if needed).
-> > > +This can be seen as an alternative to shared interrupts when at least one
-> > > +of the interrupt children is a timer (and require the irq to stay enabled
-> > > +on suspend) while others are not. This will prevent calling irq handlers of
-> > > +non timer devices while they are suspended.
-> > 
-> > This sounds like a DT-workaround for a Linux implementation problem, and
-> > I don't think this the right way to solve your problem.
-> 
-> I understand your concern, but why are you answering while I asked for
-> DT maintainers reviews for several days (if not several weeks).
-> 
-> > 
-> > Why does this have to be in DT at all? Why can we not fix the core to
-> > handle these details?
-> 
-> We already discussed that with Rob and Thomas, and hiding such a
-> demuxer chip is not an easy task.
-> I'm open to any suggestion to do that, though I'd like you (I mean DT
-> guys) to provide a working implementation (or at least a viable concept)
-> that would silently demultiplex an irq.
-> 
-> > 
-> > I am very much not keen on this binding.
-> 
-> Yes, but do you have anything else to propose.
-> We're experiencing this warning for 2 releases now, and this is time to
-> find a solution (even if it's not a perfect one).
+> > > +Required properties:
+> > > +- compatible: should be "intel,8042"
+> > > +- regs: memory for keyboard controller
+> > > +- interrupts: two interrupts should be specified (keyboard and
+> > > aux)
+> >=20
+> > Is it possible only one of these is wired up?
+>=20
+> Yes, and we should support this case. The core of i8042 does.
+>=20
 
-Thoughts on the patch below?
+Do we need to just read these IRQ numbers and leave them negative if
+absent? Will it be acceptable? This would look like:
 
-Rather than handling this at the desc level it adds an extra flag to the
-irqaction which can be set/unset during suspend for those irqs we don't
-want to handle. That way we don't need to tell the core about the
-mismatch explicitly in DT (or ACPI/board files/whatever).
+i8042_kbd_irq =3D platform_get_irq_byname(pdev, "kbd");
 
-If we can request/free interrupts during suspend then there's some logic
-missing, but it shows the basic idea.
+Testing shows it prints "Invalid argument" error -22 when an IRQ is
+absent and we are not using nokbd/noaux module options.
 
-I didn't have a system to hand with shared mismatched IRQF_NO_SUSPEND
-interrupts, so I had to fake that up in code for testing.
+>=20
+> >=20
+> > It might be worth using interrupt-names.
+> >=20
+> > > +- command-reg: offset in memory for command register
+> > > +- status-reg: offset in memory for status register
+> > > +- data-reg: offset in memory for data register
+> > > +
+> > > +Optional properties:
+> > > +- init-reset: Controller should be reset on init and cleanup
+> >=20
+> > Why is this necessary? Can't we just always reset it?
+>=20
+> We do not reset by default on x86 because BIOS takes care of this for
+> us and quite often firmware that emulates i8042 gets confused if we
+> try to reset it too. Non non-x86 we reset by default. I think we
+> should do the same for OF case  (reset) and not use this property.
+>=20
+> >=20
+> > > +
+> > > +Optional Linux-specific properties:
+> > > +- linux,kbd_phys_desc: defaults to i8042/serio0
+> > > +- linux,aux_phys_desc: defaults to i8042/serio1
+> > > +- linux,mux_phys_desc: defaults to i8042/serio%d
+> >=20
+> > As a general note, s/_/-/ in property names please.
+> >=20
+> > That said, I don't follow why we should have these at all. I don't
+> > understand what the description is intended to mean.
+> >=20
+> > In general we want to avoid Linux-specific properties. If a DTB
+> > needs to know about the inernals of an OS it's likely to be fragile
+> > and broken over time.
+>=20
+> Right, the desc were carried over from older days to keep dmesg
+> familiar. With OF it is new platforms so just settle on a generic
+> description and use it instead of allowing to specify through DT.
+>=20
+> >=20
+> > > +
+> > > +
+> > > +Example:
+> > > +	keyboard@d8008800 {
+> > > +		compatible =3D "intel,8042";
+> > > +		reg =3D <0xd8008800 0x100>;
+> > > +		interrupts =3D <23 4>;
+> >=20
+> > If this is intended to be two interrupts, please bracket them
+> > individually, e.g.
+> >=20
+> > 	interrupts =3D <23>, <4>;
+> >=20
+> > > +		command-reg =3D <0x04>;
+> > > +		status-reg =3D <0x04>;
+> >=20
+> > Same address?
+> >=20
+> > > +		data-reg =3D <0x00>;
+> > > +		mux-ports =3D <2>;
+> >=20
+> > This wasn't documented above.
+>=20
+> I think active MUX is purely x86 concept, I have never heard of it
+> being used anywhere else.
+>=20
+> Thanks.
+>=20
 
-Thanks,
-Mark.
-
----->8----
->From f390ccbb31f06efee49b4469943c8d85d963bfb5 Mon Sep 17 00:00:00 2001
-From: Mark Rutland <mark.rutland@arm.com>
-Date: Tue, 10 Feb 2015 20:14:33 +0000
-Subject: [PATCH] genirq: allow mixed IRQF_NO_SUSPEND requests
-
-In some cases a physical IRQ line may be shared between devices from
-which we expect interrupts during suspend (e.g. timers) and those we do
-not (e.g. anything we cut the power to). Where a driver did not request
-the interrupt with IRQF_NO_SUSPEND, it's unlikely that it can handle
-being called during suspend, and it may bring down the system.
-
-This patch adds logic to automatically mark the irqactions for these
-potentially unsafe handlers as disabled during suspend, leaving actions
-with IRQF_NO_SUSPEND enabled. If an interrupt is raised on a shared line
-during suspend, only the handlers requested with IRQF_NO_SUSPEND will be
-called. The handlers requested without IRQF_NO_SUSPEND will be skipped
-as if they had immediately returned IRQF_NONE.
-
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
----
- include/linux/interrupt.h |  4 ++++
- kernel/irq/handle.c       | 13 +++++++++++-
- kernel/irq/pm.c           | 50 +++++++++++++++++++++++++++++++++++++++++++----
- 3 files changed, 62 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index d9b05b5..49dcb35 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -57,6 +57,9 @@
-  * IRQF_NO_THREAD - Interrupt cannot be threaded
-  * IRQF_EARLY_RESUME - Resume IRQ early during syscore instead of at device
-  *                resume time.
-+ * IRQF_NO_ACTION - This irqaction should not be triggered.
-+ *                  Used during suspend for !IRQF_NO_SUSPEND irqactions which
-+ *                  share lines with IRQF_NO_SUSPEND irqactions.
-  */
- #define IRQF_DISABLED		0x00000020
- #define IRQF_SHARED		0x00000080
-@@ -70,6 +73,7 @@
- #define IRQF_FORCE_RESUME	0x00008000
- #define IRQF_NO_THREAD		0x00010000
- #define IRQF_EARLY_RESUME	0x00020000
-+#define IRQF_NO_ACTION		0x00040000
- 
- #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
- 
-diff --git a/kernel/irq/handle.c b/kernel/irq/handle.c
-index 6354802..44c8662 100644
---- a/kernel/irq/handle.c
-+++ b/kernel/irq/handle.c
-@@ -130,6 +130,17 @@ void __irq_wake_thread(struct irq_desc *desc, struct irqaction *action)
- 	wake_up_process(action->thread);
- }
- 
-+static irqreturn_t __handle_irq_event_percpu(unsigned int irq, struct irqaction *action)
-+{
-+	/*
-+	 * During suspend we must not call potentially unsafe irq handlers.
-+	 * See suspend_suspendable_actions.
-+	 */
-+	if (unlikely(action->flags & IRQF_NO_ACTION))
-+		return IRQ_NONE;
-+	return action->handler(irq, action->dev_id);
-+}
-+
- irqreturn_t
- handle_irq_event_percpu(struct irq_desc *desc, struct irqaction *action)
- {
-@@ -140,7 +151,7 @@ handle_irq_event_percpu(struct irq_desc *desc, struct irqaction *action)
- 		irqreturn_t res;
- 
- 		trace_irq_handler_entry(irq, action);
--		res = action->handler(irq, action->dev_id);
-+		res = __handle_irq_event_percpu(irq, action);
- 		trace_irq_handler_exit(irq, action, res);
- 
- 		if (WARN_ONCE(!irqs_disabled(),"irq %u handler %pF enabled interrupts\n",
-diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
-index 3ca5325..9d8a71f 100644
---- a/kernel/irq/pm.c
-+++ b/kernel/irq/pm.c
-@@ -43,9 +43,6 @@ void irq_pm_install_action(struct irq_desc *desc, struct irqaction *action)
- 
- 	if (action->flags & IRQF_NO_SUSPEND)
- 		desc->no_suspend_depth++;
--
--	WARN_ON_ONCE(desc->no_suspend_depth &&
--		     desc->no_suspend_depth != desc->nr_actions);
- }
- 
- /*
-@@ -63,11 +60,54 @@ void irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action)
- 		desc->no_suspend_depth--;
- }
- 
-+/*
-+ * Physical IRQ lines may be shared between devices which may be expected to
-+ * raise interrupts during suspend (e.g. timers) and those which may not (e.g.
-+ * anything we cut the power to). If an action was requested without
-+ * IRQF_NO_SUSPEND, then the handler probably can't handle being called during
-+ * suspend, and may bring the system down.
-+ *
-+ * When going down for suspend, mark those potentially unsafe actions so they
-+ * won't be called by handle_irq_event_percpu, as if we'd actually disabled the
-+ * irq.
-+ */
-+static void suspend_suspendable_actions(struct irq_desc *desc)
-+{
-+	struct irqaction *action;
-+
-+	if (desc->nr_actions == desc->no_suspend_depth)
-+		return;
-+
-+	for (action = desc->action; action; action = action->next)
-+		if (!(action->flags & IRQF_NO_SUSPEND))
-+			action->flags |= IRQF_NO_ACTION;
-+}
-+
-+/*
-+ * Reenable irqactions which were disabled during suspend. This undoes
-+ * suspend_suspendable_actions.
-+ */
-+static void resume_suspendable_actions(struct irq_desc *desc)
-+{
-+	struct irqaction *action;
-+
-+	if (desc->nr_actions == desc->no_suspend_depth)
-+		return;
-+
-+	for (action = desc->action; action; action = action->next)
-+		action->flags &= ~IRQF_NO_ACTION;
-+}
-+
- static bool suspend_device_irq(struct irq_desc *desc, int irq)
- {
--	if (!desc->action || desc->no_suspend_depth)
-+	if (!desc->action)
- 		return false;
- 
-+	if (desc->no_suspend_depth) {
-+		suspend_suspendable_actions(desc);
-+		return false;
-+	}
-+
- 	if (irqd_is_wakeup_set(&desc->irq_data)) {
- 		irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
- 		/*
-@@ -135,6 +175,8 @@ static void resume_irq(struct irq_desc *desc, int irq)
- 	if (desc->istate & IRQS_SUSPENDED)
- 		goto resume;
- 
-+	resume_suspendable_actions(desc);
-+
- 	/* Force resume the interrupt? */
- 	if (!desc->force_resume_depth)
- 		return;
--- 
-1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
