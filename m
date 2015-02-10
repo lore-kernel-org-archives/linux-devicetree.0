@@ -1,71 +1,74 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [resend PATCH v3 4/4] usb: phy: add phy-hi6220-usb
-Date: Tue, 10 Feb 2015 22:53:23 +0800
-Message-ID: <54DA1B63.5070007@linaro.org>
-References: <1423559404-13058-1-git-send-email-zhangfei.gao@linaro.org> <1423559404-13058-5-git-send-email-zhangfei.gao@linaro.org> <20150210144807.GC16711@saruman.tx.rr.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v4 2/5] irqchip: add virtual demultiplexer implementation
+Date: Tue, 10 Feb 2015 16:00:13 +0100
+Message-ID: <20150210150013.GD7119@twins.programming.kicks-ass.net>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1422527620-8308-3-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150210144807.GC16711-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1422527620-8308-3-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 29, 2015 at 11:33:37AM +0100, Boris Brezillon wrote:
+> +#ifdef CONFIG_VIRT_IRQ_DEMUX_CHIP
+> +/**
+> + * struct irq_chip_virt_demux - Dumb demultiplexer irq chip data structure
 
+s/Dumb/Virtual/ ?
 
-On 02/10/2015 10:48 PM, Felipe Balbi wrote:
-> On Tue, Feb 10, 2015 at 05:10:04PM +0800, Zhangfei Gao wrote:
->> Add usb phy controller for hi6220 platform
->>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   drivers/usb/phy/Kconfig          |   9 ++
->>   drivers/usb/phy/Makefile         |   1 +
->>   drivers/usb/phy/phy-hi6220-usb.c | 306 +++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 316 insertions(+)
->>   create mode 100644 drivers/usb/phy/phy-hi6220-usb.c
->>
->> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
->> index c6d0c8e..405a3d0 100644
->> --- a/drivers/usb/phy/Kconfig
->> +++ b/drivers/usb/phy/Kconfig
->> @@ -173,6 +173,15 @@ config USB_MXS_PHY
->>
->>   	  MXS Phy is used by some of the i.MX SoCs, for example imx23/28/6x.
->>
->> +config USB_HI6220_PHY
->> +	tristate "hi6220 USB PHY support"
->> +	select USB_PHY
->> +	select MFD_SYSCON
->> +	help
->> +	  Enable this to support the HISILICON HI6220 USB PHY.
->> +
->> +	  To compile this driver as a module, choose M here.
->> +
->>   config USB_RCAR_PHY
->>   	tristate "Renesas R-Car USB PHY support"
->>   	depends on USB || USB_GADGET
->> diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
->> index 75f2bba..00172d3 100644
->> --- a/drivers/usb/phy/Makefile
->> +++ b/drivers/usb/phy/Makefile
->> @@ -18,6 +18,7 @@ obj-$(CONFIG_SAMSUNG_USBPHY)		+= phy-samsung-usb.o
->>   obj-$(CONFIG_TWL6030_USB)		+= phy-twl6030-usb.o
->>   obj-$(CONFIG_USB_EHCI_TEGRA)		+= phy-tegra-usb.o
->>   obj-$(CONFIG_USB_GPIO_VBUS)		+= phy-gpio-vbus-usb.o
->> +obj-$(CONFIG_USB_HI6220_PHY)		+= phy-hi6220-usb.o
->
-> new drivers only on drivers/phy/, sorry.
->
-OK, thanks for the info, I don't know this at all.
-So even usb phy should be put under drivers/phy/.
+> + * @domain:		irq domain pointer
+> + * @available:		Bitfield of valid irqs
+> + * @unmasked:		Bitfield containing irqs status
+> + * @flags:		irq_virt_demux_flags flags
+> + * @src_irq:		irq feeding the virt demux chip
+> + *
+> + * Note, that irq_chip_generic can have multiple irq_chip_type
+> + * implementations which can be associated to a particular irq line of
+> + * an irq_chip_generic instance. That allows to share and protect
+> + * state in an irq_chip_generic instance when we need to implement
+> + * different flow mechanisms (level/edge) for it.
 
-Will change that.
+This seems like a copy/paste from struct irq_chip_generic; it seems not
+relevant, seeing how irq_chip_virt_demux does not even have an
+irq_chip_type pointer list.
 
-Thanks Felipe
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also, with a demuxer like this, we're bound to whatever flow type its
+host is, no?
+
+> +# Dumb interrupt demuxer chip implementation
+
+s/Dumb/Virtual/ ?
+
+> +#ifdef CONFIG_VIRT_IRQ_DEMUX_CHIP
+> +/**
+> + *	handle_virt_demux_irq - Dumb demuxer irq handle function.
+
+idem
+
+> + *	@irq:	the interrupt number
+> + *	@desc:	the interrupt description structure for this irq
+> + *
+> + *	Dumb demux interrupts are sent from a demultiplexing interrupt handler
+
+idem
+
+> + *	which is not able to decide which child interrupt handler should be
+> + *	called.
+> + *
+> + *	Note: The caller is expected to handle the ack, clear, mask and
+> + *	unmask issues if necessary.
+> + */
+
+If we're calling multiple handlers, how can they all do this and not
+collide?
+
+Over all it looks good -- in as far as my (admittedly stale IRQ
+braincells) go.
+
+I'll go queue up these bits, if you could send me a delta patch
+addressing these 'minor' comment issues?
