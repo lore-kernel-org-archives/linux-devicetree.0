@@ -1,70 +1,98 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Tue, 10 Feb 2015 15:36:28 +0000
-Message-ID: <20150210153628.GF9432@leverpostej>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
- <1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH] genirq: fix virtual irq demuxer related comments
+Date: Tue, 10 Feb 2015 16:43:12 +0100
+Message-ID: <1423582992-8154-1-git-send-email-boris.brezillon@free-electrons.com>
+References: <20150210150013.GD7119@twins.programming.kicks-ass.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
-Content-Language: en-US
+In-Reply-To: <20150210150013.GD7119@twins.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Replace remaining 'Dumb' occurrences by 'Virtual'.
+Remove inappropriate notes in kerneldoc headers.
 
-On Thu, Jan 29, 2015 at 10:33:38AM +0000, Boris Brezillon wrote:
-> Add documentation for the virtual irq demuxer.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
->  .../bindings/interrupt-controller/dumb-demux.txt   | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
-> new file mode 100644
-> index 0000000..b9a7830
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
-> @@ -0,0 +1,41 @@
-> +* Virtual Interrupt Demultiplexer
-> +
-> +This virtual demultiplexer simply forward all incoming interrupts to its
-> +enabled/unmasked children.
-> +It is only intended to be used by hardware that do not provide a proper way
-> +to demultiplex a source interrupt, and thus have to wake all their children
-> +up so that they can possibly handle the interrupt (if needed).
-> +This can be seen as an alternative to shared interrupts when at least one
-> +of the interrupt children is a timer (and require the irq to stay enabled
-> +on suspend) while others are not. This will prevent calling irq handlers of
-> +non timer devices while they are suspended.
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+---
+ include/linux/irq.h          | 8 +-------
+ kernel/irq/Kconfig           | 2 +-
+ kernel/irq/chip.c            | 7 ++-----
+ kernel/irq/virt-demux-chip.c | 2 +-
+ 4 files changed, 5 insertions(+), 14 deletions(-)
 
-This sounds like a DT-workaround for a Linux implementation problem, and
-I don't think this the right way to solve your problem.
-
-Why does this have to be in DT at all? Why can we not fix the core to
-handle these details?
-
-I am very much not keen on this binding.
-
-> +
-> +Required properties:
-> +- compatible: Should be "virtual,irq-demux".
-> +- interrupt-controller: Identifies the node as an interrupt controller.
-> +- interrupts-extended or interrupt-parent and interrupts: Reference the source
-> +  interrupt connected to this dumb demuxer.
-> +- #interrupt-cells: The number of cells to define the interrupts (should be 1).
-> +  The only cell is the IRQ number.
-> +- irqs: u32 bitfield specifying the interrupts provided by the demuxer.
-
-Arbitrary limitation?
-
-Thanks,
-Mark.
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index b703093..192dd85 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -886,18 +886,12 @@ static inline u32 irq_reg_readl(struct irq_chip_generic *gc,
+ 
+ #ifdef CONFIG_VIRT_IRQ_DEMUX_CHIP
+ /**
+- * struct irq_chip_virt_demux - Dumb demultiplexer irq chip data structure
++ * struct irq_chip_virt_demux - Virtual demultiplexer irq chip data structure
+  * @domain:		irq domain pointer
+  * @available:		Bitfield of valid irqs
+  * @unmasked:		Bitfield containing irqs status
+  * @flags:		irq_virt_demux_flags flags
+  * @src_irq:		irq feeding the virt demux chip
+- *
+- * Note, that irq_chip_generic can have multiple irq_chip_type
+- * implementations which can be associated to a particular irq line of
+- * an irq_chip_generic instance. That allows to share and protect
+- * state in an irq_chip_generic instance when we need to implement
+- * different flow mechanisms (level/edge) for it.
+  */
+ struct irq_chip_virt_demux {
+ 	struct irq_domain *domain;
+diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
+index 506644f..f608fbe 100644
+--- a/kernel/irq/Kconfig
++++ b/kernel/irq/Kconfig
+@@ -51,7 +51,7 @@ config GENERIC_IRQ_CHIP
+        bool
+        select IRQ_DOMAIN
+ 
+-# Dumb interrupt demuxer chip implementation
++# Virtual interrupt demuxer chip implementation
+ config VIRT_IRQ_DEMUX_CHIP
+ 	bool
+ 	select IRQ_DOMAIN
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 38abf8d..235595f 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -407,16 +407,13 @@ EXPORT_SYMBOL_GPL(handle_simple_irq);
+ 
+ #ifdef CONFIG_VIRT_IRQ_DEMUX_CHIP
+ /**
+- *	handle_virt_demux_irq - Dumb demuxer irq handle function.
++ *	handle_virt_demux_irq - Virtual demuxer irq handle function.
+  *	@irq:	the interrupt number
+  *	@desc:	the interrupt description structure for this irq
+  *
+- *	Dumb demux interrupts are sent from a demultiplexing interrupt handler
++ *	Virtual demux interrupts are sent from a demultiplexing interrupt handler
+  *	which is not able to decide which child interrupt handler should be
+  *	called.
+- *
+- *	Note: The caller is expected to handle the ack, clear, mask and
+- *	unmask issues if necessary.
+  */
+ irqreturn_t
+ handle_virt_demux_irq(unsigned int irq, struct irq_desc *desc)
+diff --git a/kernel/irq/virt-demux-chip.c b/kernel/irq/virt-demux-chip.c
+index 31f35f0..b705d54 100644
+--- a/kernel/irq/virt-demux-chip.c
++++ b/kernel/irq/virt-demux-chip.c
+@@ -83,7 +83,7 @@ struct irq_domain_ops irq_virt_demux_domain_ops = {
+ EXPORT_SYMBOL_GPL(irq_virt_demux_domain_ops);
+ 
+ /**
+- * irq_virt_demux_handler - Dumb demux flow handler
++ * irq_virt_demux_handler - Virtual demux flow handler
+  * @irq:		Virtual irq number
+  * @irq_desc:		irq descriptor
+  */
+-- 
+1.9.1
