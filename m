@@ -1,114 +1,34 @@
-From: RICARD Christophe <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 0/4] st33zp24 new architecture proposal and st33zp24
- spi driver
-Date: Tue, 10 Feb 2015 21:10:24 +0100
-Message-ID: <54DA65B0.3010809@gmail.com>
-References: <1422826611-22942-1-git-send-email-christophe-h.ricard@st.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [Patch v3 0/6] GSBI CRCI Autoconfiguration Support
+Date: Tue, 10 Feb 2015 14:25:43 -0600
+Message-ID: <20150210202543.GB21808@qualcomm.com>
+References: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
+ <92B272B3-7F22-426E-8BC4-B6A66C001836@codeaurora.org>
+ <20150210185936.GA21808@qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422826611-22942-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: peterhuewe-Mmb7MZpHnFY@public.gmane.org
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150210185936.GA21808@qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+<snip>
 
-Any news on this patchset ?
+> > 
+> > Series looks good, do we need a qcom_defconfig update to enable anything new for this?
+> > 
+> > - k
+> 
+> I'll send a followup to enable qcom_defconfig.
+> 
 
-Best Regards
-Christophe
-Le 01/02/2015 22:36, Christophe Ricard a =E9crit :
-> Hi,
->
-> The following patchset:
-> - propose a new architecture allowing to share a core st33zp24 data m=
-anagement
-> layer with different phy (i2c & spi). For st33zp24 both phy have a pr=
-oprietary transport
-> protocol. Both are relying on the TCG TIS protocol. At the end, it si=
-mplifies the maintenance.
-> - Add an spi phy allowing to support st33zp24 using with an SPI bus.
->
-> The complete solution got tested in polling and interrupt mode succes=
-sfully with i2c & spi phy.
-> This patchset applies on top of Peter's tree https://github.com/Peter=
-Huewe/linux-tpmdd.git for-james branch
-> on top of:
-> d4989d9f693b9502f9288da5db279c2f8c2e50be tpm/tpm_tis: Add missing ifd=
-ef CONFIG_ACPI for pnp_acpi_device
->
-> I confirm also Jarkko Sakkinen's changes are working with this produc=
-t with both phy's.
->
-> - v2 takes into account feedbacks from Jason Gunthorpe.
-> - v3 is reduced to 4 patches as 6 out of 10 got accepted for 3.20. Al=
-so compare to v2:
->          * Fix build issue with patch v2 04/10 "Replace access to io_=
-lpcpd from struct st33zp24_platform_data to tpm_stm_dev"
->          * Fix link issue with patch v2 08/10 "Split tpm_i2c_tpm_st33=
- in 2 layers (core + phy)" when building as a module.
->          The symbols wasn't exported in st33zp24.c.
->          * Add missing MODULE_LICENSE in patch v2 09/10 "Add st33zp24=
- spi phy"
->          * Fix node example in dts spi documentation in patch v2 10/1=
-0 "Add dts documentation for st33zp24 spi phy"
->          * Fix typo on Jason Gunthorpe first name. Sorry for that :(.=
-=2E.
->          * Change contact email address as tpmsupport-qxv4g6HH51o@public.gmane.org is no mo=
-re valid
-> - v4 adds missing module_license in st33zp24
-> - v5 includes as best as possible PeterHuewe comments.
-> - v6 is more explicit about the spi buffer size and remove their buff=
-er (tx_buf/rx_buf) dynamic allocation
-> - v7 fix scripts/checkpatch.pl error
->
-> Best Regards
-> Christophe
->
-> Christophe Ricard (4):
->    tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct
->      st33zp24_platform_data to tpm_stm_dev
->    tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in 2 layers (core + p=
-hy)
->    tpm/st33zp24/spi: Add st33zp24 spi phy
->    tpm/st33zp24/dts/st33zp24-spi: Add dts documentation for st33zp24 =
-spi
->      phy
->
->   .../bindings/security/tpm/st33zp24-spi.txt         |  34 +
->   drivers/char/tpm/Kconfig                           |  11 +-
->   drivers/char/tpm/Makefile                          |   2 +-
->   drivers/char/tpm/st33zp24/Kconfig                  |  30 +
->   drivers/char/tpm/st33zp24/Makefile                 |  12 +
->   drivers/char/tpm/st33zp24/i2c.c                    | 276 +++++++
->   drivers/char/tpm/st33zp24/spi.c                    | 392 +++++++++
->   drivers/char/tpm/st33zp24/st33zp24.c               | 688 ++++++++++=
-++++++
->   drivers/char/tpm/st33zp24/st33zp24.h               |  37 +
->   drivers/char/tpm/tpm_i2c_stm_st33.c                | 911 ----------=
------------
->   include/linux/platform_data/st33zp24.h             |  28 +
->   include/linux/platform_data/tpm_stm_st33.h         |  39 -
->   12 files changed, 1499 insertions(+), 961 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/security/tpm/s=
-t33zp24-spi.txt
->   create mode 100644 drivers/char/tpm/st33zp24/Kconfig
->   create mode 100644 drivers/char/tpm/st33zp24/Makefile
->   create mode 100644 drivers/char/tpm/st33zp24/i2c.c
->   create mode 100644 drivers/char/tpm/st33zp24/spi.c
->   create mode 100644 drivers/char/tpm/st33zp24/st33zp24.c
->   create mode 100644 drivers/char/tpm/st33zp24/st33zp24.h
->   delete mode 100644 drivers/char/tpm/tpm_i2c_stm_st33.c
->   create mode 100644 include/linux/platform_data/st33zp24.h
->   delete mode 100644 include/linux/platform_data/tpm_stm_st33.h
->
+Correction:
+Since I use a 'selects MFD_SYSCON' in the Kconfig we shouldn't need anything.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
