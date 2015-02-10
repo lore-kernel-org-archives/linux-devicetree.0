@@ -1,35 +1,70 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [RESEND PATCH 4/6] gpio: arizona: Add support for WM8280/WM8281
-Date: Tue, 10 Feb 2015 11:18:28 +0000
-Message-ID: <1423567110-4414-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1423567110-4414-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423567110-4414-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org, linux.walleij@linaro.org, linux-kernel@vger.kernel.org, cw00.choi@samsung.com, broonie@kernel.org, rf@opensource.wolfsonmicro.com
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [resend PATCH v3 2/4] Documentation: dt-bindings: add dt binding
+ info for hi6220
+Date: Tue, 10 Feb 2015 14:37:01 +0300
+Message-ID: <54D9ED5D.2000001@cogentembedded.com>
+References: <1423559404-13058-1-git-send-email-zhangfei.gao@linaro.org> <1423559404-13058-3-git-send-email-zhangfei.gao@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423559404-13058-3-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Hello.
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- drivers/gpio/gpio-arizona.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+On 2/10/2015 12:10 PM, Zhangfei Gao wrote:
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index fe369f5..9665d0a 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -116,6 +116,7 @@ static int arizona_gpio_probe(struct platform_device *pdev)
- 	switch (arizona->type) {
- 	case WM5102:
- 	case WM5110:
-+	case WM8280:
- 	case WM8997:
- 		arizona_gpio->gpio_chip.ngpio = 5;
- 		break;
--- 
-1.7.2.5
+> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   .../devicetree/bindings/usb/hi6220-usb.txt         | 49 ++++++++++++++++++++++
+>   1 file changed, 49 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/hi6220-usb.txt
+
+> diff --git a/Documentation/devicetree/bindings/usb/hi6220-usb.txt b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
+> new file mode 100644
+> index 0000000..b8278de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
+> @@ -0,0 +1,49 @@
+> +Hisilicon hi6220 SoC USB controller
+> +-----------------------------
+[...]
+> +PHY:
+> +-----
+> +
+> +Required properties:
+> +- compatible: "hisilicon,hi6220-usb-phy"
+> +- vcc-supply: phandle to the regulator that provides power to the PHY.
+> +- clocks: phandle and clock specifier of the PHY clock.
+> +- hisilicon,peripheral-syscon: phandle of syscon used to control peripheral.
+> +- hisilicon,gpio-vbus: gpio of detecting vbus.
+> +- hisilicon,gpio-id: gpio of detecting id.
+
+    Actually, GPIO bindings say that GPIO properties should be named 
+"[<name>-]gpios".
+
+> +
+> +Example:
+> +
+> +	peripheral_ctrl: syscon@f7030000 {
+> +	        compatible = "syscon";
+> +	        reg = <0x0 0xf7030000 0x0 0x1000>;
+> +	};
+> +
+> +	usb2_phy: usbphy {
+
+    Please name it "usb-phy" as it better resembles "ethernet-phy" 
+standardized by ePAPR.
+
+[...]
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
