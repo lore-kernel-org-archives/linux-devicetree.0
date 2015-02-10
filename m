@@ -1,127 +1,29 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v8 2/4] pinctrl: cygnus: add gpio/pinconf driver
-Date: Tue, 10 Feb 2015 13:47:37 -0800
-Message-ID: <54DA7C79.2010606@broadcom.com>
-References: <rjui@broadcom.com> <1423070463-24483-1-git-send-email-rjui@broadcom.com> <1423070463-24483-3-git-send-email-rjui@broadcom.com> <20150209191951.GA15709@dtor-ws>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH 0/3] Add initial DT support for Qualcomm SPMI PMIC devices
+Date: Tue, 10 Feb 2015 15:58:57 -0600
+Message-ID: <20150210215857.GA19819@qualcomm.com>
+References: <1422965880-11047-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150209191951.GA15709@dtor-ws>
+Content-Disposition: inline
+In-Reply-To: <1422965880-11047-1-git-send-email-iivanov@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dtor@chromium.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2/9/2015 11:20 AM, Dmitry Torokhov wrote:
-> Hi Ray,
-> 
-> On Wed, Feb 04, 2015 at 09:21:01AM -0800, Ray Jui wrote:
->> +static int cygnus_gpio_pinmux_add_range(struct cygnus_gpio *chip)
->> +{
->> +	struct device_node *node = chip->dev->of_node;
->> +	struct device_node *pinmux_node;
->> +	struct platform_device *pinmux_pdev;
->> +	struct gpio_chip *gc = &chip->gc;
->> +	int i, ret;
->> +
->> +	/* parse DT to find the phandle to the pinmux controller */
->> +	pinmux_node = of_parse_phandle(node, "pinmux", 0);
->> +	if (!pinmux_node)
->> +		return -ENODEV;
->> +
->> +	pinmux_pdev = of_find_device_by_node(pinmux_node);
->> +	if (!pinmux_pdev) {
->> +		dev_err(chip->dev, "failed to get pinmux device\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* now need to create the mapping between local GPIO and PINMUX pins */
->> +	for (i = 0; i < ARRAY_SIZE(cygnus_gpio_pintable); i++) {
->> +		ret = gpiochip_add_pin_range(gc, dev_name(&pinmux_pdev->dev),
->> +					     cygnus_gpio_pintable[i].offset,
->> +					     cygnus_gpio_pintable[i].pin_base,
->> +					     cygnus_gpio_pintable[i].num_pins);
->> +		if (ret) {
->> +			dev_err(chip->dev, "unable to add GPIO pin range\n");
->> +			goto err_put_device;
->> +		}
->> +	}
->> +
->> +	chip->pinmux_is_supported = true;
->> +
->> +	/* no need for pinmux_pdev device reference anymore */
->> +	put_device(&pinmux_pdev->dev);
-> 
-> Sorry I did not notice it before, but of_parse_phandle() takes reference
-> to the returned device node, so you need to "put" it here and in error
-> path as well. Actually you can do:
-> 
-> 	int ret = 0;
-> 
-> 	pinmux_node = of_parse_phandle(node, "pinmux", 0);
-> 	if (!pinmux_node)
-> 		return -ENODEV;
-> 
-> 	pinmux_pdev = of_find_device_by_node(pinmux_node);
-> 	/* We do not longer need pinmux node */
-> 	of_node_put(pinmux_node);
-> 
-> 	if (!pinmux_dev)
-> 		....
-> 
-> 	for (..) {
-> 		...
-> 		if (ret) {
-> 			dev_err(...);
-> 			break;
-> 		}
-> 	}
-> 
-> 	chip->pinmux_is_supported = (ret == 0);
-> 	put_device(..);
-> 	return ret;
-> }
-> 
-> This way you free resources in the same path.
+On Tue, Feb 03, 2015 at 02:17:57PM +0200, Ivan T. Ivanov wrote:
+> Following set of patches add initial DT support for PMIC devices
+> found on recent Quqalcomm chipsets. Details for SPMI bus and PMIC arbiter
+> could be found here [1].
 > 
 
-Thanks. I'll make the change.
+Looks fine.
 
-> ...
-> 
->> +
->> +static struct platform_driver cygnus_gpio_driver = {
->> +	.driver = {
->> +		.name = "cygnus-gpio",
->> +		.of_match_table = cygnus_gpio_of_match,
->> +		.suppress_bind_attrs = true,
->> +	},
->> +	.probe = cygnus_gpio_probe,
->> +};
->> +
->> +static int __init cygnus_gpio_init(void)
->> +{
->> +	return platform_driver_probe(&cygnus_gpio_driver, cygnus_gpio_probe);
-> 
-> When I asked you to add ".suppress_bind_attrs = true" I missed the fact
-> that you were using platform_driver_probe() which already does this
-> internally. However platform_driver_probe() can't handle deferred
-> probing, which may or may not be OK. Is there a chance that any of the
-> resources needed by the driver return -EPROBE_DEFER? If not then it is
-> safe to continue using platform_driver_probe() and you can drop
-> suppress_bind_attrs assignment, otherwise it may be better to switch to
-> platform_driver_register().
-> 
-> Thanks.
-> 
+Reviewed-by: Andy Gross <agross@codeaurora.org>
 
-No I do not expect any resource that this driver depends on to return
--EPROBE_DEFER. The IOMUX driver that this driver depends on should be
-initialized before this driver.
-
-I'll drop .suppress_bind_attrs then. Thanks.
-
-Ray
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
