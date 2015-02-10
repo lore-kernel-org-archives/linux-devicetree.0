@@ -1,92 +1,31 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Tue, 10 Feb 2015 17:20:05 +0100
-Message-ID: <20150210172005.4263c3a4@bbrezillon>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
-	<20150210153628.GF9432@leverpostej>
-	<20150210165201.634bc04b@bbrezillon>
-	<20150210161600.GH9432@leverpostej>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v9 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
+Date: Tue, 10 Feb 2015 09:10:23 -0800
+Message-ID: <54DA3B7F.8040705@broadcom.com>
+References: <rjui@broadcom.com> <1423373126-30024-1-git-send-email-rjui@broadcom.com> <1423373126-30024-3-git-send-email-rjui@broadcom.com> <20150209121036.GB2491@katana> <54D995DA.7040201@broadcom.com> <20150210083339.GA999@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150210161600.GH9432@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150210083339.GA999@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 Feb 2015 16:16:00 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
 
-> On Tue, Feb 10, 2015 at 03:52:01PM +0000, Boris Brezillon wrote:
-> > Hi Mark,
-> > 
-> > On Tue, 10 Feb 2015 15:36:28 +0000
-> > Mark Rutland <mark.rutland@arm.com> wrote:
-> > 
-> > > Hi Boris,
-> > > 
-> > > On Thu, Jan 29, 2015 at 10:33:38AM +0000, Boris Brezillon wrote:
-> > > > Add documentation for the virtual irq demuxer.
-> > > > 
-> > > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > > > Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> > > > ---
-> > > >  .../bindings/interrupt-controller/dumb-demux.txt   | 41 ++++++++++++++++++++++
-> > > >  1 file changed, 41 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
-> > > > new file mode 100644
-> > > > index 0000000..b9a7830
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
-> > > > @@ -0,0 +1,41 @@
-> > > > +* Virtual Interrupt Demultiplexer
-> > > > +
-> > > > +This virtual demultiplexer simply forward all incoming interrupts to its
-> > > > +enabled/unmasked children.
-> > > > +It is only intended to be used by hardware that do not provide a proper way
-> > > > +to demultiplex a source interrupt, and thus have to wake all their children
-> > > > +up so that they can possibly handle the interrupt (if needed).
-> > > > +This can be seen as an alternative to shared interrupts when at least one
-> > > > +of the interrupt children is a timer (and require the irq to stay enabled
-> > > > +on suspend) while others are not. This will prevent calling irq handlers of
-> > > > +non timer devices while they are suspended.
-> > > 
-> > > This sounds like a DT-workaround for a Linux implementation problem, and
-> > > I don't think this the right way to solve your problem.
-> > 
-> > I understand your concern, but why are you answering while I asked for
-> > DT maintainers reviews for several days (if not several weeks).
-> 
-> I am sorry that I did not spot those, and I am very sorry that this
-> means I am only now able to air my concerns.
-> 
-> > > Why does this have to be in DT at all? Why can we not fix the core to
-> > > handle these details?
-> > 
-> > We already discussed that with Rob and Thomas, and hiding such a
-> > demuxer chip is not an easy task.
-> > I'm open to any suggestion to do that, though I'd like you (I mean DT
-> > guys) to provide a working implementation (or at least a viable concept)
-> > that would silently demultiplex an irq.
-> 
-> Is it truly necessary to drop a emux in the middle?
-> 
-> As far as I can see, all that we're attempting to do here is hide the
-> IRQF_NO_SUSPEND mismatch from the core IRQ code, though I've only just
-> started digging and haven't yet figured out where/why the core code
-> cares. Any hints?
 
-You should have a look at this thread [1] ;-)
+On 2/10/2015 12:33 AM, Wolfram Sang wrote:
+> 
+>> Thanks, Wolfram. I think I'm missing something here and would like to
+>> get it clarified, so I don't make the same mistake again in the future:
+>> I thought I've already sent these patches as a new thread, i.e., [PATCH
+>> v9 ...], isn't it?
+> 
+> Yes, but "In-Reply-To" was set and so my MUAs (mutt and Thunderbird)
+> threaded them to your first submission. Most people I know prefer to
+> have this not threaded.
+> 
+Okay I got it now. Thanks.
 
-[1]https://lkml.org/lkml/2014/12/15/552
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Ray
