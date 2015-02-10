@@ -1,104 +1,108 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v4 2/5] irqchip: add virtual demultiplexer
- implementation
-Date: Tue, 10 Feb 2015 16:20:17 +0100
-Message-ID: <20150210162017.0882cb77@bbrezillon>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1422527620-8308-3-git-send-email-boris.brezillon@free-electrons.com>
-	<20150210150013.GD7119@twins.programming.kicks-ass.net>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending command'
+Date: Tue, 10 Feb 2015 20:52:47 +0530
+Message-ID: <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
+ <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com> <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150210150013.GD7119@twins.programming.kicks-ass.net>
+In-Reply-To: <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Addy Ke <addy.ke@rock-chips.com>
+Cc: robh+dt <robh+dt@kernel.org>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, dinguyen@altera.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Douglas Anderson <dianders@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, amstan@chromium.org, djkurtz@chromium.org, huangtao@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Peter,
+Hi Addy,
 
-On Tue, 10 Feb 2015 16:00:13 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Feb 9, 2015 at 12:55 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
+> Because of some uncertain factors, such as worse card or worse hardware,
+> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+> will be in busy state. This should not happend when mmc controller
+> send command to update card clocks. If this happends, mci_send_cmd will
+> be failed and we will get 'Timeout sending command', and then system will
+> be blocked. To avoid this, we need reset mmc controller.
+>
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+> ---
+>  drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 4d2e3c2..b0b57e3 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -100,6 +100,7 @@ struct idmac_desc {
+>  };
+>  #endif /* CONFIG_MMC_DW_IDMAC */
+>
+> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>  static bool dw_mci_reset(struct dw_mci *host);
+>  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>
+> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>                 cmd, arg, cmd_status);
+>  }
+>
+> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+> +{
+> +       struct dw_mci *host = slot->host;
+> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
+> +
+Why 500 msec?
 
-> On Thu, Jan 29, 2015 at 11:33:37AM +0100, Boris Brezillon wrote:
-> > +#ifdef CONFIG_VIRT_IRQ_DEMUX_CHIP
-> > +/**
-> > + * struct irq_chip_virt_demux - Dumb demultiplexer irq chip data structure
-> 
-> s/Dumb/Virtual/ ?
-> 
-> > + * @domain:		irq domain pointer
-> > + * @available:		Bitfield of valid irqs
-> > + * @unmasked:		Bitfield containing irqs status
-> > + * @flags:		irq_virt_demux_flags flags
-> > + * @src_irq:		irq feeding the virt demux chip
-> > + *
-> > + * Note, that irq_chip_generic can have multiple irq_chip_type
-> > + * implementations which can be associated to a particular irq line of
-> > + * an irq_chip_generic instance. That allows to share and protect
-> > + * state in an irq_chip_generic instance when we need to implement
-> > + * different flow mechanisms (level/edge) for it.
-> 
-> This seems like a copy/paste from struct irq_chip_generic; it seems not
-> relevant, seeing how irq_chip_virt_demux does not even have an
-> irq_chip_type pointer list.
-> 
-> Also, with a demuxer like this, we're bound to whatever flow type its
-> host is, no?
+> +       do {
+> +               if (!dw_mci_card_busy(slot->mmc))
+> +                       return;
+> +               cpu_relax();
+> +       } while (time_before(jiffies, timeout));
+> +
+> +       dev_err(host->dev, "Data busy (status %#x)\n",
+> +               mci_readl(slot->host, STATUS));
+> +
+> +       /*
+> +        * Data busy, this should not happend when mmc controller send command
+> +        * to update card clocks in non-volt-switch state. If it happends, we
+> +        * should reset controller to avoid getting "Timeout sending command".
+> +        */
+> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+> +
+Why you need to reset all blocks? may be CTRL_RESET is good enough here.
 
-Absolutely, I'll fix the comment by removing those lines.
+> +       /* Fail to reset controller or still data busy, WARN_ON! */
+> +       WARN_ON(dw_mci_card_busy(slot->mmc));
+> +}
+> +
+>  static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>  {
+>         struct dw_mci *host = slot->host;
+> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>         /* We must continue to set bit 28 in CMD until the change is complete */
+>         if (host->state == STATE_WAITING_CMD11_DONE)
+>                 sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+> +       else
+> +               dw_mci_wait_busy(slot);
+>
+hmm...I would suggest you to call dw_mci_wait_busy() from inside
+mci_send_cmd(), seems like dw_mmc hangs while sending update clock cmd
+in multiple cases.see [1]
 
-> 
-> > +# Dumb interrupt demuxer chip implementation
-> 
-> s/Dumb/Virtual/ ?
+[1]: http://permalink.gmane.org/gmane.linux.kernel.mmc/31140
 
-Yep, I'll fix that one too.
+>         if (!clock) {
+>                 mci_writel(host, CLKENA, 0);
+> --
+> 1.8.3.2
+>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> 
-> > +#ifdef CONFIG_VIRT_IRQ_DEMUX_CHIP
-> > +/**
-> > + *	handle_virt_demux_irq - Dumb demuxer irq handle function.
-> 
-> idem
-> 
-> > + *	@irq:	the interrupt number
-> > + *	@desc:	the interrupt description structure for this irq
-> > + *
-> > + *	Dumb demux interrupts are sent from a demultiplexing interrupt handler
-> 
-> idem
-> 
-> > + *	which is not able to decide which child interrupt handler should be
-> > + *	called.
-> > + *
-> > + *	Note: The caller is expected to handle the ack, clear, mask and
-> > + *	unmask issues if necessary.
-> > + */
-> 
-> If we're calling multiple handlers, how can they all do this and not
-> collide?
 
-It's the same problem as you noted above: a copy/paste that should have
-been reworded.
-I'll remove those lines too.
-
-> 
-> Over all it looks good -- in as far as my (admittedly stale IRQ
-> braincells) go.
-> 
-> I'll go queue up these bits, if you could send me a delta patch
-> addressing these 'minor' comment issues?
-
-Thanks, I'll send you a patch addressing your comments (it would be
-great if you could squash it with this patch).
-
-Regards,
-
-Boris
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Regards,
+Alim
