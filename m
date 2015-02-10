@@ -1,59 +1,46 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH v2 2/2] ARM: at91: dt: at91sam9n12ek: enable udp
-Date: Tue, 10 Feb 2015 09:55:35 +0800
-Message-ID: <1423533335-25135-3-git-send-email-voice.shen@atmel.com>
-References: <1423533335-25135-1-git-send-email-voice.shen@atmel.com>
+From: yoshihiro shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 0/2] ARM: shmobile: r8a7790: add for USB-DMAC
+Date: Tue, 10 Feb 2015 02:11:22 +0000
+Message-ID: <HKNPR06MB322BD375AA62B56D905EF3AD8240@HKNPR06MB322.apcprd06.prod.outlook.com>
+References: <1423470279-6340-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <HKNPR06MB3220948E3FFE862FA05A180D8270@HKNPR06MB322.apcprd06.prod.outlook.com>
+ <20150210001221.GA32167@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423533335-25135-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com, nicolas.ferre@atmel.com
-Cc: alexandre.belloni@free-electrons.com, sylvain.rochet@finsecur.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150210001221.GA32167-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Language: ja-JP
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable usb device port on at91sam9n12ek board.
+Hi Simon-san,
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
----
+> 
+> On Mon, Feb 09, 2015 at 08:41:18AM +0000, yoshihiro shimoda wrote:
+> > > Subject: [PATCH 0/2] ARM: shmobile: r8a7790: add for USB-DMAC
+> >
+> > Oops, I mistook this subject of cover-letter.
+> > However, actual patches are correct.
+> 
+> Thanks,
+> 
+> I think it would be best if you resubmitted this series, which is for the
+> r8a7791, and the other similar series for the r8a7790 once the relevant
+> driver changes have been accepted by their subsystem maintainer.
 
-Changes in v2:
-  - Add pinctrl for usb1 vbus sense.
+Thank you for the reply. I got it.
 
- arch/arm/boot/dts/at91sam9n12ek.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Best regards,
+Yoshihiro Shimoda
 
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index 9575c0d..6123109 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -108,6 +108,13 @@
- 							<AT91_PIOB 10 AT91_PERIPH_B AT91_PINCTRL_NONE>;
- 					};
- 				};
-+
-+				usb1 {
-+					pinctrl_usb1_vbus_sense: usb1_vbus_sense {
-+						atmel,pins =
-+							<AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;	/* PB16 gpio usb vbus sense, no pull up and deglitch */
-+					};
-+				};
- 			};
- 
- 			spi0: spi@f0000000 {
-@@ -120,6 +127,13 @@
- 				};
- 			};
- 
-+			usb1: gadget@f803c000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_usb1_vbus_sense>;
-+				atmel,vbus-gpio = <&pioB 16 GPIO_ACTIVE_HIGH>;
-+				status = "okay";
-+			};
-+
- 			watchdog@fffffe40 {
- 				status = "okay";
- 			};
--- 
-2.3.0.rc0
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
