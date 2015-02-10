@@ -1,121 +1,70 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/3] arm64: dts: Add dts files for Hisilicon Hi6220 SoC
-Date: Tue, 10 Feb 2015 15:27:18 +0000
-Message-ID: <20150210152718.GE9432@leverpostej>
-References: <1423128277-10297-1-git-send-email-bintian.wang@huawei.com>
- <1423128277-10297-4-git-send-email-bintian.wang@huawei.com>
- <20150205193017.GF20735@leverpostej>
- <CAAS=xmgsuY=c8-n_pDiZjLe2u+SPX7msRje7h0sNkRtT3HLfQA@mail.gmail.com>
- <20150206104420.GB9921@leverpostej>
- <CAAS=xmhcfeQjfyizJa38k+08pbY5WFOZH0a1wEx+gwqgVe0MXw@mail.gmail.com>
- <20150210133734.GC9432@leverpostej>
- <CAAS=xmgvQLSOXGHmDhFKKV+UGLGeZXf2dpOYWzALYTRsYp9D7g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Tue, 10 Feb 2015 15:36:28 +0000
+Message-ID: <20150210153628.GF9432@leverpostej>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAAS=xmgvQLSOXGHmDhFKKV+UGLGeZXf2dpOYWzALYTRsYp9D7g@mail.gmail.com>
+In-Reply-To: <1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brent Wang <wangbintian@gmail.com>
-Cc: Bintian Wang <bintian.wang@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "khilman@linaro.org" <khilman@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>"olof@lixom.net" <o>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> >> >> > Are we certain of the split between components the PSCI implementation
-> >> >> > must touch and those the kernel must touch?
-> >> >> >
-> >> >> >> Also add dts file to support HiKey development board which
-> >> >> >> based on Hi6220 SoC and document the devicetree bindings.
-> >> >> >>
-> >> >> >> These dts files will be changed later and more nodes will be
-> >> >> >> added to describe other devices.
-> >> >> >
-> >> >> > How is this going to be changed other than the addition of nodes?
-> >> >> >
-> >> >> > Will this DTB continue to work in future? Or do you intend to make
-> >> >> > changes that will break support?
-> >> >> My original idea is: use spin-table for SMP now, when firmware is OK to
-> >> >> support PSCI, we submit another patch to replace the spin-table with PSCI.
-> >> >
-> >> > For any users who have not updated their FW, this will break booting.
-> >> >
-> >> > This is why I suggest having hte bootloader/FW fill this in as it should
-> >> > know what enable-method the FW supports.
-> >> >
-> >> >> If DTB should continue to work in the future, we really need to remove
-> >> >> the spin-table
-> >> >> from current dts file, how about just enable one core now?
-> >> >>
-> >> >> Which one do you favor or any other suggestion?
-> >> >
-> >> > If spin-table is just for testing while you await PSCI, drop spin-table
-> >> > from the dts for now.
-> >> So, just booting one core may be the right choice now, right?
-> >
-> > Without an enable-method for secondary CPUs, that will be all that's
-> > possible. If your FW/bootlaoder injects the appropriate enable-method,
-> > then you could gain spin-table based SMP bringup while awaiting PSCI,
-> > without there being a DTB compatibility issue.
-> For DTB compatibility issue, how about just describe one core in dts
-> file? when PSCI
-> is OK, we can add the CPU topology to the dts file again.
+Hi Boris,
 
-Given that we won't boot secondary CPUs without an enable-method, we
-could leave them in, but in a currently-unusable state. That would allow
-a bootloader to patch in the relevant properties to boot them.
+On Thu, Jan 29, 2015 at 10:33:38AM +0000, Boris Brezillon wrote:
+> Add documentation for the virtual irq demuxer.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> ---
+>  .../bindings/interrupt-controller/dumb-demux.txt   | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+> new file mode 100644
+> index 0000000..b9a7830
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+> @@ -0,0 +1,41 @@
+> +* Virtual Interrupt Demultiplexer
+> +
+> +This virtual demultiplexer simply forward all incoming interrupts to its
+> +enabled/unmasked children.
+> +It is only intended to be used by hardware that do not provide a proper way
+> +to demultiplex a source interrupt, and thus have to wake all their children
+> +up so that they can possibly handle the interrupt (if needed).
+> +This can be seen as an alternative to shared interrupts when at least one
+> +of the interrupt children is a timer (and require the irq to stay enabled
+> +on suspend) while others are not. This will prevent calling irq handlers of
+> +non timer devices while they are suspended.
 
-If you add the nodes later with PSCI properties, users with existing
-firmware will expect their board to boot. So I'd recommendd that the
-bootloader patches that in, or that the firmware is ready prior to this
-being merged. I suspect that the former is more likely to be possible.
+This sounds like a DT-workaround for a Linux implementation problem, and
+I don't think this the right way to solve your problem.
 
-> > [...]
-> >
-> >> >> >> +             pm_ctrl: pm_ctrl {
-> >> >> >> +                     compatible = "hisilicon,pmctrl", "syscon";
-> >> >> >> +                     #address-cells = <1>;
-> >> >> >> +                     #size-cells = <1>;
-> >> >> >> +                     reg = <0x0 0xf7032000 0x0 0x1000>;
-> >> >> >> +                     ranges = <0 0x0 0xf7032000 0x1000>;
-> >> >> >> +
-> >> >> >> +                     clock_power: clock3@0 {
-> >> >> >> +                             compatible = "hisilicon,hi6220-clock-power";
-> >> >> >> +                             reg = <0 0x1000>;
-> >> >> >> +                             #clock-cells = <1>;
-> >> >> >> +                     };
-> >> >> >> +             };
-> >> >> >
-> >> >> > I really doesn't see the point in having a sub-device that covers the
-> >> >> > entirely of the register space of the containing node, and that being
-> >> >> > the case I am extremely concerned that the containers are marked as
-> >> >> > syscon compatible.
-> >> >> The SoC clocks are designed and placed under different system controllers,
-> >> >> so I define corresponding nodes under different controllers for clock operation.
-> >> >
-> >> > What I'm concerned wit hhere is that the pm_ctrl node and the clock3@0
-> >> > sub-node have the _exact_ same register space.
-> >> >
-> >> > Given this should mean that the clock3@0 node owns that register space,
-> >> > having the container node export this as syscon does not make sense. And
-> >> > the split between pm_ctrl and clock3@) doesn't seem to make sense given
-> >> > they cover the same space.
-> >> I understand your worry and will find the max offset of those clocks
-> >> under this controller.
-> >>
-> >> >
-> >> > As I asked before, why is pm_ctrl marked as a syscon, and what's the
-> >> > point of the separate sub-node?
-> >> There is no big difference between pm_ctrl and other controller,  they
-> >> are all designed as
-> >> the base address to control some functions of other modules (certainly
-> >> include some clock gates).
-> >
-> > Are they just different instances of the same IP block, or are there
-> > fundamental differences between them?
-> You can understand it as a different instance of the same IP block,
-> there is no fundamental
-> differences between them.
+Why does this have to be in DT at all? Why can we not fix the core to
+handle these details?
 
-Ok. If that's the case each should have the same compatible string.
+I am very much not keen on this binding.
+
+> +
+> +Required properties:
+> +- compatible: Should be "virtual,irq-demux".
+> +- interrupt-controller: Identifies the node as an interrupt controller.
+> +- interrupts-extended or interrupt-parent and interrupts: Reference the source
+> +  interrupt connected to this dumb demuxer.
+> +- #interrupt-cells: The number of cells to define the interrupts (should be 1).
+> +  The only cell is the IRQ number.
+> +- irqs: u32 bitfield specifying the interrupts provided by the demuxer.
+
+Arbitrary limitation?
 
 Thanks,
 Mark.
