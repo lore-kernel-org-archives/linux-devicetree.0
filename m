@@ -1,109 +1,77 @@
-From: Tyler Hall <tylerwhall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] thermal: armada: read stable temp on Armada XP
-Date: Tue, 10 Feb 2015 17:50:15 -0500
-Message-ID: <1423608615-6575-1-git-send-email-tylerwhall@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tyler Hall <tylerwhall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 1/4] arm: omap: hwmod: 43xx: add DebugSS hwmod data
+Date: Tue, 10 Feb 2015 23:12:40 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1502102311570.3767@utopia.booyaka.com>
+References: <1422054704-14915-1-git-send-email-balbi@ti.com> <1422054704-14915-2-git-send-email-balbi@ti.com> <alpine.DEB.2.02.1501260142590.5450@utopia.booyaka.com> <20150126165640.GA10679@saruman.tx.rr.com> <20150126194933.GG6660@saruman.tx.rr.com>
+ <20150127160143.GH14623@saruman.tx.rr.com> <alpine.DEB.2.02.1501271652340.7149@utopia.booyaka.com> <20150127171532.GC14878@saruman.tx.rr.com> <20150127171843.GD14878@saruman.tx.rr.com> <alpine.DEB.2.02.1501271751020.4845@utopia.booyaka.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1501271751020.4845@utopia.booyaka.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The current register being used to read the temperature returns a noisy value
-that is prone to variance and occasional outliers. The value in the thermal
-manager control and status register appears to have the same scale but much
-less variability.
+Hi Felipe
 
-Add a "marvell,armadaxp-filtered-thermal" config which is set up to read from
-the Thermal Manager Control and Status Register at 0x184c4 rather than the
-Thermal Sensor Status Register at 0x182b0. The only difference is the
-temperature value shift. The original "marvell,armadaxp-thermal" is retained
-for device tree compatibility.
+On Tue, 27 Jan 2015, Paul Walmsley wrote:
 
-This also fixes Armada XP clearing the disable bit in the wrong register. Bit 0
-of the sensor register was being cleared but that bit is read-only. The disable
-bit doesn't seem to have an effect on the temperature sensor value, however, so
-this doesn't make a material difference.
+> On Tue, 27 Jan 2015, Felipe Balbi wrote:
+> 
+> > On Tue, Jan 27, 2015 at 11:15:32AM -0600, Felipe Balbi wrote:
+> > > On Tue, Jan 27, 2015 at 05:12:05PM +0000, Paul Walmsley wrote:
+> > > > On Tue, 27 Jan 2015, Felipe Balbi wrote:
+> > > > 
+> > > > > On Mon, Jan 26, 2015 at 01:49:33PM -0600, Felipe Balbi wrote:
+> > > > > > On Mon, Jan 26, 2015 at 10:56:40AM -0600, Felipe Balbi wrote:
+> > > > > >
+> > > > > > > hm... modulemode SWCTRL causes wait_target_ready to fail. Any hints ?
+> > > > > > 
+> > > > > > gets stuck in transition state. PRCM_CM_WKUP_DBGSS_CLKCTRL is always
+> > > > > > read as 0x 12510f00 which would translate into:
+> > > > > > 
+> > > > > > - module disabled
+> > > > > > - all opt clocks are on
+> > > > > > - module is transitioning
+> > > > > > - module in standby
+> > > > > > - clkA as TPIU and STM trace clock
+> > > > > > - all dividers set to 2
+> > > > > 
+> > > > > just fyi, checking with HW folks, this might be a new bug, unless
+> > > > > debugss needs something special.
+> > > > 
+> > > > If that happens on DEBUGSS disable, it's probably the same issue as on 
+> > > > AM33xx:
+> > > > 
+> > > > http://www.spinics.net/lists/arm-kernel/msg320801.html
+> > > > http://www.spinics.net/lists/arm-kernel/msg321930.html
+> > > > http://www.spinics.net/lists/arm-kernel/msg329151.html
+> > > > 
+> > > > Does adding HWMOD_INIT_NO_IDLE fix the issue you're seeing?
+> > > 
+> > > I'll try it out in a bit...
+> > 
+> > nope, same thing.
+> > 
+> > [   27.633235] omap_hwmod: debugss: _wait_target_disable failed
+> 
+> OK, looking at the code, this makes sense.  So here's what I'd suggest 
+> asking the hardware team: is the right approach to:
+> 
+> 1. keep the DEBUGSS CLKCTRL MODULEMODE bitfield at 0x2 all the time, even 
+> when it's not in use or when entering chip low-power states, or
+> 
+> 2. program the DEBUGSS CLKCTRL MODULEMODE bitfield to 0x0 when the DEBUGSS 
+> is not in use or when entering chip low-power states, but ignore the 
+> DEBUGSS CLKCTRL IDLEST register 
+> 
+> We'll need a new hwmod flag either way; the question is whether it should 
+> be something like HWMOD_CANNOT_DISABLE (case 1), or 
+> HWMOD_DISABLE_IGNORE_IDLEST (case 2).
 
-This problem was detected when running with the watchdog(8) daemon polling the
-thermal value. In one instance I observed a single read of over 200 degrees C
-which caused a spurious watchdog-initiated reboot. I have since observed
-individual outliers of ~20 degrees C. With this change and the corresponding
-device tree update, the temperature is much more stable.
+Just checking on this.  Heard anything from the hardware team?  If not I'd 
+say the HWMOD_CANNOT_DISABLE approach is probably the right one for now...
 
-Signed-off-by: Tyler Hall <tylerwhall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
 
-If there's a better way to handle this than a separate binding, I'm open to
-suggestions.
-
-My conclusions about these registers are based on experimental data. The
-documentation is very sparse, but the Thermal Manager Control and Status
-Register looks like the preferred register given the way it is laid out in the
-public spec.
-
-I have the small corresponding patch to the dts which I can submit separately.
-
-Thanks
-Tyler
-
- .../devicetree/bindings/thermal/armada-thermal.txt          |  8 ++++++++
- drivers/thermal/armada_thermal.c                            | 13 +++++++++++++
- 2 files changed, 21 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-index 4698e0e..0d6a3f1 100644
---- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-@@ -7,6 +7,14 @@ Required properties:
- 		marvell,armada375-thermal
- 		marvell,armada380-thermal
- 		marvell,armadaxp-thermal
-+		marvell,armadaxp-filtered-thermal
-+
-+		Note: "marvell,armadaxp-filtered-thermal" is adjusted to read
-+		the hardware-filtered value in the thermal manager
-+		control/status register rather than the raw sensor value in the
-+		thermal sensor status register. "marvell,armadaxp-thermal"
-+		remains for backward compatibility. The sensor reg address must
-+		also point to the appropriate register.
- 
- - reg:		Device's register space.
- 		Two entries are expected, see the examples below.
-diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-index c2556cf..d3c2ad3 100644
---- a/drivers/thermal/armada_thermal.c
-+++ b/drivers/thermal/armada_thermal.c
-@@ -196,6 +196,15 @@ static const struct armada_thermal_data armadaxp_data = {
- 	.coef_div = 13825,
- };
- 
-+static const struct armada_thermal_data armadaxp_filt_data = {
-+	.init_sensor = armadaxp_init_sensor,
-+	.temp_shift = 1,
-+	.temp_mask = 0x1ff,
-+	.coef_b = 3153000000UL,
-+	.coef_m = 10000000UL,
-+	.coef_div = 13825,
-+};
-+
- static const struct armada_thermal_data armada370_data = {
- 	.is_valid = armada_is_valid,
- 	.init_sensor = armada370_init_sensor,
-@@ -236,6 +245,10 @@ static const struct of_device_id armada_thermal_id_table[] = {
- 		.data       = &armadaxp_data,
- 	},
- 	{
-+		.compatible = "marvell,armadaxp-filtered-thermal",
-+		.data       = &armadaxp_filt_data,
-+	},
-+	{
- 		.compatible = "marvell,armada370-thermal",
- 		.data       = &armada370_data,
- 	},
--- 
-2.3.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Paul
