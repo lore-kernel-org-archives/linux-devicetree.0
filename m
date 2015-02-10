@@ -1,162 +1,97 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [RFC PATCH 3/3] drm: bridge/dw_hdmi: improve hdmi single-end test
-Date: Tue, 10 Feb 2015 22:23:41 +0800
-Message-ID: <1423578221-19527-1-git-send-email-ykk@rock-chips.com>
-References: <1423577791-19238-1-git-send-email-ykk@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423577791-19238-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Russell King <rmk+kernel@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Rob Clark <robdclark@gmail.com>, Mark Yao <mark.yao@rock-chips.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Sean Cross <xobs@kosagi.com>, Jyri Sarha <jsarha@ti.com>, Ben Zhang <benzh@chromium.org>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, djkurtz@chromium.org, mmind00@googlemail.com, dianders@chromium.org, marcheu@chromium.org, linux-rockchip@lists.infradead.org, Yakir Yang <ykk@rock-chips.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [resend PATCH v3 4/4] usb: phy: add phy-hi6220-usb
+Date: Tue, 10 Feb 2015 08:48:07 -0600
+Message-ID: <20150210144807.GC16711@saruman.tx.rr.com>
+References: <1423559404-13058-1-git-send-email-zhangfei.gao@linaro.org>
+ <1423559404-13058-5-git-send-email-zhangfei.gao@linaro.org>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="c3bfwLpm8qysLVxt"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1423559404-13058-5-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Because of iMX6 & Rockchip have differnet mpll config parameter,
-than the cklvl & txlvl would be different, we also should seperate
-this parmeter.
+--c3bfwLpm8qysLVxt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As for Rockchip HDMI, when pixle clock less than 148MHz, the cklvl &
-txlvl should be set to 13. When pixel clock less than 74.25MHz the
-cklvl & txlvl should be set to 17.
+On Tue, Feb 10, 2015 at 05:10:04PM +0800, Zhangfei Gao wrote:
+> Add usb phy controller for hi6220 platform
+>=20
+> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/usb/phy/Kconfig          |   9 ++
+>  drivers/usb/phy/Makefile         |   1 +
+>  drivers/usb/phy/phy-hi6220-usb.c | 306 +++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 316 insertions(+)
+>  create mode 100644 drivers/usb/phy/phy-hi6220-usb.c
+>=20
+> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+> index c6d0c8e..405a3d0 100644
+> --- a/drivers/usb/phy/Kconfig
+> +++ b/drivers/usb/phy/Kconfig
+> @@ -173,6 +173,15 @@ config USB_MXS_PHY
+> =20
+>  	  MXS Phy is used by some of the i.MX SoCs, for example imx23/28/6x.
+> =20
+> +config USB_HI6220_PHY
+> +	tristate "hi6220 USB PHY support"
+> +	select USB_PHY
+> +	select MFD_SYSCON
+> +	help
+> +	  Enable this to support the HISILICON HI6220 USB PHY.
+> +
+> +	  To compile this driver as a module, choose M here.
+> +
+>  config USB_RCAR_PHY
+>  	tristate "Renesas R-Car USB PHY support"
+>  	depends on USB || USB_GADGET
+> diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
+> index 75f2bba..00172d3 100644
+> --- a/drivers/usb/phy/Makefile
+> +++ b/drivers/usb/phy/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_SAMSUNG_USBPHY)		+=3D phy-samsung-usb.o
+>  obj-$(CONFIG_TWL6030_USB)		+=3D phy-twl6030-usb.o
+>  obj-$(CONFIG_USB_EHCI_TEGRA)		+=3D phy-tegra-usb.o
+>  obj-$(CONFIG_USB_GPIO_VBUS)		+=3D phy-gpio-vbus-usb.o
+> +obj-$(CONFIG_USB_HI6220_PHY)		+=3D phy-hi6220-usb.o
 
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
+new drivers only on drivers/phy/, sorry.
 
- drivers/gpu/drm/bridge/dw_hdmi.c            |   14 +++++++-------
- drivers/gpu/drm/imx/dw_hdmi-imx.c           |   12 ++++++------
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c |   14 +++++++-------
- include/drm/bridge/dw_hdmi.h                |    5 +++--
- 4 files changed, 23 insertions(+), 22 deletions(-)
+--=20
+balbi
 
-diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
-index 8b3208c..869262d 100644
---- a/drivers/gpu/drm/bridge/dw_hdmi.c
-+++ b/drivers/gpu/drm/bridge/dw_hdmi.c
-@@ -764,7 +764,7 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi, unsigned char prep,
- 	const struct dw_hdmi_plat_data *plat_data = hdmi->plat_data;
- 	const struct dw_hdmi_mpll_config *mpll_config = plat_data->mpll_cfg;
- 	const struct dw_hdmi_curr_ctrl *curr_ctrl = plat_data->cur_ctr;
--	const struct dw_hdmi_sym_term *sym_term =  plat_data->sym_term;
-+	const struct dw_hdmi_phy_config *phy_config = plat_data->phy_config;
- 
- 	if (prep)
- 		return -EINVAL;
-@@ -835,18 +835,18 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi, unsigned char prep,
- 	hdmi_phy_i2c_write(hdmi, 0x0000, 0x13);  /* PLLPHBYCTRL */
- 	hdmi_phy_i2c_write(hdmi, 0x0006, 0x17);
- 
--	for (i = 0; sym_term[i].mpixelclock != (~0UL); i++)
-+	for (i = 0; phy_config[i].mpixelclock != (~0UL); i++)
- 		if (hdmi->hdmi_data.video_mode.mpixelclock <=
--		    sym_term[i].mpixelclock)
-+		    phy_config[i].mpixelclock)
- 			break;
- 
- 	/* RESISTANCE TERM 133Ohm Cfg */
--	hdmi_phy_i2c_write(hdmi, sym_term[i].term, 0x19);  /* TXTERM */
-+	hdmi_phy_i2c_write(hdmi, phy_config[i].term, 0x19);  /* TXTERM */
- 	/* PREEMP Cgf 0.00 */
--	hdmi_phy_i2c_write(hdmi, sym_term[i].sym_ctr, 0x09);  /* CKSYMTXCTRL */
--
-+	hdmi_phy_i2c_write(hdmi, phy_config[i].sym_ctr, 0x09); /* CKSYMTXCTRL */
- 	/* TX/CK LVL 10 */
--	hdmi_phy_i2c_write(hdmi, 0x01ad, 0x0E);  /* VLEVCTRL */
-+	hdmi_phy_i2c_write(hdmi, phy_config[i].vlev_ctr, 0x0E); /* VLEVCTRL */
-+
- 	/* REMOVE CLK TERM */
- 	hdmi_phy_i2c_write(hdmi, 0x8000, 0x05);  /* CKCALCTRL */
- 
-diff --git a/drivers/gpu/drm/imx/dw_hdmi-imx.c b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-index 121d30c..d6095d2 100644
---- a/drivers/gpu/drm/imx/dw_hdmi-imx.c
-+++ b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-@@ -73,10 +73,10 @@ static const struct dw_hdmi_curr_ctrl imx_cur_ctr[] = {
- 	}
- };
- 
--static const struct dw_hdmi_sym_term imx_sym_term[] = {
--	/*pixelclk   symbol   term*/
--	{ 148500000, 0x800d, 0x0005 },
--	{ ~0UL,      0x0000, 0x0000 }
-+static const struct dw_hdmi_phy_config imx_phy_config[] = {
-+	/*pixelclk   symbol   term   vlev */
-+	{ 148500000, 0x800d, 0x0005, 0x01ad},
-+	{ ~0UL,      0x0000, 0x0000, 0x0000}
- };
- 
- static int dw_hdmi_imx_parse_dt(struct imx_hdmi *hdmi)
-@@ -139,14 +139,14 @@ static struct drm_encoder_funcs dw_hdmi_imx_encoder_funcs = {
- static struct dw_hdmi_plat_data imx6q_hdmi_drv_data = {
- 	.mpll_cfg = imx_mpll_cfg,
- 	.cur_ctr  = imx_cur_ctr,
--	.sym_term = imx_sym_term,
-+	.phy_config = imx_phy_config,
- 	.dev_type = IMX6Q_HDMI,
- };
- 
- static struct dw_hdmi_plat_data imx6dl_hdmi_drv_data = {
- 	.mpll_cfg = imx_mpll_cfg,
- 	.cur_ctr  = imx_cur_ctr,
--	.sym_term = imx_sym_term,
-+	.phy_config = imx_phy_config,
- 	.dev_type = IMX6DL_HDMI,
- };
- 
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index 51030ca..65152a9 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -139,12 +139,12 @@ static const struct dw_hdmi_curr_ctrl rockchip_cur_ctr[] = {
- 	}
- };
- 
--static const struct dw_hdmi_sym_term rockchip_sym_term[] = {
--	/*pixelclk   symbol   term*/
--	{ 74250000,  0x8009, 0x0004 },
--	{ 148500000, 0x803b, 0x0004 },
--	{ 297000000, 0x8039, 0x0005 },
--	{ ~0UL,	     0x0000, 0x0000 }
-+static const struct dw_hdmi_phy_config rockchip_phy_config[] = {
-+	/*pixelclk   symbol   term   vlev*/
-+	{ 74250000,  0x8009, 0x0004, 0x0251},
-+	{ 148500000, 0x803b, 0x0004, 0x01ad},
-+	{ 297000000, 0x8039, 0x0005, 0x01ad},
-+	{ ~0UL,	     0x0000, 0x0000, 0x0000}
- };
- 
- static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
-@@ -236,7 +236,7 @@ static const struct dw_hdmi_plat_data rockchip_hdmi_drv_data = {
- 	.mode_valid = dw_hdmi_rockchip_mode_valid,
- 	.mpll_cfg   = rockchip_mpll_cfg,
- 	.cur_ctr    = rockchip_cur_ctr,
--	.sym_term   = rockchip_sym_term,
-+	.phy_config = rockchip_phy_config,
- 	.dev_type   = RK3288_HDMI,
- };
- 
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index b3f3b0d..1f14cc3 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -50,17 +50,18 @@ struct dw_hdmi_curr_ctrl {
- 	u16 curr[DW_HDMI_RES_MAX];
- };
- 
--struct dw_hdmi_sym_term {
-+struct dw_hdmi_phy_config {
- 	unsigned long mpixelclock;
- 	u16 sym_ctr;    /*clock symbol and transmitter control*/
- 	u16 term;       /*transmission termination value*/
-+	u16 vlev_ctr;   /* voltage level control */
- };
- 
- struct dw_hdmi_plat_data {
- 	enum dw_hdmi_devtype dev_type;
- 	const struct dw_hdmi_mpll_config *mpll_cfg;
- 	const struct dw_hdmi_curr_ctrl *cur_ctr;
--	const struct dw_hdmi_sym_term *sym_term;
-+	const struct dw_hdmi_phy_config *phy_config;
- 	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
- 					   struct drm_display_mode *mode);
- };
--- 
-1.7.9.5
+--c3bfwLpm8qysLVxt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU2honAAoJEIaOsuA1yqRE2/YP/3z2Gotq03+VFCei0IOVKfap
+nrx5xsIesVDDAihGbkxgsbtCZ5CNkZ9ZZk2CkwqjSLqBl2OuwhKdRNt2dT+WYqN0
+zvluJceOdCBBtpao4VE28WVnVC5oHopgd0DffV2f1SuF6jR9vXLH/wrdxjw2PTqO
+mAP5FF3kJV/XJTyNV2wPCxyDG1WI76fHcHa/tTAWqY+B8+aaoIBGIxhOepPaOazX
+m2rCYHFqPDNIBmEnqXVzSOUpLZ4kzM6IKiDxlmJtqlN4m190z52w7iNNHeFrrGwc
+B90yjEAR4CgpMpIxVHscOxZNTlWNRuNZzfF8OKHor3IX91QQYGdTZl0UzW27nX9k
+zgW/WTiSTpffqA5KxUQLsSZEp8d4Eiox9TRchM2VNienqvs4Hi0lyGDTOWiTcJB2
+0L43NFmD5WRYh3kR51ZEoonqcOvfbAmqNCmdGnJXoN9IWEig1dmVNJRVm6ciKyMQ
+Pt/HbCJY3JTEGtxRaZ4ACIV37xNm/Ky30lMqP0Gh+QpkG45btwQGfYCXdBoCiuEf
+2gTQlv0H7YYb+cEYl1WEJ4wzsHoLtn2UEnD4Qd4s6MIqF63DqYd5zvMsvzYSoZvG
+Q5mCZrciGhkV9+43QqiBy/iZ/VfE/MzefCscyH9JXtJg3w8EMCo3sYeEuFm2STNs
+OvwasvUO01SP5exVHlHK
+=9Wcp
+-----END PGP SIGNATURE-----
+
+--c3bfwLpm8qysLVxt--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
