@@ -1,70 +1,70 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] usb: phy: load usb phy earlier
-Date: Tue, 10 Feb 2015 08:49:25 -0600
-Message-ID: <20150210144925.GD16711@saruman.tx.rr.com>
-References: <20150210070424.GC32709@shlinux2>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [resend PATCH v3 4/4] usb: phy: add phy-hi6220-usb
+Date: Tue, 10 Feb 2015 22:53:23 +0800
+Message-ID: <54DA1B63.5070007@linaro.org>
+References: <1423559404-13058-1-git-send-email-zhangfei.gao@linaro.org> <1423559404-13058-5-git-send-email-zhangfei.gao@linaro.org> <20150210144807.GC16711@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bajzpZikUji1w+G9"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150210070424.GC32709@shlinux2>
+In-Reply-To: <20150210144807.GC16711-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---bajzpZikUji1w+G9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 10, 2015 at 03:04:28PM +0800, Peter Chen wrote:
-> This patch does not belong to phy, so, doesn't need to
-> add phy in subject, meanwhile, please add GregKH as TO list,
-> he is the right one to queue this patch.
->=20
-> Reply-To:=20
-> In-Reply-To: <1423554627-694-5-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> On Tue, Feb 10, 2015 at 03:50:26PM +0800, Zhangfei Gao wrote:
-> > Since phy is definitely used in usb controller, load the phy
-> > earlier to make boot time shorter.
-> >=20
-> > Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-NAK, make sure there are no such dependencies with your controller
-driver. They should know how to defer probing if their resources aren't
-available yet.
+On 02/10/2015 10:48 PM, Felipe Balbi wrote:
+> On Tue, Feb 10, 2015 at 05:10:04PM +0800, Zhangfei Gao wrote:
+>> Add usb phy controller for hi6220 platform
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   drivers/usb/phy/Kconfig          |   9 ++
+>>   drivers/usb/phy/Makefile         |   1 +
+>>   drivers/usb/phy/phy-hi6220-usb.c | 306 +++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 316 insertions(+)
+>>   create mode 100644 drivers/usb/phy/phy-hi6220-usb.c
+>>
+>> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+>> index c6d0c8e..405a3d0 100644
+>> --- a/drivers/usb/phy/Kconfig
+>> +++ b/drivers/usb/phy/Kconfig
+>> @@ -173,6 +173,15 @@ config USB_MXS_PHY
+>>
+>>   	  MXS Phy is used by some of the i.MX SoCs, for example imx23/28/6x.
+>>
+>> +config USB_HI6220_PHY
+>> +	tristate "hi6220 USB PHY support"
+>> +	select USB_PHY
+>> +	select MFD_SYSCON
+>> +	help
+>> +	  Enable this to support the HISILICON HI6220 USB PHY.
+>> +
+>> +	  To compile this driver as a module, choose M here.
+>> +
+>>   config USB_RCAR_PHY
+>>   	tristate "Renesas R-Car USB PHY support"
+>>   	depends on USB || USB_GADGET
+>> diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
+>> index 75f2bba..00172d3 100644
+>> --- a/drivers/usb/phy/Makefile
+>> +++ b/drivers/usb/phy/Makefile
+>> @@ -18,6 +18,7 @@ obj-$(CONFIG_SAMSUNG_USBPHY)		+= phy-samsung-usb.o
+>>   obj-$(CONFIG_TWL6030_USB)		+= phy-twl6030-usb.o
+>>   obj-$(CONFIG_USB_EHCI_TEGRA)		+= phy-tegra-usb.o
+>>   obj-$(CONFIG_USB_GPIO_VBUS)		+= phy-gpio-vbus-usb.o
+>> +obj-$(CONFIG_USB_HI6220_PHY)		+= phy-hi6220-usb.o
+>
+> new drivers only on drivers/phy/, sorry.
+>
+OK, thanks for the info, I don't know this at all.
+So even usb phy should be put under drivers/phy/.
 
---=20
-balbi
+Will change that.
 
---bajzpZikUji1w+G9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU2hp1AAoJEIaOsuA1yqREqiIP/jpxzpaBjMcjIJcaJYrY3hMK
-2BH5lT+JXL2qjF2GRvUA20oSTSwFC++UW5QJkLenJ92Dd+yj7sWG5PQCJDBHEGhd
-P1Fm56dil/EEyLiuF+NVg0yu/klgSRn/KWYlxdds3mCwmBuMdFw/lPNGK5iPSoOf
-qcx/IF0WRncJrUckx2MHu4Er1SGkfmGEFOzv/dcnd4NlBhBaVQjG4SCp5ZsFdrO4
-6fek68zW8AW6F6n2TUmN1CGpM5AYPlKwPSWzkZYRRmOCjz209nmQgo72GV6h8anX
-4nFcGIMyV5H790WjjZMhF2sS6xHcPsdrDSfxqVksjreDBvilqc7TUH2TjbrcamH8
-taxI/pkLruXtePAFWyya8EfGa9aEJ3oLZKbYq0YSdTa0zuOaq1fNIYhxCg5eOOR2
-99bpDEGBQsRLgRVXr8ADr/iATd6sxzy0ELxUykXZRTfLhMAPjm3x67IamYtc4FX2
-d16tfTDD4EEnTzyAnJV0YJtPLv/tm2vYDj3Q81/RAbtI/CV2ZpFTQE2EY2lv2wgN
-968DNXqKovnh2bm3J04K5C6JMIeyr7ipDuq8JwFoAB/+GF/X4CBI1b2zOs/c9Z6w
-BlJ4J8UYcZbKqNZbdivu5HwJzBeIqjprJNXjkuTUHqTFtj0EkiKwmOVsO7CPlh4c
-l11pUAGj8Jz1S8cOWuJE
-=y7I7
------END PGP SIGNATURE-----
-
---bajzpZikUji1w+G9--
+Thanks Felipe
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
