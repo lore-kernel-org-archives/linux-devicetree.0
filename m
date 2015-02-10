@@ -1,62 +1,52 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] usb: phy: load usb phy earlier
-Date: Tue, 10 Feb 2015 15:04:28 +0800
-Message-ID: <20150210070424.GC32709@shlinux2>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 3/5] ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
+Date: Tue, 10 Feb 2015 16:17:03 +0800
+Message-ID: <CACRpkdasVPUtn=-DhJ4OUXGZh36sLKwLhvm-nD-mkZjP7gQXww@mail.gmail.com>
+References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
+	<1421818097-9281-4-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421818097-9281-4-git-send-email-hongzhou.yang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dandan.he@mediatek.com, alan.cheng@mediatek.com, toby.liu@mediatek.com, maoguang.meng@mediatek.com, huang eddie <eddie.huang@mediatek.com>, Jean-Christophe
 List-Id: devicetree@vger.kernel.org
 
-This patch does not belong to phy, so, doesn't need to
-add phy in subject, meanwhile, please add GregKH as TO list,
-he is the right one to queue this patch.
+On Wed, Jan 21, 2015 at 1:28 PM, Hongzhou Yang
+<hongzhou.yang@mediatek.com> wrote:
 
-Reply-To: 
-In-Reply-To: <1423554627-694-5-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+>
+> The mediatek SoCs have GPIO controller that handle both the muxing and GPIOs.
+>
+> The GPIO controller have pinmux, pull enable, pull select, direction and output high/low control.
+>
+> This driver include common driver and mt8135 part.
+> The common driver include the pinctrl driver and GPIO driver.
+> The mt8135 part contain its special device data.
+>
+> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
 
-On Tue, Feb 10, 2015 at 03:50:26PM +0800, Zhangfei Gao wrote:
-> Since phy is definitely used in usb controller, load the phy
-> earlier to make boot time shorter.
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  drivers/usb/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
-> index 2f1e2aa..d8926c6 100644
-> --- a/drivers/usb/Makefile
-> +++ b/drivers/usb/Makefile
-> @@ -5,6 +5,7 @@
->  # Object files in subdirectories
->  
->  obj-$(CONFIG_USB)		+= core/
-> +obj-$(CONFIG_USB_SUPPORT)	+= phy/
->  
->  obj-$(CONFIG_USB_DWC3)		+= dwc3/
->  obj-$(CONFIG_USB_DWC2)		+= dwc2/
-> @@ -48,7 +49,6 @@ obj-$(CONFIG_USB_MICROTEK)	+= image/
->  obj-$(CONFIG_USB_SERIAL)	+= serial/
->  
->  obj-$(CONFIG_USB)		+= misc/
-> -obj-$(CONFIG_USB_SUPPORT)	+= phy/
->  obj-$(CONFIG_EARLY_PRINTK_DBGP)	+= early/
->  
->  obj-$(CONFIG_USB_ATM)		+= atm/
-> -- 
-> 1.9.1
-> 
+I have merged this patch for v3.21, except:
 
--- 
+>  arch/arm/mach-mediatek/Kconfig                |    1 +
+(...)
+ --- a/arch/arm/mach-mediatek/Kconfig
+> +++ b/arch/arm/mach-mediatek/Kconfig
+> @@ -1,6 +1,7 @@
+>  menuconfig ARCH_MEDIATEK
+>         bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
+>         select ARM_GIC
+> +       select PINCTRL
+>         select MTK_TIMER
+>         help
+>           Support for Mediatek MT65xx & MT81xx SoCs
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This, which should come in through the ARM SoC tree. It's not
+dependent on this series anyway.
+
+This will appear after the merge window as we start the v3.21 cycle.
+
+Yours,
+Linus Walleij
