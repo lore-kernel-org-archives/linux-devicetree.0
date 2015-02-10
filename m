@@ -1,81 +1,46 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 4/4] usb: renesas_usbhs: add support for USB-DMAC
-Date: Tue, 10 Feb 2015 11:45:56 +0100
-Message-ID: <CAMuHMdV0T_5f+nnYoDRcR+Zm8_-ALP9ShJw3GGBnR9iNGUfEGw@mail.gmail.com>
-References: <1423469774-6532-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1423469774-6532-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1423469774-6532-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, USB list <linux-usb@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [RESEND PATCH 0/6] Add support for the WM8280 and WM8281
+Date: Tue, 10 Feb 2015 11:18:24 +0000
+Message-ID: <1423567110-4414-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org, linux.walleij@linaro.org, linux-kernel@vger.kernel.org, cw00.choi@samsung.com, broonie@kernel.org, rf@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+This set of patches adds support for the WM8280 and WM8281
+codecs to the Wolfson Arizona drivers.
 
-On Mon, Feb 9, 2015 at 9:16 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Some Renesas SoCs have the USB-DMAC. It is able to terminate transfers
-> when a short packet is received, even if less bytes than the transfer
-> counter size have been received. Also, it is able to send a short
-> packet even if the packet size is not multiples of 8bytes.
->
-> Since the previous code has used the interruption of USBHS controller
-> when receiving packets even if this driver has used a dmac, a lot of
-> interruptions has happened. This patch will reduce such interruptions.
->
-> This patch allows to use the USB-DMAC on R-Car H2 and M2.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Just another resend on this series, if it would expedite
+the process I would be happy if we could just merge the MFD
+patches then I can push the other patches through their
+respective trees once that hits mainline, but at the moment
+all the patches are gated by a build dependency on the MFD
+patches.
 
-> --- a/drivers/usb/renesas_usbhs/common.c
-> +++ b/drivers/usb/renesas_usbhs/common.c
+Thanks,
+Charles
 
-> @@ -487,6 +497,15 @@ static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
->         if (gpio > 0)
->                 dparam->enable_gpio = gpio;
->
-> +       switch (dparam->type) {
-> +       case USBHS_TYPE_R8A7790:
-> +       case USBHS_TYPE_R8A7791:
-> +               dparam->has_usb_dmac = 1;
-> +               break;
-> +       default:
-> +               break;
-> +       }
-> +
->         return info;
->  }
+Richard Fitzgerald (6):
+  mfd: arizona: Add support for WM8280/WM8281
+  Documentation: devicetree: arizona: Add bindings for WM8280
+  regulator: arizona-micsupp: Add support for WM8280/WM8281
+  gpio: arizona: Add support for WM8280/WM8281
+  extcon: arizona: Add support for WM8280/WM8281
+  ASoC: arizona: Add support for WM8280/WM8281
 
->  struct usbhs_priv *usbhs_pdev_to_priv(struct platform_device *pdev);
-> diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
-> index 3b77a1b..1e7dc6e 100644
-> --- a/drivers/usb/renesas_usbhs/fifo.c
-> +++ b/drivers/usb/renesas_usbhs/fifo.c
+ Documentation/devicetree/bindings/mfd/arizona.txt |   15 +++++++++++----
+ drivers/extcon/extcon-arizona.c                   |    1 +
+ drivers/gpio/gpio-arizona.c                       |    1 +
+ drivers/mfd/Kconfig                               |    5 +++--
+ drivers/mfd/arizona-core.c                        |   15 +++++++++++++--
+ drivers/mfd/arizona-i2c.c                         |    2 ++
+ drivers/mfd/arizona-irq.c                         |    1 +
+ drivers/mfd/arizona-spi.c                         |    2 ++
+ drivers/regulator/arizona-micsupp.c               |    1 +
+ include/linux/mfd/arizona/core.h                  |    1 +
+ sound/soc/codecs/arizona.c                        |    2 ++
+ 11 files changed, 38 insertions(+), 8 deletions(-)
 
-> @@ -847,10 +849,13 @@ static int usbhsf_dma_prepare_push(struct usbhs_pkt *pkt, int *is_done)
->             usbhs_pipe_is_dcp(pipe))
->                 goto usbhsf_pio_prepare_push;
->
-> -       if (len & 0x7) /* 8byte alignment */
-> +       /* default: 8byte alignment */
-> +       if (!usbhs_get_dparam(priv, has_usb_dmac) && len & 0x7)
->                 goto usbhsf_pio_prepare_push;
-
-So the has_usb_dmac flags indicates that DMA addresses are not limited to
-8-byte alignment.
-
-Can't this be handled by looking at a dma_mask, as set by the DMAC?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+1.7.2.5
