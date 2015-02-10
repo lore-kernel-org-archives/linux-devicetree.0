@@ -1,31 +1,63 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v9 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
-Date: Tue, 10 Feb 2015 09:10:23 -0800
-Message-ID: <54DA3B7F.8040705@broadcom.com>
-References: <rjui@broadcom.com> <1423373126-30024-1-git-send-email-rjui@broadcom.com> <1423373126-30024-3-git-send-email-rjui@broadcom.com> <20150209121036.GB2491@katana> <54D995DA.7040201@broadcom.com> <20150210083339.GA999@katana>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150210083339.GA999@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [Patch v3 0/6] GSBI CRCI Autoconfiguration Support
+Date: Tue, 10 Feb 2015 11:57:27 -0600
+Message-ID: <92B272B3-7F22-426E-8BC4-B6A66C001836@codeaurora.org>
+References: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
+On Feb 9, 2015, at 4:01 PM, Andy Gross <agross@codeaurora.org> wrote:
 
-On 2/10/2015 12:33 AM, Wolfram Sang wrote:
+> This patch set adds support for automatic configuration of GSBI DMA CRCI values.
 > 
->> Thanks, Wolfram. I think I'm missing something here and would like to
->> get it clarified, so I don't make the same mistake again in the future:
->> I thought I've already sent these patches as a new thread, i.e., [PATCH
->> v9 ...], isn't it?
+> DMA operations require that the ADM CRCI mux values be properly configured in
+> the TCSR (Top Control and Status Register) block.  During probing of a GSBI
+> device, the client mode must be declared and this can be used to lookup the
+> correct TCSR ADM CRCI MUX settings and then program them so that they are
+> correct before any clients are populated.
 > 
-> Yes, but "In-Reply-To" was set and so my MUAs (mutt and Thunderbird)
-> threaded them to your first submission. Most people I know prefer to
-> have this not threaded.
+> These patches add the TCSR as a syscon device and that allows the GSBI to
+> access and manipulate the ADM CRCI MUX registers to correctly configure the
+> values based on the GSBI port configuration.
 > 
-Okay I got it now. Thanks.
+> Changes since v2:
+>  - Use cell-index instead of alias to denote GSBI instance
+> 
+> Changes since v1:
+>  - Fixed various review comments
+> 
+> Andy Gross (6):
+>  soc: qcom: gsbi: Add support for ADM CRCI muxing
+>  mfd: qcom,tcsr: Add device tree binding for TCSR
+>  ARM: DT: apq8064: Add TCSR support
+>  ARM: DT: ipq8064: Add TCSR support
+>  ARM: DT: msm8660: Add TCSR support
+>  ARM: DT: msm8960: Add TCSR support
+> 
+> .../devicetree/bindings/mfd/qcom,tcsr.txt          |   22 +++
+> .../devicetree/bindings/soc/qcom/qcom,gsbi.txt     |   14 +-
+> arch/arm/boot/dts/qcom-apq8064.dtsi                |   14 ++
+> arch/arm/boot/dts/qcom-ipq8064.dtsi                |   14 ++
+> arch/arm/boot/dts/qcom-msm8660.dtsi                |    8 ++
+> arch/arm/boot/dts/qcom-msm8960.dtsi                |    8 ++
+> drivers/soc/qcom/Kconfig                           |    1 +
+> drivers/soc/qcom/qcom_gsbi.c                       |  152 ++++++++++++++++++++
+> 8 files changed, 232 insertions(+), 1 deletion(-)
+> create mode 100644 Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
 
-Ray
+Series looks good, do we need a qcom_defconfig update to enable anything new for this?
+
+- k
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
