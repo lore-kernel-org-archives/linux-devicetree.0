@@ -1,75 +1,67 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a73a4: Move pfc node to work around probe ordering bug
-Date: Tue, 10 Feb 2015 20:53:44 +0200
-Message-ID: <3282348.ooqjOMyZ9x@avalon>
-References: <1423254173-31852-1-git-send-email-geert+renesas@glider.be> <20150209182918.GA2531@atomide.com> <CAMuHMdUmftjWD=hZVYVOGJWBc6tb1h=ZnMv61_nCROkOC=e_iw@mail.gmail.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [Patch v3 0/6] GSBI CRCI Autoconfiguration Support
+Date: Tue, 10 Feb 2015 12:59:36 -0600
+Message-ID: <20150210185936.GA21808@qualcomm.com>
+References: <1423519271-4238-1-git-send-email-agross@codeaurora.org>
+ <92B272B3-7F22-426E-8BC4-B6A66C001836@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUmftjWD=hZVYVOGJWBc6tb1h=ZnMv61_nCROkOC=e_iw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Tony Lindgren <tony@atomide.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <92B272B3-7F22-426E-8BC4-B6A66C001836@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Tuesday 10 February 2015 11:19:39 Geert Uytterhoeven wrote:
-> On Mon, Feb 9, 2015 at 7:29 PM, Tony Lindgren <tony@atomide.com> wrote:
-> > * Geert Uytterhoeven <geert@linux-m68k.org> [150209 09:17]:
-> >> On Mon, Feb 9, 2015 at 5:24 PM, Tony Lindgren <tony@atomide.com> wrote:
-> >>> * Geert Uytterhoeven <geert+renesas@glider.be> [150206 12:26]:
-> >>>> Notes:
-> >>>>   - It seems several people tried to solve this in the core OF probing
-> >>>>     code before, but the final solution never went in?
-> >>>>   
-> >>>>   - This can be reproduced on other SoCs (e.g. sh73a0 and r8a7740) by
-> >>>>     moving their pfc nodes before their interrupt controller nodes.
-> >>>>   
-> >>>>   - This patch is against my working tree, so it doesn't apply to
-> >>>>     Simon's repository, but you get the idea....
-> >>> 
-> >>> No issues with the patch, but here are few comments on the core
-> >>> reasons (without looking at the code in this case) that might help
-> >>> fix similar issues.
-> >>> 
-> >>> In all the cases I've seen these errors are caused by non-standard
-> >>> custom initcall levels for drivers like i2c bus. The real solution
-> >>> is to initialize drivers later with standard module_init, and stop
-> >>> the race to the bottom with custom initcall levels.
-> >>> 
-> >>> If there is legacy board specific platofrm init code that needs
-> >>> i2c gpios early, that code can probably be moved to initialize
-> >>> later on.
-> >> 
-> >> In this case no i2c is involved. The drivers for both pinctrl
-> >> (renesas,pfc-r8a73a4) and irqchip (renesas,irqc) are registered
-> >> 
-> >> at the same level:
-> >>   - postcore_initcall(sh_pfc_init);
-> >>   - postcore_initcall(irqc_init);
-> >> 
-> >> Hence the system uses the "natural" order from within the DTS,
-> >> and decided to instantiate the pfc before the irqchip.
-> > 
-> > OK
+On Tue, Feb 10, 2015 at 11:57:27AM -0600, Kumar Gala wrote:
 > 
-> I tried converting the renesas,irqc driver to IRQCHIP_DECLARE().
-> This solves the probe ordering problem, but it no longer allows the use of
-> a platform device.
+> On Feb 9, 2015, at 4:01 PM, Andy Gross <agross@codeaurora.org> wrote:
+> 
+> > This patch set adds support for automatic configuration of GSBI DMA CRCI values.
+> > 
+> > DMA operations require that the ADM CRCI mux values be properly configured in
+> > the TCSR (Top Control and Status Register) block.  During probing of a GSBI
+> > device, the client mode must be declared and this can be used to lookup the
+> > correct TCSR ADM CRCI MUX settings and then program them so that they are
+> > correct before any clients are populated.
+> > 
+> > These patches add the TCSR as a syscon device and that allows the GSBI to
+> > access and manipulate the ADM CRCI MUX registers to correctly configure the
+> > values based on the GSBI port configuration.
+> > 
+> > Changes since v2:
+> >  - Use cell-index instead of alias to denote GSBI instance
+> > 
+> > Changes since v1:
+> >  - Fixed various review comments
+> > 
+> > Andy Gross (6):
+> >  soc: qcom: gsbi: Add support for ADM CRCI muxing
+> >  mfd: qcom,tcsr: Add device tree binding for TCSR
+> >  ARM: DT: apq8064: Add TCSR support
+> >  ARM: DT: ipq8064: Add TCSR support
+> >  ARM: DT: msm8660: Add TCSR support
+> >  ARM: DT: msm8960: Add TCSR support
+> > 
+> > .../devicetree/bindings/mfd/qcom,tcsr.txt          |   22 +++
+> > .../devicetree/bindings/soc/qcom/qcom,gsbi.txt     |   14 +-
+> > arch/arm/boot/dts/qcom-apq8064.dtsi                |   14 ++
+> > arch/arm/boot/dts/qcom-ipq8064.dtsi                |   14 ++
+> > arch/arm/boot/dts/qcom-msm8660.dtsi                |    8 ++
+> > arch/arm/boot/dts/qcom-msm8960.dtsi                |    8 ++
+> > drivers/soc/qcom/Kconfig                           |    1 +
+> > drivers/soc/qcom/qcom_gsbi.c                       |  152 ++++++++++++++++++++
+> > 8 files changed, 232 insertions(+), 1 deletion(-)
+> > create mode 100644 Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
+> 
+> Series looks good, do we need a qcom_defconfig update to enable anything new for this?
+> 
+> - k
 
-One (quite hackish) possible way around this is to register the platform 
-driver (using a static variable to ensure the driver isn't registered multiple 
-times) in the IRQCHIP_DECLARE'd init function, and then call 
-of_platform_device_create() to create the platform device. This should get the 
-device probed immediately.
-
-> As I was already adding clock and runtime PM support
-> (which use platform devices), IRQCHIP_DECLARE doesn't look like the
-> right road to follow...
+I'll send a followup to enable qcom_defconfig.
 
 -- 
-Regards,
-
-Laurent Pinchart
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
