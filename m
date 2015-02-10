@@ -1,314 +1,59 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/2] hwrng: iproc-rng200 - Add Broadcom IPROC RNG driver
-Date: Mon, 9 Feb 2015 16:07:09 -0800
-Message-ID: <1423526830-29516-2-git-send-email-sbranden@broadcom.com>
+From: Scott Branden <sbranden@broadcom.com>
+Subject: [PATCH 1/4] mmc: sdhci: add quirk for ACMD23 broken
+Date: Mon, 9 Feb 2015 16:06:28 -0800
+Message-ID: <1423526791-29453-2-git-send-email-sbranden@broadcom.com>
 References: <Scott Branden <sbranden@broadcom.com>
- <1423526830-29516-1-git-send-email-sbranden@broadcom.com>
+ <1423526791-29453-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423526830-29516-1-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1423526791-29453-1-git-send-email-sbranden@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bcm-kernel-feedback-list@broadcom.com, Ulf Hansson <ulf.hansson@linaro.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Scott Branden <sbranden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a driver for random number generator present on Broadcom
-IPROC devices.
+Add quirk to handle broken auto-CMD23.
+Some controllers do not respond after the first auto-CMD23 is issued.
 
-Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+This allows CMD23 to still work (mandatory for the faster UHS-I mode)
+rather than disabling CMD23 entirely via SDHCI_QUIRK2_HOST_NO_CMD23.
+
+Signed-off by: Corneliu Doban <cdoban@broadcom.com>
+Signed-off-by: Scott Branden <sbranden@broadcom.com>
+
+Signed-off-by: Scott Branden <sbranden@broadcom.com>
 ---
- drivers/char/hw_random/Kconfig        |  13 ++
- drivers/char/hw_random/Makefile       |   1 +
- drivers/char/hw_random/iproc-rng200.c | 239 ++++++++++++++++++++++++++++++++++
- 3 files changed, 253 insertions(+)
- create mode 100644 drivers/char/hw_random/iproc-rng200.c
+ drivers/mmc/host/sdhci.c  | 3 ++-
+ include/linux/mmc/sdhci.h | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index de57b38..f48cf11 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -101,6 +101,19 @@ config HW_RANDOM_BCM2835
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index f1a488e..fcf78ab 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -3085,7 +3085,8 @@ int sdhci_add_host(struct sdhci_host *host)
+ 	/* Auto-CMD23 stuff only works in ADMA or PIO. */
+ 	if ((host->version >= SDHCI_SPEC_300) &&
+ 	    ((host->flags & SDHCI_USE_ADMA) ||
+-	     !(host->flags & SDHCI_USE_SDMA))) {
++	     !(host->flags & SDHCI_USE_SDMA)) &&
++	     !(host->quirks2 & SDHCI_QUIRK2_ACMD23_BROKEN)) {
+ 		host->flags |= SDHCI_AUTO_CMD23;
+ 		DBG("%s: Auto-CMD23 available\n", mmc_hostname(mmc));
+ 	} else {
+diff --git a/include/linux/mmc/sdhci.h b/include/linux/mmc/sdhci.h
+index f767a0d..a29e9bb 100644
+--- a/include/linux/mmc/sdhci.h
++++ b/include/linux/mmc/sdhci.h
+@@ -106,6 +106,8 @@ struct sdhci_host {
+ #define SDHCI_QUIRK2_CLEAR_TRANSFERMODE_REG_BEFORE_CMD	(1<<10)
+ /* Capability register bit-63 indicates HS400 support */
+ #define SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400		(1<<11)
++/* Controller broken with using ACMD23 */
++#define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<12)
  
- 	  If unsure, say Y.
- 
-+config HW_RANDOM_IPROC_RNG200
-+	tristate "Broadcom iProc RNG200 support"
-+	depends on ARCH_BCM_IPROC
-+	default HW_RANDOM
-+	---help---
-+	  This driver provides kernel-side support for the RNG200
-+	  hardware found on the Broadcom iProc SoCs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called iproc-rng200
-+
-+	  If unsure, say Y.
-+
- config HW_RANDOM_GEODE
- 	tristate "AMD Geode HW Random Number Generator support"
- 	depends on X86_32 && PCI
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 0b4cd57..055bb01 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -28,5 +28,6 @@ obj-$(CONFIG_HW_RANDOM_POWERNV) += powernv-rng.o
- obj-$(CONFIG_HW_RANDOM_EXYNOS)	+= exynos-rng.o
- obj-$(CONFIG_HW_RANDOM_TPM) += tpm-rng.o
- obj-$(CONFIG_HW_RANDOM_BCM2835) += bcm2835-rng.o
-+obj-$(CONFIG_HW_RANDOM_IPROC_RNG200) += iproc-rng200.o
- obj-$(CONFIG_HW_RANDOM_MSM) += msm-rng.o
- obj-$(CONFIG_HW_RANDOM_XGENE) += xgene-rng.o
-diff --git a/drivers/char/hw_random/iproc-rng200.c b/drivers/char/hw_random/iproc-rng200.c
-new file mode 100644
-index 0000000..0fef15d
---- /dev/null
-+++ b/drivers/char/hw_random/iproc-rng200.c
-@@ -0,0 +1,239 @@
-+/*
-+* Copyright (C) 2014 Broadcom Corporation
-+*
-+* This program is free software; you can redistribute it and/or
-+* modify it under the terms of the GNU General Public License as
-+* published by the Free Software Foundation version 2.
-+*
-+* This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+* kind, whether express or implied; without even the implied warranty
-+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+* GNU General Public License for more details.
-+*/
-+/*
-+ * DESCRIPTION: The Broadcom iProc RNG200 Driver
-+ */
-+
-+#include <linux/hw_random.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/delay.h>
-+
-+
-+/* Registers */
-+#define RNG_CTRL_OFFSET					0x00
-+#define RNG_CTRL_RNG_RBGEN_MASK				0x00001FFF
-+#define RNG_CTRL_RNG_RBGEN_ENABLE			0x00000001
-+#define RNG_CTRL_RNG_RBGEN_DISABLE			0x00000000
-+
-+#define RNG_SOFT_RESET_OFFSET				0x04
-+#define RNG_SOFT_RESET_RNG_SOFT_RESET_MASK		0x00000001
-+#define RNG_SOFT_RESET_RNG_SOFT_RESET_ACTIVE		0x00000001
-+#define RNG_SOFT_RESET_RNG_SOFT_RESET_CLEAR		0x00000000
-+
-+#define RBG_SOFT_RESET_OFFSET				0x08
-+#define RBG_SOFT_RESET_RNG_SOFT_RESET_MASK		0x00000001
-+#define RBG_SOFT_RESET_RNG_SOFT_RESET_ACTIVE		0x00000001
-+#define RBG_SOFT_RESET_RNG_SOFT_RESET_CLEAR		0x00000000
-+
-+#define RNG_INT_STATUS_OFFSET				0x18
-+#define RNG_INT_STATUS_MASTER_FAIL_LOCKOUT_IRQ_MASK	0x80000000
-+#define RNG_INT_STATUS_STARTUP_TRANSITIONS_MET_IRQ_MASK	0x00020000
-+#define RNG_INT_STATUS_NIST_FAIL_IRQ_MASK		0x00000020
-+#define RNG_INT_STATUS_TOTAL_BITS_COUNT_IRQ_MASK	0x00000001
-+
-+#define RNG_FIFO_DATA_OFFSET				0x20
-+
-+#define RNG_FIFO_COUNT_OFFSET				0x24
-+#define RNG_FIFO_COUNT_RNG_FIFO_COUNT_MASK		0x000000FF
-+
-+static void iproc_rng200_restart(void __iomem *rng_base)
-+{
-+	uint32_t val;
-+
-+	/* Disable RBG */
-+	val = ioread32(rng_base + RNG_CTRL_OFFSET);
-+	val &= ~RNG_CTRL_RNG_RBGEN_MASK;
-+	val |= RNG_CTRL_RNG_RBGEN_DISABLE;
-+	iowrite32(val, rng_base + RNG_CTRL_OFFSET);
-+
-+	/* Clear all interrupt status */
-+	iowrite32(0xFFFFFFFFUL, rng_base + RNG_INT_STATUS_OFFSET);
-+
-+	/* Reset RNG and RBG */
-+	val = ioread32(rng_base + RBG_SOFT_RESET_OFFSET);
-+	val &= ~RBG_SOFT_RESET_RNG_SOFT_RESET_MASK;
-+	val |= RBG_SOFT_RESET_RNG_SOFT_RESET_ACTIVE;
-+	iowrite32(val, rng_base + RBG_SOFT_RESET_OFFSET);
-+
-+	val = ioread32(rng_base + RNG_SOFT_RESET_OFFSET);
-+	val &= ~RNG_SOFT_RESET_RNG_SOFT_RESET_MASK;
-+	val |= RNG_SOFT_RESET_RNG_SOFT_RESET_ACTIVE;
-+	iowrite32(val, rng_base + RNG_SOFT_RESET_OFFSET);
-+
-+	val = ioread32(rng_base + RNG_SOFT_RESET_OFFSET);
-+	val &= ~RNG_SOFT_RESET_RNG_SOFT_RESET_MASK;
-+	val |= RNG_SOFT_RESET_RNG_SOFT_RESET_CLEAR;
-+	iowrite32(val, rng_base + RNG_SOFT_RESET_OFFSET);
-+
-+	val = ioread32(rng_base + RBG_SOFT_RESET_OFFSET);
-+	val &= ~RBG_SOFT_RESET_RNG_SOFT_RESET_MASK;
-+	val |= RBG_SOFT_RESET_RNG_SOFT_RESET_CLEAR;
-+	iowrite32(val, rng_base + RBG_SOFT_RESET_OFFSET);
-+
-+	/* Enable RBG */
-+	val = ioread32(rng_base + RNG_CTRL_OFFSET);
-+	val &= ~RNG_CTRL_RNG_RBGEN_MASK;
-+	val |= RNG_CTRL_RNG_RBGEN_ENABLE;
-+	iowrite32(val, rng_base + RNG_CTRL_OFFSET);
-+}
-+
-+static int iproc_rng200_read(struct hwrng *rng, void *buf, size_t max,
-+			       bool wait)
-+{
-+	uint32_t status = 0;
-+	uint32_t num_remaining = max;
-+
-+	#define MAX_RESETS_PER_READ	1
-+	uint32_t num_resets = 0;
-+
-+	#define MAX_IDLE_TIME	(1 * HZ)
-+	unsigned long idle_endtime = jiffies + MAX_IDLE_TIME;
-+
-+	/* Retrieve HW RNG registers base address. */
-+	void __iomem *rng_base = (void __iomem *)rng->priv;
-+
-+	while ((num_remaining > 0) && time_before(jiffies, idle_endtime)) {
-+
-+		/* Is RNG sane? If not, reset it. */
-+		status = ioread32(rng_base + RNG_INT_STATUS_OFFSET);
-+		if ((status & (RNG_INT_STATUS_MASTER_FAIL_LOCKOUT_IRQ_MASK |
-+			RNG_INT_STATUS_NIST_FAIL_IRQ_MASK)) != 0) {
-+
-+			if (num_resets >= MAX_RESETS_PER_READ)
-+				return max - num_remaining;
-+
-+			iproc_rng200_restart(rng_base);
-+			num_resets++;
-+		}
-+
-+		/* Are there any random numbers available? */
-+		if ((ioread32(rng_base + RNG_FIFO_COUNT_OFFSET) &
-+				RNG_FIFO_COUNT_RNG_FIFO_COUNT_MASK) > 0) {
-+
-+			if (num_remaining >= sizeof(uint32_t)) {
-+				/* Buffer has room to store entire word */
-+				*(uint32_t *)buf = ioread32(rng_base +
-+							RNG_FIFO_DATA_OFFSET);
-+				buf += sizeof(uint32_t);
-+				num_remaining -= sizeof(uint32_t);
-+			} else {
-+				/* Buffer can only store partial word */
-+				uint32_t rnd_number = ioread32(rng_base +
-+							RNG_FIFO_DATA_OFFSET);
-+				memcpy(buf, &rnd_number, num_remaining);
-+				buf += num_remaining;
-+				num_remaining = 0;
-+			}
-+
-+			/* Reset the IDLE timeout */
-+			idle_endtime = jiffies + MAX_IDLE_TIME;
-+		} else {
-+			if (!wait)
-+				/* Cannot wait, return immediately */
-+				return max - num_remaining;
-+
-+			/* Can wait, give others chance to run */
-+			cpu_relax();
-+		}
-+	}
-+
-+	return max - num_remaining;
-+}
-+
-+static struct hwrng iproc_rng200_ops = {
-+	.name	= "iproc-rng200",
-+	.read	= iproc_rng200_read,
-+};
-+
-+static int iproc_rng200_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	void __iomem *rng_base = 0;
-+	uint32_t val = 0;
-+	int err = 0;
-+
-+	/* Map peripheral */
-+	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+
-+	if (!res) {
-+		dev_err(dev, "failed to get rng resources");
-+		return -ENODEV;
-+	}
-+
-+	rng_base = devm_ioremap_resource(dev, res);
-+	if (!rng_base) {
-+		dev_err(dev, "failed to remap rng regs");
-+		return -ENODEV;
-+	}
-+
-+	iproc_rng200_ops.priv = (unsigned long)rng_base;
-+
-+	/* Setup RNG. */
-+	val = ioread32(rng_base + RNG_CTRL_OFFSET);
-+	val &= ~RNG_CTRL_RNG_RBGEN_MASK;
-+	val |= RNG_CTRL_RNG_RBGEN_ENABLE;
-+	iowrite32(val, rng_base + RNG_CTRL_OFFSET);
-+
-+	/* Register driver */
-+	err = hwrng_register(&iproc_rng200_ops);
-+	if (err) {
-+		dev_err(dev, "hwrng registration failed\n");
-+		return err;
-+	}
-+	dev_info(dev, "hwrng registered\n");
-+
-+	return 0;
-+}
-+
-+static int iproc_rng200_remove(struct platform_device *pdev)
-+{
-+	uint32_t val = 0;
-+	void __iomem *rng_base = (void __iomem *)iproc_rng200_ops.priv;
-+
-+	/* Unregister driver */
-+	hwrng_unregister(&iproc_rng200_ops);
-+
-+	/* Disable RNG hardware */
-+	val = ioread32(rng_base + RNG_CTRL_OFFSET);
-+	val &= ~RNG_CTRL_RNG_RBGEN_MASK;
-+	val |= RNG_CTRL_RNG_RBGEN_DISABLE;
-+	iowrite32(val, rng_base + RNG_CTRL_OFFSET);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id iproc_rng200_of_match[] = {
-+	{ .compatible = "brcm,iproc-rng200", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, iproc_rng200_of_match);
-+
-+static struct platform_driver iproc_rng200_driver = {
-+	.driver = {
-+		.name = "iproc-rng200",
-+		.of_match_table = iproc_rng200_of_match,
-+	},
-+	.probe		= iproc_rng200_probe,
-+	.remove		= iproc_rng200_remove,
-+};
-+module_platform_driver(iproc_rng200_driver);
-+
-+MODULE_AUTHOR("Broadcom");
-+MODULE_DESCRIPTION("iProc RNG200 Random Number Generator driver");
-+MODULE_LICENSE("GPL v2");
+ 	int irq;		/* Device IRQ */
+ 	void __iomem *ioaddr;	/* Mapped address */
 -- 
 2.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
