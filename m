@@ -1,7 +1,7 @@
 From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 2/5] Documentation: dt-bindings: add dt binding info for hi6220
-Date: Tue, 10 Feb 2015 15:50:24 +0800
-Message-ID: <1423554627-694-3-git-send-email-zhangfei.gao@linaro.org>
+Subject: [PATCH v3 4/5] usb: phy: load usb phy earlier
+Date: Tue, 10 Feb 2015 15:50:26 +0800
+Message-ID: <1423554627-694-5-git-send-email-zhangfei.gao@linaro.org>
 References: <1423554627-694-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1423554627-694-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,67 +10,35 @@ To: balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/usb/hi6220-usb.txt         | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/hi6220-usb.txt
+Since phy is definitely used in usb controller, load the phy
+earlier to make boot time shorter.
 
-diff --git a/Documentation/devicetree/bindings/usb/hi6220-usb.txt b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
-new file mode 100644
-index 0000000..b8278de
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
-@@ -0,0 +1,49 @@
-+Hisilicon hi6220 SoC USB controller
-+-----------------------------
-+
-+usb controller is inherited from dwc2, refer dwc2.txt
-+-----
-+
-+Required properties:
-+- compatible: "hisilicon,hi6220-usb"
-+Refer to dwc2.txt for dwc2 usb properties
-+
-+
-+PHY:
-+-----
-+
-+Required properties:
-+- compatible: "hisilicon,hi6220-usb-phy"
-+- vcc-supply: phandle to the regulator that provides power to the PHY.
-+- clocks: phandle and clock specifier of the PHY clock.
-+- hisilicon,peripheral-syscon: phandle of syscon used to control peripheral.
-+- hisilicon,gpio-vbus: gpio of detecting vbus.
-+- hisilicon,gpio-id: gpio of detecting id.
-+
-+Example:
-+
-+	peripheral_ctrl: syscon@f7030000 {
-+	        compatible = "syscon";
-+	        reg = <0x0 0xf7030000 0x0 0x1000>;
-+	};
-+
-+	usb2_phy: usbphy {
-+		compatible = "hisilicon,hi6220-usb-phy";
-+		vcc-supply = <&fixed_5v_hub>;
-+		hisilicon,gpio-vbus = <&gpio2 6 0>;
-+		hisilicon,gpio-id = <&gpio2 5 0>;
-+		hisilicon,peripheral-syscon = <&peripheral_ctrl>;
-+		clocks = <&clock_sys HI6220_USBOTG_HCLK>;
-+	};
-+
-+	usb: usb@f72c0000 {
-+		compatible = "hisilicon,hi6220-usb";
-+		reg = <0x0 0xf72c0000 0x0 0x40000>;
-+		phys = <&usb2_phy>;
-+		dr_mode = "otg";
-+		g-use-dma;
-+		g-rx-fifo-size = <512>;
-+		g-np-tx-fifo-size = <128>;
-+		g-tx-fifo-size = <128>;
-+		interrupts = <0 77 0x4>;
-+	};
+Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/usb/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+index 2f1e2aa..d8926c6 100644
+--- a/drivers/usb/Makefile
++++ b/drivers/usb/Makefile
+@@ -5,6 +5,7 @@
+ # Object files in subdirectories
+ 
+ obj-$(CONFIG_USB)		+= core/
++obj-$(CONFIG_USB_SUPPORT)	+= phy/
+ 
+ obj-$(CONFIG_USB_DWC3)		+= dwc3/
+ obj-$(CONFIG_USB_DWC2)		+= dwc2/
+@@ -48,7 +49,6 @@ obj-$(CONFIG_USB_MICROTEK)	+= image/
+ obj-$(CONFIG_USB_SERIAL)	+= serial/
+ 
+ obj-$(CONFIG_USB)		+= misc/
+-obj-$(CONFIG_USB_SUPPORT)	+= phy/
+ obj-$(CONFIG_EARLY_PRINTK_DBGP)	+= early/
+ 
+ obj-$(CONFIG_USB_ATM)		+= atm/
 -- 
 1.9.1
 
