@@ -1,7 +1,7 @@
 From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 1/5] Documentation: dt-bindings: add dt binding info for hi6220 dwc2
-Date: Tue, 10 Feb 2015 15:50:23 +0800
-Message-ID: <1423554627-694-2-git-send-email-zhangfei.gao@linaro.org>
+Subject: [PATCH v3 2/5] Documentation: dt-bindings: add dt binding info for hi6220
+Date: Tue, 10 Feb 2015 15:50:24 +0800
+Message-ID: <1423554627-694-3-git-send-email-zhangfei.gao@linaro.org>
 References: <1423554627-694-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1423554627-694-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,25 +10,67 @@ To: balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add necessary dwc2 binding documentation for Hisilicon soc: hi6220
-
 Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/usb/hi6220-usb.txt         | 49 ++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/hi6220-usb.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index fd132cb..2213682 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -4,6 +4,7 @@ Platform DesignWare HS OTG USB 2.0 controller
- Required properties:
- - compatible : One of:
-   - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
-+  - hisilicon,hi6220-usb: The DWC2 USB controller instance in the hi6220 SoC.
-   - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
-   - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
-   - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
+diff --git a/Documentation/devicetree/bindings/usb/hi6220-usb.txt b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
+new file mode 100644
+index 0000000..b8278de
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
+@@ -0,0 +1,49 @@
++Hisilicon hi6220 SoC USB controller
++-----------------------------
++
++usb controller is inherited from dwc2, refer dwc2.txt
++-----
++
++Required properties:
++- compatible: "hisilicon,hi6220-usb"
++Refer to dwc2.txt for dwc2 usb properties
++
++
++PHY:
++-----
++
++Required properties:
++- compatible: "hisilicon,hi6220-usb-phy"
++- vcc-supply: phandle to the regulator that provides power to the PHY.
++- clocks: phandle and clock specifier of the PHY clock.
++- hisilicon,peripheral-syscon: phandle of syscon used to control peripheral.
++- hisilicon,gpio-vbus: gpio of detecting vbus.
++- hisilicon,gpio-id: gpio of detecting id.
++
++Example:
++
++	peripheral_ctrl: syscon@f7030000 {
++	        compatible = "syscon";
++	        reg = <0x0 0xf7030000 0x0 0x1000>;
++	};
++
++	usb2_phy: usbphy {
++		compatible = "hisilicon,hi6220-usb-phy";
++		vcc-supply = <&fixed_5v_hub>;
++		hisilicon,gpio-vbus = <&gpio2 6 0>;
++		hisilicon,gpio-id = <&gpio2 5 0>;
++		hisilicon,peripheral-syscon = <&peripheral_ctrl>;
++		clocks = <&clock_sys HI6220_USBOTG_HCLK>;
++	};
++
++	usb: usb@f72c0000 {
++		compatible = "hisilicon,hi6220-usb";
++		reg = <0x0 0xf72c0000 0x0 0x40000>;
++		phys = <&usb2_phy>;
++		dr_mode = "otg";
++		g-use-dma;
++		g-rx-fifo-size = <512>;
++		g-np-tx-fifo-size = <128>;
++		g-tx-fifo-size = <128>;
++		interrupts = <0 77 0x4>;
++	};
 -- 
 1.9.1
 
