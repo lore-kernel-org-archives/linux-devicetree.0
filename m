@@ -1,150 +1,60 @@
 From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH 1/2] Input: bcm-keypad: add device tree bindings
-Date: Mon, 9 Feb 2015 16:07:40 -0800
-Message-ID: <1423526861-29579-2-git-send-email-sbranden@broadcom.com>
+Subject: [PATCH 2/4] mmc: sdhci: do not set AUTO_CMD12 for multi-block CMD53
+Date: Mon, 9 Feb 2015 16:06:29 -0800
+Message-ID: <1423526791-29453-3-git-send-email-sbranden@broadcom.com>
 References: <Scott Branden <sbranden@broadcom.com>
- <1423526861-29579-1-git-send-email-sbranden@broadcom.com>
+ <1423526791-29453-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423526861-29579-1-git-send-email-sbranden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Scott Branden <sbranden@broadcom.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1423526791-29453-1-git-send-email-sbranden@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bcm-kernel-feedback-list@broadcom.com, Ulf Hansson <ulf.hansson@linaro.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
+ Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, Anatol Pomazao <anatol@google.com>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dtor@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Documents the Broadcom keypad controller device tree bindings.
+From: Corneliu Doban <cdoban@broadcom.com>
 
-Reviewed-by: Ray Jui <rjui@broadcom.com>
+For CMD53 in block mode, the host does not need to stop the transfer,
+as it stops when the block count (present in CMD53) is reached.
+
+Signed-off-by: Corneliu Doban <cdoban@broadcom.com>
 Signed-off-by: Scott Branden <sbranden@broadcom.com>
 ---
- .../devicetree/bindings/input/brcm,bcm-keypad.txt  | 118 +++++++++++++++++++++
- 1 file changed, 118 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
+ drivers/mmc/host/sdhci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt b/Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
-new file mode 100644
-index 0000000..645829d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
-@@ -0,0 +1,118 @@
-+* Broadcom Keypad Controller device tree bindings
-+
-+Broadcom Keypad controller is used to interface a SoC with a matrix-type
-+keypad device. The keypad controller supports multiple row and column lines.
-+A key can be placed at each intersection of a unique row and a unique column.
-+The keypad controller can sense a key-press and key-release and report the
-+event using a interrupt to the cpu.
-+
-+This binding is based on the matrix-keymap binding with the following
-+changes:
-+
-+keypad,num-rows and keypad,num-columns are required.
-+
-+Required SoC Specific Properties:
-+- compatible: should be "brcm,bcm-keypad"
-+
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+
-+- interrupts: The interrupt number to the cpu.
-+
-+Board Specific Properties:
-+- keypad,num-rows: Number of row lines connected to the keypad
-+  controller.
-+
-+- keypad,num-columns: Number of column lines connected to the
-+  keypad controller.
-+
-+- key-interrupt-trigger-type: The type of interrupt trigger asociated with the Keypad matrix.
-+
-+	KEYPAD_INTERRUPT_NO_TRIGGER	=	0
-+	KEYPAD_INTERRUPT_RISING_EDGE	=	1
-+	KEYPAD_INTERRUPT_FALLING_EDGE	=	2
-+	KEYPAD_INTERRUPT_BOTH_EDGES	=	3
-+
-+- col-debounce-filter-period: The debounce period for the Column filter.
-+
-+	KEYPAD_DEBOUNCE_1_ms	=	0
-+	KEYPAD_DEBOUNCE_2_ms	=	1
-+	KEYPAD_DEBOUNCE_4_ms	=	2
-+	KEYPAD_DEBOUNCE_8_ms	=	3
-+	KEYPAD_DEBOUNCE_16_ms	=	4
-+	KEYPAD_DEBOUNCE_32_ms	=	5
-+	KEYPAD_DEBOUNCE_64_ms	=	6
-+	KEYPAD_DEBOUNCE_128_ms	=	7
-+
-+- status-debounce-filter-period: The debounce period for the Status filter.
-+
-+	KEYPAD_DEBOUNCE_1_ms	=	0
-+	KEYPAD_DEBOUNCE_2_ms	=	1
-+	KEYPAD_DEBOUNCE_4_ms	=	2
-+	KEYPAD_DEBOUNCE_8_ms	=	3
-+	KEYPAD_DEBOUNCE_16_ms	=	4
-+	KEYPAD_DEBOUNCE_32_ms	=	5
-+	KEYPAD_DEBOUNCE_64_ms	=	6
-+	KEYPAD_DEBOUNCE_128_ms	=	7
-+
-+- row-output-enabled: An optional property indicating whether the row or
-+  column is being used as output. If specified the row is being used
-+  as the output. Else defaults to column.
-+
-+- pull-up-enabled: An optional property indicating the Keypad scan mode.
-+  If specified implies the keypad scan pull-up has been enabled.
-+
-+- Keys represented as child nodes: Each key connected to the keypad
-+  controller is represented as a child node to the keypad controller
-+  device node and should include the following properties.
-+  - row: the row number to which the key is connected.
-+  - column: the column number to which the key is connected.
-+  - code: the key-code to be reported when the key is pressed
-+    and released.
-+
-+Example:
-+#include "dt-bindings/input/input.h"
-+
-+/ {
-+	keypad: keypad@180ac000 {
-+		/* Required SoC specific properties */
-+		compatible = "brcm,bcm-keypad";
-+
-+		/* Required Board specific properties */
-+		keypad,num-rows = <5>;
-+		keypad,num-columns = <5>;
-+		status = "okay";
-+
-+		linux,keymap = <MATRIX_KEY(0x00, 0x02, KEY_F) /* key_forward */
-+		MATRIX_KEY(0x00, 0x03, KEY_HOME) /* key_home */
-+		MATRIX_KEY(0x00, 0x04, KEY_M) /* key_message */
-+		MATRIX_KEY(0x01, 0x00, KEY_A) /* key_contacts */
-+		MATRIX_KEY(0x01, 0x01, KEY_1) /* key_1 */
-+		MATRIX_KEY(0x01, 0x02, KEY_2) /* key_2 */
-+		MATRIX_KEY(0x01, 0x03, KEY_3) /* key_3 */
-+		MATRIX_KEY(0x01, 0x04, KEY_S) /* key_speaker */
-+		MATRIX_KEY(0x02, 0x00, KEY_P) /* key_phone */
-+		MATRIX_KEY(0x02, 0x01, KEY_4) /* key_4 */
-+		MATRIX_KEY(0x02, 0x02, KEY_5) /* key_5 */
-+		MATRIX_KEY(0x02, 0x03, KEY_6) /* key_6 */
-+		MATRIX_KEY(0x02, 0x04, KEY_VOLUMEUP) /* key_vol_up */
-+		MATRIX_KEY(0x03, 0x00, KEY_C) /* key_call_log */
-+		MATRIX_KEY(0x03, 0x01, KEY_7) /* key_7 */
-+		MATRIX_KEY(0x03, 0x02, KEY_8) /* key_8 */
-+		MATRIX_KEY(0x03, 0x03, KEY_9) /* key_9 */
-+		MATRIX_KEY(0x03, 0x04, KEY_VOLUMEDOWN) /* key_vol_down */
-+		MATRIX_KEY(0x04, 0x00, KEY_H) /* key_headset */
-+		MATRIX_KEY(0x04, 0x01, KEY_KPASTERISK) /* key_* */
-+		MATRIX_KEY(0x04, 0x02, KEY_0) /* key_0 */
-+		MATRIX_KEY(0x04, 0x03, KEY_GRAVE) /* key_# */
-+		MATRIX_KEY(0x04, 0x04, KEY_MUTE) /* key_mute */
-+		>;
-+
-+		/* Optional board specific properties */
-+		key-interrupt-trigger-type = <3>;
-+		col-debounce-filter-period = <5>;
-+		row-output-enabled;
-+		pull-up-enabled;
-+
-+	};
-+};
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index fcf78ab..f35d413 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -28,6 +28,7 @@
+ #include <linux/mmc/mmc.h>
+ #include <linux/mmc/host.h>
+ #include <linux/mmc/card.h>
++#include <linux/mmc/sdio.h>
+ #include <linux/mmc/slot-gpio.h>
+ 
+ #include "sdhci.h"
+@@ -934,7 +935,8 @@ static void sdhci_set_transfer_mode(struct sdhci_host *host,
+ 		 * If we are sending CMD23, CMD12 never gets sent
+ 		 * on successful completion (so no Auto-CMD12).
+ 		 */
+-		if (!host->mrq->sbc && (host->flags & SDHCI_AUTO_CMD12))
++		if (!host->mrq->sbc && (host->flags & SDHCI_AUTO_CMD12) &&
++		    (cmd->opcode != SD_IO_RW_EXTENDED))
+ 			mode |= SDHCI_TRNS_AUTO_CMD12;
+ 		else if (host->mrq->sbc && (host->flags & SDHCI_AUTO_CMD23)) {
+ 			mode |= SDHCI_TRNS_AUTO_CMD23;
 -- 
 2.2.2
