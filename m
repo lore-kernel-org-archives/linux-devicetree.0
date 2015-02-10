@@ -1,70 +1,58 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [resend PATCH v3 2/4] Documentation: dt-bindings: add dt binding
- info for hi6220
-Date: Tue, 10 Feb 2015 14:37:01 +0300
-Message-ID: <54D9ED5D.2000001@cogentembedded.com>
-References: <1423559404-13058-1-git-send-email-zhangfei.gao@linaro.org> <1423559404-13058-3-git-send-email-zhangfei.gao@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: add disable-wakeup property for
+ gpio-charger
+Date: Tue, 10 Feb 2015 12:00:30 +0000
+Message-ID: <20150210120030.GD6659@leverpostej>
+References: <1423555945-24289-1-git-send-email-zyw@rock-chips.com>
+ <1423555945-24289-2-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423559404-13058-3-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Mian Yousaf Kaukab <yousaf.kaukab-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1423555945-24289-2-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: "heiko@sntech.de" <heiko@sntech.de>, "dianders@chromium.org" <dianders@chromium.org>, "dtor@chromium.org" <dtor@chromium.org>, "djkurtz@chromium.org" <djkurtz@chromium.org>, "sonnyrao@chromium.org" <sonnyrao@chromium.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko.stuebner@bq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 2/10/2015 12:10 PM, Zhangfei Gao wrote:
-
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Tue, Feb 10, 2015 at 08:12:24AM +0000, Chris Zhong wrote:
+> add disable-wakeup for gpio-charger, if you set this property, system
+> will not wakeup by gpio-charger.
+> 
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 > ---
->   .../devicetree/bindings/usb/hi6220-usb.txt         | 49 ++++++++++++++++++++++
->   1 file changed, 49 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/usb/hi6220-usb.txt
+> 
+>  Documentation/devicetree/bindings/power_supply/gpio-charger.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power_supply/gpio-charger.txt b/Documentation/devicetree/bindings/power_supply/gpio-charger.txt
+> index adbb5dc..a46e9bc 100644
+> --- a/Documentation/devicetree/bindings/power_supply/gpio-charger.txt
+> +++ b/Documentation/devicetree/bindings/power_supply/gpio-charger.txt
+> @@ -4,6 +4,7 @@ Required properties :
+>   - compatible : "gpio-charger"
+>   - gpios : GPIO indicating the charger presence.
+>     See GPIO binding in bindings/gpio/gpio.txt .
+> + - gpio-charger,disable-wakeup : Boolean, charger does not wake-up the system.
 
-> diff --git a/Documentation/devicetree/bindings/usb/hi6220-usb.txt b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
-> new file mode 100644
-> index 0000000..b8278de
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/hi6220-usb.txt
-> @@ -0,0 +1,49 @@
-> +Hisilicon hi6220 SoC USB controller
-> +-----------------------------
-[...]
-> +PHY:
-> +-----
-> +
-> +Required properties:
-> +- compatible: "hisilicon,hi6220-usb-phy"
-> +- vcc-supply: phandle to the regulator that provides power to the PHY.
-> +- clocks: phandle and clock specifier of the PHY clock.
-> +- hisilicon,peripheral-syscon: phandle of syscon used to control peripheral.
-> +- hisilicon,gpio-vbus: gpio of detecting vbus.
-> +- hisilicon,gpio-id: gpio of detecting id.
+When would the system wake up otherwise?
 
-    Actually, GPIO bindings say that GPIO properties should be named 
-"[<name>-]gpios".
+Also, "gpio-charger" is not a vendor prefix.
 
-> +
-> +Example:
-> +
-> +	peripheral_ctrl: syscon@f7030000 {
-> +	        compatible = "syscon";
-> +	        reg = <0x0 0xf7030000 0x0 0x1000>;
-> +	};
-> +
-> +	usb2_phy: usbphy {
+Mark.
 
-    Please name it "usb-phy" as it better resembles "ethernet-phy" 
-standardized by ePAPR.
-
-[...]
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   - charger-type : power supply type, one of
+>       unknown
+>       battery
+> @@ -20,6 +21,7 @@ Example:
+>  		compatible = "gpio-charger";
+>  		charger-type = "usb-sdp";
+>  		gpios = <&gpf0 2 0 0 0>;
+> +		gpio-charger,disable-wakeup;
+>  	}
+>  
+>  	battery {
+> -- 
+> 1.9.1
+> 
+> 
