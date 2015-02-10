@@ -1,92 +1,81 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/4] usb: renesas_usbhs: fix spinlock recursion by usbhsf_dma_complete()
-Date: Tue, 10 Feb 2015 11:40:33 +0100
-Message-ID: <CAMuHMdXkPciXDbEp97FbD8Q3S6KxvoZexAO3EYYg3-KsL7dg2g@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 4/4] usb: renesas_usbhs: add support for USB-DMAC
+Date: Tue, 10 Feb 2015 11:45:56 +0100
+Message-ID: <CAMuHMdV0T_5f+nnYoDRcR+Zm8_-ALP9ShJw3GGBnR9iNGUfEGw@mail.gmail.com>
 References: <1423469774-6532-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1423469774-6532-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1423469774-6532-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423469774-6532-2-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1423469774-6532-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, USB list <linux-usb@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Shimoda-san,
 
 On Mon, Feb 9, 2015 at 9:16 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> The usbhsf_pkt_handler(pipe, USBHSF_PKT_DMA_DONE) in usbhsf_dma_complete()
-> will call the complete function of a usb gadget driver finally.
-> According to the gadget.h, "The function will always be called with
-> interrupts disabled".
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Some Renesas SoCs have the USB-DMAC. It is able to terminate transfers
+> when a short packet is received, even if less bytes than the transfer
+> counter size have been received. Also, it is able to send a short
+> packet even if the packet size is not multiples of 8bytes.
 >
-> So, this patch adds a local_irq_save/local_irq_restore in the
-> usbhsf_dma_complete() because a dmaengine driver may call this
-> callback function when interrupts enabled (e.g. in tasklet).
+> Since the previous code has used the interruption of USBHS controller
+> when receiving packets even if this driver has used a dmac, a lot of
+> interruptions has happened. This patch will reduce such interruptions.
 >
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/usb/renesas_usbhs/fifo.c |    3 +++
->  1 file changed, 3 insertions(+)
+> This patch allows to use the USB-DMAC on R-Car H2 and M2.
 >
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+> --- a/drivers/usb/renesas_usbhs/common.c
+> +++ b/drivers/usb/renesas_usbhs/common.c
+
+> @@ -487,6 +497,15 @@ static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
+>         if (gpio > 0)
+>                 dparam->enable_gpio = gpio;
+>
+> +       switch (dparam->type) {
+> +       case USBHS_TYPE_R8A7790:
+> +       case USBHS_TYPE_R8A7791:
+> +               dparam->has_usb_dmac = 1;
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +
+>         return info;
+>  }
+
+>  struct usbhs_priv *usbhs_pdev_to_priv(struct platform_device *pdev);
 > diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
-> index d891bff..b1440d0 100644
+> index 3b77a1b..1e7dc6e 100644
 > --- a/drivers/usb/renesas_usbhs/fifo.c
 > +++ b/drivers/usb/renesas_usbhs/fifo.c
-> @@ -1165,11 +1165,14 @@ static void usbhsf_dma_complete(void *arg)
->         struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
->         struct device *dev = usbhs_priv_to_dev(priv);
->         int ret;
-> +       unsigned long flags;
+
+> @@ -847,10 +849,13 @@ static int usbhsf_dma_prepare_push(struct usbhs_pkt *pkt, int *is_done)
+>             usbhs_pipe_is_dcp(pipe))
+>                 goto usbhsf_pio_prepare_push;
 >
-> +       local_irq_save(flags);
+> -       if (len & 0x7) /* 8byte alignment */
+> +       /* default: 8byte alignment */
+> +       if (!usbhs_get_dparam(priv, has_usb_dmac) && len & 0x7)
+>                 goto usbhsf_pio_prepare_push;
 
-Adding "local_irq_save()" without a spinlock is usually not correct.
-I'm a bit confused here. usbhsf_pkt_handler() itself calls
+So the has_usb_dmac flags indicates that DMA addresses are not limited to
+8-byte alignment.
 
-        usbhs_lock(priv, flags);
-
-which is actually
-
-        spin_lock_irqsave(usbhs_priv_to_lock(priv), flags)
-
-so it does disable interrupts internally?
-
-Or is this about protecting the call to
-
-        pkt->done(priv, pkt);
-
-at the end of usbhsf_pkt_handler(), which is done after releasing the
-spinlock?
-
-Still, that would need some better protection, as local_irq_save() disables
-interrupts only on the CPU it's running on, not on other CPUs in a
-multiprocessor system.
-
->         ret = usbhsf_pkt_handler(pipe, USBHSF_PKT_DMA_DONE);
->         if (ret < 0)
->                 dev_err(dev, "dma_complete run_error %d : %d\n",
->                         usbhs_pipe_number(pipe), ret);
-> +       local_irq_restore(flags);
->  }
->
->  void usbhs_fifo_clear_dcp(struct usbhs_pipe *pipe)
-> --
-> 1.7.9.5
+Can't this be handled by looking at a dma_mask, as set by the DMAC?
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
