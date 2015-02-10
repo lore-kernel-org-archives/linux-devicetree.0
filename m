@@ -1,39 +1,69 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] mmc: dw_mmc: fix bug that cause mmc_test failture
-Date: Tue, 10 Feb 2015 01:34:55 -0800
-Message-ID: <CAOesGMiWBjhfzWVXah2XO7=JQhriwdVgf0jmm1UjNQjB9PeGMQ@mail.gmail.com>
-References: <1422273849-29773-1-git-send-email-addy.ke@rock-chips.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: shmobile: r8a73a4: Move pfc node to work around
+ probe ordering bug
+Date: Tue, 10 Feb 2015 11:19:39 +0100
+Message-ID: <CAMuHMdUmftjWD=hZVYVOGJWBc6tb1h=ZnMv61_nCROkOC=e_iw@mail.gmail.com>
+References: <1423254173-31852-1-git-send-email-geert+renesas@glider.be>
+	<20150209162428.GG25235@atomide.com>
+	<CAMuHMdXsbmcgRacg9CT9N7+KjOrog2F8mmGfORu31P3xyoVviA@mail.gmail.com>
+	<20150209182918.GA2531@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1422273849-29773-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, amstan@chromium.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, zhenfu.fang@ro
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150209182918.GA2531@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Addy,
-
-On Mon, Jan 26, 2015 at 4:04 AM, Addy Ke <addy.ke@rock-chips.com> wrote:
-> The STOP command can terminate a data transfer between a memory card and
-> mmc controller.
+On Mon, Feb 9, 2015 at 7:29 PM, Tony Lindgren <tony@atomide.com> wrote:
+> * Geert Uytterhoeven <geert@linux-m68k.org> [150209 09:17]:
+>> On Mon, Feb 9, 2015 at 5:24 PM, Tony Lindgren <tony@atomide.com> wrote:
+>> > * Geert Uytterhoeven <geert+renesas@glider.be> [150206 12:26]:
+>> >> Notes:
+>> >>   - It seems several people tried to solve this in the core OF probing
+>> >>     code before, but the final solution never went in?
+>> >>   - This can be reproduced on other SoCs (e.g. sh73a0 and r8a7740) by
+>> >>     moving their pfc nodes before their interrupt controller nodes.
+>> >>   - This patch is against my working tree, so it doesn't apply to
+>> >>     Simon's repository, but you get the idea....
+>> >
+>> > No issues with the patch, but here are few comments on the core
+>> > reasons (without looking at the code in this case) that might help
+>> > fix similar issues.
+>> >
+>> > In all the cases I've seen these errors are caused by non-standard
+>> > custom initcall levels for drivers like i2c bus. The real solution
+>> > is to initialize drivers later with standard module_init, and stop
+>> > the race to the bottom with custom initcall levels.
+>> >
+>> > If there is legacy board specific platofrm init code that needs
+>> > i2c gpios early, that code can probably be moved to initialize
+>> > later on.
+>>
+>> In this case no i2c is involved. The drivers for both pinctrl
+>> (renesas,pfc-r8a73a4) and irqchip (renesas,irqc) are registered
+>> at the same level:
+>>   - postcore_initcall(sh_pfc_init);
+>>   - postcore_initcall(irqc_init);
+>> Hence the system uses the "natural" order from within the DTS,
+>> and decided to instantiate the pfc before the irqchip.
 >
-> As show in Synopsys DesignWare Cores Mobile Stroage Host Databook:
-> Data timeout and Data end-bit error will terminate further data transfer
-> by mmc controller. So we should not send abort command to terminate a
-> data transfer again if we got DRTO and EBE interrupt.
->
-> After this patch, all mmc_test cases can pass on RK3288-Pink2 board.
->
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+> OK
 
-The drawback of having so many people on your to: list on a patch is
-that it's unclear who you want to review and merge it. Sometimes less
-is more.
+I tried converting the renesas,irqc driver to IRQCHIP_DECLARE().
+This solves the probe ordering problem, but it no longer allows the use of
+a platform device. As I was already adding clock and runtime PM support
+(which use platform devices), IRQCHIP_DECLARE doesn't look like the
+right road to follow...
 
-In this case, it seems appropriate to have Ulf do so. Ulf, ping? This
-seems like a reasonable patch for 3.20 given that it fixes undesired
-behavior.
+Gr{oetje,eeting}s,
 
+                        Geert
 
--Olof
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
