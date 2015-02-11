@@ -1,77 +1,185 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v3 1/2] dt/bindings: qcom_adm: Fix channel specifiers
-Date: Wed, 11 Feb 2015 00:03:38 -0600
-Message-ID: <1423634619-614-2-git-send-email-agross@codeaurora.org>
-References: <1423634619-614-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1423634619-614-1-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH RFC v8 11/21] Documentation: dt-bindings: Add bindings
+ for Synopsys DW MIPI DSI DRM bridge driver
+Date: Wed, 11 Feb 2015 15:21:46 +0800
+Message-ID: <20150211072128.GA13301@victor>
+References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
+ <1420014219-915-12-git-send-email-Ying.Liu@freescale.com>
+ <1423131004.3207.27.camel@pengutronix.de> <20150206081318.GA15088@victor>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150206081318.GA15088@victor>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, andyshrk@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the crci information from the dma channel property.  At least
-one client device requires using more than one CRCI value for a channel.  This
-does not match the current binding and the crci information needs to be removed.
+Hi Philipp,
 
-Instead, the client device will provide this information via other means.
+On Fri, Feb 06, 2015 at 04:13:20PM +0800, Liu Ying wrote:
+> On Thu, Feb 05, 2015 at 11:10:04AM +0100, Philipp Zabel wrote:
+> > Am Mittwoch, den 31.12.2014, 16:23 +0800 schrieb Liu Ying:
+> > > This patch adds device tree bindings for Synopsys DesignWare MIPI DSI
+> > > host controller DRM bridge driver.
+> > > 
+> > > Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+> > > ---
+> > > v7->v8:
+> > >  * None.
+> > > 
+> > > v6->v7:
+> > >  * None.
+> > > 
+> > > v5->v6:
+> > >  * Add the #address-cells and #size-cells properties in the example 'ports'
+> > >    node.
+> > >  * Remove the useless input-port properties from the example port@0 and port@1
+> > >    nodes.
+> > > 
+> > > v4->v5:
+> > >  * None.
+> > > 
+> > > v3->v4:
+> > >  * Newly introduced in v4.  This is separated from the relevant driver patch
+> > >    in v3 to address Stefan Wahren's comment.
+> > > 
+> > >  .../devicetree/bindings/drm/bridge/dw_mipi_dsi.txt | 73 ++++++++++++++++++++++
+> > >  1 file changed, 73 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
+> > > new file mode 100644
+> > > index 0000000..f88a8d6
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
+> > > @@ -0,0 +1,73 @@
+> > > +Device-Tree bindings for Synopsys DesignWare MIPI DSI host controller
+> > > +
+> > > +The controller is a digital core that implements all protocol functions
+> > > +defined in the MIPI DSI specification, providing an interface between
+> > > +the system and the MIPI DPHY, and allowing communication with a MIPI DSI
+> > > +compliant display.
+> > > +
+> > > +Required properties:
+> > > + - #address-cells: Should be <1>.
+> > > + - #size-cells: Should be <0>.
+> > > + - compatible: The compatible string should be "fsl,imx6q-mipi-dsi" for
+> > > +   i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
+> > > +   device tree binding documentations.
+> > 
+> > I think the compatible property should additionally contain
+> > "snps,dw-mipi-dsi". Also I think other SoCs using the same IP core
+> > should eventually list their compatibles here, but that's for later.
+> > 
+> > How about:
+> > + - compatible: The compatible string contain "fsl,imx6q-mipi-dsi" for
+> > +   i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
+> > +   device tree binding documentations. A common compatible string
+> > +   "snps,dw-mipi-dsi" should be appended for all SoCs.
+> 
+> I'm not sure if "snps,dw-mipi-dsi" should be appended.
+> 
+> Is it a compatible string that SoC specific drivers should actually use to
+> bind a device?
+> 
+> As Andy mentioned in [1], DW MIPI DSI embedded in RK618 is configured via I2C
+> bus, while i.MX6Q/DL is configured via ARM bus...
+> 
+> Another concern is that if users only specify "snps,dw-mipi-dsi" in their
+> device tree sources and use a kernel which supports multiple platforms,
+> say ARM multi v7 platforms, could several enabled SoC specific drivers be
+> probed for a single DW MIPI DSI device?
+> 
+> [1] http://lists.freedesktop.org/archives/dri-devel/2014-December/074344.html
+> 
+> > 
+> > > + - reg: Represent the physical address range of the controller.
+> > > + - interrupts: Represent the controller's interrupt to the CPU(s).
+> > > + - clocks, clock-names: Phandles to the controller pll reference and
+> > > +   core configuration clocks, as described in [1].
+> > 
+> > From the MIPI CSI-2 datasheets it looks like the D-PHY has a refclk and
+> > a cfg_clk input. So I suspect from the name of the "core_cfg" clock,
+> > that it actually represents two clock inputs, the "cfg_clk" wired to the
+> > D-PHY and a core clock wired to the MIPI DSI host controller. I am not
+> > sure if there are designs that control those clocks separately, but I
+> > think it'd be safer to split this into two clocks in the device tree.
+> 
 
-Signed-off-by: Andy Gross <agross@codeaurora.org>
----
- Documentation/devicetree/bindings/dma/qcom_adm.txt |   16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+Our internal MIPI DSI SoC owner gave me some feedbacks on the clock sources.
+According to him, the Synopsys DesignWare MIPI DSI host controller needs four
+clock sources from an application platform - pclk, refclk, cfg_clk and dpipclk.
+These clocks are mentioned in the "DesignWare Cores MIPI DSI Host Controller
+Databook, 1.01a1.30a.pdf" documentation.
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_adm.txt b/Documentation/devicetree/bindings/dma/qcom_adm.txt
-index 9bcab91..38d45f8 100644
---- a/Documentation/devicetree/bindings/dma/qcom_adm.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_adm.txt
-@@ -4,8 +4,7 @@ Required properties:
- - compatible: must contain "qcom,adm" for IPQ/APQ8064 and MSM8960
- - reg: Address range for DMA registers
- - interrupts: Should contain one interrupt shared by all channels
--- #dma-cells: must be <2>.  First cell denotes the channel number.  Second cell
--  denotes CRCI (client rate control interface) flow control assignment.
-+- #dma-cells: must be <1>.  First cell denotes the channel number.
- - clocks: Should contain the core clock and interface clock.
- - clock-names: Must contain "core" for the core clock and "iface" for the
-   interface clock.
-@@ -22,7 +21,7 @@ Example:
- 			compatible = "qcom,adm";
- 			reg = <0x18300000 0x100000>;
- 			interrupts = <0 170 0>;
--			#dma-cells = <2>;
-+			#dma-cells = <1>;
- 
- 			clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
- 			clock-names = "core", "iface";
-@@ -35,15 +34,12 @@ Example:
- 			qcom,ee = <0>;
- 		};
- 
--DMA clients must use the format descripted in the dma.txt file, using a three
-+DMA clients must use the format descripted in the dma.txt file, using a two
- cell specifier for each channel.
- 
--Each dmas request consists of 3 cells:
-+Each dmas request consists of two cells:
-  1. phandle pointing to the DMA controller
-  2. channel number
-- 3. CRCI assignment, if applicable.  If no CRCI flow control is required, use 0.
--    The CRCI is used for flow control.  It identifies the peripheral device that
--    is the source/destination for the transferred data.
- 
- Example:
- 
-@@ -56,7 +52,7 @@ Example:
- 
- 		cs-gpios = <&qcom_pinmux 20 0>;
- 
--		dmas = <&adm_dma 6 9>,
--			<&adm_dma 5 10>;
-+		dmas = <&adm_dma 6>,
-+			<&adm_dma 5>;
- 		dma-names = "rx", "tx";
- 	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Quote some words from the documentation:
+pclk    - APB clock signal.
+refclk  - D-PHY reference clock used for Master-side serial clock generation in
+          clock multiplying unit(PLL).
+cfg_clk - D-PHY Configuration clock used for the initialization of the PHY. It
+          is also used for exiting ULPS state.
+dpipclk - Input Pixel clock signal.
+
+The below table reflects how does i.MX6Q/DL provide the pclk, refclk and cfg_clk
+for the DesignWare MIPI DSI host controller, according to the SoC owner.
+ ----------------------------------------------------------------------------
+| Synopsys      |                     i.MX6Q/DL MIPI DSI                     |
+| DesignWare    |------------------------------------------------------------|
+| documentation |    clock   |     clock root     |       CCM_CCGR bits      |
+|---------------|------------|--------------------|--------------------------|
+|     pclk      |   ips_clk  |    ipg_clk_root    | mipi_core_cfg_clk_enable |
+|---------------|------------|--------------------|--------------------------|
+|    refclk     | pll_refclk | video_27m_clk_root | mipi_core_cfg_clk_enable |
+|---------------|------------|--------------------|--------------------------|
+|    cfg_clk    |   cfg_clk  | video_27m_clk_root | mipi_core_cfg_clk_enable |
+ ----------------------------------------------------------------------------
+
+I think we should add a new clock "IMX6QDL_CLK_MIPI_IPG" as a shared clock gate
+clock.  And, the clock-names property should exactly contain "pclk", "refclk"
+and "cfg_clk", right?
+
+Let me know your thoughts.  Thanks.
+
+> What MIPI CSI-2 datasheets do you refer to?
+> I don't find the refclk and cfg_clk in the MIPI CSI chapter of the i.MX6DQ
+> Reference Manual v2[2].
+> 
+> I think we need to know the design philosophy of DW MIPI DSI clock sources
+> to settle down the documentation here.  I've asked our internal MIPI DSI
+> SoC owner for ideas.  But, someone from Synopsys might be the right
+> person, perhaps.
+> 
+> [2] http://cache.freescale.com/files/32bit/doc/ref_manual/IMX6DQRM.pdf?fasp=1&WT_TYPE=Reference%20Manuals&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation&fileExt=.pdf
+> 
+> > 
+> > Also I am not sure which input to the MIPI DSI host controller the core
+> > clock represents. The i.MX6DQ Reference Manual v2 calls the remaining
+> > clock inputs gated by mipi_core_cfg_clk_enable "ac_clk_125m" and
+> > "ips_clk" (I think the latter is the ABP clock driving the register
+> > bank, just called "pclk" in the MIPI CSI-2 documentation).
+
+Yes, the "ips_clk" clock is the "pclk" clock.  The "ac_clk_125m" clock is
+designed for test and should not be used by software development, according to
+the SoC owner.
+
+Regards,
+Liu Ying
+
+> 
+> The same MIPI CSI-2 documentation you mentioned above?
+> 
+> I'm also puzzled about the clocks.
+> 
+> Regards,
+> Liu Ying
+> 
+> > 
+> > regards
+> > Philipp
+> > 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
