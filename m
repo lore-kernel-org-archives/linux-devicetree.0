@@ -1,62 +1,130 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/2] ARM: perf: Add support for Scorpion PMUs
-Date: Wed, 11 Feb 2015 10:27:17 -0800
-Message-ID: <20150211182717.GA11190@codeaurora.org>
-References: <1423616724-20849-1-git-send-email-sboyd@codeaurora.org>
- <1423616724-20849-3-git-send-email-sboyd@codeaurora.org>
- <CAJ5Y-eZsCbeZMwgPrNOg9Qdt8XqAoJBVNbiNMC7c3PQTOrUJ+g@mail.gmail.com>
+From: Jonathan Richardson <jonathar@broadcom.com>
+Subject: Re: [PATCH v2 1/2] Input: touchscreen-iproc: Add Broadcom iProc touchscreen
+ driver
+Date: Wed, 11 Feb 2015 10:45:34 -0800
+Message-ID: <54DBA34E.8090400@broadcom.com>
+References: <jonathar@broadcom.com> <1419027470-7969-1-git-send-email-jonathar@broadcom.com> <1419027470-7969-2-git-send-email-jonathar@broadcom.com> <20150115010256.GC9134@dtor-ws> <54B753C7.6000006@broadcom.com> <20150115060713.GA2694@dtor-ws> <54B81A4A.9020905@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ5Y-eZsCbeZMwgPrNOg9Qdt8XqAoJBVNbiNMC7c3PQTOrUJ+g@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Ashwin Chaugule <ashwin.chaugule@linaro.org>
-Cc: Will Deacon <will.deacon@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, linux-arm-msm@vger.kernel.org, Neil Leeder <nleeder@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54B81A4A.9020905@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Scott Branden <sbranden@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10, Ashwin Chaugule wrote:
-> Hi Stephen,
-> 
-> On 10 February 2015 at 20:05, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> > Scorpion supports a set of local performance monitor event
-> > selection registers (LPM) sitting behind a cp15 based interface
-> > that extend the architected PMU events to include Scorpion CPU
-> > and Venum VFP specific events. To use these events the user is
-> > expected to program the lpm register with the event code shifted
-> > into the group they care about and then point the PMNx event at
-> > that region+group combo by writing a LPMn_GROUPx event. Add
-> > support for this hardware.
-> >
-> > Note: the raw event number is a pure software construct that
-> > allows us to map the multi-dimensional number space of regions,
-> > groups, and event codes into a flat event number space suitable
-> > for use by the perf framework.
-> >
-> > This is based on code originally written by Ashwin Chaugule and
-> > Neil Leeder [1] massed to become similar to the Krait PMU support
-> > code.
-> 
-> Thanks for taking this up!
-> Overall this series looks good to me, but from what I faintly
-> recollect, doesn't this (and the Krait pmu code) get affected by
-> powercollapse issues anymore?
-> e.g.
-> https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/arch/arm/kernel/perf_event_msm.c?h=msm-3.4&id=b5ca687960f0fea2f4735e83ca5c9543474c19de
-> 
+Pinging maintainers... Am I ok to go ahead with the current rotation
+implementation? I haven't heard anything further. Any feedback on naming
+conventions from DT people?
 
-Right now there isn't any power collapse support in mainline so
-there's no immediate problem. Once we add power collapse support
-(i.e. cpuidle) to the Scorpion and Krait platforms we'll need to
-do something in the perf event code to properly maintain the
-counts across idle. I imagine it would be done by registering for
-cpu_pm notifications and then doing the save/restore on
-CPU_PM_ENTER and CPU_PM_EXIT. At least, that's what you started
-doing in this patch[1]. And then it seems the patch you mention
-came after that and actually did the save/restore of the counts.
+Thanks!
 
-[1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?h=msm-3.4&id=464983a7e991a484cac0bc0885cee4fee318d659
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 15-01-15 11:51 AM, Jonathan Richardson wrote:
+> Hi Dmitry,
+> 
+> On 15-01-14 10:07 PM, Dmitry Torokhov wrote:
+>> On Wed, Jan 14, 2015 at 09:44:39PM -0800, Scott Branden wrote:
+>>> On 15-01-14 05:02 PM, Dmitry Torokhov wrote:
+>>>> Hi Jonathan,
+>>>>
+>>>> On Fri, Dec 19, 2014 at 02:17:49PM -0800, Jonathan Richardson wrote:
+>>>>> +	if (of_property_read_u32(np, "scanning_period", &val) >= 0) {
+>>>>> +		if (val < 1 || val > 256) {
+>>>>> +			dev_err(dev, "scanning_period must be [1-256]\n");
+>>>>> +			return -EINVAL;
+>>>>> +		}
+>>>>> +		priv->cfg_params.scanning_period = val;
+>>>>> +	}
+>>>>> +
+>>>>> +	if (of_property_read_u32(np, "debounce_timeout", &val) >= 0) {
+>>>>> +		if (val < 0 || val > 255) {
+>>>>> +			dev_err(dev, "debounce_timeout must be [0-255]\n");
+>>>>> +			return -EINVAL;
+>>>>> +		}
+>>>>> +		priv->cfg_params.debounce_timeout = val;
+>>>>> +	}
+>>>>> +
+>>>>> +	if (of_property_read_u32(np, "settling_timeout", &val) >= 0) {
+>>>>> +		if (val < 0 || val > 11) {
+>>>>> +			dev_err(dev, "settling_timeout must be [0-11]\n");
+>>>>> +			return -EINVAL;
+>>>>> +		}
+>>>>> +		priv->cfg_params.settling_timeout = val;
+>>>>> +	}
+>>>>> +
+>>>>> +	if (of_property_read_u32(np, "touch_timeout", &val) >= 0) {
+>>>>> +		if (val < 0 || val > 255) {
+>>>>> +			dev_err(dev, "touch_timeout must be [0-255]\n");
+>>>>> +			return -EINVAL;
+>>>>> +		}
+>>>>> +		priv->cfg_params.touch_timeout = val;
+>>>>> +	}
+>>>>> +
+>>>>> +	if (of_property_read_u32(np, "average_data", &val) >= 0) {
+>>>>> +		if (val < 0 || val > 8) {
+>>>>> +			dev_err(dev, "average_data must be [0-8]\n");
+>>>>> +			return -EINVAL;
+>>>>> +		}
+>>>>> +		priv->cfg_params.average_data = val;
+>>>>> +	}
+>>>>> +
+>>>>> +	if (of_property_read_u32(np, "fifo_threshold", &val) >= 0) {
+>>>>> +		if (val < 0 || val > 31) {
+>>>>> +			dev_err(dev, "fifo_threshold must be [0-31]\n");
+>>>>> +			return -EINVAL;
+>>>>> +		}
+>>>>> +		priv->cfg_params.fifo_threshold = val;
+>>>>> +	}
+>>>>
+>>>> I think these are dveice specific and thus should have "brcm," prefix.
+>>> I'm confused as to why we need the brcm prefix?  Other device tree
+>>> bindings we have for other drivers do not need such prefix.
+>>
+>> Properties that are not standard on the system (reg, interrupts,
+>> clkocks, etc) or subsystem level customarily carry the vendor prefix so
+>> that they do not clash with newly added global or subsystem properties.
+>>
+>>>  Is this
+>>> convention documented somewhere?
+>>
+>> Not sure. I glanced through Documentation/devicetree and do not see it
+>> spelled out. Device tree overlords, what say you?
+> 
+> Let me know. I haven't seen this before either. I will change the
+> entries to use dashes though instead of underscores but will wait until
+> these other issues are decided on before sending out another patch.
+> 
+>>
+>>>>
+>>>>> +
+>>>>> +	priv->ts_rotation = TS_ROTATION_0;
+>>>>> +	if (of_property_read_u32(np, "ts-rotation", &val) >= 0) {
+>>>>> +		priv->ts_rotation = val;
+>>>>> +		dev_dbg(dev, "ts rotation [%d] degrees\n",
+>>>>> +			90 * priv->ts_rotation);
+>>>>> +	}
+>>>>
+>>>> This I am not quite sure about - if we want rotation or swap+invert. You
+>>>> are CCed on another email (tsc2007) that talks about need of generic
+>>>> touchscreen transforms in input core/of bindings.
+>>> Does such generic binding exist today?  If not, I would like to go
+>>> with this implementation and update to the new binding if/when it
+>>> exists?
+>>
+>> Not yet but there several people interested. I think we have enough time
+>> till 3.20 to hash it out properly.
+> 
+> I think the rotation is simpler personally. Everyone would understand
+> rotation refers to how it's oriented but I'm not sure everyone would
+> immediately know how it is wired. Let me know what is decided and I'll
+> make any changes required.
+> 
+> Thanks,
+> Jon
+> 
+> 
+>>
+>> Thanks.
+>>
+> 
