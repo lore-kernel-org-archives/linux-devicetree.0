@@ -1,70 +1,101 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Wed, 11 Feb 2015 11:15:17 +0000
-Message-ID: <20150211111516.GB9154@leverpostej>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
- <1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
- <20150210153628.GF9432@leverpostej>
- <20150210165201.634bc04b@bbrezillon>
- <20150210204835.GL9432@leverpostej>
- <20150211091159.GE7119@twins.programming.kicks-ass.net>
+Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for
+ hwspinlock
+Date: Wed, 11 Feb 2015 11:29:07 +0000
+Message-ID: <20150211112907.GD9154@leverpostej>
+References: <20150115135556.GH16217@leverpostej>
+ <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
+ <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com>
+ <20150116101746.GA21809@leverpostej>
+ <CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
+ <20150120180548.GK7718@atomide.com>
+ <CAK=WgbZGGtwmQwzWumjpYOsYHTt8vPQpTraABwJBsv5VXOmJ_Q@mail.gmail.com>
+ <54BFE855.3090200@ti.com>
+ <20150122185622.GE12911@leverpostej>
+ <54C9AFF2.6000108@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150211091159.GE7119@twins.programming.kicks-ass.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <54C9AFF2.6000108@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 11, 2015 at 09:11:59AM +0000, Peter Zijlstra wrote:
-> On Tue, Feb 10, 2015 at 08:48:36PM +0000, Mark Rutland wrote:
-> > From f390ccbb31f06efee49b4469943c8d85d963bfb5 Mon Sep 17 00:00:00 2001
-> > From: Mark Rutland <mark.rutland@arm.com>
-> > Date: Tue, 10 Feb 2015 20:14:33 +0000
-> > Subject: [PATCH] genirq: allow mixed IRQF_NO_SUSPEND requests
+On Thu, Jan 29, 2015 at 03:58:42AM +0000, Suman Anna wrote:
+> On 01/22/2015 12:56 PM, Mark Rutland wrote:
+> > On Wed, Jan 21, 2015 at 05:56:37PM +0000, Suman Anna wrote:
+> >> On 01/21/2015 06:41 AM, Ohad Ben-Cohen wrote:
+> >>> On Tue, Jan 20, 2015 at 8:05 PM, Tony Lindgren <tony@atomide.com> wrote:
+> >>>> How about default to Linux id space and allow overriding that with
+> >>>> a module param option if needed?
+> >>>
+> >>> I'm not sure I'm following.
+> >>>
+> >>> If the main point of contention is the base_id field, I'm also fine
+> >>> with removing it entirely, as I'm not aware of any actual user for it
+> >>> (Suman please confirm?).
+> >>
+> >> Yeah, well the current implementations that I am aware of only have a
+> >> single bank, so all of them would be using a value of 0. I am yet to see
+> >> a platform with multiple instances where the property really makes a
+> >> difference. v7 has the property mandatory, so all the implementations
+> >> would need to define this value even if it is 0.
+> >>
+> >> regards
+> >> Suman
+> >>
+> >>>
+> >>> Mark? Rob? Will you accept Suman's patches if the base_id field is removed?
 > > 
-> > In some cases a physical IRQ line may be shared between devices from
-> > which we expect interrupts during suspend (e.g. timers) and those we do
-> > not (e.g. anything we cut the power to). Where a driver did not request
-> > the interrupt with IRQF_NO_SUSPEND, it's unlikely that it can handle
-> > being called during suspend, and it may bring down the system.
+> > My concern is that the mapping of hwspinlock IDs doesn't seem to be
+> > explicit in the DT on a per-context basis, which is what I'd expect.
 > > 
-> > This patch adds logic to automatically mark the irqactions for these
-> > potentially unsafe handlers as disabled during suspend, leaving actions
-> > with IRQF_NO_SUSPEND enabled. If an interrupt is raised on a shared line
-> > during suspend, only the handlers requested with IRQF_NO_SUSPEND will be
-> > called. The handlers requested without IRQF_NO_SUSPEND will be skipped
-> > as if they had immediately returned IRQF_NONE.
+> > e.g.
 > > 
-> > Cc: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > Cc: Jason Cooper <jason@lakedaemon.net>
-> > Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > lck: hwspinlock-device@f00 {
+> > 	...
+> > 	#hwlock-cells = <1>;
+> > };
+> > 
+> > some-other-os-interface {
+> > 	...
+> > 	hwlocks = <&lck 0>, <&lck 1>, <&lck 2>, <&lck 3>;
+> > 	hwlock-names = "glbl", "pool0", "pool1", "pool2";
+> > };
+> > 
+> > a-different-os-interface {
+> > 	...
+> > 	hwlocks = <&lck 18>, <&lck 21>, <&lck 4>, <&lck 5>;
+> > 	hwlock-names = "init", "teardown", "pool0", "pool1";
+> > };
+> > 
+> > That's the only way I would expect this to possibly remain a stable
+> > over time, and it's the entire reason for #hwlock-cells, no?
+> > 
+> > How do you expect the other components sharing the hwspinlocks to be
+> > described?
 > 
-> Aw gawd.. not that again.
+> Yes indeed, this is what any of the clients will use on Linux. But
+> this is not necessarily the semantics for exchanging hwlocks with the
+> other processor(s) which is where the global id space comes into
+> picture.
 
-I agree this isn't pretty, but at least it doesn't require the HW
-description to know about Linux internals, and it can work for !DT
-systems.
+I did try to consider that above. Rather than thinking about the
+numbering as "global", think of it as unique within the a given pool
+shared between processors. That's what the "poolN" names are about
+above.
 
-I'm really not happy with placing Linux implementation details into
-DTBs.
+That way you can dynamically allocate within the pool and know that
+Linux and the SW on the other processors will use the same ID. You can
+have pools that span multiple hwlock hardware blocks, and you can have
+multiple separate pools in operation at once.
 
-> So Rafael and tglx went over this a few months ago I think:
-> 
->   lkml.kernel.org/r/26580319.OZP7jvJnA9@vostro.rjw.lan
-> 
-> is the last series I could find. Maybe Rafael can summarize?
+Surely that covers the cases you care about?
 
-I can't get at any commentary from that link, unfortunately.
-
-Rafael?
+If using names is clunky, we could instead have a pool-hwlocks property
+for that purpose.
 
 Thanks,
 Mark.
