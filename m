@@ -1,110 +1,84 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Wed, 11 Feb 2015 15:03:38 +0000
-Message-ID: <20150211150338.GM9154@leverpostej>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
- <32372622.IiYZ15O7e1@vostro.rjw.lan>
- <20150211141437.GK9154@leverpostej>
- <1448858.4nScWhYZcX@vostro.rjw.lan>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v4 00/11] Improvements to Tegra-based Chromebook support
+Date: Wed, 11 Feb 2015 16:06:32 +0100
+Message-ID: <1423667220-1062-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448858.4nScWhYZcX-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?UTF-8?q?Terje=20Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 11, 2015 at 03:07:48PM +0000, Rafael J. Wysocki wrote:
-> On Wednesday, February 11, 2015 02:14:37 PM Mark Rutland wrote:
-> > On Wed, Feb 11, 2015 at 02:31:18PM +0000, Rafael J. Wysocki wrote:
-> > > On Wednesday, February 11, 2015 11:15:17 AM Mark Rutland wrote:
-> > > > On Wed, Feb 11, 2015 at 09:11:59AM +0000, Peter Zijlstra wrote:
-> > > > > On Tue, Feb 10, 2015 at 08:48:36PM +0000, Mark Rutland wrote:
-> > > > > > From f390ccbb31f06efee49b4469943c8d85d963bfb5 Mon Sep 17 00:00:00 2001
-> > > > > > From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > > > > > Date: Tue, 10 Feb 2015 20:14:33 +0000
-> > > > > > Subject: [PATCH] genirq: allow mixed IRQF_NO_SUSPEND requests
-> > > > > > 
-> > > > > > In some cases a physical IRQ line may be shared between devices from
-> > > > > > which we expect interrupts during suspend (e.g. timers) and those we do
-> > > > > > not (e.g. anything we cut the power to). Where a driver did not request
-> > > > > > the interrupt with IRQF_NO_SUSPEND, it's unlikely that it can handle
-> > > > > > being called during suspend, and it may bring down the system.
-> > > > > > 
-> > > > > > This patch adds logic to automatically mark the irqactions for these
-> > > > > > potentially unsafe handlers as disabled during suspend, leaving actions
-> > > > > > with IRQF_NO_SUSPEND enabled. If an interrupt is raised on a shared line
-> > > > > > during suspend, only the handlers requested with IRQF_NO_SUSPEND will be
-> > > > > > called. The handlers requested without IRQF_NO_SUSPEND will be skipped
-> > > > > > as if they had immediately returned IRQF_NONE.
-> > > > > > 
-> > > > > > Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > > > > Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> > > > > > Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > > > > > Cc: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> > > > > > Cc: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> > > > > > Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> > > > > > Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > > > > 
-> > > > > Aw gawd.. not that again.
-> > > > 
-> > > > I agree this isn't pretty, but at least it doesn't require the HW
-> > > > description to know about Linux internals, and it can work for !DT
-> > > > systems.
-> > > > 
-> > > > I'm really not happy with placing Linux implementation details into
-> > > > DTBs.
-> > > > 
-> > > > > So Rafael and tglx went over this a few months ago I think:
-> > > > > 
-> > > > >   lkml.kernel.org/r/26580319.OZP7jvJnA9-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org
-> > > > > 
-> > > > > is the last series I could find. Maybe Rafael can summarize?
-> > > > 
-> > > > I can't get at any commentary from that link, unfortunately.
-> > > > 
-> > > > Rafael?
-> > > 
-> > > Well, the commentary is not there, because both I and Thomas implicitly agreed
-> > > on one thing: We cannot add any suspend-related checks to the interrupt handling
-> > > hot path, because that will affect everyone including people who don't use
-> > > suspend at all and who *really* care about interrupt handling performance.
-> > 
-> > That's fair enough, and I'm happy to avoid that by other means.
-> > 
-> > My fundamental objection(s) to the current approach is that we create a
-> > binding for a non-existent device that people will abuse without
-> > considering the consequences. All we will end up with is more DTBs
-> > containing the mux regardless of wether the drivers (or hardware) are
-> > actually safe with a shared line.
-> 
-> That is a valid concern in my view.
-> 
-> > So with the changes moves out of the hot-path (e.g. with shuffling
-> > to/from a suspended_actions list in the pm code), is there some issue
-> > that I have not considered?
-> 
-> When we were reworking the handling of wakeup interrupts during the 3.18
-> cycle, one of my proposals was to move the "suspended" irqactions to an
-> "inactive" list during suspend_device_irqs() and back during
-> resume_device_irqs(), but Thomas didn't like that approach.  His main
-> argument was that it made the code in question overly complex which
-> was fair enough to me.
+v4:	* Added support for the system reset GPIO, for proper reboots
+	* Moved out changes to ASOC to their own series, as requested by Mark
+	Brown
+	* Added patch to reset the SOR, to make sure it's in a known state
+	* Changed nvidia,model property of the sound nodes to GoogleNyanBig
+	and GoogleNyanBlaze so they can be told apart in userspace
 
-I've just looked into that, and have a trivial implementation that's
-contained within kernel/irq/pm.c, but it assumes that during suspend
-nothing needs to modify actions.
+v3:	* Added bindings for the LTN140AT29 panel
+	* Removed the delay in pwrseq, as what was actually needed was to add
+	a dependency on the power supplies of the host
+	* Uses the pinmux for the Blaze as generated by tegra-pinmux-scripts
+	* Uses the pinmux for the Big as in the last patch from Simon Glass
 
-> What about adding a new flag like I said?
+Hello,
 
-That works for me. I'll respond in the other mail.
+this series adds support for the Tegra-based HP Chromebook 14 (aka nyan
+blaze), which is very similar to the Acer Chromebook 13 (aka nyan big).
+Because they both include tegra124-nyan.dtsi, some improvements to Blaz=
+e
+support have also benefitted the Big. I have tested that USB2, the pane=
+ls,
+HDMI, the trackpad, Wifi and sound work on both.
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The DT for the Big includes the pinmux configuration as generated by
+tegra-pinmux-scripts with Simon's patch at:
+
+https://patchwork.ozlabs.org/patch/417779/
+
+These patches are based on top of linux-next 20150211.
+
+http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=3Dnyan-v4
+
+Regards,
+
+Tomeu
+
+Andrew Bresticker (1):
+  ARM: tegra: add support for warm reset GPIO
+
+St=C3=A9phane Marchesin (1):
+  drm/panel: add support for Samsung LTN140AT29 panel
+
+Tomeu Vizoso (9):
+  ARM: tegra: Change model of sound card in Nyan Big
+  ARM: tegra: Move out nyan-generic parts out from the nyan-big DT
+  ARM: tegra: Add DTS for the nyan-blaze board
+  ARM: tegra: Add node for trackpad in Nyan boards
+  ARM: tegra: Use pwrseq-simple for the wifi in Nyan
+  ARM: tegra: Use the generated pinmux data
+  ARM: tegra: Set spi-max-frequency property to flash node
+  ARM: tegra: Set nvidia,reset-gpio property on the PMC node
+  drm/tegra: Reset the SOR on probe
+
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      |    1 +
+ .../bindings/panel/samsung,ltn140at29-301.txt      |    7 +
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/tegra124-nyan-big.dts            | 2119 +++++++++++-=
+--------
+ arch/arm/boot/dts/tegra124-nyan-blaze.dts          | 1332 ++++++++++++
+ arch/arm/boot/dts/tegra124-nyan.dtsi               |  689 +++++++
+ drivers/gpu/drm/panel/panel-simple.c               |   26 +
+ drivers/gpu/drm/tegra/sor.c                        |   14 +
+ drivers/soc/tegra/pmc.c                            |   33 +
+ 9 files changed, 3261 insertions(+), 961 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/panel/samsung,ltn=
+140at29-301.txt
+ create mode 100644 arch/arm/boot/dts/tegra124-nyan-blaze.dts
+ create mode 100644 arch/arm/boot/dts/tegra124-nyan.dtsi
+
+--=20
+1.9.3
