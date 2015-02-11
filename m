@@ -1,90 +1,81 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
  demuxer chip
-Date: Wed, 11 Feb 2015 17:28:03 +0100
-Message-ID: <20150211172803.287bbae9@bbrezillon>
+Date: Wed, 11 Feb 2015 16:32:31 +0000
+Message-ID: <20150211163231.GR9154@leverpostej>
 References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20150211155720.GQ9154@leverpostej>
-	<20150211171515.55d5066f@bbrezillon>
-	<2067295.NbJCftPPli@vostro.rjw.lan>
+ <2437801.56xPyk3atd@vostro.rjw.lan>
+ <20150211151237.GN9154@leverpostej>
+ <1487331.cgC9j5u0aF@vostro.rjw.lan>
+ <20150211155720.GQ9154@leverpostej>
+ <20150211171515.55d5066f@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2067295.NbJCftPPli@vostro.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150211171515.55d5066f@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Feb 2015 17:42:22 +0100
-"Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
-
-> On Wednesday, February 11, 2015 05:15:15 PM Boris Brezillon wrote:
-> > On Wed, 11 Feb 2015 15:57:20 +0000
-> > Mark Rutland <mark.rutland@arm.com> wrote:
-> > 
-> > > [...]
-> > > 
-> > > > > > > So for the flag at request time approach to work, all the drivers using
-> > > > > > > the interrupt would have to flag they're safe in that context.
-> > > > > > 
-> > > > > > Something like IRQF_"I can share the line with a timer" I guess?  That wouldn't
-> > > > > > hurt and can be checked at request time even.
-> > > > > 
-> > > > > I guess that would have to imply IRQF_SHARED, so we'd have something
-> > > > > like:
-> > > > > 
-> > > > > IRQF_SHARED_SUSPEND_OK - This handler is safe to call spuriously during
-> > > > > 			 suspend in the case the line is shared. The
-> > > > > 			 handler will not access unavailable hardware
-> > > > > 			 or kernel infrastructure during this period.
-> > > > > 
-> > > > > #define __IRQF_SUSPEND_SPURIOUS		0x00040000
-> > > > > #define	IRQF_SHARED_SUSPEND_OK		(IRQF_SHARED | __IRQF_SUSPEND_SPURIOUS)
-> > > > 
-> > > > What about
-> > > > 
-> > > > #define __IRQF_TIMER_SIBLING_OK	0x00040000
-> > > > #define	IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
-> > > > 
-> > > > The "suspend" part is kind of a distraction to me here, because that really
-> > > > only is about sharing an IRQ with a timer and the "your interrupt handler
-> > > > may be called when the device is suspended" part is just a consequence of that.
-> > > 
-> > > My rationale was that you didn't really care who else was using the IRQ
-> > > (e.g. the timer); you're just stating that you can survive being called
-> > > during suspend (which is what the driver may need to check for in the
-> > > handler if the device happens to be powered down or whatever).
-> > > 
-> > > So I guess I see it the other way around. This is essentially claiming
-> > > we can handle sharing with IRQF_NO_SUSPEND rather than IRQF_TIMER.
-> > > 
-> > > > So IMO it's better to have "TIMER" in the names to avoid encouraging people to
-> > > > abuse this for other purposes not related to timers.
-> > > 
-> > > In the end a name is a name, and if you think IRQF_SHARED_TIMER_OK is
-> > > better I shan't complain.
-> > > 
-> > > The fundamental issue I'm concerned with is addressed by this approach.
-> > 
-> > Okay then, is anyone taking care of submitting such a patch (Mark ?) ?
+On Wed, Feb 11, 2015 at 04:15:15PM +0000, Boris Brezillon wrote:
+> On Wed, 11 Feb 2015 15:57:20 +0000
+> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
 > 
-> Well, I guess I should take the responsibility for that. :-)
+> > [...]
+> > 
+> > > > > > So for the flag at request time approach to work, all the drivers using
+> > > > > > the interrupt would have to flag they're safe in that context.
+> > > > > 
+> > > > > Something like IRQF_"I can share the line with a timer" I guess?  That wouldn't
+> > > > > hurt and can be checked at request time even.
+> > > > 
+> > > > I guess that would have to imply IRQF_SHARED, so we'd have something
+> > > > like:
+> > > > 
+> > > > IRQF_SHARED_SUSPEND_OK - This handler is safe to call spuriously during
+> > > > 			 suspend in the case the line is shared. The
+> > > > 			 handler will not access unavailable hardware
+> > > > 			 or kernel infrastructure during this period.
+> > > > 
+> > > > #define __IRQF_SUSPEND_SPURIOUS		0x00040000
+> > > > #define	IRQF_SHARED_SUSPEND_OK		(IRQF_SHARED | __IRQF_SUSPEND_SPURIOUS)
+> > > 
+> > > What about
+> > > 
+> > > #define __IRQF_TIMER_SIBLING_OK	0x00040000
+> > > #define	IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
+> > > 
+> > > The "suspend" part is kind of a distraction to me here, because that really
+> > > only is about sharing an IRQ with a timer and the "your interrupt handler
+> > > may be called when the device is suspended" part is just a consequence of that.
+> > 
+> > My rationale was that you didn't really care who else was using the IRQ
+> > (e.g. the timer); you're just stating that you can survive being called
+> > during suspend (which is what the driver may need to check for in the
+> > handler if the device happens to be powered down or whatever).
+> > 
+> > So I guess I see it the other way around. This is essentially claiming
+> > we can handle sharing with IRQF_NO_SUSPEND rather than IRQF_TIMER.
+> > 
+> > > So IMO it's better to have "TIMER" in the names to avoid encouraging people to
+> > > abuse this for other purposes not related to timers.
+> > 
+> > In the end a name is a name, and if you think IRQF_SHARED_TIMER_OK is
+> > better I shan't complain.
+> > 
+> > The fundamental issue I'm concerned with is addressed by this approach.
 > 
-> I'll try to cut one later today or tomorrow unless someone else beats me to that.
+> Okay then, is anyone taking care of submitting such a patch (Mark ?) ?
 
-I won't (I'm done with these irq stuff for now ;-)).
+I'll have the core patch shortly.
 
-Peter, if this patch is accepted, I guess you'll have to drop (or
-revert my patches).
+I'll need to ask for your help tagging the relevant drivers and testing.
 
 Thanks,
-
-Boris
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
