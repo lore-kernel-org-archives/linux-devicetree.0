@@ -1,58 +1,58 @@
-From: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Wed, 11 Feb 2015 10:11:59 +0100
-Message-ID: <20150211091159.GE7119@twins.programming.kicks-ass.net>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
- <1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
- <20150210153628.GF9432@leverpostej>
- <20150210165201.634bc04b@bbrezillon>
- <20150210204835.GL9432@leverpostej>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH/RFC 0/4] Probe deferral for IOMMU DT integration
+Date: Wed, 11 Feb 2015 10:37:46 +0100
+Message-ID: <54DB22EA.3050507@samsung.com>
+References: <1423182722-16646-1-git-send-email-lauraa@codeaurora.org>
+	<2115835102.210232.1423348884955.JavaMail.open-xchange@oxbaltgw04.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150210204835.GL9432@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-reply-to: <2115835102.210232.1423348884955.JavaMail.open-xchange-h4m1HHXQYNGZU4JK52HgGMgmgJlYmuWJ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 10, 2015 at 08:48:36PM +0000, Mark Rutland wrote:
-> From f390ccbb31f06efee49b4469943c8d85d963bfb5 Mon Sep 17 00:00:00 2001
-> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Date: Tue, 10 Feb 2015 20:14:33 +0000
-> Subject: [PATCH] genirq: allow mixed IRQF_NO_SUSPEND requests
-> 
-> In some cases a physical IRQ line may be shared between devices from
-> which we expect interrupts during suspend (e.g. timers) and those we do
-> not (e.g. anything we cut the power to). Where a driver did not request
-> the interrupt with IRQF_NO_SUSPEND, it's unlikely that it can handle
-> being called during suspend, and it may bring down the system.
-> 
-> This patch adds logic to automatically mark the irqactions for these
-> potentially unsafe handlers as disabled during suspend, leaving actions
-> with IRQF_NO_SUSPEND enabled. If an interrupt is raised on a shared line
-> during suspend, only the handlers requested with IRQF_NO_SUSPEND will be
-> called. The handlers requested without IRQF_NO_SUSPEND will be skipped
-> as if they had immediately returned IRQF_NONE.
-> 
-> Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Hello,
 
-Aw gawd.. not that again.
+On 2015-02-07 23:41, arnd-r2nGTMty4D4@public.gmane.org wrote:
+> Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> hat am 6. Februar 2015 um 01:31
+> geschrieben:
+>> The requirement for this is based on a previous patch to add clock
+>> support to the ARM SMMU driver[2]. Once we have clock support, it's
+>> possible that the driver itself may need to be defered which breaks
+>> a bunch of assumptions about how SMMU probing is supposed to work.
+>   
+> Hi Laura,
+>   
+> I was hoping that we would not need this, and instead treat the iommu in
+> the same way as timers and SMP initialization, both
+> of which need to be run early at boot time but may rely on clock controllers
+> to be initialized first.
+>   
+> Is there a specific requirement that makes this impossible here, or is your
+> intention to solve the problem more nicely by allowing deferred probing
+> over forcing the input clocks of the iommu to be early?
 
-So Rafael and tglx went over this a few months ago I think:
+I case of Exynos SoCs there is also a dependency on power domains (some 
+might
+be disabled by the bootloader). It is convenient to use the whole device
+infrastructure for this although it still doesn't provide any methods of
+modelling the real power management dependencies. Right now I simply ignored
+this problem and left it for the future.
 
-  lkml.kernel.org/r/26580319.OZP7jvJnA9-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org
+I will check if this patchset helps in our case.
 
-is the last series I could find. Maybe Rafael can summarize?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
