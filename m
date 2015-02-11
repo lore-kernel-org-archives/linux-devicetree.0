@@ -1,101 +1,46 @@
-From: Hongzhou Yang <hongzhou.yang@mediatek.com>
-Subject: Re: [PATCH v5 3/5] ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
-Date: Wed, 11 Feb 2015 00:42:56 -0800
-Message-ID: <1423644176.1967.12.camel@mussux00.eus.mediatek.inc>
-References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
- <1421818097-9281-4-git-send-email-hongzhou.yang@mediatek.com>
- <CACRpkdasVPUtn=-DhJ4OUXGZh36sLKwLhvm-nD-mkZjP7gQXww@mail.gmail.com>
+From: "Holmberg, Hans" <hans.holmberg@intel.com>
+Subject: RE: [PATCH 0/2] GPIO joystick driver
+Date: Wed, 11 Feb 2015 08:49:16 +0000
+Message-ID: <4B6D6D87A8FB62428BE0A3E38461A1AB18D6BB34@irsmsx105.ger.corp.intel.com>
+References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
+ <1AA6C46C-36D9-4243-9DC5-254A7202D339@gmail.com>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6AF04@irsmsx105.ger.corp.intel.com>
+ <20150207204658.GA29015@dtor-ws>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B24F@irsmsx105.ger.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdasVPUtn=-DhJ4OUXGZh36sLKwLhvm-nD-mkZjP7gQXww@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, maoguang.meng@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, alan.cheng@mediatek.com, Russell King <linux@arm.linux.org.uk>, toby.liu@mediatek.com, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrsoft.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, huang eddie <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B24F@irsmsx105.ger.corp.intel.com>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
+Cc: "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "'linux-input@vger.kernel.org'" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-02-10 at 16:17 +0800, Linus Walleij wrote:
-> On Wed, Jan 21, 2015 at 1:28 PM, Hongzhou Yang
-> <hongzhou.yang@mediatek.com> wrote:
-> 
-> > From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> > > As far as I can tell, there is no way to specify values for ABS-"keys"
+> > > in the device tree binding.
 > >
-> > The mediatek SoCs have GPIO controller that handle both the muxing and GPIOs.
-> >
-> > The GPIO controller have pinmux, pull enable, pull select, direction and output high/low control.
-> >
-> > This driver include common driver and mt8135 part.
-> > The common driver include the pinctrl driver and GPIO driver.
-> > The mt8135 part contain its special device data.
-> >
-> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> > It may not be present in device tree binding, but the driver does
+> > support it, so I would rather extend the binding than have a brand new
+> driver.
 > 
-> I have merged this patch for v3.21, except:
+> All right, I find it a bit like whacking a round peg down a square hole, but I'll
+> head down that path and see where it leads.
 > 
-> >  arch/arm/mach-mediatek/Kconfig                |    1 +
-> (...)
->  --- a/arch/arm/mach-mediatek/Kconfig
-> > +++ b/arch/arm/mach-mediatek/Kconfig
-> > @@ -1,6 +1,7 @@
-> >  menuconfig ARCH_MEDIATEK
-> >         bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
-> >         select ARM_GIC
-> > +       select PINCTRL
-> >         select MTK_TIMER
-> >         help
-> >           Support for Mediatek MT65xx & MT81xx SoCs
-> 
-> This, which should come in through the ARM SoC tree. It's not
-> dependent on this series anyway.
-> 
-> This will appear after the merge window as we start the v3.21 cycle.
-> 
-> Yours,
-> Linus Walleij
 
-Hi Linus,
+This is what I've found:
 
-Due to pinconf relate API changed at kernel-3.20, a build error
-happened.
-Do I need to send patch v6?
-Thanks.
+A digital joystick driver needs to report three states per axis: min, max and neutral. The hardware only have two signals per axis(i.e. up and down) however. See http://wiki.icomp.de/wiki/DB9-Joystick 
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index 721f429..83f474b
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -391,7 +391,7 @@ static int mtk_pctrl_dt_subnode_to_map(struct
-pinctrl_dev *pctldev,
-                return -EINVAL;
-        }
+This makes gpio-keys pretty much impossible to use for joysticks - as the driver only reports abs-events when a button/key is pressed, how would the neutral state be reported?  (as there is no signal for "neutral")
 
--       err = pinconf_generic_parse_dt_config(node, &configs,
-&num_configs);
-+       err = pinconf_generic_parse_dt_config(node, pctldev, &configs,
-&num_configs);
-        if (num_configs)
-                has_config = 1;
+Even if through some hackery the driver would be modified to report a special neutral event if all  "buttons/keys" for that axis are not pressed, what value should be reported?  An average of the values for that axis?   Also, reporting such an implicit neutral event would break the behavior of existing abs-reporting instances, right?
 
-@@ -716,7 +716,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
+Do you still prefer this approach?
 
-        prop = of_find_property(np, "pins-are-numbered", NULL);
-        if (!prop) {
--               dev_err(&pdev->dev, "only support pins-are-numbered
-format\n", ret);
-+               dev_err(&pdev->dev, "only support pins-are-numbered
-format\n");
-                return -EINVAL;
-        }
+Thanks,
+Hans
 
-Yours,
-Hongzhou
+
+
