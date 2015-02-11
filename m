@@ -1,79 +1,85 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2] ARM: dts: exynos5420: Add maudio power domain
-Date: Wed, 11 Feb 2015 08:29:36 +0100
-Message-ID: <1423639776.19979.2.camel@AMDC1943>
-References: <1423490243-7675-1-git-send-email-k.kozlowski@samsung.com>
+From: Rameshwar Sahu <rsahu@apm.com>
+Subject: Re: [PATCH v5 1/3] dmaengine: Add support for APM X-Gene SoC DMA
+ engine driver
+Date: Wed, 11 Feb 2015 13:38:07 +0530
+Message-ID: <CAFd313xiXQXaYoTNdGnVqnAisYoFDneQ0VwW64v7unFpKU5P_A@mail.gmail.com>
+References: <1422968107-23125-1-git-send-email-rsahu@apm.com>
+	<1422968107-23125-2-git-send-email-rsahu@apm.com>
+	<20150205015031.GK4489@intel.com>
+	<CAFd313yBS3KOdtKbnaeTKehmC_f5ZaB-nx299QoLeMm279=Jsg@mail.gmail.com>
+	<20150205201118.GB16547@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1423490243-7675-1-git-send-email-k.kozlowski@samsung.com>
+In-Reply-To: <20150205201118.GB16547@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2015-02-09 at 14:57 +0100, Krzysztof Kozlowski wrote:
-> Add maudio power domain to Exynos 5420 DTSI file so its state could be
-> tracked. This actually won't power down this domain because the pl330
-> dmaengine driver (for adma channel) uses IRQ safe runtime PM. Thus the
-> patch should not introduce any functional change except of visibility of
-> this domain to the system.
+Hi Vinod,
 
-I was wrong. There is a functional change during suspend.
 
-The mau domain is powered off after suspending adma device (pl330 dma).
-However later clk-exynos-audss receives syscore suspend notification and
-tries to save mau clock registers. This results in imprecise abort
-because mau power domain is turned off.
+On Fri, Feb 6, 2015 at 1:41 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Thu, Feb 05, 2015 at 05:29:06PM +0530, Rameshwar Sahu wrote:
+>> Hi Vinod,
+>>
+>> Thanks for reviewing this patch.
+>>
+>> Please see inline......
+> Please STOP top posting
+>
+>> >
+>> >> +}
+>> >> +
+>> >> +static void xgene_dma_issue_pending(struct dma_chan *channel)
+>> >> +{
+>> >> +     /* Nothing to do */
+>> >> +}
+>> > What do you mean by nothing to do here
+>> > See Documentation/dmaengine/client.txt Section 4 & 5
+>> This docs is only applicable on slave DMA operations, we don't support
+>> slave DMA, it's only master.
+>> Our hw engine is designed in the way that there is no scope of
+>> flushing pending transaction explicitly by sw.
+>> We have circular ring descriptor dedicated to engine. In submit
+>> callback  we are queuing descriptor and informing to engine, so after
+>> this it's internal to hw to execute descriptor one by one.
+> But the API expectations on this are _same_
+>
+> No the API expects you to maintain a SW queue, then push to your ring buffer
+> when you get issue_pending. Issue pending is the start of data transfer, you
+> client will expect accordingly.
 
-I think it is better to drop my patch.
+Okay, I will maintain a sw queue, and will push sw descriptor to hw in
+this callback.
+>
+>> >> +     /* Run until we are out of length */
+>> >> +     do {
+>> >> +             /* Create the largest transaction possible */
+>> >> +             copy = min_t(size_t, len, DMA_MAX_64BDSC_BYTE_CNT);
+>> >> +
+>> >> +             /* Prepare DMA descriptor */
+>> >> +             xgene_dma_prep_cpy_desc(chan, slot, dst, src, copy);
+>> >> +
+>> > This is wrong. The descriptor is supposed to be already prepared and now it
+>> > has to be submitted to queue
+>>
+>> Due to the race in tx_submit call from the client, need to serialize
+>> the submission of H/W DMA descriptors.
+>>  So we are making  shadow copy in prepare DMA  routine and  preparing
+>> actual descriptor during tx_submit call.
+> Thats an abuse of API and I dont see a reason why this race should happen in
+> the first place.
+>
+> So you get a prep call, you prepare a desc in SW. Then submit pushes it to a
+> queue. Finally in issue pending you push them to HW. Simple..?
 
-Krzysztof
-
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> 
-> ---
-> 
-> Changes sinve v1:
-> 1. Use generic power domain bindings (suggested by Javier).
-> 2. Add Javier's reviewed-by.
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index 9dc2e9773b30..28c4a2f4b991 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -288,6 +288,12 @@
->  			      "pclk1", "clk1", "pclk2", "clk2";
->  	};
->  
-> +	mau_pd: power-domain@100440E0 {
-> +		compatible = "samsung,exynos4210-pd";
-> +		reg = <0x100440E0 0x20>;
-> +		#power-domain-cells = <0>;
-> +	};
-> +
->  	pinctrl_0: pinctrl@13400000 {
->  		compatible = "samsung,exynos5420-pinctrl";
->  		reg = <0x13400000 0x1000>;
-> @@ -346,6 +352,7 @@
->  			#dma-cells = <1>;
->  			#dma-channels = <6>;
->  			#dma-requests = <16>;
-> +			power-domains = <&mau_pd>;
->  		};
->  
->  		pdma0: pdma@121A0000 {
-> @@ -415,6 +422,7 @@
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&i2s0_bus>;
->  		status = "disabled";
-> +		power-domains = <&mau_pd>;
->  	};
->  
->  	i2s1: i2s@12D60000 {
+I agree, I will do it and post another version soon.
+>
+> --
+> ~Vinod
+> --
+> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
