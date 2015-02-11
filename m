@@ -1,65 +1,38 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 5/5] drm/panel: Add support for OrtusTech COM43H4M85ULC panel
-Date: Wed, 11 Feb 2015 18:50:11 +0100
-Message-ID: <1423677011-17993-5-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/5] of: Add vendor prefix for Ampire Co., Ltd.
+Date: Wed, 11 Feb 2015 18:50:08 +0100
+Message-ID: <1423677011-17993-2-git-send-email-p.zabel@pengutronix.de>
 References: <1423677011-17993-1-git-send-email-p.zabel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1423677011-17993-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423677011-17993-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBDT000M0g0TTg1VUxDIDMuNyIgODAweDQ4MCBwYW5l
-bCB0byB0aGUKRFJNIHNpbXBsZSBwYW5lbCBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiBQaGlsaXBw
-IFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgotLS0KIC4uLi9iaW5kaW5ncy9wYW5lbC9v
-cnR1c3RlY2gsY29tNDNoNG04NXVsYy50eHQgICAgIHwgIDcgKysrKysrCiBkcml2ZXJzL2dwdS9k
-cm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8IDI3ICsrKysrKysrKysrKysr
-KysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMzQgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9vcnR1c3RlY2gs
-Y29tNDNoNG04NXVsYy50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcGFuZWwvb3J0dXN0ZWNoLGNvbTQzaDRtODV1bGMudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL29ydHVzdGVjaCxjb200M2g0bTg1dWxjLnR4dApu
-ZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5kZTE5ZTkzCi0tLSAvZGV2L251bGwK
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL29ydHVzdGVjaCxj
-b200M2g0bTg1dWxjLnR4dApAQCAtMCwwICsxLDcgQEAKK09ydHVzVGVjaCBDT000M0g0TTg1VUxD
-IEJsYW52aWV3IDMuNyIgVEZULUxDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBj
-b21wYXRpYmxlOiBzaG91bGQgYmUgIm9ydHVzdGVjaCxjb200M2g0bTg1dWxjIgorCitUaGlzIGJp
-bmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2gg
-aXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9n
-cHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IGFhYzlkYzEuLmRhN2M4YWIgMTAwNjQ0
-Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJz
-L2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTc4Miw2ICs3ODIsMzAgQEAgc3RhdGlj
-IGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGxnX2xwMTI5cWUgPSB7CiAJfSwKIH07CiAKK3N0YXRp
-YyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBvcnR1c3RlY2hfY29tNDNoNG04NXVsY19t
-b2RlICA9IHsKKwkuY2xvY2sgPSAyNTAwMCwKKwkuaGRpc3BsYXkgPSA0ODAsCisJLmhzeW5jX3N0
-YXJ0ID0gNDgwICsgMTAsCisJLmhzeW5jX2VuZCA9IDQ4MCArIDEwICsgMTAsCisJLmh0b3RhbCA9
-IDQ4MCArIDEwICsgMTAgKyAxNSwKKwkudmRpc3BsYXkgPSA4MDAsCisJLnZzeW5jX3N0YXJ0ID0g
-ODAwICsgMywKKwkudnN5bmNfZW5kID0gODAwICsgMyArIDMsCisJLnZ0b3RhbCA9IDgwMCArIDMg
-KyAzICsgMywKKwkudnJlZnJlc2ggPSA2MCwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFu
-ZWxfZGVzYyBvcnR1c3RlY2hfY29tNDNoNG04NXVsYyA9IHsKKwkubW9kZXMgPSAmb3J0dXN0ZWNo
-X2NvbTQzaDRtODV1bGNfbW9kZSwKKwkubnVtX21vZGVzID0gMSwKKwkuYnBjID0gOCwKKwkuc2l6
-ZSA9IHsKKwkJLndpZHRoID0gNTYsCisJCS5oZWlnaHQgPSA5MywKKwl9LAorCS5idXNfZm9ybWF0
-ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNCwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-ZHJtX2Rpc3BsYXlfbW9kZSBzYW1zdW5nX2x0bjEwMW50MDVfbW9kZSA9IHsKIAkuY2xvY2sgPSA1
-NDAzMCwKIAkuaGRpc3BsYXkgPSAxMDI0LApAQCAtODY3LDYgKzg5MSw5IEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21wYXRp
-YmxlID0gImxnLGxwMTI5cWUiLAogCQkuZGF0YSA9ICZsZ19scDEyOXFlLAogCX0sIHsKKwkJLmNv
-bXBhdGlibGUgPSAib3J0dXN0ZWNoLGNvbTQzaDRtODV1bGMiLAorCQkuZGF0YSA9ICZvcnR1c3Rl
-Y2hfY29tNDNoNG04NXVsYywKKwl9LCB7CiAJCS5jb21wYXRpYmxlID0gInNhbXN1bmcsbHRuMTAx
-bnQwNSIsCiAJCS5kYXRhID0gJnNhbXN1bmdfbHRuMTAxbnQwNSwKIAl9LCB7Ci0tIAoyLjEuNAoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Add Ampire Co., Ltd. to the list of device tree vendor prefixes.
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index c0333a9..1ca9ea1 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -15,6 +15,7 @@ altr	Altera Corp.
+ amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
+ amd	Advanced Micro Devices (AMD), Inc.
+ amlogic	Amlogic, Inc.
++ampire	Ampire Co., Ltd.
+ ams	AMS AG
+ amstaos	AMS-Taos Inc.
+ apm	Applied Micro Circuits Corporation (APM)
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
