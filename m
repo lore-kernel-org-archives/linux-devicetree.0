@@ -1,81 +1,24 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Wed, 11 Feb 2015 16:32:31 +0000
-Message-ID: <20150211163231.GR9154@leverpostej>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
- <2437801.56xPyk3atd@vostro.rjw.lan>
- <20150211151237.GN9154@leverpostej>
- <1487331.cgC9j5u0aF@vostro.rjw.lan>
- <20150211155720.GQ9154@leverpostej>
- <20150211171515.55d5066f@bbrezillon>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 0/3] Expose more controls from tegra-max98090
+Date: Wed, 11 Feb 2015 09:34:28 -0700
+Message-ID: <54DB8494.6040600@wwwdotorg.org>
+References: <1423666200-32365-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150211171515.55d5066f@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423666200-32365-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 11, 2015 at 04:15:15PM +0000, Boris Brezillon wrote:
-> On Wed, 11 Feb 2015 15:57:20 +0000
-> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> 
-> > [...]
-> > 
-> > > > > > So for the flag at request time approach to work, all the drivers using
-> > > > > > the interrupt would have to flag they're safe in that context.
-> > > > > 
-> > > > > Something like IRQF_"I can share the line with a timer" I guess?  That wouldn't
-> > > > > hurt and can be checked at request time even.
-> > > > 
-> > > > I guess that would have to imply IRQF_SHARED, so we'd have something
-> > > > like:
-> > > > 
-> > > > IRQF_SHARED_SUSPEND_OK - This handler is safe to call spuriously during
-> > > > 			 suspend in the case the line is shared. The
-> > > > 			 handler will not access unavailable hardware
-> > > > 			 or kernel infrastructure during this period.
-> > > > 
-> > > > #define __IRQF_SUSPEND_SPURIOUS		0x00040000
-> > > > #define	IRQF_SHARED_SUSPEND_OK		(IRQF_SHARED | __IRQF_SUSPEND_SPURIOUS)
-> > > 
-> > > What about
-> > > 
-> > > #define __IRQF_TIMER_SIBLING_OK	0x00040000
-> > > #define	IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
-> > > 
-> > > The "suspend" part is kind of a distraction to me here, because that really
-> > > only is about sharing an IRQ with a timer and the "your interrupt handler
-> > > may be called when the device is suspended" part is just a consequence of that.
-> > 
-> > My rationale was that you didn't really care who else was using the IRQ
-> > (e.g. the timer); you're just stating that you can survive being called
-> > during suspend (which is what the driver may need to check for in the
-> > handler if the device happens to be powered down or whatever).
-> > 
-> > So I guess I see it the other way around. This is essentially claiming
-> > we can handle sharing with IRQF_NO_SUSPEND rather than IRQF_TIMER.
-> > 
-> > > So IMO it's better to have "TIMER" in the names to avoid encouraging people to
-> > > abuse this for other purposes not related to timers.
-> > 
-> > In the end a name is a name, and if you think IRQF_SHARED_TIMER_OK is
-> > better I shan't complain.
-> > 
-> > The fundamental issue I'm concerned with is addressed by this approach.
-> 
-> Okay then, is anyone taking care of submitting such a patch (Mark ?) ?
+On 02/11/2015 07:49 AM, Tomeu Vizoso wrote:
+> Hello,
+>
+> we need some more controls in userspace so policy can be applied at events
+> such as microphone and headphone jacks being plugged in, to be used by
+> Tegra-based Chromebooks.
 
-I'll have the core patch shortly.
-
-I'll need to ask for your help tagging the relevant drivers and testing.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The series,
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
