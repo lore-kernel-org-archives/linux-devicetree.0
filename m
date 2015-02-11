@@ -1,40 +1,44 @@
-From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 2/3] devicetree: bindings: Add vendor prefix for Kosagi
-Date: Wed, 11 Feb 2015 18:23:01 +0800
-Message-ID: <1423650182-16865-3-git-send-email-xobs@kosagi.com>
-References: <1423650182-16865-1-git-send-email-xobs@kosagi.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423650182-16865-1-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+From: Sean Cross <xobs@kosagi.com>
+Subject: [PATCH v3 0/3] Add support for kosagi novena
+Date: Wed, 11 Feb 2015 18:22:59 +0800
+Message-ID: <1423650182-16865-1-git-send-email-xobs@kosagi.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org
+Cc: bunnie@kosagi.com, Sean Cross <xobs@kosagi.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a vendor prefix for Sutajio Ko-Usagi PTE Ltd., which goes by the
-more common name of Kosagi.
+The Kosagi Novena mainboard contains an i.MX6, along with a PCI Express slot.
+This patchset adds device tree support for the Novena mainboard.
 
-Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v2:
+ - Updated stmpe_touchscreen bindings to match documentation
+ - Removed bindings for eepromoops, it6251, senoko
+ - Removed simple-bus and moved regulators into the parent node
+ - Removed "Peek array power" from hog
+ - Removed lonely "wakeup" from kpp
+ - Dropped "add power-supply support" patch
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index d443279..26ed1ca 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -86,6 +86,7 @@ isil    Intersil (deprecated, use isl)
- isl	Intersil
- karo	Ka-Ro electronics GmbH
- keymile	Keymile GmbH
-+kosagi	Sutajio Ko-Usagi PTE Ltd.
- lacie	LaCie
- lantiq	Lantiq Semiconductor
- lenovo	Lenovo Group Ltd.
+Changes since v1:
+ - Add 'kosagi' to vendor prefixes
+ - Add LCD panel to simple-panel
+ - Renamed power-supply to bus-supply
+ - Replaced devm_regulator_get() with devm_regulator_get_optional()
+ - Moved regulator_enable to imx6_add_pcie_port()
+ - Removed fpga@1 from spi definition in dts -- will use overlays instead
+
+
+Sean Cross (3):
+  drm/panel: simple: Add Innolux N133HSE panel support
+  devicetree: bindings: Add vendor prefix for Kosagi
+  ARM: dts: imx6q: add Novena board
+
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/imx6q-novena.dts                 | 818 +++++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               |  26 +
+ 4 files changed, 846 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-novena.dts
+
 -- 
 2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
