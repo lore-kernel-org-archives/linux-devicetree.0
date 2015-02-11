@@ -1,15 +1,14 @@
 From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [resend PATCH v3 4/4] usb: phy: add phy-hi6220-usb
-Date: Wed, 11 Feb 2015 01:30:53 +0000
-Message-ID: <BN3PR0301MB0849FB28B1DAF7BEB5F3BE7881250@BN3PR0301MB0849.namprd03.prod.outlook.com>
-References: <1423559404-13058-1-git-send-email-zhangfei.gao@linaro.org>
- <1423559404-13058-5-git-send-email-zhangfei.gao@linaro.org>
- <20150210144807.GC16711@saruman.tx.rr.com>
+Subject: RE: [PATCH v3 4/5] usb: phy: load usb phy earlier
+Date: Wed, 11 Feb 2015 01:36:58 +0000
+Message-ID: <BN3PR0301MB08492D4F583C3C7ED250E0B781250@BN3PR0301MB0849.namprd03.prod.outlook.com>
+References: <20150210070424.GC32709@shlinux2>
+ <20150210144925.GD16711@saruman.tx.rr.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150210144807.GC16711-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <20150210144925.GD16711-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
 Content-Language: en-US
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -17,51 +16,35 @@ Cc: "john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <john.youn-HKixBCOQz3hWk
 List-Id: devicetree@vger.kernel.org
 
  
-> > Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/usb/phy/Kconfig          |   9 ++
-> >  drivers/usb/phy/Makefile         |   1 +
-> >  drivers/usb/phy/phy-hi6220-usb.c | 306
-> > +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 316 insertions(+)
-> >  create mode 100644 drivers/usb/phy/phy-hi6220-usb.c
+> On Tue, Feb 10, 2015 at 03:04:28PM +0800, Peter Chen wrote:
+> > This patch does not belong to phy, so, doesn't need to add phy in
+> > subject, meanwhile, please add GregKH as TO list, he is the right one
+> > to queue this patch.
 > >
-> > diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig index
-> > c6d0c8e..405a3d0 100644
-> > --- a/drivers/usb/phy/Kconfig
-> > +++ b/drivers/usb/phy/Kconfig
-> > @@ -173,6 +173,15 @@ config USB_MXS_PHY
+> > Reply-To:
+> > In-Reply-To: <1423554627-694-5-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > >
-> >  	  MXS Phy is used by some of the i.MX SoCs, for example imx23/28/6x.
-> >
-> > +config USB_HI6220_PHY
-> > +	tristate "hi6220 USB PHY support"
-> > +	select USB_PHY
-> > +	select MFD_SYSCON
-> > +	help
-> > +	  Enable this to support the HISILICON HI6220 USB PHY.
-> > +
-> > +	  To compile this driver as a module, choose M here.
-> > +
-> >  config USB_RCAR_PHY
-> >  	tristate "Renesas R-Car USB PHY support"
-> >  	depends on USB || USB_GADGET
-> > diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile index
-> > 75f2bba..00172d3 100644
-> > --- a/drivers/usb/phy/Makefile
-> > +++ b/drivers/usb/phy/Makefile
-> > @@ -18,6 +18,7 @@ obj-$(CONFIG_SAMSUNG_USBPHY)		+= phy-
-> samsung-usb.o
-> >  obj-$(CONFIG_TWL6030_USB)		+= phy-twl6030-usb.o
-> >  obj-$(CONFIG_USB_EHCI_TEGRA)		+= phy-tegra-usb.o
-> >  obj-$(CONFIG_USB_GPIO_VBUS)		+= phy-gpio-vbus-usb.o
-> > +obj-$(CONFIG_USB_HI6220_PHY)		+= phy-hi6220-usb.o
+> > On Tue, Feb 10, 2015 at 03:50:26PM +0800, Zhangfei Gao wrote:
+> > > Since phy is definitely used in usb controller, load the phy earlier
+> > > to make boot time shorter.
+> > >
+> > > Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > 
-> new drivers only on drivers/phy/, sorry.
+> NAK, make sure there are no such dependencies with your controller driver.
+> They should know how to defer probing if their resources aren't available yet.
 > 
 
-This driver has many USB dependencies, like otg, gadget. I don't know it
-can use generic phy currently.
+I NAKed it first.
+
+But after thinking more, I think it is a good patch, USB PHY works proper
+is the base for coming USB controller operation, with this patch,
+it can avoid the controller drivers which are linked earlier than USB PHY
+always being probed deferral, look at drivers/Makefile, it links drivers
+follow the similar method.
+
+Zhangfei, you may need to add more description in your commit log to prove
+it is a good improvement.
 
 Peter
 --
