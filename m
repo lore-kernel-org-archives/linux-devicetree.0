@@ -1,86 +1,64 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH v1] of: calculate masks of the device based on dma-range size
-Date: Wed, 11 Feb 2015 12:53:35 -0500
-Message-ID: <1423677215-28968-1-git-send-email-m-karicheri2@ti.com>
+From: 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 0/2] GPIO joystick driver
+Date: Wed, 11 Feb 2015 10:06:38 -0800
+Message-ID: <20150211180638.GB29440@dtor-ws>
+References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
+ <1AA6C46C-36D9-4243-9DC5-254A7202D339@gmail.com>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6AF04@irsmsx105.ger.corp.intel.com>
+ <20150207204658.GA29015@dtor-ws>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B24F@irsmsx105.ger.corp.intel.com>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6BB34@irsmsx105.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4B6D6D87A8FB62428BE0A3E38461A1AB18D6BB34@irsmsx105.ger.corp.intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "Holmberg, Hans" <hans.holmberg@intel.com>
+Cc: "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "'linux-input@vger.kernel.org'" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch update of_dma_configure() API to calculate the
-masks (dma_mask and coherent_dma_mask) based on the dma-range
-values set in DT for the device. Also limit the mask to lower
-of the default mask and mask calculated.
+On Wed, Feb 11, 2015 at 08:49:16AM +0000, Holmberg, Hans wrote:
+> > > > As far as I can tell, there is no way to specify values for ABS-"keys"
+> > > > in the device tree binding.
+> > >
+> > > It may not be present in device tree binding, but the driver does
+> > > support it, so I would rather extend the binding than have a brand new
+> > driver.
+> > 
+> > All right, I find it a bit like whacking a round peg down a square hole, but I'll
+> > head down that path and see where it leads.
+> > 
+> 
+> This is what I've found:
+> 
+> A digital joystick driver needs to report three states per axis: min,
+> max and neutral. The hardware only have two signals per axis(i.e. up
+> and down) however. See http://wiki.icomp.de/wiki/DB9-Joystick 
+> 
+> This makes gpio-keys pretty much impossible to use for joysticks - as
+> the driver only reports abs-events when a button/key is pressed, how
+> would the neutral state be reported?  (as there is no signal for
+> "neutral")
+> 
+> Even if through some hackery the driver would be modified to report a
+> special neutral event if all  "buttons/keys" for that axis are not
+> pressed, what value should be reported?  An average of the values for
+> that axis?   Also, reporting such an implicit neutral event would
+> break the behavior of existing abs-reporting instances, right?
 
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+You have 2 gpio per axis, and since you can't measure how "far" down the
+axis you have moved the driver should only report values -1, 0, 1 per
+axis. You start at neutral position, and move right. IRQ for right gpio
+is fired and you report EV_ABS/ABS_X/1. Then you start moving to the
+left, gpio IRQ fires (you want it to trigger on both edges) and you
+report EV_ABS/ABS_X/0. You continue moving to the left and IRQ for left
+gpio fires up and you report EV_ABS/ABS_X/-1.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- - apply on top of the series "[PATCH v6 0/7] PCI: get DMA configuration
-   from parent device" at www.spinics.net/lists/linux-pci/msg38699.html
+This assumes that you assign EV_ABS/ABS_X and value 1 for right gpio and
+EV_ABS/ABS_X and value -1 for left gpio.
 
- v1 - updated based on comments. Reverted to original
-      code for of_dma_get_range() within the of_dma_configure()
+Thanks.
 
- drivers/of/device.c |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 314c8a9..167ad2d 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -90,10 +90,11 @@ void of_dma_configure(struct device *dev, struct device_node *np)
- 	struct iommu_ops *iommu;
- 
- 	/*
--	 * Set default dma-mask to 32 bit. Drivers are expected to setup
--	 * the correct supported dma_mask.
-+	 * Set default coherent_dma_mask to 32 bit. Drivers are expected to
-+	 * setup the correct supported mask.
- 	 */
--	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-+	if (!dev->coherent_dma_mask)
-+		dev->coherent_dma_mask = DMA_BIT_MASK(32);
- 
- 	/*
- 	 * Set it to coherent_dma_mask by default if the architecture
-@@ -102,6 +103,11 @@ void of_dma_configure(struct device *dev, struct device_node *np)
- 	if (!dev->dma_mask)
- 		dev->dma_mask = &dev->coherent_dma_mask;
- 
-+	/*
-+	 * Use default size to cover 32 bit. Drivers need to set this in DT
-+	 * to override the same.
-+	 */
-+	size = 1ULL << 32;
- 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
- 	if (ret < 0) {
- 		dma_addr = offset = 0;
-@@ -128,6 +134,15 @@ void of_dma_configure(struct device *dev, struct device_node *np)
- 
- 	dev->dma_pfn_offset = offset;
- 
-+	/*
-+	 * Limit coherent and dma mask based on size and default mask
-+	 * set by the driver.
-+	 */
-+	dev->coherent_dma_mask = min(dev->coherent_dma_mask,
-+				     DMA_BIT_MASK(ilog2(dma_addr + size)));
-+	*dev->dma_mask = min((*dev->dma_mask),
-+			     DMA_BIT_MASK(ilog2(dma_addr + size)));
-+
- 	coherent = of_dma_is_coherent(np);
- 	dev_dbg(dev, "device is%sdma coherent\n",
- 		coherent ? " " : " not ");
 -- 
-1.7.9.5
+Dmitry
