@@ -1,72 +1,185 @@
-From: Mathias Nyman <mathias.nyman@intel.com>
-Subject: Re: [PATCH v3 0/5] Add support for Fujitsu USB host controller
-Date: Wed, 11 Feb 2015 13:57:58 +0200
-Message-ID: <54DB43C6.1040605@intel.com>
-References: <1422173608-24355-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>	<20150127152250.GB13776@saruman.tx.rr.com>	<20150129162312.GH21217@saruman.tx.rr.com>	<20150130163815.GG15318@saruman.tx.rr.com> <CAJ1gpc1PD0quDyeUcNr+CdCm78cFMua0dPhdBp-veLXWZAZe5w@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending
+ command'
+Date: Wed, 11 Feb 2015 12:58:26 +0100
+Message-ID: <54DB43E2.70203@samsung.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
+ <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com>
+ <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
+ <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com>
+ <54DAC534.4020708@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJ1gpc1PD0quDyeUcNr+CdCm78cFMua0dPhdBp-veLXWZAZe5w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sneeker Yeh <sneeker.yeh@gmail.com>, Felipe Balbi <balbi@ti.com>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <54DAC534.4020708@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Addy <addy.ke@rock-chips.com>, Alim Akhtar <alim.akhtar@gmail.com>
+Cc: robh+dt <robh+dt@kernel.org>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, dinguyen@altera.com, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Douglas Anderson <dianders@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, amstan@chromium.org, djkurtz@chromium.org, huangtao@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 10.02.2015 17:43, Sneeker Yeh wrote:
-> Hi
+Hi Alim,
+
+On 02/11/2015 03:57 AM, Addy wrote:
 > 
-> 2015-01-31 0:38 GMT+08:00 Felipe Balbi <balbi@ti.com>:
->> Hi,
+> On 2015/02/10 23:22, Alim Akhtar wrote:
+>> Hi Addy,
 >>
->> On Thu, Jan 29, 2015 at 10:23:12AM -0600, Felipe Balbi wrote:
->>> On Tue, Jan 27, 2015 at 09:22:50AM -0600, Felipe Balbi wrote:
->>>> Hi,
->>>>
->>>> On Sun, Jan 25, 2015 at 04:13:23PM +0800, Sneeker Yeh wrote:
->>>>> These patches add support for XHCI compliant Host controller found
->>>>> on Fujitsu Socs, and are based on http://lwn.net/Articles/629162/
->>>>> The first patch is to add Fujitsu glue layer of Synopsis DesignWare USB3 driver
->>>>> and last four patch is about quirk implementation of errata in Synopsis
->>>>> DesignWare USB3 IP.
->>>>>
->>>>> Patch 1 introduces a quirk with device disconnection management necessary
->>>>> Synopsys Designware USB3 IP with versions < 3.00a and hardware configuration
->>>>> DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1. It solves a problem where without the
->>>>> quirk, that host controller will die after a usb device is disconnected from
->>>>> port of root hub.
->>>>>
->>>>> Patch 2 is to set Synopsis quirk in xhci platform driver based on xhci platform
->>>>> data.
->>>>>
->>>>> Patch 3 is to add a revison number 2.90a and 3.00a of Synopsis DesignWare USB3
->>>>> IP core driver.
->>>>>
->>>>> Patch 4 introduces using a quirk based on a errata of Synopsis
->>>>> DesignWare USB3 IP which is versions < 3.00a and has hardware configuration
->>>>> DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1, which cannot be read from software. As a
->>>>> result this quirk has to be enabled via platform data or device tree.
->>>>>
->>>>> Patch 5 introduces Fujitsu Specific Glue layer in Synopsis DesignWare USB3 IP
->>>>> driver.
->>>>>
->>>>
->>>> Mathias, let me know how you want to handle this. Either I take them
->>>> all, or you take them all. What do you prefer ?
+>> On Mon, Feb 9, 2015 at 12:55 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
+>>> Because of some uncertain factors, such as worse card or worse hardware,
+>>> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+>>> will be in busy state. This should not happend when mmc controller
+>>> send command to update card clocks. If this happends, mci_send_cmd will
+>>> be failed and we will get 'Timeout sending command', and then system will
+>>> be blocked. To avoid this, we need reset mmc controller.
 >>>
->>> Mathias ?
+>>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+>>> ---
+>>>   drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
+>>>   1 file changed, 28 insertions(+)
+>>>
+>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>>> index 4d2e3c2..b0b57e3 100644
+>>> --- a/drivers/mmc/host/dw_mmc.c
+>>> +++ b/drivers/mmc/host/dw_mmc.c
+>>> @@ -100,6 +100,7 @@ struct idmac_desc {
+>>>   };
+>>>   #endif /* CONFIG_MMC_DW_IDMAC */
+>>>
+>>> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>>>   static bool dw_mci_reset(struct dw_mci *host);
+>>>   static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>>>
+>>> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>>                  cmd, arg, cmd_status);
+>>>   }
+>>>
+>>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+>>> +{
+>>> +       struct dw_mci *host = slot->host;
+>>> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>> +
+>> Why 500 msec?
+> This timeout value is the same as  mci_send_cmd:
+> static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+> {
+>          struct dw_mci *host = slot->host;
+>          unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>          ....
+> }
+> 
+> I have not clear that which is suitable.
+> Do you have any suggestion on it?
 >>
->> Mathias, a reminder on this series.
+>>> +       do {
+>>> +               if (!dw_mci_card_busy(slot->mmc))
+>>> +                       return;
+>>> +               cpu_relax();
+>>> +       } while (time_before(jiffies, timeout));
+>>> +
+>>> +       dev_err(host->dev, "Data busy (status %#x)\n",
+>>> +               mci_readl(slot->host, STATUS));
+>>> +
+>>> +       /*
+>>> +        * Data busy, this should not happend when mmc controller send command
+>>> +        * to update card clocks in non-volt-switch state. If it happends, we
+>>> +        * should reset controller to avoid getting "Timeout sending command".
+>>> +        */
+>>> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+>>> +
+>> Why you need to reset all blocks? may be CTRL_RESET is good enough here.
+> I have tested on rk3288, if only reset ctroller, data busy bit will not 
+> be cleaned,and we will still get
 > 
-> Would any problem is still in my patchset?
-> e.g. I might still not arrange these patch in a appropriate order so
-> that Mathias cannot review and accept these?
+> "Timeout sending command".
+> 
+>>
+>>> +       /* Fail to reset controller or still data busy, WARN_ON! */
+>>> +       WARN_ON(dw_mci_card_busy(slot->mmc));
+>>> +}
+>>> +
+>>>   static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>   {
+>>>          struct dw_mci *host = slot->host;
+>>> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>          /* We must continue to set bit 28 in CMD until the change is complete */
+>>>          if (host->state == STATE_WAITING_CMD11_DONE)
+>>>                  sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+>>> +       else
+>>> +               dw_mci_wait_busy(slot);
+>>>
+>> hmm...I would suggest you to call dw_mci_wait_busy() from inside
+>> mci_send_cmd(), seems like dw_mmc hangs while sending update clock cmd
+>> in multiple cases.see [1]
+>>
+>> [1]: http://permalink.gmane.org/gmane.linux.kernel.mmc/31140
+> I think this patch is more reasonable.
+> So I will resend patches based on this patch.
+> thank you!
+
+I have tested your patches instead [1] above and they do not solve my issue:
+Board: odroid-xu3/exynos5422/dw_mmc_250a.
+MMC card: absent, broken-cd quirk
+SD card: present
+
+System hangs during boot after few minutes kernel spits:
+[  242.188098] INFO: task kworker/u16:1:50 blocked for more than 120
+seconds.
+[  242.193524]       Not tainted
+3.19.0-next-20150210-00002-gf96831b-dirty #3834
+[  242.200622] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[  242.208422] kworker/u16:1   D c04766ac     0    50      2 0x00000000
+[  242.214756] Workqueue: kmmcd mmc_rescan
+[  242.218553] [<c04766ac>] (__schedule) from [<c0476a58>]
+(schedule+0x34/0x98)
+[  242.225591] [<c0476a58>] (schedule) from [<c047a4dc>]
+(schedule_timeout+0x110/0x164)
+[  242.233302] [<c047a4dc>] (schedule_timeout) from [<c04774f0>]
+(wait_for_common+0xb8/0x14c)
+[  242.241539] [<c04774f0>] (wait_for_common) from [<c0362138>]
+(mmc_wait_for_req+0x68/0x17c)
+[  242.249861] [<c0362138>] (mmc_wait_for_req) from [<c03622cc>]
+(mmc_wait_for_cmd+0x80/0xa0)
+[  242.258002] [<c03622cc>] (mmc_wait_for_cmd) from [<c0367e50>]
+(mmc_go_idle+0x78/0xf8)
+[  242.265796] [<c0367e50>] (mmc_go_idle) from [<c0363e2c>]
+(mmc_rescan+0x280/0x314)
+[  242.273253] [<c0363e2c>] (mmc_rescan) from [<c0034764>]
+(process_one_work+0x120/0x324)
+[  242.281135] [<c0034764>] (process_one_work) from [<c00349cc>]
+(worker_thread+0x30/0x42c)
+[  242.289194] [<c00349cc>] (worker_thread) from [<c003926c>]
+(kthread+0xd8/0xf4)
+[  242.296389] [<c003926c>] (kthread) from [<c000e7c0>]
+(ret_from_fork+0x14/0x34)
+
+Just for record, Exynos4412/dw_mmc_240a with the same configuration
+(no MMC card, broken-cd) works OK without patches.
+
+
+Regards
+Andrzej
+
+>>
+>>>          if (!clock) {
+>>>                  mci_writel(host, CLKENA, 0);
+>>> --
+>>> 1.8.3.2
+>>>
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+>>
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-doc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
 
-Sorry about the delay.
-Let me take a better look at the first patch and reasons behind the
-race. I want to check if a quirk is enough or if we need to dig deeper into xhci.
-
-I'll try to do it today still
-
--Mathias
