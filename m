@@ -1,131 +1,222 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] PCI: get DMA configuration from parent device
-Date: Wed, 11 Feb 2015 11:58:52 -0500
-Message-ID: <54DB8A4C.9050002@ti.com>
-References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
-	<20150206151542.GD23190@e104818-lin.cambridge.arm.com>
-	<54D4DD95.7000303@ti.com>
-	<CAErSpo6GOXHeKKfU8s5jCS3+Mui=HupZd=jpkLEyWAE94Ory5w@mail.gmail.com>
-	<54D509C9.9010204@ti.com> <54DB8960.9010707@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Wed, 11 Feb 2015 17:13:13 +0000
+Message-ID: <20150211171313.GS9154@leverpostej>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20150211155720.GQ9154@leverpostej>
+ <20150211171515.55d5066f@bbrezillon>
+ <2067295.NbJCftPPli@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <54DB8960.9010707-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2067295.NbJCftPPli-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2015 11:54 AM, Murali Karicheri wrote:
-> On 02/06/2015 01:36 PM, Murali Karicheri wrote:
->> On 02/06/2015 12:53 PM, Bjorn Helgaas wrote:
->>> On Fri, Feb 6, 2015 at 9:28 AM, Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
->>> wrote:
->>>> On 02/06/2015 10:15 AM, Catalin Marinas wrote:
->>>>>
->>>>> On Thu, Feb 05, 2015 at 09:52:52PM +0000, Murali Karicheri wrote:
->>>>>>
->>>>>> This patch add an important capability to PCI driver on Keystone. I
->>>>>> hope
->>>>>> to
->>>>>> have this merged to the upstream branch so that it is available for
->>>>>> v3.20.
->>>>>
->>>>> It's very late for 3.20 and the code hasn't been in linux-next at all
->>>>> (but it's not me who's merging this code), unless you can squeeze
->>>>> it in
->>>>> as a bug-fix.
->>>>
->>>> This is in fact a bug fix as PCI on Keystone is broken without this.
->>>
->>> Oh, sorry, I didn't realize that this was so urgent. I guess I read
->>> "this adds an important capability" in the cover letter and concluded
->>> that it was new functionality.
->> Bjorn,
->>
->> Thanks for responding.
->>
->> Let me give you some context on this without which my explanation won't
->> be complete. For using PCI driver on Keystone, I had submitted patches
->> related to machine and DTS to the arm mailing list to enable the driver
->> on Keystone. Subsequenty one of the patch from my series was Nack-ed and
->> I was asked to implememented in a different way and started this series.
->> You can refer to the discussion of this at
->>
->> http://www.gossamer-threads.com/lists/linux/kernel/2024591
->>
->> The PCI driver enablement on Keystone is still a working in progress and
->> I am trying to get it fully functional on the upstream. Another missing
->> piece is the SerDes phy driver patch. We have started working on the
->> other part (SerDes phy driver) already as the initial one was not
->> accepted. So it is fine if we are too late for the v3.20 merge window to
->> merge this series and this can be applied to the next branch for v3.21.
->>
->>>
->>> Anyway, if it's broken, presumably PCI on Keystone *did* work at one
->>> point. Can you identify the commit that broke it and requires these
->>> fixes, so we can figure out how far the fixes need to be backported?
->>>
->>
->> I am trying to get this driver enabled on Keystone by adding the missing
->> pieces as described above. So I guess we don't have to back port
->> anything here.
->>
->>> If I merge it, I would like to get into my for-linus branch and get a
->>> little time in -next before asking Linus to pull it. The merge window
->>> is a little wrinkle there -- I don't like to add new things to the mix
->>> during the window. But if it's an important fix we can still get it
->>> in before the final v3.20.
->>
->> Please apply this to next branch for v3.21. It currently apply cleanly
->> to v3.19-rc7. If you want me rebase to another branch, let me know I can
->> apply and send you an updated patch.
->>
-> Bjorn, Arnd,
->
-> I am assuming, Bjorn is going to merge this to his next branch for
-> v3.21. If not, it might have to be merged through the arm soc? There are
-> a couple of Tested-by and Acked-by received after v7. Do you want me to
-> post v8 with these updated in the patches?
-FYI.
+On Wed, Feb 11, 2015 at 04:42:22PM +0000, Rafael J. Wysocki wrote:
+> On Wednesday, February 11, 2015 05:15:15 PM Boris Brezillon wrote:
+> > On Wed, 11 Feb 2015 15:57:20 +0000
+> > Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > 
+> > > [...]
+> > > 
+> > > > > > > So for the flag at request time approach to work, all the drivers using
+> > > > > > > the interrupt would have to flag they're safe in that context.
+> > > > > > 
+> > > > > > Something like IRQF_"I can share the line with a timer" I guess?  That wouldn't
+> > > > > > hurt and can be checked at request time even.
+> > > > > 
+> > > > > I guess that would have to imply IRQF_SHARED, so we'd have something
+> > > > > like:
+> > > > > 
+> > > > > IRQF_SHARED_SUSPEND_OK - This handler is safe to call spuriously during
+> > > > > 			 suspend in the case the line is shared. The
+> > > > > 			 handler will not access unavailable hardware
+> > > > > 			 or kernel infrastructure during this period.
+> > > > > 
+> > > > > #define __IRQF_SUSPEND_SPURIOUS		0x00040000
+> > > > > #define	IRQF_SHARED_SUSPEND_OK		(IRQF_SHARED | __IRQF_SUSPEND_SPURIOUS)
+> > > > 
+> > > > What about
+> > > > 
+> > > > #define __IRQF_TIMER_SIBLING_OK	0x00040000
+> > > > #define	IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
+> > > > 
+> > > > The "suspend" part is kind of a distraction to me here, because that really
+> > > > only is about sharing an IRQ with a timer and the "your interrupt handler
+> > > > may be called when the device is suspended" part is just a consequence of that.
+> > > 
+> > > My rationale was that you didn't really care who else was using the IRQ
+> > > (e.g. the timer); you're just stating that you can survive being called
+> > > during suspend (which is what the driver may need to check for in the
+> > > handler if the device happens to be powered down or whatever).
+> > > 
+> > > So I guess I see it the other way around. This is essentially claiming
+> > > we can handle sharing with IRQF_NO_SUSPEND rather than IRQF_TIMER.
+> > > 
+> > > > So IMO it's better to have "TIMER" in the names to avoid encouraging people to
+> > > > abuse this for other purposes not related to timers.
+> > > 
+> > > In the end a name is a name, and if you think IRQF_SHARED_TIMER_OK is
+> > > better I shan't complain.
+> > > 
+> > > The fundamental issue I'm concerned with is addressed by this approach.
+> > 
+> > Okay then, is anyone taking care of submitting such a patch (Mark ?) ?
+> 
+> Well, I guess I should take the responsibility for that. :-)
+> 
+> I'll try to cut one later today or tomorrow unless someone else beats me to that.
 
-These are the updates.
-Series was
+I had a go at the core part below. Does it look like what you had in
+mind?
 
-1) Tested-by: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-    (on AMD Seattle platform w/ PCI Generic Host controller)
-2) Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-3) Reviewed-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+I've given it a go on a hacked-up platform, but I don't have any at91
+stuff to test with, so I haven't bothered with the driver portions just
+yet.
 
-If you want to send a updated series with these, please let me know.
+Thanks,
+Mark.
 
-Thanks and regards,
+---->8----
+>From 2d9013517637bb567fbcde3e20797cb2fab1c4c5 Mon Sep 17 00:00:00 2001
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Date: Wed, 11 Feb 2015 16:44:06 +0000
+Subject: [PATCH] genirq: allow safe sharing of irqs during suspend
 
-Murali
->
-> Murali
->
->> Thanks
->>
->> Murali
->>
->>>
->>> Bjorn
->>
->>
->
->
+In some cases a physical IRQ line may be shared between devices from
+which we expect interrupts during suspend (e.g. timers) and those we do
+not (e.g. anything we cut the power to). Where a driver did not request
+the interrupt with IRQF_NO_SUSPEND, it's unlikely that it can handle
+being called during suspend, and where the IRQ PM code detects a
+mismatch it produces a loud warning (via WARN_ON_ONCE).
 
+In a small set of cases the handlers for the devices other than timers
+can tolerate being called during suspend time. In these cases the
+warning is spurious, and masks other potentially unsafe mismatches as it
+is only printed for the first mismatch detected. As the behaviour of the
+handlers is an implementation detail, we cannot rely on external data to
+decide when it is safe for a given interrupt line to be shared in this
+manner.
 
+This patch adds a new flag, IRQF_SHARED_TIMER_OK, which drivers can use
+when requesting an IRQ to state that they can cope if the interrupt is
+shared with a timer driver (and hence may be raised during suspend). The
+PM code is updated to only warn when a mismatch occurs and at least one
+irqaction has neither asked to be called during suspend or has stated it
+is safe to be called during suspend.
+
+This reduces the set of warnings to those cases where there is a real
+problem. While it is possible that this flag may be abused, any such
+abuses will be explicit in the kernel source and can be detected.
+
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+---
+ include/linux/interrupt.h |  5 +++++
+ kernel/irq/pm.c           | 44 ++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 47 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index d9b05b5..2b8ff50 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -57,6 +57,9 @@
+  * IRQF_NO_THREAD - Interrupt cannot be threaded
+  * IRQF_EARLY_RESUME - Resume IRQ early during syscore instead of at device
+  *                resume time.
++ * IRQF_SHARED_TIMER_OK - Interrupt is safe to be shared with a timer. The
++ *                        handler may be called spuriously during suspend
++ *                        without issue.
+  */
+ #define IRQF_DISABLED		0x00000020
+ #define IRQF_SHARED		0x00000080
+@@ -70,8 +73,10 @@
+ #define IRQF_FORCE_RESUME	0x00008000
+ #define IRQF_NO_THREAD		0x00010000
+ #define IRQF_EARLY_RESUME	0x00020000
++#define __IRQF_TIMER_SIBLING_OK	0x00040000
+ 
+ #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
++#define IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
+ 
+ /*
+  * These values can be returned by request_any_context_irq() and
+diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+index 3ca5325..e4ec91a 100644
+--- a/kernel/irq/pm.c
++++ b/kernel/irq/pm.c
+@@ -28,6 +28,47 @@ bool irq_pm_check_wakeup(struct irq_desc *desc)
+ }
+ 
+ /*
++ * Check whether an interrupt is safe to occur during suspend.
++ *
++ * Physical IRQ lines may be shared between devices which may be expected to
++ * raise interrupts during suspend (e.g. timers) and those which may not (e.g.
++ * anything we cut the power to). Not all handlers will be safe to call during
++ * suspend, so we need to scream if there's the possibility an unsafe handler
++ * will be called.
++ *
++ * A small number of handlers are safe to be shared with timer interrupts, and
++ * we don't want to warn erroneously for these. Such handlers will not poke
++ * hardware that's not powered or call into kernel infrastructure not available
++ * during suspend. These are marked with __IRQF_TIMER_SIBLING_OK.
++ */
++bool irq_safe_during_suspend(struct irq_desc * desc, struct irqaction *action)
++{
++	const unsigned int safe_flags =
++		__IRQF_TIMER_SIBLING_OK | IRQF_NO_SUSPEND;
++
++	/*
++	 * If no-one wants to be called during suspend, or if everyone does,
++	 * then there's no potential conflict.
++	 */
++	if (!desc->no_suspend_depth)
++		return true;
++	if (desc->no_suspend_depth == desc->nr_actions)
++		return true;
++
++	/*
++	 * If any action hasn't asked to be called during suspend or is not
++	 * happy to be called during suspend, we have a potential problem.
++	 */
++	if (!(action->flags & safe_flags))
++		return false;
++	for (action = desc->action; action; action = action->next)
++		if (!(action->flags & safe_flags))
++			return false;
++
++	return true;
++}
++
++/*
+  * Called from __setup_irq() with desc->lock held after @action has
+  * been installed in the action chain.
+  */
+@@ -44,8 +85,7 @@ void irq_pm_install_action(struct irq_desc *desc, struct irqaction *action)
+ 	if (action->flags & IRQF_NO_SUSPEND)
+ 		desc->no_suspend_depth++;
+ 
+-	WARN_ON_ONCE(desc->no_suspend_depth &&
+-		     desc->no_suspend_depth != desc->nr_actions);
++	WARN_ON_ONCE(!irq_safe_during_suspend(desc, action));
+ }
+ 
+ /*
 -- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
