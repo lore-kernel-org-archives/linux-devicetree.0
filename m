@@ -1,53 +1,91 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH 2/3] ASoC: tegra: Add sink for the internal mic to tegra_max98090
-Date: Wed, 11 Feb 2015 15:49:53 +0100
-Message-ID: <1423666200-32365-3-git-send-email-tomeu.vizoso@collabora.com>
-References: <1423666200-32365-1-git-send-email-tomeu.vizoso@collabora.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq demuxer chip
+Date: Wed, 11 Feb 2015 16:17:20 +0100
+Message-ID: <2437801.56xPyk3atd@vostro.rjw.lan>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com> <2982569.CIWvqghzfx@vostro.rjw.lan> <20150211144345.GL9154@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423666200-32365-1-git-send-email-tomeu.vizoso@collabora.com>
+In-Reply-To: <20150211144345.GL9154@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Dylan Reid <dgreid@chromium.org>, Lars-Peter Clausen <lars@metafoo.de>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, alsa-devel@alsa-project.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Also adds a control for the pin of the internal mic, so userspace can
-apply policy when the state of the external mic jack changes.
+On Wednesday, February 11, 2015 02:43:45 PM Mark Rutland wrote:
+> [...]
+> 
+> > > > > > +static irqreturn_t __handle_irq_event_percpu(unsigned int irq, struct irqaction *action)
+> > > > > > +{
+> > > > > > +	/*
+> > > > > > +	 * During suspend we must not call potentially unsafe irq handlers.
+> > > > > > +	 * See suspend_suspendable_actions.
+> > > > > > +	 */
+> > > > > > +	if (unlikely(action->flags & IRQF_NO_ACTION))
+> > > > > > +		return IRQ_NONE;
+> > > > > 
+> > > > > Thomas was trying to avoid any new conditional code in the interrupt
+> > > > > handling path, that's why I added a suspended_action list in my
+> > > > > proposal.
+> > > > > Even if your 'unlikely' statement make things better I'm pretty sure it
+> > > > > adds some latency.
+> > > > 
+> > > > I can see that we don't want to add more code here to keep things
+> > > > clean/pure, but I find it hard to believe that a single bit test and
+> > > > branch (for data that should be hot in the cache) are going to add
+> > > > measurable latency to a path that does pointer chasing to get to the
+> > > > irqaction in the first place. I could be wrong though, and I'm happy to
+> > > > benchmark.
+> > > 
+> > > Again, I don't have enough experience to say this is (or isn't)
+> > > impacting irq handling latency, I'm just reporting what Thomas told me.
+> > > 
+> > > > 
+> > > > It would be possible to go for your list shuffling approach here while
+> > > > still keeping the flag internal and all the logic hidden away in
+> > > > kernel/irq/pm.c. I wasn't sure how actions could be manipulated during
+> > > > suspend, which made me wary of moving them to a separate list.
+> > > 
+> > > Moving them to a temporary list on suspend and restoring them on
+> > > resume should not be a problem.
+> > > The only drawback I see is that actions might be reordered after the
+> > > first resume (anyway, relying on shared irq action order is dangerous
+> > > IMHO).
+> > 
+> > We considered doing that too and saw some drawbacks (in addition to the
+> > reordering of actions you've mentioned).  It added just too much complexity
+> > to the IRQ suspend-resume code.
+> > 
+> > I, personally, would be fine with adding an IRQ flag to silence the
+> > warning mentioned by Alexandre.  Something like IRQD_TIMER_SHARED that would
+> > be set automatically if someone requested IRQF_TIMER | IRQF_SHARED.
+> > 
+> > Thoughts?
+> 
+> Even if the timer driver does that, we still require the other handlers
+> sharing the line to do the right thing across suspend, no? So either
+> their actions need to be masked at suspend time, or the handlers need to
+> detect when they're called during suspend and return early.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
----
- Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt | 1 +
- sound/soc/tegra/tegra_max98090.c                                        | 2 ++
- 2 files changed, 3 insertions(+)
+Well, the issue at hand is about things that share an IRQ with a timer AFAICS.
 
-diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt
-index c949abc..c3495be 100644
---- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt
-+++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt
-@@ -18,6 +18,7 @@ Required properties:
-   * Headphones
-   * Speakers
-   * Mic Jack
-+  * Int Mic
- 
- - nvidia,i2s-controller : The phandle of the Tegra I2S controller that's
-   connected to the CODEC.
-diff --git a/sound/soc/tegra/tegra_max98090.c b/sound/soc/tegra/tegra_max98090.c
-index 8df71a4..29ea87c 100644
---- a/sound/soc/tegra/tegra_max98090.c
-+++ b/sound/soc/tegra/tegra_max98090.c
-@@ -133,11 +133,13 @@ static const struct snd_soc_dapm_widget tegra_max98090_dapm_widgets[] = {
- 	SND_SOC_DAPM_HP("Headphones", NULL),
- 	SND_SOC_DAPM_SPK("Speakers", NULL),
- 	SND_SOC_DAPM_MIC("Mic Jack", NULL),
-+	SND_SOC_DAPM_MIC("Int Mic", NULL),
- };
- 
- static const struct snd_kcontrol_new tegra_max98090_controls[] = {
- 	SOC_DAPM_PIN_SWITCH("Headphones"),
- 	SOC_DAPM_PIN_SWITCH("Speakers"),
-+	SOC_DAPM_PIN_SWITCH("Int Mic"),
- };
- 
- static int tegra_max98090_asoc_init(struct snd_soc_pcm_runtime *rtd)
--- 
-1.9.3
+That is odd enough already and I'd say everyone in that situation needs to
+be prepared to take the pain (including having to check if the device is not
+suspended in their interrupt handlers).
+
+And quite frankly they need to do that already, because we've never suspended
+timer IRQs.
+
+> So for the flag at request time approach to work, all the drivers using
+> the interrupt would have to flag they're safe in that context.
+
+Something like IRQF_"I can share the line with a timer" I guess?  That wouldn't
+hurt and can be checked at request time even.
+
+> I'm not averse to having that (only a few drivers shuold be affected and
+> we can sanity check them now).
+
+Right.
+
+Rafael
