@@ -1,123 +1,145 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/4] arm: omap: hwmod: 43xx: add DebugSS hwmod data
-Date: Tue, 10 Feb 2015 17:56:29 -0600
-Message-ID: <20150210235629.GA4785@saruman.tx.rr.com>
-References: <1422054704-14915-2-git-send-email-balbi@ti.com>
- <alpine.DEB.2.02.1501260142590.5450@utopia.booyaka.com>
- <20150126165640.GA10679@saruman.tx.rr.com>
- <20150126194933.GG6660@saruman.tx.rr.com>
- <20150127160143.GH14623@saruman.tx.rr.com>
- <alpine.DEB.2.02.1501271652340.7149@utopia.booyaka.com>
- <20150127171532.GC14878@saruman.tx.rr.com>
- <20150127171843.GD14878@saruman.tx.rr.com>
- <alpine.DEB.2.02.1501271751020.4845@utopia.booyaka.com>
- <alpine.DEB.2.02.1502102311570.3767@utopia.booyaka.com>
-Reply-To: <balbi@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v5 0/5] drivers: bus: Add Simple Power-Managed Bus
+Date: Wed, 11 Feb 2015 09:18:35 +0900
+Message-ID: <20150211001835.GB7826@verge.net.au>
+References: <1423131088-7835-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1502102311570.3767@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+In-Reply-To: <1423131088-7835-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Felipe Balbi <balbi@ti.com>, Olof Johansson <olof@lixom.net>, Magnus Damm <magnus.damm@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Geert,
 
-Hi,
+On Thu, Feb 05, 2015 at 11:11:23AM +0100, Geert Uytterhoeven wrote:
+>         Hi all,
+> 
+> The Renesas Bus State Controller (BSC) provides an external bus for
+> connecting multiple external devices to an SoC, driving several chip
+> select lines, for e.g. NOR FLASH, Ethernet and USB.
+> On the kzm9g and ape6evm development boards, an smsc9220 Ethernet
+> controller is connnected to the BSC of an SH-Mobile AG5 (sh73a0) resp.
+> R-Mobile APE6 (r8a73a4) SoC.
+> 
+> The BSC is a fairly simple memory-mapped bus, hence a "simple-bus"
+> compatibility seems suitable.  However, the BSC is special in two
+> ways:
+>   1. It is part of a PM domain (A4S on sh73a0),
+>   2. It has a gateable functional clock (ZB).
+> Before a device connected to the BSC can be accessed, the PM domain
+> containing the BSC must be powered on, and the functional clock
+> driving the BSC must be enabled.
+> 
+> Both special properties can be described in DT in a standardized way
+> ("power-domains = <&pd_a4s>" and "clocks = <&zb_clk>", cfr. the
+> example in the DT binding documentation).  Externally connected
+> devices are described as children of the BSC node.
+> 
+> Unfortunately this doesn't mean everything will work out-of-the-box.
+> There are two problems:
+>   1. Without a device driver bound to the bus device, this device is
+>      not attached to the PM domain. And although a child device is
+>      present and active, the PM domain may be powered down, as it's
+>      considered unused by the PM domain core.
+>   2. Without a device driver calling pm_runtime_enable(), its
+>      functional clock is not enabled. Once runtime PM is enabled, the
+>      R-Mobile PM domain platform driver manages the functional clock
+>      using runtime PM.
+> 
+> As none of the above is really bus hardware-specific (PM domains and
+> functional clocks in clock domains are handled from genpd and platform
+> code), this series adds a Simple Power-Managed Bus driver for
+> transparent busses, which matches against "simple-pm-bus", enables
+> runtime PM for the bus device, and calls of_platform_populate() to
+> probe for child devices.
+> Due to the child-parent relationship of devices connected to the bus,
+> as long as the device drivers for the child devices are runtime PM
+> enabled, the bus's PM domain will be powered, and the bus's clock will
+> be enabled automatically when needed, for both runtime PM and s2ram.
+> 
+> This was tested on sh73a0/kzm9g-multiplatform (by me), and (v3) on
+> r8a73a4/ape6evm-multiplatform (by Ulrich Hecht). Without this,
+> Ethernet doesn't work, as the ZB clock is disabled by
+> clk_disable_unused().
+> 
+> Felipe: It looks like drivers/usb/musb/musb_am335x.c can be removed, if
+> "ti,am33xx-usb" claims compatibility with "simple-pm-bus"?
+> 
+> As drivers/bus doesn't have a maintainer, and this driver is needed to
+> move two shmobile platforms away from legacy to multiplatform, I think
+> this can go in through Simon's shmobile tree.
 
-On Tue, Feb 10, 2015 at 11:12:40PM +0000, Paul Walmsley wrote:
-> > > > > > > > hm... modulemode SWCTRL causes wait_target_ready to fail. A=
-ny hints ?
-> > > > > > >=20
-> > > > > > > gets stuck in transition state. PRCM_CM_WKUP_DBGSS_CLKCTRL is=
- always
-> > > > > > > read as 0x 12510f00 which would translate into:
-> > > > > > >=20
-> > > > > > > - module disabled
-> > > > > > > - all opt clocks are on
-> > > > > > > - module is transitioning
-> > > > > > > - module in standby
-> > > > > > > - clkA as TPIU and STM trace clock
-> > > > > > > - all dividers set to 2
-> > > > > >=20
-> > > > > > just fyi, checking with HW folks, this might be a new bug, unle=
-ss
-> > > > > > debugss needs something special.
-> > > > >=20
-> > > > > If that happens on DEBUGSS disable, it's probably the same issue =
-as on=20
-> > > > > AM33xx:
-> > > > >=20
-> > > > > http://www.spinics.net/lists/arm-kernel/msg320801.html
-> > > > > http://www.spinics.net/lists/arm-kernel/msg321930.html
-> > > > > http://www.spinics.net/lists/arm-kernel/msg329151.html
-> > > > >=20
-> > > > > Does adding HWMOD_INIT_NO_IDLE fix the issue you're seeing?
-> > > >=20
-> > > > I'll try it out in a bit...
-> > >=20
-> > > nope, same thing.
-> > >=20
-> > > [   27.633235] omap_hwmod: debugss: _wait_target_disable failed
-> >=20
-> > OK, looking at the code, this makes sense.  So here's what I'd suggest=
-=20
-> > asking the hardware team: is the right approach to:
-> >=20
-> > 1. keep the DEBUGSS CLKCTRL MODULEMODE bitfield at 0x2 all the time, ev=
-en=20
-> > when it's not in use or when entering chip low-power states, or
-> >=20
-> > 2. program the DEBUGSS CLKCTRL MODULEMODE bitfield to 0x0 when the DEBU=
-GSS=20
-> > is not in use or when entering chip low-power states, but ignore the=20
-> > DEBUGSS CLKCTRL IDLEST register=20
-> >=20
-> > We'll need a new hwmod flag either way; the question is whether it shou=
-ld=20
-> > be something like HWMOD_CANNOT_DISABLE (case 1), or=20
-> > HWMOD_DISABLE_IGNORE_IDLEST (case 2).
->=20
-> Just checking on this.  Heard anything from the hardware team?  If not I'=
-d=20
-> say the HWMOD_CANNOT_DISABLE approach is probably the right one for now...
+thanks for persisting with this. From my point of view it appears
+to be reviewed and ready.
 
-nothing from HW team yet. Last I heard is that they can reproduce the
-issue, and are now digging through documentation (and maybe RTL, but I'm
-speculating) to see if that should be supported or not.
+Does anyone object to me queueing this up for v3.21 in the renesas tree?
 
-=46rom my point of view, however, the thing idles, it just doesn't report
-it.
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
---=20
-balbi
-
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU2pqtAAoJEIaOsuA1yqRE47UP/0XXLPiRAbXBmTXDU6p9rbdf
-bxNydsXReJu7hbht+rska516qn7vrPY+wk8JImYoJ0MZA6B53+HXLvnd9Ht/VZKc
-s5xd+v30/bsm3icZLm0/B7A+JGe8Q6zPGZCkRSa5nIu3AtDwG9coSMBmTiTFbJ7G
-lQDbfbdx5zyHAPboF1LbuEKC/axE5uwFGP2dCBNdjKj1XrGGK4fhRP1B+rMo8ibP
-/GOn4ARyK6xPrS/s40A55s/IijizW+Lbkfv2A+Xtax9+eUp98dbNgIOsX+70PByh
-avZS/gmeNPeIRC7A8V+7Q4c5iP9LjRy1wWHBHgHtr9nAGDrRNBZj1vSO+jLW0vEO
-GX6H13qgjx6rG+XDvk9vn5g/xrrtPFopawViHIg5a94Y4N/up3XAwPFAG7Zcqnad
-TVA8mDwrEpIbBgQyAwKZLJZD+i3VJxNlLrKrsldVcYSOXQZ3xdLq7HE5hmRpKg54
-roH9k8CqaN9eqUx14GNa8WwJ67jsYoTrV1fIk3ezW9vjE4ns+3dw7Gqo6x6qW/Cd
-btuV9kJqxRnOc562JuruDhkZFo2r+C2sZOIiaNOSSaWnAc8gR6j18lqSqLvUp7rL
-qFx/z5eZfN9OmGMZQTGYS1P2vITPzMW0w1adatj2skiSlVprboEqB5uuBGhx2HNn
-y4vhHkUfEPlKBYFmd7LI
-=2mEz
------END PGP SIGNATURE-----
-
---mYCpIKhGyMATD0i+--
+> Changes compared to v4:
+>   - Add Reviewed-by,
+>   - "simple-pm-bus" is not an extension of "simple-bus",
+>   - "compatible" must not contain "simple-bus",
+>   - Add reference to clock/PM domain provider binding docs.
+> 
+> Changes compared to v3:
+>   - Replace "simple-bus" by "simple-pm-bus" in the bindings,
+>   - Move the "renesas,bsc" bindings to a separate document,
+>   - Bind against the generic "simple-pm-bus" instead of "renesas,bsc",
+>   - Explicitly call of_platform_populate() after pm_runtime_enable() to
+>     enforce ordering, instead of depending on claimed compatibility with
+>     "simple-bus".
+> 
+> Changes compared to v2:
+>   - Document required properties inherited from "simple-bus",
+>   - Document required "reg" property for "renesas,bsc",
+>   - Move "ranges" before "reg" in the example,
+>   - Add Tested-by,
+>   - Split-off sh73a0/kzm9g and r8a73a4/ape6evm DTS updates.
+> 
+> Changes compared to v1 (more detailed change logs in the individual
+> patches):
+>   - Added sorting of drivers/bus Kconfig and Makefile entries,
+>   - Added DT binding documentation,
+>   - Rename from "Renesas Bus State Controller Driver" (renesas-bsc) to
+>     "Simple Power-Managed Bus Driver" (simple-pm-bus),
+>   - Postponed adding power-domains properties to the dtsi,
+>   - Added updates for r8a73a4/ape6evm.
+> 
+> Thanks!
+> 
+> Geert Uytterhoeven (5):
+>   drivers: bus: Sort Kconfig entries alphabetically
+>   drivers: bus: Sort Makefile entries alphabetically
+>   drivers: bus: Add Simple Power-Managed Bus DT Bindings
+>   drivers: bus: Add Renesas Bus State Controller (BSC) DT Bindings
+>   drivers: bus: Add Simple Power-Managed Bus Driver
+> 
+>  .../devicetree/bindings/bus/renesas,bsc.txt        | 46 +++++++++++++++++
+>  .../devicetree/bindings/bus/simple-pm-bus.txt      | 44 ++++++++++++++++
+>  drivers/bus/Kconfig                                | 53 ++++++++++++--------
+>  drivers/bus/Makefile                               | 15 +++---
+>  drivers/bus/simple-pm-bus.c                        | 58 ++++++++++++++++++++++
+>  5 files changed, 189 insertions(+), 27 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/bus/renesas,bsc.txt
+>  create mode 100644 Documentation/devicetree/bindings/bus/simple-pm-bus.txt
+>  create mode 100644 drivers/bus/simple-pm-bus.c
+> 
+> -- 
+> 1.9.1
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
+> 
