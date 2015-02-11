@@ -1,88 +1,69 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: Re: [PATCH RFC v8 11/21] Documentation: dt-bindings: Add bindings
- for Synopsys DW MIPI DSI DRM bridge driver
-Date: Wed, 11 Feb 2015 22:09:32 +0800
-Message-ID: <20150211140931.GA6666@victor>
-References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
- <1420014219-915-12-git-send-email-Ying.Liu@freescale.com>
- <1423131004.3207.27.camel@pengutronix.de> <20150206081318.GA15088@victor>
- <20150211072128.GA13301@victor> <1423659648.4680.18.camel@pengutronix.de>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq demuxer chip
+Date: Wed, 11 Feb 2015 15:31:18 +0100
+Message-ID: <32372622.IiYZ15O7e1@vostro.rjw.lan>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com> <20150211091159.GE7119@twins.programming.kicks-ass.net> <20150211111516.GB9154@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1423659648.4680.18.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, andyshrk@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150211111516.GB9154@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCk9uIFdlZCwgRmViIDExLCAyMDE1IGF0IDAyOjAwOjQ4UE0gKzAxMDAsIFBo
-aWxpcHAgWmFiZWwgd3JvdGU6Cj4gSGkgTGl1LAo+IAo+IEFtIE1pdHR3b2NoLCBkZW4gMTEuMDIu
-MjAxNSwgMTU6MjEgKzA4MDAgc2NocmllYiBMaXUgWWluZzoKPiBbLi4uXQo+ID4gT3VyIGludGVy
-bmFsIE1JUEkgRFNJIFNvQyBvd25lciBnYXZlIG1lIHNvbWUgZmVlZGJhY2tzIG9uIHRoZSBjbG9j
-ayBzb3VyY2VzLgo+ID4gQWNjb3JkaW5nIHRvIGhpbSwgdGhlIFN5bm9wc3lzIERlc2lnbldhcmUg
-TUlQSSBEU0kgaG9zdCBjb250cm9sbGVyIG5lZWRzIGZvdXIKPiA+IGNsb2NrIHNvdXJjZXMgZnJv
-bSBhbiBhcHBsaWNhdGlvbiBwbGF0Zm9ybSAtIHBjbGssIHJlZmNsaywgY2ZnX2NsayBhbmQgZHBp
-cGNsay4KPiA+IFRoZXNlIGNsb2NrcyBhcmUgbWVudGlvbmVkIGluIHRoZSAiRGVzaWduV2FyZSBD
-b3JlcyBNSVBJIERTSSBIb3N0IENvbnRyb2xsZXIKPiA+IERhdGFib29rLCAxLjAxYTEuMzBhLnBk
-ZiIgZG9jdW1lbnRhdGlvbi4KPiA+IAo+ID4gUXVvdGUgc29tZSB3b3JkcyBmcm9tIHRoZSBkb2N1
-bWVudGF0aW9uOgo+ID4gcGNsayAgICAtIEFQQiBjbG9jayBzaWduYWwuCj4gPiByZWZjbGsgIC0g
-RC1QSFkgcmVmZXJlbmNlIGNsb2NrIHVzZWQgZm9yIE1hc3Rlci1zaWRlIHNlcmlhbCBjbG9jayBn
-ZW5lcmF0aW9uIGluCj4gPiAgICAgICAgICAgY2xvY2sgbXVsdGlwbHlpbmcgdW5pdChQTEwpLgo+
-ID4gY2ZnX2NsayAtIEQtUEhZIENvbmZpZ3VyYXRpb24gY2xvY2sgdXNlZCBmb3IgdGhlIGluaXRp
-YWxpemF0aW9uIG9mIHRoZSBQSFkuIEl0Cj4gPiAgICAgICAgICAgaXMgYWxzbyB1c2VkIGZvciBl
-eGl0aW5nIFVMUFMgc3RhdGUuCj4gPiBkcGlwY2xrIC0gSW5wdXQgUGl4ZWwgY2xvY2sgc2lnbmFs
-Lgo+ID4gCj4gPiBUaGUgYmVsb3cgdGFibGUgcmVmbGVjdHMgaG93IGRvZXMgaS5NWDZRL0RMIHBy
-b3ZpZGUgdGhlIHBjbGssIHJlZmNsayBhbmQgY2ZnX2Nsawo+ID4gZm9yIHRoZSBEZXNpZ25XYXJl
-IE1JUEkgRFNJIGhvc3QgY29udHJvbGxlciwgYWNjb3JkaW5nIHRvIHRoZSBTb0Mgb3duZXIuCj4g
-PiAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4gfCBTeW5vcHN5cyAgICAgIHwgICAgICAgICAgICAg
-ICAgICAgICBpLk1YNlEvREwgTUlQSSBEU0kgICAgICAgICAgICAgICAgICAgICB8Cj4gPiB8IERl
-c2lnbldhcmUgICAgfC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLXwKPiA+IHwgZG9jdW1lbnRhdGlvbiB8ICAgIGNsb2NrICAgfCAgICAg
-Y2xvY2sgcm9vdCAgICAgfCAgICAgICBDQ01fQ0NHUiBiaXRzICAgICAgfAo+ID4gfC0tLS0tLS0t
-LS0tLS0tLXwtLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS18Cj4gPiB8ICAgICBwY2xrICAgICAgfCAgIGlwc19jbGsgIHwgICAgaXBnX2Ns
-a19yb290ICAgIHwgbWlwaV9jb3JlX2NmZ19jbGtfZW5hYmxlIHwKPiA+IHwtLS0tLS0tLS0tLS0t
-LS18LS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tfAo+ID4gfCAgICByZWZjbGsgICAgIHwgcGxsX3JlZmNsayB8IHZpZGVvXzI3bV9jbGtf
-cm9vdCB8IG1pcGlfY29yZV9jZmdfY2xrX2VuYWJsZSB8Cj4gPiB8LS0tLS0tLS0tLS0tLS0tfC0t
-LS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LXwKPiA+IHwgICAgY2ZnX2NsayAgICB8ICAgY2ZnX2NsayAgfCB2aWRlb18yN21fY2xrX3Jvb3Qg
-fCBtaXBpX2NvcmVfY2ZnX2Nsa19lbmFibGUgfAo+ID4gIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+
-IAo+ID4gSSB0aGluayB3ZSBzaG91bGQgYWRkIGEgbmV3IGNsb2NrICJJTVg2UURMX0NMS19NSVBJ
-X0lQRyIgYXMgYSBzaGFyZWQgY2xvY2sgZ2F0ZQo+ID4gY2xvY2suCj4gCj4gVGhhdCB3b3VsZCBi
-ZSBuZWNlc3NhcnkgaWYgdGhlIHBjbGsgY2xvY2sgcmF0ZSBtYXR0ZXJlZCBvciB3b3VsZCBiZSBz
-ZXQKPiBhbnl3aGVyZS4KCkkgZG9uJ3QgdGhpbmsgdGhlIHBjbGsgY2xvY2sgcmF0ZSBtYXR0ZXJz
-IGEgbG90LiAgSXQgc2hvdWxkIGJlIHN1ZmZpY2llbnQKZm9yIHRoZSBkcml2ZXIgb25seSB0byBl
-bmFibGUvZGlzYWJsZSB0aGUgcGNsayBmb3IgcmVnaXN0ZXJzIGFjY2VzcywganVzdApsaWtlIHRo
-ZSB3YXkgdGhlIHB3bS1pbXggZHJpdmVyIHVzZXMgdGhlIGlwZyBjbG9jay4KCj4gCj4gPiBBbmQs
-IHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eSBzaG91bGQgZXhhY3RseSBjb250YWluICJwY2xrIiwg
-InJlZmNsayIKPiA+IGFuZCAiY2ZnX2NsayIsIHJpZ2h0Pwo+IAo+IE15IHBlcnNvbmFsIHByZWZl
-cmVuY2Ugd291bGQgYmUgdG8gZHJvcCB0aGUgc3VwZXJmbHVvdXMgImNsayIgcHJlZml4IGlmCj4g
-dGhlIHJlc3VsdGluZyBjbG9jayBuYW1lIGlzIHN0aWxsIGNsZWFybHkgcmVsYXRhYmxlIHRvIHRo
-ZSBvZmZpY2lhbAo+IG5hbWUuIEV4aXN0aW5nIGNsb2NrIG5hbWluZyBmb3IgdGhlIHBjbGsgaXMg
-YSBiaXQgbWl4ZWQgLQo+IFRoZSAic25wcyxkdy1hcGItdGltZXIiIGJpbmRpbmcgdXNlcyAicGNs
-ayIsIHdoaWNoIHNlZW1zIHRvIGJlIHF1aXRlCj4gY29tbW9uIGluIG90aGVyIHBsYWNlcywgdG9v
-LiBUaGUgInNucHMsZHctYXBiLXVhcnQiIGJpbmRpbmdzIHVzZQo+ICJhcGJfcGNsayIuICJzbnBz
-LGR3LWhkbWktdHgiIHVzZXMgImlhaGIiIGFuZCAiaXNmciIgd2l0aG91dCB0aGUgY2xrCj4gc3Vm
-Zml4Lgo+IEhvdyBhYm91dCAicGNsayIsICJyZWYiIGFuZCAiY2ZnIj8KCkxvb2tzIGdvb2QgYW5k
-IGNsZWFyIGVub3VnaC4gIEknZCBsaWtlIHRvIHVzZSB0aGVtLiAgVGhhbmtzLgoKQlRXLCByZWdh
-cmRpbmcgdGhlIGNvbXBhdGlibGUgc3RyaW5nIHRvcGljLCBzaGFsbCBJIGtlZXAgbXkgaW1wbGVt
-ZW50YXRpb24KdW5jaGFuZ2VkIGFuZCBkb24ndCBhcHBlbmQgdGhlIGFkZGl0aW9uYWwgInNucHMs
-ZHctbWlwaS1kc2kiIGFzIEkgc2hhcmVkCm15IGNvbmNlcm5zIGFib3V0IGl0IGJlZm9yZT8KClJl
-Z2FyZHMsCkxpdSBZaW5nCgo+IAo+IHJlZ2FyZHMKPiBQaGlsaXBwCj4gCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wednesday, February 11, 2015 11:15:17 AM Mark Rutland wrote:
+> On Wed, Feb 11, 2015 at 09:11:59AM +0000, Peter Zijlstra wrote:
+> > On Tue, Feb 10, 2015 at 08:48:36PM +0000, Mark Rutland wrote:
+> > > From f390ccbb31f06efee49b4469943c8d85d963bfb5 Mon Sep 17 00:00:00 2001
+> > > From: Mark Rutland <mark.rutland@arm.com>
+> > > Date: Tue, 10 Feb 2015 20:14:33 +0000
+> > > Subject: [PATCH] genirq: allow mixed IRQF_NO_SUSPEND requests
+> > > 
+> > > In some cases a physical IRQ line may be shared between devices from
+> > > which we expect interrupts during suspend (e.g. timers) and those we do
+> > > not (e.g. anything we cut the power to). Where a driver did not request
+> > > the interrupt with IRQF_NO_SUSPEND, it's unlikely that it can handle
+> > > being called during suspend, and it may bring down the system.
+> > > 
+> > > This patch adds logic to automatically mark the irqactions for these
+> > > potentially unsafe handlers as disabled during suspend, leaving actions
+> > > with IRQF_NO_SUSPEND enabled. If an interrupt is raised on a shared line
+> > > during suspend, only the handlers requested with IRQF_NO_SUSPEND will be
+> > > called. The handlers requested without IRQF_NO_SUSPEND will be skipped
+> > > as if they had immediately returned IRQF_NONE.
+> > > 
+> > > Cc: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > > Cc: Jason Cooper <jason@lakedaemon.net>
+> > > Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > 
+> > Aw gawd.. not that again.
+> 
+> I agree this isn't pretty, but at least it doesn't require the HW
+> description to know about Linux internals, and it can work for !DT
+> systems.
+> 
+> I'm really not happy with placing Linux implementation details into
+> DTBs.
+> 
+> > So Rafael and tglx went over this a few months ago I think:
+> > 
+> >   lkml.kernel.org/r/26580319.OZP7jvJnA9@vostro.rjw.lan
+> > 
+> > is the last series I could find. Maybe Rafael can summarize?
+> 
+> I can't get at any commentary from that link, unfortunately.
+> 
+> Rafael?
+
+Well, the commentary is not there, because both I and Thomas implicitly agreed
+on one thing: We cannot add any suspend-related checks to the interrupt handling
+hot path, because that will affect everyone including people who don't use
+suspend at all and who *really* care about interrupt handling performance.
+
+Rafael
