@@ -1,185 +1,222 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending
- command'
-Date: Wed, 11 Feb 2015 12:58:26 +0100
-Message-ID: <54DB43E2.70203@samsung.com>
-References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
- <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com>
- <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
- <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com>
- <54DAC534.4020708@rock-chips.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Wed, 11 Feb 2015 13:24:37 +0100
+Message-ID: <20150211132437.0753a7da@bbrezillon>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
+	<20150210153628.GF9432@leverpostej>
+	<20150210165201.634bc04b@bbrezillon>
+	<20150210204835.GL9432@leverpostej>
+	<20150211095339.0a2e4e7b@bbrezillon>
+	<20150211111106.GA9154@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <54DAC534.4020708@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Addy <addy.ke@rock-chips.com>, Alim Akhtar <alim.akhtar@gmail.com>
-Cc: robh+dt <robh+dt@kernel.org>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, dinguyen@altera.com, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Douglas Anderson <dianders@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, amstan@chromium.org, djkurtz@chromium.org, huangtao@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kever.yang@rock-chips.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150211111106.GA9154@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alim,
+Hi Mark,
 
-On 02/11/2015 03:57 AM, Addy wrote:
+On Wed, 11 Feb 2015 11:11:06 +0000
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+
+> On Wed, Feb 11, 2015 at 08:53:39AM +0000, Boris Brezillon wrote:
+> > Hi Mark,
+> > 
+> > On Tue, 10 Feb 2015 20:48:36 +0000
+> > Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > 
+> > > On Tue, Feb 10, 2015 at 03:52:01PM +0000, Boris Brezillon wrote:
+> > > > Hi Mark,
+> > > > 
+> > > > On Tue, 10 Feb 2015 15:36:28 +0000
+> > > > Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > > > 
+> > > > > Hi Boris,
+> > > > > 
+> > > > > On Thu, Jan 29, 2015 at 10:33:38AM +0000, Boris Brezillon wrote:
+> > > > > > Add documentation for the virtual irq demuxer.
+> > > > > > 
+> > > > > > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > > > > Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > > > > > ---
+> > > > > >  .../bindings/interrupt-controller/dumb-demux.txt   | 41 ++++++++++++++++++++++
+> > > > > >  1 file changed, 41 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+> > > > > > new file mode 100644
+> > > > > > index 0000000..b9a7830
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+> > > > > > @@ -0,0 +1,41 @@
+> > > > > > +* Virtual Interrupt Demultiplexer
+> > > > > > +
+> > > > > > +This virtual demultiplexer simply forward all incoming interrupts to its
+> > > > > > +enabled/unmasked children.
+> > > > > > +It is only intended to be used by hardware that do not provide a proper way
+> > > > > > +to demultiplex a source interrupt, and thus have to wake all their children
+> > > > > > +up so that they can possibly handle the interrupt (if needed).
+> > > > > > +This can be seen as an alternative to shared interrupts when at least one
+> > > > > > +of the interrupt children is a timer (and require the irq to stay enabled
+> > > > > > +on suspend) while others are not. This will prevent calling irq handlers of
+> > > > > > +non timer devices while they are suspended.
+> > > > > 
+> > > > > This sounds like a DT-workaround for a Linux implementation problem, and
+> > > > > I don't think this the right way to solve your problem.
+> > > > 
+> > > > I understand your concern, but why are you answering while I asked for
+> > > > DT maintainers reviews for several days (if not several weeks).
+> > > > 
+> > > > > 
+> > > > > Why does this have to be in DT at all? Why can we not fix the core to
+> > > > > handle these details?
+> > > > 
+> > > > We already discussed that with Rob and Thomas, and hiding such a
+> > > > demuxer chip is not an easy task.
+> > > > I'm open to any suggestion to do that, though I'd like you (I mean DT
+> > > > guys) to provide a working implementation (or at least a viable concept)
+> > > > that would silently demultiplex an irq.
+> > > > 
+> > > > > 
+> > > > > I am very much not keen on this binding.
+> > > > 
+> > > > Yes, but do you have anything else to propose.
+> > > > We're experiencing this warning for 2 releases now, and this is time to
+> > > > find a solution (even if it's not a perfect one).
+> > > 
+> > > Thoughts on the patch below?
+> > 
+> > That's pretty much what I proposed in my first attempt to solve this
+> > problem [1] (except for a few things commented below).
+> > Anyway, Thomas suggested to go for the "dumb/virt irq demultiplexer"
+> > approach instead.
 > 
-> On 2015/02/10 23:22, Alim Akhtar wrote:
->> Hi Addy,
->>
->> On Mon, Feb 9, 2015 at 12:55 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
->>> Because of some uncertain factors, such as worse card or worse hardware,
->>> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
->>> will be in busy state. This should not happend when mmc controller
->>> send command to update card clocks. If this happends, mci_send_cmd will
->>> be failed and we will get 'Timeout sending command', and then system will
->>> be blocked. To avoid this, we need reset mmc controller.
->>>
->>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
->>> ---
->>>   drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
->>>   1 file changed, 28 insertions(+)
->>>
->>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
->>> index 4d2e3c2..b0b57e3 100644
->>> --- a/drivers/mmc/host/dw_mmc.c
->>> +++ b/drivers/mmc/host/dw_mmc.c
->>> @@ -100,6 +100,7 @@ struct idmac_desc {
->>>   };
->>>   #endif /* CONFIG_MMC_DW_IDMAC */
->>>
->>> +static int dw_mci_card_busy(struct mmc_host *mmc);
->>>   static bool dw_mci_reset(struct dw_mci *host);
->>>   static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
->>>
->>> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
->>>                  cmd, arg, cmd_status);
->>>   }
->>>
->>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
->>> +{
->>> +       struct dw_mci *host = slot->host;
->>> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
->>> +
->> Why 500 msec?
-> This timeout value is the same as  mci_send_cmd:
-> static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
-> {
->          struct dw_mci *host = slot->host;
->          unsigned long timeout = jiffies + msecs_to_jiffies(500);
->          ....
-> }
+> There is one fundamental difference in that this patch does not require
+> drivers to be updated (the new flag is only used internally). Which
+> avoids having to patch every single driver that could possibly be used
+> in combination with one wanting interrupts during suspend.
+
+Actually, that was one of the requirements expressed by Thomas (Thomas,
+correct me if I'm wrong).
+The point was to force shared irq users to explicitly specify that they
+are mixing !IRQF_NO_SUSPEND and IRQF_NO_SUSPEND because they have no
+other choice.
+
+With your patch, there's no way to inform users that they are
+erroneously setting the IRQF_NO_SUSPEND flag on one of their shared
+interrupt.
+
 > 
-> I have not clear that which is suitable.
-> Do you have any suggestion on it?
->>
->>> +       do {
->>> +               if (!dw_mci_card_busy(slot->mmc))
->>> +                       return;
->>> +               cpu_relax();
->>> +       } while (time_before(jiffies, timeout));
->>> +
->>> +       dev_err(host->dev, "Data busy (status %#x)\n",
->>> +               mci_readl(slot->host, STATUS));
->>> +
->>> +       /*
->>> +        * Data busy, this should not happend when mmc controller send command
->>> +        * to update card clocks in non-volt-switch state. If it happends, we
->>> +        * should reset controller to avoid getting "Timeout sending command".
->>> +        */
->>> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
->>> +
->> Why you need to reset all blocks? may be CTRL_RESET is good enough here.
-> I have tested on rk3288, if only reset ctroller, data busy bit will not 
-> be cleaned,and we will still get
+> Any used which did not explicitly request with IRQF_NO_SUSPEND will not
+> receive interrupts during suspend.
 > 
-> "Timeout sending command".
+> [...]
 > 
->>
->>> +       /* Fail to reset controller or still data busy, WARN_ON! */
->>> +       WARN_ON(dw_mci_card_busy(slot->mmc));
->>> +}
->>> +
->>>   static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
->>>   {
->>>          struct dw_mci *host = slot->host;
->>> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
->>>          /* We must continue to set bit 28 in CMD until the change is complete */
->>>          if (host->state == STATE_WAITING_CMD11_DONE)
->>>                  sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
->>> +       else
->>> +               dw_mci_wait_busy(slot);
->>>
->> hmm...I would suggest you to call dw_mci_wait_busy() from inside
->> mci_send_cmd(), seems like dw_mmc hangs while sending update clock cmd
->> in multiple cases.see [1]
->>
->> [1]: http://permalink.gmane.org/gmane.linux.kernel.mmc/31140
-> I think this patch is more reasonable.
-> So I will resend patches based on this patch.
-> thank you!
-
-I have tested your patches instead [1] above and they do not solve my issue:
-Board: odroid-xu3/exynos5422/dw_mmc_250a.
-MMC card: absent, broken-cd quirk
-SD card: present
-
-System hangs during boot after few minutes kernel spits:
-[  242.188098] INFO: task kworker/u16:1:50 blocked for more than 120
-seconds.
-[  242.193524]       Not tainted
-3.19.0-next-20150210-00002-gf96831b-dirty #3834
-[  242.200622] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  242.208422] kworker/u16:1   D c04766ac     0    50      2 0x00000000
-[  242.214756] Workqueue: kmmcd mmc_rescan
-[  242.218553] [<c04766ac>] (__schedule) from [<c0476a58>]
-(schedule+0x34/0x98)
-[  242.225591] [<c0476a58>] (schedule) from [<c047a4dc>]
-(schedule_timeout+0x110/0x164)
-[  242.233302] [<c047a4dc>] (schedule_timeout) from [<c04774f0>]
-(wait_for_common+0xb8/0x14c)
-[  242.241539] [<c04774f0>] (wait_for_common) from [<c0362138>]
-(mmc_wait_for_req+0x68/0x17c)
-[  242.249861] [<c0362138>] (mmc_wait_for_req) from [<c03622cc>]
-(mmc_wait_for_cmd+0x80/0xa0)
-[  242.258002] [<c03622cc>] (mmc_wait_for_cmd) from [<c0367e50>]
-(mmc_go_idle+0x78/0xf8)
-[  242.265796] [<c0367e50>] (mmc_go_idle) from [<c0363e2c>]
-(mmc_rescan+0x280/0x314)
-[  242.273253] [<c0363e2c>] (mmc_rescan) from [<c0034764>]
-(process_one_work+0x120/0x324)
-[  242.281135] [<c0034764>] (process_one_work) from [<c00349cc>]
-(worker_thread+0x30/0x42c)
-[  242.289194] [<c00349cc>] (worker_thread) from [<c003926c>]
-(kthread+0xd8/0xf4)
-[  242.296389] [<c003926c>] (kthread) from [<c000e7c0>]
-(ret_from_fork+0x14/0x34)
-
-Just for record, Exynos4412/dw_mmc_240a with the same configuration
-(no MMC card, broken-cd) works OK without patches.
-
-
-Regards
-Andrzej
-
->>
->>>          if (!clock) {
->>>                  mci_writel(host, CLKENA, 0);
->>> --
->>> 1.8.3.2
->>>
->>>
->>>
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->>
+> > > +static irqreturn_t __handle_irq_event_percpu(unsigned int irq, struct irqaction *action)
+> > > +{
+> > > +	/*
+> > > +	 * During suspend we must not call potentially unsafe irq handlers.
+> > > +	 * See suspend_suspendable_actions.
+> > > +	 */
+> > > +	if (unlikely(action->flags & IRQF_NO_ACTION))
+> > > +		return IRQ_NONE;
+> > 
+> > Thomas was trying to avoid any new conditional code in the interrupt
+> > handling path, that's why I added a suspended_action list in my
+> > proposal.
+> > Even if your 'unlikely' statement make things better I'm pretty sure it
+> > adds some latency.
 > 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-doc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> I can see that we don't want to add more code here to keep things
+> clean/pure, but I find it hard to believe that a single bit test and
+> branch (for data that should be hot in the cache) are going to add
+> measurable latency to a path that does pointer chasing to get to the
+> irqaction in the first place. I could be wrong though, and I'm happy to
+> benchmark.
 
+Again, I don't have enough experience to say this is (or isn't)
+impacting irq handling latency, I'm just reporting what Thomas told me.
+
+> 
+> It would be possible to go for your list shuffling approach here while
+> still keeping the flag internal and all the logic hidden away in
+> kernel/irq/pm.c. I wasn't sure how actions could be manipulated during
+> suspend, which made me wary of moving them to a separate list.
+
+Moving them to a temporary list on suspend and restoring them on
+resume should not be a problem.
+The only drawback I see is that actions might be reordered after the
+first resume (anyway, relying on shared irq action order is dangerous
+IMHO).
+
+> 
+> > > +	return action->handler(irq, action->dev_id);
+> > > +}
+> > > +
+> > >  irqreturn_t
+> > >  handle_irq_event_percpu(struct irq_desc *desc, struct irqaction *action)
+> > >  {
+> > > @@ -140,7 +151,7 @@ handle_irq_event_percpu(struct irq_desc *desc, struct irqaction *action)
+> > >  		irqreturn_t res;
+> > >  
+> > >  		trace_irq_handler_entry(irq, action);
+> > > -		res = action->handler(irq, action->dev_id);
+> > > +		res = __handle_irq_event_percpu(irq, action);
+> > >  		trace_irq_handler_exit(irq, action, res);
+> > >  
+> > >  		if (WARN_ONCE(!irqs_disabled(),"irq %u handler %pF enabled interrupts\n",
+> > > diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+> > > index 3ca5325..9d8a71f 100644
+> > > --- a/kernel/irq/pm.c
+> > > +++ b/kernel/irq/pm.c
+> > > @@ -43,9 +43,6 @@ void irq_pm_install_action(struct irq_desc *desc, struct irqaction *action)
+> > >  
+> > >  	if (action->flags & IRQF_NO_SUSPEND)
+> > >  		desc->no_suspend_depth++;
+> > > -
+> > > -	WARN_ON_ONCE(desc->no_suspend_depth &&
+> > > -		     desc->no_suspend_depth != desc->nr_actions);
+> > 
+> > Hm, actually this WARN_ON was here to detect offending drivers
+> > (those mixing handler with and without IRQF_NO_SUSPEND on a shared irq).
+> > IMO, removing it is not such a good idea.
+> 
+> I'm not sure I follow. This patch remove the reason we care, no?
+
+Yep, but as explained above, the whole point of this warning is to make
+people think twice before passing IRQF_NO_SUSPEND when registering a
+shared irq, if you silently handle this case, then nobody can notice
+they might be doing something wrong.
+
+> 
+> When going for suspend the patch uses the mismatch to detect whether it
+> needs to mask out any actions for the desc.
+> 
+> If unexpected interrupts can be generated from devices we're masking the
+> actions for things could go wrong, but that's also the case with the
+> demux. So if we need the warning here we should also have one in the
+> demux to that effect...
+
+Except they are explicitly defining a virtual irq demuxer.
+This should imply taking the appropriate action to prevent any
+interrupt coming from the devices when entering suspend, but maybe
+that's not clear enough in the virtual demux description.
+
+Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
