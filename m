@@ -1,38 +1,86 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 2/5] of: Add vendor prefix for Ampire Co., Ltd.
-Date: Wed, 11 Feb 2015 18:50:08 +0100
-Message-ID: <1423677011-17993-2-git-send-email-p.zabel@pengutronix.de>
-References: <1423677011-17993-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423677011-17993-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v1] of: calculate masks of the device based on dma-range size
+Date: Wed, 11 Feb 2015 12:53:35 -0500
+Message-ID: <1423677215-28968-1-git-send-email-m-karicheri2@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Ampire Co., Ltd. to the list of device tree vendor prefixes.
+This patch update of_dma_configure() API to calculate the
+masks (dma_mask and coherent_dma_mask) based on the dma-range
+values set in DT for the device. Also limit the mask to lower
+of the default mask and mask calculated.
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ - apply on top of the series "[PATCH v6 0/7] PCI: get DMA configuration
+   from parent device" at www.spinics.net/lists/linux-pci/msg38699.html
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index c0333a9..1ca9ea1 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -15,6 +15,7 @@ altr	Altera Corp.
- amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
- amd	Advanced Micro Devices (AMD), Inc.
- amlogic	Amlogic, Inc.
-+ampire	Ampire Co., Ltd.
- ams	AMS AG
- amstaos	AMS-Taos Inc.
- apm	Applied Micro Circuits Corporation (APM)
+ v1 - updated based on comments. Reverted to original
+      code for of_dma_get_range() within the of_dma_configure()
+
+ drivers/of/device.c |   21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 314c8a9..167ad2d 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -90,10 +90,11 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+ 	struct iommu_ops *iommu;
+ 
+ 	/*
+-	 * Set default dma-mask to 32 bit. Drivers are expected to setup
+-	 * the correct supported dma_mask.
++	 * Set default coherent_dma_mask to 32 bit. Drivers are expected to
++	 * setup the correct supported mask.
+ 	 */
+-	dev->coherent_dma_mask = DMA_BIT_MASK(32);
++	if (!dev->coherent_dma_mask)
++		dev->coherent_dma_mask = DMA_BIT_MASK(32);
+ 
+ 	/*
+ 	 * Set it to coherent_dma_mask by default if the architecture
+@@ -102,6 +103,11 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+ 	if (!dev->dma_mask)
+ 		dev->dma_mask = &dev->coherent_dma_mask;
+ 
++	/*
++	 * Use default size to cover 32 bit. Drivers need to set this in DT
++	 * to override the same.
++	 */
++	size = 1ULL << 32;
+ 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+ 	if (ret < 0) {
+ 		dma_addr = offset = 0;
+@@ -128,6 +134,15 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+ 
+ 	dev->dma_pfn_offset = offset;
+ 
++	/*
++	 * Limit coherent and dma mask based on size and default mask
++	 * set by the driver.
++	 */
++	dev->coherent_dma_mask = min(dev->coherent_dma_mask,
++				     DMA_BIT_MASK(ilog2(dma_addr + size)));
++	*dev->dma_mask = min((*dev->dma_mask),
++			     DMA_BIT_MASK(ilog2(dma_addr + size)));
++
+ 	coherent = of_dma_is_coherent(np);
+ 	dev_dbg(dev, "device is%sdma coherent\n",
+ 		coherent ? " " : " not ");
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
