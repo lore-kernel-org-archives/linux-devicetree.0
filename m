@@ -1,24 +1,89 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 0/3] Expose more controls from tegra-max98090
-Date: Wed, 11 Feb 2015 09:34:28 -0700
-Message-ID: <54DB8494.6040600@wwwdotorg.org>
-References: <1423666200-32365-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Wed, 11 Feb 2015 17:38:23 +0100
+Message-ID: <20150211173823.30c42c6a@bbrezillon>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+	<2437801.56xPyk3atd@vostro.rjw.lan>
+	<20150211151237.GN9154@leverpostej>
+	<1487331.cgC9j5u0aF@vostro.rjw.lan>
+	<20150211155720.GQ9154@leverpostej>
+	<20150211171515.55d5066f@bbrezillon>
+	<20150211163231.GR9154@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423666200-32365-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150211163231.GR9154@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2015 07:49 AM, Tomeu Vizoso wrote:
-> Hello,
->
-> we need some more controls in userspace so policy can be applied at events
-> such as microphone and headphone jacks being plugged in, to be used by
-> Tegra-based Chromebooks.
+On Wed, 11 Feb 2015 16:32:31 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-The series,
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> On Wed, Feb 11, 2015 at 04:15:15PM +0000, Boris Brezillon wrote:
+> > On Wed, 11 Feb 2015 15:57:20 +0000
+> > Mark Rutland <mark.rutland@arm.com> wrote:
+> > 
+> > > [...]
+> > > 
+> > > > > > > So for the flag at request time approach to work, all the drivers using
+> > > > > > > the interrupt would have to flag they're safe in that context.
+> > > > > > 
+> > > > > > Something like IRQF_"I can share the line with a timer" I guess?  That wouldn't
+> > > > > > hurt and can be checked at request time even.
+> > > > > 
+> > > > > I guess that would have to imply IRQF_SHARED, so we'd have something
+> > > > > like:
+> > > > > 
+> > > > > IRQF_SHARED_SUSPEND_OK - This handler is safe to call spuriously during
+> > > > > 			 suspend in the case the line is shared. The
+> > > > > 			 handler will not access unavailable hardware
+> > > > > 			 or kernel infrastructure during this period.
+> > > > > 
+> > > > > #define __IRQF_SUSPEND_SPURIOUS		0x00040000
+> > > > > #define	IRQF_SHARED_SUSPEND_OK		(IRQF_SHARED | __IRQF_SUSPEND_SPURIOUS)
+> > > > 
+> > > > What about
+> > > > 
+> > > > #define __IRQF_TIMER_SIBLING_OK	0x00040000
+> > > > #define	IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
+> > > > 
+> > > > The "suspend" part is kind of a distraction to me here, because that really
+> > > > only is about sharing an IRQ with a timer and the "your interrupt handler
+> > > > may be called when the device is suspended" part is just a consequence of that.
+> > > 
+> > > My rationale was that you didn't really care who else was using the IRQ
+> > > (e.g. the timer); you're just stating that you can survive being called
+> > > during suspend (which is what the driver may need to check for in the
+> > > handler if the device happens to be powered down or whatever).
+> > > 
+> > > So I guess I see it the other way around. This is essentially claiming
+> > > we can handle sharing with IRQF_NO_SUSPEND rather than IRQF_TIMER.
+> > > 
+> > > > So IMO it's better to have "TIMER" in the names to avoid encouraging people to
+> > > > abuse this for other purposes not related to timers.
+> > > 
+> > > In the end a name is a name, and if you think IRQF_SHARED_TIMER_OK is
+> > > better I shan't complain.
+> > > 
+> > > The fundamental issue I'm concerned with is addressed by this approach.
+> > 
+> > Okay then, is anyone taking care of submitting such a patch (Mark ?) ?
+> 
+> I'll have the core patch shortly.
+> 
+> I'll need to ask for your help tagging the relevant drivers and testing.
+
+For the list of impacted drivers, you can have a look at this series [1]
+(patches 2 to 5), and I'll take care of the testing part once every one
+has agreed on the solution ;-).
+
+[1]https://lkml.org/lkml/2014/12/15/552
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
