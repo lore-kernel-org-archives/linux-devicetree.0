@@ -1,110 +1,98 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Wed, 11 Feb 2015 15:12:38 +0000
-Message-ID: <20150211151237.GN9154@leverpostej>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
- <2982569.CIWvqghzfx@vostro.rjw.lan>
- <20150211144345.GL9154@leverpostej>
- <2437801.56xPyk3atd@vostro.rjw.lan>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v4 03/11] drm/panel: add support for Samsung LTN140AT29 panel
+Date: Wed, 11 Feb 2015 16:06:35 +0100
+Message-ID: <1423667220-1062-4-git-send-email-tomeu.vizoso@collabora.com>
+References: <1423667220-1062-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2437801.56xPyk3atd@vostro.rjw.lan>
+In-Reply-To: <1423667220-1062-1-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-tegra@vger.kernel.org
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Simon Glass <sjg@chromium.org>, Dylan Reid <dgreid@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 11, 2015 at 03:17:20PM +0000, Rafael J. Wysocki wrote:
-> On Wednesday, February 11, 2015 02:43:45 PM Mark Rutland wrote:
-> > [...]
-> > 
-> > > > > > > +static irqreturn_t __handle_irq_event_percpu(unsigned int irq, struct irqaction *action)
-> > > > > > > +{
-> > > > > > > +	/*
-> > > > > > > +	 * During suspend we must not call potentially unsafe irq handlers.
-> > > > > > > +	 * See suspend_suspendable_actions.
-> > > > > > > +	 */
-> > > > > > > +	if (unlikely(action->flags & IRQF_NO_ACTION))
-> > > > > > > +		return IRQ_NONE;
-> > > > > > 
-> > > > > > Thomas was trying to avoid any new conditional code in the interrupt
-> > > > > > handling path, that's why I added a suspended_action list in my
-> > > > > > proposal.
-> > > > > > Even if your 'unlikely' statement make things better I'm pretty sure it
-> > > > > > adds some latency.
-> > > > > 
-> > > > > I can see that we don't want to add more code here to keep things
-> > > > > clean/pure, but I find it hard to believe that a single bit test and
-> > > > > branch (for data that should be hot in the cache) are going to add
-> > > > > measurable latency to a path that does pointer chasing to get to the
-> > > > > irqaction in the first place. I could be wrong though, and I'm happy to
-> > > > > benchmark.
-> > > > 
-> > > > Again, I don't have enough experience to say this is (or isn't)
-> > > > impacting irq handling latency, I'm just reporting what Thomas told me.
-> > > > 
-> > > > > 
-> > > > > It would be possible to go for your list shuffling approach here while
-> > > > > still keeping the flag internal and all the logic hidden away in
-> > > > > kernel/irq/pm.c. I wasn't sure how actions could be manipulated during
-> > > > > suspend, which made me wary of moving them to a separate list.
-> > > > 
-> > > > Moving them to a temporary list on suspend and restoring them on
-> > > > resume should not be a problem.
-> > > > The only drawback I see is that actions might be reordered after the
-> > > > first resume (anyway, relying on shared irq action order is dangerous
-> > > > IMHO).
-> > > 
-> > > We considered doing that too and saw some drawbacks (in addition to the
-> > > reordering of actions you've mentioned).  It added just too much complexity
-> > > to the IRQ suspend-resume code.
-> > > 
-> > > I, personally, would be fine with adding an IRQ flag to silence the
-> > > warning mentioned by Alexandre.  Something like IRQD_TIMER_SHARED that would
-> > > be set automatically if someone requested IRQF_TIMER | IRQF_SHARED.
-> > > 
-> > > Thoughts?
-> > 
-> > Even if the timer driver does that, we still require the other handlers
-> > sharing the line to do the right thing across suspend, no? So either
-> > their actions need to be masked at suspend time, or the handlers need to
-> > detect when they're called during suspend and return early.
-> 
-> Well, the issue at hand is about things that share an IRQ with a timer AFAICS.
-> 
-> That is odd enough already and I'd say everyone in that situation needs to
-> be prepared to take the pain (including having to check if the device is not
-> suspended in their interrupt handlers).
+=46rom: St=C3=A9phane Marchesin <marcheu@chromium.org>
 
-IMO if the line is shared it would be ideal for the core to mask the
-action (as that's essentially the behaviour when the line isn't shared
-with an IRQF_NO_SUSPEND action), but that's not esseential if a flag is
-OK for now.
+This panel is used by the Nyan Blaze board and supported by the simple-=
+panel
+driver.
 
-> And quite frankly they need to do that already, because we've never suspended
-> timer IRQs.
+Signed-off-by: St=C3=A9phane Marchesin <marcheu@chromium.org>
+[tomeu.vizoso@collabora.com: add device tree binding document]
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ .../bindings/panel/samsung,ltn140at29-301.txt      |  7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++=
+++++++++
+ 2 files changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/samsung,ltn=
+140at29-301.txt
 
-This is a very good point.
-
-> > So for the flag at request time approach to work, all the drivers using
-> > the interrupt would have to flag they're safe in that context.
-> 
-> Something like IRQF_"I can share the line with a timer" I guess?  That wouldn't
-> hurt and can be checked at request time even.
-
-I guess that would have to imply IRQF_SHARED, so we'd have something
-like:
-
-IRQF_SHARED_SUSPEND_OK - This handler is safe to call spuriously during
-			 suspend in the case the line is shared. The
-			 handler will not access unavailable hardware
-			 or kernel infrastructure during this period.
-
-#define __IRQF_SUSPEND_SPURIOUS		0x00040000
-#define	IRQF_SHARED_SUSPEND_OK		(IRQF_SHARED | __IRQF_SUSPEND_SPURIOUS)
-
-Thanks,
-Mark.
+diff --git a/Documentation/devicetree/bindings/panel/samsung,ltn140at29=
+-301.txt b/Documentation/devicetree/bindings/panel/samsung,ltn140at29-3=
+01.txt
+new file mode 100644
+index 0000000..e7f969d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/samsung,ltn140at29-301.tx=
+t
+@@ -0,0 +1,7 @@
++Samsung Electronics 14" WXGA (1366x768) TFT LCD panel
++
++Required properties:
++- compatible: should be "samsung,ltn140at29-301"
++
++This binding is compatible with the simple-panel binding, which is spe=
+cified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/pan=
+el/panel-simple.c
+index 39806c3..2da2285 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -779,6 +779,29 @@ static const struct panel_desc samsung_ltn101nt05 =
+=3D {
+ 	},
+ };
+=20
++static const struct drm_display_mode samsung_ltn140at29_301_mode =3D {
++	.clock =3D 76300,
++	.hdisplay =3D 1366,
++	.hsync_start =3D 1366 + 64,
++	.hsync_end =3D 1366 + 64 + 48,
++	.htotal =3D 1366 + 64 + 48 + 128,
++	.vdisplay =3D 768,
++	.vsync_start =3D 768 + 2,
++	.vsync_end =3D 768 + 2 + 5,
++	.vtotal =3D 768 + 2 + 5 + 17,
++	.vrefresh =3D 60,
++};
++
++static const struct panel_desc samsung_ltn140at29_301 =3D {
++	.modes =3D &samsung_ltn140at29_301_mode,
++	.num_modes =3D 1,
++	.bpc =3D 6,
++	.size =3D {
++		.width =3D 320,
++		.height =3D 187,
++	},
++};
++
+ static const struct of_device_id platform_of_match[] =3D {
+ 	{
+ 		.compatible =3D "auo,b101aw03",
+@@ -841,6 +864,9 @@ static const struct of_device_id platform_of_match[=
+] =3D {
+ 		.compatible =3D "samsung,ltn101nt05",
+ 		.data =3D &samsung_ltn101nt05,
+ 	}, {
++		.compatible =3D "samsung,ltn140at29-301",
++		.data =3D &samsung_ltn140at29_301,
++	}, {
+ 		/* sentinel */
+ 	}
+ };
+--=20
+1.9.3
