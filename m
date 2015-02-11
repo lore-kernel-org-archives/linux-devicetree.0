@@ -1,66 +1,75 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: zynq: Add linux,stdout-path and stdout-path
-Date: Wed, 11 Feb 2015 12:40:27 +0000
-Message-ID: <20150211124027.GH9154@leverpostej>
-References: <0a0e0579fb6e2794d2c0c6fb9186c5b43618f448.1423657710.git.michal.simek@xilinx.com>
- <ea777ffbffea442e3bc69fe11183811772a5716e.1423657710.git.michal.simek@xilinx.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH RFC v8 11/21] Documentation: dt-bindings: Add bindings
+ for Synopsys DW MIPI DSI DRM bridge driver
+Date: Wed, 11 Feb 2015 14:00:48 +0100
+Message-ID: <1423659648.4680.18.camel@pengutronix.de>
+References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
+	 <1420014219-915-12-git-send-email-Ying.Liu@freescale.com>
+	 <1423131004.3207.27.camel@pengutronix.de> <20150206081318.GA15088@victor>
+	 <20150211072128.GA13301@victor>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ea777ffbffea442e3bc69fe11183811772a5716e.1423657710.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20150211072128.GA13301@victor>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org" <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: stefan.wahren-eS4NqCHxEME@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 11, 2015 at 12:29:02PM +0000, Michal Simek wrote:
-> parallella - Use reference instead of hardcoded path
->              (linux,stdout-path)
+Hi Liu,
+
+Am Mittwoch, den 11.02.2015, 15:21 +0800 schrieb Liu Ying:
+[...]
+> Our internal MIPI DSI SoC owner gave me some feedbacks on the clock sources.
+> According to him, the Synopsys DesignWare MIPI DSI host controller needs four
+> clock sources from an application platform - pclk, refclk, cfg_clk and dpipclk.
+> These clocks are mentioned in the "DesignWare Cores MIPI DSI Host Controller
+> Databook, 1.01a1.30a.pdf" documentation.
 > 
-> stdout-path is used by bootloader to identify console.
+> Quote some words from the documentation:
+> pclk    - APB clock signal.
+> refclk  - D-PHY reference clock used for Master-side serial clock generation in
+>           clock multiplying unit(PLL).
+> cfg_clk - D-PHY Configuration clock used for the initialization of the PHY. It
+>           is also used for exiting ULPS state.
+> dpipclk - Input Pixel clock signal.
 > 
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
+> The below table reflects how does i.MX6Q/DL provide the pclk, refclk and cfg_clk
+> for the DesignWare MIPI DSI host controller, according to the SoC owner.
+>  ----------------------------------------------------------------------------
+> | Synopsys      |                     i.MX6Q/DL MIPI DSI                     |
+> | DesignWare    |------------------------------------------------------------|
+> | documentation |    clock   |     clock root     |       CCM_CCGR bits      |
+> |---------------|------------|--------------------|--------------------------|
+> |     pclk      |   ips_clk  |    ipg_clk_root    | mipi_core_cfg_clk_enable |
+> |---------------|------------|--------------------|--------------------------|
+> |    refclk     | pll_refclk | video_27m_clk_root | mipi_core_cfg_clk_enable |
+> |---------------|------------|--------------------|--------------------------|
+> |    cfg_clk    |   cfg_clk  | video_27m_clk_root | mipi_core_cfg_clk_enable |
+>  ----------------------------------------------------------------------------
 > 
-> U-Boot driver model requires stdout-path.
-> ---
->  arch/arm/boot/dts/zynq-parallella.dts | 3 ++-
->  arch/arm/boot/dts/zynq-zc702.dts      | 2 ++
->  arch/arm/boot/dts/zynq-zc706.dts      | 2 ++
->  arch/arm/boot/dts/zynq-zed.dts        | 2 ++
->  arch/arm/boot/dts/zynq-zybo.dts       | 2 ++
->  5 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/zynq-parallella.dts
-> index 6a5f51daa708..45228a427006 100644
-> --- a/arch/arm/boot/dts/zynq-parallella.dts
-> +++ b/arch/arm/boot/dts/zynq-parallella.dts
-> @@ -35,7 +35,8 @@
->  
->  	chosen {
->  		bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait";
-> -		linux,stdout-path = "/amba/serial@e0001000";
-> +		linux,stdout-path = &uart1;
-> +		stdout-path = &uart1;
+> I think we should add a new clock "IMX6QDL_CLK_MIPI_IPG" as a shared clock gate
+> clock.
 
-Given that you added aliases in the last patch, you can use that to
-refer to the serial:
+That would be necessary if the pclk clock rate mattered or would be set
+anywhere.
 
-	stdout-path - "serial0:115200n8";
+> And, the clock-names property should exactly contain "pclk", "refclk"
+> and "cfg_clk", right?
 
-With or without the alias you can encode the UART configuration here
-too:
+My personal preference would be to drop the superfluous "clk" prefix if
+the resulting clock name is still clearly relatable to the official
+name. Existing clock naming for the pclk is a bit mixed -
+The "snps,dw-apb-timer" binding uses "pclk", which seems to be quite
+common in other places, too. The "snps,dw-apb-uart" bindings use
+"apb_pclk". "snps,dw-hdmi-tx" uses "iahb" and "isfr" without the clk
+suffix.
+How about "pclk", "ref" and "cfg"?
 
-	stdout-path = "/amba/serial@e0001000:115200n8"
+regards
+Philipp
 
-Which makes the expected configuration explicit without relying on the
-Linux-specific bootargs.
-
-Is there any reason to keep linux,stdout-path?
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
