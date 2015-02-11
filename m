@@ -1,46 +1,227 @@
-From: "Holmberg, Hans" <hans.holmberg@intel.com>
-Subject: RE: [PATCH 0/2] GPIO joystick driver
-Date: Wed, 11 Feb 2015 08:49:16 +0000
-Message-ID: <4B6D6D87A8FB62428BE0A3E38461A1AB18D6BB34@irsmsx105.ger.corp.intel.com>
-References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
- <1AA6C46C-36D9-4243-9DC5-254A7202D339@gmail.com>
- <4B6D6D87A8FB62428BE0A3E38461A1AB18D6AF04@irsmsx105.ger.corp.intel.com>
- <20150207204658.GA29015@dtor-ws>
- <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B24F@irsmsx105.ger.corp.intel.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Wed, 11 Feb 2015 09:53:39 +0100
+Message-ID: <20150211095339.0a2e4e7b@bbrezillon>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1422527620-8308-4-git-send-email-boris.brezillon@free-electrons.com>
+	<20150210153628.GF9432@leverpostej>
+	<20150210165201.634bc04b@bbrezillon>
+	<20150210204835.GL9432@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B24F@irsmsx105.ger.corp.intel.com>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
-Cc: "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "'linux-input@vger.kernel.org'" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150210204835.GL9432@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > As far as I can tell, there is no way to specify values for ABS-"keys"
-> > > in the device tree binding.
-> >
-> > It may not be present in device tree binding, but the driver does
-> > support it, so I would rather extend the binding than have a brand new
-> driver.
+Hi Mark,
+
+On Tue, 10 Feb 2015 20:48:36 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
+
+> On Tue, Feb 10, 2015 at 03:52:01PM +0000, Boris Brezillon wrote:
+> > Hi Mark,
+> > 
+> > On Tue, 10 Feb 2015 15:36:28 +0000
+> > Mark Rutland <mark.rutland@arm.com> wrote:
+> > 
+> > > Hi Boris,
+> > > 
+> > > On Thu, Jan 29, 2015 at 10:33:38AM +0000, Boris Brezillon wrote:
+> > > > Add documentation for the virtual irq demuxer.
+> > > > 
+> > > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > > > Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> > > > ---
+> > > >  .../bindings/interrupt-controller/dumb-demux.txt   | 41 ++++++++++++++++++++++
+> > > >  1 file changed, 41 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+> > > > new file mode 100644
+> > > > index 0000000..b9a7830
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/dumb-demux.txt
+> > > > @@ -0,0 +1,41 @@
+> > > > +* Virtual Interrupt Demultiplexer
+> > > > +
+> > > > +This virtual demultiplexer simply forward all incoming interrupts to its
+> > > > +enabled/unmasked children.
+> > > > +It is only intended to be used by hardware that do not provide a proper way
+> > > > +to demultiplex a source interrupt, and thus have to wake all their children
+> > > > +up so that they can possibly handle the interrupt (if needed).
+> > > > +This can be seen as an alternative to shared interrupts when at least one
+> > > > +of the interrupt children is a timer (and require the irq to stay enabled
+> > > > +on suspend) while others are not. This will prevent calling irq handlers of
+> > > > +non timer devices while they are suspended.
+> > > 
+> > > This sounds like a DT-workaround for a Linux implementation problem, and
+> > > I don't think this the right way to solve your problem.
+> > 
+> > I understand your concern, but why are you answering while I asked for
+> > DT maintainers reviews for several days (if not several weeks).
+> > 
+> > > 
+> > > Why does this have to be in DT at all? Why can we not fix the core to
+> > > handle these details?
+> > 
+> > We already discussed that with Rob and Thomas, and hiding such a
+> > demuxer chip is not an easy task.
+> > I'm open to any suggestion to do that, though I'd like you (I mean DT
+> > guys) to provide a working implementation (or at least a viable concept)
+> > that would silently demultiplex an irq.
+> > 
+> > > 
+> > > I am very much not keen on this binding.
+> > 
+> > Yes, but do you have anything else to propose.
+> > We're experiencing this warning for 2 releases now, and this is time to
+> > find a solution (even if it's not a perfect one).
 > 
-> All right, I find it a bit like whacking a round peg down a square hole, but I'll
-> head down that path and see where it leads.
+> Thoughts on the patch below?
+
+That's pretty much what I proposed in my first attempt to solve this
+problem [1] (except for a few things commented below).
+Anyway, Thomas suggested to go for the "dumb/virt irq demultiplexer"
+approach instead.
+
 > 
+> Rather than handling this at the desc level it adds an extra flag to the
+> irqaction which can be set/unset during suspend for those irqs we don't
+> want to handle. That way we don't need to tell the core about the
+> mismatch explicitly in DT (or ACPI/board files/whatever).
+> 
+> If we can request/free interrupts during suspend then there's some logic
+> missing, but it shows the basic idea.
+> 
+> I didn't have a system to hand with shared mismatched IRQF_NO_SUSPEND
+> interrupts, so I had to fake that up in code for testing.
+> 
+> Thanks,
+> Mark.
+> 
+> ---->8----
+> From f390ccbb31f06efee49b4469943c8d85d963bfb5 Mon Sep 17 00:00:00 2001
+> From: Mark Rutland <mark.rutland@arm.com>
+> Date: Tue, 10 Feb 2015 20:14:33 +0000
+> Subject: [PATCH] genirq: allow mixed IRQF_NO_SUSPEND requests
+> 
+> In some cases a physical IRQ line may be shared between devices from
+> which we expect interrupts during suspend (e.g. timers) and those we do
+> not (e.g. anything we cut the power to). Where a driver did not request
+> the interrupt with IRQF_NO_SUSPEND, it's unlikely that it can handle
+> being called during suspend, and it may bring down the system.
+> 
+> This patch adds logic to automatically mark the irqactions for these
+> potentially unsafe handlers as disabled during suspend, leaving actions
+> with IRQF_NO_SUSPEND enabled. If an interrupt is raised on a shared line
+> during suspend, only the handlers requested with IRQF_NO_SUSPEND will be
+> called. The handlers requested without IRQF_NO_SUSPEND will be skipped
+> as if they had immediately returned IRQF_NONE.
+> 
+> Cc: Boris Brezillon <boris.brezillon@free-electrons.com>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> ---
+>  include/linux/interrupt.h |  4 ++++
+>  kernel/irq/handle.c       | 13 +++++++++++-
+>  kernel/irq/pm.c           | 50 +++++++++++++++++++++++++++++++++++++++++++----
+>  3 files changed, 62 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+> index d9b05b5..49dcb35 100644
+> --- a/include/linux/interrupt.h
+> +++ b/include/linux/interrupt.h
+> @@ -57,6 +57,9 @@
+>   * IRQF_NO_THREAD - Interrupt cannot be threaded
+>   * IRQF_EARLY_RESUME - Resume IRQ early during syscore instead of at device
+>   *                resume time.
+> + * IRQF_NO_ACTION - This irqaction should not be triggered.
+> + *                  Used during suspend for !IRQF_NO_SUSPEND irqactions which
+> + *                  share lines with IRQF_NO_SUSPEND irqactions.
+>   */
+>  #define IRQF_DISABLED		0x00000020
+>  #define IRQF_SHARED		0x00000080
+> @@ -70,6 +73,7 @@
+>  #define IRQF_FORCE_RESUME	0x00008000
+>  #define IRQF_NO_THREAD		0x00010000
+>  #define IRQF_EARLY_RESUME	0x00020000
+> +#define IRQF_NO_ACTION		0x00040000
+>  
+>  #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
+>  
+> diff --git a/kernel/irq/handle.c b/kernel/irq/handle.c
+> index 6354802..44c8662 100644
+> --- a/kernel/irq/handle.c
+> +++ b/kernel/irq/handle.c
+> @@ -130,6 +130,17 @@ void __irq_wake_thread(struct irq_desc *desc, struct irqaction *action)
+>  	wake_up_process(action->thread);
+>  }
+>  
+> +static irqreturn_t __handle_irq_event_percpu(unsigned int irq, struct irqaction *action)
+> +{
+> +	/*
+> +	 * During suspend we must not call potentially unsafe irq handlers.
+> +	 * See suspend_suspendable_actions.
+> +	 */
+> +	if (unlikely(action->flags & IRQF_NO_ACTION))
+> +		return IRQ_NONE;
 
-This is what I've found:
-
-A digital joystick driver needs to report three states per axis: min, max and neutral. The hardware only have two signals per axis(i.e. up and down) however. See http://wiki.icomp.de/wiki/DB9-Joystick 
-
-This makes gpio-keys pretty much impossible to use for joysticks - as the driver only reports abs-events when a button/key is pressed, how would the neutral state be reported?  (as there is no signal for "neutral")
-
-Even if through some hackery the driver would be modified to report a special neutral event if all  "buttons/keys" for that axis are not pressed, what value should be reported?  An average of the values for that axis?   Also, reporting such an implicit neutral event would break the behavior of existing abs-reporting instances, right?
-
-Do you still prefer this approach?
-
-Thanks,
-Hans
+Thomas was trying to avoid any new conditional code in the interrupt
+handling path, that's why I added a suspended_action list in my
+proposal.
+Even if your 'unlikely' statement make things better I'm pretty sure it
+adds some latency.
 
 
+> +	return action->handler(irq, action->dev_id);
+> +}
+> +
+>  irqreturn_t
+>  handle_irq_event_percpu(struct irq_desc *desc, struct irqaction *action)
+>  {
+> @@ -140,7 +151,7 @@ handle_irq_event_percpu(struct irq_desc *desc, struct irqaction *action)
+>  		irqreturn_t res;
+>  
+>  		trace_irq_handler_entry(irq, action);
+> -		res = action->handler(irq, action->dev_id);
+> +		res = __handle_irq_event_percpu(irq, action);
+>  		trace_irq_handler_exit(irq, action, res);
+>  
+>  		if (WARN_ONCE(!irqs_disabled(),"irq %u handler %pF enabled interrupts\n",
+> diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+> index 3ca5325..9d8a71f 100644
+> --- a/kernel/irq/pm.c
+> +++ b/kernel/irq/pm.c
+> @@ -43,9 +43,6 @@ void irq_pm_install_action(struct irq_desc *desc, struct irqaction *action)
+>  
+>  	if (action->flags & IRQF_NO_SUSPEND)
+>  		desc->no_suspend_depth++;
+> -
+> -	WARN_ON_ONCE(desc->no_suspend_depth &&
+> -		     desc->no_suspend_depth != desc->nr_actions);
 
+Hm, actually this WARN_ON was here to detect offending drivers
+(those mixing handler with and without IRQF_NO_SUSPEND on a shared irq).
+IMO, removing it is not such a good idea.
+
+Best Regards,
+
+Boris
+
+
+[1]https://lkml.org/lkml/2014/12/15/551
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
