@@ -1,70 +1,127 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch V4 00/10] ASoC: QCOM: Add support for ipq806x SOC
-Date: Wed, 11 Feb 2015 10:26:34 +0800
-Message-ID: <20150211022634.GO2593@finisterre.sirena.org.uk>
-References: <1423169626-22166-1-git-send-email-kwestfie@codeaurora.org>
- <20150206223229.GG31311@finisterre.sirena.org.uk>
- <20150209064511.GB19870@kwestfie-linux.qualcomm.com>
+From: Addy <addy.ke@rock-chips.com>
+Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending
+ command'
+Date: Wed, 11 Feb 2015 10:57:56 +0800
+Message-ID: <54DAC534.4020708@rock-chips.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com> <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com> <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com> <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Vy1A5eXR7jld12ZH"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150209064511.GB19870@kwestfie-linux.qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, srinivas.kandagatla@linaro.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: robh+dt <robh+dt@kernel.org>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, dinguyen@altera.com, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Douglas Anderson <dianders@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, amstan@chromium.org, djkurtz@chromium.org, huangtao@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
 
---Vy1A5eXR7jld12ZH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2015/02/10 23:22, Alim Akhtar wrote:
+> Hi Addy,
+>
+> On Mon, Feb 9, 2015 at 12:55 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
+>> Because of some uncertain factors, such as worse card or worse hardware,
+>> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+>> will be in busy state. This should not happend when mmc controller
+>> send command to update card clocks. If this happends, mci_send_cmd will
+>> be failed and we will get 'Timeout sending command', and then system will
+>> be blocked. To avoid this, we need reset mmc controller.
+>>
+>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+>> ---
+>>   drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index 4d2e3c2..b0b57e3 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -100,6 +100,7 @@ struct idmac_desc {
+>>   };
+>>   #endif /* CONFIG_MMC_DW_IDMAC */
+>>
+>> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>>   static bool dw_mci_reset(struct dw_mci *host);
+>>   static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>>
+>> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>                  cmd, arg, cmd_status);
+>>   }
+>>
+>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+>> +{
+>> +       struct dw_mci *host = slot->host;
+>> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>> +
+> Why 500 msec?
+This timeout value is the same as  mci_send_cmd:
+static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+{
+         struct dw_mci *host = slot->host;
+         unsigned long timeout = jiffies + msecs_to_jiffies(500);
+         ....
+}
 
-On Sun, Feb 08, 2015 at 10:45:11PM -0800, Kenneth Westfield wrote:
-> On Sat, Feb 07, 2015 at 06:32:29AM +0800, Mark Brown wrote:
+I have not clear that which is suitable.
+Do you have any suggestion on it?
+>
+>> +       do {
+>> +               if (!dw_mci_card_busy(slot->mmc))
+>> +                       return;
+>> +               cpu_relax();
+>> +       } while (time_before(jiffies, timeout));
+>> +
+>> +       dev_err(host->dev, "Data busy (status %#x)\n",
+>> +               mci_readl(slot->host, STATUS));
+>> +
+>> +       /*
+>> +        * Data busy, this should not happend when mmc controller send command
+>> +        * to update card clocks in non-volt-switch state. If it happends, we
+>> +        * should reset controller to avoid getting "Timeout sending command".
+>> +        */
+>> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+>> +
+> Why you need to reset all blocks? may be CTRL_RESET is good enough here.
+I have tested on rk3288, if only reset ctroller, data busy bit will not 
+be cleaned,and we will still get
 
-> > I'd really like to see some discussion as to how this is all supposed to
-> > be handled - how will these direct hardware access drivers and device
-> > trees work when someone does want to use the DSP (without causing
-> > problems), and how will we transition from one to the other.  This is
-> > particularly pressing if there are use cases where people will want to
-> > switch between the two modes at runtime.
+"Timeout sending command".
 
-> > What I'm trying to avoid here is being in a situation where we have
-> > existing stable DT bindings which we have to support but which conflict
-> > with the way that people want to use the systems.
+>
+>> +       /* Fail to reset controller or still data busy, WARN_ON! */
+>> +       WARN_ON(dw_mci_card_busy(slot->mmc));
+>> +}
+>> +
+>>   static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>   {
+>>          struct dw_mci *host = slot->host;
+>> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>          /* We must continue to set bit 28 in CMD until the change is complete */
+>>          if (host->state == STATE_WAITING_CMD11_DONE)
+>>                  sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+>> +       else
+>> +               dw_mci_wait_busy(slot);
+>>
+> hmm...I would suggest you to call dw_mci_wait_busy() from inside
+> mci_send_cmd(), seems like dw_mmc hangs while sending update clock cmd
+> in multiple cases.see [1]
+>
+> [1]: http://permalink.gmane.org/gmane.linux.kernel.mmc/31140
+I think this patch is more reasonable.
+So I will resend patches based on this patch.
+thank you!
+>
+>>          if (!clock) {
+>>                  mci_writel(host, CLKENA, 0);
+>> --
+>> 1.8.3.2
+>>
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
 
-> The ipq806x SOC has no LPASS DSP.  On SOCs with a DSP, these drivers
-> would not be enabled.
 
-OK, but I'm guessing that they're using the same IP that is in other
-SoCs which do have the DSP so even if you don't care for this device it
-might still be an issue.
-
-> These drivers are prefixed with "lpass" to differentiate themselves from
-> other drivers that would interact with a DSP, rather than the LPASS
-> hardware directly.
-
-Right, it may be that all that's needed here is some indication as to
-how to describe a system which *does* have a DSP.  Perhaps require that
-the devices be children of the DSP, that way if people want to access
-the hardware directly they can load a dummy driver for the DSP that just
-passes things through if they don't want to use the DSP?
-
---Vy1A5eXR7jld12ZH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU2r3aAAoJECTWi3JdVIfQpOgH/jqkVdA7kHsm+/ouUVCuwrHN
-TkkSmRlZTE3cC1wuu7hCZKuwThRXnrp0zqhCOMIC/CZ5nga0b/GlQe8AaSjQUXax
-YFTHdpkyxgYOy1oREDe6DYTp22V0LbjM5FM7t9A1KH4SLIcNrQUeUWqbyhJiVQ5X
-MvsIJG6IEyB8tE+HaZ5+MoCLFwVq2NlFLA6/p1eVa4gjUgOA/9YWCA/B4YYEn5Xh
-AeI5uaKfceCpDkd7qmWalocT3p/evWILTML8Zbbok3GcYDErk8U2pmAZupTQoKE6
-0dCRDocVVrKP/EA4IkwXgmxgBsETa5NotK90XnESdG7qBhMXjQn2NSfu0VShbZM=
-=gRiY
------END PGP SIGNATURE-----
-
---Vy1A5eXR7jld12ZH--
