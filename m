@@ -1,116 +1,62 @@
-From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 2/2] ARM: dts: zynq: Add linux, stdout-path and stdout-path
-Date: Wed, 11 Feb 2015 19:18:18 +0100
-Message-ID: <54DB9CEA.1060701@suse.de>
-References: <0a0e0579fb6e2794d2c0c6fb9186c5b43618f448.1423657710.git.michal.simek@xilinx.com> <ea777ffbffea442e3bc69fe11183811772a5716e.1423657710.git.michal.simek@xilinx.com> <20150211124027.GH9154@leverpostej> <74a9cc5d88d64421a4f1ebdacee93d7d@BL2FFO11FD041.protection.gbl>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/2] ARM: perf: Add support for Scorpion PMUs
+Date: Wed, 11 Feb 2015 10:27:17 -0800
+Message-ID: <20150211182717.GA11190@codeaurora.org>
+References: <1423616724-20849-1-git-send-email-sboyd@codeaurora.org>
+ <1423616724-20849-3-git-send-email-sboyd@codeaurora.org>
+ <CAJ5Y-eZsCbeZMwgPrNOg9Qdt8XqAoJBVNbiNMC7c3PQTOrUJ+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="dJXSKNI2rcX3UuhQ9tjolGJFpnqqVugSJ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <74a9cc5d88d64421a4f1ebdacee93d7d@BL2FFO11FD041.protection.gbl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Josh Cartwright <josh.cartwright@ni.com>, "monstr@monstr.eu" <monstr@monstr.eu>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?windows-1252?Q?S=F6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ola Jeppsson <ola@adapteva.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ5Y-eZsCbeZMwgPrNOg9Qdt8XqAoJBVNbiNMC7c3PQTOrUJ+g@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ashwin Chaugule <ashwin.chaugule@linaro.org>
+Cc: Will Deacon <will.deacon@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, linux-arm-msm@vger.kernel.org, Neil Leeder <nleeder@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---dJXSKNI2rcX3UuhQ9tjolGJFpnqqVugSJ
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On 02/10, Ashwin Chaugule wrote:
+> Hi Stephen,
+> 
+> On 10 February 2015 at 20:05, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > Scorpion supports a set of local performance monitor event
+> > selection registers (LPM) sitting behind a cp15 based interface
+> > that extend the architected PMU events to include Scorpion CPU
+> > and Venum VFP specific events. To use these events the user is
+> > expected to program the lpm register with the event code shifted
+> > into the group they care about and then point the PMNx event at
+> > that region+group combo by writing a LPMn_GROUPx event. Add
+> > support for this hardware.
+> >
+> > Note: the raw event number is a pure software construct that
+> > allows us to map the multi-dimensional number space of regions,
+> > groups, and event codes into a flat event number space suitable
+> > for use by the perf framework.
+> >
+> > This is based on code originally written by Ashwin Chaugule and
+> > Neil Leeder [1] massed to become similar to the Krait PMU support
+> > code.
+> 
+> Thanks for taking this up!
+> Overall this series looks good to me, but from what I faintly
+> recollect, doesn't this (and the Krait pmu code) get affected by
+> powercollapse issues anymore?
+> e.g.
+> https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/arch/arm/kernel/perf_event_msm.c?h=msm-3.4&id=b5ca687960f0fea2f4735e83ca5c9543474c19de
+> 
 
-Am 11.02.2015 um 15:25 schrieb Michal Simek:
-> On 02/11/2015 01:40 PM, Mark Rutland wrote:
->> On Wed, Feb 11, 2015 at 12:29:02PM +0000, Michal Simek wrote:
->>> parallella - Use reference instead of hardcoded path
->>>              (linux,stdout-path)
->>>
->>> stdout-path is used by bootloader to identify console.
->>>
->>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>> ---
->>>
->>> U-Boot driver model requires stdout-path.
->>> ---
->>>  arch/arm/boot/dts/zynq-parallella.dts | 3 ++-
->>>  arch/arm/boot/dts/zynq-zc702.dts      | 2 ++
->>>  arch/arm/boot/dts/zynq-zc706.dts      | 2 ++
->>>  arch/arm/boot/dts/zynq-zed.dts        | 2 ++
->>>  arch/arm/boot/dts/zynq-zybo.dts       | 2 ++
->>>  5 files changed, 10 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dt=
-s/zynq-parallella.dts
->>> index 6a5f51daa708..45228a427006 100644
->>> --- a/arch/arm/boot/dts/zynq-parallella.dts
->>> +++ b/arch/arm/boot/dts/zynq-parallella.dts
->>> @@ -35,7 +35,8 @@
->>> =20
->>>  	chosen {
->>>  		bootargs =3D "console=3DttyPS0,115200 earlyprintk root=3D/dev/mmcb=
-lk0p2 rootfstype=3Dext4 rw rootwait";
->>> -		linux,stdout-path =3D "/amba/serial@e0001000";
->>> +		linux,stdout-path =3D &uart1;
->>> +		stdout-path =3D &uart1;
->>
->> Given that you added aliases in the last patch, you can use that to
->> refer to the serial:
->>
->> 	stdout-path - "serial0:115200n8";
->>
->> With or without the alias you can encode the UART configuration here
->> too:
->>
->> 	stdout-path =3D "/amba/serial@e0001000:115200n8"
->=20
-> let me check this configuration if it is supported by u-boot.
+Right now there isn't any power collapse support in mainline so
+there's no immediate problem. Once we add power collapse support
+(i.e. cpuidle) to the Scorpion and Krait platforms we'll need to
+do something in the perf event code to properly maintain the
+counts across idle. I imagine it would be done by registering for
+cpu_pm notifications and then doing the save/restore on
+CPU_PM_ENTER and CPU_PM_EXIT. At least, that's what you started
+doing in this patch[1]. And then it seems the patch you mention
+came after that and actually did the save/restore of the counts.
 
-I would be surprised if either is supported - my Parallella ships:
-U-Boot 2012.10-00003-g792c31c (Jan 03 2014 - 12:24:08)
-and upstream U-Boot still doesn't have support for the Parallella.
+[1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?h=msm-3.4&id=464983a7e991a484cac0bc0885cee4fee318d659
 
->> Which makes the expected configuration explicit without relying on the=
-
->> Linux-specific bootargs.
->>
->> Is there any reason to keep linux,stdout-path?
->=20
-> Agree when stdout-patch is defined there is no reason to use linux,stdo=
-ut-patch.
-
-It's not used, it was added on reviewers' request at the time. Feel free
-to drop. But again, we are bound for patch conflict here.
-
-Regards,
-Andreas
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Jennifer Guild, Dilip Upmanyu,
-Graham Norton; HRB 21284 (AG N=FCrnberg)
-
-
---dJXSKNI2rcX3UuhQ9tjolGJFpnqqVugSJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJU25zqAAoJEPou0S0+fgE/TOYQAI1RQSxkLSnBX7kU3Erl/Zk3
-JlmhFqOcRQ5vBSY0LAbDneLNc8CAsxrhW9/GsD1ZbuXYI86BjFlap9I3ZI89Xtj9
-y6pWq2GvZCI+uWamZYnvSgf+AGyBCKK9/Sls7T4cmrhNTHNAtxtiQkMsGnIVKSu/
-Sef2P+LOyWAhu64T52XYnMROVYXeqEAz1mYzmgs8TysQh2Nd/cFsNqtyigpqGngO
-9O8f8VA+c8r1XuIeN3O9YXX1HcRG7MJKlIHJOr43tQGVAdRAXF/nhdyEBtQ1Y5Ca
-nPoZdjHy6wX3qiIE8ML4PRAmbCs3PDO/mDSXykc4bm1bLysYGuGVJENunJAP6kTo
-LnKho3UTePO2JcJrR5tkc7Cc/WPE5rDx6z2Lyzd+lYC9+vZu60Puw2Sl0Qts9r2n
-8r8wJsHdb8evOFT1Hk/eMiRN4mHMmXGBiNO5XsUhd5sr9/nObYzj+/mUrlLpwW+H
-JM8WDF4I5/uLu4Y3DkFKuKVXAIezzj3RIjq/GsubN0nvovLic9p8Lip7VhY3zrJq
-wIFTM5laKHaZOQrpT4JIk5cowZcwYW+VDW/W0tKvGETA0GfG7uG1f3A27WV2AJfg
-3bim6X5sNFliirMnHSWHsltq44TOFIhs9Kxdbqt5+QIAUSXchPROfnH2CLMhRhW5
-8exNbaCxUBeqUcvrj26z
-=fUTj
------END PGP SIGNATURE-----
-
---dJXSKNI2rcX3UuhQ9tjolGJFpnqqVugSJ--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
