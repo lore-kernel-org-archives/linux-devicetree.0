@@ -1,106 +1,93 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH] of: calculate masks of the device based on dma-range
- size
-Date: Wed, 11 Feb 2015 12:13:09 -0500
-Message-ID: <54DB8DA5.7000204@ti.com>
-References: <1423253720-2785-1-git-send-email-m-karicheri2@ti.com> <20150209112739.GC16587@e104818-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Wed, 11 Feb 2015 17:17:01 +0000
+Message-ID: <20150211171701.GT9154@leverpostej>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+ <2437801.56xPyk3atd@vostro.rjw.lan>
+ <20150211151237.GN9154@leverpostej>
+ <1487331.cgC9j5u0aF@vostro.rjw.lan>
+ <20150211155720.GQ9154@leverpostej>
+ <20150211171515.55d5066f@bbrezillon>
+ <20150211163231.GR9154@leverpostej>
+ <20150211173823.30c42c6a@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150209112739.GC16587@e104818-lin.cambridge.arm.com>
+Content-Disposition: inline
+In-Reply-To: <20150211173823.30c42c6a@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Grant Likely <grant.likely@linaro.org>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/2015 06:27 AM, Catalin Marinas wrote:
-> On Fri, Feb 06, 2015 at 03:15:20PM -0500, Murali Karicheri wrote:
->> diff --git a/drivers/of/device.c b/drivers/of/device.c
->> index 314c8a9..44209fa 100644
->> --- a/drivers/of/device.c
->> +++ b/drivers/of/device.c
->> @@ -83,17 +83,18 @@ int of_device_add(struct platform_device *ofdev)
->>    */
->>   void of_dma_configure(struct device *dev, struct device_node *np)
->>   {
->> -	u64 dma_addr, paddr, size;
->> +	u64 dma_addr = 0, paddr, size;
->>   	int ret;
->>   	bool coherent;
->> -	unsigned long offset;
->> +	unsigned long offset = 0;
->>   	struct iommu_ops *iommu;
->>
->>   	/*
->>   	 * Set default dma-mask to 32 bit. Drivers are expected to setup
->>   	 * the correct supported dma_mask.
->>   	 */
->> -	dev->coherent_dma_mask = DMA_BIT_MASK(32);
->> +	if (!dev->coherent_dma_mask)
->> +		dev->coherent_dma_mask = DMA_BIT_MASK(32);
->>
->>   	/*
->>   	 * Set it to coherent_dma_mask by default if the architecture
->> @@ -102,11 +103,14 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->>   	if (!dev->dma_mask)
->>   		dev->dma_mask =&dev->coherent_dma_mask;
->>
->> +	/*
->> +	 * Set default size to cover the 32-bit. Drivers are expected to setup
->> +	 * the correct size and dma_mask.
->> +	 */
->
-> Nitpick: drivers don't set up the size, just the mask. We read the size
-> from DT.
+On Wed, Feb 11, 2015 at 04:38:23PM +0000, Boris Brezillon wrote:
+> On Wed, 11 Feb 2015 16:32:31 +0000
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> > On Wed, Feb 11, 2015 at 04:15:15PM +0000, Boris Brezillon wrote:
+> > > On Wed, 11 Feb 2015 15:57:20 +0000
+> > > Mark Rutland <mark.rutland@arm.com> wrote:
+> > > 
+> > > > [...]
+> > > > 
+> > > > > > > > So for the flag at request time approach to work, all the drivers using
+> > > > > > > > the interrupt would have to flag they're safe in that context.
+> > > > > > > 
+> > > > > > > Something like IRQF_"I can share the line with a timer" I guess?  That wouldn't
+> > > > > > > hurt and can be checked at request time even.
+> > > > > > 
+> > > > > > I guess that would have to imply IRQF_SHARED, so we'd have something
+> > > > > > like:
+> > > > > > 
+> > > > > > IRQF_SHARED_SUSPEND_OK - This handler is safe to call spuriously during
+> > > > > > 			 suspend in the case the line is shared. The
+> > > > > > 			 handler will not access unavailable hardware
+> > > > > > 			 or kernel infrastructure during this period.
+> > > > > > 
+> > > > > > #define __IRQF_SUSPEND_SPURIOUS		0x00040000
+> > > > > > #define	IRQF_SHARED_SUSPEND_OK		(IRQF_SHARED | __IRQF_SUSPEND_SPURIOUS)
+> > > > > 
+> > > > > What about
+> > > > > 
+> > > > > #define __IRQF_TIMER_SIBLING_OK	0x00040000
+> > > > > #define	IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
+> > > > > 
+> > > > > The "suspend" part is kind of a distraction to me here, because that really
+> > > > > only is about sharing an IRQ with a timer and the "your interrupt handler
+> > > > > may be called when the device is suspended" part is just a consequence of that.
+> > > > 
+> > > > My rationale was that you didn't really care who else was using the IRQ
+> > > > (e.g. the timer); you're just stating that you can survive being called
+> > > > during suspend (which is what the driver may need to check for in the
+> > > > handler if the device happens to be powered down or whatever).
+> > > > 
+> > > > So I guess I see it the other way around. This is essentially claiming
+> > > > we can handle sharing with IRQF_NO_SUSPEND rather than IRQF_TIMER.
+> > > > 
+> > > > > So IMO it's better to have "TIMER" in the names to avoid encouraging people to
+> > > > > abuse this for other purposes not related to timers.
+> > > > 
+> > > > In the end a name is a name, and if you think IRQF_SHARED_TIMER_OK is
+> > > > better I shan't complain.
+> > > > 
+> > > > The fundamental issue I'm concerned with is addressed by this approach.
+> > > 
+> > > Okay then, is anyone taking care of submitting such a patch (Mark ?) ?
+> > 
+> > I'll have the core patch shortly.
+> > 
+> > I'll need to ask for your help tagging the relevant drivers and testing.
+> 
+> For the list of impacted drivers, you can have a look at this series [1]
+> (patches 2 to 5), and I'll take care of the testing part once every one
+> has agreed on the solution ;-).
+> 
+> [1]https://lkml.org/lkml/2014/12/15/552
 
-Not sure how this came, I will update this.
->
->> +	size = 1ULL<<  32;
->> +
->>   	ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
->> -	if (ret<  0) {
->> -		dma_addr = offset = 0;
->> -		size = dev->coherent_dma_mask + 1;
->
-> Do you assume that, on error, of_dma_get_range() does not touch any of
-> the dma_addr/paddr/size? It looks safer to me to leave it as the
-> original.
-I think dma_addr and paddr is both modified on error. So this change 
-can't be done. I will revert the logic back to original.
->
->> -	} else {
->> +	if (!ret) {
->>   		offset = PFN_DOWN(paddr - dma_addr);
->>
->>   		/*
->> @@ -128,6 +132,15 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->>
->>   	dev->dma_pfn_offset = offset;
->>
->> +	/*
->> +	 * Limit coherent and dma mask based on size and default mask
->> +	 * set by the driver.
->> +	 */
->> +	dev->coherent_dma_mask = min(dev->coherent_dma_mask,
->> +				     DMA_BIT_MASK(ilog2(dma_addr + size)));
->
-> Do we need to cover the case where size is incorrectly set to 0 in the
-> DT? At least some warning and leaving the mask unchanged.
+Thanks for the link.
 
-The previous series already warn and return if the size is incorrect 
-(Patch v6 3/7) and leave the dma mask unchanged. So we don't have to do 
-anything in this patch. I will fix the above and re-send.
->
->> +	*dev->dma_mask = min((*dev->dma_mask),
->> +			     DMA_BIT_MASK(ilog2(dma_addr + size)));
->> +
->>   	coherent = of_dma_is_coherent(np);
->>   	dev_dbg(dev, "device is%sdma coherent\n",
->>   		coherent ? " " : " not ");
->
+I'll take a look at this once Rafael's given the core patch a once-over.
 
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+Thanks,
+Mark.
