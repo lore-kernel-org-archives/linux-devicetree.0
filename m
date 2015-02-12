@@ -1,115 +1,103 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] ARM: perf: Add support for Scorpion PMUs
-Date: Thu, 12 Feb 2015 12:49:49 +0000
-Message-ID: <20150212124949.GE1522@leverpostej>
-References: <1423616724-20849-1-git-send-email-sboyd@codeaurora.org>
- <1423616724-20849-3-git-send-email-sboyd@codeaurora.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
+ if no bestdiv is normally found
+Date: Thu, 12 Feb 2015 12:56:46 +0000
+Message-ID: <20150212125646.GT8656@n2100.arm.linux.org.uk>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
+ <20150212093356.GR12209@pengutronix.de>
+ <20150212103944.GA1290@victor>
+ <20150212122405.GW12209@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1423616724-20849-3-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20150212122405.GW12209@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-I haven't given this a thorough review, but I spotted a couple of items
-below.
-
-On Wed, Feb 11, 2015 at 01:05:24AM +0000, Stephen Boyd wrote:
-> Scorpion supports a set of local performance monitor event
-> selection registers (LPM) sitting behind a cp15 based interface
-> that extend the architected PMU events to include Scorpion CPU
-> and Venum VFP specific events. To use these events the user is
-> expected to program the lpm register with the event code shifted
-> into the group they care about and then point the PMNx event at
-> that region+group combo by writing a LPMn_GROUPx event. Add
-> support for this hardware.
-> 
-> Note: the raw event number is a pure software construct that
-> allows us to map the multi-dimensional number space of regions,
-> groups, and event codes into a flat event number space suitable
-> for use by the perf framework.
-> 
-> This is based on code originally written by Ashwin Chaugule and
-> Neil Leeder [1] massed to become similar to the Krait PMU support
-> code.
-> 
-> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/tree/arch/arm/kernel/perf_event_msm.c?h=msm-3.4
-> 
-> Cc: Neil Leeder <nleeder@codeaurora.org>
-> Cc: Ashwin Chaugule <ashwinc@codeaurora.org>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/pmu.txt |   2 +
->  arch/arm/kernel/perf_event_cpu.c              |   2 +
->  arch/arm/kernel/perf_event_v7.c               | 395 ++++++++++++++++++++++++++
->  3 files changed, 399 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
-> index 75ef91d08f3b..6e54a9d88b7a 100644
-> --- a/Documentation/devicetree/bindings/arm/pmu.txt
-> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
-> @@ -18,6 +18,8 @@ Required properties:
->         "arm,arm11mpcore-pmu"
->         "arm,arm1176-pmu"
->         "arm,arm1136-pmu"
-> +       "qcom,scorpion-pmu"
-> +       "qcom,scorpion-mp-pmu"
-
-Is the PMU any different in the MP and !MP variants? The code doesn't
-seem to handle the two any differently and will pass either to userspace
-as "armv7_scorpion".
-
-If there is some difference that we don't handle right now, that's fine,
-it just looks a little odd.
-
-[...]
-
-> +static const unsigned scorpion_perf_cache_map[PERF_COUNT_HW_CACHE_MAX]
-> +                                           [PERF_COUNT_HW_CACHE_OP_MAX]
-> +                                           [PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-> +       PERF_CACHE_MAP_ALL_UNSUPPORTED,
-> +       /*
-> +        * The performance counters don't differentiate between read and write
-> +        * accesses/misses so this isn't strictly correct, but it's the best we
-> +        * can do. Writes and reads get combined.
-> +        */
-> +       [C(L1D)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_L1_DCACHE_ACCESS,
-> +       [C(L1D)][C(OP_READ)][C(RESULT_MISS)] = ARMV7_PERFCTR_L1_DCACHE_REFILL,
-> +       [C(L1D)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_L1_DCACHE_ACCESS,
-> +       [C(L1D)][C(OP_WRITE)][C(RESULT_MISS)] = ARMV7_PERFCTR_L1_DCACHE_REFILL,
-> +       [C(L1I)][C(OP_READ)][C(RESULT_ACCESS)] = SCORPION_ICACHE_ACCESS,
-> +       [C(L1I)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_ICACHE_MISS,
-> +       [C(L1I)][C(OP_WRITE)][C(RESULT_ACCESS)] = SCORPION_ICACHE_ACCESS,
-> +       [C(L1I)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_ICACHE_MISS,
-
-These last two entries go against the policy we set in commit
-40c390c768f89849: "ARM: perf: don't pretend to support counting of L1I
-writes", so I think they should be dropped.
-
-> +       /*
-> +        * Only ITLB misses and DTLB refills are supported.  If users want the
-> +        * DTLB refills misses a raw counter must be used.
-> +        */
-> +       [C(DTLB)][C(OP_READ)][C(RESULT_ACCESS)] = SCORPION_DTLB_ACCESS,
-> +       [C(DTLB)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_DTLB_MISS,
-> +       [C(DTLB)][C(OP_WRITE)][C(RESULT_ACCESS)] = SCORPION_DTLB_ACCESS,
-> +       [C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_DTLB_MISS,
-> +       [C(ITLB)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_ITLB_MISS,
-> +       [C(ITLB)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_ITLB_MISS,
-> +       [C(BPU)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
-> +       [C(BPU)][C(OP_READ)][C(RESULT_MISS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
-> +       [C(BPU)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
-> +       [C(BPU)][C(OP_WRITE)][C(RESULT_MISS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
-> +};
-
-Not ARMV7_PERFCTR_PC_BRANCH_MIS_PRED for the RESULT_MISS cases as with
-all other ARMv7 instances (Krait included)?
-
-Thanks,
-Mark.
+T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMDE6MjQ6MDVQTSArMDEwMCwgU2FzY2hhIEhhdWVyIHdy
+b3RlOgo+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDA2OjM5OjQ1UE0gKzA4MDAsIExpdSBZaW5n
+IHdyb3RlOgo+ID4gT24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTA6MzM6NTZBTSArMDEwMCwgU2Fz
+Y2hhIEhhdWVyIHdyb3RlOgo+ID4gPiBPbiBUaHUsIEZlYiAxMiwgMjAxNSBhdCAwMjowMToyNFBN
+ICswODAwLCBMaXUgWWluZyB3cm90ZToKPiA+ID4gPiBJZiBubyBiZXN0IGRpdmlkZXIgaXMgbm9y
+bWFsbHkgZm91bmQsIHdlIHdpbGwgdHJ5IHRvIHVzZSB0aGUgbWF4aW11bSBkaXZpZGVyLgo+ID4g
+PiA+IFdlIHNob3VsZCBub3Qgc2V0IHRoZSBwYXJlbnQgY2xvY2sgcmF0ZSB0byBiZSAxSHogYnkg
+Zm9yY2UgZm9yIGJlaW5nIHJvdW5kZWQuCj4gPiA+ID4gSW5zdGVhZCwgd2Ugc2hvdWxkIHRha2Ug
+dGhlIG1heGltdW0gZGl2aWRlciBhcyBhIGJhc2UgYW5kIGNhbGN1bGF0ZSBhIGNvcnJlY3QKPiA+
+ID4gPiBwYXJlbnQgY2xvY2sgcmF0ZSBmb3IgYmVpbmcgcm91bmRlZC4KPiA+ID4gCj4gPiA+IFBs
+ZWFzZSBhZGQgYW4gZXhwbGFuYXRpb24gd2h5IHlvdSB0aGluayB0aGUgY3VycmVudCBjb2RlIGlz
+IHdyb25nIGFuZAo+ID4gPiB3aGF0IHRoaXMgYWN0dWFsbHkgZml4ZXMsIG1heWJlIGFuIGV4YW1w
+bGU/Cj4gPiAKPiA+IFRoZSBNSVBJIERTSSBwYW5lbCdzIHBpeGVsIGNsb2NrIHJhdGUgaXMgMjYu
+NE1IeiBhbmQgaXQncyBkZXJpdmVkIGZyb20gUExMNSBvbgo+ID4gdGhlIE1YNkRMIFNhYnJlU0Qg
+Ym9hcmQuCj4gPiAKPiA+IFRoZXNlIGFyZSB0aGUgY2xvY2sgdHJlZSBzdW1tYXJpZXMgd2l0aCBv
+ciB3aXRob3V0IHRoZSBwYXRjaCBhcHBsaWVkOgo+ID4gMSkgV2l0aCB0aGUgcGF0Y2ggYXBwbGll
+ZDoKPiA+IHBsbDVfYnlwYXNzX3NyYyAgICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAg
+IDEgICAgMjQwMDAwMDAgICAgICAgICAgMCAwCj4gPiAgICBwbGw1ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIDEgICAgICAgICAgICAxICAgODQ0ODAwMDQ4ICAgICAgICAgIDAgMAo+ID4g
+ICAgICAgcGxsNV9ieXBhc3MgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDg0
+NDgwMDA0OCAgICAgICAgICAwIDAKPiA+ICAgICAgICAgIHBsbDVfdmlkZW8gICAgICAgICAgICAg
+ICAgICAgMSAgICAgICAgICAgIDEgICA4NDQ4MDAwNDggICAgICAgICAgMCAwCj4gPiAgICAgICAg
+ICAgICBwbGw1X3Bvc3RfZGl2ICAgICAgICAgICAgIDEgICAgICAgICAgICAxICAgMjExMjAwMDEy
+ICAgICAgICAgIDAgMAo+ID4gICAgICAgICAgICAgICAgcGxsNV92aWRlb19kaXYgICAgICAgICAg
+IDEgICAgICAgICAgICAxICAgMjExMjAwMDEyICAgICAgICAwIDAKPiA+ICAgICAgICAgICAgICAg
+ICAgIGlwdTFfZGkwX3ByZV9zZWwgICAgICAgICAgIDEgICAgICAgICAgICAxICAgMjExMjAwMDEy
+ICAgMCAwCj4gPiAgICAgICAgICAgICAgICAgICAgICBpcHUxX2RpMF9wcmUgICAgICAgICAgIDEg
+ICAgICAgICAgICAxICAgIDI2NDAwMDAyICAgIDAgMAo+ID4gICAgICAgICAgICAgICAgICAgICAg
+ICAgaXB1MV9kaTBfc2VsICAgICAgICAgICAxICAgICAgICAgICAgMSAgICAyNjQwMDAwMiAwIDAK
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwICAgICAgICAgICAxICAgICAg
+ICAgICAgMSAgICAyNjQwMDAwMiAgMCAwCj4gPiAKPiA+IDIpIFdpdGhvdXQgdGhlIHBhdGNoIGFw
+cGxpZWQ6Cj4gPiBwbGw1X2J5cGFzc19zcmMgICAgICAgICAgICAgICAgICAgICAgIDEgICAgICAg
+ICAgICAxICAgIDI0MDAwMDAwICAgICAgICAgIDAgMAo+ID4gICAgcGxsNSAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDY0ODAwMDAwMCAgICAgICAgICAwIDAK
+PiA+ICAgICAgIHBsbDVfYnlwYXNzICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEg
+ICA2NDgwMDAwMDAgICAgICAgICAgMCAwCj4gPiAgICAgICAgICBwbGw1X3ZpZGVvICAgICAgICAg
+ICAgICAgICAgIDEgICAgICAgICAgICAxICAgNjQ4MDAwMDAwICAgICAgICAgIDAgMAo+ID4gICAg
+ICAgICAgICAgcGxsNV9wb3N0X2RpdiAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDE2MjAw
+MDAwMCAgICAgICAgICAwIDAKPiA+ICAgICAgICAgICAgICAgIHBsbDVfdmlkZW9fZGl2ICAgICAg
+ICAgICAxICAgICAgICAgICAgMSAgICA0MDUwMDAwMCAgICAgICAgMCAwCj4gPiAgICAgICAgICAg
+ICAgICAgICBpcHUxX2RpMF9wcmVfc2VsICAgICAgICAgICAxICAgICAgICAgICAgMSAgICA0MDUw
+MDAwMCAgIDAgMAo+ID4gICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTBfcHJlICAgICAgICAg
+ICAxICAgICAgICAgICAgMSAgICAyMDI1MDAwMCAgICAwIDAKPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIGlwdTFfZGkwX3NlbCAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjAyNTAwMDAg
+MCAwCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICBpcHUxX2RpMCAgICAgICAgICAgMSAg
+ICAgICAgICAgIDEgICAgMjAyNTAwMDAgIDAgMAo+IAo+IFRoaXMgc2VlbXMgdG8gYmUgYnJva2Vu
+IHNpbmNlOgo+IAo+IHwgY29tbWl0IGIxMWQyODJkYmVhMjdkYjE3ODg4OTMxMTVkZmNhOGE3ODU2
+YmYyMDUKPiB8IEF1dGhvcjogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4K
+PiB8IERhdGU6ICAgVGh1IEZlYiAxMyAxMjowMzo1OSAyMDE0ICswMjAwCj4gfCAKPiB8ICAgICBj
+bGs6IGRpdmlkZXI6IGZpeCByYXRlIGNhbGN1bGF0aW9uIGZvciBmcmFjdGlvbmFsIHJhdGVzCj4g
+Cj4gVGhpcyBwYXRjaCBmaXhlZCBhIGNhc2Ugd2hlbiBjbGtfc2V0X3JhdGUoY2xrX3JvdW5kX3Jh
+dGUocmF0ZSkpIHJlc3VsdGVkCj4gaW4gYSBsb3dlciBmcmVxdWVuY3kgdGhhbiBjbGtfcm91bmRf
+cmF0ZShyYXRlKSByZXR1cm5lZC4KPiAKPiBTaW5jZSB0aGVuIHRoZSBNVUxUX1JPVU5EX1VQIGlu
+IGNsa19kaXZpZGVyX2Jlc3RkaXYoKSBpcyBpbmNvbnNpc3RlbnQgdG8KPiB0aGUgcmVzdCBvZiB0
+aGUgZGl2aWRlci4gTWF5YmUgdGhpcyBzaG91bGQgYmUgYSBzaW1wbGUgcmF0ZSAqIGkgbm93LCBi
+dXQKPiBJJ20gdW5zdXJlIHdoYXQgc2lkZSBlZmZlY3RzIHRoaXMgaGFzLgo+IAo+IEkgdGhpbmsg
+eW91ciBwYXRjaCBvbmx5IGZpeGVzIHRoZSBiZWhhdmlvdXIgaW4geW91ciBjYXNlIGJ5IGFjY2lk
+ZW50LAo+IGl0J3Mgbm90IGEgY29ycmVjdCBmaXggZm9yIHRoaXMgaXNzdWUuCgpXZWxsLCBpdCdz
+IGRlZmluZWQgdGhhdDoKCgluZXdfcmF0ZSA9IGNsa19yb3VuZF9yYXRlKGNsaywgcmF0ZSk7Cgpy
+ZXR1cm5zIHRoZSByYXRlIHdoaWNoIHlvdSB3b3VsZCBnZXQgaWYgeW91IGRpZDoKCgljbGtfc2V0
+X3JhdGUoY2xrLCByYXRlKTsKCW5ld19yYXRlID0gY2xrX2dldF9yYXRlKGNsayk7CgpUaGUgcmVh
+c29uaW5nIGhlcmUgaXMgdGhhdCBjbGtfcm91bmRfcmF0ZSgpIGdpdmVzIHlvdSBhIHdheSB0byBx
+dWVyeSB3aGF0CnJhdGUgeW91IHdvdWxkIGdldCBpZiB5b3Ugd2VyZSB0byBhc2sgZm9yIHRoZSBy
+YXRlIHRvIGJlIHNldCwgd2l0aG91dAplZmZlY3RpbmcgYSBjaGFuZ2UgaW4gdGhlIGhhcmR3YXJl
+LgoKVGhlIGlkZWEgdGhhdCB5b3Ugc2hvdWxkIGNhbGwgY2xrX3JvdW5kX3JhdGUoKSBmaXJzdCBi
+ZWZvcmUgY2xrX3NldF9yYXRlKCkKYW5kIHBhc3MgdGhlIHJldHVybmVkIHJvdW5kZWQgcmF0ZSBp
+bnRvIGNsa19zZXRfcmF0ZSgpIGlzIHJlYWxseSBpZGlvdGljCmdpdmVuIHRoYXQuICBQbGVhc2Ug
+ZG9uJ3QgZG8gaXQsIGFuZCBwbGVhc2UgcmVtb3ZlIGNvZGUgd2hpY2ggZG9lcyBpdCwgYW5kCmlu
+IHJldmlldyBjb21tZW50IG9uIGl0LiAgVGhhbmtzLgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAw
+LjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCAxMC41TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3Jk
+aW5nIHRvIHNwZWVkdGVzdC5uZXQuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
