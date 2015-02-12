@@ -1,63 +1,96 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ARM: dts: zynq: Add OCM node
-Date: Thu, 12 Feb 2015 10:26:16 +0000
-Message-ID: <20150212102615.GC1245@leverpostej>
-References: <135fba212abd740584a2547903cc8d175417344c.1423736523.git.michal.simek@xilinx.com>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
+ if no bestdiv is normally found
+Date: Thu, 12 Feb 2015 18:39:45 +0800
+Message-ID: <20150212103944.GA1290@victor>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
+ <20150212093356.GR12209@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <135fba212abd740584a2547903cc8d175417344c.1423736523.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "monstr@monstr.eu" <monstr@monstr.eu>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robherring2@gmail.com>, Josh Cartwright <josh.cartwright@ni.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20150212093356.GR12209@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 12, 2015 at 10:22:07AM +0000, Michal Simek wrote:
-> Add OCM node for all zynq boards. OCM location
-> can changed but for all current boards this
-> is the location where OCM is.`
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
-> This patch is done based on discussion here.
-> https://lkml.org/lkml/2014/12/1/396
-> 
-> There are some ways how to do it.
-> OCM location can be changed but board DTS files
-> can easily rewrite it.
-> The problem which there is that node has address
-> in it but maybe someone can suggest better solution.
-
-Given that the node is so simple, can't this be pushed down into the
-board files? So long as the label is consistent anything else that's
-referring to it should still work.
-
-Thanks,
-Mark.
-
-> ---
->  arch/arm/boot/dts/zynq-7000.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-> index a5cd2eda3edf..d55a8b365a6c 100644
-> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> @@ -150,6 +150,11 @@
->  			reg = <0xf8006000 0x1000>;
->  		};
->  
-> +		ocm: sram@fffc0000 {
-> +			compatible = "mmio-sram";
-> +			reg = <0xfffc0000 0x10000>;
-> +		};
-> +
->  		uart0: serial@e0000000 {
->  			compatible = "xlnx,xuartps", "cdns,uart-r1p8";
->  			status = "disabled";
-> -- 
-> 1.8.2.3
-> 
-> 
+T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTA6MzM6NTZBTSArMDEwMCwgU2FzY2hhIEhhdWVyIHdy
+b3RlOgo+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDAyOjAxOjI0UE0gKzA4MDAsIExpdSBZaW5n
+IHdyb3RlOgo+ID4gSWYgbm8gYmVzdCBkaXZpZGVyIGlzIG5vcm1hbGx5IGZvdW5kLCB3ZSB3aWxs
+IHRyeSB0byB1c2UgdGhlIG1heGltdW0gZGl2aWRlci4KPiA+IFdlIHNob3VsZCBub3Qgc2V0IHRo
+ZSBwYXJlbnQgY2xvY2sgcmF0ZSB0byBiZSAxSHogYnkgZm9yY2UgZm9yIGJlaW5nIHJvdW5kZWQu
+Cj4gPiBJbnN0ZWFkLCB3ZSBzaG91bGQgdGFrZSB0aGUgbWF4aW11bSBkaXZpZGVyIGFzIGEgYmFz
+ZSBhbmQgY2FsY3VsYXRlIGEgY29ycmVjdAo+ID4gcGFyZW50IGNsb2NrIHJhdGUgZm9yIGJlaW5n
+IHJvdW5kZWQuCj4gCj4gUGxlYXNlIGFkZCBhbiBleHBsYW5hdGlvbiB3aHkgeW91IHRoaW5rIHRo
+ZSBjdXJyZW50IGNvZGUgaXMgd3JvbmcgYW5kCj4gd2hhdCB0aGlzIGFjdHVhbGx5IGZpeGVzLCBt
+YXliZSBhbiBleGFtcGxlPwoKVGhlIE1JUEkgRFNJIHBhbmVsJ3MgcGl4ZWwgY2xvY2sgcmF0ZSBp
+cyAyNi40TUh6IGFuZCBpdCdzIGRlcml2ZWQgZnJvbSBQTEw1IG9uCnRoZSBNWDZETCBTYWJyZVNE
+IGJvYXJkLgoKVGhlc2UgYXJlIHRoZSBjbG9jayB0cmVlIHN1bW1hcmllcyB3aXRoIG9yIHdpdGhv
+dXQgdGhlIHBhdGNoIGFwcGxpZWQ6CjEpIFdpdGggdGhlIHBhdGNoIGFwcGxpZWQ6CnBsbDVfYnlw
+YXNzX3NyYyAgICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjQwMDAwMDAg
+ICAgICAgICAgMCAwCiAgIHBsbDUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMSAgICAg
+ICAgICAgIDEgICA4NDQ4MDAwNDggICAgICAgICAgMCAwCiAgICAgIHBsbDVfYnlwYXNzICAgICAg
+ICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA4NDQ4MDAwNDggICAgICAgICAgMCAwCiAg
+ICAgICAgIHBsbDVfdmlkZW8gICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA4NDQ4
+MDAwNDggICAgICAgICAgMCAwCiAgICAgICAgICAgIHBsbDVfcG9zdF9kaXYgICAgICAgICAgICAg
+MSAgICAgICAgICAgIDEgICAyMTEyMDAwMTIgICAgICAgICAgMCAwCiAgICAgICAgICAgICAgIHBs
+bDVfdmlkZW9fZGl2ICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDIxMTIwMDAxMiAgICAgICAg
+MCAwCiAgICAgICAgICAgICAgICAgIGlwdTFfZGkwX3ByZV9zZWwgICAgICAgICAgIDEgICAgICAg
+ICAgICAxICAgMjExMjAwMDEyICAgMCAwCiAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwX3By
+ZSAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjY0MDAwMDIgICAgMCAwCiAgICAgICAgICAg
+ICAgICAgICAgICAgIGlwdTFfZGkwX3NlbCAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjY0
+MDAwMDIgMCAwCiAgICAgICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwICAgICAgICAgICAx
+ICAgICAgICAgICAgMSAgICAyNjQwMDAwMiAgMCAwCgoyKSBXaXRob3V0IHRoZSBwYXRjaCBhcHBs
+aWVkOgpwbGw1X2J5cGFzc19zcmMgICAgICAgICAgICAgICAgICAgICAgIDEgICAgICAgICAgICAx
+ICAgIDI0MDAwMDAwICAgICAgICAgIDAgMAogICBwbGw1ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIDEgICAgICAgICAgICAxICAgNjQ4MDAwMDAwICAgICAgICAgIDAgMAogICAgICBwbGw1
+X2J5cGFzcyAgICAgICAgICAgICAgICAgICAgIDEgICAgICAgICAgICAxICAgNjQ4MDAwMDAwICAg
+ICAgICAgIDAgMAogICAgICAgICBwbGw1X3ZpZGVvICAgICAgICAgICAgICAgICAgIDEgICAgICAg
+ICAgICAxICAgNjQ4MDAwMDAwICAgICAgICAgIDAgMAogICAgICAgICAgICBwbGw1X3Bvc3RfZGl2
+ICAgICAgICAgICAgIDEgICAgICAgICAgICAxICAgMTYyMDAwMDAwICAgICAgICAgIDAgMAogICAg
+ICAgICAgICAgICBwbGw1X3ZpZGVvX2RpdiAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgNDA1
+MDAwMDAgICAgICAgIDAgMAogICAgICAgICAgICAgICAgICBpcHUxX2RpMF9wcmVfc2VsICAgICAg
+ICAgICAxICAgICAgICAgICAgMSAgICA0MDUwMDAwMCAgIDAgMAogICAgICAgICAgICAgICAgICAg
+ICBpcHUxX2RpMF9wcmUgICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDIwMjUwMDAwICAgIDAg
+MAogICAgICAgICAgICAgICAgICAgICAgICBpcHUxX2RpMF9zZWwgICAgICAgICAgIDEgICAgICAg
+ICAgICAxICAgIDIwMjUwMDAwIDAgMAogICAgICAgICAgICAgICAgICAgICAgICAgICBpcHUxX2Rp
+MCAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjAyNTAwMDAgIDAgMAoKPiAKPiA+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2Nsay9jbGstZGl2aWRlci5jIGIvZHJpdmVycy9jbGsvY2xrLWRpdmlk
+ZXIuYwo+ID4gaW5kZXggYzBhODQyYi4uZjY0MWQ0YiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMv
+Y2xrL2Nsay1kaXZpZGVyLmMKPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2Nsay1kaXZpZGVyLmMKPiA+
+IEBAIC0zMTEsNyArMzExLDggQEAgc3RhdGljIGludCBjbGtfZGl2aWRlcl9iZXN0ZGl2KHN0cnVj
+dCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCj4gPiAgCj4gPiAgCWlmICghYmVzdGRp
+dikgewo+ID4gIAkJYmVzdGRpdiA9IF9nZXRfbWF4ZGl2KGRpdmlkZXIpOwo+ID4gLQkJKmJlc3Rf
+cGFyZW50X3JhdGUgPSBfX2Nsa19yb3VuZF9yYXRlKF9fY2xrX2dldF9wYXJlbnQoaHctPmNsayks
+IDEpOwo+ID4gKwkJKmJlc3RfcGFyZW50X3JhdGUgPSBfX2Nsa19yb3VuZF9yYXRlKF9fY2xrX2dl
+dF9wYXJlbnQoaHctPmNsayksCj4gPiArCQkJCQkJTVVMVF9ST1VORF9VUChyYXRlLCBiZXN0ZGl2
+KSk7Cj4gCj4gV2hlbiBnZXR0aW5nIGludG8gdGhlIGlmKCFiZXN0ZGl2KSBpdCBtZWFucyB0aGF0
+IHRoZSBsb3dlc3QgcG9zc2libGUKPiByYXRlIHdlIGNhbiBhcmNoaWV2ZSBpcyBzdGlsbCBoaWdo
+ZXIgdGhhbiB0aGUgdGFyZ2V0IHJhdGUsIHNvIHNldHRpbmcKPiB0aGUgcGFyZW50IHJhdGUgYXMg
+bG93IGFzIHBvc3NpYmxlIHNlZW1zIHNhbmUgdG8gbWUuIFdoeSBkbyB5b3UgdGhpbmsKPiB0aGlz
+IGlzIHdyb25nPyBJbiB3aGljaCBjYXNlIHRoaXMgZXZlbiBtYWtlcyBhIGRpZmZlcmVuY2U/CgpX
+ZSBzdGlsbCBzaG91bGQgdGFrZSB0aGUgbGl0dGxlIGxlZnQgY2hhbmNlIHRvIGdldCBhIGNsb3Nl
+c3QgdGFyZ2V0IGNsb2NrCnJhdGUgd2Ugd2FudCgyNi40TUh6LCBpbiB0aGUgZXhhbXBsZSBjYXNl
+IGFib3ZlKSwgc28gaXQgbG9va3MgdGhhdCB0aGUgbG93ZXN0CnBhcmVudCBjbG9jayByYXRlIGZv
+ciBiZWluZyByb3VuZGVkIHNob3VsZCBiZSBNVUxUX1JPVU5EX1VQKHJhdGUsIGJlc3RkaXYpCmlu
+c3RlYWQgb2YgMUh6LgoKUmVnYXJkcywKTGl1IFlpbmcKCj4gCj4gU2FzY2hhCj4gCj4gLS0gCj4g
+UGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwKPiBJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAg
+ICAgICAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlLyAgfAo+IFBlaW5lciBTdHIuIDYtOCwg
+MzExMzcgSGlsZGVzaGVpbSwgR2VybWFueSB8IFBob25lOiArNDktNTEyMS0yMDY5MTctMCAgICB8
+Cj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAgIHwgRmF4OiAgICs0
+OS01MTIxLTIwNjkxNy01NTU1IHwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
