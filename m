@@ -1,53 +1,63 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: at91: at91sam9x5: enable ISI and ov2640
- support
-Date: Thu, 12 Feb 2015 10:08:37 +0100
-Message-ID: <20150212100837.2ab78742@bbrezillon>
-References: <1423728386-24544-1-git-send-email-josh.wu@atmel.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH RFC v9 09/20] drm/dsi: Add a helper to get bits per pixel
+ of MIPI DSI pixel format
+Date: Thu, 12 Feb 2015 10:26:42 +0100
+Message-ID: <20150212092642.GY24485@phenom.ffwll.local>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <1423720903-24806-10-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423728386-24544-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1423720903-24806-10-git-send-email-Ying.Liu@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liu Ying <Ying.Liu@freescale.com>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Feb 2015 16:06:22 +0800
-Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-
-> This patch series will enable ISI and ov2640 sensor support for
-> at91sam9g25ek board.
-
-This series looks good to me.
-
-Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-> 
-> 
-> Josh Wu (4):
->   ARM: at91: at91sam9x5/dts: add ISI dt support, include isi node,
->     pinctrls
->   ARM: at91: at91sam9x5ek/dts: add ov2640 support
->   ARM: at91: at91sam9g25ek/dts: enable ISI and ov2640
->   ARM: at91: at91_dt_defconfig: enable ISI and ov2640 support
-> 
->  arch/arm/boot/dts/at91sam9g25.dtsi    |  1 +
->  arch/arm/boot/dts/at91sam9g25ek.dts   | 18 +++++++++++++
->  arch/arm/boot/dts/at91sam9x5_isi.dtsi | 46 +++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/at91sam9x5ek.dtsi   | 48 +++++++++++++++++++++++++++++++++++
->  arch/arm/configs/at91_dt_defconfig    |  6 +++++
->  5 files changed, 119 insertions(+)
-> 
-
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMDI6MDE6MzJQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6
+Cj4gU2lnbmVkLW9mZi1ieTogTGl1IFlpbmcgPFlpbmcuTGl1QGZyZWVzY2FsZS5jb20+Cj4gLS0t
+Cj4gdjgtPnY5Ogo+ICAqIFJlYmFzZSBvbnRvIHRoZSBpbXgtZHJtL25leHQgYnJhbmNoIG9mIFBo
+aWxpcHAgWmFiZWwncyBvcGVuIGdpdCByZXBvc2l0b3J5Lgo+IAo+IHY3LT52ODoKPiAgKiBOb25l
+Lgo+IAo+IHY2LT52NzoKPiAgKiBOb25lLgo+IAo+IHY1LT52NjoKPiAgKiBBZGRyZXNzIHRoZSBv
+dmVyIDgwIGNoYXJhY3RlcnMgaW4gb25lIGxpbmUgd2FybmluZyByZXBvcnRlZCBieSB0aGUKPiAg
+ICBjaGVja3BhdGNoLnBsIHNjcmlwdC4KPiAKPiB2NC0+djU6Cj4gICogTm9uZS4KPiAKPiB2My0+
+djQ6Cj4gICogTm9uZS4KPiAKPiB2Mi0+djM6Cj4gICogTm9uZS4KPiAKPiB2MS0+djI6Cj4gICog
+VGhpZXJyeSBSZWRpbmcgc3VnZ2VzdGVkIHRoYXQgdGhlIG1pcGlfZHNpX3BpeGVsX2Zvcm1hdF90
+b19icHAoKSBmdW5jdGlvbgo+ICAgIGNvdWxkIGJlIHBsYWNlZCBhdCB0aGUgY29tbW9uIERSTSBN
+SVBJIERTSSBkcml2ZXIuCj4gICAgVGhpcyBwYXRjaCBpcyBuZXdseSBhZGRlZC4KPiAKPiAgaW5j
+bHVkZS9kcm0vZHJtX21pcGlfZHNpLmggfCAxNCArKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hh
+bmdlZCwgMTQgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS9kcm1f
+bWlwaV9kc2kuaCBiL2luY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oCj4gaW5kZXggZjFkOGQwZC4u
+MzY2MjAyMSAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2RybS9kcm1fbWlwaV9kc2kuaAo+ICsrKyBi
+L2luY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oCj4gQEAgLTE2Myw2ICsxNjMsMjAgQEAgc3RhdGlj
+IGlubGluZSBzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICp0b19taXBpX2RzaV9kZXZpY2Uoc3RydWN0
+IGRldmljZSAqZGV2KQo+ICAJcmV0dXJuIGNvbnRhaW5lcl9vZihkZXYsIHN0cnVjdCBtaXBpX2Rz
+aV9kZXZpY2UsIGRldik7Cj4gIH0KPiAgCj4gK3N0YXRpYyBpbmxpbmUgaW50IG1pcGlfZHNpX3Bp
+eGVsX2Zvcm1hdF90b19icHAoZW51bSBtaXBpX2RzaV9waXhlbF9mb3JtYXQgZm10KQoKS2VybmVs
+ZG9jIHNlZW1zIHRvIGJlIG1pc3NpbmcgZm9yIHRoaXMgb25lLgotRGFuaWVsCgo+ICt7Cj4gKwlz
+d2l0Y2ggKGZtdCkgewo+ICsJY2FzZSBNSVBJX0RTSV9GTVRfUkdCODg4Ogo+ICsJY2FzZSBNSVBJ
+X0RTSV9GTVRfUkdCNjY2Ogo+ICsJCXJldHVybiAyNDsKPiArCWNhc2UgTUlQSV9EU0lfRk1UX1JH
+QjY2Nl9QQUNLRUQ6Cj4gKwkJcmV0dXJuIDE4Owo+ICsJY2FzZSBNSVBJX0RTSV9GTVRfUkdCNTY1
+Ogo+ICsJCXJldHVybiAxNjsKPiArCX0KPiArCXJldHVybiAtRUlOVkFMOwo+ICt9Cj4gKwo+ICBz
+dHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpvZl9maW5kX21pcGlfZHNpX2RldmljZV9ieV9ub2RlKHN0
+cnVjdCBkZXZpY2Vfbm9kZSAqbnApOwo+ICBpbnQgbWlwaV9kc2lfYXR0YWNoKHN0cnVjdCBtaXBp
+X2RzaV9kZXZpY2UgKmRzaSk7Cj4gIGludCBtaXBpX2RzaV9kZXRhY2goc3RydWN0IG1pcGlfZHNp
+X2RldmljZSAqZHNpKTsKPiAtLSAKPiAyLjEuMAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBF
+bmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8v
+YmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
