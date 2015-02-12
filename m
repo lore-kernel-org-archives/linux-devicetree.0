@@ -1,127 +1,262 @@
-From: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] xhci: add a quirk for device disconnection errata
- for Synopsis Designware USB3 core
-Date: Thu, 12 Feb 2015 15:50:00 +0200
-Message-ID: <54DCAF88.4010607@intel.com>
-References: <1422173608-24355-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com> <1422173608-24355-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending command'
+Date: Thu, 12 Feb 2015 19:23:37 +0530
+Message-ID: <CAGOxZ518ZUL_kz5ACnNu_U3nV6FMddwY99rp2YarBAhZTokYNQ@mail.gmail.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
+ <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com>
+ <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
+ <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com>
+ <54DAC534.4020708@rock-chips.com> <54DB43E2.70203@samsung.com>
+ <CAGOxZ50CLM1Job+X45-CDF_23r9vsx0=jtMCu5cSoFk-+xzF=g@mail.gmail.com> <54DC8AF1.8030101@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422173608-24355-2-git-send-email-Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <54DC8AF1.8030101@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Addy <addy.ke@rock-chips.com>, robh+dt <robh+dt@kernel.org>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, rdunlap@infradead.org, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, dinguyen@altera.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Douglas Anderson <dianders@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, Daniel Kurtz <djkurtz@chromium.org>, Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lin Huang <hl@rock-chips.com>, linux-doc@vger.kernel.org, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, zhangqing@rock-chips.comlinu
 List-Id: devicetree@vger.kernel.org
 
-On 25.01.2015 10:13, Sneeker Yeh wrote:
-> This issue is defined by a three-way race at disconnect, between
-> 1) Class driver interrupt endpoint resheduling attempts if the ISR gave an ep
->    error event due to device detach (it would try 3 times)
-> 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
->    asynchronously
-> 3) The hardware IP was configured in silicon with
->    - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1
->    - Synopsys IP version is < 3.00a
-> The IP will auto-suspend itself on device detach with some phy-specific interval
-> after CSC is cleared by 2)
-> 
-> If 2) and 3) complete before 1), the interrupts it expects will not be generated
-> by the autosuspended IP, leading to a deadlock. Even later disconnection
-> procedure would detect that corresponding urb is still in-progress and issue a
-> ep stop command, auto-suspended IP still won't respond to that command.
-> 
+Hi Andrzej,
 
-So did I understand correctly that the class driver submits a new urb which
-is enqueued by xhci_urb_enqueue() before the hub thread notices the device is disconnected.
-Then hub thread clears CSC bit, controller suspends and the new urb is never given back?
+On Thu, Feb 12, 2015 at 4:43 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+> On 02/12/2015 12:20 AM, Alim Akhtar wrote:
+>> Hi Andrzej,
+>>
+>> On Wed, Feb 11, 2015 at 5:28 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>> Hi Alim,
+>>>
+>>> On 02/11/2015 03:57 AM, Addy wrote:
+>>>> On 2015/02/10 23:22, Alim Akhtar wrote:
+>>>>> Hi Addy,
+>>>>>
+>>>>> On Mon, Feb 9, 2015 at 12:55 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
+>>>>>> Because of some uncertain factors, such as worse card or worse hardware,
+>>>>>> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+>>>>>> will be in busy state. This should not happend when mmc controller
+>>>>>> send command to update card clocks. If this happends, mci_send_cmd will
+>>>>>> be failed and we will get 'Timeout sending command', and then system will
+>>>>>> be blocked. To avoid this, we need reset mmc controller.
+>>>>>>
+>>>>>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+>>>>>> ---
+>>>>>>   drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
+>>>>>>   1 file changed, 28 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>>>>>> index 4d2e3c2..b0b57e3 100644
+>>>>>> --- a/drivers/mmc/host/dw_mmc.c
+>>>>>> +++ b/drivers/mmc/host/dw_mmc.c
+>>>>>> @@ -100,6 +100,7 @@ struct idmac_desc {
+>>>>>>   };
+>>>>>>   #endif /* CONFIG_MMC_DW_IDMAC */
+>>>>>>
+>>>>>> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>>>>>>   static bool dw_mci_reset(struct dw_mci *host);
+>>>>>>   static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>>>>>>
+>>>>>> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>>>>>                  cmd, arg, cmd_status);
+>>>>>>   }
+>>>>>>
+>>>>>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+>>>>>> +{
+>>>>>> +       struct dw_mci *host = slot->host;
+>>>>>> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>>>>> +
+>>>>> Why 500 msec?
+>>>> This timeout value is the same as  mci_send_cmd:
+>>>> static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>>> {
+>>>>          struct dw_mci *host = slot->host;
+>>>>          unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>>>          ....
+>>>> }
+>>>>
+>>>> I have not clear that which is suitable.
+>>>> Do you have any suggestion on it?
+>>>>>> +       do {
+>>>>>> +               if (!dw_mci_card_busy(slot->mmc))
+>>>>>> +                       return;
+>>>>>> +               cpu_relax();
+>>>>>> +       } while (time_before(jiffies, timeout));
+>>>>>> +
+>>>>>> +       dev_err(host->dev, "Data busy (status %#x)\n",
+>>>>>> +               mci_readl(slot->host, STATUS));
+>>>>>> +
+>>>>>> +       /*
+>>>>>> +        * Data busy, this should not happend when mmc controller send command
+>>>>>> +        * to update card clocks in non-volt-switch state. If it happends, we
+>>>>>> +        * should reset controller to avoid getting "Timeout sending command".
+>>>>>> +        */
+>>>>>> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+>>>>>> +
+>>>>> Why you need to reset all blocks? may be CTRL_RESET is good enough here.
+>>>> I have tested on rk3288, if only reset ctroller, data busy bit will not
+>>>> be cleaned,and we will still get
+>>>>
+>>>> "Timeout sending command".
+>>>>
+>>>>>> +       /* Fail to reset controller or still data busy, WARN_ON! */
+>>>>>> +       WARN_ON(dw_mci_card_busy(slot->mmc));
+>>>>>> +}
+>>>>>> +
+>>>>>>   static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>>>>   {
+>>>>>>          struct dw_mci *host = slot->host;
+>>>>>> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>>>>          /* We must continue to set bit 28 in CMD until the change is complete */
+>>>>>>          if (host->state == STATE_WAITING_CMD11_DONE)
+>>>>>>                  sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+>>>>>> +       else
+>>>>>> +               dw_mci_wait_busy(slot);
+>>>>>>
+>>>>> hmm...I would suggest you to call dw_mci_wait_busy() from inside
+>>>>> mci_send_cmd(), seems like dw_mmc hangs while sending update clock cmd
+>>>>> in multiple cases.see [1]
+>>>>>
+>>>>> [1]: http://permalink.gmane.org/gmane.linux.kernel.mmc/31140
+>>>> I think this patch is more reasonable.
+>>>> So I will resend patches based on this patch.
+>>>> thank you!
+>>> I have tested your patches instead [1] above and they do not solve my issue:
+>>> Board: odroid-xu3/exynos5422/dw_mmc_250a.
+>>> MMC card: absent, broken-cd quirk
+>>> SD card: present
+>>>
+>> I doubt $SUBJECT patch in current form can resolve you issue. I have
+>> already given comments on $subject patch.
+>>
+>> Can you try out below patch (I have not tested yet) on top of $SUBJECT patch?
+>>
+>> =======
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index b0b57e3..ea87844 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -101,6 +101,7 @@ struct idmac_desc {
+>>  #endif /* CONFIG_MMC_DW_IDMAC */
+>>
+>>  static int dw_mci_card_busy(struct mmc_host *mmc);
+>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot);
+>>  static bool dw_mci_reset(struct dw_mci *host);
+>>  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>>
+>> @@ -874,16 +875,22 @@ static void mci_send_cmd(struct dw_mci_slot
+>> *slot, u32 cmd, u32 arg)
+>>         struct dw_mci *host = slot->host;
+>>         unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>         unsigned int cmd_status = 0;
+>> +       int re_try = 3; /* just random for now, 1 re-try should be ok */
+>>
+>> -       mci_writel(host, CMDARG, arg);
+>> -       wmb();
+>> -       mci_writel(host, CMD, SDMMC_CMD_START | cmd);
+>> +       while(re_try--) {
+>> +               mci_writel(host, CMDARG, arg);
+>> +               wmb();
+>> +               mci_writel(host, CMD, SDMMC_CMD_START | cmd);
+>>
+>> -       while (time_before(jiffies, timeout)) {
+>> -               cmd_status = mci_readl(host, CMD);
+>> -               if (!(cmd_status & SDMMC_CMD_START))
+>> -                       return;
+>> +               while (time_before(jiffies, timeout)) {
+>> +                       cmd_status = mci_readl(host, CMD);
+>> +                       if (!(cmd_status & SDMMC_CMD_START))
+>> +                               return;
+>> +               }
+>> +
+>> +               dw_mci_wait_busy(slot);
+>>         }
+>> +
+>>         dev_err(&slot->mmc->class_dev,
+>>                 "Timeout sending command (cmd %#x arg %#x status %#x)\n",
+>>                 cmd, arg, cmd_status);
+>> @@ -925,8 +932,6 @@ static void dw_mci_setup_bus(struct dw_mci_slot
+>> *slot, bool force_clkinit)
+>>         /* We must continue to set bit 28 in CMD until the change is complete */
+>>         if (host->state == STATE_WAITING_CMD11_DONE)
+>>                 sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+>> -       else
+>> -               dw_mci_wait_busy(slot);
+>>
+>>         if (!clock) {
+>>                 mci_writel(host, CLKENA, 0);
+>
+> It does not help, there is still the same timeout.
+>
+Did you tried this on top of the original $subject patch?
+What does STATUS register tells? Can you post the full log here?
 
-Doesn't the CSC bit and PORT_CONNECT bit show the device is disconnected when we enter
-xhci_enqueue_urb(), even it the hub thread doesn't know this yet?
+> Regards
+> Andrzej
+>
+>>
+>> ===== end ======
+>>> System hangs during boot after few minutes kernel spits:
+>>> [  242.188098] INFO: task kworker/u16:1:50 blocked for more than 120
+>>> seconds.
+>>> [  242.193524]       Not tainted
+>>> 3.19.0-next-20150210-00002-gf96831b-dirty #3834
+>>> [  242.200622] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+>>> disables this message.
+>>> [  242.208422] kworker/u16:1   D c04766ac     0    50      2 0x00000000
+>>> [  242.214756] Workqueue: kmmcd mmc_rescan
+>>> [  242.218553] [<c04766ac>] (__schedule) from [<c0476a58>]
+>>> (schedule+0x34/0x98)
+>>> [  242.225591] [<c0476a58>] (schedule) from [<c047a4dc>]
+>>> (schedule_timeout+0x110/0x164)
+>>> [  242.233302] [<c047a4dc>] (schedule_timeout) from [<c04774f0>]
+>>> (wait_for_common+0xb8/0x14c)
+>>> [  242.241539] [<c04774f0>] (wait_for_common) from [<c0362138>]
+>>> (mmc_wait_for_req+0x68/0x17c)
+>>> [  242.249861] [<c0362138>] (mmc_wait_for_req) from [<c03622cc>]
+>>> (mmc_wait_for_cmd+0x80/0xa0)
+>>> [  242.258002] [<c03622cc>] (mmc_wait_for_cmd) from [<c0367e50>]
+>>> (mmc_go_idle+0x78/0xf8)
+>>> [  242.265796] [<c0367e50>] (mmc_go_idle) from [<c0363e2c>]
+>>> (mmc_rescan+0x280/0x314)
+>>> [  242.273253] [<c0363e2c>] (mmc_rescan) from [<c0034764>]
+>>> (process_one_work+0x120/0x324)
+>>> [  242.281135] [<c0034764>] (process_one_work) from [<c00349cc>]
+>>> (worker_thread+0x30/0x42c)
+>>> [  242.289194] [<c00349cc>] (worker_thread) from [<c003926c>]
+>>> (kthread+0xd8/0xf4)
+>>> [  242.296389] [<c003926c>] (kthread) from [<c000e7c0>]
+>>> (ret_from_fork+0x14/0x34)
+>>>
+>>> Just for record, Exynos4412/dw_mmc_240a with the same configuration
+>>> (no MMC card, broken-cd) works OK without patches.
+>>>
+>>>
+>>> Regards
+>>> Andrzej
+>>>
+>>>>>>          if (!clock) {
+>>>>>>                  mci_writel(host, CLKENA, 0);
+>>>>>> --
+>>>>>> 1.8.3.2
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> _______________________________________________
+>>>>>> linux-arm-kernel mailing list
+>>>>>> linux-arm-kernel@lists.infradead.org
+>>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>>>
+>>>>
+>>>> --
+>>>> To unsubscribe from this list: send the line "unsubscribe linux-doc" in
+>>>> the body of a message to majordomo@vger.kernel.org
+>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>>
+>>
+>>
+>
 
-Would it make sense to check those bits in xhci_enqueue_urb, and just return error
-in the xhci_urb_enqueue() if device is not connected? Then there wouldn't be a need for any quirk
-at all.
 
-If that doesn't work then this patch looks good in general. See comments below
 
-> this defect would result in this when device detached:
-> -------------------------------------------------------
-> [   99.603544] usb 4-1: USB disconnect, device number 2
-> [  104.615254] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
-> [  104.623362] xhci-hcd xhci-hcd.0.auto: Assuming host is dying, halting host.
-> [  104.653261] xhci-hcd xhci-hcd.0.auto: Host not halted after 16000 microseconds.
-> [  104.660584] xhci-hcd xhci-hcd.0.auto: Non-responsive xHCI host is not halting.
-> [  104.667817] xhci-hcd xhci-hcd.0.auto: Completing active URBs anyway.
-> [  104.674198] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
-> ------------------------------------------------------
-> As a result, when device detached, we desired to postpone "PORTCSC clear" behind
-> "disable slot". it's found that all executed ep command related to disconnetion,
-> are executed before "disable slot".
-> 
-> Signed-off-by: Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
-> ---
->  drivers/usb/host/xhci-hub.c |    4 ++++
->  drivers/usb/host/xhci.c     |   29 +++++++++++++++++++++++++++++
->  drivers/usb/host/xhci.h     |   24 ++++++++++++++++++++++++
->  3 files changed, 57 insertions(+)
-> 
-> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-> index a7865c4..3b8f7fc 100644
-> --- a/drivers/usb/host/xhci-hub.c
-> +++ b/drivers/usb/host/xhci-hub.c
-> @@ -368,6 +368,10 @@ static void xhci_clear_port_change_bit(struct xhci_hcd *xhci, u16 wValue,
->  		port_change_bit = "warm(BH) reset";
->  		break;
->  	case USB_PORT_FEAT_C_CONNECTION:
-> +		if ((xhci->quirks & XHCI_DISCONNECT_QUIRK) &&
-> +		    !(readl(addr) & PORT_CONNECT))
-> +			return;
-> +
-
-New port status event are prevented until CSC is cleared, not sure if there's any harm in that?
-
->  		status = PORT_CSC;
->  		port_change_bit = "connect";
->  		break;
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index c50d8d2..aa8e02a 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -3584,6 +3584,33 @@ command_cleanup:
->  	return ret;
->  }
->  
-> +static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int dev_port_num)
-> +{
-> +	int max_ports;
-> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-> +	__le32 __iomem **port_array;
-> +	u32 status;
-> +
-> +	/* print debug info */
-> +	if (hcd->speed == HCD_USB3) {
-> +		max_ports = xhci->num_usb3_ports;
-> +		port_array = xhci->usb3_ports;
-> +	} else {
-> +		max_ports = xhci->num_usb2_ports;
-> +		port_array = xhci->usb2_ports;
-> +	}
-> +
-> +	if (dev_port_num > max_ports) {
-> +		xhci_err(xhci, "%s() port number invalid", __func__);
-> +		return;
-> +	}
-> +	status = readl(port_array[dev_port_num - 1]);
-> +
-> +	/* write 1 to clear */
-> +	if (!(status & PORT_CONNECT) && (status & PORT_CSC))
-> +		writel(status & PORT_CSC, port_array[0]);
-
-Shouldn't this be writel(...,port_array[dev_port_num - 1]) ?
-
--Mathias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Alim
