@@ -1,92 +1,115 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
- if no bestdiv is normally found
-Date: Thu, 12 Feb 2015 13:24:05 +0100
-Message-ID: <20150212122405.GW12209@pengutronix.de>
-References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
- <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
- <20150212093356.GR12209@pengutronix.de>
- <20150212103944.GA1290@victor>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2] ARM: perf: Add support for Scorpion PMUs
+Date: Thu, 12 Feb 2015 12:49:49 +0000
+Message-ID: <20150212124949.GE1522@leverpostej>
+References: <1423616724-20849-1-git-send-email-sboyd@codeaurora.org>
+ <1423616724-20849-3-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150212103944.GA1290@victor>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liu Ying <Ying.Liu@freescale.com>
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1423616724-20849-3-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMDY6Mzk6NDVQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6
-Cj4gT24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTA6MzM6NTZBTSArMDEwMCwgU2FzY2hhIEhhdWVy
-IHdyb3RlOgo+ID4gT24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMDI6MDE6MjRQTSArMDgwMCwgTGl1
-IFlpbmcgd3JvdGU6Cj4gPiA+IElmIG5vIGJlc3QgZGl2aWRlciBpcyBub3JtYWxseSBmb3VuZCwg
-d2Ugd2lsbCB0cnkgdG8gdXNlIHRoZSBtYXhpbXVtIGRpdmlkZXIuCj4gPiA+IFdlIHNob3VsZCBu
-b3Qgc2V0IHRoZSBwYXJlbnQgY2xvY2sgcmF0ZSB0byBiZSAxSHogYnkgZm9yY2UgZm9yIGJlaW5n
-IHJvdW5kZWQuCj4gPiA+IEluc3RlYWQsIHdlIHNob3VsZCB0YWtlIHRoZSBtYXhpbXVtIGRpdmlk
-ZXIgYXMgYSBiYXNlIGFuZCBjYWxjdWxhdGUgYSBjb3JyZWN0Cj4gPiA+IHBhcmVudCBjbG9jayBy
-YXRlIGZvciBiZWluZyByb3VuZGVkLgo+ID4gCj4gPiBQbGVhc2UgYWRkIGFuIGV4cGxhbmF0aW9u
-IHdoeSB5b3UgdGhpbmsgdGhlIGN1cnJlbnQgY29kZSBpcyB3cm9uZyBhbmQKPiA+IHdoYXQgdGhp
-cyBhY3R1YWxseSBmaXhlcywgbWF5YmUgYW4gZXhhbXBsZT8KPiAKPiBUaGUgTUlQSSBEU0kgcGFu
-ZWwncyBwaXhlbCBjbG9jayByYXRlIGlzIDI2LjRNSHogYW5kIGl0J3MgZGVyaXZlZCBmcm9tIFBM
-TDUgb24KPiB0aGUgTVg2REwgU2FicmVTRCBib2FyZC4KPiAKPiBUaGVzZSBhcmUgdGhlIGNsb2Nr
-IHRyZWUgc3VtbWFyaWVzIHdpdGggb3Igd2l0aG91dCB0aGUgcGF0Y2ggYXBwbGllZDoKPiAxKSBX
-aXRoIHRoZSBwYXRjaCBhcHBsaWVkOgo+IHBsbDVfYnlwYXNzX3NyYyAgICAgICAgICAgICAgICAg
-ICAgICAgMSAgICAgICAgICAgIDEgICAgMjQwMDAwMDAgICAgICAgICAgMCAwCj4gICAgcGxsNSAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDg0NDgwMDA0OCAg
-ICAgICAgICAwIDAKPiAgICAgICBwbGw1X2J5cGFzcyAgICAgICAgICAgICAgICAgICAgIDEgICAg
-ICAgICAgICAxICAgODQ0ODAwMDQ4ICAgICAgICAgIDAgMAo+ICAgICAgICAgIHBsbDVfdmlkZW8g
-ICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA4NDQ4MDAwNDggICAgICAgICAgMCAw
-Cj4gICAgICAgICAgICAgcGxsNV9wb3N0X2RpdiAgICAgICAgICAgICAxICAgICAgICAgICAgMSAg
-IDIxMTIwMDAxMiAgICAgICAgICAwIDAKPiAgICAgICAgICAgICAgICBwbGw1X3ZpZGVvX2RpdiAg
-ICAgICAgICAgMSAgICAgICAgICAgIDEgICAyMTEyMDAwMTIgICAgICAgIDAgMAo+ICAgICAgICAg
-ICAgICAgICAgIGlwdTFfZGkwX3ByZV9zZWwgICAgICAgICAgIDEgICAgICAgICAgICAxICAgMjEx
-MjAwMDEyICAgMCAwCj4gICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTBfcHJlICAgICAgICAg
-ICAxICAgICAgICAgICAgMSAgICAyNjQwMDAwMiAgICAwIDAKPiAgICAgICAgICAgICAgICAgICAg
-ICAgICBpcHUxX2RpMF9zZWwgICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDI2NDAwMDAyIDAg
-MAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwICAgICAgICAgICAxICAgICAg
-ICAgICAgMSAgICAyNjQwMDAwMiAgMCAwCj4gCj4gMikgV2l0aG91dCB0aGUgcGF0Y2ggYXBwbGll
-ZDoKPiBwbGw1X2J5cGFzc19zcmMgICAgICAgICAgICAgICAgICAgICAgIDEgICAgICAgICAgICAx
-ICAgIDI0MDAwMDAwICAgICAgICAgIDAgMAo+ICAgIHBsbDUgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgMSAgICAgICAgICAgIDEgICA2NDgwMDAwMDAgICAgICAgICAgMCAwCj4gICAgICAg
-cGxsNV9ieXBhc3MgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDY0ODAwMDAw
-MCAgICAgICAgICAwIDAKPiAgICAgICAgICBwbGw1X3ZpZGVvICAgICAgICAgICAgICAgICAgIDEg
-ICAgICAgICAgICAxICAgNjQ4MDAwMDAwICAgICAgICAgIDAgMAo+ICAgICAgICAgICAgIHBsbDVf
-cG9zdF9kaXYgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAxNjIwMDAwMDAgICAgICAgICAg
-MCAwCj4gICAgICAgICAgICAgICAgcGxsNV92aWRlb19kaXYgICAgICAgICAgIDEgICAgICAgICAg
-ICAxICAgIDQwNTAwMDAwICAgICAgICAwIDAKPiAgICAgICAgICAgICAgICAgICBpcHUxX2RpMF9w
-cmVfc2VsICAgICAgICAgICAxICAgICAgICAgICAgMSAgICA0MDUwMDAwMCAgIDAgMAo+ICAgICAg
-ICAgICAgICAgICAgICAgIGlwdTFfZGkwX3ByZSAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAg
-MjAyNTAwMDAgICAgMCAwCj4gICAgICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTBfc2VsICAg
-ICAgICAgICAxICAgICAgICAgICAgMSAgICAyMDI1MDAwMCAwIDAKPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBpcHUxX2RpMCAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjAyNTAwMDAg
-IDAgMAoKVGhpcyBzZWVtcyB0byBiZSBicm9rZW4gc2luY2U6Cgp8IGNvbW1pdCBiMTFkMjgyZGJl
-YTI3ZGIxNzg4ODkzMTE1ZGZjYThhNzg1NmJmMjA1CnwgQXV0aG9yOiBUb21pIFZhbGtlaW5lbiA8
-dG9taS52YWxrZWluZW5AdGkuY29tPgp8IERhdGU6ICAgVGh1IEZlYiAxMyAxMjowMzo1OSAyMDE0
-ICswMjAwCnwgCnwgICAgIGNsazogZGl2aWRlcjogZml4IHJhdGUgY2FsY3VsYXRpb24gZm9yIGZy
-YWN0aW9uYWwgcmF0ZXMKClRoaXMgcGF0Y2ggZml4ZWQgYSBjYXNlIHdoZW4gY2xrX3NldF9yYXRl
-KGNsa19yb3VuZF9yYXRlKHJhdGUpKSByZXN1bHRlZAppbiBhIGxvd2VyIGZyZXF1ZW5jeSB0aGFu
-IGNsa19yb3VuZF9yYXRlKHJhdGUpIHJldHVybmVkLgoKU2luY2UgdGhlbiB0aGUgTVVMVF9ST1VO
-RF9VUCBpbiBjbGtfZGl2aWRlcl9iZXN0ZGl2KCkgaXMgaW5jb25zaXN0ZW50IHRvCnRoZSByZXN0
-IG9mIHRoZSBkaXZpZGVyLiBNYXliZSB0aGlzIHNob3VsZCBiZSBhIHNpbXBsZSByYXRlICogaSBu
-b3csIGJ1dApJJ20gdW5zdXJlIHdoYXQgc2lkZSBlZmZlY3RzIHRoaXMgaGFzLgoKSSB0aGluayB5
-b3VyIHBhdGNoIG9ubHkgZml4ZXMgdGhlIGJlaGF2aW91ciBpbiB5b3VyIGNhc2UgYnkgYWNjaWRl
-bnQsCml0J3Mgbm90IGEgY29ycmVjdCBmaXggZm9yIHRoaXMgaXNzdWUuCgpTYXNjaGEKCi0tIApQ
-ZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfApJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAgICAg
-ICAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlLyAgfApQZWluZXIgU3RyLiA2LTgsIDMxMTM3
-IEhpbGRlc2hlaW0sIEdlcm1hbnkgfCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3LTAgICAgfApBbXRz
-Z2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEt
-MjA2OTE3LTU1NTUgfApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+Hi,
+
+I haven't given this a thorough review, but I spotted a couple of items
+below.
+
+On Wed, Feb 11, 2015 at 01:05:24AM +0000, Stephen Boyd wrote:
+> Scorpion supports a set of local performance monitor event
+> selection registers (LPM) sitting behind a cp15 based interface
+> that extend the architected PMU events to include Scorpion CPU
+> and Venum VFP specific events. To use these events the user is
+> expected to program the lpm register with the event code shifted
+> into the group they care about and then point the PMNx event at
+> that region+group combo by writing a LPMn_GROUPx event. Add
+> support for this hardware.
+> 
+> Note: the raw event number is a pure software construct that
+> allows us to map the multi-dimensional number space of regions,
+> groups, and event codes into a flat event number space suitable
+> for use by the perf framework.
+> 
+> This is based on code originally written by Ashwin Chaugule and
+> Neil Leeder [1] massed to become similar to the Krait PMU support
+> code.
+> 
+> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/tree/arch/arm/kernel/perf_event_msm.c?h=msm-3.4
+> 
+> Cc: Neil Leeder <nleeder@codeaurora.org>
+> Cc: Ashwin Chaugule <ashwinc@codeaurora.org>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/pmu.txt |   2 +
+>  arch/arm/kernel/perf_event_cpu.c              |   2 +
+>  arch/arm/kernel/perf_event_v7.c               | 395 ++++++++++++++++++++++++++
+>  3 files changed, 399 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+> index 75ef91d08f3b..6e54a9d88b7a 100644
+> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+> @@ -18,6 +18,8 @@ Required properties:
+>         "arm,arm11mpcore-pmu"
+>         "arm,arm1176-pmu"
+>         "arm,arm1136-pmu"
+> +       "qcom,scorpion-pmu"
+> +       "qcom,scorpion-mp-pmu"
+
+Is the PMU any different in the MP and !MP variants? The code doesn't
+seem to handle the two any differently and will pass either to userspace
+as "armv7_scorpion".
+
+If there is some difference that we don't handle right now, that's fine,
+it just looks a little odd.
+
+[...]
+
+> +static const unsigned scorpion_perf_cache_map[PERF_COUNT_HW_CACHE_MAX]
+> +                                           [PERF_COUNT_HW_CACHE_OP_MAX]
+> +                                           [PERF_COUNT_HW_CACHE_RESULT_MAX] = {
+> +       PERF_CACHE_MAP_ALL_UNSUPPORTED,
+> +       /*
+> +        * The performance counters don't differentiate between read and write
+> +        * accesses/misses so this isn't strictly correct, but it's the best we
+> +        * can do. Writes and reads get combined.
+> +        */
+> +       [C(L1D)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_L1_DCACHE_ACCESS,
+> +       [C(L1D)][C(OP_READ)][C(RESULT_MISS)] = ARMV7_PERFCTR_L1_DCACHE_REFILL,
+> +       [C(L1D)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_L1_DCACHE_ACCESS,
+> +       [C(L1D)][C(OP_WRITE)][C(RESULT_MISS)] = ARMV7_PERFCTR_L1_DCACHE_REFILL,
+> +       [C(L1I)][C(OP_READ)][C(RESULT_ACCESS)] = SCORPION_ICACHE_ACCESS,
+> +       [C(L1I)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_ICACHE_MISS,
+> +       [C(L1I)][C(OP_WRITE)][C(RESULT_ACCESS)] = SCORPION_ICACHE_ACCESS,
+> +       [C(L1I)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_ICACHE_MISS,
+
+These last two entries go against the policy we set in commit
+40c390c768f89849: "ARM: perf: don't pretend to support counting of L1I
+writes", so I think they should be dropped.
+
+> +       /*
+> +        * Only ITLB misses and DTLB refills are supported.  If users want the
+> +        * DTLB refills misses a raw counter must be used.
+> +        */
+> +       [C(DTLB)][C(OP_READ)][C(RESULT_ACCESS)] = SCORPION_DTLB_ACCESS,
+> +       [C(DTLB)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_DTLB_MISS,
+> +       [C(DTLB)][C(OP_WRITE)][C(RESULT_ACCESS)] = SCORPION_DTLB_ACCESS,
+> +       [C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_DTLB_MISS,
+> +       [C(ITLB)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_ITLB_MISS,
+> +       [C(ITLB)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_ITLB_MISS,
+> +       [C(BPU)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
+> +       [C(BPU)][C(OP_READ)][C(RESULT_MISS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
+> +       [C(BPU)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
+> +       [C(BPU)][C(OP_WRITE)][C(RESULT_MISS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
+> +};
+
+Not ARMV7_PERFCTR_PC_BRANCH_MIS_PRED for the RESULT_MISS cases as with
+all other ARMv7 instances (Krait included)?
+
+Thanks,
+Mark.
