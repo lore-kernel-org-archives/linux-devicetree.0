@@ -1,96 +1,164 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 0/7] OPP: Introduce OPP bindings V2 and supporting code
-Date: Wed, 11 Feb 2015 16:52:20 -0800
-Message-ID: <20150212005220.GG11190@codeaurora.org>
-References: <cover.1423642246.git.viresh.kumar@linaro.org>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH 1/5] ARM: dts: zynq: Split out common Parallella bits
+Date: Thu, 12 Feb 2015 01:55:09 +0100
+Message-ID: <1423702513-4032-2-git-send-email-afaerber@suse.de>
+References: <1423702513-4032-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1423642246.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, arnd.bergmann@linaro.org, grant.likely@linaro.org, olof@lixom.net, nm@ti.com, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, santosh.shilimkar@oracle.com, mike.turquette@linaro.org, kesavan.abhilash@gmail.com, catalin.marinas@arm.com, ta.omasab@gmail.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, l.stach@pengutronix.de, broonie@kernel.org, viswanath.puttagunta@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423702513-4032-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Ola Jeppsson <ola-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11, Viresh Kumar wrote:
-> Now that I have received an verbal Ack from Rob Herring (in a personal
-> conversation) about the bindings, I am showing how the code looks like with
-> these new bindings.
-> 
-> Some part is still now done:
-> - Interface for adding new detailed OPPs from platform code instead of DT
-> - Providing cpufreq helpers for the next OPPs
-> - Providing regulator helpers for the target/min/max ranges
-> 
-> Please provide feedback on how this looks like..
-> 
+This prepares for the USB-less Microserver edition as well as
+headless vs. HDMI bitstreams.
 
-Here's some feedback on how we can't use OPPs (and OPPs in DT) on
-qcom platforms.
+Cc: Ola Jeppsson <ola-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ arch/arm/boot/dts/zynq-parallella.dts              | 80 +-------------=
+--------
+ .../{zynq-parallella.dts =3D> zynq-parallella1.dtsi} |  3 +-
+ 2 files changed, 3 insertions(+), 80 deletions(-)
+ copy arch/arm/boot/dts/{zynq-parallella.dts =3D> zynq-parallella1.dtsi=
+} (97%)
 
-On these platforms the OPPs are not always frequency voltage
-pairs. Sometimes they're a frequency voltage voltage triplet, or
-frequency voltage current triplet. I know that the OPP framework
-in the kernel doesn't support more than frequency voltage pairs,
-but that doesn't mean it can't in the future, and if it needs to
-do so the DT bindings shouldn't need a v3 revision.
+diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/=
+zynq-parallella.dts
+index 0ebd2107022b..99ee6551ae8d 100644
+--- a/arch/arm/boot/dts/zynq-parallella.dts
++++ b/arch/arm/boot/dts/zynq-parallella.dts
+@@ -1,11 +1,6 @@
+ /*
+  * Copyright (c) 2014 SUSE LINUX Products GmbH
+- *
+- * Derived from zynq-zed.dts:
+- *
+- *  Copyright (C) 2011 Xilinx
+- *  Copyright (C) 2012 National Instruments Corp.
+- *  Copyright (C) 2013 Xilinx
++ * Copyright (c) 2015 SUSE Linux GmbH
+  *
+  * This software is licensed under the terms of the GNU General Public
+  * License version 2, as published by the Free Software Foundation, an=
+d
+@@ -17,79 +12,8 @@
+  * GNU General Public License for more details.
+  */
+ /dts-v1/;
+-/include/ "zynq-7000.dtsi"
++#include "zynq-parallella1.dtsi"
+=20
+ / {
+ 	model =3D "Adapteva Parallella Board";
+-	compatible =3D "adapteva,parallella", "xlnx,zynq-7000";
+-
+-	aliases {
+-		ethernet0 =3D &gem0;
+-		serial0 =3D &uart1;
+-	};
+-
+-	memory {
+-		device_type =3D "memory";
+-		reg =3D <0x0 0x40000000>;
+-	};
+-
+-	chosen {
+-		bootargs =3D "console=3DttyPS0,115200 earlyprintk root=3D/dev/mmcblk=
+0p2 rootfstype=3Dext4 rw rootwait";
+-		linux,stdout-path =3D "/amba/serial@e0001000";
+-	};
+-};
+-
+-&clkc {
+-	fclk-enable =3D <0xf>;
+-	ps-clk-frequency =3D <33333333>;
+-};
+-
+-&gem0 {
+-	status =3D "okay";
+-	phy-mode =3D "rgmii-id";
+-	phy-handle =3D <&ethernet_phy>;
+-
+-	ethernet_phy: ethernet-phy@0 {
+-		/* Marvell 88E1318 */
+-		compatible =3D "ethernet-phy-id0141.0e90",
+-		             "ethernet-phy-ieee802.3-c22";
+-		reg =3D <0>;
+-		marvell,reg-init =3D <0x3 0x10 0xff00 0x1e>,
+-		                   <0x3 0x11 0xfff0 0xa>;
+-	};
+-};
+-
+-&i2c0 {
+-	status =3D "okay";
+-
+-	isl9305: isl9305@68 {
+-		compatible =3D "isil,isl9305";
+-		reg =3D <0x68>;
+-
+-		regulators {
+-			dcd1 {
+-				regulator-name =3D "VDD_DSP";
+-				regulator-always-on;
+-			};
+-			dcd2 {
+-				regulator-name =3D "1P35V";
+-				regulator-always-on;
+-			};
+-			ldo1 {
+-				regulator-name =3D "VDD_ADJ";
+-			};
+-			ldo2 {
+-				regulator-name =3D "VDD_GPIO";
+-				regulator-always-on;
+-			};
+-		};
+-	};
+-};
+-
+-&sdhci1 {
+-	status =3D "okay";
+-};
+-
+-&uart1 {
+-	status =3D "okay";
+ };
+diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/=
+zynq-parallella1.dtsi
+similarity index 97%
+copy from arch/arm/boot/dts/zynq-parallella.dts
+copy to arch/arm/boot/dts/zynq-parallella1.dtsi
+index 0ebd2107022b..7c1206f928bc 100644
+--- a/arch/arm/boot/dts/zynq-parallella.dts
++++ b/arch/arm/boot/dts/zynq-parallella1.dtsi
+@@ -1,5 +1,6 @@
+ /*
+  * Copyright (c) 2014 SUSE LINUX Products GmbH
++ * Copyright (c) 2015 SUSE Linux GmbH
+  *
+  * Derived from zynq-zed.dts:
+  *
+@@ -16,11 +17,9 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  */
+-/dts-v1/;
+ /include/ "zynq-7000.dtsi"
+=20
+ / {
+-	model =3D "Adapteva Parallella Board";
+ 	compatible =3D "adapteva,parallella", "xlnx,zynq-7000";
+=20
+ 	aliases {
+--=20
+2.2.2
 
-Furthermore, we have a large number of OPP sets that apply to
-different speed bins and silicon characteristics of the SoC. In
-our systems we read some efuses (an eeprom of sorts) that tell us
-to use a certain set of OPPs because the silicon is so fast or
-has these certain characteristics. The bootloader is *not*
-reading these fuses and populating OPPs in DT. So right now we
-just put all these custom OPPish tables in DT and then pick the
-right one based on a node name match constructed from the bits we
-read in the efuses. How can we express this in DT with these
-bindings?
-
-For example, on msm8974 we have a frequency voltage current
-triplet and there are 18 different sets of these triplets, each
-with 23 triplets per set. We could encode all of these tables as
-a bunch of nodes with compatible = "operating-points-v2" but how
-do we pick the right one to assign and populate for the CPU
-devices? Do we need some sort of opp-fuse-map table that encodes
-the information we want somewhere?
-
- qcom,opp-fuse-map = <speedX binY versionZ &oppN>,
-                     ...
-
-but where do we put it? In the cpus node? Or maybe we can keep
-doing the node name matching? That would required dropping the
-oppN convention.
-
-Or take msm8916 as another example. On this device the voltage
-for a few frequencies comes from the efuses and then we
-interpolate the rest of the frequency voltage pairs. The speed
-bins are picked from another set of efuses so we can do the
-interpolation. Unfortunately we don't encode the frequency in the
-fuses, so we rely on a handful of tables being defined somewhere
-so that we know speed bin 0 means this set of frequencies and
-speed bin 1 means this set of frequencies. How do we encode this
-in DT?  Should we have the frequencies as OPPs and leave the
-voltage part out, filling it in at runtime based on what we read
-out of the efuses? I assume it's desirable to have the frequency
-tables in DT but we could also have them in the driver and if we
-did that there wouldn't be any shared-opp property to set and
-have the cpufreq-dt driver use to figure out clock sharing.
-
-Also sometimes we need to correlate OPPs between each other. For
-example on msm8960/apq8064 if the CPU is running at a frequency
-and voltage, the L2 needs to be running at another frequency,
-voltage, and voltage (triplet). The L2 is in two power domains
-but it only has one clock. Can/should this be expressed in DT? It
-certainly seems that it's at least easier to add it on as a
-feature because OPPs are nodes instead of an array. But we need
-to make sure we can support multiple regulators somehow, either
-through correlated OPPs and multiple OPPs for a single device or
-by being able to say opp-0-microvolt, opp-1-microvolt. I would
-guess something similar could happen if there were two clocks and
-one regulator although I've never seen such a scenario in
-practice.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
