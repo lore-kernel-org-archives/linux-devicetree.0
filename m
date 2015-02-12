@@ -1,43 +1,35 @@
 From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v6 07/15] of: document external-memory-controller property in tegra124-car
-Date: Thu, 12 Feb 2015 15:06:23 +0100
-Message-ID: <1423750042-6535-8-git-send-email-tomeu.vizoso@collabora.com>
+Subject: [PATCH v6 02/15] of: Document long-ram-code property in nvidia,tegra20-apbmisc
+Date: Thu, 12 Feb 2015 15:06:18 +0100
+Message-ID: <1423750042-6535-3-git-send-email-tomeu.vizoso@collabora.com>
 References: <1423750042-6535-1-git-send-email-tomeu.vizoso@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1423750042-6535-1-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-tegra@vger.kernel.org
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Paul Walmsley <paul@pwsan.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Eduardo Valentin <edubezval@gmail.com>, Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This property contains a phandle to the EMC driver that is needed by the
-EMC clock to request the EMC driver to do its part of the clock change
-sequence.
+Needed to properly decode the ram code register.
 
 Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+
 ---
- Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt | 2 ++
+
+v3:	* Clarify wording as suggested by Mikko
+---
+ Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
-index c3891ce..7f02fb4 100644
---- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
-+++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
-@@ -20,6 +20,7 @@ Required properties :
- - #reset-cells : Should be 1.
-   In clock consumers, this cell represents the bit number in the CAR's
-   array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
-+- nvidia,external-memory-controller : phandle of the EMC driver.
+diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
+index 47b205c..4556359 100644
+--- a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
++++ b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
+@@ -10,3 +10,5 @@ Required properties:
+        The second entry gives the physical address and length of the
+        registers indicating the strapping options.
  
- The node should contain a "emc-timings" subnode for each supported RAM type (see
- field RAM_CODE in register PMC_STRAPPING_OPT_A).
-@@ -50,6 +51,7 @@ Example SoC include file:
- 		reg = <0x60006000 0x1000>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
-+		nvidia,external-memory-controller = <&emc>;
- 	};
- 
- 	usb@c5004000 {
++Optional properties:
++- nvidia,long-ram-code: If present, the RAM code is long (4 bit). If not, short (2 bit).
 -- 
 1.9.3
