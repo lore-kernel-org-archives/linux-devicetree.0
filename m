@@ -1,132 +1,199 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
-Date: Thu, 12 Feb 2015 11:20:13 -0800
-Message-ID: <CAK5ve-L5VoXAO-XJsc2ewZchcTpXT2n2u---cz=rw3Ocfkq3TQ@mail.gmail.com>
-References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
- <1422535712.28891.3.camel@mm-sol.com> <20150129190753.GN11960@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20150129190753.GN11960@sonymobile.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, "Cavin, Courtney" <Courtney.Cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 06/14] drivers: reset: Add STM32 reset driver
+Date: Thu, 12 Feb 2015 18:45:56 +0100
+Message-ID: <1423763164-5606-7-git-send-email-mcoquelin.stm32__35657.1182994687$1423768991$gmane$org@gmail.com>
+References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423763164-5606-1-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 29, 2015 at 11:07 AM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> On Thu 29 Jan 04:48 PST 2015, Ivan T. Ivanov wrote:
->
->>
->> Hi Bjorn,
->>
->> Just few nitpick comments.
->>
->
-> Thanks.
->
->> On Fri, 2015-01-23 at 16:54 -0800, Bjorn Andersson wrote:
->> > From: Courtney Cavin cavin@sonymobile.com>
->> >
->> > This adds support for the WLED ('White' LED) block on Qualcomm's
->> > PM8941 PMICs.
->> >
->> > Signed-off-by: Courtney Cavin cavin@sonymobile.com>
->> > Signed-off-by: Bjorn Andersson andersson@sonymobile.com>
+The STM32 MCUs family IP can be reset by accessing some shared registers.
 
+The specificity is that some reset lines are used by the timers.
+At timer initialization time, the timer has to be reset, that's why
+we cannot use a regular driver.
 
-I'm good with this patch and will merge it into my tree.
+Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/reset/st,stm32-reset.txt   |  19 ++++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-stm32.c                        | 124 +++++++++++++++++++++
+ 3 files changed, 144 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/st,stm32-reset.txt
+ create mode 100644 drivers/reset/reset-stm32.c
 
-Thanks,
--Bryan
+diff --git a/Documentation/devicetree/bindings/reset/st,stm32-reset.txt b/Documentation/devicetree/bindings/reset/st,stm32-reset.txt
+new file mode 100644
+index 0000000..add1298
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/st,stm32-reset.txt
+@@ -0,0 +1,19 @@
++STMicroelectronics STM32 Peripheral Reset Controller
++====================================================
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
++
++Required properties:
++- compatible: Should be "st,stm32-reset"
++- reg: should be register base and length as documented in the
++  datasheet
++- #reset-cells: 1, see below
++
++example:
++
++reset_ahb1: reset@40023810 {
++	#reset-cells = <1>;
++	compatible = "st,stm32-reset";
++	reg = <0x40023810 0x4>;
++};
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 157d421..aed12d1 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -1,5 +1,6 @@
+ obj-$(CONFIG_RESET_CONTROLLER) += core.o
+ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
+ obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
++obj-$(CONFIG_ARCH_STM32) += reset-stm32.o
+ obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+ obj-$(CONFIG_ARCH_STI) += sti/
+diff --git a/drivers/reset/reset-stm32.c b/drivers/reset/reset-stm32.c
+new file mode 100644
+index 0000000..7a96677
+--- /dev/null
++++ b/drivers/reset/reset-stm32.c
+@@ -0,0 +1,124 @@
++/*
++ * Copyright (C) Maxime Coquelin 2015
++ * Author:  Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ * License terms:  GNU General Public License (GPL), version 2
++ *
++ * Heavily based on sunxi driver from Maxime Ripard.
++ */
++
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/reset-controller.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++
++struct stm32_reset_data {
++	spinlock_t			lock;
++	void __iomem			*membase;
++	struct reset_controller_dev	rcdev;
++};
++
++static int stm32_reset_assert(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	struct stm32_reset_data *data = container_of(rcdev,
++						     struct stm32_reset_data,
++						     rcdev);
++	int bank = id / BITS_PER_LONG;
++	int offset = id % BITS_PER_LONG;
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(&data->lock, flags);
++
++	reg = readl_relaxed(data->membase + (bank * 4));
++	writel_relaxed(reg | BIT(offset), data->membase + (bank * 4));
++
++	spin_unlock_irqrestore(&data->lock, flags);
++
++	return 0;
++}
++
++static int stm32_reset_deassert(struct reset_controller_dev *rcdev,
++				unsigned long id)
++{
++	struct stm32_reset_data *data = container_of(rcdev,
++						     struct stm32_reset_data,
++						     rcdev);
++	int bank = id / BITS_PER_LONG;
++	int offset = id % BITS_PER_LONG;
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(&data->lock, flags);
++
++	reg = readl_relaxed(data->membase + (bank * 4));
++	writel_relaxed(reg & ~BIT(offset), data->membase + (bank * 4));
++
++	spin_unlock_irqrestore(&data->lock, flags);
++
++	return 0;
++}
++
++static struct reset_control_ops stm32_reset_ops = {
++	.assert		= stm32_reset_assert,
++	.deassert	= stm32_reset_deassert,
++};
++
++static void stm32_reset_init(struct device_node *np)
++{
++	struct stm32_reset_data *data;
++	struct resource res;
++	resource_size_t size;
++	int err;
++
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return;
++
++	err = of_address_to_resource(np, 0, &res);
++	if (err)
++		goto err_alloc;
++
++	size = resource_size(&res);
++	if (!request_mem_region(res.start, size, np->name)) {
++		err = -EINVAL;
++		goto err_alloc;
++	}
++
++	data->membase = ioremap(res.start, size);
++	if (!data->membase) {
++		err = -ENOMEM;
++		goto err_alloc;
++	}
++
++	spin_lock_init(&data->lock);
++
++	data->rcdev.owner = THIS_MODULE;
++	data->rcdev.nr_resets = size * 8;
++	data->rcdev.ops = &stm32_reset_ops;
++	data->rcdev.of_node = np;
++
++	err = reset_controller_register(&data->rcdev);
++	if (err)
++		goto err_iomap;
++
++	pr_info("%s: %d reset lines registered\n", np->full_name,
++			data->rcdev.nr_resets);
++	return;
++
++err_iomap:
++	iounmap(data->membase);
++err_alloc:
++	kfree(data);
++	pr_err("%s: Reset ctrl registration failed (%d).\n",
++			np->full_name, err);
++}
++
++RESET_CONTROLLER_OF_DECLARE(stm32, "st,stm32-reset", stm32_reset_init);
++
+-- 
+1.9.1
 
->> > ---
->> >  drivers/leds/Kconfig            |   8 +
->> >  drivers/leds/Makefile           |   1 +
->> >  drivers/leds/leds-pm8941-wled.c | 459 ++++++++++++++++++++++++++++++++++++++++
->> >  3 files changed, 468 insertions(+)
->> >  create mode 100644 drivers/leds/leds-pm8941-wled.c
->> >
->>
->> <snip>
->>
->> > +
->> > +#define PM8941_WLED_REG_VAL_BASE               0x40
->> > +#define  PM8941_WLED_REG_VAL_MAX               0xFFF
->> > +
->> > +#define PM8941_WLED_REG_MOD_EN                 0x46
->> > +#define  PM8941_WLED_REG_MOD_EN_BIT            BIT(7)
->> > +#define  PM8941_WLED_REG_MOD_EN_MASK           BIT(7)
->>
->> Is it possible bit definitions to have same indentation like registers offsets?
->>
->
-> Well, yes ;)
->
-> But I like the separation, so unless Bryan would like me to change it I prefer
-> to leave it as is.
->
->> >
->> > +struct pm8941_wled_config {
->> > +       u32 i_boost_limit;
->> > +       u32 ovp;
->> > +       u32 switch_freq;
->> > +       u32 num_strings;
->> > +       u32 i_limit;
->> > +       bool cs_out_en;
->> > +       bool ext_gen;
->> > +       bool cabc_en;
->> > +};
->> > +
->>
->> Could this be further squashed to bellow structure?
->>
->
-> It could, but I see that it would simplify things.
->
->> > +struct pm8941_wled {
->> > +       struct regmap *regmap;
->> > +       u16 addr;
->> > +
->> > +       struct led_classdev cdev;
->> > +
->> > +       struct pm8941_wled_config cfg;
->> > +};
->> > +
->> >
->>
->> <snip>
->>
->> > +static void pm8941_wled_set_brightness(struct led_classdev *cdev,
->> > +                                                                                       enum
->> > led_brightness value)
->> > +{
->> > +       if (pm8941_wled_set(cdev, value)) {
->>
->> pm8941_wled_set() is used only here, could it be merged into this function?
->>
->
-> It could, but that would just mean that we move these lines into the tail of
-> pm8941_wled_set and replace all the returns with a bunch of gotos. So I don't
-> think it's cleaner.
->
->> > +               dev_err(cdev->dev, "Unable to set brightness\n");
->> > +               return;
->> > +       }
->> > +       cdev->brightness = value;
->> > +}
->> > +
->> >
->>
->> Otherwise it looks good. Driver is loaded and device is detected
->> properly (i have added readings for type and subtype registers).
->> Do you know where I can measure result from changing brightness
->> sysfs entry. I am using 8074 dragonboard?
->>
->
-> I'm not sure how this is exposed on the dragonboard. I've tested it on Xperia
-> Z1 (honami) and the display lights up nicely.
->
-> Regards,
-> Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
