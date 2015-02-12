@@ -1,57 +1,57 @@
-Return-Path: <jaswinder.singh@linaro.org>
+Return-Path: <mtk10466@mediatek.inc>
+From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Subject: [PATCH] pinctrl: mediatek: Fix build error in Mediatek pinctrl driver.
+Date: Wed, 11 Feb 2015 23:56:11 -0800
+Message-ID: <1423727771-24112-1-git-send-email-hongzhou.yang@mediatek.com>
+In-Reply-To: <yes>
+References: <yes>
 MIME-Version: 1.0
-In-Reply-To: <2790199.44Rvt91EcZ@wuerfel>
-References: <1422955310-6542-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<3540319.u6RL7AO77m@wuerfel>
-	<CAJe_ZhcXR4oaBKZx3n0ckCzXgbREoezUXjizJ09QXQVqEQ3G_g@mail.gmail.com>
-	<2790199.44Rvt91EcZ@wuerfel>
-Date: Thu, 5 Feb 2015 17:32:39 +0530
-Message-ID: <CAJe_Zhf_WuRK2EE0Sj9ksXDDe5VA=DJ+H3eS4YRKpDZLdRRfow@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: multipart/alternative; boundary=001a11c1ef629b7b35050e5614cd
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vincent Yang <vincent.yang.fujitsu@gmail.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andy Green <andy.green@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Olof Johansson <olof@lixom.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Patch Tracking <patches@linaro.org>, arm@kernel.org, Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Stefan Agner <stefan@agner.ch>, Stephen Warren <swarren@nvidia.com>, Fabio Estevam <fabio.estevam@freescale.com>, Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Martin Fuzzey <mfuzzey@parkeon.com>, Kiran Padwal <kiran.padwal21@gmail.com>, Thierry Reding <treding@nvidia.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, dandan.he@mediatek.com, yingjoe.chen@mediatek.com, alan.cheng@mediatek.com, eddie.huang@mediatek.com
 List-ID: <devicetree@vger.kernel.org>
 
---001a11c1ef629b7b35050e5614cd
-Content-Type: text/plain; charset=UTF-8
+Since pinconf relate API changes in pinctrl devel branch, a build error happened.
+Send this small patch to fix it.
 
-On Feb 5, 2015 5:13 PM, "Arnd Bergmann" <arnd@arndb.de> wrote:
->
-> >
-> > I know typedef's are frowned upon, but how bad is the following option?
-> >        typedef void*  mbox_data_info
-> >        int mbox_send_message(struct mbox_chan *chan, mbox_data_info
-data);
->
-> I don't see how that would help.
->
-If it's abuse because the argument is a void*... What if we called it
-mbox_data_info?  To say platforms are free to pass data as a pointer or a
-value :)
+---
+Due to pinconf_generic_parse_dt_config() API changes in pinctrl devel branch,
+add one parameter to fix build error.
 
-Jassi
+Also fix warning:
+drivers/pinctrl/mediatek/pinctrl-mtk-common.c:718:3: warning: too many arguments for format [-Wformat-extra-args]
+      dev_err(&pdev->dev, "only support pins-are-numbered format\n", ret);
+      ^
 
---001a11c1ef629b7b35050e5614cd
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+by removing extra parameter when calling dev_err in mtk_pctrl_init.
 
-<p dir=3D"ltr">On Feb 5, 2015 5:13 PM, &quot;Arnd Bergmann&quot; &lt;<a hre=
-f=3D"mailto:arnd@arndb.de">arnd@arndb.de</a>&gt; wrote:<br>
-&gt;<br>
-&gt; &gt;<br>
-&gt; &gt; I know typedef&#39;s are frowned upon, but how bad is the followi=
-ng option?<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 typedef void*=C2=A0 mbox_data_info<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 int mbox_send_message(struct mbox_chan=
- *chan, mbox_data_info data);<br>
-&gt;<br>
-&gt; I don&#39;t see how that would help.<br>
-&gt;<br>
-If it&#39;s abuse because the argument is a void*... What if we called it m=
-box_data_info?=C2=A0 To say platforms are free to pass data as a pointer or=
- a value :)=C2=A0 <br></p>
-<p dir=3D"ltr">Jassi</p>
+Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+---
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---001a11c1ef629b7b35050e5614cd--
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+index 5d680c8..63df62b 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+@@ -391,7 +391,8 @@ static int mtk_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		return -EINVAL;
+ 	}
+ 
+-	err = pinconf_generic_parse_dt_config(node, &configs, &num_configs);
++	err = pinconf_generic_parse_dt_config(node, pctldev, &configs,
++		&num_configs);
+ 	if (num_configs)
+ 		has_config = 1;
+ 
+@@ -715,7 +716,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
+ 
+ 	prop = of_find_property(np, "pins-are-numbered", NULL);
+ 	if (!prop) {
+-		dev_err(&pdev->dev, "only support pins-are-numbered format\n", ret);
++		dev_err(&pdev->dev, "only support pins-are-numbered format\n");
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+1.7.9.5
