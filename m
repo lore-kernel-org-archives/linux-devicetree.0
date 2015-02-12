@@ -1,55 +1,40 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v3 1/5] xhci: add a quirk for device disconnection errata
- for Synopsis Designware USB3 core
-Date: Thu, 12 Feb 2015 10:18:19 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1502121013390.1209-100000@iolanthe.rowland.org>
-References: <54DCAF88.4010607@intel.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54DCAF88.4010607@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Sneeker Yeh <sneeker.yeh@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+From: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/2] DT: Documentation: input: rotary encoder: Add wakeup-source property
+Date: Thu, 12 Feb 2015 16:40:37 +0100
+Message-ID: <1423755638-9294-2-git-send-email-sylvain.rochet@finsecur.com>
+References: <1423755638-9294-1-git-send-email-sylvain.rochet@finsecur.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423755638-9294-1-git-send-email-sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Mack <daniel-rDUAYElUppE@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Feb 2015, Mathias Nyman wrote:
+This patch adds property wakeup-source to GPIO rotary encoders.
 
-> On 25.01.2015 10:13, Sneeker Yeh wrote:
-> > This issue is defined by a three-way race at disconnect, between
-> > 1) Class driver interrupt endpoint resheduling attempts if the ISR gave an ep
-> >    error event due to device detach (it would try 3 times)
-> > 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
-> >    asynchronously
-> > 3) The hardware IP was configured in silicon with
-> >    - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1
-> >    - Synopsys IP version is < 3.00a
-> > The IP will auto-suspend itself on device detach with some phy-specific interval
-> > after CSC is cleared by 2)
-> > 
-> > If 2) and 3) complete before 1), the interrupts it expects will not be generated
-> > by the autosuspended IP, leading to a deadlock. Even later disconnection
-> > procedure would detect that corresponding urb is still in-progress and issue a
-> > ep stop command, auto-suspended IP still won't respond to that command.
+Signed-off-by: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/input/rotary-encoder.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-If the Synopsys IP provides a way to do it, it would be better to turn
-off the autosuspend feature entirely.  Doesn't autosuspend violate the
-xHCI specification?
+diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+index 3315495..2c643a3 100644
+--- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
++++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+@@ -15,6 +15,7 @@ Optional properties:
+ - rotary-encoder,rollover: Automatic rollove when the rotary value becomes
+   greater than the specified steps or smaller than 0. For absolute axis only.
+ - rotary-encoder,half-period: Makes the driver work on half-period mode.
++- wakeup-source: Boolean, rotary encoder can wake-up the system.
+ 
+ See Documentation/input/rotary-encoder.txt for more information.
+ 
+-- 
+2.1.4
 
-> So did I understand correctly that the class driver submits a new urb which
-> is enqueued by xhci_urb_enqueue() before the hub thread notices the device is disconnected.
-> Then hub thread clears CSC bit, controller suspends and the new urb is never given back?
-> 
-> Doesn't the CSC bit and PORT_CONNECT bit show the device is disconnected when we enter
-> xhci_enqueue_urb(), even it the hub thread doesn't know this yet?
-
-What if the device disconnects _after_ the new URB is enqueued?
-
-> Would it make sense to check those bits in xhci_enqueue_urb, and just return error
-> in the xhci_urb_enqueue() if device is not connected? Then there wouldn't be a need for any quirk
-> at all.
-
-That wouldn't help URBs that were already enqueued when the disconnect 
-occurred.
-
-Alan Stern
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
