@@ -1,77 +1,123 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v4 1/2] dt/bindings: qcom_adm: Fix channel specifiers
-Date: Wed, 11 Feb 2015 23:46:04 -0600
-Message-ID: <1423719965-8156-2-git-send-email-agross@codeaurora.org>
-References: <1423719965-8156-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423719965-8156-1-git-send-email-agross@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: [PATCH RFC v9 00/20] Add support for i.MX MIPI DSI DRM driver
+Date: Thu, 12 Feb 2015 14:01:23 +0800
+Message-ID: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, a.hajda@samsung.com, andy.yan@rock-chips.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the crci information from the dma channel property.  At least
-one client device requires using more than one CRCI value for a channel.  This
-does not match the current binding and the crci information needs to be removed.
-
-Instead, the client device will provide this information via other means.
-
-Signed-off-by: Andy Gross <agross@codeaurora.org>
----
- Documentation/devicetree/bindings/dma/qcom_adm.txt |   16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/qcom_adm.txt b/Documentation/devicetree/bindings/dma/qcom_adm.txt
-index 9bcab91..38d45f8 100644
---- a/Documentation/devicetree/bindings/dma/qcom_adm.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_adm.txt
-@@ -4,8 +4,7 @@ Required properties:
- - compatible: must contain "qcom,adm" for IPQ/APQ8064 and MSM8960
- - reg: Address range for DMA registers
- - interrupts: Should contain one interrupt shared by all channels
--- #dma-cells: must be <2>.  First cell denotes the channel number.  Second cell
--  denotes CRCI (client rate control interface) flow control assignment.
-+- #dma-cells: must be <1>.  First cell denotes the channel number.
- - clocks: Should contain the core clock and interface clock.
- - clock-names: Must contain "core" for the core clock and "iface" for the
-   interface clock.
-@@ -22,7 +21,7 @@ Example:
- 			compatible = "qcom,adm";
- 			reg = <0x18300000 0x100000>;
- 			interrupts = <0 170 0>;
--			#dma-cells = <2>;
-+			#dma-cells = <1>;
- 
- 			clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
- 			clock-names = "core", "iface";
-@@ -35,15 +34,12 @@ Example:
- 			qcom,ee = <0>;
- 		};
- 
--DMA clients must use the format descripted in the dma.txt file, using a three
-+DMA clients must use the format descripted in the dma.txt file, using a two
- cell specifier for each channel.
- 
--Each dmas request consists of 3 cells:
-+Each dmas request consists of two cells:
-  1. phandle pointing to the DMA controller
-  2. channel number
-- 3. CRCI assignment, if applicable.  If no CRCI flow control is required, use 0.
--    The CRCI is used for flow control.  It identifies the peripheral device that
--    is the source/destination for the transferred data.
- 
- Example:
- 
-@@ -56,7 +52,7 @@ Example:
- 
- 		cs-gpios = <&qcom_pinmux 20 0>;
- 
--		dmas = <&adm_dma 6 9>,
--			<&adm_dma 5 10>;
-+		dmas = <&adm_dma 6>,
-+			<&adm_dma 5>;
- 		dma-names = "rx", "tx";
- 	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+SGksCgpUaGlzIHZlcnNpb24gbWFpbmx5IGFkZHJlc3NlcyB0aGUgY29tbWVudHMgZnJvbSBQaGls
+aXBwIFphYmVsIG9uIHY4LgpUaGUgY29tbWVudHMgaW5jbHVkZQphLiBBIGNvbW1vbiBjb21wYXRp
+YmxlIHN0cmluZyAic25wcyxkdy1taXBpLWRzaSIgc2hvdWxkIGJlIGFwcGVuZGVkIHRvIGFsbCBT
+b0NzJwogICBNSVBJIERTSSBkZXZpY2UgdHJlZSBkb2N1bWVudGF0aW9ucyBhbmQgbm9kZXMuCmIu
+IENsZWFuIHVwIHRoZSBjb21tb24gY2xvY2tzIG5lZWRlZCBieSB0aGUgU3lub3BzeXMgRGVzaWdu
+V2FyZSBNSVBJIERTSSBob3N0CiAgIGNvbnRyb2xsZXIuCgpUaGlzIHZlcnNpb24gYWxzbyBkcm9w
+cyB0d28gZG9jdW1lbnRhdGlvbiBwYXRjaGVzIGluIHY4IGZvciBhZGRpbmcgSGltYXggYW5kClRy
+dWx5IHZlbmRvciBwcmVmaXhlcyBzaW5jZSBSb2IgSGVycmluZyBoYXMgdGFrZW4gdGhlbS4KClRo
+ZSBpLk1YIE1JUEkgRFNJIGlzIGEgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJIERTSSBob3N0IGNv
+bnRyb2xsZXIgSVAuClRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3IgYSBTeW5vcHN5cyBEZXNp
+Z25XYXJlIE1JUEkgRFNJIGhvc3QgY29udHJvbGxlcgpEUk0gYnJpZGdlIGRyaXZlciBhbmQgYSBp
+Lk1YIE1JUEkgRFNJIHNwZWNpZmljIERSTSBkcml2ZXIuCkN1cnJlbnRseSwgdGhlIE1JUEkgRFNJ
+IGRyaXZlcnMgb25seSBzdXBwb3J0IHRoZSBidXJzdCB3aXRoIHN5bmMgcHVsc2UgbW9kZS4KClRo
+aXMgc2VyaWVzIGFsc28gaW5jbHVkZXMgYSBEUk0gcGFuZWwgZHJpdmVyIGZvciB0aGUgVHJ1bHkg
+VEZUNDgwODAwLTE2LUUgcGFuZWwKd2hpY2ggaXMgZHJpdmVuIGJ5IHRoZSBIaW1heCBIWDgzNjlB
+IGRyaXZlciBJQy4gIFRoZSBkcml2ZXIgSUMgZGF0YSBzaGVldCBjb3VsZApiZSBmb3VuZCBhdCBb
+MV0uICBBcyBtZW50aW9uZWQgYnkgdGhlIGRhdGEgc2hlZXQsIHRoZSBkcml2ZXIgSUMgc3VwcG9y
+dHMgc2V2ZXJhbAppbnRlcmZhY2UgbW9kZXMuICBDdXJyZW50bHksIHRoZSBEUk0gcGFuZWwgZHJp
+dmVyIG9ubHkgc3VwcG9ydHMgdGhlIE1JUEkgRFNJIHZpZGVvCm1vZGUuICBOZXcgaW50ZXJmYWNl
+IG1vZGVzIGNvdWxkIGJlIGFkZGVkIGxhdGVyKHBlcmhhcHMsIGp1c3QgbGlrZSB0aGUgd2F5IHRo
+ZSBEUk0Kc2ltcGxlIHBhbmVsIGRyaXZlciBzdXBwb3J0cyBib3RoIE1JUEkgRFNJIGludGVyZmFj
+ZSBwYW5lbHMgYW5kIHNpbXBsZShwYXJhbGxlbCkKaW50ZXJmYWNlIHBhbmVscykuCgpUaGUgTUlQ
+SSBEU0kgZmVhdHVyZSBpcyB0ZXN0ZWQgb24gaS5NWDZRIFNhYnJlU0QgYm9hcmQgYW5kIGkuTVg2
+REwgU2FicmVTRCBib2FyZC4KVGhlIE1JUEkgRFNJIGRpc3BsYXkgY291bGQgYmUgZW5hYmxlZCBk
+aXJlY3RseSBvbiBpLk1YNlEgU2FicmVTRCBib2FyZCBhZnRlcgphcHBseWluZyB0aGlzIHNlcmll
+cywgYmVjYXVzZSB0aGUgMjYuNE1IeiBwaXhlbCBjbG9jayB0aGUgcGFuZWwgcmVxdWlyZXMgY291
+bGQgYmUKZGVyaXZlZCBmcm9tIHRoZSBJUFUgSFNQIGNsb2NrKDI2NE1Ieikgd2l0aCBhbiBpbnRl
+Z2VyIGRpdmlkZXIuCk9uIGkuTVg2REwgU2FicmVTRCBib2FyZCwgd2UgbmVlZCB0byBtYW51YWxs
+eSBkaXNhYmxlIHRoZSBMVkRTIGFuZCBIRE1JIGRpc3BsYXlzIGluCnRoZSBkZXZpY2UgdHJlZSBi
+bG9iLCBzaW5jZSB0aGUgaS5NWDZETCBJUFUgSFNQIGNsb2NrIGlzIDE5OE1IeiBhdCBwcmVzZW50
+LCB3aGljaAptYWtlcyB0aGUgcGl4ZWwgY2xvY2sgc2hhcmUgdGhlIFBMTDUgdmlkZW8gY2xvY2sg
+c291cmNlIHdpdGggdGhlIExWRFMgYW5kIEhETUksCnRodXMsIHRoZSBwYW5lbCBjYW5ub3QgZ2V0
+IHRoZSBwaXhlbCBjbG9jayByYXRlIGl0IHdhbnRzLgoKUGF0Y2ggMDEvMjAgaXMgbmVlZGVkIHRv
+IGdldCBhIHByZWNpc2UgcGl4ZWwgY2xvY2sgcmF0ZSgyNi40TUh6KSBmcm9tIHRoZSBQTEw1IHZp
+ZGVvCmNsb2NrLiAgSWYgd2UgZG9uJ3QgaGF2ZSB0aGlzIHBhdGNoLCB0aGUgcGl4ZWwgY2xvY2sg
+cmF0ZSBpcyBhYm91dCAyME1Ieiwgd2hpY2gKY2F1c2VzIGEgaG9yaXRvbmFsIHNoaWZ0IG9uIHRo
+ZSBkaXNwbGF5IGltYWdlLgoKVGhpcyBzZXJpZXMgY2FuIGJlIGFwcGxpZWQgb24gdGhlIGlteC1k
+cm0vbmV4dCBicmFuY2ggb2YgUGhpbGlwcCBaYWJlbCdzIG9wZW4KZ2l0IHJlcG9zaXRvcnkuCgpb
+MV0gaHR0cDovL3d3dy5hbGxzaG9yZS5jb20vcGRmL0hpbWF4X0hYODM2OS1BLnBkZgoKTGl1IFlp
+bmcgKDIwKToKICBjbGs6IGRpdmlkZXI6IENvcnJlY3QgcGFyZW50IGNsayByb3VuZCByYXRlIGlm
+IG5vIGJlc3RkaXYgaXMgbm9ybWFsbHkKICAgIGZvdW5kCiAgQVJNOiBpbXg2cTogQWRkIEdQUjMg
+TUlQSSBtdXhpbmcgY29udHJvbCByZWdpc3RlciBmaWVsZCBzaGlmdCBiaXRzCiAgICBkZWZpbml0
+aW9uCiAgQVJNOiBpbXg2cTogY2xrOiBBZGQgdGhlIHZpZGVvXzI3bSBjbG9jawogIEFSTTogaW14
+NnE6IGNsazogQ2hhbmdlIGhkbWlfaXNmciBjbG9jaydzIHBhcmVudCB0byBiZSB2aWRlb18yN20g
+Y2xvY2sKICBBUk06IGlteDZxOiBjbGs6IENoYW5nZSBoc2lfdHggY2xvY2sgdG8gYmUgYSBzaGFy
+ZWQgY2xvY2sgZ2F0ZQogIEFSTTogaW14NnE6IGNsazogQWRkIHN1cHBvcnQgZm9yIG1pcGlfY29y
+ZV9jZmcgY2xvY2sgYXMgYSBzaGFyZWQgY2xvY2sKICAgIGdhdGUKICBBUk06IGlteDZxOiBjbGs6
+IEFkZCBzdXBwb3J0IGZvciBtaXBpX2lwZyBjbG9jayBhcyBhIHNoYXJlZCBjbG9jayBnYXRlCiAg
+QVJNOiBkdHM6IGlteDZxZGw6IE1vdmUgZXhpc3RpbmcgTUlQSSBEU0kgcG9ydHMgaW50byBhIG5l
+dyAncG9ydHMnCiAgICBub2RlCiAgZHJtL2RzaTogQWRkIGEgaGVscGVyIHRvIGdldCBiaXRzIHBl
+ciBwaXhlbCBvZiBNSVBJIERTSSBwaXhlbCBmb3JtYXQKICBEb2N1bWVudGF0aW9uOiBkdC1iaW5k
+aW5nczogQWRkIGJpbmRpbmdzIGZvciBTeW5vcHN5cyBEVyBNSVBJIERTSSBEUk0KICAgIGJyaWRn
+ZSBkcml2ZXIKICBkcm0vYnJpZGdlOiBBZGQgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJIERTSSBo
+b3N0IGNvbnRyb2xsZXIgZHJpdmVyCiAgRG9jdW1lbnRhdGlvbjogZHQtYmluZGluZ3M6IEFkZCBi
+aW5kaW5ncyBmb3IgaS5NWCBzcGVjaWZpYyBTeW5vcHN5cyBEVwogICAgTUlQSSBEU0kgZHJpdmVy
+CiAgZHJtOiBpbXg6IFN1cHBvcnQgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJIERTSSBob3N0IGNv
+bnRyb2xsZXIKICBEb2N1bWVudGF0aW9uOiBkdC1iaW5kaW5nczogQWRkIGJpbmRpbmdzIGZvciBI
+aW1heCBIWDgzNjlBIERSTSBwYW5lbAogICAgZHJpdmVyCiAgZHJtOiBwYW5lbDogQWRkIHN1cHBv
+cnQgZm9yIEhpbWF4IEhYODM2OUEgTUlQSSBEU0kgcGFuZWwKICBBUk06IGR0c2k6IGlteDZxZGw6
+IEFkZCBzdXBwb3J0IGZvciBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIKICBBUk06IGR0czogaW14
+NnFkbC1zYWJyZXNkOiBBZGQgc3VwcG9ydCBmb3IgVFJVTFkgVEZUNDgwODAwLTE2LUUgTUlQSQog
+ICAgRFNJIHBhbmVsCiAgQVJNOiBpbXhfdjZfdjdfZGVmY29uZmlnOiBDbGVhbnVwIGZvciBpbXgg
+ZHJtIGJlaW5nIG1vdmVkIG91dCBvZgogICAgc3RhZ2luZwogIEFSTTogaW14X3Y2X3Y3X2RlZmNv
+bmZpZzogQWRkIHN1cHBvcnQgZm9yIE1JUEkgRFNJIGhvc3QgY29udHJvbGxlcgogIEFSTTogaW14
+X3Y2X3Y3X2RlZmNvbmZpZzogQWRkIHN1cHBvcnQgZm9yIEhpbWF4IEhYODM2OUEgcGFuZWwKCiAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLnR4dCB8ICAgNzYg
+KysKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pbXgvbWlwaV9kc2kudHh0ICAgICAgIHwg
+ICA4MSArKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvaGltYXgsaHg4MzY5YS50eHQg
+ICAgfCAgIDM5ICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLmR0c2kgICAgICAgICAgICAgICAg
+ICAgICAgIHwgICAyMCArLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1zYWJyZXNkLmR0c2kg
+ICAgICAgICAgICAgfCAgIDIwICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwuZHRzaSAgICAg
+ICAgICAgICAgICAgICAgIHwgICAzMCArLQogYXJjaC9hcm0vY29uZmlncy9pbXhfdjZfdjdfZGVm
+Y29uZmlnICAgICAgICAgICAgICAgfCAgIDIzICstCiBhcmNoL2FybS9tYWNoLWlteC9jbGstaW14
+NnEuYyAgICAgICAgICAgICAgICAgICAgICB8ICAgIDggKy0KIGRyaXZlcnMvY2xrL2Nsay1kaXZp
+ZGVyLmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMyArLQogZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgIDEwICsKIGRyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAgMSArCiBkcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmMgICAgICAgICAgICAgICB8IDEwMDYgKysrKysr
+KysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9pbXgvS2NvbmZpZyAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICAgNyArCiBkcml2ZXJzL2dwdS9kcm0vaW14L01ha2VmaWxlICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgIDEgKwogZHJpdmVycy9ncHUvZHJtL2lteC9kd19taXBpX2RzaS1p
+bXguYyAgICAgICAgICAgICAgfCAgMjMwICsrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICAgICB8ICAgIDUgKwogZHJpdmVycy9ncHUvZHJtL3BhbmVs
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9wYW5lbC1oaW1heC1oeDgzNjlhLmMgICAgICAgIHwgIDYxMCArKysrKysrKysrKysKIGlu
+Y2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oICAgICAgICAgICAgICAgICAgIHwgICAyNyAr
+CiBpbmNsdWRlL2RybS9kcm1fbWlwaV9kc2kuaCAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+MTQgKwogaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9pbXg2cWRsLWNsb2NrLmggICAgICAgICAg
+fCAgICA1ICstCiBpbmNsdWRlL2xpbnV4L21mZC9zeXNjb24vaW14NnEtaW9tdXhjLWdwci5oICAg
+ICAgICB8ICAgIDEgKwogMjIgZmlsZXMgY2hhbmdlZCwgMjE4NCBpbnNlcnRpb25zKCspLCAzNCBk
+ZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZHJtL2JyaWRnZS9kd19taXBpX2RzaS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9taXBpX2RzaS50eHQKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwv
+aGltYXgsaHg4MzY5YS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL2R3X21pcGlfZHNpLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaW14
+L2R3X21pcGlfZHNpLWlteC5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Bh
+bmVsL3BhbmVsLWhpbWF4LWh4ODM2OWEuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHJt
+L2JyaWRnZS9kd19taXBpX2RzaS5oCgotLSAKMi4xLjAKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
