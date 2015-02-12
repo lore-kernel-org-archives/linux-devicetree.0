@@ -1,84 +1,55 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2] ARM: dts: zynq: Add OCM node
-Date: Thu, 12 Feb 2015 16:15:43 +0100
-Message-ID: <6cd07a2ca61d4083b1a3d370efcc19bc@BN1BFFO11FD016.protection.gbl>
-References: <6df19b400e314ef8228be475bb8ba83765683016.1423737765.git.michal.simek@xilinx.com>
- <20150212105443.GB1522@leverpostej>
- <c64e7b4bf78649049cea3dceecea453c@BN1AFFO11FD014.protection.gbl>
- <5c1602f83c594a72aac78c245f1830fa@BL2FFO11FD052.protection.gbl>
- <20150212150709.GG1522@leverpostej>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v3 1/5] xhci: add a quirk for device disconnection errata
+ for Synopsis Designware USB3 core
+Date: Thu, 12 Feb 2015 10:18:19 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1502121013390.1209-100000@iolanthe.rowland.org>
+References: <54DCAF88.4010607@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150212150709.GG1522@leverpostej>
+In-Reply-To: <54DCAF88.4010607@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "monstr@monstr.eu" <monstr@monstr.eu>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robherring2@gmail.com>, Josh Cartwright <josh.cartwright@ni.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Sneeker Yeh <sneeker.yeh@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/2015 04:07 PM, Mark Rutland wrote:
-> On Thu, Feb 12, 2015 at 02:58:36PM +0000, S=C3=B6ren Brinkmann wrote:
->> On Thu, 2015-02-12 at 12:01PM +0100, Michal Simek wrote:
->>> On 02/12/2015 11:54 AM, Mark Rutland wrote:
->>>> On Thu, Feb 12, 2015 at 10:42:47AM +0000, Michal Simek wrote:
->>>>> Add OCM node for all zynq boards. OCM location
->>>>> can changed but for all current boards this
->>>>> is the location where OCM is.`
->>>>>
->>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>>> ---
->>>>>
->>>>> Changes in v2:
->>>>> - Move node to board file suggested by Mark
->>>>>
->>>>> This patch is done based on discussion here.
->>>>> https://lkml.org/lkml/2014/12/1/396
->>>>>
->>>>> Mark: I expect you won't like amba bus reference or
->>>>> am I wrong?
->>>>
->>>> I'm fine with dropping things onto a bus in this way. If we're hap=
-py to
->>>> do it for other nodes I don't see why busses should be special.
->>>
->>> Wonderful. I will give people some time to comment this style.
->>
->> Given that the location is discoverable, wouldn't it make sense to l=
-et
->> 'reg' point to the ctrl/cfg registers in the SLCR and let the driver
->> handle the whereabouts of the OCM location? (but I guess this is goi=
-ng
->> in circles now, such a proposal was on the table at some point, IIRC=
-).
->> But I'd prefer:
->> 	memory-controller@0xfffc0000 { /* the address here would of course =
-not match all configurations */
->=20
-> I'd really prefer that we keep the unit-address and reg consistent.
->=20
-> Given that the address may change on a per-board basis, it simply has=
- to
-> live in the board file.
->=20
-> However, given that all boards are currently the same it could be
-> dropped in the SoC file for now, with a comment saying it should be
-> factored out to boards when the first board with a different address
-> comes along.
+On Thu, 12 Feb 2015, Mathias Nyman wrote:
 
-Soren is talking about different solution which I have tried to push to=
- mainline
-in that thread above. OCM configuration is discoverable through system =
-controller
-to find out which configuration is used.
+> On 25.01.2015 10:13, Sneeker Yeh wrote:
+> > This issue is defined by a three-way race at disconnect, between
+> > 1) Class driver interrupt endpoint resheduling attempts if the ISR gave an ep
+> >    error event due to device detach (it would try 3 times)
+> > 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
+> >    asynchronously
+> > 3) The hardware IP was configured in silicon with
+> >    - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1
+> >    - Synopsys IP version is < 3.00a
+> > The IP will auto-suspend itself on device detach with some phy-specific interval
+> > after CSC is cleared by 2)
+> > 
+> > If 2) and 3) complete before 1), the interrupts it expects will not be generated
+> > by the autosuspended IP, leading to a deadlock. Even later disconnection
+> > procedure would detect that corresponding urb is still in-progress and issue a
+> > ep stop command, auto-suspended IP still won't respond to that command.
 
-=46rom this simple sram block it looks like that it is 64k of memory bu=
-t
-it is just one block which can live in low or high address (at 0x0 or 0=
-xfffc0000)
-based on controller configuration.
+If the Synopsys IP provides a way to do it, it would be better to turn
+off the autosuspend feature entirely.  Doesn't autosuspend violate the
+xHCI specification?
 
-In total there are 4 blocks with low and high locations.
+> So did I understand correctly that the class driver submits a new urb which
+> is enqueued by xhci_urb_enqueue() before the hub thread notices the device is disconnected.
+> Then hub thread clears CSC bit, controller suspends and the new urb is never given back?
+> 
+> Doesn't the CSC bit and PORT_CONNECT bit show the device is disconnected when we enter
+> xhci_enqueue_urb(), even it the hub thread doesn't know this yet?
 
-Thanks,
-Michal
+What if the device disconnects _after_ the new URB is enqueued?
+
+> Would it make sense to check those bits in xhci_enqueue_urb, and just return error
+> in the xhci_urb_enqueue() if device is not connected? Then there wouldn't be a need for any quirk
+> at all.
+
+That wouldn't help URBs that were already enqueued when the disconnect 
+occurred.
+
+Alan Stern
