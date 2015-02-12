@@ -1,247 +1,129 @@
 From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v6 06/15] of: Add Tegra124 EMC bindings
-Date: Thu, 12 Feb 2015 15:06:22 +0100
-Message-ID: <1423750042-6535-7-git-send-email-tomeu.vizoso@collabora.com>
+Subject: [PATCH v6 09/15] ARM: tegra: Add EMC timings to Jetson TK1 device tree
+Date: Thu, 12 Feb 2015 15:06:25 +0100
+Message-ID: <1423750042-6535-10-git-send-email-tomeu.vizoso@collabora.com>
 References: <1423750042-6535-1-git-send-email-tomeu.vizoso@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1423750042-6535-1-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-tegra@vger.kernel.org
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Mikko Perttunen <mperttunen@nvidia.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Mikko Perttunen <mperttunen@nvidia.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Mikko Perttunen <mperttunen@nvidia.com>
 
-Add binding documentation for the nvidia,tegra124-emc device tree node.
+This adds a new file, tegra124-jetson-tk1-emc.dtsi that contains
+valid timings for the EMC memory clock. The file is included to the
+main Jetson TK1 device tree.
+
+The data is generated from the V5.0.17 version of the DVFS tables.
 
 Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
 
 ---
 
-v5:	* Add a short description for each of the register properties
+v5:	* Add emc-xm2dqspadctrl2, emc-zcal-interval and
+	  emc-zcal-interval properties
+	* Sort register properties alphabetically
+	* Update data to V5.0.17 version of the DVFS tables
 
-v4:	* Remove mandatory naming of the timings subnode
-	* Remove constraint on the unit-address of the timings and timing subnodes
-	* Add some more information about nvidia,emc-configuration
-	* Make the example complete
+v4:	* Rename timings subnode to emc-timings
+	* Remove unit addresses from timings and timing subnodes
 
-v2:	* Specify the unit addresses for the timings and timing nodes
+v2:	* Fix the unit addresses of the timings and timing nodes
 ---
- .../bindings/memory-controllers/tegra-emc.txt      | 379 +++++++++++++++++++++
- 1 file changed, 379 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
+ arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi | 2469 ++++++++++++++++++++++++
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts      |    2 +
+ 2 files changed, 2471 insertions(+)
+ create mode 100644 arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt b/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
+diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi b/arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi
 new file mode 100644
-index 0000000..da923b1
+index 0000000..abbc7c2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
-@@ -0,0 +1,379 @@
-+NVIDIA Tegra124 SoC EMC (external memory controller)
-+====================================================
-+
-+Required properties :
-+- compatible : Should be "nvidia,tegra124-emc".
-+- reg : physical base address and length of the controller's registers.
-+- nvidia,memory-controller : phandle of the MC driver.
-+
-+The node should contain a "emc-timings" subnode for each supported RAM type (see field RAM_CODE in
-+register PMC_STRAPPING_OPT_A), with its unit address being its RAM_CODE.
-+
-+Required properties for "emc-timings" nodes :
-+- nvidia,ram-code : Should contain the value of RAM_CODE this timing set is used for.
-+
-+Each "emc-timings" node should contain a "timing" subnode for every supported EMC clock rate. The
-+"timing" subnodes should have the clock rate in Hz as their unit address.
-+
-+Required properties for "timing" nodes :
-+- clock-frequency : Should contain the memory clock rate in Hz.
-+- The following properties contain EMC timing characterization values (specified in the board
-+documentation) :
-+  - nvidia,emc-auto-cal-config : EMC_AUTO_CAL_CONFIG
-+  - nvidia,emc-auto-cal-config2 : EMC_AUTO_CAL_CONFIG2
-+  - nvidia,emc-auto-cal-config3 : EMC_AUTO_CAL_CONFIG3
-+  - nvidia,emc-auto-cal-interval : EMC_AUTO_CAL_INTERVAL
-+  - nvidia,emc-bgbias-ctl0 : EMC_BGBIAS_CTL0
-+  - nvidia,emc-cfg : EMC_CFG
-+  - nvidia,emc-cfg-2 : EMC_CFG_2
-+  - nvidia,emc-cfg-dig-dll : EMC_CFG_DIG_DLL
-+  - nvidia,emc-ctt-term-ctrl : EMC_CTT_TERM_CTRL
-+  - nvidia,emc-mode-1 : Mode Register 1
-+  - nvidia,emc-mode-2 : Mode Register 2
-+  - nvidia,emc-mode-4 : Mode Register 4
-+  - nvidia,emc-mode-reset : Mode Register 0
-+  - nvidia,emc-mrs-wait-cnt : EMC_MRS_WAIT_CNT
-+  - nvidia,emc-sel-dpd-ctrl : EMC_SEL_DPD_CTRL
-+  - nvidia,emc-xm2dqspadctrl2 : EMC_XM2DQSPADCTRL2
-+  - nvidia,emc-zcal-cnt-long : EMC_ZCAL_WAIT_CNT
-+  - nvidia,emc-zcal-interval : EMC_ZCAL_INTERVAL
-+- nvidia,emc-configuration : EMC timing characterization data. These are the registers (see section
-+"15.6.2 EMC Registers" in the TRM) whose values need to be specified, according to the board
-+documentation:
-+
-+	EMC_RC
-+	EMC_RFC
-+	EMC_RFC_SLR
-+	EMC_RAS
-+	EMC_RP
-+	EMC_R2W
-+	EMC_W2R
-+	EMC_R2P
-+	EMC_W2P
-+	EMC_RD_RCD
-+	EMC_WR_RCD
-+	EMC_RRD
-+	EMC_REXT
-+	EMC_WEXT
-+	EMC_WDV
-+	EMC_WDV_MASK
-+	EMC_QUSE
-+	EMC_QUSE_WIDTH
-+	EMC_IBDLY
-+	EMC_EINPUT
-+	EMC_EINPUT_DURATION
-+	EMC_PUTERM_EXTRA
-+	EMC_PUTERM_WIDTH
-+	EMC_PUTERM_ADJ
-+	EMC_CDB_CNTL_1
-+	EMC_CDB_CNTL_2
-+	EMC_CDB_CNTL_3
-+	EMC_QRST
-+	EMC_QSAFE
-+	EMC_RDV
-+	EMC_RDV_MASK
-+	EMC_REFRESH
-+	EMC_BURST_REFRESH_NUM
-+	EMC_PRE_REFRESH_REQ_CNT
-+	EMC_PDEX2WR
-+	EMC_PDEX2RD
-+	EMC_PCHG2PDEN
-+	EMC_ACT2PDEN
-+	EMC_AR2PDEN
-+	EMC_RW2PDEN
-+	EMC_TXSR
-+	EMC_TXSRDLL
-+	EMC_TCKE
-+	EMC_TCKESR
-+	EMC_TPD
-+	EMC_TFAW
-+	EMC_TRPAB
-+	EMC_TCLKSTABLE
-+	EMC_TCLKSTOP
-+	EMC_TREFBW
-+	EMC_FBIO_CFG6
-+	EMC_ODT_WRITE
-+	EMC_ODT_READ
-+	EMC_FBIO_CFG5
-+	EMC_CFG_DIG_DLL
-+	EMC_CFG_DIG_DLL_PERIOD
-+	EMC_DLL_XFORM_DQS0
-+	EMC_DLL_XFORM_DQS1
-+	EMC_DLL_XFORM_DQS2
-+	EMC_DLL_XFORM_DQS3
-+	EMC_DLL_XFORM_DQS4
-+	EMC_DLL_XFORM_DQS5
-+	EMC_DLL_XFORM_DQS6
-+	EMC_DLL_XFORM_DQS7
-+	EMC_DLL_XFORM_DQS8
-+	EMC_DLL_XFORM_DQS9
-+	EMC_DLL_XFORM_DQS10
-+	EMC_DLL_XFORM_DQS11
-+	EMC_DLL_XFORM_DQS12
-+	EMC_DLL_XFORM_DQS13
-+	EMC_DLL_XFORM_DQS14
-+	EMC_DLL_XFORM_DQS15
-+	EMC_DLL_XFORM_QUSE0
-+	EMC_DLL_XFORM_QUSE1
-+	EMC_DLL_XFORM_QUSE2
-+	EMC_DLL_XFORM_QUSE3
-+	EMC_DLL_XFORM_QUSE4
-+	EMC_DLL_XFORM_QUSE5
-+	EMC_DLL_XFORM_QUSE6
-+	EMC_DLL_XFORM_QUSE7
-+	EMC_DLL_XFORM_ADDR0
-+	EMC_DLL_XFORM_ADDR1
-+	EMC_DLL_XFORM_ADDR2
-+	EMC_DLL_XFORM_ADDR3
-+	EMC_DLL_XFORM_ADDR4
-+	EMC_DLL_XFORM_ADDR5
-+	EMC_DLL_XFORM_QUSE8
-+	EMC_DLL_XFORM_QUSE9
-+	EMC_DLL_XFORM_QUSE10
-+	EMC_DLL_XFORM_QUSE11
-+	EMC_DLL_XFORM_QUSE12
-+	EMC_DLL_XFORM_QUSE13
-+	EMC_DLL_XFORM_QUSE14
-+	EMC_DLL_XFORM_QUSE15
-+	EMC_DLI_TRIM_TXDQS0
-+	EMC_DLI_TRIM_TXDQS1
-+	EMC_DLI_TRIM_TXDQS2
-+	EMC_DLI_TRIM_TXDQS3
-+	EMC_DLI_TRIM_TXDQS4
-+	EMC_DLI_TRIM_TXDQS5
-+	EMC_DLI_TRIM_TXDQS6
-+	EMC_DLI_TRIM_TXDQS7
-+	EMC_DLI_TRIM_TXDQS8
-+	EMC_DLI_TRIM_TXDQS9
-+	EMC_DLI_TRIM_TXDQS10
-+	EMC_DLI_TRIM_TXDQS11
-+	EMC_DLI_TRIM_TXDQS12
-+	EMC_DLI_TRIM_TXDQS13
-+	EMC_DLI_TRIM_TXDQS14
-+	EMC_DLI_TRIM_TXDQS15
-+	EMC_DLL_XFORM_DQ0
-+	EMC_DLL_XFORM_DQ1
-+	EMC_DLL_XFORM_DQ2
-+	EMC_DLL_XFORM_DQ3
-+	EMC_DLL_XFORM_DQ4
-+	EMC_DLL_XFORM_DQ5
-+	EMC_DLL_XFORM_DQ6
-+	EMC_DLL_XFORM_DQ7
-+	EMC_XM2CMDPADCTRL
-+	EMC_XM2CMDPADCTRL4
-+	EMC_XM2CMDPADCTRL5
-+	EMC_XM2DQSPADCTRL2
-+	EMC_XM2DQPADCTRL2
-+	EMC_XM2DQPADCTRL3
-+	EMC_XM2CLKPADCTRL
-+	EMC_XM2CLKPADCTRL2
-+	EMC_XM2COMPPADCTRL
-+	EMC_XM2VTTGENPADCTRL
-+	EMC_XM2VTTGENPADCTRL2
-+	EMC_XM2VTTGENPADCTRL3
-+	EMC_XM2DQSPADCTRL3
-+	EMC_XM2DQSPADCTRL4
-+	EMC_XM2DQSPADCTRL5
-+	EMC_XM2DQSPADCTRL6
-+	EMC_DSR_VTTGEN_DRV
-+	EMC_TXDSRVTTGEN
-+	EMC_FBIO_SPARE
-+	EMC_ZCAL_INTERVAL
-+	EMC_ZCAL_WAIT_CNT
-+	EMC_MRS_WAIT_CNT
-+	EMC_MRS_WAIT_CNT2
-+	EMC_CTT
-+	EMC_CTT_DURATION
-+	EMC_CFG_PIPE
-+	EMC_DYN_SELF_REF_CONTROL
-+	EMC_QPOP
-+
-+Example SoC include file:
-+
++++ b/arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi
+@@ -0,0 +1,2469 @@
 +/ {
-+	emc@0,7001b000 {
-+		compatible = "nvidia,tegra124-emc";
-+		reg = <0x0 0x7001b000 0x0 0x1000>;
++	clock@0,60006000 {
++		emc-timings-3 {
++			nvidia,ram-code = <3>;
 +
-+		nvidia,memory-controller = <&mc>;
++			timing-12750000 {
++				clock-frequency = <12750000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-20400000 {
++				clock-frequency = <20400000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-40800000 {
++				clock-frequency = <40800000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-68000000 {
++				clock-frequency = <68000000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-102000000 {
++				clock-frequency = <102000000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-204000000 {
++				clock-frequency = <204000000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-300000000 {
++				clock-frequency = <300000000>;
++				nvidia,parent-clock-frequency = <600000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_C>;
++				clock-names = "emc-parent";
++			};
++			timing-396000000 {
++				clock-frequency = <396000000>;
++				nvidia,parent-clock-frequency = <792000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M>;
++				clock-names = "emc-parent";
++			};
++			timing-528000000 {
++				clock-frequency = <528000000>;
++				nvidia,parent-clock-frequency = <528000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
++				clock-names = "emc-parent";
++			};
++			timing-600000000 {
++				clock-frequency = <600000000>;
++				nvidia,parent-clock-frequency = <600000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_C_UD>;
++				clock-names = "emc-parent";
++			};
++			timing-792000000 {
++				clock-frequency = <792000000>;
++				nvidia,parent-clock-frequency = <792000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
++				clock-names = "emc-parent";
++			};
++			timing-924000000 {
++				clock-frequency = <924000000>;
++				nvidia,parent-clock-frequency = <924000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
++				clock-names = "emc-parent";
++			};
++		};
 +	};
-+};
 +
-+Example board file:
-+
-+/ {
 +	emc@0,7001b000 {
 +		emc-timings-3 {
 +			nvidia,ram-code = <3>;
@@ -249,173 +131,2400 @@ index 0000000..da923b1
 +			timing-12750000 {
 +				clock-frequency = <12750000>;
 +
-+				nvidia,emc-zcal-cnt-long = <0x00000042>;
-+				nvidia,emc-auto-cal-interval = <0x001fffff>;
-+				nvidia,emc-ctt-term-ctrl = <0x00000802>;
-+				nvidia,emc-cfg = <0x73240000>;
-+				nvidia,emc-cfg-2 = <0x000008c5>;
-+				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
-+				nvidia,emc-cfg-dig-dll = <0x002c0068>;
-+				nvidia,emc-bgbias-ctl0 = <0x00000008>;
 +				nvidia,emc-auto-cal-config = <0xa1430000>;
 +				nvidia,emc-auto-cal-config2 = <0x00000000>;
 +				nvidia,emc-auto-cal-config3 = <0x00000000>;
-+				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
 +				nvidia,emc-mode-1 = <0x80100003>;
 +				nvidia,emc-mode-2 = <0x80200008>;
 +				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
 +
 +				nvidia,emc-configuration = <
-+					0x00000000 /* EMC_RC */
-+					0x00000003 /* EMC_RFC */
-+					0x00000000 /* EMC_RFC_SLR */
-+					0x00000000 /* EMC_RAS */
-+					0x00000000 /* EMC_RP */
-+					0x00000004 /* EMC_R2W */
-+					0x0000000a /* EMC_W2R */
-+					0x00000003 /* EMC_R2P */
-+					0x0000000b /* EMC_W2P */
-+					0x00000000 /* EMC_RD_RCD */
-+					0x00000000 /* EMC_WR_RCD */
-+					0x00000003 /* EMC_RRD */
-+					0x00000003 /* EMC_REXT */
-+					0x00000000 /* EMC_WEXT */
-+					0x00000006 /* EMC_WDV */
-+					0x00000006 /* EMC_WDV_MASK */
-+					0x00000006 /* EMC_QUSE */
-+					0x00000002 /* EMC_QUSE_WIDTH */
-+					0x00000000 /* EMC_IBDLY */
-+					0x00000005 /* EMC_EINPUT */
-+					0x00000005 /* EMC_EINPUT_DURATION */
-+					0x00010000 /* EMC_PUTERM_EXTRA */
-+					0x00000003 /* EMC_PUTERM_WIDTH */
-+					0x00000000 /* EMC_PUTERM_ADJ */
-+					0x00000000 /* EMC_CDB_CNTL_1 */
-+					0x00000000 /* EMC_CDB_CNTL_2 */
-+					0x00000000 /* EMC_CDB_CNTL_3 */
-+					0x00000004 /* EMC_QRST */
-+					0x0000000c /* EMC_QSAFE */
-+					0x0000000d /* EMC_RDV */
-+					0x0000000f /* EMC_RDV_MASK */
-+					0x00000060 /* EMC_REFRESH */
-+					0x00000000 /* EMC_BURST_REFRESH_NUM */
-+					0x00000018 /* EMC_PRE_REFRESH_REQ_CNT */
-+					0x00000002 /* EMC_PDEX2WR */
-+					0x00000002 /* EMC_PDEX2RD */
-+					0x00000001 /* EMC_PCHG2PDEN */
-+					0x00000000 /* EMC_ACT2PDEN */
-+					0x00000007 /* EMC_AR2PDEN */
-+					0x0000000f /* EMC_RW2PDEN */
-+					0x00000005 /* EMC_TXSR */
-+					0x00000005 /* EMC_TXSRDLL */
-+					0x00000004 /* EMC_TCKE */
-+					0x00000005 /* EMC_TCKESR */
-+					0x00000004 /* EMC_TPD */
-+					0x00000000 /* EMC_TFAW */
-+					0x00000000 /* EMC_TRPAB */
-+					0x00000005 /* EMC_TCLKSTABLE */
-+					0x00000005 /* EMC_TCLKSTOP */
-+					0x00000064 /* EMC_TREFBW */
-+					0x00000000 /* EMC_FBIO_CFG6 */
-+					0x00000000 /* EMC_ODT_WRITE */
-+					0x00000000 /* EMC_ODT_READ */
-+					0x106aa298 /* EMC_FBIO_CFG5 */
-+					0x002c00a0 /* EMC_CFG_DIG_DLL */
-+					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
-+					0x00064000 /* EMC_DLL_XFORM_DQS0 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS1 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS2 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS3 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS4 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS5 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS6 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS7 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS8 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS9 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS10 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS11 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS12 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS13 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS14 */
-+					0x00064000 /* EMC_DLL_XFORM_DQS15 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
-+					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
-+					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
-+					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
-+					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
-+					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
-+					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
-+					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
-+					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
-+					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
-+					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
-+					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
-+					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
-+					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
-+					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
-+					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
-+					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
-+					0x10000280 /* EMC_XM2CMDPADCTRL */
-+					0x00000000 /* EMC_XM2CMDPADCTRL4 */
-+					0x00111111 /* EMC_XM2CMDPADCTRL5 */
-+					0x0130b118 /* EMC_XM2DQSPADCTRL2 */
-+					0x00000000 /* EMC_XM2DQPADCTRL2 */
-+					0x00000000 /* EMC_XM2DQPADCTRL3 */
-+					0x77ffc081 /* EMC_XM2CLKPADCTRL */
-+					0x00000e0e /* EMC_XM2CLKPADCTRL2 */
-+					0x81f1f108 /* EMC_XM2COMPPADCTRL */
-+					0x07070004 /* EMC_XM2VTTGENPADCTRL */
-+					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
-+					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
-+					0x51451400 /* EMC_XM2DQSPADCTRL3 */
-+					0x00514514 /* EMC_XM2DQSPADCTRL4 */
-+					0x00514514 /* EMC_XM2DQSPADCTRL5 */
-+					0x51451400 /* EMC_XM2DQSPADCTRL6 */
-+					0x0000003f /* EMC_DSR_VTTGEN_DRV */
-+					0x00000007 /* EMC_TXDSRVTTGEN */
-+					0x00000000 /* EMC_FBIO_SPARE */
-+					0x00000000 /* EMC_ZCAL_INTERVAL */
-+					0x00000042 /* EMC_ZCAL_WAIT_CNT */
-+					0x000e000e /* EMC_MRS_WAIT_CNT */
-+					0x000e000e /* EMC_MRS_WAIT_CNT2 */
-+					0x00000000 /* EMC_CTT */
-+					0x00000003 /* EMC_CTT_DURATION */
-+					0x0000f2f3 /* EMC_CFG_PIPE */
-+					0x800001c5 /* EMC_DYN_SELF_REF_CONTROL */
-+					0x0000000a /* EMC_QPOP */
++					0x00000000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000004
++					0x0000000a
++					0x00000005
++					0x0000000b
++					0x00000000
++					0x00000000
++					0x00000003
++					0x00000003
++					0x00000000
++					0x00000006
++					0x00000006
++					0x00000006
++					0x00000002
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00010000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000004
++					0x0000000c
++					0x0000000d
++					0x0000000f
++					0x00000060
++					0x00000000
++					0x00000018
++					0x00000002
++					0x00000002
++					0x00000001
++					0x00000000
++					0x00000007
++					0x0000000f
++					0x00000005
++					0x00000005
++					0x00000004
++					0x00000005
++					0x00000004
++					0x00000000
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00000064
++					0x00000000
++					0x00000000
++					0x00000000
++					0x106aa298
++					0x002c00a0
++					0x00008000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x10000280
++					0x00000000
++					0x00111111
++					0x0130b118
++					0x00000000
++					0x00000000
++					0x77ffc081
++					0x00000e0e
++					0x81f1f108
++					0x07070004
++					0x0000003f
++					0x016eeeee
++					0x51451400
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0000003f
++					0x00000007
++					0x00000000
++					0x00000000
++					0x00000042
++					0x000e000e
++					0x000e000e
++					0x00000000
++					0x00000003
++					0x0000f2f3
++					0x800001c5
++					0x0000000a
++				>;
++			};
++
++			timing-20400000 {
++				clock-frequency = <20400000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000000
++					0x00000005
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000004
++					0x0000000a
++					0x00000005
++					0x0000000b
++					0x00000000
++					0x00000000
++					0x00000003
++					0x00000003
++					0x00000000
++					0x00000006
++					0x00000006
++					0x00000006
++					0x00000002
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00010000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000004
++					0x0000000c
++					0x0000000d
++					0x0000000f
++					0x0000009a
++					0x00000000
++					0x00000026
++					0x00000002
++					0x00000002
++					0x00000001
++					0x00000000
++					0x00000007
++					0x0000000f
++					0x00000006
++					0x00000006
++					0x00000004
++					0x00000005
++					0x00000004
++					0x00000000
++					0x00000000
++					0x00000005
++					0x00000005
++					0x000000a0
++					0x00000000
++					0x00000000
++					0x00000000
++					0x106aa298
++					0x002c00a0
++					0x00008000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x10000280
++					0x00000000
++					0x00111111
++					0x0130b118
++					0x00000000
++					0x00000000
++					0x77ffc081
++					0x00000e0e
++					0x81f1f108
++					0x07070004
++					0x0000003f
++					0x016eeeee
++					0x51451400
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0000003f
++					0x0000000b
++					0x00000000
++					0x00000000
++					0x00000042
++					0x000e000e
++					0x000e000e
++					0x00000000
++					0x00000003
++					0x0000f2f3
++					0x8000023a
++					0x0000000a
++				>;
++			};
++
++			timing-40800000 {
++				clock-frequency = <40800000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000001
++					0x0000000a
++					0x00000000
++					0x00000001
++					0x00000000
++					0x00000004
++					0x0000000a
++					0x00000005
++					0x0000000b
++					0x00000000
++					0x00000000
++					0x00000003
++					0x00000003
++					0x00000000
++					0x00000006
++					0x00000006
++					0x00000006
++					0x00000002
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00010000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000004
++					0x0000000c
++					0x0000000d
++					0x0000000f
++					0x00000134
++					0x00000000
++					0x0000004d
++					0x00000002
++					0x00000002
++					0x00000001
++					0x00000000
++					0x00000008
++					0x0000000f
++					0x0000000c
++					0x0000000c
++					0x00000004
++					0x00000005
++					0x00000004
++					0x00000000
++					0x00000000
++					0x00000005
++					0x00000005
++					0x0000013f
++					0x00000000
++					0x00000000
++					0x00000000
++					0x106aa298
++					0x002c00a0
++					0x00008000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x10000280
++					0x00000000
++					0x00111111
++					0x0130b118
++					0x00000000
++					0x00000000
++					0x77ffc081
++					0x00000e0e
++					0x81f1f108
++					0x07070004
++					0x0000003f
++					0x016eeeee
++					0x51451400
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0000003f
++					0x00000015
++					0x00000000
++					0x00000000
++					0x00000042
++					0x000e000e
++					0x000e000e
++					0x00000000
++					0x00000003
++					0x0000f2f3
++					0x80000370
++					0x0000000a
++				>;
++			};
++
++			timing-68000000 {
++				clock-frequency = <68000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000003
++					0x00000011
++					0x00000000
++					0x00000002
++					0x00000000
++					0x00000004
++					0x0000000a
++					0x00000005
++					0x0000000b
++					0x00000000
++					0x00000000
++					0x00000003
++					0x00000003
++					0x00000000
++					0x00000006
++					0x00000006
++					0x00000006
++					0x00000002
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00010000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000004
++					0x0000000c
++					0x0000000d
++					0x0000000f
++					0x00000202
++					0x00000000
++					0x00000080
++					0x00000002
++					0x00000002
++					0x00000001
++					0x00000000
++					0x0000000f
++					0x0000000f
++					0x00000013
++					0x00000013
++					0x00000004
++					0x00000005
++					0x00000004
++					0x00000001
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00000213
++					0x00000000
++					0x00000000
++					0x00000000
++					0x106aa298
++					0x002c00a0
++					0x00008000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x10000280
++					0x00000000
++					0x00111111
++					0x0130b118
++					0x00000000
++					0x00000000
++					0x77ffc081
++					0x00000e0e
++					0x81f1f108
++					0x07070004
++					0x0000003f
++					0x016eeeee
++					0x51451400
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0000003f
++					0x00000022
++					0x00000000
++					0x00000000
++					0x00000042
++					0x000e000e
++					0x000e000e
++					0x00000000
++					0x00000003
++					0x0000f2f3
++					0x8000050e
++					0x0000000a
++				>;
++			};
++
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000004
++					0x0000001a
++					0x00000000
++					0x00000003
++					0x00000001
++					0x00000004
++					0x0000000a
++					0x00000005
++					0x0000000b
++					0x00000001
++					0x00000001
++					0x00000003
++					0x00000003
++					0x00000000
++					0x00000006
++					0x00000006
++					0x00000006
++					0x00000002
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00010000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000004
++					0x0000000c
++					0x0000000d
++					0x0000000f
++					0x00000304
++					0x00000000
++					0x000000c1
++					0x00000002
++					0x00000002
++					0x00000001
++					0x00000000
++					0x00000018
++					0x0000000f
++					0x0000001c
++					0x0000001c
++					0x00000004
++					0x00000005
++					0x00000004
++					0x00000002
++					0x00000000
++					0x00000005
++					0x00000005
++					0x0000031c
++					0x00000000
++					0x00000000
++					0x00000000
++					0x106aa298
++					0x002c00a0
++					0x00008000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x000fc000
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x0000fc00
++					0x10000280
++					0x00000000
++					0x00111111
++					0x0130b118
++					0x00000000
++					0x00000000
++					0x77ffc081
++					0x00000e0e
++					0x81f1f108
++					0x07070004
++					0x0000003f
++					0x016eeeee
++					0x51451400
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0000003f
++					0x00000033
++					0x00000000
++					0x00000000
++					0x00000042
++					0x000e000e
++					0x000e000e
++					0x00000000
++					0x00000003
++					0x0000f2f3
++					0x80000713
++					0x0000000a
++				>;
++			};
++
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008cd>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000009
++					0x00000035
++					0x00000000
++					0x00000006
++					0x00000002
++					0x00000005
++					0x0000000a
++					0x00000005
++					0x0000000b
++					0x00000002
++					0x00000002
++					0x00000003
++					0x00000003
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00000006
++					0x00000002
++					0x00000000
++					0x00000004
++					0x00000006
++					0x00010000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000003
++					0x0000000d
++					0x0000000f
++					0x00000011
++					0x00000607
++					0x00000000
++					0x00000181
++					0x00000002
++					0x00000002
++					0x00000001
++					0x00000000
++					0x00000032
++					0x0000000f
++					0x00000038
++					0x00000038
++					0x00000004
++					0x00000005
++					0x00000004
++					0x00000006
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00000638
++					0x00000000
++					0x00000000
++					0x00000000
++					0x106aa298
++					0x002c00a0
++					0x00008000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00080000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00008000
++					0x00000000
++					0x00000000
++					0x00008000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00090000
++					0x00090000
++					0x00090000
++					0x00090000
++					0x00009000
++					0x00009000
++					0x00009000
++					0x00009000
++					0x10000280
++					0x00000000
++					0x00111111
++					0x0130b118
++					0x00000000
++					0x00000000
++					0x77ffc081
++					0x00000707
++					0x81f1f108
++					0x07070004
++					0x0000003f
++					0x016eeeee
++					0x51451400
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0000003f
++					0x00000066
++					0x00000000
++					0x00020000
++					0x00000100
++					0x000e000e
++					0x000e000e
++					0x00000000
++					0x00000003
++					0x0000d2b3
++					0x80000d22
++					0x0000000a
++				>;
++			};
++
++			timing-300000000 {
++				clock-frequency = <300000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73340000>;
++				nvidia,emc-cfg-2 = <0x000008d5>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200000>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000321>;
++				nvidia,emc-mrs-wait-cnt = <0x0173000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x01231339>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x0000000d
++					0x0000004d
++					0x00000000
++					0x00000009
++					0x00000003
++					0x00000004
++					0x00000008
++					0x00000002
++					0x00000009
++					0x00000003
++					0x00000003
++					0x00000002
++					0x00000002
++					0x00000000
++					0x00000003
++					0x00000003
++					0x00000005
++					0x00000002
++					0x00000000
++					0x00000002
++					0x00000007
++					0x00020000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000001
++					0x0000000e
++					0x00000010
++					0x00000012
++					0x000008e4
++					0x00000000
++					0x00000239
++					0x00000001
++					0x00000008
++					0x00000001
++					0x00000000
++					0x0000004b
++					0x0000000e
++					0x00000052
++					0x00000200
++					0x00000004
++					0x00000005
++					0x00000004
++					0x00000008
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00000924
++					0x00000000
++					0x00000000
++					0x00000000
++					0x104ab098
++					0x002c00a0
++					0x00008000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00098000
++					0x00098000
++					0x00000000
++					0x00098000
++					0x00098000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00050000
++					0x00050000
++					0x00050000
++					0x00050000
++					0x00005000
++					0x00005000
++					0x00005000
++					0x00005000
++					0x10000280
++					0x00000000
++					0x00111111
++					0x01231339
++					0x00000000
++					0x00000000
++					0x77ffc081
++					0x00000505
++					0x81f1f108
++					0x07070004
++					0x00000000
++					0x016eeeee
++					0x51451420
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0000003f
++					0x00000096
++					0x00000000
++					0x00020000
++					0x00000100
++					0x0173000e
++					0x0173000e
++					0x00000000
++					0x00000003
++					0x000052a3
++					0x800012d7
++					0x00000009
++				>;
++			};
++
++			timing-396000000 {
++				clock-frequency = <396000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73340000>;
++				nvidia,emc-cfg-2 = <0x00000895>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200000>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000521>;
++				nvidia,emc-mrs-wait-cnt = <0x015b000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x01231339>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000011
++					0x00000066
++					0x00000000
++					0x0000000c
++					0x00000004
++					0x00000004
++					0x00000008
++					0x00000002
++					0x0000000a
++					0x00000004
++					0x00000004
++					0x00000002
++					0x00000002
++					0x00000000
++					0x00000003
++					0x00000003
++					0x00000005
++					0x00000002
++					0x00000000
++					0x00000001
++					0x00000008
++					0x00020000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x0000000f
++					0x00000010
++					0x00000012
++					0x00000bd1
++					0x00000000
++					0x000002f4
++					0x00000001
++					0x00000008
++					0x00000001
++					0x00000000
++					0x00000063
++					0x0000000f
++					0x0000006c
++					0x00000200
++					0x00000004
++					0x00000005
++					0x00000004
++					0x0000000b
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00000c11
++					0x00000000
++					0x00000000
++					0x00000000
++					0x104ab098
++					0x002c00a0
++					0x00008000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00030000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00070000
++					0x00070000
++					0x00000000
++					0x00070000
++					0x00070000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00038000
++					0x00038000
++					0x00038000
++					0x00038000
++					0x00003800
++					0x00003800
++					0x00003800
++					0x00003800
++					0x10000280
++					0x00000000
++					0x00111111
++					0x01231339
++					0x00000000
++					0x00000000
++					0x77ffc081
++					0x00000505
++					0x81f1f108
++					0x07070004
++					0x00000000
++					0x016eeeee
++					0x51451420
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0000003f
++					0x000000c6
++					0x00000000
++					0x00020000
++					0x00000100
++					0x015b000e
++					0x015b000e
++					0x00000000
++					0x00000003
++					0x000052a3
++					0x8000188b
++					0x00000009
++				>;
++			};
++
++			timing-528000000 {
++				clock-frequency = <528000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0000089d>;
++				nvidia,emc-cfg-dig-dll = <0xe0120069>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000941>;
++				nvidia,emc-mrs-wait-cnt = <0x0139000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0123133d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000018
++					0x00000088
++					0x00000000
++					0x00000010
++					0x00000006
++					0x00000006
++					0x00000009
++					0x00000002
++					0x0000000d
++					0x00000006
++					0x00000006
++					0x00000002
++					0x00000002
++					0x00000000
++					0x00000003
++					0x00000003
++					0x00000006
++					0x00000002
++					0x00000000
++					0x00000001
++					0x00000009
++					0x00030000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000010
++					0x00000012
++					0x00000014
++					0x00000fd6
++					0x00000000
++					0x000003f5
++					0x00000002
++					0x0000000b
++					0x00000001
++					0x00000000
++					0x00000085
++					0x00000012
++					0x00000090
++					0x00000200
++					0x00000004
++					0x00000005
++					0x00000004
++					0x00000010
++					0x00000000
++					0x00000006
++					0x00000006
++					0x00001017
++					0x00000000
++					0x00000000
++					0x00000000
++					0x104ab098
++					0xe01200b1
++					0x00008000
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00054000
++					0x00054000
++					0x00000000
++					0x00054000
++					0x00054000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x0000000c
++					0x0000000c
++					0x0000000c
++					0x0000000c
++					0x0000000c
++					0x0000000c
++					0x0000000c
++					0x0000000c
++					0x100002a0
++					0x00000000
++					0x00111111
++					0x0123133d
++					0x00000000
++					0x00000000
++					0x77ffc085
++					0x00000505
++					0x81f1f108
++					0x07070004
++					0x00000000
++					0x016eeeee
++					0x51451420
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0606003f
++					0x00000000
++					0x00000000
++					0x00020000
++					0x00000100
++					0x0139000e
++					0x0139000e
++					0x00000000
++					0x00000003
++					0x000042a0
++					0x80002062
++					0x0000000a
++				>;
++			};
++
++			timing-600000000 {
++				clock-frequency = <600000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0000089d>;
++				nvidia,emc-cfg-dig-dll = <0xe00e0069>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200010>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000b61>;
++				nvidia,emc-mrs-wait-cnt = <0x0127000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0121113d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x0000001b
++					0x0000009b
++					0x00000000
++					0x00000013
++					0x00000007
++					0x00000007
++					0x0000000b
++					0x00000003
++					0x00000010
++					0x00000007
++					0x00000007
++					0x00000002
++					0x00000002
++					0x00000000
++					0x00000005
++					0x00000005
++					0x0000000a
++					0x00000002
++					0x00000000
++					0x00000003
++					0x0000000b
++					0x00070000
++					0x00000003
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000002
++					0x00000012
++					0x00000016
++					0x00000018
++					0x00001208
++					0x00000000
++					0x00000482
++					0x00000002
++					0x0000000d
++					0x00000001
++					0x00000000
++					0x00000097
++					0x00000015
++					0x000000a3
++					0x00000200
++					0x00000004
++					0x00000005
++					0x00000004
++					0x00000013
++					0x00000000
++					0x00000006
++					0x00000006
++					0x00001248
++					0x00000000
++					0x00000000
++					0x00000000
++					0x104ab098
++					0xe00e00b1
++					0x00008000
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00048000
++					0x00048000
++					0x00000000
++					0x00048000
++					0x00048000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x0000000d
++					0x0000000d
++					0x0000000d
++					0x0000000d
++					0x0000000d
++					0x0000000d
++					0x0000000d
++					0x0000000d
++					0x100002a0
++					0x00000000
++					0x00111111
++					0x0121113d
++					0x00000000
++					0x00000000
++					0x77ffc085
++					0x00000505
++					0x81f1f108
++					0x07070004
++					0x00000000
++					0x016eeeee
++					0x51451420
++					0x00514514
++					0x00514514
++					0x51451400
++					0x0606003f
++					0x00000000
++					0x00000000
++					0x00020000
++					0x00000100
++					0x0127000e
++					0x0127000e
++					0x00000000
++					0x00000003
++					0x000040a0
++					0x800024aa
++					0x0000000e
++				>;
++			};
++
++			timing-792000000 {
++				clock-frequency = <792000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0000089d>;
++				nvidia,emc-cfg-dig-dll = <0xe0070069>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200018>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000d71>;
++				nvidia,emc-mrs-wait-cnt = <0x00f7000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040000>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0120113d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000024
++					0x000000cd
++					0x00000000
++					0x00000019
++					0x0000000a
++					0x00000008
++					0x0000000d
++					0x00000004
++					0x00000013
++					0x0000000a
++					0x0000000a
++					0x00000004
++					0x00000002
++					0x00000000
++					0x00000006
++					0x00000006
++					0x0000000b
++					0x00000002
++					0x00000000
++					0x00000002
++					0x0000000d
++					0x00080000
++					0x00000004
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000001
++					0x00000014
++					0x00000018
++					0x0000001a
++					0x000017e2
++					0x00000000
++					0x000005f8
++					0x00000003
++					0x00000011
++					0x00000001
++					0x00000000
++					0x000000c7
++					0x00000018
++					0x000000d7
++					0x00000200
++					0x00000005
++					0x00000006
++					0x00000005
++					0x00000019
++					0x00000000
++					0x00000008
++					0x00000008
++					0x00001822
++					0x00000000
++					0x00000000
++					0x00000000
++					0x104ab098
++					0xe00700b1
++					0x00008000
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x007fc008
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00034000
++					0x00034000
++					0x00000000
++					0x00034000
++					0x00034000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x00000005
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x0000000a
++					0x100002a0
++					0x00000000
++					0x00111111
++					0x0120113d
++					0x00000000
++					0x00000000
++					0x77ffc085
++					0x00000000
++					0x81f1f108
++					0x07070004
++					0x00000000
++					0x016eeeee
++					0x61861820
++					0x00514514
++					0x00514514
++					0x61861800
++					0x0606003f
++					0x00000000
++					0x00000000
++					0x00020000
++					0x00000100
++					0x00f7000e
++					0x00f7000e
++					0x00000000
++					0x00000004
++					0x00004080
++					0x80003012
++					0x0000000f
++				>;
++			};
++
++			timing-924000000 {
++				clock-frequency = <924000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430303>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0000089d>;
++				nvidia,emc-cfg-dig-dll = <0xe0040069>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200020>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000f15>;
++				nvidia,emc-mrs-wait-cnt = <0x00cd000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040000>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0120113d>;
++				nvidia,emc-zcal-cnt-long = <0x0000004c>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x0000002b
++					0x000000f0
++					0x00000000
++					0x0000001e
++					0x0000000b
++					0x00000009
++					0x0000000f
++					0x00000005
++					0x00000016
++					0x0000000b
++					0x0000000b
++					0x00000004
++					0x00000002
++					0x00000000
++					0x00000007
++					0x00000007
++					0x0000000d
++					0x00000002
++					0x00000000
++					0x00000002
++					0x0000000f
++					0x000a0000
++					0x00000004
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000001
++					0x00000016
++					0x0000001a
++					0x0000001c
++					0x00001be7
++					0x00000000
++					0x000006f9
++					0x00000004
++					0x00000015
++					0x00000001
++					0x00000000
++					0x000000e7
++					0x0000001b
++					0x000000fb
++					0x00000200
++					0x00000006
++					0x00000007
++					0x00000006
++					0x0000001e
++					0x00000000
++					0x0000000a
++					0x0000000a
++					0x00001c28
++					0x00000000
++					0x00000000
++					0x00000000
++					0x104ab898
++					0xe00400b1
++					0x00008000
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x007f800a
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x0002c000
++					0x0002c000
++					0x00000000
++					0x0002c000
++					0x0002c000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000000
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000004
++					0x00000008
++					0x00000008
++					0x00000008
++					0x00000008
++					0x00000008
++					0x00000008
++					0x00000008
++					0x00000008
++					0x100002a0
++					0x00000000
++					0x00111111
++					0x0120113d
++					0x00000000
++					0x00000000
++					0x77ffc085
++					0x00000000
++					0x81f1f108
++					0x07070004
++					0x00000000
++					0x016eeeee
++					0x5d75d720
++					0x00514514
++					0x00514514
++					0x5d75d700
++					0x0606003f
++					0x00000000
++					0x00000000
++					0x00020000
++					0x00000128
++					0x00cd000e
++					0x00cd000e
++					0x00000000
++					0x00000004
++					0x00004080
++					0x800037ea
++					0x00000011
++				>;
++			};
++
++		};
++	};
++
++	memory-controller@0,70019000 {
++		emc-timings-3 {
++			nvidia,ram-code = <3>;
++
++			timing-12750000 {
++				clock-frequency = <12750000>;
++
++				nvidia,emem-configuration = <
++					0x40040001
++					0x8000000a
++					0x00000001
++					0x00000001
++					0x00000002
++					0x00000000
++					0x00000002
++					0x00000001
++					0x00000003
++					0x00000008
++					0x00000003
++					0x00000002
++					0x00000003
++					0x00000006
++					0x06030203
++					0x000a0502
++					0x77e30303
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-20400000 {
++				clock-frequency = <20400000>;
++
++				nvidia,emem-configuration = <
++					0x40020001
++					0x80000012
++					0x00000001
++					0x00000001
++					0x00000002
++					0x00000000
++					0x00000002
++					0x00000001
++					0x00000003
++					0x00000008
++					0x00000003
++					0x00000002
++					0x00000003
++					0x00000006
++					0x06030203
++					0x000a0502
++					0x76230303
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-40800000 {
++				clock-frequency = <40800000>;
++
++				nvidia,emem-configuration = <
++					0xa0000001
++					0x80000017
++					0x00000001
++					0x00000001
++					0x00000002
++					0x00000000
++					0x00000002
++					0x00000001
++					0x00000003
++					0x00000008
++					0x00000003
++					0x00000002
++					0x00000003
++					0x00000006
++					0x06030203
++					0x000a0502
++					0x74a30303
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-68000000 {
++				clock-frequency = <68000000>;
++
++				nvidia,emem-configuration = <
++					0x00000001
++					0x8000001e
++					0x00000001
++					0x00000001
++					0x00000002
++					0x00000000
++					0x00000002
++					0x00000001
++					0x00000003
++					0x00000008
++					0x00000003
++					0x00000002
++					0x00000003
++					0x00000006
++					0x06030203
++					0x000a0502
++					0x74230403
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emem-configuration = <
++					0x08000001
++					0x80000026
++					0x00000001
++					0x00000001
++					0x00000003
++					0x00000000
++					0x00000002
++					0x00000001
++					0x00000003
++					0x00000008
++					0x00000003
++					0x00000002
++					0x00000003
++					0x00000006
++					0x06030203
++					0x000a0503
++					0x73c30504
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emem-configuration = <
++					0x01000003
++					0x80000040
++					0x00000001
++					0x00000001
++					0x00000004
++					0x00000002
++					0x00000003
++					0x00000001
++					0x00000003
++					0x00000008
++					0x00000003
++					0x00000002
++					0x00000004
++					0x00000006
++					0x06040203
++					0x000a0504
++					0x73840a05
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-300000000 {
++				clock-frequency = <300000000>;
++
++				nvidia,emem-configuration = <
++					0x08000004
++					0x80000040
++					0x00000001
++					0x00000002
++					0x00000007
++					0x00000004
++					0x00000004
++					0x00000001
++					0x00000002
++					0x00000007
++					0x00000002
++					0x00000002
++					0x00000004
++					0x00000006
++					0x06040202
++					0x000b0607
++					0x77450e08
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-396000000 {
++				clock-frequency = <396000000>;
++
++				nvidia,emem-configuration = <
++					0x0f000005
++					0x80000040
++					0x00000001
++					0x00000002
++					0x00000009
++					0x00000005
++					0x00000006
++					0x00000001
++					0x00000002
++					0x00000008
++					0x00000002
++					0x00000002
++					0x00000004
++					0x00000006
++					0x06040202
++					0x000d0709
++					0x7586120a
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-528000000 {
++				clock-frequency = <528000000>;
++
++				nvidia,emem-configuration = <
++					0x0f000007
++					0x80000040
++					0x00000002
++					0x00000003
++					0x0000000c
++					0x00000007
++					0x00000008
++					0x00000001
++					0x00000002
++					0x00000009
++					0x00000002
++					0x00000002
++					0x00000005
++					0x00000006
++					0x06050202
++					0x0010090c
++					0x7428180d
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-600000000 {
++				clock-frequency = <600000000>;
++
++				nvidia,emem-configuration = <
++					0x00000009
++					0x80000040
++					0x00000003
++					0x00000004
++					0x0000000e
++					0x00000009
++					0x0000000a
++					0x00000001
++					0x00000003
++					0x0000000b
++					0x00000002
++					0x00000002
++					0x00000005
++					0x00000007
++					0x07050202
++					0x00130b0e
++					0x73a91b0f
++					0x70000f03
++					0x001f0000
++				>;
++			};
++
++			timing-792000000 {
++				clock-frequency = <792000000>;
++
++				nvidia,emem-configuration = <
++					0x0e00000b
++					0x80000040
++					0x00000004
++					0x00000005
++					0x00000013
++					0x0000000c
++					0x0000000d
++					0x00000002
++					0x00000003
++					0x0000000c
++					0x00000002
++					0x00000002
++					0x00000006
++					0x00000008
++					0x08060202
++					0x00170e13
++					0x736c2414
++					0x70000f02
++					0x001f0000
++				>;
++			};
++
++			timing-924000000 {
++				clock-frequency = <924000000>;
++
++				nvidia,emem-configuration = <
++					0x0e00000d
++					0x80000040
++					0x00000005
++					0x00000006
++					0x00000016
++					0x0000000e
++					0x0000000f
++					0x00000002
++					0x00000004
++					0x0000000e
++					0x00000002
++					0x00000002
++					0x00000006
++					0x00000009
++					0x09060202
++					0x001a1016
++					0x734e2a17
++					0x70000f02
++					0x001f0000
 +				>;
 +			};
 +		};
 +	};
 +};
+diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+index dbfaba0..36a4004 100644
+--- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
++++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+@@ -3,6 +3,8 @@
+ #include <dt-bindings/input/input.h>
+ #include "tegra124.dtsi"
+ 
++#include "tegra124-jetson-tk1-emc.dtsi"
++
+ / {
+ 	model = "NVIDIA Tegra124 Jetson TK1";
+ 	compatible = "nvidia,jetson-tk1", "nvidia,tegra124";
 -- 
 1.9.3
