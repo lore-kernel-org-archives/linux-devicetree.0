@@ -1,34 +1,52 @@
-From: Grazvydas Ignotas <notasas@gmail.com>
-Subject: Re: [PATCH 0/4] add openpandora device support
-Date: Thu, 12 Feb 2015 16:35:14 +0200
-Message-ID: <CANOLnOPZ5j-r9APq6WrW65iOyNQPT4M_uRgN+xp9Mrp4zgVn7w@mail.gmail.com>
-References: <1423746226-700-1-git-send-email-marek@goldelico.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2] ARM: dts: zynq: Add OCM node
+Date: Thu, 12 Feb 2015 06:58:36 -0800
+Message-ID: <5c1602f83c594a72aac78c245f1830fa@BL2FFO11FD052.protection.gbl>
+References: <6df19b400e314ef8228be475bb8ba83765683016.1423737765.git.michal.simek@xilinx.com>
+ <20150212105443.GB1522@leverpostej>
+ <c64e7b4bf78649049cea3dceecea453c@BN1AFFO11FD014.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423746226-700-1-git-send-email-marek@goldelico.com>
+Content-Disposition: inline
+In-Reply-To: <c64e7b4bf78649049cea3dceecea453c@BN1AFFO11FD014.protection.gbl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, galak@codeaurora.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "monstr@monstr.eu" <monstr@monstr.eu>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robherring2@gmail.com>, Josh Cartwright <josh.cartwright@ni.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 12, 2015 at 3:03 PM, Marek Belisko <marek@goldelico.com> wr=
-ote:
-> This series of patches adds initial device tree support for the
-> OpenPandora. The most important parts are working (display, keyboard,
-> touch, charging, fuel gauge, musb port, sd/mmc ports, leds, buttons).
-> Not yet supported are: usb host port, nubs, wifi, bluetooth, audio.
->
-> First patch add common dtsi file which is then used in 600mhz and 1gh=
-z
-> variants of openpandora which support is added in patches 2 and 3.
+On Thu, 2015-02-12 at 12:01PM +0100, Michal Simek wrote:
+> On 02/12/2015 11:54 AM, Mark Rutland wrote:
+> > On Thu, Feb 12, 2015 at 10:42:47AM +0000, Michal Simek wrote:
+> >> Add OCM node for all zynq boards. OCM location
+> >> can changed but for all current boards this
+> >> is the location where OCM is.`
+> >>
+> >> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> >> ---
+> >>
+> >> Changes in v2:
+> >> - Move node to board file suggested by Mark
+> >>
+> >> This patch is done based on discussion here.
+> >> https://lkml.org/lkml/2014/12/1/396
+> >>
+> >> Mark: I expect you won't like amba bus reference or
+> >> am I wrong?
+> > 
+> > I'm fine with dropping things onto a bus in this way. If we're happy to
+> > do it for other nodes I don't see why busses should be special.
+> 
+> Wonderful. I will give people some time to comment this style.
 
-Nice, thanks for those patches.
-There is also a OMAP3530 variant with 256MB of RAM (otherwise
-identical to 512MB OMAP3530) that the legacy board file supports, over
-1000 such units were made. Could we also have support for that? I
-guess that will make 4 pandora related .dts files...
+Given that the location is discoverable, wouldn't it make sense to let
+'reg' point to the ctrl/cfg registers in the SLCR and let the driver
+handle the whereabouts of the OCM location? (but I guess this is going
+in circles now, such a proposal was on the table at some point, IIRC).
+But I'd prefer:
+	memory-controller@0xfffc0000 { /* the address here would of course not match all configurations */
+		interrupts = ...;
+		syscon = &slcr;
+	};
 
-
-Gra=C5=BEvydas
+	Soren
