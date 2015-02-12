@@ -1,315 +1,117 @@
-From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending command'
-Date: Thu, 12 Feb 2015 19:29:24 +0530
-Message-ID: <CAGOxZ53wJfANx=UyOh8tmD0LQgsF=FuZPrxBoCqOwR=C9MkN0w@mail.gmail.com>
-References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
- <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com>
- <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
- <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com>
- <54DAC534.4020708@rock-chips.com> <54DB43E2.70203@samsung.com>
- <CAGOxZ50CLM1Job+X45-CDF_23r9vsx0=jtMCu5cSoFk-+xzF=g@mail.gmail.com>
- <54DC0FBB.7010308@rock-chips.com> <54DC8A1B.7070402@samsung.com>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
+ if no bestdiv is normally found
+Date: Thu, 12 Feb 2015 22:06:27 +0800
+Message-ID: <20150212140625.GA32487@victor>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
+ <20150212093356.GR12209@pengutronix.de> <20150212103944.GA1290@victor>
+ <20150212122405.GW12209@pengutronix.de>
+ <20150212125646.GT8656@n2100.arm.linux.org.uk>
+ <20150212134131.GX12209@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54DC8A1B.7070402-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?5aea5pm65oOF?= <yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.orgl
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150212134131.GX12209@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, dri-devel@lists.freedesktop.org, stefan.wahren@i2se.com, devicetree@vger.kernel.org, kernel@pengutronix.de, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, a.hajda@samsung.com, andy.yan@rock-chips.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 12, 2015 at 4:40 PM, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 02/12/2015 03:28 AM, addy ke wrote:
->> Hi Andrzej and Alim
->>
->> On 2015/2/12 07:20, Alim Akhtar wrote:
->>> Hi Andrzej,
->>>
->>> On Wed, Feb 11, 2015 at 5:28 PM, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>> Hi Alim,
->>>>
->>>> On 02/11/2015 03:57 AM, Addy wrote:
->>>>> On 2015/02/10 23:22, Alim Akhtar wrote:
->>>>>> Hi Addy,
->>>>>>
->>>>>> On Mon, Feb 9, 2015 at 12:55 PM, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->>>>>>> Because of some uncertain factors, such as worse card or worse hardware,
->>>>>>> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
->>>>>>> will be in busy state. This should not happend when mmc controller
->>>>>>> send command to update card clocks. If this happends, mci_send_cmd will
->>>>>>> be failed and we will get 'Timeout sending command', and then system will
->>>>>>> be blocked. To avoid this, we need reset mmc controller.
->>>>>>>
->>>>>>> Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>>>> ---
->>>>>>>   drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
->>>>>>>   1 file changed, 28 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
->>>>>>> index 4d2e3c2..b0b57e3 100644
->>>>>>> --- a/drivers/mmc/host/dw_mmc.c
->>>>>>> +++ b/drivers/mmc/host/dw_mmc.c
->>>>>>> @@ -100,6 +100,7 @@ struct idmac_desc {
->>>>>>>   };
->>>>>>>   #endif /* CONFIG_MMC_DW_IDMAC */
->>>>>>>
->>>>>>> +static int dw_mci_card_busy(struct mmc_host *mmc);
->>>>>>>   static bool dw_mci_reset(struct dw_mci *host);
->>>>>>>   static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
->>>>>>>
->>>>>>> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
->>>>>>>                  cmd, arg, cmd_status);
->>>>>>>   }
->>>>>>>
->>>>>>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
->>>>>>> +{
->>>>>>> +       struct dw_mci *host = slot->host;
->>>>>>> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
->>>>>>> +
->>>>>> Why 500 msec?
->>>>> This timeout value is the same as  mci_send_cmd:
->>>>> static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
->>>>> {
->>>>>          struct dw_mci *host = slot->host;
->>>>>          unsigned long timeout = jiffies + msecs_to_jiffies(500);
->>>>>          ....
->>>>> }
->>>>>
->>>>> I have not clear that which is suitable.
->>>>> Do you have any suggestion on it?
->>>>>>> +       do {
->>>>>>> +               if (!dw_mci_card_busy(slot->mmc))
->>>>>>> +                       return;
->>>>>>> +               cpu_relax();
->>>>>>> +       } while (time_before(jiffies, timeout));
->>>>>>> +
->>>>>>> +       dev_err(host->dev, "Data busy (status %#x)\n",
->>>>>>> +               mci_readl(slot->host, STATUS));
->>>>>>> +
->>>>>>> +       /*
->>>>>>> +        * Data busy, this should not happend when mmc controller send command
->>>>>>> +        * to update card clocks in non-volt-switch state. If it happends, we
->>>>>>> +        * should reset controller to avoid getting "Timeout sending command".
->>>>>>> +        */
->>>>>>> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
->>>>>>> +
->>>>>> Why you need to reset all blocks? may be CTRL_RESET is good enough here.
->>>>> I have tested on rk3288, if only reset ctroller, data busy bit will not
->>>>> be cleaned,and we will still get
->>>>>
->>>>> "Timeout sending command".
->>>>>
->>>>>>> +       /* Fail to reset controller or still data busy, WARN_ON! */
->>>>>>> +       WARN_ON(dw_mci_card_busy(slot->mmc));
->>>>>>> +}
->>>>>>> +
->>>>>>>   static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
->>>>>>>   {
->>>>>>>          struct dw_mci *host = slot->host;
->>>>>>> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
->>>>>>>          /* We must continue to set bit 28 in CMD until the change is complete */
->>>>>>>          if (host->state == STATE_WAITING_CMD11_DONE)
->>>>>>>                  sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
->>>>>>> +       else
->>>>>>> +               dw_mci_wait_busy(slot);
->>>>>>>
->>>>>> hmm...I would suggest you to call dw_mci_wait_busy() from inside
->>>>>> mci_send_cmd(), seems like dw_mmc hangs while sending update clock cmd
->>>>>> in multiple cases.see [1]
->>>>>>
->>>>>> [1]: http://permalink.gmane.org/gmane.linux.kernel.mmc/31140
->>>>> I think this patch is more reasonable.
->>>>> So I will resend patches based on this patch.
->>>>> thank you!
->>>> I have tested your patches instead [1] above and they do not solve my issue:
->>>> Board: odroid-xu3/exynos5422/dw_mmc_250a.
->>>> MMC card: absent, broken-cd quirk
->>>> SD card: present
->>>>
->>> I doubt $SUBJECT patch in current form can resolve you issue. I have
->>> already given comments on $subject patch.
->>>
->>> Can you try out below patch (I have not tested yet) on top of $SUBJECT patch?
->>>
->>> =======
->>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
->>> index b0b57e3..ea87844 100644
->>> --- a/drivers/mmc/host/dw_mmc.c
->>> +++ b/drivers/mmc/host/dw_mmc.c
->>> @@ -101,6 +101,7 @@ struct idmac_desc {
->>>  #endif /* CONFIG_MMC_DW_IDMAC */
->>>
->>>  static int dw_mci_card_busy(struct mmc_host *mmc);
->>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot);
->>>  static bool dw_mci_reset(struct dw_mci *host);
->>>  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
->>>
->>> @@ -874,16 +875,22 @@ static void mci_send_cmd(struct dw_mci_slot
->>> *slot, u32 cmd, u32 arg)
->>>         struct dw_mci *host = slot->host;
->>>         unsigned long timeout = jiffies + msecs_to_jiffies(500);
->>>         unsigned int cmd_status = 0;
->>> +       int re_try = 3; /* just random for now, 1 re-try should be ok */
->>>
->>> -       mci_writel(host, CMDARG, arg);
->>> -       wmb();
->>> -       mci_writel(host, CMD, SDMMC_CMD_START | cmd);
->>> +       while(re_try--) {
->>> +               mci_writel(host, CMDARG, arg);
->>> +               wmb();
->>> +               mci_writel(host, CMD, SDMMC_CMD_START | cmd);
->>>
->>> -       while (time_before(jiffies, timeout)) {
->>> -               cmd_status = mci_readl(host, CMD);
->>> -               if (!(cmd_status & SDMMC_CMD_START))
->>> -                       return;
->>> +               while (time_before(jiffies, timeout)) {
->>> +                       cmd_status = mci_readl(host, CMD);
->>> +                       if (!(cmd_status & SDMMC_CMD_START))
->>> +                               return;
->>> +               }
->>> +
->>> +               dw_mci_wait_busy(slot);
->>>         }
->>> +
->>>         dev_err(&slot->mmc->class_dev,
->>>                 "Timeout sending command (cmd %#x arg %#x status %#x)\n",
->>>                 cmd, arg, cmd_status);
->>> @@ -925,8 +932,6 @@ static void dw_mci_setup_bus(struct dw_mci_slot
->>> *slot, bool force_clkinit)
->>>         /* We must continue to set bit 28 in CMD until the change is complete */
->>>         if (host->state == STATE_WAITING_CMD11_DONE)
->>>                 sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
->>> -       else
->>> -               dw_mci_wait_busy(slot);
->>>
->>>         if (!clock) {
->>>                 mci_writel(host, CLKENA, 0);
->>>
->>> ===== end ======
->> The reason why we are fail to send command is that we got data busy in
->> none-switch-volt state(host->state != STATE_WAITING_CMD11_DONE).
->> So:
->> if(host->state != STATE_WAITING_CMD11_DONE), we must wait until data not busy,
->> And if (host->state == STATE_WAITING_CMD11_DONE) we should not wait.
->>
->>>> System hangs during boot after few minutes kernel spits:
->>>> [  242.188098] INFO: task kworker/u16:1:50 blocked for more than 120
->>>> seconds.
->>>> [  242.193524]       Not tainted
->>>> 3.19.0-next-20150210-00002-gf96831b-dirty #3834
->>>> [  242.200622] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
->>>> disables this message.
->>>> [  242.208422] kworker/u16:1   D c04766ac     0    50      2 0x00000000
->>>> [  242.214756] Workqueue: kmmcd mmc_rescan
->>>> [  242.218553] [<c04766ac>] (__schedule) from [<c0476a58>]
->>>> (schedule+0x34/0x98)
->>>> [  242.225591] [<c0476a58>] (schedule) from [<c047a4dc>]
->>>> (schedule_timeout+0x110/0x164)
->>>> [  242.233302] [<c047a4dc>] (schedule_timeout) from [<c04774f0>]
->>>> (wait_for_common+0xb8/0x14c)
->>>> [  242.241539] [<c04774f0>] (wait_for_common) from [<c0362138>]
->>>> (mmc_wait_for_req+0x68/0x17c)
->>>> [  242.249861] [<c0362138>] (mmc_wait_for_req) from [<c03622cc>]
->>>> (mmc_wait_for_cmd+0x80/0xa0)
->>>> [  242.258002] [<c03622cc>] (mmc_wait_for_cmd) from [<c0367e50>]
->>>> (mmc_go_idle+0x78/0xf8)
->>>> [  242.265796] [<c0367e50>] (mmc_go_idle) from [<c0363e2c>]
->>>> (mmc_rescan+0x280/0x314)
->>>> [  242.273253] [<c0363e2c>] (mmc_rescan) from [<c0034764>]
->>>> (process_one_work+0x120/0x324)
->>>> [  242.281135] [<c0034764>] (process_one_work) from [<c00349cc>]
->>>> (worker_thread+0x30/0x42c)
->>>> [  242.289194] [<c00349cc>] (worker_thread) from [<c003926c>]
->>>> (kthread+0xd8/0xf4)
->>>> [  242.296389] [<c003926c>] (kthread) from [<c000e7c0>]
->>>> (ret_from_fork+0x14/0x34)
->>>>
->>>> Just for record, Exynos4412/dw_mmc_240a with the same configuration
->>>> (no MMC card, broken-cd) works OK without patches.
->> This is because mmc start command,but mmc_request_done() is't called.
->> I have ever found this issue.
->> I found that host does't get DTO interrupt when mmc send command to read data.
->> I have sent a patch for it, see:
->> https://patchwork.kernel.org/patch/5426531/
->>
->> Would you please merge it and test again?
->
-> I have merged it and added quirk to exynos, but it does not help. There
-> is still timeout:
->
-I don't think this DTO issue. I think we need a way to reproduce this,
-at least on Exyons5422/5800.
-what type of sd card is being used? Are you trying UHS-I mode by any chance?
+On Thu, Feb 12, 2015 at 02:41:31PM +0100, Sascha Hauer wrote:
+> On Thu, Feb 12, 2015 at 12:56:46PM +0000, Russell King - ARM Linux wrote:
+> > On Thu, Feb 12, 2015 at 01:24:05PM +0100, Sascha Hauer wrote:
+> > > On Thu, Feb 12, 2015 at 06:39:45PM +0800, Liu Ying wrote:
+> > > > On Thu, Feb 12, 2015 at 10:33:56AM +0100, Sascha Hauer wrote:
+> > > > > On Thu, Feb 12, 2015 at 02:01:24PM +0800, Liu Ying wrote:
+> > > > > > If no best divider is normally found, we will try to use the maximum divider.
+> > > > > > We should not set the parent clock rate to be 1Hz by force for being rounded.
+> > > > > > Instead, we should take the maximum divider as a base and calculate a correct
+> > > > > > parent clock rate for being rounded.
+> > > > > 
+> > > > > Please add an explanation why you think the current code is wrong and
+> > > > > what this actually fixes, maybe an example?
+> > > > 
+> > > > The MIPI DSI panel's pixel clock rate is 26.4MHz and it's derived from PLL5 on
+> > > > the MX6DL SabreSD board.
+> > > > 
+> > > > These are the clock tree summaries with or without the patch applied:
+> > > > 1) With the patch applied:
+> > > > pll5_bypass_src                       1            1    24000000          0 0
+> > > >    pll5                               1            1   844800048          0 0
+> > > >       pll5_bypass                     1            1   844800048          0 0
+> > > >          pll5_video                   1            1   844800048          0 0
+> > > >             pll5_post_div             1            1   211200012          0 0
+> > > >                pll5_video_div           1            1   211200012        0 0
+> > > >                   ipu1_di0_pre_sel           1            1   211200012   0 0
+> > > >                      ipu1_di0_pre           1            1    26400002    0 0
+> > > >                         ipu1_di0_sel           1            1    26400002 0 0
+> > > >                            ipu1_di0           1            1    26400002  0 0
+> > > > 
+> > > > 2) Without the patch applied:
+> > > > pll5_bypass_src                       1            1    24000000          0 0
+> > > >    pll5                               1            1   648000000          0 0
+> > > >       pll5_bypass                     1            1   648000000          0 0
+> > > >          pll5_video                   1            1   648000000          0 0
+> > > >             pll5_post_div             1            1   162000000          0 0
+> > > >                pll5_video_div           1            1    40500000        0 0
+> > > >                   ipu1_di0_pre_sel           1            1    40500000   0 0
+> > > >                      ipu1_di0_pre           1            1    20250000    0 0
+> > > >                         ipu1_di0_sel           1            1    20250000 0 0
+> > > >                            ipu1_di0           1            1    20250000  0 0
+> > > 
+> > > This seems to be broken since:
+> > > 
+> > > | commit b11d282dbea27db1788893115dfca8a7856bf205
+> > > | Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > > | Date:   Thu Feb 13 12:03:59 2014 +0200
+> > > | 
+> > > |     clk: divider: fix rate calculation for fractional rates
+> > > 
+> > > This patch fixed a case when clk_set_rate(clk_round_rate(rate)) resulted
+> > > in a lower frequency than clk_round_rate(rate) returned.
+> > > 
+> > > Since then the MULT_ROUND_UP in clk_divider_bestdiv() is inconsistent to
+> > > the rest of the divider. Maybe this should be a simple rate * i now, but
+> > > I'm unsure what side effects this has.
+> > > 
+> > > I think your patch only fixes the behaviour in your case by accident,
+> > > it's not a correct fix for this issue.
+> > 
+> > Well, it's defined that:
+> > 
+> > 	new_rate = clk_round_rate(clk, rate);
+> > 
+> > returns the rate which you would get if you did:
+> > 
+> > 	clk_set_rate(clk, rate);
+> > 	new_rate = clk_get_rate(clk);
+> > 
+> > The reasoning here is that clk_round_rate() gives you a way to query what
+> > rate you would get if you were to ask for the rate to be set, without
+> > effecting a change in the hardware.
+> > 
+> > The idea that you should call clk_round_rate() first before clk_set_rate()
+> > and pass the returned rounded rate into clk_set_rate() is really idiotic
+> > given that.  Please don't do it, and please remove code which does it, and
+> > in review comment on it.  Thanks.
+> 
+> Tomis patch is based on the assumption that clk_set_rate(clk_round_rate(rate))
+> is equal to clk_round_rate(rate). So when this assumption is wrong then
+> it should simply be reverted.
+> So Liu, could you test if reverting Tomis patch fixes your problem?
 
-> [  242.188178] INFO: task kworker/u16:1:50 blocked for more than 120
-> seconds.
-> [  242.193605]       Not tainted
-> 3.19.0-next-20150212-00003-g7850750-dirty #3841
-> [  242.200703] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-> disables this message.
-> [  242.208592] kworker/u16:1   D c04755f4     0    50      2 0x00000000
-> [  242.214840] Workqueue: kmmcd mmc_rescan
-> [  242.218635] [<c04755f4>] (__schedule) from [<c04759a0>]
-> (schedule+0x34/0x98)
-> [  242.225671] [<c04759a0>] (schedule) from [<c0479424>]
-> (schedule_timeout+0x110/0x164)
-> [  242.233383] [<c0479424>] (schedule_timeout) from [<c0476438>]
-> (wait_for_common+0xb8/0x14c)
-> [  242.241619] [<c0476438>] (wait_for_common) from [<c0361600>]
-> (mmc_wait_for_req+0xb0/0x13c)
-> [  242.249848] [<c0361600>] (mmc_wait_for_req) from [<c036170c>]
-> (mmc_wait_for_cmd+0x80/0xa0)
-> [  242.258086] [<c036170c>] (mmc_wait_for_cmd) from [<c03676e0>]
-> (mmc_go_idle+0x78/0xf8)
-> [  242.265876] [<c03676e0>] (mmc_go_idle) from [<c0363700>]
-> (mmc_rescan+0x25c/0x2e4)
-> [  242.273333] [<c0363700>] (mmc_rescan) from [<c0034764>]
-> (process_one_work+0x120/0x324)
-> [  242.281216] [<c0034764>] (process_one_work) from [<c00349cc>]
-> (worker_thread+0x30/0x42c)
-> [  242.289275] [<c00349cc>] (worker_thread) from [<c003926c>]
-> (kthread+0xd8/0xf4)
-> [  242.296469] [<c003926c>] (kthread) from [<c000e7c0>]
-> (ret_from_fork+0x14/0x34)
->
->
-> Regards
-> Andrzej
->
->>>>
->>>> Regards
->>>> Andrzej
->>>>
->>>>>>>          if (!clock) {
->>>>>>>                  mci_writel(host, CLKENA, 0);
->>>>>>> --
->>>>>>> 1.8.3.2
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> _______________________________________________
->>>>>>> linux-arm-kernel mailing list
->>>>>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>>>>>
->>>>>
->>>>> --
->>>>> To unsubscribe from this list: send the line "unsubscribe linux-doc" in
->>>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>>>
->>>
->>>
->>
->
+Yes, I'll test tomorrow when I have access to my board.
 
-
-
--- 
 Regards,
-Alim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Liu Ying
+
+> 
+> Sascha
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
