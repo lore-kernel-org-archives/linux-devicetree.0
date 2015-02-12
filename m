@@ -1,41 +1,122 @@
-From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 11/14] ARM: dts: Add ARM System timer as clockevent in armv7m
-Date: Thu, 12 Feb 2015 18:46:01 +0100
-Message-ID: <1423763164-5606-12-git-send-email-mcoquelin.stm32__11467.1086812907$1423764261$gmane$org@gmail.com>
-References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423763164-5606-1-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/2] ARM: perf: Add support for Scorpion PMUs
+Date: Thu, 12 Feb 2015 10:53:17 -0800
+Message-ID: <54DCF69D.5090707@codeaurora.org>
+References: <1423616724-20849-1-git-send-email-sboyd@codeaurora.org> <1423616724-20849-3-git-send-email-sboyd@codeaurora.org> <20150212124949.GE1522@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150212124949.GE1522@leverpostej>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/armv7-m.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+On 02/12/15 04:49, Mark Rutland wrote:
+> Hi,
+>
+> I haven't given this a thorough review, but I spotted a couple of items
+> below.
+>
+> On Wed, Feb 11, 2015 at 01:05:24AM +0000, Stephen Boyd wrote:
+>> Scorpion supports a set of local performance monitor event
+>> selection registers (LPM) sitting behind a cp15 based interface
+>> that extend the architected PMU events to include Scorpion CPU
+>> and Venum VFP specific events. To use these events the user is
+>> expected to program the lpm register with the event code shifted
+>> into the group they care about and then point the PMNx event at
+>> that region+group combo by writing a LPMn_GROUPx event. Add
+>> support for this hardware.
+>>
+>> Note: the raw event number is a pure software construct that
+>> allows us to map the multi-dimensional number space of regions,
+>> groups, and event codes into a flat event number space suitable
+>> for use by the perf framework.
+>>
+>> This is based on code originally written by Ashwin Chaugule and
+>> Neil Leeder [1] massed to become similar to the Krait PMU support
+>> code.
+>>
+>> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/tree/arch/arm/kernel/perf_event_msm.c?h=msm-3.4
+>>
+>> Cc: Neil Leeder <nleeder@codeaurora.org>
+>> Cc: Ashwin Chaugule <ashwinc@codeaurora.org>
+>> Cc: <devicetree@vger.kernel.org>
+>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/pmu.txt |   2 +
+>>  arch/arm/kernel/perf_event_cpu.c              |   2 +
+>>  arch/arm/kernel/perf_event_v7.c               | 395 ++++++++++++++++++++++++++
+>>  3 files changed, 399 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+>> index 75ef91d08f3b..6e54a9d88b7a 100644
+>> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+>> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+>> @@ -18,6 +18,8 @@ Required properties:
+>>         "arm,arm11mpcore-pmu"
+>>         "arm,arm1176-pmu"
+>>         "arm,arm1136-pmu"
+>> +       "qcom,scorpion-pmu"
+>> +       "qcom,scorpion-mp-pmu"
+> Is the PMU any different in the MP and !MP variants? The code doesn't
+> seem to handle the two any differently and will pass either to userspace
+> as "armv7_scorpion".
+>
+> If there is some difference that we don't handle right now, that's fine,
+> it just looks a little odd.
 
-diff --git a/arch/arm/boot/dts/armv7-m.dtsi b/arch/arm/boot/dts/armv7-m.dtsi
-index 5a660d0..5b279d3 100644
---- a/arch/arm/boot/dts/armv7-m.dtsi
-+++ b/arch/arm/boot/dts/armv7-m.dtsi
-@@ -8,6 +8,13 @@
- 		reg = <0xe000e100 0xc00>;
- 	};
- 
-+	systick: system-timer {
-+		compatible = "arm,armv7m-systick";
-+		reg = <0xe000e010 0x10>;
-+
-+		status = "disabled";
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+It seems that on MP there are two event encodings on MP that aren't
+there on !MP and vice versa[1]. So I made two compatibles to reflect
+that. I'll make two names that go to userspace to clarify this.
+
+>> +static const unsigned scorpion_perf_cache_map[PERF_COUNT_HW_CACHE_MAX]
+>> +                                           [PERF_COUNT_HW_CACHE_OP_MAX]
+>> +                                           [PERF_COUNT_HW_CACHE_RESULT_MAX] = {
+>> +       PERF_CACHE_MAP_ALL_UNSUPPORTED,
+>> +       /*
+>> +        * The performance counters don't differentiate between read and write
+>> +        * accesses/misses so this isn't strictly correct, but it's the best we
+>> +        * can do. Writes and reads get combined.
+>> +        */
+>> +       [C(L1D)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_L1_DCACHE_ACCESS,
+>> +       [C(L1D)][C(OP_READ)][C(RESULT_MISS)] = ARMV7_PERFCTR_L1_DCACHE_REFILL,
+>> +       [C(L1D)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_L1_DCACHE_ACCESS,
+>> +       [C(L1D)][C(OP_WRITE)][C(RESULT_MISS)] = ARMV7_PERFCTR_L1_DCACHE_REFILL,
+>> +       [C(L1I)][C(OP_READ)][C(RESULT_ACCESS)] = SCORPION_ICACHE_ACCESS,
+>> +       [C(L1I)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_ICACHE_MISS,
+>> +       [C(L1I)][C(OP_WRITE)][C(RESULT_ACCESS)] = SCORPION_ICACHE_ACCESS,
+>> +       [C(L1I)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_ICACHE_MISS,
+> These last two entries go against the policy we set in commit
+> 40c390c768f89849: "ARM: perf: don't pretend to support counting of L1I
+> writes", so I think they should be dropped.
+
+Fair enough. Thanks for the pointer.
+
+>
+>> +       /*
+>> +        * Only ITLB misses and DTLB refills are supported.  If users want the
+>> +        * DTLB refills misses a raw counter must be used.
+>> +        */
+>> +       [C(DTLB)][C(OP_READ)][C(RESULT_ACCESS)] = SCORPION_DTLB_ACCESS,
+>> +       [C(DTLB)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_DTLB_MISS,
+>> +       [C(DTLB)][C(OP_WRITE)][C(RESULT_ACCESS)] = SCORPION_DTLB_ACCESS,
+>> +       [C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_DTLB_MISS,
+>> +       [C(ITLB)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_ITLB_MISS,
+>> +       [C(ITLB)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_ITLB_MISS,
+>> +       [C(BPU)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
+>> +       [C(BPU)][C(OP_READ)][C(RESULT_MISS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
+>> +       [C(BPU)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
+>> +       [C(BPU)][C(OP_WRITE)][C(RESULT_MISS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
+>> +};
+> Not ARMV7_PERFCTR_PC_BRANCH_MIS_PRED for the RESULT_MISS cases as with
+> all other ARMv7 instances (Krait included)?
+
+I was just copying the stuff from downstream. I think it's a bug that
+nobody noticed because the same problem was there on Krait and I fixed
+it before sending upstream. Thanks for catching it.
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
