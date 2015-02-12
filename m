@@ -1,184 +1,439 @@
-From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 10/14] ARM: Add STM32 family machine
-Date: Thu, 12 Feb 2015 18:46:00 +0100
-Message-ID: <1423763164-5606-11-git-send-email-mcoquelin.stm32__8741.19169679961$1423770093$gmane$org@gmail.com>
-References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423763164-5606-1-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
+From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH 1/4] ARM: dts: omap3-pandora: add common device tree
+Date: Thu, 12 Feb 2015 21:09:56 +0100
+Message-ID: <C3181BA1-56A2-4185-BA08-05E71993BEB0@goldelico.com>
+References: <1423746226-700-1-git-send-email-marek@goldelico.com> <1423746226-700-2-git-send-email-marek@goldelico.com> <CANOLnOMEJXSJcujdeG+6XXkU99yv7cSw115b+-NX+CPVVO_FVw@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANOLnOMEJXSJcujdeG+6XXkU99yv7cSw115b+-NX+CPVVO_FVw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grazvydas Ignotas <notasas@gmail.com>, Marek Belisko <marek@goldelico.com>
+Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-STMicrolectronics's STM32 series is a family of Cortex-M
-microcontrollers. It is used in various applications, and
-proposes a wide range of peripherals.
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/arm/stm32/overview.txt           | 32 ++++++++++++++++++++++++++
- Documentation/arm/stm32/stm32f429-overview.txt | 22 ++++++++++++++++++
- arch/arm/Kconfig                               | 22 ++++++++++++++++++
- arch/arm/Makefile                              |  1 +
- arch/arm/mach-stm32/Makefile                   |  1 +
- arch/arm/mach-stm32/Makefile.boot              |  0
- arch/arm/mach-stm32/board-dt.c                 | 19 +++++++++++++++
- 7 files changed, 97 insertions(+)
- create mode 100644 Documentation/arm/stm32/overview.txt
- create mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
- create mode 100644 arch/arm/mach-stm32/Makefile
- create mode 100644 arch/arm/mach-stm32/Makefile.boot
- create mode 100644 arch/arm/mach-stm32/board-dt.c
+Am 12.02.2015 um 18:47 schrieb Grazvydas Ignotas <notasas@gmail.com>:
 
-diff --git a/Documentation/arm/stm32/overview.txt b/Documentation/arm/stm32/overview.txt
-new file mode 100644
-index 0000000..d8bf6bb
---- /dev/null
-+++ b/Documentation/arm/stm32/overview.txt
-@@ -0,0 +1,32 @@
-+			STM32 ARM Linux Overview
-+			==========================
-+
-+Introduction
-+------------
-+
-+  The STMicroelectronics family of Cortex-M based MCUs are supported by the
-+  'STM32' platform of ARM Linux. Currently only the STM32F429 is supported.
-+
-+
-+Configuration
-+-------------
-+
-+  A generic configuration is provided for STM32 family, and can be used as the
-+  default by
-+	make stm32_defconfig
-+
-+Layout
-+------
-+
-+  All the files for multiple machine families are located in the platform code
-+  contained in arch/arm/mach-stm32
-+
-+  There is a generic board board-dt.c in the mach folder which support
-+  Flattened Device Tree, which means, It works with any compatible board with
-+  Device Trees.
-+
-+
-+Document Author
-+---------------
-+
-+  Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-diff --git a/Documentation/arm/stm32/stm32f429-overview.txt b/Documentation/arm/stm32/stm32f429-overview.txt
-new file mode 100644
-index 0000000..5206822
---- /dev/null
-+++ b/Documentation/arm/stm32/stm32f429-overview.txt
-@@ -0,0 +1,22 @@
-+			STM32F429 Overview
-+			==================
-+
-+  Introduction
-+  ------------
-+	The STM32F429 is a Cortex-M4 MCU aimed at various applications.
-+	It features:
-+	- ARM Cortex-M4 up to 180MHz with FPU
-+	- 2MB internal Flash Memory
-+	- External memory support through FMC controller (PSRAM, SDRAM, NOR, NAND)
-+	- I2C, SPI, SAI, CAN, USB OTG, Ethernet controllers
-+	- LCD controller & Camera interface
-+	- Cryptographic processor
-+
-+  Resources
-+  ---------
-+	Datasheet and reference manual are publicly available on ST website:
-+	- http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1577/LN1806?ecmp=stm32f429-439_pron_pr-ces2014_nov2013
-+
-+  Document Author
-+  ---------------
-+	Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 97d07ed..fd803a4 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -774,6 +774,28 @@ config ARCH_OMAP1
- 	help
- 	  Support for older TI OMAP1 (omap7xx, omap15xx or omap16xx)
- 
-+config ARCH_STM32
-+	bool "STMicrolectronics STM32"
-+	depends on !MMU
-+	select ARCH_REQUIRE_GPIOLIB
-+	select ARM_NVIC
-+	select AUTO_ZRELADDR
-+	select ARCH_HAS_RESET_CONTROLLER
-+	select RESET_CONTROLLER
-+	select PINCTRL
-+	select PINCTRL_STM32
-+	select CLKSRC_OF
-+	select ARM_SYSTEM_TIMER
-+	select COMMON_CLK
-+	select CPU_V7M
-+	select GENERIC_CLOCKEVENTS
-+	select NO_DMA
-+	select NO_IOPORT_MAP
-+	select SPARSE_IRQ
-+	select USE_OF
-+	help
-+	  Support for STMicorelectronics STM32 processors.
-+
- endchoice
- 
- menu "Multiple platform selection"
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index c1785ee..7d00659 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -196,6 +196,7 @@ machine-$(CONFIG_ARCH_SHMOBILE) 	+= shmobile
- machine-$(CONFIG_ARCH_SIRF)		+= prima2
- machine-$(CONFIG_ARCH_SOCFPGA)		+= socfpga
- machine-$(CONFIG_ARCH_STI)		+= sti
-+machine-$(CONFIG_ARCH_STM32)		+= stm32
- machine-$(CONFIG_ARCH_SUNXI)		+= sunxi
- machine-$(CONFIG_ARCH_TEGRA)		+= tegra
- machine-$(CONFIG_ARCH_U300)		+= u300
-diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
-new file mode 100644
-index 0000000..bd0b7b5
---- /dev/null
-+++ b/arch/arm/mach-stm32/Makefile
-@@ -0,0 +1 @@
-+obj-y += board-dt.o
-diff --git a/arch/arm/mach-stm32/Makefile.boot b/arch/arm/mach-stm32/Makefile.boot
-new file mode 100644
-index 0000000..e69de29
-diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-dt.c
-new file mode 100644
-index 0000000..f2ad772
---- /dev/null
-+++ b/arch/arm/mach-stm32/board-dt.c
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright (C) Maxime Coquelin 2015
-+ * Author:  Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+#include <linux/kernel.h>
-+#include <asm/v7m.h>
-+#include <asm/mach/arch.h>
-+
-+static const char *const stm32_compat[] __initconst = {
-+	"st,stm32f429",
-+	NULL
-+};
-+
-+DT_MACHINE_START(STM32DT, "STM32 (Device Tree Support)")
-+	.dt_compat = stm32_compat,
-+	.restart = armv7m_restart,
-+MACHINE_END
--- 
-1.9.1
+> On Thu, Feb 12, 2015 at 3:03 PM, Marek Belisko <marek@goldelico.com> =
+wrote:
+>> From: "H. Nikolaus Schaller" <hns@goldelico.com>
+>>=20
+>> This device tree allows to boot, supports the panel,
+>> framebuffer, touch screen, as well as some more peripherals.
+>> Since there is a OMAP3530 based 600 MHz variant and a DM3730 based
+>> 1 GHz variant we must include this common device tree code
+>> in one of two CPU specific device trees.
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Signed-off-by: Marek Belisko <marek@goldelico.com>
+>> ---
+>> arch/arm/boot/dts/omap3-pandora-common.dtsi | 641 ++++++++++++++++++=
+++++++++++
+>> 1 file changed, 641 insertions(+)
+>> create mode 100644 arch/arm/boot/dts/omap3-pandora-common.dtsi
+>>=20
+>> diff --git a/arch/arm/boot/dts/omap3-pandora-common.dtsi b/arch/arm/=
+boot/dts/omap3-pandora-common.dtsi
+>> new file mode 100644
+>> index 0000000..0a2a878
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+>> @@ -0,0 +1,641 @@
+>=20
+> ...
+>=20
+>> +
+>> +       gpio-leds {
+>> +
+>> +               compatible =3D "gpio-leds";
+>> +
+>> +               pinctrl-names =3D "default";
+>> +               pinctrl-0 =3D <&led_pins>;
+>> +
+>> +               led@1 {
+>> +                       label =3D "pandora::sd1";
+>> +                       gpios =3D <&gpio5 0 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_128 */
+>> +                       linux,default-trigger =3D "mmc0";
+>> +                       default-state =3D "off";
+>> +               };
+>> +
+>> +               led@2 {
+>> +                       label =3D "pandora::sd2";
+>> +                       gpios =3D <&gpio5 1 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_129 */
+>> +                       linux,default-trigger =3D "mmc1";
+>> +                       default-state =3D "off";
+>> +               };
+>> +
+>> +               led@3 {
+>> +                       label =3D "pandora::bluetooth";
+>> +                       gpios =3D <&gpio5 30 GPIO_ACTIVE_HIGH>;   /*=
+ GPIO_158 */
+>> +                       linux,default-trigger =3D "heartbeat";
+>=20
+> I=92d prefer this had no trigger, but no strong feelings here.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok. Well, this is more or less our testing setup - so that we did see s=
+omething before
+we could fix the display setup. I think practice will show what is bett=
+er, and then
+it can be patched. We are at the beginning of Pandora DT work=85
+
+>=20
+>> +                       default-state =3D "off";
+>> +               };
+>> +
+>> +               led@4 {
+>> +                       label =3D "pandora::wifi";
+>> +                       gpios =3D <&gpio5 31 GPIO_ACTIVE_HIGH>;   /*=
+ GPIO_159 */
+>> +                       linux,default-trigger =3D "mmc2";
+>> +                       default-state =3D "off";
+>> +               };
+>> +       };
+>> +
+>> +       gpio-keys {
+>> +               compatible =3D "gpio-keys";
+>> +
+>> +               pinctrl-names =3D "default";
+>> +               pinctrl-0 =3D <&button_pins>;
+>> +
+>> +               up-button {
+>> +                       label =3D "up";
+>> +                       linux,code =3D <KEY_UP>;
+>> +                       gpios =3D <&gpio4 14 GPIO_ACTIVE_HIGH>;   /*=
+ GPIO_110 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               down-button {
+>> +                       label =3D "down";
+>> +                       linux,code =3D <KEY_DOWN>;
+>> +                       gpios =3D <&gpio4 7 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_103 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               left-button {
+>> +                       label =3D "left";
+>> +                       linux,code =3D <KEY_LEFT>;
+>> +                       gpios =3D <&gpio4 0 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_96 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               right-button {
+>> +                       label =3D "right";
+>> +                       linux,code =3D <KEY_RIGHT>;
+>> +                       gpios =3D <&gpio4 2 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_98 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               pageup-button {
+>> +                       label =3D "game 1";
+>> +                       linux,code =3D <KEY_PAGEUP>;
+>> +                       gpios =3D <&gpio4 13 GPIO_ACTIVE_HIGH>;   /*=
+ GPIO_109 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               pagedown-button {
+>> +                       label =3D "game 3";
+>> +                       linux,code =3D <KEY_PAGEDOWN>;
+>> +                       gpios =3D <&gpio4 10 GPIO_ACTIVE_HIGH>;   /*=
+ GPIO_106 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               home-button {
+>> +                       label =3D "game 4";
+>> +                       linux,code =3D <KEY_HOME>;
+>> +                       gpios =3D <&gpio4 5 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_101 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               end-button {
+>> +                       label =3D "game 2";
+>> +                       linux,code =3D <KEY_END>;
+>> +                       gpios =3D <&gpio4 15 GPIO_ACTIVE_HIGH>;   /*=
+ GPIO_111 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               right-shift {
+>> +                       label =3D "l";
+>> +                       linux,code =3D <KEY_RIGHTSHIFT>;
+>> +                       gpios =3D <&gpio4 6 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_102 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               kp-plus {
+>> +                       label =3D "l2";
+>> +                       linux,code =3D <KEY_KPPLUS>;
+>> +                       gpios =3D <&gpio4 1 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_97 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               right-ctrl {
+>> +                       label =3D "r";
+>> +                       linux,code =3D <KEY_RIGHTCTRL>;
+>> +                       gpios =3D <&gpio4 9 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_105 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               kp-minus {
+>> +                       label =3D "r2";
+>> +                       linux,code =3D <KEY_KPMINUS>;
+>> +                       gpios =3D <&gpio4 11 GPIO_ACTIVE_HIGH>;   /*=
+ GPIO_107 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               left-ctrl {
+>> +                       label =3D "ctrl";
+>> +                       linux,code =3D <KEY_LEFTCTRL>;
+>> +                       gpios =3D <&gpio4 8 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_104 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               menu {
+>> +                       label =3D "menu";
+>> +                       linux,code =3D <KEY_MENU>;
+>> +                       gpios =3D <&gpio4 3 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_99 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               hold {
+>> +                       label =3D "hold";
+>> +                       linux,code =3D <KEY_COFFEE>;
+>> +                       gpios =3D <&gpio6 16 GPIO_ACTIVE_HIGH>;   /*=
+ GPIO_176 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               left-alt {
+>> +                       label =3D "alt";
+>> +                       linux,code =3D <KEY_LEFTALT>;
+>> +                       gpios =3D <&gpio4 4 GPIO_ACTIVE_HIGH>;    /*=
+ GPIO_100 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>> +
+>> +               lid {
+>> +                       label =3D "lid";
+>> +                       linux,code =3D <0x00>;    /* SW_LID lid shut=
+ */
+>> +                       linux,input-type =3D <0x05>;    /* EV_SW */
+>> +                       gpios =3D <&gpio4 12 GPIO_ACTIVE_HIGH>;   /*=
+ GPIO_108 */
+>> +                       gpio-key,wakeup;
+>> +               };
+>=20
+> This is not right, all button GPIOs are active low except GPIO_100,
+> which is active high.
+
+Well, I didn=92t notice a difference - but here we should do it right.
+
+> GPIO_108 should not have the wakeup flag set
+> because lid switch power is normally cut during low power modes.
+
+Ah, you are right. It is VSIM powered.
+
+>=20
+> ...
+>=20
+>> +
+>> +       dss_dpi_pins: pinmux_dss_dpi_pins {
+>> +               pinctrl-single,pins =3D <
+>> +                       OMAP3_CORE1_IOPAD(0x20d4, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_pclk.dss_pclk */
+>> +                       OMAP3_CORE1_IOPAD(0x20d6, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_hsync.dss_hsync */
+>> +                       OMAP3_CORE1_IOPAD(0x20d8, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_vsync.dss_vsync */
+>> +                       OMAP3_CORE1_IOPAD(0x20da, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_acbias.dss_acbias */
+>> +                       OMAP3_CORE1_IOPAD(0x20dc, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data0.dss_data0 */
+>> +                       OMAP3_CORE1_IOPAD(0x20de, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data1.dss_data1 */
+>> +                       OMAP3_CORE1_IOPAD(0x20e0, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data2.dss_data2 */
+>> +                       OMAP3_CORE1_IOPAD(0x20e2, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data3.dss_data3 */
+>> +                       OMAP3_CORE1_IOPAD(0x20e4, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data4.dss_data4 */
+>> +                       OMAP3_CORE1_IOPAD(0x20e6, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data5.dss_data5 */
+>> +                       OMAP3_CORE1_IOPAD(0x20e8, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data6.dss_data6 */
+>> +                       OMAP3_CORE1_IOPAD(0x20ea, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data7.dss_data7 */
+>> +                       OMAP3_CORE1_IOPAD(0x20ec, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data8.dss_data8 */
+>> +                       OMAP3_CORE1_IOPAD(0x20ee, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data9.dss_data9 */
+>> +                       OMAP3_CORE1_IOPAD(0x20f0, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data10.dss_data10 */
+>> +                       OMAP3_CORE1_IOPAD(0x20f2, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data11.dss_data11 */
+>> +                       OMAP3_CORE1_IOPAD(0x20f4, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data12.dss_data12 */
+>> +                       OMAP3_CORE1_IOPAD(0x20f6, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data13.dss_data13 */
+>> +                       OMAP3_CORE1_IOPAD(0x20f8, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data14.dss_data14 */
+>> +                       OMAP3_CORE1_IOPAD(0x20fa, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data15.dss_data15 */
+>> +                       OMAP3_CORE1_IOPAD(0x20fc, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data16.dss_data16 */
+>> +                       OMAP3_CORE1_IOPAD(0x20fe, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data17.dss_data17 */
+>> +                       OMAP3_CORE1_IOPAD(0x2100, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data18.dss_data18 */
+>> +                       OMAP3_CORE1_IOPAD(0x2102, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data19.dss_data19 */
+>> +                       OMAP3_CORE1_IOPAD(0x2104, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data20.dss_data20 */
+>> +                       OMAP3_CORE1_IOPAD(0x2106, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data21.dss_data21 */
+>> +                       OMAP3_CORE1_IOPAD(0x2108, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data22.dss_data22 */
+>> +                       OMAP3_CORE1_IOPAD(0x210a, PIN_OUTPUT | MUX_M=
+ODE0)       /* dss_data23.dss_data23 */
+>> +                       OMAP3_CORE1_IOPAD(0x218e, PIN_OUTPUT | MUX_M=
+ODE4)       /* GPIO_157 =3D lcd reset */
+>> +               >;
+>> +       };
+>> +
+>> +       uart3_pins: pinmux_uart3_pins {
+>> +               pinctrl-single,pins =3D <
+>> +                       OMAP3_CORE1_IOPAD(0x219e, PIN_INPUT | PIN_OF=
+=46_WAKEUPENABLE | MUX_MODE0) /* uart3_rx_irrx.uart3_rx_irrx */
+>> +                       OMAP3_CORE1_IOPAD(0x21a0, PIN_OUTPUT | MUX_M=
+ODE0) /* uart3_tx_irtx.uart3_tx_irtx */
+>> +               >;
+>> +       };
+>> +
+>> +       led_pins: pinmux_leds_pins {
+>> +               pinctrl-single,pins =3D <
+>> +                       OMAP3_CORE1_IOPAD(0x2154, PIN_OUTPUT | MUX_M=
+ODE4)       /* GPIO_128 */
+>> +                       OMAP3_CORE1_IOPAD(0x2156, PIN_OUTPUT | MUX_M=
+ODE4)       /* GPIO_129 */
+>> +                       OMAP3_CORE1_IOPAD(0x2190, PIN_OUTPUT | MUX_M=
+ODE4)       /* GPIO_158 */
+>> +                       OMAP3_CORE1_IOPAD(0x2192, PIN_OUTPUT | MUX_M=
+ODE4)       /* GPIO_159 */
+>> +               >;
+>> +       };
+>> +
+>> +       button_pins: pinmux_button_pins {
+>> +               pinctrl-single,pins =3D <
+>> +                       OMAP3_CORE1_IOPAD(0x2110, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_96 */
+>> +                       OMAP3_CORE1_IOPAD(0x2112, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_97 */
+>> +                       OMAP3_CORE1_IOPAD(0x2114, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_98 */
+>> +                       OMAP3_CORE1_IOPAD(0x2116, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_99 */
+>> +                       OMAP3_CORE1_IOPAD(0x2118, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_100 */
+>> +                       OMAP3_CORE1_IOPAD(0x211a, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_101 */
+>> +                       OMAP3_CORE1_IOPAD(0x211c, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_102 */
+>> +                       OMAP3_CORE1_IOPAD(0x211e, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_103 */
+>> +                       OMAP3_CORE1_IOPAD(0x2120, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_104 */
+>> +                       OMAP3_CORE1_IOPAD(0x2122, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_105 */
+>> +                       OMAP3_CORE1_IOPAD(0x2124, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_106 */
+>> +                       OMAP3_CORE1_IOPAD(0x2126, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_107 */
+>> +                       OMAP3_CORE1_IOPAD(0x2128, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_108 */
+>> +                       OMAP3_CORE1_IOPAD(0x212a, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_109 */
+>> +                       OMAP3_CORE1_IOPAD(0x212c, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_110 */
+>> +                       OMAP3_CORE1_IOPAD(0x212e, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_111 */
+>> +                       OMAP3_CORE1_IOPAD(0x21d2, PIN_INPUT_PULLUP |=
+ MUX_MODE4)        /* GPIO_176 */
+>=20
+> We should not set pullups for all the buttons, they all have external=
+ pullups.
+
+Well, if they are active low, unless a button is pressed it does not ma=
+tter. If a button is pressed we have 100k and ~30k in parallel
+giving approx. 80uA. Anyways, we should take your recommendation.
+
+>=20
+>> +               >;
+>> +       };
+>> +
+>> +       penirq_pins: pinmux_penirq_pins {
+>> +               pinctrl-single,pins =3D <
+>> +                       /* here we could enable to wakeup the cpu fr=
+om suspend by a pen touch */
+>> +                       OMAP3_CORE1_IOPAD(0x210c, PIN_INPUT_PULLUP |=
+ MUX_MODE4) /* GPIO_94 */
+>=20
+> Again, we already have external pullup, no need to waste power.
+
+Ok.
+
+>=20
+> ...
+>=20
+>> +
+>> +&mmc1 {
+>> +       pinctrl-names =3D "default";
+>> +       pinctrl-0 =3D <&mmc1_pins>;
+>> +       vmmc-supply =3D <&vmmc1>;
+>> +       bus-width =3D <4>;
+>> +       cd-gpios =3D <&twl_gpio 0 GPIO_ACTIVE_LOW>;
+>> +       wp-gpios =3D <&gpio4 30 GPIO_ACTIVE_LOW>; /* GPIO_126 */
+>=20
+> Large number of pandoras have defective write potect pins. Kernel use=
+d
+> to not support write protect at all, so we noticed it too late. If
+> it's possible to omit this it would be better do so, perhaps with a
+> comment, or I can send a patch later=85
+
+I think in this case you should send a patch later because you best can=
+ describe
+the problem in the commit message.
+
+>=20
+>> +};
+>> +
+>> +&mmc2 {
+>> +       pinctrl-names =3D "default";
+>> +       pinctrl-0 =3D <&mmc2_pins>;
+>> +       vmmc-supply =3D <&vmmc2>;
+>> +       bus-width =3D <4>;
+>> +       cd-gpios =3D <&twl_gpio 1 GPIO_ACTIVE_HIGH>;
+>> +       wp-gpios =3D <&gpio4 31 GPIO_ACTIVE_LOW>; /* GPIO_127 */
+>=20
+> same here
+>=20
+>=20
+> Gra=9Evydas
+
+BR,
+Nikolaus
