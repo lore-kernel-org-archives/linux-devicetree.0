@@ -1,40 +1,38 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v4 1/5] ARM: dts: pxa: add pwri2c to pxa device-tree
-Date: Thu, 12 Feb 2015 18:22:34 +0100
-Message-ID: <1423761758-29159-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v4 3/5] ARM: dts: pxa: add pxa27x-udc to pxa27x
+Date: Thu, 12 Feb 2015 18:22:36 +0100
+Message-ID: <1423761758-29159-3-git-send-email-robert.jarzmik@free.fr>
+References: <1423761758-29159-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423761758-29159-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-pxa27x variant has 2 I2C busses on the SoC :
- - the casual I2C
- - the power I2C, normally driving power regulators, and capable of
- receiving orders on core frequency modifications
+Each pxa27x has an embedded usb udc controller. Add it in the pxa27x
+device-tree description.
 
-Add the missing pwri2c to pxa27x description.
-
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 ---
-Since v2: as Dmitry pointed out, no pwri2c on pxa25x, only pxa27x
+Since v3: changed pxa2xx-clks into clks
 ---
  arch/arm/boot/dts/pxa27x.dtsi | 7 +++++++
  1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 80fc5d7..98b560e 100644
+index 9696718..7cc36ef 100644
 --- a/arch/arm/boot/dts/pxa27x.dtsi
 +++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -35,6 +35,13 @@
- 			reg = <0x40c00010 0x10>;
- 			#pwm-cells = <1>;
+@@ -53,6 +53,13 @@
+ 			status = "disabled";
  		};
-+
-+		pwri2c: i2c@40f000180 {
-+			compatible = "mrvl,pxa-i2c";
-+			reg = <0x40f00180 0x24>;
-+			interrupts = <6>;
+ 
++		pxa27x_udc: udc@40600000 {
++			compatible = "marvell,pxa270-udc";
++			reg = <0x40600000 0x10000>;
++			interrupts = <11>;
++			clocks = <&clks CLK_USB>;
 +			status = "disabled";
 +		};
  	};
@@ -42,3 +40,8 @@ index 80fc5d7..98b560e 100644
  	clocks {
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
