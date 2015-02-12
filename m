@@ -1,103 +1,35 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
- if no bestdiv is normally found
-Date: Thu, 12 Feb 2015 12:56:46 +0000
-Message-ID: <20150212125646.GT8656@n2100.arm.linux.org.uk>
-References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
- <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
- <20150212093356.GR12209@pengutronix.de>
- <20150212103944.GA1290@victor>
- <20150212122405.GW12209@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20150212122405.GW12209@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH 0/4] add openpandora device support
+Date: Thu, 12 Feb 2015 14:03:42 +0100
+Message-ID: <1423746226-700-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, bcousson@baylibre.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, marek@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMDE6MjQ6MDVQTSArMDEwMCwgU2FzY2hhIEhhdWVyIHdy
-b3RlOgo+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDA2OjM5OjQ1UE0gKzA4MDAsIExpdSBZaW5n
-IHdyb3RlOgo+ID4gT24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTA6MzM6NTZBTSArMDEwMCwgU2Fz
-Y2hhIEhhdWVyIHdyb3RlOgo+ID4gPiBPbiBUaHUsIEZlYiAxMiwgMjAxNSBhdCAwMjowMToyNFBN
-ICswODAwLCBMaXUgWWluZyB3cm90ZToKPiA+ID4gPiBJZiBubyBiZXN0IGRpdmlkZXIgaXMgbm9y
-bWFsbHkgZm91bmQsIHdlIHdpbGwgdHJ5IHRvIHVzZSB0aGUgbWF4aW11bSBkaXZpZGVyLgo+ID4g
-PiA+IFdlIHNob3VsZCBub3Qgc2V0IHRoZSBwYXJlbnQgY2xvY2sgcmF0ZSB0byBiZSAxSHogYnkg
-Zm9yY2UgZm9yIGJlaW5nIHJvdW5kZWQuCj4gPiA+ID4gSW5zdGVhZCwgd2Ugc2hvdWxkIHRha2Ug
-dGhlIG1heGltdW0gZGl2aWRlciBhcyBhIGJhc2UgYW5kIGNhbGN1bGF0ZSBhIGNvcnJlY3QKPiA+
-ID4gPiBwYXJlbnQgY2xvY2sgcmF0ZSBmb3IgYmVpbmcgcm91bmRlZC4KPiA+ID4gCj4gPiA+IFBs
-ZWFzZSBhZGQgYW4gZXhwbGFuYXRpb24gd2h5IHlvdSB0aGluayB0aGUgY3VycmVudCBjb2RlIGlz
-IHdyb25nIGFuZAo+ID4gPiB3aGF0IHRoaXMgYWN0dWFsbHkgZml4ZXMsIG1heWJlIGFuIGV4YW1w
-bGU/Cj4gPiAKPiA+IFRoZSBNSVBJIERTSSBwYW5lbCdzIHBpeGVsIGNsb2NrIHJhdGUgaXMgMjYu
-NE1IeiBhbmQgaXQncyBkZXJpdmVkIGZyb20gUExMNSBvbgo+ID4gdGhlIE1YNkRMIFNhYnJlU0Qg
-Ym9hcmQuCj4gPiAKPiA+IFRoZXNlIGFyZSB0aGUgY2xvY2sgdHJlZSBzdW1tYXJpZXMgd2l0aCBv
-ciB3aXRob3V0IHRoZSBwYXRjaCBhcHBsaWVkOgo+ID4gMSkgV2l0aCB0aGUgcGF0Y2ggYXBwbGll
-ZDoKPiA+IHBsbDVfYnlwYXNzX3NyYyAgICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAg
-IDEgICAgMjQwMDAwMDAgICAgICAgICAgMCAwCj4gPiAgICBwbGw1ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIDEgICAgICAgICAgICAxICAgODQ0ODAwMDQ4ICAgICAgICAgIDAgMAo+ID4g
-ICAgICAgcGxsNV9ieXBhc3MgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDg0
-NDgwMDA0OCAgICAgICAgICAwIDAKPiA+ICAgICAgICAgIHBsbDVfdmlkZW8gICAgICAgICAgICAg
-ICAgICAgMSAgICAgICAgICAgIDEgICA4NDQ4MDAwNDggICAgICAgICAgMCAwCj4gPiAgICAgICAg
-ICAgICBwbGw1X3Bvc3RfZGl2ICAgICAgICAgICAgIDEgICAgICAgICAgICAxICAgMjExMjAwMDEy
-ICAgICAgICAgIDAgMAo+ID4gICAgICAgICAgICAgICAgcGxsNV92aWRlb19kaXYgICAgICAgICAg
-IDEgICAgICAgICAgICAxICAgMjExMjAwMDEyICAgICAgICAwIDAKPiA+ICAgICAgICAgICAgICAg
-ICAgIGlwdTFfZGkwX3ByZV9zZWwgICAgICAgICAgIDEgICAgICAgICAgICAxICAgMjExMjAwMDEy
-ICAgMCAwCj4gPiAgICAgICAgICAgICAgICAgICAgICBpcHUxX2RpMF9wcmUgICAgICAgICAgIDEg
-ICAgICAgICAgICAxICAgIDI2NDAwMDAyICAgIDAgMAo+ID4gICAgICAgICAgICAgICAgICAgICAg
-ICAgaXB1MV9kaTBfc2VsICAgICAgICAgICAxICAgICAgICAgICAgMSAgICAyNjQwMDAwMiAwIDAK
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwICAgICAgICAgICAxICAgICAg
-ICAgICAgMSAgICAyNjQwMDAwMiAgMCAwCj4gPiAKPiA+IDIpIFdpdGhvdXQgdGhlIHBhdGNoIGFw
-cGxpZWQ6Cj4gPiBwbGw1X2J5cGFzc19zcmMgICAgICAgICAgICAgICAgICAgICAgIDEgICAgICAg
-ICAgICAxICAgIDI0MDAwMDAwICAgICAgICAgIDAgMAo+ID4gICAgcGxsNSAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDY0ODAwMDAwMCAgICAgICAgICAwIDAK
-PiA+ICAgICAgIHBsbDVfYnlwYXNzICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEg
-ICA2NDgwMDAwMDAgICAgICAgICAgMCAwCj4gPiAgICAgICAgICBwbGw1X3ZpZGVvICAgICAgICAg
-ICAgICAgICAgIDEgICAgICAgICAgICAxICAgNjQ4MDAwMDAwICAgICAgICAgIDAgMAo+ID4gICAg
-ICAgICAgICAgcGxsNV9wb3N0X2RpdiAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDE2MjAw
-MDAwMCAgICAgICAgICAwIDAKPiA+ICAgICAgICAgICAgICAgIHBsbDVfdmlkZW9fZGl2ICAgICAg
-ICAgICAxICAgICAgICAgICAgMSAgICA0MDUwMDAwMCAgICAgICAgMCAwCj4gPiAgICAgICAgICAg
-ICAgICAgICBpcHUxX2RpMF9wcmVfc2VsICAgICAgICAgICAxICAgICAgICAgICAgMSAgICA0MDUw
-MDAwMCAgIDAgMAo+ID4gICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTBfcHJlICAgICAgICAg
-ICAxICAgICAgICAgICAgMSAgICAyMDI1MDAwMCAgICAwIDAKPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgIGlwdTFfZGkwX3NlbCAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjAyNTAwMDAg
-MCAwCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICBpcHUxX2RpMCAgICAgICAgICAgMSAg
-ICAgICAgICAgIDEgICAgMjAyNTAwMDAgIDAgMAo+IAo+IFRoaXMgc2VlbXMgdG8gYmUgYnJva2Vu
-IHNpbmNlOgo+IAo+IHwgY29tbWl0IGIxMWQyODJkYmVhMjdkYjE3ODg4OTMxMTVkZmNhOGE3ODU2
-YmYyMDUKPiB8IEF1dGhvcjogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4K
-PiB8IERhdGU6ICAgVGh1IEZlYiAxMyAxMjowMzo1OSAyMDE0ICswMjAwCj4gfCAKPiB8ICAgICBj
-bGs6IGRpdmlkZXI6IGZpeCByYXRlIGNhbGN1bGF0aW9uIGZvciBmcmFjdGlvbmFsIHJhdGVzCj4g
-Cj4gVGhpcyBwYXRjaCBmaXhlZCBhIGNhc2Ugd2hlbiBjbGtfc2V0X3JhdGUoY2xrX3JvdW5kX3Jh
-dGUocmF0ZSkpIHJlc3VsdGVkCj4gaW4gYSBsb3dlciBmcmVxdWVuY3kgdGhhbiBjbGtfcm91bmRf
-cmF0ZShyYXRlKSByZXR1cm5lZC4KPiAKPiBTaW5jZSB0aGVuIHRoZSBNVUxUX1JPVU5EX1VQIGlu
-IGNsa19kaXZpZGVyX2Jlc3RkaXYoKSBpcyBpbmNvbnNpc3RlbnQgdG8KPiB0aGUgcmVzdCBvZiB0
-aGUgZGl2aWRlci4gTWF5YmUgdGhpcyBzaG91bGQgYmUgYSBzaW1wbGUgcmF0ZSAqIGkgbm93LCBi
-dXQKPiBJJ20gdW5zdXJlIHdoYXQgc2lkZSBlZmZlY3RzIHRoaXMgaGFzLgo+IAo+IEkgdGhpbmsg
-eW91ciBwYXRjaCBvbmx5IGZpeGVzIHRoZSBiZWhhdmlvdXIgaW4geW91ciBjYXNlIGJ5IGFjY2lk
-ZW50LAo+IGl0J3Mgbm90IGEgY29ycmVjdCBmaXggZm9yIHRoaXMgaXNzdWUuCgpXZWxsLCBpdCdz
-IGRlZmluZWQgdGhhdDoKCgluZXdfcmF0ZSA9IGNsa19yb3VuZF9yYXRlKGNsaywgcmF0ZSk7Cgpy
-ZXR1cm5zIHRoZSByYXRlIHdoaWNoIHlvdSB3b3VsZCBnZXQgaWYgeW91IGRpZDoKCgljbGtfc2V0
-X3JhdGUoY2xrLCByYXRlKTsKCW5ld19yYXRlID0gY2xrX2dldF9yYXRlKGNsayk7CgpUaGUgcmVh
-c29uaW5nIGhlcmUgaXMgdGhhdCBjbGtfcm91bmRfcmF0ZSgpIGdpdmVzIHlvdSBhIHdheSB0byBx
-dWVyeSB3aGF0CnJhdGUgeW91IHdvdWxkIGdldCBpZiB5b3Ugd2VyZSB0byBhc2sgZm9yIHRoZSBy
-YXRlIHRvIGJlIHNldCwgd2l0aG91dAplZmZlY3RpbmcgYSBjaGFuZ2UgaW4gdGhlIGhhcmR3YXJl
-LgoKVGhlIGlkZWEgdGhhdCB5b3Ugc2hvdWxkIGNhbGwgY2xrX3JvdW5kX3JhdGUoKSBmaXJzdCBi
-ZWZvcmUgY2xrX3NldF9yYXRlKCkKYW5kIHBhc3MgdGhlIHJldHVybmVkIHJvdW5kZWQgcmF0ZSBp
-bnRvIGNsa19zZXRfcmF0ZSgpIGlzIHJlYWxseSBpZGlvdGljCmdpdmVuIHRoYXQuICBQbGVhc2Ug
-ZG9uJ3QgZG8gaXQsIGFuZCBwbGVhc2UgcmVtb3ZlIGNvZGUgd2hpY2ggZG9lcyBpdCwgYW5kCmlu
-IHJldmlldyBjb21tZW50IG9uIGl0LiAgVGhhbmtzLgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAw
-LjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCAxMC41TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3Jk
-aW5nIHRvIHNwZWVkdGVzdC5uZXQuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+This series of patches adds initial device tree support for the
+OpenPandora. The most important parts are working (display, keyboard,
+touch, charging, fuel gauge, musb port, sd/mmc ports, leds, buttons).
+Not yet supported are: usb host port, nubs, wifi, bluetooth, audio.
+
+First patch add common dtsi file which is then used in 600mhz and 1ghz
+variants of openpandora which support is added in patches 2 and 3.
+
+H. Nikolaus Schaller (4):
+  ARM: dts: omap3-pandora: add common device tree
+  ARM: dts: omap3-pandora: add OMAP3530 600 MHz version
+  ARM: dts: omap3-pandora: add DM3730 1 GHz version
+  ARM: dts: omap3-pandora: include in dts Makefile
+
+ arch/arm/boot/dts/Makefile                  |   2 +
+ arch/arm/boot/dts/omap3-pandora-1ghz.dts    |  65 +++
+ arch/arm/boot/dts/omap3-pandora-600mhz.dts  |  65 +++
+ arch/arm/boot/dts/omap3-pandora-common.dtsi | 641 ++++++++++++++++++++++++++++
+ 4 files changed, 773 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap3-pandora-1ghz.dts
+ create mode 100644 arch/arm/boot/dts/omap3-pandora-600mhz.dts
+ create mode 100644 arch/arm/boot/dts/omap3-pandora-common.dtsi
+
+-- 
+1.9.1
