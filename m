@@ -1,35 +1,67 @@
-From: Kenneth Westfield <kwestfie@codeaurora.org>
-Subject: Re: [Patch V5 02/12] ASoC: max98357a: Document MAX98357A bindings
-Date: Thu, 12 Feb 2015 02:41:49 -0800
-Message-ID: <20150212104149.GA27200@kwestfie-linux.qualcomm.com>
-References: <1423707015-14527-1-git-send-email-kwestfie@codeaurora.org>
- <1423707015-14527-3-git-send-email-kwestfie@codeaurora.org>
- <20150212032918.GW2593@finisterre.sirena.org.uk>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v2] ARM: dts: zynq: Add OCM node
+Date: Thu, 12 Feb 2015 11:42:47 +0100
+Message-ID: <6df19b400e314ef8228be475bb8ba83765683016.1423737765.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150212032918.GW2593@finisterre.sirena.org.uk>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kenneth Westfield <kwestfie@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu
+Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 12, 2015 at 11:29:18AM +0800, Mark Brown wrote:
-> On Wed, Feb 11, 2015 at 06:10:05PM -0800, Kenneth Westfield wrote:
-> > From: Kenneth Westfield <kwestfie@codeaurora.org>
-> > 
-> > Add documentation to the sound directory of the
-> > device-tree bindings for the Maxim MAX98357A audio
-> > DAC.
-> 
-> This driver has already been applied.  If there are any changes to
-> current code please send incremental patches.
+Add OCM node for all zynq boards. OCM location
+can changed but for all current boards this
+is the location where OCM is.`
 
-No changes from V4 to V5.  Please drop this patch.
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
+Changes in v2:
+- Move node to board file suggested by Mark
+
+This patch is done based on discussion here.
+https://lkml.org/lkml/2014/12/1/396
+
+Mark: I expect you won't like amba bus reference or
+am I wrong?
+
+---
+ arch/arm/boot/dts/zynq-7000.dtsi | 2 +-
+ arch/arm/boot/dts/zynq-zc702.dts | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index a5cd2eda3edf..acca3c180324 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -57,7 +57,7 @@
+ 		regulator-always-on;
+ 	};
+ 
+-	amba {
++	amba: amba {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index fb59d34e8ee6..79077c5ac60e 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -50,6 +50,13 @@
+ 	};
+ };
+ 
++&amba {
++	ocm: sram@fffc0000 {
++		compatible = "mmio-sram";
++		reg = <0xfffc0000 0x10000>;
++	};
++};
++
+ &can0 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
 -- 
-Kenneth Westfield
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
-a Linux Foundation Collaborative Project
+1.8.2.3
