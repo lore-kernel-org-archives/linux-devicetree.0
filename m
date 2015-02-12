@@ -1,68 +1,46 @@
-From: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: perf: Add support for Scorpion PMUs
-Date: Wed, 11 Feb 2015 20:57:28 -0500
-Message-ID: <CAJ5Y-ebrzQfhac2eoEkt-haZiG_tMiix6dVvunrf9_+JzFVA0g@mail.gmail.com>
-References: <1423616724-20849-1-git-send-email-sboyd@codeaurora.org>
-	<1423616724-20849-3-git-send-email-sboyd@codeaurora.org>
-	<CAJ5Y-eZsCbeZMwgPrNOg9Qdt8XqAoJBVNbiNMC7c3PQTOrUJ+g@mail.gmail.com>
-	<20150211182717.GA11190@codeaurora.org>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH RFC v8 11/21] Documentation: dt-bindings: Add bindings
+ for Synopsys DW MIPI DSI DRM bridge driver
+Date: Thu, 12 Feb 2015 10:14:56 +0800
+Message-ID: <20150212021454.GA23140@victor>
+References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
+ <1420014219-915-12-git-send-email-Ying.Liu@freescale.com>
+ <1423131004.3207.27.camel@pengutronix.de> <20150206081318.GA15088@victor>
+ <20150211072128.GA13301@victor> <1423659648.4680.18.camel@pengutronix.de>
+ <20150211140931.GA6666@victor> <1423668181.4680.24.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150211182717.GA11190-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ashwin Chaugule <ashwinc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Leeder <nleeder-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1423668181.4680.24.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, andyshrk@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 February 2015 at 13:27, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 02/10, Ashwin Chaugule wrote:
->> Hi Stephen,
->>
->> On 10 February 2015 at 20:05, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> > Scorpion supports a set of local performance monitor event
->> > selection registers (LPM) sitting behind a cp15 based interface
->> > that extend the architected PMU events to include Scorpion CPU
->> > and Venum VFP specific events. To use these events the user is
->> > expected to program the lpm register with the event code shifted
->> > into the group they care about and then point the PMNx event at
->> > that region+group combo by writing a LPMn_GROUPx event. Add
->> > support for this hardware.
->> >
->> > Note: the raw event number is a pure software construct that
->> > allows us to map the multi-dimensional number space of regions,
->> > groups, and event codes into a flat event number space suitable
->> > for use by the perf framework.
->> >
->> > This is based on code originally written by Ashwin Chaugule and
->> > Neil Leeder [1] massed to become similar to the Krait PMU support
->> > code.
->>
->> Thanks for taking this up!
->> Overall this series looks good to me, but from what I faintly
->> recollect, doesn't this (and the Krait pmu code) get affected by
->> powercollapse issues anymore?
->> e.g.
->> https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/arch/arm/kernel/perf_event_msm.c?h=msm-3.4&id=b5ca687960f0fea2f4735e83ca5c9543474c19de
->>
->
-> Right now there isn't any power collapse support in mainline so
-> there's no immediate problem. Once we add power collapse support
-> (i.e. cpuidle) to the Scorpion and Krait platforms we'll need to
-> do something in the perf event code to properly maintain the
-> counts across idle. I imagine it would be done by registering for
-> cpu_pm notifications and then doing the save/restore on
-> CPU_PM_ENTER and CPU_PM_EXIT. At least, that's what you started
-> doing in this patch[1]. And then it seems the patch you mention
-> came after that and actually did the save/restore of the counts.
->
-> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?h=msm-3.4&id=464983a7e991a484cac0bc0885cee4fee318d659
-
-Right. Thats essential whenever the power collapse stuff goes in.
-
-Thanks,
-Ashwin.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBGZWIgMTEsIDIwMTUgYXQgMDQ6MjM6MDFQTSArMDEwMCwgUGhpbGlwcCBaYWJlbCB3
+cm90ZToKPiBBbSBNaXR0d29jaCwgZGVuIDExLjAyLjIwMTUsIDIyOjA5ICswODAwIHNjaHJpZWIg
+TGl1IFlpbmc6Cj4gPiBCVFcsIHJlZ2FyZGluZyB0aGUgY29tcGF0aWJsZSBzdHJpbmcgdG9waWMs
+IHNoYWxsIEkga2VlcCBteSBpbXBsZW1lbnRhdGlvbgo+ID4gdW5jaGFuZ2VkIGFuZCBkb24ndCBh
+cHBlbmQgdGhlIGFkZGl0aW9uYWwgInNucHMsZHctbWlwaS1kc2kiIGFzIEkgc2hhcmVkCj4gPiBt
+eSBjb25jZXJucyBhYm91dCBpdCBiZWZvcmU/Cj4gCj4gTGVhdmUgdGhlIGltcGxlbWVudGF0aW9u
+IHVuY2hhbmdlZC4gU3RpbGwsIEknZCBsaWtlIHRvIHNlZQo+ICJzbnBzLGR3LW1pcGktZHNpIiBh
+cHBlbmRlZCB0byB0aGUgbWlwaV9kc2kgY29tcGF0aWJsZSBwcm9wZXJ0eSBpbgo+IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLnR4dAo+IGFu
+ZCBpbiBhcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kuIEFmdGVyIGFsbCwgRnJlZXNjYWxl
+J3MgaS5NWDYKPiBzcGVjaWZpYyBpbXBsZW1lbnRhdGlvbiBpcyByZWdpc3RlciBjb21wYXRpYmxl
+IHRvIFN5bm9wc3lzJyBkZXNpZ24sCj4gaXNuJ3QgaXQ/CgpBbGwgcmlnaHQuICBXaWxsIGRvIHRo
+aXMgaW4gdGhlIG5leHQgdmVyc2lvbi4KClJlZ2FyZHMsCkxpdSBZaW5nCgo+IAo+IHJlZ2FyZHMK
+PiBQaGlsaXBwCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
