@@ -1,116 +1,127 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
- if no bestdiv is normally found
-Date: Thu, 12 Feb 2015 14:41:31 +0100
-Message-ID: <20150212134131.GX12209@pengutronix.de>
-References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
- <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
- <20150212093356.GR12209@pengutronix.de>
- <20150212103944.GA1290@victor>
- <20150212122405.GW12209@pengutronix.de>
- <20150212125646.GT8656@n2100.arm.linux.org.uk>
+From: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] xhci: add a quirk for device disconnection errata
+ for Synopsis Designware USB3 core
+Date: Thu, 12 Feb 2015 15:50:00 +0200
+Message-ID: <54DCAF88.4010607@intel.com>
+References: <1422173608-24355-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com> <1422173608-24355-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20150212125646.GT8656@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422173608-24355-2-git-send-email-Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTI6NTY6NDZQTSArMDAwMCwgUnVzc2VsbCBLaW5nIC0g
-QVJNIExpbnV4IHdyb3RlOgo+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDAxOjI0OjA1UE0gKzAx
-MDAsIFNhc2NoYSBIYXVlciB3cm90ZToKPiA+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDA2OjM5
-OjQ1UE0gKzA4MDAsIExpdSBZaW5nIHdyb3RlOgo+ID4gPiBPbiBUaHUsIEZlYiAxMiwgMjAxNSBh
-dCAxMDozMzo1NkFNICswMTAwLCBTYXNjaGEgSGF1ZXIgd3JvdGU6Cj4gPiA+ID4gT24gVGh1LCBG
-ZWIgMTIsIDIwMTUgYXQgMDI6MDE6MjRQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6Cj4gPiA+ID4g
-PiBJZiBubyBiZXN0IGRpdmlkZXIgaXMgbm9ybWFsbHkgZm91bmQsIHdlIHdpbGwgdHJ5IHRvIHVz
-ZSB0aGUgbWF4aW11bSBkaXZpZGVyLgo+ID4gPiA+ID4gV2Ugc2hvdWxkIG5vdCBzZXQgdGhlIHBh
-cmVudCBjbG9jayByYXRlIHRvIGJlIDFIeiBieSBmb3JjZSBmb3IgYmVpbmcgcm91bmRlZC4KPiA+
-ID4gPiA+IEluc3RlYWQsIHdlIHNob3VsZCB0YWtlIHRoZSBtYXhpbXVtIGRpdmlkZXIgYXMgYSBi
-YXNlIGFuZCBjYWxjdWxhdGUgYSBjb3JyZWN0Cj4gPiA+ID4gPiBwYXJlbnQgY2xvY2sgcmF0ZSBm
-b3IgYmVpbmcgcm91bmRlZC4KPiA+ID4gPiAKPiA+ID4gPiBQbGVhc2UgYWRkIGFuIGV4cGxhbmF0
-aW9uIHdoeSB5b3UgdGhpbmsgdGhlIGN1cnJlbnQgY29kZSBpcyB3cm9uZyBhbmQKPiA+ID4gPiB3
-aGF0IHRoaXMgYWN0dWFsbHkgZml4ZXMsIG1heWJlIGFuIGV4YW1wbGU/Cj4gPiA+IAo+ID4gPiBU
-aGUgTUlQSSBEU0kgcGFuZWwncyBwaXhlbCBjbG9jayByYXRlIGlzIDI2LjRNSHogYW5kIGl0J3Mg
-ZGVyaXZlZCBmcm9tIFBMTDUgb24KPiA+ID4gdGhlIE1YNkRMIFNhYnJlU0QgYm9hcmQuCj4gPiA+
-IAo+ID4gPiBUaGVzZSBhcmUgdGhlIGNsb2NrIHRyZWUgc3VtbWFyaWVzIHdpdGggb3Igd2l0aG91
-dCB0aGUgcGF0Y2ggYXBwbGllZDoKPiA+ID4gMSkgV2l0aCB0aGUgcGF0Y2ggYXBwbGllZDoKPiA+
-ID4gcGxsNV9ieXBhc3Nfc3JjICAgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAg
-ICAyNDAwMDAwMCAgICAgICAgICAwIDAKPiA+ID4gICAgcGxsNSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDg0NDgwMDA0OCAgICAgICAgICAwIDAKPiA+ID4g
-ICAgICAgcGxsNV9ieXBhc3MgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDg0
-NDgwMDA0OCAgICAgICAgICAwIDAKPiA+ID4gICAgICAgICAgcGxsNV92aWRlbyAgICAgICAgICAg
-ICAgICAgICAxICAgICAgICAgICAgMSAgIDg0NDgwMDA0OCAgICAgICAgICAwIDAKPiA+ID4gICAg
-ICAgICAgICAgcGxsNV9wb3N0X2RpdiAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDIxMTIw
-MDAxMiAgICAgICAgICAwIDAKPiA+ID4gICAgICAgICAgICAgICAgcGxsNV92aWRlb19kaXYgICAg
-ICAgICAgIDEgICAgICAgICAgICAxICAgMjExMjAwMDEyICAgICAgICAwIDAKPiA+ID4gICAgICAg
-ICAgICAgICAgICAgaXB1MV9kaTBfcHJlX3NlbCAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAy
-MTEyMDAwMTIgICAwIDAKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTBfcHJlICAg
-ICAgICAgICAxICAgICAgICAgICAgMSAgICAyNjQwMDAwMiAgICAwIDAKPiA+ID4gICAgICAgICAg
-ICAgICAgICAgICAgICAgaXB1MV9kaTBfc2VsICAgICAgICAgICAxICAgICAgICAgICAgMSAgICAy
-NjQwMDAwMiAwIDAKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTAgICAg
-ICAgICAgIDEgICAgICAgICAgICAxICAgIDI2NDAwMDAyICAwIDAKPiA+ID4gCj4gPiA+IDIpIFdp
-dGhvdXQgdGhlIHBhdGNoIGFwcGxpZWQ6Cj4gPiA+IHBsbDVfYnlwYXNzX3NyYyAgICAgICAgICAg
-ICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjQwMDAwMDAgICAgICAgICAgMCAwCj4gPiA+
-ICAgIHBsbDUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA2
-NDgwMDAwMDAgICAgICAgICAgMCAwCj4gPiA+ICAgICAgIHBsbDVfYnlwYXNzICAgICAgICAgICAg
-ICAgICAgICAgMSAgICAgICAgICAgIDEgICA2NDgwMDAwMDAgICAgICAgICAgMCAwCj4gPiA+ICAg
-ICAgICAgIHBsbDVfdmlkZW8gICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA2NDgw
-MDAwMDAgICAgICAgICAgMCAwCj4gPiA+ICAgICAgICAgICAgIHBsbDVfcG9zdF9kaXYgICAgICAg
-ICAgICAgMSAgICAgICAgICAgIDEgICAxNjIwMDAwMDAgICAgICAgICAgMCAwCj4gPiA+ICAgICAg
-ICAgICAgICAgIHBsbDVfdmlkZW9fZGl2ICAgICAgICAgICAxICAgICAgICAgICAgMSAgICA0MDUw
-MDAwMCAgICAgICAgMCAwCj4gPiA+ICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwX3ByZV9zZWwg
-ICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDQwNTAwMDAwICAgMCAwCj4gPiA+ICAgICAgICAg
-ICAgICAgICAgICAgIGlwdTFfZGkwX3ByZSAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjAy
-NTAwMDAgICAgMCAwCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwX3NlbCAg
-ICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjAyNTAwMDAgMCAwCj4gPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGlwdTFfZGkwICAgICAgICAgICAxICAgICAgICAgICAgMSAgICAyMDI1
-MDAwMCAgMCAwCj4gPiAKPiA+IFRoaXMgc2VlbXMgdG8gYmUgYnJva2VuIHNpbmNlOgo+ID4gCj4g
-PiB8IGNvbW1pdCBiMTFkMjgyZGJlYTI3ZGIxNzg4ODkzMTE1ZGZjYThhNzg1NmJmMjA1Cj4gPiB8
-IEF1dGhvcjogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPiA+IHwgRGF0
-ZTogICBUaHUgRmViIDEzIDEyOjAzOjU5IDIwMTQgKzAyMDAKPiA+IHwgCj4gPiB8ICAgICBjbGs6
-IGRpdmlkZXI6IGZpeCByYXRlIGNhbGN1bGF0aW9uIGZvciBmcmFjdGlvbmFsIHJhdGVzCj4gPiAK
-PiA+IFRoaXMgcGF0Y2ggZml4ZWQgYSBjYXNlIHdoZW4gY2xrX3NldF9yYXRlKGNsa19yb3VuZF9y
-YXRlKHJhdGUpKSByZXN1bHRlZAo+ID4gaW4gYSBsb3dlciBmcmVxdWVuY3kgdGhhbiBjbGtfcm91
-bmRfcmF0ZShyYXRlKSByZXR1cm5lZC4KPiA+IAo+ID4gU2luY2UgdGhlbiB0aGUgTVVMVF9ST1VO
-RF9VUCBpbiBjbGtfZGl2aWRlcl9iZXN0ZGl2KCkgaXMgaW5jb25zaXN0ZW50IHRvCj4gPiB0aGUg
-cmVzdCBvZiB0aGUgZGl2aWRlci4gTWF5YmUgdGhpcyBzaG91bGQgYmUgYSBzaW1wbGUgcmF0ZSAq
-IGkgbm93LCBidXQKPiA+IEknbSB1bnN1cmUgd2hhdCBzaWRlIGVmZmVjdHMgdGhpcyBoYXMuCj4g
-PiAKPiA+IEkgdGhpbmsgeW91ciBwYXRjaCBvbmx5IGZpeGVzIHRoZSBiZWhhdmlvdXIgaW4geW91
-ciBjYXNlIGJ5IGFjY2lkZW50LAo+ID4gaXQncyBub3QgYSBjb3JyZWN0IGZpeCBmb3IgdGhpcyBp
-c3N1ZS4KPiAKPiBXZWxsLCBpdCdzIGRlZmluZWQgdGhhdDoKPiAKPiAJbmV3X3JhdGUgPSBjbGtf
-cm91bmRfcmF0ZShjbGssIHJhdGUpOwo+IAo+IHJldHVybnMgdGhlIHJhdGUgd2hpY2ggeW91IHdv
-dWxkIGdldCBpZiB5b3UgZGlkOgo+IAo+IAljbGtfc2V0X3JhdGUoY2xrLCByYXRlKTsKPiAJbmV3
-X3JhdGUgPSBjbGtfZ2V0X3JhdGUoY2xrKTsKPiAKPiBUaGUgcmVhc29uaW5nIGhlcmUgaXMgdGhh
-dCBjbGtfcm91bmRfcmF0ZSgpIGdpdmVzIHlvdSBhIHdheSB0byBxdWVyeSB3aGF0Cj4gcmF0ZSB5
-b3Ugd291bGQgZ2V0IGlmIHlvdSB3ZXJlIHRvIGFzayBmb3IgdGhlIHJhdGUgdG8gYmUgc2V0LCB3
-aXRob3V0Cj4gZWZmZWN0aW5nIGEgY2hhbmdlIGluIHRoZSBoYXJkd2FyZS4KPiAKPiBUaGUgaWRl
-YSB0aGF0IHlvdSBzaG91bGQgY2FsbCBjbGtfcm91bmRfcmF0ZSgpIGZpcnN0IGJlZm9yZSBjbGtf
-c2V0X3JhdGUoKQo+IGFuZCBwYXNzIHRoZSByZXR1cm5lZCByb3VuZGVkIHJhdGUgaW50byBjbGtf
-c2V0X3JhdGUoKSBpcyByZWFsbHkgaWRpb3RpYwo+IGdpdmVuIHRoYXQuICBQbGVhc2UgZG9uJ3Qg
-ZG8gaXQsIGFuZCBwbGVhc2UgcmVtb3ZlIGNvZGUgd2hpY2ggZG9lcyBpdCwgYW5kCj4gaW4gcmV2
-aWV3IGNvbW1lbnQgb24gaXQuICBUaGFua3MuCgpUb21pcyBwYXRjaCBpcyBiYXNlZCBvbiB0aGUg
-YXNzdW1wdGlvbiB0aGF0IGNsa19zZXRfcmF0ZShjbGtfcm91bmRfcmF0ZShyYXRlKSkKaXMgZXF1
-YWwgdG8gY2xrX3JvdW5kX3JhdGUocmF0ZSkuIFNvIHdoZW4gdGhpcyBhc3N1bXB0aW9uIGlzIHdy
-b25nIHRoZW4KaXQgc2hvdWxkIHNpbXBseSBiZSByZXZlcnRlZC4KU28gTGl1LCBjb3VsZCB5b3Ug
-dGVzdCBpZiByZXZlcnRpbmcgVG9taXMgcGF0Y2ggZml4ZXMgeW91ciBwcm9ibGVtPwoKU2FzY2hh
-CgotLSAKUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwKSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAg
-ICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8gIHwKUGVpbmVyIFN0ci4gNi04
-LCAzMTEzNyBIaWxkZXNoZWltLCBHZXJtYW55IHwgUGhvbmU6ICs0OS01MTIxLTIwNjkxNy0wICAg
-IHwKQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAgIHwgRmF4OiAgICs0
-OS01MTIxLTIwNjkxNy01NTU1IHwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On 25.01.2015 10:13, Sneeker Yeh wrote:
+> This issue is defined by a three-way race at disconnect, between
+> 1) Class driver interrupt endpoint resheduling attempts if the ISR gave an ep
+>    error event due to device detach (it would try 3 times)
+> 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
+>    asynchronously
+> 3) The hardware IP was configured in silicon with
+>    - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1
+>    - Synopsys IP version is < 3.00a
+> The IP will auto-suspend itself on device detach with some phy-specific interval
+> after CSC is cleared by 2)
+> 
+> If 2) and 3) complete before 1), the interrupts it expects will not be generated
+> by the autosuspended IP, leading to a deadlock. Even later disconnection
+> procedure would detect that corresponding urb is still in-progress and issue a
+> ep stop command, auto-suspended IP still won't respond to that command.
+> 
+
+So did I understand correctly that the class driver submits a new urb which
+is enqueued by xhci_urb_enqueue() before the hub thread notices the device is disconnected.
+Then hub thread clears CSC bit, controller suspends and the new urb is never given back?
+
+Doesn't the CSC bit and PORT_CONNECT bit show the device is disconnected when we enter
+xhci_enqueue_urb(), even it the hub thread doesn't know this yet?
+
+Would it make sense to check those bits in xhci_enqueue_urb, and just return error
+in the xhci_urb_enqueue() if device is not connected? Then there wouldn't be a need for any quirk
+at all.
+
+If that doesn't work then this patch looks good in general. See comments below
+
+> this defect would result in this when device detached:
+> -------------------------------------------------------
+> [   99.603544] usb 4-1: USB disconnect, device number 2
+> [  104.615254] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
+> [  104.623362] xhci-hcd xhci-hcd.0.auto: Assuming host is dying, halting host.
+> [  104.653261] xhci-hcd xhci-hcd.0.auto: Host not halted after 16000 microseconds.
+> [  104.660584] xhci-hcd xhci-hcd.0.auto: Non-responsive xHCI host is not halting.
+> [  104.667817] xhci-hcd xhci-hcd.0.auto: Completing active URBs anyway.
+> [  104.674198] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+> ------------------------------------------------------
+> As a result, when device detached, we desired to postpone "PORTCSC clear" behind
+> "disable slot". it's found that all executed ep command related to disconnetion,
+> are executed before "disable slot".
+> 
+> Signed-off-by: Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+> ---
+>  drivers/usb/host/xhci-hub.c |    4 ++++
+>  drivers/usb/host/xhci.c     |   29 +++++++++++++++++++++++++++++
+>  drivers/usb/host/xhci.h     |   24 ++++++++++++++++++++++++
+>  3 files changed, 57 insertions(+)
+> 
+> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+> index a7865c4..3b8f7fc 100644
+> --- a/drivers/usb/host/xhci-hub.c
+> +++ b/drivers/usb/host/xhci-hub.c
+> @@ -368,6 +368,10 @@ static void xhci_clear_port_change_bit(struct xhci_hcd *xhci, u16 wValue,
+>  		port_change_bit = "warm(BH) reset";
+>  		break;
+>  	case USB_PORT_FEAT_C_CONNECTION:
+> +		if ((xhci->quirks & XHCI_DISCONNECT_QUIRK) &&
+> +		    !(readl(addr) & PORT_CONNECT))
+> +			return;
+> +
+
+New port status event are prevented until CSC is cleared, not sure if there's any harm in that?
+
+>  		status = PORT_CSC;
+>  		port_change_bit = "connect";
+>  		break;
+> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+> index c50d8d2..aa8e02a 100644
+> --- a/drivers/usb/host/xhci.c
+> +++ b/drivers/usb/host/xhci.c
+> @@ -3584,6 +3584,33 @@ command_cleanup:
+>  	return ret;
+>  }
+>  
+> +static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int dev_port_num)
+> +{
+> +	int max_ports;
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +	__le32 __iomem **port_array;
+> +	u32 status;
+> +
+> +	/* print debug info */
+> +	if (hcd->speed == HCD_USB3) {
+> +		max_ports = xhci->num_usb3_ports;
+> +		port_array = xhci->usb3_ports;
+> +	} else {
+> +		max_ports = xhci->num_usb2_ports;
+> +		port_array = xhci->usb2_ports;
+> +	}
+> +
+> +	if (dev_port_num > max_ports) {
+> +		xhci_err(xhci, "%s() port number invalid", __func__);
+> +		return;
+> +	}
+> +	status = readl(port_array[dev_port_num - 1]);
+> +
+> +	/* write 1 to clear */
+> +	if (!(status & PORT_CONNECT) && (status & PORT_CSC))
+> +		writel(status & PORT_CSC, port_array[0]);
+
+Shouldn't this be writel(...,port_array[dev_port_num - 1]) ?
+
+-Mathias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
