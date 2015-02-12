@@ -1,67 +1,64 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 4/5] ARM: dts: zynq: Split off Parallella Microserver device tree
-Date: Thu, 12 Feb 2015 01:55:12 +0100
-Message-ID: <1423702513-4032-5-git-send-email-afaerber@suse.de>
-References: <1423702513-4032-1-git-send-email-afaerber@suse.de>
+From: Kenneth Westfield <kwestfie@codeaurora.org>
+Subject: Re: [alsa-devel] [Patch V4 00/10] ASoC: QCOM: Add support for
+	ipq806x SOC
+Date: Wed, 11 Feb 2015 17:05:52 -0800
+Message-ID: <20150212010551.GA7330@kwestfie-linux.qualcomm.com>
+References: <1423169626-22166-1-git-send-email-kwestfie@codeaurora.org>
+ <20150206223229.GG31311@finisterre.sirena.org.uk>
+ <20150209064511.GB19870@kwestfie-linux.qualcomm.com>
+ <20150211022634.GO2593@finisterre.sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423702513-4032-1-git-send-email-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Olof Johansson <olof@lixom.net>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org, Andreas Olofsson <andreas@adapteva.com>, Ola Jeppsson <ola@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150211022634.GO2593@finisterre.sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, srinivas.kandagatla@linaro.org, Kenneth Westfield <kwestfie@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The Microserver edition has neither HDMI nor USB.
+On Tue, Feb 10, 2015 at 06:26:34PM -0800, Mark Brown wrote:
+> On Sun, Feb 08, 2015 at 10:45:11PM -0800, Kenneth Westfield wrote:
+> > On Sat, Feb 07, 2015 at 06:32:29AM +0800, Mark Brown wrote:
+> 
+> > > I'd really like to see some discussion as to how this is all supposed
+> to
+> > > be handled - how will these direct hardware access drivers and device
+> > > trees work when someone does want to use the DSP (without causing
+> > > problems), and how will we transition from one to the other.  This is
+> > > particularly pressing if there are use cases where people will want to
+> > > switch between the two modes at runtime.
+> 
+> > > What I'm trying to avoid here is being in a situation where we have
+> > > existing stable DT bindings which we have to support but which
+> conflict
+> > > with the way that people want to use the systems.
+> 
+> > The ipq806x SOC has no LPASS DSP.  On SOCs with a DSP, these drivers
+> > would not be enabled.
+> 
+> OK, but I'm guessing that they're using the same IP that is in other
+> SoCs which do have the DSP so even if you don't care for this device it
+> might still be an issue.
+> 
+> > These drivers are prefixed with "lpass" to differentiate themselves from
+> > other drivers that would interact with a DSP, rather than the LPASS
+> > hardware directly.
+> 
+> Right, it may be that all that's needed here is some indication as to
+> how to describe a system which *does* have a DSP.  Perhaps require that
+> the devices be children of the DSP, that way if people want to access
+> the hardware directly they can load a dummy driver for the DSP that just
+> passes things through if they don't want to use the DSP?
 
-Cc: Ola Jeppsson <ola@adapteva.com>
-Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
----
- arch/arm/boot/dts/Makefile                        |  1 +
- arch/arm/boot/dts/zynq-parallella-microserver.dts | 19 +++++++++++++++=
-++++
- 2 files changed, 20 insertions(+)
- create mode 100644 arch/arm/boot/dts/zynq-parallella-microserver.dts
+Replacing DSP-based drivers with LPASS-based drivers would be something that
+should be handled by Kconfig selections.  For the DT, the DSP-related
+nodes and the LPASS-related nodes shouldn't overlap.  There should be a
+DSP-based DT binding and a separate LPASS-based DT binding.  Tying one
+or the other to the sound node (but not both), should work.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a1c776b8dcec..42c75eeba584 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -606,6 +606,7 @@ dtb-$(CONFIG_ARCH_VT8500) +=3D \
- 	wm8850-w70v2.dtb
- dtb-$(CONFIG_ARCH_ZYNQ) +=3D \
- 	zynq-parallella.dtb \
-+	zynq-parallella-microserver.dtb \
- 	zynq-zc702.dtb \
- 	zynq-zc706.dtb \
- 	zynq-zed.dtb \
-diff --git a/arch/arm/boot/dts/zynq-parallella-microserver.dts b/arch/a=
-rm/boot/dts/zynq-parallella-microserver.dts
-new file mode 100644
-index 000000000000..1f3bd2d27a93
---- /dev/null
-+++ b/arch/arm/boot/dts/zynq-parallella-microserver.dts
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright (c) 2014 SUSE LINUX Products GmbH
-+ * Copyright (c) 2015 SUSE Linux GmbH
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, an=
-d
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+/dts-v1/;
-+#include "zynq-parallella1.dtsi"
-+
-+/ {
-+	model =3D "Adapteva Parallella Microserver Board";
-+};
---=20
-2.2.2
+-- 
+Kenneth Westfield
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
+a Linux Foundation Collaborative Project
