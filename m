@@ -1,118 +1,40 @@
-From: Kenneth Westfield <kwestfie@codeaurora.org>
-Subject: [Patch V2] ASoC: max98357a: Add missing deps and
-	headers
-Date: Thu, 12 Feb 2015 03:01:36 -0800
-Message-ID: <1423738896-30342-1-git-send-email-kwestfie@codeaurora.org>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] arm64: exynos5433: Enable ARMv8 based Exynos5433
+ (SoC) support
+Date: Thu, 12 Feb 2015 11:02:08 +0000
+Message-ID: <20150212110208.GB1028@e104818-lin.cambridge.arm.com>
+References: <1423724158-23632-1-git-send-email-cw00.choi@samsung.com>
+ <1423724158-23632-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Kenneth Westfield <kwestfie@codeaurora.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1423724158-23632-2-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sangbae90.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kenneth Westfield <kwestfie@codeaurora.org>
+On Thu, Feb 12, 2015 at 03:55:51PM +0900, Chanwoo Choi wrote:
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 15e8e74..4fc08d1 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -153,6 +153,19 @@ config ARCH_EXYNOS
+>  	help
+>  	  This enables support for Samsung Exynos SoC family
+>  
+> +config ARCH_EXYNOS5433
+> +	bool "ARMv8 based Samsung Exynos5433"
+> +	select ARCH_EXYNOS
+> +	select ARM_AMBA
+> +	select ARM_GIC
 
-Add missing build dependancy to GPIOLIB in Kconfig.
-Add header files to avoid implicit declarations
-and indirect inclusions.  Remove use of DRV_NAME
-constant.
+ARM_GIC and ARM_AMBA are already selected by the top ARM64 config.
 
-Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
----
-for topic/max98357a branch
-
-changes from v1:
- - matched subject line to subsystem style
-
- sound/soc/codecs/Kconfig     |  2 +-
- sound/soc/codecs/max98357a.c | 23 +++++++++++++++--------
- 2 files changed, 16 insertions(+), 9 deletions(-)
-
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 6ecac1e4428eafc491d6cfc25110f6b3dbf699ed..0500b3ed5fa5ac4d45663ad659da9db3003bc5a3 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -69,7 +69,7 @@ config SND_SOC_ALL_CODECS
- 	select SND_SOC_MAX98088 if I2C
- 	select SND_SOC_MAX98090 if I2C
- 	select SND_SOC_MAX98095 if I2C
--	select SND_SOC_MAX98357A
-+	select SND_SOC_MAX98357A if GPIOLIB
- 	select SND_SOC_MAX9850 if I2C
- 	select SND_SOC_MAX9768 if I2C
- 	select SND_SOC_MAX9877 if I2C
-diff --git a/sound/soc/codecs/max98357a.c b/sound/soc/codecs/max98357a.c
-index 1806333ea29e5a6b49e2a0adb8c58257d34b7508..4ee23fbc4e1237268ae104319a9cfe4fc369934e 100644
---- a/sound/soc/codecs/max98357a.c
-+++ b/sound/soc/codecs/max98357a.c
-@@ -12,11 +12,19 @@
-  * max98357a.c -- MAX98357A ALSA SoC Codec driver
-  */
- 
--#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <sound/pcm.h>
- #include <sound/soc.h>
--
--#define DRV_NAME "max98357a"
-+#include <sound/soc-dai.h>
-+#include <sound/soc-dapm.h>
- 
- static int max98357a_daiops_trigger(struct snd_pcm_substream *substream,
- 		int cmd, struct snd_soc_dai *dai)
-@@ -77,9 +85,9 @@ static struct snd_soc_dai_ops max98357a_dai_ops = {
- };
- 
- static struct snd_soc_dai_driver max98357a_dai_driver = {
--	.name = DRV_NAME,
-+	.name = "max98357a",
- 	.playback = {
--		.stream_name	= DRV_NAME "-playback",
-+		.stream_name	= "max98357a-playback",
- 		.formats	= SNDRV_PCM_FMTBIT_S16 |
- 					SNDRV_PCM_FMTBIT_S24 |
- 					SNDRV_PCM_FMTBIT_S32,
-@@ -117,7 +125,7 @@ static int max98357a_platform_remove(struct platform_device *pdev)
- 
- #ifdef CONFIG_OF
- static const struct of_device_id max98357a_device_id[] = {
--	{ .compatible = "maxim," DRV_NAME, },
-+	{ .compatible = "maxim,max98357a" },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, max98357a_device_id);
-@@ -125,7 +133,7 @@ MODULE_DEVICE_TABLE(of, max98357a_device_id);
- 
- static struct platform_driver max98357a_platform_driver = {
- 	.driver = {
--		.name = DRV_NAME,
-+		.name = "max98357a",
- 		.of_match_table = of_match_ptr(max98357a_device_id),
- 	},
- 	.probe	= max98357a_platform_probe,
-@@ -135,4 +143,3 @@ module_platform_driver(max98357a_platform_driver);
- 
- MODULE_DESCRIPTION("Maxim MAX98357A Codec Driver");
- MODULE_LICENSE("GPL v2");
--MODULE_ALIAS("platform:" DRV_NAME);
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
