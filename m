@@ -1,165 +1,301 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Thu, 12 Feb 2015 12:09:17 +0100
-Message-ID: <20150212120917.44e58bf6@bbrezillon>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20150211155720.GQ9154@leverpostej>
-	<20150211171515.55d5066f@bbrezillon>
-	<2067295.NbJCftPPli@vostro.rjw.lan>
-	<20150211171313.GS9154@leverpostej>
-	<20150211182945.5004586a@bbrezillon>
-	<20150212105215.GA1522@leverpostej>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending
+ command'
+Date: Thu, 12 Feb 2015 12:10:19 +0100
+Message-ID: <54DC8A1B.7070402@samsung.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com>
+ <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com>
+ <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com>
+ <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com>
+ <54DAC534.4020708@rock-chips.com> <54DB43E2.70203@samsung.com>
+ <CAGOxZ50CLM1Job+X45-CDF_23r9vsx0=jtMCu5cSoFk-+xzF=g@mail.gmail.com>
+ <54DC0FBB.7010308@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150212105215.GA1522@leverpostej>
+In-reply-to: <54DC0FBB.7010308@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: addy ke <addy.ke@rock-chips.com>, alim.akhtar@gmail.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org, djkurtz@chromium.org, huangtao@rock-chips.com, devicetree@vger.kernel.org, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Feb 2015 10:52:15 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
+On 02/12/2015 03:28 AM, addy ke wrote:
+> Hi Andrzej and Alim
+>
+> On 2015/2/12 07:20, Alim Akhtar wrote:
+>> Hi Andrzej,
+>>
+>> On Wed, Feb 11, 2015 at 5:28 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>> Hi Alim,
+>>>
+>>> On 02/11/2015 03:57 AM, Addy wrote:
+>>>> On 2015/02/10 23:22, Alim Akhtar wrote:
+>>>>> Hi Addy,
+>>>>>
+>>>>> On Mon, Feb 9, 2015 at 12:55 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
+>>>>>> Because of some uncertain factors, such as worse card or worse hardware,
+>>>>>> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+>>>>>> will be in busy state. This should not happend when mmc controller
+>>>>>> send command to update card clocks. If this happends, mci_send_cmd will
+>>>>>> be failed and we will get 'Timeout sending command', and then system will
+>>>>>> be blocked. To avoid this, we need reset mmc controller.
+>>>>>>
+>>>>>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+>>>>>> ---
+>>>>>>   drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
+>>>>>>   1 file changed, 28 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>>>>>> index 4d2e3c2..b0b57e3 100644
+>>>>>> --- a/drivers/mmc/host/dw_mmc.c
+>>>>>> +++ b/drivers/mmc/host/dw_mmc.c
+>>>>>> @@ -100,6 +100,7 @@ struct idmac_desc {
+>>>>>>   };
+>>>>>>   #endif /* CONFIG_MMC_DW_IDMAC */
+>>>>>>
+>>>>>> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>>>>>>   static bool dw_mci_reset(struct dw_mci *host);
+>>>>>>   static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>>>>>>
+>>>>>> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>>>>>                  cmd, arg, cmd_status);
+>>>>>>   }
+>>>>>>
+>>>>>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+>>>>>> +{
+>>>>>> +       struct dw_mci *host = slot->host;
+>>>>>> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>>>>> +
+>>>>> Why 500 msec?
+>>>> This timeout value is the same as  mci_send_cmd:
+>>>> static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>>> {
+>>>>          struct dw_mci *host = slot->host;
+>>>>          unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>>>          ....
+>>>> }
+>>>>
+>>>> I have not clear that which is suitable.
+>>>> Do you have any suggestion on it?
+>>>>>> +       do {
+>>>>>> +               if (!dw_mci_card_busy(slot->mmc))
+>>>>>> +                       return;
+>>>>>> +               cpu_relax();
+>>>>>> +       } while (time_before(jiffies, timeout));
+>>>>>> +
+>>>>>> +       dev_err(host->dev, "Data busy (status %#x)\n",
+>>>>>> +               mci_readl(slot->host, STATUS));
+>>>>>> +
+>>>>>> +       /*
+>>>>>> +        * Data busy, this should not happend when mmc controller send command
+>>>>>> +        * to update card clocks in non-volt-switch state. If it happends, we
+>>>>>> +        * should reset controller to avoid getting "Timeout sending command".
+>>>>>> +        */
+>>>>>> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+>>>>>> +
+>>>>> Why you need to reset all blocks? may be CTRL_RESET is good enough here.
+>>>> I have tested on rk3288, if only reset ctroller, data busy bit will not
+>>>> be cleaned,and we will still get
+>>>>
+>>>> "Timeout sending command".
+>>>>
+>>>>>> +       /* Fail to reset controller or still data busy, WARN_ON! */
+>>>>>> +       WARN_ON(dw_mci_card_busy(slot->mmc));
+>>>>>> +}
+>>>>>> +
+>>>>>>   static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>>>>   {
+>>>>>>          struct dw_mci *host = slot->host;
+>>>>>> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>>>>          /* We must continue to set bit 28 in CMD until the change is complete */
+>>>>>>          if (host->state == STATE_WAITING_CMD11_DONE)
+>>>>>>                  sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+>>>>>> +       else
+>>>>>> +               dw_mci_wait_busy(slot);
+>>>>>>
+>>>>> hmm...I would suggest you to call dw_mci_wait_busy() from inside
+>>>>> mci_send_cmd(), seems like dw_mmc hangs while sending update clock cmd
+>>>>> in multiple cases.see [1]
+>>>>>
+>>>>> [1]: http://permalink.gmane.org/gmane.linux.kernel.mmc/31140
+>>>> I think this patch is more reasonable.
+>>>> So I will resend patches based on this patch.
+>>>> thank you!
+>>> I have tested your patches instead [1] above and they do not solve my issue:
+>>> Board: odroid-xu3/exynos5422/dw_mmc_250a.
+>>> MMC card: absent, broken-cd quirk
+>>> SD card: present
+>>>
+>> I doubt $SUBJECT patch in current form can resolve you issue. I have
+>> already given comments on $subject patch.
+>>
+>> Can you try out below patch (I have not tested yet) on top of $SUBJECT patch?
+>>
+>> =======
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index b0b57e3..ea87844 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -101,6 +101,7 @@ struct idmac_desc {
+>>  #endif /* CONFIG_MMC_DW_IDMAC */
+>>
+>>  static int dw_mci_card_busy(struct mmc_host *mmc);
+>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot);
+>>  static bool dw_mci_reset(struct dw_mci *host);
+>>  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>>
+>> @@ -874,16 +875,22 @@ static void mci_send_cmd(struct dw_mci_slot
+>> *slot, u32 cmd, u32 arg)
+>>         struct dw_mci *host = slot->host;
+>>         unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>         unsigned int cmd_status = 0;
+>> +       int re_try = 3; /* just random for now, 1 re-try should be ok */
+>>
+>> -       mci_writel(host, CMDARG, arg);
+>> -       wmb();
+>> -       mci_writel(host, CMD, SDMMC_CMD_START | cmd);
+>> +       while(re_try--) {
+>> +               mci_writel(host, CMDARG, arg);
+>> +               wmb();
+>> +               mci_writel(host, CMD, SDMMC_CMD_START | cmd);
+>>
+>> -       while (time_before(jiffies, timeout)) {
+>> -               cmd_status = mci_readl(host, CMD);
+>> -               if (!(cmd_status & SDMMC_CMD_START))
+>> -                       return;
+>> +               while (time_before(jiffies, timeout)) {
+>> +                       cmd_status = mci_readl(host, CMD);
+>> +                       if (!(cmd_status & SDMMC_CMD_START))
+>> +                               return;
+>> +               }
+>> +
+>> +               dw_mci_wait_busy(slot);
+>>         }
+>> +
+>>         dev_err(&slot->mmc->class_dev,
+>>                 "Timeout sending command (cmd %#x arg %#x status %#x)\n",
+>>                 cmd, arg, cmd_status);
+>> @@ -925,8 +932,6 @@ static void dw_mci_setup_bus(struct dw_mci_slot
+>> *slot, bool force_clkinit)
+>>         /* We must continue to set bit 28 in CMD until the change is complete */
+>>         if (host->state == STATE_WAITING_CMD11_DONE)
+>>                 sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+>> -       else
+>> -               dw_mci_wait_busy(slot);
+>>
+>>         if (!clock) {
+>>                 mci_writel(host, CLKENA, 0);
+>>
+>> ===== end ======
+> The reason why we are fail to send command is that we got data busy in
+> none-switch-volt state(host->state != STATE_WAITING_CMD11_DONE).
+> So:
+> if(host->state != STATE_WAITING_CMD11_DONE), we must wait until data not busy,
+> And if (host->state == STATE_WAITING_CMD11_DONE) we should not wait.
+>
+>>> System hangs during boot after few minutes kernel spits:
+>>> [  242.188098] INFO: task kworker/u16:1:50 blocked for more than 120
+>>> seconds.
+>>> [  242.193524]       Not tainted
+>>> 3.19.0-next-20150210-00002-gf96831b-dirty #3834
+>>> [  242.200622] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+>>> disables this message.
+>>> [  242.208422] kworker/u16:1   D c04766ac     0    50      2 0x00000000
+>>> [  242.214756] Workqueue: kmmcd mmc_rescan
+>>> [  242.218553] [<c04766ac>] (__schedule) from [<c0476a58>]
+>>> (schedule+0x34/0x98)
+>>> [  242.225591] [<c0476a58>] (schedule) from [<c047a4dc>]
+>>> (schedule_timeout+0x110/0x164)
+>>> [  242.233302] [<c047a4dc>] (schedule_timeout) from [<c04774f0>]
+>>> (wait_for_common+0xb8/0x14c)
+>>> [  242.241539] [<c04774f0>] (wait_for_common) from [<c0362138>]
+>>> (mmc_wait_for_req+0x68/0x17c)
+>>> [  242.249861] [<c0362138>] (mmc_wait_for_req) from [<c03622cc>]
+>>> (mmc_wait_for_cmd+0x80/0xa0)
+>>> [  242.258002] [<c03622cc>] (mmc_wait_for_cmd) from [<c0367e50>]
+>>> (mmc_go_idle+0x78/0xf8)
+>>> [  242.265796] [<c0367e50>] (mmc_go_idle) from [<c0363e2c>]
+>>> (mmc_rescan+0x280/0x314)
+>>> [  242.273253] [<c0363e2c>] (mmc_rescan) from [<c0034764>]
+>>> (process_one_work+0x120/0x324)
+>>> [  242.281135] [<c0034764>] (process_one_work) from [<c00349cc>]
+>>> (worker_thread+0x30/0x42c)
+>>> [  242.289194] [<c00349cc>] (worker_thread) from [<c003926c>]
+>>> (kthread+0xd8/0xf4)
+>>> [  242.296389] [<c003926c>] (kthread) from [<c000e7c0>]
+>>> (ret_from_fork+0x14/0x34)
+>>>
+>>> Just for record, Exynos4412/dw_mmc_240a with the same configuration
+>>> (no MMC card, broken-cd) works OK without patches.
+> This is because mmc start command,but mmc_request_done() is't called.
+> I have ever found this issue.
+> I found that host does't get DTO interrupt when mmc send command to read data.
+> I have sent a patch for it, see:
+> https://patchwork.kernel.org/patch/5426531/
+>
+> Would you please merge it and test again?
 
-> [...]
-> 
-> > > diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-> > > index d9b05b5..2b8ff50 100644
-> > > --- a/include/linux/interrupt.h
-> > > +++ b/include/linux/interrupt.h
-> > > @@ -57,6 +57,9 @@
-> > >   * IRQF_NO_THREAD - Interrupt cannot be threaded
-> > >   * IRQF_EARLY_RESUME - Resume IRQ early during syscore instead of at device
-> > >   *                resume time.
-> > > + * IRQF_SHARED_TIMER_OK - Interrupt is safe to be shared with a timer. The
-> > > + *                        handler may be called spuriously during suspend
-> > > + *                        without issue.
-> > >   */
-> > >  #define IRQF_DISABLED		0x00000020
-> > >  #define IRQF_SHARED		0x00000080
-> > > @@ -70,8 +73,10 @@
-> > >  #define IRQF_FORCE_RESUME	0x00008000
-> > >  #define IRQF_NO_THREAD		0x00010000
-> > >  #define IRQF_EARLY_RESUME	0x00020000
-> > > +#define __IRQF_TIMER_SIBLING_OK	0x00040000
-> > >  
-> > >  #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
-> > > +#define IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
-> > >  
-> > >  /*
-> > >   * These values can be returned by request_any_context_irq() and
-> > > diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
-> > > index 3ca5325..e4ec91a 100644
-> > > --- a/kernel/irq/pm.c
-> > > +++ b/kernel/irq/pm.c
-> > > @@ -28,6 +28,47 @@ bool irq_pm_check_wakeup(struct irq_desc *desc)
-> > >  }
-> > >  
-> > >  /*
-> > > + * Check whether an interrupt is safe to occur during suspend.
-> > > + *
-> > > + * Physical IRQ lines may be shared between devices which may be expected to
-> > > + * raise interrupts during suspend (e.g. timers) and those which may not (e.g.
-> > > + * anything we cut the power to). Not all handlers will be safe to call during
-> > > + * suspend, so we need to scream if there's the possibility an unsafe handler
-> > > + * will be called.
-> > > + *
-> > > + * A small number of handlers are safe to be shared with timer interrupts, and
-> > > + * we don't want to warn erroneously for these. Such handlers will not poke
-> > > + * hardware that's not powered or call into kernel infrastructure not available
-> > > + * during suspend. These are marked with __IRQF_TIMER_SIBLING_OK.
-> > > + */
-> > > +bool irq_safe_during_suspend(struct irq_desc * desc, struct irqaction *action)
-> > > +{
-> > > +	const unsigned int safe_flags =
-> > > +		__IRQF_TIMER_SIBLING_OK | IRQF_NO_SUSPEND;
-> > > +
-> > > +	/*
-> > > +	 * If no-one wants to be called during suspend, or if everyone does,
-> > > +	 * then there's no potential conflict.
-> > > +	 */
-> > > +	if (!desc->no_suspend_depth)
-> > > +		return true;
-> > > +	if (desc->no_suspend_depth == desc->nr_actions)
-> > > +		return true;
+I have merged it and added quirk to exynos, but it does not help. There
+is still timeout:
 
-Just another nit, can't we also return early when
-desc->nr_actions == 1 (I mean, the handler cannot conflict with anything
-since it is the only one registered) ?
-
-> > > +
-> > > +	/*
-> > > +	 * If any action hasn't asked to be called during suspend or is not
-> > > +	 * happy to be called during suspend, we have a potential problem.
-> > > +	 */
-> > > +	if (!(action->flags & safe_flags))
-> > > +		return false;
-> > 	else if (!(action->flags & IRQF_NO_SUSPEND) ||
-> > 		 desc->no_suspend_depth > 1)
-> > 		return true;
-> > 
-> > Am I missing something or is the following loop only required if
-> > we're adding an action with the IRQF_NO_SUSPEND flag set for the
-> > first time ?
-> 
-> With the check above we could return true incorrectly after the first
-> time we return true. Consider adding the following in order to an empty
-> desc:
-> 
-> 	flags = IRQF_SHARED		// safe, returns true
-> 	flags = IRQF_NO_SUSPEND		// unsafe, returns false
-> 	flags = IRQF_NO_SUSPEND		// unsafe, but returns true
-
-Yep, you're right.
-
-> 
-> Currently it shouldn't matter as the only caller is a WARN_ON_ONCE(),
-> but it seems unfortunate to allow this.
-
-Absolutely, forget about that, I guess we don't have to optimize that
-test anyway.
-
-> 
-> We'd also run the loop until we had at least two IRQF_NO_SUSPEND
-> irqactions:
-> 
-> 	flags = IRQF_SHARED_TIMER_OK	// early return
-> 	flags = IRQF_NO_SUSPEND		// run loop
-> 	flags = IRQF_SHARED_TIMER_OK	// run loop
-
-Hm, no, this one would return directly (it's an '||' operator not an
-'&&' one), because we're not adding an IRQF_NO_SUSPEND handler here, and
-adding IRQF_SHARED_TIMER_OK is always safe, isn't it ?
+[  242.188178] INFO: task kworker/u16:1:50 blocked for more than 120
+seconds.
+[  242.193605]       Not tainted
+3.19.0-next-20150212-00003-g7850750-dirty #3841
+[  242.200703] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[  242.208592] kworker/u16:1   D c04755f4     0    50      2 0x00000000
+[  242.214840] Workqueue: kmmcd mmc_rescan
+[  242.218635] [<c04755f4>] (__schedule) from [<c04759a0>]
+(schedule+0x34/0x98)
+[  242.225671] [<c04759a0>] (schedule) from [<c0479424>]
+(schedule_timeout+0x110/0x164)
+[  242.233383] [<c0479424>] (schedule_timeout) from [<c0476438>]
+(wait_for_common+0xb8/0x14c)
+[  242.241619] [<c0476438>] (wait_for_common) from [<c0361600>]
+(mmc_wait_for_req+0xb0/0x13c)
+[  242.249848] [<c0361600>] (mmc_wait_for_req) from [<c036170c>]
+(mmc_wait_for_cmd+0x80/0xa0)
+[  242.258086] [<c036170c>] (mmc_wait_for_cmd) from [<c03676e0>]
+(mmc_go_idle+0x78/0xf8)
+[  242.265876] [<c03676e0>] (mmc_go_idle) from [<c0363700>]
+(mmc_rescan+0x25c/0x2e4)
+[  242.273333] [<c0363700>] (mmc_rescan) from [<c0034764>]
+(process_one_work+0x120/0x324)
+[  242.281216] [<c0034764>] (process_one_work) from [<c00349cc>]
+(worker_thread+0x30/0x42c)
+[  242.289275] [<c00349cc>] (worker_thread) from [<c003926c>]
+(kthread+0xd8/0xf4)
+[  242.296469] [<c003926c>] (kthread) from [<c000e7c0>]
+(ret_from_fork+0x14/0x34)
 
 
-> 	flags = IRQF_SHARED_TIMER_OK	// run loop
-> 	flags = IRQF_SHARED_TIMER_OK	// run loop
-> 	flags = IRQF_NO_SUSPEND		// don't run loop.
-> 	flags = IRQF_SHARED_TIMER_OK	// don't run loop
-> 
-> I assume that we only have one IRQF_NO_SUSPEND action sharing the line
-> anyway in your case?
+Regards
+Andrzej
 
-Yep.
-
-> 
-> Given that we'll only bother to run the test if there's a mismatch
-> between desc->no_suspend_depth and desc->nr_actions, I don't think we
-> win much. These cases should be rare in practice, the tests only
-> performed when we request the irq, and there shouldn't be that many
-> actions to loop over.
-
-Sure, never mind, as I said, I'm not sure extra optimization is needed
-here.
-
-Regards,
-
-Boris
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+>>>
+>>> Regards
+>>> Andrzej
+>>>
+>>>>>>          if (!clock) {
+>>>>>>                  mci_writel(host, CLKENA, 0);
+>>>>>> --
+>>>>>> 1.8.3.2
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> _______________________________________________
+>>>>>> linux-arm-kernel mailing list
+>>>>>> linux-arm-kernel@lists.infradead.org
+>>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>>>
+>>>>
+>>>> --
+>>>> To unsubscribe from this list: send the line "unsubscribe linux-doc" in
+>>>> the body of a message to majordomo@vger.kernel.org
+>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>>
+>>
+>>
+>
