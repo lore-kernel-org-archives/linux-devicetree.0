@@ -1,228 +1,99 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
-Date: Thu, 12 Feb 2015 14:07:02 +0000
-Message-ID: <20150212140702.GF1522@leverpostej>
-References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com>
- <20150121164632.GK5044@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150121164632.GK5044@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ksankaran-qTEPVZfXA3Y@public.gmane.org" <ksankaran-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Thomas Lendacky <Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org>, Joel Schopp <Joel.Schopp-5C7GfCeVMHo@public.gmane.org>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v6 00/15] Tegra124 EMC (external memory controller) support
+Date: Thu, 12 Feb 2015 15:06:16 +0100
+Message-ID: <1423750042-6535-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On Wed, Jan 21, 2015 at 04:46:32PM +0000, Mark Rutland wrote:
-> On Wed, Jan 21, 2015 at 12:02:30PM +0000, Sudeep Holla wrote:
-> > Commit 5d425c18653731af6 ("arm64: kernel: add support for cpu cache
-> > information") adds cacheinfo support for ARM64. Since there's no
-> > architectural way of detecting the cpus that share particular cache,
-> > device tree can be used and the core cacheinfo already supports the
-> > same.
-> 
-> This still leaves the possibility that misleading information is exposed
-> for systems from other vendors. I've made a quick attempt to Cc the
-> authors of other arm64 dts here.
-> 
-> Given that in the absence of these nodes we can't derive a complete view
-> of the cache hierarchy, shouldn't we only expose the cacheinfo when we
-> have these nodes and can therefore produce correct values?
+this v6 mainly contains a rebase on latest linux-next.
 
-I'm still rather concerned about exposing misleading cache info in this
-manner. Is there no way we can limit the exposure of this information to
-those cases where we actually have the information?
+There's an outstanding issue with frequencies lower than 102MHz, as the MC IP
+complains of EMEM arbitration errors when at those frequencies. Any suggestions
+welcome. The downstream kernels that I have seen ignore those errors, but mainline prints a message out, so it's actually visible even if everything else appears to keep working.
 
-Do we know if/how this will work for ACPI systems?
+So far it has been tested only on a Jetson TK1.
 
-Thanks,
-Mark.
+Patch 1: Removes the old EMC clock, that was unused and not functional
 
-> I can imagine that future dts are likely to appear without these nodes,
-> and I imagine that we won't spot all of those cases. We also have
-> existing DTBs to take into account.
-> 
-> Thanks,
-> Mark.
-> 
-> > 
-> > This patch adds the L2 cache topology on Juno board, FVP/RTSM and
-> > foundation models.
-> > 
-> > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/arm/foundation-v8.dts  |  8 ++++++++
-> >  arch/arm64/boot/dts/arm/juno.dts           | 14 ++++++++++++++
-> >  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts |  8 ++++++++
-> >  3 files changed, 30 insertions(+)
-> > 
-> > Hi Arnd/Olof,
-> > 
-> > Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
-> > support for cpu cache information") which is in -next(via arm64) are
-> > dependent to provide desired functionality, then can go indepedently
-> > if you think there could be conflicts if this change is taken via arm64.
-> > If not, Catalin can pick up with your acks after the review.
-> > 
-> > Regards,
-> > Sudeep
-> > 
-> > diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
-> > index 27f32962e55c..4eac8dcea423 100644
-> > --- a/arch/arm64/boot/dts/arm/foundation-v8.dts
-> > +++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
-> > @@ -34,6 +34,7 @@
-> >  			reg = <0x0 0x0>;
-> >  			enable-method = "spin-table";
-> >  			cpu-release-addr = <0x0 0x8000fff8>;
-> > +			next-level-cache = <&L2_0>;
-> >  		};
-> >  		cpu@1 {
-> >  			device_type = "cpu";
-> > @@ -41,6 +42,7 @@
-> >  			reg = <0x0 0x1>;
-> >  			enable-method = "spin-table";
-> >  			cpu-release-addr = <0x0 0x8000fff8>;
-> > +			next-level-cache = <&L2_0>;
-> >  		};
-> >  		cpu@2 {
-> >  			device_type = "cpu";
-> > @@ -48,6 +50,7 @@
-> >  			reg = <0x0 0x2>;
-> >  			enable-method = "spin-table";
-> >  			cpu-release-addr = <0x0 0x8000fff8>;
-> > +			next-level-cache = <&L2_0>;
-> >  		};
-> >  		cpu@3 {
-> >  			device_type = "cpu";
-> > @@ -55,6 +58,11 @@
-> >  			reg = <0x0 0x3>;
-> >  			enable-method = "spin-table";
-> >  			cpu-release-addr = <0x0 0x8000fff8>;
-> > +			next-level-cache = <&L2_0>;
-> > +		};
-> > +
-> > +		L2_0: l2-cache0 {
-> > +			compatible = "cache";
-> >  		};
-> >  	};
-> >  
-> > diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-> > index cb3073e4e7a8..15dafbb24426 100644
-> > --- a/arch/arm64/boot/dts/arm/juno.dts
-> > +++ b/arch/arm64/boot/dts/arm/juno.dts
-> > @@ -39,6 +39,7 @@
-> >  			reg = <0x0 0x0>;
-> >  			device_type = "cpu";
-> >  			enable-method = "psci";
-> > +			next-level-cache = <&A57_L2>;
-> >  		};
-> >  
-> >  		A57_1: cpu@1 {
-> > @@ -46,6 +47,7 @@
-> >  			reg = <0x0 0x1>;
-> >  			device_type = "cpu";
-> >  			enable-method = "psci";
-> > +			next-level-cache = <&A57_L2>;
-> >  		};
-> >  
-> >  		A53_0: cpu@100 {
-> > @@ -53,6 +55,7 @@
-> >  			reg = <0x0 0x100>;
-> >  			device_type = "cpu";
-> >  			enable-method = "psci";
-> > +			next-level-cache = <&A53_L2>;
-> >  		};
-> >  
-> >  		A53_1: cpu@101 {
-> > @@ -60,6 +63,7 @@
-> >  			reg = <0x0 0x101>;
-> >  			device_type = "cpu";
-> >  			enable-method = "psci";
-> > +			next-level-cache = <&A53_L2>;
-> >  		};
-> >  
-> >  		A53_2: cpu@102 {
-> > @@ -67,6 +71,7 @@
-> >  			reg = <0x0 0x102>;
-> >  			device_type = "cpu";
-> >  			enable-method = "psci";
-> > +			next-level-cache = <&A53_L2>;
-> >  		};
-> >  
-> >  		A53_3: cpu@103 {
-> > @@ -74,6 +79,15 @@
-> >  			reg = <0x0 0x103>;
-> >  			device_type = "cpu";
-> >  			enable-method = "psci";
-> > +			next-level-cache = <&A53_L2>;
-> > +		};
-> > +
-> > +		A57_L2: l2-cache0 {
-> > +			compatible = "cache";
-> > +		};
-> > +
-> > +		A53_L2: l2-cache1 {
-> > +			compatible = "cache";
-> >  		};
-> >  	};
-> >  
-> > diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> > index efc59b3baf63..20addabbd127 100644
-> > --- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> > +++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> > @@ -37,6 +37,7 @@
-> >  			reg = <0x0 0x0>;
-> >  			enable-method = "spin-table";
-> >  			cpu-release-addr = <0x0 0x8000fff8>;
-> > +			next-level-cache = <&L2_0>;
-> >  		};
-> >  		cpu@1 {
-> >  			device_type = "cpu";
-> > @@ -44,6 +45,7 @@
-> >  			reg = <0x0 0x1>;
-> >  			enable-method = "spin-table";
-> >  			cpu-release-addr = <0x0 0x8000fff8>;
-> > +			next-level-cache = <&L2_0>;
-> >  		};
-> >  		cpu@2 {
-> >  			device_type = "cpu";
-> > @@ -51,6 +53,7 @@
-> >  			reg = <0x0 0x2>;
-> >  			enable-method = "spin-table";
-> >  			cpu-release-addr = <0x0 0x8000fff8>;
-> > +			next-level-cache = <&L2_0>;
-> >  		};
-> >  		cpu@3 {
-> >  			device_type = "cpu";
-> > @@ -58,6 +61,11 @@
-> >  			reg = <0x0 0x3>;
-> >  			enable-method = "spin-table";
-> >  			cpu-release-addr = <0x0 0x8000fff8>;
-> > +			next-level-cache = <&L2_0>;
-> > +		};
-> > +
-> > +		L2_0: l2-cache0 {
-> > +			compatible = "cache";
-> >  		};
-> >  	};
-> >  
-> > -- 
-> > 1.9.1
-> > 
-> > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch 2: Documents bindings for the new long-ram-code property
+
+Patch 3: Adds API for reading the ram code
+
+Patches 4 to 7: Document OF additions
+
+Patch 8: Adds EMC node to Tegra124 DT
+
+Patch 9: Adds timings for Jetson TK1 board
+
+Patch 10: Adds functions to the MC driver so the EMC driver can stay within its
+own registers
+
+Patch 11: Adds the actual EMC driver, making use of the new MC API
+
+Patch 12: Adds EMC clock driver, making use of API provided by the EMC driver
+
+Patch 13: Adds debugfs entry for getting and setting the EMC rate
+
+Patch 14: On Tegra124, have the EMC clock be the parent of the MC clock
+
+http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=emc-v6
+
+Regards,
+
+Tomeu
+
+Mikko Perttunen (9):
+  clk: tegra124: Remove old emc clock
+  soc/tegra: Add ram code reader helper
+  of: Add Tegra124 EMC bindings
+  ARM: tegra: Add EMC to Tegra124 device tree
+  ARM: tegra: Add EMC timings to Jetson TK1 device tree
+  memory: tegra: Add API needed by the EMC driver
+  memory: tegra: Add EMC (external memory controller) driver
+  clk: tegra: Add EMC clock driver
+  memory: tegra: Add debugfs entry for getting and setting the EMC rate
+
+Tomeu Vizoso (6):
+  of: Document long-ram-code property in nvidia,tegra20-apbmisc
+  of: document new emc-timings subnode in nvidia,tegra124-car
+  of: Document timings subnode of nvidia,tegra-mc
+  of: document external-memory-controller property in tegra124-car
+  clk: Expose clk_hw_reparent to providers
+  clk: tegra: Set the EMC clock as the parent of the MC clock
+
+ .../bindings/clock/nvidia,tegra124-car.txt         |   44 +-
+ .../memory-controllers/nvidia,tegra-mc.txt         |   84 +-
+ .../bindings/memory-controllers/tegra-emc.txt      |  379 +++
+ .../bindings/misc/nvidia,tegra20-apbmisc.txt       |    2 +
+ arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi     | 2469 ++++++++++++++++++++
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts          |    2 +
+ arch/arm/boot/dts/tegra124.dtsi                    |    8 +
+ drivers/clk/clk.c                                  |    8 +
+ drivers/clk/tegra/Makefile                         |    2 +-
+ drivers/clk/tegra/clk-emc.c                        |  528 +++++
+ drivers/clk/tegra/clk-tegra124.c                   |   18 +-
+ drivers/clk/tegra/clk.h                            |    3 +
+ drivers/memory/tegra/Kconfig                       |   11 +
+ drivers/memory/tegra/Makefile                      |    2 +
+ drivers/memory/tegra/mc.c                          |  136 ++
+ drivers/memory/tegra/tegra124-emc.c                | 1164 +++++++++
+ drivers/memory/tegra/tegra124.c                    |   44 +
+ drivers/soc/tegra/fuse/tegra-apbmisc.c             |   19 +
+ include/linux/clk-provider.h                       |    1 +
+ include/soc/tegra/emc.h                            |   19 +
+ include/soc/tegra/fuse.h                           |    1 +
+ include/soc/tegra/mc.h                             |   14 +-
+ 22 files changed, 4939 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
+ create mode 100644 arch/arm/boot/dts/tegra124-jetson-tk1-emc.dtsi
+ create mode 100644 drivers/clk/tegra/clk-emc.c
+ create mode 100644 drivers/memory/tegra/tegra124-emc.c
+ create mode 100644 include/soc/tegra/emc.h
+
+-- 
+1.9.3
