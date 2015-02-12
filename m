@@ -1,84 +1,116 @@
-From: Ola Jeppsson <ola@adapteva.com>
-Subject: Re: [PATCH 4/5] ARM: dts: zynq: Split off Parallella Microserver
- device tree
-Date: Thu, 12 Feb 2015 14:12:19 +0100
-Message-ID: <54DCA6B3.1090903@adapteva.com>
-References: <1423702513-4032-1-git-send-email-afaerber@suse.de> <1423702513-4032-5-git-send-email-afaerber@suse.de>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
+ if no bestdiv is normally found
+Date: Thu, 12 Feb 2015 14:41:31 +0100
+Message-ID: <20150212134131.GX12209@pengutronix.de>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
+ <20150212093356.GR12209@pengutronix.de>
+ <20150212103944.GA1290@victor>
+ <20150212122405.GW12209@pengutronix.de>
+ <20150212125646.GT8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423702513-4032-5-git-send-email-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Michal Simek <michal.simek@xilinx.com>
-Cc: Olof Johansson <olof@lixom.net>, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150212125646.GT8656@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-02-12 01:55, Andreas F=C3=A4rber wrote:
-> The Microserver edition has neither HDMI nor USB.
->
-> Cc: Ola Jeppsson <ola@adapteva.com>
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> ---
->   arch/arm/boot/dts/Makefile                        |  1 +
->   arch/arm/boot/dts/zynq-parallella-microserver.dts | 19 ++++++++++++=
-+++++++
->   2 files changed, 20 insertions(+)
->   create mode 100644 arch/arm/boot/dts/zynq-parallella-microserver.dt=
-s
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index a1c776b8dcec..42c75eeba584 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -606,6 +606,7 @@ dtb-$(CONFIG_ARCH_VT8500) +=3D \
->   	wm8850-w70v2.dtb
->   dtb-$(CONFIG_ARCH_ZYNQ) +=3D \
->   	zynq-parallella.dtb \
-> +	zynq-parallella-microserver.dtb \
->   	zynq-zc702.dtb \
->   	zynq-zc706.dtb \
->   	zynq-zed.dtb \
-> diff --git a/arch/arm/boot/dts/zynq-parallella-microserver.dts b/arch=
-/arm/boot/dts/zynq-parallella-microserver.dts
-> new file mode 100644
-> index 000000000000..1f3bd2d27a93
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/zynq-parallella-microserver.dts
-> @@ -0,0 +1,19 @@
-> +/*
-> + * Copyright (c) 2014 SUSE LINUX Products GmbH
-> + * Copyright (c) 2015 SUSE Linux GmbH
-> + *
-> + * This software is licensed under the terms of the GNU General Publ=
-ic
-> + * License version 2, as published by the Free Software Foundation, =
-and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +/dts-v1/;
-> +#include "zynq-parallella1.dtsi"
-> +
-> +/ {
-> +	model =3D "Adapteva Parallella Microserver Board";
-> +};
-To me it would make more sense to use the model number in the file name=
-=2E
-I.e., p1600 instead of microserver.
-
-http://www.digikey.com/product-search/en?v=3D1554&FV=3Dfff40028%2Cfff80=
-14d
-
-
-// Ola
-
---=20
-Phone: +46.733208642
-Skype: olajep
-Email: ola@adapteva.com
+T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTI6NTY6NDZQTSArMDAwMCwgUnVzc2VsbCBLaW5nIC0g
+QVJNIExpbnV4IHdyb3RlOgo+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDAxOjI0OjA1UE0gKzAx
+MDAsIFNhc2NoYSBIYXVlciB3cm90ZToKPiA+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDA2OjM5
+OjQ1UE0gKzA4MDAsIExpdSBZaW5nIHdyb3RlOgo+ID4gPiBPbiBUaHUsIEZlYiAxMiwgMjAxNSBh
+dCAxMDozMzo1NkFNICswMTAwLCBTYXNjaGEgSGF1ZXIgd3JvdGU6Cj4gPiA+ID4gT24gVGh1LCBG
+ZWIgMTIsIDIwMTUgYXQgMDI6MDE6MjRQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6Cj4gPiA+ID4g
+PiBJZiBubyBiZXN0IGRpdmlkZXIgaXMgbm9ybWFsbHkgZm91bmQsIHdlIHdpbGwgdHJ5IHRvIHVz
+ZSB0aGUgbWF4aW11bSBkaXZpZGVyLgo+ID4gPiA+ID4gV2Ugc2hvdWxkIG5vdCBzZXQgdGhlIHBh
+cmVudCBjbG9jayByYXRlIHRvIGJlIDFIeiBieSBmb3JjZSBmb3IgYmVpbmcgcm91bmRlZC4KPiA+
+ID4gPiA+IEluc3RlYWQsIHdlIHNob3VsZCB0YWtlIHRoZSBtYXhpbXVtIGRpdmlkZXIgYXMgYSBi
+YXNlIGFuZCBjYWxjdWxhdGUgYSBjb3JyZWN0Cj4gPiA+ID4gPiBwYXJlbnQgY2xvY2sgcmF0ZSBm
+b3IgYmVpbmcgcm91bmRlZC4KPiA+ID4gPiAKPiA+ID4gPiBQbGVhc2UgYWRkIGFuIGV4cGxhbmF0
+aW9uIHdoeSB5b3UgdGhpbmsgdGhlIGN1cnJlbnQgY29kZSBpcyB3cm9uZyBhbmQKPiA+ID4gPiB3
+aGF0IHRoaXMgYWN0dWFsbHkgZml4ZXMsIG1heWJlIGFuIGV4YW1wbGU/Cj4gPiA+IAo+ID4gPiBU
+aGUgTUlQSSBEU0kgcGFuZWwncyBwaXhlbCBjbG9jayByYXRlIGlzIDI2LjRNSHogYW5kIGl0J3Mg
+ZGVyaXZlZCBmcm9tIFBMTDUgb24KPiA+ID4gdGhlIE1YNkRMIFNhYnJlU0QgYm9hcmQuCj4gPiA+
+IAo+ID4gPiBUaGVzZSBhcmUgdGhlIGNsb2NrIHRyZWUgc3VtbWFyaWVzIHdpdGggb3Igd2l0aG91
+dCB0aGUgcGF0Y2ggYXBwbGllZDoKPiA+ID4gMSkgV2l0aCB0aGUgcGF0Y2ggYXBwbGllZDoKPiA+
+ID4gcGxsNV9ieXBhc3Nfc3JjICAgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAg
+ICAyNDAwMDAwMCAgICAgICAgICAwIDAKPiA+ID4gICAgcGxsNSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDg0NDgwMDA0OCAgICAgICAgICAwIDAKPiA+ID4g
+ICAgICAgcGxsNV9ieXBhc3MgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDg0
+NDgwMDA0OCAgICAgICAgICAwIDAKPiA+ID4gICAgICAgICAgcGxsNV92aWRlbyAgICAgICAgICAg
+ICAgICAgICAxICAgICAgICAgICAgMSAgIDg0NDgwMDA0OCAgICAgICAgICAwIDAKPiA+ID4gICAg
+ICAgICAgICAgcGxsNV9wb3N0X2RpdiAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDIxMTIw
+MDAxMiAgICAgICAgICAwIDAKPiA+ID4gICAgICAgICAgICAgICAgcGxsNV92aWRlb19kaXYgICAg
+ICAgICAgIDEgICAgICAgICAgICAxICAgMjExMjAwMDEyICAgICAgICAwIDAKPiA+ID4gICAgICAg
+ICAgICAgICAgICAgaXB1MV9kaTBfcHJlX3NlbCAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAy
+MTEyMDAwMTIgICAwIDAKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTBfcHJlICAg
+ICAgICAgICAxICAgICAgICAgICAgMSAgICAyNjQwMDAwMiAgICAwIDAKPiA+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgaXB1MV9kaTBfc2VsICAgICAgICAgICAxICAgICAgICAgICAgMSAgICAy
+NjQwMDAwMiAwIDAKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTAgICAg
+ICAgICAgIDEgICAgICAgICAgICAxICAgIDI2NDAwMDAyICAwIDAKPiA+ID4gCj4gPiA+IDIpIFdp
+dGhvdXQgdGhlIHBhdGNoIGFwcGxpZWQ6Cj4gPiA+IHBsbDVfYnlwYXNzX3NyYyAgICAgICAgICAg
+ICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjQwMDAwMDAgICAgICAgICAgMCAwCj4gPiA+
+ICAgIHBsbDUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA2
+NDgwMDAwMDAgICAgICAgICAgMCAwCj4gPiA+ICAgICAgIHBsbDVfYnlwYXNzICAgICAgICAgICAg
+ICAgICAgICAgMSAgICAgICAgICAgIDEgICA2NDgwMDAwMDAgICAgICAgICAgMCAwCj4gPiA+ICAg
+ICAgICAgIHBsbDVfdmlkZW8gICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA2NDgw
+MDAwMDAgICAgICAgICAgMCAwCj4gPiA+ICAgICAgICAgICAgIHBsbDVfcG9zdF9kaXYgICAgICAg
+ICAgICAgMSAgICAgICAgICAgIDEgICAxNjIwMDAwMDAgICAgICAgICAgMCAwCj4gPiA+ICAgICAg
+ICAgICAgICAgIHBsbDVfdmlkZW9fZGl2ICAgICAgICAgICAxICAgICAgICAgICAgMSAgICA0MDUw
+MDAwMCAgICAgICAgMCAwCj4gPiA+ICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwX3ByZV9zZWwg
+ICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDQwNTAwMDAwICAgMCAwCj4gPiA+ICAgICAgICAg
+ICAgICAgICAgICAgIGlwdTFfZGkwX3ByZSAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjAy
+NTAwMDAgICAgMCAwCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwX3NlbCAg
+ICAgICAgICAgMSAgICAgICAgICAgIDEgICAgMjAyNTAwMDAgMCAwCj4gPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGlwdTFfZGkwICAgICAgICAgICAxICAgICAgICAgICAgMSAgICAyMDI1
+MDAwMCAgMCAwCj4gPiAKPiA+IFRoaXMgc2VlbXMgdG8gYmUgYnJva2VuIHNpbmNlOgo+ID4gCj4g
+PiB8IGNvbW1pdCBiMTFkMjgyZGJlYTI3ZGIxNzg4ODkzMTE1ZGZjYThhNzg1NmJmMjA1Cj4gPiB8
+IEF1dGhvcjogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPiA+IHwgRGF0
+ZTogICBUaHUgRmViIDEzIDEyOjAzOjU5IDIwMTQgKzAyMDAKPiA+IHwgCj4gPiB8ICAgICBjbGs6
+IGRpdmlkZXI6IGZpeCByYXRlIGNhbGN1bGF0aW9uIGZvciBmcmFjdGlvbmFsIHJhdGVzCj4gPiAK
+PiA+IFRoaXMgcGF0Y2ggZml4ZWQgYSBjYXNlIHdoZW4gY2xrX3NldF9yYXRlKGNsa19yb3VuZF9y
+YXRlKHJhdGUpKSByZXN1bHRlZAo+ID4gaW4gYSBsb3dlciBmcmVxdWVuY3kgdGhhbiBjbGtfcm91
+bmRfcmF0ZShyYXRlKSByZXR1cm5lZC4KPiA+IAo+ID4gU2luY2UgdGhlbiB0aGUgTVVMVF9ST1VO
+RF9VUCBpbiBjbGtfZGl2aWRlcl9iZXN0ZGl2KCkgaXMgaW5jb25zaXN0ZW50IHRvCj4gPiB0aGUg
+cmVzdCBvZiB0aGUgZGl2aWRlci4gTWF5YmUgdGhpcyBzaG91bGQgYmUgYSBzaW1wbGUgcmF0ZSAq
+IGkgbm93LCBidXQKPiA+IEknbSB1bnN1cmUgd2hhdCBzaWRlIGVmZmVjdHMgdGhpcyBoYXMuCj4g
+PiAKPiA+IEkgdGhpbmsgeW91ciBwYXRjaCBvbmx5IGZpeGVzIHRoZSBiZWhhdmlvdXIgaW4geW91
+ciBjYXNlIGJ5IGFjY2lkZW50LAo+ID4gaXQncyBub3QgYSBjb3JyZWN0IGZpeCBmb3IgdGhpcyBp
+c3N1ZS4KPiAKPiBXZWxsLCBpdCdzIGRlZmluZWQgdGhhdDoKPiAKPiAJbmV3X3JhdGUgPSBjbGtf
+cm91bmRfcmF0ZShjbGssIHJhdGUpOwo+IAo+IHJldHVybnMgdGhlIHJhdGUgd2hpY2ggeW91IHdv
+dWxkIGdldCBpZiB5b3UgZGlkOgo+IAo+IAljbGtfc2V0X3JhdGUoY2xrLCByYXRlKTsKPiAJbmV3
+X3JhdGUgPSBjbGtfZ2V0X3JhdGUoY2xrKTsKPiAKPiBUaGUgcmVhc29uaW5nIGhlcmUgaXMgdGhh
+dCBjbGtfcm91bmRfcmF0ZSgpIGdpdmVzIHlvdSBhIHdheSB0byBxdWVyeSB3aGF0Cj4gcmF0ZSB5
+b3Ugd291bGQgZ2V0IGlmIHlvdSB3ZXJlIHRvIGFzayBmb3IgdGhlIHJhdGUgdG8gYmUgc2V0LCB3
+aXRob3V0Cj4gZWZmZWN0aW5nIGEgY2hhbmdlIGluIHRoZSBoYXJkd2FyZS4KPiAKPiBUaGUgaWRl
+YSB0aGF0IHlvdSBzaG91bGQgY2FsbCBjbGtfcm91bmRfcmF0ZSgpIGZpcnN0IGJlZm9yZSBjbGtf
+c2V0X3JhdGUoKQo+IGFuZCBwYXNzIHRoZSByZXR1cm5lZCByb3VuZGVkIHJhdGUgaW50byBjbGtf
+c2V0X3JhdGUoKSBpcyByZWFsbHkgaWRpb3RpYwo+IGdpdmVuIHRoYXQuICBQbGVhc2UgZG9uJ3Qg
+ZG8gaXQsIGFuZCBwbGVhc2UgcmVtb3ZlIGNvZGUgd2hpY2ggZG9lcyBpdCwgYW5kCj4gaW4gcmV2
+aWV3IGNvbW1lbnQgb24gaXQuICBUaGFua3MuCgpUb21pcyBwYXRjaCBpcyBiYXNlZCBvbiB0aGUg
+YXNzdW1wdGlvbiB0aGF0IGNsa19zZXRfcmF0ZShjbGtfcm91bmRfcmF0ZShyYXRlKSkKaXMgZXF1
+YWwgdG8gY2xrX3JvdW5kX3JhdGUocmF0ZSkuIFNvIHdoZW4gdGhpcyBhc3N1bXB0aW9uIGlzIHdy
+b25nIHRoZW4KaXQgc2hvdWxkIHNpbXBseSBiZSByZXZlcnRlZC4KU28gTGl1LCBjb3VsZCB5b3Ug
+dGVzdCBpZiByZXZlcnRpbmcgVG9taXMgcGF0Y2ggZml4ZXMgeW91ciBwcm9ibGVtPwoKU2FzY2hh
+CgotLSAKUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwKSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAg
+ICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8gIHwKUGVpbmVyIFN0ci4gNi04
+LCAzMTEzNyBIaWxkZXNoZWltLCBHZXJtYW55IHwgUGhvbmU6ICs0OS01MTIxLTIwNjkxNy0wICAg
+IHwKQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAgIHwgRmF4OiAgICs0
+OS01MTIxLTIwNjkxNy01NTU1IHwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
