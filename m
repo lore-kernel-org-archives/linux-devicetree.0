@@ -1,196 +1,265 @@
-From: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 1/4] usb: renesas_usbhs: fix spinlock recursion by
- usbhsf_dma_complete()
-Date: Thu, 12 Feb 2015 02:20:51 +0000
-Message-ID: <SIXPR06MB33345668E089894ACE363B7D8220@SIXPR06MB333.apcprd06.prod.outlook.com>
-References: <1423469774-6532-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1423469774-6532-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdXkPciXDbEp97FbD8Q3S6KxvoZexAO3EYYg3-KsL7dg2g@mail.gmail.com>
+From: addy ke <addy.ke@rock-chips.com>
+Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending
+ command'
+Date: Thu, 12 Feb 2015 10:28:11 +0800
+Message-ID: <54DC0FBB.7010308@rock-chips.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com> <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com> <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com> <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com> <54DAC534.4020708@rock-chips.com> <54DB43E2.70203@samsung.com> <CAGOxZ50CLM1Job+X45-CDF_23r9vsx0=jtMCu5cSoFk-+xzF=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXkPciXDbEp97FbD8Q3S6KxvoZexAO3EYYg3-KsL7dg2g@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, USB list <linux-usb@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ50CLM1Job+X45-CDF_23r9vsx0=jtMCu5cSoFk-+xzF=g@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: alim.akhtar@gmail.com, a.hajda@samsung.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org, djkurtz@chromium.org, huangtao@rock-chips.com, devicetree@vger.kernel.org, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXBseSENCg0KPiBIaSBTaGltb2Rh
-LXNhbiwNCj4gDQo+IE9uIE1vbiwgRmViIDksIDIwMTUgYXQgOToxNiBBTSwgWW9zaGloaXJvIFNo
-aW1vZGENCj4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBU
-aGUgdXNiaHNmX3BrdF9oYW5kbGVyKHBpcGUsIFVTQkhTRl9QS1RfRE1BX0RPTkUpIGluIHVzYmhz
-Zl9kbWFfY29tcGxldGUoKQ0KPiA+IHdpbGwgY2FsbCB0aGUgY29tcGxldGUgZnVuY3Rpb24gb2Yg
-YSB1c2IgZ2FkZ2V0IGRyaXZlciBmaW5hbGx5Lg0KPiA+IEFjY29yZGluZyB0byB0aGUgZ2FkZ2V0
-LmgsICJUaGUgZnVuY3Rpb24gd2lsbCBhbHdheXMgYmUgY2FsbGVkIHdpdGgNCj4gPiBpbnRlcnJ1
-cHRzIGRpc2FibGVkIi4NCj4gPg0KPiA+IFNvLCB0aGlzIHBhdGNoIGFkZHMgYSBsb2NhbF9pcnFf
-c2F2ZS9sb2NhbF9pcnFfcmVzdG9yZSBpbiB0aGUNCj4gPiB1c2Joc2ZfZG1hX2NvbXBsZXRlKCkg
-YmVjYXVzZSBhIGRtYWVuZ2luZSBkcml2ZXIgbWF5IGNhbGwgdGhpcw0KPiA+IGNhbGxiYWNrIGZ1
-bmN0aW9uIHdoZW4gaW50ZXJydXB0cyBlbmFibGVkIChlLmcuIGluIHRhc2tsZXQpLg0KPiA+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogWW9zaGloaXJvIFNoaW1vZGEgPHlvc2hpaGlyby5zaGltb2RhLnVo
-QHJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3VzYi9yZW5lc2FzX3VzYmhzL2Zp
-Zm8uYyB8ICAgIDMgKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCj4g
-Pg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9yZW5lc2FzX3VzYmhzL2ZpZm8uYyBiL2Ry
-aXZlcnMvdXNiL3JlbmVzYXNfdXNiaHMvZmlmby5jDQo+ID4gaW5kZXggZDg5MWJmZi4uYjE0NDBk
-MCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi9yZW5lc2FzX3VzYmhzL2ZpZm8uYw0KPiA+
-ICsrKyBiL2RyaXZlcnMvdXNiL3JlbmVzYXNfdXNiaHMvZmlmby5jDQo+ID4gQEAgLTExNjUsMTEg
-KzExNjUsMTQgQEAgc3RhdGljIHZvaWQgdXNiaHNmX2RtYV9jb21wbGV0ZSh2b2lkICphcmcpDQo+
-ID4gICAgICAgICBzdHJ1Y3QgdXNiaHNfcHJpdiAqcHJpdiA9IHVzYmhzX3BpcGVfdG9fcHJpdihw
-aXBlKTsNCj4gPiAgICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9IHVzYmhzX3ByaXZfdG9fZGV2
-KHByaXYpOw0KPiA+ICAgICAgICAgaW50IHJldDsNCj4gPiArICAgICAgIHVuc2lnbmVkIGxvbmcg
-ZmxhZ3M7DQo+ID4NCj4gPiArICAgICAgIGxvY2FsX2lycV9zYXZlKGZsYWdzKTsNCj4gDQo+IEFk
-ZGluZyAibG9jYWxfaXJxX3NhdmUoKSIgd2l0aG91dCBhIHNwaW5sb2NrIGlzIHVzdWFsbHkgbm90
-IGNvcnJlY3QuDQo+IEknbSBhIGJpdCBjb25mdXNlZCBoZXJlLiB1c2Joc2ZfcGt0X2hhbmRsZXIo
-KSBpdHNlbGYgY2FsbHMNCj4gDQo+ICAgICAgICAgdXNiaHNfbG9jayhwcml2LCBmbGFncyk7DQo+
-IA0KPiB3aGljaCBpcyBhY3R1YWxseQ0KPiANCj4gICAgICAgICBzcGluX2xvY2tfaXJxc2F2ZSh1
-c2Joc19wcml2X3RvX2xvY2socHJpdiksIGZsYWdzKQ0KPiANCj4gc28gaXQgZG9lcyBkaXNhYmxl
-IGludGVycnVwdHMgaW50ZXJuYWxseT8NCg0KWWVzLCBpdCBkb2VzLiBCdXQuLg0KDQo+IE9yIGlz
-IHRoaXMgYWJvdXQgcHJvdGVjdGluZyB0aGUgY2FsbCB0bw0KPiANCj4gICAgICAgICBwa3QtPmRv
-bmUocHJpdiwgcGt0KTsNCj4gDQo+IGF0IHRoZSBlbmQgb2YgdXNiaHNmX3BrdF9oYW5kbGVyKCks
-IHdoaWNoIGlzIGRvbmUgYWZ0ZXIgcmVsZWFzaW5nIHRoZQ0KPiBzcGlubG9jaz8NCg0KeWVzLCBJ
-IHdvdWxkIGxpa2UgdG8gcHJvdGVjdCBwa3QtPmRvbmUocHJpdiwgcGt0KSBiZWNhdXNlIGl0IHdp
-bGwgY2FsbA0KdXNiX2dhZGdldF9naXZlYmFja19yZXF1ZXN0KCkgaW4gbW9kX2dhZGdldC5jLg0K
-T3RoZXJ3aXNlLCBhbiBvb3BzIGhhcHBlbnMgaWYgSSBlbmFibGVkIENPTkZJR19ERUJVR19TUElO
-TE9DSyBhbmQgdXNlZCBnX25jbS4NCkkgY29waWVkIHRoZSBvb3BzIGxvZyBhdCB0aGUgZW5kIG9m
-IHRoaXMgZW1haWwuDQooQWZ0ZXIgSSBsb29ja2VkIHRoZSBsb2cgYWdhaW4sIEkgc2hvdWxkIGhh
-dmUgZGVzY3JpYmVkIGEgY29tbWl0IGxvZyB0aGF0IHRoaXMNCiBpc3N1ZSBpcyBjYXVzZWQgZnJv
-bSBhIGdhZGdldCBkcml2ZXIuKQ0KDQpBbHNvLCB0aGlzIGRyaXZlciBjYW5ub3QgcHJvdGVjdCBw
-a3QtPmRvbmUocHJpdiwgcGt0KSB1c2luZyB1c2Joc19sb2NrKCkgYmVjYXVzZQ0KYSBnYWRnZXQg
-ZHJpdmVyIG1heSBjYWxsIHVzYl9lcF9xdWV1ZSgpIGluIHRoZSBjb21wbGV0ZSBmdW5jdGlvbiBm
-cm9tDQp1c2JfZ2FkZ2V0X2dpdmViYWNrX3JlcXVlc3QoKS4gU28sIGEgc3BpbmxvY2sgcmVjdXJz
-aW9uIHdpbGwgaGFwcGVuLg0KDQo+IFN0aWxsLCB0aGF0IHdvdWxkIG5lZWQgc29tZSBiZXR0ZXIg
-cHJvdGVjdGlvbiwgYXMgbG9jYWxfaXJxX3NhdmUoKSBkaXNhYmxlcw0KPiBpbnRlcnJ1cHRzIG9u
-bHkgb24gdGhlIENQVSBpdCdzIHJ1bm5pbmcgb24sIG5vdCBvbiBvdGhlciBDUFVzIGluIGENCj4g
-bXVsdGlwcm9jZXNzb3Igc3lzdGVtLg0KDQpJIHNlZS4gSSB3aWxsIGludmVzdGlnYXRlIHRoaXMg
-aXNzdWUgbW9yZS4NCg0KPT09PT09PSBvb3BzIGxvZyA9PT09PT09DQpCVUc6IHNwaW5sb2NrIHJl
-Y3Vyc2lvbiBvbiBDUFUjMCwgaXJxLzEwMi1lNjVhMDAwLzU0Ng0KIGxvY2s6IDB4ZWUxZjVkNWMs
-IC5tYWdpYzogZGVhZDRlYWQsIC5vd25lcjogaXJxLzEwMi1lNjVhMDAwLzU0NiwgLm93bmVyX2Nw
-dTogMA0KQ1BVOiAwIFBJRDogNTQ2IENvbW06IGlycS8xMDItZTY1YTAwMCBUYWludGVkOiBHICAg
-ICAgICBXICAgICAgMy4xOS4wLXJjNC0wMTc1NC1nZmQ1Yjg0ZS1kaXJ0eSAjMTgxDQpIYXJkd2Fy
-ZSBuYW1lOiBHZW5lcmljIFI4QTc3OTEgKEZsYXR0ZW5lZCBEZXZpY2UgVHJlZSkNCkJhY2t0cmFj
-ZToNCls8YzAwMTFlNzg+XSAoZHVtcF9iYWNrdHJhY2UpIGZyb20gWzxjMDAxMjA4ND5dIChzaG93
-X3N0YWNrKzB4MTgvMHgxYykNCiByNjowMDAwMDAwMCByNTplZTFmNWQ1YyByNDowMDAwMDAwMCBy
-MzowMDIwODA0MA0KWzxjMDAxMjA2Yz5dIChzaG93X3N0YWNrKSBmcm9tIFs8YzA0NmM0NWM+XSAo
-ZHVtcF9zdGFjaysweDdjLzB4OTgpDQpbPGMwNDZjM2UwPl0gKGR1bXBfc3RhY2spIGZyb20gWzxj
-MDQ2Yjc1ND5dIChzcGluX2R1bXArMHg4MC8weDk0KQ0KIHI0OmVlOTY3MjQwIHIzOmMwNjUzMzM0
-DQpbPGMwNDZiNmQ0Pl0gKHNwaW5fZHVtcCkgZnJvbSBbPGMwNDZiNzk0Pl0gKHNwaW5fYnVnKzB4
-MmMvMHgzMCkNCiByNTpjMDU5YjIyOSByNDplZTFmNWQ1Yw0KWzxjMDQ2Yjc2OD5dIChzcGluX2J1
-ZykgZnJvbSBbPGMwMDU1NzhjPl0gKGRvX3Jhd19zcGluX2xvY2srMHg1MC8weDE5MCkNCiByNTow
-MDAwMDAwZiByNDo2MDAwMDExMw0KWzxjMDA1NTczYz5dIChkb19yYXdfc3Bpbl9sb2NrKSBmcm9t
-IFs8YzA0NzAyNzA+XSAoX3Jhd19zcGluX2xvY2tfaXJxc2F2ZSsweDE4LzB4MjApDQogcjk6ZWUx
-ZjVkNWMgcjg6ZWUxZjVkNDAgcjc6ZWVhZWE0MzQgcjY6MDAwMDAwMDAgcjU6MDAwMDAwMGYgcjQ6
-NjAwMDAxMTMNCls8YzA0NzAyNTg+XSAoX3Jhd19zcGluX2xvY2tfaXJxc2F2ZSkgZnJvbSBbPGJm
-MDAwNmU4Pl0gKGV0aF9zdGFydF94bWl0KzB4ZDAvMHgzN2MgW3VfZXRoZXJdKQ0KIHI0OmVlMWY1
-ODAwIHIzOjAwMDAwMDAwDQpbPGJmMDAwNjE4Pl0gKGV0aF9zdGFydF94bWl0IFt1X2V0aGVyXSkg
-ZnJvbSBbPGJmMDFiMGU4Pl0gKG5jbV90eF90YXNrbGV0KzB4NDQvMHg0YyBbdXNiX2ZfbmNtXSkN
-CiByMTA6ZWVhNWZkMzggcjk6YzA2OTg3YzAgcjg6MDAwMDAwMDAgcjc6MDAwMDAwMDAgcjY6YzA2
-NTMyNzQgcjU6MDAwMDAwMDANCiByNDplZTExNTYwMA0KWzxiZjAxYjBhND5dIChuY21fdHhfdGFz
-a2xldCBbdXNiX2ZfbmNtXSkgZnJvbSBbPGMwMDI5ODY4Pl0gKHRhc2tsZXRfYWN0aW9uKzB4OTQv
-MHhmNCkNCiByNTplZTExNTZlMCByNDplZTExNTZkYw0KWzxjMDAyOTdkND5dICh0YXNrbGV0X2Fj
-dGlvbikgZnJvbSBbPGMwMDI4ZjNjPl0gKF9fZG9fc29mdGlycSsweGVjLzB4MjIwKQ0KIHI4OmMw
-NjU4MDk4IHI3OjAwMDAwMTAwIHI2OmMwNjU4MDg4IHI1OjAwMDAwMDMwIHI0OmVlYTVlMDAwIHIz
-OjQwMDAwMDA0DQpbPGMwMDI4ZTUwPl0gKF9fZG9fc29mdGlycSkgZnJvbSBbPGMwMDI5MmVjPl0g
-KGlycV9leGl0KzB4OGMvMHhmYykNCiByMTA6MDAwMDAwMDIgcjk6NjAwMDAwMTMgcjg6MDAwMDAw
-MDEgcjc6ZWU4MDYwMDAgcjY6MDAwMDAwMDAgcjU6YzA2NTNhYzgNCiByNDowMDAwMDAwMA0KWzxj
-MDAyOTI2MD5dIChpcnFfZXhpdCkgZnJvbSBbPGMwMDViMWQ4Pl0gKF9faGFuZGxlX2RvbWFpbl9p
-cnErMHg5NC8weGI4KQ0KIHI0OjAwMDAwMDAwIHIzOjAwMDAwMGEyDQpbPGMwMDViMTQ0Pl0gKF9f
-aGFuZGxlX2RvbWFpbl9pcnEpIGZyb20gWzxjMDAwOTM5ND5dIChnaWNfaGFuZGxlX2lycSsweDQw
-LzB4NjQpDQogcjg6ZWVhNGY4YjAgcjc6ZWVhNWZlMWMgcjY6YzA2NWU5NWMgcjU6ZWVhNWZkZTgg
-cjQ6ZjAwMDIwMDAgcjM6ZWVhNWZkZTgNCls8YzAwMDkzNTQ+XSAoZ2ljX2hhbmRsZV9pcnEpIGZy
-b20gWzxjMDAxMmJjMD5dIChfX2lycV9zdmMrMHg0MC8weDU0KQ0KRXhjZXB0aW9uIHN0YWNrKDB4
-ZWVhNWZkZTggdG8gMHhlZWE1ZmUzMCkNCmZkZTA6ICAgICAgICAgICAgICAgICAgIGVlMWY1ZDVj
-IGFjNGFhYzQ5IGVlMGI2NWU0IGVlMWY1ZDQwIGVlMWY1ZDQwIGVlMGI2NWMwDQpmZTAwOiBlZWI1
-YjI4MCBlZTFmNWQ1YyBlZWE0ZjhiMCA2MDAwMDAxMyAwMDAwMDAwMiBlZWE1ZmU0YyBlZWE1ZmUy
-MCBlZWE1ZmUzMA0KZmUyMDogYzA0NzAyNTQgYmYwMDA1YjggNjAwMDAwMTMgZmZmZmZmZmYNCiBy
-NjpmZmZmZmZmZiByNTo2MDAwMDAxMyByNDpiZjAwMDViOCByMzpjMDQ3MDI1NA0KWzxiZjAwMDU0
-MD5dICh0eF9jb21wbGV0ZSBbdV9ldGhlcl0pIGZyb20gWzxjMDJkNmEwND5dICh1c2JfZ2FkZ2V0
-X2dpdmViYWNrX3JlcXVlc3QrMHgxNC8weDE4KQ0KIHI3OmVlYTRmODEwIHI2OmVlOGUyMDZjIHI1
-OjAwMDAwMDAwIHI0OmVlMGI2NWY0DQpbPGMwMmQ2OWYwPl0gKHVzYl9nYWRnZXRfZ2l2ZWJhY2tf
-cmVxdWVzdCkgZnJvbSBbPGMwMmQ1ZDE0Pl0gKHVzYmhzZ19xdWV1ZV9kb25lKzB4MmMvMHgzMCkN
-Cls8YzAyZDVjZTg+XSAodXNiaHNnX3F1ZXVlX2RvbmUpIGZyb20gWzxjMDJkNTYwYz5dICh1c2Jo
-c2ZfcGt0X2hhbmRsZXIrMHhmYy8weDExNCkNCls8YzAyZDU1MTA+XSAodXNiaHNmX3BrdF9oYW5k
-bGVyKSBmcm9tIFs8YzAyZDU2NDQ+XSAodXNiaHNmX2RtYV9jb21wbGV0ZSsweDIwLzB4NTgpDQog
-cjEwOjAwMDAwMDAwIHI5OjAwMDAwMDAxIHI4OjAwMjAwMjAwIHI3OjAwMTAwMTAwIHI2OmVlYjEx
-OGM4IHI1OmVlOWE1YTAwDQogcjQ6ZWU4ZTIwNmMNCls8YzAyZDU2MjQ+XSAodXNiaHNmX2RtYV9j
-b21wbGV0ZSkgZnJvbSBbPGMwMWYxYWVjPl0gKHVzYl9kbWFjX2lzcl9jaGFubmVsX3RocmVhZCsw
-eDhjLzB4Y2MpDQogcjU6ZWViMTE4OTQgcjQ6ZWU5ZTg1MmMNCls8YzAxZjFhNjA+XSAodXNiX2Rt
-YWNfaXNyX2NoYW5uZWxfdGhyZWFkKSBmcm9tIFs8YzAwNWMyZWM+XSAoaXJxX3RocmVhZF9mbisw
-eDI0LzB4M2MpDQogcjg6YzAwNWMyYzggcjc6ZWUxYmJmYTAgcjY6ZWU5OTg2NDAgcjU6ZWVhNWUw
-MDAgcjQ6ZWUxYmJmODAgcjM6YzAxZjFhNjANCls8YzAwNWMyYzg+XSAoaXJxX3RocmVhZF9mbikg
-ZnJvbSBbPGMwMDVjNWMwPl0gKGlycV90aHJlYWQrMHhmNC8weDE2YykNCiByNjplZTFiYmY4MCBy
-NTplZWE1ZTAwMCByNDplZTk5ODY0MCByMzowMDAwMDAwNA0KWzxjMDA1YzRjYz5dIChpcnFfdGhy
-ZWFkKSBmcm9tIFs8YzAwM2Q3YjQ+XSAoa3RocmVhZCsweGYwLzB4MTA0KQ0KIHIxMDowMDAwMDAw
-MCByOTowMDAwMDAwMCByODowMDAwMDAwMCByNzpjMDA1YzRjYyByNjplZTFiYmY4MCByNTowMDAw
-MDAwMA0KIHI0OmVlMWJiZjQwDQpbPGMwMDNkNmM0Pl0gKGt0aHJlYWQpIGZyb20gWzxjMDAwZWJk
-OD5dIChyZXRfZnJvbV9mb3JrKzB4MTQvMHgzYykNCiByNzowMDAwMDAwMCByNjowMDAwMDAwMCBy
-NTpjMDAzZDZjNCByNDplZTFiYmY0MA0KQlVHOiBzcGlubG9jayBsb2NrdXAgc3VzcGVjdGVkIG9u
-IENQVSMxLCBpcGVyZi8yNDczDQogbG9jazogMHhlZTFmNWQ1YywgLm1hZ2ljOiBkZWFkNGVhZCwg
-Lm93bmVyOiBpcnEvMTAyLWU2NWEwMDAvNTQ2LCAub3duZXJfY3B1OiAwDQpDUFU6IDEgUElEOiAy
-NDczIENvbW06IGlwZXJmIFRhaW50ZWQ6IEcgICAgICAgIFcgICAgICAzLjE5LjAtcmM0LTAxNzU0
-LWdmZDViODRlLWRpcnR5ICMxODENCkhhcmR3YXJlIG5hbWU6IEdlbmVyaWMgUjhBNzc5MSAoRmxh
-dHRlbmVkIERldmljZSBUcmVlKQ0KQmFja3RyYWNlOg0KWzxjMDAxMWU3OD5dIChkdW1wX2JhY2t0
-cmFjZSkgZnJvbSBbPGMwMDEyMDg0Pl0gKHNob3dfc3RhY2srMHgxOC8weDFjKQ0KIHI2OjAwOTg5
-NjgwIHI1OmVlMWY1ZDVjIHI0OjAwMDAwMDAwIHIzOjAwNDA0MDQwDQpbPGMwMDEyMDZjPl0gKHNo
-b3dfc3RhY2spIGZyb20gWzxjMDQ2YzQ1Yz5dIChkdW1wX3N0YWNrKzB4N2MvMHg5OCkNCls8YzA0
-NmMzZTA+XSAoZHVtcF9zdGFjaykgZnJvbSBbPGMwNDZiNzU0Pl0gKHNwaW5fZHVtcCsweDgwLzB4
-OTQpDQogcjQ6ZWU5NjcyNDAgcjM6YzA2NTMzMzQNCls8YzA0NmI2ZDQ+XSAoc3Bpbl9kdW1wKSBm
-cm9tIFs8YzAwNTU4Nzg+XSAoZG9fcmF3X3NwaW5fbG9jaysweDEzYy8weDE5MCkNCiByNTowMDAw
-MDAwMCByNDowMDk4OTY4MA0KWzxjMDA1NTczYz5dIChkb19yYXdfc3Bpbl9sb2NrKSBmcm9tIFs8
-YzA0NzAyNzA+XSAoX3Jhd19zcGluX2xvY2tfaXJxc2F2ZSsweDE4LzB4MjApDQogcjk6ZWUxZjVk
-NWMgcjg6ZWUxZjVkNDAgcjc6ZWVhZWE0MzQgcjY6ZWUyOGY1ODAgcjU6MDAwMDAwMGYgcjQ6MjAw
-MDAwMTMNCls8YzA0NzAyNTg+XSAoX3Jhd19zcGluX2xvY2tfaXJxc2F2ZSkgZnJvbSBbPGJmMDAw
-NmU4Pl0gKGV0aF9zdGFydF94bWl0KzB4ZDAvMHgzN2MgW3VfZXRoZXJdKQ0KIHI0OmVlMWY1ODAw
-IHIzOjAwMDAwMDAxDQpbPGJmMDAwNjE4Pl0gKGV0aF9zdGFydF94bWl0IFt1X2V0aGVyXSkgZnJv
-bSBbPGMwMzk2YzcwPl0gKGRldl9oYXJkX3N0YXJ0X3htaXQrMHgyNTAvMHgyZTgpDQogcjEwOmVl
-MzQ2YzYwIHI5OmVlMmEyMTAwIHI4OmVlMWY1ODAwIHI3OjAwMDAwMDAwIHI2OmVlMzQ2YzAwIHI1
-OmVlMjhmNTgwDQogcjQ6MDAwMDAwMDENCls8YzAzOTZhMjA+XSAoZGV2X2hhcmRfc3RhcnRfeG1p
-dCkgZnJvbSBbPGMwM2FlYjU4Pl0gKHNjaF9kaXJlY3RfeG1pdCsweGE4LzB4MWQwKQ0KIHIxMDpl
-ZTM0NmM2MCByOTplZTFmNTgwMCByODplZTI4ZjU4MCByNzplZTJhMjEwMCByNjplZTM0NmMwMCBy
-NTplZTM0NmMwMA0KIHI0OjAwMDAwMDAxDQpbPGMwM2FlYWIwPl0gKHNjaF9kaXJlY3RfeG1pdCkg
-ZnJvbSBbPGMwMzk2ZjU0Pl0gKF9fZGV2X3F1ZXVlX3htaXQrMHgyNGMvMHg0OTgpDQogcjEwOmVl
-MzQ2YzYwIHI5OjAwMDAwMDAwIHI4OjAwMDAwMDAwIHI3OmVlMmEyMTAwIHI2OmVlMWY1ODAwIHI1
-OmVlMzQ2YzAwDQogcjQ6ZWUyOGY1ODANCls8YzAzOTZkMDg+XSAoX19kZXZfcXVldWVfeG1pdCkg
-ZnJvbSBbPGMwMzk3MWI0Pl0gKGRldl9xdWV1ZV94bWl0KzB4MTQvMHgxOCkNCiByMTA6MDAwMDAw
-MDAgcjk6ZWUzMzgwY2Mgcjg6ZWUzMzgwYmMgcjc6MDAwMDAwMDAgcjY6ZWUyOGY1ODAgcjU6MDAw
-MDAwMGUNCiByNDplZTMzODAwMA0KWzxjMDM5NzFhMD5dIChkZXZfcXVldWVfeG1pdCkgZnJvbSBb
-PGMwM2JkMWU4Pl0gKGlwX2ZpbmlzaF9vdXRwdXQrMHg4ZTQvMHg5NmMpDQpbPGMwM2JjOTA0Pl0g
-KGlwX2ZpbmlzaF9vdXRwdXQpIGZyb20gWzxjMDNiZTY3ND5dIChpcF9vdXRwdXQrMHhhOC8weGI0
-KQ0KIHI5OjAwMTEwNWM2IHI4OjAwMDAwMDAwIHI3OmVlYWFiZWYwIHI2OmVlYWFiYzgwIHI1OmVl
-MWY1ODAwIHI0OmVlMjhmNTgwDQpbPGMwM2JlNWNjPl0gKGlwX291dHB1dCkgZnJvbSBbPGMwM2Jk
-ZjBjPl0gKGlwX2xvY2FsX291dF9zaysweDNjLzB4NDApDQogcjU6ZWVhYWJjODAgcjQ6ZWUyOGY1
-ODANCls8YzAzYmRlZDA+XSAoaXBfbG9jYWxfb3V0X3NrKSBmcm9tIFs8YzAzYmYwY2M+XSAoaXBf
-c2VuZF9za2IrMHgxOC8weGEwKQ0KIHI1OmMwNjhmM2MwIHI0OmVlMjhmNTgwDQpbPGMwM2JmMGI0
-Pl0gKGlwX3NlbmRfc2tiKSBmcm9tIFs8YzAzZGY5ODQ+XSAodWRwX3NlbmRfc2tiKzB4MTg4LzB4
-MjM0KQ0KIHI1OmVkYzBmODI0IHI0OmVlMjhmNTgwDQpbPGMwM2RmN2ZjPl0gKHVkcF9zZW5kX3Nr
-YikgZnJvbSBbPGMwM2UxOTQ0Pl0gKHVkcF9zZW5kbXNnKzB4NGYwLzB4NmRjKQ0KIHI5OjAwMDA4
-OTEzIHI4OjAwMDAwNWJlIHI3OmVlYWFiZWYwIHI2OjE2MTZhOGMwIHI1OmVlOTViZTg0IHI0OmVl
-YWFiYzgwDQpbPGMwM2UxNDU0Pl0gKHVkcF9zZW5kbXNnKSBmcm9tIFs8YzAzZWE3MDQ+XSAoaW5l
-dF9zZW5kbXNnKzB4ODQvMHhiNCkNCiByMTA6MDAwMDAwMDAgcjk6MDAwMWU1YjAgcjg6ZWUzMjYx
-MDAgcjc6MDAwMDA1YmUgcjY6ZWU5NWJlODQgcjU6ZWU5NWJlZTgNCiByNDplZWFhYmM4MA0KWzxj
-MDNlYTY4MD5dIChpbmV0X3NlbmRtc2cpIGZyb20gWzxjMDM3ZmQzMD5dIChzb2NrX2Fpb193cml0
-ZSsweGU0LzB4ZjQpDQogcjc6ZWU5NWJlNjQgcjY6ZWU5NWJlZTggcjU6ZWU0MGE1ODAgcjQ6MDAw
-MDA1YmUNCls8YzAzN2ZjNGM+XSAoc29ja19haW9fd3JpdGUpIGZyb20gWzxjMDBjN2IzYz5dIChk
-b19zeW5jX3dyaXRlKzB4NzQvMHg5OCkNCiByODowMDAwMDViZSByNzplZTMyNjEwMCByNjplZTk1
-YmY3OCByNTowMDAwMDAwMCByNDowMDAwMDAwMA0KWzxjMDBjN2FjOD5dIChkb19zeW5jX3dyaXRl
-KSBmcm9tIFs8YzAwYzgzZTA+XSAodmZzX3dyaXRlKzB4ZTQvMHgxOTQpDQogcjg6MDAwMDA1YmUg
-cjc6MDAwMDA1YmUgcjY6ZWU5NWJmNzggcjU6MDAwMWU1YjAgcjQ6ZWUzMjYxMDANCls8YzAwYzgy
-ZmM+XSAodmZzX3dyaXRlKSBmcm9tIFs8YzAwYzg5ODA+XSAoU3lTX3dyaXRlKzB4NDQvMHg4NCkN
-CiByOTowMDAxZTViMCByODowMDAwMDViZSByNzplZTMyNjEwMSByNjplZTMyNjEwMCByNTowMDAw
-MDAwMCByNDowMDAwMDAwMA0KWzxjMDBjODkzYz5dIChTeVNfd3JpdGUpIGZyb20gWzxjMDAwZWI0
-MD5dIChyZXRfZmFzdF9zeXNjYWxsKzB4MC8weDMwKQ0KIHI5OmVlOTVhMDAwIHI4OmMwMDBlY2U0
-IHI3OjAwMDAwMDA0IHI2OmZmZmZjM2VmIHI1OjAwMDFlYjc4IHI0OjAwMDFlMWM4DQo9PT09PT09
-PT09PT09PT09PT09PT0NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiA+
-ICAgICAgICAgcmV0ID0gdXNiaHNmX3BrdF9oYW5kbGVyKHBpcGUsIFVTQkhTRl9QS1RfRE1BX0RP
-TkUpOw0KPiA+ICAgICAgICAgaWYgKHJldCA8IDApDQo+ID4gICAgICAgICAgICAgICAgIGRldl9l
-cnIoZGV2LCAiZG1hX2NvbXBsZXRlIHJ1bl9lcnJvciAlZCA6ICVkXG4iLA0KPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIHVzYmhzX3BpcGVfbnVtYmVyKHBpcGUpLCByZXQpOw0KPiA+ICsgICAg
-ICAgbG9jYWxfaXJxX3Jlc3RvcmUoZmxhZ3MpOw0KPiA+ICB9DQo+ID4NCj4gPiAgdm9pZCB1c2Jo
-c19maWZvX2NsZWFyX2RjcChzdHJ1Y3QgdXNiaHNfcGlwZSAqcGlwZSkNCj4gPiAtLQ0KPiA+IDEu
-Ny45LjUNCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxv
-dHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IElu
-IHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlz
-ZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1
-c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
+Hi Andrzej and Alim
+
+On 2015/2/12 07:20, Alim Akhtar wrote:
+> Hi Andrzej,
+> 
+> On Wed, Feb 11, 2015 at 5:28 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+>> Hi Alim,
+>>
+>> On 02/11/2015 03:57 AM, Addy wrote:
+>>>
+>>> On 2015/02/10 23:22, Alim Akhtar wrote:
+>>>> Hi Addy,
+>>>>
+>>>> On Mon, Feb 9, 2015 at 12:55 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
+>>>>> Because of some uncertain factors, such as worse card or worse hardware,
+>>>>> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+>>>>> will be in busy state. This should not happend when mmc controller
+>>>>> send command to update card clocks. If this happends, mci_send_cmd will
+>>>>> be failed and we will get 'Timeout sending command', and then system will
+>>>>> be blocked. To avoid this, we need reset mmc controller.
+>>>>>
+>>>>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+>>>>> ---
+>>>>>   drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
+>>>>>   1 file changed, 28 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>>>>> index 4d2e3c2..b0b57e3 100644
+>>>>> --- a/drivers/mmc/host/dw_mmc.c
+>>>>> +++ b/drivers/mmc/host/dw_mmc.c
+>>>>> @@ -100,6 +100,7 @@ struct idmac_desc {
+>>>>>   };
+>>>>>   #endif /* CONFIG_MMC_DW_IDMAC */
+>>>>>
+>>>>> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>>>>>   static bool dw_mci_reset(struct dw_mci *host);
+>>>>>   static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>>>>>
+>>>>> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>>>>                  cmd, arg, cmd_status);
+>>>>>   }
+>>>>>
+>>>>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+>>>>> +{
+>>>>> +       struct dw_mci *host = slot->host;
+>>>>> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>>>> +
+>>>> Why 500 msec?
+>>> This timeout value is the same as  mci_send_cmd:
+>>> static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>> {
+>>>          struct dw_mci *host = slot->host;
+>>>          unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>>          ....
+>>> }
+>>>
+>>> I have not clear that which is suitable.
+>>> Do you have any suggestion on it?
+>>>>
+>>>>> +       do {
+>>>>> +               if (!dw_mci_card_busy(slot->mmc))
+>>>>> +                       return;
+>>>>> +               cpu_relax();
+>>>>> +       } while (time_before(jiffies, timeout));
+>>>>> +
+>>>>> +       dev_err(host->dev, "Data busy (status %#x)\n",
+>>>>> +               mci_readl(slot->host, STATUS));
+>>>>> +
+>>>>> +       /*
+>>>>> +        * Data busy, this should not happend when mmc controller send command
+>>>>> +        * to update card clocks in non-volt-switch state. If it happends, we
+>>>>> +        * should reset controller to avoid getting "Timeout sending command".
+>>>>> +        */
+>>>>> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+>>>>> +
+>>>> Why you need to reset all blocks? may be CTRL_RESET is good enough here.
+>>> I have tested on rk3288, if only reset ctroller, data busy bit will not
+>>> be cleaned,and we will still get
+>>>
+>>> "Timeout sending command".
+>>>
+>>>>
+>>>>> +       /* Fail to reset controller or still data busy, WARN_ON! */
+>>>>> +       WARN_ON(dw_mci_card_busy(slot->mmc));
+>>>>> +}
+>>>>> +
+>>>>>   static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>>>   {
+>>>>>          struct dw_mci *host = slot->host;
+>>>>> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>>>          /* We must continue to set bit 28 in CMD until the change is complete */
+>>>>>          if (host->state == STATE_WAITING_CMD11_DONE)
+>>>>>                  sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+>>>>> +       else
+>>>>> +               dw_mci_wait_busy(slot);
+>>>>>
+>>>> hmm...I would suggest you to call dw_mci_wait_busy() from inside
+>>>> mci_send_cmd(), seems like dw_mmc hangs while sending update clock cmd
+>>>> in multiple cases.see [1]
+>>>>
+>>>> [1]: http://permalink.gmane.org/gmane.linux.kernel.mmc/31140
+>>> I think this patch is more reasonable.
+>>> So I will resend patches based on this patch.
+>>> thank you!
+>>
+>> I have tested your patches instead [1] above and they do not solve my issue:
+>> Board: odroid-xu3/exynos5422/dw_mmc_250a.
+>> MMC card: absent, broken-cd quirk
+>> SD card: present
+>>
+> I doubt $SUBJECT patch in current form can resolve you issue. I have
+> already given comments on $subject patch.
+> 
+> Can you try out below patch (I have not tested yet) on top of $SUBJECT patch?
+> 
+> =======
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index b0b57e3..ea87844 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -101,6 +101,7 @@ struct idmac_desc {
+>  #endif /* CONFIG_MMC_DW_IDMAC */
+> 
+>  static int dw_mci_card_busy(struct mmc_host *mmc);
+> +static void dw_mci_wait_busy(struct dw_mci_slot *slot);
+>  static bool dw_mci_reset(struct dw_mci *host);
+>  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+> 
+> @@ -874,16 +875,22 @@ static void mci_send_cmd(struct dw_mci_slot
+> *slot, u32 cmd, u32 arg)
+>         struct dw_mci *host = slot->host;
+>         unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>         unsigned int cmd_status = 0;
+> +       int re_try = 3; /* just random for now, 1 re-try should be ok */
+> 
+> -       mci_writel(host, CMDARG, arg);
+> -       wmb();
+> -       mci_writel(host, CMD, SDMMC_CMD_START | cmd);
+> +       while(re_try--) {
+> +               mci_writel(host, CMDARG, arg);
+> +               wmb();
+> +               mci_writel(host, CMD, SDMMC_CMD_START | cmd);
+> 
+> -       while (time_before(jiffies, timeout)) {
+> -               cmd_status = mci_readl(host, CMD);
+> -               if (!(cmd_status & SDMMC_CMD_START))
+> -                       return;
+> +               while (time_before(jiffies, timeout)) {
+> +                       cmd_status = mci_readl(host, CMD);
+> +                       if (!(cmd_status & SDMMC_CMD_START))
+> +                               return;
+> +               }
+> +
+> +               dw_mci_wait_busy(slot);
+>         }
+> +
+>         dev_err(&slot->mmc->class_dev,
+>                 "Timeout sending command (cmd %#x arg %#x status %#x)\n",
+>                 cmd, arg, cmd_status);
+> @@ -925,8 +932,6 @@ static void dw_mci_setup_bus(struct dw_mci_slot
+> *slot, bool force_clkinit)
+>         /* We must continue to set bit 28 in CMD until the change is complete */
+>         if (host->state == STATE_WAITING_CMD11_DONE)
+>                 sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+> -       else
+> -               dw_mci_wait_busy(slot);
+> 
+>         if (!clock) {
+>                 mci_writel(host, CLKENA, 0);
+> 
+> ===== end ======
+The reason why we are fail to send command is that we got data busy in
+none-switch-volt state(host->state != STATE_WAITING_CMD11_DONE).
+So:
+if(host->state != STATE_WAITING_CMD11_DONE), we must wait until data not busy,
+And if (host->state == STATE_WAITING_CMD11_DONE) we should not wait.
+
+>> System hangs during boot after few minutes kernel spits:
+>> [  242.188098] INFO: task kworker/u16:1:50 blocked for more than 120
+>> seconds.
+>> [  242.193524]       Not tainted
+>> 3.19.0-next-20150210-00002-gf96831b-dirty #3834
+>> [  242.200622] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+>> disables this message.
+>> [  242.208422] kworker/u16:1   D c04766ac     0    50      2 0x00000000
+>> [  242.214756] Workqueue: kmmcd mmc_rescan
+>> [  242.218553] [<c04766ac>] (__schedule) from [<c0476a58>]
+>> (schedule+0x34/0x98)
+>> [  242.225591] [<c0476a58>] (schedule) from [<c047a4dc>]
+>> (schedule_timeout+0x110/0x164)
+>> [  242.233302] [<c047a4dc>] (schedule_timeout) from [<c04774f0>]
+>> (wait_for_common+0xb8/0x14c)
+>> [  242.241539] [<c04774f0>] (wait_for_common) from [<c0362138>]
+>> (mmc_wait_for_req+0x68/0x17c)
+>> [  242.249861] [<c0362138>] (mmc_wait_for_req) from [<c03622cc>]
+>> (mmc_wait_for_cmd+0x80/0xa0)
+>> [  242.258002] [<c03622cc>] (mmc_wait_for_cmd) from [<c0367e50>]
+>> (mmc_go_idle+0x78/0xf8)
+>> [  242.265796] [<c0367e50>] (mmc_go_idle) from [<c0363e2c>]
+>> (mmc_rescan+0x280/0x314)
+>> [  242.273253] [<c0363e2c>] (mmc_rescan) from [<c0034764>]
+>> (process_one_work+0x120/0x324)
+>> [  242.281135] [<c0034764>] (process_one_work) from [<c00349cc>]
+>> (worker_thread+0x30/0x42c)
+>> [  242.289194] [<c00349cc>] (worker_thread) from [<c003926c>]
+>> (kthread+0xd8/0xf4)
+>> [  242.296389] [<c003926c>] (kthread) from [<c000e7c0>]
+>> (ret_from_fork+0x14/0x34)
+>>
+>> Just for record, Exynos4412/dw_mmc_240a with the same configuration
+>> (no MMC card, broken-cd) works OK without patches.
+This is because mmc start command,but mmc_request_done() is't called.
+I have ever found this issue.
+I found that host does't get DTO interrupt when mmc send command to read data.
+I have sent a patch for it, see:
+https://patchwork.kernel.org/patch/5426531/
+
+Would you please merge it and test again?
+>>
+>>
+>> Regards
+>> Andrzej
+>>
+>>>>
+>>>>>          if (!clock) {
+>>>>>                  mci_writel(host, CLKENA, 0);
+>>>>> --
+>>>>> 1.8.3.2
+>>>>>
+>>>>>
+>>>>>
+>>>>> _______________________________________________
+>>>>> linux-arm-kernel mailing list
+>>>>> linux-arm-kernel@lists.infradead.org
+>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>>
+>>>>
+>>>
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-doc" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>
+> 
+> 
+> 
+
