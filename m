@@ -1,35 +1,43 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v6 02/15] of: Document long-ram-code property in nvidia,tegra20-apbmisc
-Date: Thu, 12 Feb 2015 15:06:18 +0100
-Message-ID: <1423750042-6535-3-git-send-email-tomeu.vizoso@collabora.com>
-References: <1423750042-6535-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Josh Cartwright <joshc@ni.com>
+Subject: Re: [PATCH] ARM: dts: zynq: Add OCM node
+Date: Thu, 12 Feb 2015 08:31:38 -0600
+Message-ID: <20150212143138.GB27577@jcartwri.amer.corp.natinst.com>
+References: <135fba212abd740584a2547903cc8d175417344c.1423736523.git.michal.simek@xilinx.com>
+ <20150212102615.GC1245@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423750042-6535-1-git-send-email-tomeu.vizoso@collabora.com>
+In-Reply-To: <20150212102615.GC1245@leverpostej>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-tegra@vger.kernel.org
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Eduardo Valentin <edubezval@gmail.com>, Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "monstr@monstr.eu" <monstr@monstr.eu>, Andreas F?rber <afaerber@suse.de>, S?ren Brinkmann <soren.brinkmann@xilinx.com>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Needed to properly decode the ram code register.
+On Thu, Feb 12, 2015 at 10:26:16AM +0000, Mark Rutland wrote:
+> On Thu, Feb 12, 2015 at 10:22:07AM +0000, Michal Simek wrote:
+> > Add OCM node for all zynq boards. OCM location
+> > can changed but for all current boards this
+> > is the location where OCM is.`
+> > 
+> > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> > ---
+> > 
+> > This patch is done based on discussion here.
+> > https://lkml.org/lkml/2014/12/1/396
+> > 
+> > There are some ways how to do it.
+> > OCM location can be changed but board DTS files
+> > can easily rewrite it.
+> > The problem which there is that node has address
+> > in it but maybe someone can suggest better solution.
+> 
+> Given that the node is so simple, can't this be pushed down into the
+> board files? So long as the label is consistent anything else that's
+> referring to it should still work.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Not that I have a strong opinion, but I've found that sometimes it's
+nice to be able to just glance at the SoC dtsi file to get an
+understanding of all of the hardware currently being modeled.
 
----
-
-v3:	* Clarify wording as suggested by Mikko
----
- Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-index 47b205c..4556359 100644
---- a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-+++ b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-@@ -10,3 +10,5 @@ Required properties:
-        The second entry gives the physical address and length of the
-        registers indicating the strapping options.
- 
-+Optional properties:
-+- nvidia,long-ram-code: If present, the RAM code is long (4 bit). If not, short (2 bit).
--- 
-1.9.3
+  Josh
