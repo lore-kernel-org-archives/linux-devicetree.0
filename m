@@ -1,122 +1,87 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/2] ARM: perf: Add support for Scorpion PMUs
-Date: Thu, 12 Feb 2015 10:53:17 -0800
-Message-ID: <54DCF69D.5090707@codeaurora.org>
-References: <1423616724-20849-1-git-send-email-sboyd@codeaurora.org> <1423616724-20849-3-git-send-email-sboyd@codeaurora.org> <20150212124949.GE1522@leverpostej>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH v2 1/2] leds: add DT binding for Qualcomm PM8941 WLED block
+Date: Thu, 12 Feb 2015 11:11:09 -0800
+Message-ID: <CAK5ve-J7orKM379gs0bfRyAjmTywrG4nJR=9jWVXVF8KPmVR1A@mail.gmail.com>
+References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150212124949.GE1522@leverpostej>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/15 04:49, Mark Rutland wrote:
-> Hi,
+On Fri, Jan 23, 2015 at 4:54 PM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
+> From: Courtney Cavin <courtney.cavin@sonymobile.com>
 >
-> I haven't given this a thorough review, but I spotted a couple of items
-> below.
+> This adds device tree binding documentation for the WLED ('White' LED)
+> block on Qualcomm's PM8941 PMICs.
 >
-> On Wed, Feb 11, 2015 at 01:05:24AM +0000, Stephen Boyd wrote:
->> Scorpion supports a set of local performance monitor event
->> selection registers (LPM) sitting behind a cp15 based interface
->> that extend the architected PMU events to include Scorpion CPU
->> and Venum VFP specific events. To use these events the user is
->> expected to program the lpm register with the event code shifted
->> into the group they care about and then point the PMNx event at
->> that region+group combo by writing a LPMn_GROUPx event. Add
->> support for this hardware.
->>
->> Note: the raw event number is a pure software construct that
->> allows us to map the multi-dimensional number space of regions,
->> groups, and event codes into a flat event number space suitable
->> for use by the perf framework.
->>
->> This is based on code originally written by Ashwin Chaugule and
->> Neil Leeder [1] massed to become similar to the Krait PMU support
->> code.
->>
->> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/tree/arch/arm/kernel/perf_event_msm.c?h=msm-3.4
->>
->> Cc: Neil Leeder <nleeder@codeaurora.org>
->> Cc: Ashwin Chaugule <ashwinc@codeaurora.org>
->> Cc: <devicetree@vger.kernel.org>
->> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/arm/pmu.txt |   2 +
->>  arch/arm/kernel/perf_event_cpu.c              |   2 +
->>  arch/arm/kernel/perf_event_v7.c               | 395 ++++++++++++++++++++++++++
->>  3 files changed, 399 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
->> index 75ef91d08f3b..6e54a9d88b7a 100644
->> --- a/Documentation/devicetree/bindings/arm/pmu.txt
->> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
->> @@ -18,6 +18,8 @@ Required properties:
->>         "arm,arm11mpcore-pmu"
->>         "arm,arm1176-pmu"
->>         "arm,arm1136-pmu"
->> +       "qcom,scorpion-pmu"
->> +       "qcom,scorpion-mp-pmu"
-> Is the PMU any different in the MP and !MP variants? The code doesn't
-> seem to handle the two any differently and will pass either to userspace
-> as "armv7_scorpion".
+> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+
+I will merge this into my branch for next 3.20 release.
+
+Thanks,
+-Bryan
+
+
+> ---
+>  .../devicetree/bindings/leds/leds-pm8941-wled.txt  | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
 >
-> If there is some difference that we don't handle right now, that's fine,
-> it just looks a little odd.
-
-It seems that on MP there are two event encodings on MP that aren't
-there on !MP and vice versa[1]. So I made two compatibles to reflect
-that. I'll make two names that go to userspace to clarify this.
-
->> +static const unsigned scorpion_perf_cache_map[PERF_COUNT_HW_CACHE_MAX]
->> +                                           [PERF_COUNT_HW_CACHE_OP_MAX]
->> +                                           [PERF_COUNT_HW_CACHE_RESULT_MAX] = {
->> +       PERF_CACHE_MAP_ALL_UNSUPPORTED,
->> +       /*
->> +        * The performance counters don't differentiate between read and write
->> +        * accesses/misses so this isn't strictly correct, but it's the best we
->> +        * can do. Writes and reads get combined.
->> +        */
->> +       [C(L1D)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_L1_DCACHE_ACCESS,
->> +       [C(L1D)][C(OP_READ)][C(RESULT_MISS)] = ARMV7_PERFCTR_L1_DCACHE_REFILL,
->> +       [C(L1D)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_L1_DCACHE_ACCESS,
->> +       [C(L1D)][C(OP_WRITE)][C(RESULT_MISS)] = ARMV7_PERFCTR_L1_DCACHE_REFILL,
->> +       [C(L1I)][C(OP_READ)][C(RESULT_ACCESS)] = SCORPION_ICACHE_ACCESS,
->> +       [C(L1I)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_ICACHE_MISS,
->> +       [C(L1I)][C(OP_WRITE)][C(RESULT_ACCESS)] = SCORPION_ICACHE_ACCESS,
->> +       [C(L1I)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_ICACHE_MISS,
-> These last two entries go against the policy we set in commit
-> 40c390c768f89849: "ARM: perf: don't pretend to support counting of L1I
-> writes", so I think they should be dropped.
-
-Fair enough. Thanks for the pointer.
-
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+> new file mode 100644
+> index 0000000..a85a964
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+> @@ -0,0 +1,43 @@
+> +Binding for Qualcomm PM8941 WLED driver
+> +
+> +Required properties:
+> +- compatible: should be "qcom,pm8941-wled"
+> +- reg: slave address
+> +
+> +Optional properties:
+> +- label: The label for this led
+> +  See Documentation/devicetree/bindings/leds/common.txt
+> +- linux,default-trigger: Default trigger assigned to the LED
+> +  See Documentation/devicetree/bindings/leds/common.txt
+> +- qcom,cs-out: bool; enable current sink output
+> +- qcom,cabc: bool; enable content adaptive backlight control
+> +- qcom,ext-gen: bool; use externally generated modulator signal to dim
+> +- qcom,current-limit: mA; per-string current limit; value from 0 to 25
+> +       default: 20mA
+> +- qcom,current-boost-limit: mA; boost current limit; one of:
+> +       105, 385, 525, 805, 980, 1260, 1400, 1680
+> +       default: 805mA
+> +- qcom,switching-freq: kHz; switching frequency; one of:
+> +       600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371,
+> +       1600, 1920, 2400, 3200, 4800, 9600,
+> +       default: 1600kHz
+> +- qcom,ovp: V; Over-voltage protection limit; one of:
+> +       27, 29, 32, 35
+> +       default: 29V
+> +- qcom,num-strings: #; number of led strings attached; value from 1 to 3
+> +       default: 2
+> +
+> +Example:
+> +
+> +pm8941-wled@d800 {
+> +       compatible = "qcom,pm8941-wled";
+> +       reg = <0xd800>;
+> +       label = "backlight";
+> +
+> +       qcom,cs-out;
+> +       qcom,current-limit = <20>;
+> +       qcom,current-boost-limit = <805>;
+> +       qcom,switching-freq = <1600>;
+> +       qcom,ovp = <29>;
+> +       qcom,num-strings = <2>;
+> +};
+> --
+> 1.9.1
 >
->> +       /*
->> +        * Only ITLB misses and DTLB refills are supported.  If users want the
->> +        * DTLB refills misses a raw counter must be used.
->> +        */
->> +       [C(DTLB)][C(OP_READ)][C(RESULT_ACCESS)] = SCORPION_DTLB_ACCESS,
->> +       [C(DTLB)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_DTLB_MISS,
->> +       [C(DTLB)][C(OP_WRITE)][C(RESULT_ACCESS)] = SCORPION_DTLB_ACCESS,
->> +       [C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_DTLB_MISS,
->> +       [C(ITLB)][C(OP_READ)][C(RESULT_MISS)] = SCORPION_ITLB_MISS,
->> +       [C(ITLB)][C(OP_WRITE)][C(RESULT_MISS)] = SCORPION_ITLB_MISS,
->> +       [C(BPU)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
->> +       [C(BPU)][C(OP_READ)][C(RESULT_MISS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
->> +       [C(BPU)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
->> +       [C(BPU)][C(OP_WRITE)][C(RESULT_MISS)] = ARMV7_PERFCTR_PC_BRANCH_PRED,
->> +};
-> Not ARMV7_PERFCTR_PC_BRANCH_MIS_PRED for the RESULT_MISS cases as with
-> all other ARMv7 instances (Krait included)?
-
-I was just copying the stuff from downstream. I think it's a bug that
-nobody noticed because the same problem was there on Krait and I fixed
-it before sending upstream. Thanks for catching it.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
