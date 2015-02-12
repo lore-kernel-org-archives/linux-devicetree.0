@@ -1,94 +1,84 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH 3/4] ARM: dts: omap3-pandora: add DM3730 1 GHz version
-Date: Thu, 12 Feb 2015 14:03:45 +0100
-Message-ID: <1423746226-700-4-git-send-email-marek@goldelico.com>
-References: <1423746226-700-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1423746226-700-1-git-send-email-marek@goldelico.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, bcousson@baylibre.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, marek@goldelico.com, "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Ola Jeppsson <ola@adapteva.com>
+Subject: Re: [PATCH 4/5] ARM: dts: zynq: Split off Parallella Microserver
+ device tree
+Date: Thu, 12 Feb 2015 14:12:19 +0100
+Message-ID: <54DCA6B3.1090903@adapteva.com>
+References: <1423702513-4032-1-git-send-email-afaerber@suse.de> <1423702513-4032-5-git-send-email-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1423702513-4032-5-git-send-email-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Michal Simek <michal.simek@xilinx.com>
+Cc: Olof Johansson <olof@lixom.net>, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+On 2015-02-12 01:55, Andreas F=C3=A4rber wrote:
+> The Microserver edition has neither HDMI nor USB.
+>
+> Cc: Ola Jeppsson <ola@adapteva.com>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+>   arch/arm/boot/dts/Makefile                        |  1 +
+>   arch/arm/boot/dts/zynq-parallella-microserver.dts | 19 ++++++++++++=
++++++++
+>   2 files changed, 20 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/zynq-parallella-microserver.dt=
+s
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index a1c776b8dcec..42c75eeba584 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -606,6 +606,7 @@ dtb-$(CONFIG_ARCH_VT8500) +=3D \
+>   	wm8850-w70v2.dtb
+>   dtb-$(CONFIG_ARCH_ZYNQ) +=3D \
+>   	zynq-parallella.dtb \
+> +	zynq-parallella-microserver.dtb \
+>   	zynq-zc702.dtb \
+>   	zynq-zc706.dtb \
+>   	zynq-zed.dtb \
+> diff --git a/arch/arm/boot/dts/zynq-parallella-microserver.dts b/arch=
+/arm/boot/dts/zynq-parallella-microserver.dts
+> new file mode 100644
+> index 000000000000..1f3bd2d27a93
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/zynq-parallella-microserver.dts
+> @@ -0,0 +1,19 @@
+> +/*
+> + * Copyright (c) 2014 SUSE LINUX Products GmbH
+> + * Copyright (c) 2015 SUSE Linux GmbH
+> + *
+> + * This software is licensed under the terms of the GNU General Publ=
+ic
+> + * License version 2, as published by the Free Software Foundation, =
+and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +/dts-v1/;
+> +#include "zynq-parallella1.dtsi"
+> +
+> +/ {
+> +	model =3D "Adapteva Parallella Microserver Board";
+> +};
+To me it would make more sense to use the model number in the file name=
+=2E
+I.e., p1600 instead of microserver.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/omap3-pandora-1ghz.dts | 65 ++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-pandora-1ghz.dts
+http://www.digikey.com/product-search/en?v=3D1554&FV=3Dfff40028%2Cfff80=
+14d
 
-diff --git a/arch/arm/boot/dts/omap3-pandora-1ghz.dts b/arch/arm/boot/dts/omap3-pandora-1ghz.dts
-new file mode 100644
-index 0000000..6286f41
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-pandora-1ghz.dts
-@@ -0,0 +1,65 @@
-+/*
-+ * Copyright (C) 2015
-+ *   Nikolaus Schaller <hns@goldelico.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * device tree for OpenPandora 1GHz with DM3730
-+ */
-+
-+/dts-v1/;
-+
-+#include "omap36xx.dtsi"
-+#include "omap3-pandora-common.dtsi"
-+
-+/ {
-+	model = "Pandora Handheld Console 1GHz";
-+
-+	compatible = "ti,omap36xx", "ti,omap3";
-+};
-+
-+&omap3_pmx_core2 {
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&hsusb2_2_pins
-+		&control_pins
-+	>;
-+
-+	hsusb2_2_pins: pinmux_hsusb2_2_pins {
-+		pinctrl-single,pins = <
-+			OMAP3630_CORE2_IOPAD(0x25f0, PIN_OUTPUT | MUX_MODE3)		/* etk_d10.hsusb2_clk */
-+			OMAP3630_CORE2_IOPAD(0x25f2, PIN_OUTPUT | MUX_MODE3)		/* etk_d11.hsusb2_stp */
-+			OMAP3630_CORE2_IOPAD(0x25f4, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d12.hsusb2_dir */
-+			OMAP3630_CORE2_IOPAD(0x25f6, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d13.hsusb2_nxt */
-+			OMAP3630_CORE2_IOPAD(0x25f8, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d14.hsusb2_data0 */
-+			OMAP3630_CORE2_IOPAD(0x25fa, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d15.hsusb2_data1 */
-+		>;
-+	};
-+
-+	mmc3_pins: pinmux_mmc3_pins {
-+		pinctrl-single,pins = <
-+			OMAP3630_CORE2_IOPAD(0x25d8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_clk.sdmmc3_clk */
-+			OMAP3630_CORE2_IOPAD(0x25da, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_ctl.sdmmc3_cmd */
-+			OMAP3630_CORE2_IOPAD(0x25e2, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d3.sdmmc3_dat3 */
-+			OMAP3630_CORE2_IOPAD(0x25e4, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d4.sdmmc3_dat0 */
-+			OMAP3630_CORE2_IOPAD(0x25e6, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d5.sdmmc3_dat1 */
-+			OMAP3630_CORE2_IOPAD(0x25e8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d6.sdmmc3_dat2 */
-+		>;
-+	};
-+
-+	control_pins: pinmux_control_pins {
-+		pinctrl-single,pins = <
-+			OMAP3630_CORE2_IOPAD(0x25dc, PIN_INPUT_PULLDOWN | MUX_MODE4)	/* etk_d0.gpio_14 =  HP_SHUTDOWN */
-+			OMAP3630_CORE2_IOPAD(0x25de, PIN_OUTPUT | MUX_MODE4)		/* etk_d1.gpio_15 =  BT_SHUTDOWN */
-+			OMAP3630_CORE2_IOPAD(0x25e0, PIN_OUTPUT | MUX_MODE4)		/* etk_d2.gpio_16 =  RESET_USB_HOST */
-+			OMAP3630_CORE2_IOPAD(0x25ea, PIN_INPUT_PULLUP | MUX_MODE4)	/* etk_d7.gpio_21 =  WIFI IRQ */
-+			OMAP3630_CORE2_IOPAD(0x25ec, PIN_OUTPUT | MUX_MODE4)		/* etk_d8.gpio_22 =  MSECURE */
-+			OMAP3630_CORE2_IOPAD(0x25ee, PIN_OUTPUT | MUX_MODE4)		/* etk_d9.gpio_23 =  WIFI_POWER */
-+		>;
-+	};
-+};
--- 
-1.9.1
 
+// Ola
+
+--=20
+Phone: +46.733208642
+Skype: olajep
+Email: ola@adapteva.com
