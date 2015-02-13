@@ -1,166 +1,119 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4] clk: Add PWM clock driver
-Date: Fri, 13 Feb 2015 13:16:38 +0100
-Message-ID: <1423829798.4182.35.camel@pengutronix.de>
-References: <1418381269-26399-1-git-send-email-p.zabel@pengutronix.de>
-	 <20150212222923.GA23372@mithrandir>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 3/5] ARM: dove: create a proper PMU driver for power
+ domains, PMU IRQs and resets
+Date: Fri, 13 Feb 2015 13:29:25 +0000
+Message-ID: <20150213132924.GA27774@n2100.arm.linux.org.uk>
+References: <20140427132312.GC26756@n2100.arm.linux.org.uk>
+ <E1WeP8f-0000Uo-1q@rmk-PC.arm.linux.org.uk>
+ <CAPDyKFoboE4iKyom86+EwHHTQAGpgKxGq969yrjQVpqizk-SLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150212222923.GA23372@mithrandir>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Janusz =?UTF-8?Q?U=C5=BCycki?= <j.uzycki@elproma.com.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFoboE4iKyom86+EwHHTQAGpgKxGq969yrjQVpqizk-SLA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+On Mon, Apr 28, 2014 at 01:55:40PM +0200, Ulf Hansson wrote:
+> On 27 April 2014 15:29, Russell King <rmk+kernel@arm.linux.org.uk> wr=
+ote:
+> > The PMU device contains an interrupt controller, power control and
+> > resets.  The interrupt controller is a little sub-standard in that
+> > there is no race free way to clear down pending interrupts, so we t=
+ry
+> > to avoid problems by reducing the window as much as possible, and
+> > clearing as infrequently as possible.
+> >
+> > The interrupt support is implemented using an IRQ domain, and the
+> > parent interrupt referenced in the standard DT way.
+> >
+> > The power domains and reset support is closely related - there is a
+> > defined sequence for powering down a domain which is tightly couple=
+d
+> > with asserting the reset.  Hence, it makes sense to group these two
+> > together.
+> >
+> > This patch adds the core PMU driver: power domains must be defined =
+in
+> > the DT file in order to make use of them.  The reset controller can
+> > be referenced in the standard way for reset controllers.
+>=20
+> Hi Russell,
+>=20
+> This patch would be simplified if this was based upon the not yet
+> merged patchset from Tomasz Figa, "[PATCH v3 0/3] Generic Device Tree
+> based power domain look-up".
+>=20
+> For example you would likely not need to add some of the marvel
+> specific DT bindings, and you wouldn=E2=80=99t need the bus_notifiers=
+ to add
+> devices to the power domain. I guess I just though it could be useful
+> input to consider while going forward, unless you already knew.
 
-thank you for the comments.
+In 3.19, I notice something of an odd behaviour.
 
-Am Donnerstag, den 12.02.2015, 23:29 +0100 schrieb Thierry Reding:
-> On Fri, Dec 12, 2014 at 11:47:49AM +0100, Philipp Zabel wrote:
-> > Some board designers, when running out of clock output pads, decide to
-> > (mis)use PWM output pads to provide a clock to external components.
-> > This driver supports this practice by providing an adapter between the
-> > PWM and clock bindings in the device tree. As the PWM bindings specify
-> > the period in the device tree, this is a fixed clock.
-> 
-> Typically the period is specified in DT because it is a board-level
-> characteristic. In this case where you emulate a clock using the PWM
-> channel you could simply ignore the period. After all you can freely
-> choose it during pwm_config() irrespective of the period specified in
-> DT.
+My vMeta driver has runtime PM support enabled.  When I explicitly regi=
+ster
+the PM domain in the pmu driver via a bus notifier, I see:
 
-The problem with with dynamic rate changes is that they go through the
-PWM API, and due to rounding issues it is often impossible to obtain the
-correct clock rate or upper and lower limits of the clock without
-knowledge about the reference clock of the PWM itself, for example.
+root@cubox:~# cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+    domain                      status         slaves
+           /device                                      runtime status
+----------------------------------------------------------------------
+gpu-domain                      on
+    /devices/platform/vivante/etnaviv-gpu,2d            active
+vpu-domain                      off
+    /devices/platform/mbus/mbus:internal-regs/f1c00000.video-decoder  s=
+uspended
 
-> Other than that looks mostly good to me, just a few nits below.
-> 
-> [...]
-> > diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-> > new file mode 100644
-> > index 0000000..751fff5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-> > @@ -0,0 +1,26 @@
-> > +Binding for an external clock signal driven by a PWM pin.
-> > +
-> > +This binding uses the common clock binding[1] and the common PWM binding[2].
-> > +
-> > +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +[2] Documentation/devicetree/bindings/pwm/pwm.txt
-> > +
-> > +Required properties:
-> > +- compatible : shall be "pwm-clock".
-> > +- #clock-cells : from common clock binding; shall be set to 0.
-> > +- pwms : from common PWM binding; this determines the clock frequency
-> > +  via the PWM period given in the pwm-specifier.
-> 
-> Perhaps: "the period given in the PWM specifier"?
+But when I disable that, and let the generic code do the registration,
+I instead get:
 
-Yes, I'll change that.
+root@cubox:~# cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+    domain                      status         slaves
+           /device                                      runtime status
+----------------------------------------------------------------------
+gpu-domain                      on
+    /devices/platform/vivante/etnaviv-gpu,2d            active
+vpu-domain                      on
+    /devices/platform/mbus/mbus:internal-regs/f1c00000.video-decoder  s=
+uspended
 
-> > +Optional properties:
-> > +- clock-output-names : From common clock binding.
-> > +- clock-frequency : Exact output frequency, in case the pwm period
-> 
-> "PWM period"
+The difference being that the vpu domain remains powered.
 
-Ok.
+The only difference code-wise seems to be when genpd_dev_pm_attach() is
+called.  In the working case, it's before the device is considered for
+probing.  In the non-working case, it's just before the device is probe=
+d.
 
-> > +  is not exact but was rounded to nanoseconds.
-> 
-> Does this make sense?
+With debugging enabled in the PM domain code, with the former case I ge=
+t:
 
-The PWM binding specifies the period value, but it is not good enough
-for pwm-clock's purpose. Due to the rounding issue:
-For the Nitrogen6X board I want to produce a 22 MHz 'clock' from a PWM
-with 66 MHz reference clock, with a 33% duty cycle.
-The period time for this rate is 45.4545 ns, but in the PWM bindings it
-is only possible to request 45 ns or 46 ns and hope the PWM driver will
-round into the right direction.
+Added domain provider from /mbus/internal-regs/power-management@d0000/v=
+pu-domain
+platform f1c00000.video-decoder: adding to PM domain vpu-domain
+platform f1c00000.video-decoder: __pm_genpd_add_device()
 
->  For one it's now easy to specify two different
-> values for the frequency, one using the PWM specifier, the other with
-> clock-frequency.
+With the latter non-working case:
 
-I agree this is suboptimal. At least there is a warning for this case.
+Added domain provider from /mbus/internal-regs/power-management@d0000/v=
+pu-domain
+=2E..
+ap510-vmeta f1c00000.video-decoder: adding to PM domain vpu-domain
+ap510-vmeta f1c00000.video-decoder: __pm_genpd_add_device()
+vpu-domain: Power-on latency exceeded, new value 1578 ns
 
-> According to the above, clock-frequency takes
-> precedence, but in that case, what use is there in having the PWM
-> specifier?
+Neither of these debug messages provide much hint as to what the
+difference is, or the cause of the PM domain code being de-sync'd
+with its devices.
 
-Are you suggesting the period given int the PWM specifier should be set
-to 0?
+Maybe the PM code needs more debugging in it, and maybe the debugfs
+file should always be present if debugfs support is enabled?
 
-> > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> > index 455fd17..36a6918a 100644
-> > --- a/drivers/clk/Kconfig
-> > +++ b/drivers/clk/Kconfig
-> > @@ -129,6 +129,13 @@ config COMMON_CLK_PALMAS
-> >  	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
-> >  	  using common clock framework.
-> >  
-> > +config COMMON_CLK_PWM
-> > +	bool "Clock driver for PWMs used as clock outputs"
-> > +	depends on PWM
-> > +	---help---
-> > +	  Adapter driver so that any PWM output can be (mis)used as clock signal
-> > +	  at 50% duty cycle.
-> 
-> Any reason why this isn't tristate?
-
-No, I'll change that.
-
-[...]
-> > +#define to_clk_pwm(_hw) container_of(_hw, struct clk_pwm, hw)
-> 
-> Perhaps use a static inline so you get proper type checking?
-
-Ok.
-
-[...]
-> > +	pwm = devm_pwm_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(pwm))
-> > +		return PTR_ERR(pwm);
-> > +
-> > +	if (!pwm || !pwm->period) {
-> 
-> I don't think there's a case where pwm can be NULL here.
-
-I think you are right.
-
-> > +		dev_err(&pdev->dev, "invalid pwm period\n");
-> 
-> "PWM"
-
-Ok.
-
-[...]
-> > +	if (pwm->period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
-> > +	    pwm->period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-> > +		dev_err(&pdev->dev,
-> > +			"clock-frequency does not match pwm period\n");
-> 
-> "PWM"
-> 
-> > +static struct platform_driver clk_pwm_driver = {
-> > +	.probe = clk_pwm_probe,
-> > +	.remove = clk_pwm_remove,
-> > +	.driver = {
-> > +		.name = "pwm-clock",
-> > +		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(clk_pwm_driver);
-> 
-> This is missing MODULE_AUTHOR, MODULE_DESCRIPTION and MODULE_LICENSE.
-
-Will add them in the next round.
-
-regards
-Philipp
+--=20
+=46TTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps u=
+p
+according to speedtest.net.
