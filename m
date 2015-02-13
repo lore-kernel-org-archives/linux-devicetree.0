@@ -1,244 +1,112 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v5] clk: Add PWM clock driver
-Date: Fri, 13 Feb 2015 20:18:52 +0100
-Message-ID: <1423855132-20939-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?q?Janusz=20U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 12/14] ARM: dts: Introduce STM32F429 MCU
+Date: Fri, 13 Feb 2015 20:18:22 +0100
+Message-ID: <1423855102.4182.63.camel@pengutronix.de>
+References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
+	 <1423763164-5606-13-git-send-email-mcoquelin.stm32@gmail.com>
+	 <1423828078.4182.17.camel@pengutronix.de>
+	 <CALszF6D+5mXajUWarwq8M4yL_Nc+x1Bmu4D7_HxDRy2kGRXNVQ@mail.gmail.com>
+	 <1423844735.4182.52.camel@pengutronix.de>
+	 <CALszF6Ad93BgT4UsJudVKpfhhL2dbtKTTRno1XqQ5=eANkwXzA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CALszF6Ad93BgT4UsJudVKpfhhL2dbtKTTRno1XqQ5=eANkwXzA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal
 List-Id: devicetree@vger.kernel.org
 
-Some board designers, when running out of clock output pads, decide to
-(mis)use PWM output pads to provide a clock to external components.
-This driver supports this practice by providing an adapter between the
-PWM and clock bindings in the device tree. As the PWM bindings specify
-the period in the device tree, this is a fixed clock.
+Am Freitag, den 13.02.2015, 17:41 +0100 schrieb Maxime Coquelin:
+> 2015-02-13 17:25 GMT+01:00 Philipp Zabel <p.zabel@pengutronix.de>:
+> > Hi Maxime,
+> >
+> > Am Freitag, den 13.02.2015, 16:59 +0100 schrieb Maxime Coquelin:
+> >> Hi Philipp,
+> >>
+> >> 2015-02-13 12:47 GMT+01:00 Philipp Zabel <p.zabel@pengutronix.de>:
+> >> > Hi Maxime,
+> >> >
+> >> > Am Donnerstag, den 12.02.2015, 18:46 +0100 schrieb Maxime Coquelin:
+> >> > [...]
+> >> >> +     soc {
+> >> >> +             reset_ahb1: reset@40023810 {
+> >> >> +                     #reset-cells = <1>;
+> >> >> +                     compatible = "st,stm32-reset";
+> >> >> +                     reg = <0x40023810 0x4>;
+> >> >> +             };
+> >> >> +
+> >> >> +             reset_ahb2: reset@40023814 {
+> >> >> +                     #reset-cells = <1>;
+> >> >> +                     compatible = "st,stm32-reset";
+> >> >> +                     reg = <0x40023814 0x4>;
+> >> >> +             };
+> >> >> +
+> >> >> +             reset_ahb3: reset@40023818 {
+> >> >> +                     #reset-cells = <1>;
+> >> >> +                     compatible = "st,stm32-reset";
+> >> >> +                     reg = <0x40023818 0x4>;
+> >> >> +             };
+> >> >> +
+> >> >> +             reset_apb1: reset@40023820 {
+> >> >> +                     #reset-cells = <1>;
+> >> >> +                     compatible = "st,stm32-reset";
+> >> >> +                     reg = <0x40023820 0x4>;
+> >> >> +             };
+> >> >> +
+> >> >> +             reset_apb2: reset@40023824 {
+> >> >> +                     #reset-cells = <1>;
+> >> >> +                     compatible = "st,stm32-reset";
+> >> >> +                     reg = <0x40023824 0x4>;
+> >> >> +             };
+> >> >
+> >> > These are mostly consecutive, single registers. I wonder if these are
+> >> > part of the same IP block and thus should be grouped together into the
+> >> > same reset controller node?
+> >>
+> >> What I could to is to have two instances. One for AHB and one for APB domain.
+> >> Doing this, I will have one instance per domain, and only consecutive registers.
+> >> Is it fine for you?
+> >
+> > Looking at
+> > http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf
+> > Table 34 (RCC register map and reset values), I'd say there is a single
+> > "Reset and Clock Control" device at 0x40023800 - 0x40023884:
+> >
+> >         soc {
+> >                 rcc: rcc@40023800 {
+> >                         #clock-cells = <1>;
+> >                         #reset-cells = <1>;
+> >                         compatible = "st,stm32-rcc";
+> >                         reg = <0x40023800 0x84>;
+> >                 };
+> >
+> >                 ...
+> >
+> > If you really want to describe the reset controller parts (offsets +0x10
+> > to +0x24) in a separate node, I won't argue against it too long,
+> > although this is a somewhat arbitrary decision.
+> >
+> > In any case, the whole register at offset +0x1c is reserved, so there is
+> > no reason to split the reset controller. It is ok to have unused ranges
+> > as is already the case with reserved bits inside the used registers.
+> 
+> Ok. I understand your point.
+> But it will be more difficult at usage, because the node referencing
+> the fourth reset bit of apb2 register will have to pass 164 as
+> parameter.
+> It is error prone IMHO.
+>
+> Other solution would be to add some defines for each reset line in the
+> DT-Bindings, as we do today for STi platform.
+> But it is giving an unneeded constraint between DT and reset trees.
 
-Tested-by: Janusz Uzycki <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-Changes since v4:
-- Added missing static keywords, as pointed out by Stephen Boyd
-- Turned to_clk_pwm into an inline function,
-- added MODULE_AUTHOR/DESCRIPTION/LICENSE,
-- and fixed PWM spelling issues, as pointed out by Thierry Reding
----
- .../devicetree/bindings/clock/pwm-clock.txt        |  26 ++++
- drivers/clk/Kconfig                                |   7 ++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-pwm.c                              | 136 +++++++++++++++++++++
- 4 files changed, 170 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/pwm-clock.txt
- create mode 100644 drivers/clk/clk-pwm.c
+That is a bit unfortunate, but providing the named constants in
+include/dt-bindings/reset/ makes for a much better readable device tree,
+so I'd prefer that solution, even if it means having to coordinate pull
+requests.
 
-diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-new file mode 100644
-index 0000000..83db876
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-@@ -0,0 +1,26 @@
-+Binding for an external clock signal driven by a PWM pin.
-+
-+This binding uses the common clock binding[1] and the common PWM binding[2].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Documentation/devicetree/bindings/pwm/pwm.txt
-+
-+Required properties:
-+- compatible : shall be "pwm-clock".
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- pwms : from common PWM binding; this determines the clock frequency
-+  via the period given in the PWM specifier.
-+
-+Optional properties:
-+- clock-output-names : From common clock binding.
-+- clock-frequency : Exact output frequency, in case the PWM period
-+  is not exact but was rounded to nanoseconds.
-+
-+Example:
-+	clock {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+		clock-output-names = "mipi_mclk";
-+		pwms = <&pwm2 0 40>; /* 1 / 40 ns = 25 MHz */
-+	};
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 3f44f292..772d45e 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -129,6 +129,13 @@ config COMMON_CLK_PALMAS
- 	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
- 	  using common clock framework.
- 
-+config COMMON_CLK_PWM
-+	tristate "Clock driver for PWMs used as clock outputs"
-+	depends on PWM
-+	---help---
-+	  Adapter driver so that any PWM output can be (mis)used as clock signal
-+	  at 50% duty cycle.
-+
- config COMMON_CLK_PXA
- 	def_bool COMMON_CLK && ARCH_PXA
- 	---help---
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index d5fba5b..6a0c5cf 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_ARCH_U300)			+= clk-u300.o
- obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
- obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
- obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
-+obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
- obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
- obj-$(CONFIG_ARCH_BCM_MOBILE)		+= bcm/
- obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
-diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-new file mode 100644
-index 0000000..328fcfc
---- /dev/null
-+++ b/drivers/clk/clk-pwm.c
-@@ -0,0 +1,136 @@
-+/*
-+ * Copyright (C) 2014 Philipp Zabel, Pengutronix
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * PWM (mis)used as clock output
-+ */
-+#include <linux/clk-provider.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+struct clk_pwm {
-+	struct clk_hw hw;
-+	struct pwm_device *pwm;
-+	u32 fixed_rate;
-+};
-+
-+static inline struct clk_pwm *to_clk_pwm(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct clk_pwm, hw);
-+}
-+
-+static int clk_pwm_prepare(struct clk_hw *hw)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	return pwm_enable(clk_pwm->pwm);
-+}
-+
-+static void clk_pwm_unprepare(struct clk_hw *hw)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	pwm_disable(clk_pwm->pwm);
-+}
-+
-+static unsigned long clk_pwm_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	return clk_pwm->fixed_rate;
-+}
-+
-+static const struct clk_ops clk_pwm_ops = {
-+	.prepare = clk_pwm_prepare,
-+	.unprepare = clk_pwm_unprepare,
-+	.recalc_rate = clk_pwm_recalc_rate,
-+};
-+
-+static int clk_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct clk_init_data init;
-+	struct clk_pwm *clk_pwm;
-+	struct pwm_device *pwm;
-+	const char *clk_name;
-+	struct clk *clk;
-+	int ret;
-+
-+	clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
-+	if (!clk_pwm)
-+		return -ENOMEM;
-+
-+	pwm = devm_pwm_get(&pdev->dev, NULL);
-+	if (IS_ERR(pwm))
-+		return PTR_ERR(pwm);
-+
-+	if (!pwm->period) {
-+		dev_err(&pdev->dev, "invalid PWM period\n");
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-+		clk_pwm->fixed_rate = NSEC_PER_SEC / pwm->period;
-+
-+	if (pwm->period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
-+	    pwm->period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-+		dev_err(&pdev->dev,
-+			"clock-frequency does not match PWM period\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = pwm_config(pwm, (pwm->period + 1) >> 1, pwm->period);
-+	if (ret < 0)
-+		return ret;
-+
-+	clk_name = node->name;
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	init.name = clk_name;
-+	init.ops = &clk_pwm_ops;
-+	init.flags = CLK_IS_BASIC | CLK_IS_ROOT;
-+	init.num_parents = 0;
-+
-+	clk_pwm->pwm = pwm;
-+	clk_pwm->hw.init = &init;
-+	clk = devm_clk_register(&pdev->dev, &clk_pwm->hw);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	return of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+}
-+
-+static int clk_pwm_remove(struct platform_device *pdev)
-+{
-+	of_clk_del_provider(pdev->dev.of_node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id clk_pwm_dt_ids[] = {
-+	{ .compatible = "pwm-clock" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, clk_pwm_dt_ids);
-+
-+static struct platform_driver clk_pwm_driver = {
-+	.probe = clk_pwm_probe,
-+	.remove = clk_pwm_remove,
-+	.driver = {
-+		.name = "pwm-clock",
-+		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
-+	},
-+};
-+
-+module_platform_driver(clk_pwm_driver);
-+
-+MODULE_AUTHOR("Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
-+MODULE_DESCRIPTION("PWM clock driver");
-+MODULE_LICENSE("GPL");
--- 
-2.1.4
+regards
+Philipp
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
