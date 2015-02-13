@@ -1,40 +1,68 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
-Date: Thu, 12 Feb 2015 20:34:20 -0800
-Message-ID: <54DD7ECC.5020504@codeaurora.org>
-References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>		 <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>	 <1422535712.28891.3.camel@mm-sol.com> <54DD7896.9020403@codeaurora.org> <1423801725.1241.1.camel@mm-sol.com>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH RFC v9 09/20] drm/dsi: Add a helper to get bits per pixel
+ of MIPI DSI pixel format
+Date: Fri, 13 Feb 2015 13:01:14 +0800
+Message-ID: <20150213050112.GA18793@victor>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <1423720903-24806-10-git-send-email-Ying.Liu@freescale.com>
+ <20150212092642.GY24485@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1423801725.1241.1.camel@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150212092642.GY24485@phenom.ffwll.local>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/15 20:28, Ivan T. Ivanov wrote:
-> On Thu, 2015-02-12 at 20:07 -0800, Stephen Boyd wrote:
->> On 01/29/15 04:48, Ivan T. Ivanov wrote:
->>> Otherwise it looks good. Driver is loaded and device is detected
->>> properly (i have added readings for type and subtype registers).
->>> Do you know where I can measure result from changing brightness
->>> sysfs entry. I am using 8074 dragonboard?
->> Does the backlight turn on? From what I can tell it controls the
->> backlight, but it may be that nothings getting displayed so it won't be
->> noticeable.
->>
-> Yes, I can not see visual changes. That is why I have asked where
-> I could hook the probe and measure current change or wherever.
-> BL_WLEDx signals go out from J2, but somehow I was unable to 
-> locate it on the board, will try to look harder :-)
->
->
-
-When the screen is "off" in android I can still turn on the brightness
-to max in sysfs and see the screen glow. Hopefully we don't need
-something else to make that work.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTA6MjY6NDJBTSArMDEwMCwgRGFuaWVsIFZldHRlciB3
+cm90ZToKPiBPbiBUaHUsIEZlYiAxMiwgMjAxNSBhdCAwMjowMTozMlBNICswODAwLCBMaXUgWWlu
+ZyB3cm90ZToKPiA+IFNpZ25lZC1vZmYtYnk6IExpdSBZaW5nIDxZaW5nLkxpdUBmcmVlc2NhbGUu
+Y29tPgo+ID4gLS0tCj4gPiB2OC0+djk6Cj4gPiAgKiBSZWJhc2Ugb250byB0aGUgaW14LWRybS9u
+ZXh0IGJyYW5jaCBvZiBQaGlsaXBwIFphYmVsJ3Mgb3BlbiBnaXQgcmVwb3NpdG9yeS4KPiA+IAo+
+ID4gdjctPnY4Ogo+ID4gICogTm9uZS4KPiA+IAo+ID4gdjYtPnY3Ogo+ID4gICogTm9uZS4KPiA+
+IAo+ID4gdjUtPnY2Ogo+ID4gICogQWRkcmVzcyB0aGUgb3ZlciA4MCBjaGFyYWN0ZXJzIGluIG9u
+ZSBsaW5lIHdhcm5pbmcgcmVwb3J0ZWQgYnkgdGhlCj4gPiAgICBjaGVja3BhdGNoLnBsIHNjcmlw
+dC4KPiA+IAo+ID4gdjQtPnY1Ogo+ID4gICogTm9uZS4KPiA+IAo+ID4gdjMtPnY0Ogo+ID4gICog
+Tm9uZS4KPiA+IAo+ID4gdjItPnYzOgo+ID4gICogTm9uZS4KPiA+IAo+ID4gdjEtPnYyOgo+ID4g
+ICogVGhpZXJyeSBSZWRpbmcgc3VnZ2VzdGVkIHRoYXQgdGhlIG1pcGlfZHNpX3BpeGVsX2Zvcm1h
+dF90b19icHAoKSBmdW5jdGlvbgo+ID4gICAgY291bGQgYmUgcGxhY2VkIGF0IHRoZSBjb21tb24g
+RFJNIE1JUEkgRFNJIGRyaXZlci4KPiA+ICAgIFRoaXMgcGF0Y2ggaXMgbmV3bHkgYWRkZWQuCj4g
+PiAKPiA+ICBpbmNsdWRlL2RybS9kcm1fbWlwaV9kc2kuaCB8IDE0ICsrKysrKysrKysrKysrCj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykKPiA+IAo+ID4gZGlmZiAtLWdpdCBh
+L2luY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oIGIvaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmgK
+PiA+IGluZGV4IGYxZDhkMGQuLjM2NjIwMjEgMTAwNjQ0Cj4gPiAtLS0gYS9pbmNsdWRlL2RybS9k
+cm1fbWlwaV9kc2kuaAo+ID4gKysrIGIvaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmgKPiA+IEBA
+IC0xNjMsNiArMTYzLDIwIEBAIHN0YXRpYyBpbmxpbmUgc3RydWN0IG1pcGlfZHNpX2RldmljZSAq
+dG9fbWlwaV9kc2lfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+ICAJcmV0dXJuIGNvbnRh
+aW5lcl9vZihkZXYsIHN0cnVjdCBtaXBpX2RzaV9kZXZpY2UsIGRldik7Cj4gPiAgfQo+ID4gIAo+
+ID4gK3N0YXRpYyBpbmxpbmUgaW50IG1pcGlfZHNpX3BpeGVsX2Zvcm1hdF90b19icHAoZW51bSBt
+aXBpX2RzaV9waXhlbF9mb3JtYXQgZm10KQo+IAo+IEtlcm5lbGRvYyBzZWVtcyB0byBiZSBtaXNz
+aW5nIGZvciB0aGlzIG9uZS4KCkknbGwgYWRkIGl0LiAgVGhhbmtzIGZvciBwb2ludGluZyBvdXQg
+dGhpcy4KClJlZ2FyZHMsCkxpdSBZaW5nCgo+IC1EYW5pZWwKPiAKPiA+ICt7Cj4gPiArCXN3aXRj
+aCAoZm10KSB7Cj4gPiArCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjg4ODoKPiA+ICsJY2FzZSBNSVBJ
+X0RTSV9GTVRfUkdCNjY2Ogo+ID4gKwkJcmV0dXJuIDI0Owo+ID4gKwljYXNlIE1JUElfRFNJX0ZN
+VF9SR0I2NjZfUEFDS0VEOgo+ID4gKwkJcmV0dXJuIDE4Owo+ID4gKwljYXNlIE1JUElfRFNJX0ZN
+VF9SR0I1NjU6Cj4gPiArCQlyZXR1cm4gMTY7Cj4gPiArCX0KPiA+ICsJcmV0dXJuIC1FSU5WQUw7
+Cj4gPiArfQo+ID4gKwo+ID4gIHN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKm9mX2ZpbmRfbWlwaV9k
+c2lfZGV2aWNlX2J5X25vZGUoc3RydWN0IGRldmljZV9ub2RlICpucCk7Cj4gPiAgaW50IG1pcGlf
+ZHNpX2F0dGFjaChzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkc2kpOwo+ID4gIGludCBtaXBpX2Rz
+aV9kZXRhY2goc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKTsKPiA+IC0tIAo+ID4gMi4xLjAK
+PiA+IAo+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+PiA+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiA+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKPiA+IGh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwKPiAKPiAtLSAKPiBEYW5pZWwgVmV0dGVyCj4gU29mdHdhcmUgRW5naW5lZXIsIElu
+dGVsIENvcnBvcmF0aW9uCj4gKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8vYmxvZy5mZnds
+bC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
