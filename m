@@ -1,125 +1,312 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [RFC PATCH] ARM: DRA: hwmod: RTC: Add reset function for RTC
-Date: Fri, 13 Feb 2015 11:07:16 +0530
-Message-ID: <54DD8D8C.60203@ti.com>
-References: <1416199402-3865-1-git-send-email-lokeshvutla@ti.com> <546DB513.6000104@ti.com> <alpine.DEB.2.02.1411201644470.9204@utopia.booyaka.com> <5473FF68.3070805@ti.com> <alpine.DEB.2.02.1411260649330.16047@utopia.booyaka.com> <alpine.DEB.2.02.1501022252580.27058@utopia.booyaka.com> <alpine.DEB.2.02.1502121641320.3767@utopia.booyaka.com>
+From: addy ke <addy.ke@rock-chips.com>
+Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: fix bug that cause 'Timeout sending
+ command'
+Date: Fri, 13 Feb 2015 16:15:01 +0800
+Message-ID: <54DDB285.20900@rock-chips.com>
+References: <1423134801-23219-1-git-send-email-addy.ke@rock-chips.com> <1423466726-20833-1-git-send-email-addy.ke@rock-chips.com> <1423466726-20833-2-git-send-email-addy.ke@rock-chips.com> <CAGOxZ51wgw9iXF3xX39vnB0M5ZPb+zHWoCtTvvKdyo9bSOCVgw@mail.gmail.com> <54DAC534.4020708@rock-chips.com> <54DB43E2.70203@samsung.com> <CAGOxZ50CLM1Job+X45-CDF_23r9vsx0=jtMCu5cSoFk-+xzF=g@mail.gmail.com> <54DC0FBB.7010308@rock-chips.com> <54DC8A1B.7070402@samsung.com> <CAGOxZ53wJfANx=UyOh8tmD0LQgsF=FuZPrxBoCqOwR=C9MkN0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1502121641320.3767@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, t-kristo@ti.com, balbi@ti.com, nm@ti.com
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ53wJfANx=UyOh8tmD0LQgsF=FuZPrxBoCqOwR=C9MkN0w@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: alim.akhtar@gmail.com, a.hajda@samsung.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org, djkurtz@chromium.org, huangtao@rock-chips.com, devicetree@vger.kernel.org, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
-On Thursday 12 February 2015 10:11 PM, Paul Walmsley wrote:
-> + Felipe, Nishanth
-> 
-> Hi Lokesh,
-> 
-> what's the status here?
-Sorry for the delayed response.
-I am currently on a high priority issue. Once I am done with it Ill address your
-comments and repost the patch.
 
-Thanks and regards,
-Lokesh
-> 
-> - Paul
-> 
-> 
-> On Fri, 2 Jan 2015, Paul Walmsley wrote:
-> 
->> Ping.  Are you going to redo this one?
->>
->> - Paul
->>
->> On Wed, 26 Nov 2014, Paul Walmsley wrote:
->>
->>> Hi Lokesh 
->>>
->>> On Tue, 25 Nov 2014, Lokesh Vutla wrote:
->>>
->>>> Hi Paul,
->>>> On Thursday 20 November 2014 10:26 PM, Paul Walmsley wrote:
->>>>> On Thu, 20 Nov 2014, Lokesh Vutla wrote:
->>>>>
->>>>>> On Monday 17 November 2014 10:13 AM, Lokesh Vutla wrote:
->>>>>>> RTC IP have kicker feature which prevents spurious writes to its registers.
->>>>>>> In order to write into any of the RTC registers, KICK values has te be
->>>>>>> written to KICK registers. Currently hwmod is updating the IDLEMODE in rtc
->>>>>>> sysconfig register without writing into any kick register which is a noop.
->>>>>>> When autoidle is allowed for rtc, interruts are not received until IDLEMODE
->>>>>>> is set to SIDLE_SMART_WKUP.
->>>>>>> Adding a reset function to unlock RTC registers so that IDLEMODE is
->>>>>>> updated.
->>>>>> Ping..!!
->>>>>> Is this patch acceptable?
->>>>>
->>>>> Lokesh
->>>>>
->>>>> 1. This looks like a fix.  Is this intended to go in as a v3.18-rc patch, 
->>>>> or against v3.19?  If so it would be very helpful for the maintainers if 
->>>>> you were to state that somewhere.
->>>> Yes. This is a fix, intended to go in 3.18-rc. Sorry should have
->>>> mentioned it.
->>>
->>> A few questions.  Do you know when this problem started (in terms of 
->>> kernel versions)?
->>>
->>> Also: the patch description states that this is only a problem when 
->>> autoidle is allowed for RTC.  What enables autoidle for RTC - the RTCSS 
->>> driver?  Or does hwmod wind up doing this after the RTCSS driver unlocks 
->>> it?
->>>
->>>>> 2. Your patch unlocks the RTC registers, but never relocks it.  This seems 
->>>>> to defeat the point of the spurious write protection.  Shouldn't your 
->>>>> patch only unlock the RTC immediately before the hwmod code touches the 
->>>>> RTC registers, and then relock it immediately afterwards, per SPRUHZ6 
->>>>> section 23.4.3.3?  If so then the .reset function pointer is the wrong 
->>>>> place for this; I would suggest adding some .lock and .unlock function 
->>>>> pointers that are to be called before and after any register write to the 
->>>>> IP block.
->>>> Yeah I agree with you.
->>>> Currently rtc driver unlocks these kick registers in probe and leaves it unlocks for
->>>> further use.
->>>> But if hwmod does unlock and lock for every sysconfig write driver should also
->>>> implement unlock and lock for every rtc register write, which adds an extra overhead.
->>>> I am not sure if some one writes into rtc registers other than hwmod and driver.
->>>> IMO we can leave it unlocked as the driver does.
->>>
->>> I would think that the best approach would be to set up .lock and .unlock 
->>> function pointers, then add a temporary hwmod flag that, if set, would 
->>> prevent the .lock function from ever being called.  Then once the driver 
->>> is fixed, that flag can be dropped.
->>>
->>>>> 3. Your macros don't mention DRA7xx specifically.  Does this sequence 
->>>>> apply to some other TI chips, or just DRA7xx?  Please document this in a 
->>>>> comment above the macros, and possibly change the name of the macros to 
->>>>> refer to DRA7XX.
->>>> This sequence applies to AM43xx and AM33xx also. So made it generic.
->>>> Ill document it.
->>>
->>> OK but it would need more than just documentation, right?  Wouldn't the 
->>> hwmod data also need to be modified for AM33xx/AM43xx to add the .reset 
->>> function pointer?  Any reason why folks wouldn't have seen this problem on 
->>> AM33xx/AM43xx?
->>>
->>>
->>> - Paul
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
->>
->>
->> - Paul
->>
-> 
-> 
-> - Paul
-> 
 
+On 2015/2/12 21:59, Alim Akhtar wrote:
+> On Thu, Feb 12, 2015 at 4:40 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+>> On 02/12/2015 03:28 AM, addy ke wrote:
+>>> Hi Andrzej and Alim
+>>>
+>>> On 2015/2/12 07:20, Alim Akhtar wrote:
+>>>> Hi Andrzej,
+>>>>
+>>>> On Wed, Feb 11, 2015 at 5:28 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>>>> Hi Alim,
+>>>>>
+>>>>> On 02/11/2015 03:57 AM, Addy wrote:
+>>>>>> On 2015/02/10 23:22, Alim Akhtar wrote:
+>>>>>>> Hi Addy,
+>>>>>>>
+>>>>>>> On Mon, Feb 9, 2015 at 12:55 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
+>>>>>>>> Because of some uncertain factors, such as worse card or worse hardware,
+>>>>>>>> DAT[3:0](the data lines) may be pulled down by card, and mmc controller
+>>>>>>>> will be in busy state. This should not happend when mmc controller
+>>>>>>>> send command to update card clocks. If this happends, mci_send_cmd will
+>>>>>>>> be failed and we will get 'Timeout sending command', and then system will
+>>>>>>>> be blocked. To avoid this, we need reset mmc controller.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+>>>>>>>> ---
+>>>>>>>>   drivers/mmc/host/dw_mmc.c | 28 ++++++++++++++++++++++++++++
+>>>>>>>>   1 file changed, 28 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>>>>>>>> index 4d2e3c2..b0b57e3 100644
+>>>>>>>> --- a/drivers/mmc/host/dw_mmc.c
+>>>>>>>> +++ b/drivers/mmc/host/dw_mmc.c
+>>>>>>>> @@ -100,6 +100,7 @@ struct idmac_desc {
+>>>>>>>>   };
+>>>>>>>>   #endif /* CONFIG_MMC_DW_IDMAC */
+>>>>>>>>
+>>>>>>>> +static int dw_mci_card_busy(struct mmc_host *mmc);
+>>>>>>>>   static bool dw_mci_reset(struct dw_mci *host);
+>>>>>>>>   static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>>>>>>>>
+>>>>>>>> @@ -888,6 +889,31 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>>>>>>>                  cmd, arg, cmd_status);
+>>>>>>>>   }
+>>>>>>>>
+>>>>>>>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot)
+>>>>>>>> +{
+>>>>>>>> +       struct dw_mci *host = slot->host;
+>>>>>>>> +       unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>>>>>>> +
+>>>>>>> Why 500 msec?
+>>>>>> This timeout value is the same as  mci_send_cmd:
+>>>>>> static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg)
+>>>>>> {
+>>>>>>          struct dw_mci *host = slot->host;
+>>>>>>          unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>>>>>          ....
+>>>>>> }
+>>>>>>
+>>>>>> I have not clear that which is suitable.
+>>>>>> Do you have any suggestion on it?
+>>>>>>>> +       do {
+>>>>>>>> +               if (!dw_mci_card_busy(slot->mmc))
+>>>>>>>> +                       return;
+>>>>>>>> +               cpu_relax();
+>>>>>>>> +       } while (time_before(jiffies, timeout));
+>>>>>>>> +
+>>>>>>>> +       dev_err(host->dev, "Data busy (status %#x)\n",
+>>>>>>>> +               mci_readl(slot->host, STATUS));
+>>>>>>>> +
+>>>>>>>> +       /*
+>>>>>>>> +        * Data busy, this should not happend when mmc controller send command
+>>>>>>>> +        * to update card clocks in non-volt-switch state. If it happends, we
+>>>>>>>> +        * should reset controller to avoid getting "Timeout sending command".
+>>>>>>>> +        */
+>>>>>>>> +       dw_mci_ctrl_reset(host, SDMMC_CTRL_ALL_RESET_FLAGS);
+>>>>>>>> +
+>>>>>>> Why you need to reset all blocks? may be CTRL_RESET is good enough here.
+>>>>>> I have tested on rk3288, if only reset ctroller, data busy bit will not
+>>>>>> be cleaned,and we will still get
+>>>>>>
+>>>>>> "Timeout sending command".
+>>>>>>
+>>>>>>>> +       /* Fail to reset controller or still data busy, WARN_ON! */
+>>>>>>>> +       WARN_ON(dw_mci_card_busy(slot->mmc));
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>>   static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>>>>>>   {
+>>>>>>>>          struct dw_mci *host = slot->host;
+>>>>>>>> @@ -899,6 +925,8 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>>>>>>          /* We must continue to set bit 28 in CMD until the change is complete */
+>>>>>>>>          if (host->state == STATE_WAITING_CMD11_DONE)
+>>>>>>>>                  sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+>>>>>>>> +       else
+>>>>>>>> +               dw_mci_wait_busy(slot);
+>>>>>>>>
+>>>>>>> hmm...I would suggest you to call dw_mci_wait_busy() from inside
+>>>>>>> mci_send_cmd(), seems like dw_mmc hangs while sending update clock cmd
+>>>>>>> in multiple cases.see [1]
+>>>>>>>
+>>>>>>> [1]: http://permalink.gmane.org/gmane.linux.kernel.mmc/31140
+>>>>>> I think this patch is more reasonable.
+>>>>>> So I will resend patches based on this patch.
+>>>>>> thank you!
+>>>>> I have tested your patches instead [1] above and they do not solve my issue:
+>>>>> Board: odroid-xu3/exynos5422/dw_mmc_250a.
+>>>>> MMC card: absent, broken-cd quirk
+>>>>> SD card: present
+>>>>>
+>>>> I doubt $SUBJECT patch in current form can resolve you issue. I have
+>>>> already given comments on $subject patch.
+>>>>
+>>>> Can you try out below patch (I have not tested yet) on top of $SUBJECT patch?
+>>>>
+>>>> =======
+>>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>>>> index b0b57e3..ea87844 100644
+>>>> --- a/drivers/mmc/host/dw_mmc.c
+>>>> +++ b/drivers/mmc/host/dw_mmc.c
+>>>> @@ -101,6 +101,7 @@ struct idmac_desc {
+>>>>  #endif /* CONFIG_MMC_DW_IDMAC */
+>>>>
+>>>>  static int dw_mci_card_busy(struct mmc_host *mmc);
+>>>> +static void dw_mci_wait_busy(struct dw_mci_slot *slot);
+>>>>  static bool dw_mci_reset(struct dw_mci *host);
+>>>>  static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>>>>
+>>>> @@ -874,16 +875,22 @@ static void mci_send_cmd(struct dw_mci_slot
+>>>> *slot, u32 cmd, u32 arg)
+>>>>         struct dw_mci *host = slot->host;
+>>>>         unsigned long timeout = jiffies + msecs_to_jiffies(500);
+>>>>         unsigned int cmd_status = 0;
+>>>> +       int re_try = 3; /* just random for now, 1 re-try should be ok */
+>>>>
+>>>> -       mci_writel(host, CMDARG, arg);
+>>>> -       wmb();
+>>>> -       mci_writel(host, CMD, SDMMC_CMD_START | cmd);
+>>>> +       while(re_try--) {
+>>>> +               mci_writel(host, CMDARG, arg);
+>>>> +               wmb();
+>>>> +               mci_writel(host, CMD, SDMMC_CMD_START | cmd);
+>>>>
+>>>> -       while (time_before(jiffies, timeout)) {
+>>>> -               cmd_status = mci_readl(host, CMD);
+>>>> -               if (!(cmd_status & SDMMC_CMD_START))
+>>>> -                       return;
+>>>> +               while (time_before(jiffies, timeout)) {
+>>>> +                       cmd_status = mci_readl(host, CMD);
+>>>> +                       if (!(cmd_status & SDMMC_CMD_START))
+>>>> +                               return;
+>>>> +               }
+>>>> +
+>>>> +               dw_mci_wait_busy(slot);
+>>>>         }
+>>>> +
+>>>>         dev_err(&slot->mmc->class_dev,
+>>>>                 "Timeout sending command (cmd %#x arg %#x status %#x)\n",
+>>>>                 cmd, arg, cmd_status);
+>>>> @@ -925,8 +932,6 @@ static void dw_mci_setup_bus(struct dw_mci_slot
+>>>> *slot, bool force_clkinit)
+>>>>         /* We must continue to set bit 28 in CMD until the change is complete */
+>>>>         if (host->state == STATE_WAITING_CMD11_DONE)
+>>>>                 sdmmc_cmd_bits |= SDMMC_CMD_VOLT_SWITCH;
+>>>> -       else
+>>>> -               dw_mci_wait_busy(slot);
+>>>>
+>>>>         if (!clock) {
+>>>>                 mci_writel(host, CLKENA, 0);
+>>>>
+>>>> ===== end ======
+>>> The reason why we are fail to send command is that we got data busy in
+>>> none-switch-volt state(host->state != STATE_WAITING_CMD11_DONE).
+>>> So:
+>>> if(host->state != STATE_WAITING_CMD11_DONE), we must wait until data not busy,
+>>> And if (host->state == STATE_WAITING_CMD11_DONE) we should not wait.
+>>>
+>>>>> System hangs during boot after few minutes kernel spits:
+>>>>> [  242.188098] INFO: task kworker/u16:1:50 blocked for more than 120
+>>>>> seconds.
+>>>>> [  242.193524]       Not tainted
+>>>>> 3.19.0-next-20150210-00002-gf96831b-dirty #3834
+>>>>> [  242.200622] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+>>>>> disables this message.
+>>>>> [  242.208422] kworker/u16:1   D c04766ac     0    50      2 0x00000000
+>>>>> [  242.214756] Workqueue: kmmcd mmc_rescan
+>>>>> [  242.218553] [<c04766ac>] (__schedule) from [<c0476a58>]
+>>>>> (schedule+0x34/0x98)
+>>>>> [  242.225591] [<c0476a58>] (schedule) from [<c047a4dc>]
+>>>>> (schedule_timeout+0x110/0x164)
+>>>>> [  242.233302] [<c047a4dc>] (schedule_timeout) from [<c04774f0>]
+>>>>> (wait_for_common+0xb8/0x14c)
+>>>>> [  242.241539] [<c04774f0>] (wait_for_common) from [<c0362138>]
+>>>>> (mmc_wait_for_req+0x68/0x17c)
+>>>>> [  242.249861] [<c0362138>] (mmc_wait_for_req) from [<c03622cc>]
+>>>>> (mmc_wait_for_cmd+0x80/0xa0)
+>>>>> [  242.258002] [<c03622cc>] (mmc_wait_for_cmd) from [<c0367e50>]
+>>>>> (mmc_go_idle+0x78/0xf8)
+>>>>> [  242.265796] [<c0367e50>] (mmc_go_idle) from [<c0363e2c>]
+>>>>> (mmc_rescan+0x280/0x314)
+>>>>> [  242.273253] [<c0363e2c>] (mmc_rescan) from [<c0034764>]
+>>>>> (process_one_work+0x120/0x324)
+>>>>> [  242.281135] [<c0034764>] (process_one_work) from [<c00349cc>]
+>>>>> (worker_thread+0x30/0x42c)
+>>>>> [  242.289194] [<c00349cc>] (worker_thread) from [<c003926c>]
+>>>>> (kthread+0xd8/0xf4)
+>>>>> [  242.296389] [<c003926c>] (kthread) from [<c000e7c0>]
+>>>>> (ret_from_fork+0x14/0x34)
+>>>>>
+>>>>> Just for record, Exynos4412/dw_mmc_240a with the same configuration
+>>>>> (no MMC card, broken-cd) works OK without patches.
+>>> This is because mmc start command,but mmc_request_done() is't called.
+>>> I have ever found this issue.
+>>> I found that host does't get DTO interrupt when mmc send command to read data.
+>>> I have sent a patch for it, see:
+>>> https://patchwork.kernel.org/patch/5426531/
+>>>
+>>> Would you please merge it and test again?
+>>
+>> I have merged it and added quirk to exynos, but it does not help. There
+>> is still timeout:
+>>
+> I don't think this DTO issue. I think we need a way to reproduce this,
+> at least on Exyons5422/5800.
+> what type of sd card is being used? Are you trying UHS-I mode by any chance?
+> 
+Emmc, sd card and sdio, all have this issue on rk3288,
+I have NOT found data busy before send command, but still not get DTO interrupt.
+
+And we have ever found little probability of no command done interrupt.
+
+>> [  242.188178] INFO: task kworker/u16:1:50 blocked for more than 120
+>> seconds.
+>> [  242.193605]       Not tainted
+>> 3.19.0-next-20150212-00003-g7850750-dirty #3841
+>> [  242.200703] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+>> disables this message.
+>> [  242.208592] kworker/u16:1   D c04755f4     0    50      2 0x00000000
+>> [  242.214840] Workqueue: kmmcd mmc_rescan
+>> [  242.218635] [<c04755f4>] (__schedule) from [<c04759a0>]
+>> (schedule+0x34/0x98)
+>> [  242.225671] [<c04759a0>] (schedule) from [<c0479424>]
+>> (schedule_timeout+0x110/0x164)
+>> [  242.233383] [<c0479424>] (schedule_timeout) from [<c0476438>]
+>> (wait_for_common+0xb8/0x14c)
+>> [  242.241619] [<c0476438>] (wait_for_common) from [<c0361600>]
+>> (mmc_wait_for_req+0xb0/0x13c)
+>> [  242.249848] [<c0361600>] (mmc_wait_for_req) from [<c036170c>]
+>> (mmc_wait_for_cmd+0x80/0xa0)
+>> [  242.258086] [<c036170c>] (mmc_wait_for_cmd) from [<c03676e0>]
+>> (mmc_go_idle+0x78/0xf8)
+>> [  242.265876] [<c03676e0>] (mmc_go_idle) from [<c0363700>]
+>> (mmc_rescan+0x25c/0x2e4)
+>> [  242.273333] [<c0363700>] (mmc_rescan) from [<c0034764>]
+>> (process_one_work+0x120/0x324)
+>> [  242.281216] [<c0034764>] (process_one_work) from [<c00349cc>]
+>> (worker_thread+0x30/0x42c)
+>> [  242.289275] [<c00349cc>] (worker_thread) from [<c003926c>]
+>> (kthread+0xd8/0xf4)
+>> [  242.296469] [<c003926c>] (kthread) from [<c000e7c0>]
+>> (ret_from_fork+0x14/0x34)
+>>
+>>
+>> Regards
+>> Andrzej
+>>
+>>>>>
+>>>>> Regards
+>>>>> Andrzej
+>>>>>
+>>>>>>>>          if (!clock) {
+>>>>>>>>                  mci_writel(host, CLKENA, 0);
+>>>>>>>> --
+>>>>>>>> 1.8.3.2
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> _______________________________________________
+>>>>>>>> linux-arm-kernel mailing list
+>>>>>>>> linux-arm-kernel@lists.infradead.org
+>>>>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>>>>>
+>>>>>>
+>>>>>> --
+>>>>>> To unsubscribe from this list: send the line "unsubscribe linux-doc" in
+>>>>>> the body of a message to majordomo@vger.kernel.org
+>>>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>>>>
+>>>>
+>>>>
+>>>
+>>
+> 
+> 
+> 
