@@ -1,153 +1,149 @@
-From: Travis <taskboxtester@gmail.com>
-Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round
- rate if no bestdiv is normally found
-Date: Thu, 12 Feb 2015 20:58:49 -0600
-Message-ID: <54dd6ab3.6a5e3c0a.3c85.59de@mx.google.com>
-References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
- <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
- <20150212093356.GR12209@pengutronix.de> <20150212103944.GA1290@victor>
- <20150212122405.GW12209@pengutronix.de>
- <20150212125646.GT8656@n2100.arm.linux.org.uk>
- <20150212134131.GX12209@pengutronix.de> <20150212140625.GA32487@victor>
- <20150213025825.GA30014@victor>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
+Date: Thu, 12 Feb 2015 20:04:10 -0800
+Message-ID: <54DD77BA.5020808@codeaurora.org>
+References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com> <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150213025825.GA30014@victor>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liu Ying <Ying.Liu@freescale.com>
-Cc: andy.yan@rock-chips.com, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, stefan.wahren@i2se.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, dri-devel@lists.freedesktop.org, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>
+Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VHJhdmlzIGxpa2VkIHlvdXIgbWVzc2FnZSB3aXRoIEJveGVyIGZvciBBbmRyb2lkLgoKT24gRmVi
-IDEyLCAyMDE1IDg6NTggUE0sIExpdSBZaW5nIDxZaW5nLkxpdUBmcmVlc2NhbGUuY29tPiB3cm90
-ZToKPgo+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDEwOjA2OjI3UE0gKzA4MDAsIExpdSBZaW5n
-IHdyb3RlOiAKPiA+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDAyOjQxOjMxUE0gKzAxMDAsIFNh
-c2NoYSBIYXVlciB3cm90ZTogCj4gPiA+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDEyOjU2OjQ2
-UE0gKzAwMDAsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZTogCj4gPiA+ID4gT24gVGh1
-LCBGZWIgMTIsIDIwMTUgYXQgMDE6MjQ6MDVQTSArMDEwMCwgU2FzY2hhIEhhdWVyIHdyb3RlOiAK
-PiA+ID4gPiA+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDA2OjM5OjQ1UE0gKzA4MDAsIExpdSBZ
-aW5nIHdyb3RlOiAKPiA+ID4gPiA+ID4gT24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTA6MzM6NTZB
-TSArMDEwMCwgU2FzY2hhIEhhdWVyIHdyb3RlOiAKPiA+ID4gPiA+ID4gPiBPbiBUaHUsIEZlYiAx
-MiwgMjAxNSBhdCAwMjowMToyNFBNICswODAwLCBMaXUgWWluZyB3cm90ZTogCj4gPiA+ID4gPiA+
-ID4gPiBJZiBubyBiZXN0IGRpdmlkZXIgaXMgbm9ybWFsbHkgZm91bmQsIHdlIHdpbGwgdHJ5IHRv
-IHVzZSB0aGUgbWF4aW11bSBkaXZpZGVyLiAKPiA+ID4gPiA+ID4gPiA+IFdlIHNob3VsZCBub3Qg
-c2V0IHRoZSBwYXJlbnQgY2xvY2sgcmF0ZSB0byBiZSAxSHogYnkgZm9yY2UgZm9yIGJlaW5nIHJv
-dW5kZWQuIAo+ID4gPiA+ID4gPiA+ID4gSW5zdGVhZCwgd2Ugc2hvdWxkIHRha2UgdGhlIG1heGlt
-dW0gZGl2aWRlciBhcyBhIGJhc2UgYW5kIGNhbGN1bGF0ZSBhIGNvcnJlY3QgCj4gPiA+ID4gPiA+
-ID4gPiBwYXJlbnQgY2xvY2sgcmF0ZSBmb3IgYmVpbmcgcm91bmRlZC4gCj4gPiA+ID4gPiA+ID4g
-Cj4gPiA+ID4gPiA+ID4gUGxlYXNlIGFkZCBhbiBleHBsYW5hdGlvbiB3aHkgeW91IHRoaW5rIHRo
-ZSBjdXJyZW50IGNvZGUgaXMgd3JvbmcgYW5kIAo+ID4gPiA+ID4gPiA+IHdoYXQgdGhpcyBhY3R1
-YWxseSBmaXhlcywgbWF5YmUgYW4gZXhhbXBsZT8gCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBU
-aGUgTUlQSSBEU0kgcGFuZWwncyBwaXhlbCBjbG9jayByYXRlIGlzIDI2LjRNSHogYW5kIGl0J3Mg
-ZGVyaXZlZCBmcm9tIFBMTDUgb24gCj4gPiA+ID4gPiA+IHRoZSBNWDZETCBTYWJyZVNEIGJvYXJk
-LiAKPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IFRoZXNlIGFyZSB0aGUgY2xvY2sgdHJlZSBzdW1t
-YXJpZXMgd2l0aCBvciB3aXRob3V0IHRoZSBwYXRjaCBhcHBsaWVkOiAKPiA+ID4gPiA+ID4gMSkg
-V2l0aCB0aGUgcGF0Y2ggYXBwbGllZDogCj4gPiA+ID4gPiA+IHBsbDVfYnlwYXNzX3NyY8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIDHCoMKgwqAgMjQwMDAwMDDCoMKgwqDCoMKgwqDCoMKgwqAgMCAwIAo+ID4gPiA+ID4g
-PsKgwqDCoCBwbGw1wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIDHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgIDg0NDgwMDA0OMKg
-wqDCoMKgwqDCoMKgwqDCoCAwIDAgCj4gPiA+ID4gPiA+wqDCoMKgwqDCoMKgIHBsbDVfYnlwYXNz
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCAxwqDCoCA4NDQ4MDAwNDjCoMKgwqDCoMKgwqDCoMKgwqAgMCAwIAo+ID4gPiA+ID4g
-PsKgwqDCoMKgwqDCoMKgwqDCoCBwbGw1X3ZpZGVvwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIDHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgIDg0NDgwMDA0OMKgwqDCoMKg
-wqDCoMKgwqDCoCAwIDAgCj4gPiA+ID4gPiA+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBsbDVf
-cG9zdF9kaXbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-McKgwqAgMjExMjAwMDEywqDCoMKgwqDCoMKgwqDCoMKgIDAgMCAKPiA+ID4gPiA+ID7CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGxsNV92aWRlb19kaXbCoMKgwqDCoMKgwqDCoMKgwqDC
-oCAxwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDCoCAyMTEyMDAwMTLCoMKgwqDCoMKgwqDCoCAw
-IDAgCj4gPiA+ID4gPiA+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlwdTFf
-ZGkwX3ByZV9zZWzCoMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAx
-wqDCoCAyMTEyMDAwMTLCoMKgIDAgMCAKPiA+ID4gPiA+ID7CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgaXB1MV9kaTBfcHJlwqDCoMKgwqDCoMKgwqDCoMKgwqAgMcKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgMcKgwqDCoCAyNjQwMDAwMsKgwqDCoCAwIDAgCj4gPiA+ID4g
-PiA+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlwdTFf
-ZGkwX3NlbMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKg
-wqAgMjY0MDAwMDIgMCAwIAo+ID4gPiA+ID4gPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpcHUxX2RpMMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgwqAgMjY0MDAwMDLCoCAwIDAgCj4gPiA+ID4gPiA+
-IAo+ID4gPiA+ID4gPiAyKSBXaXRob3V0IHRoZSBwYXRjaCBhcHBsaWVkOiAKPiA+ID4gPiA+ID4g
-cGxsNV9ieXBhc3Nfc3JjwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgMcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMcKgwqDCoCAyNDAwMDAwMMKgwqDCoMKgwqDCoMKg
-wqDCoCAwIDAgCj4gPiA+ID4gPiA+wqDCoMKgIHBsbDXCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMcKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgMcKgwqAgNjQ4MDAwMDAwwqDCoMKgwqDCoMKgwqDCoMKgIDAgMCAKPiA+ID4gPiA+ID7CoMKg
-wqDCoMKgwqAgcGxsNV9ieXBhc3PCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIDHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgIDY0ODAwMDAwMMKgwqDCoMKgwqDCoMKg
-wqDCoCAwIDAgCj4gPiA+ID4gPiA+wqDCoMKgwqDCoMKgwqDCoMKgIHBsbDVfdmlkZW/CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMcKg
-wqAgNjQ4MDAwMDAwwqDCoMKgwqDCoMKgwqDCoMKgIDAgMCAKPiA+ID4gPiA+ID7CoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgcGxsNV9wb3N0X2RpdsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDCoCAxNjIwMDAwMDDCoMKgwqDCoMKgwqDCoMKgwqAgMCAw
-IAo+ID4gPiA+ID4gPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwbGw1X3ZpZGVvX2Rp
-dsKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgwqAgNDA1
-MDAwMDDCoMKgwqDCoMKgwqDCoCAwIDAgCj4gPiA+ID4gPiA+wqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGlwdTFfZGkwX3ByZV9zZWzCoMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDCoMKgIDQwNTAwMDAwwqDCoCAwIDAgCj4gPiA+ID4gPiA+
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlwdTFfZGkwX3ByZcKg
-wqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDHCoMKgwqAgMjAyNTAw
-MDDCoMKgwqAgMCAwIAo+ID4gPiA+ID4gPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBpcHUxX2RpMF9zZWzCoMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCAxwqDCoMKgIDIwMjUwMDAwIDAgMCAKPiA+ID4gPiA+ID7CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaXB1MV9kaTDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDCoMKgIDIwMjUw
-MDAwwqAgMCAwIAo+ID4gPiA+ID4gCj4gPiA+ID4gPiBUaGlzIHNlZW1zIHRvIGJlIGJyb2tlbiBz
-aW5jZTogCj4gPiA+ID4gPiAKPiA+ID4gPiA+IHwgY29tbWl0IGIxMWQyODJkYmVhMjdkYjE3ODg4
-OTMxMTVkZmNhOGE3ODU2YmYyMDUgCj4gPiA+ID4gPiB8IEF1dGhvcjogVG9taSBWYWxrZWluZW4g
-PHRvbWkudmFsa2VpbmVuQHRpLmNvbT4gCj4gPiA+ID4gPiB8IERhdGU6wqDCoCBUaHUgRmViIDEz
-IDEyOjAzOjU5IDIwMTQgKzAyMDAgCj4gPiA+ID4gPiB8IAo+ID4gPiA+ID4gfMKgwqDCoMKgIGNs
-azogZGl2aWRlcjogZml4IHJhdGUgY2FsY3VsYXRpb24gZm9yIGZyYWN0aW9uYWwgcmF0ZXMgCj4g
-PiA+ID4gPiAKPiA+ID4gPiA+IFRoaXMgcGF0Y2ggZml4ZWQgYSBjYXNlIHdoZW4gY2xrX3NldF9y
-YXRlKGNsa19yb3VuZF9yYXRlKHJhdGUpKSByZXN1bHRlZCAKPiA+ID4gPiA+IGluIGEgbG93ZXIg
-ZnJlcXVlbmN5IHRoYW4gY2xrX3JvdW5kX3JhdGUocmF0ZSkgcmV0dXJuZWQuIAo+ID4gPiA+ID4g
-Cj4gPiA+ID4gPiBTaW5jZSB0aGVuIHRoZSBNVUxUX1JPVU5EX1VQIGluIGNsa19kaXZpZGVyX2Jl
-c3RkaXYoKSBpcyBpbmNvbnNpc3RlbnQgdG8gCj4gPiA+ID4gPiB0aGUgcmVzdCBvZiB0aGUgZGl2
-aWRlci4gTWF5YmUgdGhpcyBzaG91bGQgYmUgYSBzaW1wbGUgcmF0ZSAqIGkgbm93LCBidXQgCj4g
-PiA+ID4gPiBJJ20gdW5zdXJlIHdoYXQgc2lkZSBlZmZlY3RzIHRoaXMgaGFzLiAKPiA+ID4gPiA+
-IAo+ID4gPiA+ID4gSSB0aGluayB5b3VyIHBhdGNoIG9ubHkgZml4ZXMgdGhlIGJlaGF2aW91ciBp
-biB5b3VyIGNhc2UgYnkgYWNjaWRlbnQsIAo+ID4gPiA+ID4gaXQncyBub3QgYSBjb3JyZWN0IGZp
-eCBmb3IgdGhpcyBpc3N1ZS4gCj4gPiA+ID4gCj4gPiA+ID4gV2VsbCwgaXQncyBkZWZpbmVkIHRo
-YXQ6IAo+ID4gPiA+IAo+ID4gPiA+IG5ld19yYXRlID0gY2xrX3JvdW5kX3JhdGUoY2xrLCByYXRl
-KTsgCj4gPiA+ID4gCj4gPiA+ID4gcmV0dXJucyB0aGUgcmF0ZSB3aGljaCB5b3Ugd291bGQgZ2V0
-IGlmIHlvdSBkaWQ6IAo+ID4gPiA+IAo+ID4gPiA+IGNsa19zZXRfcmF0ZShjbGssIHJhdGUpOyAK
-PiA+ID4gPiBuZXdfcmF0ZSA9IGNsa19nZXRfcmF0ZShjbGspOyAKPiA+ID4gPiAKPiA+ID4gPiBU
-aGUgcmVhc29uaW5nIGhlcmUgaXMgdGhhdCBjbGtfcm91bmRfcmF0ZSgpIGdpdmVzIHlvdSBhIHdh
-eSB0byBxdWVyeSB3aGF0IAo+ID4gPiA+IHJhdGUgeW91IHdvdWxkIGdldCBpZiB5b3Ugd2VyZSB0
-byBhc2sgZm9yIHRoZSByYXRlIHRvIGJlIHNldCwgd2l0aG91dCAKPiA+ID4gPiBlZmZlY3Rpbmcg
-YSBjaGFuZ2UgaW4gdGhlIGhhcmR3YXJlLiAKPiA+ID4gPiAKPiA+ID4gPiBUaGUgaWRlYSB0aGF0
-IHlvdSBzaG91bGQgY2FsbCBjbGtfcm91bmRfcmF0ZSgpIGZpcnN0IGJlZm9yZSBjbGtfc2V0X3Jh
-dGUoKSAKPiA+ID4gPiBhbmQgcGFzcyB0aGUgcmV0dXJuZWQgcm91bmRlZCByYXRlIGludG8gY2xr
-X3NldF9yYXRlKCkgaXMgcmVhbGx5IGlkaW90aWMgCj4gPiA+ID4gZ2l2ZW4gdGhhdC7CoCBQbGVh
-c2UgZG9uJ3QgZG8gaXQsIGFuZCBwbGVhc2UgcmVtb3ZlIGNvZGUgd2hpY2ggZG9lcyBpdCwgYW5k
-IAo+ID4gPiA+IGluIHJldmlldyBjb21tZW50IG9uIGl0LsKgIFRoYW5rcy4gCj4gPiA+IAo+ID4g
-PiBUb21pcyBwYXRjaCBpcyBiYXNlZCBvbiB0aGUgYXNzdW1wdGlvbiB0aGF0IGNsa19zZXRfcmF0
-ZShjbGtfcm91bmRfcmF0ZShyYXRlKSkgCj4gPiA+IGlzIGVxdWFsIHRvIGNsa19yb3VuZF9yYXRl
-KHJhdGUpLiBTbyB3aGVuIHRoaXMgYXNzdW1wdGlvbiBpcyB3cm9uZyB0aGVuIAo+ID4gPiBpdCBz
-aG91bGQgc2ltcGx5IGJlIHJldmVydGVkLiAKPiA+ID4gU28gTGl1LCBjb3VsZCB5b3UgdGVzdCBp
-ZiByZXZlcnRpbmcgVG9taXMgcGF0Y2ggZml4ZXMgeW91ciBwcm9ibGVtPyAKPiA+IAo+ID4gWWVz
-LCBJJ2xsIHRlc3QgdG9tb3Jyb3cgd2hlbiBJIGhhdmUgYWNjZXNzIHRvIG15IGJvYXJkLiAKPgo+
-IFRvbWkncyBwYXRjaCBjYW5ub3QgYmUgcmV2ZXJ0ZWQgZGlyZWN0bHkgYmVjYXVzZSBvZiBjb25m
-bGljdHMgd2l0aCB0aGUgbGF0ZXIgCj4gcGF0Y2hlcy7CoCBTbywgSSByZXZlcnQgYWxsIHRoZSBj
-bG9jayBkaXZpZGVyIGRyaXZlciBwYXRjaGVzIG9uIHRvcCBvZiB0aGF0LiAKPiBBbmQsIHllcywg
-YWZ0ZXIgcmV2ZXJ0aW5nIFRvbWkncyBwYXRjaCwgSSBtYXkgZ2V0IHRoZSBjb3JyZWN0IDI2LjRN
-SHogcGl4ZWwgCj4gY2xvY2sgcmF0ZS4gCj4KPiBSZWdhcmRzLCAKPiBMaXUgWWluZyAKPgo+ID4g
-Cj4gPiBSZWdhcmRzLCAKPiA+IExpdSBZaW5nIAo+ID4gCj4gPiA+IAo+ID4gPiBTYXNjaGEgCj4g
-PiA+IAo+ID4gPiAtLSAKPiA+ID4gUGVuZ3V0cm9uaXggZS5LLsKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgCj4gPiA+IEluZHVzdHJpYWwgTGlu
-dXggU29sdXRpb25zwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCBodHRwOi8vd3d3
-LnBlbmd1dHJvbml4LmRlL8KgIHwgCj4gPiA+IFBlaW5lciBTdHIuIDYtOCwgMzExMzcgSGlsZGVz
-aGVpbSwgR2VybWFueSB8IFBob25lOiArNDktNTEyMS0yMDY5MTctMMKgwqDCoCB8IAo+ID4gPiBB
-bXRzZ2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NsKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgRmF4
-OsKgwqAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfCAKPiA+IF9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fIAo+ID4gZHJpLWRldmVsIG1haWxpbmcgbGlzdCAKPiA+
-IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcgCj4gPiBodHRwOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsIAo+IC0tIAo+IFRvIHVuc3Vic2Ny
-aWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1rZXJu
-ZWwiIGluIAo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwu
-b3JnIAo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXTCoCBodHRwOi8vdmdlci5rZXJuZWwub3JnL21h
-am9yZG9tby1pbmZvLmh0bWwgCj4gUGxlYXNlIHJlYWQgdGhlIEZBUSBhdMKgIGh0dHA6Ly93d3cu
-dHV4Lm9yZy9sa21sLyAK
+On 01/23/15 16:54, Bjorn Andersson wrote:
+> +
+> +static int pm8941_wled_configure(struct pm8941_wled *wled, struct device *dev)
+> +{
+> +	struct pm8941_wled_config *cfg = &wled->cfg;
+> +	u32 val;
+> +	int rc;
+> +	int i;
+> +
+> +	const struct {
+> +		const char *name;
+> +		u32 *val_ptr;
+> +		const struct pm8941_wled_var_cfg *cfg;
+> +	} u32_opts[] = {
+> +		{
+> +			"qcom,current-boost-limit",
+> +			&cfg->i_boost_limit,
+> +			.cfg = &pm8941_wled_i_boost_limit_cfg,
+> +		},
+> +		{
+> +			"qcom,current-limit",
+> +			&cfg->i_limit,
+> +			.cfg = &pm8941_wled_i_limit_cfg,
+> +		},
+> +		{
+> +			"qcom,ovp",
+> +			&cfg->ovp,
+> +			.cfg = &pm8941_wled_ovp_cfg,
+> +		},
+> +		{
+> +			"qcom,switching-freq",
+> +			&cfg->switch_freq,
+> +			.cfg = &pm8941_wled_switch_freq_cfg,
+> +		},
+> +		{
+> +			"qcom,num-strings",
+> +			&cfg->num_strings,
+> +			.cfg = &pm8941_wled_num_strings_cfg,
+> +		},
+> +	};
+> +	const struct {
+> +		const char *name;
+> +		bool *val_ptr;
+> +	} bool_opts[] = {
+> +		{ "qcom,cs-out", &cfg->cs_out_en, },
+> +		{ "qcom,ext-gen", &cfg->ext_gen, },
+> +		{ "qcom,cabc", &cfg->cabc_en, },
+> +	};
+> +
+> +	rc = of_property_read_u32(dev->of_node, "reg", &val);
+> +	if (rc || val > 0xffff) {
+> +		dev_err(dev, "invalid IO resources\n");
+> +		return rc ? rc : -EINVAL;
+> +	}
+> +	wled->addr = val;
+> +
+> +	rc = of_property_read_string(dev->of_node, "label", &wled->cdev.name);
+> +	if (rc)
+> +		wled->cdev.name = dev->of_node->name;
+> +
+> +	wled->cdev.default_trigger = of_get_property(dev->of_node,
+> +			"linux,default-trigger", NULL);
+> +
+> +	*cfg = pm8941_wled_config_defaults;
+> +	for (i = 0; i < ARRAY_SIZE(u32_opts); ++i) {
+> +		u32 sel, c;
+> +		int j, rj;
+> +
+> +		rc = of_property_read_u32(dev->of_node, u32_opts[i].name, &val);
+> +		if (rc) {
+> +			if (rc != -EINVAL) {
+> +				dev_err(dev, "error reading '%s'\n",
+> +						u32_opts[i].name);
+> +				return rc;
+> +			}
+> +			continue;
+> +		}
+> +
+> +		sel = UINT_MAX;
+> +		rj = -1;
+> +		c = pm8941_wled_values(u32_opts[i].cfg, 0);
+> +		for (j = 0; c != UINT_MAX; ++j) {
+> +			if (c <= val && (sel == UINT_MAX || c >= sel)) {
+> +				sel = c;
+> +				rj = j;
+> +			}
+> +			c = pm8941_wled_values(u32_opts[i].cfg, j + 1);
+> +		}
+> +		if (sel == UINT_MAX) {
+> +			dev_err(dev, "invalid value for '%s'\n",
+> +					u32_opts[i].name);
+> +			return rc;
+
+Isn't rc always 0 here? Don't we want to return an error?
+
+Also, I find this code very convoluted given that we loop through a
+table and match based on nodes and call function pointers, etc. Why
+can't we just have a handful of if statements with of_property_read_u32
+in them? That way we don't have to jump through so many hoops, bouncing
+all around this file to figure out what's going on. If we did I imagine
+we wouldn't have missed out on rc being 0 here.
+
+> +
+> +static int pm8941_wled_remove(struct platform_device *pdev)
+> +{
+> +	struct pm8941_wled *wled;
+> +
+> +	wled = platform_get_drvdata(pdev);
+> +	led_classdev_unregister(&wled->cdev);
+
+Would be nice to have a devm for this one too.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id pm8941_wled_match_table[] = {
+> +	{ .compatible = "qcom,pm8941-wled" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, pm8941_wled_match_table);
+> +
+> +static struct platform_driver pm8941_wled_driver = {
+> +	.probe	= pm8941_wled_probe,
+> +	.remove = pm8941_wled_remove,
+> +	.driver	= {
+> +		.name		= "pm8941-wled",
+> +		.owner		= THIS_MODULE,
+
+THIS_MODULE should be removed.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
