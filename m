@@ -1,142 +1,69 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH 8/9] arm/dts: am57xx-beagle-x15.dts: add HDMI
-Date: Fri, 13 Feb 2015 17:11:25 +0200
-Message-ID: <1423840286-18377-9-git-send-email-tomi.valkeinen@ti.com>
-References: <1423840286-18377-1-git-send-email-tomi.valkeinen@ti.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH 12/14] ARM: dts: Introduce STM32F429 MCU
+Date: Fri, 13 Feb 2015 16:59:01 +0100
+Message-ID: <CALszF6D+5mXajUWarwq8M4yL_Nc+x1Bmu4D7_HxDRy2kGRXNVQ@mail.gmail.com>
+References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1423763164-5606-13-git-send-email-mcoquelin.stm32@gmail.com>
+	<1423828078.4182.17.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1423840286-18377-1-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Tero Kristo <t-kristo@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1423828078.4182.17.camel@pengutronix.de>
+Sender: linux-arch-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal
 List-Id: devicetree@vger.kernel.org
 
-AM57xx Beagle X15 has a HDMI output. This patch adds the device tree
-nodes required for HDMI.
+Hi Philipp,
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org
----
- arch/arm/boot/dts/am57xx-beagle-x15.dts | 80 +++++++++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+2015-02-13 12:47 GMT+01:00 Philipp Zabel <p.zabel@pengutronix.de>:
+> Hi Maxime,
+>
+> Am Donnerstag, den 12.02.2015, 18:46 +0100 schrieb Maxime Coquelin:
+> [...]
+>> +     soc {
+>> +             reset_ahb1: reset@40023810 {
+>> +                     #reset-cells = <1>;
+>> +                     compatible = "st,stm32-reset";
+>> +                     reg = <0x40023810 0x4>;
+>> +             };
+>> +
+>> +             reset_ahb2: reset@40023814 {
+>> +                     #reset-cells = <1>;
+>> +                     compatible = "st,stm32-reset";
+>> +                     reg = <0x40023814 0x4>;
+>> +             };
+>> +
+>> +             reset_ahb3: reset@40023818 {
+>> +                     #reset-cells = <1>;
+>> +                     compatible = "st,stm32-reset";
+>> +                     reg = <0x40023818 0x4>;
+>> +             };
+>> +
+>> +             reset_apb1: reset@40023820 {
+>> +                     #reset-cells = <1>;
+>> +                     compatible = "st,stm32-reset";
+>> +                     reg = <0x40023820 0x4>;
+>> +             };
+>> +
+>> +             reset_apb2: reset@40023824 {
+>> +                     #reset-cells = <1>;
+>> +                     compatible = "st,stm32-reset";
+>> +                     reg = <0x40023824 0x4>;
+>> +             };
+>
+> These are mostly consecutive, single registers. I wonder if these are
+> part of the same IP block and thus should be grouped together into the
+> same reset controller node?
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index 49edbda68cd5..0b838d34b8a1 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-@@ -19,6 +19,7 @@
- 	aliases {
- 		rtc0 = &mcp_rtc;
- 		rtc1 = &tps659038_rtc;
-+		display0 = &hdmi0;
- 	};
- 
- 	memory {
-@@ -80,6 +81,51 @@
- 			default-state = "off";
- 		};
- 	};
-+
-+	hdmi0: connector {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&tpd12s015_out>;
-+			};
-+		};
-+	};
-+
-+	tpd12s015: encoder {
-+		compatible = "ti,tpd12s015";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tpd12s015_pins>;
-+
-+		gpios = <&gpio7 10 GPIO_ACTIVE_HIGH>,	/* gpio7_10, CT CP HPD */
-+			<&gpio6 28 GPIO_ACTIVE_HIGH>,	/* gpio6_28, LS OE */
-+			<&gpio7 12 GPIO_ACTIVE_HIGH>;	/* gpio7_12/sp1_cs2, HPD */
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				tpd12s015_in: endpoint {
-+					remote-endpoint = <&hdmi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				tpd12s015_out: endpoint {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &dra7_pmx_core {
-@@ -99,6 +145,13 @@
- 		>;
- 	};
- 
-+	hdmi_pins: pinmux_hdmi_pins {
-+		pinctrl-single,pins = <
-+			0x408 (PIN_INPUT | MUX_MODE1)	/* i2c2_sda.hdmi1_ddc_scl */
-+			0x40c (PIN_INPUT | MUX_MODE1)	/* i2c2_scl.hdmi1_ddc_sda */
-+		>;
-+	};
-+
- 	i2c3_pins_default: i2c3_pins_default {
- 		pinctrl-single,pins = <
- 			0x2a4 (PIN_INPUT| MUX_MODE10)	/* mcasp1_aclkx.i2c3_sda */
-@@ -164,6 +217,13 @@
- 		>;
- 	};
- 
-+	tpd12s015_pins: pinmux_tpd12s015_pins {
-+		pinctrl-single,pins = <
-+			0x3b0 (PIN_OUTPUT | MUX_MODE14)		/* gpio7_10 CT_CP_HPD */
-+			0x3b8 (PIN_INPUT_PULLDOWN | MUX_MODE14)	/* gpio7_12 HPD */
-+			0x370 (PIN_OUTPUT | MUX_MODE14)		/* gpio6_28 LS_OE */
-+		>;
-+	};
- };
- 
- &i2c1 {
-@@ -403,3 +463,23 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&usb1_pins>;
- };
-+
-+&dss {
-+	status = "ok";
-+
-+	vdda_video-supply = <&ldoln_reg>;
-+};
-+
-+&hdmi {
-+	status = "ok";
-+	vdda-supply = <&ldo3_reg>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_pins>;
-+
-+	port {
-+		hdmi_out: endpoint {
-+			remote-endpoint = <&tpd12s015_in>;
-+		};
-+	};
-+};
--- 
-2.3.0
+What I could to is to have two instances. One for AHB and one for APB domain.
+Doing this, I will have one instance per domain, and only consecutive registers.
+Is it fine for you?
 
+Thanks,
+Maxime
+
+>
+> regards
+> Philipp
+>
