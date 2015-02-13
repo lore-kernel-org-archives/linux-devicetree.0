@@ -1,59 +1,133 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] mfd: devicetree: bindings: Add Qualcomm RPM regulator
- subnodes
-Date: Fri, 13 Feb 2015 16:13:32 -0600
-Message-ID: <20150213221332.GA19975@qualcomm.com>
-References: <1422582666-32653-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Ashley Lai <ashley@ashleylai.com>
+Subject: Re: [tpmdd-devel] [PATCH] Added Little Endian support to vtpm
+ module
+Date: Fri, 13 Feb 2015 16:25:30 -0600 (CST)
+Message-ID: <alpine.DEB.2.10.1502131620280.7574@ant>
+References: <525b5ba04c7d86f483ac11404cf15572@imap.linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1422582666-32653-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <525b5ba04c7d86f483ac11404cf15572@imap.linux.ibm.com>
+Sender: stable-owner@vger.kernel.org
+To: honclo <honclo@imap.linux.ibm.com>
+Cc: tpmdd-devel@lists.sourceforge.net, ashley@ashleylai.com, PeterHuewe@gmx.de, jmlatten@linux.vnet.ibm.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 29, 2015 at 05:51:06PM -0800, Bjorn Andersson wrote:
-> Add the regulator subnodes to the Qualcomm RPM MFD device tree bindings.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Looks good to me.
+
+Reviewed-by: Ashley Lai <ashley@ahsleylai.com>
+
+Thanks,
+--Ashley
+
+On Thu, 12 Feb 2015, honclo wrote:
+
+> The tpm_ibmvtpm module is affected by an unaligned access problem.
+> ibmvtpm_crq_get_version failed with rc=-4 during boot when vTPM is
+> enabled in Power partition, which supports both little endian and
+> big endian modes.
+>
+> We added little endian support to fix this problem:
+> 1) added cpu_to_be64 calls to ensure BE data is sent from an LE OS.
+> 2) added be16_to_cpu and be32_to_cpu calls to make sure data received
+>   is in LE format on a LE OS.
+>
+> Signed-off-by: Hon Ching(Vicky) Lo <honclo@linux.vnet.ibm.com>
+> Signed-off-by: Joy Latten <jmlatten@linux.vnet.ibm.com>
 > ---
-
->  	#include <dt-bindings/mfd/qcom-rpm.h>
-> @@ -66,5 +237,18 @@ frequencies.
->  
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +
-> +		pm8921_smps1: pm8921-smps1 {
-> +			compatible = "qcom,rpm-pm8921-smps";
-> +			reg = <QCOM_RPM_PM8921_SMPS1>;
-> +
-> +			regulator-min-microvolt = <1225000>;
-> +			regulator-max-microvolt = <1225000>;
-> +			regulator-always-on;
-> +
-> +			bias-pull-down;
-> +
-> +			qcom,switch-mode-frequency = <3200000>;
-> +		};
->  	};
-
-My only comment here is that most (all but one) of the other mfd regulator
-devices use regulators {}.  Still wonder if that's what we should do.
-
-Otherwise,
-
-Reviewed-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/char/tpm/tpm_ibmvtpm.c |   20 ++++++++++++--------
+>  1 files changed, 12 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c
+> b/drivers/char/tpm/tpm_ibmvtpm.c
+> index af74c57..1632242 100644
+> --- a/drivers/char/tpm/tpm_ibmvtpm.c
+> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
+> @@ -148,7 +148,8 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip,
+> u8 *buf, size_t count)
+>  	crq.len = (u16)count;
+>  	crq.data = ibmvtpm->rtce_dma_handle;
+>
+> -	rc = ibmvtpm_send_crq(ibmvtpm->vdev, word[0], word[1]);
+> +	rc = ibmvtpm_send_crq(ibmvtpm->vdev, cpu_to_be64(word[0]),
+> +			      cpu_to_be64(word[1]));
+>  	if (rc != H_SUCCESS) {
+>  		dev_err(ibmvtpm->dev, "tpm_ibmvtpm_send failed rc=%d\n", rc);
+>  		rc = 0;
+> @@ -186,7 +187,8 @@ static int ibmvtpm_crq_get_rtce_size(struct
+> ibmvtpm_dev *ibmvtpm)
+>  	crq.valid = (u8)IBMVTPM_VALID_CMD;
+>  	crq.msg = (u8)VTPM_GET_RTCE_BUFFER_SIZE;
+>
+> -	rc = ibmvtpm_send_crq(ibmvtpm->vdev, buf[0], buf[1]);
+> +	rc = ibmvtpm_send_crq(ibmvtpm->vdev, cpu_to_be64(buf[0]),
+> +			      cpu_to_be64(buf[1]));
+>  	if (rc != H_SUCCESS)
+>  		dev_err(ibmvtpm->dev,
+>  			"ibmvtpm_crq_get_rtce_size failed rc=%d\n", rc);
+> @@ -212,7 +214,8 @@ static int ibmvtpm_crq_get_version(struct
+> ibmvtpm_dev *ibmvtpm)
+>  	crq.valid = (u8)IBMVTPM_VALID_CMD;
+>  	crq.msg = (u8)VTPM_GET_VERSION;
+>
+> -	rc = ibmvtpm_send_crq(ibmvtpm->vdev, buf[0], buf[1]);
+> +	rc = ibmvtpm_send_crq(ibmvtpm->vdev, cpu_to_be64(buf[0]),
+> +			      cpu_to_be64(buf[1]));
+>  	if (rc != H_SUCCESS)
+>  		dev_err(ibmvtpm->dev,
+>  			"ibmvtpm_crq_get_version failed rc=%d\n", rc);
+> @@ -327,7 +330,8 @@ static int tpm_ibmvtpm_suspend(struct device *dev)
+>  	crq.valid = (u8)IBMVTPM_VALID_CMD;
+>  	crq.msg = (u8)VTPM_PREPARE_TO_SUSPEND;
+>
+> -	rc = ibmvtpm_send_crq(ibmvtpm->vdev, buf[0], buf[1]);
+> +	rc = ibmvtpm_send_crq(ibmvtpm->vdev, cpu_to_be64(buf[0]),
+> +			      cpu_to_be64(buf[1]));
+>  	if (rc != H_SUCCESS)
+>  		dev_err(ibmvtpm->dev,
+>  			"tpm_ibmvtpm_suspend failed rc=%d\n", rc);
+> @@ -472,11 +476,11 @@ static void ibmvtpm_crq_process(struct ibmvtpm_crq
+> *crq,
+>  	case IBMVTPM_VALID_CMD:
+>  		switch (crq->msg) {
+>  		case VTPM_GET_RTCE_BUFFER_SIZE_RES:
+> -			if (crq->len <= 0) {
+> +			if (be16_to_cpu(crq->len) <= 0) {
+>  				dev_err(ibmvtpm->dev, "Invalid rtce size\n");
+>  				return;
+>  			}
+> -			ibmvtpm->rtce_size = crq->len;
+> +			ibmvtpm->rtce_size = be16_to_cpu(crq->len);
+>  			ibmvtpm->rtce_buf = kmalloc(ibmvtpm->rtce_size,
+>  						    GFP_KERNEL);
+>  			if (!ibmvtpm->rtce_buf) {
+> @@ -497,11 +501,11 @@ static void ibmvtpm_crq_process(struct ibmvtpm_crq
+> *crq,
+>
+>  			return;
+>  		case VTPM_GET_VERSION_RES:
+> -			ibmvtpm->vtpm_version = crq->data;
+> +			ibmvtpm->vtpm_version = be32_to_cpu(crq->data);
+>  			return;
+>  		case VTPM_TPM_COMMAND_RES:
+>  			/* len of the data in rtce buffer */
+> -			ibmvtpm->res_len = crq->len;
+> +			ibmvtpm->res_len = be16_to_cpu(crq->len);
+>  			wake_up_interruptible(&ibmvtpm->wq);
+>  			return;
+>  		default:
+> -- 
+> 1.7.1
+>
+>
+> ------------------------------------------------------------------------------
+> Dive into the World of Parallel Programming. The Go Parallel Website,
+> sponsored by Intel and developed in partnership with Slashdot Media, is your
+> hub for all things parallel software development, from weekly thought
+> leadership blogs to news, videos, case studies, tutorials and more. Take a
+> look and join the conversation now. http://goparallel.sourceforge.net/
+> _______________________________________________
+> tpmdd-devel mailing list
+> tpmdd-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/tpmdd-devel
+>
