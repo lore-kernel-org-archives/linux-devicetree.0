@@ -1,70 +1,49 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 04/14] reset: Add reset_controller_of_init() function
-Date: Fri, 13 Feb 2015 12:49:04 +0100
-Message-ID: <1423828144.4182.18.camel@pengutronix.de>
-References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-	 <1423763164-5606-5-git-send-email-mcoquelin.stm32@gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] pm: domains: quieten down generic pm domains
+Date: Fri, 13 Feb 2015 11:54:08 +0000
+Message-ID: <20150213115408.GA25698@n2100.arm.linux.org.uk>
+References: <20140427132312.GC26756@n2100.arm.linux.org.uk>
+ <10021780.rnCkCYmgZH@vostro.rjw.lan>
+ <CAPDyKFpKnhcttY-BWDEG=XTYsKHro0t5G7YBao-+F=o3ez3grA@mail.gmail.com>
+ <1412882.XTDX0QPJ6V@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1423763164-5606-5-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1412882.XTDX0QPJ6V-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-Am Donnerstag, den 12.02.2015, 18:45 +0100 schrieb Maxime Coquelin:
-> Some platforms need to initialize the reset controller before the timers.
+On Mon, May 05, 2014 at 12:36:25AM +0200, Rafael J. Wysocki wrote:
+> On Friday, May 02, 2014 11:24:45 AM Ulf Hansson wrote:
+> > On 1 May 2014 01:46, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
+> > > On Sunday, April 27, 2014 02:28:50 PM Russell King wrote:
+> > >> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> > >
+> > > Acked-by: Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+> > >
+> > > Since you need this one and [2/5] for the rest of the patchset, please feel
+> > > free to take them through your tree if that's convenient.
+> > 
+> > Unless it complicates things for Russell, I would prefer if this could
+> > go via Rafael's tree.
+> > 
+> > I have a quite big patchset for the PM domain, it would help me if I
+> > have a single point to base my work upon.
 > 
-> This patch introduces a reset_controller_of_init() function that can be
-> called before the timers intialization.
-> 
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> ---
->  drivers/reset/core.c              | 20 ++++++++++++++++++++
->  include/asm-generic/vmlinux.lds.h |  4 +++-
->  include/linux/reset-controller.h  |  6 ++++++
->  3 files changed, 29 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> index 7955e00..18ee579 100644
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
-> @@ -86,6 +86,26 @@ void reset_controller_unregister(struct reset_controller_dev *rcdev)
->  }
->  EXPORT_SYMBOL_GPL(reset_controller_unregister);
->  
-> +extern struct of_device_id __reset_ctrl_of_table[];
-> +
-> +static const struct of_device_id __reset_ctrl_of_table_sentinel
-> +	__used __section(__reset_ctrl_of_table_end);
-> +
-> +void __init reset_controller_of_init(void)
+> No problem for me, but I'm not sure about what Russell things.
 
-The patch looks fine to me, but this function is missing a kerneldoc
-comment.
+Well, it seems nothing happened with these patches, and they're still
+something I have (and I've just updated them to changes in 3.19.)
 
-> +{
-> +	struct device_node *np;
-> +	const struct of_device_id *match;
-> +	of_init_fn_1 init_func;
-> +
-> +	for_each_matching_node_and_match(np, __reset_ctrl_of_table, &match) {
-> +		if (!of_device_is_available(np))
-> +			continue;
-> +
-> +		init_func = match->data;
-> +		init_func(np);
-> +	}
-> +}
-> +
->  /**
->   * reset_control_reset - reset the controlled device
->   * @rstc: reset controller
+What are we going to do about them?
 
-regards
-Philipp
-
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
