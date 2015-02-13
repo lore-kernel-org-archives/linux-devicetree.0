@@ -1,112 +1,40 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 12/14] ARM: dts: Introduce STM32F429 MCU
-Date: Fri, 13 Feb 2015 20:18:22 +0100
-Message-ID: <1423855102.4182.63.camel@pengutronix.de>
-References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-	 <1423763164-5606-13-git-send-email-mcoquelin.stm32@gmail.com>
-	 <1423828078.4182.17.camel@pengutronix.de>
-	 <CALszF6D+5mXajUWarwq8M4yL_Nc+x1Bmu4D7_HxDRy2kGRXNVQ@mail.gmail.com>
-	 <1423844735.4182.52.camel@pengutronix.de>
-	 <CALszF6Ad93BgT4UsJudVKpfhhL2dbtKTTRno1XqQ5=eANkwXzA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CALszF6Ad93BgT4UsJudVKpfhhL2dbtKTTRno1XqQ5=eANkwXzA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal
+From: Roman Volkov <v1ron@v1ros.org>
+Subject: [PATCH v2 0/5] Device Tree support for i8042 driver
+Date: Fri, 13 Feb 2015 22:52:48 +0300
+Message-ID: <1423857173-16432-1-git-send-email-v1ron@v1ros.org>
+References: <20150203011051.11999a16@v1ron-s7>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150203011051.11999a16@v1ron-s7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>, Wolfram Sang <wsa@the-dreams.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roman Volkov <v1ron@v1ros.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 13.02.2015, 17:41 +0100 schrieb Maxime Coquelin:
-> 2015-02-13 17:25 GMT+01:00 Philipp Zabel <p.zabel@pengutronix.de>:
-> > Hi Maxime,
-> >
-> > Am Freitag, den 13.02.2015, 16:59 +0100 schrieb Maxime Coquelin:
-> >> Hi Philipp,
-> >>
-> >> 2015-02-13 12:47 GMT+01:00 Philipp Zabel <p.zabel@pengutronix.de>:
-> >> > Hi Maxime,
-> >> >
-> >> > Am Donnerstag, den 12.02.2015, 18:46 +0100 schrieb Maxime Coquelin:
-> >> > [...]
-> >> >> +     soc {
-> >> >> +             reset_ahb1: reset@40023810 {
-> >> >> +                     #reset-cells = <1>;
-> >> >> +                     compatible = "st,stm32-reset";
-> >> >> +                     reg = <0x40023810 0x4>;
-> >> >> +             };
-> >> >> +
-> >> >> +             reset_ahb2: reset@40023814 {
-> >> >> +                     #reset-cells = <1>;
-> >> >> +                     compatible = "st,stm32-reset";
-> >> >> +                     reg = <0x40023814 0x4>;
-> >> >> +             };
-> >> >> +
-> >> >> +             reset_ahb3: reset@40023818 {
-> >> >> +                     #reset-cells = <1>;
-> >> >> +                     compatible = "st,stm32-reset";
-> >> >> +                     reg = <0x40023818 0x4>;
-> >> >> +             };
-> >> >> +
-> >> >> +             reset_apb1: reset@40023820 {
-> >> >> +                     #reset-cells = <1>;
-> >> >> +                     compatible = "st,stm32-reset";
-> >> >> +                     reg = <0x40023820 0x4>;
-> >> >> +             };
-> >> >> +
-> >> >> +             reset_apb2: reset@40023824 {
-> >> >> +                     #reset-cells = <1>;
-> >> >> +                     compatible = "st,stm32-reset";
-> >> >> +                     reg = <0x40023824 0x4>;
-> >> >> +             };
-> >> >
-> >> > These are mostly consecutive, single registers. I wonder if these are
-> >> > part of the same IP block and thus should be grouped together into the
-> >> > same reset controller node?
-> >>
-> >> What I could to is to have two instances. One for AHB and one for APB domain.
-> >> Doing this, I will have one instance per domain, and only consecutive registers.
-> >> Is it fine for you?
-> >
-> > Looking at
-> > http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf
-> > Table 34 (RCC register map and reset values), I'd say there is a single
-> > "Reset and Clock Control" device at 0x40023800 - 0x40023884:
-> >
-> >         soc {
-> >                 rcc: rcc@40023800 {
-> >                         #clock-cells = <1>;
-> >                         #reset-cells = <1>;
-> >                         compatible = "st,stm32-rcc";
-> >                         reg = <0x40023800 0x84>;
-> >                 };
-> >
-> >                 ...
-> >
-> > If you really want to describe the reset controller parts (offsets +0x10
-> > to +0x24) in a separate node, I won't argue against it too long,
-> > although this is a somewhat arbitrary decision.
-> >
-> > In any case, the whole register at offset +0x1c is reserved, so there is
-> > no reason to split the reset controller. It is ok to have unused ranges
-> > as is already the case with reserved bits inside the used registers.
-> 
-> Ok. I understand your point.
-> But it will be more difficult at usage, because the node referencing
-> the fourth reset bit of apb2 register will have to pass 164 as
-> parameter.
-> It is error prone IMHO.
->
-> Other solution would be to add some defines for each reset line in the
-> DT-Bindings, as we do today for STi platform.
-> But it is giving an unneeded constraint between DT and reset trees.
+Yes, some embedded devices still use the i8042 controller. This patch set
+enables the i8042 driver to get necessary information from Device Tree instead
+of using specific headers with hardcoded addresses for each specific machine.
+For example, vt8500 architecture has i8042.
 
-That is a bit unfortunate, but providing the named constants in
-include/dt-bindings/reset/ makes for a much better readable device tree,
-so I'd prefer that solution, even if it means having to coordinate pull
-requests.
+v2:
+Changes in the documentation.
+Errors fixed in the initialization funtion.
+Redundant parameters removed from Device Tree bindings (init-reset, etc.).
 
-regards
-Philipp
+Roman Volkov (5):
+  i8042: intel-8042 DT documentation
+  i8042: Kernel configuration handling for DT support
+  i8042: Add OF match table
+  i8042: Prepare i8042 driver for DT support
+  i8042: Add i8042_dt.h glue for DT support
 
+ .../devicetree/bindings/input/intel-8042.txt       |  26 ++++++
+ drivers/input/serio/i8042-dt.h                     | 104 +++++++++++++++++++++
+ drivers/input/serio/i8042.c                        |  43 ++++++++-
+ drivers/input/serio/i8042.h                        |   3 +
+ 4 files changed, 173 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/intel-8042.txt
+ create mode 100644 drivers/input/serio/i8042-dt.h
+
+--
+Friday the 13-th
+2.3.0
