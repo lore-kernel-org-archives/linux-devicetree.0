@@ -1,85 +1,85 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [Patch V4 00/10] ASoC: QCOM: Add support for
- ipq806x SOC
-Date: Sat, 14 Feb 2015 14:25:10 +0900
-Message-ID: <20150214052510.GI9110@finisterre.sirena.org.uk>
-References: <1423169626-22166-1-git-send-email-kwestfie@codeaurora.org>
- <20150206223229.GG31311@finisterre.sirena.org.uk>
- <20150209064511.GB19870@kwestfie-linux.qualcomm.com>
- <20150211022634.GO2593@finisterre.sirena.org.uk>
- <20150212010551.GA7330@kwestfie-linux.qualcomm.com>
- <20150212025341.GT2593@finisterre.sirena.org.uk>
- <54DC5441.1070004@codeaurora.org>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+ driver support
+Date: Sat, 14 Feb 2015 14:21:52 +0000
+Message-ID: <ed439c7a25d0465d9dbf4c06987d42a1@BY2FFO11FD018.protection.gbl>
+References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
+ <3236720.MHeqOodrCV@wuerfel>
+ <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
+ <1967130.oYyZRWCcEF@wuerfel>
+ <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
+ <20150212093445.GM21387@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yzvKDKJiLNESc64M"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54DC5441.1070004@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Patrick Lai <plai@codeaurora.org>
-Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, srinivas.kandagatla@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150212093445.GM21387@intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vinod,
 
---yzvKDKJiLNESc64M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Feb 11, 2015 at 11:20:33PM -0800, Patrick Lai wrote:
-> On 2/11/2015 6:53 PM, Mark Brown wrote:
-> >On Wed, Feb 11, 2015 at 05:05:52PM -0800, Kenneth Westfield wrote:
+> -----Original Message-----
+> From: Vinod Koul [mailto:vinod.koul@intel.com]
+> Sent: Thursday, February 12, 2015 3:05 PM
+> To: Appana Durga Kedareswara Rao
+> Cc: Arnd Bergmann; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; Srikanth Vemula; linux-
+> kernel@vger.kernel.org; Srikanth Thokala; dmaengine@vger.kernel.org;
+> robh+dt@kernel.org; Michal Simek; Anirudha Sarangi;
+> grant.likely@linaro.org; dan.j.williams@intel.com
+> Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+> driver support
+>
+> On Thu, Jan 29, 2015 at 11:24:41AM +0000, Appana Durga Kedareswara Rao
+> wrote:
+> > >  Earlier in the driver we are embedding dma_slave_config into custom
+> > > structs But Lars suggested to modify it. please refer to the below
+> > > thread for more details.
+> > >  http://www.spinics.net/lists/dmaengine/msg00010.html
+> > >
+> > >  And later we thought of creating a separate private member in
+> > > dma_slave_config for sharing additional configuration between slave
+> > > device and dma engine Or a new dma_ctrl_cmd like
+> > >
+> FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
+> > >
+> > >  Finally Vinod was ok with the existing suggestion so we dropped the
+> > > above thought.
+> > >
+> > >  @Vinod : Could you please comment on this.
+> FSLDMA_EXTERNAL_START has been removed, and you cna use the removal
+> as a guidance of how to solve your issue
+>
 
-> >>Replacing DSP-based drivers with LPASS-based drivers would be something that
-> >>should be handled by Kconfig selections.  For the DT, the DSP-related
+The current VDMA driver that got merged in the open source and the  current patch (dma: xilinx dma v4) Srikanth T submitted both contains the
+Similar implementation that you pointed as above(I mean similar to the free scale dma driver).
 
-> >No, it shouldn't be.  We should have the ability to build a single
-> >kernel image which will run on many systems, including both your
-> >system with a DSP and other systems without.
+The discussion starts here is why we need the header file(Xilinx_dma.h) in the include/linux/amba/Xilinx_dma.h  folder.
 
-> Is there expectation that DTB flashed onto the system would define nodes to
-> bind with both LPASS-based driver and DSP-based driver? I hope not as we want
-> to keep LPASS-based driver & DSP-based driver mutually exclusive.
+Like for FSL DMA it is got defined (fsl_dma_external_start) as a function prototype in include/linux/fsldma.h
+And it is being getting used in the drivers/misc/carma/carma-fpga-program.c
 
-DTB time selections are a separate thing to Kconfig changes like Kenneth
-was proposing.  They're more viable though it'd be a lot better to avoid
-needing them, designing out the possibility of doing something is often
-a sure fire way of finding a user.
+Similarly in the Xilinx VDMA driver(xilinx_vdma_channel_set_config ) defined as a function prototype in the include/linux/amba/xilinx_dma.h
+And is being used by Xilinx videos  drivers.
+Those video driver need to use the (xilinx_vdma_channel_set_config) which requires this global header file.
 
-> >The selection of DSP use sounds like something which isn't part of the
-> >description of the hardware but rather a runtime policy decision (at
-> >least in so far as non-DSP is ever an option).
+Could you please suggest us whether that header file (Xilinx_dma.h) should be there  in include/linux/amba or we should move it to include/linux?
+And any functional comments for this v4 patch?
 
-> Put aside IPQ8064, I would say it is actually more of build time policy
-> decision for QC SoCs with DSP. XPU is programmed by trust zone to allow certain
-> LPASS registers to be accessed by the chosen processor. If ADSP and app
-> processor would have to have access to audio interfaces and DMA, resources
-> partition(i.e # of DMAs go to ADSP while rest of DMA go to app processor is
-> decided after analyzing expected concurrency use case. For case of 8016, MDSP
-> would simply expect it has access to all audio subsystem except digital core of
-> CODEC.
 
-But is it possible to configure the TrustZone firmware to leave things
-open?  That's the tricky case.
+Regards,
+Kedar.
 
-Actually, can we read the configuration TrustZone did?  That might be
-the best answer here, the DT can describe the silicon and then we can
-check at runtime which bits of it we're actually allowed to talk to.
+> Thanks
+>
+> --
+> ~Vinod
 
---yzvKDKJiLNESc64M
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQEcBAEBCAAGBQJU3tw2AAoJECTWi3JdVIfQsogH/2vp7AmEy12Fq7Ht7DoBr+FI
-4i/z+hhnBL0NQbs2V7c4BkuaWMs0uFWKY2dHgPsbZEv/Q8MksRqI8qqV4/1qEP0+
-WoXp18EfAIIm9KTm1YOQnCuiZBNPnaWjmkMIz9/79oHc60DWHyJDLFYuicnL7SM5
-IRZjfKjQryyYQFB0S2TePLJG+8TmotWpmJsCG9eHKJt/vWw70CXkMvRICNyMRqCx
-h68Zo7XDJDBveLtyNN5ckAZqouHeI4hzaL3Wvc4Bkqn/jqTDyC9j8iagL0g6tXju
-fPbRcoDnY/GPNwxNdu6jDiE3yp4ndJcEXBrF9Hz9zVgl4w5m8xB1m8T3s2l7jG4=
-=w/4Y
------END PGP SIGNATURE-----
-
---yzvKDKJiLNESc64M--
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
