@@ -1,48 +1,49 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH 8/8] ARM: dt: dove: add GPU power domain description
-Date: Sat, 14 Feb 2015 15:28:06 +0000
-Message-ID: <E1YMeda-00054u-GA@rmk-PC.arm.linux.org.uk>
-References: <20150214152659.GI8656@n2100.arm.linux.org.uk>
+From: Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH 1/2] hwrng: iproc-rng200 - Add Broadcom IPROC RNG driver
+Date: Sat, 14 Feb 2015 08:36:11 -0800
+Message-ID: <54DF797B.40407@broadcom.com>
+References: <Scott Branden <sbranden@broadcom.com>	 <1423526830-29516-1-git-send-email-sbranden@broadcom.com>	 <1423526830-29516-2-git-send-email-sbranden@broadcom.com> <1423528033.2933.29.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150214152659.GI8656-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1423528033.2933.29.camel@perches.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Grant Likely <grant.likely@linaro.org>, Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the description of the GPU power domain to the PMU DT entry.
+Hi Joe,
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- arch/arm/boot/dts/dove.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+I really don't see the missing terminating newlines in the patch or 
+source code.  The lines look the same as every other line???
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index a47c7cef380f..081f968c521a 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -394,6 +394,13 @@
- 					marvell,pmu_iso_mask = <0x00000001>;
- 					resets = <&pmu 16>;
- 				};
-+
-+				gpu_domain: gpu-domain {
-+					#power-domain-cells = <0>;
-+					marvell,pmu_pwr_mask = <0x00000004>;
-+					marvell,pmu_iso_mask = <0x00000002>;
-+					resets = <&pmu 18>;
-+				};
- 			};
- 
- 			thermal: thermal-diode@d001c {
--- 
-1.8.3.1
+Regards,
+  Scott
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 15-02-09 04:27 PM, Joe Perches wrote:
+> On Mon, 2015-02-09 at 16:07 -0800, Scott Branden wrote:
+>> This adds a driver for random number generator present on Broadcom
+>> IPROC devices.
+>
+> trivia:
+>
+>> diff --git a/drivers/char/hw_random/iproc-rng200.c b/drivers/char/hw_random/iproc-rng200.c
+> []
+>> +static int iproc_rng200_probe(struct platform_device *pdev)
+>> +{
+> []
+>> +	if (!res) {
+>> +		dev_err(dev, "failed to get rng resources");
+>
+> Missing terminating newline:
+>
+> 		dev_err(dev, "failed to get rng resources\n");
+>
+>> +	rng_base = devm_ioremap_resource(dev, res);
+>> +	if (!rng_base) {
+>> +		dev_err(dev, "failed to remap rng regs");
+>
+> here too.
+>
+>
