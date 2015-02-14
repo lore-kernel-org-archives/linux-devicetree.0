@@ -1,85 +1,39 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
- driver support
-Date: Sat, 14 Feb 2015 14:21:52 +0000
-Message-ID: <ed439c7a25d0465d9dbf4c06987d42a1@BY2FFO11FD018.protection.gbl>
-References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
- <3236720.MHeqOodrCV@wuerfel>
- <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
- <1967130.oYyZRWCcEF@wuerfel>
- <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
- <20150212093445.GM21387@intel.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] ARM: dts: pxa: add pwri2c to pxa device-tree
+Date: Sat, 14 Feb 2015 15:57:58 +0100
+Message-ID: <87y4o04k21.fsf@free.fr>
+References: <1423761758-29159-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150212093445.GM21387@intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423761758-29159-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+	(Robert Jarzmik's message of "Thu, 12 Feb 2015 18:22:34 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> writes:
 
-
-> -----Original Message-----
-> From: Vinod Koul [mailto:vinod.koul@intel.com]
-> Sent: Thursday, February 12, 2015 3:05 PM
-> To: Appana Durga Kedareswara Rao
-> Cc: Arnd Bergmann; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; Srikanth Vemula; linux-
-> kernel@vger.kernel.org; Srikanth Thokala; dmaengine@vger.kernel.org;
-> robh+dt@kernel.org; Michal Simek; Anirudha Sarangi;
-> grant.likely@linaro.org; dan.j.williams@intel.com
-> Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
-> driver support
+> pxa27x variant has 2 I2C busses on the SoC :
+>  - the casual I2C
+>  - the power I2C, normally driving power regulators, and capable of
+>  receiving orders on core frequency modifications
 >
-> On Thu, Jan 29, 2015 at 11:24:41AM +0000, Appana Durga Kedareswara Rao
-> wrote:
-> > >  Earlier in the driver we are embedding dma_slave_config into custom
-> > > structs But Lars suggested to modify it. please refer to the below
-> > > thread for more details.
-> > >  http://www.spinics.net/lists/dmaengine/msg00010.html
-> > >
-> > >  And later we thought of creating a separate private member in
-> > > dma_slave_config for sharing additional configuration between slave
-> > > device and dma engine Or a new dma_ctrl_cmd like
-> > >
-> FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
-> > >
-> > >  Finally Vinod was ok with the existing suggestion so we dropped the
-> > > above thought.
-> > >
-> > >  @Vinod : Could you please comment on this.
-> FSLDMA_EXTERNAL_START has been removed, and you cna use the removal
-> as a guidance of how to solve your issue
+> Add the missing pwri2c to pxa27x description.
 >
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 
-The current VDMA driver that got merged in the open source and the  current patch (dma: xilinx dma v4) Srikanth T submitted both contains the
-Similar implementation that you pointed as above(I mean similar to the free scale dma driver).
+Hi Rob, Mark, Sergei,
 
-The discussion starts here is why we need the header file(Xilinx_dma.h) in the include/linux/amba/Xilinx_dma.h  folder.
+I'd like to queue that into the pxa/dt tree next week.
+Could I have a "Reviewed-by" ?
 
-Like for FSL DMA it is got defined (fsl_dma_external_start) as a function prototype in include/linux/fsldma.h
-And it is being getting used in the drivers/misc/carma/carma-fpga-program.c
+Cheers.
 
-Similarly in the Xilinx VDMA driver(xilinx_vdma_channel_set_config ) defined as a function prototype in the include/linux/amba/xilinx_dma.h
-And is being used by Xilinx videos  drivers.
-Those video driver need to use the (xilinx_vdma_channel_set_config) which requires this global header file.
-
-Could you please suggest us whether that header file (Xilinx_dma.h) should be there  in include/linux/amba or we should move it to include/linux?
-And any functional comments for this v4 patch?
-
-
-Regards,
-Kedar.
-
-> Thanks
->
-> --
-> ~Vinod
-
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+--
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
