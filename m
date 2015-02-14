@@ -1,133 +1,54 @@
-From: Ashley Lai <ashley@ashleylai.com>
-Subject: Re: [tpmdd-devel] [PATCH] Added Little Endian support to vtpm
- module
-Date: Fri, 13 Feb 2015 16:25:30 -0600 (CST)
-Message-ID: <alpine.DEB.2.10.1502131620280.7574@ant>
-References: <525b5ba04c7d86f483ac11404cf15572@imap.linux.ibm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [Patch] ASoC: codec: Add missing deps/hdrs to MAX98357A
+Date: Sat, 14 Feb 2015 13:36:43 +0900
+Message-ID: <20150214043643.GE9110@finisterre.sirena.org.uk>
+References: <1423737354-27150-1-git-send-email-kwestfie@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <525b5ba04c7d86f483ac11404cf15572@imap.linux.ibm.com>
-Sender: stable-owner@vger.kernel.org
-To: honclo <honclo@imap.linux.ibm.com>
-Cc: tpmdd-devel@lists.sourceforge.net, ashley@ashleylai.com, PeterHuewe@gmx.de, jmlatten@linux.vnet.ibm.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="C94crkcyjafcjHxo"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1423737354-27150-1-git-send-email-kwestfie@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>
+Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Looks good to me.
 
-Reviewed-by: Ashley Lai <ashley@ahsleylai.com>
+--C94crkcyjafcjHxo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
---Ashley
+On Thu, Feb 12, 2015 at 02:35:54AM -0800, Kenneth Westfield wrote:
+> From: Kenneth Westfield <kwestfie@codeaurora.org>
+>=20
+> For the max98357a codec driver:
+>   - Add missing build dependancy to GPIOLIB in
+>     Kconfig.
+>   - Add header files to avoid implicit declarations
+>     and indirect inclusions.
+>   - Remove use of DRV_NAME constant.
 
-On Thu, 12 Feb 2015, honclo wrote:
+Several of these fixes have already been submitted by other people and
+applied and (as covered in SubmttingPatches) each you should submit one
+patch per logical change.  Your changelog clearly identifies at least
+three different changes.
 
-> The tpm_ibmvtpm module is affected by an unaligned access problem.
-> ibmvtpm_crq_get_version failed with rc=-4 during boot when vTPM is
-> enabled in Power partition, which supports both little endian and
-> big endian modes.
->
-> We added little endian support to fix this problem:
-> 1) added cpu_to_be64 calls to ensure BE data is sent from an LE OS.
-> 2) added be16_to_cpu and be32_to_cpu calls to make sure data received
->   is in LE format on a LE OS.
->
-> Signed-off-by: Hon Ching(Vicky) Lo <honclo@linux.vnet.ibm.com>
-> Signed-off-by: Joy Latten <jmlatten@linux.vnet.ibm.com>
-> ---
->  drivers/char/tpm/tpm_ibmvtpm.c |   20 ++++++++++++--------
->  1 files changed, 12 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c
-> b/drivers/char/tpm/tpm_ibmvtpm.c
-> index af74c57..1632242 100644
-> --- a/drivers/char/tpm/tpm_ibmvtpm.c
-> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
-> @@ -148,7 +148,8 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip,
-> u8 *buf, size_t count)
->  	crq.len = (u16)count;
->  	crq.data = ibmvtpm->rtce_dma_handle;
->
-> -	rc = ibmvtpm_send_crq(ibmvtpm->vdev, word[0], word[1]);
-> +	rc = ibmvtpm_send_crq(ibmvtpm->vdev, cpu_to_be64(word[0]),
-> +			      cpu_to_be64(word[1]));
->  	if (rc != H_SUCCESS) {
->  		dev_err(ibmvtpm->dev, "tpm_ibmvtpm_send failed rc=%d\n", rc);
->  		rc = 0;
-> @@ -186,7 +187,8 @@ static int ibmvtpm_crq_get_rtce_size(struct
-> ibmvtpm_dev *ibmvtpm)
->  	crq.valid = (u8)IBMVTPM_VALID_CMD;
->  	crq.msg = (u8)VTPM_GET_RTCE_BUFFER_SIZE;
->
-> -	rc = ibmvtpm_send_crq(ibmvtpm->vdev, buf[0], buf[1]);
-> +	rc = ibmvtpm_send_crq(ibmvtpm->vdev, cpu_to_be64(buf[0]),
-> +			      cpu_to_be64(buf[1]));
->  	if (rc != H_SUCCESS)
->  		dev_err(ibmvtpm->dev,
->  			"ibmvtpm_crq_get_rtce_size failed rc=%d\n", rc);
-> @@ -212,7 +214,8 @@ static int ibmvtpm_crq_get_version(struct
-> ibmvtpm_dev *ibmvtpm)
->  	crq.valid = (u8)IBMVTPM_VALID_CMD;
->  	crq.msg = (u8)VTPM_GET_VERSION;
->
-> -	rc = ibmvtpm_send_crq(ibmvtpm->vdev, buf[0], buf[1]);
-> +	rc = ibmvtpm_send_crq(ibmvtpm->vdev, cpu_to_be64(buf[0]),
-> +			      cpu_to_be64(buf[1]));
->  	if (rc != H_SUCCESS)
->  		dev_err(ibmvtpm->dev,
->  			"ibmvtpm_crq_get_version failed rc=%d\n", rc);
-> @@ -327,7 +330,8 @@ static int tpm_ibmvtpm_suspend(struct device *dev)
->  	crq.valid = (u8)IBMVTPM_VALID_CMD;
->  	crq.msg = (u8)VTPM_PREPARE_TO_SUSPEND;
->
-> -	rc = ibmvtpm_send_crq(ibmvtpm->vdev, buf[0], buf[1]);
-> +	rc = ibmvtpm_send_crq(ibmvtpm->vdev, cpu_to_be64(buf[0]),
-> +			      cpu_to_be64(buf[1]));
->  	if (rc != H_SUCCESS)
->  		dev_err(ibmvtpm->dev,
->  			"tpm_ibmvtpm_suspend failed rc=%d\n", rc);
-> @@ -472,11 +476,11 @@ static void ibmvtpm_crq_process(struct ibmvtpm_crq
-> *crq,
->  	case IBMVTPM_VALID_CMD:
->  		switch (crq->msg) {
->  		case VTPM_GET_RTCE_BUFFER_SIZE_RES:
-> -			if (crq->len <= 0) {
-> +			if (be16_to_cpu(crq->len) <= 0) {
->  				dev_err(ibmvtpm->dev, "Invalid rtce size\n");
->  				return;
->  			}
-> -			ibmvtpm->rtce_size = crq->len;
-> +			ibmvtpm->rtce_size = be16_to_cpu(crq->len);
->  			ibmvtpm->rtce_buf = kmalloc(ibmvtpm->rtce_size,
->  						    GFP_KERNEL);
->  			if (!ibmvtpm->rtce_buf) {
-> @@ -497,11 +501,11 @@ static void ibmvtpm_crq_process(struct ibmvtpm_crq
-> *crq,
->
->  			return;
->  		case VTPM_GET_VERSION_RES:
-> -			ibmvtpm->vtpm_version = crq->data;
-> +			ibmvtpm->vtpm_version = be32_to_cpu(crq->data);
->  			return;
->  		case VTPM_TPM_COMMAND_RES:
->  			/* len of the data in rtce buffer */
-> -			ibmvtpm->res_len = crq->len;
-> +			ibmvtpm->res_len = be16_to_cpu(crq->len);
->  			wake_up_interruptible(&ibmvtpm->wq);
->  			return;
->  		default:
-> -- 
-> 1.7.1
->
->
-> ------------------------------------------------------------------------------
-> Dive into the World of Parallel Programming. The Go Parallel Website,
-> sponsored by Intel and developed in partnership with Slashdot Media, is your
-> hub for all things parallel software development, from weekly thought
-> leadership blogs to news, videos, case studies, tutorials and more. Take a
-> look and join the conversation now. http://goparallel.sourceforge.net/
-> _______________________________________________
-> tpmdd-devel mailing list
-> tpmdd-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/tpmdd-devel
->
+--C94crkcyjafcjHxo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU3tDaAAoJECTWi3JdVIfQx9MH/2Saet18Pl0c2CzAexz7weQi
+Ns/LQU+pepM6yvMEIVkLW9G8pyXuCk0iP1pH4tSAgQfY+/3G22wvx74oGWTGsLb9
+DLEgrCWOIVtd9eKDCYu7Yl+bGE0goUFPQkJ4H31kJtXC1+NOHC6CsW3pwi1hq+j2
+Z06SnuyRavk8Hp3a+46bYiLSFPakUfVcw+pIp+j+hY9d5kQsvyjQnLW8+mAL8TaC
+PgA60XzNz1oWiU8a/THXLwVCSN7i4EaXqm804/4VTtaDrtK4wjBGBY7TS1i1PIQ3
+WDpKO03wITZXbRhot/PpT5mit/5jKEtVmmzCYas4hvLjiNPmGiG3nYmRfcJMgG0=
+=aAfe
+-----END PGP SIGNATURE-----
+
+--C94crkcyjafcjHxo--
