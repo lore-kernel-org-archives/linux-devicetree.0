@@ -1,61 +1,62 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC] ARM: shmobile: lager: Fix audio clk master to SSI
- and change audio data interface format type
-Date: Sun, 15 Feb 2015 10:29:58 -0500
-Message-ID: <20150215152957.GA25065@verge.net.au>
-References: <1424011746-3787-1-git-send-email-ykaneko0929@gmail.com>
+Subject: Re: [PATCH/RFC] ARM: shmobile: r8a7790: Fix HSUSB clock to hp_clk
+ from mp_clk
+Date: Sun, 15 Feb 2015 10:36:29 -0500
+Message-ID: <20150215153628.GB25065@verge.net.au>
+References: <1424011746-3787-2-git-send-email-ykaneko0929@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1424011746-3787-1-git-send-email-ykaneko0929@gmail.com>
+In-Reply-To: <1424011746-3787-2-git-send-email-ykaneko0929@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[Cc Morimoto-san]
-
-Hi Kaneko-san,
-
-thanks for this.
-
-Hi Morimoto-san,
-
-I would be most grateful if you could review this.
-
-On Sun, Feb 15, 2015 at 11:49:04PM +0900, Yoshihiro Kaneko wrote:
-> From: Biju Das <biju.das@bp.renesas.com>
+On Sun, Feb 15, 2015 at 11:49:05PM +0900, Yoshihiro Kaneko wrote:
+> From: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
 > 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> HSUSB uses hp_clk for H/W register access.
+> HSUSB uses mp_clk for USB-DMAC access.
+> The clock is defined for H/W register access.
+> 
+> Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
 > Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+
+I plan to take this through the renesas tree unless someone objects.
+In the mean time, for reference:
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
 > ---
 > 
 > This patch is based on devel branch of Simon Horman's renesas tree.
 > 
->  arch/arm/boot/dts/r8a7790-lager.dts | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  arch/arm/boot/dts/r8a7790.dtsi | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-> index 0c3b678..e7dda8a 100644
-> --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-> @@ -177,9 +177,7 @@
->  	sound {
->  		compatible = "simple-audio-card";
->  
-> -		simple-audio-card,format = "left_j";
-> -		simple-audio-card,bitclock-master = <&sndcodec>;
-> -		simple-audio-card,frame-master = <&sndcodec>;
-> +		simple-audio-card,format = "i2s";
->  
->  		sndcpu: simple-audio-card,cpu {
->  			sound-dai = <&rcar_sound>;
+> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+> index 24de994..113edf2 100644
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -1,6 +1,7 @@
+>  /*
+>   * Device Tree Source for the r8a7790 SoC
+>   *
+> + * Copyright (C) 2015 Renesas Electronics Corporation
+>   * Copyright (C) 2013-2014 Renesas Solutions Corp.
+>   * Copyright (C) 2014 Cogent Embedded Inc.
+>   *
+> @@ -1132,7 +1133,7 @@
+>  		mstp7_clks: mstp7_clks@e615014c {
+>  			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+>  			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
+> -			clocks = <&mp_clk>, <&mp_clk>, <&zs_clk>, <&zs_clk>, <&p_clk>,
+> +			clocks = <&mp_clk>, <&hp_clk>, <&zs_clk>, <&zs_clk>, <&p_clk>,
+>  				 <&p_clk>, <&zx_clk>, <&zx_clk>, <&zx_clk>, <&zx_clk>,
+>  				 <&zx_clk>;
+>  			#clock-cells = <1>;
 > -- 
 > 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
