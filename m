@@ -1,96 +1,63 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Sun, 15 Feb 2015 23:40:06 +0100
-Message-ID: <20150215224006.GA5626@amd>
-References: <20150113200032.GA16205@obsidianresearch.com>
- <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
- <20150113222450.GA17475@obsidianresearch.com>
- <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
- <20150115184726.GA23247@obsidianresearch.com>
- <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
- <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
- <20150121160151.453ba403@lxorguk.ukuu.org.uk>
- <D466D9FF-25DA-4765-9469-128733BEBC4D@konsulko.com>
- <20150121202700.GB4942@obsidianresearch.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 02/14] ARM: ARMv7M: Enlarge vector table to 256 entries
+Date: Sun, 15 Feb 2015 16:42:59 -0600
+Message-ID: <CAL_Jsq+rHFPXmWqByvdG435tpbO_+ODByiMcdxboULYpUfDUmg@mail.gmail.com>
+References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1423763164-5606-3-git-send-email-mcoquelin.stm32@gmail.com>
+ <CAMuHMdWESyPktOSBfVoZCb35stUbhNpbbpzSW4JfORdObgg5jw@mail.gmail.com> <CALszF6BDa9pUb534YN2z9DbYA+hPCnG8XYy5YbjJwSiseKz4xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150121202700.GB4942@obsidianresearch.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, Andrew Morton <akpm@linux->
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALszF6BDa9pUb534YN2z9DbYA+hPCnG8XYy5YbjJwSiseKz4xg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>R
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2015-01-21 13:27:00, Jason Gunthorpe wrote:
-> On Wed, Jan 21, 2015 at 06:33:12PM +0200, Pantelis Antoniou wrote:
-> > Hi Alan,
-> >=20
-> > > On Jan 21, 2015, at 18:01 , One Thousand Gnomes <gnomes@lxorguk.u=
-kuu.org.uk> wrote:
-> > >=20
-> > > On Thu, 15 Jan 2015 22:54:46 +0200
-> > > Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
-> > >=20
-> > >> Hi Alan,
-> > >>=20
-> > >>> On Jan 15, 2015, at 22:45 , One Thousand Gnomes <gnomes@lxorguk=
-=2Eukuu.org.uk> wrote:
-> > >>>=20
-> > >>> On Thu, 15 Jan 2015 11:47:26 -0700
-> > >>> Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> > >>>> It is a novel idea, my concern would be that embedding the FPG=
-A in the
-> > >>>> DT makes it permanent unswappable kernel memory.
-> > >>>> Not having the kernel hold the FPGA is best for many uses.
-> > >>>=20
-> > >>> If you have a filesysytem before the FPGA is set up then it bel=
-ongs in
-> > >>> the file system. As you presumably loaded the kernel from somew=
-here there
-> > >>> ought to be a file system (even an initrd).
-> > >>>=20
-> > >>=20
-> > >> Request firmware does not imply keeping it around. You can alway=
-s re-request
-> > >> when reloading (although there=E2=80=99s a nasty big of caching =
-that needs to be
-> > >> resolved with the firmware loader).
-> > >=20
-> > > Which comes down to the same thing. Unless you can prove that the=
-re is a
-> > > path to recover the firmware file that does not have any dependan=
-cies
-> > > upon the firmware executing (and those can be subtle and horrid a=
-t times)
-> > > you need to keep it around for suspend/resume at least and potent=
-ially
-> > > any unexpected error/reset.
-> > >=20
-> >=20
-> > In that case the only safe place to put it is in the kernel image i=
-tself, which
-> > is something the firmware loader already supports.
->=20
-> My point is that the current firmware layer is overly cautious and
-> FPGAs are very big. My current project on small Xilinx device has a
-> 10MB programming file. The biggest Xilinx device today has a max
-> bitfile size around 122MB.
->=20
-> So keeping that much memory pinned in the kernel when I can prove it
-> is uncessary for my system (either because there is no suspend/resume
-> possibility, or because I know the CPU can always access the
-> filesytem) is very undesirable.
+On Fri, Feb 13, 2015 at 2:42 AM, Maxime Coquelin
+<mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Geert,
+>
+> 2015-02-12 21:34 GMT+01:00 Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>:
+>> On Thu, Feb 12, 2015 at 6:45 PM, Maxime Coquelin
+>> <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From Cortex-M4 and M7 reference manuals, the nvic supports up to 240
+>>> interrupts. So the number of entries in vectors table is 256.
+>>>
+>>> This patch adds the missing entries, and change the alignement, so that
+>>> vector_table remains naturally aligned.
+>>
+>> Shouldn't this depend on ARCH_STM32, or some other M4 or M7 specific
+>> Kconfig option, to avoid wasting the space on other CPUs?
+>
+> Actually, the STM32F429 has 90 interrupts, so it would need 106
+> entries in the vector table.
+> The maximum of supported interrupts is not only for Cortex-M4 and M7,
+> this is also true for Cortex-M3.
+>
+> I see two possibilities:
+>  1 - We declare the vector table for the maximum supported number of
+> IRQs, as this patch does.
+>         - Pro: it will be functionnal with all Cortex-M MCUs
+>         - Con: Waste of less than 1KB for memory
 
-Well, your current device aalso has 1GB RAM, no?
+The waste depends on the alignment size as well and could be up to
+almost 2KB worst case. It varies depending on the padding. We should
+try to place it so it always aligned and the wasted space is
+minimized.
 
-> Other systems might have to take the ram hit.
+Rob
 
-I'd say the general case is "store bitstream in RAM" we can add
-optimalizations later.
-										Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
+>  2 - We introduce a config flag that provides the number of interrupts
+>         - Pro: No more memory waste
+>         - Con: Need to declare a per MCU model config flag.
+>
+> Then, regarding the natural alignment, is there a way to ensure it
+> depending on the value of a config flag?
+> Or we should keep it at the maximum value possible?
+>
+> Any feedback will be appreciated, especially from Uwe who maintains
+> the efm32 machine.
+>
+> Kind regards,
+> Maxime
