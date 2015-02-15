@@ -1,121 +1,39 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH 12/14] ARM: dts: Introduce STM32F429 MCU
-Date: Sun, 15 Feb 2015 15:36:29 +0100
-Message-ID: <CALszF6CxQcJ6NDy_4P-PDPf1=+zQ_QcUBB9qYn=n02XFKNG2Rw@mail.gmail.com>
-References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1423763164-5606-13-git-send-email-mcoquelin.stm32@gmail.com>
-	<1423828078.4182.17.camel@pengutronix.de>
-	<CALszF6D+5mXajUWarwq8M4yL_Nc+x1Bmu4D7_HxDRy2kGRXNVQ@mail.gmail.com>
-	<1423844735.4182.52.camel@pengutronix.de>
-	<CALszF6Ad93BgT4UsJudVKpfhhL2dbtKTTRno1XqQ5=eANkwXzA@mail.gmail.com>
-	<1423855102.4182.63.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1423855102.4182.63.camel@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal
+From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Subject: [PATCH/RFC] ARM: shmobile: lager: Fix audio clk master to SSI and change audio data interface format type
+Date: Sun, 15 Feb 2015 23:49:04 +0900
+Message-ID: <1424011746-3787-1-git-send-email-ykaneko0929@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+From: Biju Das <biju.das@bp.renesas.com>
 
-2015-02-13 20:18 GMT+01:00 Philipp Zabel <p.zabel@pengutronix.de>:
-> Am Freitag, den 13.02.2015, 17:41 +0100 schrieb Maxime Coquelin:
->> 2015-02-13 17:25 GMT+01:00 Philipp Zabel <p.zabel@pengutronix.de>:
->> > Hi Maxime,
->> >
->> > Am Freitag, den 13.02.2015, 16:59 +0100 schrieb Maxime Coquelin:
->> >> Hi Philipp,
->> >>
->> >> 2015-02-13 12:47 GMT+01:00 Philipp Zabel <p.zabel@pengutronix.de>:
->> >> > Hi Maxime,
->> >> >
->> >> > Am Donnerstag, den 12.02.2015, 18:46 +0100 schrieb Maxime Coquelin:
->> >> > [...]
->> >> >> +     soc {
->> >> >> +             reset_ahb1: reset@40023810 {
->> >> >> +                     #reset-cells = <1>;
->> >> >> +                     compatible = "st,stm32-reset";
->> >> >> +                     reg = <0x40023810 0x4>;
->> >> >> +             };
->> >> >> +
->> >> >> +             reset_ahb2: reset@40023814 {
->> >> >> +                     #reset-cells = <1>;
->> >> >> +                     compatible = "st,stm32-reset";
->> >> >> +                     reg = <0x40023814 0x4>;
->> >> >> +             };
->> >> >> +
->> >> >> +             reset_ahb3: reset@40023818 {
->> >> >> +                     #reset-cells = <1>;
->> >> >> +                     compatible = "st,stm32-reset";
->> >> >> +                     reg = <0x40023818 0x4>;
->> >> >> +             };
->> >> >> +
->> >> >> +             reset_apb1: reset@40023820 {
->> >> >> +                     #reset-cells = <1>;
->> >> >> +                     compatible = "st,stm32-reset";
->> >> >> +                     reg = <0x40023820 0x4>;
->> >> >> +             };
->> >> >> +
->> >> >> +             reset_apb2: reset@40023824 {
->> >> >> +                     #reset-cells = <1>;
->> >> >> +                     compatible = "st,stm32-reset";
->> >> >> +                     reg = <0x40023824 0x4>;
->> >> >> +             };
->> >> >
->> >> > These are mostly consecutive, single registers. I wonder if these are
->> >> > part of the same IP block and thus should be grouped together into the
->> >> > same reset controller node?
->> >>
->> >> What I could to is to have two instances. One for AHB and one for APB domain.
->> >> Doing this, I will have one instance per domain, and only consecutive registers.
->> >> Is it fine for you?
->> >
->> > Looking at
->> > http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf
->> > Table 34 (RCC register map and reset values), I'd say there is a single
->> > "Reset and Clock Control" device at 0x40023800 - 0x40023884:
->> >
->> >         soc {
->> >                 rcc: rcc@40023800 {
->> >                         #clock-cells = <1>;
->> >                         #reset-cells = <1>;
->> >                         compatible = "st,stm32-rcc";
->> >                         reg = <0x40023800 0x84>;
->> >                 };
->> >
->> >                 ...
->> >
->> > If you really want to describe the reset controller parts (offsets +0x10
->> > to +0x24) in a separate node, I won't argue against it too long,
->> > although this is a somewhat arbitrary decision.
->> >
->> > In any case, the whole register at offset +0x1c is reserved, so there is
->> > no reason to split the reset controller. It is ok to have unused ranges
->> > as is already the case with reserved bits inside the used registers.
->>
->> Ok. I understand your point.
->> But it will be more difficult at usage, because the node referencing
->> the fourth reset bit of apb2 register will have to pass 164 as
->> parameter.
->> It is error prone IMHO.
->>
->> Other solution would be to add some defines for each reset line in the
->> DT-Bindings, as we do today for STi platform.
->> But it is giving an unneeded constraint between DT and reset trees.
->
-> That is a bit unfortunate, but providing the named constants in
-> include/dt-bindings/reset/ makes for a much better readable device tree,
-> so I'd prefer that solution, even if it means having to coordinate pull
-> requests.
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+---
 
-Ok, I will add constants in include/dt-bindings/reset/
+This patch is based on devel branch of Simon Horman's renesas tree.
 
-Thanks,
-Maxime
+ arch/arm/boot/dts/r8a7790-lager.dts | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
->
-> regards
-> Philipp
->
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 0c3b678..e7dda8a 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -177,9 +177,7 @@
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 
+-		simple-audio-card,format = "left_j";
+-		simple-audio-card,bitclock-master = <&sndcodec>;
+-		simple-audio-card,frame-master = <&sndcodec>;
++		simple-audio-card,format = "i2s";
+ 
+ 		sndcpu: simple-audio-card,cpu {
+ 			sound-dai = <&rcar_sound>;
+-- 
+1.9.1
+
