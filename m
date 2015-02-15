@@ -1,50 +1,90 @@
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH/RFC] ARM: shmobile: r8a7791: Fix HSUSB clock to hp_clk from mp_clk
-Date: Sun, 15 Feb 2015 23:49:06 +0900
-Message-ID: <1424011746-3787-3-git-send-email-ykaneko0929@gmail.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] xhci: add a quirk for device disconnection errata
+ for Synopsis Designware USB3 core
+Date: Sun, 15 Feb 2015 23:09:10 +0800
+Message-ID: <CAJ1gpc2FKe06gWMoMHXriO52_AnKdDSa1G46mvrzAFTEQUY99w@mail.gmail.com>
+References: <54DCAF88.4010607@intel.com>
+	<Pine.LNX.4.44L0.1502121013390.1209-100000@iolanthe.rowland.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1502121013390.1209-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+Hi Alan:
 
-HSUSB uses hp_clk for H/W register access.
-HSUSB uses mp_clk for USB-DMAC access.
-The clock is defined for H/W register access.
+thanks for comment it,
+and sorry that a little bit late for replying,
 
-Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
----
+2015-02-12 23:18 GMT+08:00 Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>:
+> On Thu, 12 Feb 2015, Mathias Nyman wrote:
+>
+>> On 25.01.2015 10:13, Sneeker Yeh wrote:
+>> > This issue is defined by a three-way race at disconnect, between
+>> > 1) Class driver interrupt endpoint resheduling attempts if the ISR gave an ep
+>> >    error event due to device detach (it would try 3 times)
+>> > 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
+>> >    asynchronously
+>> > 3) The hardware IP was configured in silicon with
+>> >    - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1
+>> >    - Synopsys IP version is < 3.00a
+>> > The IP will auto-suspend itself on device detach with some phy-specific interval
+>> > after CSC is cleared by 2)
+>> >
+>> > If 2) and 3) complete before 1), the interrupts it expects will not be generated
+>> > by the autosuspended IP, leading to a deadlock. Even later disconnection
+>> > procedure would detect that corresponding urb is still in-progress and issue a
+>> > ep stop command, auto-suspended IP still won't respond to that command.
+>
+> If the Synopsys IP provides a way to do it, it would be better to turn
+> off the autosuspend feature entirely.  Doesn't autosuspend violate the
+> xHCI specification?
 
-This patch is based on devel branch of Simon Horman's renesas tree.
+it's an IP parameter that can't be turn off via any register ><.
 
- arch/arm/boot/dts/r8a7791.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I guess Synopsis can insisted that xHCI specification doesn't
+explicitly state that hardware designer shouldn't do auto-suspend when
+device is attached, especially that definition of the auto-suspend is
+their own specific low power state.
+IIRC, this is point of view from Synopsis.
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index afba8af..cb9a9e7 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * Device Tree Source for the r8a7791 SoC
-  *
-- * Copyright (C) 2013-2014 Renesas Electronics Corporation
-+ * Copyright (C) 2013-2015 Renesas Electronics Corporation
-  * Copyright (C) 2013-2014 Renesas Solutions Corp.
-  * Copyright (C) 2014 Cogent Embedded Inc.
-  *
-@@ -1136,7 +1136,7 @@
- 		mstp7_clks: mstp7_clks@e615014c {
- 			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
--			clocks = <&mp_clk>,  <&mp_clk>, <&zs_clk>, <&p_clk>, <&p_clk>, <&zs_clk>,
-+			clocks = <&mp_clk>,  <&hp_clk>, <&zs_clk>, <&p_clk>, <&p_clk>, <&zs_clk>,
- 				 <&zs_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
- 				 <&zx_clk>, <&zx_clk>, <&zx_clk>;
- 			#clock-cells = <1>;
--- 
-1.9.1
+I wonder maybe they just didn't have a good assumption when
+implementing auto-suspend, e.g. they shouldn't take PORTCSC clearing
+as a commitment that software has done all the device detach task, so
+that IP can go into suspend. it seems more reasonable to take
+slot-disabling as a commitment to a start of auto-suspend.
 
+anyway the "errata" would be disclosed recently, and Synopsis plan to
+fix it in their new silicon version IP.
+Old version IP has to live happily with some patch that can workaround
+this monster i think.
+
+Much appreciate,
+Sneeker
+
+>
+>> So did I understand correctly that the class driver submits a new urb which
+>> is enqueued by xhci_urb_enqueue() before the hub thread notices the device is disconnected.
+>> Then hub thread clears CSC bit, controller suspends and the new urb is never given back?
+>>
+>> Doesn't the CSC bit and PORT_CONNECT bit show the device is disconnected when we enter
+>> xhci_enqueue_urb(), even it the hub thread doesn't know this yet?
+>
+> What if the device disconnects _after_ the new URB is enqueued?
+>
+>> Would it make sense to check those bits in xhci_enqueue_urb, and just return error
+>> in the xhci_urb_enqueue() if device is not connected? Then there wouldn't be a need for any quirk
+>> at all.
+>
+> That wouldn't help URBs that were already enqueued when the disconnect
+> occurred.
+>
+> Alan Stern
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
