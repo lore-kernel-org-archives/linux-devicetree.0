@@ -1,192 +1,159 @@
-From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] wlcore: add basic device-tree support
-Date: Sun, 15 Feb 2015 13:09:10 +0200
-Message-ID: <1423998550-8829-1-git-send-email-eliad@wizery.com>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+From: Sneeker Yeh <sneeker.yeh@gmail.com>
+Subject: Re: [PATCH v3 1/5] xhci: add a quirk for device disconnection errata
+ for Synopsis Designware USB3 core
+Date: Sun, 15 Feb 2015 22:29:33 +0800
+Message-ID: <CAJ1gpc3fSpVyYx52xk+r+aPJt4YBcP+9wLGo9bUnX-EE1MP-VQ@mail.gmail.com>
+References: <1422173608-24355-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+	<1422173608-24355-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+	<54DCAF88.4010607@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54DCAF88.4010607@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
-When running with device-tree, we no longer have a board file
-that can set up the platform data for wlcore.
-Allow this data to be passed from DT.
+hi Mathias:
 
-For now, parse only the irq used. Other (optional) properties
-can be added later on.
+thanks for reviewing these patch,
+and sorry for replying lately~
 
-Signed-off-by: Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
----
-previous submission of this patch got lost somewhere.
+2015-02-12 21:50 GMT+08:00 Mathias Nyman <mathias.nyman@intel.com>:
+> On 25.01.2015 10:13, Sneeker Yeh wrote:
+>> This issue is defined by a three-way race at disconnect, between
+>> 1) Class driver interrupt endpoint resheduling attempts if the ISR gave an ep
+>>    error event due to device detach (it would try 3 times)
+>> 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
+>>    asynchronously
+>> 3) The hardware IP was configured in silicon with
+>>    - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1
+>>    - Synopsys IP version is < 3.00a
+>> The IP will auto-suspend itself on device detach with some phy-specific interval
+>> after CSC is cleared by 2)
+>>
+>> If 2) and 3) complete before 1), the interrupts it expects will not be generated
+>> by the autosuspended IP, leading to a deadlock. Even later disconnection
+>> procedure would detect that corresponding urb is still in-progress and issue a
+>> ep stop command, auto-suspended IP still won't respond to that command.
+>>
+>
+> So did I understand correctly that the class driver submits a new urb which
+> is enqueued by xhci_urb_enqueue() before the hub thread notices the device is disconnected.
+> Then hub thread clears CSC bit, controller suspends and the new urb is never given back?
 
-this patch follows the expected way to pass SDIO function DT
-information, as was recently added by this patchset:
-http://www.spinics.net/lists/linux-mmc/msg27353.html
+yes.
 
- .../devicetree/bindings/net/wireless/ti,wlcore.txt | 31 +++++++++++
- drivers/net/wireless/ti/wlcore/sdio.c              | 65 ++++++++++++++++++++--
- 2 files changed, 90 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
+>
+> Doesn't the CSC bit and PORT_CONNECT bit show the device is disconnected when we enter
+> xhci_enqueue_urb(), even it the hub thread doesn't know this yet?
+>
+> Would it make sense to check those bits in xhci_enqueue_urb, and just return error
+> in the xhci_urb_enqueue() if device is not connected? Then there wouldn't be a need for any quirk
+> at all.
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
-new file mode 100644
-index 0000000..df9af48
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
-@@ -0,0 +1,31 @@
-+TI Wilink (wlcore) SDIO devices
-+
-+This node provides properties for controlling the wilink wireless device. The
-+node is expected to be specified as a child node to the SDIO controller that
-+connects the device to the system.
-+
-+Required properties:
-+
-+ - compatible : Should be "ti,wlcore".
-+ - interrupt-parent : the phandle for the interrupt controller to which the
-+	device interrupts are connected.
-+ - interrupts : specifies attributes for the out-of-band interrupt.
-+
-+Example:
-+
-+&mmc3 {
-+	status = "okay";
-+	vmmc-supply = <&wlan_en_reg>;
-+	bus-width = <4>;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@0 {
-+		compatible = "ti,wlcore";
-+		reg = <2>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <19 IRQ_TYPE_NONE>;
-+	};
-+};
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index d3dd7bf..317796b 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -34,6 +34,8 @@
- #include <linux/wl12xx.h>
- #include <linux/pm_runtime.h>
- #include <linux/printk.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
- 
- #include "wlcore.h"
- #include "wl12xx_80211.h"
-@@ -214,6 +216,54 @@ static struct wl1271_if_operations sdio_ops = {
- 	.set_block_size = wl1271_sdio_set_block_size,
- };
- 
-+#ifdef CONFIG_OF
-+static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct wl12xx_platform_data *pdata;
-+
-+	if (!np || !of_device_is_compatible(np, "ti,wlcore")) {
-+		dev_err(dev, "No platform data set\n");
-+		return NULL;
-+	}
-+
-+	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	pdata->irq = irq_of_parse_and_map(np, 0);
-+	if (!pdata->irq) {
-+		dev_err(dev, "No irq in platform data\n");
-+		kfree(pdata);
-+		return NULL;
-+	}
-+
-+	return pdata;
-+}
-+#else
-+static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+static struct wl12xx_platform_data *
-+wlcore_get_platform_data(struct device *dev)
-+{
-+	struct wl12xx_platform_data *pdata;
-+
-+	pdata = wl12xx_get_platform_data();
-+	if (!IS_ERR(pdata))
-+		return kmemdup(pdata, sizeof(*pdata), GFP_KERNEL);
-+
-+	return wlcore_probe_of(dev);
-+}
-+
-+static void wlcore_del_platform_data(struct wl12xx_platform_data *pdata)
-+{
-+	kfree(pdata);
-+}
-+
- static int wl1271_probe(struct sdio_func *func,
- 				  const struct sdio_device_id *id)
- {
-@@ -245,12 +295,9 @@ static int wl1271_probe(struct sdio_func *func,
- 	/* Use block mode for transferring over one block size of data */
- 	func->card->quirks |= MMC_QUIRK_BLKSZ_FOR_BYTE_MODE;
- 
--	pdev_data.pdata = wl12xx_get_platform_data();
--	if (IS_ERR(pdev_data.pdata)) {
--		ret = PTR_ERR(pdev_data.pdata);
--		dev_err(glue->dev, "missing wlan platform data: %d\n", ret);
-+	pdev_data.pdata = wlcore_get_platform_data(&func->dev);
-+	if (!pdev_data.pdata)
- 		goto out_free_glue;
--	}
- 
- 	/* if sdio can keep power while host is suspended, enable wow */
- 	mmcflags = sdio_get_host_pm_caps(func);
-@@ -279,7 +326,7 @@ static int wl1271_probe(struct sdio_func *func,
- 	if (!glue->core) {
- 		dev_err(glue->dev, "can't allocate platform_device");
- 		ret = -ENOMEM;
--		goto out_free_glue;
-+		goto out_free_pdata;
- 	}
- 
- 	glue->core->dev.parent = &func->dev;
-@@ -313,6 +360,9 @@ static int wl1271_probe(struct sdio_func *func,
- out_dev_put:
- 	platform_device_put(glue->core);
- 
-+out_free_pdata:
-+	wlcore_del_platform_data(pdev_data.pdata);
-+
- out_free_glue:
- 	kfree(glue);
- 
-@@ -323,11 +373,14 @@ out:
- static void wl1271_remove(struct sdio_func *func)
- {
- 	struct wl12xx_sdio_glue *glue = sdio_get_drvdata(func);
-+	struct wlcore_platdev_data *pdev_data = glue->core->dev.platform_data;
-+	struct wl12xx_platform_data *pdata = pdev_data->pdata;
- 
- 	/* Undo decrement done above in wl1271_probe */
- 	pm_runtime_get_noresume(&func->dev);
- 
- 	platform_device_unregister(glue->core);
-+	wlcore_del_platform_data(pdata);
- 	kfree(glue);
- }
- 
--- 
-1.8.5.2.229.g4448466.dirty
+ya I tried this before, it would work if i stop enqueue when i found
+device detached,
+but sometime it won't work when device might be detached just right
+after i done enqueue, just like Alan mentioned.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> If that doesn't work then this patch looks good in general. See comments below
+>
+>> this defect would result in this when device detached:
+>> -------------------------------------------------------
+>> [   99.603544] usb 4-1: USB disconnect, device number 2
+>> [  104.615254] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
+>> [  104.623362] xhci-hcd xhci-hcd.0.auto: Assuming host is dying, halting host.
+>> [  104.653261] xhci-hcd xhci-hcd.0.auto: Host not halted after 16000 microseconds.
+>> [  104.660584] xhci-hcd xhci-hcd.0.auto: Non-responsive xHCI host is not halting.
+>> [  104.667817] xhci-hcd xhci-hcd.0.auto: Completing active URBs anyway.
+>> [  104.674198] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+>> ------------------------------------------------------
+>> As a result, when device detached, we desired to postpone "PORTCSC clear" behind
+>> "disable slot". it's found that all executed ep command related to disconnetion,
+>> are executed before "disable slot".
+>>
+>> Signed-off-by: Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+>> ---
+>>  drivers/usb/host/xhci-hub.c |    4 ++++
+>>  drivers/usb/host/xhci.c     |   29 +++++++++++++++++++++++++++++
+>>  drivers/usb/host/xhci.h     |   24 ++++++++++++++++++++++++
+>>  3 files changed, 57 insertions(+)
+>>
+>> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+>> index a7865c4..3b8f7fc 100644
+>> --- a/drivers/usb/host/xhci-hub.c
+>> +++ b/drivers/usb/host/xhci-hub.c
+>> @@ -368,6 +368,10 @@ static void xhci_clear_port_change_bit(struct xhci_hcd *xhci, u16 wValue,
+>>               port_change_bit = "warm(BH) reset";
+>>               break;
+>>       case USB_PORT_FEAT_C_CONNECTION:
+>> +             if ((xhci->quirks & XHCI_DISCONNECT_QUIRK) &&
+>> +                 !(readl(addr) & PORT_CONNECT))
+>> +                     return;
+>> +
+>
+> New port status event are prevented until CSC is cleared, not sure if there's any harm in that?
+
+hub thread would be aware of device detach before he try to clear PORTCSC, IIUC,
+Despite I skip clearing PORTCSC here, whole device detach procedure
+still behave normally.
+
+>
+>>               status = PORT_CSC;
+>>               port_change_bit = "connect";
+>>               break;
+>> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+>> index c50d8d2..aa8e02a 100644
+>> --- a/drivers/usb/host/xhci.c
+>> +++ b/drivers/usb/host/xhci.c
+>> @@ -3584,6 +3584,33 @@ command_cleanup:
+>>       return ret;
+>>  }
+>>
+>> +static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int dev_port_num)
+>> +{
+>> +     int max_ports;
+>> +     struct xhci_hcd *xhci = hcd_to_xhci(hcd);
+>> +     __le32 __iomem **port_array;
+>> +     u32 status;
+>> +
+>> +     /* print debug info */
+>> +     if (hcd->speed == HCD_USB3) {
+>> +             max_ports = xhci->num_usb3_ports;
+>> +             port_array = xhci->usb3_ports;
+>> +     } else {
+>> +             max_ports = xhci->num_usb2_ports;
+>> +             port_array = xhci->usb2_ports;
+>> +     }
+>> +
+>> +     if (dev_port_num > max_ports) {
+>> +             xhci_err(xhci, "%s() port number invalid", __func__);
+>> +             return;
+>> +     }
+>> +     status = readl(port_array[dev_port_num - 1]);
+>> +
+>> +     /* write 1 to clear */
+>> +     if (!(status & PORT_CONNECT) && (status & PORT_CSC))
+>> +             writel(status & PORT_CSC, port_array[0]);
+>
+> Shouldn't this be writel(...,port_array[dev_port_num - 1]) ?
+
+yes, thanks for correcting this,
+and I also would like to add xhci_port_state_to_neutral() you mentioned.
+what would you think if I modify it like this?
+
++       /* write 1 to clear */
++       if (!(status & PORT_CONNECT) && (status & PORT_CSC)) {
++               status = xhci_port_state_to_neutral(status);
++               writel(status | PORT_CSC, port_array[dev_port_num - 1]);
++       }
+
+Much appreciate,
+Sneeker
+
+
+>
+> -Mathias
