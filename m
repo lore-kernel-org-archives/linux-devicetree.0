@@ -1,50 +1,68 @@
-From: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] xhci: add a quirk for device disconnection errata
- for Synopsis Designware USB3 core
-Date: Mon, 16 Feb 2015 11:26:36 +0200
-Message-ID: <54E1B7CC.9080805@intel.com>
-References: <1422173608-24355-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>	<1422173608-24355-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>	<54DCAF88.4010607@intel.com> <CAJ1gpc3fSpVyYx52xk+r+aPJt4YBcP+9wLGo9bUnX-EE1MP-VQ@mail.gmail.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Mon, 16 Feb 2015 10:28:14 +0100
+Message-ID: <20150216092814.GF7119@twins.programming.kicks-ass.net>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+ <2437801.56xPyk3atd@vostro.rjw.lan>
+ <20150211151237.GN9154@leverpostej>
+ <1487331.cgC9j5u0aF@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJ1gpc3fSpVyYx52xk+r+aPJt4YBcP+9wLGo9bUnX-EE1MP-VQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1487331.cgC9j5u0aF@vostro.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15.02.2015 16:29, Sneeker Yeh wrote:
-> hi Mathias:
-> 
-> thanks for reviewing these patch,
-> and sorry for replying lately~
-> 
 
->>> +     status = readl(port_array[dev_port_num - 1]);
->>> +
->>> +     /* write 1 to clear */
->>> +     if (!(status & PORT_CONNECT) && (status & PORT_CSC))
->>> +             writel(status & PORT_CSC, port_array[0]);
->>
->> Shouldn't this be writel(...,port_array[dev_port_num - 1]) ?
-> 
-> yes, thanks for correcting this,
-> and I also would like to add xhci_port_state_to_neutral() you mentioned.
-> what would you think if I modify it like this?
-> 
-> +       /* write 1 to clear */
-> +       if (!(status & PORT_CONNECT) && (status & PORT_CSC)) {
-> +               status = xhci_port_state_to_neutral(status);
-> +               writel(status | PORT_CSC, port_array[dev_port_num - 1]);
-> +       }
-> 
+Guys, trim your emails, please!
 
-Looks good to me
+On Wed, Feb 11, 2015 at 04:51:36PM +0100, Rafael J. Wysocki wrote:
+> On Wednesday, February 11, 2015 03:12:38 PM Mark Rutland wrote:
+> > I guess that would have to imply IRQF_SHARED, so we'd have something
+> > like:
+> > 
+> > IRQF_SHARED_SUSPEND_OK - This handler is safe to call spuriously during
+> > 			 suspend in the case the line is shared. The
+> > 			 handler will not access unavailable hardware
+> > 			 or kernel infrastructure during this period.
+> > 
+> > #define __IRQF_SUSPEND_SPURIOUS		0x00040000
+> > #define	IRQF_SHARED_SUSPEND_OK		(IRQF_SHARED | __IRQF_SUSPEND_SPURIOUS)
+> 
+> What about
+> 
+> #define __IRQF_TIMER_SIBLING_OK	0x00040000
+> #define	IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
+> 
+> The "suspend" part is kind of a distraction to me here, because that really
+> only is about sharing an IRQ with a timer and the "your interrupt handler
+> may be called when the device is suspended" part is just a consequence of that.
+> 
+> So IMO it's better to have "TIMER" in the names to avoid encouraging people to
+> abuse this for other purposes not related to timers.
 
--Mathias
+Sorry to be late to the bike-shed party, but what about:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Documentation/power/suspend-and-interrupts.txt:the IRQ's users.  For this reason, using IRQF_NO_SUSPEND and IRQF_SHARED at the
+
+arch/arm/mach-omap2/mux.c:		omap_hwmod_mux_handle_irq, IRQF_SHARED | IRQF_NO_SUSPEND,
+arch/arm/mach-omap2/pm34xx.c:		_prcm_int_handle_io, IRQF_SHARED | IRQF_NO_SUSPEND, "pm_io",
+drivers/mfd/ab8500-debugfs.c:				   IRQF_SHARED | IRQF_NO_SUSPEND,
+drivers/mfd/ab8500-gpadc.c:			IRQF_NO_SUSPEND | IRQF_SHARED, "ab8500-gpadc-sw",
+drivers/mfd/ab8500-gpadc.c:			IRQF_NO_SUSPEND | IRQF_SHARED, "ab8500-gpadc-hw",
+drivers/pinctrl/pinctrl-single.c:				  IRQF_SHARED | IRQF_NO_SUSPEND,
+drivers/power/ab8500_btemp.c:			IRQF_SHARED | IRQF_NO_SUSPEND,
+drivers/power/ab8500_charger.c:			IRQF_SHARED | IRQF_NO_SUSPEND,
+drivers/power/ab8500_fg.c:			IRQF_SHARED | IRQF_NO_SUSPEND,
+drivers/rtc/rtc-pl031.c:	.irqflags = IRQF_SHARED | IRQF_NO_SUSPEND,
+drivers/usb/phy/phy-ab8500-usb.c:				IRQF_NO_SUSPEND | IRQF_SHARED,
+drivers/usb/phy/phy-ab8500-usb.c:				IRQF_NO_SUSPEND | IRQF_SHARED,
+drivers/usb/phy/phy-ab8500-usb.c:				IRQF_NO_SUSPEND | IRQF_SHARED,
+drivers/watchdog/intel-mid_wdt.c:			       IRQF_SHARED | IRQF_NO_SUSPEND, "watchdog",
+
+Is there a single legitimate user in that list? If so, the TIMER name
+might be misleading.
