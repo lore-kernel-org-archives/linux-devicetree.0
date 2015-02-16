@@ -1,98 +1,409 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH 06/14] drivers: reset: Add STM32 reset driver
-Date: Mon, 16 Feb 2015 13:25:24 +0100
-Message-ID: <CALszF6Cc8CZk-tBQzB-YSsPNDhufoewBzEFz+uRHXqCsQG4BkQ@mail.gmail.com>
-References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1423763164-5606-7-git-send-email-mcoquelin.stm32@gmail.com>
-	<54E132D6.6010608@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <54E132D6.6010608@suse.de>
-Sender: linux-arch-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees
+From: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: [PATCHv3] mvebu: add Linksys WRT1900AC (Mamba) support
+Date: Mon, 16 Feb 2015 13:31:04 +0100
+Message-ID: <1424089864-15651-1-git-send-email-kaloz@openwrt.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-02-16 0:59 GMT+01:00 Andreas F=C3=A4rber <afaerber@suse.de>:
-> Am 12.02.2015 um 18:45 schrieb Maxime Coquelin:
->> The STM32 MCUs family IP can be reset by accessing some shared regis=
-ters.
->>
->> The specificity is that some reset lines are used by the timers.
->> At timer initialization time, the timer has to be reset, that's why
->> we cannot use a regular driver.
->>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->> ---
->>  .../devicetree/bindings/reset/st,stm32-reset.txt   |  19 ++++
->>  drivers/reset/Makefile                             |   1 +
->>  drivers/reset/reset-stm32.c                        | 124 ++++++++++=
-+++++++++++
->>  3 files changed, 144 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/reset/st,stm32=
--reset.txt
->>  create mode 100644 drivers/reset/reset-stm32.c
->>
->> diff --git a/Documentation/devicetree/bindings/reset/st,stm32-reset.=
-txt b/Documentation/devicetree/bindings/reset/st,stm32-reset.txt
->> new file mode 100644
->> index 0000000..add1298
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/st,stm32-reset.txt
->> @@ -0,0 +1,19 @@
->> +STMicroelectronics STM32 Peripheral Reset Controller
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
->> +
->> +Please also refer to reset.txt in this directory for common reset
->> +controller binding usage.
->> +
->> +Required properties:
->> +- compatible: Should be "st,stm32-reset"
->> +- reg: should be register base and length as documented in the
->> +  datasheet
->> +- #reset-cells: 1, see below
->> +
->> +example:
->> +
->> +reset_ahb1: reset@40023810 {
->> +     #reset-cells =3D <1>;
->> +     compatible =3D "st,stm32-reset";
->> +     reg =3D <0x40023810 0x4>;
->> +};
-> [snip]
->
-> RM0090 has two different chapters on the RCC IP:
-> * Reset and clock control for STM32F42xxx and STM32F43xxx (RCC)
-> * Reset and clock control for STM32F405xx/07xx and STM32F415xx/17xx(R=
-CC)
->
-> I therefore feel it is wrong to use "stm32-" here; instead I used
-> "st,stm32f429-rcc" (also relates to 12/14 discussion). This may apply=
- to
-> other identifiers, too.
+The Linksys WRT1900AC (Mamba) is a router that has
 
-In this first version, the reset driver was really generic, and was
-compatible with the STM32 family.
-The only difference would have been in the device trees.
+- 2 mini-PCIe slots with Marvell 88W8864 radios
+- 1 USB 3.0 port
+- 1 USB 2.0/eSATAp port
+- 2 Ethernet interfaces connected to a 88E6172 switch (1x WAN + 4x LAN)
+- 128MB NAND flash
+- 256MB RAM
 
-Now, from the discussion with Philipp, I will reconsider the
-implementation to add some named constants,
-so maybe I will reconsider the compatible, it will depend on how I
-will implement it.
+Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+---
+Changes since v2:
+  * added tlc59116 leds
+  * added an extra partition for the unused space
+  * added serial console pinout
+  * renamed the dts to armada-xp-linksys-mamba.dts
 
-Thanks,
-Maxime
+Changes since v1:
+  * add dual license
+  * lower SPI speed to meet the chip's maximum
+  * pinctrl cleanups based on Andrew Lunn's suggestions
+---
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 348 ++++++++++++++++++++++++++
+ 2 files changed, 349 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-xp-linksys-mamba.dts
 
->
-> Regards,
-> Andreas
->
-> --
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-> GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upma=
-nyu,
-> Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 91bd5bd..a84063f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -541,6 +541,7 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
+ 	armada-xp-db.dtb \
+ 	armada-xp-gp.dtb \
+ 	armada-xp-lenovo-ix4-300d.dtb \
++	armada-xp-linksys-mamba.dtb \
+ 	armada-xp-matrix.dtb \
+ 	armada-xp-netgear-rn2120.dtb \
+ 	armada-xp-openblocks-ax3-4.dtb \
+diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+new file mode 100644
+index 0000000..0a3d1d6
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+@@ -0,0 +1,348 @@
++/*
++ * Device Tree file for the Linksys WRT1900AC (Mamba).
++ *
++ * Note: this board is shipped with a new generation boot loader that
++ * remaps internal registers at 0xf1000000. Therefore, if earlyprintk
++ * is used, the CONFIG_DEBUG_MVEBU_UART_ALTERNATE option should be
++ * used.
++ *
++ * Copyright (C) 2014 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
++ *
++ * Based on armada-xp-axpwifiap.dts:
++ *
++ *     Copyright (C) 2013 Marvell
++ *
++ *     Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is licensed under the terms of the GNU General Public
++ *     License version 2.  This program is licensed "as is" without
++ *     any warranty of any kind, whether express or implied.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include "armada-xp-mv78230.dtsi"
++
++/ {
++	model = "Linksys WRT1900AC";
++	compatible = "linksys,mamba", "marvell,armadaxp-mv78230",
++		     "marvell,armadaxp", "marvell,armada-370-xp";
++
++	chosen {
++		bootargs = "console=ttyS0,115200";
++		stdout-path = &uart0;
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x00000000 0x00000000 0x10000000>; /* 256MB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
++
++		pcie-controller {
++			status = "okay";
++
++			/* Etron EJ168 USB 3.0 controller */
++			pcie@1,0 {
++				/* Port 0, Lane 0 */
++				status = "okay";
++			};
++
++			/* First mini-PCIe port */
++			pcie@2,0 {
++				/* Port 0, Lane 1 */
++				status = "okay";
++			};
++
++			/* Second mini-PCIe port */
++			pcie@3,0 {
++				/* Port 0, Lane 3 */
++				status = "okay";
++			};
++		};
++
++		internal-regs {
++
++			/* J10: VCC, NC, RX, NC, TX, GND  */
++			serial@12000 {
++				status = "okay";
++			};
++
++			sata@a0000 {
++				nr-ports = <1>;
++				status = "okay";
++			};
++
++			ethernet@70000 {
++				pinctrl-0 = <&ge0_rgmii_pins>;
++				pinctrl-names = "default";
++				status = "okay";
++				phy-mode = "rgmii-id";
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++
++			ethernet@74000 {
++				pinctrl-0 = <&ge1_rgmii_pins>;
++				pinctrl-names = "default";
++				status = "okay";
++				phy-mode = "rgmii-id";
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++
++			/* USB part of the eSATA/USB 2.0 port */
++			usb@50000 {
++				status = "okay";
++			};
++
++			i2c@11000 {
++				status = "okay";
++				clock-frequency = <100000>;
++
++				tmp421@4c {
++					compatible = "ti,tmp421";
++					reg = <0x4c>;
++				};
++
++				tlc59116@68 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					#gpio-cells = <2>;
++					compatible = "ti,tlc59116";
++					reg = <0x68>;
++
++					wan_amber@0 {
++						label = "mamba:amber:wan";
++						reg = <0x0>;
++					};
++
++					wan_white@1 {
++						label = "mamba:white:wan";
++						reg = <0x1>;
++					};
++
++					wlan_2g@2 {
++						label = "mamba:white:wlan_2g";
++						reg = <0x2>;
++					};
++
++					wlan_5g@3 {
++						label = "mamba:white:wlan_5g";
++						reg = <0x3>;
++					};
++
++					esata@4 {
++						label = "mamba:white:esata";
++						reg = <0x4>;
++					};
++
++					usb2@5 {
++						label = "mamba:white:usb2";
++						reg = <0x5>;
++					};
++
++					usb3_1@6 {
++						label = "mamba:white:usb3_1";
++						reg = <0x6>;
++					};
++
++					usb3_2@7 {
++						label = "mamba:white:usb3_2";
++						reg = <0x7>;
++					};
++
++					wps_white@8 {
++						label = "mamba:white:wps";
++						reg = <0x8>;
++					};
++
++					wps_amber@9 {
++						label = "mamba:amber:wps";
++						reg = <0x9>;
++					};
++				};
++			};
++
++			nand@d0000 {
++				status = "okay";
++				num-cs = <1>;
++				marvell,nand-keep-config;
++				marvell,nand-enable-arbiter;
++				nand-on-flash-bbt;
++				nand-ecc-strength = <4>;
++				nand-ecc-step-size = <512>;
++
++				partition@0 {
++					label = "u-boot";
++					reg = <0x0000000 0x100000>;  /* 1MB */
++					read-only;
++				};
++
++				partition@100000 {
++					label = "u_env";
++					reg = <0x100000 0x40000>;    /* 256KB */
++				};
++
++				partition@140000 {
++					label = "s_env";
++					reg = <0x140000 0x40000>;    /* 256KB */
++				};
++
++				partition@900000 {
++					label = "devinfo";
++					reg = <0x900000 0x100000>;   /* 1MB */
++					read-only;
++				};
++
++				/* kernel1 overlaps with rootfs1 by design */
++				partition@a00000 {
++					label = "kernel1";
++					reg = <0xa00000 0x2800000>;  /* 40MB */
++				};
++
++				partition@d00000 {
++					label = "rootfs1";
++					reg = <0xd00000 0x2500000>;  /* 37MB */
++				};
++
++				/* kernel2 overlaps with rootfs2 by design */
++				partition@3200000 {
++					label = "kernel2";
++					reg = <0x3200000 0x2800000>; /* 40MB */
++				};
++
++				partition@3500000 {
++					label = "rootfs2";
++					reg = <0x3500000 0x2500000>; /* 37MB */
++				};
++
++				/*
++				 * 38MB, last MB is for the BBT, not writable */
++				 */
++				partition@5a00000 {
++					label = "syscfg";
++					reg = <0x5a00000 0x2600000>;
++				};
++
++				/*
++				 * Unused area between "s_env" and "devinfo".
++				 * Moved here because otherwise the renumbered
++				 * partitions would break the bootloader
++				 * supplied bootargs
++				 */
++				partition@180000 {
++					label = "unused_area";
++					reg = <0x180000 0x780000>;   /* 7.5MB */
++				};
++			};
++
++			spi0: spi@10600 {
++				status = "okay";
++
++				spi-flash@0 {
++					#address-cells = <1>;
++					#size-cells = <1>;
++					compatible = "everspin,mr25h256";
++					reg = <0>; /* Chip select 0 */
++					spi-max-frequency = <40000000>;
++				};
++			};
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-0 = <&keys_pin>;
++		pinctrl-names = "default";
++
++		button@1 {
++			label = "WPS";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
++		};
++
++		button@2 {
++			label = "Factory Reset Button";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&power_led_pin>;
++		pinctrl-names = "default";
++
++		power {
++			label = "mamba:white:power";
++			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++
++	gpio_fan {
++		/* SUNON HA4010V4-0000-C99 */
++		compatible = "gpio-fan";
++		gpios = <&gpio0 24 0>;
++
++		gpio-fan,speed-map = <0    0
++				      4500 1>;
++	};
++};
++
++&pinctrl {
++
++	keys_pin: keys-pin {
++		marvell,pins = "mpp32", "mpp33";
++		marvell,function = "gpio";
++	};
++
++	power_led_pin: power-led-pin {
++		marvell,pins = "mpp40";
++		marvell,function = "gpio";
++	};
++
++	gpio_fan_pin: gpio-fan-pin {
++		marvell,pins = "mpp24";
++		marvell,function = "gpio";
++	};
++};
+-- 
+2.1.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
