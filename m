@@ -1,44 +1,92 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] drivers/core/of: Add symlink to device-tree from devices with an OF node
-Date: Mon, 16 Feb 2015 10:56:19 +0100
-Message-ID: <2821848.vmevui3v0t@wuerfel>
-References: <1424059156.21410.38.camel@kernel.crashing.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2] wlcore: add basic device-tree support
+Date: Mon, 16 Feb 2015 11:06:14 +0100
+Message-ID: <2344371.zDnvJJhFdD@wuerfel>
+References: <1423998550-8829-1-git-send-email-eliad@wizery.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424059156.21410.38.camel@kernel.crashing.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423998550-8829-1-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 16 February 2015 14:59:16 Benjamin Herrenschmidt wrote:
-> So I've been annoyed lately with having a bunch of devices such as i2c
-> eeproms (for use by VPDs, server world !) and other bits and pieces that
-> I want to be able to identify from userspace, and possibly provide
-> additional data about from FW.
-> 
-> Basically, it boils down to correlating the sysfs device with the OF
-> tree device node, so that user space can use device-tree info such as
-> additional "location" or "label" (or whatever else we can come up with)
-> properties to identify a given device, or get some attributes of use
-> about it, etc...
-> 
-> Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
-> using "devspec" properties. For example, PCI creates them if it can
-> correlate the probed device with a DT node. Some powerpc specific busses
-> do that too.
-> 
-> However, i2c doesn't and it would be nice to have something more generic
-> since technically any device can have a corresponding device tree node
-> these days.
-> 
-> This patch achieves this by adding an "of_node" symlink to devices that
-> have a non-NULL dev->of_node pointer.
-> 
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+On Sunday 15 February 2015 13:09:10 Eliad Peller wrote:
+s
+> +
+> +This node provides properties for controlling the wilink wireless device. The
+> +node is expected to be specified as a child node to the SDIO controller that
+> +connects the device to the system.
+> +
+> +Required properties:
+> +
+> + - compatible : Should be "ti,wlcore".
 
-I like the idea, this seems very useful.
+I think you should use the specific model number here. If I understand
+correctly, wlcore is the name of the driver that is used for multiple
+device implementation.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> + - interrupt-parent : the phandle for the interrupt controller to which the
+> +	device interrupts are connected.
+
+interrupt-parent should not be required
+
+> +&mmc3 {
+> +	status = "okay";
+> +	vmmc-supply = <&wlan_en_reg>;
+> +	bus-width = <4>;
+> +	cap-power-off-card;
+> +	keep-power-in-suspend;
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	wlcore: wlcore@0 {
+> +		compatible = "ti,wlcore";
+> +		reg = <2>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <19 IRQ_TYPE_NONE>;
+> +	};
+> +};
+
+It could make sense to specify a few extra properties here:
+
+- The platform data lists two clocks. How about adding them
+  here as optional clocks so we don't need to change the binding
+  again.
+
+> diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+> index d3dd7bf..317796b 100644
+> --- a/drivers/net/wireless/ti/wlcore/sdio.c
+> +++ b/drivers/net/wireless/ti/wlcore/sdio.c
+
+Please make this a two-patch series and keep the dt binding in a separate
+patch from the driver change.
+  
+> +#ifdef CONFIG_OF
+> +static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct wl12xx_platform_data *pdata;
+> +
+> +	if (!np || !of_device_is_compatible(np, "ti,wlcore")) {
+> +		dev_err(dev, "No platform data set\n");
+> +		return NULL;
+> +	}
+> +
+> +	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return NULL;
+
+Your method seems overly complicated. While a lot of drivers do the same
+thing, allocating a platform_data structure at probe time is really
+just extra work compared to making the platform_data optional and
+adding the required fields into the driver-private structure.
+
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
