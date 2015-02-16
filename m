@@ -1,43 +1,61 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v2 0/2] Qualcomm PM8941 power key driver
-Date: Mon, 16 Feb 2015 11:55:16 +0200
-Message-ID: <1424080516.2328.1.camel@mm-sol.com>
-References: <1422058747-13486-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
+Date: Mon, 16 Feb 2015 09:56:21 +0000
+Message-ID: <54E1BEC5.5070009@arm.com>
+References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com> <20150121164632.GK5044@leverpostej> <20150212140702.GF1522@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1422058747-13486-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150212140702.GF1522@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ksankaran-qTEPVZfXA3Y@public.gmane.org" <ksankaran-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Thomas Lendacky <Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org>, Joel Schopp <Joel.Schopp-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
-On Fri, 2015-01-23 at 16:19 -0800, Bjorn Andersson wrote:
-> These patches add dt bindings and a device driver for the power key block in
-> the Qualcomm PM8941 pmic.
-> 
-> Changes since v1:
->  * Use a reboot_notifier to set power off/reboot mode
->  * Use irq flags from devicetree
->  * Some style fixes
-> 
-> Courtney Cavin (2):
->   input: Add Qualcomm PM8941 power key driver
->   input: pm8941-pwrkey: Add DT binding documentation
+On 12/02/15 14:07, Mark Rutland wrote:
+> Hi,
+>
+> On Wed, Jan 21, 2015 at 04:46:32PM +0000, Mark Rutland wrote:
+>> On Wed, Jan 21, 2015 at 12:02:30PM +0000, Sudeep Holla wrote:
+>>> Commit 5d425c18653731af6 ("arm64: kernel: add support for cpu
+>>> cache information") adds cacheinfo support for ARM64. Since
+>>> there's no architectural way of detecting the cpus that share
+>>> particular cache, device tree can be used and the core cacheinfo
+>>> already supports the same.
+>>
+>> This still leaves the possibility that misleading information is
+>> exposed for systems from other vendors. I've made a quick attempt
+>> to Cc the authors of other arm64 dts here.
+>>
+>> Given that in the absence of these nodes we can't derive a complete
+>> view of the cache hierarchy, shouldn't we only expose the cacheinfo
+>> when we have these nodes and can therefore produce correct values?
+>
+> I'm still rather concerned about exposing misleading cache info in
+> this manner. Is there no way we can limit the exposure of this
+> information to those cases where we actually have the information?
+>
 
-Tested-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+Yes I have a patch to check all the device nodes in the cache hierarchy
+before initializing the sysfs. So cacheinfo won't be setup if all the
+device nodes aren't found(at-least on architecture like ARM/ARM64 which
+depends on DT). I will post it soon, was waiting for a week so that it's
+not lost during merge window.
 
-Thanks.
+> Do we know if/how this will work for ACPI systems?
+>
 
-> 
->  .../bindings/input/qcom,pm8941-pwrkey.txt          |  43 ++++
->  drivers/input/misc/Kconfig                         |  12 +
->  drivers/input/misc/Makefile                        |   1 +
->  drivers/input/misc/pm8941-pwrkey.c                 | 281 +++++++++++++++++++++
->  4 files changed, 337 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
->  create mode 100644 drivers/input/misc/pm8941-pwrkey.c
-> 
-> 
+It should be similar to DT i.e. the hierarchy must be completely
+detected through ACPI tables/methods, but I have not thought of
+implementation specifics yet.
+
+Regards,
+Sudeep
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
