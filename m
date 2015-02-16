@@ -1,73 +1,43 @@
-From: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Mon, 16 Feb 2015 10:49:46 +0100
-Message-ID: <20150216094946.GG7119@twins.programming.kicks-ass.net>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
- <20150211155720.GQ9154@leverpostej>
- <20150211171515.55d5066f@bbrezillon>
- <2067295.NbJCftPPli@vostro.rjw.lan>
- <20150211171313.GS9154@leverpostej>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v2 0/2] Qualcomm PM8941 power key driver
+Date: Mon, 16 Feb 2015 11:55:16 +0200
+Message-ID: <1424080516.2328.1.camel@mm-sol.com>
+References: <1422058747-13486-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150211171313.GS9154@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1422058747-13486-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-Please change the Subject to start with [PATCH] again when including
-patches, otherwise its too easy for them to get lost. Esp. with
-excessive quoting on top.
-
-I nearly missed the patch here, seeing nothing in the first page of
-text.
-
-On Wed, Feb 11, 2015 at 05:13:13PM +0000, Mark Rutland wrote:
-> ---
->  include/linux/interrupt.h |  5 +++++
->  kernel/irq/pm.c           | 44 ++++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 47 insertions(+), 2 deletions(-)
+On Fri, 2015-01-23 at 16:19 -0800, Bjorn Andersson wrote:
+> These patches add dt bindings and a device driver for the power key block in
+> the Qualcomm PM8941 pmic.
 > 
-> diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-> index d9b05b5..2b8ff50 100644
-> --- a/include/linux/interrupt.h
-> +++ b/include/linux/interrupt.h
-> @@ -57,6 +57,9 @@
->   * IRQF_NO_THREAD - Interrupt cannot be threaded
->   * IRQF_EARLY_RESUME - Resume IRQ early during syscore instead of at device
->   *                resume time.
-> + * IRQF_SHARED_TIMER_OK - Interrupt is safe to be shared with a timer. The
-> + *                        handler may be called spuriously during suspend
-> + *                        without issue.
+> Changes since v1:
+>  * Use a reboot_notifier to set power off/reboot mode
+>  * Use irq flags from devicetree
+>  * Some style fixes
+> 
+> Courtney Cavin (2):
+>   input: Add Qualcomm PM8941 power key driver
+>   input: pm8941-pwrkey: Add DT binding documentation
 
-I feel we should do better documenting this; at the very least refer to
-Documentation/power/suspend-and-interrupts.txt and ideally put a scary
-note in telling people that if they use this as a bandaid to make the
-warn go away, they will end up with a broken system.
+Tested-by: Ivan T. Ivanov <iivanov@mm-sol.com>
 
-Now ideally every driver that employs this should also have a comment
-next to it how it does indeed behave nicely, such that we can 'quickly'
-see people have indeed thought about things and not just slapped it on
-to make the WARN go away.
+Thanks.
 
-> diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
-> index 3ca5325..e4ec91a 100644
-> --- a/kernel/irq/pm.c
-> +++ b/kernel/irq/pm.c
-> @@ -28,6 +28,47 @@ bool irq_pm_check_wakeup(struct irq_desc *desc)
-
-> +	for (action = desc->action; action; action = action->next)
-> +		if (!(action->flags & safe_flags))
-> +			return false;
-
-In general I prefer braces around the for loop even though C does not
-strictly require it. Its just too easy to confuse multi-line statements
-with multiple statements. Extra braces comfort the brain in this case.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>  .../bindings/input/qcom,pm8941-pwrkey.txt          |  43 ++++
+>  drivers/input/misc/Kconfig                         |  12 +
+>  drivers/input/misc/Makefile                        |   1 +
+>  drivers/input/misc/pm8941-pwrkey.c                 | 281 +++++++++++++++++++++
+>  4 files changed, 337 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+>  create mode 100644 drivers/input/misc/pm8941-pwrkey.c
+> 
+> 
