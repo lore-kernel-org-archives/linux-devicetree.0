@@ -1,68 +1,73 @@
-From: Peter Zijlstra <peterz@infradead.org>
+From: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
  demuxer chip
-Date: Mon, 16 Feb 2015 10:28:14 +0100
-Message-ID: <20150216092814.GF7119@twins.programming.kicks-ass.net>
+Date: Mon, 16 Feb 2015 10:49:46 +0100
+Message-ID: <20150216094946.GG7119@twins.programming.kicks-ass.net>
 References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
- <2437801.56xPyk3atd@vostro.rjw.lan>
- <20150211151237.GN9154@leverpostej>
- <1487331.cgC9j5u0aF@vostro.rjw.lan>
+ <20150211155720.GQ9154@leverpostej>
+ <20150211171515.55d5066f@bbrezillon>
+ <2067295.NbJCftPPli@vostro.rjw.lan>
+ <20150211171313.GS9154@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1487331.cgC9j5u0aF@vostro.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20150211171313.GS9154@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Guys, trim your emails, please!
+Please change the Subject to start with [PATCH] again when including
+patches, otherwise its too easy for them to get lost. Esp. with
+excessive quoting on top.
 
-On Wed, Feb 11, 2015 at 04:51:36PM +0100, Rafael J. Wysocki wrote:
-> On Wednesday, February 11, 2015 03:12:38 PM Mark Rutland wrote:
-> > I guess that would have to imply IRQF_SHARED, so we'd have something
-> > like:
-> > 
-> > IRQF_SHARED_SUSPEND_OK - This handler is safe to call spuriously during
-> > 			 suspend in the case the line is shared. The
-> > 			 handler will not access unavailable hardware
-> > 			 or kernel infrastructure during this period.
-> > 
-> > #define __IRQF_SUSPEND_SPURIOUS		0x00040000
-> > #define	IRQF_SHARED_SUSPEND_OK		(IRQF_SHARED | __IRQF_SUSPEND_SPURIOUS)
+I nearly missed the patch here, seeing nothing in the first page of
+text.
+
+On Wed, Feb 11, 2015 at 05:13:13PM +0000, Mark Rutland wrote:
+> ---
+>  include/linux/interrupt.h |  5 +++++
+>  kernel/irq/pm.c           | 44 ++++++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 47 insertions(+), 2 deletions(-)
 > 
-> What about
-> 
-> #define __IRQF_TIMER_SIBLING_OK	0x00040000
-> #define	IRQF_SHARED_TIMER_OK	(IRQF_SHARED | __IRQF_TIMER_SIBLING_OK)
-> 
-> The "suspend" part is kind of a distraction to me here, because that really
-> only is about sharing an IRQ with a timer and the "your interrupt handler
-> may be called when the device is suspended" part is just a consequence of that.
-> 
-> So IMO it's better to have "TIMER" in the names to avoid encouraging people to
-> abuse this for other purposes not related to timers.
+> diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+> index d9b05b5..2b8ff50 100644
+> --- a/include/linux/interrupt.h
+> +++ b/include/linux/interrupt.h
+> @@ -57,6 +57,9 @@
+>   * IRQF_NO_THREAD - Interrupt cannot be threaded
+>   * IRQF_EARLY_RESUME - Resume IRQ early during syscore instead of at device
+>   *                resume time.
+> + * IRQF_SHARED_TIMER_OK - Interrupt is safe to be shared with a timer. The
+> + *                        handler may be called spuriously during suspend
+> + *                        without issue.
 
-Sorry to be late to the bike-shed party, but what about:
+I feel we should do better documenting this; at the very least refer to
+Documentation/power/suspend-and-interrupts.txt and ideally put a scary
+note in telling people that if they use this as a bandaid to make the
+warn go away, they will end up with a broken system.
 
-Documentation/power/suspend-and-interrupts.txt:the IRQ's users.  For this reason, using IRQF_NO_SUSPEND and IRQF_SHARED at the
+Now ideally every driver that employs this should also have a comment
+next to it how it does indeed behave nicely, such that we can 'quickly'
+see people have indeed thought about things and not just slapped it on
+to make the WARN go away.
 
-arch/arm/mach-omap2/mux.c:		omap_hwmod_mux_handle_irq, IRQF_SHARED | IRQF_NO_SUSPEND,
-arch/arm/mach-omap2/pm34xx.c:		_prcm_int_handle_io, IRQF_SHARED | IRQF_NO_SUSPEND, "pm_io",
-drivers/mfd/ab8500-debugfs.c:				   IRQF_SHARED | IRQF_NO_SUSPEND,
-drivers/mfd/ab8500-gpadc.c:			IRQF_NO_SUSPEND | IRQF_SHARED, "ab8500-gpadc-sw",
-drivers/mfd/ab8500-gpadc.c:			IRQF_NO_SUSPEND | IRQF_SHARED, "ab8500-gpadc-hw",
-drivers/pinctrl/pinctrl-single.c:				  IRQF_SHARED | IRQF_NO_SUSPEND,
-drivers/power/ab8500_btemp.c:			IRQF_SHARED | IRQF_NO_SUSPEND,
-drivers/power/ab8500_charger.c:			IRQF_SHARED | IRQF_NO_SUSPEND,
-drivers/power/ab8500_fg.c:			IRQF_SHARED | IRQF_NO_SUSPEND,
-drivers/rtc/rtc-pl031.c:	.irqflags = IRQF_SHARED | IRQF_NO_SUSPEND,
-drivers/usb/phy/phy-ab8500-usb.c:				IRQF_NO_SUSPEND | IRQF_SHARED,
-drivers/usb/phy/phy-ab8500-usb.c:				IRQF_NO_SUSPEND | IRQF_SHARED,
-drivers/usb/phy/phy-ab8500-usb.c:				IRQF_NO_SUSPEND | IRQF_SHARED,
-drivers/watchdog/intel-mid_wdt.c:			       IRQF_SHARED | IRQF_NO_SUSPEND, "watchdog",
+> diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+> index 3ca5325..e4ec91a 100644
+> --- a/kernel/irq/pm.c
+> +++ b/kernel/irq/pm.c
+> @@ -28,6 +28,47 @@ bool irq_pm_check_wakeup(struct irq_desc *desc)
 
-Is there a single legitimate user in that list? If so, the TIMER name
-might be misleading.
+> +	for (action = desc->action; action; action = action->next)
+> +		if (!(action->flags & safe_flags))
+> +			return false;
+
+In general I prefer braces around the for loop even though C does not
+strictly require it. Its just too easy to confuse multi-line statements
+with multiple statements. Extra braces comfort the brain in this case.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
