@@ -1,93 +1,68 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] usb: renesas_usbhs: fix spinlock suspected in a
- gadget complete function
-Date: Mon, 16 Feb 2015 11:15:36 +0100
-Message-ID: <CAMuHMdXOkzznW_4KJwqiO5UgYXYN2tZ+2OEYwA+eQJF2S-Z8jQ@mail.gmail.com>
-References: <1424051579-5060-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
+Date: Mon, 16 Feb 2015 10:19:35 +0000
+Message-ID: <20150216101935.GA8676@leverpostej>
+References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com>
+ <20150121164632.GK5044@leverpostej>
+ <20150212140702.GF1522@leverpostej>
+ <54E1BEC5.5070009@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54E1BEC5.5070009-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ksankaran-qTEPVZfXA3Y@public.gmane.org" <ksankaran-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Thomas Lendacky <Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org>, Joel Schopp <Joel.Schopp-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+On Mon, Feb 16, 2015 at 09:56:21AM +0000, Sudeep Holla wrote:
+> Hi Mark,
+> 
+> On 12/02/15 14:07, Mark Rutland wrote:
+> > Hi,
+> >
+> > On Wed, Jan 21, 2015 at 04:46:32PM +0000, Mark Rutland wrote:
+> >> On Wed, Jan 21, 2015 at 12:02:30PM +0000, Sudeep Holla wrote:
+> >>> Commit 5d425c18653731af6 ("arm64: kernel: add support for cpu
+> >>> cache information") adds cacheinfo support for ARM64. Since
+> >>> there's no architectural way of detecting the cpus that share
+> >>> particular cache, device tree can be used and the core cacheinfo
+> >>> already supports the same.
+> >>
+> >> This still leaves the possibility that misleading information is
+> >> exposed for systems from other vendors. I've made a quick attempt
+> >> to Cc the authors of other arm64 dts here.
+> >>
+> >> Given that in the absence of these nodes we can't derive a complete
+> >> view of the cache hierarchy, shouldn't we only expose the cacheinfo
+> >> when we have these nodes and can therefore produce correct values?
+> >
+> > I'm still rather concerned about exposing misleading cache info in
+> > this manner. Is there no way we can limit the exposure of this
+> > information to those cases where we actually have the information?
+> >
+> 
+> Yes I have a patch to check all the device nodes in the cache hierarchy
+> before initializing the sysfs. So cacheinfo won't be setup if all the
+> device nodes aren't found(at-least on architecture like ARM/ARM64 which
+> depends on DT). I will post it soon, was waiting for a week so that it's
+> not lost during merge window.
 
-On Mon, Feb 16, 2015 at 2:52 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> According to the gadget.h, a "complete" function will always be called
-> with interrupts disabled. However, sometimes usbhsg_queue_pop() function
-> is called with interrupts enabled. So, this function should calls
-> local_irq_save() before this calls the usb_gadget_giveback_request().
-> Otherwise, there is possible to cause a spinlock suspected in a gadget
-> complete function.
+Great, that's exactly what I was hoping for!
 
-I still feel uneasy about adding the call to local_irq_save(), as the need for
-this is usually an indicator of another locking problem.
+> > Do we know if/how this will work for ACPI systems?
+> >
+> 
+> It should be similar to DT i.e. the hierarchy must be completely
+> detected through ACPI tables/methods, but I have not thought of
+> implementation specifics yet.
 
-Unfortunately I know next to nothing about the USB gadget subsystem, so some
-help from the USB gadget experts would be appreciated.
+Ok.
 
-I had a look at other drivers, and it seems most drivers actually release
-and reacquire a spinlock around the call to usb_gadget_giveback_request(),
-i.e. they do:
-
-    spin_unlock(...);
-    usb_gadget_giveback_request(...);
-    spin_lock();
-
-This means they had already acquired the spinlock (and disabled interrupts!)
-before, which looks much healthier to me.
-
-There's only one driver that uses local_irq_save() (pxa27x_udc).
-
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/usb/renesas_usbhs/mod_gadget.c |   11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
-> index e0384af..104bddf 100644
-> --- a/drivers/usb/renesas_usbhs/mod_gadget.c
-> +++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-> @@ -126,11 +126,22 @@ static void usbhsg_queue_pop(struct usbhsg_uep *uep,
->         struct usbhsg_gpriv *gpriv = usbhsg_uep_to_gpriv(uep);
->         struct usbhs_pipe *pipe = usbhsg_uep_to_pipe(uep);
->         struct device *dev = usbhsg_gpriv_to_dev(gpriv);
-> +       unsigned long flags;
->
->         dev_dbg(dev, "pipe %d : queue pop\n", usbhs_pipe_number(pipe));
->
->         ureq->req.status = status;
-> +       /*
-> +        * According to the gadget.h, a "complete" function will always be
-> +        * called with interrupts disabled. However, sometimes this function
-> +        * is called with interrupts enabled. (e.g. complete a DMAC transfer or
-> +        * write data and done is set immediately when PIO.) So, this function
-> +        * should calls local_irq_save() before this calls the
-> +        * usb_gadget_giveback_request().
-> +        */
-> +       local_irq_save(flags);
->         usb_gadget_giveback_request(&uep->ep, &ureq->req);
-> +       local_irq_restore(flags);
->  }
->
->  static void usbhsg_queue_done(struct usbhs_priv *priv, struct usbhs_pkt *pkt)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Thanks,
+Mark
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
