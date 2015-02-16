@@ -1,52 +1,52 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 1/6] mfd: max77843: Add max77843 MFD driver core driver
-Date: Mon, 16 Feb 2015 22:48:01 +0900
-Message-ID: <54E1F511.1090604@samsung.com>
-References: <1423025771-4139-1-git-send-email-jaewon02.kim@samsung.com>
- <1423025771-4139-2-git-send-email-jaewon02.kim@samsung.com>
- <54D20A32.1020604@samsung.com> <20150216134206.GH14545@x1>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC] ARM: shmobile: lager: Fix audio clk master to SSI
+ and change audio data interface format type
+Date: Mon, 16 Feb 2015 08:51:47 -0500
+Message-ID: <20150216135141.GA3622@verge.net.au>
+References: <1424011746-3787-1-git-send-email-ykaneko0929@gmail.com>
+ <20150215152957.GA25065@verge.net.au>
+ <87fva6n2pb.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20150216134206.GH14545@x1>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Jaewon Kim <jaewon02.kim@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>, Beomho Seo <beomho.seo@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87fva6n2pb.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Yoshihiro Kaneko <ykaneko0929@gmail.com>, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/16/2015 10:42 PM, Lee Jones wrote:
-> On Wed, 04 Feb 2015, Chanwoo Choi wrote:
->> On 02/04/2015 01:56 PM, Jaewon Kim wrote:
->>> This patch adds MAX77843 core/irq driver to support PMIC,
->>> MUIC(Micro USB Interface Controller), Charger, Fuel Gauge,
->>> LED and Haptic device.
->>>
->>> Cc: Lee Jones <lee.jones@linaro.org>
->>> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
->>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->>> ---
->>>  drivers/mfd/Kconfig                  |   14 ++
->>>  drivers/mfd/Makefile                 |    1 +
->>>  drivers/mfd/max77843.c               |  245 +++++++++++++++++++
->>>  include/linux/mfd/max77843-private.h |  441 ++++++++++++++++++++++++++++++++++
->>>  4 files changed, 701 insertions(+)
->>>  create mode 100644 drivers/mfd/max77843.c
->>>  create mode 100644 include/linux/mfd/max77843-private.h
-> 
-> <LOTS OF POINTLESS LINES OF UNCHANGED/UNREVIEWED CODE>
-> 
->> Looks good to me.
->>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> 
-> Chanwoo,
-> 
-> If you're not going to make any comments, either put the Reviewed-by
-> at the top, or better still, snip out all of the bumph in the middle.
-> 
+Hi Morimoto-san,
 
-OK, I'll do according your comment.
+On Mon, Feb 16, 2015 at 12:01:15AM +0000, Kuninori Morimoto wrote:
+> 
+> Hi Kaneko-san, Simon
+> 
+> > >  arch/arm/boot/dts/r8a7790-lager.dts | 4 +---
+> > >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+> > > index 0c3b678..e7dda8a 100644
+> > > --- a/arch/arm/boot/dts/r8a7790-lager.dts
+> > > +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+> > > @@ -177,9 +177,7 @@
+> > >  	sound {
+> > >  		compatible = "simple-audio-card";
+> > >  
+> > > -		simple-audio-card,format = "left_j";
+> > > -		simple-audio-card,bitclock-master = <&sndcodec>;
+> > > -		simple-audio-card,frame-master = <&sndcodec>;
+> > > +		simple-audio-card,format = "i2s";
+> > >  
+> > >  		sndcpu: simple-audio-card,cpu {
+> > >  			sound-dai = <&rcar_sound>;
+> 
+> Unfortunately, I can't accept this patch.
+> It will be strange sound if you change clk master to SSI (*1).
+> Additionally, it needs audio_clk settings for SSI master,
+> but, it needs special limitation (*1).
+> (*1 HW connection reason)
+> And format change left_j -> i2s is no meaning on Lager board case
 
-Thanks,
-Chanwoo Choi
+Thanks for your analysis.
+I am marking this patch as "rejected".
