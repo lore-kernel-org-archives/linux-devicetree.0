@@ -1,92 +1,93 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] wlcore: add basic device-tree support
-Date: Mon, 16 Feb 2015 11:06:14 +0100
-Message-ID: <2344371.zDnvJJhFdD@wuerfel>
-References: <1423998550-8829-1-git-send-email-eliad@wizery.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] usb: renesas_usbhs: fix spinlock suspected in a
+ gadget complete function
+Date: Mon, 16 Feb 2015 11:15:36 +0100
+Message-ID: <CAMuHMdXOkzznW_4KJwqiO5UgYXYN2tZ+2OEYwA+eQJF2S-Z8jQ@mail.gmail.com>
+References: <1424051579-5060-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423998550-8829-1-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 15 February 2015 13:09:10 Eliad Peller wrote:
-s
-> +
-> +This node provides properties for controlling the wilink wireless device. The
-> +node is expected to be specified as a child node to the SDIO controller that
-> +connects the device to the system.
-> +
-> +Required properties:
-> +
-> + - compatible : Should be "ti,wlcore".
+Hi Shimoda-san,
 
-I think you should use the specific model number here. If I understand
-correctly, wlcore is the name of the driver that is used for multiple
-device implementation.
+On Mon, Feb 16, 2015 at 2:52 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> According to the gadget.h, a "complete" function will always be called
+> with interrupts disabled. However, sometimes usbhsg_queue_pop() function
+> is called with interrupts enabled. So, this function should calls
+> local_irq_save() before this calls the usb_gadget_giveback_request().
+> Otherwise, there is possible to cause a spinlock suspected in a gadget
+> complete function.
 
-> + - interrupt-parent : the phandle for the interrupt controller to which the
-> +	device interrupts are connected.
+I still feel uneasy about adding the call to local_irq_save(), as the need for
+this is usually an indicator of another locking problem.
 
-interrupt-parent should not be required
+Unfortunately I know next to nothing about the USB gadget subsystem, so some
+help from the USB gadget experts would be appreciated.
 
-> +&mmc3 {
-> +	status = "okay";
-> +	vmmc-supply = <&wlan_en_reg>;
-> +	bus-width = <4>;
-> +	cap-power-off-card;
-> +	keep-power-in-suspend;
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	wlcore: wlcore@0 {
-> +		compatible = "ti,wlcore";
-> +		reg = <2>;
-> +		interrupt-parent = <&gpio0>;
-> +		interrupts = <19 IRQ_TYPE_NONE>;
-> +	};
-> +};
+I had a look at other drivers, and it seems most drivers actually release
+and reacquire a spinlock around the call to usb_gadget_giveback_request(),
+i.e. they do:
 
-It could make sense to specify a few extra properties here:
+    spin_unlock(...);
+    usb_gadget_giveback_request(...);
+    spin_lock();
 
-- The platform data lists two clocks. How about adding them
-  here as optional clocks so we don't need to change the binding
-  again.
+This means they had already acquired the spinlock (and disabled interrupts!)
+before, which looks much healthier to me.
 
-> diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-> index d3dd7bf..317796b 100644
-> --- a/drivers/net/wireless/ti/wlcore/sdio.c
-> +++ b/drivers/net/wireless/ti/wlcore/sdio.c
+There's only one driver that uses local_irq_save() (pxa27x_udc).
 
-Please make this a two-patch series and keep the dt binding in a separate
-patch from the driver change.
-  
-> +#ifdef CONFIG_OF
-> +static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	struct wl12xx_platform_data *pdata;
-> +
-> +	if (!np || !of_device_is_compatible(np, "ti,wlcore")) {
-> +		dev_err(dev, "No platform data set\n");
-> +		return NULL;
-> +	}
-> +
-> +	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return NULL;
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/usb/renesas_usbhs/mod_gadget.c |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
+> index e0384af..104bddf 100644
+> --- a/drivers/usb/renesas_usbhs/mod_gadget.c
+> +++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+> @@ -126,11 +126,22 @@ static void usbhsg_queue_pop(struct usbhsg_uep *uep,
+>         struct usbhsg_gpriv *gpriv = usbhsg_uep_to_gpriv(uep);
+>         struct usbhs_pipe *pipe = usbhsg_uep_to_pipe(uep);
+>         struct device *dev = usbhsg_gpriv_to_dev(gpriv);
+> +       unsigned long flags;
+>
+>         dev_dbg(dev, "pipe %d : queue pop\n", usbhs_pipe_number(pipe));
+>
+>         ureq->req.status = status;
+> +       /*
+> +        * According to the gadget.h, a "complete" function will always be
+> +        * called with interrupts disabled. However, sometimes this function
+> +        * is called with interrupts enabled. (e.g. complete a DMAC transfer or
+> +        * write data and done is set immediately when PIO.) So, this function
+> +        * should calls local_irq_save() before this calls the
+> +        * usb_gadget_giveback_request().
+> +        */
+> +       local_irq_save(flags);
+>         usb_gadget_giveback_request(&uep->ep, &ureq->req);
+> +       local_irq_restore(flags);
+>  }
+>
+>  static void usbhsg_queue_done(struct usbhs_priv *priv, struct usbhs_pkt *pkt)
 
-Your method seems overly complicated. While a lot of drivers do the same
-thing, allocating a platform_data structure at probe time is really
-just extra work compared to making the platform_data optional and
-adding the required fields into the driver-private structure.
+Gr{oetje,eeting}s,
 
-	Arnd
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
