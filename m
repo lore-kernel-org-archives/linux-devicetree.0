@@ -1,78 +1,67 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
-Date: Mon, 16 Feb 2015 10:06:26 -0800
-Message-ID: <CAJAp7OgCs2kyF+ZdSzbf02qNHDdd_g=Nyf54akiAjAd1uK6cEA@mail.gmail.com>
-References: <20150115135556.GH16217@leverpostej>
-	<CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
-	<CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com>
-	<20150116101746.GA21809@leverpostej>
-	<CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
-	<20150120180548.GK7718@atomide.com>
-	<CAK=WgbZGGtwmQwzWumjpYOsYHTt8vPQpTraABwJBsv5VXOmJ_Q@mail.gmail.com>
-	<54BFE855.3090200@ti.com>
-	<20150122185622.GE12911@leverpostej>
-	<54C9AFF2.6000108@ti.com>
-	<20150211112907.GD9154@leverpostej>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] sh-pfc: add R8A7794 PFC support
+Date: Mon, 16 Feb 2015 21:41:31 +0200
+Message-ID: <33139732.2SupcF0KCS@avalon>
+References: <5262485.fuAdzVmykl@wasted.cogentembedded.com> <1974835.KMEIIiPVsr@avalon> <CAMuHMdX-U-JdWhsg9qiA8okKOjQxqLmusah3kcJbzSjzvhbmnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150211112907.GD9154@leverpostej>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Suman Anna <s-anna@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdX-U-JdWhsg9qiA8okKOjQxqLmusah3kcJbzSjzvhbmnA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linus Walleij <linus.walleij@linaro.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 11, 2015 at 3:29 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Thu, Jan 29, 2015 at 03:58:42AM +0000, Suman Anna wrote:
->> On 01/22/2015 12:56 PM, Mark Rutland wrote:
-[..]
->> > That's the only way I would expect this to possibly remain a stable
->> > over time, and it's the entire reason for #hwlock-cells, no?
->> >
->> > How do you expect the other components sharing the hwspinlocks to be
->> > described?
->>
->> Yes indeed, this is what any of the clients will use on Linux. But
->> this is not necessarily the semantics for exchanging hwlocks with the
->> other processor(s) which is where the global id space comes into
->> picture.
->
-> I did try to consider that above. Rather than thinking about the
-> numbering as "global", think of it as unique within the a given pool
-> shared between processors. That's what the "poolN" names are about
-> above.
->
-> That way you can dynamically allocate within the pool and know that
-> Linux and the SW on the other processors will use the same ID. You can
-> have pools that span multiple hwlock hardware blocks, and you can have
-> multiple separate pools in operation at once.
->
-> Surely that covers the cases you care about?
->
-> If using names is clunky, we could instead have a pool-hwlocks property
-> for that purpose.
->
+Hi Geert,
 
-Just to make I understand your suggestion.
+On Monday 16 February 2015 09:57:09 Geert Uytterhoeven wrote:
+> On Sun, Feb 15, 2015 at 5:06 PM, Laurent Pinchart wrote:
+> >> --- /dev/null
+> >> +++ linux-pinctrl/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
+> >> @@ -0,0 +1,3989 @@
+> >> +/*
+> >> + * r8a7794 processor support - PFC hardware block.
+> >> + *
+> >> + * Copyright (C) 2014 Renesas Electronics Corporation
+> >> + * Copyright (C) 2015 Renesas Solutions Corp.
+> >> + * Copyright (C) 2015 Cogent  Embedded, Inc.,
+> >> <source@cogentembedded.com>
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modify
+> >> + * it under the terms of the GNU General Public License version 2
+> >> + * as published by the Free Software Foundation.
+> >> + */
+> >> +
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/platform_data/gpio-rcar.h>
+> >> +
+> >> +#include "core.h"
+> >> +#include "sh_pfc.h"
+> >> +
+> >> +#define CPU_ALL_PORT(fn, sfx)                                           
+> >>     \ +     PORT_GP_32(0, fn, sfx),                                     
+> >>    \ +     PORT_GP_32(1, fn, sfx),                                      
+> >>   \ +     PORT_GP_32(2, fn, sfx),                                       
+> >>  \ +     PORT_GP_32(3, fn, sfx),                                        
+> >> \ +     PORT_GP_32(4, fn, sfx),                                        
+> >> \ +     PORT_GP_32(5, fn, sfx),                                        
+> >> \ +     PORT_GP_32(6, fn, sfx)
+> > 
+> > If I'm not mistaken port GP1 has 26 pins only, GP5 28 pins and GP6 26
+> > pins.
+> 
+> That's correct.
+> 
+> If that has to be reflected in the CPU_ALL_PORT() macro, a few existing pfc
+> drivers should be modified, too:
+>   - on r8a7790, port GP1 and GP2 have 30 pins only,
+>   - on r8a7791, port GP1 has 26 pins only.
 
-We would have the communication entity list all the potential hwlocks
-(and gpios etc) that it can share and the key to be communicated would
-then basically be the index in that list?
+Done :-)
 
-Like:
-awesome-hub {
-    pool-hwlocks = <&a 1>, <&a 3>, <&b 5>;
-};
-
-And a communicated "lock 2" would mean lock 3 from block a?
-
-
-This would make it possible to describe what locks are available in
-this "allocation pool" and would keep such allocation logic out from
-the hwlock core - as the awesome-hub driver could simply trial and
-error (with some logic) through the list.
-
-Is this understanding correct?
-
+-- 
 Regards,
-Bjorn
+
+Laurent Pinchart
+
