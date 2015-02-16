@@ -1,34 +1,66 @@
-From: "Matwey V. Kornilov" <matwey@sai.msu.ru>
-Subject: [PATCH v2 2/2] of: Drop superfluous dependance for OF_OVERLAY
-Date: Mon, 16 Feb 2015 09:27:24 +0300
-Message-ID: <1424068044-3457-2-git-send-email-matwey@sai.msu.ru>
-References: <1424068044-3457-1-git-send-email-matwey@sai.msu.ru>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424068044-3457-1-git-send-email-matwey@sai.msu.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pebolle@tiscali.nl, "Matwey V. Kornilov" <matwey@sai.msu.ru>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] sh-pfc: add R8A7794 PFC support
+Date: Mon, 16 Feb 2015 09:57:09 +0100
+Message-ID: <CAMuHMdX-U-JdWhsg9qiA8okKOjQxqLmusah3kcJbzSjzvhbmnA@mail.gmail.com>
+References: <5262485.fuAdzVmykl@wasted.cogentembedded.com>
+	<1974835.KMEIIiPVsr@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1974835.KMEIIiPVsr@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linus Walleij <linus.walleij@linaro.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The whole menu already depends on OF, so there is no need to additionaly specify it.
+On Sun, Feb 15, 2015 at 5:06 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>> --- /dev/null
+>> +++ linux-pinctrl/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
+>> @@ -0,0 +1,3989 @@
+>> +/*
+>> + * r8a7794 processor support - PFC hardware block.
+>> + *
+>> + * Copyright (C) 2014 Renesas Electronics Corporation
+>> + * Copyright (C) 2015 Renesas Solutions Corp.
+>> + * Copyright (C) 2015 Cogent  Embedded, Inc., <source@cogentembedded.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2
+>> + * as published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/platform_data/gpio-rcar.h>
+>> +
+>> +#include "core.h"
+>> +#include "sh_pfc.h"
+>> +
+>> +#define CPU_ALL_PORT(fn, sfx)                                                \
+>> +     PORT_GP_32(0, fn, sfx),                                         \
+>> +     PORT_GP_32(1, fn, sfx),                                         \
+>> +     PORT_GP_32(2, fn, sfx),                                         \
+>> +     PORT_GP_32(3, fn, sfx),                                         \
+>> +     PORT_GP_32(4, fn, sfx),                                         \
+>> +     PORT_GP_32(5, fn, sfx),                                         \
+>> +     PORT_GP_32(6, fn, sfx)
+>
+> If I'm not mistaken port GP1 has 26 pins only, GP5 28 pins and GP6 26 pins.
 
-Suggested-by: Paul Bolle <pebolle@tiscali.nl>
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
----
- drivers/of/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+That's correct.
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index fdca685..4831137 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -86,7 +86,6 @@ config OF_RESOLVE
- 
- config OF_OVERLAY
- 	bool "Device Tree overlays"
--	depends on OF
- 	select OF_DYNAMIC
- 	select OF_RESOLVE
- 
--- 
-2.1.4
+If that has to be reflected in the CPU_ALL_PORT() macro, a few existing pfc
+drivers should be modified, too:
+  - on r8a7790, port GP1 and GP2 have 30 pins only,
+  - on r8a7791, port GP1 has 26 pins only.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
