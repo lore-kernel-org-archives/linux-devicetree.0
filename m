@@ -1,74 +1,146 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: [PATCH 2/2] drivers/core/of: Add symlink to device-tree from
- devices with an OF node
-Date: Mon, 16 Feb 2015 14:59:16 +1100
-Message-ID: <1424059156.21410.38.camel@kernel.crashing.org>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Input: bcm-keypad: add device tree bindings
+Date: Sun, 15 Feb 2015 21:17:51 -0800
+Message-ID: <20150216051751.GA15948@dtor-ws>
+References: <sbranden@broadcom.com>
+ <1423526861-29579-1-git-send-email-sbranden@broadcom.com>
+ <1423526861-29579-2-git-send-email-sbranden@broadcom.com>
+ <20150210005134.GA13695@dtor-ws>
+ <54DF7C8B.3050103@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54DF7C8B.3050103-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-So I've been annoyed lately with having a bunch of devices such as i2c
-eeproms (for use by VPDs, server world !) and other bits and pieces that
-I want to be able to identify from userspace, and possibly provide
-additional data about from FW.
+Hi Scott,
 
-Basically, it boils down to correlating the sysfs device with the OF
-tree device node, so that user space can use device-tree info such as
-additional "location" or "label" (or whatever else we can come up with)
-properties to identify a given device, or get some attributes of use
-about it, etc...
+On Sat, Feb 14, 2015 at 08:49:15AM -0800, Scott Branden wrote:
+> Hi Dmitry,
+> 
+> Comments inline.  I still have an issue with vendor prefix as there
+> are not documented guidelines I can find in this area?
 
-Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
-using "devspec" properties. For example, PCI creates them if it can
-correlate the probed device with a DT node. Some powerpc specific busses
-do that too.
+I looked and I could not locate it written down either. I think Grant is
+in Santa Rosa this week, I'll ask him to clarify.
 
-However, i2c doesn't and it would be nice to have something more generic
-since technically any device can have a corresponding device tree node
-these days.
+> 
+> 
+> On 15-02-09 04:51 PM, Dmitry Torokhov wrote:
+> >Hi Scott,
+> >
+> >On Mon, Feb 09, 2015 at 04:07:40PM -0800, Scott Branden wrote:
+> >>Documents the Broadcom keypad controller device tree bindings.
+> >>
+> >>Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> >>Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> >>---
+> >>  .../devicetree/bindings/input/brcm,bcm-keypad.txt  | 118 +++++++++++++++++++++
+> >>  1 file changed, 118 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt b/Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
+> >>new file mode 100644
+> >>index 0000000..645829d
+> >>--- /dev/null
+> >>+++ b/Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
+> >>@@ -0,0 +1,118 @@
+> >>+* Broadcom Keypad Controller device tree bindings
+> >>+
+> >>+Broadcom Keypad controller is used to interface a SoC with a matrix-type
+> >>+keypad device. The keypad controller supports multiple row and column lines.
+> >>+A key can be placed at each intersection of a unique row and a unique column.
+> >>+The keypad controller can sense a key-press and key-release and report the
+> >>+event using a interrupt to the cpu.
+> >>+
+> >>+This binding is based on the matrix-keymap binding with the following
+> >>+changes:
+> >>+
+> >>+keypad,num-rows and keypad,num-columns are required.
+> >>+
+> >>+Required SoC Specific Properties:
+> >>+- compatible: should be "brcm,bcm-keypad"
+> >>+
+> >>+- reg: physical base address of the controller and length of memory mapped
+> >>+  region.
+> >>+
+> >>+- interrupts: The interrupt number to the cpu.
+> >>+
+> >>+Board Specific Properties:
+> >>+- keypad,num-rows: Number of row lines connected to the keypad
+> >>+  controller.
+> >>+
+> >>+- keypad,num-columns: Number of column lines connected to the
+> >>+  keypad controller.
+> >>+
+> >>+- key-interrupt-trigger-type: The type of interrupt trigger asociated with the Keypad matrix.
+> >>+
+> >>+	KEYPAD_INTERRUPT_NO_TRIGGER	=	0
+> >>+	KEYPAD_INTERRUPT_RISING_EDGE	=	1
+> >>+	KEYPAD_INTERRUPT_FALLING_EDGE	=	2
+> >>+	KEYPAD_INTERRUPT_BOTH_EDGES	=	3
+> >
+> >Can we get this data from the interrupt spec?
+> I don't understand your question. Could you elaborate?
+> But, looking at this closer this determines when the hardware should
+> generate interrupts.  I think we would always need to set it to both
+> edges and this binding option can probably we removed?
 
-This patch achieves this by adding an "of_node" symlink to devices that
-have a non-NULL dev->of_node pointer.
+What I meant that interrupt binding allows specifying the trigger and
+you have separate binding for trigger here. It would be nice to have
+just one (the standard interrupt binding).
 
-Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
----
- drivers/base/core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> >
+> >>+
+> >>+- col-debounce-filter-period: The debounce period for the Column filter.
+> >>+
+> >>+	KEYPAD_DEBOUNCE_1_ms	=	0
+> >>+	KEYPAD_DEBOUNCE_2_ms	=	1
+> >>+	KEYPAD_DEBOUNCE_4_ms	=	2
+> >>+	KEYPAD_DEBOUNCE_8_ms	=	3
+> >
+> >>+	KEYPAD_DEBOUNCE_16_ms	=	4
+> >>+	KEYPAD_DEBOUNCE_32_ms	=	5
+> >>+	KEYPAD_DEBOUNCE_64_ms	=	6
+> >>+	KEYPAD_DEBOUNCE_128_ms	=	7
+> >>+
+> >>+- status-debounce-filter-period: The debounce period for the Status filter.
+> >>+
+> >>+	KEYPAD_DEBOUNCE_1_ms	=	0
+> >>+	KEYPAD_DEBOUNCE_2_ms	=	1
+> >>+	KEYPAD_DEBOUNCE_4_ms	=	2
+> >>+	KEYPAD_DEBOUNCE_8_ms	=	3
+> >>+	KEYPAD_DEBOUNCE_16_ms	=	4
+> >>+	KEYPAD_DEBOUNCE_32_ms	=	5
+> >>+	KEYPAD_DEBOUNCE_64_ms	=	6
+> >>+	KEYPAD_DEBOUNCE_128_ms	=	7
+> >
+> >I could swear device-specific properties should be in form of
+> ><vendor-prefix>,<property-name> to ensure it won't clash with changes on
+> >subsystem level later on. Device-tree folks, what say you?
+> I see examples with and without vendor-prefix.
+> qcom,pm8xxx-keypad.txt does not have prefixes
+> st-keyscan.txt does have a prefix
+> 
+> I can't find any documented guidelines for this.
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 97e2baf..61ef574 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -469,6 +469,7 @@ static int device_add_attrs(struct device *dev)
- {
- 	struct class *class = dev->class;
- 	const struct device_type *type = dev->type;
-+	struct device_node *of_node;
- 	int error;
- 
- 	if (class) {
-@@ -493,6 +494,13 @@ static int device_add_attrs(struct device *dev)
- 			goto err_remove_dev_groups;
- 	}
- 
-+	of_node = dev_of_node(dev);
-+	if (of_node) {
-+		error = sysfs_create_link(&dev->kobj, &of_node->kobj, "of_node");
-+		if (error)
-+			dev_warn(dev, "Error %d creating of_node link\n", error);
-+	}
-+
- 	return 0;
- 
-  err_remove_dev_groups:
+As I mentioned I'll try to get clarification on this.
 
+> Clash changes should not happen because as new standard properties
+> are added the drivers should be adjusted to use the new dt-bindings?
 
+This is a misconception: device tree bindings are supposed to form ABI
+(and the goal to eventually separate them from the kernel) and so we
+need to support old bindings in new kernels.
 
+Thanks.
+
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
