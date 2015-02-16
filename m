@@ -1,61 +1,44 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
-Date: Mon, 16 Feb 2015 09:56:21 +0000
-Message-ID: <54E1BEC5.5070009@arm.com>
-References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com> <20150121164632.GK5044@leverpostej> <20150212140702.GF1522@leverpostej>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] drivers/core/of: Add symlink to device-tree from devices with an OF node
+Date: Mon, 16 Feb 2015 10:56:19 +0100
+Message-ID: <2821848.vmevui3v0t@wuerfel>
+References: <1424059156.21410.38.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150212140702.GF1522@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ksankaran-qTEPVZfXA3Y@public.gmane.org" <ksankaran-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Thomas Lendacky <Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org>, Joel Schopp <Joel.Schopp-5C7GfCeVMHo@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424059156.21410.38.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Monday 16 February 2015 14:59:16 Benjamin Herrenschmidt wrote:
+> So I've been annoyed lately with having a bunch of devices such as i2c
+> eeproms (for use by VPDs, server world !) and other bits and pieces that
+> I want to be able to identify from userspace, and possibly provide
+> additional data about from FW.
+> 
+> Basically, it boils down to correlating the sysfs device with the OF
+> tree device node, so that user space can use device-tree info such as
+> additional "location" or "label" (or whatever else we can come up with)
+> properties to identify a given device, or get some attributes of use
+> about it, etc...
+> 
+> Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
+> using "devspec" properties. For example, PCI creates them if it can
+> correlate the probed device with a DT node. Some powerpc specific busses
+> do that too.
+> 
+> However, i2c doesn't and it would be nice to have something more generic
+> since technically any device can have a corresponding device tree node
+> these days.
+> 
+> This patch achieves this by adding an "of_node" symlink to devices that
+> have a non-NULL dev->of_node pointer.
+> 
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-On 12/02/15 14:07, Mark Rutland wrote:
-> Hi,
->
-> On Wed, Jan 21, 2015 at 04:46:32PM +0000, Mark Rutland wrote:
->> On Wed, Jan 21, 2015 at 12:02:30PM +0000, Sudeep Holla wrote:
->>> Commit 5d425c18653731af6 ("arm64: kernel: add support for cpu
->>> cache information") adds cacheinfo support for ARM64. Since
->>> there's no architectural way of detecting the cpus that share
->>> particular cache, device tree can be used and the core cacheinfo
->>> already supports the same.
->>
->> This still leaves the possibility that misleading information is
->> exposed for systems from other vendors. I've made a quick attempt
->> to Cc the authors of other arm64 dts here.
->>
->> Given that in the absence of these nodes we can't derive a complete
->> view of the cache hierarchy, shouldn't we only expose the cacheinfo
->> when we have these nodes and can therefore produce correct values?
->
-> I'm still rather concerned about exposing misleading cache info in
-> this manner. Is there no way we can limit the exposure of this
-> information to those cases where we actually have the information?
->
+I like the idea, this seems very useful.
 
-Yes I have a patch to check all the device nodes in the cache hierarchy
-before initializing the sysfs. So cacheinfo won't be setup if all the
-device nodes aren't found(at-least on architecture like ARM/ARM64 which
-depends on DT). I will post it soon, was waiting for a week so that it's
-not lost during merge window.
-
-> Do we know if/how this will work for ACPI systems?
->
-
-It should be similar to DT i.e. the hierarchy must be completely
-detected through ACPI tables/methods, but I have not thought of
-implementation specifics yet.
-
-Regards,
-Sudeep
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Arnd Bergmann <arnd@arndb.de>
