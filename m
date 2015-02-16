@@ -1,93 +1,28 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
-Date: Mon, 16 Feb 2015 23:14:13 +0100
-Message-ID: <87fva5a4i2.fsf@free.fr>
-References: <20150216130549.GF14545@x1>
-	<1170550770.470129293.1424093248596.JavaMail.root@zimbra1-e1.priv.proxad.net>
-	<20150216162712.GR14545@x1>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/2] Add R8A7794/SILK board eMMC DT support
+Date: Tue, 17 Feb 2015 01:53:57 +0300
+Message-ID: <2215524.TTIERu0tyd@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150216162712.GR14545@x1> (Lee Jones's message of "Mon, 16 Feb
-	2015 16:27:12 +0000")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+Hello.
 
-> What's all this?  Please configure your mail client correctly.
->
-> For advice, see:
->
->   Documentation/email-clients.txt
-While at day work, I have only access to web mail ...
+   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20150215-v3.19' tag. Here we add the eMMC device tree support
+for the R8A7794-based SILK board. It depends on the  order to work.
 
->>  2) after v2, we _both_ agreed that the accurate name is "cplds"
->>     which exactly what is in this patch
->>     (see device registering with lubbock_cplds).
->
-> There is no mention of this decision in the changelogs.  If it's not
-> in the change logs, it didn't happen. ;)
-Ah right.
+[1/2] ARM: shmobile: r8a7794: add MMCIF DT support
+[2/2] ARM: shmobile: silk: add eMMC DT support
 
-> I'm still concerned with the fact that the driver file is named using
-> and is populated by lots of instances of a "board" name.  I'm sure you
-> would share my thoughts is someone submitted a driver called
-> beaglebone.c or raspberrypi.c to MFD.
-I understand your concern. Arnd, a thought about it ? The only viable
-alternative would be to move it to arch/arm/plat-pxa AFAIS.
+WBR, Sergei
 
->> > Besides, this is MFD, where we support single pieces of silicon which
->> > happen to support multiple devices.  I definitely don't want to support
->> > boards here.
->> > You might want to re-think the naming and your (sales) pitch.
->> I might need help. As for the (sales), no comment.
->
-> By pitch, I mean to convince me that this belongs in MFD.
-I've been trying.
-
->> I thought cplds were to be handled by an MFD driver.
->
-> Not to my knowledge, although we do appear to have one.  That doesn't
-> necessarily mean that it's the right place for it though.  I'm not
-> entirely sure how CPLDs even work on a functional level.
-As I said, I understand your concern.
-
->> > I'm going to stop here, as I think I need more of an explanation so
->> > what you're trying to achieve with this driver.
->> Why ? I think things were clear that this driver handles the CPLDs on
->> lubbock board, namely u46 and u52. I don't understand what is wrong
->> with this patch so that you don't want to go forward.
->
-> Understanding was lost when I learned that the whole file was centred
-> around the premise of board support.  I understand now that this is a
-> driver for a CPLD, which I'm not sure is even MFD.  Also, if it is
-> really a CPLD driver, shouldn't be named after the manufacturer/model
-> number of the chip, rather than the PCB which it's connected to?
->
-> I'm also concerned that this driver has no functional CPLD code
-> contained.  All you're doing is defining an IRQ domain.  Why then
-> isn't this really an drivers/irqchip (Suggested-by: Josh Cartwright)
-> driver?
-Is not only a irqchip because, as explained at the bottom of the commit message,
-quoting myself :
-  This patch moves all that handling to a mfd driver. It's only purpose
-  for the time being is the interrupt handling, but in the future it
-  should encompass all the motherboard CPLDs handling :
-   - leds
-   - switches
-   - hexleds
-
-When these parts will be added, and they'll have to be handled by this driver
-because of iospace sharing, and same IP (cplds) providing the hardware support,
-the irqchip way will be just impossible to follow.
-
-As I said above, I understand your concern. If we all reach a concensus this
-should be moved to the pxa tree, so be it. But I'd like other opinion here.
-
-Cheers.
-
--- 
-Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
