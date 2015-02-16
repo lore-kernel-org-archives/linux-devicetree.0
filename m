@@ -1,409 +1,175 @@
-From: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCHv3] mvebu: add Linksys WRT1900AC (Mamba) support
-Date: Mon, 16 Feb 2015 13:31:04 +0100
-Message-ID: <1424089864-15651-1-git-send-email-kaloz@openwrt.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
+Date: Mon, 16 Feb 2015 13:05:49 +0000
+Message-ID: <20150216130549.GF14545@x1>
+References: <1422111903-22176-1-git-send-email-robert.jarzmik@free.fr>
+ <1422111903-22176-2-git-send-email-robert.jarzmik@free.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422111903-22176-2-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Linksys WRT1900AC (Mamba) is a router that has
+On Sat, 24 Jan 2015, Robert Jarzmik wrote:
 
-- 2 mini-PCIe slots with Marvell 88W8864 radios
-- 1 USB 3.0 port
-- 1 USB 2.0/eSATAp port
-- 2 Ethernet interfaces connected to a 88E6172 switch (1x WAN + 4x LAN)
-- 128MB NAND flash
-- 256MB RAM
+> Lubbock () board is the IO motherboard of the Intel PXA25x Developmen=
+t
+> Platform, which supports the Lubbock pxa25x soc board.
+>=20
+> Historically, this support was in arch/arm/mach-pxa/lubbock.c. When
+> gpio-pxa was moved to drivers/pxa, it became a driver, and its
+> initialization and probing happened at postcore initcall. The lubbock
+> code used to install the chained lubbock interrupt handler at init_ir=
+q()
+> time.
+>=20
+> The consequence of the gpio-pxa change is that the installed chained =
+irq
+> handler lubbock_irq_handler() was overwritten in pxa_gpio_probe(_dt)(=
+),
+> removing :
+>  - the handler
+>  - the falling edge detection setting of GPIO0, which revealed the
+>    interrupt request from the lubbock IO board.
+>=20
+> As a fix, move the gpio0 chained handler setup to a place where we ha=
+ve
+> the guarantee that pxa_gpio_probe() was called before, so that lubboc=
+k
+> handler becomes the true IRQ chained handler of GPIO0, demuxing the
+> lubbock IO board interrupts.
+>=20
+> This patch moves all that handling to a mfd driver. It's only purpose
+> for the time being is the interrupt handling, but in the future it
+> should encompass all the motherboard CPLDs handling :
+>  - leds
+>  - switches
+>  - hexleds
+>=20
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> ---
+> Since v1: change the name from cottula to lubbock_io
+>             Dmitry pointed out the Cottula was the pxa25x family name=
+,
+> 	    lubbock was the pxa25x development board name. Therefore the
+> 	    name was changed to lubbock_io (lubbock IO board)
 
-Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
-Changes since v2:
-  * added tlc59116 leds
-  * added an extra partition for the unused space
-  * added serial console pinout
-  * renamed the dts to armada-xp-linksys-mamba.dts
+Are you sure this is what you want to do?  We don't usually support
+'boards' per say.  Instead we support 'devices', then pull each of
+those devices together using some h/w description mechanism.
 
-Changes since v1:
-  * add dual license
-  * lower SPI speed to meet the chip's maximum
-  * pinctrl cleanups based on Andrew Lunn's suggestions
----
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 348 ++++++++++++++++++++++++++
- 2 files changed, 349 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+Board files are so yesterday!
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 91bd5bd..a84063f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -541,6 +541,7 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
- 	armada-xp-db.dtb \
- 	armada-xp-gp.dtb \
- 	armada-xp-lenovo-ix4-300d.dtb \
-+	armada-xp-linksys-mamba.dtb \
- 	armada-xp-matrix.dtb \
- 	armada-xp-netgear-rn2120.dtb \
- 	armada-xp-openblocks-ax3-4.dtb \
-diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-new file mode 100644
-index 0000000..0a3d1d6
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-@@ -0,0 +1,348 @@
-+/*
-+ * Device Tree file for the Linksys WRT1900AC (Mamba).
-+ *
-+ * Note: this board is shipped with a new generation boot loader that
-+ * remaps internal registers at 0xf1000000. Therefore, if earlyprintk
-+ * is used, the CONFIG_DEBUG_MVEBU_UART_ALTERNATE option should be
-+ * used.
-+ *
-+ * Copyright (C) 2014 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-+ *
-+ * Based on armada-xp-axpwifiap.dts:
-+ *
-+ *     Copyright (C) 2013 Marvell
-+ *
-+ *     Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is licensed under the terms of the GNU General Public
-+ *     License version 2.  This program is licensed "as is" without
-+ *     any warranty of any kind, whether express or implied.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "armada-xp-mv78230.dtsi"
-+
-+/ {
-+	model = "Linksys WRT1900AC";
-+	compatible = "linksys,mamba", "marvell,armadaxp-mv78230",
-+		     "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200";
-+		stdout-path = &uart0;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x00000000 0x00000000 0x10000000>; /* 256MB */
-+	};
-+
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
-+
-+		pcie-controller {
-+			status = "okay";
-+
-+			/* Etron EJ168 USB 3.0 controller */
-+			pcie@1,0 {
-+				/* Port 0, Lane 0 */
-+				status = "okay";
-+			};
-+
-+			/* First mini-PCIe port */
-+			pcie@2,0 {
-+				/* Port 0, Lane 1 */
-+				status = "okay";
-+			};
-+
-+			/* Second mini-PCIe port */
-+			pcie@3,0 {
-+				/* Port 0, Lane 3 */
-+				status = "okay";
-+			};
-+		};
-+
-+		internal-regs {
-+
-+			/* J10: VCC, NC, RX, NC, TX, GND  */
-+			serial@12000 {
-+				status = "okay";
-+			};
-+
-+			sata@a0000 {
-+				nr-ports = <1>;
-+				status = "okay";
-+			};
-+
-+			ethernet@70000 {
-+				pinctrl-0 = <&ge0_rgmii_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+				phy-mode = "rgmii-id";
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+
-+			ethernet@74000 {
-+				pinctrl-0 = <&ge1_rgmii_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+				phy-mode = "rgmii-id";
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+
-+			/* USB part of the eSATA/USB 2.0 port */
-+			usb@50000 {
-+				status = "okay";
-+			};
-+
-+			i2c@11000 {
-+				status = "okay";
-+				clock-frequency = <100000>;
-+
-+				tmp421@4c {
-+					compatible = "ti,tmp421";
-+					reg = <0x4c>;
-+				};
-+
-+				tlc59116@68 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					#gpio-cells = <2>;
-+					compatible = "ti,tlc59116";
-+					reg = <0x68>;
-+
-+					wan_amber@0 {
-+						label = "mamba:amber:wan";
-+						reg = <0x0>;
-+					};
-+
-+					wan_white@1 {
-+						label = "mamba:white:wan";
-+						reg = <0x1>;
-+					};
-+
-+					wlan_2g@2 {
-+						label = "mamba:white:wlan_2g";
-+						reg = <0x2>;
-+					};
-+
-+					wlan_5g@3 {
-+						label = "mamba:white:wlan_5g";
-+						reg = <0x3>;
-+					};
-+
-+					esata@4 {
-+						label = "mamba:white:esata";
-+						reg = <0x4>;
-+					};
-+
-+					usb2@5 {
-+						label = "mamba:white:usb2";
-+						reg = <0x5>;
-+					};
-+
-+					usb3_1@6 {
-+						label = "mamba:white:usb3_1";
-+						reg = <0x6>;
-+					};
-+
-+					usb3_2@7 {
-+						label = "mamba:white:usb3_2";
-+						reg = <0x7>;
-+					};
-+
-+					wps_white@8 {
-+						label = "mamba:white:wps";
-+						reg = <0x8>;
-+					};
-+
-+					wps_amber@9 {
-+						label = "mamba:amber:wps";
-+						reg = <0x9>;
-+					};
-+				};
-+			};
-+
-+			nand@d0000 {
-+				status = "okay";
-+				num-cs = <1>;
-+				marvell,nand-keep-config;
-+				marvell,nand-enable-arbiter;
-+				nand-on-flash-bbt;
-+				nand-ecc-strength = <4>;
-+				nand-ecc-step-size = <512>;
-+
-+				partition@0 {
-+					label = "u-boot";
-+					reg = <0x0000000 0x100000>;  /* 1MB */
-+					read-only;
-+				};
-+
-+				partition@100000 {
-+					label = "u_env";
-+					reg = <0x100000 0x40000>;    /* 256KB */
-+				};
-+
-+				partition@140000 {
-+					label = "s_env";
-+					reg = <0x140000 0x40000>;    /* 256KB */
-+				};
-+
-+				partition@900000 {
-+					label = "devinfo";
-+					reg = <0x900000 0x100000>;   /* 1MB */
-+					read-only;
-+				};
-+
-+				/* kernel1 overlaps with rootfs1 by design */
-+				partition@a00000 {
-+					label = "kernel1";
-+					reg = <0xa00000 0x2800000>;  /* 40MB */
-+				};
-+
-+				partition@d00000 {
-+					label = "rootfs1";
-+					reg = <0xd00000 0x2500000>;  /* 37MB */
-+				};
-+
-+				/* kernel2 overlaps with rootfs2 by design */
-+				partition@3200000 {
-+					label = "kernel2";
-+					reg = <0x3200000 0x2800000>; /* 40MB */
-+				};
-+
-+				partition@3500000 {
-+					label = "rootfs2";
-+					reg = <0x3500000 0x2500000>; /* 37MB */
-+				};
-+
-+				/*
-+				 * 38MB, last MB is for the BBT, not writable */
-+				 */
-+				partition@5a00000 {
-+					label = "syscfg";
-+					reg = <0x5a00000 0x2600000>;
-+				};
-+
-+				/*
-+				 * Unused area between "s_env" and "devinfo".
-+				 * Moved here because otherwise the renumbered
-+				 * partitions would break the bootloader
-+				 * supplied bootargs
-+				 */
-+				partition@180000 {
-+					label = "unused_area";
-+					reg = <0x180000 0x780000>;   /* 7.5MB */
-+				};
-+			};
-+
-+			spi0: spi@10600 {
-+				status = "okay";
-+
-+				spi-flash@0 {
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					compatible = "everspin,mr25h256";
-+					reg = <0>; /* Chip select 0 */
-+					spi-max-frequency = <40000000>;
-+				};
-+			};
-+		};
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-0 = <&keys_pin>;
-+		pinctrl-names = "default";
-+
-+		button@1 {
-+			label = "WPS";
-+			linux,code = <KEY_WPS_BUTTON>;
-+			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		button@2 {
-+			label = "Factory Reset Button";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-0 = <&power_led_pin>;
-+		pinctrl-names = "default";
-+
-+		power {
-+			label = "mamba:white:power";
-+			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+
-+	gpio_fan {
-+		/* SUNON HA4010V4-0000-C99 */
-+		compatible = "gpio-fan";
-+		gpios = <&gpio0 24 0>;
-+
-+		gpio-fan,speed-map = <0    0
-+				      4500 1>;
-+	};
-+};
-+
-+&pinctrl {
-+
-+	keys_pin: keys-pin {
-+		marvell,pins = "mpp32", "mpp33";
-+		marvell,function = "gpio";
-+	};
-+
-+	power_led_pin: power-led-pin {
-+		marvell,pins = "mpp40";
-+		marvell,function = "gpio";
-+	};
-+
-+	gpio_fan_pin: gpio-fan-pin {
-+		marvell,pins = "mpp24";
-+		marvell,function = "gpio";
-+	};
-+};
--- 
-2.1.0
+Besides, this is MFD, where we support single pieces of silicon which
+happen to support multiple devices.  I definitely don't want to support
+boards here.
+
+You might want to re-think the naming and your (sales) pitch.
+
+> 	  change the resources to bi-irq ioresource
+> 	    Discussion between Arnd and Robert to change the gpio
+> 	    request by a irq request.
+> Since v2: take into account Mark's review
+>       	    Use irq flags from resources (DT case and pdata case).
+> 	    Change of name from lubbock_io to lubbock-io
+> Since v3: take into account Lee's review + Russell's advice
+>             whitespace errors fixes
+> 	    debug/info messages formatting
+> 	    return X; empty lines
+> ---
+>  drivers/mfd/Kconfig   |  10 +++
+>  drivers/mfd/Makefile  |   1 +
+>  drivers/mfd/lubbock.c | 199 ++++++++++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 210 insertions(+)
+>  create mode 100644 drivers/mfd/lubbock.c
+>=20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 2e6b731..4d8939f 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -91,6 +91,16 @@ config MFD_AXP20X
+>  	  components like regulators or the PEK (Power Enable Key) under th=
+e
+>  	  corresponding menus.
+> =20
+> +config MFD_LUBBOCK
+> +	bool "Lubbock Motherboard"
+> +	def_bool ARCH_LUBBOCK
+> +	select MFD_CORE
+> +	help
+> +	  This driver supports the Lubbock multifunction chip found on the
+> +	  pxa25x development platform system (named Lubbock). This IO board
+> +	  supports the interrupts handling, ethernet controller, flash chip=
+s,
+> +	  etc ...
+> +
+>  config MFD_CROS_EC
+>  	tristate "ChromeOS Embedded Controller"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 53467e2..aff1f4f 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -9,6 +9,7 @@ obj-$(CONFIG_MFD_88PM805)	+=3D 88pm805.o 88pm80x.o
+>  obj-$(CONFIG_MFD_SM501)		+=3D sm501.o
+>  obj-$(CONFIG_MFD_ASIC3)		+=3D asic3.o tmio_core.o
+>  obj-$(CONFIG_MFD_BCM590XX)	+=3D bcm590xx.o
+> +obj-$(CONFIG_MFD_LUBBOCK)	+=3D lubbock.o
+>  obj-$(CONFIG_MFD_CROS_EC)	+=3D cros_ec.o
+>  obj-$(CONFIG_MFD_CROS_EC_I2C)	+=3D cros_ec_i2c.o
+>  obj-$(CONFIG_MFD_CROS_EC_SPI)	+=3D cros_ec_spi.o
+> diff --git a/drivers/mfd/lubbock.c b/drivers/mfd/lubbock.c
+> new file mode 100644
+> index 0000000..4077fc5
+> --- /dev/null
+> +++ b/drivers/mfd/lubbock.c
+> @@ -0,0 +1,199 @@
+> +/*
+> + * Intel Cotulla MFD - lubbock motherboard
+> + *
+> + * Copyright (C) 2014 Robert Jarzmik
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License as published=
+ by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * Lubbock motherboard driver, supporting Lubbock (aka. PXA25X) SoC =
+board.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/mfd/core.h>
+
+Why have you included this?  I don't see the use of the MFD framework
+anywhere.  So what makes this an MFD?
+
+I'm going to stop here, as I think I need more of an explanation so
+what you're trying to achieve with this driver.
+
+[...]
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
