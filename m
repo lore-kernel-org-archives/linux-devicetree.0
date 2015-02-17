@@ -1,53 +1,50 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/6] mfd: fsl imx25 Touchscreen ADC driver
-Date: Tue, 17 Feb 2015 20:14:38 +0100
-Message-ID: <20150217191438.GF19388@pengutronix.de>
-References: <1422108103-15052-1-git-send-email-mpa@pengutronix.de>
- <1422108103-15052-2-git-send-email-mpa@pengutronix.de>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Tue, 17 Feb 2015 20:17:27 +0100
+Message-ID: <20150217191727.GA18429@amd>
+References: <20150113222450.GA17475@obsidianresearch.com>
+ <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
+ <20150115184726.GA23247@obsidianresearch.com>
+ <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
+ <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
+ <20150121160151.453ba403@lxorguk.ukuu.org.uk>
+ <D466D9FF-25DA-4765-9469-128733BEBC4D@konsulko.com>
+ <20150121202700.GB4942@obsidianresearch.com>
+ <20150215224006.GA5626@amd>
+ <54E37569.80508@landley.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1422108103-15052-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <54E37569.80508@landley.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, Andrew
 List-Id: devicetree@vger.kernel.org
 
-Hello Markus,
+On Tue 2015-02-17 11:07:53, Rob Landley wrote:
+> 
+> 
+> On 02/15/2015 04:40 PM, Pavel Machek wrote:
+> > On Wed 2015-01-21 13:27:00, Jason Gunthorpe wrote:
+> >> On Wed, Jan 21, 2015 at 06:33:12PM +0200, Pantelis Antoniou wrote:
+> >> My point is that the current firmware layer is overly cautious and
+> >> FPGAs are very big. My current project on small Xilinx device has a
+> >> 10MB programming file. The biggest Xilinx device today has a max
+> >> bitfile size around 122MB.
+> >>
+> >> So keeping that much memory pinned in the kernel when I can prove it
+> >> is uncessary for my system (either because there is no suspend/resume
+> >> possibility, or because I know the CPU can always access the
+> >> filesytem) is very undesirable.
+> > 
+> > Well, your current device aalso has 1GB RAM, no?
+> 
+> Unnecessarily pinning 10% of your ram is a good solution?
 
-On Sat, Jan 24, 2015 at 03:01:38PM +0100, Markus Pargmann wrote:
-> +config MFD_MX25_TSADC
-> +	tristate "Freescale i.MX25 integrated Touchscreen and ADC unit"
-> +	select REGMAP_MMIO
-> +	depends on SOC_IMX25
-Can you make that:
-
-	depends on SOC_IMX25 || COMPILE_TEST
-
-?
-
-> + * The code contained herein is licensed under the GNU General Publi=
-c
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-Which version of the GPL is your code licensed under?
-
-> +static int mx25_tsadc_setup_irq(struct platform_device *pdev,
-> +				struct mx25_tsadc *tsadc)
-> [...]
-> +	irq_set_chained_handler(irq, mx25_tsadc_irq_handler);
-> +	irq_set_handler_data(irq, tsadc);
-Do you need to reverse the order of these two calls to prevent the
-handler being called while handler_data is still unset?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Never said that. But I'd rather have _some_ API proposed, then try to
+design in everthing including kitchen sink and do nothing.
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
