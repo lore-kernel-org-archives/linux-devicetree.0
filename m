@@ -1,52 +1,79 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 1/8] i2c: mux-pinctrl: Rework to honor disabled child
- nodes
-Date: Tue, 17 Feb 2015 22:19:25 +0100
-Message-ID: <54E3B05D.5050805@gmail.com>
-References: <1424199129-22099-1-git-send-email-sebastian.hesselbarth@gmail.com> <1424199129-22099-2-git-send-email-sebastian.hesselbarth@gmail.com> <54E3A8A7.8080703@wwwdotorg.org> <54E3ADB9.1040008@gmail.com> <54E3AF5F.3020902@wwwdotorg.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54E3AF5F.3020902@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Gabriel Dobato <dobatog@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Subject: Re: [PATCH] mfd: devicetree: bindings: Add Qualcomm RPM regulator subnodes
+Date: Tue, 17 Feb 2015 13:48:27 -0800
+Message-ID: <CAJAp7OjwuOdD=DynygFWnPH6tEVyf_dzOHQbUV_CHjS7OXihdg@mail.gmail.com>
+References: <1422582666-32653-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<20150213221332.GA19975@qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150213221332.GA19975-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17.02.2015 22:15, Stephen Warren wrote:
-> On 02/17/2015 02:08 PM, Sebastian Hesselbarth wrote:
->> On 17.02.2015 21:46, Stephen Warren wrote:
->>> Can you be more explicit about the problem here? Why does anything need
->>> to be re-written if a child node is disabled; presumably there's no need
->>> for the child bus numbers to be contiguous. In other words, with the
->>> example in the existing DT binding doc:
-[...]
+On Fri, Feb 13, 2015 at 2:13 PM, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On Thu, Jan 29, 2015 at 05:51:06PM -0800, Bjorn Andersson wrote:
+>> Add the regulator subnodes to the Qualcomm RPM MFD device tree bindings.
 >>
->> The way the current driver works, to disable i2c@0 you'd have to remove
->> the pinctrl-0 state, pinctrl-names string at position 0, and the node
->> itself.
-[...]
-> OK, that all makes sense, but I don't think there's any change at all to
-> the binding; this can all be fixed in the driver without affecting the
-> definition of the binding at all. At most all that's needed in the
-> binding is a note to the effect that if a particular child node is
-> disabled, then this has no effect at all on the requirements for the
-> pinctrl properties.
-
-I totally agree that the binding is not affected at all. I was under the
-impression that the current binding doc justifies the way the driver is
-currently parsing the properties. So this was an attempt to reword it
-to make it more clear what properties should influence the way
-sub-busses are registered.
-
-I'll have another look at the binding doc when the driver is fine.
-
-[...]
->> Do you still have one of the current boards available for testing?
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>> ---
 >
-> Yes, I have both Seaboard and Ventana still (the two Tegra boards that
-> use this driver). I haven't used them in a while; I hope they still work:-)
+>>       #include <dt-bindings/mfd/qcom-rpm.h>
+>> @@ -66,5 +237,18 @@ frequencies.
+>>
+>>               #address-cells = <1>;
+>>               #size-cells = <0>;
+>> +
+>> +             pm8921_smps1: pm8921-smps1 {
+>> +                     compatible = "qcom,rpm-pm8921-smps";
+>> +                     reg = <QCOM_RPM_PM8921_SMPS1>;
+>> +
+>> +                     regulator-min-microvolt = <1225000>;
+>> +                     regulator-max-microvolt = <1225000>;
+>> +                     regulator-always-on;
+>> +
+>> +                     bias-pull-down;
+>> +
+>> +                     qcom,switch-mode-frequency = <3200000>;
+>> +             };
+>>       };
+>
+> My only comment here is that most (all but one) of the other mfd regulator
+> devices use regulators {}.  Still wonder if that's what we should do.
+>
 
-Ok, I cross my fingers too and expect a Tested-by :)
+Looking at the existing mfds they all have a list in the code of the
+regulators supported on a certain mfd. Through the use of
+regulator_desc.{of_match,regulators_node} these regulators are
+populated with properties from of_nodes matched by name (of_match)
+under the specified node (regulators_node).
+But as we've discussed in other cases it's not desirable to maintain
+these lists for the various variants of Qualcomm platforms, so I did
+choose to go with "standalone" platform devices - with matching
+through compatible and all.
 
-Sebastian
+But that's all implementation, looking at the binding itself a
+regulator {} (clocks{} and msm_bus{}) would serve as a sort of
+grouping of children based on type. Except for the implications this
+has on the implementation I don't see much benefit of this (and in our
+case the implementation would suffer from the extra grouping).
+
+
+Let me know what you think, I based these ideas on just reading the
+existing code and bindings, and might very well have missed something.
+
+> Otherwise,
+>
+> Reviewed-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>
+
+Thanks
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
