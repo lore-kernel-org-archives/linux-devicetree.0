@@ -1,56 +1,81 @@
-From: Rob Landley <rob@landley.net>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 17 Feb 2015 11:07:53 -0600
-Message-ID: <54E37569.80508@landley.net>
-References: <20150113200032.GA16205@obsidianresearch.com> <alpine.DEB.2.02.1501131455130.30192@linuxheads99> <20150113222450.GA17475@obsidianresearch.com> <alpine.DEB.2.02.1501150936390.16760@linuxheads99> <20150115184726.GA23247@obsidianresearch.com> <20150115204502.591bca1d@lxorguk.ukuu.org.uk> <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com> <20150121160151.453ba403@lxorguk.ukuu.org.uk> <D466D9FF-25DA-4765-9469-128733BEBC4D@konsulko.com> <20150121202700.GB4942@obsidianresearch.com> <20150215224006.GA5626@amd>
+From: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] Ethernet packet sniffer: Device tree binding and
+ vendor prefix
+Date: Tue, 17 Feb 2015 17:13:19 +0000
+Message-ID: <54E376AF.80602@linn.co.uk>
+References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk> <0a86907642a97e5bd880f69299664232fcffaf9d.1424181053.git.stathis.voukelatos@linn.co.uk> <20150217145124.GM8994@leverpostej> <54E36AAC.7010308@linn.co.uk> <20150217163527.GR8994@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150215224006.GA5626@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, Andrew Morton <akpm@linux-foundation.org>, Linus
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150217163527.GR8994@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
+On 17/02/15 16:35, Mark Rutland wrote:
+>
+>>>> +- tstamp-hz : frequency of the timestamp counter
+>
+> Is this the frequency the clock is running at, or a frequency that it
+> should be programmed to in order to be used?
+>
+> The former can be queried from the common clock framework, and if you
+> intended the latter the wording shuold be a little more explicit about
+> that being the case.
+>
 
-On 02/15/2015 04:40 PM, Pavel Machek wrote:
-> On Wed 2015-01-21 13:27:00, Jason Gunthorpe wrote:
->> On Wed, Jan 21, 2015 at 06:33:12PM +0200, Pantelis Antoniou wrote:
->> My point is that the current firmware layer is overly cautious and
->> FPGAs are very big. My current project on small Xilinx device has a
->> 10MB programming file. The biggest Xilinx device today has a max
->> bitfile size around 122MB.
+It is the frequency of the timestamp values supplied to the sniffer
+module. It is used by the driver to convert to nanoseconds.
+I was trying to be somewhat generic here and not assume that it
+is necessarily the same as the 'tstamp' clock below, in which case we
+could indeed obtain it using the common clock framework.
+
+>> See: include/linux/clocksource.h
+>> The driver uses a cyclecounter and timecounter to convert raw timestamps
+>> to nanoseconds. 'tstamp-shift' refers to the 'shift' field of the
+>> cyclecounter structure, that can be used to improve the precision of
+>> the conversion
+>
+> Sure, but the very concept of a cyclecounter is a Linux implementation
+> detail. If we have the frequency of the timer we should be able to
+> dynamically generate this, so there's no need for this to be in the DT.
+>
+
+Most networking driver use hard-coded values for that, but in my case
+I did not want to assume a certain fixed clock frequency. I will remove
+it from the DT and generate it dynamically. There is a kernel function
+clocks_calc_mult_shift() to do it but unfortunately it is not exported,
+so I guess I will need to replicate the code.
+
+>>> As mentioned previously, I think the relation between this unit and the
+>>> MAC and/or PHY needs to be explicitly described in the DT.
 >>
->> So keeping that much memory pinned in the kernel when I can prove it
->> is uncessary for my system (either because there is no suspend/resume
->> possibility, or because I know the CPU can always access the
->> filesytem) is very undesirable.
-> 
-> Well, your current device aalso has 1GB RAM, no?
+>> Do you suggest a field along the lines of:
+>> mac = <&eth_controller_0>;
+>> The driver could check that it exists and is valid but does
+>> not need to make use of it.
+>
+> I would expect some level of the software stack to make use of it, or
+> you have no idea which ethernet interface is related to this monitoring
+> interface. Perhaps current systems only have one interface, but that
+> shouldn't be relied upon.
 
-Unnecessarily pinning 10% of your ram is a good solution?
+Yes, but the sniffer module is hard-wired to a certain Ethernet Mii
+interface. We can add an entry to tie it to an Ethernet controller, but
+apart of a sanity check I am not sure what else the S/W can do.
 
-> I'd say the general case is "store bitstream in RAM" we can add
-> optimalizations later.
+>
+> Thanks,
+> Mark.
+>
 
-We _have_ a firmware loading layer that doesn't store other kinds of
-firmware in pinned kernel memory. I guess that was retroactively a bad
-idea. As was the "freeing kernel memory" part at the end of boot.
-
-There honestly are small embedded devices. Still. When you have your
-DRAM on the SOC instead of as an external chip, a gigabyte is not in the
-cards.
-
-If you're saying "Linux should not care about this niche, let's open
-ourselves to a new disruptive technology attack with that as its initial
-protected base, because the average kernel developer age is about 44 now
-and we're not really recruiting anybody younger than that, so we'll all
-be dead before we have to care about being replaced"...
-
-Rob
-
-(At $DAYJOB we're building a chip that runs off of induction current to
-retrofit monitoring sensors onto things. It currently has 64 megs of ram
-but they're trying to trim that _down_ to free up chip space.)
+Thank you,
+Stathis
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
