@@ -1,96 +1,99 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/8] i2c: mux-pinctrl: Rework to honor disabled child
- nodes
-Date: Tue, 17 Feb 2015 13:46:31 -0700
-Message-ID: <54E3A8A7.8080703@wwwdotorg.org>
-References: <1424199129-22099-1-git-send-email-sebastian.hesselbarth@gmail.com> <1424199129-22099-2-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH 1/2] power: reset: Add support for NI Ettus Research USRP
+ E3x0 soft-poweroff.
+Date: Tue, 17 Feb 2015 12:49:15 -0800
+Message-ID: <CAAtXAHeD=145xiMYS3irwDATaY1wkWhYMnk6fj4mZYC4SE14GQ@mail.gmail.com>
+References: <1423790080-8264-1-git-send-email-moritz.fischer@ettus.com>
+	<1423790080-8264-2-git-send-email-moritz.fischer@ettus.com>
+	<1424032334.9418.109.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424199129-22099-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424032334.9418.109.camel@x220>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2015 11:52 AM, Sebastian Hesselbarth wrote:
-> I2C mux pinctrl driver currently determines the number of sub-busses by
-> counting available pinctrl-names. Unfortunately, this requires each
-> incarnation of the devicetree node with different available sub-busses
-> to be rewritten.
+Paul,
 
-Can you be more explicit about the problem here? Why does anything need 
-to be re-written if a child node is disabled; presumably there's no need 
-for the child bus numbers to be contiguous. In other words, with the 
-example in the existing DT binding doc:
+thanks for your feedback. Will incorporate the changes into the v2
+when I'll resend.
 
-         i2cmux {
-                 compatible = "i2c-mux-pinctrl";
-...
-                 pinctrl-names = "ddc", "pta", "idle";
-                 pinctrl-0 = <&state_i2cmux_ddc>;
-                 pinctrl-1 = <&state_i2cmux_pta>;
-                 pinctrl-2 = <&state_i2cmux_idle>;
 
-                 i2c@0 {
-                         reg = <0>;
-...
-                 i2c@1 {
-                         reg = <1>;
-...
-
-That would generate child busses 0 and 1. If I was to disable the i2c@0 
-node, then there would still be definitions for child busses 0 and 1 in 
-the DT, it's just that child bus 0 wouldn't actually exist at run-time. 
-I don't see what part of DT needs to be re-written to accomodate this?
-
-> This patch reworks i2c-mux-pinctrl driver to count the number of
-> available sub-nodes instead. The rework should be compatible to the old
-> way of probing for sub-busses and additionally allows to disable unused
-> sub-busses with standard DT property status = "disabled".
+On Sun, Feb 15, 2015 at 12:32 PM, Paul Bolle <pebolle@tiscali.nl> wrote:
+> One nit below.
 >
-> This also amends the corresponding devicetree binding documentation to
-> reflect the new functionality to disable unused sub-nodes. While at it,
-> also fix two references to binding documentation files that miss an "i2c-"
-> prefix.
-
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pinctrl.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pinctrl.txt
-
-> -For each named state defined in the pinctrl-names property, an I2C child bus
-> -will be created. I2C child bus numbers are assigned based on the index into
-> -the pinctrl-names property.
-> +For each child node that is not disabled by a status != "okay", an I2C
-> +child bus will be created. I2C child bus numbers are assigned based on the
-> +order of child nodes.
-
-I would have assumed that disabled sub-nodes was a global concept within 
-DT, and so wouldn't be mentioned in the binding. It would just be a bug 
-in the driver if it didn't ignore disabled sub-nodes.
-
-
-
-
+> On Thu, 2015-02-12 at 17:14 -0800, Moritz Fischer wrote:
+>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+>> ---
+>>  .../bindings/power/reset/e3x0-poweroff.txt         | 16 ++++
+>>  drivers/power/reset/Kconfig                        | 10 +++
+>>  drivers/power/reset/Makefile                       |  1 +
+>>  drivers/power/reset/e3x0-poweroff.c                | 94 ++++++++++++++++++++++
+>>  4 files changed, 121 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/reset/e3x0-poweroff.txt b/Documentation/devicetree/bindings/power/reset/e3x0-poweroff.txt
+>> new file mode 100644
+>> index 0000000..df19998
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/reset/e3x0-poweroff.txt
+>> @@ -0,0 +1,16 @@
+>> +National Instruments Ettus Research USRP E3x0 poweroff driver
+>> +
+>> +This module is part of the NI Ettus Research USRP E3x0 SDR.
+>> +
+>> +Required properties:
+>> +- compatible: should be one of the following
+>> +  - "ettus,e3x0-poweroff": For devices such as the NI Ettus Research USRP E3x0
+>> +- reg: The registers to write to in order to trigger the poweroff.
+>> +
+>> +Note: Addresses may vary depending on the FPGA configuration
+>> +
+>> +Example:
+>> +     poweroff0: poweroff@40300000 {
+>> +             compatible = "ettus,e3x0-poweroff";
+>> +             reg = <0x40300000 0x04>;
+>> +     };
+>> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+>> index 27f6646..e45029f 100644
+>> --- a/drivers/power/reset/Kconfig
+>> +++ b/drivers/power/reset/Kconfig
+>> @@ -48,6 +48,16 @@ config POWER_RESET_BRCMSTB
+>>         Say Y here if you have a Broadcom STB board and you wish
+>>         to have restart support.
+>>
+>> +config POWER_RESET_E3X0
+>> +     tristate "NI Ettus Research USRP E3x0 soft poweroff driver."
+>> +     default n
+>> +     help
+>> +       Say Y here to enable support for the NI Ettus Research
+>> +       USRP E3x0 soft poweroff.
+>> +
+>> +       To compile this driver as a module, chose M here: the
+>> +       module will be called e3x0-reset.
 >
-> -The only exception is that no bus will be created for a state named "idle". If
-> -such a state is defined, it must be the last entry in pinctrl-names. For
-> -example:
-> -
-> -	pinctrl-names = "ddc", "pta", "idle"  ->  ddc = bus 0, pta = bus 1
-> -	pinctrl-names = "ddc", "idle", "pta"  ->  Invalid ("idle" not last)
-> -	pinctrl-names = "idle", "ddc", "pta"  ->  Invalid ("idle" not last)
-> +There must be a corresponding pinctrl-names entry for each enabled child
-> +node at the position of the child node's "reg" property.
+>                                   e3x0-poweroff
+>
+>> +
+>>  config POWER_RESET_GPIO
+>>       bool "GPIO power-off driver"
+>>       depends on OF_GPIO
+>> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+>> index 11de15b..eef50e9a 100644
+>> --- a/drivers/power/reset/Makefile
+>> +++ b/drivers/power/reset/Makefile
+>> @@ -3,6 +3,7 @@ obj-$(CONFIG_POWER_RESET_AT91_POWEROFF) += at91-poweroff.o
+>>  obj-$(CONFIG_POWER_RESET_AT91_RESET) += at91-reset.o
+>>  obj-$(CONFIG_POWER_RESET_AXXIA) += axxia-reset.o
+>>  obj-$(CONFIG_POWER_RESET_BRCMSTB) += brcmstb-reboot.o
+>> +obj-$(CONFIG_POWER_RESET_E3X0) += e3x0-poweroff.o
+>>  obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+>>  obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
+>>  obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
+>
+>
+> Paul Bolle
+>
 
-The addition there seems fine, but the existing text re: the idle state 
-seems clearer in the original text.
->
->   Whenever an access is made to a device on a child bus, the relevant pinctrl
->   state will be programmed into hardware.
->
-> -If an idle state is defined, whenever an access is not being made to a device
-> -on a child bus, the idle pinctrl state will be programmed into hardware.
-> +Also, there can be an idle pinctrl state defined at the end of possible
-> +pinctrl states. If an idle state is defined, whenever an access is not being
-> +made to a device on a child bus, the idle pinctrl state will be programmed
-> +into hardware.
+Moritz
