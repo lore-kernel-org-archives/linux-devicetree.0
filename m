@@ -1,109 +1,53 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH v2 2/3] ARM: dts: omap3-pandora: add OMAP3530 600 MHz version
-Date: Tue, 17 Feb 2015 20:52:22 +0100
-Message-ID: <1424202743-26387-3-git-send-email-marek@goldelico.com>
-References: <1424202743-26387-1-git-send-email-marek@goldelico.com>
+From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Subject: Re: [PATCH 1/2] phy: usbphy: Add dt documentation for Broadcom Cygnus
+ USB PHY driver
+Date: Tue, 17 Feb 2015 12:00:49 -0800
+Message-ID: <54E39DF1.50409@broadcom.com>
+References: <1424200821-16368-1-git-send-email-arun.ramamurthy@broadcom.com> <1424200821-16368-2-git-send-email-arun.ramamurthy@broadcom.com> <8242260.cl4QTECoeX@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424202743-26387-1-git-send-email-marek@goldelico.com>
+In-Reply-To: <8242260.cl4QTECoeX@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hns@goldelico.com, marek@goldelico.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Thank you for the review Arnd.
+On 15-02-17 11:41 AM, Arnd Bergmann wrote:
+> On Tuesday 17 February 2015 11:20:20 Arun Ramamurthy wrote:
+>> +       /* This nodes declares  port 0
+>> +       and port 1 as host*/
+>> +
+>> +       ehci0: usb@0x18048000 {
+>> +               compatible = "generic-ehci";
+>> +               reg = <0x18048000 0x100>;
+>> +               interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+>> +               phys = <&usbphy0 0 1 &usbphy0 1>;
+>
+> The second reference in the example is missing the last cell,
+> as you have #phy-cells = <2>.
+>
+I am missing a 1 for the port number, will update in next patchset, 
+thank you
+>> +               phy-names = "usbp0","usbp1";
+>> +               status = "okay";
+>> +       };
+>
+> Further, the binding for "generic-ehci" requires the name to be "usb",
+> not "usbp0". You should probably update that binding if you can have
+> multiple references to mention that.
+>
+> Can you make both names "usb"? If not, we should document a common
+> naming scheme that the driver can use.
+>
+Arnd, I patched the ehci and ohci driver to accept multiple phys so they 
+require different names and cannot both be "usb". That patch was 
+accepted by Alen Stern but I did not update the bindings documentation.
+I will send out another patch for that. Could we go with the naming 
+scheme of "usb" + "p" + port number or do you have other suggestions?
 
-Added Pandora Rebirth model which is based on Pandora
-Classic with 512 MiB DDR-333 SDRAM memory.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/Makefile                 |  1 +
- arch/arm/boot/dts/omap3-pandora-600mhz.dts | 65 ++++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-pandora-600mhz.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 91bd5bd..eddbeee 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -343,6 +343,7 @@ dtb-$(CONFIG_ARCH_OMAP3) += am3517-craneboard.dtb \
- 	omap3-overo-storm-tobi.dtb \
- 	omap3-overo-summit.dtb \
- 	omap3-overo-tobi.dtb \
-+	omap3-pandora-600mhz.dtb \
- 	omap3-sbc-t3517.dtb \
- 	omap3-sbc-t3530.dtb \
- 	omap3-sbc-t3730.dtb \
-diff --git a/arch/arm/boot/dts/omap3-pandora-600mhz.dts b/arch/arm/boot/dts/omap3-pandora-600mhz.dts
-new file mode 100644
-index 0000000..fb803a7
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-pandora-600mhz.dts
-@@ -0,0 +1,65 @@
-+/*
-+ * Copyright (C) 2015
-+ *   Nikolaus Schaller <hns@goldelico.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * device tree for OpenPandora with OMAP3530
-+ */
-+
-+/dts-v1/;
-+
-+#include "omap34xx.dtsi"
-+#include "omap3-pandora-common.dtsi"
-+
-+/ {
-+	model = "Pandora Handheld Console";
-+
-+	compatible = "ti,omap3";
-+};
-+
-+&omap3_pmx_core2 {
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&hsusb2_2_pins
-+		&control_pins
-+	>;
-+
-+	hsusb2_2_pins: pinmux_hsusb2_2_pins {
-+		pinctrl-single,pins = <
-+			OMAP3430_CORE2_IOPAD(0x25f0, PIN_OUTPUT | MUX_MODE3)		/* etk_d10.hsusb2_clk */
-+			OMAP3430_CORE2_IOPAD(0x25f2, PIN_OUTPUT | MUX_MODE3)		/* etk_d11.hsusb2_stp */
-+			OMAP3430_CORE2_IOPAD(0x25f4, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d12.hsusb2_dir */
-+			OMAP3430_CORE2_IOPAD(0x25f6, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d13.hsusb2_nxt */
-+			OMAP3430_CORE2_IOPAD(0x25f8, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d14.hsusb2_data0 */
-+			OMAP3430_CORE2_IOPAD(0x25fa, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d15.hsusb2_data1 */
-+		>;
-+	};
-+
-+	mmc3_pins: pinmux_mmc3_pins {
-+		pinctrl-single,pins = <
-+			OMAP3430_CORE2_IOPAD(0x25d8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_clk.sdmmc3_clk */
-+			OMAP3430_CORE2_IOPAD(0x25da, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_ctl.sdmmc3_cmd */
-+			OMAP3430_CORE2_IOPAD(0x25e2, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d3.sdmmc3_dat3 */
-+			OMAP3430_CORE2_IOPAD(0x25e4, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d4.sdmmc3_dat0 */
-+			OMAP3430_CORE2_IOPAD(0x25e6, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d5.sdmmc3_dat1 */
-+			OMAP3430_CORE2_IOPAD(0x25e8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d6.sdmmc3_dat2 */
-+		>;
-+	};
-+
-+	control_pins: pinmux_control_pins {
-+		pinctrl-single,pins = <
-+			OMAP3430_CORE2_IOPAD(0x25dc, PIN_INPUT_PULLDOWN | MUX_MODE4)	/* etk_d0.gpio_14 =  HP_SHUTDOWN */
-+			OMAP3430_CORE2_IOPAD(0x25de, PIN_OUTPUT | MUX_MODE4)		/* etk_d1.gpio_15 =  BT_SHUTDOWN */
-+			OMAP3430_CORE2_IOPAD(0x25e0, PIN_OUTPUT | MUX_MODE4)		/* etk_d2.gpio_16 =  RESET_USB_HOST */
-+			OMAP3430_CORE2_IOPAD(0x25ea, PIN_INPUT | MUX_MODE4)		/* etk_d7.gpio_21 =  WIFI IRQ */
-+			OMAP3430_CORE2_IOPAD(0x25ec, PIN_OUTPUT | MUX_MODE4)		/* etk_d8.gpio_22 =  MSECURE */
-+			OMAP3430_CORE2_IOPAD(0x25ee, PIN_OUTPUT | MUX_MODE4)		/* etk_d9.gpio_23 =  WIFI_POWER */
-+		>;
-+	};
-+};
--- 
-1.9.1
+> 	Arnd
+>
