@@ -1,57 +1,52 @@
-From: Kenneth Westfield <kwestfie@codeaurora.org>
-Subject: [Patch V3 1/2] ASoC: max98357a: Add missing header files
-Date: Tue, 17 Feb 2015 00:53:11 -0800
-Message-ID: <1424163192-665-1-git-send-email-kwestfie@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
-Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Kenneth Westfield <kwestfie@codeaurora.org>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] of/overlay: Directly include idr.h
+Date: Tue, 17 Feb 2015 11:15:28 +0200
+Message-ID: <56CDBF0A-4E66-406D-9086-7C0128FEC6C7@konsulko.com>
+References: <1424140618-22987-1-git-send-email-broonie@kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424140618-22987-1-git-send-email-broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kenneth Westfield <kwestfie@codeaurora.org>
+Hi Mark,
 
-Add missing header files to avoid implicit
-declarations and indirect inclusions.
+> On Feb 17, 2015, at 04:36 , Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+> The overlay code uses IDRs but does not explicitly include the header
+> providing the interface, instead relying on an implicit inclusion. Make
+> the dependency implict to avoid potential future build issues if the
+> implicit inclusion goes away.
+> 
+> Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> drivers/of/overlay.c | 1 +
+> 1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 352b4f28f82c..406664801cb5 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -19,6 +19,7 @@
+> #include <linux/string.h>
+> #include <linux/slab.h>
+> #include <linux/err.h>
+> +#include <linux/idr.h>
+> 
+> #include "of_private.h"
+> 
+> -- 
+> 2.1.4
+> 
 
-Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
----
-for fix/max98357a branch
+Nice catch.
 
-changes from v2:
- - split patch into logical changes
- - rebased to new branch
-
-changes from v1:
- - matched subject line to subsystem style
-
- sound/soc/codecs/max98357a.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/codecs/max98357a.c b/sound/soc/codecs/max98357a.c
-index f493fb6fd4ea764d617b3d7dd5f3b1ebe1e0fe20..e9e6efbc21dd527299fb459ec01903fa8c24dae2 100644
---- a/sound/soc/codecs/max98357a.c
-+++ b/sound/soc/codecs/max98357a.c
-@@ -12,10 +12,19 @@
-  * max98357a.c -- MAX98357A ALSA SoC Codec driver
-  */
- 
--#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <sound/pcm.h>
- #include <sound/soc.h>
-+#include <sound/soc-dai.h>
-+#include <sound/soc-dapm.h>
- 
- #define DRV_NAME "max98357a"
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Acked-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
