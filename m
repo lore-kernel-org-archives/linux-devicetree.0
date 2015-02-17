@@ -1,57 +1,146 @@
-From: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v2 1/4] usb: renesas_usbhs: fix spinlock suspected in a
- gadget complete function
-Date: Tue, 17 Feb 2015 03:34:53 +0000
-Message-ID: <HKNPR06MB3227796F47FE559CEAD573DD82F0@HKNPR06MB322.apcprd06.prod.outlook.com>
-References: <1424051579-5060-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1424051579-5060-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdXOkzznW_4KJwqiO5UgYXYN2tZ+2OEYwA+eQJF2S-Z8jQ@mail.gmail.com>
+From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] of: add helper for getting endpoint node with specific
+ identifiers
+Date: Tue, 17 Feb 2015 13:19:26 +0900
+Message-ID: <20150217131926.13904df5@hwh-ubuntu>
+References: <1424083050-7804-1-git-send-email-human.hwang@samsung.com>
+ <CAL_JsqKYYVzPgcpCQvGKcCMD2jY8heMcUp-72TWys5o3aaa0bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXOkzznW_4KJwqiO5UgYXYN2tZ+2OEYwA+eQJF2S-Z8jQ@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, USB list <linux-usb@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAL_JsqKYYVzPgcpCQvGKcCMD2jY8heMcUp-72TWys5o3aaa0bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXBseSBhZ2FpbiENCg0KPiBIaSBT
-aGltb2RhLXNhbiwNCj4gDQo+IE9uIE1vbiwgRmViIDE2LCAyMDE1IGF0IDI6NTIgQU0sIFlvc2hp
-aGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6
-DQo+ID4gQWNjb3JkaW5nIHRvIHRoZSBnYWRnZXQuaCwgYSAiY29tcGxldGUiIGZ1bmN0aW9uIHdp
-bGwgYWx3YXlzIGJlIGNhbGxlZA0KPiA+IHdpdGggaW50ZXJydXB0cyBkaXNhYmxlZC4gSG93ZXZl
-ciwgc29tZXRpbWVzIHVzYmhzZ19xdWV1ZV9wb3AoKSBmdW5jdGlvbg0KPiA+IGlzIGNhbGxlZCB3
-aXRoIGludGVycnVwdHMgZW5hYmxlZC4gU28sIHRoaXMgZnVuY3Rpb24gc2hvdWxkIGNhbGxzDQo+
-ID4gbG9jYWxfaXJxX3NhdmUoKSBiZWZvcmUgdGhpcyBjYWxscyB0aGUgdXNiX2dhZGdldF9naXZl
-YmFja19yZXF1ZXN0KCkuDQo+ID4gT3RoZXJ3aXNlLCB0aGVyZSBpcyBwb3NzaWJsZSB0byBjYXVz
-ZSBhIHNwaW5sb2NrIHN1c3BlY3RlZCBpbiBhIGdhZGdldA0KPiA+IGNvbXBsZXRlIGZ1bmN0aW9u
-Lg0KPiANCj4gSSBzdGlsbCBmZWVsIHVuZWFzeSBhYm91dCBhZGRpbmcgdGhlIGNhbGwgdG8gbG9j
-YWxfaXJxX3NhdmUoKSwgYXMgdGhlIG5lZWQgZm9yDQo+IHRoaXMgaXMgdXN1YWxseSBhbiBpbmRp
-Y2F0b3Igb2YgYW5vdGhlciBsb2NraW5nIHByb2JsZW0uDQoNCkkgYWxzbyB0aGluayB0aGF0IEkg
-d291bGQgbGlrZSB0byBhdm9pZCB1c2luZyBsb2NhbF9pcnFfc2F2ZSgpLg0KQnV0LCBJIGhhdmUg
-bm8gaWRlYSB0byByZXNvbHZlIHRoaXMgaXNzdWUgZm9yIG5vdy4NCg0KPiBVbmZvcnR1bmF0ZWx5
-IEkga25vdyBuZXh0IHRvIG5vdGhpbmcgYWJvdXQgdGhlIFVTQiBnYWRnZXQgc3Vic3lzdGVtLCBz
-byBzb21lDQo+IGhlbHAgZnJvbSB0aGUgVVNCIGdhZGdldCBleHBlcnRzIHdvdWxkIGJlIGFwcHJl
-Y2lhdGVkLg0KPiANCj4gSSBoYWQgYSBsb29rIGF0IG90aGVyIGRyaXZlcnMsIGFuZCBpdCBzZWVt
-cyBtb3N0IGRyaXZlcnMgYWN0dWFsbHkgcmVsZWFzZQ0KPiBhbmQgcmVhY3F1aXJlIGEgc3Bpbmxv
-Y2sgYXJvdW5kIHRoZSBjYWxsIHRvIHVzYl9nYWRnZXRfZ2l2ZWJhY2tfcmVxdWVzdCgpLA0KPiBp
-LmUuIHRoZXkgZG86DQo+IA0KPiAgICAgc3Bpbl91bmxvY2soLi4uKTsNCj4gICAgIHVzYl9nYWRn
-ZXRfZ2l2ZWJhY2tfcmVxdWVzdCguLi4pOw0KPiAgICAgc3Bpbl9sb2NrKCk7DQo+IA0KPiBUaGlz
-IG1lYW5zIHRoZXkgaGFkIGFscmVhZHkgYWNxdWlyZWQgdGhlIHNwaW5sb2NrIChhbmQgZGlzYWJs
-ZWQgaW50ZXJydXB0cyEpDQo+IGJlZm9yZSwgd2hpY2ggbG9va3MgbXVjaCBoZWFsdGhpZXIgdG8g
-bWUuDQo+IA0KPiBUaGVyZSdzIG9ubHkgb25lIGRyaXZlciB0aGF0IHVzZXMgbG9jYWxfaXJxX3Nh
-dmUoKSAocHhhMjd4X3VkYykuDQoNCkkgaGFkIGEgbG9vayBhdCB0aGUgbXVzYiBkcml2ZXIuIEl0
-IHVzZXMgYSBkbWFlbmdpbmUgZHJpdmVyLg0KQW5kLCBpbiB0aGUgY2FsbGJhY2sgcm91dGluZSBv
-ZiB0aGUgbXVzYiBkcml2ZXIsIGl0IGNhbGxzIHNwaW5fbG9ja19pcnFzYXZlKCkgYXQgZmlyc3Qu
-DQoNCmNwcGk0MV9kbWFfY2FsbGJhY2sNCi0tPiBzcGluX2xvY2tfaXJxc2F2ZSgmbXVzYi0+bG9j
-aywgZmxhZ3MpOw0KLS0+IGNwcGk0MV90cmFuc19kb25lDQogLS0+IG11c2JfZG1hX2NvbXBsZXRp
-b24NCiAgLS0+IG11c2JfZ190eCBvciBtdXNiX2dfcngNCiAgIC0tPiBtdXNiX2dfZ2l2ZWJhY2sN
-CiAgICAtLT4gc3Bpbl91bmxvY2soJm11c2ItPmxvY2spOyAgICMgVGhpcyBtZWFucyB1bmxvY2tl
-ZCB0aGUgc3BpbiwgYnV0IGRpc2FibGVkIGludGVycnVwdHMuDQogICAgLS0+IHVzYl9nYWRnZXRf
-Z2l2ZWJhY2tfcmVxdWVzdA0KICAgIC0tPiBzcGluX2xvY2soJm11c2ItPmxvY2spOw0KIDwgc25p
-cCA+DQotLT4gc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmbXVzYi0+bG9jaywgZmxhZ3MpOw0KDQpT
-bywgYWJvdXQgZGlzYWJsZWQgaW50ZXJydXB0cyBiZWZvcmUgdXNiX2dhZGdldF9naXZlYmFja19y
-ZXF1ZXN0KCksDQppdCBpcyBzaW1pbGFyIHdpdGggdGhpcyBwYXRjaC4NCg0KQmVzdCByZWdhcmRz
-LA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
+Dear Rob Herring,
+
+On Mon, 16 Feb 2015 11:47:24 -0600
+Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> On Mon, Feb 16, 2015 at 4:37 AM, Hyungwon Hwang
+> <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> > When there are multiple ports or multiple endpoints in a port, they
+> > have to be distinguished by the value of reg property. It is
+> > common. The drivers can get the specific endpoint in the specific
+> > port via this function. Now the drivers have to implement this code
+> > in themselves or have to force the order of dt nodes to get the
+> > right node.
+> >
+> > Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  drivers/of/base.c        | 34 ++++++++++++++++++++++++++++++++++
+> >  include/linux/of_graph.h |  2 ++
+> >  2 files changed, 36 insertions(+)
+> >
+> > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > index 36536b6..95ffe1c 100644
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -2155,6 +2155,40 @@ struct device_node
+> > *of_graph_get_next_endpoint(const struct device_node *parent,
+> > EXPORT_SYMBOL(of_graph_get_next_endpoint);
+> >
+> >  /**
+> > + * of_graph_get_endpoint_by_regs() - get endpoint node of specific
+> > identifiers
+> > + * @parent: pointer to the parent device node
+> > + * @port_reg: identifier (value of reg property) of the parent
+> > port node
+> > + * @reg: identifier (value of reg property) of the endpoint node
+> > + *
+> > + * Return: An 'endpoint' node pointer which is identified by reg
+> > and at the same
+> > + * is the child of a port node identified by port_reg. reg and
+> > port_reg are
+> > + * ignored when they are -1.
+> > + */
+> > +struct device_node *of_graph_get_endpoint_by_regs(
+> > +       const struct device_node *parent, int port_reg, int reg)
+> > +{
+> > +       struct of_endpoint endpoint;
+> > +       struct device_node *node, *prev_node = NULL;
+> > +
+> > +       while (1) {
+> > +               node = of_graph_get_next_endpoint(parent,
+> > prev_node);
+> > +               of_node_put(prev_node);
+> > +               if (!node)
+> > +                       break;
+> > +
+> > +               of_graph_parse_endpoint(node, &endpoint);
+> 
+> Seems like this all could be in a "for_each_of_graph_child_endpoint"
+> iterator. I've not looked, but I'd guess there are other similar
+> loops?
+> 
+
+There is no other iterator which can be used here. So other codes which
+call of_graph_get_next_endpoint() are also using loop. I thought
+about adding that kinds of iterator newly. IMHO, I feel it is a little
+excessive. So I prefer to using the loop.
+
+> > +               if (((port_reg == -1) ||
+> 
+> What if of_graph_parse_endpoint failed?
+> 
+
+It never fails and never return except 0. So there is no need to check
+the return value of it.
+
+> > +                       (endpoint.port == (unsigned int) port_reg))
+> > &&
+> > +                       ((reg == -1) || (endpoint.id == (unsigned
+> > int) reg)))
+> 
+> Why the casts?
+
+I just clarify that endpoint.{port/id} is unsigned int. But now it
+seems unnecessary, and make harder to read the code. I will remove it.
+
+> 
+> > +                       return node;
+> > +
+> > +               prev_node = node;
+> > +       }
+> > +
+> > +       return NULL;
+> > +}
+> > +
+> > +/**
+> >   * of_graph_get_remote_port_parent() - get remote port's parent
+> > node
+> >   * @node: pointer to a local endpoint device_node
+> >   *
+> > diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+> > index befef42..c119728 100644
+> > --- a/include/linux/of_graph.h
+> > +++ b/include/linux/of_graph.h
+> > @@ -31,6 +31,8 @@ int of_graph_parse_endpoint(const struct
+> > device_node *node, struct of_endpoint *endpoint);
+> >  struct device_node *of_graph_get_next_endpoint(const struct
+> > device_node *parent, struct device_node *previous);
+> > +struct device_node *of_graph_get_endpoint_by_regs(
+> > +               const struct device_node *parent, int port_reg, int
+> > reg);
+> 
+> Empty version is needed.
+
+Sorry. I forgot.
+
+> 
+> >  struct device_node *of_graph_get_remote_port_parent(
+> >                                         const struct device_node
+> > *node); struct device_node *of_graph_get_remote_port(const struct
+> > device_node *node); --
+> > 1.9.1
+> >
+
+Best regards,
+Hyungwon Hwang
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
