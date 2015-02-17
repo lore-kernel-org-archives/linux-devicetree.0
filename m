@@ -1,146 +1,60 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
-Date: Tue, 17 Feb 2015 12:38:04 -0500 (EST)
-Message-ID: <alpine.LFD.2.11.1502171221300.22104@knanqh.ubzr>
-References: <20150216130549.GF14545@x1> <1170550770.470129293.1424093248596.JavaMail.root@zimbra1-e1.priv.proxad.net> <20150216162712.GR14545@x1> <87fva5a4i2.fsf@free.fr> <20150217074310.GT14545@x1>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 0/7] Add initial support for DA9150 Charger &
+ Fuel-Gauge IC
+Date: Tue, 17 Feb 2015 19:04:01 +0100
+Message-ID: <20150217180401.GA13777@earth.universe>
+References: <cover.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
+ <20150121165250.GG13715@earth.universe>
+ <C1079F30-5D1D-45AA-A129-FE1E68EA5DC5@jic23.retrosnub.co.uk>
+ <20150122075811.GO22024@x1>
+ <2E89032DDAA8B9408CB92943514A0337AB52D71F@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-934122259-1424194686=:22104"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150217074310.GT14545@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Robert Jarzmik <robert.jarzmik@free.fr>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB52D71F-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-934122259-1424194686=:22104
-Content-Type: TEXT/PLAIN; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 17 Feb 2015, Lee Jones wrote:
+Hi,
 
-> Arnd, Greg,
-> 
->   Perhaps you have some ideas WRT programmables (PLDs/CPLDs/FPGAs)?
+On Mon, Feb 16, 2015 at 09:45:59PM +0000, Opensource [Adam Thomson] wrote:
+> Just a quick one to see what the status is on this patch set? Just
+> interested as to when it'll be pulled in.
 
-FWIW...
+I plan to pull it into for-next once -rc1 has been tagged (probably
+about a week). Feel free to send a new version with the style fixes.
 
-The Lubbock is an ancient development board (circa 2003) using a CPLD to 
-multiplex a couple things on the board.  I really doubt anyone would 
-reprogram this CPLD at this point. So I'd treat it just like another 
-interrupt controller + random peripherals that will never change.  And 
-yes, maybe a more appropriate name is needed.
+-- Sebastian
 
-And I happen to have one such beast on my desk wasting significant 
-realestate and picking up dust.  I don't think I booted it even once in 
-the last 3 years.  I'm seriously considering a trip to the recycling 
-facility to dispose of it unless someone wants it and is ready to pay 
-for the shipping.
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> On Mon, 16 Feb 2015, Robert Jarzmik wrote:
-> > Lee Jones wrote:
-> > > What's all this?  Please configure your mail client correctly.
-> > >
-> > > For advice, see:
-> > >
-> > >   Documentation/email-clients.txt
-> > While at day work, I have only access to web mail ...
-> 
-> Probably best to hold off your reply until you get home then.  It's
-> not just a formatting issue, you also exposed many raw email addresses
-> to the internet, which are easily harvested up by web crawlers.
-> 
-> See this:
->   https://lkml.org/lkml/2015/2/16/247
-> 
-> > >>  2) after v2, we _both_ agreed that the accurate name is "cplds"
-> > >>     which exactly what is in this patch
-> > >>     (see device registering with lubbock_cplds).
-> > >
-> > > There is no mention of this decision in the changelogs.  If it's not
-> > > in the change logs, it didn't happen. ;)
-> > Ah right.
-> > 
-> > > I'm still concerned with the fact that the driver file is named using
-> > > and is populated by lots of instances of a "board" name.  I'm sure you
-> > > would share my thoughts is someone submitted a driver called
-> > > beaglebone.c or raspberrypi.c to MFD.
-> > I understand your concern. Arnd, a thought about it ? The only viable
-> > alternative would be to move it to arch/arm/plat-pxa AFAIS.
-> 
-> I don't think this is correct either.  CPLD handling would probably be
-> slightly less out of place in drivers/misc, but perhaps a new
-> subsystem for PLDs/CPLDs/FPGAs would be more appropriate
-> drivers/programmables or similar maybe.
-> 
-> > >> > Besides, this is MFD, where we support single pieces of silicon which
-> > >> > happen to support multiple devices.  I definitely don't want to support
-> > >> > boards here.
-> > >> > You might want to re-think the naming and your (sales) pitch.
-> > >> I might need help. As for the (sales), no comment.
-> > >
-> > > By pitch, I mean to convince me that this belongs in MFD.
-> > I've been trying.
-> 
-> I'm pretty convinced that it doesn't belong in MFD now, but it doesn't
-> mean I'm going to leave you on the curb.  I'd like to help you get it
-> into a better home.
-> 
-> [...]
-> 
-> > > Understanding was lost when I learned that the whole file was centred
-> > > around the premise of board support.  I understand now that this is a
-> > > driver for a CPLD, which I'm not sure is even MFD.  Also, if it is
-> > > really a CPLD driver, shouldn't be named after the manufacturer/model
-> > > number of the chip, rather than the PCB which it's connected to?
-> > >
-> > > I'm also concerned that this driver has no functional CPLD code
-> > > contained.  All you're doing is defining an IRQ domain.  Why then
-> > > isn't this really an drivers/irqchip (Suggested-by: Josh Cartwright)
-> > > driver?
-> > Is not only a irqchip because, as explained at the bottom of the commit message,
-> > quoting myself :
-> >   This patch moves all that handling to a mfd driver. It's only purpose
-> >   for the time being is the interrupt handling, but in the future it
-> >   should encompass all the motherboard CPLDs handling :
-> >    - leds
-> >    - switches
-> >    - hexleds
-> 
-> I had a conversation about this on IRC yesterday and some good
-> points/questions were posed.  This is a difficult area, because you
-> can program these things to do whatever you like.  Depending on the
-> 'intention' (and it is only an intention -- someone else can come
-> along and reprogram these devices on a whim), the CPLD code could live
-> anywhere.  If you wanted to put watchdog functionality in there, then
-> there is an argument for it to live in drivers/watchdog, etc etc.  So
-> just because the plan is to support a few (i.e. more than one) simple
-> devices, it doesn't necessarily mean that the handling should be done
-> in MFD.
-> 
-> Yesterday I was asked "Are you wanting to restrict drivers in
-> drivers/mfd to those that make use of MFD_CORE functionality?".  My
-> answer to that was "No, however; I only want devices which
-> _intrinsically_ operate in multiple subsystems", which these
-> programmables no not do.
-> 
-> FYI, you're not on your own here.  There is at least one of these
-> devices in the kernel already and upon a short inspection there
-> appears to be a number of Out-of-Tree (OoT) drivers out there which
-> will require a home in Mainline sooner or later.
-> 
-> -- 
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
-> 
---8323328-934122259-1424194686=:22104--
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJU44KMAAoJENju1/PIO/qajXQP/0R0jooORnXlpWWIpKouiJwj
+PGUrhmfNWdZcsa4tAJQ+LgqyXYuHGW4U8DjyWUu+6HPSIfectV1R2/ppuGeKiiwn
++rc98sMcDy9vZuUyxAFi80WR/VZ6LQY8ibzIGvEGYNwG2OkQqv0CBqzjjlaDR5TA
+eNO/YLKl8DwzRvIB4KJaCOzNuLkb/jvNjeAETXLfVYkg4ZkbIzRPPCv/IfjFx/1S
+B/4l9K+TdUg7mMoGY9GCF6OD8Nh2/HQH1Qprod2xqG1IVSxDxHHgD9szxuNzgCgq
+sdYk5VF5i4BJwZ3n84NOVHmWAgKvNhu6lk7Lh72Pdu8YIJ1vosCdPKNQlcIbewUQ
+hmhOhiR2H6P7bO3PJpUM6gOn+1W6GEeIUgsS79rpji7ZEjbKmOgPVZ+85IWdmkxR
+dOgJSfHEBrQXMsEjrPGhB6fCtl9D473XWhk42dYMvCbf/AHFgRukvqbN4w4muCMH
+0fRbbi1oDejUxtYpMQv3AhV7XtzYP9eAK/lfsUysWNAWzguVRgdZnZBrZiNrPJ43
+C660dIgTaiqCMb+MlsnHWVpHajuPL7xVYKjYtXj2LnS8P3aNs838xBkeDLsNzAoK
+Mg6dY2kKjXhU4a5rPxsSI3mkffmGsjkmOvY0/Zg9tOyvR6sz+4QU8CI911y2nUSd
+JriD9lX0UKqgggMTWl3J
+=WX/X
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
