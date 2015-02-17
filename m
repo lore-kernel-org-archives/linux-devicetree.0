@@ -1,131 +1,83 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/3] Ethernet packet sniffer: Device tree binding and
- vendor prefix
-Date: Tue, 17 Feb 2015 14:51:24 +0000
-Message-ID: <20150217145124.GM8994@leverpostej>
-References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
- <0a86907642a97e5bd880f69299664232fcffaf9d.1424181053.git.stathis.voukelatos@linn.co.uk>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 2/2] drivers/core/of: Add symlink to device-tree from
+ devices with an OF node
+Date: Tue, 17 Feb 2015 09:00:47 -0600
+Message-ID: <CAL_JsqKWJmt9e5hts1F6Yv_FqodJ6pkmqmxBqBp=Y33w+dPj9w@mail.gmail.com>
+References: <1424059156.21410.38.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0a86907642a97e5bd880f69299664232fcffaf9d.1424181053.git.stathis.voukelatos@linn.co.uk>
+In-Reply-To: <1424059156.21410.38.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 17, 2015 at 02:03:31PM +0000, Stathis Voukelatos wrote:
-> Signed-off-by: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
++GregKH
+
+On Sun, Feb 15, 2015 at 9:59 PM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> So I've been annoyed lately with having a bunch of devices such as i2c
+> eeproms (for use by VPDs, server world !) and other bits and pieces that
+> I want to be able to identify from userspace, and possibly provide
+> additional data about from FW.
+>
+> Basically, it boils down to correlating the sysfs device with the OF
+> tree device node, so that user space can use device-tree info such as
+> additional "location" or "label" (or whatever else we can come up with)
+> properties to identify a given device, or get some attributes of use
+> about it, etc...
+>
+> Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
+> using "devspec" properties. For example, PCI creates them if it can
+> correlate the probed device with a DT node. Some powerpc specific busses
+> do that too.
+>
+> However, i2c doesn't and it would be nice to have something more generic
+> since technically any device can have a corresponding device tree node
+> these days.
+>
+> This patch achieves this by adding an "of_node" symlink to devices that
+> have a non-NULL dev->of_node pointer.
+
+Doesn't this need sysfs documentation?
+
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+
+I don't mind applying, but this is Greg's code.
+
+Rob
+
 > ---
->  .../bindings/net/linn-ether-packet-sniffer.txt     | 42 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  2 files changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt b/Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
-> new file mode 100644
-> index 0000000..74bac5e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
-> @@ -0,0 +1,42 @@
-> +* Linn Products Ethernet Packet Sniffer
-> +The module allows Ethernet packets to be parsed, matched against
-> +a user-defined pattern and timestamped. It sits between a 100M
-> +Ethernet MAC and PHY and is completely passive with respect to
-> +Ethernet frames.
-> +Matched packet bytes and timestamp values are returned through a
-> +FIFO. Timestamps are provided to the module through an externally
-> +generated Gray-encoded counter.
-
-Does this counter unit need to be enabled (or have any input clocks
-enabled)?
-
+>  drivers/base/core.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 97e2baf..61ef574 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -469,6 +469,7 @@ static int device_add_attrs(struct device *dev)
+>  {
+>         struct class *class = dev->class;
+>         const struct device_type *type = dev->type;
+> +       struct device_node *of_node;
+>         int error;
+>
+>         if (class) {
+> @@ -493,6 +494,13 @@ static int device_add_attrs(struct device *dev)
+>                         goto err_remove_dev_groups;
+>         }
+>
+> +       of_node = dev_of_node(dev);
+> +       if (of_node) {
+> +               error = sysfs_create_link(&dev->kobj, &of_node->kobj, "of_node");
+> +               if (error)
+> +                       dev_warn(dev, "Error %d creating of_node link\n", error);
+> +       }
 > +
-> +Required properties:
-> +- compatible : must be "linn,eth-sniffer"
-
-Is there not a more precise name for this IP block?
-
-> +- reg : physical addresses and sizes of registers. Must contain 3 entries:
-> +          - registers memory space
-> +          - TX command string memory
-> +          - RX command string memory
-> +- reg-names : must contain the following 3 entries:
-> +                  "regs", "tx-ram", "rx-ram"
-
-It would be nicer to format this as:
-
-- reg: A list of physical address and size pairs corresponding to each
-       entry in reg-names
-
-- reg-names: must contain:
-  * "regs" for the control registers
-  * "tx-ram" for the TX command string memory
-  * "rx-ram" for the RX command string memory
-
-Which avoids redundancy.
-
-The phrase "command string" sounds a bit odd. What are these used for
-exactly?
-
-> +- interrupts : sniffer interrupt specifier
-> +- clocks : specify the system clock for the peripheral and
-> +	   the enable clock for the timestamp counter
-> +- clock-names : must contain the "sys" and "tstamp" entries
-
-Similarly here clocks should just be defined in terms of clock-names.
-
-> +- fifo-block-words : number of words in one data FIFO entry
-
-I didn't see a data FIFO described. Is that dynamically allocated and
-handed to the sniffer, or does that correspond to one of the memory
-regions above?
-
-> +- tstamp-hz : frequency of the timestamp counter
-> +- tstamp-shift : shift value for the timestamp cyclecounter struct
-
-What exactly is this used for?
-
-Are there any docs?
-
-> +- tstamp-bits : width in bits of the timestamp counter
-> +
-> +Example:
-> +
-> +sniffer@1814a000 {
-> +	compatible = "linn,eth-sniffer";
-> +	reg = <0x1814a000 0x100>, <0x1814a400 0x400>,
-> +	      <0x1814a800 0x400>;
-> +	reg-names = "regs", "tx-ram", "rx-ram";
-> +	interrupts = <GIC_SHARED 58 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&clk_core CLK_AUDIO>,
-> +		 <&cr_periph SYS_CLK_EVENT_TIMER>;
-> +	clock-names = "sys", "tstamp";
-> +	fifo-block-words = <4>;
-> +	tstamp-hz = <52000000>;
-> +	tstamp-shift = <27>;
-> +	tstamp-bits = <30>;
-
-This property wasn't documented.
-
-As mentioned previously, I think the relation between this unit and the
-MAC and/or PHY needs to be explicitly described in the DT.
-
-> +};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index d443279..891c224 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -90,6 +90,7 @@ lacie	LaCie
->  lantiq	Lantiq Semiconductor
->  lenovo	Lenovo Group Ltd.
->  lg	LG Corporation
-> +linn    Linn Products Ltd.
-
-This addition looks fine to me. For some reason it seems to be padded
-with spaces instead of tabs though; is my mail server corrupting things
-or is that the case in the original patch?
-
-Thanks,
-Mark.
+>         return 0;
+>
+>   err_remove_dev_groups:
+>
+>
+>
