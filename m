@@ -1,146 +1,90 @@
-From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] of: add helper for getting endpoint node with specific
- identifiers
-Date: Tue, 17 Feb 2015 13:19:26 +0900
-Message-ID: <20150217131926.13904df5@hwh-ubuntu>
-References: <1424083050-7804-1-git-send-email-human.hwang@samsung.com>
- <CAL_JsqKYYVzPgcpCQvGKcCMD2jY8heMcUp-72TWys5o3aaa0bg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAL_JsqKYYVzPgcpCQvGKcCMD2jY8heMcUp-72TWys5o3aaa0bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Sneeker Yeh <sneeker.yeh@gmail.com>
+Subject: [PATCH v4 0/5] Add support for Fujitsu USB host controller
+Date: Tue, 17 Feb 2015 13:41:32 +0800
+Message-ID: <1424151697-2084-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob Herring,
+These patches add support for XHCI compliant Host controller found
+on Fujitsu Socs, and are based on http://lwn.net/Articles/629162/
+The first patch is to add Fujitsu glue layer of Synopsis DesignWare USB3 driver
+and last four patch is about quirk implementation of errata in Synopsis
+DesignWare USB3 IP.
 
-On Mon, 16 Feb 2015 11:47:24 -0600
-Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Patch 1 introduces a quirk with device disconnection management necessary
+Synopsys Designware USB3 IP with versions < 3.00a and hardware configuration
+DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1. It solves a problem where without the
+quirk, that host controller will die after a usb device is disconnected from
+port of root hub.
 
-> On Mon, Feb 16, 2015 at 4:37 AM, Hyungwon Hwang
-> <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> > When there are multiple ports or multiple endpoints in a port, they
-> > have to be distinguished by the value of reg property. It is
-> > common. The drivers can get the specific endpoint in the specific
-> > port via this function. Now the drivers have to implement this code
-> > in themselves or have to force the order of dt nodes to get the
-> > right node.
-> >
-> > Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  drivers/of/base.c        | 34 ++++++++++++++++++++++++++++++++++
-> >  include/linux/of_graph.h |  2 ++
-> >  2 files changed, 36 insertions(+)
-> >
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index 36536b6..95ffe1c 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -2155,6 +2155,40 @@ struct device_node
-> > *of_graph_get_next_endpoint(const struct device_node *parent,
-> > EXPORT_SYMBOL(of_graph_get_next_endpoint);
-> >
-> >  /**
-> > + * of_graph_get_endpoint_by_regs() - get endpoint node of specific
-> > identifiers
-> > + * @parent: pointer to the parent device node
-> > + * @port_reg: identifier (value of reg property) of the parent
-> > port node
-> > + * @reg: identifier (value of reg property) of the endpoint node
-> > + *
-> > + * Return: An 'endpoint' node pointer which is identified by reg
-> > and at the same
-> > + * is the child of a port node identified by port_reg. reg and
-> > port_reg are
-> > + * ignored when they are -1.
-> > + */
-> > +struct device_node *of_graph_get_endpoint_by_regs(
-> > +       const struct device_node *parent, int port_reg, int reg)
-> > +{
-> > +       struct of_endpoint endpoint;
-> > +       struct device_node *node, *prev_node = NULL;
-> > +
-> > +       while (1) {
-> > +               node = of_graph_get_next_endpoint(parent,
-> > prev_node);
-> > +               of_node_put(prev_node);
-> > +               if (!node)
-> > +                       break;
-> > +
-> > +               of_graph_parse_endpoint(node, &endpoint);
-> 
-> Seems like this all could be in a "for_each_of_graph_child_endpoint"
-> iterator. I've not looked, but I'd guess there are other similar
-> loops?
-> 
+Patch 2 is to set Synopsis quirk in xhci platform driver based on xhci platform
+data.
 
-There is no other iterator which can be used here. So other codes which
-call of_graph_get_next_endpoint() are also using loop. I thought
-about adding that kinds of iterator newly. IMHO, I feel it is a little
-excessive. So I prefer to using the loop.
+Patch 3 is to add a revison number 2.90a and 3.00a of Synopsis DesignWare USB3
+IP core driver.
 
-> > +               if (((port_reg == -1) ||
-> 
-> What if of_graph_parse_endpoint failed?
-> 
+Patch 4 introduces using a quirk based on a errata of Synopsis
+DesignWare USB3 IP which is versions < 3.00a and has hardware configuration
+DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1, which cannot be read from software. As a
+result this quirk has to be enabled via platform data or device tree.
 
-It never fails and never return except 0. So there is no need to check
-the return value of it.
+Patch 5 introduces Fujitsu Specific Glue layer in Synopsis DesignWare USB3 IP
+driver. 
 
-> > +                       (endpoint.port == (unsigned int) port_reg))
-> > &&
-> > +                       ((reg == -1) || (endpoint.id == (unsigned
-> > int) reg)))
-> 
-> Why the casts?
+Successfully tested on Fujitsu mb86s7x board.
 
-I just clarify that endpoint.{port/id} is unsigned int. But now it
-seems unnecessary, and make harder to read the code. I will remove it.
+Changes since v3 (RFC):
+[https://lkml.org/lkml/2014/12/15/929]
+ - based on Mathias's comment, fix bug and using xhci_port_state_to_neutral()
+   helper function to mask out some RW1C bits, prevent writing back all the
+   bits read from the PORTSC register.
 
-> 
-> > +                       return node;
-> > +
-> > +               prev_node = node;
-> > +       }
-> > +
-> > +       return NULL;
-> > +}
-> > +
-> > +/**
-> >   * of_graph_get_remote_port_parent() - get remote port's parent
-> > node
-> >   * @node: pointer to a local endpoint device_node
-> >   *
-> > diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-> > index befef42..c119728 100644
-> > --- a/include/linux/of_graph.h
-> > +++ b/include/linux/of_graph.h
-> > @@ -31,6 +31,8 @@ int of_graph_parse_endpoint(const struct
-> > device_node *node, struct of_endpoint *endpoint);
-> >  struct device_node *of_graph_get_next_endpoint(const struct
-> > device_node *parent, struct device_node *previous);
-> > +struct device_node *of_graph_get_endpoint_by_regs(
-> > +               const struct device_node *parent, int port_reg, int
-> > reg);
-> 
-> Empty version is needed.
+Changes since v2 (RFC):
+[https://lkml.org/lkml/2014/12/15/929]
+ - based on Felipe's comment, re-order patches to avoid breaking bisectability,
+ - based on Felipe's comment, add comment to structure's member, and sort it
+   alphabetically,
+ - based on Felipe's comment, add another v2.90 revision number in dwc3 IP.
 
-Sorry. I forgot.
+Changes since v1 (RFC):
+[https://lkml.org/lkml/2014/12/15/929]
+ - based on Arnd's comment, remove entire unnecessary Fujitsu EHCI/OHCI glue,
+ - based on Felipe's comment, fix mis-using of runtime-pm API and setting dma
+   mask, remove unnecessary comment, and refactor suspend/resume handler in
+   Fujitsu Specific Glue layer in dwc3,
+ - based on Felipe's comment, add more commit log and comments in Synopsis
+   quirk implementation, and separate it into four patches.
 
-> 
-> >  struct device_node *of_graph_get_remote_port_parent(
-> >                                         const struct device_node
-> > *node); struct device_node *of_graph_get_remote_port(const struct
-> > device_node *node); --
-> > 1.9.1
-> >
+Sneeker Yeh (5):
+  xhci: add a quirk for device disconnection errata for Synopsis
+    Designware USB3     core
+  xhci: Platform: Set Synopsis device disconnection quirk based on
+    platform data
+  usb: dwc3: add revision number DWC3_REVISION_290A and
+    DWC3_REVISION_300A
+  usb: dwc3: Add quirk for Synopsis device disconnection errata
+  usb: dwc3: add Fujitsu Specific Glue layer
 
-Best regards,
-Hyungwon Hwang
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/usb/dwc3.txt     |   17 ++
+ .../devicetree/bindings/usb/fujitsu-dwc3.txt       |   33 ++++
+ drivers/usb/dwc3/Kconfig                           |   11 ++
+ drivers/usb/dwc3/Makefile                          |    1 +
+ drivers/usb/dwc3/core.c                            |    6 +
+ drivers/usb/dwc3/core.h                            |    6 +
+ drivers/usb/dwc3/dwc3-mb86s70.c                    |  206 ++++++++++++++++++++
+ drivers/usb/dwc3/host.c                            |    4 +
+ drivers/usb/dwc3/platform_data.h                   |    8 +
+ drivers/usb/host/xhci-hub.c                        |    4 +
+ drivers/usb/host/xhci-plat.c                       |    3 +
+ drivers/usb/host/xhci.c                            |   31 +++
+ drivers/usb/host/xhci.h                            |   24 +++
+ include/linux/usb/xhci_pdriver.h                   |    4 +
+ 14 files changed, 358 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/fujitsu-dwc3.txt
+ create mode 100644 drivers/usb/dwc3/dwc3-mb86s70.c
+
+-- 
+1.7.9.5
