@@ -1,128 +1,56 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/3] Ethernet packet sniffer: Device tree binding and
- vendor prefix
-Date: Tue, 17 Feb 2015 16:35:27 +0000
-Message-ID: <20150217163527.GR8994@leverpostej>
-References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
- <0a86907642a97e5bd880f69299664232fcffaf9d.1424181053.git.stathis.voukelatos@linn.co.uk>
- <20150217145124.GM8994@leverpostej>
- <54E36AAC.7010308@linn.co.uk>
+From: Rob Landley <rob@landley.net>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Tue, 17 Feb 2015 11:07:53 -0600
+Message-ID: <54E37569.80508@landley.net>
+References: <20150113200032.GA16205@obsidianresearch.com> <alpine.DEB.2.02.1501131455130.30192@linuxheads99> <20150113222450.GA17475@obsidianresearch.com> <alpine.DEB.2.02.1501150936390.16760@linuxheads99> <20150115184726.GA23247@obsidianresearch.com> <20150115204502.591bca1d@lxorguk.ukuu.org.uk> <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com> <20150121160151.453ba403@lxorguk.ukuu.org.uk> <D466D9FF-25DA-4765-9469-128733BEBC4D@konsulko.com> <20150121202700.GB4942@obsidianresearch.com> <20150215224006.GA5626@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54E36AAC.7010308@linn.co.uk>
+In-Reply-To: <20150215224006.GA5626@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>
+To: Pavel Machek <pavel@denx.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, Andrew Morton <akpm@linux-foundation.org>, Linus
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 17, 2015 at 04:22:04PM +0000, Stathis Voukelatos wrote:
-> Hi Mark,
+
+
+On 02/15/2015 04:40 PM, Pavel Machek wrote:
+> On Wed 2015-01-21 13:27:00, Jason Gunthorpe wrote:
+>> On Wed, Jan 21, 2015 at 06:33:12PM +0200, Pantelis Antoniou wrote:
+>> My point is that the current firmware layer is overly cautious and
+>> FPGAs are very big. My current project on small Xilinx device has a
+>> 10MB programming file. The biggest Xilinx device today has a max
+>> bitfile size around 122MB.
+>>
+>> So keeping that much memory pinned in the kernel when I can prove it
+>> is uncessary for my system (either because there is no suspend/resume
+>> possibility, or because I know the CPU can always access the
+>> filesytem) is very undesirable.
 > 
-> On 17/02/15 14:51, Mark Rutland wrote:
-> 
-> >> +Matched packet bytes and timestamp values are returned through a
-> >> +FIFO. Timestamps are provided to the module through an externally
-> >> +generated Gray-encoded counter.
-> >
-> > Does this counter unit need to be enabled (or have any input clocks
-> > enabled)?
-> >
-> 
-> Yes it does, that is the purpose of the 'tstamp' entry in the
-> 'clock-names' property below.
+> Well, your current device aalso has 1GB RAM, no?
 
-Ah, I see.
+Unnecessarily pinning 10% of your ram is a good solution?
 
-> >> +
-> >> +Required properties:
-> >> +- compatible : must be "linn,eth-sniffer"
-> >
-> > Is there not a more precise name for this IP block?
-> 
-> It is generally called 'ethernet packet sniffer', maybe
-> linn,eth-packet-sniffer would be a more descriptive name?
+> I'd say the general case is "store bitstream in RAM" we can add
+> optimalizations later.
 
-Either way is fine. I was expecting something more like a product code.
+We _have_ a firmware loading layer that doesn't store other kinds of
+firmware in pinned kernel memory. I guess that was retroactively a bad
+idea. As was the "freeing kernel memory" part at the end of boot.
 
-[...]
+There honestly are small embedded devices. Still. When you have your
+DRAM on the SOC instead of as an external chip, a gigabyte is not in the
+cards.
 
-> >> +- fifo-block-words : number of words in one data FIFO entry
-> >
-> > I didn't see a data FIFO described. Is that dynamically allocated and
-> > handed to the sniffer, or does that correspond to one of the memory
-> > regions above?
-> >
-> 
-> It is a H/W FIFO internal to the module and accessed through
-> a register. It is divided in blocks and 'fifo-block-words'
-> specify the number of words in each block. It is needed by
-> the driver to make sure it reads an entire block, in order
-> to clear the 'data available' interrupt.
+If you're saying "Linux should not care about this niche, let's open
+ourselves to a new disruptive technology attack with that as its initial
+protected base, because the average kernel developer age is about 44 now
+and we're not really recruiting anybody younger than that, so we'll all
+be dead before we have to care about being replaced"...
 
-I see. I assumed that the FIFO was memory mapped rather than exposed
-through a register.
+Rob
 
-Given the above this sounds fine.
-
-> >> +- tstamp-hz : frequency of the timestamp counter
-
-Is this the frequency the clock is running at, or a frequency that it
-should be programmed to in order to be used?
-
-The former can be queried from the common clock framework, and if you
-intended the latter the wording shuold be a little more explicit about
-that being the case.
-
-> >> +- tstamp-shift : shift value for the timestamp cyclecounter struct
-> >
-> > What exactly is this used for?
-> >
-> > Are there any docs?
-> 
-> See: include/linux/clocksource.h
-> The driver uses a cyclecounter and timecounter to convert raw timestamps
-> to nanoseconds. 'tstamp-shift' refers to the 'shift' field of the
-> cyclecounter structure, that can be used to improve the precision of
-> the conversion
-
-Sure, but the very concept of a cyclecounter is a Linux implementation
-detail. If we have the frequency of the timer we should be able to
-dynamically generate this, so there's no need for this to be in the DT.
-
-> >> +- tstamp-bits : width in bits of the timestamp counter
-> >> +
-> >> +Example:
-> >> +
-> >> +sniffer@1814a000 {
-> >> +	compatible = "linn,eth-sniffer";
-> >> +	reg = <0x1814a000 0x100>, <0x1814a400 0x400>,
-> >> +	      <0x1814a800 0x400>;
-> >> +	reg-names = "regs", "tx-ram", "rx-ram";
-> >> +	interrupts = <GIC_SHARED 58 IRQ_TYPE_LEVEL_HIGH>;
-> >> +	clocks = <&clk_core CLK_AUDIO>,
-> >> +		 <&cr_periph SYS_CLK_EVENT_TIMER>;
-> >> +	clock-names = "sys", "tstamp";
-> >> +	fifo-block-words = <4>;
-> >> +	tstamp-hz = <52000000>;
-> >> +	tstamp-shift = <27>;
-> >> +	tstamp-bits = <30>;
-> >
-> > This property wasn't documented.
-> >
-> > As mentioned previously, I think the relation between this unit and the
-> > MAC and/or PHY needs to be explicitly described in the DT.
-> 
-> Do you suggest a field along the lines of:
-> mac = <&eth_controller_0>;
-> The driver could check that it exists and is valid but does
-> not need to make use of it.
-
-I would expect some level of the software stack to make use of it, or
-you have no idea which ethernet interface is related to this monitoring
-interface. Perhaps current systems only have one interface, but that
-shouldn't be relied upon.
-
-Thanks,
-Mark.
+(At $DAYJOB we're building a chip that runs off of induction current to
+retrofit monitoring sensors onto things. It currently has 64 megs of ram
+but they're trying to trim that _down_ to free up chip space.)
