@@ -1,98 +1,146 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/3] Ethernet packet sniffer: Device tree binding and
- vendor prefix
-Date: Tue, 17 Feb 2015 17:30:00 +0000
-Message-ID: <20150217173000.GT8994@leverpostej>
-References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
- <0a86907642a97e5bd880f69299664232fcffaf9d.1424181053.git.stathis.voukelatos@linn.co.uk>
- <20150217145124.GM8994@leverpostej>
- <54E36AAC.7010308@linn.co.uk>
- <20150217163527.GR8994@leverpostej>
- <54E376AF.80602@linn.co.uk>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
+Date: Tue, 17 Feb 2015 12:38:04 -0500 (EST)
+Message-ID: <alpine.LFD.2.11.1502171221300.22104@knanqh.ubzr>
+References: <20150216130549.GF14545@x1> <1170550770.470129293.1424093248596.JavaMail.root@zimbra1-e1.priv.proxad.net> <20150216162712.GR14545@x1> <87fva5a4i2.fsf@free.fr> <20150217074310.GT14545@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-934122259-1424194686=:22104"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54E376AF.80602@linn.co.uk>
+In-Reply-To: <20150217074310.GT14545@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Robert Jarzmik <robert.jarzmik@free.fr>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 17, 2015 at 05:13:19PM +0000, Stathis Voukelatos wrote:
-> Hi Mark,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-934122259-1424194686=:22104
+Content-Type: TEXT/PLAIN; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+On Tue, 17 Feb 2015, Lee Jones wrote:
+
+> Arnd, Greg,
 > 
-> On 17/02/15 16:35, Mark Rutland wrote:
-> >
-> >>>> +- tstamp-hz : frequency of the timestamp counter
-> >
-> > Is this the frequency the clock is running at, or a frequency that it
-> > should be programmed to in order to be used?
-> >
-> > The former can be queried from the common clock framework, and if you
-> > intended the latter the wording shuold be a little more explicit about
-> > that being the case.
-> >
+>   Perhaps you have some ideas WRT programmables (PLDs/CPLDs/FPGAs)?
+
+FWIW...
+
+The Lubbock is an ancient development board (circa 2003) using a CPLD to 
+multiplex a couple things on the board.  I really doubt anyone would 
+reprogram this CPLD at this point. So I'd treat it just like another 
+interrupt controller + random peripherals that will never change.  And 
+yes, maybe a more appropriate name is needed.
+
+And I happen to have one such beast on my desk wasting significant 
+realestate and picking up dust.  I don't think I booted it even once in 
+the last 3 years.  I'm seriously considering a trip to the recycling 
+facility to dispose of it unless someone wants it and is ready to pay 
+for the shipping.
+
+> On Mon, 16 Feb 2015, Robert Jarzmik wrote:
+> > Lee Jones wrote:
+> > > What's all this?  Please configure your mail client correctly.
+> > >
+> > > For advice, see:
+> > >
+> > >   Documentation/email-clients.txt
+> > While at day work, I have only access to web mail ...
 > 
-> It is the frequency of the timestamp values supplied to the sniffer
-> module. It is used by the driver to convert to nanoseconds.
-> I was trying to be somewhat generic here and not assume that it
-> is necessarily the same as the 'tstamp' clock below, in which case we
-> could indeed obtain it using the common clock framework.
-
-In what cases would it _not_ be the same? From your description this is
-that clock, no?
-
-> >> See: include/linux/clocksource.h
-> >> The driver uses a cyclecounter and timecounter to convert raw timestamps
-> >> to nanoseconds. 'tstamp-shift' refers to the 'shift' field of the
-> >> cyclecounter structure, that can be used to improve the precision of
-> >> the conversion
-> >
-> > Sure, but the very concept of a cyclecounter is a Linux implementation
-> > detail. If we have the frequency of the timer we should be able to
-> > dynamically generate this, so there's no need for this to be in the DT.
-> >
+> Probably best to hold off your reply until you get home then.  It's
+> not just a formatting issue, you also exposed many raw email addresses
+> to the internet, which are easily harvested up by web crawlers.
 > 
-> Most networking driver use hard-coded values for that, but in my case
-> I did not want to assume a certain fixed clock frequency. I will remove
-> it from the DT and generate it dynamically. There is a kernel function
-> clocks_calc_mult_shift() to do it but unfortunately it is not exported,
-> so I guess I will need to replicate the code.
-
-Or submit a patch exporting it, along with the rationale for doing so?
-
-> >>> As mentioned previously, I think the relation between this unit and the
-> >>> MAC and/or PHY needs to be explicitly described in the DT.
-> >>
-> >> Do you suggest a field along the lines of:
-> >> mac = <&eth_controller_0>;
-> >> The driver could check that it exists and is valid but does
-> >> not need to make use of it.
-> >
-> > I would expect some level of the software stack to make use of it, or
-> > you have no idea which ethernet interface is related to this monitoring
-> > interface. Perhaps current systems only have one interface, but that
-> > shouldn't be relied upon.
+> See this:
+>   https://lkml.org/lkml/2015/2/16/247
 > 
-> Yes, but the sniffer module is hard-wired to a certain Ethernet Mii
-> interface. We can add an entry to tie it to an Ethernet controller, but
-> apart of a sanity check I am not sure what else the S/W can do.
-
-Fundamentally, the use-case for this is monitoring an ethernet
-interface. So regardless of which kernel framework this plumbs into,
-there needs to be a way to go from ethN to whatever this is exposed as.
-
-Exposing a completely separate interface makes no sense. Singleton stuff
-like that inevitably gets broken as someone later builds a board with
-multiple instances of some similar IP block.
-
-So I would imagine that either the link between interface and monitoring
-interface would be described somewhere in the filesystem, or there'd be
-a syscall/ioctl/whatever to go from an interface to the appropriate
-monitoring interface.
-
-That all depends on exactly how this gets exposed in the end, however.
-
-Thanks,
-Mark.
+> > >>  2) after v2, we _both_ agreed that the accurate name is "cplds"
+> > >>     which exactly what is in this patch
+> > >>     (see device registering with lubbock_cplds).
+> > >
+> > > There is no mention of this decision in the changelogs.  If it's not
+> > > in the change logs, it didn't happen. ;)
+> > Ah right.
+> > 
+> > > I'm still concerned with the fact that the driver file is named using
+> > > and is populated by lots of instances of a "board" name.  I'm sure you
+> > > would share my thoughts is someone submitted a driver called
+> > > beaglebone.c or raspberrypi.c to MFD.
+> > I understand your concern. Arnd, a thought about it ? The only viable
+> > alternative would be to move it to arch/arm/plat-pxa AFAIS.
+> 
+> I don't think this is correct either.  CPLD handling would probably be
+> slightly less out of place in drivers/misc, but perhaps a new
+> subsystem for PLDs/CPLDs/FPGAs would be more appropriate
+> drivers/programmables or similar maybe.
+> 
+> > >> > Besides, this is MFD, where we support single pieces of silicon which
+> > >> > happen to support multiple devices.  I definitely don't want to support
+> > >> > boards here.
+> > >> > You might want to re-think the naming and your (sales) pitch.
+> > >> I might need help. As for the (sales), no comment.
+> > >
+> > > By pitch, I mean to convince me that this belongs in MFD.
+> > I've been trying.
+> 
+> I'm pretty convinced that it doesn't belong in MFD now, but it doesn't
+> mean I'm going to leave you on the curb.  I'd like to help you get it
+> into a better home.
+> 
+> [...]
+> 
+> > > Understanding was lost when I learned that the whole file was centred
+> > > around the premise of board support.  I understand now that this is a
+> > > driver for a CPLD, which I'm not sure is even MFD.  Also, if it is
+> > > really a CPLD driver, shouldn't be named after the manufacturer/model
+> > > number of the chip, rather than the PCB which it's connected to?
+> > >
+> > > I'm also concerned that this driver has no functional CPLD code
+> > > contained.  All you're doing is defining an IRQ domain.  Why then
+> > > isn't this really an drivers/irqchip (Suggested-by: Josh Cartwright)
+> > > driver?
+> > Is not only a irqchip because, as explained at the bottom of the commit message,
+> > quoting myself :
+> >   This patch moves all that handling to a mfd driver. It's only purpose
+> >   for the time being is the interrupt handling, but in the future it
+> >   should encompass all the motherboard CPLDs handling :
+> >    - leds
+> >    - switches
+> >    - hexleds
+> 
+> I had a conversation about this on IRC yesterday and some good
+> points/questions were posed.  This is a difficult area, because you
+> can program these things to do whatever you like.  Depending on the
+> 'intention' (and it is only an intention -- someone else can come
+> along and reprogram these devices on a whim), the CPLD code could live
+> anywhere.  If you wanted to put watchdog functionality in there, then
+> there is an argument for it to live in drivers/watchdog, etc etc.  So
+> just because the plan is to support a few (i.e. more than one) simple
+> devices, it doesn't necessarily mean that the handling should be done
+> in MFD.
+> 
+> Yesterday I was asked "Are you wanting to restrict drivers in
+> drivers/mfd to those that make use of MFD_CORE functionality?".  My
+> answer to that was "No, however; I only want devices which
+> _intrinsically_ operate in multiple subsystems", which these
+> programmables no not do.
+> 
+> FYI, you're not on your own here.  There is at least one of these
+> devices in the kernel already and upon a short inspection there
+> appears to be a number of Out-of-Tree (OoT) drivers out there which
+> will require a home in Mainline sooner or later.
+> 
+> -- 
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
+> 
+--8323328-934122259-1424194686=:22104--
