@@ -1,157 +1,82 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
-Date: Tue, 17 Feb 2015 14:14:19 -0800
-Message-ID: <CAK5ve-KJK_aT_8sVmhtnTTJRZpdAvSGc45dtH-XH-E59wB=jXQ@mail.gmail.com>
-References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com> <54DD77BA.5020808@codeaurora.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] drivers/core/of: Add symlink to device-tree from
+ devices with an OF node
+Date: Wed, 18 Feb 2015 09:16:12 +1100
+Message-ID: <1424211372.21410.104.camel@kernel.crashing.org>
+References: <1424059156.21410.38.camel@kernel.crashing.org>
+	 <CAL_JsqKWJmt9e5hts1F6Yv_FqodJ6pkmqmxBqBp=Y33w+dPj9w@mail.gmail.com>
+	 <20150217150919.GA18008@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <54DD77BA.5020808@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150217150919.GA18008@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 12, 2015 at 8:04 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 01/23/15 16:54, Bjorn Andersson wrote:
+On Tue, 2015-02-17 at 07:09 -0800, Greg Kroah-Hartman wrote:
+> > 
+> > Doesn't this need sysfs documentation?
+> 
+> Yes it does.
 
-Thanks for the review, Stephen.
-Bjorn, could you please update your patch according to Stephen's review.
+Ok, will do.
 
--Bryan
+> > > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > 
+> > I don't mind applying, but this is Greg's code.
+> > 
+> > Rob
+> > 
+> > > ---
+> > >  drivers/base/core.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > index 97e2baf..61ef574 100644
+> > > --- a/drivers/base/core.c
+> > > +++ b/drivers/base/core.c
+> > > @@ -469,6 +469,7 @@ static int device_add_attrs(struct device *dev)
+> > >  {
+> > >         struct class *class = dev->class;
+> > >         const struct device_type *type = dev->type;
+> > > +       struct device_node *of_node;
+> > >         int error;
+> > >
+> > >         if (class) {
+> > > @@ -493,6 +494,13 @@ static int device_add_attrs(struct device *dev)
+> > >                         goto err_remove_dev_groups;
+> > >         }
+> > >
+> > > +       of_node = dev_of_node(dev);
+> > > +       if (of_node) {
+> > > +               error = sysfs_create_link(&dev->kobj, &of_node->kobj, "of_node");
+> > > +               if (error)
+> > > +                       dev_warn(dev, "Error %d creating of_node link\n", error);
+> > > +       }
+> 
+> You don't clean up the link when the device is removed?
 
->> +
->> +static int pm8941_wled_configure(struct pm8941_wled *wled, struct device *dev)
->> +{
->> +     struct pm8941_wled_config *cfg = &wled->cfg;
->> +     u32 val;
->> +     int rc;
->> +     int i;
->> +
->> +     const struct {
->> +             const char *name;
->> +             u32 *val_ptr;
->> +             const struct pm8941_wled_var_cfg *cfg;
->> +     } u32_opts[] = {
->> +             {
->> +                     "qcom,current-boost-limit",
->> +                     &cfg->i_boost_limit,
->> +                     .cfg = &pm8941_wled_i_boost_limit_cfg,
->> +             },
->> +             {
->> +                     "qcom,current-limit",
->> +                     &cfg->i_limit,
->> +                     .cfg = &pm8941_wled_i_limit_cfg,
->> +             },
->> +             {
->> +                     "qcom,ovp",
->> +                     &cfg->ovp,
->> +                     .cfg = &pm8941_wled_ovp_cfg,
->> +             },
->> +             {
->> +                     "qcom,switching-freq",
->> +                     &cfg->switch_freq,
->> +                     .cfg = &pm8941_wled_switch_freq_cfg,
->> +             },
->> +             {
->> +                     "qcom,num-strings",
->> +                     &cfg->num_strings,
->> +                     .cfg = &pm8941_wled_num_strings_cfg,
->> +             },
->> +     };
->> +     const struct {
->> +             const char *name;
->> +             bool *val_ptr;
->> +     } bool_opts[] = {
->> +             { "qcom,cs-out", &cfg->cs_out_en, },
->> +             { "qcom,ext-gen", &cfg->ext_gen, },
->> +             { "qcom,cabc", &cfg->cabc_en, },
->> +     };
->> +
->> +     rc = of_property_read_u32(dev->of_node, "reg", &val);
->> +     if (rc || val > 0xffff) {
->> +             dev_err(dev, "invalid IO resources\n");
->> +             return rc ? rc : -EINVAL;
->> +     }
->> +     wled->addr = val;
->> +
->> +     rc = of_property_read_string(dev->of_node, "label", &wled->cdev.name);
->> +     if (rc)
->> +             wled->cdev.name = dev->of_node->name;
->> +
->> +     wled->cdev.default_trigger = of_get_property(dev->of_node,
->> +                     "linux,default-trigger", NULL);
->> +
->> +     *cfg = pm8941_wled_config_defaults;
->> +     for (i = 0; i < ARRAY_SIZE(u32_opts); ++i) {
->> +             u32 sel, c;
->> +             int j, rj;
->> +
->> +             rc = of_property_read_u32(dev->of_node, u32_opts[i].name, &val);
->> +             if (rc) {
->> +                     if (rc != -EINVAL) {
->> +                             dev_err(dev, "error reading '%s'\n",
->> +                                             u32_opts[i].name);
->> +                             return rc;
->> +                     }
->> +                     continue;
->> +             }
->> +
->> +             sel = UINT_MAX;
->> +             rj = -1;
->> +             c = pm8941_wled_values(u32_opts[i].cfg, 0);
->> +             for (j = 0; c != UINT_MAX; ++j) {
->> +                     if (c <= val && (sel == UINT_MAX || c >= sel)) {
->> +                             sel = c;
->> +                             rj = j;
->> +                     }
->> +                     c = pm8941_wled_values(u32_opts[i].cfg, j + 1);
->> +             }
->> +             if (sel == UINT_MAX) {
->> +                     dev_err(dev, "invalid value for '%s'\n",
->> +                                     u32_opts[i].name);
->> +                     return rc;
->
-> Isn't rc always 0 here? Don't we want to return an error?
->
-> Also, I find this code very convoluted given that we loop through a
-> table and match based on nodes and call function pointers, etc. Why
-> can't we just have a handful of if statements with of_property_read_u32
-> in them? That way we don't have to jump through so many hoops, bouncing
-> all around this file to figure out what's going on. If we did I imagine
-> we wouldn't have missed out on rc being 0 here.
->
->> +
->> +static int pm8941_wled_remove(struct platform_device *pdev)
->> +{
->> +     struct pm8941_wled *wled;
->> +
->> +     wled = platform_get_drvdata(pdev);
->> +     led_classdev_unregister(&wled->cdev);
->
-> Would be nice to have a devm for this one too.
->
->> +
->> +     return 0;
->> +}
->> +
->> +static const struct of_device_id pm8941_wled_match_table[] = {
->> +     { .compatible = "qcom,pm8941-wled" },
->> +     {}
->> +};
->> +MODULE_DEVICE_TABLE(of, pm8941_wled_match_table);
->> +
->> +static struct platform_driver pm8941_wled_driver = {
->> +     .probe  = pm8941_wled_probe,
->> +     .remove = pm8941_wled_remove,
->> +     .driver = {
->> +             .name           = "pm8941-wled",
->> +             .owner          = THIS_MODULE,
->
-> THIS_MODULE should be removed.
->
+Hrm, I suppose I do :-) 
+
+> And why do it here and not in device_add_class_symlinks() like all other
+> devices do?
+
+Well, device_add_class_symlinks() had "class" in the name so I
+(incorrectly) assumed that was for class related stuff, but I see
+that the parent pointer is there too. Also originally my patch was
+adding an attribute and got turned into a symlink later. I'll move
+it.
+
+Cheers,
+Ben.
+
+> thanks,
+> 
+> greg k-h
 > --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
