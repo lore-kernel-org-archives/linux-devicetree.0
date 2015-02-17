@@ -1,79 +1,157 @@
-From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Subject: Re: [PATCH] mfd: devicetree: bindings: Add Qualcomm RPM regulator subnodes
-Date: Tue, 17 Feb 2015 13:48:27 -0800
-Message-ID: <CAJAp7OjwuOdD=DynygFWnPH6tEVyf_dzOHQbUV_CHjS7OXihdg@mail.gmail.com>
-References: <1422582666-32653-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<20150213221332.GA19975@qualcomm.com>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
+Date: Tue, 17 Feb 2015 14:14:19 -0800
+Message-ID: <CAK5ve-KJK_aT_8sVmhtnTTJRZpdAvSGc45dtH-XH-E59wB=jXQ@mail.gmail.com>
+References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com> <54DD77BA.5020808@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150213221332.GA19975-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <54DD77BA.5020808@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 13, 2015 at 2:13 PM, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On Thu, Jan 29, 2015 at 05:51:06PM -0800, Bjorn Andersson wrote:
->> Add the regulator subnodes to the Qualcomm RPM MFD device tree bindings.
->>
->> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
->> ---
->
->>       #include <dt-bindings/mfd/qcom-rpm.h>
->> @@ -66,5 +237,18 @@ frequencies.
->>
->>               #address-cells = <1>;
->>               #size-cells = <0>;
+On Thu, Feb 12, 2015 at 8:04 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 01/23/15 16:54, Bjorn Andersson wrote:
+
+Thanks for the review, Stephen.
+Bjorn, could you please update your patch according to Stephen's review.
+
+-Bryan
+
 >> +
->> +             pm8921_smps1: pm8921-smps1 {
->> +                     compatible = "qcom,rpm-pm8921-smps";
->> +                     reg = <QCOM_RPM_PM8921_SMPS1>;
+>> +static int pm8941_wled_configure(struct pm8941_wled *wled, struct device *dev)
+>> +{
+>> +     struct pm8941_wled_config *cfg = &wled->cfg;
+>> +     u32 val;
+>> +     int rc;
+>> +     int i;
 >> +
->> +                     regulator-min-microvolt = <1225000>;
->> +                     regulator-max-microvolt = <1225000>;
->> +                     regulator-always-on;
+>> +     const struct {
+>> +             const char *name;
+>> +             u32 *val_ptr;
+>> +             const struct pm8941_wled_var_cfg *cfg;
+>> +     } u32_opts[] = {
+>> +             {
+>> +                     "qcom,current-boost-limit",
+>> +                     &cfg->i_boost_limit,
+>> +                     .cfg = &pm8941_wled_i_boost_limit_cfg,
+>> +             },
+>> +             {
+>> +                     "qcom,current-limit",
+>> +                     &cfg->i_limit,
+>> +                     .cfg = &pm8941_wled_i_limit_cfg,
+>> +             },
+>> +             {
+>> +                     "qcom,ovp",
+>> +                     &cfg->ovp,
+>> +                     .cfg = &pm8941_wled_ovp_cfg,
+>> +             },
+>> +             {
+>> +                     "qcom,switching-freq",
+>> +                     &cfg->switch_freq,
+>> +                     .cfg = &pm8941_wled_switch_freq_cfg,
+>> +             },
+>> +             {
+>> +                     "qcom,num-strings",
+>> +                     &cfg->num_strings,
+>> +                     .cfg = &pm8941_wled_num_strings_cfg,
+>> +             },
+>> +     };
+>> +     const struct {
+>> +             const char *name;
+>> +             bool *val_ptr;
+>> +     } bool_opts[] = {
+>> +             { "qcom,cs-out", &cfg->cs_out_en, },
+>> +             { "qcom,ext-gen", &cfg->ext_gen, },
+>> +             { "qcom,cabc", &cfg->cabc_en, },
+>> +     };
 >> +
->> +                     bias-pull-down;
+>> +     rc = of_property_read_u32(dev->of_node, "reg", &val);
+>> +     if (rc || val > 0xffff) {
+>> +             dev_err(dev, "invalid IO resources\n");
+>> +             return rc ? rc : -EINVAL;
+>> +     }
+>> +     wled->addr = val;
 >> +
->> +                     qcom,switch-mode-frequency = <3200000>;
->> +             };
->>       };
+>> +     rc = of_property_read_string(dev->of_node, "label", &wled->cdev.name);
+>> +     if (rc)
+>> +             wled->cdev.name = dev->of_node->name;
+>> +
+>> +     wled->cdev.default_trigger = of_get_property(dev->of_node,
+>> +                     "linux,default-trigger", NULL);
+>> +
+>> +     *cfg = pm8941_wled_config_defaults;
+>> +     for (i = 0; i < ARRAY_SIZE(u32_opts); ++i) {
+>> +             u32 sel, c;
+>> +             int j, rj;
+>> +
+>> +             rc = of_property_read_u32(dev->of_node, u32_opts[i].name, &val);
+>> +             if (rc) {
+>> +                     if (rc != -EINVAL) {
+>> +                             dev_err(dev, "error reading '%s'\n",
+>> +                                             u32_opts[i].name);
+>> +                             return rc;
+>> +                     }
+>> +                     continue;
+>> +             }
+>> +
+>> +             sel = UINT_MAX;
+>> +             rj = -1;
+>> +             c = pm8941_wled_values(u32_opts[i].cfg, 0);
+>> +             for (j = 0; c != UINT_MAX; ++j) {
+>> +                     if (c <= val && (sel == UINT_MAX || c >= sel)) {
+>> +                             sel = c;
+>> +                             rj = j;
+>> +                     }
+>> +                     c = pm8941_wled_values(u32_opts[i].cfg, j + 1);
+>> +             }
+>> +             if (sel == UINT_MAX) {
+>> +                     dev_err(dev, "invalid value for '%s'\n",
+>> +                                     u32_opts[i].name);
+>> +                     return rc;
 >
-> My only comment here is that most (all but one) of the other mfd regulator
-> devices use regulators {}.  Still wonder if that's what we should do.
+> Isn't rc always 0 here? Don't we want to return an error?
 >
-
-Looking at the existing mfds they all have a list in the code of the
-regulators supported on a certain mfd. Through the use of
-regulator_desc.{of_match,regulators_node} these regulators are
-populated with properties from of_nodes matched by name (of_match)
-under the specified node (regulators_node).
-But as we've discussed in other cases it's not desirable to maintain
-these lists for the various variants of Qualcomm platforms, so I did
-choose to go with "standalone" platform devices - with matching
-through compatible and all.
-
-But that's all implementation, looking at the binding itself a
-regulator {} (clocks{} and msm_bus{}) would serve as a sort of
-grouping of children based on type. Except for the implications this
-has on the implementation I don't see much benefit of this (and in our
-case the implementation would suffer from the extra grouping).
-
-
-Let me know what you think, I based these ideas on just reading the
-existing code and bindings, and might very well have missed something.
-
-> Otherwise,
+> Also, I find this code very convoluted given that we loop through a
+> table and match based on nodes and call function pointers, etc. Why
+> can't we just have a handful of if statements with of_property_read_u32
+> in them? That way we don't have to jump through so many hoops, bouncing
+> all around this file to figure out what's going on. If we did I imagine
+> we wouldn't have missed out on rc being 0 here.
 >
-> Reviewed-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> +
+>> +static int pm8941_wled_remove(struct platform_device *pdev)
+>> +{
+>> +     struct pm8941_wled *wled;
+>> +
+>> +     wled = platform_get_drvdata(pdev);
+>> +     led_classdev_unregister(&wled->cdev);
 >
-
-Thanks
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Would be nice to have a devm for this one too.
+>
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static const struct of_device_id pm8941_wled_match_table[] = {
+>> +     { .compatible = "qcom,pm8941-wled" },
+>> +     {}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, pm8941_wled_match_table);
+>> +
+>> +static struct platform_driver pm8941_wled_driver = {
+>> +     .probe  = pm8941_wled_probe,
+>> +     .remove = pm8941_wled_remove,
+>> +     .driver = {
+>> +             .name           = "pm8941-wled",
+>> +             .owner          = THIS_MODULE,
+>
+> THIS_MODULE should be removed.
+>
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
