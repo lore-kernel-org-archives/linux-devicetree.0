@@ -1,37 +1,83 @@
-From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Bjorn Andersson <bjorn@kryo.se>
 Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
-Date: Tue, 17 Feb 2015 14:32:54 -0800
-Message-ID: <CAK5ve-KZ8Jyf_CfVzO7jss2Hj=ACtY3VNQAU18qE8szzJ+s6Cg@mail.gmail.com>
+Date: Tue, 17 Feb 2015 15:02:00 -0800
+Message-ID: <CAJAp7OgD3+mGZ02o6xAWkJvKoD4BcQWVD1GS87Niw_fcReBMMA@mail.gmail.com>
 References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
- <54DD77BA.5020808@codeaurora.org> <CAK5ve-KJK_aT_8sVmhtnTTJRZpdAvSGc45dtH-XH-E59wB=jXQ@mail.gmail.com>
- <CAJAp7OgkY+zsp_Yfgnri2H7yv8xrwVMR9UugFv8oEh4x-Fs82g@mail.gmail.com>
+	<1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
+	<54DD7CE5.5000302@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJAp7OgkY+zsp_Yfgnri2H7yv8xrwVMR9UugFv8oEh4x-Fs82g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <54DD7CE5.5000302@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 17, 2015 at 2:30 PM, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org> wrote:
-> On Tue, Feb 17, 2015 at 2:14 PM, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Thu, Feb 12, 2015 at 8:04 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>> On 01/23/15 16:54, Bjorn Andersson wrote:
->>
->> Thanks for the review, Stephen.
->> Bjorn, could you please update your patch according to Stephen's review.
->>
+On Thu, Feb 12, 2015 at 8:26 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 01/23/15 16:54, Bjorn Andersson wrote:
+>> +
+>> +static int pm8941_wled_set(struct led_classdev *cdev,
+>> +                        enum led_brightness value)
+>> +{
+>> +     struct pm8941_wled *wled;
+>> +     u8 ctrl = 0;
+>> +     u16 val;
+>> +     int rc;
+>> +     int i;
+>> +
+>> +     wled = container_of(cdev, struct pm8941_wled, cdev);
+>> +
+>> +     if (value != 0)
+>> +             ctrl = PM8941_WLED_REG_MOD_EN_BIT;
+>> +
+>> +     val = value * PM8941_WLED_REG_VAL_MAX / LED_FULL;
+>> +
+>> +     rc = regmap_update_bits(wled->regmap,
+>> +                     wled->addr + PM8941_WLED_REG_MOD_EN,
+>> +                     PM8941_WLED_REG_MOD_EN_MASK, ctrl);
+>> +     if (rc)
+>> +             return rc;
+>> +
+>> +     for (i = 0; i < wled->cfg.num_strings; ++i) {
+>> +             u8 v[2] = { val & 0xff, (val >> 8) & 0xf };
+>> +
+>> +             rc = regmap_bulk_write(wled->regmap,
+>> +                             wled->addr + PM8941_WLED_REG_VAL_BASE + 2 * i,
+>> +                             v, 2);
+>> +             if (rc)
+>> +                     return rc;
+>> +     }
+>> +
+>> +     rc = regmap_update_bits(wled->regmap,
+>> +                     wled->addr + PM8941_WLED_REG_SYNC,
+>> +                     PM8941_WLED_REG_SYNC_MASK, PM8941_WLED_REG_SYNC_ALL);
+>> +     if (rc)
+>> +             return rc;
+>> +
+>> +     rc = regmap_update_bits(wled->regmap,
+>> +                     wled->addr + PM8941_WLED_REG_SYNC,
+>> +                     PM8941_WLED_REG_SYNC_MASK, PM8941_WLED_REG_SYNC_CLEAR);
+>> +     return rc;
+>> +}
 >
-> I will do so, do you want me to send a new patch or an incremental
-> patch with the changes?
+> This doesn't seem to do anything for the OVP spike mentioned in this
+> patch[1]. Do you see that problem on your device? I imagine the PMIC is
+> the same.
+>
+> [1]
+> https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?id=fef9e15072562f0f28dc7066dcdd69388df81ed3
 >
 
-Please send me a new one.
+That's odd, I can't find that fix in any officially supported releases
+for 8974 - which Courtney used as reference for this driver.
 
--Bryan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Just to make sure I understand the solution; when disabling the sinks
+the over-voltage-protection sometimes triggers, so we should detect
+that and reset the ovp configuration?
+
+I presume the side effect would be that the sinks would not give any
+output until this is done?
+
+Regards,
+Bjorn
