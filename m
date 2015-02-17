@@ -1,46 +1,31 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 17 Feb 2015 11:12:19 -0700
-Message-ID: <20150217181219.GA27658@obsidianresearch.com>
-References: <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
- <20150113222450.GA17475@obsidianresearch.com>
- <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
- <20150115184726.GA23247@obsidianresearch.com>
- <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
- <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
- <20150121160151.453ba403@lxorguk.ukuu.org.uk>
- <D466D9FF-25DA-4765-9469-128733BEBC4D@konsulko.com>
- <20150121202700.GB4942@obsidianresearch.com>
- <20150215224006.GA5626@amd>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Subject: RE: [PATCH v6 0/7] Add initial support for DA9150 Charger &
+ Fuel-Gauge IC
+Date: Tue, 17 Feb 2015 18:15:11 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337AB534CBC@NB-EX-MBX01.diasemi.com>
+References: <cover.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
+ <20150121165250.GG13715@earth.universe>
+ <C1079F30-5D1D-45AA-A129-FE1E68EA5DC5@jic23.retrosnub.co.uk>
+ <20150122075811.GO22024@x1>
+ <2E89032DDAA8B9408CB92943514A0337AB52D71F@SW-EX-MBX01.diasemi.com>
+ <20150217180401.GA13777@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150215224006.GA5626@amd>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, Andrew Morton <akpm@linux->
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150217180401.GA13777@earth.universe>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Jonathan Cameron <jic23@jic23.retrosnub.co.uk>, Jonathan Cameron <jic23@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Hartmut Knaack <knaack.h@gmx.de>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 15, 2015 at 11:40:06PM +0100, Pavel Machek wrote:
-
-> > So keeping that much memory pinned in the kernel when I can prove it
-> > is uncessary for my system (either because there is no suspend/resume
-> > possibility, or because I know the CPU can always access the
-> > filesytem) is very undesirable.
-> 
-> Well, your current device aalso has 1GB RAM, no?
-
-No, certainly not. 256MB - the board only has space for two x16 DDR3
-chips, and at design time 1GBit was about the biggest that could be
-reasonably obtained.
-
-It is also using a Zynq chip for management and the next firmware spin
-is likely to throw away 50% of that space to enable Xilinx's narrow ECC
-scheme on the ram.
-
-The Linux environment requires only about 40M of ram for runtime, as
-it was designed for systems with only 64M of ram, so even the 128M is
-overkill.
-
-Jason
+T24gRmVicnVhcnkgMTcsIDIwMTUgMTg6MDQsIFNlYmFzdGlhbiBSZWljaGVsIHdyb3RlOg0KDQo+
+IEhpLA0KPiANCj4gT24gTW9uLCBGZWIgMTYsIDIwMTUgYXQgMDk6NDU6NTlQTSArMDAwMCwgT3Bl
+bnNvdXJjZSBbQWRhbSBUaG9tc29uXSB3cm90ZToNCj4gPiBKdXN0IGEgcXVpY2sgb25lIHRvIHNl
+ZSB3aGF0IHRoZSBzdGF0dXMgaXMgb24gdGhpcyBwYXRjaCBzZXQ/IEp1c3QNCj4gPiBpbnRlcmVz
+dGVkIGFzIHRvIHdoZW4gaXQnbGwgYmUgcHVsbGVkIGluLg0KPiANCj4gSSBwbGFuIHRvIHB1bGwg
+aXQgaW50byBmb3ItbmV4dCBvbmNlIC1yYzEgaGFzIGJlZW4gdGFnZ2VkIChwcm9iYWJseQ0KPiBh
+Ym91dCBhIHdlZWspLiBGZWVsIGZyZWUgdG8gc2VuZCBhIG5ldyB2ZXJzaW9uIHdpdGggdGhlIHN0
+eWxlIGZpeGVzLg0KDQpPayB0aGFua3MgZm9yIHRoZSB1cGRhdGUuIFdpbGwgc2VlIGlmIEkgY2Fu
+IGdldCB0aGUgdXBkYXRlcyBvdXQgYmVmb3JlIHRoZW4uDQoNClRoYW5rcw0KQWRhbQ0K
