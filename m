@@ -1,114 +1,47 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 7/8] ARM: dts: dove: Add internal i2c multiplexer node
-Date: Tue, 17 Feb 2015 19:52:08 +0100
-Message-ID: <1424199129-22099-8-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 2/8] devicetree: vendor-prefixes: Add CompuLab to known vendors
+Date: Tue, 17 Feb 2015 19:52:03 +0100
+Message-ID: <1424199129-22099-3-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1424199129-22099-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1424199129-22099-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Gabriel Dobato <dobatog@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Gabriel Dobato <dobatog@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a i2c-mux-pinctrl node to dove.dtsi for the internal i2c
-mux found on Dove SoCs. Up to now, we had no board using any of the
-two additional i2c busses, so make sure the change does not break
-any existing boards.
-
-Therefore, we rename the i2c-controller node label to "i2c" and
-enable it by default. Also, the dedicated sub-bus (now "i2c0") is
-enabled by default. The two optional sub-busses require additional
-external pin-muxing, so disable them by default.
+This adds "compulab" as a vendor-prefix for CompuLab (compulab.co.il),
+an Israeli company that builds ARM-based SoMs and CoMs.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
-Wolfram,
-
-Actually, I was hoping that default pin hog mechanism
-(pinctrl-names = "default") could also be used from i2c mux nodes
-and devices. Anyway, I had a look at i2c-core/mux code and failed
-how to achieve that easily. Instead I decided, it would also be ok
-to put the pin hog into the i2c controller node where pins will be
-bound by standard platform device code.
-
 Cc: Jason Cooper <jason@lakedaemon.net>
 Cc: Andrew Lunn <andrew@lunn.ch>
 Cc: Gregory Clement <gregory.clement@free-electrons.com>
 Cc: Gabriel Dobato <dobatog@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-i2c@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
 Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/dove.dtsi | 40 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 9ad829523a13..b3340e862b0e 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -28,6 +28,42 @@
- 		};
- 	};
- 
-+	i2c-mux {
-+		compatible = "i2c-mux-pinctrl";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c-parent = <&i2c>;
-+
-+		pinctrl-names = "i2c0", "i2c1", "i2c2";
-+		pinctrl-0 = <&pmx_i2cmux_0>;
-+		pinctrl-1 = <&pmx_i2cmux_1>;
-+		pinctrl-2 = <&pmx_i2cmux_2>;
-+
-+		i2c0: i2c@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "okay";
-+		};
-+
-+		i2c1: i2c@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			/* Requires pmx_i2c1 on i2c controller node */
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@2 {
-+			reg = <2>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			/* Requires pmx_i2c2 on i2c controller node */
-+			status = "disabled";
-+		};
-+	};
-+
- 	l2: l2-cache {
- 		compatible = "marvell,tauros2-cache";
- 		marvell,tauros2-cache-features = <0>;
-@@ -123,7 +159,7 @@
- 				status = "disabled";
- 			};
- 
--			i2c0: i2c-ctrl@11000 {
-+			i2c: i2c-ctrl@11000 {
- 				compatible = "marvell,mv64xxx-i2c";
- 				reg = <0x11000 0x20>;
- 				#address-cells = <1>;
-@@ -132,7 +168,7 @@
- 				clock-frequency = <400000>;
- 				timeout-ms = <1000>;
- 				clocks = <&core_clk 0>;
--				status = "disabled";
-+				status = "okay";
- 			};
- 
- 			uart0: serial@12000 {
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index d443279c95dc..2de628532d4b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -35,6 +35,7 @@ chrp	Common Hardware Reference Platform
+ chunghwa	Chunghwa Picture Tubes Ltd.
+ cirrus	Cirrus Logic, Inc.
+ cnm	Chips&Media, Inc.
++compulab	CompuLab
+ cortina	Cortina Systems, Inc.
+ crystalfontz	Crystalfontz America, Inc.
+ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
 -- 
 2.1.0
