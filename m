@@ -1,50 +1,85 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 17 Feb 2015 20:17:27 +0100
-Message-ID: <20150217191727.GA18429@amd>
-References: <20150113222450.GA17475@obsidianresearch.com>
- <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
- <20150115184726.GA23247@obsidianresearch.com>
- <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
- <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
- <20150121160151.453ba403@lxorguk.ukuu.org.uk>
- <D466D9FF-25DA-4765-9469-128733BEBC4D@konsulko.com>
- <20150121202700.GB4942@obsidianresearch.com>
- <20150215224006.GA5626@amd>
- <54E37569.80508@landley.net>
+From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/2] phy: usbphy: Add dt documentation for Broadcom Cygnus USB PHY driver
+Date: Tue, 17 Feb 2015 11:20:20 -0800
+Message-ID: <1424200821-16368-2-git-send-email-arun.ramamurthy@broadcom.com>
+References: <1424200821-16368-1-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54E37569.80508@landley.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Landley <rob@landley.net>
-Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, Andrew
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424200821-16368-1-git-send-email-arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2015-02-17 11:07:53, Rob Landley wrote:
-> 
-> 
-> On 02/15/2015 04:40 PM, Pavel Machek wrote:
-> > On Wed 2015-01-21 13:27:00, Jason Gunthorpe wrote:
-> >> On Wed, Jan 21, 2015 at 06:33:12PM +0200, Pantelis Antoniou wrote:
-> >> My point is that the current firmware layer is overly cautious and
-> >> FPGAs are very big. My current project on small Xilinx device has a
-> >> 10MB programming file. The biggest Xilinx device today has a max
-> >> bitfile size around 122MB.
-> >>
-> >> So keeping that much memory pinned in the kernel when I can prove it
-> >> is uncessary for my system (either because there is no suspend/resume
-> >> possibility, or because I know the CPU can always access the
-> >> filesytem) is very undesirable.
-> > 
-> > Well, your current device aalso has 1GB RAM, no?
-> 
-> Unnecessarily pinning 10% of your ram is a good solution?
+Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ .../bindings/phy/brcm,cygnus-usb-phy.txt           | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
 
-Never said that. But I'd rather have _some_ API proposed, then try to
-design in everthing including kitchen sink and do nothing.
-									Pavel
+diff --git a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+new file mode 100644
+index 0000000..f218fae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
+@@ -0,0 +1,50 @@
++BROADCOM CYGNUS USB PHY
++
++Required Properties:
++	- compatible:  brcm,cygnus-usb-phy
++	- reg : usbphy_regs - Base address of phy registers
++			usb2h_idm_regs - Base address of host idm registers
++			usb2d_idm_regs - Base address of device idm registers
++	 - num_phys : Number of phys available
++	 - #phy-cells must be 2
++The node that uses the phy must provide two integers, the first indicates the
++port and the second indicates whether its host or device. The second integer
++is 0 for device and 1 for host
++
++NOTE: port 0 and port 1 are host only and port 2 can be configured for host or device.
++
++Example of phy :
++	usbphy0: usbphy@0x0301c000 {
++		#phy-cells = <2>;
++		num_phys = <3>;
++		compatible = "brcm,cygnus-usb-phy";
++		reg = <0x0301c000 0x2000>,
++		      <0x18115000 0x1000>,
++		      <0x18111000 0x1000>;
++		status = "okay";
++	};
++
++Example of node using the phy:
++
++	/* This nodes declares  port 0
++	and port 1 as host*/
++
++	ehci0: usb@0x18048000 {
++		compatible = "generic-ehci";
++		reg = <0x18048000 0x100>;
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
++		phys = <&usbphy0 0 1 &usbphy0 1>;
++		phy-names = "usbp0","usbp1";
++		status = "okay";
++	};
++
++	/* This node declares port 2 phy
++	and configures it for device */
++
++	usbd_udc_dwc1: usbd_udc_dwc@0x1804c000 {
++		compatible = "iproc-udc";
++		reg = <0x1804c000 0x2000>;
++		interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
++		phys = <&usbphy0 2 0>;
++		phy-names = "usb";
++	};
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+2.3.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
