@@ -1,65 +1,95 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH/RFC 2/2] regulator: da9210: Add optional interrupt support
-Date: Tue, 17 Feb 2015 23:01:10 +0900
-Message-ID: <20150217140110.GV9110@finisterre.sirena.org.uk>
-References: <1424175072-14643-1-git-send-email-geert+renesas@glider.be>
- <1424175072-14643-2-git-send-email-geert+renesas@glider.be>
+From: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
+Subject: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
+Date: Tue, 17 Feb 2015 14:03:30 +0000
+Message-ID: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AHVSF3we4xtO5oi5"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1424175072-14643-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Support Opensource <support.opensource@diasemi.com>, Liam Girdwood <lgirdwood@gmail.com>, Steve Twiss <stwiss.opensource@diasemi.com>, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds support the Ethernet Packet Sniffer H/W module
+developed by Linn Products Ltd and found in the IMG Pistachio SoC.
+The module allows Ethernet packets to be parsed, matched against
+a user-defined pattern and timestamped. It sits between a 100M
+Ethernet MAC and PHY and is completely passive with respect to
+Ethernet frames.
 
---AHVSF3we4xtO5oi5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Matched packet bytes and timestamp values are returned through a
+FIFO. Timestamps are provided to the module through an externally
+generated Gray-encoded counter.
 
-On Tue, Feb 17, 2015 at 01:11:12PM +0100, Geert Uytterhoeven wrote:
+The command string for packet matching is stored in module RAM
+and consists of a sequence of 16-bit entries. Each entry includes
+an 8-bit command code and and 8-bit data value. Valid command
+codes are:
+0 - Don't care
+1 - Match: packet data must match command string byte
+2 - Copy: packet data will be copied to FIFO
+3 - Match/Stamp: if packet data matches string byte, a timestamp
+                 is copied into the FIFO
+4 - Copy/Done: packet data will be copied into the FIFO.
+               This command terminates the command string.
 
->   - Does there exist any regulator notifier event that corresponds to
->     DA9210_E_VMAX?
+The driver consists of two modules:
+- Core: it provides a common framework for managing backend packet
+        sniffer implementations. Each backend channel is registered
+        by the core as a netdev, which can be accessed from user
+        space through a raw packet socket. 
 
-What does that mean, I might be able to tell you?  I guess it might be
-an over voltage event...
+- Ethernet Packet Sniffer backend: provides the driver for the
+        Linn Ethernet Packet Sniffer H/W modules.
 
-> +	error = regmap_read(chip->regmap, DA9210_REG_EVENT_B, &val);
-> +	if (error < 0)
-> +		goto error_i2c;
+The split between a core and backend modules allows for other
+implementations to be added in the future apart of the Ethernet
+packet sniffer presented in this patch set.
 
-...
+Changes:
+v2:
+* Complete redesign of core framework to use netdev instead of 
+the generic netlink framework
+* Updated device tree binding
+* A number of minor code improvements suggested by code review
 
-> +	if (val) {
-> +		/* Clear all events */
-> +		error = regmap_write(chip->regmap, DA9210_REG_EVENT_B, val);
-> +		if (error < 0)
-> +			goto error_i2c;
-> +
-> +		ret = IRQ_HANDLED;
-> +	}
+Stathis Voukelatos (3):
+  Ethernet packet sniffer: Device tree binding and vendor prefix
+  Packet sniffer core framework
+  Linn Ethernet packet sniffer driver
 
-It's generally better to only acknowledge unmasked sources for
-defensiveness and improved diagnostics.  Not super critical though.
+ .../bindings/net/linn-ether-packet-sniffer.txt     |  42 +++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |   6 +
+ drivers/net/Kconfig                                |   2 +
+ drivers/net/Makefile                               |   2 +
+ drivers/net/pkt-sniffer/Kconfig                    |  19 +
+ drivers/net/pkt-sniffer/Makefile                   |   7 +
+ drivers/net/pkt-sniffer/backends/ether/channel.c   | 392 +++++++++++++++++++++
+ drivers/net/pkt-sniffer/backends/ether/channel.h   |  81 +++++
+ drivers/net/pkt-sniffer/backends/ether/hw.h        |  46 +++
+ drivers/net/pkt-sniffer/backends/ether/platform.c  | 301 ++++++++++++++++
+ drivers/net/pkt-sniffer/core/module.c              |  37 ++
+ drivers/net/pkt-sniffer/core/netdev.c              | 254 +++++++++++++
+ drivers/net/pkt-sniffer/core/snf_core.h            |  60 ++++
+ include/uapi/linux/pkt_sniffer.h                   |  33 ++
+ 15 files changed, 1283 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
+ create mode 100644 drivers/net/pkt-sniffer/Kconfig
+ create mode 100644 drivers/net/pkt-sniffer/Makefile
+ create mode 100644 drivers/net/pkt-sniffer/backends/ether/channel.c
+ create mode 100644 drivers/net/pkt-sniffer/backends/ether/channel.h
+ create mode 100644 drivers/net/pkt-sniffer/backends/ether/hw.h
+ create mode 100644 drivers/net/pkt-sniffer/backends/ether/platform.c
+ create mode 100644 drivers/net/pkt-sniffer/core/module.c
+ create mode 100644 drivers/net/pkt-sniffer/core/netdev.c
+ create mode 100644 drivers/net/pkt-sniffer/core/snf_core.h
+ create mode 100644 include/uapi/linux/pkt_sniffer.h
 
---AHVSF3we4xtO5oi5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+-- 
+1.9.1
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU40mlAAoJECTWi3JdVIfQeQsH/0PwI1etk4K6l0kXnY5fkKeH
-UwkGpbr7H2G4TA08uBDQVZe3SW982Br/j/s4OqB6oEDkxxcxa6KYjle9hVahvG1G
-TWYh1ifMatIgUF92nq5mA/cd8KmWSFhJ7VoOimMSbpe0huLGe2pboHjhHq4i60ZD
-ukhWPqGwW96f2JOi3MsY9klnnD0xabrUc06FNp8JlLJ4P9pIzlPjYLiYdIBrZhhp
-xtD+PNl3hNqEoU4fTdfaavjesF0tuyLfrBaWfS83wvD5ry6aAd7F9OTG9znj37Td
-pEXFhnLgnFTPKHTQjgUDgc/ZoAgYvKTJ917kUK6ONgHPzlcR4r2w63LeqiTnAZw=
-=xRtY
------END PGP SIGNATURE-----
-
---AHVSF3we4xtO5oi5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
