@@ -1,61 +1,51 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 4/4] clk: dt: Introduce always-on clock domain documentation
-Date: Wed, 18 Feb 2015 16:15:01 +0000
-Message-ID: <1424276101-30137-5-git-send-email-lee.jones@linaro.org>
-References: <1424276101-30137-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424276101-30137-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH] ARM: dts: Update lid and power pin-functions for exynos5250-spring
+Date: Wed, 18 Feb 2015 17:17:25 +0100
+Message-ID: <1424276245-7028-1-git-send-email-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <tomasz.figa@gmail.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- .../devicetree/bindings/clock/clk-domain.txt       | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/clk-domain.txt
+Configure the pins in external interrupt mode, as done for Snow in
+e5e5c6d14e39 ("ARM: dts: Add power and lid GPIO keys pinctrl for
+exynos5250-snow").
 
-diff --git a/Documentation/devicetree/bindings/clock/clk-domain.txt b/Documentation/devicetree/bindings/clock/clk-domain.txt
-new file mode 100644
-index 0000000..b86772f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/clk-domain.txt
-@@ -0,0 +1,35 @@
-+Always-on Clock Domain
-+
-+Some hardware is contains bunches of clocks which must never be
-+turned off.  If drivers a) fail to obtain a reference to any of
-+these or b) give up a previously obtained reference during suspend,
-+the common clk framework will attempt to disable them and the
-+hardware can fail irrecoverably.  Usually, the only way to recover
-+from these failures is to restart.
-+
-+To avoid either of these two scenarios from catastrophically
-+disabling an otherwise perfectly healthy running system, we have
-+implemented a clock domain where clocks are consumed and references
-+are taken, thus preventing them from being shut down by the
-+framework.
-+
-+We use the generic clock bindings found in:
-+  Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : Must be "always-on-clk-domain"
-+
-+Example:
-+
-+clk-domain {
-+	compatible = "always-on-clk-domain";
-+	clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>,
-+		 <&clk_s_c0_flexgen CLK_COMPO_DVP>,
-+		 <&clk_s_c0_flexgen CLK_MMC_1>,
-+		 <&clk_s_c0_flexgen CLK_ICN_SBC>,
-+		 <&clk_s_c0_flexgen CLK_ICN_LMI>,
-+		 <&clk_s_c0_flexgen CLK_ICN_CPU>,
-+		 <&clk_s_c0_flexgen CLK_TX_ICN_DMU>,
-+		 <&clk_s_a0_flexgen CLK_IC_LMI0>,
-+		 <&clk_m_a9>;
-+};
--- 
-1.9.1
+Reported-by: Kukjin Kim <kgene@kernel.org>
+Suggested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk=
+>
+=46ixes: 53dd4138bb0a ("ARM: dts: Add exynos5250-spring device tree")
+Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+---
+ arch/arm/boot/dts/exynos5250-spring.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5250-spring.dts b/arch/arm/boot/dt=
+s/exynos5250-spring.dts
+index c41600e587e0..d075a68ac078 100644
+--- a/arch/arm/boot/dts/exynos5250-spring.dts
++++ b/arch/arm/boot/dts/exynos5250-spring.dts
+@@ -482,7 +482,7 @@
+=20
+ 	power_key_irq: power-key-irq {
+ 		samsung,pins =3D "gpx1-3";
+-		samsung,pin-function =3D <0>;
++		samsung,pin-function =3D <0xf>;
+ 		samsung,pin-pud =3D <0>;
+ 		samsung,pin-drv =3D <0>;
+ 	};
+@@ -510,7 +510,7 @@
+=20
+ 	lid_irq: lid-irq {
+ 		samsung,pins =3D "gpx3-5";
+-		samsung,pin-function =3D <0>;
++		samsung,pin-function =3D <0xf>;
+ 		samsung,pin-pud =3D <0>;
+ 		samsung,pin-drv =3D <0>;
+ 	};
+--=20
+2.1.4
