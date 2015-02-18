@@ -1,82 +1,84 @@
 From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 1/5] xhci: add a quirk for device disconnection errata
- for Synopsis Designware USB3 core
-Date: Wed, 18 Feb 2015 08:33:45 -0600
-Message-ID: <20150218143345.GC3651@saruman.tx.rr.com>
-References: <1424151697-2084-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <1424151697-2084-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <54E451B1.8020401@intel.com>
+Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
+Date: Wed, 18 Feb 2015 08:35:46 -0600
+Message-ID: <20150218143546.GD3651@saruman.tx.rr.com>
+References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org>
+ <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org>
+ <54E4249C.9050404@ti.com>
+ <54E426B5.4070206@linaro.org>
 Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
+	protocol="application/pgp-signature"; boundary="C1iGAkRnbeBonpVg"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54E451B1.8020401@intel.com>
+In-Reply-To: <54E426B5.4070206@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Sneeker Yeh <sneeker.yeh@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, balbi@ti.com, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dan . zhao" <dan.zhao@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---DSayHWYpDlRfCAAQ
+--C1iGAkRnbeBonpVg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 18, 2015 at 10:47:45AM +0200, Mathias Nyman wrote:
-> Hi
+On Wed, Feb 18, 2015 at 01:44:21PM +0800, zhangfei wrote:
+> Hi, Kishon
 >=20
-> This looks correct, but if you are still going to make a new series fixing
-> Felipe's comments then the following tiny nitpicks could be fixed as well=
-=2E=20
+> On 02/18/2015 01:35 PM, Kishon Vijay Abraham I wrote:
+> >Hi,
+> >
+> >On Thursday 12 February 2015 01:07 PM, Zhangfei Gao wrote:
+> >>Add usb phy controller for hi6220 platform
+> >>
+> >>Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> >>---
+> >>  drivers/phy/Kconfig          |   9 ++
+> >>  drivers/phy/Makefile         |   1 +
+> >>  drivers/phy/phy-hi6220-usb.c | 306
+> >>+++++++++++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 316 insertions(+)
+> >>  create mode 100644 drivers/phy/phy-hi6220-usb.c
+> >
+> >why is this driver in drivers/phy when it doesn't use the generic PHY
+> >framework at all?
+> >
 >=20
-> Otherwise
->=20
-> Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
->=20
-> Felipe, Do you want to take this series through your tree?
+> Balbi recommended "new drivers only on drivers/phy/", including usb
+> phy.
 
-I can, no issues :-)
+but it should use the API too. It's not only about a directory, you need
+to use the new API.
 
-> On 17.02.2015 07:41, Sneeker Yeh wrote:
-> > =20
-> > +static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int dev_port_nu=
-m)
->=20
-> Either add a function description explaining something like "Late
-> clearing of connect status.
-> Some quirky hardware will suspend the controller when CSC bit is
-> cleared and leave URBs unhandled"
->=20
-> Or change the function name to something like
-> xhci_late_csc_clear_quirk() or xhci_deferred_csc_clear_quirk()
+> So Move drivers/usb/phy/phy-hi6220-usb.c to
+> drivers/phy/phy-hi6220-usb.c, required by Balbi.
 
-I have a feeling xhci_late_csc_clear_quirk() is a better name, much more
-descriptive than xhci_try_to_clear_csc() :-)
+you're reading what I stated the way you like.
 
 --=20
 balbi
 
---DSayHWYpDlRfCAAQ
+--C1iGAkRnbeBonpVg
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJU5KLJAAoJEIaOsuA1yqREMCAQAJcicnvUIPUlW6TI5GAR4gge
-oWZik9LxPy03BdIEjsQv2bip7a90IZ+7oHERuGq+/+Ef5Nje8krjYsSGEIKoyzNc
-qNR0ZeVCEu8Uxahg2IdkS68H1IB61yzBzpHFkCY4CEV1oixqie80QA7F4Spm8jQh
-Cr1KaQK8SsQmxahAfraeQIsUmRjxMR3ZhctHobi2Q9lG54GIssqIsJsswmcoRd6w
-XXyz0MPLPrmKq6+6U/N5Rb56QYAbh6AATPwn0YK8NZAGxLQM2qF7Q+PYxrH8KEsX
-w5zZwGmV6eblOVmcU940OfOUBdC2GJ/ZET0InE1tdlES1NiJ6dPO/MYG7tME1yH2
-5MYPugs43iC+4aQx8P3QWEIX4/cexU7gLNCehMAkm0NeGIeoub/T8mSN9R8pMO6H
-WjAQxsfVVT+uZojy5MoE8TDsx49aT9HHPxj/ClTpny0/Y/uHegjRNDcjxBCQ8Ggb
-tq3efMo5EHShcD0II7Mc7RQCs89OqJm5GLUQ4goUEoDgs7W/RVROAB2QGO0o4S71
-TII8CJ+Rt1EttC1gPMIgRRu/KR7hzVjOGu33MQmNPtBaNmcQVQiTACQFr8euZOli
-8E3sFlL5njfjotEuOb0jgxM43vt1jDTwfXVwS7huVrvWz8kVIXVE9aLkXDFmkonu
-XtAZjRiltBBwPrsLf/rf
-=708I
+iQIcBAEBAgAGBQJU5KNCAAoJEIaOsuA1yqREuIEP/0lfGnca9Fl0sxxTUJZ3CPez
+xsOgaLfX2EtrgEW02XfOX//0z3v7yS3zFFIynqng2oimaRE9QPguoYoBlVEgEZhl
++011U5uNYDI7M8Jg9jyJZUITvtSMUnLP84d5oG9wNbmd7APC5npy69MsjY5dI9WW
+cHDr0625b/rCMcryVrmkJuzhBddMhscUjrPX8OZxngCTpxrcqXD277MWN9CR4l9N
+16eMID/oHn48ZlPhHQHCBimQamF7jF9vGGZTfYHm2wurC7ntXJzXC+Y1vsIf8kxE
+I++fyRueWKG3YGF46spUMpDAUG1tGVPxjjxvjVYAxZSzRrlPtha41x/RiLoLYiu9
+MIP3UgTLXOZPn5GeW780yplKCIpZbndy5+X6eC2/wJUtWyMuHY0HGE6tAO1O9kp1
+63HK3oiXG+buTV8uH5GHrlZ8hTRAJ+oGx3QE9Lr50K26AoK20DCZkla9pdAWsazX
+4uMfZtzDEOH8xi8vWrL8FLqzSr4FWQnJsoGVb76eU2wmmtbVsQ/NKjm+yzM3TMjD
+5Y2b8dJXZYBNQmaejkVcE99Ogyv+7840d4D1uy92JdfcUG2uZVrbnEz7EqLytdQ8
+WfM7AtrYLKLFtuD57szXqDPif/EMCjXoO6YUWTkGwQ4GSVnTAsf6gou0AkK3NF9S
+8CtpOsKkP5sBI2iZcH6J
+=uiJX
 -----END PGP SIGNATURE-----
 
---DSayHWYpDlRfCAAQ--
+--C1iGAkRnbeBonpVg--
