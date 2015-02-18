@@ -1,53 +1,65 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 7/8] ARM: STi: STiH407: Enable PMU IRQs
-Date: Wed, 18 Feb 2015 15:14:03 +0000
-Message-ID: <1424272444-16230-8-git-send-email-lee.jones@linaro.org>
-References: <1424272444-16230-1-git-send-email-lee.jones@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] phy: usbphy: Add dt documentation for Broadcom Cygnus USB PHY driver
+Date: Wed, 18 Feb 2015 16:15:01 +0100
+Message-ID: <11865413.8NsXkQ6AUR@wuerfel>
+References: <1424200821-16368-1-git-send-email-arun.ramamurthy@broadcom.com> <2797126.uqvyZJisPk@wuerfel> <54E3AD2E.8050902@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424272444-16230-1-git-send-email-lee.jones@linaro.org>
+In-Reply-To: <54E3AD2E.8050902@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Jonathan Richardson <jonathar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Dmitry Torokhov <dtor@google.com>, Kumar Gala <galak@codeaurora.org>, Anatol Pomazau <anatol@google.com>, stern@rowland.harvard.edu
 List-Id: devicetree@vger.kernel.org
 
-This driver is used to enable System Configuration Register controlled
-External, CTI (Core Sight), PMU (Performance Management), and PL310 L2
-Cache IRQs prior to use.
+On Tuesday 17 February 2015 13:05:50 Arun Ramamurthy wrote:
+> On 15-02-17 12:53 PM, Arnd Bergmann wrote:
+> > On Tuesday 17 February 2015 12:00:49 Arun Ramamurthy wrote:
+> >> Arnd, I patched the ehci and ohci driver to accept multiple phys so they
+> >> require different names and cannot both be "usb". That patch was
+> >> accepted by Alen Stern but I did not update the bindings documentation.
+> >> I will send out another patch for that. Could we go with the naming
+> >> scheme of "usb" + "p" + port number or do you have other suggestions?
+> >
+> > I don't have a good idea, but I think it would be best if the first
+> > phy could remain named "usb" for compatibility with the existing binding.
+> >
+> The patch was written in a way that all the existing and new drivers can
+> continue to use "usb" if they are using only one phy so that we remain 
+> compatible. The names need to be different only if more than one phy is 
+> specified. In such cases i don't think the first phy should be "usb" as 
+> it would be confusing to have
+>         phy-names = "usb","usbp1"
 
-Here we are enabling PMU IRQs on both channels.
+I see your patch now, as 7e7a0e67f2c ("usb: ehci-platform: add support for
+multiple phys per controller"), and I'm not too happy about the way you
+did this.
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/boot/dts/stih407-family.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+We already concluded that there should have been a binding change
+to go along with this, and that would have caught the fact that you
+circumvent the API here by reading the phy names manually. That
+part should never have made it into the kernel.
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 939e46e..aa86d99 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -8,6 +8,7 @@
-  */
- #include "stih407-pinctrl.dtsi"
- #include <dt-bindings/reset-controller/stih407-resets.h>
-+#include <dt-bindings/interrupt-controller/irq-st.h>
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-@@ -119,6 +120,15 @@
- 			reg = <0x94b5100 0x1000>;
- 		};
- 
-+		irq-syscfg {
-+			compatible    = "st,stih407-irq-syscfg";
-+			st,syscfg     = <&syscfg_core>;
-+			st,irq-device = <ST_IRQ_SYSCFG_PMU_0>,
-+					<ST_IRQ_SYSCFG_PMU_1>;
-+			st,fiq-device = <ST_IRQ_SYSCFG_DISABLED>,
-+					<ST_IRQ_SYSCFG_DISABLED>;
-+		};
-+
- 		serial@9830000 {
- 			compatible = "st,asc";
- 			reg = <0x9830000 0x2c>;
--- 
-1.9.1
+I think we can do this either by defining specific names for the
+phy, or by changing the generic PHY binding to allow anonymous
+phy references (leaving out "phy-names" entirely), and adding a
+proper API for that.
+
+> Should I run this by Alan Stern?
+
+I've added him to Cc here. He clearly didn't know the background about
+the DT binding change, and should not need to, but he may have an opinion
+on what names we should use.
+
+> > What is the reason for having two phys in your case? Are these
+> > identical phy devices connected to a single controller or do they
+> > server different purposes?
+> >
+> Yes, we have three identical phys connected to a single host controller 
+> and one of the phys is also connected to the device controller
+
+Ok, no problem with that, let's just make sure we come up with a
+good binding for it.
+
+	Arnd
