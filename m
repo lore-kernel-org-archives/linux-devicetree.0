@@ -1,38 +1,33 @@
-From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH V2 3/3] arm64: dts: add proxy I2C device driver on APM X-Gene platform
-Date: Wed, 18 Feb 2015 11:34:03 -0800
-Message-ID: <1424288043-2995-3-git-send-email-fkan@apm.com>
-References: <1424288043-2995-1-git-send-email-fkan@apm.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424288043-2995-1-git-send-email-fkan-qTEPVZfXA3Y@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: patches-qTEPVZfXA3Y@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Hieu Le <hnle-qTEPVZfXA3Y@public.gmane.org>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [version 2]  amba uarts - arm type uarts fifo size provided by device tree
+Date: Wed, 18 Feb 2015 15:07:47 -0500
+Message-ID: <1424290069-8760-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+References: <amba uarts - arm type uarts fifo size provided by device tree>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <amba uarts - arm type uarts fifo size provided by device tree>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add proxy I2C device driver on APM X-Gene platform.
+[PATCH 1/2] Documentation: bindings: add optional fifo size property
+[PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present [updated]
 
-Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Hieu Le <hnle-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm/apm-storm.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+These patches aim at resolving an issue present on some of the amba pl011 uarts.
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index 27d6c3d..f19bb6b 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -483,6 +483,11 @@
- 					<0x0 0x7 0x4>;
- 		};
- 
-+		i2cslimpro {
-+			compatible = "apm,xgene-slimpro-i2c";
-+			mboxes = <&mailbox 0>;
-+		};
-+
- 		serial0: serial@1c020000 {
- 			status = "disabled";
- 			device_type = "serial";
--- 
-1.9.1
+They were developed for the Hisilicon Hi6220 SoC where the fifo size on the
+uarts is 64 despite the amba revision having been set to 1. 
+
+This makes the current way of detecting the fifo size based on the value of the
+amba_rev non usable.
+
+A mechanism for those uarts to retrieve the fifo sizes using the optional
+property "fifo-size" in the device tree declared in PATCH1/2 is implemented
+under PATCH2/2.
+
+This device tree setting shall take precedence over any other calculated values.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
