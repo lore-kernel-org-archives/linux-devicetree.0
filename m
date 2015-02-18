@@ -1,71 +1,82 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH v7 2/7] mfd: da9150: Add DT binding documentation for core
-Date: Wed, 18 Feb 2015 14:08:26 +0000
-Message-ID: <d3c040b8f0c74a7d731b36e24384215327b83725.1424267009.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1424267009.git.Adam.Thomson.Opensource@diasemi.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 1/5] xhci: add a quirk for device disconnection errata
+ for Synopsis Designware USB3 core
+Date: Wed, 18 Feb 2015 08:33:45 -0600
+Message-ID: <20150218143345.GC3651@saruman.tx.rr.com>
+References: <1424151697-2084-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <1424151697-2084-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <54E451B1.8020401@intel.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1424267009.git.Adam.Thomson.Opensource@diasemi.com>
+Content-Disposition: inline
+In-Reply-To: <54E451B1.8020401@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>
-Cc: linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Sneeker Yeh <sneeker.yeh@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
----
- Documentation/devicetree/bindings/mfd/da9150.txt | 43 ++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/da9150.txt
+--DSayHWYpDlRfCAAQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/mfd/da9150.txt b/Documentation/devicetree/bindings/mfd/da9150.txt
-new file mode 100644
-index 0000000..d0588ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/da9150.txt
-@@ -0,0 +1,43 @@
-+Dialog Semiconductor DA9150 Combined Charger/Fuel-Gauge MFD bindings
-+
-+DA9150 consists of a group of sub-devices:
-+
-+Device			 Description
-+------			 -----------
-+da9150-gpadc		: General Purpose ADC
-+da9150-charger		: Battery Charger
-+
-+======
-+
-+Required properties:
-+- compatible : Should be "dlg,da9150"
-+- reg: Specifies the I2C slave address
-+- interrupt-parent: Specifies the phandle of the interrupt controller to which
-+  the IRQs from da9150 are delivered to.
-+- interrupts: IRQ line info for da9150 chip.
-+- interrupt-controller: da9150 has internal IRQs (own IRQ domain).
-+  (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
-+   further information relating to interrupt properties)
-+
-+Sub-devices:
-+- da9150-gpadc: See Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
-+- da9150-charger: See Documentation/devicetree/bindings/power/da9150-charger.txt
-+
-+
-+Example:
-+
-+	charger_fg: da9150@58 {
-+		compatible = "dlg,da9150";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+
-+		gpadc: da9150-gpadc {
-+			...
-+		};
-+
-+		da9150-charger {
-+			...
-+		};
-+	};
---
-1.9.3
+On Wed, Feb 18, 2015 at 10:47:45AM +0200, Mathias Nyman wrote:
+> Hi
+>=20
+> This looks correct, but if you are still going to make a new series fixing
+> Felipe's comments then the following tiny nitpicks could be fixed as well=
+=2E=20
+>=20
+> Otherwise
+>=20
+> Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+>=20
+> Felipe, Do you want to take this series through your tree?
+
+I can, no issues :-)
+
+> On 17.02.2015 07:41, Sneeker Yeh wrote:
+> > =20
+> > +static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int dev_port_nu=
+m)
+>=20
+> Either add a function description explaining something like "Late
+> clearing of connect status.
+> Some quirky hardware will suspend the controller when CSC bit is
+> cleared and leave URBs unhandled"
+>=20
+> Or change the function name to something like
+> xhci_late_csc_clear_quirk() or xhci_deferred_csc_clear_quirk()
+
+I have a feeling xhci_late_csc_clear_quirk() is a better name, much more
+descriptive than xhci_try_to_clear_csc() :-)
+
+--=20
+balbi
+
+--DSayHWYpDlRfCAAQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU5KLJAAoJEIaOsuA1yqREMCAQAJcicnvUIPUlW6TI5GAR4gge
+oWZik9LxPy03BdIEjsQv2bip7a90IZ+7oHERuGq+/+Ef5Nje8krjYsSGEIKoyzNc
+qNR0ZeVCEu8Uxahg2IdkS68H1IB61yzBzpHFkCY4CEV1oixqie80QA7F4Spm8jQh
+Cr1KaQK8SsQmxahAfraeQIsUmRjxMR3ZhctHobi2Q9lG54GIssqIsJsswmcoRd6w
+XXyz0MPLPrmKq6+6U/N5Rb56QYAbh6AATPwn0YK8NZAGxLQM2qF7Q+PYxrH8KEsX
+w5zZwGmV6eblOVmcU940OfOUBdC2GJ/ZET0InE1tdlES1NiJ6dPO/MYG7tME1yH2
+5MYPugs43iC+4aQx8P3QWEIX4/cexU7gLNCehMAkm0NeGIeoub/T8mSN9R8pMO6H
+WjAQxsfVVT+uZojy5MoE8TDsx49aT9HHPxj/ClTpny0/Y/uHegjRNDcjxBCQ8Ggb
+tq3efMo5EHShcD0II7Mc7RQCs89OqJm5GLUQ4goUEoDgs7W/RVROAB2QGO0o4S71
+TII8CJ+Rt1EttC1gPMIgRRu/KR7hzVjOGu33MQmNPtBaNmcQVQiTACQFr8euZOli
+8E3sFlL5njfjotEuOb0jgxM43vt1jDTwfXVwS7huVrvWz8kVIXVE9aLkXDFmkonu
+XtAZjRiltBBwPrsLf/rf
+=708I
+-----END PGP SIGNATURE-----
+
+--DSayHWYpDlRfCAAQ--
