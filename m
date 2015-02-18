@@ -1,53 +1,38 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 1/8] dt: bindings: Supply shared ST IRQ defines
-Date: Wed, 18 Feb 2015 15:13:57 +0000
-Message-ID: <1424272444-16230-2-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v3 6/8] ARM: STi: STiH407: Enable Cortex-A9 PMU support
+Date: Wed, 18 Feb 2015 15:14:02 +0000
+Message-ID: <1424272444-16230-7-git-send-email-lee.jones@linaro.org>
 References: <1424272444-16230-1-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1424272444-16230-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, tglx@linutronix.de, lee.jones@linaro.org, kernel@stlinux.com, jason@lakedaemon.net
+Cc: lee.jones@linaro.org, kernel@stlinux.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlc2UgZGVmaW5lcyBhcmUgdXNlZCB0byBhbGxvdyB2YWx1ZXMgdXNlZCBmb3IgY29uZmlndXJh
-dGlvbiB0byBiZQplYXNpbHkgaHVtYW4gcmVhZGFibGUgYW5kIHdpbGwgbGVzc2VuIHRoZSBjaGFu
-Y2Ugb2YgbG9naWNhbCBtaXN0YWtlcy4KClNpZ25lZC1vZmYtYnk6IExlZSBKb25lcyA8bGVlLmpv
-bmVzQGxpbmFyby5vcmc+Ci0tLQogaW5jbHVkZS9kdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJv
-bGxlci9pcnEtc3QuaCB8IDMwICsrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
-ZCwgMzAgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGlu
-Z3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLXN0LmgKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2R0
-LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS1zdC5oIGIvaW5jbHVkZS9kdC1iaW5k
-aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEtc3QuaApuZXcgZmlsZSBtb2RlIDEwMDY0NApp
-bmRleCAwMDAwMDAwLi40YzU5YWNlCi0tLSAvZGV2L251bGwKKysrIGIvaW5jbHVkZS9kdC1iaW5k
-aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEtc3QuaApAQCAtMCwwICsxLDMwIEBACisvKgor
-ICogIGluY2x1ZGUvbGludXgvaXJxY2hpcC9pcnEtc3QuaAorICoKKyAqICBDb3B5cmlnaHQgKEMp
-IDIwMTQgU1RNaWNyb2VsZWN0cm9uaWNzIOKAkyBBbGwgUmlnaHRzIFJlc2VydmVkCisgKgorICog
-IEF1dGhvcjogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4KKyAqCisgKiBUaGlzIHBy
-b2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1v
-ZGlmeQorICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGlj
-ZW5zZSB2ZXJzaW9uIDIgYXMKKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3Vu
-ZGF0aW9uLgorICovCisKKyNpZm5kZWYgX0RUX0JJTkRJTkdTX0lOVEVSUlVQVF9DT05UUk9MTEVS
-X1NUX0gKKyNkZWZpbmUgX0RUX0JJTkRJTkdTX0lOVEVSUlVQVF9DT05UUk9MTEVSX1NUX0gKKwor
-I2RlZmluZSBTVF9JUlFfU1lTQ0ZHX0VYVF8wCQkwCisjZGVmaW5lIFNUX0lSUV9TWVNDRkdfRVhU
-XzEJCTEKKyNkZWZpbmUgU1RfSVJRX1NZU0NGR19FWFRfMgkJMgorI2RlZmluZSBTVF9JUlFfU1lT
-Q0ZHX0NUSV8wCQkzCisjZGVmaW5lIFNUX0lSUV9TWVNDRkdfQ1RJXzEJCTQKKyNkZWZpbmUgU1Rf
-SVJRX1NZU0NGR19QTVVfMAkJNQorI2RlZmluZSBTVF9JUlFfU1lTQ0ZHX1BNVV8xCQk2CisjZGVm
-aW5lIFNUX0lSUV9TWVNDRkdfcGwzMTBfTDIJCTcKKyNkZWZpbmUgU1RfSVJRX1NZU0NGR19ESVNB
-QkxFRAkJMHhGRkZGRkZGRgorCisjZGVmaW5lIFNUX0lSUV9TWVNDRkdfRVhUXzFfSU5WCQkweDEK
-KyNkZWZpbmUgU1RfSVJRX1NZU0NGR19FWFRfMl9JTlYJCTB4MgorI2RlZmluZSBTVF9JUlFfU1lT
-Q0ZHX0VYVF8zX0lOVgkJMHg0CisKKyNlbmRpZgotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+This is ARM's generic Performance Monitoring Unit.
+
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ arch/arm/boot/dts/stih407-family.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 3e31d32..939e46e 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -56,6 +56,12 @@
+ 		cache-level = <2>;
+ 	};
+ 
++	arm-pmu {
++		interrupt-parent = <&intc>;
++		compatible = "arm,cortex-a9-pmu";
++		interrupts = <GIC_PPI 15 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-- 
+1.9.1
