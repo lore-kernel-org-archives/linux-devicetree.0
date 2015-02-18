@@ -1,84 +1,95 @@
 From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
-Date: Wed, 18 Feb 2015 08:35:46 -0600
-Message-ID: <20150218143546.GD3651@saruman.tx.rr.com>
-References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org>
- <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org>
- <54E4249C.9050404@ti.com>
- <54E426B5.4070206@linaro.org>
+Subject: Re: [PATCH v4 1/5] xhci: add a quirk for device disconnection errata
+ for Synopsis Designware USB3 core
+Date: Wed, 18 Feb 2015 08:42:35 -0600
+Message-ID: <20150218144235.GF3651@saruman.tx.rr.com>
+References: <1424151697-2084-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <1424151697-2084-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <54E451B1.8020401@intel.com>
+ <20150218143345.GC3651@saruman.tx.rr.com>
+ <CAJ1gpc3CT8RBZaXDbFz67mG5RcKOEfoxLjh8PEMq1Cme1QW1Vg@mail.gmail.com>
 Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="C1iGAkRnbeBonpVg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="1Y7d0dPL928TPQbc"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54E426B5.4070206@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zhangfei <zhangfei.gao@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, balbi@ti.com, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dan . zhao" <dan.zhao@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+In-Reply-To: <CAJ1gpc3CT8RBZaXDbFz67mG5RcKOEfoxLjh8PEMq1Cme1QW1Vg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sneeker Yeh <sneeker.yeh@gmail.com>
+Cc: Felipe Balbi <balbi@ti.com>, Kumar Gala <galak@codeaurora.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>, Andy Green <andy.green@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Huang Rui <ray.huang@amd.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
---C1iGAkRnbeBonpVg
-Content-Type: text/plain; charset=us-ascii
+--1Y7d0dPL928TPQbc
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 18, 2015 at 01:44:21PM +0800, zhangfei wrote:
-> Hi, Kishon
+On Wed, Feb 18, 2015 at 10:39:53PM +0800, Sneeker Yeh wrote:
+> Hi,
+> 2015/2/18 =E4=B8=8B=E5=8D=8810:34 =E6=96=BC "Felipe Balbi" <balbi@ti.com>=
+ =E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > On Wed, Feb 18, 2015 at 10:47:45AM +0200, Mathias Nyman wrote:
+> > > Hi
+> > >
+> > > This looks correct, but if you are still going to make a new series
+> fixing
+> > > Felipe's comments then the following tiny nitpicks could be fixed as
+> well.
+> > >
+> > > Otherwise
+> > >
+> > > Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+> > >
+> > > Felipe, Do you want to take this series through your tree?
+> >
+> > I can, no issues :-)
+> >
+> > > On 17.02.2015 07:41, Sneeker Yeh wrote:
+> > > >
+> > > > +static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int
+> dev_port_num)
+> > >
+> > > Either add a function description explaining something like "Late
+> > > clearing of connect status.
+> > > Some quirky hardware will suspend the controller when CSC bit is
+> > > cleared and leave URBs unhandled"
+> > >
+> > > Or change the function name to something like
+> > > xhci_late_csc_clear_quirk() or xhci_deferred_csc_clear_quirk()
+> >
+> > I have a feeling xhci_late_csc_clear_quirk() is a better name, much more
+> > descriptive than xhci_try_to_clear_csc() :-)
 >=20
-> On 02/18/2015 01:35 PM, Kishon Vijay Abraham I wrote:
-> >Hi,
-> >
-> >On Thursday 12 February 2015 01:07 PM, Zhangfei Gao wrote:
-> >>Add usb phy controller for hi6220 platform
-> >>
-> >>Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> >>---
-> >>  drivers/phy/Kconfig          |   9 ++
-> >>  drivers/phy/Makefile         |   1 +
-> >>  drivers/phy/phy-hi6220-usb.c | 306
-> >>+++++++++++++++++++++++++++++++++++++++++++
-> >>  3 files changed, 316 insertions(+)
-> >>  create mode 100644 drivers/phy/phy-hi6220-usb.c
-> >
-> >why is this driver in drivers/phy when it doesn't use the generic PHY
-> >framework at all?
-> >
->=20
-> Balbi recommended "new drivers only on drivers/phy/", including usb
-> phy.
+> Hmm, I'll use this one, ^^
+> Thanks for comment it.
 
-but it should use the API too. It's not only about a directory, you need
-to use the new API.
-
-> So Move drivers/usb/phy/phy-hi6220-usb.c to
-> drivers/phy/phy-hi6220-usb.c, required by Balbi.
-
-you're reading what I stated the way you like.
+alright, either one is fine :-)
 
 --=20
 balbi
 
---C1iGAkRnbeBonpVg
+--1Y7d0dPL928TPQbc
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJU5KNCAAoJEIaOsuA1yqREuIEP/0lfGnca9Fl0sxxTUJZ3CPez
-xsOgaLfX2EtrgEW02XfOX//0z3v7yS3zFFIynqng2oimaRE9QPguoYoBlVEgEZhl
-+011U5uNYDI7M8Jg9jyJZUITvtSMUnLP84d5oG9wNbmd7APC5npy69MsjY5dI9WW
-cHDr0625b/rCMcryVrmkJuzhBddMhscUjrPX8OZxngCTpxrcqXD277MWN9CR4l9N
-16eMID/oHn48ZlPhHQHCBimQamF7jF9vGGZTfYHm2wurC7ntXJzXC+Y1vsIf8kxE
-I++fyRueWKG3YGF46spUMpDAUG1tGVPxjjxvjVYAxZSzRrlPtha41x/RiLoLYiu9
-MIP3UgTLXOZPn5GeW780yplKCIpZbndy5+X6eC2/wJUtWyMuHY0HGE6tAO1O9kp1
-63HK3oiXG+buTV8uH5GHrlZ8hTRAJ+oGx3QE9Lr50K26AoK20DCZkla9pdAWsazX
-4uMfZtzDEOH8xi8vWrL8FLqzSr4FWQnJsoGVb76eU2wmmtbVsQ/NKjm+yzM3TMjD
-5Y2b8dJXZYBNQmaejkVcE99Ogyv+7840d4D1uy92JdfcUG2uZVrbnEz7EqLytdQ8
-WfM7AtrYLKLFtuD57szXqDPif/EMCjXoO6YUWTkGwQ4GSVnTAsf6gou0AkK3NF9S
-8CtpOsKkP5sBI2iZcH6J
-=uiJX
+iQIcBAEBAgAGBQJU5KTbAAoJEIaOsuA1yqRESYsP/jZqFSnGie39njr3pQ7y3stc
+a4LxroQSFPgy3udrL42dU/GSCOA8EzBiI1YMUPcTTCVtTfn1hzCn/iDS8c7k4kjG
+qPzZmqpgdvfF0HMpmZCrGy467veicky67hMAp6HGqQrDaz77vQhqy78pEvwGx7+o
+gkPcVDybhk0bzlo0TbVnCCecXy+1olN8n63xmfnAv3cdITvINVJV/fpFg0aTHWfu
+b2b6lbFNUwVL4qF3yigJMoBNdIBSBMwZe9AK3iVjJGEjyqO+gBhH3XON/VmSP1m7
+9ACK6J1Grj2FbKnTIJWwTFc5GpHSmLBMSSgSYBfWtWqObSd13P8xeAKzGA93EfKK
+ynbhsC+QJfKjxz5dG5McTEQxxkPrVrm/0IVmMKf+g2O9+jCjCK/9/BxdfRR3mjMO
+7s/kk2BMNlm5TZlxgJMX8nvoVdH6PS4VHpISBQGOUIECSRye4OQTmYPKMC+ktsKY
+uwTZXg3WuPN11yspBq7coVpaj4V37xZgMNOIKzXXXw9ub6tai9ZSZ7jAvhUjLIdh
+2yvvLzLQTuPlWYlidpiEKaIoc4jVaE3tj0EWuexJc0HSNclJ6A7V/mJuwV1ueyGz
+GhRO3xyen5zHnlVpH6K0PXPcfCDmLVAYAFNdOlkMDsnZQh5uRClYx7mteQViut+e
+h+0bV3UC66Gi0bSjr6pN
+=rvaB
 -----END PGP SIGNATURE-----
 
---C1iGAkRnbeBonpVg--
+--1Y7d0dPL928TPQbc--
