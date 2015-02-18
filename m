@@ -1,59 +1,58 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
-Date: Wed, 18 Feb 2015 06:54:30 -0800
-Message-ID: <CAJAp7OjNK5WhZ62x5+z5RZG_GJ8sDoyyHDRq+BBUUkxY_ndjhw@mail.gmail.com>
-References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
-	<54DD7CE5.5000302@codeaurora.org>
-	<CAJAp7OgD3+mGZ02o6xAWkJvKoD4BcQWVD1GS87Niw_fcReBMMA@mail.gmail.com>
-	<54E3FCD3.4000304@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <54E3FCD3.4000304@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4] Device Tree Quirks & the Beaglebone
+Date: Wed, 18 Feb 2015 16:59:32 +0200
+Message-ID: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 17, 2015 at 6:45 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 02/17/15 15:02, Bjorn Andersson wrote:
->> On Thu, Feb 12, 2015 at 8:26 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-[..]
->>> This doesn't seem to do anything for the OVP spike mentioned in this
->>> patch[1]. Do you see that problem on your device? I imagine the PMIC is
->>> the same.
->>>
->>> [1]
->>> https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?id=fef9e15072562f0f28dc7066dcdd69388df81ed3
->>>
->> That's odd, I can't find that fix in any officially supported releases
->> for 8974 - which Courtney used as reference for this driver.
->>
->> Just to make sure I understand the solution; when disabling the sinks
->> the over-voltage-protection sometimes triggers, so we should detect
->> that and reset the ovp configuration?
->>
->> I presume the side effect would be that the sinks would not give any
->> output until this is done?
->>
->
-> It seems that commit is not very good at describing the problem. From
-> what I can tell, the inductor current may spike when the WLED is turned
-> off and the switch is stuck on (the circuit is a boost convertor). To
-> make sure this doesn't happen, we force an OVP so that the switch is
-> known to be open (i.e. off) and thus can't cause the current spike when
-> we disable.
->
+The following patchset introduces Device Tree quirks which
+apply right after unflattening. Quirks allow using a single
+device tree blob to support revisions of a single board.
 
-Apparently that commit is only half of the solution, there's another
-commit earlier in history with the same commit message [2].
+This makes deployment easier, since there is no need to modify
+the bootloader environment, and allow booting using a very small
+bootloader shim with a resulting decrease in boot time which
+is extremely important in various use-cases.
 
-With both [1] and [2] in place there are a bunch of different
-operations going on, so I'm not able to fully map these to your
-description - which does make sense.
+For details please look at Documentation/devicetree/quirks.txt
 
-[2] https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?id=b1a2f61113c69d2aba68c583101ac40a05cb2c5b
+This patch has an implicit dependency on a previous patch
+"of: Custom printk format specifier for device node" for debugging
+prints of device nodes.
 
-Regards,
-Bjorn
+Pantelis Antoniou (4):
+  arm: of: Add a DT quirk method after unflattening
+  of: DT quirks infrastructure
+  arm: am33xx: DT quirks for am33xx based beaglebone variants
+  arm: dts: Common Black/White Beaglebone DTS using quirks
+
+ .../bindings/quirks/am33xx-bone-quirk.txt          |  82 ++++
+ Documentation/devicetree/quirks.txt                | 101 +++++
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/am335x-bone-all.dts              | 157 +++++++
+ arch/arm/include/asm/mach/arch.h                   |   1 +
+ arch/arm/kernel/setup.c                            |   3 +
+ arch/arm/mach-omap2/Makefile                       |   5 +
+ arch/arm/mach-omap2/am33xx-dt-quirks.c             | 498 +++++++++++++++++++++
+ arch/arm/mach-omap2/am33xx-dt-quirks.h             |  10 +
+ arch/arm/mach-omap2/board-generic.c                |   1 +
+ arch/arm/mach-omap2/common.h                       |   8 +
+ drivers/of/dynamic.c                               | 358 +++++++++++++++
+ include/linux/of.h                                 |  16 +
+ 13 files changed, 1242 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/quirks/am33xx-bone-quirk.txt
+ create mode 100644 Documentation/devicetree/quirks.txt
+ create mode 100644 arch/arm/boot/dts/am335x-bone-all.dts
+ create mode 100644 arch/arm/mach-omap2/am33xx-dt-quirks.c
+ create mode 100644 arch/arm/mach-omap2/am33xx-dt-quirks.h
+
+-- 
+1.7.12
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
