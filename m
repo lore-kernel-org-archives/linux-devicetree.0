@@ -1,53 +1,63 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: amba uarts - arm type uarts fifo size provided by device tree
-Date: Wed, 18 Feb 2015 19:06:02 +0000
-Message-ID: <20150218190601.GI29429@leverpostej>
-References: <1424285593-2886-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/6] ASoC: max98088: Add DT bindings
+Date: Wed, 18 Feb 2015 22:08:44 +0300
+Message-ID: <54E4E33C.9040301@cogentembedded.com>
+References: <1424283959-16289-1-git-send-email-afaerber@suse.de> <1424283959-16289-3-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424285593-2886-1-git-send-email-jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1424283959-16289-3-git-send-email-afaerber@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Sangbeom Kim <sbkim73@samsung.com>, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.de>, Xiubo Li <Li.Xiubo@freescale.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
-Please Cc lakml for patches in this area in future.
+On 02/18/2015 09:25 PM, Andreas F=C3=A4rber wrote:
 
-On Wed, Feb 18, 2015 at 06:53:11PM +0000, Jorge Ramirez-Ortiz wrote:
-> [PATCH 1/2] Documentation: bindings: add optional fifo size property
-> [PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present
-> 
-> 
-> These patches aim at resolving an issue present on some of the amba pl011
-> uarts.  
+> "maxim,max98089" will be used for the Spring Chromebook.
 
-Which systems are affected? Neither of your two patches add the property
-to any dts file.
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+>   sound/soc/codecs/max98088.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
 
-> Some of these arm type uarts have their fifo sizes not defined in terms of the
-> amba_rev register. 
+> diff --git a/sound/soc/codecs/max98088.c b/sound/soc/codecs/max98088.=
+c
+> index 805b3f8cd39d..69a21d1946e3 100644
+> --- a/sound/soc/codecs/max98088.c
+> +++ b/sound/soc/codecs/max98088.c
+> @@ -2009,10 +2009,18 @@ static const struct i2c_device_id max98088_i2=
+c_id[] =3D {
+>   };
+>   MODULE_DEVICE_TABLE(i2c, max98088_i2c_id);
+>
+> +static const struct of_device_id max98088_of_match[] =3D {
 
-What does said register actually contain?
+    If I don't mistake, gcc will complain about this variable being unu=
+sed if=20
+CONFIG_OF=3Dn.
 
-Is this a full PL011, or a cut-down SBSA UART?
+> +	{ .compatible =3D "maxim,max98088" },
+> +	{ .compatible =3D "maxim,max98089" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, max98088_of_match);
+> +
+>   static struct i2c_driver max98088_i2c_driver =3D {
+>   	.driver =3D {
+>   		.name =3D "max98088",
+>   		.owner =3D THIS_MODULE,
+> +		.of_match_table =3D of_match_ptr(max98088_of_match),
 
-Mark.
+    You probably don;t need of_match_ptr(). Either that or do something=
+ with=20
+the match table, like enclosing into #ifdef or annotating with '__maybe=
+_unused'.
 
-> Those uarts should be able to declare their fifo sizes using the optional
-> property "fifo-size" in the device tree. This device tree setting shall take
-> precedence over any other values. 
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+WBR, Sergei
