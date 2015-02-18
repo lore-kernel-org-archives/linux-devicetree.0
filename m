@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 3/8] ARM: STi: DT: STiH407: Add Device Tree node for the LPC
-Date: Wed, 18 Feb 2015 11:49:09 +0000
-Message-ID: <1424260154-12868-4-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v3 8/8] MAINTAINERS: Add Watchdog and RTC files to STI's maintainer entry
+Date: Wed, 18 Feb 2015 11:49:14 +0000
+Message-ID: <1424260154-12868-9-git-send-email-lee.jones@linaro.org>
 References: <1424260154-12868-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1424260154-12868-1-git-send-email-lee.jones@linaro.org>
@@ -10,52 +10,27 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: lee.jones@linaro.org, kernel@stlinux.com, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com
 List-Id: devicetree@vger.kernel.org
 
-On current ST platforms the LPC controls a number of functions.  This
-patch enables support for the LPC Watchdog and LPC RTC devices on LPC1
-and LPC2 respectively.
-
-Signed-off-by: David Paris <david.paris@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 3e31d32..04448a7 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -7,6 +7,7 @@
-  * publishhed by the Free Software Foundation.
-  */
- #include "stih407-pinctrl.dtsi"
-+#include <dt-bindings/mfd/st-lpc.h>
- #include <dt-bindings/reset-controller/stih407-resets.h>
- / {
- 	#address-cells = <1>;
-@@ -274,5 +275,24 @@
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ddb9ac8..7060aa6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1439,10 +1439,12 @@ F:	drivers/phy/phy-stih407-usb.c
+ F:	drivers/phy/phy-stih41x-usb.c
+ F:	drivers/pinctrl/pinctrl-st.c
+ F:	drivers/reset/sti/
++F:	drivers/rtc/rtc-st-lpc.c
+ F:	drivers/tty/serial/st-asc.c
+ F:	drivers/usb/dwc3/dwc3-st.c
+ F:	drivers/usb/host/ehci-st.c
+ F:	drivers/usb/host/ohci-st.c
++F:	drivers/watchdog/st_lpc_wdt.c
+ F:	drivers/ata/ahci_st.c
  
- 			status = "disabled";
- 		};
-+
-+		/* Watchdog and Real-Time Clock */
-+		lpc@8787000 {
-+			compatible = "st,stih407-lpc";
-+			reg = <0x8787000 0x1000>;
-+			interrupts = <GIC_SPI 129 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&clk_s_d3_flexgen CLK_LPC_0>;
-+			timeout-sec = <120>;
-+			st,syscfg = <&syscfg_core>;
-+			st,lpc-mode = <ST_LPC_MODE_WDT>;
-+		};
-+
-+		lpc@8788000 {
-+			compatible = "st,stih407-lpc";
-+			reg = <0x8788000 0x1000>;
-+			interrupts = <GIC_SPI 130 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&clk_s_d3_flexgen CLK_LPC_1>;
-+			st,lpc-mode = <ST_LPC_MODE_RTC>;
-+		};
- 	};
- };
+ ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
 -- 
 1.9.1
