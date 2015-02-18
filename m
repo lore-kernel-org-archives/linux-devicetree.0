@@ -1,63 +1,60 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/6] ASoC: max98088: Add DT bindings
-Date: Wed, 18 Feb 2015 22:08:44 +0300
-Message-ID: <54E4E33C.9040301@cogentembedded.com>
-References: <1424283959-16289-1-git-send-email-afaerber@suse.de> <1424283959-16289-3-git-send-email-afaerber@suse.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present
+Date: Wed, 18 Feb 2015 19:08:34 +0000
+Message-ID: <20150218190834.GJ29429@leverpostej>
+References: <1424285593-2886-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1424285593-2886-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1424283959-16289-3-git-send-email-afaerber@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Sangbeom Kim <sbkim73@samsung.com>, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.de>, Xiubo Li <Li.Xiubo@freescale.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1424285593-2886-3-git-send-email-jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 02/18/2015 09:25 PM, Andreas F=C3=A4rber wrote:
-
-> "maxim,max98089" will be used for the Spring Chromebook.
-
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+On Wed, Feb 18, 2015 at 06:53:13PM +0000, Jorge Ramirez-Ortiz wrote:
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->   sound/soc/codecs/max98088.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-
-> diff --git a/sound/soc/codecs/max98088.c b/sound/soc/codecs/max98088.=
-c
-> index 805b3f8cd39d..69a21d1946e3 100644
-> --- a/sound/soc/codecs/max98088.c
-> +++ b/sound/soc/codecs/max98088.c
-> @@ -2009,10 +2009,18 @@ static const struct i2c_device_id max98088_i2=
-c_id[] =3D {
->   };
->   MODULE_DEVICE_TABLE(i2c, max98088_i2c_id);
->
-> +static const struct of_device_id max98088_of_match[] =3D {
-
-    If I don't mistake, gcc will complain about this variable being unu=
-sed if=20
-CONFIG_OF=3Dn.
-
-> +	{ .compatible =3D "maxim,max98088" },
-> +	{ .compatible =3D "maxim,max98089" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max98088_of_match);
+>  drivers/tty/serial/amba-pl011.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+> index 02016fc..23fef63 100644
+> --- a/drivers/tty/serial/amba-pl011.c
+> +++ b/drivers/tty/serial/amba-pl011.c
+> @@ -84,6 +84,12 @@ struct vendor_data {
+>  
+>  static unsigned int get_fifosize_arm(struct amba_device *dev)
+>  {
+> +	const void *prop;
 > +
->   static struct i2c_driver max98088_i2c_driver =3D {
->   	.driver =3D {
->   		.name =3D "max98088",
->   		.owner =3D THIS_MODULE,
-> +		.of_match_table =3D of_match_ptr(max98088_of_match),
+> +	prop = of_get_property(dev->dev.of_node, "fifo-size", NULL);
+> +	if (prop)
+> +		return of_read_ulong(prop, 1);
 
-    You probably don;t need of_match_ptr(). Either that or do something=
- with=20
-the match table, like enclosing into #ifdef or annotating with '__maybe=
-_unused'.
+Use of_property_read_u32.
 
-[...]
+You will need to sanity check the result, also.
 
-WBR, Sergei
+What value do you need for your platform?
+
+Mark.
+
+> +
+>  	return amba_rev(dev) < 3 ? 16 : 32;
+>  }
+>  
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
