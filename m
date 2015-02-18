@@ -1,94 +1,49 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v4 4/8] ARM: dts: Add pwm-fan node to the Odroid-U3 board
-Date: Wed, 18 Feb 2015 14:16:26 +0100
-Message-ID: <54E490AA.3020301@suse.de>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com> <1424254056-5904-1-git-send-email-l.majewski@samsung.com> <1424254056-5904-5-git-send-email-l.majewski@samsung.com>
+From: Sneeker Yeh <sneeker.yeh@gmail.com>
+Subject: Re: [PATCH v4 5/5] usb: dwc3: add Fujitsu Specific Glue layer
+Date: Wed, 18 Feb 2015 21:55:27 +0800
+Message-ID: <CAJ1gpc1D_siNXPjfGrE2OJVzYaEz19TcAqCwjxMXPt7g6VFncQ@mail.gmail.com>
+References: <1424151697-2084-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+	<1424151697-2084-6-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+	<20150217192612.GH31167@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1424254056-5904-5-git-send-email-l.majewski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150217192612.GH31167@saruman.tx.rr.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 18.02.2015 um 11:07 schrieb Lukasz Majewski:
-> From: Kamil Debski <k.debski@samsung.com>
->=20
-> Add pwm-fan node to the Odroid-U3 board file to enable PWM control of=
- the
-> cooling fan. In addition, add the "pwm" label to the pwm@139D0000 nod=
-e
-> in the exynos4412.dtsi.
->=20
-> Signed-off-by: Kamil Debski <k.debski@samsung.com>
-> [Rebased on the newest mainline by l.majewski@samsung.com]
+hi Felipe:
 
-You need to sign off patches you submit.
+thanks for the suggestion,
 
-> ---
-> Changes since v1:
-> - added pwm label to the pwm@139D0000 node in exynos4.dtsi
-> - use the pwm label in the exynos4412-odroidu3.dts
-> - change order or properties in the pwn-fan node, to be sorted
->   in alphabetical order
->=20
-> ---
->  arch/arm/boot/dts/exynos4.dtsi            |  2 +-
->  arch/arm/boot/dts/exynos4412-odroidu3.dts | 13 +++++++++++++
->  2 files changed, 14 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exyno=
-s4.dtsi
-> index f18d746..75266e3 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -582,7 +582,7 @@
->  		status =3D "disabled";
->  	};
-> =20
-> -	pwm@139D0000 {
-> +	pwm: pwm@139D0000 {
->  		compatible =3D "samsung,exynos4210-pwm";
->  		reg =3D <0x139D0000 0x1000>;
->  		interrupts =3D <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>, <0 41 0>;
-> diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boo=
-t/dts/exynos4412-odroidu3.dts
-> index c8a64be..60bd1e4 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> +++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> @@ -31,6 +31,19 @@
->  			linux,default-trigger =3D "heartbeat";
->  		};
->  	};
-> +
-> +	pwm-fan {
-> +		compatible =3D "pwm-fan";
-> +		pwms =3D <&pwm 0 10000 0>;
-> +		status =3D "okay";
+2015-02-18 3:26 GMT+08:00 Felipe Balbi <balbi@ti.com>:
+> On Tue, Feb 17, 2015 at 01:41:37PM +0800, Sneeker Yeh wrote:
+>> This patch adds support for Synopsis DesignWare USB3 IP Core found
+>> on Fujitsu Socs.
+>>
+>> Signed-off-by: Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+>> ---
+>>  .../devicetree/bindings/usb/fujitsu-dwc3.txt       |   33 ++++
+>>  drivers/usb/dwc3/Kconfig                           |   11 ++
+>>  drivers/usb/dwc3/Makefile                          |    1 +
+>>  drivers/usb/dwc3/dwc3-mb86s70.c                    |  206 ++++++++++++++++++++
+>>  4 files changed, 251 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/fujitsu-dwc3.txt
+>>  create mode 100644 drivers/usb/dwc3/dwc3-mb86s70.c
+>
+> what's the possibility that fujitsu will make another SoC with dwc3 in
+> it ? I wonder if we should use a slightly more generic name here:
+>
+> dwc3-fujitsu.c ?
 
-Status "okay" is only needed for pre-existing nodes that would have
-status "disabled" otherwise, such as below. Just drop it here.
+We did have several SoC that has dwc3 in it,
+"dwc3-fujitsu.c" looks fine, and I would like to take this to next patchset.
 
-Regards,
-Andreas
+Much appreciate,
+Sneeker
 
-> +	};
-> +};
-> +
-> +&pwm {
-> +	pinctrl-0 =3D <&pwm0_out>;
-> +	pinctrl-names =3D "default";
-> +	samsung,pwm-outputs =3D <0>;
-> +	status =3D "okay";
->  };
-> =20
->  &usb3503 {
->=20
-
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Jennifer Guild, Dilip Upmanyu,
-Graham Norton; HRB 21284 (AG N=FCrnberg)
+>
+> --
+> balbi
