@@ -1,60 +1,72 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present
-Date: Wed, 18 Feb 2015 19:08:34 +0000
-Message-ID: <20150218190834.GJ29429@leverpostej>
-References: <1424285593-2886-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1424285593-2886-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH 2/6] ASoC: max98088: Add DT bindings
+Date: Wed, 18 Feb 2015 20:17:59 +0100
+Message-ID: <54E4E567.2060403@suse.de>
+References: <1424283959-16289-1-git-send-email-afaerber@suse.de> <1424283959-16289-3-git-send-email-afaerber@suse.de> <54E4E33C.9040301@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424285593-2886-3-git-send-email-jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54E4E33C.9040301@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.de>, Xiubo Li <Li.Xiubo@freescale.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 18, 2015 at 06:53:13PM +0000, Jorge Ramirez-Ortiz wrote:
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/tty/serial/amba-pl011.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> index 02016fc..23fef63 100644
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -84,6 +84,12 @@ struct vendor_data {
->  
->  static unsigned int get_fifosize_arm(struct amba_device *dev)
->  {
-> +	const void *prop;
-> +
-> +	prop = of_get_property(dev->dev.of_node, "fifo-size", NULL);
-> +	if (prop)
-> +		return of_read_ulong(prop, 1);
+Hi,
 
-Use of_property_read_u32.
+Am 18.02.2015 um 20:08 schrieb Sergei Shtylyov:
+> On 02/18/2015 09:25 PM, Andreas F=C3=A4rber wrote:
+>=20
+>> "maxim,max98089" will be used for the Spring Chromebook.
+>=20
+>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>> ---
+>>   sound/soc/codecs/max98088.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>=20
+>> diff --git a/sound/soc/codecs/max98088.c b/sound/soc/codecs/max98088=
+=2Ec
+>> index 805b3f8cd39d..69a21d1946e3 100644
+>> --- a/sound/soc/codecs/max98088.c
+>> +++ b/sound/soc/codecs/max98088.c
+>> @@ -2009,10 +2009,18 @@ static const struct i2c_device_id
+>> max98088_i2c_id[] =3D {
+>>   };
+>>   MODULE_DEVICE_TABLE(i2c, max98088_i2c_id);
+>>
+>> +static const struct of_device_id max98088_of_match[] =3D {
+>=20
+>    If I don't mistake, gcc will complain about this variable being
+> unused if CONFIG_OF=3Dn.
 
-You will need to sanity check the result, also.
+I assume there will be no warning because of the "const".
+=46or just "static" you would be right.
 
-What value do you need for your platform?
+>> +    { .compatible =3D "maxim,max98088" },
+>> +    { .compatible =3D "maxim,max98089" },
+>> +    { }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, max98088_of_match);
+>> +
+>>   static struct i2c_driver max98088_i2c_driver =3D {
+>>       .driver =3D {
+>>           .name =3D "max98088",
+>>           .owner =3D THIS_MODULE,
+>> +        .of_match_table =3D of_match_ptr(max98088_of_match),
+>=20
+>    You probably don;t need of_match_ptr(). Either that or do somethin=
+g
+> with the match table, like enclosing into #ifdef or annotating with
+> '__maybe_unused'.
 
-Mark.
+This was copied from max98090 and max98095.
 
-> +
->  	return amba_rev(dev) < 3 ? 16 : 32;
->  }
->  
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Andreas
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upmany=
+u,
+Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
