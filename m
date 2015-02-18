@@ -1,85 +1,54 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] mfd: devicetree: bindings: Add Qualcomm RPM regulator
- subnodes
-Date: Tue, 17 Feb 2015 18:52:48 -0800
-Message-ID: <54E3FE80.2090202@codeaurora.org>
-References: <1422582666-32653-1-git-send-email-bjorn.andersson@sonymobile.com>	<20150213221332.GA19975@qualcomm.com> <CAJAp7OjwuOdD=DynygFWnPH6tEVyf_dzOHQbUV_CHjS7OXihdg@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/2 v3] drivers/core/of: Add symlink to device-tree from
+ devices with an OF node
+Date: Tue, 17 Feb 2015 20:57:08 -0800
+Message-ID: <20150218045708.GC3222@kroah.com>
+References: <1415342031.4925.27.camel@kernel.crashing.org>
+ <1415342117.4925.29.camel@kernel.crashing.org>
+ <1415596626.5769.14.camel@kernel.crashing.org>
+ <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
+ <1424219118.21410.111.camel@kernel.crashing.org>
+ <CAL_JsqJZg9zTjpx6pNxF8yvbTVcXX3cMP=RtEHUaf+E2X3MC_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OjwuOdD=DynygFWnPH6tEVyf_dzOHQbUV_CHjS7OXihdg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJZg9zTjpx6pNxF8yvbTVcXX3cMP=RtEHUaf+E2X3MC_w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>, Andy Gross <agross@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Jeremy Kerr <jeremy.kerr@au1.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/15 13:48, Bjorn Andersson wrote:
-> On Fri, Feb 13, 2015 at 2:13 PM, Andy Gross <agross@codeaurora.org> wrote:
->> On Thu, Jan 29, 2015 at 05:51:06PM -0800, Bjorn Andersson wrote:
->>> Add the regulator subnodes to the Qualcomm RPM MFD device tree bindings.
->>>
->>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->>> ---
->>>       #include <dt-bindings/mfd/qcom-rpm.h>
->>> @@ -66,5 +237,18 @@ frequencies.
->>>
->>>               #address-cells = <1>;
->>>               #size-cells = <0>;
->>> +
->>> +             pm8921_smps1: pm8921-smps1 {
->>> +                     compatible = "qcom,rpm-pm8921-smps";
->>> +                     reg = <QCOM_RPM_PM8921_SMPS1>;
->>> +
->>> +                     regulator-min-microvolt = <1225000>;
->>> +                     regulator-max-microvolt = <1225000>;
->>> +                     regulator-always-on;
->>> +
->>> +                     bias-pull-down;
->>> +
->>> +                     qcom,switch-mode-frequency = <3200000>;
->>> +             };
->>>       };
->> My only comment here is that most (all but one) of the other mfd regulator
->> devices use regulators {}.  Still wonder if that's what we should do.
->>
-> Looking at the existing mfds they all have a list in the code of the
-> regulators supported on a certain mfd. Through the use of
-> regulator_desc.{of_match,regulators_node} these regulators are
-> populated with properties from of_nodes matched by name (of_match)
-> under the specified node (regulators_node).
-> But as we've discussed in other cases it's not desirable to maintain
-> these lists for the various variants of Qualcomm platforms, so I did
-> choose to go with "standalone" platform devices - with matching
-> through compatible and all.
->
-> But that's all implementation, looking at the binding itself a
-> regulator {} (clocks{} and msm_bus{}) would serve as a sort of
-> grouping of children based on type. Except for the implications this
-> has on the implementation I don't see much benefit of this (and in our
-> case the implementation would suffer from the extra grouping).
->
->
-> Let me know what you think, I based these ideas on just reading the
-> existing code and bindings, and might very well have missed something.
->
+On Tue, Feb 17, 2015 at 07:07:14PM -0600, Rob Herring wrote:
+> On Tue, Feb 17, 2015 at 6:25 PM, Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+> > So I've been annoyed lately with having a bunch of devices such as i2c
+> > eeproms (for use by VPDs, server world !) and other bits and pieces that
+> > I want to be able to identify from userspace, and possibly provide
+> > additional data about from FW.
+> >
+> > Basically, it boils down to correlating the sysfs device with the OF
+> > tree device node, so that user space can use device-tree info such as
+> > additional "location" or "label" (or whatever else we can come up with)
+> > propreties to identify a given device, or get some attributes of use
+> > about it, etc...
+> >
+> > Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
+> > using "devspec" properties. For example, PCI creates them if it can
+> > correlate the probed device with a DT node. Some powerpc specific busses
+> > do that too.
+> >
+> > However, i2c doesn't and it would be nice to have something more generic
+> > since technically any device can have a corresponding device tree node.
+> >
+> > This patch adds an "of_node" symlink to devices that have a non-NULL
+> > dev->of_node pointer, the patch is pretty trivial and seems to work just
+> > fine for me.
+> >
+> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-The main benefit I can think of is we cut down on runtime memory bloat.
+Thanks, I'll queue these up after 3.20-rc1 is out.
 
-(gdb) p sizeof(struct platform_device)
-$1 = 624
-
-Multiply that by 20 regulators and you get 624 * 20 = 12480 bytes in
-platform devices. If we had one platform_device for all RPM controlled
-regulators that would reduce this number from ~12k to ~0.5K. It would
-require of_regulator_match() and the (undesirable) lists of regulator
-names for all the different pmic variants, or we would need to pick out
-the regulator nodes based on compatible matching. Is that so bad? In the
-other cases we were putting lots of data in the driver purely for
-debugging, whereas in this case we're doing it to find nodes that we
-need to hook up with regulators in software and any associated data for
-that regulator.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+greg k-h
