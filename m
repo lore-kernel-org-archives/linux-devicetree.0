@@ -1,59 +1,46 @@
-From: Niklas Cassel <nks@flawful.org>
-Subject: [PATCH RESEND 2/2] serial: add device tree binding documentation for ETRAX FS UART
-Date: Wed, 18 Feb 2015 23:29:38 +0100
-Message-ID: <1424298578-6833-1-git-send-email-nks@flawful.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, Niklas Cassel <nks@flawful.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
+ leds: flash: document sysfs interface
+Date: Wed, 18 Feb 2015 23:47:47 +0100
+Message-ID: <20150218224747.GA3999@amd>
+References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
+ <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>, Greg KH <greg@kroah.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Niklas Cassel <nks@flawful.org>
----
-[PATCH 1/2] of this patch series has already reached its way into mainline.
-It would be nice if someone picked up [PATCH 2/2] (this commit) before the merge window closes.
 
- .../devicetree/bindings/serial/axis,etraxfs-uart.txt  | 19 +++++++++++++++++++
- Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
- 2 files changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
+On Wed 2015-02-18 17:20:22, Jacek Anaszewski wrote:
+> Add a documentation of LED Flash class specific sysfs attributes.
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
 
-diff --git a/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt b/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
-new file mode 100644
-index 0000000..ebcbb62
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
-@@ -0,0 +1,19 @@
-+ETRAX FS UART
-+
-+Required properties:
-+- compatible : "axis,etraxfs-uart"
-+- reg: offset and length of the register set for the device.
-+- interrupts: device interrupt
-+
-+Optional properties:
-+- {dtr,dsr,ri,cd}-gpios: specify a GPIO for DTR/DSR/RI/CD
-+  line respectively.
-+
-+Example:
-+
-+serial@b00260000 {
-+	compatible = "axis,etraxfs-uart";
-+	reg = <0xb0026000 0x1000>;
-+	interrupts = <68>;
-+	status = "disabled";
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index d6bad12..f8d088e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -27,6 +27,7 @@ atmel	Atmel Corporation
- auo	AU Optronics Corporation
- avago	Avago Technologies
- avic	Shanghai AVIC Optoelectronics Co., Ltd.
-+axis	Axis Communications AB
- bosch	Bosch Sensortec GmbH
- brcm	Broadcom Corporation
- buffalo	Buffalo, Inc.
+NAK-ed-by: Pavel Machek
+
+> +What:		/sys/class/leds/<led>/available_sync_leds
+> +Date:		February 2015
+> +KernelVersion:	3.20
+> +Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
+> +Description:	read/write
+> +		Space separated list of LEDs available for flash strobe
+> +		synchronization, displayed in the format:
+> +
+> +		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
+
+Multiple values per file, with all the problems we had in /proc. I
+assume led_id is an integer? What prevents space or dot in led name?
+
+       	      	    	     	  	   	    	       Pavel
+
 -- 
-2.2.2
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
