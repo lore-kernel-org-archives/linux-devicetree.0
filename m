@@ -1,32 +1,57 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 2/2 v3] drivers/core/of: Add symlink to device-tree from
- devices with an OF node
-Date: Wed, 18 Feb 2015 20:50:45 +1100
-Message-ID: <1424253045.26254.2.camel@kernel.crashing.org>
-References: <1415342031.4925.27.camel@kernel.crashing.org>
-	 <1415342117.4925.29.camel@kernel.crashing.org>
-	 <1415596626.5769.14.camel@kernel.crashing.org>
-	 <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
-	 <1424219118.21410.111.camel@kernel.crashing.org>
-	 <CAL_JsqJZg9zTjpx6pNxF8yvbTVcXX3cMP=RtEHUaf+E2X3MC_w@mail.gmail.com>
-	 <20150218045708.GC3222@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150218045708.GC3222@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Jeremy Kerr <jeremy.kerr@au1.ibm.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: [PATCH v4 0/8] hwmon: thermal: Odroid U3: Provide support for Odroid
+ U3 fan
+Date: Wed, 18 Feb 2015 11:07:28 +0100
+Message-ID: <1424254056-5904-1-git-send-email-l.majewski@samsung.com>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>
+Cc: lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-02-17 at 20:57 -0800, Greg Kroah-Hartman wrote:
+Presented patches add support for Odroid's U3 optional CPU FAN, which uses PWM
+subsystem for low level control.
 
-> > Acked-by: Rob Herring <robh@kernel.org>
-> 
-> Thanks, I'll queue these up after 3.20-rc1 is out.
+After successful probe it registers itself as a cooling device for thermal
+subsystem. To preserve the ability to use this fan as a PWM device stubs for
+thermal_of_cooling_device_register() and thermal_cdev_update() have been added.
 
-Awesome, thanks !
+Additionally, devices without support for DTS are still supported.
 
-Cheers,
-Ben.
+To provide correct functionality, new properties to device tree description for 
+Exynos4412 and in particular Odroid U3 have been added.
+
+Those patches were tested on Exynos4412 - Odroid U3 board.
+
+Patches were applied on:
+linux-soc-thermal/next branch (Linux 3.19-rc5)
+SHA1: 252454f5cbda2c6b40c5d36f58cac2938437b85d
+
+Kamil Debski (1):
+  ARM: dts: Add pwm-fan node to the Odroid-U3 board
+
+Lukasz Majewski (7):
+  thermal: Provide stub for thermal_of_cooling_device_register()
+    function
+  thermal: Provide stub for thermal_cdev_update() function
+  Documentation: dts: Documentation entry to explain how to use PWM FAN
+    as a cooling device
+  ARM: dts: Add properties to use pwm-fan device as a cooling device in
+    Odroid U3
+  hwmon: pwm-fan: Extract __set_pwm() function to only modify PWM duty
+    cycle
+  hwmon: pwm-fan: Read PWM FAN configuration from device tree
+  hwmon: pwm-fan: Code for using PWM FAN as a cooling device
+
+ .../devicetree/bindings/hwmon/pwm-fan.txt          |  20 +++
+ arch/arm/boot/dts/exynos4.dtsi                     |   2 +-
+ arch/arm/boot/dts/exynos4412-odroidu3.dts          |  44 ++++++
+ drivers/hwmon/pwm-fan.c                            | 167 +++++++++++++++++++--
+ include/linux/thermal.h                            |  22 ++-
+ 5 files changed, 236 insertions(+), 19 deletions(-)
+
+-- 
+2.0.0.rc2
+
