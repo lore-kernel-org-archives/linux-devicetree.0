@@ -1,42 +1,51 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 0/4] phy: ti-pipe3: fixes for 3.19-rc
-Date: Wed, 18 Feb 2015 10:00:20 +0200
-Message-ID: <54E44694.4070801@ti.com>
-References: <1421151802-7396-1-git-send-email-rogerq@ti.com> <20150113155409.GA2419@atomide.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/6] mfd: fsl imx25 Touchscreen ADC driver
+Date: Wed, 18 Feb 2015 08:01:56 +0000
+Message-ID: <20150218080156.GA5781@x1>
+References: <1422108103-15052-1-git-send-email-mpa@pengutronix.de>
+ <1422108103-15052-2-git-send-email-mpa@pengutronix.de>
+ <20150216133829.GG14545@x1>
+ <CAOMZO5AwbNeEhVgUuLUi-_QT0DesPBBCTvvebuA91y-P2_CNzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150113155409.GA2419@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, kishon@ti.com
-Cc: nm@ti.com, balbi@ti.com, george.cherian@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5AwbNeEhVgUuLUi-_QT0DesPBBCTvvebuA91y-P2_CNzg@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Denis Carikli <denis@eukrea.com>, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/01/15 17:54, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [150113 04:26]:
->> Hi,
->>
->> During system suspend L3INIT_960M_GFCLK and L3INIT_480M_GFCLK clocks remain
->> active on the DRA7 platform. This is because the pipe3 driver doesn't shut
->> them off as part of .suspend(). Patch 1 addresses this issue.
->>
->> SATA on both OMAP5 and DRA7 breaks when SATA drive is plugged in after a
->> system suspend/resume or if AHCI_PLATFORM driver is used as module.
->> Patches 2,3,4 fix it.
->>
->> Hope to get these patches in through the 3.19-rc cycle.
->>
->> Tony,
->>
->> Do you wish to take the DTS patches or let them go in through PHY tree?
-> 
-> Those look ok to me to merge along with the fixes, will ack those two.
-> 
+On Tue, 17 Feb 2015, Fabio Estevam wrote:
 
-Looks like this missed 3.19-rc. My bad for not following up.
+> On Mon, Feb 16, 2015 at 11:38 AM, Lee Jones <lee.jones@linaro.org> wr=
+ote:
+>=20
+> >> +static int mx25_tsadc_setup_irq(struct platform_device *pdev,
+> >> +                             struct mx25_tsadc *tsadc)
+> >> +{
+> >> +     struct device *dev =3D &pdev->dev;
+> >> +     struct device_node *np =3D dev->of_node;
+> >> +     int irq;
+> >> +
+> >> +     irq =3D platform_get_irq(pdev, 0);
+> >> +     if (irq < 0) {
+> >
+> > What if 0 is returned?
+>=20
+> Then  imx25.dtsi would be passing irq=3D0 for the ADC, which would be
+> totally wrong.
 
-Kishon, can you please queue these for 3.20-rc? Thanks.
+Exactly, so it should be <=3D.
 
-cheers,
--roger
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
