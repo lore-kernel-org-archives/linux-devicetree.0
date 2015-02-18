@@ -1,119 +1,115 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH] mfd: devicetree: bindings: Add Qualcomm RPM regulator subnodes
-Date: Wed, 18 Feb 2015 10:37:44 -0800
-Message-ID: <CAJAp7OiheEhCPQEid7Mo1+A08i-t3q5xzpGZhoQW4s0Txa7Xkw@mail.gmail.com>
-References: <1422582666-32653-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<20150213221332.GA19975@qualcomm.com>
-	<CAJAp7OjwuOdD=DynygFWnPH6tEVyf_dzOHQbUV_CHjS7OXihdg@mail.gmail.com>
-	<54E3FE80.2090202@codeaurora.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 4/4] clk: dt: Introduce always-on clock domain documentation
+Date: Wed, 18 Feb 2015 12:50:39 -0600
+Message-ID: <CAL_JsqJ0sfQ-OQvYjL3X3ebH4p9HkN4iy35iT7i9S2d+yz9zYg@mail.gmail.com>
+References: <1424276101-30137-1-git-send-email-lee.jones@linaro.org>
+ <1424276101-30137-5-git-send-email-lee.jones@linaro.org> <CAL_Jsq+r1BKt5B9FNPG+Y0Oi1-3RGNmRUDbpX_uDJwr45bxMXA@mail.gmail.com>
+ <20150218171230.GA30676@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54E3FE80.2090202@codeaurora.org>
+In-Reply-To: <20150218171230.GA30676@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <agross@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, kernel@stlinux.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 17, 2015 at 6:52 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 02/17/15 13:48, Bjorn Andersson wrote:
->> On Fri, Feb 13, 2015 at 2:13 PM, Andy Gross <agross@codeaurora.org> wrote:
->>> On Thu, Jan 29, 2015 at 05:51:06PM -0800, Bjorn Andersson wrote:
->>>> Add the regulator subnodes to the Qualcomm RPM MFD device tree bindings.
->>>>
->>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->>>> ---
->>>>       #include <dt-bindings/mfd/qcom-rpm.h>
->>>> @@ -66,5 +237,18 @@ frequencies.
->>>>
->>>>               #address-cells = <1>;
->>>>               #size-cells = <0>;
->>>> +
->>>> +             pm8921_smps1: pm8921-smps1 {
->>>> +                     compatible = "qcom,rpm-pm8921-smps";
->>>> +                     reg = <QCOM_RPM_PM8921_SMPS1>;
->>>> +
->>>> +                     regulator-min-microvolt = <1225000>;
->>>> +                     regulator-max-microvolt = <1225000>;
->>>> +                     regulator-always-on;
->>>> +
->>>> +                     bias-pull-down;
->>>> +
->>>> +                     qcom,switch-mode-frequency = <3200000>;
->>>> +             };
->>>>       };
->>> My only comment here is that most (all but one) of the other mfd regulator
->>> devices use regulators {}.  Still wonder if that's what we should do.
->>>
->> Looking at the existing mfds they all have a list in the code of the
->> regulators supported on a certain mfd. Through the use of
->> regulator_desc.{of_match,regulators_node} these regulators are
->> populated with properties from of_nodes matched by name (of_match)
->> under the specified node (regulators_node).
->> But as we've discussed in other cases it's not desirable to maintain
->> these lists for the various variants of Qualcomm platforms, so I did
->> choose to go with "standalone" platform devices - with matching
->> through compatible and all.
->>
->> But that's all implementation, looking at the binding itself a
->> regulator {} (clocks{} and msm_bus{}) would serve as a sort of
->> grouping of children based on type. Except for the implications this
->> has on the implementation I don't see much benefit of this (and in our
->> case the implementation would suffer from the extra grouping).
->>
->>
->> Let me know what you think, I based these ideas on just reading the
->> existing code and bindings, and might very well have missed something.
->>
+On Wed, Feb 18, 2015 at 11:12 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Wed, 18 Feb 2015, Rob Herring wrote:
 >
-> The main benefit I can think of is we cut down on runtime memory bloat.
+>> On Wed, Feb 18, 2015 at 10:15 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>> > ---
+>> >  .../devicetree/bindings/clock/clk-domain.txt       | 35 ++++++++++++++++++++++
+>> >  1 file changed, 35 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/clock/clk-domain.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/clock/clk-domain.txt b/Documentation/devicetree/bindings/clock/clk-domain.txt
+>> > new file mode 100644
+>> > index 0000000..b86772f5
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/clock/clk-domain.txt
+>> > @@ -0,0 +1,35 @@
+>> > +Always-on Clock Domain
+>> > +
+>> > +Some hardware is contains bunches of clocks which must never be
+>> > +turned off.  If drivers a) fail to obtain a reference to any of
+>> > +these or b) give up a previously obtained reference during suspend,
+>> > +the common clk framework will attempt to disable them and the
+>> > +hardware can fail irrecoverably.  Usually, the only way to recover
+>> > +from these failures is to restart.
+>>
+>> How is (b) not a bug?
 >
-> (gdb) p sizeof(struct platform_device)
-> $1 = 624
+> Clocks are normally disabled during suspend.  When clocks are disabled
+> they give up their reference.  If references reach 0, the clock is
+> gated.  If one of these clocks is gated, the system will never come
+> out of suspend.
 >
-> Multiply that by 20 regulators and you get 624 * 20 = 12480 bytes in
-> platform devices. If we had one platform_device for all RPM controlled
-> regulators that would reduce this number from ~12k to ~0.5K. It would
-> require of_regulator_match() and the (undesirable) lists of regulator
-> names for all the different pmic variants, or we would need to pick out
-> the regulator nodes based on compatible matching. Is that so bad? In the
-> other cases we were putting lots of data in the driver purely for
-> debugging, whereas in this case we're doing it to find nodes that we
-> need to hook up with regulators in software and any associated data for
-> that regulator.
+> How is it a bug?
+
+It a clock needs to be enabled during suspend, then the driver using
+it should not disable it. Anyway, suspend is a bit orthogonal to this
+issue.
+
+>> While I think we need something here, I worry that this will be abused
+>> to be a list of clocks you have not gotten around to managing. We
 >
+> You can say that about any framework.  It's our responsibility to ask
+> the right questions and to disallow it from being abused.  The clocks
+> I use in the (real-world) example in this set are _really_ always-on.
+> If any of them are turned off the system will cease to perform in any
+> meaningful way.
 
-That is indeed a bunch of memory.
+You cannot tell here up front whether clocks are really always-on. A
+reviewer is not going to know, and the submitter may not even have all
+the documentation and know the answer. Getting it wrong here means you
+have to change the dtb to fix it. Granted, it doesn't really break
+things in this case.
 
-I think that if we instantiate the rpm-regulator driver by name from
-the mfd driver and then loop over all the children and match against
-our compatible list we would come down to 1 platform driver that
-instantiate all our regulators. It's going to require some surgery and
-will make the regulator driver less simple, but can be done.
+>> cannot be changing the DT every time the kernel starts managing a
+>> clock. I think this should operate more as always on until claimed.
+>
+> The point of this is that even when these clocks are claimed, there is
+> an issue that when unclaimed (i.e. during suspend) the clk framework
+> will attempt to gate them, and when they do *boom*.
+>
+>> But then you get into drivers having to be aware that the clock
+>> started enabled.
+>
+> This has nothing to do with the initial state of the clock.  It's
+> whether the clock is integral (i.e. is part of a vital interconnect)
+> that's important.  For instance, ST's bootloader turns on lots of
+> clocks which can be safely gated if unused.  The clocks we're
+> registering with this always-on framework cannot.
 
-With this we can go for the proposed binding and later alter the
-implementation to save the memory. The cost of not encapsulating the
-regulators/clocks/msm_busses are the extra loops in above search. The
-benefit is cleaner bindings (and something that works as of today).
+It does because you have to assume either the initial state is wrong
+and you need to disable it, or that the initial state is correct and
+you need to leave the clock enabled.
 
+There are also other usecases such as simplefb where you want to leave
+clocks on until the real fb driver takes over. Consoles have a similar
+issue.
 
-With the alternative of using the existing infrastructure of matching
-regulators by name we need to change the binding to require certain
-naming as well as maintain lists of the resources within the
-regulator, clock & msm_bus drivers - something that has been objected
-to several times already.
+Perhaps you need to model your buses more completely? Does
+simple-pm-bus help you?
 
+>> Also, I feel like we are using DT to work around kernel policy (of
+>> turning off clocks). If the policy was to leave on clocks, then we
+>> would be trying to put a list of clocks to disable in DT.
+>
+> I'm not sure I understand your point.  The current policy is correct
+> if it's power that you care about, which is invariably the point of
+> disabling clocks in the first place, right?  Also, this has nothing to
+> do with DT per say.  It's just another framework driver.
 
-A drawback of both these solutions is that supplies are specified on
-the device's of_node, and hence it is no longer possible to describe
-the supply dependency between our regulators - something that have
-shown to be needed. Maybe we can open code the supply logic in the
-regulator driver or we have to convince Mark about the necessity of
-this.
+It does have something to do with DT because you are designing a
+binding around what the kernel does. Should the kernel assume it can
+disable clocks safely? Another OS may do the opposite and assume it
+cannot turn-off unused clocks. Then you would have a list of clocks
+safe to disable in DT.
 
+This is also completely solvable within the framework driver by
+claiming those clocks in the clock controller driver.
 
-So I would prefer to merge the binding as is and then put an
-optimisation effort of the implementation on the todo list.
-
-Regards,
-Bjorn
+Rob
