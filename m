@@ -1,94 +1,139 @@
-From: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] xhci: add a quirk for device disconnection errata
- for Synopsis Designware USB3 core
-Date: Wed, 18 Feb 2015 22:02:32 +0800
-Message-ID: <CAJ1gpc1J7r7R1hEZCC7xGTDx3DMG+PqW2SVA5U2cgPnZdgbCBA@mail.gmail.com>
-References: <1424151697-2084-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-	<1424151697-2084-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-	<54E451B1.8020401@intel.com>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH v7 0/7] Add initial support for DA9150 Charger & Fuel-Gauge IC
+Date: Wed, 18 Feb 2015 14:08:19 +0000
+Message-ID: <cover.1424267009.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54E451B1.8020401-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>
+Cc: linux-kernel@vger.kernel.org, support.opensource@diasemi.com
 List-Id: devicetree@vger.kernel.org
 
-hi Mathias,
+This patch set adds initial support for the Dialog DA9150 Integrated Charger &
+Fuel-Gauge IC. The device also provides GPIO and GPADC functionality.
 
-thanks for reviewing these,
+In this patch set the following is provided:
+ - MFD Core support and DT bindings documentation.
+ - IIO GPADC support and DT bindings documentation.
+ - Power Supply Charger support and DT bindings documentation.
+ - Update to MAINTAINERS file to add DA9150 files to Dialog support list.
 
-2015-02-18 16:47 GMT+08:00 Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
-> Hi
->
-> This looks correct, but if you are still going to make a new series fixing
-> Felipe's comments then the following tiny nitpicks could be fixed as well.
->
-> Otherwise
->
-> Acked-by: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->
-> Felipe, Do you want to take this series through your tree?
->
-> On 17.02.2015 07:41, Sneeker Yeh wrote:
->>
->> +static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int dev_port_num)
->
-> Either add a function description explaining something like "Late clearing of connect status.
-> Some quirky hardware will suspend the controller when CSC bit is cleared and leave URBs unhandled"
->
-> Or change the function name to something like xhci_late_csc_clear_quirk() or xhci_deferred_csc_clear_quirk()
->
-> Maybe the name should be changed anyways.
-> The "try to" makes it look like some non-blocking version of a csc clear function.
+To keep patch submission from being too large, support for GPIO and Fuel-Gauge
+will come after initial support patches are accepted.
 
-hm...thanks...it totally make sense,
-i'd like to use xhci_deferred_csc_clear_quirk(), and will take it to
-my next patches.
+This patch set is baselined against the v3.19 kernel version.
 
->
->> +{
->> +     int max_ports;
->> +     struct xhci_hcd *xhci = hcd_to_xhci(hcd);
->> +     __le32 __iomem **port_array;
->> +     u32 status;
->> +
->> +     /* print debug info */
->
-> Remove this comment
+Changes in v7:
+- Small style changes to use '!' instead of ' == NULL' in Charger probe, and
+  use already defined 'dev' attribute for 'devm_iio_device_alloc()' call instead
+  of doing '&pdev->dev'.
 
-okay, i see.
+Changes in v6:
+- For GPADC driver, Use lower case extended names for IIO GPADC channels, and
+  remove extended names for GPIO related channels.
+- For charger driver, revert to no devm IRQ request/free functions as ordering
+  is important, and probe failure scenario was not being correctly covered. A
+  helper function for free IRQs has been added to make code cleaner.
 
->
->> +     if (hcd->speed == HCD_USB3) {
->> +             max_ports = xhci->num_usb3_ports;
->> +             port_array = xhci->usb3_ports;
->> +     } else {
->> +             max_ports = xhci->num_usb2_ports;
->> +             port_array = xhci->usb2_ports;
->> +     }
->> +
->> +     if (dev_port_num > max_ports) {
->> +             xhci_err(xhci, "%s() port number invalid", __func__);
->> +             return;
->> +     }
->> +     status = readl(port_array[dev_port_num - 1]);
->> +
->> +     /* write 1 to clear */
->
-> Not really a helpful comment either, either remove or change to something like
-> "clearing the connect status bit will now immediately suspend these quirky controllers"
+Changes in v5:
+- Use sizeof(*gpadc) instead of sizeof(struct da9150_gpadc) in GPADC driver.
+- Fix erroneous goto for IRQ failure in GPADC driver. Now returns err directly.
+- Remove IIO ABI document patch as this has been taken by maintainer.
 
-okay, i got it ,
-thanks.
+Changes in v4:
+- Correct MODULE_AUTHOR lines so e-mail addresses correctly surrounded with <>.
+- Update to MFD binding document to remove unnecesary I2C reference, make
+  module description generic, and add link to interrupt binding documentation.
+- For GPADC driver, irq request moved above iio related calls in probe() to
+  mirror correctly the remove() function ordering, as requested.
+- For charger driver, remove additional sysfs entries as these are not necessary
+  (debug only).
+- For charger driver, add helper function for requesting IRQs, to make probe()
+  function cleaner/simpler.
 
-Much appreciate,
-Sneeker
+Changes in v3:
+- IRQ register and remove helper functions removed from MFD, deemed unnecessary.
+  Drivers using helper functions updated to use direct calls to relevant
+  kernel framework functions.
+- MFD I2C file removed and code folded into -core file as requested.
+- MFD core now buildable as driver module.
+- Platform data structure definition moved into core header, pdata.h removed.
+- Update functions in GPADC driver to be static, where appropriate.
+- Change units of GPADC readings to match ABI documentation. Updates to charger
+  driver also made to align with this modification.
+- Refactor GPADC temp calculations to use scale & offset method.
+- Scale values now returned as FRACTIONAL to allow for accurate conversion in
+  user-space.
+- Tidy up of GPADC scale, offset and raw functions to return from case statements
+  with correct return types.
+- Update GPADC channel macros naming to prefix with DA9150, prevent conflict.
+- GPADC GPIO voltage readings actually in 6V range, updated accordingly.
+- Addition to IIO ABI document to add details on input current readings.
+- Small style updates to address comments.
 
->
-> -Mathias
+Changes in v2:
+ - Drop devicetree prefix patch as this is being dealt with separately.
+ - IIO framework fix patch removed from set, has already been accepted/merged.
+ - Use __ instead of _ for protecting #ifdefs in headers.
+ - Moved private data & definitions to source files and remove unwanted headers.
+ - Bug fix to EXPORT_SYMBOL for common functions in MFD core used by
+   sub-devices, so they can be correctly built as kernel modules.
+ - Removed unnecessary channels from GPADC IIO driver to simplify code.
+ - For GPADC IIO driver, VBAT reading now provides scale and offset values as it
+   is a linear scale.
+ - GPADC read code refactored to make it tidier.
+ - Remove use of flag to indicate GPADC availability. IIO framework should
+   indicate need to defer if it's not yet instantiated.
+ - Unwanted comments removed.
+ - Removed conditional shutdown of device (Charger/MFD) as this is not needed.
+ - Removed AC type supply from charger as device cannot differentiate. Now just
+   uses USB supply type.
+ - Removed use of invalid-tbat flag from platform data as it doesn't really add
+   anything to the driver except forcing battery present status.
+ - Bug fix for checking of usb_phy validity in Charger probe() function.
+ - Addition of common IRQ release function to allow sub-devices to explicitly
+   tidy up IRQs when devm clean up is too late.
+ - Improved tidy up of resources in charger.
+ - Fix location of IIO GPADC related devicetree binding document so it now
+   resides correctly under 'adc' directory.
+ - Add update to MAINTAINERS file to include these files in Dialog support list.
+
+Adam Thomson (7):
+  mfd: Add support for DA9150 combined charger & fuel-gauge device
+  mfd: da9150: Add DT binding documentation for core
+  iio: Add support for DA9150 GPADC
+  iio: da9150: Add DT binding documentation for GPADC
+  power: Add support for DA9150 Charger
+  power: da9150: Add DT binding documentation for charger
+  MAINTAINERS: Include DA9150 files in Dialog Semiconductor support
+    list.
+
+ .../devicetree/bindings/iio/adc/da9150-gpadc.txt   |   16 +
+ Documentation/devicetree/bindings/mfd/da9150.txt   |   43 +
+ .../devicetree/bindings/power/da9150-charger.txt   |   26 +
+ MAINTAINERS                                        |    4 +
+ drivers/iio/adc/Kconfig                            |    9 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/da9150-gpadc.c                     |  407 +++++++
+ drivers/mfd/Kconfig                                |   12 +
+ drivers/mfd/Makefile                               |    2 +-
+ drivers/mfd/da9150-core.c                          |  413 +++++++
+ drivers/power/Kconfig                              |   12 +
+ drivers/power/Makefile                             |    1 +
+ drivers/power/da9150-charger.c                     |  688 ++++++++++++
+ include/linux/mfd/da9150/core.h                    |   68 ++
+ include/linux/mfd/da9150/registers.h               | 1155 ++++++++++++++++++++
+ 15 files changed, 2856 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/da9150.txt
+ create mode 100644 Documentation/devicetree/bindings/power/da9150-charger.txt
+ create mode 100644 drivers/iio/adc/da9150-gpadc.c
+ create mode 100644 drivers/mfd/da9150-core.c
+ create mode 100644 drivers/power/da9150-charger.c
+ create mode 100644 include/linux/mfd/da9150/core.h
+ create mode 100644 include/linux/mfd/da9150/registers.h
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.3
+
