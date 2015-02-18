@@ -1,187 +1,59 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 4/4] clk: dt: Introduce always-on clock domain
- documentation
-Date: Wed, 18 Feb 2015 21:54:35 +0000
-Message-ID: <20150218215435.GA32415@x1>
-References: <1424276101-30137-1-git-send-email-lee.jones@linaro.org>
- <1424276101-30137-5-git-send-email-lee.jones@linaro.org>
- <CAL_Jsq+r1BKt5B9FNPG+Y0Oi1-3RGNmRUDbpX_uDJwr45bxMXA@mail.gmail.com>
- <20150218171230.GA30676@x1>
- <CAL_JsqJ0sfQ-OQvYjL3X3ebH4p9HkN4iy35iT7i9S2d+yz9zYg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Niklas Cassel <nks@flawful.org>
+Subject: [PATCH RESEND 2/2] serial: add device tree binding documentation for ETRAX FS UART
+Date: Wed, 18 Feb 2015 23:29:38 +0100
+Message-ID: <1424298578-6833-1-git-send-email-nks@flawful.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ0sfQ-OQvYjL3X3ebH4p9HkN4iy35iT7i9S2d+yz9zYg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, kernel@stlinux.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: robh+dt@kernel.org
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, Niklas Cassel <nks@flawful.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Feb 2015, Rob Herring wrote:
+Signed-off-by: Niklas Cassel <nks@flawful.org>
+---
+[PATCH 1/2] of this patch series has already reached its way into mainline.
+It would be nice if someone picked up [PATCH 2/2] (this commit) before the merge window closes.
 
-> On Wed, Feb 18, 2015 at 11:12 AM, Lee Jones <lee.jones@linaro.org> wr=
-ote:
-> > On Wed, 18 Feb 2015, Rob Herring wrote:
-> >
-> >> On Wed, Feb 18, 2015 at 10:15 AM, Lee Jones <lee.jones@linaro.org>=
- wrote:
-> >> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> >> > ---
-> >> >  .../devicetree/bindings/clock/clk-domain.txt       | 35 +++++++=
-+++++++++++++++
-> >> >  1 file changed, 35 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/clock/clk-=
-domain.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/clock/clk-domain.=
-txt b/Documentation/devicetree/bindings/clock/clk-domain.txt
-> >> > new file mode 100644
-> >> > index 0000000..b86772f5
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/clock/clk-domain.txt
-> >> > @@ -0,0 +1,35 @@
-> >> > +Always-on Clock Domain
-> >> > +
-> >> > +Some hardware is contains bunches of clocks which must never be
-> >> > +turned off.  If drivers a) fail to obtain a reference to any of
-> >> > +these or b) give up a previously obtained reference during susp=
-end,
-> >> > +the common clk framework will attempt to disable them and the
-> >> > +hardware can fail irrecoverably.  Usually, the only way to reco=
-ver
-> >> > +from these failures is to restart.
-> >>
-> >> How is (b) not a bug?
-> >
-> > Clocks are normally disabled during suspend.  When clocks are disab=
-led
-> > they give up their reference.  If references reach 0, the clock is
-> > gated.  If one of these clocks is gated, the system will never come
-> > out of suspend.
-> >
-> > How is it a bug?
->=20
-> It a clock needs to be enabled during suspend, then the driver using
-> it should not disable it. Anyway, suspend is a bit orthogonal to this
-> issue.
+ .../devicetree/bindings/serial/axis,etraxfs-uart.txt  | 19 +++++++++++++++++++
+ Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
+ 2 files changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
 
-IMO, it's not the driver's responsibility to know which clock they are
-using and whether it's a critical clock or not.
-
-> >> While I think we need something here, I worry that this will be ab=
-used
-> >> to be a list of clocks you have not gotten around to managing. We
-> >
-> > You can say that about any framework.  It's our responsibility to a=
-sk
-> > the right questions and to disallow it from being abused.  The cloc=
-ks
-> > I use in the (real-world) example in this set are _really_ always-o=
-n.
-> > If any of them are turned off the system will cease to perform in a=
-ny
-> > meaningful way.
->=20
-> You cannot tell here up front whether clocks are really always-on. A
-> reviewer is not going to know, and the submitter may not even have al=
-l
-> the documentation and know the answer. Getting it wrong here means yo=
-u
-> have to change the dtb to fix it. Granted, it doesn't really break
-> things in this case.
-
-We should make it clear in the documentation that this framework
-should only be used if the clock is a critical "if it's turned off it
-will cripple the system" one.
-
-> >> cannot be changing the DT every time the kernel starts managing a
-> >> clock. I think this should operate more as always on until claimed=
-=2E
-> >
-> > The point of this is that even when these clocks are claimed, there=
- is
-> > an issue that when unclaimed (i.e. during suspend) the clk framewor=
-k
-> > will attempt to gate them, and when they do *boom*.
-> >
-> >> But then you get into drivers having to be aware that the clock
-> >> started enabled.
-> >
-> > This has nothing to do with the initial state of the clock.  It's
-> > whether the clock is integral (i.e. is part of a vital interconnect=
-)
-> > that's important.  For instance, ST's bootloader turns on lots of
-> > clocks which can be safely gated if unused.  The clocks we're
-> > registering with this always-on framework cannot.
->=20
-> It does because you have to assume either the initial state is wrong
-> and you need to disable it, or that the initial state is correct and
-> you need to leave the clock enabled.
-
-I think the kernel's policy is a good one i.e. wait until all devices
-are probed and have had the opportunity to take the clocks they need,
-at which point we can usually safely gate the remainder.  These types
-of clocks are the exception however; hence the need for this driver.
-There are other vendors which have similar issues with their h/w.
-These are currently using bespoke versions of this implementation, but
-IMO a generic solution would be better.
-
-> There are also other usecases such as simplefb where you want to leav=
-e
-> clocks on until the real fb driver takes over. Consoles have a simila=
-r
-> issue.
-
-Why wouldn't these devices have taken references by the time
-clk_disable_unused() is called?
-
-> Perhaps you need to model your buses more completely?
-
-Would you mind explaining this a little more please?
-
-> Does simple-pm-bus help you?
-
-I have no idea what this is, and I'm struggling to grep for it too?
-
-> >> Also, I feel like we are using DT to work around kernel policy (of
-> >> turning off clocks). If the policy was to leave on clocks, then we
-> >> would be trying to put a list of clocks to disable in DT.
-> >
-> > I'm not sure I understand your point.  The current policy is correc=
-t
-> > if it's power that you care about, which is invariably the point of
-> > disabling clocks in the first place, right?  Also, this has nothing=
- to
-> > do with DT per say.  It's just another framework driver.
->=20
-> It does have something to do with DT because you are designing a
-> binding around what the kernel does. Should the kernel assume it can
-> disable clocks safely?
-
-I guess it depends on what you're trying to achieve.  Personally I
-think the kernel's policy is a good one, especually with regards to
-power saving.  What are you suggesting?  A new policy?
-
-> Another OS may do the opposite and assume it
-> cannot turn-off unused clocks. Then you would have a list of clocks
-> safe to disable in DT.
-
-Sounds bananas.  What's good about that kind of policy?  It wouldn't
-matter anyway, both of these implementations can live harmoniously in
-the same tree.
-
-> This is also completely solvable within the framework driver by
-> claiming those clocks in the clock controller driver.
-
-This conversation has now gone full circle.  This was an earlier
-suggestion, but it was considered hacky, and I'm inclined to agree.
-An always-on power domain was deemed to be a much more elegant
-solution.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+diff --git a/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt b/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
+new file mode 100644
+index 0000000..ebcbb62
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
+@@ -0,0 +1,19 @@
++ETRAX FS UART
++
++Required properties:
++- compatible : "axis,etraxfs-uart"
++- reg: offset and length of the register set for the device.
++- interrupts: device interrupt
++
++Optional properties:
++- {dtr,dsr,ri,cd}-gpios: specify a GPIO for DTR/DSR/RI/CD
++  line respectively.
++
++Example:
++
++serial@b00260000 {
++	compatible = "axis,etraxfs-uart";
++	reg = <0xb0026000 0x1000>;
++	interrupts = <68>;
++	status = "disabled";
++};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index d6bad12..f8d088e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -27,6 +27,7 @@ atmel	Atmel Corporation
+ auo	AU Optronics Corporation
+ avago	Avago Technologies
+ avic	Shanghai AVIC Optoelectronics Co., Ltd.
++axis	Axis Communications AB
+ bosch	Bosch Sensortec GmbH
+ brcm	Broadcom Corporation
+ buffalo	Buffalo, Inc.
+-- 
+2.2.2
