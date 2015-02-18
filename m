@@ -1,83 +1,94 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/3] Ethernet packet sniffer: Device tree binding and
- vendor prefix
-Date: Wed, 18 Feb 2015 12:11:50 +0000
-Message-ID: <20150218121150.GA29429@leverpostej>
-References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
- <0a86907642a97e5bd880f69299664232fcffaf9d.1424181053.git.stathis.voukelatos@linn.co.uk>
- <20150217145124.GM8994@leverpostej>
- <54E36AAC.7010308@linn.co.uk>
- <20150217163527.GR8994@leverpostej>
- <54E376AF.80602@linn.co.uk>
- <20150217173000.GT8994@leverpostej>
- <54E45E06.2020609@linn.co.uk>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v4 4/8] ARM: dts: Add pwm-fan node to the Odroid-U3 board
+Date: Wed, 18 Feb 2015 14:16:26 +0100
+Message-ID: <54E490AA.3020301@suse.de>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com> <1424254056-5904-1-git-send-email-l.majewski@samsung.com> <1424254056-5904-5-git-send-email-l.majewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54E45E06.2020609@linn.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "abrestic@chromium.org" <abrestic@chromium.org>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1424254056-5904-5-git-send-email-l.majewski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 18, 2015 at 09:40:22AM +0000, Stathis Voukelatos wrote:
-> 
-> 
-> On 17/02/15 17:30, Mark Rutland wrote:
-> 
-> >> It is the frequency of the timestamp values supplied to the sniffer
-> >> module. It is used by the driver to convert to nanoseconds.
-> >> I was trying to be somewhat generic here and not assume that it
-> >> is necessarily the same as the 'tstamp' clock below, in which case we
-> >> could indeed obtain it using the common clock framework.
-> >
-> > In what cases would it _not_ be the same? From your description this is
-> > that clock, no?
-> >
-> 
-> Counters can often have a divider applied to their input clock and
-> therefore run at a scaled down frequency. This is not the case in the
-> first SoC where the sniffer is used, so for simplicity I can modify as
-> you suggest and remove that field from the DT.
+Am 18.02.2015 um 11:07 schrieb Lukasz Majewski:
+> From: Kamil Debski <k.debski@samsung.com>
+>=20
+> Add pwm-fan node to the Odroid-U3 board file to enable PWM control of=
+ the
+> cooling fan. In addition, add the "pwm" label to the pwm@139D0000 nod=
+e
+> in the exynos4412.dtsi.
+>=20
+> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> [Rebased on the newest mainline by l.majewski@samsung.com]
 
-The common clock bindings have fixed-factor-clock for handling dividers,
-so I believe you should be able to use that.
+You need to sign off patches you submit.
 
-You mentioned that the counter was a block external to the sniffer. Does
-it have any configuration interface (e.g. to reset the counter)? We may
-need to model it in the DT if so (and describe the clock as feeding into
-it rather than into the sniffer).
+> ---
+> Changes since v1:
+> - added pwm label to the pwm@139D0000 node in exynos4.dtsi
+> - use the pwm label in the exynos4412-odroidu3.dts
+> - change order or properties in the pwn-fan node, to be sorted
+>   in alphabetical order
+>=20
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi            |  2 +-
+>  arch/arm/boot/dts/exynos4412-odroidu3.dts | 13 +++++++++++++
+>  2 files changed, 14 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exyno=
+s4.dtsi
+> index f18d746..75266e3 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -582,7 +582,7 @@
+>  		status =3D "disabled";
+>  	};
+> =20
+> -	pwm@139D0000 {
+> +	pwm: pwm@139D0000 {
+>  		compatible =3D "samsung,exynos4210-pwm";
+>  		reg =3D <0x139D0000 0x1000>;
+>  		interrupts =3D <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>, <0 41 0>;
+> diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boo=
+t/dts/exynos4412-odroidu3.dts
+> index c8a64be..60bd1e4 100644
+> --- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
+> +++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+> @@ -31,6 +31,19 @@
+>  			linux,default-trigger =3D "heartbeat";
+>  		};
+>  	};
+> +
+> +	pwm-fan {
+> +		compatible =3D "pwm-fan";
+> +		pwms =3D <&pwm 0 10000 0>;
+> +		status =3D "okay";
 
-> >> Yes, but the sniffer module is hard-wired to a certain Ethernet Mii
-> >> interface. We can add an entry to tie it to an Ethernet controller, but
-> >> apart of a sanity check I am not sure what else the S/W can do.
-> >
-> > Fundamentally, the use-case for this is monitoring an ethernet
-> > interface. So regardless of which kernel framework this plumbs into,
-> > there needs to be a way to go from ethN to whatever this is exposed as.
-> >
-> > Exposing a completely separate interface makes no sense. Singleton stuff
-> > like that inevitably gets broken as someone later builds a board with
-> > multiple instances of some similar IP block.
-> >
-> > So I would imagine that either the link between interface and monitoring
-> > interface would be described somewhere in the filesystem, or there'd be
-> > a syscall/ioctl/whatever to go from an interface to the appropriate
-> > monitoring interface.
-> >
-> > That all depends on exactly how this gets exposed in the end, however.
-> >
-> 
-> After the first version of the patch was submitted, the feedback from 
-> the netdev list was to expose it as a network interface as this would
-> allow it to be accessed by standard user space monitoring tools.
-> It definitely makes sense to link it to the associated ethernet netdev,
-> but I am not sure if there is a framework in the kernel to do it at
-> the driver level?
+Status "okay" is only needed for pre-existing nodes that would have
+status "disabled" otherwise, such as below. Just drop it here.
 
-Unfortunately I'm not familiar enough with the net code; hopefully
-someone else can point us in the right direction.
+Regards,
+Andreas
 
-Thanks,
-Mark.
+> +	};
+> +};
+> +
+> +&pwm {
+> +	pinctrl-0 =3D <&pwm0_out>;
+> +	pinctrl-names =3D "default";
+> +	samsung,pwm-outputs =3D <0>;
+> +	status =3D "okay";
+>  };
+> =20
+>  &usb3503 {
+>=20
+
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Jennifer Guild, Dilip Upmanyu,
+Graham Norton; HRB 21284 (AG N=FCrnberg)
