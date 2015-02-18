@@ -1,96 +1,70 @@
-From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] wlcore: add basic device-tree support
-Date: Wed, 18 Feb 2015 10:14:33 +0200
-Message-ID: <CAB3XZEfESwUr6Tpcw71rzgZEnXZZpdgM0E1cdivBD01kGc1P0Q@mail.gmail.com>
-References: <1423998550-8829-1-git-send-email-eliad@wizery.com>
-	<2344371.zDnvJJhFdD@wuerfel>
-	<CAB3XZEe1HmOwQ3GcU5T3ruFybKdCVNiBwQbeLS3X4MMkL2G5uA@mail.gmail.com>
-	<20150217154538.GP8994@leverpostej>
+From: "Holmberg, Hans" <hans.holmberg@intel.com>
+Subject: RE: [PATCH 0/2] GPIO joystick driver
+Date: Wed, 18 Feb 2015 08:42:27 +0000
+Message-ID: <4B6D6D87A8FB62428BE0A3E38461A1AB18D7A2D0@irsmsx105.ger.corp.intel.com>
+References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
+ <1AA6C46C-36D9-4243-9DC5-254A7202D339@gmail.com>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6AF04@irsmsx105.ger.corp.intel.com>
+ <20150207204658.GA29015@dtor-ws>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B24F@irsmsx105.ger.corp.intel.com>
+ <4B6D6D87A8FB62428BE0A3E38461A1AB18D6BB34@irsmsx105.ger.corp.intel.com>
+ <20150211180638.GB29440@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150217154538.GP8994@leverpostej>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150211180638.GB29440@dtor-ws>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
+Cc: "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "'linux-input@vger.kernel.org'" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 17, 2015 at 5:45 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Tue, Feb 17, 2015 at 03:39:03PM +0000, Eliad Peller wrote:
->> On Mon, Feb 16, 2015 at 12:06 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> > On Sunday 15 February 2015 13:09:10 Eliad Peller wrote:
->> > s
->> >> +
->> >> +This node provides properties for controlling the wilink wireless device. The
->> >> +node is expected to be specified as a child node to the SDIO controller that
->> >> +connects the device to the system.
->> >> +
->> >> +Required properties:
->> >> +
->> >> + - compatible : Should be "ti,wlcore".
->> >
->> > I think you should use the specific model number here. If I understand
->> > correctly, wlcore is the name of the driver that is used for multiple
->> > device implementation.
->> >
->> right, wlcore is the common driver part of wl12xx and wl18xx device drivers.
->> these DT properties are common for both.
->> can't we use a common binding as well in this case?
->
-> Just have a string for each; the driver can easily match them all and
-> handle them identically for now until we decide/realise we need to
-> handle them differently later.
->
-> Regardless, the compatible string should match some real part number
-> and/or standard rather than the Linux driver name.
->
-ok, makes sense.
+> > A digital joystick driver needs to report three states per axis: min,
+> > max and neutral. The hardware only have two signals per axis(i.e. up
+> > and down) however. See http://wiki.icomp.de/wiki/DB9-Joystick
+> >
+> > This makes gpio-keys pretty much impossible to use for joysticks - as
+> > the driver only reports abs-events when a button/key is pressed, how
+> > would the neutral state be reported?  (as there is no signal for
+> > "neutral")
+> >
+> > Even if through some hackery the driver would be modified to report a
+> > special neutral event if all  "buttons/keys" for that axis are not
+> > pressed, what value should be reported?  An average of the values for
+> > that axis?   Also, reporting such an implicit neutral event would
+> > break the behavior of existing abs-reporting instances, right?
+> 
+> You have 2 gpio per axis, and since you can't measure how "far" down the
+> axis you have moved the driver should only report values -1, 0, 1 per axis.
+> You start at neutral position, and move right. IRQ for right gpio is fired and
+> you report EV_ABS/ABS_X/1. Then you start moving to the left, gpio IRQ fires
+> (you want it to trigger on both edges) and you report EV_ABS/ABS_X/0. You
+> continue moving to the left and IRQ for left gpio fires up and you report
+> EV_ABS/ABS_X/-1.
+> This assumes that you assign EV_ABS/ABS_X and value 1 for right gpio and
+> EV_ABS/ABS_X and value -1 for left gpio.
 
->> >> +&mmc3 {
->> >> +     status = "okay";
->> >> +     vmmc-supply = <&wlan_en_reg>;
->> >> +     bus-width = <4>;
->> >> +     cap-power-off-card;
->> >> +     keep-power-in-suspend;
->> >> +
->> >> +     #address-cells = <1>;
->> >> +     #size-cells = <0>;
->> >> +     wlcore: wlcore@0 {
->> >> +             compatible = "ti,wlcore";
->> >> +             reg = <2>;
->> >> +             interrupt-parent = <&gpio0>;
->> >> +             interrupts = <19 IRQ_TYPE_NONE>;
->> >> +     };
->> >> +};
->> >
->> > It could make sense to specify a few extra properties here:
->> >
->> > - The platform data lists two clocks. How about adding them
->> >   here as optional clocks so we don't need to change the binding
->> >   again.
->> >
->> There were some very long threads previously regarding the correct way
->> to describe these clocks.
->> I prefer starting a working basic implementation and add the
->> controversial parts later on, as needed.
->
-> This could be problematic. Elsewhere we've later added properties that
-> should have been mandatory from the start but were masked by some
-> platform data somewhere. It would be very good to avoid that.
->
-that's a good argument.
-in this case, i'll start with submitting a binding only for wl18xx,
-which doesn't need the clock bindings (they are needed only for
-wl12xx).
+Right, but the problem I was referring to is that "up/release" events are not reported by gpio-keys.c today:
 
-> What is problematic about describing the clock inputs to this block? Is
-> the problem specific to this block or to the specific clock
-> controller(s) it happens to be wired to?
-i'm referring to patches like this one:
-http://thread.gmane.org/gmane.linux.kernel/1520752
+        if (type == EV_ABS) {
+                if (state)
+                        input_event(input, type, button->code, button->value);
+        } else {
+                input_event(input, type, button->code, !!state);
+        }
 
-Eliad.
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I see three solutions:
+
+1. Start reporting ABS=0 if state == 0 - this is what I would expect of the driver, but would break the current behavior.
+2. Add an optional down-abs-value per key. If it is not specified, It won't be reported. 
+3. Add a device-global property ("report-neutral-abs") that will report ABS=0 on all "up" events for abs-keys.
+
+Comments?
+
+In any case, I have a patch set based on (3) that works (but that I need to test a bit more), enabling gpio-keys to support digital joysticks using the new device property api.
+
+I had  to define the abs-value device tree property as  a 2's complement signed 32 integer. Negative numbers are not commonly used but the device tree compiler supports it.  In the ACPI case, the iasl compiler only supports unsigned ints, but it's easy enough to work around (-1 <-> 0xFFFFFFFF) .
+
+Thanks!
+Hans
