@@ -1,70 +1,73 @@
-From: "Holmberg, Hans" <hans.holmberg@intel.com>
-Subject: RE: [PATCH 0/2] GPIO joystick driver
-Date: Wed, 18 Feb 2015 08:42:27 +0000
-Message-ID: <4B6D6D87A8FB62428BE0A3E38461A1AB18D7A2D0@irsmsx105.ger.corp.intel.com>
-References: <1423215122-19947-1-git-send-email-hans.holmberg@intel.com>
- <1AA6C46C-36D9-4243-9DC5-254A7202D339@gmail.com>
- <4B6D6D87A8FB62428BE0A3E38461A1AB18D6AF04@irsmsx105.ger.corp.intel.com>
- <20150207204658.GA29015@dtor-ws>
- <4B6D6D87A8FB62428BE0A3E38461A1AB18D6B24F@irsmsx105.ger.corp.intel.com>
- <4B6D6D87A8FB62428BE0A3E38461A1AB18D6BB34@irsmsx105.ger.corp.intel.com>
- <20150211180638.GB29440@dtor-ws>
+From: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] xhci: add a quirk for device disconnection errata
+ for Synopsis Designware USB3 core
+Date: Wed, 18 Feb 2015 10:47:45 +0200
+Message-ID: <54E451B1.8020401@intel.com>
+References: <1424151697-2084-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com> <1424151697-2084-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150211180638.GB29440@dtor-ws>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
-Cc: "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "'linux-input@vger.kernel.org'" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424151697-2084-2-git-send-email-Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > A digital joystick driver needs to report three states per axis: min,
-> > max and neutral. The hardware only have two signals per axis(i.e. up
-> > and down) however. See http://wiki.icomp.de/wiki/DB9-Joystick
-> >
-> > This makes gpio-keys pretty much impossible to use for joysticks - as
-> > the driver only reports abs-events when a button/key is pressed, how
-> > would the neutral state be reported?  (as there is no signal for
-> > "neutral")
-> >
-> > Even if through some hackery the driver would be modified to report a
-> > special neutral event if all  "buttons/keys" for that axis are not
-> > pressed, what value should be reported?  An average of the values for
-> > that axis?   Also, reporting such an implicit neutral event would
-> > break the behavior of existing abs-reporting instances, right?
-> 
-> You have 2 gpio per axis, and since you can't measure how "far" down the
-> axis you have moved the driver should only report values -1, 0, 1 per axis.
-> You start at neutral position, and move right. IRQ for right gpio is fired and
-> you report EV_ABS/ABS_X/1. Then you start moving to the left, gpio IRQ fires
-> (you want it to trigger on both edges) and you report EV_ABS/ABS_X/0. You
-> continue moving to the left and IRQ for left gpio fires up and you report
-> EV_ABS/ABS_X/-1.
-> This assumes that you assign EV_ABS/ABS_X and value 1 for right gpio and
-> EV_ABS/ABS_X and value -1 for left gpio.
+Hi
 
-Right, but the problem I was referring to is that "up/release" events are not reported by gpio-keys.c today:
+This looks correct, but if you are still going to make a new series fixing
+Felipe's comments then the following tiny nitpicks could be fixed as well. 
 
-        if (type == EV_ABS) {
-                if (state)
-                        input_event(input, type, button->code, button->value);
-        } else {
-                input_event(input, type, button->code, !!state);
-        }
+Otherwise
 
-I see three solutions:
+Acked-by: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-1. Start reporting ABS=0 if state == 0 - this is what I would expect of the driver, but would break the current behavior.
-2. Add an optional down-abs-value per key. If it is not specified, It won't be reported. 
-3. Add a device-global property ("report-neutral-abs") that will report ABS=0 on all "up" events for abs-keys.
+Felipe, Do you want to take this series through your tree?
 
-Comments?
+On 17.02.2015 07:41, Sneeker Yeh wrote:
+>  
+> +static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int dev_port_num)
 
-In any case, I have a patch set based on (3) that works (but that I need to test a bit more), enabling gpio-keys to support digital joysticks using the new device property api.
+Either add a function description explaining something like "Late clearing of connect status.
+Some quirky hardware will suspend the controller when CSC bit is cleared and leave URBs unhandled"
 
-I had  to define the abs-value device tree property as  a 2's complement signed 32 integer. Negative numbers are not commonly used but the device tree compiler supports it.  In the ACPI case, the iasl compiler only supports unsigned ints, but it's easy enough to work around (-1 <-> 0xFFFFFFFF) .
+Or change the function name to something like xhci_late_csc_clear_quirk() or xhci_deferred_csc_clear_quirk()
 
-Thanks!
-Hans
+Maybe the name should be changed anyways. 
+The "try to" makes it look like some non-blocking version of a csc clear function.
+ 
+> +{
+> +	int max_ports;
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +	__le32 __iomem **port_array;
+> +	u32 status;
+> +
+> +	/* print debug info */
+
+Remove this comment
+
+> +	if (hcd->speed == HCD_USB3) {
+> +		max_ports = xhci->num_usb3_ports;
+> +		port_array = xhci->usb3_ports;
+> +	} else {
+> +		max_ports = xhci->num_usb2_ports;
+> +		port_array = xhci->usb2_ports;
+> +	}
+> +
+> +	if (dev_port_num > max_ports) {
+> +		xhci_err(xhci, "%s() port number invalid", __func__);
+> +		return;
+> +	}
+> +	status = readl(port_array[dev_port_num - 1]);
+> +
+> +	/* write 1 to clear */
+
+Not really a helpful comment either, either remove or change to something like 
+"clearing the connect status bit will now immediately suspend these quirky controllers"
+
+-Mathias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
