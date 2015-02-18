@@ -1,95 +1,59 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 1/5] xhci: add a quirk for device disconnection errata
- for Synopsis Designware USB3 core
-Date: Wed, 18 Feb 2015 08:42:35 -0600
-Message-ID: <20150218144235.GF3651@saruman.tx.rr.com>
-References: <1424151697-2084-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <1424151697-2084-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <54E451B1.8020401@intel.com>
- <20150218143345.GC3651@saruman.tx.rr.com>
- <CAJ1gpc3CT8RBZaXDbFz67mG5RcKOEfoxLjh8PEMq1Cme1QW1Vg@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
+Date: Wed, 18 Feb 2015 06:54:30 -0800
+Message-ID: <CAJAp7OjNK5WhZ62x5+z5RZG_GJ8sDoyyHDRq+BBUUkxY_ndjhw@mail.gmail.com>
+References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>
+	<54DD7CE5.5000302@codeaurora.org>
+	<CAJAp7OgD3+mGZ02o6xAWkJvKoD4BcQWVD1GS87Niw_fcReBMMA@mail.gmail.com>
+	<54E3FCD3.4000304@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1Y7d0dPL928TPQbc"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ1gpc3CT8RBZaXDbFz67mG5RcKOEfoxLjh8PEMq1Cme1QW1Vg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sneeker Yeh <sneeker.yeh@gmail.com>
-Cc: Felipe Balbi <balbi@ti.com>, Kumar Gala <galak@codeaurora.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>, Andy Green <andy.green@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Huang Rui <ray.huang@amd.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <54E3FCD3.4000304@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---1Y7d0dPL928TPQbc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Feb 17, 2015 at 6:45 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 02/17/15 15:02, Bjorn Andersson wrote:
+>> On Thu, Feb 12, 2015 at 8:26 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+[..]
+>>> This doesn't seem to do anything for the OVP spike mentioned in this
+>>> patch[1]. Do you see that problem on your device? I imagine the PMIC is
+>>> the same.
+>>>
+>>> [1]
+>>> https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?id=fef9e15072562f0f28dc7066dcdd69388df81ed3
+>>>
+>> That's odd, I can't find that fix in any officially supported releases
+>> for 8974 - which Courtney used as reference for this driver.
+>>
+>> Just to make sure I understand the solution; when disabling the sinks
+>> the over-voltage-protection sometimes triggers, so we should detect
+>> that and reset the ovp configuration?
+>>
+>> I presume the side effect would be that the sinks would not give any
+>> output until this is done?
+>>
+>
+> It seems that commit is not very good at describing the problem. From
+> what I can tell, the inductor current may spike when the WLED is turned
+> off and the switch is stuck on (the circuit is a boost convertor). To
+> make sure this doesn't happen, we force an OVP so that the switch is
+> known to be open (i.e. off) and thus can't cause the current spike when
+> we disable.
+>
 
-On Wed, Feb 18, 2015 at 10:39:53PM +0800, Sneeker Yeh wrote:
-> Hi,
-> 2015/2/18 =E4=B8=8B=E5=8D=8810:34 =E6=96=BC "Felipe Balbi" <balbi@ti.com>=
- =E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > On Wed, Feb 18, 2015 at 10:47:45AM +0200, Mathias Nyman wrote:
-> > > Hi
-> > >
-> > > This looks correct, but if you are still going to make a new series
-> fixing
-> > > Felipe's comments then the following tiny nitpicks could be fixed as
-> well.
-> > >
-> > > Otherwise
-> > >
-> > > Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> > >
-> > > Felipe, Do you want to take this series through your tree?
-> >
-> > I can, no issues :-)
-> >
-> > > On 17.02.2015 07:41, Sneeker Yeh wrote:
-> > > >
-> > > > +static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int
-> dev_port_num)
-> > >
-> > > Either add a function description explaining something like "Late
-> > > clearing of connect status.
-> > > Some quirky hardware will suspend the controller when CSC bit is
-> > > cleared and leave URBs unhandled"
-> > >
-> > > Or change the function name to something like
-> > > xhci_late_csc_clear_quirk() or xhci_deferred_csc_clear_quirk()
-> >
-> > I have a feeling xhci_late_csc_clear_quirk() is a better name, much more
-> > descriptive than xhci_try_to_clear_csc() :-)
->=20
-> Hmm, I'll use this one, ^^
-> Thanks for comment it.
+Apparently that commit is only half of the solution, there's another
+commit earlier in history with the same commit message [2].
 
-alright, either one is fine :-)
+With both [1] and [2] in place there are a bunch of different
+operations going on, so I'm not able to fully map these to your
+description - which does make sense.
 
---=20
-balbi
+[2] https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?id=b1a2f61113c69d2aba68c583101ac40a05cb2c5b
 
---1Y7d0dPL928TPQbc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU5KTbAAoJEIaOsuA1yqRESYsP/jZqFSnGie39njr3pQ7y3stc
-a4LxroQSFPgy3udrL42dU/GSCOA8EzBiI1YMUPcTTCVtTfn1hzCn/iDS8c7k4kjG
-qPzZmqpgdvfF0HMpmZCrGy467veicky67hMAp6HGqQrDaz77vQhqy78pEvwGx7+o
-gkPcVDybhk0bzlo0TbVnCCecXy+1olN8n63xmfnAv3cdITvINVJV/fpFg0aTHWfu
-b2b6lbFNUwVL4qF3yigJMoBNdIBSBMwZe9AK3iVjJGEjyqO+gBhH3XON/VmSP1m7
-9ACK6J1Grj2FbKnTIJWwTFc5GpHSmLBMSSgSYBfWtWqObSd13P8xeAKzGA93EfKK
-ynbhsC+QJfKjxz5dG5McTEQxxkPrVrm/0IVmMKf+g2O9+jCjCK/9/BxdfRR3mjMO
-7s/kk2BMNlm5TZlxgJMX8nvoVdH6PS4VHpISBQGOUIECSRye4OQTmYPKMC+ktsKY
-uwTZXg3WuPN11yspBq7coVpaj4V37xZgMNOIKzXXXw9ub6tai9ZSZ7jAvhUjLIdh
-2yvvLzLQTuPlWYlidpiEKaIoc4jVaE3tj0EWuexJc0HSNclJ6A7V/mJuwV1ueyGz
-GhRO3xyen5zHnlVpH6K0PXPcfCDmLVAYAFNdOlkMDsnZQh5uRClYx7mteQViut+e
-h+0bV3UC66Gi0bSjr6pN
-=rvaB
------END PGP SIGNATURE-----
-
---1Y7d0dPL928TPQbc--
+Regards,
+Bjorn
