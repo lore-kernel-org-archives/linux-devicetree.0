@@ -1,39 +1,47 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
-Date: Wed, 18 Feb 2015 22:08:30 +0100
-Message-ID: <20150218210830.GA7778@localhost.localdomain>
-References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: bindings: add optional fifo size
+ property to AMBA UARTs
+Date: Wed, 18 Feb 2015 15:17:31 -0600
+Message-ID: <CAL_JsqKBxmEUCYz4Pw6wbBTvU8p7Fo5O05tLUi9SHoiAzdVRgA@mail.gmail.com>
+References: <1424290069-8760-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1424290069-8760-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1424181053.git.stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
+In-Reply-To: <1424290069-8760-2-git-send-email-jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 17, 2015 at 02:03:30PM +0000, Stathis Voukelatos wrote:
-> The command string for packet matching is stored in module RAM
-> and consists of a sequence of 16-bit entries. Each entry includes
-> an 8-bit command code and and 8-bit data value. Valid command
-> codes are:
-> 0 - Don't care
-> 1 - Match: packet data must match command string byte
-> 2 - Copy: packet data will be copied to FIFO
-> 3 - Match/Stamp: if packet data matches string byte, a timestamp
->                  is copied into the FIFO
-> 4 - Copy/Done: packet data will be copied into the FIFO.
->                This command terminates the command string.
+On Wed, Feb 18, 2015 at 2:07 PM, Jorge Ramirez-Ortiz
+<jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Why do you need to expose this interface to user space at all?  Why
-not just time stamp every frame?
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-How does the "Match" command work?  The frame must have one particular
-byte?  That can't be right.  Please explain.
-
-Thanks,
-Richard
+> ---
+>  Documentation/devicetree/bindings/serial/pl011.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/pl011.txt b/Documentation/devicetree/bindings/serial/pl011.txt
+> index 5d2e840..05d1adb 100644
+> --- a/Documentation/devicetree/bindings/serial/pl011.txt
+> +++ b/Documentation/devicetree/bindings/serial/pl011.txt
+> @@ -13,5 +13,6 @@ Optional properties:
+>  - dmas:           When present, may have one or two dma channels.
+>            The first one must be named "rx", the second one
+>            must be named "tx".
+> +- fifo-size:  When present, must have the fifo size.
+>
+>  See also bindings/arm/primecell.txt
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
