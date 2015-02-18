@@ -1,273 +1,332 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH/RFC v11 20/20] leds: aat1290: add support for V4L2 Flash
- sub-device
-Date: Wed, 18 Feb 2015 17:20:41 +0100
-Message-ID: <1424276441-3969-21-git-send-email-j.anaszewski@samsung.com>
-References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
+Date: Wed, 18 Feb 2015 17:32:38 +0100
+Message-ID: <20150218163238.GG32600@odux.rfo.atmel.com>
+References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com>
+ <20150218154106.GC29429@leverpostej>
+ <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Ludovic Desroches <ludovic.desroches@atmel.com>, Rob Herring <robherring2@gmail.com>, Tony Lindgren <tony@atomide.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for V4L2 Flash sub-device to the aat1290 LED Flash class
-driver. The support allows for V4L2 Flash sub-device to take the control
-of the LED Flash class device.
+Hi,
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/leds/leds-aat1290.c |  163 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 163 insertions(+)
+Great something we are waiting for a long time!
 
-diff --git a/drivers/leds/leds-aat1290.c b/drivers/leds/leds-aat1290.c
-index b217f0a..0e32be7 100644
---- a/drivers/leds/leds-aat1290.c
-+++ b/drivers/leds/leds-aat1290.c
-@@ -20,6 +20,7 @@
- #include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <media/v4l2-flash.h>
- #include <linux/workqueue.h>
- 
- #define AAT1290_MOVIE_MODE_CURRENT_ADDR	17
-@@ -46,6 +47,9 @@
- #define AAT1290_MM_CURRENT_SCALE_SIZE	15
- 
- struct aat1290_led_settings {
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+	struct led_flash_setting torch_brightness;
-+#endif
- 	struct led_flash_setting flash_timeout;
- };
- 
-@@ -57,11 +61,19 @@ struct aat1290_led {
- 
- 	/* related LED Flash class device */
- 	struct led_classdev_flash fled_cdev;
-+	/* V4L2 Flash device */
-+	struct v4l2_flash *v4l2_flash;
- 
- 	/* FLEN pin */
- 	int flen_gpio;
- 	/* EN|SET pin  */
- 	int en_set_gpio;
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+	/* chooses flash strobe source - external or SoC gpio */
-+	int ext_strobe_gpio;
-+	/* movie mode current scale */
-+	int *mm_current_scale;
-+#endif
- 
- 	/* maximum flash timeout */
- 	u32 max_flash_tm;
-@@ -279,6 +291,15 @@ static void aat1290_init_flash_settings(struct aat1290_led *led,
- {
- 	struct led_flash_setting *setting;
- 
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+	/* Init flash intensity setting */
-+	setting = &s->torch_brightness;
-+	setting->min = led->mm_current_scale[0];
-+	setting->max = led->mm_current_scale[AAT1290_MM_CURRENT_SCALE_SIZE - 1];
-+	setting->step = 1;
-+	setting->val = setting->max;
-+#endif
-+
- 	/* Init flash timeout setting */
- 	setting = &s->flash_timeout;
- 	setting->min = led->max_flash_tm / AAT1290_FLASH_TM_NUM_LEVELS;
-@@ -287,6 +308,97 @@ static void aat1290_init_flash_settings(struct aat1290_led *led,
- 	setting->val = setting->max;
- }
- 
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+enum led_brightness aat1290_intensity_to_brightness(
-+					struct v4l2_flash *v4l2_flash,
-+					s32 intensity)
-+{
-+	struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
-+	struct aat1290_led *led = fled_cdev_to_led(fled_cdev);
-+	int i;
-+
-+	for (i = AAT1290_MM_CURRENT_SCALE_SIZE - 1; i >= 0; --i)
-+		if (intensity >= led->mm_current_scale[i])
-+			return i + 1;
-+
-+	return 1;
-+}
-+
-+s32 aat1290_brightness_to_intensity(struct v4l2_flash *v4l2_flash,
-+					enum led_brightness brightness)
-+{
-+	struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
-+	struct aat1290_led *led = fled_cdev_to_led(fled_cdev);
-+
-+	return led->mm_current_scale[brightness - 1];
-+}
-+
-+static int aat1290_led_external_strobe_set(struct v4l2_flash *v4l2_flash,
-+						bool enable)
-+{
-+	struct aat1290_led *led = fled_cdev_to_led(v4l2_flash->fled_cdev);
-+
-+	led->movie_mode = false;
-+	gpio_set_value(led->flen_gpio, 0);
-+	gpio_set_value(led->en_set_gpio, 0);
-+	gpio_set_value(led->ext_strobe_gpio, enable);
-+
-+	return 0;
-+}
-+
-+int init_mm_current_scale(struct aat1290_led *led)
-+{
-+	int max_mm_current_percent[] = { 20, 22, 25, 28, 32, 36, 40, 45, 50, 56,
-+						63, 71, 79, 89, 100 };
-+	int i, max_mm_current = AAT1290_MAX_MM_CURRENT(led->max_flash_current);
-+
-+	led->mm_current_scale = devm_kzalloc(&led->pdev->dev,
-+						sizeof(max_mm_current_percent),
-+						GFP_KERNEL);
-+	if (!led->mm_current_scale)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < AAT1290_MM_CURRENT_SCALE_SIZE; ++i)
-+		led->mm_current_scale[i] = max_mm_current *
-+					  max_mm_current_percent[i] / 100;
-+
-+	return 0;
-+}
-+
-+static void aat1290_init_v4l2_ctrl_config(struct aat1290_led *led,
-+					struct aat1290_led_settings *s,
-+					struct v4l2_flash_ctrl_config *config)
-+{
-+	struct led_flash_setting *setting;
-+	struct v4l2_ctrl_config *c;
-+
-+	c = &config->intensity;
-+	setting = &s->torch_brightness;
-+	c->min = setting->min;
-+	c->max = setting->max;
-+	c->step = setting->step;
-+	c->def = setting->val;
-+
-+	c = &config->flash_timeout;
-+	setting = &s->flash_timeout;
-+	c->min = setting->min;
-+	c->max = setting->max;
-+	c->step = setting->step;
-+	c->def = setting->val;
-+
-+	config->has_external_strobe = gpio_is_valid(led->ext_strobe_gpio);
-+}
-+
-+static const struct v4l2_flash_ops v4l2_flash_ops = {
-+	.external_strobe_set = aat1290_led_external_strobe_set,
-+	.intensity_to_led_brightness = aat1290_intensity_to_brightness,
-+	.led_brightness_to_intensity = aat1290_brightness_to_intensity,
-+};
-+#else
-+#define aat1290_init_v4l2_ctrl_config(led, s, config)
-+#define init_mm_current_scale(led) (0)
-+#endif
-+
- static const struct led_flash_ops flash_ops = {
- 	.strobe_set = aat1290_led_flash_strobe_set,
- 	.timeout_set = aat1290_led_flash_timeout_set,
-@@ -299,6 +411,10 @@ static int aat1290_led_probe(struct platform_device *pdev)
- 	struct aat1290_led *led;
- 	struct led_classdev *led_cdev;
- 	struct led_classdev_flash *fled_cdev;
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+	struct v4l2_flash_ctrl_config v4l2_flash_config;
-+	int ext_strobe_gpio;
-+#endif
- 	struct aat1290_led_settings settings;
- 	int flen_gpio, enset_gpio, ret;
- 
-@@ -342,6 +458,21 @@ static int aat1290_led_probe(struct platform_device *pdev)
- 	}
- 	led->en_set_gpio = enset_gpio;
- 
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+	ext_strobe_gpio = of_get_gpio(dev_node, 2);
-+	if (gpio_is_valid(ext_strobe_gpio)) {
-+		ret = devm_gpio_request_one(dev, ext_strobe_gpio, GPIOF_DIR_OUT,
-+						"aat1290_en_hw_strobe");
-+		if (ret < 0) {
-+			dev_err(dev,
-+				"failed to request GPIO %d, error %d\n",
-+							ext_strobe_gpio, ret);
-+			return ret;
-+		}
-+	}
-+	led->ext_strobe_gpio = ext_strobe_gpio;
-+#endif
-+
- 	fled_cdev = &led->fled_cdev;
- 	led_cdev = &fled_cdev->led_cdev;
- 
-@@ -349,9 +480,20 @@ static int aat1290_led_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	/*
-+	 * Initialize non-linear movie mode current scale basing
-+	 * on the max flash current from Device Tree binding.
-+	 */
-+	ret = init_mm_current_scale(led);
-+	if (ret < 0)
-+		return ret;
-+
- 	/* Init flash settings */
- 	aat1290_init_flash_settings(led, &settings);
- 
-+	/* Init V4L2 Flash controls basing on initialized settings */
-+	aat1290_init_v4l2_ctrl_config(led, &settings, &v4l2_flash_config);
-+
- 	fled_cdev->timeout = settings.flash_timeout;
- 	fled_cdev->ops = &flash_ops;
- 
-@@ -370,13 +512,34 @@ static int aat1290_led_probe(struct platform_device *pdev)
- 
- 	mutex_init(&led->lock);
- 
-+	of_node_get(dev_node);
-+	led_cdev->dev->of_node = dev_node;
-+
-+	/* Create V4L2 Flash subdev. */
-+	led->v4l2_flash = v4l2_flash_init(fled_cdev,
-+					  &v4l2_flash_ops,
-+					  &v4l2_flash_config);
-+	if (IS_ERR(led->v4l2_flash)) {
-+		ret = PTR_ERR(led->v4l2_flash);
-+		goto error_v4l2_flash_init;
-+	}
-+
- 	return 0;
-+
-+error_v4l2_flash_init:
-+	of_node_put(dev_node);
-+	led_classdev_flash_unregister(fled_cdev);
-+	mutex_destroy(&led->lock);
-+
-+	return ret;
- }
- 
- static int aat1290_led_remove(struct platform_device *pdev)
- {
- 	struct aat1290_led *led = platform_get_drvdata(pdev);
- 
-+	v4l2_flash_release(led->v4l2_flash);
-+	of_node_put(led->fled_cdev.led_cdev.dev->of_node);
- 	led_classdev_flash_unregister(&led->fled_cdev);
- 	cancel_work_sync(&led->work_brightness_set);
- 
--- 
-1.7.9.5
+On Wed, Feb 18, 2015 at 05:53:50PM +0200, Pantelis Antoniou wrote:
+> Hi Mark,
+>=20
+> > On Feb 18, 2015, at 17:41 , Mark Rutland <mark.rutland@arm.com> wro=
+te:
+> >=20
+> > Hi Pantelis,
+> >=20
+> > On Wed, Feb 18, 2015 at 02:59:34PM +0000, Pantelis Antoniou wrote:
+> >> Implement a method of applying DT quirks early in the boot sequenc=
+e.
+> >>=20
+> >> A DT quirk is a subtree of the boot DT that can be applied to
+> >> a target in the base DT resulting in a modification of the live
+> >> tree. The format of the quirk nodes is that of a device tree overl=
+ay.
+> >>=20
+> >> For details please refer to Documentation/devicetree/quirks.txt
+> >>=20
+> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> >> ---
+> >> Documentation/devicetree/quirks.txt | 101 ++++++++++
+> >> drivers/of/dynamic.c                | 358 ++++++++++++++++++++++++=
+++++++++++++
+> >> include/linux/of.h                  |  16 ++
+> >> 3 files changed, 475 insertions(+)
+> >> create mode 100644 Documentation/devicetree/quirks.txt
+> >>=20
+> >> diff --git a/Documentation/devicetree/quirks.txt b/Documentation/d=
+evicetree/quirks.txt
+> >> new file mode 100644
+> >> index 0000000..789319a
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/quirks.txt
+> >> @@ -0,0 +1,101 @@
+> >> +A Device Tree quirk is the way which allows modification of the
+> >> +boot device tree under the control of a per-platform specific met=
+hod.
+> >> +
+> >> +Take for instance the case of a board family that comprises of a
+> >> +number of different board revisions, all being incremental change=
+s
+> >> +after an initial release.
+> >> +
+> >> +Since all board revisions must be supported via a single software=
+ image
+> >> +the only way to support this scheme is by having a different DTB =
+for each
+> >> +revision with the bootloader selecting which one to use at boot t=
+ime.
+> >=20
+> > Not necessarily at boot time. The boards don't have to run the exac=
+t
+> > same FW/bootloader binary, so the relevant DTB could be programmed =
+onto
+> > each board.
+> >=20
+>=20
+> That has not been the case in any kind of board I=E2=80=99ve worked w=
+ith.
+>=20
+> A special firmware image that requires a different programming step a=
+t
+> the factory to select the correct DTB for each is always one more thi=
+ng
+> that can go wrong.
+>=20
+
+I agree. We have boards with several display modules, even if it seems
+quite easy to know which dtb has to be loaded since we use a prefix
+describing the display module (_pda4, _pda7, etc.) it is a pain for
+customers. Moreover you can add the revision of the board, we have a
+mother board and a cpu module so it can quickly lead to something like
+this:
+at91-sama5d31ek_mb-revc_cm-revd_pda7.
+
+It is only an example, at the moment it is a bit less complicated but I
+am not so far from the reality: sama5d31ek_revc_pda7.dts,
+sama5d33ek_revc_pda4.dts, etc. For a SoC family, we have 27 DTS files..=
+=2E
+
+As for the single zImage, we should find a way to have a single DTB.
+
+> >> +While this may in theory work, in practice it is very cumbersome
+> >> +for the following reasons:
+> >> +
+> >> +1. The act of selecting a different boot device tree blob require=
+s
+> >> +a reasonably advanced bootloader with some kind of configuration =
+or
+> >> +scripting capabilities. Sadly this is not the case many times, th=
+e
+> >> +bootloader is extremely dumb and can only use a single dt blob.
+> >=20
+> > You can have several bootloader builds, or even a single build with
+> > something like appended DTB to get an appropriate DTB if the same b=
+inary
+> > will otherwise work across all variants of a board.
+> >=20
+>=20
+> No, the same DTB will not work across all the variants of a board.
+>=20
+> > So it's not necessarily true that you need a complex bootloader.
+> >=20
+>=20
+> >> +2. On many instances boot time is extremely critical; in some cas=
+es
+> >> +there are hard requirements like having working video feeds in un=
+der
+> >> +2 seconds from power-up. This leaves an extremely small time budg=
+et for
+> >> +boot-up, as low as 500ms to kernel entry. The sanest way to get t=
+here
+> >> +is by removing the standard bootloader from the normal boot seque=
+nce
+> >> +altogether by having a very small boot shim that loads the kernel=
+ and
+> >> +immediately jumps to kernel, like falcon-boot mode in u-boot does=
+=2E
+> >=20
+> > Given my previous comments above I don't see why this is relevant.
+> > You're already passing _some_ DTB here, so if you can organise for =
+the
+> > board to statically provide a sane DTB that's fine, or you can reso=
+rt to
+> > appended DTB if it's not possible to update the board configuration=
+=2E
+> >=20
+>=20
+> You=E2=80=99re missing the point. I can=E2=80=99t use the same DTB fo=
+r each revision of the
+> board. Each board is similar but it=E2=80=99s not identical.
+>=20
+> >> +3. Having different DTBs/DTSs for different board revisions easil=
+y leads to
+> >> +drift between versions. Since no developer is expected to have ev=
+ery single
+> >> +board revision at hand, things are easy to get out of sync, with =
+board versions
+> >> +failing to boot even though the kernel is up to date.
+> >=20
+> > I'm not sure I follow. Surely if you don't have every board revisio=
+n at
+> > hand you can't test quirks exhaustively either?
+> >=20
+>=20
+> It=E2=80=99s one less thing to worry about. For example in the curren=
+t mainline kernel
+> already there is a drift between the beaglebone white and the beagleb=
+one black.
+>=20
+> Having the same DTS is just easier to keep things in sync.
+>=20
+> > Additionally you face the problem that two boards of the same varia=
+nt
+> > could have different base DTBs that you would need to test that eac=
+h
+> > board's quirks worked for a range of base DTBs.
+> >=20
+>=20
+> This is not a valid case. This patch is about boards that have the sa=
+me base DTB.
+>=20
+> >> +4. One final problem is the static way that device tree works.
+> >> +For example it might be desirable for various boards to have a wa=
+y to
+> >> +selectively configure the boot device tree, possibly by the use o=
+f command
+> >> +line options.  For instance a device might be disabled if a given=
+ command line
+> >> +option is present, different configuration to various devices for=
+ debugging
+> >> +purposes can be selected and so on. Currently the only way to do =
+so is by
+> >> +recompiling the DTS and installing, which is an chore for develop=
+ers and
+> >> +a completely unreasonable expectation from end-users.
+> >=20
+> > I'm not sure I follow here.
+> >=20
+> > Which devices do you envisage this being the case for?
+> >=20
+> > Outside of debug scenarios when would you envisage we do this?
+> >=20
+>=20
+> We already have to do this on the beaglebone black. The onboard EMMC =
+and HDMI
+> devices conflict with any capes that use the same pins. So you have t=
+o
+> have a way to disable them so that the attached cape will work.
+> =20
+> > For the debug case it seems reasonable to have command line paramet=
+ers
+> > to get the kernel to do what we want. Just because there's a device=
+ in
+> > the DTB that's useful in a debug scenario doesn't mean we have to u=
+se it
+> > by default.
+>=20
+> I don=E2=80=99t follow. Users need this functionality to work. I.e. p=
+ass a command
+> line option to use different OPPs etc. Real world usage is messy.
+>=20
+> >=20
+> >> +Device Tree quirks solve all those problems by having an in-kerne=
+l interface
+> >> +which per-board/platform method can use to selectively modify the=
+ device tree
+> >> +right after unflattening.
+> >> +
+> >> +A DT quirk is a subtree of the boot DT that can be applied to
+> >> +a target in the base DT resulting in a modification of the live
+> >> +tree. The format of the quirk nodes is that of a device tree over=
+lay.
+> >> +
+> >> +As an example the following DTS contains a quirk.
+> >> +
+> >> +/ {
+> >> +       foo: foo-node {
+> >> +               bar =3D <10>;
+> >> +       };
+> >> +
+> >> +       select-quirk =3D <&quirk>;
+> >> +
+> >> +       quirk: quirk {
+> >> +               fragment@0 {
+> >> +                       target =3D <&foo>;
+> >> +                       __overlay {
+> >> +                               bar =3D <0xf00>;
+> >> +                               baz =3D <11>;
+> >> +                       };
+> >> +               };
+> >> +       };
+> >> +};
+> >> +
+> >> +The quirk when applied would result at the following tree:
+> >> +
+> >> +/ {
+> >> +       foo: foo-node {
+> >> +               bar =3D <0xf00>;
+> >> +               baz =3D <11>;
+> >> +       };
+> >> +
+> >> +       select-quirk =3D <&quirk>;
+> >> +
+> >> +       quirk: quirk {
+> >> +               fragment@0 {
+> >> +                       target =3D <&foo>;
+> >> +                       __overlay {
+> >> +                               bar =3D <0xf00>;
+> >> +                               baz =3D <11>;
+> >> +                       };
+> >> +               };
+> >> +       };
+> >> +
+> >> +};
+> >> +
+> >> +The two public method used to accomplish this are of_quirk_apply_=
+by_node()
+> >> +and of_quirk_apply_by_phandle();
+> >> +
+> >> +To apply the quirk, a per-platform method can retrieve the phandl=
+e from the
+> >> +select-quirk property and pass it to the of_quirk_apply_by_phandl=
+e() node.
+> >> +
+> >> +The method which the per-platform method is using to select the q=
+uirk to apply
+> >> +is out of the scope of the DT quirk definition, but possible meth=
+ods include
+> >> +and are not limited to: revision encoding in a GPIO input range, =
+board id
+> >> +located in external or internal EEPROM or flash, DMI board ids, e=
+tc.
+> >=20
+> > It seems rather unfortunate that to get a useful device tree we hav=
+e to
+> > resort to board-specific mechanisms. That means yet more platform c=
+ode,
+> > which is rather unfortunate. This would also require any other DT u=
+sers
+> > to understand and potentially have to sanitize any quirks (e.g. in =
+the
+> > case of Xen).
+>=20
+> The original internal version of the patches used early platform devi=
+ces and
+> a generic firmware quirk mechanism, but I was directed to the per-pla=
+tform
+> method instead. It is perfectly doable to go back at the original imp=
+lementation
+> but I need to get the ball rolling with a discussion about the intern=
+als.
+
+I also think we should used early platform devices to not add platform
+specific code. What were the cons to swith to per-platform method?
+
+> =20
+> >=20
+> > Mark.
+>=20
+> Regards
+>=20
+> =E2=80=94 Pantelis
+>=20
+
+Regards
+
+Ludovic
