@@ -1,65 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] phy: usbphy: Add dt documentation for Broadcom Cygnus USB PHY driver
-Date: Wed, 18 Feb 2015 16:15:01 +0100
-Message-ID: <11865413.8NsXkQ6AUR@wuerfel>
-References: <1424200821-16368-1-git-send-email-arun.ramamurthy@broadcom.com> <2797126.uqvyZJisPk@wuerfel> <54E3AD2E.8050902@broadcom.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v3 1/8] dt: bindings: Supply shared ST IRQ defines
+Date: Wed, 18 Feb 2015 15:13:57 +0000
+Message-ID: <1424272444-16230-2-git-send-email-lee.jones@linaro.org>
+References: <1424272444-16230-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54E3AD2E.8050902@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Arun Ramamurthy <arun.ramamurthy@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Jonathan Richardson <jonathar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Dmitry Torokhov <dtor@google.com>, Kumar Gala <galak@codeaurora.org>, Anatol Pomazau <anatol@google.com>, stern@rowland.harvard.edu
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1424272444-16230-1-git-send-email-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, tglx@linutronix.de, lee.jones@linaro.org, kernel@stlinux.com, jason@lakedaemon.net
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 17 February 2015 13:05:50 Arun Ramamurthy wrote:
-> On 15-02-17 12:53 PM, Arnd Bergmann wrote:
-> > On Tuesday 17 February 2015 12:00:49 Arun Ramamurthy wrote:
-> >> Arnd, I patched the ehci and ohci driver to accept multiple phys so they
-> >> require different names and cannot both be "usb". That patch was
-> >> accepted by Alen Stern but I did not update the bindings documentation.
-> >> I will send out another patch for that. Could we go with the naming
-> >> scheme of "usb" + "p" + port number or do you have other suggestions?
-> >
-> > I don't have a good idea, but I think it would be best if the first
-> > phy could remain named "usb" for compatibility with the existing binding.
-> >
-> The patch was written in a way that all the existing and new drivers can
-> continue to use "usb" if they are using only one phy so that we remain 
-> compatible. The names need to be different only if more than one phy is 
-> specified. In such cases i don't think the first phy should be "usb" as 
-> it would be confusing to have
->         phy-names = "usb","usbp1"
-
-I see your patch now, as 7e7a0e67f2c ("usb: ehci-platform: add support for
-multiple phys per controller"), and I'm not too happy about the way you
-did this.
-
-We already concluded that there should have been a binding change
-to go along with this, and that would have caught the fact that you
-circumvent the API here by reading the phy names manually. That
-part should never have made it into the kernel.
-
-I think we can do this either by defining specific names for the
-phy, or by changing the generic PHY binding to allow anonymous
-phy references (leaving out "phy-names" entirely), and adding a
-proper API for that.
-
-> Should I run this by Alan Stern?
-
-I've added him to Cc here. He clearly didn't know the background about
-the DT binding change, and should not need to, but he may have an opinion
-on what names we should use.
-
-> > What is the reason for having two phys in your case? Are these
-> > identical phy devices connected to a single controller or do they
-> > server different purposes?
-> >
-> Yes, we have three identical phys connected to a single host controller 
-> and one of the phys is also connected to the device controller
-
-Ok, no problem with that, let's just make sure we come up with a
-good binding for it.
-
-	Arnd
+VGhlc2UgZGVmaW5lcyBhcmUgdXNlZCB0byBhbGxvdyB2YWx1ZXMgdXNlZCBmb3IgY29uZmlndXJh
+dGlvbiB0byBiZQplYXNpbHkgaHVtYW4gcmVhZGFibGUgYW5kIHdpbGwgbGVzc2VuIHRoZSBjaGFu
+Y2Ugb2YgbG9naWNhbCBtaXN0YWtlcy4KClNpZ25lZC1vZmYtYnk6IExlZSBKb25lcyA8bGVlLmpv
+bmVzQGxpbmFyby5vcmc+Ci0tLQogaW5jbHVkZS9kdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJv
+bGxlci9pcnEtc3QuaCB8IDMwICsrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgMzAgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGlu
+Z3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLXN0LmgKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2R0
+LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS1zdC5oIGIvaW5jbHVkZS9kdC1iaW5k
+aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEtc3QuaApuZXcgZmlsZSBtb2RlIDEwMDY0NApp
+bmRleCAwMDAwMDAwLi40YzU5YWNlCi0tLSAvZGV2L251bGwKKysrIGIvaW5jbHVkZS9kdC1iaW5k
+aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEtc3QuaApAQCAtMCwwICsxLDMwIEBACisvKgor
+ICogIGluY2x1ZGUvbGludXgvaXJxY2hpcC9pcnEtc3QuaAorICoKKyAqICBDb3B5cmlnaHQgKEMp
+IDIwMTQgU1RNaWNyb2VsZWN0cm9uaWNzIOKAkyBBbGwgUmlnaHRzIFJlc2VydmVkCisgKgorICog
+IEF1dGhvcjogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4KKyAqCisgKiBUaGlzIHBy
+b2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1v
+ZGlmeQorICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGlj
+ZW5zZSB2ZXJzaW9uIDIgYXMKKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3Vu
+ZGF0aW9uLgorICovCisKKyNpZm5kZWYgX0RUX0JJTkRJTkdTX0lOVEVSUlVQVF9DT05UUk9MTEVS
+X1NUX0gKKyNkZWZpbmUgX0RUX0JJTkRJTkdTX0lOVEVSUlVQVF9DT05UUk9MTEVSX1NUX0gKKwor
+I2RlZmluZSBTVF9JUlFfU1lTQ0ZHX0VYVF8wCQkwCisjZGVmaW5lIFNUX0lSUV9TWVNDRkdfRVhU
+XzEJCTEKKyNkZWZpbmUgU1RfSVJRX1NZU0NGR19FWFRfMgkJMgorI2RlZmluZSBTVF9JUlFfU1lT
+Q0ZHX0NUSV8wCQkzCisjZGVmaW5lIFNUX0lSUV9TWVNDRkdfQ1RJXzEJCTQKKyNkZWZpbmUgU1Rf
+SVJRX1NZU0NGR19QTVVfMAkJNQorI2RlZmluZSBTVF9JUlFfU1lTQ0ZHX1BNVV8xCQk2CisjZGVm
+aW5lIFNUX0lSUV9TWVNDRkdfcGwzMTBfTDIJCTcKKyNkZWZpbmUgU1RfSVJRX1NZU0NGR19ESVNB
+QkxFRAkJMHhGRkZGRkZGRgorCisjZGVmaW5lIFNUX0lSUV9TWVNDRkdfRVhUXzFfSU5WCQkweDEK
+KyNkZWZpbmUgU1RfSVJRX1NZU0NGR19FWFRfMl9JTlYJCTB4MgorI2RlZmluZSBTVF9JUlFfU1lT
+Q0ZHX0VYVF8zX0lOVgkJMHg0CisKKyNlbmRpZgotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
