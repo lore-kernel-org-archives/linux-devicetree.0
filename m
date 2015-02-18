@@ -1,89 +1,84 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
-Date: Tue, 17 Feb 2015 18:45:39 -0800
-Message-ID: <54E3FCD3.4000304@codeaurora.org>
-References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>	<1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>	<54DD7CE5.5000302@codeaurora.org> <CAJAp7OgD3+mGZ02o6xAWkJvKoD4BcQWVD1GS87Niw_fcReBMMA@mail.gmail.com>
+Subject: Re: [PATCH] mfd: devicetree: bindings: Add Qualcomm RPM regulator
+ subnodes
+Date: Tue, 17 Feb 2015 18:52:48 -0800
+Message-ID: <54E3FE80.2090202@codeaurora.org>
+References: <1422582666-32653-1-git-send-email-bjorn.andersson@sonymobile.com>	<20150213221332.GA19975@qualcomm.com> <CAJAp7OjwuOdD=DynygFWnPH6tEVyf_dzOHQbUV_CHjS7OXihdg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OgD3+mGZ02o6xAWkJvKoD4BcQWVD1GS87Niw_fcReBMMA@mail.gmail.com>
+In-Reply-To: <CAJAp7OjwuOdD=DynygFWnPH6tEVyf_dzOHQbUV_CHjS7OXihdg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: Bjorn Andersson <bjorn@kryo.se>, Andy Gross <agross@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/15 15:02, Bjorn Andersson wrote:
-> On Thu, Feb 12, 2015 at 8:26 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> On 01/23/15 16:54, Bjorn Andersson wrote:
+On 02/17/15 13:48, Bjorn Andersson wrote:
+> On Fri, Feb 13, 2015 at 2:13 PM, Andy Gross <agross@codeaurora.org> wrote:
+>> On Thu, Jan 29, 2015 at 05:51:06PM -0800, Bjorn Andersson wrote:
+>>> Add the regulator subnodes to the Qualcomm RPM MFD device tree bindings.
+>>>
+>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>>> ---
+>>>       #include <dt-bindings/mfd/qcom-rpm.h>
+>>> @@ -66,5 +237,18 @@ frequencies.
+>>>
+>>>               #address-cells = <1>;
+>>>               #size-cells = <0>;
 >>> +
->>> +static int pm8941_wled_set(struct led_classdev *cdev,
->>> +                        enum led_brightness value)
->>> +{
->>> +     struct pm8941_wled *wled;
->>> +     u8 ctrl = 0;
->>> +     u16 val;
->>> +     int rc;
->>> +     int i;
+>>> +             pm8921_smps1: pm8921-smps1 {
+>>> +                     compatible = "qcom,rpm-pm8921-smps";
+>>> +                     reg = <QCOM_RPM_PM8921_SMPS1>;
 >>> +
->>> +     wled = container_of(cdev, struct pm8941_wled, cdev);
+>>> +                     regulator-min-microvolt = <1225000>;
+>>> +                     regulator-max-microvolt = <1225000>;
+>>> +                     regulator-always-on;
 >>> +
->>> +     if (value != 0)
->>> +             ctrl = PM8941_WLED_REG_MOD_EN_BIT;
+>>> +                     bias-pull-down;
 >>> +
->>> +     val = value * PM8941_WLED_REG_VAL_MAX / LED_FULL;
->>> +
->>> +     rc = regmap_update_bits(wled->regmap,
->>> +                     wled->addr + PM8941_WLED_REG_MOD_EN,
->>> +                     PM8941_WLED_REG_MOD_EN_MASK, ctrl);
->>> +     if (rc)
->>> +             return rc;
->>> +
->>> +     for (i = 0; i < wled->cfg.num_strings; ++i) {
->>> +             u8 v[2] = { val & 0xff, (val >> 8) & 0xf };
->>> +
->>> +             rc = regmap_bulk_write(wled->regmap,
->>> +                             wled->addr + PM8941_WLED_REG_VAL_BASE + 2 * i,
->>> +                             v, 2);
->>> +             if (rc)
->>> +                     return rc;
->>> +     }
->>> +
->>> +     rc = regmap_update_bits(wled->regmap,
->>> +                     wled->addr + PM8941_WLED_REG_SYNC,
->>> +                     PM8941_WLED_REG_SYNC_MASK, PM8941_WLED_REG_SYNC_ALL);
->>> +     if (rc)
->>> +             return rc;
->>> +
->>> +     rc = regmap_update_bits(wled->regmap,
->>> +                     wled->addr + PM8941_WLED_REG_SYNC,
->>> +                     PM8941_WLED_REG_SYNC_MASK, PM8941_WLED_REG_SYNC_CLEAR);
->>> +     return rc;
->>> +}
->> This doesn't seem to do anything for the OVP spike mentioned in this
->> patch[1]. Do you see that problem on your device? I imagine the PMIC is
->> the same.
+>>> +                     qcom,switch-mode-frequency = <3200000>;
+>>> +             };
+>>>       };
+>> My only comment here is that most (all but one) of the other mfd regulator
+>> devices use regulators {}.  Still wonder if that's what we should do.
 >>
->> [1]
->> https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?id=fef9e15072562f0f28dc7066dcdd69388df81ed3
->>
-> That's odd, I can't find that fix in any officially supported releases
-> for 8974 - which Courtney used as reference for this driver.
+> Looking at the existing mfds they all have a list in the code of the
+> regulators supported on a certain mfd. Through the use of
+> regulator_desc.{of_match,regulators_node} these regulators are
+> populated with properties from of_nodes matched by name (of_match)
+> under the specified node (regulators_node).
+> But as we've discussed in other cases it's not desirable to maintain
+> these lists for the various variants of Qualcomm platforms, so I did
+> choose to go with "standalone" platform devices - with matching
+> through compatible and all.
 >
-> Just to make sure I understand the solution; when disabling the sinks
-> the over-voltage-protection sometimes triggers, so we should detect
-> that and reset the ovp configuration?
+> But that's all implementation, looking at the binding itself a
+> regulator {} (clocks{} and msm_bus{}) would serve as a sort of
+> grouping of children based on type. Except for the implications this
+> has on the implementation I don't see much benefit of this (and in our
+> case the implementation would suffer from the extra grouping).
 >
-> I presume the side effect would be that the sinks would not give any
-> output until this is done?
+>
+> Let me know what you think, I based these ideas on just reading the
+> existing code and bindings, and might very well have missed something.
 >
 
-It seems that commit is not very good at describing the problem. From
-what I can tell, the inductor current may spike when the WLED is turned
-off and the switch is stuck on (the circuit is a boost convertor). To
-make sure this doesn't happen, we force an OVP so that the switch is
-known to be open (i.e. off) and thus can't cause the current spike when
-we disable.
+The main benefit I can think of is we cut down on runtime memory bloat.
+
+(gdb) p sizeof(struct platform_device)
+$1 = 624
+
+Multiply that by 20 regulators and you get 624 * 20 = 12480 bytes in
+platform devices. If we had one platform_device for all RPM controlled
+regulators that would reduce this number from ~12k to ~0.5K. It would
+require of_regulator_match() and the (undesirable) lists of regulator
+names for all the different pmic variants, or we would need to pick out
+the regulator nodes based on compatible matching. Is that so bad? In the
+other cases we were putting lots of data in the driver purely for
+debugging, whereas in this case we're doing it to find nodes that we
+need to hook up with regulators in software and any associated data for
+that regulator.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
