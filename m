@@ -1,55 +1,67 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
-Date: Wed, 18 Feb 2015 11:32:38 -0800
-Message-ID: <20150218193238.GA32179@roeck-us.net>
-References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com>
- <20150218154106.GC29429@leverpostej>
- <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com>
- <20150218173115.GG29429@leverpostej>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: amba uarts - arm type uarts fifo size provided by device tree
+Date: Wed, 18 Feb 2015 14:33:42 -0500
+Message-ID: <54E4E916.1010009@linaro.org>
+References: <1424285593-2886-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <20150218190601.GI29429@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150218173115.GG29429@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Ludovic Desroches <ludovic.desroches@atmel.com>, Rob Herring <robherring2@gmail.com>, Tony Lindgren <tony@atomide.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150218190601.GI29429@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 18, 2015 at 05:31:16PM +0000, Mark Rutland wrote:
-> > >> +While this may in theory work, in practice it is very cumbersome
-> > >> +for the following reasons:
-> > >> +
-> > >> +1. The act of selecting a different boot device tree blob requires
-> > >> +a reasonably advanced bootloader with some kind of configuration or
-> > >> +scripting capabilities. Sadly this is not the case many times, the
-> > >> +bootloader is extremely dumb and can only use a single dt blob.
-> > > 
-> > > You can have several bootloader builds, or even a single build with
-> > > something like appended DTB to get an appropriate DTB if the same binary
-> > > will otherwise work across all variants of a board.
-> > > 
-> > 
-> > No, the same DTB will not work across all the variants of a board.
-> 
-> I wasn't on about the DTB. I was on about the loader binary, in the case
-> the FW/bootloader could be common even if the DTB couldn't.
-> 
-> To some extent there must be a DTB that will work across all variants
-> (albeit with limited utility) or the quirk approach wouldn't work...
-> 
+On 02/18/2015 02:06 PM, Mark Rutland wrote:
+> Hi,
+>
+> Please Cc lakml for patches in this area in future.
+>
+> On Wed, Feb 18, 2015 at 06:53:11PM +0000, Jorge Ramirez-Ortiz wrote:
+>> [PATCH 1/2] Documentation: bindings: add optional fifo size property
+>> [PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present
+>>
+>>
+>> These patches aim at resolving an issue present on some of the amba pl011
+>> uarts.  
+> Which systems are affected? Neither of your two patches add the property
+> to any dts file.
 
-Not necessarily. I have another use case: A cpu card can be plugged into
-multiple carrier card variants, each with different functionality.
-At production time, it is not known which carrier card the CPU card
-will be plugged in. It is not feasible for manufacturing to update
-the dtb files after the cpu card has been plugged into the carrier,
-since both are manufactured separately and plugged together at a
-later step in the production process (and may be swapped around later).
 
-External overlays do not work in this case because those have to be loaded
-through the carrier card. A common dtb file as proposed here would be an
-elegant solution for that problem.
+yes, the system affected is still under revision (I should have mentioned)
+https://lkml.org/lkml/2015/2/5/144
 
-Guenter
+this is the board I am using to test
+https://www.96boards.org/products/hikey/
+
+>
+>> Some of these arm type uarts have their fifo sizes not defined in terms of the
+>> amba_rev register. 
+> What does said register actually contain?
+
+the amba_rev contains '1' for the Hisilicon Hi6220 SoC
+
+>
+> Is this a full PL011, or a cut-down SBSA UART?
+
+I believe is full PL011 (ARM type) - that is what is being run in my tests.
+
+>
+> Mark.
+>
+>> Those uarts should be able to declare their fifo sizes using the optional
+>> property "fifo-size" in the device tree. This device tree setting shall take
+>> precedence over any other values. 
+>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
