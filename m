@@ -1,32 +1,26 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] Documentation: bindings: add optional fifo size property to AMBA UARTs
-Date: Wed, 18 Feb 2015 13:53:12 -0500
-Message-ID: <1424285593-2886-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
-References: <1424285593-2886-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Subject: amba uarts - arm type uarts fifo size provided by device tree
+Date: Wed, 18 Feb 2015 13:53:11 -0500
+Message-ID: <1424285593-2886-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424285593-2886-1-git-send-email-jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/serial/pl011.txt | 1 +
- 1 file changed, 1 insertion(+)
+[PATCH 1/2] Documentation: bindings: add optional fifo size property
+[PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present
 
-diff --git a/Documentation/devicetree/bindings/serial/pl011.txt b/Documentation/devicetree/bindings/serial/pl011.txt
-index 5d2e840..05d1adb 100644
---- a/Documentation/devicetree/bindings/serial/pl011.txt
-+++ b/Documentation/devicetree/bindings/serial/pl011.txt
-@@ -13,5 +13,6 @@ Optional properties:
- - dmas:	   When present, may have one or two dma channels.
- 	   The first one must be named "rx", the second one
- 	   must be named "tx".
-+- fifo-size:  When present, must have the fifo size.
- 
- See also bindings/arm/primecell.txt
--- 
-1.9.1
+
+These patches aim at resolving an issue present on some of the amba pl011
+uarts.  
+
+Some of these arm type uarts have their fifo sizes not defined in terms of the
+amba_rev register. 
+
+Those uarts should be able to declare their fifo sizes using the optional
+property "fifo-size" in the device tree. This device tree setting shall take
+precedence over any other values. 
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
