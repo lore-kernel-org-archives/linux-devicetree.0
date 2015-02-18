@@ -1,138 +1,90 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2 v3] drivers/core/of: Add symlink to device-tree from
- devices with an OF node
-Date: Tue, 17 Feb 2015 19:07:14 -0600
-Message-ID: <CAL_JsqJZg9zTjpx6pNxF8yvbTVcXX3cMP=RtEHUaf+E2X3MC_w@mail.gmail.com>
-References: <1415342031.4925.27.camel@kernel.crashing.org> <1415342117.4925.29.camel@kernel.crashing.org>
- <1415596626.5769.14.camel@kernel.crashing.org> <CAL_JsqKG=vpeGKj3v-2VW9oGQsnmuYMHRfy6LuXDXE=ROjHT4w@mail.gmail.com>
- <1424219118.21410.111.camel@kernel.crashing.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] leds: add Qualcomm PM8941 WLED driver
+Date: Tue, 17 Feb 2015 18:45:39 -0800
+Message-ID: <54E3FCD3.4000304@codeaurora.org>
+References: <1422060853-1067-1-git-send-email-bjorn.andersson@sonymobile.com>	<1422060853-1067-2-git-send-email-bjorn.andersson@sonymobile.com>	<54DD7CE5.5000302@codeaurora.org> <CAJAp7OgD3+mGZ02o6xAWkJvKoD4BcQWVD1GS87Niw_fcReBMMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424219118.21410.111.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7OgD3+mGZ02o6xAWkJvKoD4BcQWVD1GS87Niw_fcReBMMA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 17, 2015 at 6:25 PM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> So I've been annoyed lately with having a bunch of devices such as i2c
-> eeproms (for use by VPDs, server world !) and other bits and pieces that
-> I want to be able to identify from userspace, and possibly provide
-> additional data about from FW.
+On 02/17/15 15:02, Bjorn Andersson wrote:
+> On Thu, Feb 12, 2015 at 8:26 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>> On 01/23/15 16:54, Bjorn Andersson wrote:
+>>> +
+>>> +static int pm8941_wled_set(struct led_classdev *cdev,
+>>> +                        enum led_brightness value)
+>>> +{
+>>> +     struct pm8941_wled *wled;
+>>> +     u8 ctrl = 0;
+>>> +     u16 val;
+>>> +     int rc;
+>>> +     int i;
+>>> +
+>>> +     wled = container_of(cdev, struct pm8941_wled, cdev);
+>>> +
+>>> +     if (value != 0)
+>>> +             ctrl = PM8941_WLED_REG_MOD_EN_BIT;
+>>> +
+>>> +     val = value * PM8941_WLED_REG_VAL_MAX / LED_FULL;
+>>> +
+>>> +     rc = regmap_update_bits(wled->regmap,
+>>> +                     wled->addr + PM8941_WLED_REG_MOD_EN,
+>>> +                     PM8941_WLED_REG_MOD_EN_MASK, ctrl);
+>>> +     if (rc)
+>>> +             return rc;
+>>> +
+>>> +     for (i = 0; i < wled->cfg.num_strings; ++i) {
+>>> +             u8 v[2] = { val & 0xff, (val >> 8) & 0xf };
+>>> +
+>>> +             rc = regmap_bulk_write(wled->regmap,
+>>> +                             wled->addr + PM8941_WLED_REG_VAL_BASE + 2 * i,
+>>> +                             v, 2);
+>>> +             if (rc)
+>>> +                     return rc;
+>>> +     }
+>>> +
+>>> +     rc = regmap_update_bits(wled->regmap,
+>>> +                     wled->addr + PM8941_WLED_REG_SYNC,
+>>> +                     PM8941_WLED_REG_SYNC_MASK, PM8941_WLED_REG_SYNC_ALL);
+>>> +     if (rc)
+>>> +             return rc;
+>>> +
+>>> +     rc = regmap_update_bits(wled->regmap,
+>>> +                     wled->addr + PM8941_WLED_REG_SYNC,
+>>> +                     PM8941_WLED_REG_SYNC_MASK, PM8941_WLED_REG_SYNC_CLEAR);
+>>> +     return rc;
+>>> +}
+>> This doesn't seem to do anything for the OVP spike mentioned in this
+>> patch[1]. Do you see that problem on your device? I imagine the PMIC is
+>> the same.
+>>
+>> [1]
+>> https://www.codeaurora.org/cgit/quic/la/kernel/msm/commit/?id=fef9e15072562f0f28dc7066dcdd69388df81ed3
+>>
+> That's odd, I can't find that fix in any officially supported releases
+> for 8974 - which Courtney used as reference for this driver.
 >
-> Basically, it boils down to correlating the sysfs device with the OF
-> tree device node, so that user space can use device-tree info such as
-> additional "location" or "label" (or whatever else we can come up with)
-> propreties to identify a given device, or get some attributes of use
-> about it, etc...
+> Just to make sure I understand the solution; when disabling the sinks
+> the over-voltage-protection sometimes triggers, so we should detect
+> that and reset the ovp configuration?
 >
-> Now, so far, we've done that in some subsystem in a fairly ad-hoc basis
-> using "devspec" properties. For example, PCI creates them if it can
-> correlate the probed device with a DT node. Some powerpc specific busses
-> do that too.
+> I presume the side effect would be that the sinks would not give any
+> output until this is done?
 >
-> However, i2c doesn't and it would be nice to have something more generic
-> since technically any device can have a corresponding device tree node.
->
-> This patch adds an "of_node" symlink to devices that have a non-NULL
-> dev->of_node pointer, the patch is pretty trivial and seems to work just
-> fine for me.
->
-> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+It seems that commit is not very good at describing the problem. From
+what I can tell, the inductor current may spike when the WLED is turned
+off and the switch is stuck on (the circuit is a boost convertor). To
+make sure this doesn't happen, we force an OVP so that the switch is
+known to be open (i.e. off) and thus can't cause the current spike when
+we disable.
 
-> ---
->
-> This addresses Greg's comments. Note that I'm not 100% certain about
-> using device_add_class_symlinks(), I had to put the code before the
-> test for dev->class, maybe we should rename that function to device_add_symlinks()
-> if it grows beyond the class bits ?
->
-> Also there was nothing that I could find in Documentation/ABI that
-> documented "core" device properties, it's all in
-> Documentation/sysfs-rules.txt, but as suggested by Greg (on IRC) I
-> went for ABI anyway, so I've added a file for "generic" properties
-> and added that one in. I'm happy to change it if you think that's not
-> right, just let me know where you want things.
->
-> I'm not resending patch 1/2, it should still be fine. Let me know if
-> you want a new copy.
->
->  Documentation/ABI/stable/sysfs-devices | 10 ++++++++++
->  drivers/base/core.c                    | 16 ++++++++++++++--
->  2 files changed, 24 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/ABI/stable/sysfs-devices
->
-> diff --git a/Documentation/ABI/stable/sysfs-devices b/Documentation/ABI/stable/sysfs-devices
-> new file mode 100644
-> index 0000000..43f78b88d
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/sysfs-devices
-> @@ -0,0 +1,10 @@
-> +# Note: This documents additional properties of any device beyond what
-> +# is documented in Documentation/sysfs-rules.txt
-> +
-> +What:          /sys/devices/*/of_path
-> +Date:          February 2015
-> +Contact:       Device Tree mailing list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> +Description:
-> +               Any device associated with a device-tree node will have
-> +               an of_path symlink pointing to the corresponding device
-> +               node in /sys/firmware/devicetree/
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 97e2baf..2549805 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -805,8 +805,16 @@ static void cleanup_device_parent(struct device *dev)
->
->  static int device_add_class_symlinks(struct device *dev)
->  {
-> +       struct device_node *of_node = dev_of_node(dev);
->         int error;
->
-> +       if (of_node) {
-> +               error = sysfs_create_link(&dev->kobj, &of_node->kobj,"of_node");
-> +               if (error)
-> +                       dev_warn(dev, "Error %d creating of_node link\n",error);
-> +               /* An error here doesn't warrant bringing down the device */
-> +       }
-> +
->         if (!dev->class)
->                 return 0;
->
-> @@ -814,7 +822,7 @@ static int device_add_class_symlinks(struct device *dev)
->                                   &dev->class->p->subsys.kobj,
->                                   "subsystem");
->         if (error)
-> -               goto out;
-> +               goto out_devnode;
->
->         if (dev->parent && device_is_not_partition(dev)) {
->                 error = sysfs_create_link(&dev->kobj, &dev->parent->kobj,
-> @@ -842,12 +850,16 @@ out_device:
->
->  out_subsys:
->         sysfs_remove_link(&dev->kobj, "subsystem");
-> -out:
-> +out_devnode:
-> +       sysfs_remove_link(&dev->kobj, "of_node");
->         return error;
->  }
->
->  static void device_remove_class_symlinks(struct device *dev)
->  {
-> +       if (dev_of_node(dev))
-> +               sysfs_remove_link(&dev->kobj, "of_node");
-> +
->         if (!dev->class)
->                 return;
->
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
