@@ -1,350 +1,325 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Wed, 18 Feb 2015 10:37:43 +0000
-Message-ID: <54E46B77.4060803@arm.com>
-References: <1423188007-17047-1-git-send-email-Vincent.Yang@tw.fujitsu.com> <1423188528-17134-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH] mfd: arizona: Move useful defines into a dt-binding include
+Date: Wed, 18 Feb 2015 11:03:39 +0000
+Message-ID: <1424257419-28000-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423188528-17134-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kWeLe5EKmSxzQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563kn/h4/h/YSQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Move parts of linux/mfd/arizona/pdata.h and gpio.h into a new file in
+the dt-binding directory for use by device tree bindings. This also
+makes gpio.h redundant so remove it in the process.
 
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+ include/dt-bindings/mfd/arizona.h |  109 +++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/arizona/gpio.h  |   96 --------------------------------
+ include/linux/mfd/arizona/pdata.h |   46 +---------------
+ sound/soc/codecs/arizona.c        |    1 -
+ 4 files changed, 110 insertions(+), 142 deletions(-)
+ create mode 100644 include/dt-bindings/mfd/arizona.h
+ delete mode 100644 include/linux/mfd/arizona/gpio.h
 
-On 06/02/15 02:08, Vincent Yang wrote:
-> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Add driver for the ARM Primecell Message-Handling-Unit(MHU) controller.
->
-> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
-> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
-> ---
->   .../devicetree/bindings/mailbox/arm-mhu.txt        |  35 ++++
->   drivers/mailbox/Kconfig                            |   7 +
->   drivers/mailbox/Makefile                           |   2 +
->   drivers/mailbox/arm_mhu.c                          | 196 +++++++++++++++++++++
->   4 files changed, 240 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->   create mode 100644 drivers/mailbox/arm_mhu.c
->
-> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> new file mode 100644
-> index 0000000..986a205
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> @@ -0,0 +1,35 @@
-> +ARM MHU Mailbox Driver
-> +======================
-> +
-> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
-> +3 independent channels/links to communicate with remote processor(s).
-> + MHU links are hardwired on a platform. A link raises interrupt for any
-> +received data. However, there is no specified way of knowing if the sent
-
-IIUC the IP as such doesn't have this restriction, it's just the way
-currently integrated in the SoCs. So we need to provide a way for future
-expansion.
-
-> +data has been read by the remote. This driver assumes the sender polls
-> +STAT register and the remote clears it after having read the data.
-> +
-
-I would rather drop any specifics about what driver does. Bindings 
-should try to confine to the underlying hardware only if possible.
-
-> +Mailbox Device Node:
-> +====================
-> +
-> +Required properties:
-> +--------------------
-> +- compatible:		Shall be "arm,mhu" & "arm,primecell"
-> +- reg:			Contains the mailbox register address range (base
-> +			address and length)
-> +- #mbox-cells		Shall be 1
-
-Need to explain what that one cell must represent.
-
-> +- interrupts:		Contains the interrupt information corresponding to
-> +			each of the 3 links of MHU.
-> +
-
-How do we handle if the middle link has no interrupt ?
-Also please that the last channel is secure only and must not be used in 
-non-secure execution.
-
-> +Example:
-> +--------
-> +
-> +	mhu: mailbox@2b1f0000 {
-> +		#mbox-cells = <1>;
-> +		compatible = "arm,mhu", "arm,primecell";
-> +		reg = <0 0x2b1f0000 0x1000>;
-> +		interrupts = <0 36 4>,
-> +			     <0 35 4>,
-> +			     <0 37 4>;
-> +		clocks = <&clock 0 2 1>;
-> +		clock-names = "apb_pclk";
-> +	};
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index c04fed9..9238440 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -6,6 +6,13 @@ menuconfig MAILBOX
->   	  signals. Say Y if your platform supports hardware mailboxes.
->
->   if MAILBOX
-> +
-> +config ARM_MHU
-> +	tristate "ARM MHU Mailbox"
-> +	depends on ARM
-> +	help
-> +	  Say Y here if you want to build the ARM MHU controller driver
-> +
-
-May be a brief one/2-liners on what IP does might be useful ?
-
->   config PL320_MBOX
->   	bool "ARM PL320 Mailbox"
->   	depends on ARM_AMBA
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index dd412c2..c83791d 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -2,6 +2,8 @@
->
->   obj-$(CONFIG_MAILBOX)		+= mailbox.o
->
-> +obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o
-> +
->   obj-$(CONFIG_PL320_MBOX)	+= pl320-ipc.o
->
->   obj-$(CONFIG_OMAP2PLUS_MBOX)	+= omap-mailbox.o
-> diff --git a/drivers/mailbox/arm_mhu.c b/drivers/mailbox/arm_mhu.c
-> new file mode 100644
-> index 0000000..d6fd1cd
-> --- /dev/null
-> +++ b/drivers/mailbox/arm_mhu.c
-> @@ -0,0 +1,196 @@
-> +/*
-> + * Copyright (C) 2013-2015 Fujitsu Semiconductor Ltd.
-> + * Copyright (C) 2015 Linaro Ltd.
-> + * Author: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation, version 2 of the License.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/mutex.h>
-> +#include <linux/delay.h>
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/amba/bus.h>
-> +#include <linux/mailbox_controller.h>
-> +
-> +#define INTR_STAT_OFS	0x0
-> +#define INTR_SET_OFS	0x8
-> +#define INTR_CLR_OFS	0x10
-> +
-> +struct mhu_link {
-> +	unsigned irq;
-> +	void __iomem *tx_reg;
-> +	void __iomem *rx_reg;
-> +};
-> +
-> +struct arm_mhu {
-> +	void __iomem *base;
-> +	struct mhu_link mlink[3];
-
-Replace "3" with some macro throughout the file.
-
-> +	struct mbox_chan chan[3];
-> +	struct mbox_controller mbox;
-> +};
-> +
-> +static irqreturn_t mhu_rx_interrupt(int irq, void *p)
-> +{
-> +	struct mbox_chan *chan = p;
-> +	struct mhu_link *mlink = chan->con_priv;
-> +	u32 val;
-> +
-> +	val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
-> +	if (!val)
-> +		return IRQ_NONE;
-> +
-> +	mbox_chan_received_data(chan, (void *)&val);
-> +
-> +	writel_relaxed(val, mlink->rx_reg + INTR_CLR_OFS);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static bool mhu_last_tx_done(struct mbox_chan *chan)
-> +{
-> +	struct mhu_link *mlink = chan->con_priv;
-> +	u32 val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
-> +
-> +	return (val == 0);
-
-[Nit] How about just
-	return readl_relaxed(mlink->tx_reg + INTR_STAT_OFS) == 0;
-
-> +}
-> +
-> +static int mhu_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +	struct mhu_link *mlink = chan->con_priv;
-> +	u32 *arg = data;
-> +
-> +	if (!mhu_last_tx_done(chan)) {
-> +		dev_err(chan->mbox->dev, "Last TX(%d) pending!\n", mlink->irq);
-> +		return -EBUSY;
-> +	}
-> +
-
-Why do you need the above check when the core handles that already ?
-
-> +	writel_relaxed(*arg, mlink->tx_reg + INTR_SET_OFS);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mhu_startup(struct mbox_chan *chan)
-> +{
-> +	struct mhu_link *mlink = chan->con_priv;
-> +	u32 val;
-> +	int ret;
-> +
-> +	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
-> +	writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
-> +
-> +	ret = request_irq(mlink->irq, mhu_rx_interrupt, 0, "mhu_link", chan);
-> +	if (ret) {
-> +		dev_err(chan->mbox->dev,
-> +			"Unable to aquire IRQ %d\n", mlink->irq);
-> +		return ret;
-> +	}
-
-This proved costly(in terms of time) on Juno board in my testing,
-requesting and setting up irq for every small packets you need to send.
-I would prefer it to be moved to probe.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void mhu_shutdown(struct mbox_chan *chan)
-> +{
-> +	struct mhu_link *mlink = chan->con_priv;
-> +
-> +	free_irq(mlink->irq, chan);
-> +}
-> +
-> +static struct mbox_chan_ops mhu_ops = {
-> +	.send_data = mhu_send_data,
-> +	.startup = mhu_startup,
-> +	.shutdown = mhu_shutdown,
-> +	.last_tx_done = mhu_last_tx_done,
-> +};
-> +
-> +static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
-> +{
-> +	int i, err;
-> +	struct arm_mhu *mhu;
-> +	struct device *dev = &adev->dev;
-> +	int mhu_reg[3] = {0x0, 0x20, 0x200};
-> +
-> +	err = amba_request_regions(adev, NULL);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Allocate memory for device */
-> +	mhu = devm_kzalloc(dev, sizeof(*mhu), GFP_KERNEL);
-> +	if (!mhu)
-> +		return -ENOMEM;
-> +
-> +	mhu->base = devm_ioremap_resource(dev, &adev->res);
-
-This will either explode or warn as you have already requested the
-regions. Have you run this code after converting to amba bus device ?
-
-> +	if (IS_ERR(mhu->base)) {
-> +		dev_err(dev, "ioremap failed\n");
-> +		return PTR_ERR(mhu->base);
-> +	}
-> +
-> +	for (i = 0; i < 3; i++) {
-> +		mhu->chan[i].con_priv = &mhu->mlink[i];
-> +		mhu->mlink[i].irq = adev->irq[i];
-> +		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
-> +		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + 0x100;
-
-Again a macro for 0x100 ?
-
-> +	}
-> +
-> +	mhu->mbox.dev = dev;
-> +	mhu->mbox.chans = &mhu->chan[0];
-> +	mhu->mbox.num_chans = 3;
-> +	mhu->mbox.ops = &mhu_ops;
-> +	mhu->mbox.txdone_irq = false;
-> +	mhu->mbox.txdone_poll = true;
-> +	mhu->mbox.txpoll_period = 10;
-
-10ms seems to high, but if that's a derived value then I am fine.
-On Juno, typically we get response within a millisecond, so we need not
-get blocked on Tx even after getting Rx for 10ms. I prefer it to be set
-to 1 ms.
-
-> +
-> +	amba_set_drvdata(adev, mhu);
-> +
-> +	err = mbox_controller_register(&mhu->mbox);
-> +	if (err) {
-> +		dev_err(dev, "Failed to register mailboxes %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	dev_info(dev, "ARM MHU Mailbox registered\n");
-> +	return 0;
-> +}
-> +
-> +static int mhu_remove(struct amba_device *adev)
-> +{
-> +	struct arm_mhu *mhu = amba_get_drvdata(adev);
-> +
-> +	mbox_controller_unregister(&mhu->mbox);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct amba_id mhu_ids[] = {
-> +	{
-> +		.id	= 0x1bb098,
-
-This is the problem. This IP has PID(0x98 0xB0 0x1B 0x00 0x04)
-it's 5 bytes[1] . Even I had thought of AMBA initially, it doesn't fit
-as is, may need changes to the amba core to consider this.
-
-Regards,
-Sudeep
-
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b/CHDCHJEH.html
+diff --git a/include/dt-bindings/mfd/arizona.h b/include/dt-bindings/mfd/arizona.h
+new file mode 100644
+index 0000000..f2a4821
+--- /dev/null
++++ b/include/dt-bindings/mfd/arizona.h
+@@ -0,0 +1,109 @@
++/*
++ * Device Tree defines for Arizona devices
++ *
++ * Copyright 2014 Wolfson Microelectronics. PLC.
++ *
++ * Author: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef _DT_BINDINGS_MFD_ARIZONA_H
++#define _DT_BINDINGS_MFD_ARIZONA_H
++
++#define ARIZONA_GP_FN_TXLRCLK                    0x00
++#define ARIZONA_GP_FN_GPIO                       0x01
++#define ARIZONA_GP_FN_IRQ1                       0x02
++#define ARIZONA_GP_FN_IRQ2                       0x03
++#define ARIZONA_GP_FN_OPCLK                      0x04
++#define ARIZONA_GP_FN_FLL1_OUT                   0x05
++#define ARIZONA_GP_FN_FLL2_OUT                   0x06
++#define ARIZONA_GP_FN_PWM1                       0x08
++#define ARIZONA_GP_FN_PWM2                       0x09
++#define ARIZONA_GP_FN_SYSCLK_UNDERCLOCKED        0x0A
++#define ARIZONA_GP_FN_ASYNCCLK_UNDERCLOCKED      0x0B
++#define ARIZONA_GP_FN_FLL1_LOCK                  0x0C
++#define ARIZONA_GP_FN_FLL2_LOCK                  0x0D
++#define ARIZONA_GP_FN_FLL1_CLOCK_OK              0x0F
++#define ARIZONA_GP_FN_FLL2_CLOCK_OK              0x10
++#define ARIZONA_GP_FN_HEADPHONE_DET              0x12
++#define ARIZONA_GP_FN_MIC_DET                    0x13
++#define ARIZONA_GP_FN_WSEQ_STATUS                0x15
++#define ARIZONA_GP_FN_CIF_ADDRESS_ERROR          0x16
++#define ARIZONA_GP_FN_ASRC1_LOCK                 0x1A
++#define ARIZONA_GP_FN_ASRC2_LOCK                 0x1B
++#define ARIZONA_GP_FN_ASRC_CONFIG_ERROR          0x1C
++#define ARIZONA_GP_FN_DRC1_SIGNAL_DETECT         0x1D
++#define ARIZONA_GP_FN_DRC1_ANTICLIP              0x1E
++#define ARIZONA_GP_FN_DRC1_DECAY                 0x1F
++#define ARIZONA_GP_FN_DRC1_NOISE                 0x20
++#define ARIZONA_GP_FN_DRC1_QUICK_RELEASE         0x21
++#define ARIZONA_GP_FN_DRC2_SIGNAL_DETECT         0x22
++#define ARIZONA_GP_FN_DRC2_ANTICLIP              0x23
++#define ARIZONA_GP_FN_DRC2_DECAY                 0x24
++#define ARIZONA_GP_FN_DRC2_NOISE                 0x25
++#define ARIZONA_GP_FN_DRC2_QUICK_RELEASE         0x26
++#define ARIZONA_GP_FN_MIXER_DROPPED_SAMPLE       0x27
++#define ARIZONA_GP_FN_AIF1_CONFIG_ERROR          0x28
++#define ARIZONA_GP_FN_AIF2_CONFIG_ERROR          0x29
++#define ARIZONA_GP_FN_AIF3_CONFIG_ERROR          0x2A
++#define ARIZONA_GP_FN_SPK_TEMP_SHUTDOWN          0x2B
++#define ARIZONA_GP_FN_SPK_TEMP_WARNING           0x2C
++#define ARIZONA_GP_FN_UNDERCLOCKED               0x2D
++#define ARIZONA_GP_FN_OVERCLOCKED                0x2E
++#define ARIZONA_GP_FN_DSP_IRQ1                   0x35
++#define ARIZONA_GP_FN_DSP_IRQ2                   0x36
++#define ARIZONA_GP_FN_ASYNC_OPCLK                0x3D
++#define ARIZONA_GP_FN_BOOT_DONE                  0x44
++#define ARIZONA_GP_FN_DSP1_RAM_READY             0x45
++#define ARIZONA_GP_FN_SYSCLK_ENA_STATUS          0x4B
++#define ARIZONA_GP_FN_ASYNCCLK_ENA_STATUS        0x4C
++
++#define ARIZONA_GPN_DIR                          0x8000  /* GPN_DIR */
++#define ARIZONA_GPN_DIR_MASK                     0x8000  /* GPN_DIR */
++#define ARIZONA_GPN_DIR_SHIFT                        15  /* GPN_DIR */
++#define ARIZONA_GPN_DIR_WIDTH                         1  /* GPN_DIR */
++#define ARIZONA_GPN_PU                           0x4000  /* GPN_PU */
++#define ARIZONA_GPN_PU_MASK                      0x4000  /* GPN_PU */
++#define ARIZONA_GPN_PU_SHIFT                         14  /* GPN_PU */
++#define ARIZONA_GPN_PU_WIDTH                          1  /* GPN_PU */
++#define ARIZONA_GPN_PD                           0x2000  /* GPN_PD */
++#define ARIZONA_GPN_PD_MASK                      0x2000  /* GPN_PD */
++#define ARIZONA_GPN_PD_SHIFT                         13  /* GPN_PD */
++#define ARIZONA_GPN_PD_WIDTH                          1  /* GPN_PD */
++#define ARIZONA_GPN_LVL                          0x0800  /* GPN_LVL */
++#define ARIZONA_GPN_LVL_MASK                     0x0800  /* GPN_LVL */
++#define ARIZONA_GPN_LVL_SHIFT                        11  /* GPN_LVL */
++#define ARIZONA_GPN_LVL_WIDTH                         1  /* GPN_LVL */
++#define ARIZONA_GPN_POL                          0x0400  /* GPN_POL */
++#define ARIZONA_GPN_POL_MASK                     0x0400  /* GPN_POL */
++#define ARIZONA_GPN_POL_SHIFT                        10  /* GPN_POL */
++#define ARIZONA_GPN_POL_WIDTH                         1  /* GPN_POL */
++#define ARIZONA_GPN_OP_CFG                       0x0200  /* GPN_OP_CFG */
++#define ARIZONA_GPN_OP_CFG_MASK                  0x0200  /* GPN_OP_CFG */
++#define ARIZONA_GPN_OP_CFG_SHIFT                      9  /* GPN_OP_CFG */
++#define ARIZONA_GPN_OP_CFG_WIDTH                      1  /* GPN_OP_CFG */
++#define ARIZONA_GPN_DB                           0x0100  /* GPN_DB */
++#define ARIZONA_GPN_DB_MASK                      0x0100  /* GPN_DB */
++#define ARIZONA_GPN_DB_SHIFT                          8  /* GPN_DB */
++#define ARIZONA_GPN_DB_WIDTH                          1  /* GPN_DB */
++#define ARIZONA_GPN_FN_MASK                      0x007F  /* GPN_FN - [6:0] */
++#define ARIZONA_GPN_FN_SHIFT                          0  /* GPN_FN - [6:0] */
++#define ARIZONA_GPN_FN_WIDTH                          7  /* GPN_FN - [6:0] */
++
++#define ARIZONA_32KZ_MCLK1 1
++#define ARIZONA_32KZ_MCLK2 2
++#define ARIZONA_32KZ_NONE  3
++
++#define ARIZONA_DMIC_MICVDD   0
++#define ARIZONA_DMIC_MICBIAS1 1
++#define ARIZONA_DMIC_MICBIAS2 2
++#define ARIZONA_DMIC_MICBIAS3 3
++
++#define ARIZONA_INMODE_DIFF 0
++#define ARIZONA_INMODE_SE   1
++#define ARIZONA_INMODE_DMIC 2
++
++#endif
+diff --git a/include/linux/mfd/arizona/gpio.h b/include/linux/mfd/arizona/gpio.h
+deleted file mode 100644
+index d2146bb..0000000
+--- a/include/linux/mfd/arizona/gpio.h
++++ /dev/null
+@@ -1,96 +0,0 @@
+-/*
+- * GPIO configuration for Arizona devices
+- *
+- * Copyright 2013 Wolfson Microelectronics. PLC.
+- *
+- * Author: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
+-
+-#ifndef _ARIZONA_GPIO_H
+-#define _ARIZONA_GPIO_H
+-
+-#define ARIZONA_GP_FN_TXLRCLK                    0x00
+-#define ARIZONA_GP_FN_GPIO                       0x01
+-#define ARIZONA_GP_FN_IRQ1                       0x02
+-#define ARIZONA_GP_FN_IRQ2                       0x03
+-#define ARIZONA_GP_FN_OPCLK                      0x04
+-#define ARIZONA_GP_FN_FLL1_OUT                   0x05
+-#define ARIZONA_GP_FN_FLL2_OUT                   0x06
+-#define ARIZONA_GP_FN_PWM1                       0x08
+-#define ARIZONA_GP_FN_PWM2                       0x09
+-#define ARIZONA_GP_FN_SYSCLK_UNDERCLOCKED        0x0A
+-#define ARIZONA_GP_FN_ASYNCCLK_UNDERCLOCKED      0x0B
+-#define ARIZONA_GP_FN_FLL1_LOCK                  0x0C
+-#define ARIZONA_GP_FN_FLL2_LOCK                  0x0D
+-#define ARIZONA_GP_FN_FLL1_CLOCK_OK              0x0F
+-#define ARIZONA_GP_FN_FLL2_CLOCK_OK              0x10
+-#define ARIZONA_GP_FN_HEADPHONE_DET              0x12
+-#define ARIZONA_GP_FN_MIC_DET                    0x13
+-#define ARIZONA_GP_FN_WSEQ_STATUS                0x15
+-#define ARIZONA_GP_FN_CIF_ADDRESS_ERROR          0x16
+-#define ARIZONA_GP_FN_ASRC1_LOCK                 0x1A
+-#define ARIZONA_GP_FN_ASRC2_LOCK                 0x1B
+-#define ARIZONA_GP_FN_ASRC_CONFIG_ERROR          0x1C
+-#define ARIZONA_GP_FN_DRC1_SIGNAL_DETECT         0x1D
+-#define ARIZONA_GP_FN_DRC1_ANTICLIP              0x1E
+-#define ARIZONA_GP_FN_DRC1_DECAY                 0x1F
+-#define ARIZONA_GP_FN_DRC1_NOISE                 0x20
+-#define ARIZONA_GP_FN_DRC1_QUICK_RELEASE         0x21
+-#define ARIZONA_GP_FN_DRC2_SIGNAL_DETECT         0x22
+-#define ARIZONA_GP_FN_DRC2_ANTICLIP              0x23
+-#define ARIZONA_GP_FN_DRC2_DECAY                 0x24
+-#define ARIZONA_GP_FN_DRC2_NOISE                 0x25
+-#define ARIZONA_GP_FN_DRC2_QUICK_RELEASE         0x26
+-#define ARIZONA_GP_FN_MIXER_DROPPED_SAMPLE       0x27
+-#define ARIZONA_GP_FN_AIF1_CONFIG_ERROR          0x28
+-#define ARIZONA_GP_FN_AIF2_CONFIG_ERROR          0x29
+-#define ARIZONA_GP_FN_AIF3_CONFIG_ERROR          0x2A
+-#define ARIZONA_GP_FN_SPK_TEMP_SHUTDOWN          0x2B
+-#define ARIZONA_GP_FN_SPK_TEMP_WARNING           0x2C
+-#define ARIZONA_GP_FN_UNDERCLOCKED               0x2D
+-#define ARIZONA_GP_FN_OVERCLOCKED                0x2E
+-#define ARIZONA_GP_FN_DSP_IRQ1                   0x35
+-#define ARIZONA_GP_FN_DSP_IRQ2                   0x36
+-#define ARIZONA_GP_FN_ASYNC_OPCLK                0x3D
+-#define ARIZONA_GP_FN_BOOT_DONE                  0x44
+-#define ARIZONA_GP_FN_DSP1_RAM_READY             0x45
+-#define ARIZONA_GP_FN_SYSCLK_ENA_STATUS          0x4B
+-#define ARIZONA_GP_FN_ASYNCCLK_ENA_STATUS        0x4C
+-
+-#define ARIZONA_GPN_DIR                          0x8000  /* GPN_DIR */
+-#define ARIZONA_GPN_DIR_MASK                     0x8000  /* GPN_DIR */
+-#define ARIZONA_GPN_DIR_SHIFT                        15  /* GPN_DIR */
+-#define ARIZONA_GPN_DIR_WIDTH                         1  /* GPN_DIR */
+-#define ARIZONA_GPN_PU                           0x4000  /* GPN_PU */
+-#define ARIZONA_GPN_PU_MASK                      0x4000  /* GPN_PU */
+-#define ARIZONA_GPN_PU_SHIFT                         14  /* GPN_PU */
+-#define ARIZONA_GPN_PU_WIDTH                          1  /* GPN_PU */
+-#define ARIZONA_GPN_PD                           0x2000  /* GPN_PD */
+-#define ARIZONA_GPN_PD_MASK                      0x2000  /* GPN_PD */
+-#define ARIZONA_GPN_PD_SHIFT                         13  /* GPN_PD */
+-#define ARIZONA_GPN_PD_WIDTH                          1  /* GPN_PD */
+-#define ARIZONA_GPN_LVL                          0x0800  /* GPN_LVL */
+-#define ARIZONA_GPN_LVL_MASK                     0x0800  /* GPN_LVL */
+-#define ARIZONA_GPN_LVL_SHIFT                        11  /* GPN_LVL */
+-#define ARIZONA_GPN_LVL_WIDTH                         1  /* GPN_LVL */
+-#define ARIZONA_GPN_POL                          0x0400  /* GPN_POL */
+-#define ARIZONA_GPN_POL_MASK                     0x0400  /* GPN_POL */
+-#define ARIZONA_GPN_POL_SHIFT                        10  /* GPN_POL */
+-#define ARIZONA_GPN_POL_WIDTH                         1  /* GPN_POL */
+-#define ARIZONA_GPN_OP_CFG                       0x0200  /* GPN_OP_CFG */
+-#define ARIZONA_GPN_OP_CFG_MASK                  0x0200  /* GPN_OP_CFG */
+-#define ARIZONA_GPN_OP_CFG_SHIFT                      9  /* GPN_OP_CFG */
+-#define ARIZONA_GPN_OP_CFG_WIDTH                      1  /* GPN_OP_CFG */
+-#define ARIZONA_GPN_DB                           0x0100  /* GPN_DB */
+-#define ARIZONA_GPN_DB_MASK                      0x0100  /* GPN_DB */
+-#define ARIZONA_GPN_DB_SHIFT                          8  /* GPN_DB */
+-#define ARIZONA_GPN_DB_WIDTH                          1  /* GPN_DB */
+-#define ARIZONA_GPN_FN_MASK                      0x007F  /* GPN_DB */
+-#define ARIZONA_GPN_FN_SHIFT                          0  /* GPN_DB */
+-#define ARIZONA_GPN_FN_WIDTH                          7  /* GPN_DB */
+-
+-#endif
+diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
+index 4578c72..ed30763 100644
+--- a/include/linux/mfd/arizona/pdata.h
++++ b/include/linux/mfd/arizona/pdata.h
+@@ -7,61 +7,17 @@
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+  */
++#include <dt-bindings/mfd/arizona.h>
+ 
+ #ifndef _ARIZONA_PDATA_H
+ #define _ARIZONA_PDATA_H
+ 
+-#define ARIZONA_GPN_DIR                          0x8000  /* GPN_DIR */
+-#define ARIZONA_GPN_DIR_MASK                     0x8000  /* GPN_DIR */
+-#define ARIZONA_GPN_DIR_SHIFT                        15  /* GPN_DIR */
+-#define ARIZONA_GPN_DIR_WIDTH                         1  /* GPN_DIR */
+-#define ARIZONA_GPN_PU                           0x4000  /* GPN_PU */
+-#define ARIZONA_GPN_PU_MASK                      0x4000  /* GPN_PU */
+-#define ARIZONA_GPN_PU_SHIFT                         14  /* GPN_PU */
+-#define ARIZONA_GPN_PU_WIDTH                          1  /* GPN_PU */
+-#define ARIZONA_GPN_PD                           0x2000  /* GPN_PD */
+-#define ARIZONA_GPN_PD_MASK                      0x2000  /* GPN_PD */
+-#define ARIZONA_GPN_PD_SHIFT                         13  /* GPN_PD */
+-#define ARIZONA_GPN_PD_WIDTH                          1  /* GPN_PD */
+-#define ARIZONA_GPN_LVL                          0x0800  /* GPN_LVL */
+-#define ARIZONA_GPN_LVL_MASK                     0x0800  /* GPN_LVL */
+-#define ARIZONA_GPN_LVL_SHIFT                        11  /* GPN_LVL */
+-#define ARIZONA_GPN_LVL_WIDTH                         1  /* GPN_LVL */
+-#define ARIZONA_GPN_POL                          0x0400  /* GPN_POL */
+-#define ARIZONA_GPN_POL_MASK                     0x0400  /* GPN_POL */
+-#define ARIZONA_GPN_POL_SHIFT                        10  /* GPN_POL */
+-#define ARIZONA_GPN_POL_WIDTH                         1  /* GPN_POL */
+-#define ARIZONA_GPN_OP_CFG                       0x0200  /* GPN_OP_CFG */
+-#define ARIZONA_GPN_OP_CFG_MASK                  0x0200  /* GPN_OP_CFG */
+-#define ARIZONA_GPN_OP_CFG_SHIFT                      9  /* GPN_OP_CFG */
+-#define ARIZONA_GPN_OP_CFG_WIDTH                      1  /* GPN_OP_CFG */
+-#define ARIZONA_GPN_DB                           0x0100  /* GPN_DB */
+-#define ARIZONA_GPN_DB_MASK                      0x0100  /* GPN_DB */
+-#define ARIZONA_GPN_DB_SHIFT                          8  /* GPN_DB */
+-#define ARIZONA_GPN_DB_WIDTH                          1  /* GPN_DB */
+-#define ARIZONA_GPN_FN_MASK                      0x007F  /* GPN_FN - [6:0] */
+-#define ARIZONA_GPN_FN_SHIFT                          0  /* GPN_FN - [6:0] */
+-#define ARIZONA_GPN_FN_WIDTH                          7  /* GPN_FN - [6:0] */
+-
+ #define ARIZONA_MAX_GPIO 5
+ 
+-#define ARIZONA_32KZ_MCLK1 1
+-#define ARIZONA_32KZ_MCLK2 2
+-#define ARIZONA_32KZ_NONE  3
+-
+ #define ARIZONA_MAX_INPUT 4
+ 
+-#define ARIZONA_DMIC_MICVDD   0
+-#define ARIZONA_DMIC_MICBIAS1 1
+-#define ARIZONA_DMIC_MICBIAS2 2
+-#define ARIZONA_DMIC_MICBIAS3 3
+-
+ #define ARIZONA_MAX_MICBIAS 3
+ 
+-#define ARIZONA_INMODE_DIFF 0
+-#define ARIZONA_INMODE_SE   1
+-#define ARIZONA_INMODE_DMIC 2
+-
+ #define ARIZONA_MAX_OUTPUT 6
+ 
+ #define ARIZONA_MAX_AIF 3
+diff --git a/sound/soc/codecs/arizona.c b/sound/soc/codecs/arizona.c
+index 9550d74..3ff2be9 100644
+--- a/sound/soc/codecs/arizona.c
++++ b/sound/soc/codecs/arizona.c
+@@ -19,7 +19,6 @@
+ #include <sound/tlv.h>
+ 
+ #include <linux/mfd/arizona/core.h>
+-#include <linux/mfd/arizona/gpio.h>
+ #include <linux/mfd/arizona/registers.h>
+ 
+ #include "arizona.h"
+-- 
+1.7.2.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
