@@ -1,49 +1,56 @@
-From: Sneeker Yeh <sneeker.yeh@gmail.com>
-Subject: Re: [PATCH v4 5/5] usb: dwc3: add Fujitsu Specific Glue layer
-Date: Wed, 18 Feb 2015 21:55:27 +0800
-Message-ID: <CAJ1gpc1D_siNXPjfGrE2OJVzYaEz19TcAqCwjxMXPt7g6VFncQ@mail.gmail.com>
-References: <1424151697-2084-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-	<1424151697-2084-6-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-	<20150217192612.GH31167@saruman.tx.rr.com>
+From: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] Ethernet packet sniffer: Device tree binding and
+ vendor prefix
+Date: Wed, 18 Feb 2015 13:56:03 +0000
+Message-ID: <54E499F3.4020403@linn.co.uk>
+References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk> <0a86907642a97e5bd880f69299664232fcffaf9d.1424181053.git.stathis.voukelatos@linn.co.uk> <20150217145124.GM8994@leverpostej> <54E36AAC.7010308@linn.co.uk> <20150217163527.GR8994@leverpostej> <54E376AF.80602@linn.co.uk> <20150217173000.GT8994@leverpostej> <54E45E06.2020609@linn.co.uk> <20150218121150.GA29429@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150217192612.GH31167@saruman.tx.rr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150218121150.GA29429@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-hi Felipe:
 
-thanks for the suggestion,
+Hi Mark,
 
-2015-02-18 3:26 GMT+08:00 Felipe Balbi <balbi@ti.com>:
-> On Tue, Feb 17, 2015 at 01:41:37PM +0800, Sneeker Yeh wrote:
->> This patch adds support for Synopsis DesignWare USB3 IP Core found
->> on Fujitsu Socs.
+On 18/02/15 12:11, Mark Rutland wrote:
 >>
->> Signed-off-by: Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
->> ---
->>  .../devicetree/bindings/usb/fujitsu-dwc3.txt       |   33 ++++
->>  drivers/usb/dwc3/Kconfig                           |   11 ++
->>  drivers/usb/dwc3/Makefile                          |    1 +
->>  drivers/usb/dwc3/dwc3-mb86s70.c                    |  206 ++++++++++++++++++++
->>  4 files changed, 251 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/usb/fujitsu-dwc3.txt
->>  create mode 100644 drivers/usb/dwc3/dwc3-mb86s70.c
+>> Counters can often have a divider applied to their input clock and
+>> therefore run at a scaled down frequency. This is not the case in the
+>> first SoC where the sniffer is used, so for simplicity I can modify as
+>> you suggest and remove that field from the DT.
 >
-> what's the possibility that fujitsu will make another SoC with dwc3 in
-> it ? I wonder if we should use a slightly more generic name here:
+> The common clock bindings have fixed-factor-clock for handling dividers,
+> so I believe you should be able to use that.
 >
-> dwc3-fujitsu.c ?
-
-We did have several SoC that has dwc3 in it,
-"dwc3-fujitsu.c" looks fine, and I would like to take this to next patchset.
-
-Much appreciate,
-Sneeker
-
+> You mentioned that the counter was a block external to the sniffer. Does
+> it have any configuration interface (e.g. to reset the counter)? We may
+> need to model it in the DT if so (and describe the clock as feeding into
+> it rather than into the sniffer).
 >
-> --
-> balbi
+
+The sniffer module is designed so that it receives a Gray encoded
+timestamp from another module of the SoC that it is integrated in.
+The first integration that we have is in the IMG Pistachio SoC.
+There the timestamp counter is part of the Event Timer module
+and its source is one of the system clocks of the chip (configurable)
+That module will eventually have it's own device-tree node when a
+driver becomes available for it.
+
+The 'tstamp' clock given in the sniffer DT node should be such
+that when it is enabled it will start the counter and its parent clock,
+so that it can start counting.
+
+> Thanks,
+> Mark.
+>
+
+Stathis
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
