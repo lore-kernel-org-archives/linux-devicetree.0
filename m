@@ -1,46 +1,96 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 0/4] phy: ti-pipe3: fixes for 3.19-rc
-Date: Wed, 18 Feb 2015 10:09:22 +0200
-Message-ID: <54E448B2.80103@ti.com>
-References: <1421151802-7396-1-git-send-email-rogerq@ti.com> <20150113155409.GA2419@atomide.com> <54E44694.4070801@ti.com>
+From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] wlcore: add basic device-tree support
+Date: Wed, 18 Feb 2015 10:14:33 +0200
+Message-ID: <CAB3XZEfESwUr6Tpcw71rzgZEnXZZpdgM0E1cdivBD01kGc1P0Q@mail.gmail.com>
+References: <1423998550-8829-1-git-send-email-eliad@wizery.com>
+	<2344371.zDnvJJhFdD@wuerfel>
+	<CAB3XZEe1HmOwQ3GcU5T3ruFybKdCVNiBwQbeLS3X4MMkL2G5uA@mail.gmail.com>
+	<20150217154538.GP8994@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54E44694.4070801@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, kishon@ti.com
-Cc: nm@ti.com, balbi@ti.com, george.cherian@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150217154538.GP8994@leverpostej>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/02/15 10:00, Roger Quadros wrote:
-> On 13/01/15 17:54, Tony Lindgren wrote:
->> * Roger Quadros <rogerq@ti.com> [150113 04:26]:
->>> Hi,
->>>
->>> During system suspend L3INIT_960M_GFCLK and L3INIT_480M_GFCLK clocks remain
->>> active on the DRA7 platform. This is because the pipe3 driver doesn't shut
->>> them off as part of .suspend(). Patch 1 addresses this issue.
->>>
->>> SATA on both OMAP5 and DRA7 breaks when SATA drive is plugged in after a
->>> system suspend/resume or if AHCI_PLATFORM driver is used as module.
->>> Patches 2,3,4 fix it.
->>>
->>> Hope to get these patches in through the 3.19-rc cycle.
->>>
->>> Tony,
->>>
->>> Do you wish to take the DTS patches or let them go in through PHY tree?
->>
->> Those look ok to me to merge along with the fixes, will ack those two.
->>
-> 
-> Looks like this missed 3.19-rc. My bad for not following up.
-> 
-> Kishon, can you please queue these for 3.20-rc? Thanks.
+On Tue, Feb 17, 2015 at 5:45 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Feb 17, 2015 at 03:39:03PM +0000, Eliad Peller wrote:
+>> On Mon, Feb 16, 2015 at 12:06 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Sunday 15 February 2015 13:09:10 Eliad Peller wrote:
+>> > s
+>> >> +
+>> >> +This node provides properties for controlling the wilink wireless device. The
+>> >> +node is expected to be specified as a child node to the SDIO controller that
+>> >> +connects the device to the system.
+>> >> +
+>> >> +Required properties:
+>> >> +
+>> >> + - compatible : Should be "ti,wlcore".
+>> >
+>> > I think you should use the specific model number here. If I understand
+>> > correctly, wlcore is the name of the driver that is used for multiple
+>> > device implementation.
+>> >
+>> right, wlcore is the common driver part of wl12xx and wl18xx device drivers.
+>> these DT properties are common for both.
+>> can't we use a common binding as well in this case?
+>
+> Just have a string for each; the driver can easily match them all and
+> handle them identically for now until we decide/realise we need to
+> handle them differently later.
+>
+> Regardless, the compatible string should match some real part number
+> and/or standard rather than the Linux driver name.
+>
+ok, makes sense.
 
-Well the PHY patches (1 and 2) are already queued for v3.20-rc1 via Greg's usb-next tree.
-Tony can you please queue the DT side patches for v3.20? Thanks.
+>> >> +&mmc3 {
+>> >> +     status = "okay";
+>> >> +     vmmc-supply = <&wlan_en_reg>;
+>> >> +     bus-width = <4>;
+>> >> +     cap-power-off-card;
+>> >> +     keep-power-in-suspend;
+>> >> +
+>> >> +     #address-cells = <1>;
+>> >> +     #size-cells = <0>;
+>> >> +     wlcore: wlcore@0 {
+>> >> +             compatible = "ti,wlcore";
+>> >> +             reg = <2>;
+>> >> +             interrupt-parent = <&gpio0>;
+>> >> +             interrupts = <19 IRQ_TYPE_NONE>;
+>> >> +     };
+>> >> +};
+>> >
+>> > It could make sense to specify a few extra properties here:
+>> >
+>> > - The platform data lists two clocks. How about adding them
+>> >   here as optional clocks so we don't need to change the binding
+>> >   again.
+>> >
+>> There were some very long threads previously regarding the correct way
+>> to describe these clocks.
+>> I prefer starting a working basic implementation and add the
+>> controversial parts later on, as needed.
+>
+> This could be problematic. Elsewhere we've later added properties that
+> should have been mandatory from the start but were masked by some
+> platform data somewhere. It would be very good to avoid that.
+>
+that's a good argument.
+in this case, i'll start with submitting a binding only for wl18xx,
+which doesn't need the clock bindings (they are needed only for
+wl12xx).
 
-cheers,
--roger
+> What is problematic about describing the clock inputs to this block? Is
+> the problem specific to this block or to the specific clock
+> controller(s) it happens to be wired to?
+i'm referring to patches like this one:
+http://thread.gmane.org/gmane.linux.kernel/1520752
+
+Eliad.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
