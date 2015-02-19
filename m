@@ -1,50 +1,80 @@
-From: Maxime Bizon <mbizon@freebox.fr>
-Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
-Date: Thu, 19 Feb 2015 19:22:54 +0100
-Message-ID: <1424370174.13604.18.camel@sakura.staff.proxad.net>
-References: <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com>
-	 <20150218154106.GC29429@leverpostej>
-	 <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com>
-	 <20150218173115.GG29429@leverpostej>
-	 <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com>
-	 <54E613E7.2020405@gmail.com>
-	 <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com>
-	 <54E61DD2.3060002@gmail.com>
-	 <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com>
-	 <1424368919.13604.9.camel@sakura.staff.proxad.net>
-	 <20150219181218.GA5048@gradator.net>
-Reply-To: mbizon@freebox.fr
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
+Date: Thu, 19 Feb 2015 12:23:15 -0600
+Message-ID: <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com>
+References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150219181218.GA5048@gradator.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylvain Rochet <gradator@gradator.net>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Ludovic Desroches <ludovic.desroches@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Porter <matt.porter@linaro.org>, frowand.list@gmail.com, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1422342206-4750-1-git-send-email-psawargaonkar-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 27, 2015 at 1:03 AM, Pranavkumar Sawargaonkar
+<psawargaonkar-qTEPVZfXA3Y@public.gmane.org> wrote:
+> In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
+> in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
+> size due to size alignment checking in vgic driver for VCPU Control and
+> VCPU register.
+>
+> This patch corrects the sizes to be inline with the hardware spec.
 
-On Thu, 2015-02-19 at 19:12 +0100, Sylvain Rochet wrote:
+This does not make sense. The GIC regions are still only 4 or 8KB and
+the h/w description should reflect that. For implementations using
+gic-400 and the addressing decode trick, the rest of the register
+range is also not safe to access given it is multiple mapped. Also,
+this wastes virtual space, but I guess we don't care on 64-bit.
 
-> Or use a 1-wire or I2C EEPROM to store your board information.
+KVM should be fixed to only check base address alignment. Size
+alignment does not matter (if it does, then you need to fix all
+register blocks).
 
-no, you don't reduce the human error probability.
+Rob
 
-eeprom needs to be preprogrammed, factory will at some point have a lot
-of eeprom with different version, and will potentially equip the wrong
-one.
-
-much more error prone than them putting the resistor at the wrong place.
-
-> Or, even better, if you have an I2C device, just chose a different 
-> address on each board for this device and then probe I2C devices in your 
-> boot loader until you found one you are looking for, this way, you don't 
-> need spare GPIO at all. You don't even need to populate the same I2C 
-> device on all boards, you can actually probe anything.
-
-I'm not a fan of schemes where not probing something is not a definitive
-sign of hardware failure.
-
--- 
-Maxime
+>
+> CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> CC: kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
+> CC: arnd-r2nGTMty4D4@public.gmane.org
+> CC: marc.zyngier-5wv7dgnIgG8@public.gmane.org
+> CC: christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+> CC: jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+> Signed-off-by: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi |    8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> index f1ad9c2..65f0e6d 100644
+> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> @@ -81,10 +81,10 @@
+>                 compatible = "arm,cortex-a15-gic";
+>                 #interrupt-cells = <3>;
+>                 interrupt-controller;
+> -               reg = <0x0 0x78010000 0x0 0x1000>,      /* GIC Dist */
+> -                     <0x0 0x78020000 0x0 0x1000>,      /* GIC CPU */
+> -                     <0x0 0x78040000 0x0 0x2000>,      /* GIC VCPU Control */
+> -                     <0x0 0x78060000 0x0 0x2000>;      /* GIC VCPU */
+> +               reg = <0x0 0x78010000 0x0 0x10000>,     /* GIC Dist */
+> +                     <0x0 0x78020000 0x0 0x20000>,     /* GIC CPU */
+> +                     <0x0 0x78040000 0x0 0x10000>,     /* GIC VCPU Control */
+> +                     <0x0 0x78060000 0x0 0x20000>;     /* GIC VCPU */
+>                 interrupts = <1 9 0xf04>;       /* GIC Maintenence IRQ */
+>         };
+>
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
