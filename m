@@ -1,34 +1,87 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 0/3] Add R8A7791/Henninger board CAN DT support
-Date: Fri, 20 Feb 2015 01:39:01 +0300
-Message-ID: <54E66605.5060908@cogentembedded.com>
-References: <1652479.NHBlqJ9OaR@wasted.cogentembedded.com> <54E6593A.500@cogentembedded.com> <20150219221346.GB617@verge.net.au>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] mmc: dw_mmc: fix bug that cause mmc_test failture
+Date: Thu, 19 Feb 2015 14:39:53 -0800
+Message-ID: <CAD=FV=Xxoo=HGhLad4pr=TKN7sWQ5Pzai=dGGvUUZe173DhLOA@mail.gmail.com>
+References: <1422273849-29773-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150219221346.GB617-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1422273849-29773-1-git-send-email-addy.ke@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Addy Ke <addy.ke@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/20/2015 01:13 AM, Simon Horman wrote:
+Addy,
 
->>>     Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
->>> 'renesas-devel-20141231-v3.19-rc2' tag. Here we add the CAN device tree support
->>> for the R8A7791-based Henninger board. It depends on the clk driver RCAN clock
->>> patch reposted today in order to work.
+Your subject needs work.  It should at least touch on what the bug
+was.  Please use a subject more like:
+  mmc: dw_mmc: fix mmc_test by not sending abort for DRTO / EBE errors
 
->>     Simon, now that this patch has been merged, could you merge the patchset too?
+On Mon, Jan 26, 2015 at 4:04 AM, Addy Ke <addy.ke@rock-chips.com> wrote:
+> The STOP command can terminate a data transfer between a memory card and
+> mmc controller.
+>
+> As show in Synopsys DesignWare Cores Mobile Stroage Host Databook:
+> Data timeout and Data end-bit error will terminate further data transfer
+> by mmc controller. So we should not send abort command to terminate a
+> data transfer again if we got DRTO and EBE interrupt.
 
-> Sure, I have queued them up as part of renesas-devel-20150219v2-v3.19
+OK, I see this in the section "Error Detection".
 
-    Thank you. Mike Turquette said he'd send a pull request soonish...
+Looking at the section titled "Error Handling" in the version of the
+databook I see it suggesting "STOP or ABORT" in the case of Data
+Errors which might include "end bit not found".  In another section
+(the Card Interface Unit (CIU) section) it talks about the data end
+bit error and suggests issuing the stop/abort command.
 
-WBR, Sergei
+...that being said, it does appear that you're right that we don't
+want to send an abort in the EBE case since it appears necessary to
+fully fix mmc_test...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> After this patch, all mmc_test cases can pass on RK3288-Pink2 board.
+
+I didn't find this to be the case.  I asked Alexandru to
+double-confirm for me and he agrees, it doesn't fix mmc_test.
+Probably because your code is broken.  See below.
+
+
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+> ---
+>  drivers/mmc/host/dw_mmc.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 4d2e3c2..4bd7df1 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -1520,7 +1520,10 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>                         if (test_and_clear_bit(EVENT_DATA_ERROR,
+>                                                &host->pending_events)) {
+>                                 dw_mci_stop_dma(host);
+> -                               send_stop_abort(host, data);
+> +                               if (data->stop ||
+> +                                   !(host->data_status & SDMMC_INT_DRTO) ||
+> +                                   !(host->data_status & SDMMC_INT_EBE))
+> +                                       send_stop_abort(host, data);
+
+Your concept appears right, but your code is totally wrong.  Let's
+imagine that data->stop is NULL so your check matters.  Now:
+
+DRTO is set, EBE is set: you won't send stop abort
+DRTO is set, EBE is _not_ set: you _will_ send stop aborft
+DRTO is _not_ set, EBE is set: you _will_ send stop aborft
+
+I can fix this with:
+
+-                                   !(host->data_status & SDMMC_INT_DRTO) ||
+-                                   !(host->data_status & SDMMC_INT_EBE))
++                                   !(host->data_status & (SDMMC_INT_DRTO |
++                                                          SDMMC_INT_EBE)))
+
+When I do that then mmc_test is working much better.  Note that is
+appears that both EBE and DRTO are necessary here.  Can you please
+respin?  Please make sure to include Addy and Javier on your patch as
+they may be able to do some extra testing.
+
+-Doug
