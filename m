@@ -1,80 +1,158 @@
-Return-Path: <linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org>
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH 2/3] Documentation: mailbox: Add APM X-Gene SLIMpro mailbox
- dts documentation
-Date: Tue, 17 Feb 2015 15:40:47 -0800
-Message-Id: <1424216448-28665-2-git-send-email-fkan@apm.com>
-In-Reply-To: <1424216448-28665-1-git-send-email-fkan@apm.com>
-References: <1424216448-28665-1-git-send-email-fkan@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org
-To: patches@apm.com, jassisinghbrar@gmail.com, =devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Feng Kan <fkan@apm.com>
+In-Reply-To: <20150219111325.GG12212@x1>
+References: <20150218215435.GA32415@x1>
+	<CAMuHMdU6DpZoi-q3pUFUX8xjnXGfTqfEYyzajZZm=-qZTk1qHQ@mail.gmail.com>
+	<20150219094200.GB12212@x1>
+	<CAMuHMdW+np0_zUhBOXVBN_7ztM5Z=xN5-mE-P_wR35BggQxerQ@mail.gmail.com>
+	<20150219101106.GD12212@x1>
+	<CAMuHMdW=kV+zx=Uq7y7SyrH3eQyWsdfWjuLFMAKQjPhX-QaPPA@mail.gmail.com>
+	<20150219102810.GE12212@x1>
+	<CAMuHMdXYT6HvKhpi1mxF7SJBDyLVHw2W2Rxe1poDrdwKR0nu=w@mail.gmail.com>
+	<20150219104332.GF12212@x1>
+	<CAMuHMdXY5+Sm0LUsbrPraUJSNS7PsuRHaaLY--DBVt3adZ-+Cw@mail.gmail.com>
+	<20150219111325.GG12212@x1>
+Date: Thu, 19 Feb 2015 10:53:45 -0600
+Message-ID: <CAL_JsqJ5obm0++a1kfYMc3YWbXs=-NAD2X5TBTE08yku_GNz5g@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] clk: dt: Introduce always-on clock domain documentation
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, kernel@stlinux.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This adds the APM X-Gene SLIMpro mailbox device tree node documentation.
-
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- .../bindings/mailbox/xgene-slimpro-mailbox.txt     | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
-
-diff --git a/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
-new file mode 100644
-index 0000000..d02a3d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
-@@ -0,0 +1,34 @@
-+The APM X-Gene SLIMpro mailbox is used to communicate messages between
-+the ARM64 processors and the Cortex M3 (dubbed SLIMpro). It uses a simple
-+interrupt based door bell mechanism and can exchange simple messages using the
-+internal registers.
-+
-+There are total of 7 interrupts in this mailbox. Each used for an individual
-+door bell (or mailbox channel).
-+
-+Required properties:
-+- compatible:	Should be as "apm, xgene-slimpro-mbox".
-+
-+- reg:		Contain the mailbox register address range.
-+
-+- interrupts:	7 interrupts must start from 0 to 6, interrupt 0 define the
-+		the interrupt for mailbox channel 0 and interrupt 1 for
-+		mailbox channel 1 and so likewise for the reminder.
-+
-+- #mbox-cells:	only one to specify the mailbox channel number.
-+
-+Example:
-+
-+Mailbox Node:
-+		slimpro-mbox: slimpro-mbox@10540000 {
-+			compatible = "apm,xgene-slimpro-mbox";
-+			reg = <0x0 0x10540000 0x0 0xa000>;
-+			#mbox-cells = <1>;
-+			interrupts =  	<0x0 0x0 0x4>,
-+					<0x0 0x1 0x4>,
-+					<0x0 0x2 0x4>,
-+					<0x0 0x3 0x4>,
-+					<0x0 0x4 0x4>,
-+					<0x0 0x5 0x4>,
-+					<0x0 0x6 0x4>,
-+		};
--- 
-1.9.1
-
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+On Thu, Feb 19, 2015 at 5:13 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
+>> On Thu, Feb 19, 2015 at 11:43 AM, Lee Jones <lee.jones@linaro.org> wrote=
+:
+>> > On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
+>> >> On Thu, Feb 19, 2015 at 11:28 AM, Lee Jones <lee.jones@linaro.org> wr=
+ote:
+>> >> > On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
+>> >> >> On Thu, Feb 19, 2015 at 11:11 AM, Lee Jones <lee.jones@linaro.org>=
+ wrote:
+>> >> >> > On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
+>> >> >> >> On Thu, Feb 19, 2015 at 10:42 AM, Lee Jones <lee.jones@linaro.o=
+rg> wrote:
+>> >> >> >> >> What kind of clocks are these? What do they control?
+>> >> >> >> >> Memory controllers? Bus controllers?
+>> >> >> >> >>
+>> >> >> >> >> They must control some device(s), so there should be one or =
+more device
+>> >> >> >> >> nodes in DT that reference these clocks.
+>> >> >> >> >> As soon as that information is in DT, support can be added t=
+o Linux to
+>> >> >> >> >> make sure the "critical" clocks stay enabled, either through=
+ a real driver,
+>> >> >> >> >> or through platform code.
+>> >> >> >> >
+>> >> >> >> > Some do, some don't.  For instance, we have one clock which c=
+ontrols
+>> >> >> >> > SPI and I2C that must not be turned off.  We discovered this =
+then when
+>> >> >> >> > a suspend was attempted and the board refused to resume.  Thi=
+s clock
+>> >> >> >> > also runs one of the critical interconnects that runs from th=
+e a9.  It
+>> >> >> >> > would be wrong to remove the clk_disable() attempt from the S=
+PI/I2C
+>> >> >> >> > drivers because the same IP on another board might be control=
+led by a
+>> >> >> >> > different clock which is able to be gated.
+>> >> >> >> >
+>> >> >> >> > There are also clocks which control other interconnects that =
+are not
+>> >> >> >> > connected to any device drivers.  If we fail to take referenc=
+es for
+>> >> >> >> > them before clk_disable_unused() is called, again the board h=
+angs.  We
+>> >> >> >> > even lose JTAG support.
+>> >> >> >>
+>> >> >> >> Interconnects are buses. Can't you represent those buses in the=
+ DT
+>> >> >> >> hierarchy, and give them clocks properties?
+>> >> >> >
+>> >> >> > So instead of this nice succinct, simple, cover all bases
+>> >> >> > (interconnects was just an example, there are bound to be others=
+),
+>> >> >> > generic framework, you are suggesting to write drivers for devic=
+es
+>> >> >> > which other than "don't turn my clocks off", Linux can't actuall=
+y see
+>> >> >> > or control?
+>> >> >>
+>> >> >> DT describes the hardware, not behavior.
+>> >> >
+>> >> > Okay so ...
+>> >> >
+>> >> > /*
+>> >> >  * ICNs are not visible/controllable in Linux, but references to th=
+eir
+>> >> >  * clocks must be obtained and retained or the platform will become
+>> >> >  * irrecoverably unresponsive.
+>> >> >  */
+>> >> > interconnects@0 {
+>> >> >        compatible =3D "always-on-clk-domain";
+>> >>
+>> >> st,...flexgen...
+>> >>
+>> >> >        clocks =3D <&clk_s_c0_flexgen CLK_ICN_SBC>,
+>> >> >                 <&clk_s_c0_flexgen CLK_ICN_LMI>,
+>> >> >                 <&clk_s_c0_flexgen CLK_ICN_CPU>,
+>> >> >                 <&clk_s_c0_flexgen CLK_TX_ICN_DMU>;
+>> >> > };
+>> >>
+>> >> And then you can have platform code that binds against st,...flexgen.=
+..,
+>> >> and enables all referenced clocks.
+>> >
+>> > Flexgen isn't a device, it's a clk source.  a) writing a device driver
+>>
+>> Sorry, I'm not familiar with ST nomenclature.
+>> So that should become the name of the interconnect/bus.
+>
+> You're still talking about writing function-less drivers for multiple
+> pieces of h/w.  We would have a few for ST alone, then multiply that
+> by the number of silicon vendors with similar issues -- which is
+> likely to be most of them.
+>
+> I can understand Rob's "DT has to match h/w" point, but to insist we
+> write lots of empty drivers just to stop some clocks from being gated
+> is barking mad.
+>
+>> > for a clk source seems wrong b) what if on another platform a
+>> > different clock source supplied the clock?  Write another driver?  And
+>> > what if the ICNs are connected to different clock sources?  More
+>> > drivers?  c) all of these drivers will only do one thing -- pull a
+>> > reference and keep hold of it.  You want 50 drivers (across all
+>> > platforms) doing only that?  Or, more sanely, do you want this one
+>> > generic framework driver doing that?
+>> >
+>> >> Alternatively, if you have power domains, you can add a reference to
+>> >> the power domain, and let the power domain driver handle it.
+>> >
+>> > I'm not sure what a power domain driver will do?  We need a driver to
+>> > _not_ give up references, that is all. :)
+>>
+>> A power domain driver can do anything it wants.
+>> That includes enabling your interconnect clocks, and keeping them enable=
+d.
+>>
+>> Now, if flexgen is the name of the clock source, then all devices connec=
+ted
+>> to flexgen are part of the flexgen clock domain, which can be represente=
+d
+>> in Linux using the generic PM domain. Do all devices connected to flexge=
+n
+>> need to be handled similarly w.r.t. clocks? If yes, the genpd may be the=
+ place
+>> to implement that.
+>
+> Most of the FLEXGEN clocks are fully gateable.  It's only a select few
+> which are critical to the running of the system.
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
