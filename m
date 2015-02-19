@@ -1,53 +1,102 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
- leds: flash: document sysfs interface
-Date: Thu, 19 Feb 2015 11:02:04 +0200
-Message-ID: <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
-References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
- <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
- <20150218224747.GA3999@amd>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 4/4] clk: dt: Introduce always-on clock domain documentation
+Date: Thu, 19 Feb 2015 10:27:01 +0100
+Message-ID: <CAMuHMdU6DpZoi-q3pUFUX8xjnXGfTqfEYyzajZZm=-qZTk1qHQ@mail.gmail.com>
+References: <1424276101-30137-1-git-send-email-lee.jones@linaro.org>
+	<1424276101-30137-5-git-send-email-lee.jones@linaro.org>
+	<CAL_Jsq+r1BKt5B9FNPG+Y0Oi1-3RGNmRUDbpX_uDJwr45bxMXA@mail.gmail.com>
+	<20150218171230.GA30676@x1>
+	<CAL_JsqJ0sfQ-OQvYjL3X3ebH4p9HkN4iy35iT7i9S2d+yz9zYg@mail.gmail.com>
+	<20150218215435.GA32415@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150218224747.GA3999@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150218215435.GA32415@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, kernel@stlinux.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 18, 2015 at 11:47:47PM +0100, Pavel Machek wrote:
-> 
-> On Wed 2015-02-18 17:20:22, Jacek Anaszewski wrote:
-> > Add a documentation of LED Flash class specific sysfs attributes.
-> > 
-> > Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
-> 
-> NAK-ed-by: Pavel Machek
-> 
-> > +What:		/sys/class/leds/<led>/available_sync_leds
-> > +Date:		February 2015
-> > +KernelVersion:	3.20
-> > +Contact:	Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > +Description:	read/write
-> > +		Space separated list of LEDs available for flash strobe
-> > +		synchronization, displayed in the format:
-> > +
-> > +		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
-> 
-> Multiple values per file, with all the problems we had in /proc. I
-> assume led_id is an integer? What prevents space or dot in led name?
+Hi Lee,
 
-Very good point. How about using a newline instead? That'd be a little bit
-easier to parse, too.
+On Wed, Feb 18, 2015 at 10:54 PM, Lee Jones <lee.jones@linaro.org> wrote:
+>> >> > +Some hardware is contains bunches of clocks which must never be
+>> >> > +turned off.  If drivers a) fail to obtain a reference to any of
+>> >> > +these or b) give up a previously obtained reference during suspend,
+>> >> > +the common clk framework will attempt to disable them and the
+>> >> > +hardware can fail irrecoverably.  Usually, the only way to recover
+>> >> > +from these failures is to restart.
+>> >>
+>> >> How is (b) not a bug?
+>> >
+>> > Clocks are normally disabled during suspend.  When clocks are disabled
+>> > they give up their reference.  If references reach 0, the clock is
+>> > gated.  If one of these clocks is gated, the system will never come
+>> > out of suspend.
+>> >
+>> > How is it a bug?
+>>
+>> It a clock needs to be enabled during suspend, then the driver using
+>> it should not disable it. Anyway, suspend is a bit orthogonal to this
+>> issue.
+>
+> IMO, it's not the driver's responsibility to know which clock they are
+> using and whether it's a critical clock or not.
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+So it's (partly) a platform/bus issue.
+
+>> >> While I think we need something here, I worry that this will be abused
+>> >> to be a list of clocks you have not gotten around to managing. We
+>> >
+>> > You can say that about any framework.  It's our responsibility to ask
+>> > the right questions and to disallow it from being abused.  The clocks
+>> > I use in the (real-world) example in this set are _really_ always-on.
+>> > If any of them are turned off the system will cease to perform in any
+>> > meaningful way.
+>>
+>> You cannot tell here up front whether clocks are really always-on. A
+>> reviewer is not going to know, and the submitter may not even have all
+>> the documentation and know the answer. Getting it wrong here means you
+>> have to change the dtb to fix it. Granted, it doesn't really break
+>> things in this case.
+>
+> We should make it clear in the documentation that this framework
+> should only be used if the clock is a critical "if it's turned off it
+> will cripple the system" one.
+
+[...]
+
+> I think the kernel's policy is a good one i.e. wait until all devices
+> are probed and have had the opportunity to take the clocks they need,
+> at which point we can usually safely gate the remainder.  These types
+> of clocks are the exception however; hence the need for this driver.
+> There are other vendors which have similar issues with their h/w.
+> These are currently using bespoke versions of this implementation, but
+> IMO a generic solution would be better.
+
+What kind of clocks are these? What do they control?
+Memory controllers? Bus controllers?
+
+They must control some device(s), so there should be one or more device
+nodes in DT that reference these clocks.
+As soon as that information is in DT, support can be added to Linux to
+make sure the "critical" clocks stay enabled, either through a real driver,
+or through platform code.
+
+>> Does simple-pm-bus help you?
+>
+> I have no idea what this is, and I'm struggling to grep for it too?
+
+Rob already provided a pointer.
+If you have more questions, feel free to ask!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
