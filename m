@@ -1,53 +1,54 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH 5/6] ASoC: samsung: Extend Snow driver to support max98089
-Date: Thu, 19 Feb 2015 18:56:25 +0100
-Message-ID: <54E623C9.7070001@suse.de>
-References: <1424283959-16289-1-git-send-email-afaerber@suse.de>	<1424283959-16289-6-git-send-email-afaerber@suse.de>	<20150219094425.GB3198@finisterre.sirena.org.uk> <CAD=FV=WkieDSSB_-a6DtH1hmq6SyZk4NAR-eXQ11hxUDMTvRfg@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
+Date: Thu, 19 Feb 2015 12:01:14 -0600
+Message-ID: <CAL_JsqKT3+URcad6X=i+73NLRnVstbpvFJxxT=ru7KJmp_XuVQ@mail.gmail.com>
+References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com> <54E54586.5070602@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WkieDSSB_-a6DtH1hmq6SyZk4NAR-eXQ11hxUDMTvRfg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54E54586.5070602-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 19.02.2015 um 18:44 schrieb Doug Anderson:
-> On Thu, Feb 19, 2015 at 1:44 AM, Mark Brown <broonie@kernel.org> wrot=
-e:
->> On Wed, Feb 18, 2015 at 07:25:58PM +0100, Andreas F=C3=A4rber wrote:
+On Wed, Feb 18, 2015 at 8:08 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 2/18/2015 6:59 AM, Pantelis Antoniou wrote:
+>> Implement a method of applying DT quirks early in the boot sequence.
 >>
->>>  static const struct of_device_id snow_of_match[] =3D {
->>> +     { .compatible =3D "google,snow-audio-max98089", },
->>>       { .compatible =3D "google,snow-audio-max98090", },
->>>       { .compatible =3D "google,snow-audio-max98091", },
->>>       { .compatible =3D "google,snow-audio-max98095", },
->>
->> Since we completely ignore the CODEC in the property might it not be
->> better to just add a plain old snow-audio compatible and bind to tha=
-t,
->> that way we don't need these driver updates?  Just the "snow" bit sh=
-ould
->> be enough to know it's one of this class of machines.
->=20
-> I think what you're suggesting is that here we should add a new
-> compatible string "google,snow-audio" instead of adding
-> "google,snow-audio-max98089" here.  Then the sound node in the spring
-> DTS would look like:
->=20
->   compatible =3D "google,snow-audio-max98089", "google,snow-audio";
+>> A DT quirk is a subtree of the boot DT that can be applied to
+>> a target in the base DT resulting in a modification of the live
+>> tree. The format of the quirk nodes is that of a device tree overlay.
+>
+> The use of the word "quirk" is a different mental model for me than what
+> this patch series appears to be addressing.  I would suggest totally
+> removing the word "quirk" from this proposal to avoid confusing the
+> mental models of future generations of kernel folks.
 
-If we want to be specific just in case, was it an active decision not t=
-o
-use "google,peach-pi[t]-audio-max98..."?
+This comes from me as quirks are a different usecase I had in mind,
+but one that could use a similar mechanism. Although, in the case of
+quirks, I would expect them to be overlays built into the kernel. It
+would be more a way to update old dtbs.
 
-Again, either way works for me.
+> What this patch series seems to be proposing is a method to apply DT
+> overlays as soon as unflatten_device_tree() completes.  In other words,
+> making the device tree a dynamic object, that is partially defined by
+> the kernel during boot.  Well, to be fair, the kernel chooses among
+> several possible alternatives encoded in the DT blob.  So the device
+> tree is no longer a static object that describes the hardware of the
+> system.  It may not sound like a big deal, but it seems to me to be
+> a fundamental shift in what the device tree blob is.  Something that
+> should be thought about carefully and not just applied as a patch to
+> solve a point problem.
 
-Andreas
+I agree. I would not want to see every board for an SOC become an
+overlay for example. I think it has to be limited to truly plugable
+h/w (e.g. capes) or minor changes. We just have to define what is
+minor. :)
 
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upmany=
-u,
-Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
