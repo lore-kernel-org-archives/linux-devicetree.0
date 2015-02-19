@@ -1,221 +1,195 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/7] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Thu, 19 Feb 2015 17:17:25 +0000
-Message-ID: <54E61AA5.4090803@arm.com>
-References: <1423188007-17047-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<1423188528-17134-1-git-send-email-Vincent.Yang@tw.fujitsu.com>	<54E46B77.4060803@arm.com> <CAJe_ZhcejiQ-EJubbxJoPu8kOwB0CPpxmWJyHZcwGNRzXtbNzw@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
+Date: Thu, 19 Feb 2015 09:30:58 -0800
+Message-ID: <54E61DD2.3060002@gmail.com>
+References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com> <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com> <20150218154106.GC29429@leverpostej> <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com> <20150218173115.GG29429@leverpostej> <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com> <54E613E7.2020405@gmail.com> <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_ZhcejiQ-EJubbxJoPu8kOwB0CPpxmWJyHZcwGNRzXtbNzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Ludovic Desroches <ludovic.desroches@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Porter <matt.porter@linaro.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 19/02/15 16:10, Jassi Brar wrote:
-> On 18 February 2015 at 16:07, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
->>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>> @@ -0,0 +1,35 @@
->>> +ARM MHU Mailbox Driver
->>> +======================
->>> +
->>> +The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
->>> +3 independent channels/links to communicate with remote processor(s).
->>> + MHU links are hardwired on a platform. A link raises interrupt for any
->>> +received data. However, there is no specified way of knowing if the sent
+On 2/19/2015 9:00 AM, Pantelis Antoniou wrote:
+> Hi Frank,
+>=20
+>> On Feb 19, 2015, at 18:48 , Frank Rowand <frowand.list@gmail.com> wr=
+ote:
 >>
+>> On 2/19/2015 6:29 AM, Pantelis Antoniou wrote:
+>>> Hi Mark,
+>>>
+>>>> On Feb 18, 2015, at 19:31 , Mark Rutland <mark.rutland@arm.com> wr=
+ote:
+>>>>
+>>>>>>> +While this may in theory work, in practice it is very cumberso=
+me
+>>>>>>> +for the following reasons:
+>>>>>>> +
+>>>>>>> +1. The act of selecting a different boot device tree blob requ=
+ires
+>>>>>>> +a reasonably advanced bootloader with some kind of configurati=
+on or
+>>>>>>> +scripting capabilities. Sadly this is not the case many times,=
+ the
+>>>>>>> +bootloader is extremely dumb and can only use a single dt blob=
+=2E
+>>>>>>
+>>>>>> You can have several bootloader builds, or even a single build w=
+ith
+>>>>>> something like appended DTB to get an appropriate DTB if the sam=
+e binary
+>>>>>> will otherwise work across all variants of a board.
+>>>>>>
+>>>>>
+>>>>> No, the same DTB will not work across all the variants of a board=
+=2E
+>>>>
+>>>> I wasn't on about the DTB. I was on about the loader binary, in th=
+e case
+>>>> the FW/bootloader could be common even if the DTB couldn't.
+>>>>
+>>>> To some extent there must be a DTB that will work across all varia=
+nts
+>>>> (albeit with limited utility) or the quirk approach wouldn't work=E2=
+=80=A6
+>>>>
+>>>
+>>> That=E2=80=99s not correct; the only part of the DTB that needs to =
+be common
+>>> is the model property that would allow the quirk detection logic to=
+ fire.
+>>>
+>>> So, there is a base DTB that will work on all variants, but that on=
+ly means
+>>> that it will work only up to the point that the quirk detector meth=
+od
+>>> can work. So while in recommended practice there are common subsets
+>>> of the DTB that might work, they might be unsafe.
+>>>
+>>> For instance on the beaglebone the regulator configuration is diffe=
+rent
+>>> between white and black, it is imperative you get them right otherw=
+ise
+>>> you risk board damage.
+>>>
+>>>>>> So it's not necessarily true that you need a complex bootloader.
+>>>>>>
+>>>>>
+>>>>>>> +2. On many instances boot time is extremely critical; in some =
+cases
+>>>>>>> +there are hard requirements like having working video feeds in=
+ under
+>>>>>>> +2 seconds from power-up. This leaves an extremely small time b=
+udget for
+>>>>>>> +boot-up, as low as 500ms to kernel entry. The sanest way to ge=
+t there
+>>>>>>> +is by removing the standard bootloader from the normal boot se=
+quence
+>>>>>>> +altogether by having a very small boot shim that loads the ker=
+nel and
+>>>>>>> +immediately jumps to kernel, like falcon-boot mode in u-boot d=
+oes.
+>>>>>>
+>>>>>> Given my previous comments above I don't see why this is relevan=
+t.
+>>>>>> You're already passing _some_ DTB here, so if you can organise f=
+or the
+>>>>>> board to statically provide a sane DTB that's fine, or you can r=
+esort to
+>>>>>> appended DTB if it's not possible to update the board configurat=
+ion.
+>>>>>>
+>>>>>
+>>>>> You=E2=80=99re missing the point. I can=E2=80=99t use the same DT=
+B for each revision of the
+>>>>> board. Each board is similar but it=E2=80=99s not identical.
+>>>>
+>>>> I think you've misunderstood my point. If you program the board wi=
+th the
+>>>> relevant DTB, or use appended DTB, then you will pass the correct =
+DTB to
+>>>> the kernel without need for quirks.
+>>>>
+>>>> I understand that each variant is somewhat incompatible (and hence=
+ needs
+>>>> its own DTB).
+>>>
+>>> In theory it might work, in practice this does not. Ludovic mention=
+ed that they
+>>> have 27 different DTBs in use at the moment. At a relatively common=
+ 60k per DTB
+>>> that=E2=80=99s 27x60k =3D 1.6MB of DTBs, that need to be installed.
 >>
->> IIUC the IP as such doesn't have this restriction, it's just the way
->> currently integrated in the SoCs. So we need to provide a way for future
->> expansion.
+>> < snip >
 >>
->>> +data has been read by the remote. This driver assumes the sender polls
->>> +STAT register and the remote clears it after having read the data.
+>> Or you can install the correct DTB on the board.  You trust your man=
+ufacturing line
+>> to install the correct resistors.  You trust your manufacturing line=
+ to install the
+>> correct kernel version (eg an updated version to resolve a security =
+issue).
 >>
->> I would rather drop any specifics about what driver does. Bindings should
->> try to confine to the underlying hardware only if possible.
+>> I thought the DT blob was supposed to follow the same standard that =
+other OS's or
+>> bootloaders understood.  Are you willing to break that?  (This is on=
+e of those
+>> ripples I mentioned in my other emails.)
 >>
-> The behavior of local controller and remote firmware clubbed together
-> is what mailbox drivers have to deal with.
->
->   For example, if the remote f/w doesn't clear the STAT register after
-> reading it, this driver won't have a way to know if the last tx has
-> been done or not, i.e, mhu_last_tx_done() won't work. And that
-> behavior is not decided by Linux/driver, so is in a way a h/w feature.
+>=20
+> Trust no-one.
+>=20
+> This is one of those things that the kernel community doesn=E2=80=99t=
+ understand which makes people
+> who push product quite mad.
+>=20
+> Engineering a product is not only about meeting customer spec, in ord=
+er to turn a profit
+> the whole endeavor must be engineered as well for manufacturability.
+>=20
+> Yes, you can always manually install files in the bootloader. For 1 b=
+oard no problem.
+> For 10 doable. For 100 I guess you can hire an extra guy. For 1 milli=
+on? Guess what,
+> instead of turning a profit you=E2=80=99re losing money if you only h=
+ave a few cents of profit
+> per unit.
 
-OK then mention it as the firmware. Don't tell anything about what the
-driver assumes, that's Linux/driver specific.
+I'm not installing physical components manually.  Why would I be instal=
+ling software
+manually?  (rhetorical question)
 
-> Does your remote f/w not clear the STAT?
->
+>=20
+> No knobs to tweak means no knobs to break. And a broken knob can have=
+ pretty bad consequences
+> for a few million units.=20
 
-It does.
+And you produce a few million units before testing that the first one o=
+ff the line works?
 
->>> +Mailbox Device Node:
->>> +====================
->>> +
->>> +Required properties:
->>> +--------------------
->>> +- compatible:          Shall be "arm,mhu" & "arm,primecell"
->>> +- reg:                 Contains the mailbox register address range (base
->>> +                       address and length)
->>> +- #mbox-cells          Shall be 1
->>
->> Need to explain what that one cell must represent.
->>
->>> +- interrupts:          Contains the interrupt information corresponding
->>> to
->>> +                       each of the 3 links of MHU.
->>
->> How do we handle if the middle link has no interrupt ?
->>
-> The MHU chapter in my SoC manual suggests the specification requires
-> an RX-IRQ per channel. Does your platform omit the irq?
->
+>=20
+> And frankly I don=E2=80=99t care what other OSes do. If you were to t=
+ake a look at the sorry DT support
+> they have you=E2=80=99d be amazed.
+>=20
+> I would be very surprised if there=E2=80=99s another OS out there tha=
+t can boot with a late Linux DTB.
+> =20
+>> -Frank
+>=20
+> Regards
+>=20
+> =E2=80=94 Pantelis
+>=20
+> PS. For a real use case please take a look at the answer Guenter gave=
+ on this thread a little
+> while back.
+>=20
 
-What if there's a platform with broken irq, it just can skip that in DT
-if we use named interrupts in the binding.
+My previous comments were written after reading Guenter's comment.
 
->> Also please that the last channel is secure only and must not be used in
->> non-secure execution.
->>
-> I am aware and it is perfectly possible to not touch the secure
-> channel from NS mode.
->
-
-Sorry my statement was not clear, I wanted to ask you to add that info
-to the binding.
-
-[...]
-
->>> +
->>> +static bool mhu_last_tx_done(struct mbox_chan *chan)
->>> +{
->>> +       struct mhu_link *mlink = chan->con_priv;
->>> +       u32 val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
->>> +
->>> +       return (val == 0);
->>
->>
->> [Nit] How about just
->>          return readl_relaxed(mlink->tx_reg + INTR_STAT_OFS) == 0;
->>
-> I think (val == 0) is less cluttered.
->
-
-OK
-
->>> +static int mhu_send_data(struct mbox_chan *chan, void *data)
->>> +{
->>> +       struct mhu_link *mlink = chan->con_priv;
->>> +       u32 *arg = data;
->>> +
->>> +       if (!mhu_last_tx_done(chan)) {
->>> +               dev_err(chan->mbox->dev, "Last TX(%d) pending!\n",
->>> mlink->irq);
->>> +               return -EBUSY;
->>> +       }
->>
->> Why do you need the above check when the core handles that already ?
->>
-> Our bootloader also uses mhu so we could have failed/pending bits in
-> STAT when Linux first tries to use it. However since then the driver
-> clears the STAT register upon startup, so this could probably be
-> dropped. Will do.
->
-
-Exactly, it can and you have already handled it in the probe, and it
-must be that way. Else you are confusing the state machine in the
-mailbox core and working it around in your driver, which is wrong.
-
->>> +static int mhu_startup(struct mbox_chan *chan)
->>> +{
->>> +       struct mhu_link *mlink = chan->con_priv;
->>> +       u32 val;
->>> +       int ret;
->>> +
->>> +       val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
->>> +       writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
->>> +
->>> +       ret = request_irq(mlink->irq, mhu_rx_interrupt, 0, "mhu_link",
->>> chan);
->>> +       if (ret) {
->>> +               dev_err(chan->mbox->dev,
->>> +                       "Unable to aquire IRQ %d\n", mlink->irq);
->>> +               return ret;
->>> +       }
->>
->> This proved costly(in terms of time) on Juno board in my testing,
->> requesting and setting up irq for every small packets you need to send.
->> I would prefer it to be moved to probe.
->>
-> If your usage of mailbox is so frequent that request-release of irq
-> proves expensive, maybe you could fix your client to hold onto the
-> channel for the lifetime. I don't see why your scpi_protocol.c
-> shouldn't do that, even if request_irq was in probe.
->
-
-Agreed, and that's how it's done. But I was thinking of cases where
-there are multiple clients transferring small data.
-
-[...]
-
->
->>> +
->>> +       mhu->mbox.dev = dev;
->>> +       mhu->mbox.chans = &mhu->chan[0];
->>> +       mhu->mbox.num_chans = 3;
->>> +       mhu->mbox.ops = &mhu_ops;
->>> +       mhu->mbox.txdone_irq = false;
->>> +       mhu->mbox.txdone_poll = true;
->>> +       mhu->mbox.txpoll_period = 10;
->>
->> 10ms seems to high, but if that's a derived value then I am fine.
->> On Juno, typically we get response within a millisecond, so we need not
->> get blocked on Tx even after getting Rx for 10ms. I prefer it to be set
->> to 1 ms.
->>
-> Similar on my platform.  However 1 isn't much meaning in milliseconds
-> because mod_timer works in jiffiy which is usually atleast 5ms. If we
-> are polling we can't anyway expect latency critical stuff, so 10ms
-> seems like a safe bet.
->
-
-Here you are assuming the fact about HZ value in the driver. Leave that
-to timer subsystem for the conversion(msecs_to_jiffies takes care of
-rounding) and put values based on what hardware expects IMO.
-
->>> +
->>> +static struct amba_id mhu_ids[] = {
->>> +       {
->>> +               .id     = 0x1bb098,
->>
->>
->> This is the problem. This IP has PID(0x98 0xB0 0x1B 0x00 0x04)
->> it's 5 bytes[1] . Even I had thought of AMBA initially, it doesn't fit
->> as is, may need changes to the amba core to consider this.
->>
-> How is that a problem? AMBA chooses to compare 32bits of PID for the
-> class. The PID4 might change across versions of MHU, which we could
-> figure out in the mhu driver in future.
->
-
-No that's wrong IMO. You mask is incorrect as it doesn't include PID4
-which in this case contains
-[3:0] DES_2 JEP106 continuation code that identifies the designer.
-Set to 0x4 for ARM.
-
-IMO it's not a proper comparison/match as you are not including part of
-ID that identifies the designer.
-
-Regards,
-Sudeep
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Frank
