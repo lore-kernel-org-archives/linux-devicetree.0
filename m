@@ -1,38 +1,76 @@
-From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Update lid and power pin-functions for exynos5250-spring
-Date: Thu, 19 Feb 2015 12:49:11 +0100
-Message-ID: <54E5CDB7.6050002@collabora.co.uk>
-References: <1424276245-7028-1-git-send-email-afaerber@suse.de>
+From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 5/6] ASoC: samsung: Extend Snow driver to support max98089
+Date: Thu, 19 Feb 2015 13:33:18 +0100
+Message-ID: <54E5D80E.3020603@suse.de>
+References: <1424283959-16289-1-git-send-email-afaerber@suse.de> <1424283959-16289-6-git-send-email-afaerber@suse.de> <20150219094425.GB3198@finisterre.sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424276245-7028-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="lKOTFdijtkiooW8AcOLRrPhUJNvokiIlE"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150219094425.GB3198@finisterre.sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andreas,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--lKOTFdijtkiooW8AcOLRrPhUJNvokiIlE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On 02/18/2015 05:17 PM, Andreas F=C3=A4rber wrote:
-> Configure the pins in external interrupt mode, as done for Snow in
-> e5e5c6d14e39 ("ARM: dts: Add power and lid GPIO keys pinctrl for
-> exynos5250-snow").
+Am 19.02.2015 um 10:44 schrieb Mark Brown:
+> On Wed, Feb 18, 2015 at 07:25:58PM +0100, Andreas F=E4rber wrote:
 >=20
-> Reported-by: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Suggested-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8p/WX4DV1PbvA@public.gmane.org=
-uk>
-> Fixes: 53dd4138bb0a ("ARM: dts: Add exynos5250-spring device tree")
-> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
+>>  static const struct of_device_id snow_of_match[] =3D {
+>> +	{ .compatible =3D "google,snow-audio-max98089", },
+>>  	{ .compatible =3D "google,snow-audio-max98090", },
+>>  	{ .compatible =3D "google,snow-audio-max98091", },
+>>  	{ .compatible =3D "google,snow-audio-max98095", },
+>=20
+> Since we completely ignore the CODEC in the property might it not be
+> better to just add a plain old snow-audio compatible and bind to that,
+> that way we don't need these driver updates?  Just the "snow" bit shoul=
+d
+> be enough to know it's one of this class of machines.
 
-Reviewed-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Personally I don't mind either way, but I'd rather leave that decision
+to Google/Samsung people.
 
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With all those Tegra and Rockchip based Chromebooks popping up, are
+there any further Exynos based Chromebooks planned using this driver, or
+is it the last of its kind?
+
+Cheers,
+Andreas
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Jennifer Guild, Dilip Upmanyu,
+Graham Norton; HRB 21284 (AG N=FCrnberg)
+
+
+--lKOTFdijtkiooW8AcOLRrPhUJNvokiIlE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJU5dgSAAoJEPou0S0+fgE/9b0P/2Ne2RoN7dPo3pfXTeipNvC+
+4d6TCO6bTVY461z/47+OaaTkWWcY70Olj9TnB26ls+IKf+q0Uq+rghQlpjeSCEyL
+71rbSaCIwwXCc55NEHjhulCvjxbffqj2MZbWNbyyIdm1YRdv9aVeXerH7GJAqpAU
+BpwIiuMpqfiI4ahiArQXByser1oTy+3/GF2JiqdgfZ4qMWaRO7kYsPGu2odK3Rx/
+03cOeWATHGxXq8YRrBk024+z8pmyKpLDUf8m1sVgDlAWlY4wCkYtLT1iGsW/Fq44
+hYhrXxyv2MOBFefF1IjEU73nb5GjkyuSj2OvBKAatMyNizM9rZGf8edJ9tMICi8r
+U6tYpP1I9bc1+k32tZ+ooZWyVOucmIv8MKD/OJAOr181+IDFCGxBpvH5bCo90o0q
+SaXKxikYRxPLd20sbJtXjnyaKxrvY8pAyXRw17UtGvTI/nw6am+h1eJkWwnIOuaC
+Qt6XtoM7KE2pVctOv34Mo0I2+2Psi6skgI+RMIhQF/aX7m0K6SryXhyglupqNIVm
+SgxQPg+zbLuqrhLZWcY4XD5VLtxEdXq4DqUuZBNYUykBJKMqySP4EC8wbXyXta07
+zrGVpksWH0sJWf5tzco4tVIzSgct5mIDp8yhFJ5UQj4OhARzvatmOg53qOoT/YGm
+38JMRMcNlZkGuddFX+Dp
+=AHH6
+-----END PGP SIGNATURE-----
+
+--lKOTFdijtkiooW8AcOLRrPhUJNvokiIlE--
