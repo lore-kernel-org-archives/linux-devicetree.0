@@ -1,76 +1,51 @@
-From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 5/6] ASoC: samsung: Extend Snow driver to support max98089
-Date: Thu, 19 Feb 2015 13:33:18 +0100
-Message-ID: <54E5D80E.3020603@suse.de>
-References: <1424283959-16289-1-git-send-email-afaerber@suse.de> <1424283959-16289-6-git-send-email-afaerber@suse.de> <20150219094425.GB3198@finisterre.sirena.org.uk>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Thu, 19 Feb 2015 13:46:13 +0100
+Message-ID: <0440c296085f48918e07134b07690a08@BY2FFO11FD028.protection.gbl>
+References: <20150113222450.GA17475@obsidianresearch.com>
+ <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
+ <20150115184726.GA23247@obsidianresearch.com>
+ <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
+ <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
+ <20150121160151.453ba403@lxorguk.ukuu.org.uk>
+ <D466D9FF-25DA-4765-9469-128733BEBC4D@konsulko.com>
+ <20150121202700.GB4942@obsidianresearch.com> <20150215224006.GA5626@amd>
+ <54E37569.80508@landley.net> <20150217191727.GA18429@amd>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="lKOTFdijtkiooW8AcOLRrPhUJNvokiIlE"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20150219094425.GB3198@finisterre.sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>
-Cc: Sangbeom Kim <sbkim73@samsung.com>, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150217191727.GA18429@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>, Rob Landley <rob@landley.net>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, davem@davemloft.net, cesarb@cesarb.net
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---lKOTFdijtkiooW8AcOLRrPhUJNvokiIlE
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On 02/17/2015 08:17 PM, Pavel Machek wrote:
+> On Tue 2015-02-17 11:07:53, Rob Landley wrote:
+>>
+>>
+>> On 02/15/2015 04:40 PM, Pavel Machek wrote:
+>>> On Wed 2015-01-21 13:27:00, Jason Gunthorpe wrote:
+>>>> On Wed, Jan 21, 2015 at 06:33:12PM +0200, Pantelis Antoniou wrote:
+>>>> My point is that the current firmware layer is overly cautious and
+>>>> FPGAs are very big. My current project on small Xilinx device has a
+>>>> 10MB programming file. The biggest Xilinx device today has a max
+>>>> bitfile size around 122MB.
+>>>>
+>>>> So keeping that much memory pinned in the kernel when I can prove it
+>>>> is uncessary for my system (either because there is no suspend/resume
+>>>> possibility, or because I know the CPU can always access the
+>>>> filesytem) is very undesirable.
+>>>
+>>> Well, your current device aalso has 1GB RAM, no?
+>>
+>> Unnecessarily pinning 10% of your ram is a good solution?
+> 
+> Never said that. But I'd rather have _some_ API proposed, then try to
+> design in everthing including kitchen sink and do nothing.
 
-Am 19.02.2015 um 10:44 schrieb Mark Brown:
-> On Wed, Feb 18, 2015 at 07:25:58PM +0100, Andreas F=E4rber wrote:
->=20
->>  static const struct of_device_id snow_of_match[] =3D {
->> +	{ .compatible =3D "google,snow-audio-max98089", },
->>  	{ .compatible =3D "google,snow-audio-max98090", },
->>  	{ .compatible =3D "google,snow-audio-max98091", },
->>  	{ .compatible =3D "google,snow-audio-max98095", },
->=20
-> Since we completely ignore the CODEC in the property might it not be
-> better to just add a plain old snow-audio compatible and bind to that,
-> that way we don't need these driver updates?  Just the "snow" bit shoul=
-d
-> be enough to know it's one of this class of machines.
++1 on this.
 
-Personally I don't mind either way, but I'd rather leave that decision
-to Google/Samsung people.
-
-With all those Tegra and Rockchip based Chromebooks popping up, are
-there any further Exynos based Chromebooks planned using this driver, or
-is it the last of its kind?
-
-Cheers,
-Andreas
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Jennifer Guild, Dilip Upmanyu,
-Graham Norton; HRB 21284 (AG N=FCrnberg)
-
-
---lKOTFdijtkiooW8AcOLRrPhUJNvokiIlE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJU5dgSAAoJEPou0S0+fgE/9b0P/2Ne2RoN7dPo3pfXTeipNvC+
-4d6TCO6bTVY461z/47+OaaTkWWcY70Olj9TnB26ls+IKf+q0Uq+rghQlpjeSCEyL
-71rbSaCIwwXCc55NEHjhulCvjxbffqj2MZbWNbyyIdm1YRdv9aVeXerH7GJAqpAU
-BpwIiuMpqfiI4ahiArQXByser1oTy+3/GF2JiqdgfZ4qMWaRO7kYsPGu2odK3Rx/
-03cOeWATHGxXq8YRrBk024+z8pmyKpLDUf8m1sVgDlAWlY4wCkYtLT1iGsW/Fq44
-hYhrXxyv2MOBFefF1IjEU73nb5GjkyuSj2OvBKAatMyNizM9rZGf8edJ9tMICi8r
-U6tYpP1I9bc1+k32tZ+ooZWyVOucmIv8MKD/OJAOr181+IDFCGxBpvH5bCo90o0q
-SaXKxikYRxPLd20sbJtXjnyaKxrvY8pAyXRw17UtGvTI/nw6am+h1eJkWwnIOuaC
-Qt6XtoM7KE2pVctOv34Mo0I2+2Psi6skgI+RMIhQF/aX7m0K6SryXhyglupqNIVm
-SgxQPg+zbLuqrhLZWcY4XD5VLtxEdXq4DqUuZBNYUykBJKMqySP4EC8wbXyXta07
-zrGVpksWH0sJWf5tzco4tVIzSgct5mIDp8yhFJ5UQj4OhARzvatmOg53qOoT/YGm
-38JMRMcNlZkGuddFX+Dp
-=AHH6
------END PGP SIGNATURE-----
-
---lKOTFdijtkiooW8AcOLRrPhUJNvokiIlE--
+Thanks,
+Michal
