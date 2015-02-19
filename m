@@ -1,46 +1,72 @@
-From: Ravikumar Kattekola <rk@ti.com>
-Subject: Re: [PATCH 0/2] ARM: DRA7x/OMAP5: Clock: DPLL Clock fixes
-Date: Thu, 19 Feb 2015 20:38:29 +0530
-Message-ID: <54E5FC6D.7040701@ti.com>
-References: <1422724005-9415-1-git-send-email-rk@ti.com>
+From: Christoffer Dall <christoffer.dall@linaro.org>
+Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
+Date: Thu, 19 Feb 2015 16:51:38 +0100
+Message-ID: <20150219155138.GA24460@cbox>
+References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422724005-9415-1-git-send-email-rk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com
-Cc: tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+Content-Disposition: inline
+In-Reply-To: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Pranavkumar Sawargaonkar <psawargaonkar@apm.com>
+Cc: devicetree@vger.kernel.org, arnd@arndb.de, Feng Kan <fkan@apm.com>, marc.zyngier@arm.com, jcm@redhat.com, patches@apm.com, Tushar Jagad <tjagad@apm.com>, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/31/2015 10:36 PM, Ravikumar Kattekola wrote:
-> Fix bypass clock source for a few DPLLs.
->
-> On DRA7x/OMAP5, for a few DPLLs, both CLKINP and CLKINPULOW are connected
-> to a mux and the output from mux is routed to the bypass clkout.
-> Add a mux-clock as bypass clock with CLKINP and CLKINPULOW as parents.
->
-> Tested against:
-> 	tree: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
-> 	branch: master
-> On:
-> CPU  : OMAP5432 ES2.0
-> Board: OMAP5432 uEVM
-> and
-> CPU  : DRA752 ES1.0
-> Board: DRA7xx
->
->
-> Ravikumar Kattekola (2):
->    ARM: DRA7x: dts: Fix the bypass clock source for dpll_iva and others
->    ARM: OMAP5: dts: Fix the bypass clock source for dpll_iva and others
->
->   arch/arm/boot/dts/dra7xx-clocks.dtsi   |   90 ++++++++++++++++++++++++++++----
->   arch/arm/boot/dts/omap54xx-clocks.dtsi |   41 +++++++++++++--
->   2 files changed, 118 insertions(+), 13 deletions(-)
->
-Hi Benoit,
-     Can these fixes be looked into for 3.20-rc?
+On Tue, Jan 27, 2015 at 12:33:26PM +0530, Pranavkumar Sawargaonkar wrote:
+> In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
+> in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
+> size due to size alignment checking in vgic driver for VCPU Control and
+> VCPU register.
+> 
+> This patch corrects the sizes to be inline with the hardware spec.
+> 
+> CC: linux-arm-kernel@lists.infradead.org
+> CC: kvmarm@lists.cs.columbia.edu
+> CC: arnd@arndb.de
+> CC: marc.zyngier@arm.com
+> CC: christoffer.dall@linaro.org
+> CC: jcm@redhat.com
+> Signed-off-by: Pranavkumar Sawargaonkar <psawargaonkar@apm.com>
+> Signed-off-by: Tushar Jagad <tjagad@apm.com>
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> ---
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi |    8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> index f1ad9c2..65f0e6d 100644
+> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> @@ -81,10 +81,10 @@
+>  		compatible = "arm,cortex-a15-gic";
+>  		#interrupt-cells = <3>;
+>  		interrupt-controller;
+> -		reg = <0x0 0x78010000 0x0 0x1000>,	/* GIC Dist */
+> -		      <0x0 0x78020000 0x0 0x1000>,	/* GIC CPU */
+> -		      <0x0 0x78040000 0x0 0x2000>,	/* GIC VCPU Control */
+> -		      <0x0 0x78060000 0x0 0x2000>;	/* GIC VCPU */
+> +		reg = <0x0 0x78010000 0x0 0x10000>,	/* GIC Dist */
+> +		      <0x0 0x78020000 0x0 0x20000>,	/* GIC CPU */
+> +		      <0x0 0x78040000 0x0 0x10000>,	/* GIC VCPU Control */
+> +		      <0x0 0x78060000 0x0 0x20000>;	/* GIC VCPU */
+>  		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
+>  	};
+> 
+> --
+> 1.7.9.5
+> 
 
-Regards,
-RK
+This looks good to me and works with 4K and 64K pages on the mustang I
+have at hand.
+
+Acked-by: Christoffer Dall <christoffer.dall@linaro.org>
