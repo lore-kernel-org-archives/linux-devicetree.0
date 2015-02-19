@@ -1,154 +1,76 @@
-From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 2/2] wl18xx: add basic device-tree support
-Date: Thu, 19 Feb 2015 18:13:21 +0200
-Message-ID: <1424362401-8228-2-git-send-email-eliad@wizery.com>
-References: <1424362401-8228-1-git-send-email-eliad@wizery.com>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424362401-8228-1-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH 02/14] ARM: ARMv7M: Enlarge vector table to 256 entries
+Date: Thu, 19 Feb 2015 17:13:32 +0100
+Message-ID: <CALszF6DyVqaE6DLKSQHeuYWgSChzhEtCbmOsbjoTkvipquBivw@mail.gmail.com>
+References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1423763164-5606-3-git-send-email-mcoquelin.stm32@gmail.com>
+	<CAMuHMdWESyPktOSBfVoZCb35stUbhNpbbpzSW4JfORdObgg5jw@mail.gmail.com>
+	<CALszF6BDa9pUb534YN2z9DbYA+hPCnG8XYy5YbjJwSiseKz4xg@mail.gmail.com>
+	<CAL_Jsq+rHFPXmWqByvdG435tpbO_+ODByiMcdxboULYpUfDUmg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+rHFPXmWqByvdG435tpbO_+ODByiMcdxboULYpUfDUmg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>R
 List-Id: devicetree@vger.kernel.org
 
-When running with device-tree, we no longer have a board file
-that can set up the platform data for wlcore.
-Allow this data to be passed from DT.
+Hi Rob,
 
-For now, parse only the irq used. Other (optional) properties
-can be added later on.
+2015-02-15 23:42 GMT+01:00 Rob Herring <robherring2@gmail.com>:
+> On Fri, Feb 13, 2015 at 2:42 AM, Maxime Coquelin
+> <mcoquelin.stm32@gmail.com> wrote:
+>> Hi Geert,
+>>
+>> 2015-02-12 21:34 GMT+01:00 Geert Uytterhoeven <geert@linux-m68k.org>:
+>>> On Thu, Feb 12, 2015 at 6:45 PM, Maxime Coquelin
+>>> <mcoquelin.stm32@gmail.com> wrote:
+>>>> From Cortex-M4 and M7 reference manuals, the nvic supports up to 240
+>>>> interrupts. So the number of entries in vectors table is 256.
+>>>>
+>>>> This patch adds the missing entries, and change the alignement, so that
+>>>> vector_table remains naturally aligned.
+>>>
+>>> Shouldn't this depend on ARCH_STM32, or some other M4 or M7 specific
+>>> Kconfig option, to avoid wasting the space on other CPUs?
+>>
+>> Actually, the STM32F429 has 90 interrupts, so it would need 106
+>> entries in the vector table.
+>> The maximum of supported interrupts is not only for Cortex-M4 and M7,
+>> this is also true for Cortex-M3.
+>>
+>> I see two possibilities:
+>>  1 - We declare the vector table for the maximum supported number of
+>> IRQs, as this patch does.
+>>         - Pro: it will be functionnal with all Cortex-M MCUs
+>>         - Con: Waste of less than 1KB for memory
+>
+> The waste depends on the alignment size as well and could be up to
+> almost 2KB worst case. It varies depending on the padding. We should
+> try to place it so it always aligned and the wasted space is
+> minimized.
 
-Signed-off-by: Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
----
- drivers/net/wireless/ti/wlcore/sdio.c | 70 ++++++++++++++++++++++++++++++++---
- 1 file changed, 64 insertions(+), 6 deletions(-)
+Sorry, I just notice I didn't replied to all. That was my question:
 
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index d3dd7bf..c3bc178 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -34,6 +34,8 @@
- #include <linux/wl12xx.h>
- #include <linux/pm_runtime.h>
- #include <linux/printk.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
- 
- #include "wlcore.h"
- #include "wl12xx_80211.h"
-@@ -214,6 +216,59 @@ static struct wl1271_if_operations sdio_ops = {
- 	.set_block_size = wl1271_sdio_set_block_size,
- };
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id wlcore_sdio_of_match_table[] = {
-+	{ .compatible = "ti,wl18xx" },
-+	{ }
-+};
-+
-+static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct wl12xx_platform_data *pdata;
-+
-+	if (!np || !of_match_node(wlcore_sdio_of_match_table, np)) {
-+		dev_err(dev, "No platform data set\n");
-+		return NULL;
-+	}
-+
-+	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	pdata->irq = irq_of_parse_and_map(np, 0);
-+	if (!pdata->irq) {
-+		dev_err(dev, "No irq in platform data\n");
-+		kfree(pdata);
-+		return NULL;
-+	}
-+
-+	return pdata;
-+}
-+#else
-+static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+static struct wl12xx_platform_data *
-+wlcore_get_platform_data(struct device *dev)
-+{
-+	struct wl12xx_platform_data *pdata;
-+
-+	pdata = wl12xx_get_platform_data();
-+	if (!IS_ERR(pdata))
-+		return kmemdup(pdata, sizeof(*pdata), GFP_KERNEL);
-+
-+	return wlcore_probe_of(dev);
-+}
-+
-+static void wlcore_del_platform_data(struct wl12xx_platform_data *pdata)
-+{
-+	kfree(pdata);
-+}
-+
- static int wl1271_probe(struct sdio_func *func,
- 				  const struct sdio_device_id *id)
- {
-@@ -245,12 +300,9 @@ static int wl1271_probe(struct sdio_func *func,
- 	/* Use block mode for transferring over one block size of data */
- 	func->card->quirks |= MMC_QUIRK_BLKSZ_FOR_BYTE_MODE;
- 
--	pdev_data.pdata = wl12xx_get_platform_data();
--	if (IS_ERR(pdev_data.pdata)) {
--		ret = PTR_ERR(pdev_data.pdata);
--		dev_err(glue->dev, "missing wlan platform data: %d\n", ret);
-+	pdev_data.pdata = wlcore_get_platform_data(&func->dev);
-+	if (!pdev_data.pdata)
- 		goto out_free_glue;
--	}
- 
- 	/* if sdio can keep power while host is suspended, enable wow */
- 	mmcflags = sdio_get_host_pm_caps(func);
-@@ -279,7 +331,7 @@ static int wl1271_probe(struct sdio_func *func,
- 	if (!glue->core) {
- 		dev_err(glue->dev, "can't allocate platform_device");
- 		ret = -ENOMEM;
--		goto out_free_glue;
-+		goto out_free_pdata;
- 	}
- 
- 	glue->core->dev.parent = &func->dev;
-@@ -313,6 +365,9 @@ static int wl1271_probe(struct sdio_func *func,
- out_dev_put:
- 	platform_device_put(glue->core);
- 
-+out_free_pdata:
-+	wlcore_del_platform_data(pdev_data.pdata);
-+
- out_free_glue:
- 	kfree(glue);
- 
-@@ -323,11 +378,14 @@ out:
- static void wl1271_remove(struct sdio_func *func)
- {
- 	struct wl12xx_sdio_glue *glue = sdio_get_drvdata(func);
-+	struct wlcore_platdev_data *pdev_data = glue->core->dev.platform_data;
-+	struct wl12xx_platform_data *pdata = pdev_data->pdata;
- 
- 	/* Undo decrement done above in wl1271_probe */
- 	pm_runtime_get_noresume(&func->dev);
- 
- 	platform_device_unregister(glue->core);
-+	wlcore_del_platform_data(pdata);
- 	kfree(glue);
- }
- 
--- 
-1.8.5.1.109.g3d252a9
+Do you mean by forcing its location in the arch/arm/kernel/vmlinux.lds.S file?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Maxime
+
+>
+> Rob
+>
+>>  2 - We introduce a config flag that provides the number of interrupts
+>>         - Pro: No more memory waste
+>>         - Con: Need to declare a per MCU model config flag.
+>>
+>> Then, regarding the natural alignment, is there a way to ensure it
+>> depending on the value of a config flag?
+>> Or we should keep it at the maximum value possible?
+>>
+>> Any feedback will be appreciated, especially from Uwe who maintains
+>> the efm32 machine.
+>>
+>> Kind regards,
+>> Maxime
