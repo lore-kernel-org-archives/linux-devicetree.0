@@ -1,62 +1,131 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH/RFC 2/2] regulator: da9210: Add optional interrupt support
-Date: Thu, 19 Feb 2015 11:39:25 +0100
-Message-ID: <CAMuHMdU+Q7M=2UaCDyUaxq8mzT9x6-tSh+OQJF4MBrFrz_fTuQ@mail.gmail.com>
-References: <1424175072-14643-1-git-send-email-geert+renesas@glider.be>
-	<1424175072-14643-2-git-send-email-geert+renesas@glider.be>
-	<20150217140110.GV9110@finisterre.sirena.org.uk>
-	<CAMuHMdXOFVZWn+u4wyz4Ro_kS_LaWc4Mwrq-XZU3dPpjmX2E3w@mail.gmail.com>
-	<20150219103346.GE3198@finisterre.sirena.org.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 4/4] clk: dt: Introduce always-on clock domain
+ documentation
+Date: Thu, 19 Feb 2015 10:43:32 +0000
+Message-ID: <20150219104332.GF12212@x1>
+References: <20150218171230.GA30676@x1>
+ <CAL_JsqJ0sfQ-OQvYjL3X3ebH4p9HkN4iy35iT7i9S2d+yz9zYg@mail.gmail.com>
+ <20150218215435.GA32415@x1>
+ <CAMuHMdU6DpZoi-q3pUFUX8xjnXGfTqfEYyzajZZm=-qZTk1qHQ@mail.gmail.com>
+ <20150219094200.GB12212@x1>
+ <CAMuHMdW+np0_zUhBOXVBN_7ztM5Z=xN5-mE-P_wR35BggQxerQ@mail.gmail.com>
+ <20150219101106.GD12212@x1>
+ <CAMuHMdW=kV+zx=Uq7y7SyrH3eQyWsdfWjuLFMAKQjPhX-QaPPA@mail.gmail.com>
+ <20150219102810.GE12212@x1>
+ <CAMuHMdXYT6HvKhpi1mxF7SJBDyLVHw2W2Rxe1poDrdwKR0nu=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150219103346.GE3198-bheZrs9scGb3/WHNxyQH9YN0K6Il/+VY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXYT6HvKhpi1mxF7SJBDyLVHw2W2Rxe1poDrdwKR0nu=w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, kernel@stlinux.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
 
-On Thu, Feb 19, 2015 at 11:33 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Feb 17, 2015 at 03:18:40PM +0100, Geert Uytterhoeven wrote:
->> On Tue, Feb 17, 2015 at 3:01 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> > On Tue, Feb 17, 2015 at 01:11:12PM +0100, Geert Uytterhoeven wrote:
->
->> >>   - Does there exist any regulator notifier event that corresponds to
->> >>     DA9210_E_VMAX?
->
->> > What does that mean, I might be able to tell you?  I guess it might be
->> > an over voltage event...
->
->> Possibly. There's no regulator notifier event for that yet, though.
->> Shall I add one?
->
-> I'm wondering if it may be better to change the first notification to
-> just a general "out of regulation" one, though the consequences of over
-> voltage are usually different to under voltage if that is what's going
-> on here.
->
->> Anyway, let's wait for confirmation from Dialog...
->
-> I guess - is there really no indication in the datasheet?
+> Hi Lee,
+>=20
+> On Thu, Feb 19, 2015 at 11:28 AM, Lee Jones <lee.jones@linaro.org> wr=
+ote:
+> > On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
+> >> On Thu, Feb 19, 2015 at 11:11 AM, Lee Jones <lee.jones@linaro.org>=
+ wrote:
+> >> > On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
+> >> >> On Thu, Feb 19, 2015 at 10:42 AM, Lee Jones <lee.jones@linaro.o=
+rg> wrote:
+> >> >> >> What kind of clocks are these? What do they control?
+> >> >> >> Memory controllers? Bus controllers?
+> >> >> >>
+> >> >> >> They must control some device(s), so there should be one or =
+more device
+> >> >> >> nodes in DT that reference these clocks.
+> >> >> >> As soon as that information is in DT, support can be added t=
+o Linux to
+> >> >> >> make sure the "critical" clocks stay enabled, either through=
+ a real driver,
+> >> >> >> or through platform code.
+> >> >> >
+> >> >> > Some do, some don't.  For instance, we have one clock which c=
+ontrols
+> >> >> > SPI and I2C that must not be turned off.  We discovered this =
+then when
+> >> >> > a suspend was attempted and the board refused to resume.  Thi=
+s clock
+> >> >> > also runs one of the critical interconnects that runs from th=
+e a9.  It
+> >> >> > would be wrong to remove the clk_disable() attempt from the S=
+PI/I2C
+> >> >> > drivers because the same IP on another board might be control=
+led by a
+> >> >> > different clock which is able to be gated.
+> >> >> >
+> >> >> > There are also clocks which control other interconnects that =
+are not
+> >> >> > connected to any device drivers.  If we fail to take referenc=
+es for
+> >> >> > them before clk_disable_unused() is called, again the board h=
+angs.  We
+> >> >> > even lose JTAG support.
+> >> >>
+> >> >> Interconnects are buses. Can't you represent those buses in the=
+ DT
+> >> >> hierarchy, and give them clocks properties?
+> >> >
+> >> > So instead of this nice succinct, simple, cover all bases
+> >> > (interconnects was just an example, there are bound to be others=
+),
+> >> > generic framework, you are suggesting to write drivers for devic=
+es
+> >> > which other than "don't turn my clocks off", Linux can't actuall=
+y see
+> >> > or control?
+> >>
+> >> DT describes the hardware, not behavior.
+> >
+> > Okay so ...
+> >
+> > /*
+> >  * ICNs are not visible/controllable in Linux, but references to th=
+eir
+> >  * clocks must be obtained and retained or the platform will become
+> >  * irrecoverably unresponsive.
+> >  */
+> > interconnects@0 {
+> >        compatible =3D "always-on-clk-domain";
+>=20
+> st,...flexgen...
+>=20
+> >        clocks =3D <&clk_s_c0_flexgen CLK_ICN_SBC>,
+> >                 <&clk_s_c0_flexgen CLK_ICN_LMI>,
+> >                 <&clk_s_c0_flexgen CLK_ICN_CPU>,
+> >                 <&clk_s_c0_flexgen CLK_TX_ICN_DMU>;
+> > };
+>=20
+> And then you can have platform code that binds against st,...flexgen.=
+=2E.,
+> and enables all referenced clocks.
 
--ENOENT
+=46lexgen isn't a device, it's a clk source.  a) writing a device drive=
+r
+for a clk source seems wrong b) what if on another platform a
+different clock source supplied the clock?  Write another driver?  And
+what if the ICNs are connected to different clock sources?  More
+drivers?  c) all of these drivers will only do one thing -- pull a
+reference and keep hold of it.  You want 50 drivers (across all
+platforms) doing only that?  Or, more sanely, do you want this one
+generic framework driver doing that?
 
-(I hope that's actually -EPROBE_DEFER, as I applied for datasheet access
-last week ;-)
+> Alternatively, if you have power domains, you can add a reference to
+> the power domain, and let the power domain driver handle it.
 
-Gr{oetje,eeting}s,
+I'm not sure what a power domain driver will do?  We need a driver to
+_not_ give up references, that is all. :)
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
