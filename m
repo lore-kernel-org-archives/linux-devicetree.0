@@ -1,66 +1,150 @@
 From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/2] dt: bindings: add wl18xx wireless device
-Date: Thu, 19 Feb 2015 18:13:20 +0200
-Message-ID: <1424362401-8228-1-git-send-email-eliad@wizery.com>
+Subject: [PATCH v3 2/2] wl18xx: add basic device-tree support
+Date: Thu, 19 Feb 2015 18:13:21 +0200
+Message-ID: <1424362401-8228-2-git-send-email-eliad@wizery.com>
+References: <1424362401-8228-1-git-send-email-eliad@wizery.com>
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424362401-8228-1-git-send-email-eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for TI's wl18xx
-wlan chip.
+When running with device-tree, we no longer have a board file
+that can set up the platform data for wlcore.
+Allow this data to be passed from DT.
 
+For now, parse only the irq used. Other (optional) properties
+can be added later on.
+
+Signed-off-by: Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 ---
-v3:
- * make the bindings device-specific (wl18xx) (Arnd, Mark)
- * split bindings and driver changes (Arnd)
- * make interrupt-parent optional (Arnd)
- * make unit-address same as reg (Mark)
+ drivers/net/wireless/ti/wlcore/sdio.c | 70 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 64 insertions(+), 6 deletions(-)
 
- .../devicetree/bindings/net/wireless/ti,wl18xx.txt | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wl18xx.txt
-
-diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl18xx.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl18xx.txt
-new file mode 100644
-index 0000000..8120a81
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/ti,wl18xx.txt
-@@ -0,0 +1,32 @@
-+TI Wilink8 (wl18xx) SDIO devices
-+
-+This node provides properties for controlling the wilink8 wireless device. The
-+node is expected to be specified as a child node to the SDIO controller that
-+connects the device to the system.
-+
-+Required properties:
-+ - compatible : Should be "ti,wl18xx".
-+ - interrupts : specifies attributes for the out-of-band interrupt.
-+
-+Optional properties:
-+ - interrupt-parent : the phandle for the interrupt controller to which the
-+	device interrupts are connected.
-+
-+Example:
-+
-+&mmc3 {
-+	status = "okay";
-+	vmmc-supply = <&wlan_en_reg>;
-+	bus-width = <4>;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl18xx";
-+		reg = <2>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <19 IRQ_TYPE_NONE>;
-+	};
+diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+index d3dd7bf..c3bc178 100644
+--- a/drivers/net/wireless/ti/wlcore/sdio.c
++++ b/drivers/net/wireless/ti/wlcore/sdio.c
+@@ -34,6 +34,8 @@
+ #include <linux/wl12xx.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/printk.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
+ 
+ #include "wlcore.h"
+ #include "wl12xx_80211.h"
+@@ -214,6 +216,59 @@ static struct wl1271_if_operations sdio_ops = {
+ 	.set_block_size = wl1271_sdio_set_block_size,
+ };
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id wlcore_sdio_of_match_table[] = {
++	{ .compatible = "ti,wl18xx" },
++	{ }
 +};
++
++static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct wl12xx_platform_data *pdata;
++
++	if (!np || !of_match_node(wlcore_sdio_of_match_table, np)) {
++		dev_err(dev, "No platform data set\n");
++		return NULL;
++	}
++
++	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	pdata->irq = irq_of_parse_and_map(np, 0);
++	if (!pdata->irq) {
++		dev_err(dev, "No irq in platform data\n");
++		kfree(pdata);
++		return NULL;
++	}
++
++	return pdata;
++}
++#else
++static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
++static struct wl12xx_platform_data *
++wlcore_get_platform_data(struct device *dev)
++{
++	struct wl12xx_platform_data *pdata;
++
++	pdata = wl12xx_get_platform_data();
++	if (!IS_ERR(pdata))
++		return kmemdup(pdata, sizeof(*pdata), GFP_KERNEL);
++
++	return wlcore_probe_of(dev);
++}
++
++static void wlcore_del_platform_data(struct wl12xx_platform_data *pdata)
++{
++	kfree(pdata);
++}
++
+ static int wl1271_probe(struct sdio_func *func,
+ 				  const struct sdio_device_id *id)
+ {
+@@ -245,12 +300,9 @@ static int wl1271_probe(struct sdio_func *func,
+ 	/* Use block mode for transferring over one block size of data */
+ 	func->card->quirks |= MMC_QUIRK_BLKSZ_FOR_BYTE_MODE;
+ 
+-	pdev_data.pdata = wl12xx_get_platform_data();
+-	if (IS_ERR(pdev_data.pdata)) {
+-		ret = PTR_ERR(pdev_data.pdata);
+-		dev_err(glue->dev, "missing wlan platform data: %d\n", ret);
++	pdev_data.pdata = wlcore_get_platform_data(&func->dev);
++	if (!pdev_data.pdata)
+ 		goto out_free_glue;
+-	}
+ 
+ 	/* if sdio can keep power while host is suspended, enable wow */
+ 	mmcflags = sdio_get_host_pm_caps(func);
+@@ -279,7 +331,7 @@ static int wl1271_probe(struct sdio_func *func,
+ 	if (!glue->core) {
+ 		dev_err(glue->dev, "can't allocate platform_device");
+ 		ret = -ENOMEM;
+-		goto out_free_glue;
++		goto out_free_pdata;
+ 	}
+ 
+ 	glue->core->dev.parent = &func->dev;
+@@ -313,6 +365,9 @@ static int wl1271_probe(struct sdio_func *func,
+ out_dev_put:
+ 	platform_device_put(glue->core);
+ 
++out_free_pdata:
++	wlcore_del_platform_data(pdev_data.pdata);
++
+ out_free_glue:
+ 	kfree(glue);
+ 
+@@ -323,11 +378,14 @@ out:
+ static void wl1271_remove(struct sdio_func *func)
+ {
+ 	struct wl12xx_sdio_glue *glue = sdio_get_drvdata(func);
++	struct wlcore_platdev_data *pdev_data = glue->core->dev.platform_data;
++	struct wl12xx_platform_data *pdata = pdev_data->pdata;
+ 
+ 	/* Undo decrement done above in wl1271_probe */
+ 	pm_runtime_get_noresume(&func->dev);
+ 
+ 	platform_device_unregister(glue->core);
++	wlcore_del_platform_data(pdata);
+ 	kfree(glue);
+ }
+ 
 -- 
 1.8.5.1.109.g3d252a9
 
