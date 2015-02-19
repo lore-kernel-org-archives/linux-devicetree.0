@@ -1,48 +1,60 @@
-From: Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 4/6] ASoC: samsung: Document binding for
- max98089 based Snow driver
-Date: Thu, 19 Feb 2015 09:19:05 +0530
-Message-ID: <54E55D31.7020807@gmail.com>
-References: <1424283959-16289-1-git-send-email-afaerber@suse.de> <1424283959-16289-5-git-send-email-afaerber@suse.de>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
+ leds: flash: document sysfs interface
+Date: Thu, 19 Feb 2015 09:26:23 +0100
+Message-ID: <54E59E2F.5050805@samsung.com>
+References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
+ <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
+ <20150218224747.GA3999@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424283959-16289-5-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20150218224747.GA3999@amd>
+Sender: linux-media-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Greg KH <greg@kroah.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/18/2015 11:55 PM, Andreas F=C3=A4rber wrote:
-> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/sound/snow.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/sound/snow.txt b/Docum=
-entation/devicetree/bindings/sound/snow.txt
-> index 6df74f15687f..1430a6bdb2ae 100644
-> --- a/Documentation/devicetree/bindings/sound/snow.txt
-> +++ b/Documentation/devicetree/bindings/sound/snow.txt
-> @@ -2,6 +2,7 @@ Audio Binding for Snow boards
-> =20
->  Required properties:
->  - compatible : Can be one of the following,
-> +			"google,snow-audio-max98089" or
->  			"google,snow-audio-max98090" or
->  			"google,snow-audio-max98091" or
->  			"google,snow-audio-max98095"
->=20
+On 02/18/2015 11:47 PM, Pavel Machek wrote:
+>
+> On Wed 2015-02-18 17:20:22, Jacek Anaszewski wrote:
+>> Add a documentation of LED Flash class specific sysfs attributes.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Bryan Wu <cooloney@gmail.com>
+>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>
+> NAK-ed-by: Pavel Machek
+>
+>> +What:		/sys/class/leds/<led>/available_sync_leds
+>> +Date:		February 2015
+>> +KernelVersion:	3.20
+>> +Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
+>> +Description:	read/write
 
-Looks good.
+Here it should be 'read only', to be fixed.
 
-Acked-by: Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> +		Space separated list of LEDs available for flash strobe
+>> +		synchronization, displayed in the format:
+>> +
+>> +		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
+>
+> Multiple values per file, with all the problems we had in /proc. I
+> assume led_id is an integer?
 
---=20
-Tushar Behera
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes.
+
+> What prevents space or dot in led name?
+
+Space can be forbidden by defining naming convention. The name comes
+from the DT binding 'label' property and I don't see any problem in
+forbidding space in it.
+
+A dot in the name does not introduce parsing problems - simply the first
+dot after digits separates led id from led name.
+
+-- 
+Best Regards,
+Jacek Anaszewski
