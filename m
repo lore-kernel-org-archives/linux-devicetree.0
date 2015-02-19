@@ -1,44 +1,60 @@
-From: Maxime Bizon <mbizon@freebox.fr>
+From: Guenter Roeck <linux@roeck-us.net>
 Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
-Date: Thu, 19 Feb 2015 19:01:59 +0100
-Message-ID: <1424368919.13604.9.camel@sakura.staff.proxad.net>
+Date: Thu, 19 Feb 2015 10:12:48 -0800
+Message-ID: <20150219181248.GA7713@roeck-us.net>
 References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com>
  <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com>
- <20150218154106.GC29429@leverpostej>
- <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com>
- <20150218173115.GG29429@leverpostej>
- <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com>
- <54E613E7.2020405@gmail.com>
- <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com>
- <54E61DD2.3060002@gmail.com>
- <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com>
-Reply-To: mbizon@freebox.fr
+ <54E54586.5070602@gmail.com>
+ <CAL_JsqKT3+URcad6X=i+73NLRnVstbpvFJxxT=ru7KJmp_XuVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Ludovic Desroches <ludovic.desroches@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Porter <matt.porter@linaro.org>, frowand.list@gmail.com, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKT3+URcad6X=i+73NLRnVstbpvFJxxT=ru7KJmp_XuVQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Matt Porter <matt.porter@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIFRodSwgMjAxNS0wMi0xOSBhdCAxOTozOCArMDIwMCwgUGFudGVsaXMgQW50b25pb3Ugd3Jv
-dGU6Cgo+IEhhdmluZyB0byBib290IGFuZCB0d2VhayB0aGUgYm9vdGxvYWRlciBzZXR0aW5ncyB0
-byBzZWxlY3QgdGhlIGNvcnJlY3QKPiBkdGIgKGV2ZW4gaWYgaXTigJlzIHByZXNlbnQgb24gdGhl
-IGZsYXNoIG1lZGl1bSkgdGFrZXMgdGltZSBhbmQgaXMKPiBlcnJvci1wcm9uZS4KCkRlZGljYXRl
-IGEgc2V0IG9mIEdQSU8gZm9yIGJvYXJkL1BDQiByZXZpc2lvbiBkZXRlY3Rpb24gKGl0IG9ubHkg
-Y29zdHMgYQpmZXcgcmVzaXN0b3JzIGNvbm5lY3RlZCB0byBWQ0Mgb3IgR05EKSwgdGhlbiB1c2Ug
-dGhhdCBpbmZvcm1hdGlvbiB0bwpjaG9vc2UgdGhlIGNvcnJlY3QgRFRCLgoKLS0gCk1heGltZQoK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+On Thu, Feb 19, 2015 at 12:01:14PM -0600, Rob Herring wrote:
+> On Wed, Feb 18, 2015 at 8:08 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> > On 2/18/2015 6:59 AM, Pantelis Antoniou wrote:
+> >> Implement a method of applying DT quirks early in the boot sequence.
+> >>
+> >> A DT quirk is a subtree of the boot DT that can be applied to
+> >> a target in the base DT resulting in a modification of the live
+> >> tree. The format of the quirk nodes is that of a device tree overlay.
+> >
+> > The use of the word "quirk" is a different mental model for me than what
+> > this patch series appears to be addressing.  I would suggest totally
+> > removing the word "quirk" from this proposal to avoid confusing the
+> > mental models of future generations of kernel folks.
+> 
+> This comes from me as quirks are a different usecase I had in mind,
+> but one that could use a similar mechanism. Although, in the case of
+> quirks, I would expect them to be overlays built into the kernel. It
+> would be more a way to update old dtbs.
+> 
+> > What this patch series seems to be proposing is a method to apply DT
+> > overlays as soon as unflatten_device_tree() completes.  In other words,
+> > making the device tree a dynamic object, that is partially defined by
+> > the kernel during boot.  Well, to be fair, the kernel chooses among
+> > several possible alternatives encoded in the DT blob.  So the device
+> > tree is no longer a static object that describes the hardware of the
+> > system.  It may not sound like a big deal, but it seems to me to be
+> > a fundamental shift in what the device tree blob is.  Something that
+> > should be thought about carefully and not just applied as a patch to
+> > solve a point problem.
+> 
+> I agree. I would not want to see every board for an SOC become an
+> overlay for example. I think it has to be limited to truly plugable
+> h/w (e.g. capes) or minor changes. We just have to define what is
+> minor. :)
+> 
+
+Everything that isn't OIR capable but fixed at boot time. OIR can and
+should be handled with "real" overlays. OIR implies removal; I would
+assume that what is discused here is insertion-only, and runtime removal
+is neither required nor wanted. Or at least that is our use case.
+
+Guenter
