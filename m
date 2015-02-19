@@ -1,72 +1,76 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH 3/4] arm: am33xx: DT quirks for am33xx based beaglebone variants
-Date: Thu, 19 Feb 2015 20:44:39 +0200
-Message-ID: <145DEB3E-A20E-4390-84B1-4B30E7C3D841@antoniou-consulting.com>
-References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com> <1424271576-1952-4-git-send-email-pantelis.antoniou@konsulko.com> <20150219181656.GF32521@atomide.com> <9C7BFC7C-0751-4233-927F-D01AF078704B@antoniou-consulting.com> <20150219183600.GG32521@atomide.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH 1/6] ASoC: max98088: Document DT bindings
+Date: Thu, 19 Feb 2015 19:54:06 +0100
+Message-ID: <54E6314E.5060509@suse.de>
+References: <1424283959-16289-1-git-send-email-afaerber@suse.de>	<1424283959-16289-2-git-send-email-afaerber@suse.de>	<54E5EB36.9020007@collabora.co.uk>	<54E5EF73.2090302@suse.de> <CAD=FV=VoFnbEsKi4mDDkaTrTXboJmm0UNV5iCk1CvV5ndEZtsA@mail.gmail.com> <54E62E1C.4030105@suse.de>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150219183600.GG32521-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <54E62E1C.4030105@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-> On Feb 19, 2015, at 20:36 , Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+Am 19.02.2015 um 19:40 schrieb Andreas F=C3=A4rber:
+> Am 19.02.2015 um 18:48 schrieb Doug Anderson:
+>> On Thu, Feb 19, 2015 at 6:13 AM, Andreas F=C3=A4rber <afaerber@suse.=
+de> wrote:
+>>>> I see that a master clock (mclk) is added in patch 6/6 but the
+>>>> max98088 codec driver does handle this clock.
+>>>>
+>>>> If the SoC XCLKOUT provides the master clock to the max98089
+>>>> codec in Spring like is the case for the max9809{0,5} codecs
+>>>> in the Snow and Peach Pit/Pi Chromebooks then you need to do
+>>>> something along the lines of the following commits:
+>>>>
+>>>> e3048c3d2be5 ASoC: max98095: Add master clock handling
+>>>> b10ab7b838bd ASoC: max98090: Add master clock handling
+>>>>
+>>>> If that's the case you also have to mention in the DT binding
+>>>> doc that "clocks" and "clock-names" are optional properties
+>>>> like Documentation/devicetree/bindings/sound/max9809{0,5}.txt.
+>>>
+>>> When I prepared this patch, I believe it was a straight copy from
+>>> max98090. Sounds like they changed since then.
+>>>
+>>> My 6/6 adopted the mclk clock from your now-cancelled v2 patch for =
+Snow,
+>>> assuming it would be the same on all Chromebooks. I tested that las=
+t
+>>> change by checking for errors in dmesg.
+>>>
+>>> Doug, can you advise on how the clock wiring is for Spring?
+>>
+>> I can confirm that XCLKOUT is connected to the codec MCLK on the
+>> Spring schematics I have.
 >=20
-> * Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> [150219 10:32]:
->>> On Feb 19, 2015, at 20:16 , Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->>>=20
->>> Uhh I don't like the idea of duplicating the i2c-omap.c driver unde=
-r
->>> arch/arm.. And in general we should initialize things later rather
->>> than earlier.
->>>=20
->>> What's stopping doing these quirk checks later on time with just
->>> a regular device driver, something like drivers/misc/bbone-quirks.c=
-?
->>>=20
->>=20
->> We have no choice; we are way early in the boot process, right after
->> the device tree unflattening step.
+> Thanks! I updated max98088 and had it working on first boot, but on
+> second boot it complained about the frequency:
 >=20
-> To me it seems the dt patching part should be done with minimal
-> code before any driver like features..
->=20
+> [    7.896834] max98088 7-0010: revision A
+> [    7.912776] snow-audio sound: HiFi <-> 3830000.i2s mapping ok
+> [    7.919367] max98088 7-0010: Invalid master clock frequency
+> [    7.919429] snow-audio sound: ASoC: Spring-I2S-MAX98089 late_probe=
+()
+> failed: -22
+> [    7.920019] snow-audio sound: snd_soc_register_card failed (-22)
+> [    7.920109] snow-audio: probe of sound failed with error -22
 
-The way it=E2=80=99s done right now is with minimal code. Reading the E=
-EPROM
-is required.
+Reproducible on third boot.
 
->> I=E2=80=99ve toyed with the idea of using early platform devices but=
- the omap-i2c driver
->> would need some tender love and care to make it work, and I didn=E2=80=
-=99t want to get
->> bogged down with i2c driver details at this point.
->=20
-> ..so how about just parse a kernel cmdline for the quirks to apply
-> based on a version string or similar? That can be easily populated
-> by u-boot or set manually with setenv.
->=20
-> That leaves out the need for tinkering with i2c super early in
-> the kernel for revision detection.
->=20
+On a suspicion, the fourth boot I waited for the double-beep of the
+firmware (waiting for Ctrl+d/u), and then it did work.
 
-You assume there=E2=80=99s going to be a bootloader=E2=80=A6
+So it seems the mclk is not always set up properly by the kernel,
+relying on firmware. Who's in charge of setting that clock up?
 
-> Regards,
->=20
-> Tony
+Regards,
+Andreas
 
-Regards
-
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upmany=
+u,
+Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
