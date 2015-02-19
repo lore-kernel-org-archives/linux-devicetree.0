@@ -1,48 +1,72 @@
-From: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
-Date: Thu, 19 Feb 2015 20:03:48 +0100
-Message-ID: <20150219190348.GB24460@cbox>
-References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
- <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7794: add MMCIF DT support
+Date: Thu, 19 Feb 2015 22:13:42 +0300
+Message-ID: <54E635E6.1010409@cogentembedded.com>
+References: <29687119.ELU9MoH02q@wasted.cogentembedded.com> <4040756.88Rqm1nt32@wasted.cogentembedded.com> <20150219161012.GA3864@verge.net.au> <54E61740.8030708@cogentembedded.com> <20150219175458.GA18262@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150219175458.GA18262@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 19, 2015 at 12:23:15PM -0600, Rob Herring wrote:
-> On Tue, Jan 27, 2015 at 1:03 AM, Pranavkumar Sawargaonkar
-> <psawargaonkar-qTEPVZfXA3Y@public.gmane.org> wrote:
-> > In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
-> > in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
-> > size due to size alignment checking in vgic driver for VCPU Control and
-> > VCPU register.
-> >
-> > This patch corrects the sizes to be inline with the hardware spec.
-> 
-> This does not make sense. The GIC regions are still only 4 or 8KB and
-> the h/w description should reflect that. For implementations using
-> gic-400 and the addressing decode trick, the rest of the register
-> range is also not safe to access given it is multiple mapped. Also,
-> this wastes virtual space, but I guess we don't care on 64-bit.
-> 
-> KVM should be fixed to only check base address alignment. Size
-> alignment does not matter (if it does, then you need to fix all
-> register blocks).
-> 
-It matters if you want to ensure that the 64K page you are assigning to
-a guest for the GIC virtual CPU interface contains only GIC virtual CPU
-mappings, and not other random stuff that the guest is not allowed to
-touch.
+On 02/19/2015 08:55 PM, Simon Horman wrote:
 
-How else should this be enforced?
+>>>> Define the generic R8A7794 part of the MMCIF0 device node.
 
--Christoffer
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> Based on the orginal patch by Shinobu Uehara <shinobu.uehara.xc@renesas.com>.
+
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+>>>> ---
+>>>>   arch/arm/boot/dts/r8a7794.dtsi |   11 +++++++++++
+>>>>   1 file changed, 11 insertions(+)
+
+>>>> Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+>>>> ===================================================================
+>>>> --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
+>>>> +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+>>>> @@ -346,6 +346,17 @@
+>>>>   		status = "disabled";
+>>>>   	};
+>>>>
+>>>> +	mmcif0: mmc@ee200000 {
+>>>> +		compatible = "renesas,mmcif-r8a7794", "renesas,sh-mmcif";
+
+>>> Please submit a patch to add "renesas,mmcif-r8a7794" to
+>>> Documentation/devicetree/bindings/mmc/renesas,mmcif.txt.
+>>> I looked and I couldn't find such a change in-tree or in-flight.
+
+>>     That file doesn't match the reality at all. It says:
+
+>> <<
+>> - compatible: must contain one of the following
+>>          - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+>>          - "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+>>          - "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+>>          - "renesas,sh-mmcif" for the generic MMCIF
+>>>>
+
+>> while in reality, the driver only matches on the latter string and doesn't
+>> care for the SoC specific strings.
+
+> By documenting the binding in that file it exists and may be used in DT
+> nodes. It may or may not be used by the driver now or in the future.
+
+    What's the use of binding the driver doesn't understand?
+
+> For better or worse this one way that bindings may be handled.
+
+> Strictly speaking it shouldn't be used in DT before it exists,
+> even only in the documentation. But in this case its just a minor
+> update to an existing scheme so it seems unlikely to be rejected.
+
+    I don't think the minor update will be rejected, I just wanted to say that 
+the binding should be edited to better reflect the reality as well. And it 
+falls on my shoulders, unfortunately. :-)
+
+WBR, Sergei
+
