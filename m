@@ -1,107 +1,97 @@
-From: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
-Subject: Re: [Patch v6 0/2] gpio: add GPIO hogging mechanism
-Date: Thu, 19 Feb 2015 15:46:39 -0600
-Message-ID: <20150219214639.GB8656@deathray>
-References: <AAE35E953C746D4784A1A0C604EFEA714DFBD819@DLEE10.ent.ti.com>
- <20150218172341.GA3851@ti.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq demuxer chip
+Date: Thu, 19 Feb 2015 23:35:54 +0100
+Message-ID: <5225828.OI8hbGqrC4@vostro.rjw.lan>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com> <2502710.nOuZfdq5QP@vostro.rjw.lan> <20150219112346.GA13659@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150218172341.GA3851-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150219112346.GA13659@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 18, 2015 at 11:23:42AM -0600, Benoit Parrot wrote:
-> Gentle ping.
-> 
-> Is there any chance this will make it in 3.21?
-> 
-> Benoit
->
-
-Is there a reason that the pin has to be "hogged"?
-
-Couldn't the pin be released after configuration for eventual use in the userspace?
- 
-> Parrot, Benoit <bparrot-l0cyMroinI0@public.gmane.org> wrote on Wed [2015-Feb-02 17:44:43 -0600]:
-> > This patch set re-introduces the gpio hogging concept first
-> > presented by Boris Brezillion.
-> > This patch set provides a way to initially configure specific GPIO
-> > when the GPIO controller is probed.
-> >  
-> > The actual DT scanning to collect the GPIO specific data is performed
-> > as part of of_gpiochip_add().
-> >  
-> > The purpose of this is to allow specific GPIOs to be configured
-> > without any driver specific code.
-> > This is particularly useful because board design are getting
-> > increasingly complex and given SoC pins can now have more
-> > than 10 mux values a lot of connections are now dependent on
-> > external IO muxes to switch various modes.
-> >  
-> > Specific drivers should not necessarily need to be aware of
-> > what accounts to a specific board implementation. This board level
-> > "description" should be best kept as part of the dts file.
-> >  
-> > Changes since v5:
-> > * Addressed review comment from Linus Walleij
-> > * Replace "state" property back with separate boolean properties
-> > * Renamed helper function
-> > * Refactored pr_* calls to remove "__func__"
-> >  
-> > Changes since v4:
-> > * Addressed review comments from Alexandre Courbot
-> >  
-> > Changes since v3:
-> > * Relocated the non-DT "hog" function to gpiolib.c.
-> > * Rename some of the function to be clearer and remove _ prefixes.
-> > * Replace the gpiod_request/gpiod_put usage with
-> >    gpiochip_request_own_desc/free_own_desc version instead.
-> > * Refactor some of the logic to better handle error condition/reporting
-> > * Renamed the "direction" DT properties to "state".
-> >  
-> > Changes since v2:
-> > * Refactor the gpio-hog mechanism to split the DT related action
-> >    from the actual "hogging" operation.
-> > * This allows non-DT providers to implement hogs as well.
-> > * Added FLAG_IS_HOGGED to mark hogged gpio and make gpiochip removal
-> >    able to release hogged gpio.
-> > * Similarly to the hogging, the cleanup is performed as part of
-> >    of_gpiochip_remove
-> >  
-> > Changes since v1:
-> > * Split the devicetree bindings documentation in its own patch.
-> > * Refactor the gpio-hog mechanism as private functions meant to
-> >    be to invoked from of_gpiochip_add().
-> >  
-> >  
-> > Benoit Parrot (2):
-> >   gpio: add GPIO hogging mechanism
-> >   gpio: Document GPIO hogging mechanism
-> >  
-> > Documentation/devicetree/bindings/gpio/gpio.txt |  30 ++++++
-> > drivers/gpio/gpiolib-of.c                       | 111 +++++++++++++++++++++
-> > drivers/gpio/gpiolib.c                          | 124 ++++++++++++++++++++----
-> > drivers/gpio/gpiolib.h                          |   3 +
-> > 4 files changed, 249 insertions(+), 19 deletions(-)
-> >  
-> > --
-> > 1.8.5.1
-> >  
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >  
+On Thursday, February 19, 2015 11:23:46 AM Mark Rutland wrote:
+> On Thu, Feb 19, 2015 at 01:16:50AM +0000, Rafael J. Wysocki wrote:
+> > On Monday, February 16, 2015 12:23:43 PM Mark Rutland wrote:
+> > > [...]
+> > > 
+> > > > > The "suspend" part is kind of a distraction to me here, because that really
+> > > > > only is about sharing an IRQ with a timer and the "your interrupt handler
+> > > > > may be called when the device is suspended" part is just a consequence of that.
+> > > > > 
+> > > > > So IMO it's better to have "TIMER" in the names to avoid encouraging people to
+> > > > > abuse this for other purposes not related to timers.
+> > > > 
+> > > > Sorry to be late to the bike-shed party, but what about:
+> > > 
+> > > [...]
+> > > 
+> > > > arch/arm/mach-omap2/mux.c:		omap_hwmod_mux_handle_irq, IRQF_SHARED | IRQF_NO_SUSPEND,
+> > > > arch/arm/mach-omap2/pm34xx.c:		_prcm_int_handle_io, IRQF_SHARED | IRQF_NO_SUSPEND, "pm_io",
+> > > > drivers/pinctrl/pinctrl-single.c:				  IRQF_SHARED | IRQF_NO_SUSPEND,
+> > > 
+> > > These are chained IRQ handlers. If any of these have a chained timer irq
+> > > then the IRQF_NO_SUSPEND may be legitimate. I can't imagine why these
+> > > would be shared, however.
+> > > 
+> > > It also looks like these abuse IRQF_NO_SUSPEND for wakeup interrupts.
+> > > 
+> > > > drivers/rtc/rtc-pl031.c:	.irqflags = IRQF_SHARED | IRQF_NO_SUSPEND,
+> > > 
+> > > This looks to be an abuse and should use {enable,disable}_irq_wake.
+> > > 
+> > > However, we'd then need to handle mismatch with wakeup interrupts (which
+> > > is effectively the same problem as sharing with a timer).
 > > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > IRQF_NO_SUSPEND and wakeup fundamentally don't match due to the way
+> > wakeup is implemented in the IRQ core now.
+> > 
+> > Unless drivers with IRQF_NO_SUSPEND do the wakeup behind the core's back
+> > which is just disgusting and should never happen.
+> 
+> I completely agree that using IRQF_NO_SUSPEND in that manner is a
+> disgusting abuse. It seems like some drivers are abusing it for wakeup,
+> and those need to be corrected.
+> 
+> If those are corrected, the same issue with mismatch will happen with
+> those wakeup interrupts, and we need to fix that somehow given people
+> seem to already be relying on being able to share a line with a wakeup
+> device.
+
+The way we handle wakeup interrupts in the core prevents that, because
+wakeup is handled at the IRQ level rather than at a handler (irqaction)
+level.  Interrupt handlers from irqactions are not run for wakeup
+interrupts at all after suspend_device_irqs(), so if you have anyone
+sharing an IRQ with a wakeup source, their interrupt handler won't be
+run anyway then.
+
+> I propose we add a new IRQF_BIKESHED, meaning that this interrupt line
+> may be shared with an IRQF_NO_SUSPEND or wakeup interrupt handler.
+
+As I said, sharing an IRQ with a wakeup source is OK (worst case you'll
+cause spurious wakeup interrupts to occur if your device is not suspended
+properly).  The problem is *entirely* about IRQF_NO_SUSPEND.
+
+Moreover, I don't think any watchdogs have a legitimate reason to use
+IRQF_NO_SUSPEND, because quite frankly if you don't want your watchdog
+to abort system suspends in progress, then you have no reason to run that
+watchdog during system suspend at all.  Conversely, if you want the watchdog
+to abort system suspends in progress, its wakeup interrupt should be a wakeup
+one.
+
+So I claim that the only things having legitimate reasons to ever use
+IRQF_NO_SUSPEND are (a) timers and (b) IPIs.  There really are no other
+cases to worry about in my view, but I may be overlooking something.
+
+Anyway, I wouldn't like to add flags allowing driver writers to do fishy
+things in a hush-hush manner.  The warning trigger is there for a good
+reason and if we allow it to be avoided, that has to be for a good reason
+too.  In other words, it shouldn't be too easy to do that.
+
+
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
