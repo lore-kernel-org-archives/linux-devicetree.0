@@ -1,74 +1,29 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/3] Expose more controls from
-	tegra-max98090
-Date: Sat, 21 Feb 2015 23:50:32 +0900
-Message-ID: <20150221145031.GX6236@finisterre.sirena.org.uk>
-References: <1423666200-32365-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH/RFC v11 05/20] mfd: max77693: Modify flash cell
+ name identifiers
+Date: Thu, 19 Feb 2015 11:21:30 +0200
+Message-ID: <54E5AB1A.2040306@iki.fi>
+References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com> <1424276441-3969-6-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6848528231171760507=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1423666200-32365-1-git-send-email-tomeu.vizoso@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, Dylan Reid <dgreid@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1424276441-3969-6-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Jacek Anaszewski wrote:
+> Change flash cell identifiers from max77693-flash to max77693-led
+> to avoid confusion with NOR/NAND Flash.
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
 
---===============6848528231171760507==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0btr6/5+bhBdui6J"
-Content-Disposition: inline
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-
---0btr6/5+bhBdui6J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 11, 2015 at 03:49:51PM +0100, Tomeu Vizoso wrote:
-> Hello,
->=20
-> we need some more controls in userspace so policy can be applied at events
-> such as microphone and headphone jacks being plugged in, to be used by
-> Tegra-based Chromebooks.
-
-I see that your "v2" which only added an ack was sent less than a day
-after this initial posting.  Don't do that, it just adds to the mail
-volume.  Only resend if it's been a while and there's been no review or
-if you've got an actual change to make otherwise the mail isn't really
-adding anything.
-
---0btr6/5+bhBdui6J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU6Js3AAoJECTWi3JdVIfQoFgH/3O/YE4FolWux6/rkCGubSQe
-oesUD9BM/leyQ/Qf6Su2re2bRWCGVav4Fw+khRGtYBaV0QnG0pKal9WdM8MZrZGt
-1rj+wmaaSI/GGCRjE7dTaW+sVpMDrMULrLBOQ3cAYYISbvSHl98Kq99Uh6mEPhp9
-KXqF6N71CIr0yt6IzxjDbI69imo2+wKTQWxqz3Rs+HKGi2DOeynsztwwbYzAbjC/
-pYaGIYAGLqRGNgXRSe+nOQegoKlfNOaymHMc5iHqTfKYWcauHttbCD/RYcNlf2Oh
-olc9yvGTZqBKzBhW57q/PQ3/8OzGLPWdd3YluZjljkYy2E2QYHtS8Whe3+otCaM=
-=ctjX
------END PGP SIGNATURE-----
-
---0btr6/5+bhBdui6J--
-
---===============6848528231171760507==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6848528231171760507==--
+-- 
+Sakari Ailus
+sakari.ailus@iki.fi
