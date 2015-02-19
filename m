@@ -1,75 +1,63 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 5/6] ASoC: samsung: Extend Snow driver to
-	support max98089
-Date: Thu, 19 Feb 2015 18:44:25 +0900
-Message-ID: <20150219094425.GB3198@finisterre.sirena.org.uk>
-References: <1424283959-16289-1-git-send-email-afaerber@suse.de>
- <1424283959-16289-6-git-send-email-afaerber@suse.de>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] clk: dt: Introduce always-on clock domain documentation
+Date: Thu, 19 Feb 2015 10:55:16 +0100
+Message-ID: <CAMuHMdW+np0_zUhBOXVBN_7ztM5Z=xN5-mE-P_wR35BggQxerQ@mail.gmail.com>
+References: <1424276101-30137-1-git-send-email-lee.jones@linaro.org>
+	<1424276101-30137-5-git-send-email-lee.jones@linaro.org>
+	<CAL_Jsq+r1BKt5B9FNPG+Y0Oi1-3RGNmRUDbpX_uDJwr45bxMXA@mail.gmail.com>
+	<20150218171230.GA30676@x1>
+	<CAL_JsqJ0sfQ-OQvYjL3X3ebH4p9HkN4iy35iT7i9S2d+yz9zYg@mail.gmail.com>
+	<20150218215435.GA32415@x1>
+	<CAMuHMdU6DpZoi-q3pUFUX8xjnXGfTqfEYyzajZZm=-qZTk1qHQ@mail.gmail.com>
+	<20150219094200.GB12212@x1>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6861968169231599671=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1424283959-16289-6-git-send-email-afaerber@suse.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Kukjin Kim <kgene@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150219094200.GB12212@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee,
 
---===============6861968169231599671==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
-Content-Disposition: inline
+On Thu, Feb 19, 2015 at 10:42 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> What kind of clocks are these? What do they control?
+>> Memory controllers? Bus controllers?
+>>
+>> They must control some device(s), so there should be one or more device
+>> nodes in DT that reference these clocks.
+>> As soon as that information is in DT, support can be added to Linux to
+>> make sure the "critical" clocks stay enabled, either through a real driver,
+>> or through platform code.
+>
+> Some do, some don't.  For instance, we have one clock which controls
+> SPI and I2C that must not be turned off.  We discovered this then when
+> a suspend was attempted and the board refused to resume.  This clock
+> also runs one of the critical interconnects that runs from the a9.  It
+> would be wrong to remove the clk_disable() attempt from the SPI/I2C
+> drivers because the same IP on another board might be controlled by a
+> different clock which is able to be gated.
+>
+> There are also clocks which control other interconnects that are not
+> connected to any device drivers.  If we fail to take references for
+> them before clk_disable_unused() is called, again the board hangs.  We
+> even lose JTAG support.
 
+Interconnects are buses. Can't you represent those buses in the DT
+hierarchy, and give them clocks properties?
 
---3uo+9/B/ebqu+fSQ
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Gr{oetje,eeting}s,
 
-On Wed, Feb 18, 2015 at 07:25:58PM +0100, Andreas F=E4rber wrote:
+                        Geert
 
->  static const struct of_device_id snow_of_match[] =3D {
-> +	{ .compatible =3D "google,snow-audio-max98089", },
->  	{ .compatible =3D "google,snow-audio-max98090", },
->  	{ .compatible =3D "google,snow-audio-max98091", },
->  	{ .compatible =3D "google,snow-audio-max98095", },
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-Since we completely ignore the CODEC in the property might it not be
-better to just add a plain old snow-audio compatible and bind to that,
-that way we don't need these driver updates?  Just the "snow" bit should
-be enough to know it's one of this class of machines.
-
---3uo+9/B/ebqu+fSQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU5bB5AAoJECTWi3JdVIfQrvMH/jQFZat83HOXGQ6uN6UfGyOp
-EL/5IynL/XJOM9WRGk/9LCH2BITnrIECC4k2zIOflnzaCe0aLspAY9cdC2XjZroM
-iiRrOAC0a8OM9GmshJt1uatdoIdAJF+Xs2zaxqXzEgqaIdDtUJSG0rjlo/xA0+gU
-ITpKI9u5fOTO6GpEskBCbs28EL9zW1lAXciMm2aiEbRdPlhHBywmroBQzjuI3RlE
-hkehhi2xSWrMqbN9gbEks3kRB/2AUvCjeCFDwlp4Fuid3DsP7QEKAYR2rLvCU8IN
-ZpJ+7cqgzvK3l/lSlkJ9RAeKHIYxsux9U/OZWFm2873BJ/MhFs1jigTko67W36s=
-=o+MI
------END PGP SIGNATURE-----
-
---3uo+9/B/ebqu+fSQ--
-
---===============6861968169231599671==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6861968169231599671==--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
