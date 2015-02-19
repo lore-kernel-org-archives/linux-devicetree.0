@@ -1,66 +1,98 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH/RFC 2/2] regulator: da9210: Add optional interrupt support
-Date: Thu, 19 Feb 2015 19:33:46 +0900
-Message-ID: <20150219103346.GE3198@finisterre.sirena.org.uk>
-References: <1424175072-14643-1-git-send-email-geert+renesas@glider.be>
- <1424175072-14643-2-git-send-email-geert+renesas@glider.be>
- <20150217140110.GV9110@finisterre.sirena.org.uk>
- <CAMuHMdXOFVZWn+u4wyz4Ro_kS_LaWc4Mwrq-XZU3dPpjmX2E3w@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 4/4] clk: dt: Introduce always-on clock domain documentation
+Date: Thu, 19 Feb 2015 11:35:58 +0100
+Message-ID: <CAMuHMdXYT6HvKhpi1mxF7SJBDyLVHw2W2Rxe1poDrdwKR0nu=w@mail.gmail.com>
+References: <1424276101-30137-5-git-send-email-lee.jones@linaro.org>
+	<CAL_Jsq+r1BKt5B9FNPG+Y0Oi1-3RGNmRUDbpX_uDJwr45bxMXA@mail.gmail.com>
+	<20150218171230.GA30676@x1>
+	<CAL_JsqJ0sfQ-OQvYjL3X3ebH4p9HkN4iy35iT7i9S2d+yz9zYg@mail.gmail.com>
+	<20150218215435.GA32415@x1>
+	<CAMuHMdU6DpZoi-q3pUFUX8xjnXGfTqfEYyzajZZm=-qZTk1qHQ@mail.gmail.com>
+	<20150219094200.GB12212@x1>
+	<CAMuHMdW+np0_zUhBOXVBN_7ztM5Z=xN5-mE-P_wR35BggQxerQ@mail.gmail.com>
+	<20150219101106.GD12212@x1>
+	<CAMuHMdW=kV+zx=Uq7y7SyrH3eQyWsdfWjuLFMAKQjPhX-QaPPA@mail.gmail.com>
+	<20150219102810.GE12212@x1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="d8Lz2Tf5e5STOWUP"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXOFVZWn+u4wyz4Ro_kS_LaWc4Mwrq-XZU3dPpjmX2E3w@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Support Opensource <support.opensource@diasemi.com>, Liam Girdwood <lgirdwood@gmail.com>, Steve Twiss <stwiss.opensource@diasemi.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150219102810.GE12212@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, kernel@stlinux.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee,
 
---d8Lz2Tf5e5STOWUP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 19, 2015 at 11:28 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
+>> On Thu, Feb 19, 2015 at 11:11 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>> > On Thu, 19 Feb 2015, Geert Uytterhoeven wrote:
+>> >> On Thu, Feb 19, 2015 at 10:42 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>> >> >> What kind of clocks are these? What do they control?
+>> >> >> Memory controllers? Bus controllers?
+>> >> >>
+>> >> >> They must control some device(s), so there should be one or more device
+>> >> >> nodes in DT that reference these clocks.
+>> >> >> As soon as that information is in DT, support can be added to Linux to
+>> >> >> make sure the "critical" clocks stay enabled, either through a real driver,
+>> >> >> or through platform code.
+>> >> >
+>> >> > Some do, some don't.  For instance, we have one clock which controls
+>> >> > SPI and I2C that must not be turned off.  We discovered this then when
+>> >> > a suspend was attempted and the board refused to resume.  This clock
+>> >> > also runs one of the critical interconnects that runs from the a9.  It
+>> >> > would be wrong to remove the clk_disable() attempt from the SPI/I2C
+>> >> > drivers because the same IP on another board might be controlled by a
+>> >> > different clock which is able to be gated.
+>> >> >
+>> >> > There are also clocks which control other interconnects that are not
+>> >> > connected to any device drivers.  If we fail to take references for
+>> >> > them before clk_disable_unused() is called, again the board hangs.  We
+>> >> > even lose JTAG support.
+>> >>
+>> >> Interconnects are buses. Can't you represent those buses in the DT
+>> >> hierarchy, and give them clocks properties?
+>> >
+>> > So instead of this nice succinct, simple, cover all bases
+>> > (interconnects was just an example, there are bound to be others),
+>> > generic framework, you are suggesting to write drivers for devices
+>> > which other than "don't turn my clocks off", Linux can't actually see
+>> > or control?
+>>
+>> DT describes the hardware, not behavior.
+>
+> Okay so ...
+>
+> /*
+>  * ICNs are not visible/controllable in Linux, but references to their
+>  * clocks must be obtained and retained or the platform will become
+>  * irrecoverably unresponsive.
+>  */
+> interconnects@0 {
+>        compatible = "always-on-clk-domain";
 
-On Tue, Feb 17, 2015 at 03:18:40PM +0100, Geert Uytterhoeven wrote:
-> Hi Mark,
->=20
-> On Tue, Feb 17, 2015 at 3:01 PM, Mark Brown <broonie@kernel.org> wrote:
-> > On Tue, Feb 17, 2015 at 01:11:12PM +0100, Geert Uytterhoeven wrote:
+st,...flexgen...
 
-> >>   - Does there exist any regulator notifier event that corresponds to
-> >>     DA9210_E_VMAX?
+>        clocks = <&clk_s_c0_flexgen CLK_ICN_SBC>,
+>                 <&clk_s_c0_flexgen CLK_ICN_LMI>,
+>                 <&clk_s_c0_flexgen CLK_ICN_CPU>,
+>                 <&clk_s_c0_flexgen CLK_TX_ICN_DMU>;
+> };
 
-> > What does that mean, I might be able to tell you?  I guess it might be
-> > an over voltage event...
+And then you can have platform code that binds against st,...flexgen...,
+and enables all referenced clocks.
 
-> Possibly. There's no regulator notifier event for that yet, though.
-> Shall I add one?
+Alternatively, if you have power domains, you can add a reference to
+the power domain, and let the power domain driver handle it.
 
-I'm wondering if it may be better to change the first notification to
-just a general "out of regulation" one, though the consequences of over
-voltage are usually different to under voltage if that is what's going
-on here.
+Gr{oetje,eeting}s,
 
-> Anyway, let's wait for confirmation from Dialog...
+                        Geert
 
-I guess - is there really no indication in the datasheet?
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---d8Lz2Tf5e5STOWUP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU5bwKAAoJECTWi3JdVIfQ77IH/2/IzJD58yXSM+ZxcUoUne8m
-VzkM74eWtVjKuEWsn3wRKxZRllzqMGssoljCPvswQy5iergLAFzVCOsBTjzDUz1s
-u7iiLGx12anOwcLDvO6PUNNRi/ZQuuQ2bKgOcOJ4Cny3/Ltt2tpKrGvEwo+3BooF
-pVgqY3y/z8UahCTFsXIEzNvOb0xv03aqpQsGCei/TtyzcrY+fdVivVM5POxYFcu9
-Zm4nTYGWHdZX+GyX4IZXUWvi1u2BrHha+3d6rbxZULvaeqdw91iRrbAvZeaMZjPd
-qb8d4qVxkrKm+CV41XgXwMlD5amEWCmHkORPsPN6sE2qraXSeazwCm/JrTANqT4=
-=vcEG
------END PGP SIGNATURE-----
-
---d8Lz2Tf5e5STOWUP--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
