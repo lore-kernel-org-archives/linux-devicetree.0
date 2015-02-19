@@ -1,53 +1,30 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
- leds: flash: document sysfs interface
-Date: Thu, 19 Feb 2015 13:40:43 -0800
-Message-ID: <20150219214043.GB29875@kroah.com>
-References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
- <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
- <20150218224747.GA3999@amd>
- <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 0/2] Add R8A7790 CAN DT support
+Date: Fri, 20 Feb 2015 00:43:33 +0300
+Message-ID: <54E65905.7090009@cogentembedded.com>
+References: <28994794.h3WeokSSG3@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <28994794.h3WeokSSG3@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 19, 2015 at 11:02:04AM +0200, Sakari Ailus wrote:
-> On Wed, Feb 18, 2015 at 11:47:47PM +0100, Pavel Machek wrote:
-> > 
-> > On Wed 2015-02-18 17:20:22, Jacek Anaszewski wrote:
-> > > Add a documentation of LED Flash class specific sysfs attributes.
-> > > 
-> > > Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> > > Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> > > Cc: Bryan Wu <cooloney@gmail.com>
-> > > Cc: Richard Purdie <rpurdie@rpsys.net>
-> > 
-> > NAK-ed-by: Pavel Machek
-> > 
-> > > +What:		/sys/class/leds/<led>/available_sync_leds
-> > > +Date:		February 2015
-> > > +KernelVersion:	3.20
-> > > +Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-> > > +Description:	read/write
-> > > +		Space separated list of LEDs available for flash strobe
-> > > +		synchronization, displayed in the format:
-> > > +
-> > > +		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
-> > 
-> > Multiple values per file, with all the problems we had in /proc. I
-> > assume led_id is an integer? What prevents space or dot in led name?
-> 
-> Very good point. How about using a newline instead? That'd be a little bit
-> easier to parse, too.
+On 01/06/2015 12:31 AM, Sergei Shtylyov wrote:
 
-No, please make it one value per-file, which is what sysfs requires.
+>     Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> 'renesas-devel-20141231-v3.19-rc2' tag. Here we add the CAN device tree support
+> for the R8A7790 SoC (unfortunately, it's impossible to test CAN on the Lager
+> board). It depends on the clk driver RCAN clock patch reposted today in order
+> to work.
 
-thanks,
+    Simon, now that this patch has been merged, could you merge this patchset too?
 
-greg k-h
+> [1/2] ARM: shmobile: r8a7790: add CAN clocks
+> [2/2] ARM: shmobile: r8a7790: add CAN DT support
+
+WBR, Sergei
+
