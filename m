@@ -1,51 +1,75 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: amba uarts - arm type uarts fifo size provided by device tree
-Date: Thu, 19 Feb 2015 00:34:09 +0000
-Message-ID: <20150219003409.GX8656@n2100.arm.linux.org.uk>
-References: <1424285593-2886-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <20150218190601.GI29429@leverpostej> <54E4E916.1010009@linaro.org>
+From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Subject: Re: [PATCH 1/2] phy: usbphy: Add dt documentation for Broadcom Cygnus
+ USB PHY driver
+Date: Wed, 18 Feb 2015 16:46:48 -0800
+Message-ID: <54E53278.70705@broadcom.com>
+References: <1424200821-16368-1-git-send-email-arun.ramamurthy@broadcom.com> <2797126.uqvyZJisPk@wuerfel> <54E3AD2E.8050902@broadcom.com> <11865413.8NsXkQ6AUR@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <54E4E916.1010009@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <11865413.8NsXkQ6AUR@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Jonathan Richardson <jonathar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Dmitry Torokhov <dtor@google.com>, Kumar Gala <galak@codeaurora.org>, Anatol Pomazau <anatol@google.com>, stern@rowland.harvard.edu
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 18, 2015 at 02:33:42PM -0500, Jorge Ramirez-Ortiz wrote:
-> On 02/18/2015 02:06 PM, Mark Rutland wrote:
-> > Hi,
-> >
-> > Please Cc lakml for patches in this area in future.
-> >
-> > On Wed, Feb 18, 2015 at 06:53:11PM +0000, Jorge Ramirez-Ortiz wrote:
-> >> [PATCH 1/2] Documentation: bindings: add optional fifo size property
-> >> [PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present
-> >>
-> >>
-> >> These patches aim at resolving an issue present on some of the amba pl011
-> >> uarts.  
-> > Which systems are affected? Neither of your two patches add the property
-> > to any dts file.
-> 
-> 
-> yes, the system affected is still under revision (I should have mentioned)
-> https://lkml.org/lkml/2015/2/5/144
 
-Sorry, I can't follow that thread.  What FIFO size do your UARTs have?
-What is the full ID of the UARTs?
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+On 15-02-18 07:15 AM, Arnd Bergmann wrote:
+> On Tuesday 17 February 2015 13:05:50 Arun Ramamurthy wrote:
+>> On 15-02-17 12:53 PM, Arnd Bergmann wrote:
+>>> On Tuesday 17 February 2015 12:00:49 Arun Ramamurthy wrote:
+>>>> Arnd, I patched the ehci and ohci driver to accept multiple phys so they
+>>>> require different names and cannot both be "usb". That patch was
+>>>> accepted by Alen Stern but I did not update the bindings documentation.
+>>>> I will send out another patch for that. Could we go with the naming
+>>>> scheme of "usb" + "p" + port number or do you have other suggestions?
+>>>
+>>> I don't have a good idea, but I think it would be best if the first
+>>> phy could remain named "usb" for compatibility with the existing binding.
+>>>
+>> The patch was written in a way that all the existing and new drivers can
+>> continue to use "usb" if they are using only one phy so that we remain
+>> compatible. The names need to be different only if more than one phy is
+>> specified. In such cases i don't think the first phy should be "usb" as
+>> it would be confusing to have
+>>          phy-names = "usb","usbp1"
+>
+> I see your patch now, as 7e7a0e67f2c ("usb: ehci-platform: add support for
+> multiple phys per controller"), and I'm not too happy about the way you
+> did this.
+
+> We already concluded that there should have been a binding change
+> to go along with this, and that would have caught the fact that you
+> circumvent the API here by reading the phy names manually. That
+> part should never have made it into the kernel.
+>
+> I think we can do this either by defining specific names for the
+> phy, or by changing the generic PHY binding to allow anonymous
+> phy references (leaving out "phy-names" entirely), and adding a
+> proper API for that.
+>
+Thanks Arnd, I will wait for Alan's comments before proceeding. I am 
+happy to patch the ehci-platform driver to use a new api instead of 
+devm_phy_get if that is the best option.
+
+>> Should I run this by Alan Stern?
+>
+> I've added him to Cc here. He clearly didn't know the background about
+> the DT binding change, and should not need to, but he may have an opinion
+> on what names we should use.
+>
+
+>>> What is the reason for having two phys in your case? Are these
+>>> identical phy devices connected to a single controller or do they
+>>> server different purposes?
+>>>
+>> Yes, we have three identical phys connected to a single host controller
+>> and one of the phys is also connected to the device controller
+>
+> Ok, no problem with that, let's just make sure we come up with a
+> good binding for it.
+>
+> 	Arnd
+>
