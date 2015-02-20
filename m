@@ -1,58 +1,138 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
- if no bestdiv is normally found
-Date: Fri, 20 Feb 2015 19:20:43 +0000
-Message-ID: <20150220192043.GM8656@n2100.arm.linux.org.uk>
-References: <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
- <20150212093356.GR12209@pengutronix.de>
- <20150212103944.GA1290@victor>
- <20150212122405.GW12209@pengutronix.de>
- <20150212125646.GT8656@n2100.arm.linux.org.uk>
- <20150212134131.GX12209@pengutronix.de> <54DE0BB8.7070004@ti.com>
- <20150213185713.GA12209@pengutronix.de>
- <20150216112724.GN8656@n2100.arm.linux.org.uk>
- <20150220191306.421.58746@quantum>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
+Date: Fri, 20 Feb 2015 19:25:37 +0000
+Message-ID: <54E78A31.9020306@linaro.org>
+References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20150220191306.421.58746@quantum>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mike Turquette <mturquette@linaro.org>
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, andy.yan@rock-chips.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMjAsIDIwMTUgYXQgMTE6MTM6MDZBTSAtMDgwMCwgTWlrZSBUdXJxdWV0dGUg
-d3JvdGU6Cj4gUXVvdGluZyBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggKDIwMTUtMDItMTYgMDM6
-Mjc6MjQpCj4gPiBPbiBGcmksIEZlYiAxMywgMjAxNSBhdCAwNzo1NzoxM1BNICswMTAwLCBTYXNj
-aGEgSGF1ZXIgd3JvdGU6Cj4gPiA+IEkgYWdyZWUgdGhhdCBpdCdzIGEgYml0IG9kZCwgYnV0IEkg
-dGhpbmsgaXQgaGFzIHRvIGJlIGxpa2UgdGhpcy4KPiA+ID4gQ29uc2lkZXIgdGhhdCB5b3UgcmVx
-dWVzdCBhIHJhdGUgb2YgMTAwSHosIGJ1dCB0aGUgY2xvY2sgY2FuIG9ubHkKPiA+ID4gcHJvZHVj
-ZSA5OS41SHosIHNvIGR1ZSB0byByb3VuZGluZyBjbGtfcm91bmRfcmF0ZSgpIHJldHVybnMgOTlI
-ei4KPiA+ID4gTm93IHdoZW4geW91IHJlcXVlc3QgOTlIeiBmcm9tIGNsa19zZXRfcmF0ZSgpIHRo
-ZSA5OS41SHogdmFsdWUKPiA+ID4gY2FuJ3QgYmUgdXNlZCBiZWNhdXNlIGl0J3MgdG9vIGhpZ2gu
-Cj4gPiAKPiA+IE1hdGggcm91bmRpbmcgcnVsZXMgbm9ybWFsbHkgc3RhdGUgdGhhdCBhbnl0aGlu
-ZyBvZiAuNSBhbmQgZ3JlYXRlcgo+ID4gc2hvdWxkIGJlIHJvdW5kZWQgdXAsIG5vdCByb3VuZGVk
-IGRvd24uICBTbywgZm9yIDk5LjVIeiwgeW91IHJlYWxseQo+ID4gb3VnaHQgdG8gYmUgcmV0dXJu
-aW5nIDEwMEh6LCBub3QgOTlIei4KPiA+IAo+ID4gSG93ZXZlciwgeW91IGRvIGhhdmUgYSBwb2lu
-dCBmb3IgOTkuNEh6LCB3aGljaCB3b3VsZCBiZSByZXR1cm5lZCBhcwo+ID4gOTlIeiwgYW5kIHdo
-ZW4gc2V0LCBpdCB3b3VsZCByZXN1bHQgaW4gc29tZXRoaW5nIHdoaWNoIGlzbid0IDk5LjRIei4K
-PiAKPiBNb3JlIHByYWN0aWNhbGx5LCB0aGlzIGFnYWluIHJhaXNlcyB0aGUgaXNzdWUgb2Ygd2hl
-dGhlciBvciBub3QgdW5zaWduZWQKPiBsb25nIHJhdGUgc2hvdWxkIGJlIGluIG1pbGxpaGVydHog
-b3Igc29tZXRoaW5nIG90aGVyIHRoYW4gaGVydHouCgpZb3Ugc3RpbGwgZ2V0IHRoZSBzYW1lIGlz
-c3VlIGlmIGl0J3MgbWlsbGloZXJ0ei4gIFRha2UgMTAgMi8zcmRzIEh6LgpJcyAxMC42NjYgSHog
-bGVzcyB0aGFuIDEwIDIvM3JkcyBIej8KCi0tIApGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBs
-aW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBrYnBzIHVwCmFjY29yZGluZyB0byBz
-cGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+
+
+On 20/02/15 17:21, Rob Herring wrote:
+> On Thu, Feb 19, 2015 at 11:08 AM, Srinivas Kandagatla
+> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>
+>> Up until now, EEPROM drivers were stored in drivers/misc, where they all had to
+>> duplicate pretty much the same code to register a sysfs file, allow in-kernel
+>> users to access the content of the devices they were driving, etc.
+>>
+>> This was also a problem as far as other in-kernel users were involved, since
+>> the solutions used were pretty much different from on driver to another, there
+>> was a rather big abstraction leak.
+>>
+>> This introduction of this framework aims at solving this. It also introduces DT
+>> representation for consumer devices to go get the data they require (MAC
+>> Addresses, SoC/Revision ID, part numbers, and so on) from the EEPROMs.
+>>
+>> Having regmap interface to this framework would give much better
+>> abstraction for eeproms on different buses.
+>>
+>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> [srinivas.kandagatla: Moved to regmap based and cleanedup apis]
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/eeprom/eeprom.txt          |  48 ++++
+>>   drivers/Kconfig                                    |   2 +
+>>   drivers/Makefile                                   |   1 +
+>>   drivers/eeprom/Kconfig                             |  19 ++
+>>   drivers/eeprom/Makefile                            |   9 +
+>>   drivers/eeprom/core.c                              | 290 +++++++++++++++++++++
+>>   include/linux/eeprom-consumer.h                    |  73 ++++++
+>>   include/linux/eeprom-provider.h                    |  51 ++++
+>
+> Who is going to be the maintainer for this?
+
+Am happy to be one.
+
+>
+>>   8 files changed, 493 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/eeprom/eeprom.txt
+>>   create mode 100644 drivers/eeprom/Kconfig
+>>   create mode 100644 drivers/eeprom/Makefile
+>>   create mode 100644 drivers/eeprom/core.c
+>>   create mode 100644 include/linux/eeprom-consumer.h
+>>   create mode 100644 include/linux/eeprom-provider.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+>> new file mode 100644
+>> index 0000000..9ec1ec2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+>
+> Please make bindings a separate patch.
+Sure, Will do it in next version.
+
+>
+>> @@ -0,0 +1,48 @@
+>> += EEPROM Data Device Tree Bindings =
+>> +
+>> +This binding is intended to represent the location of hardware
+>> +configuration data stored in EEPROMs.
+>> +
+>> +On a significant proportion of boards, the manufacturer has stored
+>> +some data on an EEPROM-like device, for the OS to be able to retrieve
+>> +these information and act upon it. Obviously, the OS has to know
+>> +about where to retrieve these data from, and where they are stored on
+>> +the storage device.
+>> +
+>> +This document is here to document this.
+>> +
+>> += Data providers =
+>> +
+>> +Required properties:
+>> +#eeprom-cells: Number of cells in an eeprom specifier; The common
+>> +               case is 2.
+>
+> We already have eeproms in DTs, it would be nice to be able to support
+> them with this framework as well.
+
+Yes, I can see more than 60% of them are atmel,at24* eeproms in DT. We 
+have some plans to migrate at24 and at25 eeproms to this framework once 
+the the framework itself is accepted.
+
+>
+>> +
+>> +For example:
+>> +
+>> +       at24: eeprom@42 {
+>> +               #eeprom-cells = <2>;
+>> +       };
+>> +
+>> += Data consumers =
+>> +
+>> +Required properties:
+>> +
+>> +eeproms: List of phandle and data cell specifier triplet, one triplet
+>> +        for each data cell the device might be interested in. The
+>> +        triplet consists of the phandle to the eeprom provider, then
+>> +        the offset in byte within that storage device, and the length
+>> +        in byte of the data we care about.
+>
+> The problem with this is it assumes you know who the consumer is and
+> that it is a DT node. For example, how would you describe a serial
+> number?
+Correct me if I miss understood.
+Is serial number any different?
+Am hoping that the eeprom consumer would be aware of offset and size of 
+serial number in the eeprom
+
+Cant the consumer do:
+
+eeprom-consumer {
+	eeproms = <&at24 0 4>;
+	eeprom-names = "device-serial-number";
+};
+
+--srini
+
+>
+> Rob
+>
