@@ -1,86 +1,96 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
-Date: Fri, 20 Feb 2015 10:48:18 -0800
-Message-ID: <20150220184818.GC26698@roeck-us.net>
-References: <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com>
- <20150218173115.GG29429@leverpostej>
- <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com>
- <54E613E7.2020405@gmail.com>
- <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com>
- <54E61DD2.3060002@gmail.com>
- <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com>
- <54E742F2.80506@hurleysoftware.com>
- <20150220164753.GC22752@roeck-us.net>
- <54E77876.9020500@hurleysoftware.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
+Date: Fri, 20 Feb 2015 19:00:22 +0000
+Message-ID: <54E78446.8050800@linaro.org>
+References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <20150220174641.GI8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54E77876.9020500-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150220174641.GI8656@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, broonie@kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 20, 2015 at 01:09:58PM -0500, Peter Hurley wrote:
-> Hi Guenter,
-> 
-> On 02/20/2015 11:47 AM, Guenter Roeck wrote:
-> 
-> [...]
-> 
-> > I am open to hearing your suggestions for our use case, where the CPU card with
-> > the eeprom is manufactured separately from its carier cards.
-> 
-> I think your use case may be more compelling than two flavors of Beaglebone
-> (one of which is pretty much a dead stick), but it's also less clear what your
-> design constraints are (not that I really want to know, 'cause I don't).
-> 
-> But the logical extension of this is an N-way dtb that supports unrelated SOCs,
-> and I think most would agree that's not an acceptable outcome.
-> 
-With this logic you can pretty much refuse to accept anything new, anywhere.
-Including everything old, for that matter.
 
-Food can be abused to poison people, therefore no one should be permitted to
-distribute food. Houses can be abused to falsely imprison people, therefore
-no one should live in houses. And don't even start talking about guns.
-Everything can be abused, therefore we should not do anything.
 
-Discussions about possible abuse are for sure valid, and reducing the potential
-for abuse is a worthy goal, but not as argument to reject a solution for an
-existing and real roblem outright.
+On 20/02/15 17:46, Russell King - ARM Linux wrote:
+> On Thu, Feb 19, 2015 at 05:08:28PM +0000, Srinivas Kandagatla wrote:
+>> +static struct class eeprom_class = {
+>> +	.name		= "eeprom",
+>> +	.dev_groups	= eeprom_dev_groups,
+>> +};
+>> +
+>> +int eeprom_register(struct eeprom_device *eeprom)
+>> +{
+>> +	int rval;
+>> +
+>> +	if (!eeprom->regmap || !eeprom->size) {
+>> +		dev_err(eeprom->dev, "Regmap not found\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	eeprom->id = ida_simple_get(&eeprom_ida, 0, 0, GFP_KERNEL);
+>> +	if (eeprom->id < 0)
+>> +		return eeprom->id;
+>> +
+>> +	eeprom->edev.class = &eeprom_class;
+>> +	eeprom->edev.parent = eeprom->dev;
+>> +	eeprom->edev.of_node = eeprom->dev ? eeprom->dev->of_node : NULL;
+>> +	dev_set_name(&eeprom->edev, "eeprom%d", eeprom->id);
+>> +
+>> +	device_initialize(&eeprom->edev);
+>> +
+>> +	dev_dbg(&eeprom->edev, "Registering eeprom device %s\n",
+>> +		dev_name(&eeprom->edev));
+>> +
+>> +	rval = device_add(&eeprom->edev);
+>> +	if (rval)
+>> +		return rval;
+>> +
+>> +	mutex_lock(&eeprom_list_mutex);
+>> +	list_add(&eeprom->list, &eeprom_list);
+>> +	mutex_unlock(&eeprom_list_mutex);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(eeprom_register);
+>> +
+>> +int eeprom_unregister(struct eeprom_device *eeprom)
+>> +{
+>> +	device_del(&eeprom->edev);
+>> +
+>> +	mutex_lock(&eeprom_list_mutex);
+>> +	list_del(&eeprom->list);
+>> +	mutex_unlock(&eeprom_list_mutex);
+>> +
+>> +	return 0;
+>
+> There's problems with this.  "edev" is embedded into eeprom, and "edev"
+> is a refcounted structure - it has a lifetime, and the lifetime of
+> eeprom is thus determined by edev.
+>
+> What this means is that calling eeprom_unregister() and then freeing
+> the eeprom structure is a potentially unsafe operation - the memory
+> backing edev must only be freed when the release method for the
+> struct device has been called.
 
-> My thought was that every design that can afford an EEPROM to probe can afford
-> a bootloader to select the appropriate dtb, and can afford the extra space
-> required for multiple dtbs.
-> 
-There are many more use cases where this is simply not the case. Another one,
-for example, is a system where the devicetree is loaded through u-boot using
-tftp. In this case, u-boot would have some information about the hardware
-to request the correct devicetree file, but it may not know about hardware
-variants.
+Thats a good catch, Yes I see the issue.
 
-Sure, one could solve that problem by making u-boot aware of such variants
-and maintaining a large number of dtb files as you suggest. That means,
-however, that there would be that need to maintain all those dtb files
-just to address minor differences, and having modify every piece of the
-system for each new variant. In essence you put a lot of burden on pretty
-much everyone from software to manufacturing to testing, plus possibly
-hardware, just for the purpose of rejecting a relatively simple solution
-for the problem Pantelis' patch set is trying to address.
+Moving the struct eeprom_device allocation to eeprom core.c should 
+address this issue. This makes eeprom self contained and can safely free 
+the eeprom_device memory in eeprom_class.eeprom_release().
 
-Ultimately, no matter what the kernel community ends up doing, Pantelis'
-solution or something similar _will_ find its way into our system.
-I would very much prefer to have the code upstream, but we will carry
-his patches along in our vendor branch if necessary. The functionality
-and its benefits for our development, manufacturing, and testing process
-are way too valuable to ignore, and it actually solves problems for which
-we don't have an acceptable solution today. I would be quite surprised
-if other vendors would not end up doing the same.
+Will fix this in next version.
 
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +struct eeprom_device {
+>> +	struct regmap		*regmap;
+>> +	int			stride;
+>> +	size_t			size;
+>> +	struct device		*dev;
+>
+> Failing to understand and address the driver model life time issues is
+> a major blocker for this patch.  Sorry.
+>
