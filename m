@@ -1,292 +1,267 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
-Date: Fri, 20 Feb 2015 08:27:27 +0000
-Message-ID: <54E6EFEF.2000200@linaro.org>
-References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <20150219181230.GC795@lunn.ch>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6qdl-sabrelite: add supported LVDS
+ displays
+Date: Fri, 20 Feb 2015 09:53:40 +0100
+Message-ID: <1424422420.3137.7.camel@pengutronix.de>
+References: <1424390002-8726-1-git-send-email-eric.nelson@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150219181230.GC795-g2DYL2Zd6BY@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424390002-8726-1-git-send-email-eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Andrew for your comments,
+Hi Eric,
 
-On 19/02/15 18:12, Andrew Lunn wrote:
->> +
->> +Required properties:
->> +
->> +eeproms: List of phandle and data cell specifier triplet, one triplet
->> +	 for each data cell the device might be interested in. The
->> +	 triplet consists of the phandle to the eeprom provider, then
->> +	 the offset in byte within that storage device, and the length
+Am Donnerstag, den 19.02.2015, 16:53 -0700 schrieb Eric Nelson:
+> The BD-SL-i.MX6 (SABRE Lite board) supports three companion displays:
+> 	Okaya 1024x600
+> 	Hannstar 1024x768
+> 	LG 1280x800
+> 
+> This patch adds timing entries into the LDB device tree and aliases
+> for them and HDMI to make it easy for the boot loader to configure them.
 >
-> bytes
->
->> +	 in byte of the data we care about.
->
-> bytes
-Yep will fix it in next version.
->
->> +
->> +Optional properties:
->> +
->> +eeprom-names: List of data cell name strings sorted in the same order
->> + 	      as the resets property. Consumers drivers will use
->
-> resets? I guess this text was cut/paste from the reset documentation?\
->
-I think so. Will fix it.
->> + 	      eeprom-names to differentiate between multiple cells,
->> + 	      and hence being able to know what these cells are for.
->> +
->> +For example:
->> +
->> +	device {
->> +		eeproms = <&at24 14 42>;
->
-> I like to use 42, but is it realistic to have a soc-rev-id which is 42
-> bytes long?  How about using 42 as the offset and a sensible length of
-> say 4?
-Ok, will fix it..
->
->> +		eeprom-names = "soc-rev-id";
->> +menuconfig EEPROM
->> +	bool "EEPROM Support"
->> +	depends on OF
->> +	help
->> +	  Support for EEPROM alike devices.
->
-> like.
-Ok
->
->> +
->> +	  This framework is designed to provide a generic interface to EEPROM
->
-> EPROMs
-Ok.
->
->> +
->> +
->> +static ssize_t bin_attr_eeprom_read_write(struct kobject *kobj,
->> +				    char *buf, loff_t offset,
->> +				    size_t count, bool read)
->> +{
->> +	struct device *dev = container_of(kobj, struct device, kobj);
->> +	struct eeprom_device *eeprom = container_of(dev, struct eeprom_device,
->> +						    edev);
->> +	int rc;
->> +
->> +	if (offset > eeprom->size)
->> +		return 0;
->> +
->> +	if (offset + count > eeprom->size)
->> +		count = eeprom->size - offset;
->> +
->> +	if (read)
->> +		rc = regmap_bulk_read(eeprom->regmap, offset,
->> +				      buf, count/eeprom->stride);
->
-> This division will round down, so you could get one less byte than
-> what you expected, and the value you actually return. It seems like
-> there should be a check here, the count is a multiple of stride and
-> return an error if it is not.
-Thats a good catch, I will fix this for other such instances too.
->
->> +	else
->> +		rc = regmap_bulk_write(eeprom->regmap, offset,
->> +				       buf, count/eeprom->stride);
->> +
->> +	if (IS_ERR_VALUE(rc))
->> +		return 0;
->> +
->
-> I don't think returning 0 here, and above is the best thing to
-> do. Return the real error code from regmap, or EINVAL or some other
-> error code for going off the end of the eerpom.
-Ok, I will fix the return value here for both the cases.
+> Signed-off-by: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 
->
->> +	return count;
->> +}
->> +
->> +static ssize_t bin_attr_eeprom_read(struct file *filp, struct kobject *kobj,
->> +				    struct bin_attribute *attr,
->> +				    char *buf, loff_t offset, size_t count)
->> +{
->> +	return bin_attr_eeprom_read_write(kobj, buf, offset, count, true);
->> +}
->> +
->> +static ssize_t bin_attr_eeprom_write(struct file *filp, struct kobject *kobj,
->> +				     struct bin_attribute *attr,
->> +				     char *buf, loff_t offset, size_t count)
->> +{
->> +	return bin_attr_eeprom_read_write(kobj, buf, offset, count, false);
->> +}
->>
->
-> These two functions seem to be identical. So just have one of them?
+Could you please have a look at the simple-panel driver and add these
+panels there instead? This allows to handle enable/disable timings,
+backlights and regulators or enable GPIOs properly.
 
-One is read and other is write.. there is a true and false flag at the 
-end of the call to bin_attr_eeprom_read_write().
->
-> +
->> +static struct bin_attribute bin_attr_eeprom = {
->> +	.attr	= {
->> +		.name	= "eeprom",
->> +		.mode	= 0660,
->
-> Symbolic values like S_IRUGO | S_IWUSR would be better.
-Yep, thats correct, I will fix it.
->
-> Are you also sure you want group write?
->
-S_IWUSR should be enough.
+I have a patch to add drm_panel support to the imx-ldb driver (see
+below). It depends on this of-graph series:
 
->> +	},
->> +	.read	= bin_attr_eeprom_read,
->> +	.write	= bin_attr_eeprom_write,
->> +};
->> +
->> +static struct eeprom_cell *__eeprom_cell_get(struct device_node *node,
->> +					     int index)
->> +{
->> +	struct of_phandle_args args;
->> +	struct eeprom_cell *cell;
->> +	struct eeprom_device *e, *eeprom = NULL;
->> +	int ret;
->> +
->> +	ret = of_parse_phandle_with_args(node, "eeproms",
->> +					 "#eeprom-cells", index, &args);
->> +	if (ret)
->> +		return ERR_PTR(ret);
->> +
->> +	if (args.args_count != 2)
->> +		return ERR_PTR(-EINVAL);
->> +
->> +	mutex_lock(&eeprom_list_mutex);
->> +
->> +	list_for_each_entry(e, &eeprom_list, list) {
->> +		if (args.np == e->edev.of_node) {
->> +			eeprom = e;
->> +			break;
->> +		}
->> +	}
->> +	mutex_unlock(&eeprom_list_mutex);
->
-> Shouldn't you increment a reference count to the eeprom here?  You are
-> going to have trouble if the eeprom is unregistered and there is a
-> call still referring to it.
-Yes, Stephen Byod also pointed the same, having owner in eeprom_device 
-should fix this.
-I will fix it in next version.
+    https://lkml.org/lkml/2015/1/22/104
 
->
->> +
->> +	if (!eeprom)
->> +		return ERR_PTR(-EPROBE_DEFER);
->> +
->> +	cell = kzalloc(sizeof(*cell), GFP_KERNEL);
->> +	if (!cell)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	cell->eeprom = eeprom;
->> +	cell->offset = args.args[0];
->> +	cell->count = args.args[1];
->> +
->> +	return cell;
->> +}
->> +
->> +
->> diff --git a/include/linux/eeprom-consumer.h b/include/linux/eeprom-consumer.h
->> new file mode 100644
->> index 0000000..706ae9d
->> --- /dev/null
->> +++ b/include/linux/eeprom-consumer.h
->> @@ -0,0 +1,73 @@
->> +/*
->> + * EEPROM framework consumer.
->> + *
->> + * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> + * Copyright (C) 2013 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> + *
->> + * This file is licensed under the terms of the GNU General Public
->> + * License version 2.  This program is licensed "as is" without any
->> + * warranty of any kind, whether express or implied.
->> + */
->> +
->> +#ifndef _LINUX_EEPROM_CONSUMER_H
->> +#define _LINUX_EEPROM_CONSUMER_H
->> +
->> +struct eeprom_cell;
->> +
->> +/**
->> + * eeprom_cell_get(): Get eeprom cell of device form a given index.
->
-> of a device for a
->
-Ok, will be fixed in next version.
->> + *
->> + * @dev: Device that will be interacted with
->> + * @index: Index of the eeprom cell.
->> + *
->> + * The return value will be an ERR_PTR() on error or a valid pointer
->> + * to a struct eeprom_cell.  The eeprom_cell will be freed by the
->> + * eeprom_cell_put().
->> + */
->> +struct eeprom_cell *eeprom_cell_get(struct device *dev, int index);
->> +
->> +/**
->> + * eeprom_cell_get(): Get eeprom cell of device form a given name.
->
-> same again
-Ok, will be fixed in next version.
->
->> + *
->> + * @dev: Device that will be interacted with
->> + * @name: Name of the eeprom cell.
->> + *
->> + * The return value will be an ERR_PTR() on error or a valid pointer
->> + * to a struct eeprom_cell.  The eeprom_cell will be freed by the
->> + * eeprom_cell_put().
->> + */
->> +struct eeprom_cell *eeprom_cell_get_byname(struct device *dev,
->> +					   const char *name);
->> +
->> +/**
->> + * eeprom_cell_put(): Release previously allocated eeprom cell.
->> + *
->> + * @cell: Previously allocated eeprom cell by eeprom_cell_get()
->> + * or eeprom_cell_get_byname().
->> + */
->> +void eeprom_cell_put(struct eeprom_cell *cell);
->> +
->> +/**
->> + * eeprom_cell_read(): Read a given eeprom cell
->> + *
->> + * @cell: eeprom cell to be read.
->> + * @len: pointer to length of cell which will be populated on successful read.
->> + *
->> + * The return value will be an ERR_PTR() on error or a valid pointer
->> + * to a char * bufffer.  The buffer should be freed by the consumer with a
->> + * kfree().
->> + */
->> +char *eeprom_cell_read(struct eeprom_cell *cell, ssize_t *len);
->
-> Would void * be better than char *? I guess the contents is mostly
-> data, not strings.
-Yes, thats sounds sensible.
->
->        Andrew
->
->> +
->> +/**
+regards
+Philipp
 
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-----8<-----
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Date: Thu, 6 Mar 2014 14:54:39 +0100
+Subject: [PATCH] drm/imx: imx-ldb: add drm_panel support
+
+This patch allows to optionally attach the lvds-channel to a panel
+supported by a drm_panel driver using of-graph bindings, instead of
+supplying the modes via display-timings in the device tree.
+
+This depends on of_graph_get_port_by_id and uses the OF graph to
+link the optional DRM panel to the LDB lvds-channel. The output
+port number is 2 on devices without the external 4-port input
+multiplexer (i.MX5) and 4 on devices with the mux (i.MX6).
+
+Before:
+
+	ldb {
+		...
+
+		lvds-channel@0 {
+			...
+
+			display-timings {
+				native-timing = <&timing1>;
+				timing1: etm0700g0dh6 {
+					hactive = <800>;
+					vactive = <480>;
+					clock-frequency = <33260000>;
+					hsync-len = <128>;
+					hback-porch = <88>;
+					hfront-porch = <40>;
+					vsync-len = <2>;
+					vback-porch = <33>;
+					vfront-porch = <10>;
+					hsync-active = <0>;
+					vsync-active = <0>;
+					...
+				};
+			};
+			...
+		};
+	};
+
+After:
+	ldb {
+		...
+
+		lvds-channel@0 {
+			...
+
+			port@4 {
+				reg = <4>;
+
+				lvds_out: endpoint {
+					remote_endpoint = <&panel_in>;
+				};
+			};
+		};
+	};
+
+	panel {
+		compatible = "edt,etm0700g0dh6", "simple-panel";
+		...
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&lvds_out>;
+			};
+		};
+	};
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+[Fixed build error due to missing select on DRM_PANEL --rmk]
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/gpu/drm/imx/Kconfig   |  1 +
+ drivers/gpu/drm/imx/imx-ldb.c | 45 +++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/imx/Kconfig b/drivers/gpu/drm/imx/Kconfig
+index ab31848..1a5dbdb 100644
+--- a/drivers/gpu/drm/imx/Kconfig
++++ b/drivers/gpu/drm/imx/Kconfig
+@@ -36,6 +36,7 @@ config DRM_IMX_TVE
+ config DRM_IMX_LDB
+ 	tristate "Support for LVDS displays"
+ 	depends on DRM_IMX && MFD_SYSCON
++	select DRM_PANEL
+ 	help
+ 	  Choose this to enable the internal LVDS Display Bridge (LDB)
+ 	  found on i.MX53 and i.MX6 processors.
+diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
+index c604600..e3cd148 100644
+--- a/drivers/gpu/drm/imx/imx-ldb.c
++++ b/drivers/gpu/drm/imx/imx-ldb.c
+@@ -19,10 +19,11 @@
+ #include <drm/drmP.h>
+ #include <drm/drm_fb_helper.h>
+ #include <drm/drm_crtc_helper.h>
++#include <drm/drm_panel.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+-#include <linux/of_address.h>
+ #include <linux/of_device.h>
++#include <linux/of_graph.h>
+ #include <video/of_videomode.h>
+ #include <linux/regmap.h>
+ #include <linux/videodev2.h>
+@@ -55,6 +56,7 @@ struct imx_ldb_channel {
+ 	struct imx_ldb *ldb;
+ 	struct drm_connector connector;
+ 	struct drm_encoder encoder;
++	struct drm_panel *panel;
+ 	struct device_node *child;
+ 	int chno;
+ 	void *edid;
+@@ -91,6 +93,13 @@ static int imx_ldb_connector_get_modes(struct drm_connector *connector)
+ 	struct imx_ldb_channel *imx_ldb_ch = con_to_imx_ldb_ch(connector);
+ 	int num_modes = 0;
+ 
++	if (imx_ldb_ch->panel && imx_ldb_ch->panel->funcs &&
++	    imx_ldb_ch->panel->funcs->get_modes) {
++		num_modes = imx_ldb_ch->panel->funcs->get_modes(imx_ldb_ch->panel);
++		if (num_modes > 0)
++			return num_modes;
++	}
++
+ 	if (imx_ldb_ch->edid) {
+ 		drm_mode_connector_update_edid_property(connector,
+ 							imx_ldb_ch->edid);
+@@ -205,6 +214,8 @@ static void imx_ldb_encoder_commit(struct drm_encoder *encoder)
+ 	int dual = ldb->ldb_ctrl & LDB_SPLIT_MODE_EN;
+ 	int mux = imx_drm_encoder_get_mux_id(imx_ldb_ch->child, encoder);
+ 
++	drm_panel_prepare(imx_ldb_ch->panel);
++
+ 	if (dual) {
+ 		clk_prepare_enable(ldb->clk[0]);
+ 		clk_prepare_enable(ldb->clk[1]);
+@@ -238,6 +249,8 @@ static void imx_ldb_encoder_commit(struct drm_encoder *encoder)
+ 	}
+ 
+ 	regmap_write(ldb->regmap, IOMUXC_GPR2, ldb->ldb_ctrl);
++
++	drm_panel_enable(imx_ldb_ch->panel);
+ }
+ 
+ static void imx_ldb_encoder_mode_set(struct drm_encoder *encoder,
+@@ -289,6 +302,8 @@ static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
+ 		 (ldb->ldb_ctrl & LDB_CH1_MODE_EN_MASK) == 0)
+ 		return;
+ 
++	drm_panel_disable(imx_ldb_ch->panel);
++
+ 	if (imx_ldb_ch == &ldb->channel[0])
+ 		ldb->ldb_ctrl &= ~LDB_CH0_MODE_EN_MASK;
+ 	else if (imx_ldb_ch == &ldb->channel[1])
+@@ -300,6 +315,8 @@ static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
+ 		clk_disable_unprepare(ldb->clk[0]);
+ 		clk_disable_unprepare(ldb->clk[1]);
+ 	}
++
++	drm_panel_unprepare(imx_ldb_ch->panel);
+ }
+ 
+ static struct drm_connector_funcs imx_ldb_connector_funcs = {
+@@ -373,6 +390,9 @@ static int imx_ldb_register(struct drm_device *drm,
+ 	drm_connector_init(drm, &imx_ldb_ch->connector,
+ 			   &imx_ldb_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
+ 
++	if (imx_ldb_ch->panel)
++		drm_panel_attach(imx_ldb_ch->panel, &imx_ldb_ch->connector);
++
+ 	drm_mode_connector_attach_encoder(&imx_ldb_ch->connector,
+ 			&imx_ldb_ch->encoder);
+ 
+@@ -487,6 +507,7 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	for_each_child_of_node(np, child) {
+ 		struct imx_ldb_channel *channel;
++		struct device_node *port;
+ 
+ 		ret = of_property_read_u32(child, "reg", &i);
+ 		if (ret || i < 0 || i > 1)
+@@ -505,11 +526,31 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
+ 		channel->chno = i;
+ 		channel->child = child;
+ 
++		/* The output port is port@4 on i.MX6 or port@2 on i.MX53 */
++		port = of_graph_get_port_by_id(child, imx_ldb->lvds_mux ? 4 : 2);
++		if (port) {
++			struct device_node *endpoint, *remote;
++
++			endpoint = of_get_child_by_name(port, "endpoint");
++			if (endpoint) {
++				remote = of_graph_get_remote_port_parent(endpoint);
++				if (remote)
++					channel->panel = of_drm_find_panel(remote);
++				else
++					return -EPROBE_DEFER;
++				if (!channel->panel) {
++					dev_err(dev, "panel not found: %s\n",
++						remote->full_name);
++					return -EPROBE_DEFER;
++				}
++			}
++		}
++
+ 		edidp = of_get_property(child, "edid", &channel->edid_len);
+ 		if (edidp) {
+ 			channel->edid = kmemdup(edidp, channel->edid_len,
+ 						GFP_KERNEL);
+-		} else {
++		} else if (!channel->panel) {
+ 			ret = of_get_drm_display_mode(child, &channel->mode, 0);
+ 			if (!ret)
+ 				channel->mode_valid = 1;
+-- 
+2.1.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
