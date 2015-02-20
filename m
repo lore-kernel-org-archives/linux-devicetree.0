@@ -1,49 +1,80 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 2/5] ARM: DTS: omap3: Correct the dma controller's property
- names
-Date: Fri, 20 Feb 2015 15:42:03 +0200
-Message-ID: <1424439726-31994-3-git-send-email-peter.ujfalusi@ti.com>
-References: <1424439726-31994-1-git-send-email-peter.ujfalusi@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 09/10] ARM: mvebu: add Device Tree files for Armada 39x
+ SoC and board
+Date: Fri, 20 Feb 2015 15:14:55 +0100
+Message-ID: <20150220151455.461b97bb@free-electrons.com>
+References: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1423238276-9206-10-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20150206172153.GY25985@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1424439726-31994-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: vinod.koul@intel.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150206172153.GY25985@lunn.ch>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-According to the Documentation/devicetree/bindings/dma/dma.txt the
-dma-channels and dma-requests property should not have '#'.
+Dear Andrew Lunn,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/omap3.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, 6 Feb 2015 18:21:53 +0100, Andrew Lunn wrote:
 
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 01b71111bd55..f4f78c40b564 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -155,8 +155,8 @@
- 				     <14>,
- 				     <15>;
- 			#dma-cells = <1>;
--			#dma-channels = <32>;
--			#dma-requests = <96>;
-+			dma-channels = <32>;
-+			dma-requests = <96>;
- 		};
- 
- 		omap3_pmx_core: pinmux@48002030 {
+> > +	chosen {
+> > +		bootargs = "console=ttyS0,115200 earlyprintk";
+> > +	};
+> > +
+> 
+> Arnd has been encouraging people not use earlyprintk here.  Also a
+> stdout-path would be nice. We also seem to be missing aliases for the
+> serial ports.
+
+Right.
+
+
+> > +		internal-regs {
+> > +                        i2c@11000 {
+> > +				pinctrl-0 = <&i2c0_pins>;
+> > +				pinctrl-names = "default";
+> > +                                status = "okay";
+> > +                                clock-frequency = <100000>;
+> > +                        };
+> > +
+> > +			serial@12000 {
+> > +				pinctrl-0 = <&uart0_pins>;
+> > +				pinctrl-names = "default";
+> > +				status = "okay";
+> > +			};
+> > +
+> 
+> Tab vs space issue here somewhere? Probably the i2c node.
+
+Yes, fixed.
+
+> > +			pinctrl@18000 {
+> > +				uart0_pins: uart0-pins {
+> > +					marvell,pins = "mpp0", "mpp1";
+> > +					marvell,function = "ua0";
+> > +				};
+> > +
+> > +				uart1_pins: uart1-pins {
+> > +					marvell,pins = "mpp19", "mpp20";
+> > +					marvell,function = "ua1";
+> > +				};
+> 
+> Does it make sense to put there in the .dtsi file? I know there are
+> other choices, but generally board manufacturers tend to follow the
+> reference design.
+
+I am not really convinced here: there are really many possible pin
+muxing possibilities. Various pins for UART0 and UART1, whether you use
+CTS/RTS or not, etc. I believe this is really the sort of pin mux
+configuration that is best left at the board level.
+
+Best regards,
+
+Thomas
 -- 
-2.3.0
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
