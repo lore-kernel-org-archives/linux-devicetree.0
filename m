@@ -1,54 +1,50 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v10 0/2] mfd: axp20x: Add DT binding documentation
-Date: Fri, 20 Feb 2015 19:19:26 +0800
-Message-ID: <1424431168-25157-1-git-send-email-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 1/6] ASoC: max98088: Document DT bindings
+Date: Fri, 20 Feb 2015 13:12:15 +0100
+Message-ID: <54E7249F.2020900@samsung.com>
+References: <1424283959-16289-1-git-send-email-afaerber@suse.de>
+ <1424283959-16289-2-git-send-email-afaerber@suse.de>
+ <54E5EB36.9020007@collabora.co.uk> <54E5EF73.2090302@suse.de>
+ <CAD=FV=VoFnbEsKi4mDDkaTrTXboJmm0UNV5iCk1CvV5ndEZtsA@mail.gmail.com>
+ <54E62E1C.4030105@suse.de> <54E6314E.5060509@suse.de>
+ <54E64C09.5000505@collabora.co.uk> <54E681A8.6040702@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <54E681A8.6040702@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Doug Anderson <dianders@chromium.org>, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+On 20/02/15 01:36, Andreas F=C3=A4rber wrote:
+>>> >> So it seems the mclk is not always set up properly by the kernel=
+,
+>>> >> relying on firmware. Who's in charge of setting that clock up?
+>> >=20
+>> > Right, it seems audio is only working due the firmware doing some =
+previous
+>> > setup. Probably it works on every boot if you have "sound init" as=
+ a part of
+>> > the u-boot boot commands?
+>
+> Indeed it does, 24 MHz without the reparenting patch, and sound worki=
+ng.
 
-This is v10 of the axp20x series. v10 reverts back to the DT bindings
-from v8. This is the binding currently supported by the kernel drivers
-since 3.18. Mark Brown raised concern on the needless changes to
-active regulator bindings in v9.
+You can have parent of the CLKOUT clock set by the clk core if it is
+specified in device tree in the PMU (the clkout clock supplier) device
+node.
 
-Maxime, I dropped your Acked-by because of all the changes I've made.
-Please have a look again.
+Similarly as we did for the Odroix U3:
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/ar=
+ch/arm/boot/dts/exynos4412-odroid-common.dtsi#n39
 
-Mark (Brown), please take a look at the regulator bits in the second
-patch. If it looks good, could you give your Acked-by?
+Relying on the clk_set_rate() to set the parent clock is not optimal
+IMO. Presumably you need to set select stable parent clock for clkout
+like XXTI. But I'm not very familiar with exyno5250 and that might be
+something different.
 
-I hope we can get this series merged so we can move on to adding
-AXP221 support.
-
-
+--=20
 Regards,
-ChenYu
-
-
-Changes since v9:
-
-    - Revert to bindings in v8
-    - Dropped new patches in v9
-    - x-powers,dcdc-workmode default changed to "current hardware setting",
-      matching the regulator driver.
-    - Reorganized regulator related properties into separate section.
-      This should make it easier to read and also update for newer PMICs.
-    - Regulator nodes should only be listed if they are to be managed by
-      the OS.
-
-
-Carlo Caione (2):
-  mfd: AXP20x: Add bindings documentation
-  dt-bindings: add vendor-prefix for X-Powers
-
- Documentation/devicetree/bindings/mfd/axp20x.txt   | 96 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/axp20x.txt
-
--- 
-2.1.4
+Sylwester
