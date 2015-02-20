@@ -1,211 +1,86 @@
-From: Peter Meerwald <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2 14/18] ARM: Add STM32 family machine
-Date: Fri, 20 Feb 2015 19:33:26 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1502201930040.2739@pmeerw.net>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com> <1424455277-29983-15-git-send-email-mcoquelin.stm32@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
+Date: Fri, 20 Feb 2015 10:48:18 -0800
+Message-ID: <20150220184818.GC26698@roeck-us.net>
+References: <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com>
+ <20150218173115.GG29429@leverpostej>
+ <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com>
+ <54E613E7.2020405@gmail.com>
+ <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com>
+ <54E61DD2.3060002@gmail.com>
+ <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com>
+ <54E742F2.80506@hurleysoftware.com>
+ <20150220164753.GC22752@roeck-us.net>
+ <54E77876.9020500@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424455277-29983-15-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54E77876.9020500-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-> STMicrolectronics's STM32 series is a family of Cortex-M
-> microcontrollers. It is used in various applications, and
-> proposes a wide range of peripherals.
-
-the text describing the STM32 could be a bit more specific :)
-some more nitpicking below
-
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> ---
->  Documentation/arm/stm32/overview.txt           | 32 ++++++++++++++++++++++++++
->  Documentation/arm/stm32/stm32f429-overview.txt | 22 ++++++++++++++++++
->  arch/arm/Kconfig                               | 22 ++++++++++++++++++
->  arch/arm/Makefile                              |  1 +
->  arch/arm/mach-stm32/Makefile                   |  1 +
->  arch/arm/mach-stm32/Makefile.boot              |  0
->  arch/arm/mach-stm32/board-dt.c                 | 31 +++++++++++++++++++++++++
->  7 files changed, 109 insertions(+)
->  create mode 100644 Documentation/arm/stm32/overview.txt
->  create mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
->  create mode 100644 arch/arm/mach-stm32/Makefile
->  create mode 100644 arch/arm/mach-stm32/Makefile.boot
->  create mode 100644 arch/arm/mach-stm32/board-dt.c
+On Fri, Feb 20, 2015 at 01:09:58PM -0500, Peter Hurley wrote:
+> Hi Guenter,
 > 
-> diff --git a/Documentation/arm/stm32/overview.txt b/Documentation/arm/stm32/overview.txt
-> new file mode 100644
-> index 0000000..d8bf6bb
-> --- /dev/null
-> +++ b/Documentation/arm/stm32/overview.txt
-> @@ -0,0 +1,32 @@
-> +			STM32 ARM Linux Overview
-> +			==========================
-
-overlong ===
-
-> +
-> +Introduction
-> +------------
-> +
-> +  The STMicroelectronics family of Cortex-M based MCUs are supported by the
-> +  'STM32' platform of ARM Linux. Currently only the STM32F429 is supported.
-> +
-> +
-> +Configuration
-> +-------------
-> +
-> +  A generic configuration is provided for STM32 family, and can be used as the
-> +  default by
-> +	make stm32_defconfig
-> +
-> +Layout
-> +------
-> +
-> +  All the files for multiple machine families are located in the platform code
-> +  contained in arch/arm/mach-stm32
-> +
-> +  There is a generic board board-dt.c in the mach folder which support
-> +  Flattened Device Tree, which means, It works with any compatible board with
-
-it (lowercase)
-
-> +  Device Trees.
-> +
-> +
-> +Document Author
-> +---------------
-> +
-> +  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> diff --git a/Documentation/arm/stm32/stm32f429-overview.txt b/Documentation/arm/stm32/stm32f429-overview.txt
-> new file mode 100644
-> index 0000000..5206822
-> --- /dev/null
-> +++ b/Documentation/arm/stm32/stm32f429-overview.txt
-> @@ -0,0 +1,22 @@
-> +			STM32F429 Overview
-> +			==================
-> +
-> +  Introduction
-> +  ------------
-> +	The STM32F429 is a Cortex-M4 MCU aimed at various applications.
-> +	It features:
-> +	- ARM Cortex-M4 up to 180MHz with FPU
-> +	- 2MB internal Flash Memory
-> +	- External memory support through FMC controller (PSRAM, SDRAM, NOR, NAND)
-> +	- I2C, SPI, SAI, CAN, USB OTG, Ethernet controllers
-> +	- LCD controller & Camera interface
-> +	- Cryptographic processor
-> +
-> +  Resources
-> +  ---------
-> +	Datasheet and reference manual are publicly available on ST website:
-> +	- http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1577/LN1806?ecmp=stm32f429-439_pron_pr-ces2014_nov2013
-> +
-> +  Document Author
-> +  ---------------
-> +	Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 97d07ed..cfd9532 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -774,6 +774,28 @@ config ARCH_OMAP1
->  	help
->  	  Support for older TI OMAP1 (omap7xx, omap15xx or omap16xx)
->  
-> +config ARCH_STM32
-> +	bool "STMicrolectronics STM32"
-> +	depends on !MMU
-> +	select ARCH_REQUIRE_GPIOLIB
-> +	select ARM_NVIC
-> +	select AUTO_ZRELADDR
-> +	select ARCH_HAS_RESET_CONTROLLER
-> +	select RESET_CONTROLLER
-> +	select PINCTRL
-> +	select PINCTRL_STM32
-> +	select CLKSRC_OF
-> +	select ARMV7M_SYSTICK
-> +	select COMMON_CLK
-> +	select CPU_V7M
-> +	select GENERIC_CLOCKEVENTS
-> +	select NO_DMA
-> +	select NO_IOPORT_MAP
-> +	select SPARSE_IRQ
-> +	select USE_OF
-> +	help
-> +	  Support for STMicorelectronics STM32 processors.
-
-STMicroelectronics
-
-> +
->  endchoice
->  
->  menu "Multiple platform selection"
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index c1785ee..7d00659 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -196,6 +196,7 @@ machine-$(CONFIG_ARCH_SHMOBILE) 	+= shmobile
->  machine-$(CONFIG_ARCH_SIRF)		+= prima2
->  machine-$(CONFIG_ARCH_SOCFPGA)		+= socfpga
->  machine-$(CONFIG_ARCH_STI)		+= sti
-> +machine-$(CONFIG_ARCH_STM32)		+= stm32
->  machine-$(CONFIG_ARCH_SUNXI)		+= sunxi
->  machine-$(CONFIG_ARCH_TEGRA)		+= tegra
->  machine-$(CONFIG_ARCH_U300)		+= u300
-> diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
-> new file mode 100644
-> index 0000000..bd0b7b5
-> --- /dev/null
-> +++ b/arch/arm/mach-stm32/Makefile
-> @@ -0,0 +1 @@
-> +obj-y += board-dt.o
-> diff --git a/arch/arm/mach-stm32/Makefile.boot b/arch/arm/mach-stm32/Makefile.boot
-> new file mode 100644
-> index 0000000..e69de29
-> diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-dt.c
-> new file mode 100644
-> index 0000000..1d681b3
-> --- /dev/null
-> +++ b/arch/arm/mach-stm32/board-dt.c
-> @@ -0,0 +1,31 @@
-> +/*
-> + * Copyright (C) Maxime Coquelin 2015
-> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> + * License terms:  GNU General Public License (GPL), version 2
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/clocksource.h>
-> +#include <linux/reset-controller.h>
-> +#include <asm/v7m.h>
-> +#include <asm/mach/arch.h>
-> +
-> +static const char *const stm32_compat[] __initconst = {
-> +	"st,stm32f429",
-> +	NULL
-> +};
-> +
-> +static void __init stm32_timer_init(void)
-> +{
-> +	of_clk_init(NULL);
-> +	reset_controller_of_init();
-> +	clocksource_of_init();
-> +
-> +}
-> +
-> +DT_MACHINE_START(STM32DT, "STM32 (Device Tree Support)")
-> +	.init_time = stm32_timer_init,
-> +	.dt_compat = stm32_compat,
-> +	.restart = armv7m_restart,
-> +MACHINE_END
+> On 02/20/2015 11:47 AM, Guenter Roeck wrote:
 > 
+> [...]
+> 
+> > I am open to hearing your suggestions for our use case, where the CPU card with
+> > the eeprom is manufactured separately from its carier cards.
+> 
+> I think your use case may be more compelling than two flavors of Beaglebone
+> (one of which is pretty much a dead stick), but it's also less clear what your
+> design constraints are (not that I really want to know, 'cause I don't).
+> 
+> But the logical extension of this is an N-way dtb that supports unrelated SOCs,
+> and I think most would agree that's not an acceptable outcome.
+> 
+With this logic you can pretty much refuse to accept anything new, anywhere.
+Including everything old, for that matter.
 
--- 
+Food can be abused to poison people, therefore no one should be permitted to
+distribute food. Houses can be abused to falsely imprison people, therefore
+no one should live in houses. And don't even start talking about guns.
+Everything can be abused, therefore we should not do anything.
 
-Peter Meerwald
-+43-664-2444418 (mobile)
+Discussions about possible abuse are for sure valid, and reducing the potential
+for abuse is a worthy goal, but not as argument to reject a solution for an
+existing and real roblem outright.
+
+> My thought was that every design that can afford an EEPROM to probe can afford
+> a bootloader to select the appropriate dtb, and can afford the extra space
+> required for multiple dtbs.
+> 
+There are many more use cases where this is simply not the case. Another one,
+for example, is a system where the devicetree is loaded through u-boot using
+tftp. In this case, u-boot would have some information about the hardware
+to request the correct devicetree file, but it may not know about hardware
+variants.
+
+Sure, one could solve that problem by making u-boot aware of such variants
+and maintaining a large number of dtb files as you suggest. That means,
+however, that there would be that need to maintain all those dtb files
+just to address minor differences, and having modify every piece of the
+system for each new variant. In essence you put a lot of burden on pretty
+much everyone from software to manufacturing to testing, plus possibly
+hardware, just for the purpose of rejecting a relatively simple solution
+for the problem Pantelis' patch set is trying to address.
+
+Ultimately, no matter what the kernel community ends up doing, Pantelis'
+solution or something similar _will_ find its way into our system.
+I would very much prefer to have the code upstream, but we will carry
+his patches along in our vendor branch if necessary. The functionality
+and its benefits for our development, manufacturing, and testing process
+are way too valuable to ignore, and it actually solves problems for which
+we don't have an acceptable solution today. I would be quite surprised
+if other vendors would not end up doing the same.
+
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
