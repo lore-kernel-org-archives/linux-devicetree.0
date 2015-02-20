@@ -1,138 +1,102 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
-Date: Fri, 20 Feb 2015 19:25:37 +0000
-Message-ID: <54E78A31.9020306@linaro.org>
-References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug@mail.gmail.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 2/2] ARM: perf: Add support for Scorpion PMUs
+Date: Fri, 20 Feb 2015 19:35:52 +0000
+Message-ID: <20150220193552.GE1767@arm.com>
+References: <1423851849-6069-1-git-send-email-sboyd@codeaurora.org>
+ <1423851849-6069-3-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1423851849-6069-3-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 13, 2015 at 06:24:09PM +0000, Stephen Boyd wrote:
+> Scorpion supports a set of local performance monitor event
+> selection registers (LPM) sitting behind a cp15 based interface
+> that extend the architected PMU events to include Scorpion CPU
+> and Venum VFP specific events. To use these events the user is
+> expected to program the lpm register with the event code shifted
+> into the group they care about and then point the PMNx event at
+> that region+group combo by writing a LPMn_GROUPx event. Add
+> support for this hardware.
+> 
+> Note: the raw event number is a pure software construct that
+> allows us to map the multi-dimensional number space of regions,
+> groups, and event codes into a flat event number space suitable
+> for use by the perf framework.
+> 
+> This is based on code originally written by Ashwin Chaugule and
+> Neil Leeder [1] massaged to become similar to the Krait PMU
+> support code.
+> 
+> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/tree/arch/arm/kernel/perf_event_msm.c?h=msm-3.4
+> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Neil Leeder <nleeder@codeaurora.org>
+> Cc: Ashwin Chaugule <ashwinc@codeaurora.org>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/pmu.txt |   2 +
+>  arch/arm/kernel/perf_event_cpu.c              |   2 +
+>  arch/arm/kernel/perf_event_v7.c               | 417 ++++++++++++++++++++++++++
+>  3 files changed, 421 insertions(+)
 
+[...]
 
-On 20/02/15 17:21, Rob Herring wrote:
-> On Thu, Feb 19, 2015 at 11:08 AM, Srinivas Kandagatla
-> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>
->> Up until now, EEPROM drivers were stored in drivers/misc, where they all had to
->> duplicate pretty much the same code to register a sysfs file, allow in-kernel
->> users to access the content of the devices they were driving, etc.
->>
->> This was also a problem as far as other in-kernel users were involved, since
->> the solutions used were pretty much different from on driver to another, there
->> was a rather big abstraction leak.
->>
->> This introduction of this framework aims at solving this. It also introduces DT
->> representation for consumer devices to go get the data they require (MAC
->> Addresses, SoC/Revision ID, part numbers, and so on) from the EEPROMs.
->>
->> Having regmap interface to this framework would give much better
->> abstraction for eeproms on different buses.
->>
->> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> [srinivas.kandagatla: Moved to regmap based and cleanedup apis]
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   .../devicetree/bindings/eeprom/eeprom.txt          |  48 ++++
->>   drivers/Kconfig                                    |   2 +
->>   drivers/Makefile                                   |   1 +
->>   drivers/eeprom/Kconfig                             |  19 ++
->>   drivers/eeprom/Makefile                            |   9 +
->>   drivers/eeprom/core.c                              | 290 +++++++++++++++++++++
->>   include/linux/eeprom-consumer.h                    |  73 ++++++
->>   include/linux/eeprom-provider.h                    |  51 ++++
->
-> Who is going to be the maintainer for this?
+> +static void scorpion_evt_setup(int idx, u32 config_base)
+> +{
+> +       u32 val;
+> +       u32 mask;
+> +       u32 vval, fval;
+> +       unsigned int region;
+> +       unsigned int group;
+> +       unsigned int code;
+> +       unsigned int group_shift;
+> +       bool venum_event;
+> +
+> +       krait_decode_event(config_base, &region, &group, &code, &venum_event,
+> +                          NULL);
+> +
+> +       group_shift = group * 8;
+> +       mask = 0xff << group_shift;
+> +
+> +       /* Configure evtsel for the region and group */
+> +       if (venum_event)
+> +               val = SCORPION_VLPM_GROUP0;
+> +       else
+> +               val = scorpion_get_pmresrn_event(region);
+> +       val += group;
+> +       /* Mix in mode-exclusion bits */
+> +       val |= config_base & (ARMV7_EXCLUDE_USER | ARMV7_EXCLUDE_PL1);
+> +       armv7_pmnc_write_evtsel(idx, val);
+> +
+> +       asm volatile("mcr p15, 0, %0, c9, c15, 0" : : "r" (0));
 
-Am happy to be one.
+What's this guy doing?
 
->
->>   8 files changed, 493 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/eeprom/eeprom.txt
->>   create mode 100644 drivers/eeprom/Kconfig
->>   create mode 100644 drivers/eeprom/Makefile
->>   create mode 100644 drivers/eeprom/core.c
->>   create mode 100644 include/linux/eeprom-consumer.h
->>   create mode 100644 include/linux/eeprom-provider.h
->>
->> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
->> new file mode 100644
->> index 0000000..9ec1ec2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
->
-> Please make bindings a separate patch.
-Sure, Will do it in next version.
+> +static int scorpion_pmu_get_event_idx(struct pmu_hw_events *cpuc,
+> +                                  struct perf_event *event)
+> +{
+> +       int idx;
+> +       int bit = -1;
+> +       unsigned int region;
+> +       unsigned int code;
+> +       unsigned int group;
+> +       bool venum_event, scorpion_event;
+> +       struct hw_perf_event *hwc = &event->hw;
+> +
+> +       krait_decode_event(hwc->config_base, &region, &group, &code,
+> +                          &venum_event, &scorpion_event);
+> +
+> +       if (venum_event || scorpion_event) {
+> +               /* Ignore invalid events */
+> +               if (group > 3 || region > 3)
 
->
->> @@ -0,0 +1,48 @@
->> += EEPROM Data Device Tree Bindings =
->> +
->> +This binding is intended to represent the location of hardware
->> +configuration data stored in EEPROMs.
->> +
->> +On a significant proportion of boards, the manufacturer has stored
->> +some data on an EEPROM-like device, for the OS to be able to retrieve
->> +these information and act upon it. Obviously, the OS has to know
->> +about where to retrieve these data from, and where they are stored on
->> +the storage device.
->> +
->> +This document is here to document this.
->> +
->> += Data providers =
->> +
->> +Required properties:
->> +#eeprom-cells: Number of cells in an eeprom specifier; The common
->> +               case is 2.
->
-> We already have eeproms in DTs, it would be nice to be able to support
-> them with this framework as well.
+Where does the 3 come from?
 
-Yes, I can see more than 60% of them are atmel,at24* eeproms in DT. We 
-have some plans to migrate at24 and at25 eeproms to this framework once 
-the the framework itself is accepted.
-
->
->> +
->> +For example:
->> +
->> +       at24: eeprom@42 {
->> +               #eeprom-cells = <2>;
->> +       };
->> +
->> += Data consumers =
->> +
->> +Required properties:
->> +
->> +eeproms: List of phandle and data cell specifier triplet, one triplet
->> +        for each data cell the device might be interested in. The
->> +        triplet consists of the phandle to the eeprom provider, then
->> +        the offset in byte within that storage device, and the length
->> +        in byte of the data we care about.
->
-> The problem with this is it assumes you know who the consumer is and
-> that it is a DT node. For example, how would you describe a serial
-> number?
-Correct me if I miss understood.
-Is serial number any different?
-Am hoping that the eeprom consumer would be aware of offset and size of 
-serial number in the eeprom
-
-Cant the consumer do:
-
-eeprom-consumer {
-	eeproms = <&at24 0 4>;
-	eeprom-names = "device-serial-number";
-};
-
---srini
-
->
-> Rob
->
+Will
