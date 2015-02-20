@@ -1,24 +1,94 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch v6 0/2] gpio: add GPIO hogging mechanism
-Date: Fri, 20 Feb 2015 13:53:20 +0900
-Message-ID: <CAAVeFu+riMjE6H912ZdedYYs+Z4k5v_r+X95huz8pZXEbbgLjg@mail.gmail.com>
-References: <AAE35E953C746D4784A1A0C604EFEA714DFBD819@DLEE10.ent.ti.com> <20150218172341.GA3851@ti.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+ driver support
+Date: Fri, 20 Feb 2015 11:59:34 +0530
+Message-ID: <20150220062934.GX21387@intel.com>
+References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
+ <3236720.MHeqOodrCV@wuerfel>
+ <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
+ <1967130.oYyZRWCcEF@wuerfel>
+ <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
+ <20150212093445.GM21387@intel.com>
+ <ed439c7a25d0465d9dbf4c06987d42a1@BY2FFO11FD018.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150218172341.GA3851-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ed439c7a25d0465d9dbf4c06987d42a1-neA4ZlFjCT2qEU4nYqjAjmYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+To: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 19, 2015 at 2:23 AM, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> wrote:
-> Gentle ping.
->
-> Is there any chance this will make it in 3.21?
+On Sat, Feb 14, 2015 at 02:21:52PM +0000, Appana Durga Kedareswara Rao wrote:
+> Hi Vinod,
+> 
+> 
+> > -----Original Message-----
+> > From: Vinod Koul [mailto:vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org]
+> > Sent: Thursday, February 12, 2015 3:05 PM
+> > To: Appana Durga Kedareswara Rao
+> > Cc: Arnd Bergmann; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Srikanth Vemula; linux-
+> > kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Srikanth Thokala; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Michal Simek; Anirudha Sarangi;
+> > grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> > Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+> > driver support
+> >
+> > On Thu, Jan 29, 2015 at 11:24:41AM +0000, Appana Durga Kedareswara Rao
+> > wrote:
+> > > >  Earlier in the driver we are embedding dma_slave_config into custom
+> > > > structs But Lars suggested to modify it. please refer to the below
+> > > > thread for more details.
+> > > >  http://www.spinics.net/lists/dmaengine/msg00010.html
+> > > >
+> > > >  And later we thought of creating a separate private member in
+> > > > dma_slave_config for sharing additional configuration between slave
+> > > > device and dma engine Or a new dma_ctrl_cmd like
+> > > >
+> > FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
+> > > >
+> > > >  Finally Vinod was ok with the existing suggestion so we dropped the
+> > > > above thought.
+> > > >
+> > > >  @Vinod : Could you please comment on this.
+> > FSLDMA_EXTERNAL_START has been removed, and you cna use the removal
+> > as a guidance of how to solve your issue
+> >
+> 
+Please limit you mailer to set wrap at 80 chars, otherwise it becomes
+unreadable
 
-I'm good with it - Linus will probably come to it after the 3.20 merge
-window closes.
+> The current VDMA driver that got merged in the open source and the
+> current patch (dma: xilinx dma v4) Srikanth T submitted both contains the
+> Similar implementation that you pointed as above(I mean similar to the
+> free scale dma driver).
+> 
+> The discussion starts here is why we need the header file(Xilinx_dma.h) in
+> the include/linux/amba/Xilinx_dma.h  folder.
+> 
+> Like for FSL DMA it is got defined (fsl_dma_external_start) as a function
+> prototype in include/linux/fsldma.h And it is being getting used in the
+> drivers/misc/carma/carma-fpga-program.c
+> 
+> Similarly in the Xilinx VDMA driver(xilinx_vdma_channel_set_config )
+> defined as a function prototype in the include/linux/amba/xilinx_dma.h And
+> is being used by Xilinx videos  drivers.  Those video driver need to use
+> the (xilinx_vdma_channel_set_config) which requires this global header
+> file.
+> 
+> Could you please suggest us whether that header file (Xilinx_dma.h) should
+> be there  in include/linux/amba or we should move it to include/linux?
+> And any functional comments for this v4 patch?
+Let me ask you a question, what is the relation of xilinx_dma with amba?
+
+If none then only include/linux/ seems to be the right choice. If not then
+amba maybe okay but you need to provide justfication why it should be in amba?
+
+-- 
+~Vinod
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
