@@ -1,72 +1,24 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: dts: stih407: Fix property name
-Date: Fri, 20 Feb 2015 10:12:42 +0530
-Message-ID: <1424407362-3912-1-git-send-email-jaswinder.singh@linaro.org>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch v6 0/2] gpio: add GPIO hogging mechanism
+Date: Fri, 20 Feb 2015 13:53:20 +0900
+Message-ID: <CAAVeFu+riMjE6H912ZdedYYs+Z4k5v_r+X95huz8pZXEbbgLjg@mail.gmail.com>
+References: <AAE35E953C746D4784A1A0C604EFEA714DFBD819@DLEE10.ent.ti.com> <20150218172341.GA3851@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150218172341.GA3851-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It's interrupt-names, not interrupts-names.
+On Thu, Feb 19, 2015 at 2:23 AM, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> wrote:
+> Gentle ping.
+>
+> Is there any chance this will make it in 3.21?
 
-Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index 402844c..55dbd62 100644
---- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -53,7 +53,7 @@
- 			reg = <0x0961f080 0x4>;
- 			reg-names = "irqmux";
- 			interrupts = <GIC_SPI 188 IRQ_TYPE_NONE>;
--			interrupts-names = "irqmux";
-+			interrupt-names = "irqmux";
- 			ranges = <0 0x09610000 0x6000>;
- 
- 			pio0: gpio@09610000 {
-@@ -263,7 +263,7 @@
- 			reg = <0x0920f080 0x4>;
- 			reg-names = "irqmux";
- 			interrupts = <GIC_SPI 189 IRQ_TYPE_NONE>;
--			interrupts-names = "irqmux";
-+			interrupt-names = "irqmux";
- 			ranges = <0 0x09200000 0x10000>;
- 
- 			pio10: pio@09200000 {
-@@ -448,7 +448,7 @@
- 			reg = <0x0921f080 0x4>;
- 			reg-names = "irqmux";
- 			interrupts = <GIC_SPI 190 IRQ_TYPE_NONE>;
--			interrupts-names = "irqmux";
-+			interrupt-names = "irqmux";
- 			ranges = <0 0x09210000 0x10000>;
- 
- 			pio20: pio@09210000 {
-@@ -469,7 +469,7 @@
- 			reg = <0x0922f080 0x4>;
- 			reg-names = "irqmux";
- 			interrupts = <GIC_SPI 191 IRQ_TYPE_NONE>;
--			interrupts-names = "irqmux";
-+			interrupt-names = "irqmux";
- 			ranges = <0 0x09220000 0x6000>;
- 
- 			pio30: gpio@09220000 {
-@@ -566,7 +566,7 @@
- 			reg = <0x0923f080 0x4>;
- 			reg-names = "irqmux";
- 			interrupts = <GIC_SPI 192 IRQ_TYPE_NONE>;
--			interrupts-names = "irqmux";
-+			interrupt-names = "irqmux";
- 			ranges = <0 0x09230000 0x3000>;
- 
- 			pio40: gpio@09230000 {
--- 
-1.9.1
-
+I'm good with it - Linus will probably come to it after the 3.20 merge
+window closes.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
