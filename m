@@ -1,90 +1,76 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
-Date: Fri, 20 Feb 2015 18:27:27 +0800
-Message-ID: <54E70C0F.1030601@linaro.org>
-References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org> <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org> <54E4249C.9050404@ti.com> <54E426B5.4070206@linaro.org> <20150218143546.GD3651@saruman.tx.rr.com> <54E6A4E9.4030401@linaro.org> <20150220043805.GA22128@saruman.tx.rr.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Fri, 20 Feb 2015 10:31:44 +0000
+Message-ID: <20150220103144.GI13659@leverpostej>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+ <2502710.nOuZfdq5QP@vostro.rjw.lan>
+ <20150219112346.GA13659@leverpostej>
+ <5225828.OI8hbGqrC4@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150220043805.GA22128-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5225828.OI8hbGqrC4@vostro.rjw.lan>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Peter Zijlstra <peterz@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+[...]
 
+> > > IRQF_NO_SUSPEND and wakeup fundamentally don't match due to the way
+> > > wakeup is implemented in the IRQ core now.
+> > > 
+> > > Unless drivers with IRQF_NO_SUSPEND do the wakeup behind the core's back
+> > > which is just disgusting and should never happen.
+> > 
+> > I completely agree that using IRQF_NO_SUSPEND in that manner is a
+> > disgusting abuse. It seems like some drivers are abusing it for wakeup,
+> > and those need to be corrected.
+> > 
+> > If those are corrected, the same issue with mismatch will happen with
+> > those wakeup interrupts, and we need to fix that somehow given people
+> > seem to already be relying on being able to share a line with a wakeup
+> > device.
+> 
+> The way we handle wakeup interrupts in the core prevents that, because
+> wakeup is handled at the IRQ level rather than at a handler (irqaction)
+> level.  Interrupt handlers from irqactions are not run for wakeup
+> interrupts at all after suspend_device_irqs(), so if you have anyone
+> sharing an IRQ with a wakeup source, their interrupt handler won't be
+> run anyway then.
 
-On 02/20/2015 12:38 PM, Felipe Balbi wrote:
-> On Fri, Feb 20, 2015 at 11:07:21AM +0800, zhangfei wrote:
->> Hi, Balbi
->>
->> On 02/18/2015 10:35 PM, Felipe Balbi wrote:
->>> On Wed, Feb 18, 2015 at 01:44:21PM +0800, zhangfei wrote:
->>>> Hi, Kishon
->>>>
->>>> On 02/18/2015 01:35 PM, Kishon Vijay Abraham I wrote:
->>>>> Hi,
->>>>>
->>>>> On Thursday 12 February 2015 01:07 PM, Zhangfei Gao wrote:
->>>>>> Add usb phy controller for hi6220 platform
->>>>>>
->>>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>> ---
->>>>>>   drivers/phy/Kconfig          |   9 ++
->>>>>>   drivers/phy/Makefile         |   1 +
->>>>>>   drivers/phy/phy-hi6220-usb.c | 306
->>>>>> +++++++++++++++++++++++++++++++++++++++++++
->>>>>>   3 files changed, 316 insertions(+)
->>>>>>   create mode 100644 drivers/phy/phy-hi6220-usb.c
->>>>>
->>>>> why is this driver in drivers/phy when it doesn't use the generic PHY
->>>>> framework at all?
->>>>>
->>>>
->>>> Balbi recommended "new drivers only on drivers/phy/", including usb
->>>> phy.
->>>
->>> but it should use the API too. It's not only about a directory, you need
->>> to use the new API.
->>>
->>>> So Move drivers/usb/phy/phy-hi6220-usb.c to
->>>> drivers/phy/phy-hi6220-usb.c, required by Balbi.
->>>
->>> you're reading what I stated the way you like.
->>
->> Sorry for my bad understanding.
->>
->> Still not clear about the otg_set_peripheral, which is required in
->> phy-hi6220-usb.c
->>
->> 1. drivers/usb/dwc2/gadget.c use
->> otg_set_peripheral(hsotg->uphy->otg, &hsotg->gadget);
->>
->> 2. include/linux/phy/phy.h
->> struct phy do not have member otg, while struct usb_phy has.
->>
->> Could you give more hints?
->
-> your set_peripheral doesn't do anything, just holds a pointer. Might as
-> well not implement it. I'll review your driver more fully tomorrow.
->
-> There a few things which must be changed.
->
+I had missed that fact; thank you for correcting me!
 
-Thanks in advance.
+> > I propose we add a new IRQF_BIKESHED, meaning that this interrupt line
+> > may be shared with an IRQF_NO_SUSPEND or wakeup interrupt handler.
+> 
+> As I said, sharing an IRQ with a wakeup source is OK (worst case you'll
+> cause spurious wakeup interrupts to occur if your device is not suspended
+> properly).  The problem is *entirely* about IRQF_NO_SUSPEND.
 
-We need this call back set_peripheral setting otg->gadget, which used in 
-usb_gadget_connect/disconnect(otg->gadget).
+I see that now.
 
-The workable method test here is not provide phy-names = "usb2-phy";
-Then dwc2 will still use hsotg->uphy instead of hsotg->phy.
-Though devm_phy_create is used in phy-hi6220-usb.c, phy_ops is not used 
-in fact.
+> So I claim that the only things having legitimate reasons to ever use
+> IRQF_NO_SUSPEND are (a) timers and (b) IPIs.  There really are no other
+> cases to worry about in my view, but I may be overlooking something.
 
-Thanks
+Assuming you also include any chained irqchip handlers necessary for
+those timers or IPIs, that makes sense to me.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Anyway, I wouldn't like to add flags allowing driver writers to do fishy
+> things in a hush-hush manner.  The warning trigger is there for a good
+> reason and if we allow it to be avoided, that has to be for a good reason
+> too.  In other words, it shouldn't be too easy to do that.
+
+Sure.
+
+Given all of the above I'll go back to the IRQF_SHARED_TIMER_OK approach
+you proposed, along with documentation updates and comments at usage
+sites to make it clear when it is valid to use.
+
+Thank you for bearing with me so far.
+
+Mark.
