@@ -1,87 +1,81 @@
-From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 02/18] ARM: ARMv7M: Enlarge vector table to 256 entries
-Date: Fri, 20 Feb 2015 19:01:01 +0100
-Message-ID: <1424455277-29983-3-git-send-email-mcoquelin.stm32__10820.4772849151$1424455716$gmane$org@gmail.com>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424455277-29983-1-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
+Date: Fri, 20 Feb 2015 13:09:58 -0500
+Message-ID: <54E77876.9020500@hurleysoftware.com>
+References: <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com> <20150218154106.GC29429@leverpostej> <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com> <20150218173115.GG29429@leverpostej> <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com> <54E613E7.2020405@gmail.com> <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com> <54E61DD2.3060002@gmail.com> <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com> <54E742F2.80506@hurleysoftware.com> <20150220164753.GC22752@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150220164753.GC22752@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, frowand.list@gmail.com, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Ludovic Desroches <ludovic.desroches@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Porter <matt.porter@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
->From Cortex-M reference manuals, the nvic supports up to 240 interrupts.
-So the number of entries in vectors table is up to 256.
+Hi Guenter,
 
-This patch adds a new config flag to specify the number of external interrupts.
-Some ifdeferies are added in order to respect the natural alignment without
-wasting too much space on smaller systems.
+On 02/20/2015 11:47 AM, Guenter Roeck wrote:
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/kernel/entry-v7m.S | 13 +++++++++----
- arch/arm/mm/Kconfig         | 15 +++++++++++++++
- 2 files changed, 24 insertions(+), 4 deletions(-)
+[...]
 
-diff --git a/arch/arm/kernel/entry-v7m.S b/arch/arm/kernel/entry-v7m.S
-index 8944f49..68cde36 100644
---- a/arch/arm/kernel/entry-v7m.S
-+++ b/arch/arm/kernel/entry-v7m.S
-@@ -117,9 +117,14 @@ ENTRY(__switch_to)
- ENDPROC(__switch_to)
- 
- 	.data
--	.align	8
-+#if CONFIG_CPUV7M_NUM_IRQ <= 112
-+	.align	9
-+#else
-+	.align	10
-+#endif
-+
- /*
-- * Vector table (64 words => 256 bytes natural alignment)
-+ * Vector table (Natural alignment need to be ensured)
-  */
- ENTRY(vector_table)
- 	.long	0			@ 0 - Reset stack pointer
-@@ -138,6 +143,6 @@ ENTRY(vector_table)
- 	.long	__invalid_entry		@ 13 - Reserved
- 	.long	__pendsv_entry		@ 14 - PendSV
- 	.long	__invalid_entry		@ 15 - SysTick
--	.rept	64 - 16
--	.long	__irq_entry		@ 16..64 - External Interrupts
-+	.rept	CONFIG_CPUV7M_NUM_IRQ
-+	.long	__irq_entry		@ External Interrupts
- 	.endr
-diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-index c43c714..27eb835 100644
---- a/arch/arm/mm/Kconfig
-+++ b/arch/arm/mm/Kconfig
-@@ -604,6 +604,21 @@ config CPU_USE_DOMAINS
- 	  This option enables or disables the use of domain switching
- 	  via the set_fs() function.
- 
-+config CPUV7M_NUM_IRQ
-+	int "Number of external interrupts connected to the NVIC"
-+	depends on CPU_V7M
-+	default 90 if ARCH_STM32
-+	default 38 if ARCH_EFM32
-+	default 240
-+	help
-+	  This option indicates the number of interrupts connected to the NVIC.
-+	  The value can be larger than the real number of interrupts supported
-+	  by the system, but must not be lower.
-+	  The default value is 240, corresponding to the maximum number of
-+	  interrupts supported by the NVIC on Cortex-M family.
-+
-+	  If unsure, keep default value.
-+
- #
- # CPU supports 36-bit I/O
- #
--- 
-1.9.1
+> I am open to hearing your suggestions for our use case, where the CPU card with
+> the eeprom is manufactured separately from its carier cards.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think your use case may be more compelling than two flavors of Beaglebone
+(one of which is pretty much a dead stick), but it's also less clear what your
+design constraints are (not that I really want to know, 'cause I don't).
+
+But the logical extension of this is an N-way dtb that supports unrelated SOCs,
+and I think most would agree that's not an acceptable outcome.
+
+My thought was that every design that can afford an EEPROM to probe can afford
+a bootloader to select the appropriate dtb, and can afford the extra space
+required for multiple dtbs.
+
+I'm not naysaying; I just want to elicit enough information so the community
+can make informed decisions.
+
+> I assume you might suggest that manufacturing should (re-)program the EEPROM
+> on the CPU card after it was inserted into the carrier.
+> 
+> Problem is though that the CPU card may be inserted into ts carrier outside
+> manufacturing, at the final stages of assembly or in product repair. Those
+> groups would typically not even have the means to (re-)program the eeprom.
+> Besides, manufacturing would, quite understandably, go ballistic if we demand
+> that they start programming EEPROMs after insertion into carrier, and no longer
+> use pre-programmed EEPROMs.
+
+I agree; that would be The Wrong Way.
+
+> Note that it is not feasible to put the necessary EEPROM onto the carrier
+> either. Maybe in a later design. Maybe that makes sense, and we will go along
+> that route at some point. However, forcing a specific hardware solution
+> due to software limitations, ie lack of ability by core software to handle
+> the different carries, seems to be not the right decision to make on an
+> OS level.
+
+Agreed; hardware is what it is.
+
+
+> In the PCI world it has long since been accepted that the world is not perfect.  
+> The argument here is pretty much equivalent to demanding that PCI drop its
+> quirks mechanism, to force the HW manufacturers to finally get it right from
+> the beginning. I somehow suspect that this won't happen.
+
+I was thinking back to the introductions of fast DEVSEL# and AGP :(
+
+> Instead of questioning the need for a mechanism such as the one proposed by
+> Pantelis, I think our time would be better spent arguing if it is the right
+> mechanism and, if not, how it can be improved.
+
+My thoughts exactly. Apologies if something I wrote came across as
+"You Shall Not Pass" :)
+
+One issue seems to be the moving target that is the compelling use case(s).
+The initial submission implied it was the Beaglebone, which comes with
+4GB eMMC/microSD so naturally the argument for space-savings with DTBs doesn't
+fly. That has since been clarified so no need to rehash that.
+
+Regards,
+Peter Hurley
