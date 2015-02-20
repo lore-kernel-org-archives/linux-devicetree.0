@@ -1,96 +1,50 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
-Date: Fri, 20 Feb 2015 19:00:22 +0000
-Message-ID: <54E78446.8050800@linaro.org>
-References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <20150220174641.GI8656@n2100.arm.linux.org.uk>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate if no
+ bestdiv is normally found
+Date: Fri, 20 Feb 2015 11:13:06 -0800
+Message-ID: <20150220191306.421.58746@quantum>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
+ <20150212093356.GR12209@pengutronix.de> <20150212103944.GA1290@victor>
+ <20150212122405.GW12209@pengutronix.de>
+ <20150212125646.GT8656@n2100.arm.linux.org.uk>
+ <20150212134131.GX12209@pengutronix.de> <54DE0BB8.7070004@ti.com>
+ <20150213185713.GA12209@pengutronix.de>
+ <20150216112724.GN8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150220174641.GI8656@n2100.arm.linux.org.uk>
+In-Reply-To: <20150216112724.GN8656@n2100.arm.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, broonie@kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, stefan.wahren@i2se.com, devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, Liu Ying <Ying.Liu@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Russell King - ARM Linux (2015-02-16 03:27:24)
+> On Fri, Feb 13, 2015 at 07:57:13PM +0100, Sascha Hauer wrote:
+> > I agree that it's a bit odd, but I think it has to be like this.
+> > Consider that you request a rate of 100Hz, but the clock can only
+> > produce 99.5Hz, so due to rounding clk_round_rate() returns 99Hz.
+> > Now when you request 99Hz from clk_set_rate() the 99.5Hz value
+> > can't be used because it's too high.
+> 
+> Math rounding rules normally state that anything of .5 and greater
+> should be rounded up, not rounded down.  So, for 99.5Hz, you really
+> ought to be returning 100Hz, not 99Hz.
+> 
+> However, you do have a point for 99.4Hz, which would be returned as
+> 99Hz, and when set, it would result in something which isn't 99.4Hz.
 
+More practically, this again raises the issue of whether or not unsigned
+long rate should be in millihertz or something other than hertz.
 
-On 20/02/15 17:46, Russell King - ARM Linux wrote:
-> On Thu, Feb 19, 2015 at 05:08:28PM +0000, Srinivas Kandagatla wrote:
->> +static struct class eeprom_class = {
->> +	.name		= "eeprom",
->> +	.dev_groups	= eeprom_dev_groups,
->> +};
->> +
->> +int eeprom_register(struct eeprom_device *eeprom)
->> +{
->> +	int rval;
->> +
->> +	if (!eeprom->regmap || !eeprom->size) {
->> +		dev_err(eeprom->dev, "Regmap not found\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	eeprom->id = ida_simple_get(&eeprom_ida, 0, 0, GFP_KERNEL);
->> +	if (eeprom->id < 0)
->> +		return eeprom->id;
->> +
->> +	eeprom->edev.class = &eeprom_class;
->> +	eeprom->edev.parent = eeprom->dev;
->> +	eeprom->edev.of_node = eeprom->dev ? eeprom->dev->of_node : NULL;
->> +	dev_set_name(&eeprom->edev, "eeprom%d", eeprom->id);
->> +
->> +	device_initialize(&eeprom->edev);
->> +
->> +	dev_dbg(&eeprom->edev, "Registering eeprom device %s\n",
->> +		dev_name(&eeprom->edev));
->> +
->> +	rval = device_add(&eeprom->edev);
->> +	if (rval)
->> +		return rval;
->> +
->> +	mutex_lock(&eeprom_list_mutex);
->> +	list_add(&eeprom->list, &eeprom_list);
->> +	mutex_unlock(&eeprom_list_mutex);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(eeprom_register);
->> +
->> +int eeprom_unregister(struct eeprom_device *eeprom)
->> +{
->> +	device_del(&eeprom->edev);
->> +
->> +	mutex_lock(&eeprom_list_mutex);
->> +	list_del(&eeprom->list);
->> +	mutex_unlock(&eeprom_list_mutex);
->> +
->> +	return 0;
->
-> There's problems with this.  "edev" is embedded into eeprom, and "edev"
-> is a refcounted structure - it has a lifetime, and the lifetime of
-> eeprom is thus determined by edev.
->
-> What this means is that calling eeprom_unregister() and then freeing
-> the eeprom structure is a potentially unsafe operation - the memory
-> backing edev must only be freed when the release method for the
-> struct device has been called.
+And then that question again raises the issue of making rate 64-bit...
 
-Thats a good catch, Yes I see the issue.
+Regards,
+Mike
 
-Moving the struct eeprom_device allocation to eeprom core.c should 
-address this issue. This makes eeprom self contained and can safely free 
-the eeprom_device memory in eeprom_class.eeprom_release().
-
-Will fix this in next version.
-
->
->> +struct eeprom_device {
->> +	struct regmap		*regmap;
->> +	int			stride;
->> +	size_t			size;
->> +	struct device		*dev;
->
-> Failing to understand and address the driver model life time issues is
-> a major blocker for this patch.  Sorry.
->
+> 
+> -- 
+> FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+> according to speedtest.net.
