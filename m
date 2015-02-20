@@ -1,149 +1,76 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
-Date: Fri, 20 Feb 2015 10:06:10 -0600
-Message-ID: <20150220160610.GB6430@saruman.tx.rr.com>
-References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org>
- <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org>
- <20150220144119.GB1707@saruman.tx.rr.com>
- <54E75665.6050205@linaro.org>
-Reply-To: <balbi@ti.com>
+From: Jon Hunter <jgchunter@gmail.com>
+Subject: Re: [PATCH 3/4] arm: am33xx: DT quirks for am33xx based beaglebone
+ variants
+Date: Fri, 20 Feb 2015 16:13:05 +0000
+Message-ID: <54E75D11.3060409@gmail.com>
+References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com> <1424271576-1952-4-git-send-email-pantelis.antoniou@konsulko.com> <20150219181656.GF32521@atomide.com> <9C7BFC7C-0751-4233-927F-D01AF078704B@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54E75665.6050205@linaro.org>
+In-Reply-To: <9C7BFC7C-0751-4233-927F-D01AF078704B@antoniou-consulting.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: zhangfei <zhangfei.gao@linaro.org>
-Cc: balbi@ti.com, Kishon Vijay Abraham I <kishon@ti.com>, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dan . zhao" <dan.zhao@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Ludovic Desroches <ludovic.desroches@atmel.com>, linux-arm-kernel@lists.infradead.org, Matt Porter <matt.porter@linaro.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
---qlTNgmc+xy1dBmNv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
 
-On Fri, Feb 20, 2015 at 11:44:37PM +0800, zhangfei wrote:
-> Hi, Balbi
->=20
-> On 02/20/2015 10:41 PM, Felipe Balbi wrote:
->=20
-> >>+static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
-> >>+{
-> >>+	struct usb_otg *otg =3D priv->phy.otg;
-> >>+
-> >>+	if (!otg->gadget)
-> >>+		return;
-> >>+
-> >>+	if (on)
-> >>+		usb_gadget_connect(otg->gadget);
-> >>+	else
-> >>+		usb_gadget_disconnect(otg->gadget);
-> >
-> >why is the PHY fiddling with pullups ?
->=20
-> We use this to enable/disable otg gadget mode.
+On 02/19/2015 06:28 PM, Pantelis Antoniou wrote:
+> Hi Tony,
+> 
+>> On Feb 19, 2015, at 20:16 , Tony Lindgren <tony@atomide.com> wrote:
+>>
+>> * Pantelis Antoniou <pantelis.antoniou@konsulko.com> [150218 07:03]:
+>>> Implement DT quirks for the am33xx beaglebone boards.
+>>> --- /dev/null
+>>> +++ b/arch/arm/mach-omap2/am33xx-dt-quirks.c
+>> ...
+>>> +
+>>> +/*
+>>> + * The board IDs for am33xx board are in an I2C EEPROM
+>>> + * We are very early in the boot process so we have to
+>>> + * read the EEPROM directly without using the I2C layer.
+>>> + *
+>>> + * Note that we rely on the bootloader setting up the muxes
+>>> + * (which is the case for u-boot).
+>>> + */
+>>> +
+>>> +/* I2C Status Register (OMAP_I2C_STAT): */
+>>> +#define OMAP_I2C_STAT_XDR	(1 << 14)	/* TX Buffer draining */
+>>> +#define OMAP_I2C_STAT_RDR	(1 << 13)	/* RX Buffer draining */
+>>> +#define OMAP_I2C_STAT_BB	(1 << 12)	/* Bus busy */
+>>> +#define OMAP_I2C_STAT_ROVR	(1 << 11)	/* Receive overrun */
+>>> +#define OMAP_I2C_STAT_XUDF	(1 << 10)	/* Transmit underflow */
+>>> +#define OMAP_I2C_STAT_AAS	(1 << 9)	/* Address as slave */
+>>> +#define OMAP_I2C_STAT_BF	(1 << 8)	/* Bus Free */
+>>> +#define OMAP_I2C_STAT_XRDY	(1 << 4)	/* Transmit data ready */
+>>> +#define OMAP_I2C_STAT_RRDY	(1 << 3)	/* Receive data ready */
+>>> +#define OMAP_I2C_STAT_ARDY	(1 << 2)	/* Register access ready */
+>>> +#define OMAP_I2C_STAT_NACK	(1 << 1)	/* No ack interrupt enable */
+>>> +#define OMAP_I2C_STAT_AL	(1 << 0)	/* Arbitration lost int ena */
+>> ...
+>>
+>> Uhh I don't like the idea of duplicating the i2c-omap.c driver under
+>> arch/arm.. And in general we should initialize things later rather
+>> than earlier.
+>>
+>> What's stopping doing these quirk checks later on time with just
+>> a regular device driver, something like drivers/misc/bbone-quirks.c?
+>>
+> 
+> We have no choice; we are way early in the boot process, right after
+> the device tree unflattening step.
 
-I got that, but the pullups don't belong to the PHY, they belong to the
-gadget.
+Can you elaborate with an example of why not? Why can't the overlay
+happen at a later stage in the kernel boot as Tony suggests?
 
-> The gpio_id & gpio_vbus are used to distinguish otg gadget mode or
-> host mode.
-> When micro usb or otg device attached to otg, gpio_vbus falling down.
-> And gpio_id =3D 1 is micro usb, gpio_id =3D 0 is otg device.
+One thought would be that ideally devices that are dependent on a
+particular board variant would be disabled in the base DT blob until you
+know what board you are. However, that assumes that they can be
+initialised at a later stage in the boot process and may be for some
+regulators or other devices this is not possible. I know you mentioned
+some time restrictions for some devices, but I still don't see why it
+could not happen later.
 
-all of that I understood clearly :-)
-
-> So when micro usb attached, we enable gadget mode; while micro usb
-> detached, we disable gadget mode, and dwc2 will automatically set to
-> host mode.
-
-that's all fine, I'm concerned about letting the PHY fiddle with
-something it doesn't own. If I am to change pullups rules in udc-core,
-this is likely to break down miserably and I don't want to have to go
-through that.
-
-> >>+static void hi6220_detect_work(struct work_struct *work)
-> >>+{
-> >>+	struct hi6220_priv *priv =3D
-> >>+		container_of(work, struct hi6220_priv, work.work);
-> >>+	int gpio_id, gpio_vbus;
-> >>+	enum usb_otg_state state;
-> >>+
-> >>+	if (!gpio_is_valid(priv->gpio_id) || !gpio_is_valid(priv->gpio_vbus))
-> >>+		return;
-> >>+
-> >>+	gpio_id =3D gpio_get_value_cansleep(priv->gpio_id);
-> >>+	gpio_vbus =3D gpio_get_value_cansleep(priv->gpio_vbus);
-> >
-> >looks like this should be using extcon
-> Not used extcon before.
-> However, we need gpio_vbus interrupt.
-> Checked phy-tahvo.c and phy-omap-otg.c, not find extcon related with
-> interrupt.
-> Will investigate tomorrow.
-
-drivers/extcon/extcon-gpio.c
-
-> >>+	if (gpio_vbus =3D=3D 0) {
-> >>+		if (gpio_id =3D=3D 1)
-> >>+			state =3D OTG_STATE_B_PERIPHERAL;
-> >>+		else
-> >>+			state =3D OTG_STATE_A_HOST;
-> >>+	} else {
-> >>+		state =3D OTG_STATE_A_HOST;
-> >>+	}
-> >>+
-> >>+	if (priv->state !=3D state) {
-> >>+		hi6220_start_peripheral(priv, state =3D=3D OTG_STATE_B_PERIPHERAL);
-> >>+		priv->state =3D state;
-> >>+	}
-> >>+}
-> >>+
-> >>+static irqreturn_t hiusb_gpio_intr(int irq, void *data)
-> >>+{
-> >>+	struct hi6220_priv *priv =3D (struct hi6220_priv *)data;
-> >>+
-> >>+	/* add debounce time */
-> >>+	schedule_delayed_work(&priv->work, msecs_to_jiffies(100));
-> >
-> >this is really bad. We have threaded interrupt support, right ?
->=20
-> Since we use two gpio to distinguish gadget mode or host mode.
-> Debounce time can introduce more accuracy.
-
-gpio_set_debounce() ?
-
-> I think threaded interrupt can not be used for adding debounce time.
-> Here add debounce is just for safety.
-
-add the debounce to the gpio itself.
-
---=20
-balbi
-
---qlTNgmc+xy1dBmNv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU51tyAAoJEIaOsuA1yqRE4yIP/RimNedyzVc1YDZ9Fl+q3c5N
-R2tzvOQA0ZZ6W1UZFwscBjwXNWGFt7SbdsX7VDj1In8beHKSbXjAX8jmBzH8dKF7
-js5MwQlfeHiiRQRwkEsKsw3l6hS6bj8BDYdUMWMUCtXORg/OWYa8OAeucX8UnPU2
-Jqp7V0fbMvZsBCnqVTTSBMFwxsB5atQ7l8RbA6tgJhkZ4BLWwe5Z44xNjENzXzTI
-hieP0hzq2jHsWTG30xRtTowUF6yS3CETT6bOcKG5OnEOaMCvd5+W0FhXF20/NN+W
-4lXv1oHs/tMYhBzZ9cF1LIQhGxtFk5FrMaOsTej6a1huz7ClnJdGb7oGcHTfm7Mv
-GTk4iKjDiBfawMo9htPTEkZyrZJ6eaStNkJA5p0x27j9zZCw/iUvdCuD5yJzzbq3
-yWVYITm4Z6Zv126OJfGbYcPKcEx19nWv3biihU0w0Xj5hIIYjU5Td/1DhQFfXwMt
-A6rPLGjXNDyCNXcpvhS637mDwpVOuwAS5Ql2gWBmVJoY/Boc3anA+nZUKBaA0ljq
-P8umeF4h7uga56Ic2SGjJKgjqZKze1H3ZP5k4Fv65wDInlYsHmIuUbODNAv8FS7A
-HKM19GOp1xUBtMB0HCmktgEaBRJuScmbrCV4nYlBLEOpaxZTKFsQOcNSdPII8bBd
-Vyw93ChfGk4C+wZRBnpy
-=1lUT
------END PGP SIGNATURE-----
-
---qlTNgmc+xy1dBmNv--
+Jon
