@@ -1,65 +1,64 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
- leds: flash: document sysfs interface
-Date: Fri, 20 Feb 2015 09:16:17 +0100
-Message-ID: <20150220081617.GA14057@amd>
-References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
- <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
- <20150218224747.GA3999@amd>
- <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
- <20150219214043.GB29875@kroah.com>
- <54E6E89B.4050404@samsung.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
+Date: Fri, 20 Feb 2015 09:16:58 +0100
+Message-ID: <20150220081658.GM32600@odux.rfo.atmel.com>
+References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com>
+ <54E54586.5070602@gmail.com>
+ <CAL_JsqKT3+URcad6X=i+73NLRnVstbpvFJxxT=ru7KJmp_XuVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54E6E89B.4050404@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Greg KH <greg@kroah.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+In-Reply-To: <CAL_JsqKT3+URcad6X=i+73NLRnVstbpvFJxxT=ru7KJmp_XuVQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> >>>>+What:		/sys/class/leds/<led>/available_sync_leds
-> >>>>+Date:		February 2015
-> >>>>+KernelVersion:	3.20
-> >>>>+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-> >>>>+Description:	read/write
-> >>>>+		Space separated list of LEDs available for flash strobe
-> >>>>+		synchronization, displayed in the format:
-> >>>>+
-> >>>>+		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
-> >>>
-> >>>Multiple values per file, with all the problems we had in /proc. I
-> >>>assume led_id is an integer? What prevents space or dot in led name?
+On Thu, Feb 19, 2015 at 12:01:14PM -0600, Rob Herring wrote:
+> On Wed, Feb 18, 2015 at 8:08 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On 2/18/2015 6:59 AM, Pantelis Antoniou wrote:
+> >> Implement a method of applying DT quirks early in the boot sequence.
 > >>
-> >>Very good point. How about using a newline instead? That'd be a little bit
-> >>easier to parse, too.
+> >> A DT quirk is a subtree of the boot DT that can be applied to
+> >> a target in the base DT resulting in a modification of the live
+> >> tree. The format of the quirk nodes is that of a device tree overlay.
 > >
-> >No, please make it one value per-file, which is what sysfs requires.
+> > The use of the word "quirk" is a different mental model for me than what
+> > this patch series appears to be addressing.  I would suggest totally
+> > removing the word "quirk" from this proposal to avoid confusing the
+> > mental models of future generations of kernel folks.
 > 
-> The purpose of this attribute is only to provide an information about
-> the range of valid identifiers that can be written to the
-> flash_sync_strobe attribute. Wouldn't splitting this to many attributes
-> be an unnecessary inflation of sysfs files?
+> This comes from me as quirks are a different usecase I had in mind,
+> but one that could use a similar mechanism. Although, in the case of
+> quirks, I would expect them to be overlays built into the kernel. It
+> would be more a way to update old dtbs.
+> 
+> > What this patch series seems to be proposing is a method to apply DT
+> > overlays as soon as unflatten_device_tree() completes.  In other words,
+> > making the device tree a dynamic object, that is partially defined by
+> > the kernel during boot.  Well, to be fair, the kernel chooses among
+> > several possible alternatives encoded in the DT blob.  So the device
+> > tree is no longer a static object that describes the hardware of the
+> > system.  It may not sound like a big deal, but it seems to me to be
+> > a fundamental shift in what the device tree blob is.  Something that
+> > should be thought about carefully and not just applied as a patch to
+> > solve a point problem.
+> 
+> I agree. I would not want to see every board for an SOC become an
+> overlay for example. I think it has to be limited to truly plugable
+> h/w (e.g. capes) or minor changes. We just have to define what is
+> minor. :)
 
-No, it would not. It is required so that we don't end up with broken
-parsers.
- 
-> Apart from it, we have also flash_faults attribute, that currently
-> provides a space separated list of flash faults that have occurred.
-> If we are to stick tightly to the one-value-per-file rule, then how
-> we should approach flash_faults case? Should the separate file be
-> dynamically created for each reported fault?
+I don't think it is the goal. It should allow to deal with board
+revisions, for example some components put on an other i2c bus to
+isolate an i2c device corrupting the bus in some cases. It should
+concern plugable h/w which is only needed at boot time for instance a
+display panel if we want to show a splash screen.
 
-I think you can get away with flash_faults attribute (since the
-strings are hardcoded).
-
-Dynamically created files would be extremely ugly interface, but you
-could also have files such as "overvoltage_fault" containing either 0
-or 1 ...
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Ludovic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
