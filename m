@@ -1,92 +1,37 @@
 Return-Path: <mcoquelin.stm32@gmail.com>
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH 04/14] reset: Add reset_controller_of_init() function
-Date: Thu, 12 Feb 2015 18:45:54 +0100
-Message-Id: <1423763164-5606-5-git-send-email-mcoquelin.stm32@gmail.com>
-In-Reply-To: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1423763164-5606-1-git-send-email-mcoquelin.stm32@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal Marek <mmarek@suse.cz>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-arch@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH v2 18/18] MAINTAINERS: Add entry for STM32 MCUs
+Date: Fri, 20 Feb 2015 19:01:17 +0100
+Message-Id: <1424455277-29983-19-git-send-email-mcoquelin.stm32@gmail.com>
+In-Reply-To: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
+References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
+To: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal Marek <mmarek@suse.cz>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-arch@vger.kernel.org, linux-api@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Some platforms need to initialize the reset controller before the timers.
-
-This patch introduces a reset_controller_of_init() function that can be
-called before the timers intialization.
+Add a MAINTAINER entry covering all STM32 machine and drivers files.
 
 Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 ---
- drivers/reset/core.c              | 20 ++++++++++++++++++++
- include/asm-generic/vmlinux.lds.h |  4 +++-
- include/linux/reset-controller.h  |  6 ++++++
- 3 files changed, 29 insertions(+), 1 deletion(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index 7955e00..18ee579 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -86,6 +86,26 @@ void reset_controller_unregister(struct reset_controller_dev *rcdev)
- }
- EXPORT_SYMBOL_GPL(reset_controller_unregister);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d66a97d..559cd45 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1448,6 +1448,13 @@ F:	drivers/usb/host/ehci-st.c
+ F:	drivers/usb/host/ohci-st.c
+ F:	drivers/ata/ahci_st.c
  
-+extern struct of_device_id __reset_ctrl_of_table[];
++ARM/STM32 ARCHITECTURE
++M:	Maxime Coquelin <mcoquelin.stm32@gmail.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++N:	stm32
++F:	drivers/clocksource/armv7m_systick.c
 +
-+static const struct of_device_id __reset_ctrl_of_table_sentinel
-+	__used __section(__reset_ctrl_of_table_end);
-+
-+void __init reset_controller_of_init(void)
-+{
-+	struct device_node *np;
-+	const struct of_device_id *match;
-+	of_init_fn_1 init_func;
-+
-+	for_each_matching_node_and_match(np, __reset_ctrl_of_table, &match) {
-+		if (!of_device_is_available(np))
-+			continue;
-+
-+		init_func = match->data;
-+		init_func(np);
-+	}
-+}
-+
- /**
-  * reset_control_reset - reset the controlled device
-  * @rstc: reset controller
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index bee5d68..1f96365 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -168,6 +168,7 @@
- #define RESERVEDMEM_OF_TABLES()	OF_TABLE(CONFIG_OF_RESERVED_MEM, reservedmem)
- #define CPU_METHOD_OF_TABLES()	OF_TABLE(CONFIG_SMP, cpu_method)
- #define EARLYCON_OF_TABLES()	OF_TABLE(CONFIG_SERIAL_EARLYCON, earlycon)
-+#define RESET_CTRL_OF_TABLES()	OF_TABLE(CONFIG_RESET_CONTROLLER, reset_ctrl)
- 
- #define KERNEL_DTB()							\
- 	STRUCT_ALIGN();							\
-@@ -502,7 +503,8 @@
- 	CPU_METHOD_OF_TABLES()						\
- 	KERNEL_DTB()							\
- 	IRQCHIP_OF_MATCH_TABLE()					\
--	EARLYCON_OF_TABLES()
-+	EARLYCON_OF_TABLES()						\
-+	RESET_CTRL_OF_TABLES()
- 
- #define INIT_TEXT							\
- 	*(.init.text)							\
-diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
-index ce6b962..f8a030a 100644
---- a/include/linux/reset-controller.h
-+++ b/include/linux/reset-controller.h
-@@ -51,4 +51,10 @@ struct reset_controller_dev {
- int reset_controller_register(struct reset_controller_dev *rcdev);
- void reset_controller_unregister(struct reset_controller_dev *rcdev);
- 
-+
-+#define RESET_CONTROLLER_OF_DECLARE(name, compat, fn) \
-+	OF_DECLARE_1(reset_ctrl, name, compat, fn)
-+
-+void reset_controller_of_init(void);
-+
- #endif
+ ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
+ M:	Lennert Buytenhek <kernel@wantstofly.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 -- 
 1.9.1
