@@ -1,99 +1,81 @@
 Return-Path: <mcoquelin.stm32@gmail.com>
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v2 05/18] reset: Add reset_controller_of_init() function
-Date: Fri, 20 Feb 2015 19:01:04 +0100
-Message-Id: <1424455277-29983-6-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: [PATCH v2 02/18] ARM: ARMv7M: Enlarge vector table to 256 entries
+Date: Fri, 20 Feb 2015 19:01:01 +0100
+Message-Id: <1424455277-29983-3-git-send-email-mcoquelin.stm32@gmail.com>
 In-Reply-To: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
 References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
 To: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal Marek <mmarek@suse.cz>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-arch@vger.kernel.org, linux-api@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Some platforms need to initialize the reset controller before the timers.
+>From Cortex-M reference manuals, the nvic supports up to 240 interrupts.
+So the number of entries in vectors table is up to 256.
 
-This patch introduces a reset_controller_of_init() function that can be
-called before the timers intialization.
+This patch adds a new config flag to specify the number of external interrupts.
+Some ifdeferies are added in order to respect the natural alignment without
+wasting too much space on smaller systems.
 
 Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 ---
- drivers/reset/core.c              | 27 +++++++++++++++++++++++++++
- include/asm-generic/vmlinux.lds.h |  4 +++-
- include/linux/reset-controller.h  |  6 ++++++
- 3 files changed, 36 insertions(+), 1 deletion(-)
+ arch/arm/kernel/entry-v7m.S | 13 +++++++++----
+ arch/arm/mm/Kconfig         | 15 +++++++++++++++
+ 2 files changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index 7955e00..7eef63e 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -86,6 +86,33 @@ void reset_controller_unregister(struct reset_controller_dev *rcdev)
- }
- EXPORT_SYMBOL_GPL(reset_controller_unregister);
+diff --git a/arch/arm/kernel/entry-v7m.S b/arch/arm/kernel/entry-v7m.S
+index 8944f49..68cde36 100644
+--- a/arch/arm/kernel/entry-v7m.S
++++ b/arch/arm/kernel/entry-v7m.S
+@@ -117,9 +117,14 @@ ENTRY(__switch_to)
+ ENDPROC(__switch_to)
  
-+extern struct of_device_id __reset_ctrl_of_table[];
+ 	.data
+-	.align	8
++#if CONFIG_CPUV7M_NUM_IRQ <= 112
++	.align	9
++#else
++	.align	10
++#endif
 +
-+static const struct of_device_id __reset_ctrl_of_table_sentinel
-+	__used __section(__reset_ctrl_of_table_end);
-+
-+/**
-+ * reset_controller_of_init - scan and init reset controllers from the DT
-+ *
-+ * This function scas the device tree for matching reset controllers. It is
-+ * used on machines that need reset controls at early stage. To use it, the
-+ * controller driver has to be registred with RESET_CONTROLLER_OF_DECLARE().
-+ */
-+void __init reset_controller_of_init(void)
-+{
-+	struct device_node *np;
-+	const struct of_device_id *match;
-+	of_init_fn_1 init_func;
-+
-+	for_each_matching_node_and_match(np, __reset_ctrl_of_table, &match) {
-+		if (!of_device_is_available(np))
-+			continue;
-+
-+		init_func = match->data;
-+		init_func(np);
-+	}
-+}
-+
- /**
-  * reset_control_reset - reset the controlled device
-  * @rstc: reset controller
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index bee5d68..1f96365 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -168,6 +168,7 @@
- #define RESERVEDMEM_OF_TABLES()	OF_TABLE(CONFIG_OF_RESERVED_MEM, reservedmem)
- #define CPU_METHOD_OF_TABLES()	OF_TABLE(CONFIG_SMP, cpu_method)
- #define EARLYCON_OF_TABLES()	OF_TABLE(CONFIG_SERIAL_EARLYCON, earlycon)
-+#define RESET_CTRL_OF_TABLES()	OF_TABLE(CONFIG_RESET_CONTROLLER, reset_ctrl)
+ /*
+- * Vector table (64 words => 256 bytes natural alignment)
++ * Vector table (Natural alignment need to be ensured)
+  */
+ ENTRY(vector_table)
+ 	.long	0			@ 0 - Reset stack pointer
+@@ -138,6 +143,6 @@ ENTRY(vector_table)
+ 	.long	__invalid_entry		@ 13 - Reserved
+ 	.long	__pendsv_entry		@ 14 - PendSV
+ 	.long	__invalid_entry		@ 15 - SysTick
+-	.rept	64 - 16
+-	.long	__irq_entry		@ 16..64 - External Interrupts
++	.rept	CONFIG_CPUV7M_NUM_IRQ
++	.long	__irq_entry		@ External Interrupts
+ 	.endr
+diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
+index c43c714..27eb835 100644
+--- a/arch/arm/mm/Kconfig
++++ b/arch/arm/mm/Kconfig
+@@ -604,6 +604,21 @@ config CPU_USE_DOMAINS
+ 	  This option enables or disables the use of domain switching
+ 	  via the set_fs() function.
  
- #define KERNEL_DTB()							\
- 	STRUCT_ALIGN();							\
-@@ -502,7 +503,8 @@
- 	CPU_METHOD_OF_TABLES()						\
- 	KERNEL_DTB()							\
- 	IRQCHIP_OF_MATCH_TABLE()					\
--	EARLYCON_OF_TABLES()
-+	EARLYCON_OF_TABLES()						\
-+	RESET_CTRL_OF_TABLES()
- 
- #define INIT_TEXT							\
- 	*(.init.text)							\
-diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
-index ce6b962..f8a030a 100644
---- a/include/linux/reset-controller.h
-+++ b/include/linux/reset-controller.h
-@@ -51,4 +51,10 @@ struct reset_controller_dev {
- int reset_controller_register(struct reset_controller_dev *rcdev);
- void reset_controller_unregister(struct reset_controller_dev *rcdev);
- 
++config CPUV7M_NUM_IRQ
++	int "Number of external interrupts connected to the NVIC"
++	depends on CPU_V7M
++	default 90 if ARCH_STM32
++	default 38 if ARCH_EFM32
++	default 240
++	help
++	  This option indicates the number of interrupts connected to the NVIC.
++	  The value can be larger than the real number of interrupts supported
++	  by the system, but must not be lower.
++	  The default value is 240, corresponding to the maximum number of
++	  interrupts supported by the NVIC on Cortex-M family.
 +
-+#define RESET_CONTROLLER_OF_DECLARE(name, compat, fn) \
-+	OF_DECLARE_1(reset_ctrl, name, compat, fn)
++	  If unsure, keep default value.
 +
-+void reset_controller_of_init(void);
-+
- #endif
+ #
+ # CPU supports 36-bit I/O
+ #
 -- 
 1.9.1
