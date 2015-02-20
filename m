@@ -1,102 +1,64 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v2 2/2] ARM: perf: Add support for Scorpion PMUs
-Date: Fri, 20 Feb 2015 19:35:52 +0000
-Message-ID: <20150220193552.GE1767@arm.com>
-References: <1423851849-6069-1-git-send-email-sboyd@codeaurora.org>
- <1423851849-6069-3-git-send-email-sboyd@codeaurora.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
+ if no bestdiv is normally found
+Date: Fri, 20 Feb 2015 11:42:27 -0800
+Message-ID: <20150220194227.421.44526@quantum>
+References: <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
+ <20150212103944.GA1290@victor> <20150212122405.GW12209@pengutronix.de>
+ <20150212125646.GT8656@n2100.arm.linux.org.uk>
+ <20150212134131.GX12209@pengutronix.de> <54DE0BB8.7070004@ti.com>
+ <20150213185713.GA12209@pengutronix.de>
+ <20150216112724.GN8656@n2100.arm.linux.org.uk>
+ <20150220191306.421.58746@quantum>
+ <20150220192043.GM8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1423851849-6069-3-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150220192043.GM8656@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, andy.yan@rock-chips.com, Liu Ying <Ying.Liu@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 13, 2015 at 06:24:09PM +0000, Stephen Boyd wrote:
-> Scorpion supports a set of local performance monitor event
-> selection registers (LPM) sitting behind a cp15 based interface
-> that extend the architected PMU events to include Scorpion CPU
-> and Venum VFP specific events. To use these events the user is
-> expected to program the lpm register with the event code shifted
-> into the group they care about and then point the PMNx event at
-> that region+group combo by writing a LPMn_GROUPx event. Add
-> support for this hardware.
+Quoting Russell King - ARM Linux (2015-02-20 11:20:43)
+> On Fri, Feb 20, 2015 at 11:13:06AM -0800, Mike Turquette wrote:
+> > Quoting Russell King - ARM Linux (2015-02-16 03:27:24)
+> > > On Fri, Feb 13, 2015 at 07:57:13PM +0100, Sascha Hauer wrote:
+> > > > I agree that it's a bit odd, but I think it has to be like this.
+> > > > Consider that you request a rate of 100Hz, but the clock can only
+> > > > produce 99.5Hz, so due to rounding clk_round_rate() returns 99Hz.
+> > > > Now when you request 99Hz from clk_set_rate() the 99.5Hz value
+> > > > can't be used because it's too high.
+> > > 
+> > > Math rounding rules normally state that anything of .5 and greater
+> > > should be rounded up, not rounded down.  So, for 99.5Hz, you really
+> > > ought to be returning 100Hz, not 99Hz.
+> > > 
+> > > However, you do have a point for 99.4Hz, which would be returned as
+> > > 99Hz, and when set, it would result in something which isn't 99.4Hz.
+> > 
+> > More practically, this again raises the issue of whether or not unsigned
+> > long rate should be in millihertz or something other than hertz.
 > 
-> Note: the raw event number is a pure software construct that
-> allows us to map the multi-dimensional number space of regions,
-> groups, and event codes into a flat event number space suitable
-> for use by the perf framework.
+> You still get the same issue if it's millihertz.  Take 10 2/3rds Hz.
+> Is 10.666 Hz less than 10 2/3rds Hz?
+
+Millihertz won't solve rounding problems, I agree. But we currently do
+not support any fractional rates and we should.
+
+Regards,
+Mike
+
 > 
-> This is based on code originally written by Ashwin Chaugule and
-> Neil Leeder [1] massaged to become similar to the Krait PMU
-> support code.
-> 
-> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/tree/arch/arm/kernel/perf_event_msm.c?h=msm-3.4
-> 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Neil Leeder <nleeder@codeaurora.org>
-> Cc: Ashwin Chaugule <ashwinc@codeaurora.org>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/pmu.txt |   2 +
->  arch/arm/kernel/perf_event_cpu.c              |   2 +
->  arch/arm/kernel/perf_event_v7.c               | 417 ++++++++++++++++++++++++++
->  3 files changed, 421 insertions(+)
-
-[...]
-
-> +static void scorpion_evt_setup(int idx, u32 config_base)
-> +{
-> +       u32 val;
-> +       u32 mask;
-> +       u32 vval, fval;
-> +       unsigned int region;
-> +       unsigned int group;
-> +       unsigned int code;
-> +       unsigned int group_shift;
-> +       bool venum_event;
-> +
-> +       krait_decode_event(config_base, &region, &group, &code, &venum_event,
-> +                          NULL);
-> +
-> +       group_shift = group * 8;
-> +       mask = 0xff << group_shift;
-> +
-> +       /* Configure evtsel for the region and group */
-> +       if (venum_event)
-> +               val = SCORPION_VLPM_GROUP0;
-> +       else
-> +               val = scorpion_get_pmresrn_event(region);
-> +       val += group;
-> +       /* Mix in mode-exclusion bits */
-> +       val |= config_base & (ARMV7_EXCLUDE_USER | ARMV7_EXCLUDE_PL1);
-> +       armv7_pmnc_write_evtsel(idx, val);
-> +
-> +       asm volatile("mcr p15, 0, %0, c9, c15, 0" : : "r" (0));
-
-What's this guy doing?
-
-> +static int scorpion_pmu_get_event_idx(struct pmu_hw_events *cpuc,
-> +                                  struct perf_event *event)
-> +{
-> +       int idx;
-> +       int bit = -1;
-> +       unsigned int region;
-> +       unsigned int code;
-> +       unsigned int group;
-> +       bool venum_event, scorpion_event;
-> +       struct hw_perf_event *hwc = &event->hw;
-> +
-> +       krait_decode_event(hwc->config_base, &region, &group, &code,
-> +                          &venum_event, &scorpion_event);
-> +
-> +       if (venum_event || scorpion_event) {
-> +               /* Ignore invalid events */
-> +               if (group > 3 || region > 3)
-
-Where does the 3 come from?
-
-Will
+> -- 
+> FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+> according to speedtest.net.
