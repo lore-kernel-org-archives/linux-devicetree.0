@@ -1,76 +1,39 @@
-From: Jon Hunter <jgchunter@gmail.com>
-Subject: Re: [PATCH 3/4] arm: am33xx: DT quirks for am33xx based beaglebone
- variants
-Date: Fri, 20 Feb 2015 16:13:05 +0000
-Message-ID: <54E75D11.3060409@gmail.com>
-References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com> <1424271576-1952-4-git-send-email-pantelis.antoniou@konsulko.com> <20150219181656.GF32521@atomide.com> <9C7BFC7C-0751-4233-927F-D01AF078704B@antoniou-consulting.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] genirq: fix virtual irq demuxer related comments
+Date: Fri, 20 Feb 2015 16:12:59 +0000
+Message-ID: <20150220161259.GL13659@leverpostej>
+References: <20150210150013.GD7119@twins.programming.kicks-ass.net>
+ <1423582992-8154-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20150210161425.GZ21418@twins.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9C7BFC7C-0751-4233-927F-D01AF078704B@antoniou-consulting.com>
+Content-Disposition: inline
+In-Reply-To: <20150210161425.GZ21418@twins.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Ludovic Desroches <ludovic.desroches@atmel.com>, linux-arm-kernel@lists.infradead.org, Matt Porter <matt.porter@linaro.org>, Guenter Roeck <linux@roeck-us.net>
+To: Peter Zijlstra <peterz@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Peter,
 
-
-On 02/19/2015 06:28 PM, Pantelis Antoniou wrote:
-> Hi Tony,
+On Tue, Feb 10, 2015 at 04:14:25PM +0000, Peter Zijlstra wrote:
+> On Tue, Feb 10, 2015 at 04:43:12PM +0100, Boris Brezillon wrote:
+> > Replace remaining 'Dumb' occurrences by 'Virtual'.
+> > Remove inappropriate notes in kerneldoc headers.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 > 
->> On Feb 19, 2015, at 20:16 , Tony Lindgren <tony@atomide.com> wrote:
->>
->> * Pantelis Antoniou <pantelis.antoniou@konsulko.com> [150218 07:03]:
->>> Implement DT quirks for the am33xx beaglebone boards.
->>> --- /dev/null
->>> +++ b/arch/arm/mach-omap2/am33xx-dt-quirks.c
->> ...
->>> +
->>> +/*
->>> + * The board IDs for am33xx board are in an I2C EEPROM
->>> + * We are very early in the boot process so we have to
->>> + * read the EEPROM directly without using the I2C layer.
->>> + *
->>> + * Note that we rely on the bootloader setting up the muxes
->>> + * (which is the case for u-boot).
->>> + */
->>> +
->>> +/* I2C Status Register (OMAP_I2C_STAT): */
->>> +#define OMAP_I2C_STAT_XDR	(1 << 14)	/* TX Buffer draining */
->>> +#define OMAP_I2C_STAT_RDR	(1 << 13)	/* RX Buffer draining */
->>> +#define OMAP_I2C_STAT_BB	(1 << 12)	/* Bus busy */
->>> +#define OMAP_I2C_STAT_ROVR	(1 << 11)	/* Receive overrun */
->>> +#define OMAP_I2C_STAT_XUDF	(1 << 10)	/* Transmit underflow */
->>> +#define OMAP_I2C_STAT_AAS	(1 << 9)	/* Address as slave */
->>> +#define OMAP_I2C_STAT_BF	(1 << 8)	/* Bus Free */
->>> +#define OMAP_I2C_STAT_XRDY	(1 << 4)	/* Transmit data ready */
->>> +#define OMAP_I2C_STAT_RRDY	(1 << 3)	/* Receive data ready */
->>> +#define OMAP_I2C_STAT_ARDY	(1 << 2)	/* Register access ready */
->>> +#define OMAP_I2C_STAT_NACK	(1 << 1)	/* No ack interrupt enable */
->>> +#define OMAP_I2C_STAT_AL	(1 << 0)	/* Arbitration lost int ena */
->> ...
->>
->> Uhh I don't like the idea of duplicating the i2c-omap.c driver under
->> arch/arm.. And in general we should initialize things later rather
->> than earlier.
->>
->> What's stopping doing these quirk checks later on time with just
->> a regular device driver, something like drivers/misc/bbone-quirks.c?
->>
-> 
-> We have no choice; we are way early in the boot process, right after
-> the device tree unflattening step.
+> Thanks, squished into the other one.
 
-Can you elaborate with an example of why not? Why can't the overlay
-happen at a later stage in the kernel boot as Tony suggests?
+Would you be able to drop the virtual demuxer patch(es) for now?
 
-One thought would be that ideally devices that are dependent on a
-particular board variant would be disabled in the base DT blob until you
-know what board you are. However, that assumes that they can be
-initialised at a later stage in the boot process and may be for some
-regulators or other devices this is not possible. I know you mentioned
-some time restrictions for some devices, but I still don't see why it
-could not happen later.
+The fundamental problem here is that a physical IRQ is shared by wakeup
+and IRQF_NO_SUSPEND handlers. Neither the virtual demuxer nor the flag
+approach solve that problem.
 
-Jon
+Boris and I have spoken on IRC and have some ideas as to what we could
+do, but no code just yet.
+
+Thanks,
+Mark.
