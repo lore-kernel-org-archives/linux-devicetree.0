@@ -1,154 +1,66 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
-Date: Fri, 20 Feb 2015 18:49:28 +0200
-Message-ID: <886019B3-F60D-4FF5-AA93-EC8D6B68F8C2@konsulko.com>
-References: <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com> <20150218154106.GC29429@leverpostej> <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com> <20150218173115.GG29429@leverpostej> <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com> <54E613E7.2020405@gmail.com> <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com> <54E61DD2.3060002@gmail.com> <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com> <54E742F2.80506@hurleysoftware.com> <20150220143533.GA29908@odux.rfo.atmel.com> <54E74BF6.208@hurleysoftware.com> <F2A28070-4A8D-4869-8E2A-6AA744EECCCE@konsulko.com> <54E751BF.3000604@hurleysoftware.com> <9EDB5290-5C9F-42C1-826A-B38CC8C01F9B@konsulko.com> <54E7621B.6040100@hurleysoftware.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54E7621B.6040100@hurleysoftware.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: frowand.list@gmail.com, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Porter <matt.porter@linaro.org>, Guenter Roeck <linux@roeck-us.net>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv2 02/15] ARM: mvebu: fix usb@ unit address on Armada 38x to match register address
+Date: Fri, 20 Feb 2015 18:04:21 +0100
+Message-ID: <1424451874-25375-3-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On Marvell Armada 38x, the USB2 controller registers are at 0x58000,
+so the corresponding Device Tree node should have a unit address of
+58000, and not 50000. We were using 50000 due to an incorrect
+copy/pastebin of Armada 370/XP code.
 
-> On Feb 20, 2015, at 18:34 , Peter Hurley <peter@hurleysoftware.com> w=
-rote:
->=20
-> On 02/20/2015 10:38 AM, Pantelis Antoniou wrote:
->> Hi Peter,
->>=20
->>> On Feb 20, 2015, at 17:24 , Peter Hurley <peter@hurleysoftware.com>=
- wrote:
->>>=20
->>> On 02/20/2015 10:02 AM, Pantelis Antoniou wrote:
->>>> Hi Peter,
->>>>=20
->>>>> On Feb 20, 2015, at 17:00 , Peter Hurley <peter@hurleysoftware.co=
-m> wrote:
->>>>>=20
->>>>> On 02/20/2015 09:35 AM, Ludovic Desroches wrote:
->=20
-> [...]
->=20
->>>>>> As you said, we can imagine many reasons to have a failure durin=
-g the
->>>>>> production, having several DTB files will increase the risk.
->>>>>=20
->>>>> It's interesting that you don't see the added complexity of open-=
-coding
->>>>> the i2c driver or mixing DTS fragments for different designs as i=
-ncreased risk
->>>>> (for us all).
->>>>>=20
->>>>>=20
->>>>=20
->>>> You don=E2=80=99t have to use it.
->>>=20
->>>> diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Ma=
-kefile
->>>> index 5d27dfd..02129e7 100644
->>>> --- a/arch/arm/mach-omap2/Makefile
->>>> +++ b/arch/arm/mach-omap2/Makefile
->>>> @@ -259,6 +259,11 @@ obj-$(CONFIG_MACH_CRANEBOARD)		+=3D board-am3=
-517crane.o
->>>>=20
->>>> obj-$(CONFIG_MACH_SBC3530)		+=3D board-omap3stalker.o
->>>>=20
->>>> +# DT quirks
->>>> +ifneq ($(CONFIG_OF_DYNAMIC),)
->>>> +obj-$(CONFIG_SOC_AM33XX)		+=3D am33xx-dt-quirks.o
->>>> +endif
->>>=20
->>> Won't this automatically be included on my Black that supports DT o=
-verlays?
->>>=20
->>=20
->> Yes it will. It is a grand total of 498 lines of code, and the total=
- size of
->> the code segment is about 2.2K.
->>=20
->> You do realize that you=E2=80=99re probably booting a multi-platform=
- kernel on the=20
->> black right? Including things for all 2xxx/3xxx and 44xx platforms?
->> For instance:
->>=20
->>> ~/ti/kernels/linux-github.git $ wc -l arch/arm/mach-omap2/*44xx*.c
->>>   443 arch/arm/mach-omap2/clockdomains44xx_data.c
->>>   526 arch/arm/mach-omap2/cminst44xx.c
->>>   251 arch/arm/mach-omap2/cpuidle44xx.c
->>>   250 arch/arm/mach-omap2/dpll44xx.c
->>>  4864 arch/arm/mach-omap2/omap_hwmod_44xx_data.c
->>>   295 arch/arm/mach-omap2/pm44xx.c
->>>   358 arch/arm/mach-omap2/powerdomains44xx_data.c
->>>    62 arch/arm/mach-omap2/prcm_mpu44xx.c
->>>   770 arch/arm/mach-omap2/prm44xx.c
->>>   210 arch/arm/mach-omap2/prminst44xx.c
->>>   117 arch/arm/mach-omap2/vc44xx_data.c
->>>   130 arch/arm/mach-omap2/voltagedomains44xx_data.c
->>>   104 arch/arm/mach-omap2/vp44xx_data.c
->>>  8380 total
->>=20
->> I bet those things are far larger than 2.2K. And I also bet that in =
-the
->> tradeoff analysis that the board maintainer did things came down to=20
->> increasing complexity so that he can consolidate the kernels for all=
- the
->> other platforms he has to support besides the black.
->=20
-> Not that it really matters, but I'm not using any of that.
->=20
->=20
->>>> Some people really do though. As for increased risk
->>>> I expect to see arguments instead of a statement.
->>>=20
->>> No one is wasting your time with random arguments. Please keep your=
- tone civil.
->>>=20
->>=20
->> A statement like 'increasing risk for all of us' is very open ended.=
- What is
->> the risk? How much of it exists?
->=20
-> My point was simply that this trades reduced complexity in one area
-> with increased complexity in another area.
->=20
-> For you, that trade-off is worth it, but for others, not so much.
->=20
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+---
+ arch/arm/boot/dts/armada-388-db.dts | 2 +-
+ arch/arm/boot/dts/armada-388-gp.dts | 2 +-
+ arch/arm/boot/dts/armada-38x.dtsi   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Of course and that=E2=80=99s the point. No-one is going to remove the v=
-anilla
-DTSs for the beaglebone black. If you don=E2=80=99t want to use this ca=
-pability
-there won=E2=80=99t be any impact.
+diff --git a/arch/arm/boot/dts/armada-388-db.dts b/arch/arm/boot/dts/armada-388-db.dts
+index 16512ef..af6c74e 100644
+--- a/arch/arm/boot/dts/armada-388-db.dts
++++ b/arch/arm/boot/dts/armada-388-db.dts
+@@ -99,7 +99,7 @@
+ 				phy-mode = "rgmii-id";
+ 			};
+ 
+-			usb@50000 {
++			usb@58000 {
+ 				status = "ok";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/armada-388-gp.dts b/arch/arm/boot/dts/armada-388-gp.dts
+index 590b383..3ff0573 100644
+--- a/arch/arm/boot/dts/armada-388-gp.dts
++++ b/arch/arm/boot/dts/armada-388-gp.dts
+@@ -135,7 +135,7 @@
+ 			};
+ 
+ 			/* CON4 */
+-			usb@50000 {
++			usb@58000 {
+ 				vcc-supply = <&reg_usb2_0_vbus>;
+ 				status = "okay";
+ 			};
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 54ebce7..96d7cf0 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -435,7 +435,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			usb@50000 {
++			usb@58000 {
+ 				compatible = "marvell,orion-ehci";
+ 				reg = <0x58000 0x500>;
+ 				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.1.0
 
-The EEPROM probe is only triggered by the presence of the quirk node,
-so if you don=E2=80=99t boot with a DTB that contains it there is no ch=
-ange
-in the boot process.
-
-> FWIW, I agree that some mechanism is required to support the other
-> use cases. I just don't think ease of manufacturing, when the
-> submit configuration is the BeagleBone, is where I would hang my hat.
->=20
-
-The beaglebone is just an open source friendly platform that I can
-demonstrate the capability.
-
->=20
->> If I offended you I=E2=80=99m really sorry though, I meant no such t=
-hing.
->=20
-> In re-reading it, I realize I shouldn't have taken offense. Thanks an=
-yway
-> for the apology.
->=20
-> Regards,
-> Peter Hurley
-
-Regards
-
-=E2=80=94 Pantelis
