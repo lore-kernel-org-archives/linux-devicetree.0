@@ -1,261 +1,218 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
-Date: Fri, 20 Feb 2015 16:38:14 +0200
-Message-ID: <3EEA42F7-393E-46AD-B732-BCA7D6E068CE@konsulko.com>
-References: <1424271576-1952-1-git-send-email-pantelis.antoniou@konsulko.com> <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com> <20150218154106.GC29429@leverpostej> <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com> <20150218173115.GG29429@leverpostej> <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com> <54E613E7.2020405@gmail.com> <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com> <54E61DD2.3060002@gmail.com> <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com> <54E742F2.80506@hurleysoftware.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
+Date: Fri, 20 Feb 2015 08:41:19 -0600
+Message-ID: <20150220144119.GB1707@saruman.tx.rr.com>
+References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org>
+ <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b5gNqxB1S1yM7hjW"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54E742F2.80506@hurleysoftware.com>
+Content-Disposition: inline
+In-Reply-To: <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: frowand.list@gmail.com, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Ludovic Desroches <ludovic.desroches@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Porter <matt.porter@linaro.org>, Guenter Roeck <linux@roeck-us.net>
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, balbi@ti.com, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dan . zhao" <dan.zhao@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+--b5gNqxB1S1yM7hjW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Feb 20, 2015, at 16:21 , Peter Hurley <peter@hurleysoftware.com> w=
-rote:
->=20
-> On 02/19/2015 12:38 PM, Pantelis Antoniou wrote:
->>=20
->>> On Feb 19, 2015, at 19:30 , Frank Rowand <frowand.list@gmail.com> w=
-rote:
->>>=20
->>> On 2/19/2015 9:00 AM, Pantelis Antoniou wrote:
->>>> Hi Frank,
->>>>=20
->>>>> On Feb 19, 2015, at 18:48 , Frank Rowand <frowand.list@gmail.com>=
- wrote:
->>>>>=20
->>>>> On 2/19/2015 6:29 AM, Pantelis Antoniou wrote:
->>>>>> Hi Mark,
->>>>>>=20
->>>>>>> On Feb 18, 2015, at 19:31 , Mark Rutland <mark.rutland@arm.com>=
- wrote:
->>>>>>>=20
->>>>>>>>>> +While this may in theory work, in practice it is very cumbe=
-rsome
->>>>>>>>>> +for the following reasons:
->>>>>>>>>> +
->>>>>>>>>> +1. The act of selecting a different boot device tree blob r=
-equires
->>>>>>>>>> +a reasonably advanced bootloader with some kind of configur=
-ation or
->>>>>>>>>> +scripting capabilities. Sadly this is not the case many tim=
-es, the
->>>>>>>>>> +bootloader is extremely dumb and can only use a single dt b=
-lob.
->>>>>>>>>=20
->>>>>>>>> You can have several bootloader builds, or even a single buil=
-d with
->>>>>>>>> something like appended DTB to get an appropriate DTB if the =
-same binary
->>>>>>>>> will otherwise work across all variants of a board.
->>>>>>>>>=20
->>>>>>>>=20
->>>>>>>> No, the same DTB will not work across all the variants of a bo=
-ard.
->>>>>>>=20
->>>>>>> I wasn't on about the DTB. I was on about the loader binary, in=
- the case
->>>>>>> the FW/bootloader could be common even if the DTB couldn't.
->>>>>>>=20
->>>>>>> To some extent there must be a DTB that will work across all va=
-riants
->>>>>>> (albeit with limited utility) or the quirk approach wouldn't wo=
-rk=E2=80=A6
->>>>>>>=20
->>>>>>=20
->>>>>> That=E2=80=99s not correct; the only part of the DTB that needs =
-to be common
->>>>>> is the model property that would allow the quirk detection logic=
- to fire.
->>>>>>=20
->>>>>> So, there is a base DTB that will work on all variants, but that=
- only means
->>>>>> that it will work only up to the point that the quirk detector m=
-ethod
->>>>>> can work. So while in recommended practice there are common subs=
-ets
->>>>>> of the DTB that might work, they might be unsafe.
->>>>>>=20
->>>>>> For instance on the beaglebone the regulator configuration is di=
-fferent
->>>>>> between white and black, it is imperative you get them right oth=
-erwise
->>>>>> you risk board damage.
->>>>>>=20
->>>>>>>>> So it's not necessarily true that you need a complex bootload=
-er.
->>>>>>>>>=20
->>>>>>>>=20
->>>>>>>>>> +2. On many instances boot time is extremely critical; in so=
-me cases
->>>>>>>>>> +there are hard requirements like having working video feeds=
- in under
->>>>>>>>>> +2 seconds from power-up. This leaves an extremely small tim=
-e budget for
->>>>>>>>>> +boot-up, as low as 500ms to kernel entry. The sanest way to=
- get there
->>>>>>>>>> +is by removing the standard bootloader from the normal boot=
- sequence
->>>>>>>>>> +altogether by having a very small boot shim that loads the =
-kernel and
->>>>>>>>>> +immediately jumps to kernel, like falcon-boot mode in u-boo=
-t does.
->>>>>>>>>=20
->>>>>>>>> Given my previous comments above I don't see why this is rele=
-vant.
->>>>>>>>> You're already passing _some_ DTB here, so if you can organis=
-e for the
->>>>>>>>> board to statically provide a sane DTB that's fine, or you ca=
-n resort to
->>>>>>>>> appended DTB if it's not possible to update the board configu=
-ration.
->>>>>>>>>=20
->>>>>>>>=20
->>>>>>>> You=E2=80=99re missing the point. I can=E2=80=99t use the same=
- DTB for each revision of the
->>>>>>>> board. Each board is similar but it=E2=80=99s not identical.
->>>>>>>=20
->>>>>>> I think you've misunderstood my point. If you program the board=
- with the
->>>>>>> relevant DTB, or use appended DTB, then you will pass the corre=
-ct DTB to
->>>>>>> the kernel without need for quirks.
->>>>>>>=20
->>>>>>> I understand that each variant is somewhat incompatible (and he=
-nce needs
->>>>>>> its own DTB).
->>>>>>=20
->>>>>> In theory it might work, in practice this does not. Ludovic ment=
-ioned that they
->>>>>> have 27 different DTBs in use at the moment. At a relatively com=
-mon 60k per DTB
->>>>>> that=E2=80=99s 27x60k =3D 1.6MB of DTBs, that need to be install=
-ed.
->>>>>=20
->>>>> < snip >
->>>>>=20
->>>>> Or you can install the correct DTB on the board.  You trust your =
-manufacturing line
->>>>> to install the correct resistors.  You trust your manufacturing l=
-ine to install the
->>>>> correct kernel version (eg an updated version to resolve a securi=
-ty issue).
->>>>>=20
->>>>> I thought the DT blob was supposed to follow the same standard th=
-at other OS's or
->>>>> bootloaders understood.  Are you willing to break that?  (This is=
- one of those
->>>>> ripples I mentioned in my other emails.)
->>>>>=20
->>>>=20
->>>> Trust no-one.
->>>>=20
->>>> This is one of those things that the kernel community doesn=E2=80=99=
-t understand which makes people
->>>> who push product quite mad.
->>>>=20
->>>> Engineering a product is not only about meeting customer spec, in =
-order to turn a profit
->>>> the whole endeavor must be engineered as well for manufacturabilit=
-y.
->>>>=20
->>>> Yes, you can always manually install files in the bootloader. For =
-1 board no problem.
->>>> For 10 doable. For 100 I guess you can hire an extra guy. For 1 mi=
-llion? Guess what,
->>>> instead of turning a profit you=E2=80=99re losing money if you onl=
-y have a few cents of profit
->>>> per unit.
->>>=20
->>> I'm not installing physical components manually.  Why would I be in=
-stalling software
->>> manually?  (rhetorical question)
->>>=20
->>=20
->> Because on high volume product runs the flash comes preprogrammed an=
-d is soldered as is.
->>=20
->> Having a single binary to flash to every revision of the board makes=
- logistics considerably
->> easier.
->>=20
->> Having to boot and tweak the bootloader settings to select the corre=
-ct dtb (even if it=E2=80=99s present
->> on the flash medium) takes time and is error-prone.
->>=20
->> Factory time =3D=3D money, errors =3D=3D money.
->>=20
->>>>=20
->>>> No knobs to tweak means no knobs to break. And a broken knob can h=
-ave pretty bad consequences
->>>> for a few million units.=20
->>>=20
->>> And you produce a few million units before testing that the first o=
-ne off the line works?
->>>=20
->>=20
->> The first one off the line works. The rest will get some burn in and=
- functional testing if you=E2=80=99re
->> lucky. In many cases where the product is very cheap it might make f=
-inancial sense to just ship
->> as is and deal with recalls, if you=E2=80=99re reasonably happy afte=
-r a little bit of statistical sampling.
->>=20
->> Hardware is hard :)
->=20
-> I'm failing to see how this series improves your manufacturing proces=
-s at all.
->=20
-> 1. Won't you have to provide the factory with different eeprom images=
- for the
->   White and Black?  You _trust_ them to get that right, or more likel=
-y, you
->   have process control procedures in place so that you don't get 1 mi=
-llion Blacks
->   flashed with the White eeprom image.
->=20
-> 2. The White and Black use different memory technology so it's not as=
- if the
->   eMMC from the Black will end up on the White SMT line (or vice vers=
-a).
->=20
-> 3  For that matter, why wouldn't you worry that all the microSD cards=
- intended
->   for the White were accidentally assembled with the first 50,000 Bla=
-cks; at
->   that point you're losing a lot more than a few cents of profit. And=
- that has
->   nothing to do with what image you provided.
->=20
-> 3. The factory is just as likely to use some other customer's image b=
-y accident,
->   so you're just as likely to have the same failure rate if you have =
-no test
->   process at the factory.
->=20
-> 4. If you're using offline programming, the image has to be tested af=
-ter
->   reflow anyway.
->=20
-> IOW, your QA process will not change at all =3D=3D same cost.
->=20
+Hi,
 
-I never said this fixes every case where someone might screw up, I just=
- said
-that it makes it extremely less likely.
+On Thu, Feb 12, 2015 at 03:37:26PM +0800, Zhangfei Gao wrote:
+> Add usb phy controller for hi6220 platform
+>=20
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>  drivers/phy/Kconfig          |   9 ++
+>  drivers/phy/Makefile         |   1 +
+>  drivers/phy/phy-hi6220-usb.c | 306 +++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 316 insertions(+)
+>  create mode 100644 drivers/phy/phy-hi6220-usb.c
+>=20
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index ccad880..40a1ef1 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -162,6 +162,15 @@ config PHY_HIX5HD2_SATA
+>  	help
+>  	  Support for SATA PHY on Hisilicon hix5hd2 Soc.
+> =20
+> +config PHY_HI6220_USB
+> +	tristate "hi6220 USB PHY support"
+> +	select USB_PHY
+> +	select MFD_SYSCON
+> +	help
+> +	  Enable this to support the HISILICON HI6220 USB PHY.
+> +
+> +	  To compile this driver as a module, choose M here.
+> +
+>  config PHY_SUN4I_USB
+>  	tristate "Allwinner sunxi SoC USB PHY driver"
+>  	depends on ARCH_SUNXI && HAS_IOMEM && OF
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index aa74f96..ec43c2d 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -19,6 +19,7 @@ obj-$(CONFIG_TI_PIPE3)			+=3D phy-ti-pipe3.o
+>  obj-$(CONFIG_TWL4030_USB)		+=3D phy-twl4030-usb.o
+>  obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+=3D phy-exynos5250-sata.o
+>  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+=3D phy-hix5hd2-sata.o
+> +obj-$(CONFIG_PHY_HI6220_USB)		+=3D phy-hi6220-usb.o
+>  obj-$(CONFIG_PHY_SUN4I_USB)		+=3D phy-sun4i-usb.o
+>  obj-$(CONFIG_PHY_SAMSUNG_USB2)		+=3D phy-exynos-usb2.o
+>  phy-exynos-usb2-y			+=3D phy-samsung-usb2.o
+> diff --git a/drivers/phy/phy-hi6220-usb.c b/drivers/phy/phy-hi6220-usb.c
+> new file mode 100644
+> index 0000000..0d9f5ac
+> --- /dev/null
+> +++ b/drivers/phy/phy-hi6220-usb.c
+> @@ -0,0 +1,306 @@
+> +/*
+> + * Copyright (c) 2015 Linaro Ltd.
+> + * Copyright (c) 2015 Hisilicon Limited.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/usb/gadget.h>
+> +#include <linux/usb/otg.h>
+> +
+> +#define SC_PERIPH_CTRL4			0x00c
+> +
+> +#define CTRL4_PICO_SIDDQ		BIT(6)
+> +#define CTRL4_PICO_OGDISABLE		BIT(8)
+> +#define CTRL4_PICO_VBUSVLDEXT		BIT(10)
+> +#define CTRL4_PICO_VBUSVLDEXTSEL	BIT(11)
+> +#define CTRL4_OTG_PHY_SEL		BIT(21)
+> +
+> +#define SC_PERIPH_CTRL5			0x010
+> +
+> +#define CTRL5_USBOTG_RES_SEL		BIT(3)
+> +#define CTRL5_PICOPHY_ACAENB		BIT(4)
+> +#define CTRL5_PICOPHY_BC_MODE		BIT(5)
+> +#define CTRL5_PICOPHY_CHRGSEL		BIT(6)
+> +#define CTRL5_PICOPHY_VDATSRCEND	BIT(7)
+> +#define CTRL5_PICOPHY_VDATDETENB	BIT(8)
+> +#define CTRL5_PICOPHY_DCDENB		BIT(9)
+> +#define CTRL5_PICOPHY_IDDIG		BIT(10)
+> +
+> +#define SC_PERIPH_CTRL8			0x018
+> +#define SC_PERIPH_RSTEN0		0x300
+> +#define SC_PERIPH_RSTDIS0		0x304
+> +
+> +#define RST0_USBOTG_BUS			BIT(4)
+> +#define RST0_POR_PICOPHY		BIT(5)
+> +#define RST0_USBOTG			BIT(6)
+> +#define RST0_USBOTG_32K			BIT(7)
+> +
+> +#define EYE_PATTERN_PARA		0x7053348c
+> +
+> +struct hi6220_priv {
+> +	struct usb_phy phy;
+> +	struct delayed_work work;
+> +	struct regmap *reg;
+> +	struct clk *clk;
+> +	struct regulator *vcc;
+> +	struct device *dev;
+> +	int gpio_vbus;
+> +	int gpio_id;
+> +	enum usb_otg_state state;
+> +};
+> +
+> +static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
+> +{
+> +	struct usb_otg *otg =3D priv->phy.otg;
+> +
+> +	if (!otg->gadget)
+> +		return;
+> +
+> +	if (on)
+> +		usb_gadget_connect(otg->gadget);
+> +	else
+> +		usb_gadget_disconnect(otg->gadget);
 
-And no-one is holding the beaglebone as the paragon of good design proc=
-ess for
-ease of manufacturing as far as I know.
-=20
-> Regards,
-> Peter Hurley
+why is the PHY fiddling with pullups ?
 
-Regards
+> +}
+> +
+> +static void hi6220_detect_work(struct work_struct *work)
+> +{
+> +	struct hi6220_priv *priv =3D
+> +		container_of(work, struct hi6220_priv, work.work);
+> +	int gpio_id, gpio_vbus;
+> +	enum usb_otg_state state;
+> +
+> +	if (!gpio_is_valid(priv->gpio_id) || !gpio_is_valid(priv->gpio_vbus))
+> +		return;
+> +
+> +	gpio_id =3D gpio_get_value_cansleep(priv->gpio_id);
+> +	gpio_vbus =3D gpio_get_value_cansleep(priv->gpio_vbus);
 
-=E2=80=94 Pantelis
+looks like this should be using extcon
+
+> +
+> +	if (gpio_vbus =3D=3D 0) {
+> +		if (gpio_id =3D=3D 1)
+> +			state =3D OTG_STATE_B_PERIPHERAL;
+> +		else
+> +			state =3D OTG_STATE_A_HOST;
+> +	} else {
+> +		state =3D OTG_STATE_A_HOST;
+> +	}
+> +
+> +	if (priv->state !=3D state) {
+> +		hi6220_start_peripheral(priv, state =3D=3D OTG_STATE_B_PERIPHERAL);
+> +		priv->state =3D state;
+> +	}
+> +}
+> +
+> +static irqreturn_t hiusb_gpio_intr(int irq, void *data)
+> +{
+> +	struct hi6220_priv *priv =3D (struct hi6220_priv *)data;
+> +
+> +	/* add debounce time */
+> +	schedule_delayed_work(&priv->work, msecs_to_jiffies(100));
+
+this is really bad. We have threaded interrupt support, right ?
+
+--=20
+balbi
+
+--b5gNqxB1S1yM7hjW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU50ePAAoJEIaOsuA1yqREJIkP/0S2/nYVx/WW8g9gsb8aOnCl
+cWlaZyYitY/FQavTW7h2mGpkaTnal/6oDVy0k01+7EPEbihF054K94iwXOfL0EFA
+/d4UskLbgTNGcGPfh9wIP8moC19uIHU3CD0pDcHQwLlBfkc7zAOHZe7wMIDtQlB7
+MhPcM+JOgEe2g76eHTjQagnQEa6S9I95HsNFLYOMVGBU9qLPiORrwpFwR+6J75pg
+Tirr1VX2eFlH/YpFxdfswTERnZK4Kqgp16odlqRNzsxUbSYaJRU4u+/XvVxnCInv
+uSFz4IlvhnEe2FRyNQgvpRKw2wt+NAMKtoHY6L41pM8TZKZZJydJ41eSfFDCAiyC
+ueOTCELCEiC5TV7EhlWlVIvUjGrTDR04pVFEbdnOkZG8tJoxShqO65IPxiO/xeDa
+fRImfkJ9sEhUjpdPPk7BUCmUUwckOacmKWdxR3Bm9tK2y9Bwcy5SkOIUunvHZiS7
+W530BWlhq0YNNePkqoH3raPF8EHskqonMwEg9+J4XwsAZXFQTQjQ02DORm/hV1Nm
+cY10uR6lzPkzkQne/v88tlOQbsQh7Rgu3XQBe1gt+7/dXRhAxq9+/zSVRnr48F/8
+84ZVWkY/2+/yRe58ARlRAScwKT8AMNWZW/pqGZ5aCwzO4KrqjVGwlKgiwbSbkogu
+Y8mOYufx4gZwB+9nv7m4
+=pEsG
+-----END PGP SIGNATURE-----
+
+--b5gNqxB1S1yM7hjW--
