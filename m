@@ -1,136 +1,88 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
-Date: Fri, 20 Feb 2015 19:37:08 +0200
-Message-ID: <37628878-C4B4-49F6-9000-B993250F54AB@konsulko.com>
-References: <1424271576-1952-3-git-send-email-pantelis.antoniou@konsulko.com> <20150218154106.GC29429@leverpostej> <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com> <20150218173115.GG29429@leverpostej> <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com> <54E613E7.2020405@gmail.com> <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com> <54E61DD2.3060002@gmail.com> <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com> <54E742F2.80506@hurleysoftware.com> <20150220143533.GA29908@odux.rfo.atmel.com> <CAL_JsqLENvqsG+vjK740Aw4yKYONwHB1b-B7mKvE_iAZ1JSdNw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLENvqsG+vjK740Aw4yKYONwHB1b-B7mKvE_iAZ1JSdNw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Peter Hurley <peter@hurleysoftware.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Porter <matt.porter@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Ludovic Desroches <ludovic.desroches@atmel.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
+Date: Fri, 20 Feb 2015 17:46:41 +0000
+Message-ID: <20150220174641.GI8656@n2100.arm.linux.org.uk>
+References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1424365708-26681-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Feb 19, 2015 at 05:08:28PM +0000, Srinivas Kandagatla wrote:
+> +static struct class eeprom_class = {
+> +	.name		= "eeprom",
+> +	.dev_groups	= eeprom_dev_groups,
+> +};
+> +
+> +int eeprom_register(struct eeprom_device *eeprom)
+> +{
+> +	int rval;
+> +
+> +	if (!eeprom->regmap || !eeprom->size) {
+> +		dev_err(eeprom->dev, "Regmap not found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	eeprom->id = ida_simple_get(&eeprom_ida, 0, 0, GFP_KERNEL);
+> +	if (eeprom->id < 0)
+> +		return eeprom->id;
+> +
+> +	eeprom->edev.class = &eeprom_class;
+> +	eeprom->edev.parent = eeprom->dev;
+> +	eeprom->edev.of_node = eeprom->dev ? eeprom->dev->of_node : NULL;
+> +	dev_set_name(&eeprom->edev, "eeprom%d", eeprom->id);
+> +
+> +	device_initialize(&eeprom->edev);
+> +
+> +	dev_dbg(&eeprom->edev, "Registering eeprom device %s\n",
+> +		dev_name(&eeprom->edev));
+> +
+> +	rval = device_add(&eeprom->edev);
+> +	if (rval)
+> +		return rval;
+> +
+> +	mutex_lock(&eeprom_list_mutex);
+> +	list_add(&eeprom->list, &eeprom_list);
+> +	mutex_unlock(&eeprom_list_mutex);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(eeprom_register);
+> +
+> +int eeprom_unregister(struct eeprom_device *eeprom)
+> +{
+> +	device_del(&eeprom->edev);
+> +
+> +	mutex_lock(&eeprom_list_mutex);
+> +	list_del(&eeprom->list);
+> +	mutex_unlock(&eeprom_list_mutex);
+> +
+> +	return 0;
 
-> On Feb 20, 2015, at 19:30 , Rob Herring <robherring2@gmail.com> wrote=
-:
->=20
-> On Fri, Feb 20, 2015 at 8:35 AM, Ludovic Desroches
-> <ludovic.desroches@atmel.com> wrote:
->> On Fri, Feb 20, 2015 at 09:21:38AM -0500, Peter Hurley wrote:
->>> On 02/19/2015 12:38 PM, Pantelis Antoniou wrote:
->>>>=20
->>>>> On Feb 19, 2015, at 19:30 , Frank Rowand <frowand.list@gmail.com>=
- wrote:
->>>>>=20
->>>>> On 2/19/2015 9:00 AM, Pantelis Antoniou wrote:
->>>>>> Hi Frank,
->=20
-> [...]
->=20
->>>>>> This is one of those things that the kernel community doesn=E2=80=
-=99t understand which makes people
->>>>>> who push product quite mad.
->>>>>>=20
->>>>>> Engineering a product is not only about meeting customer spec, i=
-n order to turn a profit
->>>>>> the whole endeavor must be engineered as well for manufacturabil=
-ity.
->>>>>>=20
->>>>>> Yes, you can always manually install files in the bootloader. Fo=
-r 1 board no problem.
->>>>>> For 10 doable. For 100 I guess you can hire an extra guy. For 1 =
-million? Guess what,
->>>>>> instead of turning a profit you=E2=80=99re losing money if you o=
-nly have a few cents of profit
->>>>>> per unit.
->>>>>=20
->>>>> I'm not installing physical components manually.  Why would I be =
-installing software
->>>>> manually?  (rhetorical question)
->>>>>=20
->>>>=20
->>>> Because on high volume product runs the flash comes preprogrammed =
-and is soldered as is.
->>>>=20
->>>> Having a single binary to flash to every revision of the board mak=
-es logistics considerably
->>>> easier.
->>>>=20
->>>> Having to boot and tweak the bootloader settings to select the cor=
-rect dtb (even if it=E2=80=99s present
->>>> on the flash medium) takes time and is error-prone.
->>>>=20
->>>> Factory time =3D=3D money, errors =3D=3D money.
->>>>=20
->>>>>>=20
->>>>>> No knobs to tweak means no knobs to break. And a broken knob can=
- have pretty bad consequences
->>>>>> for a few million units.
->>>>>=20
->>>>> And you produce a few million units before testing that the first=
- one off the line works?
->>>>>=20
->>>>=20
->>>> The first one off the line works. The rest will get some burn in a=
-nd functional testing if you=E2=80=99re
->>>> lucky. In many cases where the product is very cheap it might make=
- financial sense to just ship
->>>> as is and deal with recalls, if you=E2=80=99re reasonably happy af=
-ter a little bit of statistical sampling.
->>>>=20
->>>> Hardware is hard :)
->>>=20
->>> I'm failing to see how this series improves your manufacturing proc=
-ess at all.
->>>=20
->>> 1. Won't you have to provide the factory with different eeprom imag=
-es for the
->>>   White and Black?  You _trust_ them to get that right, or more lik=
-ely, you
->>>   have process control procedures in place so that you don't get 1 =
-million Blacks
->>>   flashed with the White eeprom image.
->>>=20
->>> 2. The White and Black use different memory technology so it's not =
-as if the
->>>   eMMC from the Black will end up on the White SMT line (or vice ve=
-rsa).
->>>=20
->>> 3  For that matter, why wouldn't you worry that all the microSD car=
-ds intended
->>>   for the White were accidentally assembled with the first 50,000 B=
-lacks; at
->>>   that point you're losing a lot more than a few cents of profit. A=
-nd that has
->>>   nothing to do with what image you provided.
->>>=20
->>=20
->> As you said, we can imagine many reasons to have a failure during th=
-e
->> production, having several DTB files will increase the risk.
->=20
-> Then package them as a single file. You can even use DT to do that.
-> See u-boot FIT image.
->=20
+There's problems with this.  "edev" is embedded into eeprom, and "edev"
+is a refcounted structure - it has a lifetime, and the lifetime of
+eeprom is thus determined by edev.
 
-In the ideal case there is no u-boot, and no bootloader.
+What this means is that calling eeprom_unregister() and then freeing
+the eeprom structure is a potentially unsafe operation - the memory
+backing edev must only be freed when the release method for the
+struct device has been called.
 
-Packaging 27 difference DTBs, as in the Atmel people case, differing in=
- only a few=20
-properties seems a waste of space, no? =20
+> +struct eeprom_device {
+> +	struct regmap		*regmap;
+> +	int			stride;
+> +	size_t			size;
+> +	struct device		*dev;
 
-We keep on dancing around the issue, namely that DT does not have a qui=
-rk/variant
-mechanism. I feel that it is a glaring omission. We can=E2=80=99t keep =
-shoveling crap over
-the fence to firmware and expect it to get buried there.
+Failing to understand and address the driver model life time issues is
+a major blocker for this patch.  Sorry.
 
-> Rob
-
-Regards
-
-=E2=80=94 Pantelis
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
