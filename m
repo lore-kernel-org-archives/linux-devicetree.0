@@ -1,85 +1,65 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
-Date: Fri, 20 Feb 2015 08:14:34 +0000
-Message-ID: <54E6ECEA.7020604@linaro.org>
-References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <54E69DB0.60701@codeaurora.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
+ leds: flash: document sysfs interface
+Date: Fri, 20 Feb 2015 09:16:17 +0100
+Message-ID: <20150220081617.GA14057@amd>
+References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
+ <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
+ <20150218224747.GA3999@amd>
+ <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
+ <20150219214043.GB29875@kroah.com>
+ <54E6E89B.4050404@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54E69DB0.60701@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, broonie@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54E6E89B.4050404@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Greg KH <greg@kroah.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Hi!
 
+> >>>>+What:		/sys/class/leds/<led>/available_sync_leds
+> >>>>+Date:		February 2015
+> >>>>+KernelVersion:	3.20
+> >>>>+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
+> >>>>+Description:	read/write
+> >>>>+		Space separated list of LEDs available for flash strobe
+> >>>>+		synchronization, displayed in the format:
+> >>>>+
+> >>>>+		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
+> >>>
+> >>>Multiple values per file, with all the problems we had in /proc. I
+> >>>assume led_id is an integer? What prevents space or dot in led name?
+> >>
+> >>Very good point. How about using a newline instead? That'd be a little bit
+> >>easier to parse, too.
+> >
+> >No, please make it one value per-file, which is what sysfs requires.
+> 
+> The purpose of this attribute is only to provide an information about
+> the range of valid identifiers that can be written to the
+> flash_sync_strobe attribute. Wouldn't splitting this to many attributes
+> be an unnecessary inflation of sysfs files?
 
-On 20/02/15 02:36, Stephen Boyd wrote:
-> On 02/19/15 09:08, Srinivas Kandagatla wrote:
->> diff --git a/drivers/Kconfig b/drivers/Kconfig
->> index c70d6e4..d7afc82 100644
->> --- a/drivers/Kconfig
->> +++ b/drivers/Kconfig
->> @@ -184,4 +184,6 @@ source "drivers/thunderbolt/Kconfig"
->>
->>   source "drivers/android/Kconfig"
->>
->> +source "drivers/eeprom/Kconfig"
->> +
->>   endmenu
->> diff --git a/drivers/Makefile b/drivers/Makefile
->> index 527a6da..57eb5b0 100644
->> --- a/drivers/Makefile
->> +++ b/drivers/Makefile
->> @@ -165,3 +165,4 @@ obj-$(CONFIG_RAS)		+= ras/
->>   obj-$(CONFIG_THUNDERBOLT)	+= thunderbolt/
->>   obj-$(CONFIG_CORESIGHT)		+= coresight/
->>   obj-$(CONFIG_ANDROID)		+= android/
->> +obj-$(CONFIG_EEPROM)		+= eeprom/
->> diff --git a/drivers/eeprom/Kconfig b/drivers/eeprom/Kconfig
->> new file mode 100644
->> index 0000000..2c5452a
->> --- /dev/null
->> +++ b/drivers/eeprom/Kconfig
->> @@ -0,0 +1,19 @@
->> +menuconfig EEPROM
->> +	bool "EEPROM Support"
->> +	depends on OF
->
-> Doesn't this need some sort of select REGMAP somewhere?
-May be depends REGMAP would be good.
+No, it would not. It is required so that we don't end up with broken
+parsers.
+ 
+> Apart from it, we have also flash_faults attribute, that currently
+> provides a space separated list of flash faults that have occurred.
+> If we are to stick tightly to the one-value-per-file rule, then how
+> we should approach flash_faults case? Should the separate file be
+> dynamically created for each reported fault?
 
->
-> Also, why do we need to use regmap for the eeprom framework read/write
-> ops? I liked the simple eeprom::{read,write} API that Maxime had. The
-> regmap part could be a regmap-eeprom driver that implements read/write
-> ops like you've done in the core.
-regmap bus does the same job.
+I think you can get away with flash_faults attribute (since the
+strings are hardcoded).
 
-The only reason for using regmap here is to have more generic drivers 
-for eeprom providers based on different buses like mmio, i2c, spi...
-As of today we could just make the qfprom eeprom provider as more 
-generic eeprom-mmio provider. May be sunxi_sid could reuse it too with 
-some effort.
-
-In future It may be possible to have eeprom-i2c or eeprom-spi providers.
-
->
-
->> +
->> +struct eeprom_device {
->> +	struct regmap		*regmap;
->> +	int			stride;
->> +	size_t			size;
->> +	struct device		*dev;
->> +
->> +	/* Internal to framework */
->> +	struct device		edev;
->> +	int			id;
->> +	struct list_head	list;
->
-> Should there be a module owner here to handle module removal?
->
-
-Good point, we should do some reference counting.
+Dynamically created files would be extremely ugly interface, but you
+could also have files such as "overvoltage_fault" containing either 0
+or 1 ...
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
