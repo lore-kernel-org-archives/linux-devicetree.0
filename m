@@ -1,40 +1,54 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v10 2/2] dt-bindings: add vendor-prefix for X-Powers
-Date: Fri, 20 Feb 2015 19:19:28 +0800
-Message-ID: <1424431168-25157-3-git-send-email-wens@csie.org>
-References: <1424431168-25157-1-git-send-email-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424431168-25157-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v10 0/2] mfd: axp20x: Add DT binding documentation
+Date: Fri, 20 Feb 2015 19:19:26 +0800
+Message-ID: <1424431168-25157-1-git-send-email-wens@csie.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Hi everyone,
 
-Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+This is v10 of the axp20x series. v10 reverts back to the DT bindings
+from v8. This is the binding currently supported by the kernel drivers
+since 3.18. Mark Brown raised concern on the needless changes to
+active regulator bindings in v9.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 96a17541391e..04d63ce07364 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -175,6 +175,7 @@ voipac	Voipac Technologies s.r.o.
- winbond Winbond Electronics corp.
- wlf	Wolfson Microelectronics
- wm	Wondermedia Technologies, Inc.
-+x-powers	X-Powers
- xes	Extreme Engineering Solutions (X-ES)
- xillybus	Xillybus Ltd.
- xlnx	Xilinx
+Maxime, I dropped your Acked-by because of all the changes I've made.
+Please have a look again.
+
+Mark (Brown), please take a look at the regulator bits in the second
+patch. If it looks good, could you give your Acked-by?
+
+I hope we can get this series merged so we can move on to adding
+AXP221 support.
+
+
+Regards,
+ChenYu
+
+
+Changes since v9:
+
+    - Revert to bindings in v8
+    - Dropped new patches in v9
+    - x-powers,dcdc-workmode default changed to "current hardware setting",
+      matching the regulator driver.
+    - Reorganized regulator related properties into separate section.
+      This should make it easier to read and also update for newer PMICs.
+    - Regulator nodes should only be listed if they are to be managed by
+      the OS.
+
+
+Carlo Caione (2):
+  mfd: AXP20x: Add bindings documentation
+  dt-bindings: add vendor-prefix for X-Powers
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt   | 96 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ 2 files changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/axp20x.txt
+
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
