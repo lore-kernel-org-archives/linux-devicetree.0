@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv2 05/15] ARM: mvebu: add stdout-path to all armada-*.dts
-Date: Fri, 20 Feb 2015 18:04:24 +0100
-Message-ID: <1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv2 10/15] clk: mvebu: extend common code to allow an optional refclk
+Date: Fri, 20 Feb 2015 18:04:29 +0100
+Message-ID: <1424451874-25375-11-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -10,195 +10,70 @@ To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian
 Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the stdout-path property in /chosen for all Armada
-boards that were not yet carrying this property.
+The Armada 39x, contrary to its predecessor, has a configurable
+reference clock frequency, of either 25 Mhz, or 40 Mhz. For the
+previous SoCs, it was fixed to 25 Mhz and described directly as such
+in the Device Tree.
+
+For Armada 39x, we need to read certain registers to know whether the
+frequency is 25 or 40 Mhz. Therefore, this commit extends the common
+mvebu clock code to allow the SoC-specific code to say it wants to
+register a reference clock, by giving a non-NULL ->get_refclk_freq()
+function pointer in its coreclk_soc_desc structure.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-370-db.dts              | 1 +
- arch/arm/boot/dts/armada-370-mirabox.dts         | 1 +
- arch/arm/boot/dts/armada-370-netgear-rn102.dts   | 1 +
- arch/arm/boot/dts/armada-370-netgear-rn104.dts   | 1 +
- arch/arm/boot/dts/armada-370-rd.dts              | 1 +
- arch/arm/boot/dts/armada-375-db.dts              | 1 +
- arch/arm/boot/dts/armada-388-db.dts              | 1 +
- arch/arm/boot/dts/armada-388-rd.dts              | 1 +
- arch/arm/boot/dts/armada-xp-axpwifiap.dts        | 1 +
- arch/arm/boot/dts/armada-xp-db.dts               | 1 +
- arch/arm/boot/dts/armada-xp-gp.dts               | 1 +
- arch/arm/boot/dts/armada-xp-matrix.dts           | 1 +
- arch/arm/boot/dts/armada-xp-netgear-rn2120.dts   | 1 +
- arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 1 +
- 14 files changed, 14 insertions(+)
+ drivers/clk/mvebu/common.c | 17 +++++++++++++++++
+ drivers/clk/mvebu/common.h |  1 +
+ 2 files changed, 18 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
-index e993c46..286bedd 100644
---- a/arch/arm/boot/dts/armada-370-db.dts
-+++ b/arch/arm/boot/dts/armada-370-db.dts
-@@ -56,6 +56,7 @@
+diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
+index 0d4d121..15b370f 100644
+--- a/drivers/clk/mvebu/common.c
++++ b/drivers/clk/mvebu/common.c
+@@ -121,6 +121,11 @@ void __init mvebu_coreclk_setup(struct device_node *np,
  
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
+ 	/* Allocate struct for TCLK, cpu clk, and core ratio clocks */
+ 	clk_data.clk_num = 2 + desc->num_ratios;
++
++	/* One more clock for the optional refclk */
++	if (desc->get_refclk_freq)
++		clk_data.clk_num += 1;
++
+ 	clk_data.clks = kzalloc(clk_data.clk_num * sizeof(struct clk *),
+ 				GFP_KERNEL);
+ 	if (WARN_ON(!clk_data.clks)) {
+@@ -162,6 +167,18 @@ void __init mvebu_coreclk_setup(struct device_node *np,
+ 		WARN_ON(IS_ERR(clk_data.clks[2+n]));
  	};
  
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
-index b10ceb4..ec77b86 100644
---- a/arch/arm/boot/dts/armada-370-mirabox.dts
-+++ b/arch/arm/boot/dts/armada-370-mirabox.dts
-@@ -52,6 +52,7 @@
++	/* Register optional refclk */
++	if (desc->get_refclk_freq) {
++		const char *name = "refclk";
++		of_property_read_string_index(np, "clock-output-names",
++					      2 + desc->num_ratios, &name);
++		rate = desc->get_refclk_freq(base);
++		clk_data.clks[2 + desc->num_ratios] =
++			clk_register_fixed_rate(NULL, name, NULL,
++						CLK_IS_ROOT, rate);
++		WARN_ON(IS_ERR(clk_data.clks[2 + desc->num_ratios]));
++	}
++
+ 	/* SAR register isn't needed anymore */
+ 	iounmap(base);
  
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-index 7c5c4ff..8c786cf 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-@@ -54,6 +54,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-index 1de53b5..1d64532 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-@@ -54,6 +54,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
-index 6ae36a3..f40d35b 100644
---- a/arch/arm/boot/dts/armada-370-rd.dts
-+++ b/arch/arm/boot/dts/armada-370-rd.dts
-@@ -65,6 +65,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-375-db.dts b/arch/arm/boot/dts/armada-375-db.dts
-index 0440891..033665c 100644
---- a/arch/arm/boot/dts/armada-375-db.dts
-+++ b/arch/arm/boot/dts/armada-375-db.dts
-@@ -56,6 +56,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-388-db.dts b/arch/arm/boot/dts/armada-388-db.dts
-index af6c74e..c56ccd74 100644
---- a/arch/arm/boot/dts/armada-388-db.dts
-+++ b/arch/arm/boot/dts/armada-388-db.dts
-@@ -55,6 +55,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-388-rd.dts b/arch/arm/boot/dts/armada-388-rd.dts
-index d99baac..e17edbb 100644
---- a/arch/arm/boot/dts/armada-388-rd.dts
-+++ b/arch/arm/boot/dts/armada-388-rd.dts
-@@ -56,6 +56,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-index c1fbab2..a7fd474 100644
---- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-+++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-@@ -60,6 +60,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-index 48bdafe..a12e159 100644
---- a/arch/arm/boot/dts/armada-xp-db.dts
-+++ b/arch/arm/boot/dts/armada-xp-db.dts
-@@ -65,6 +65,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 206aebb..8a2e49e 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -66,6 +66,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-xp-matrix.dts b/arch/arm/boot/dts/armada-xp-matrix.dts
-index 56f958e..3e81f22 100644
---- a/arch/arm/boot/dts/armada-xp-matrix.dts
-+++ b/arch/arm/boot/dts/armada-xp-matrix.dts
-@@ -53,6 +53,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-index a7ceafd..508a395 100644
---- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-+++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-@@ -54,6 +54,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
-diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index 0c76d9f..7b2ea2060 100644
---- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-+++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -55,6 +55,7 @@
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = &uart0;
- 	};
- 
- 	memory {
+diff --git a/drivers/clk/mvebu/common.h b/drivers/clk/mvebu/common.h
+index 783b563..f0de6c8 100644
+--- a/drivers/clk/mvebu/common.h
++++ b/drivers/clk/mvebu/common.h
+@@ -30,6 +30,7 @@ struct coreclk_soc_desc {
+ 	u32 (*get_tclk_freq)(void __iomem *sar);
+ 	u32 (*get_cpu_freq)(void __iomem *sar);
+ 	void (*get_clk_ratio)(void __iomem *sar, int id, int *mult, int *div);
++	u32 (*get_refclk_freq)(void __iomem *sar);
+ 	bool (*is_sscg_enabled)(void __iomem *sar);
+ 	u32 (*fix_sscg_deviation)(u32 system_clk);
+ 	const struct coreclk_ratio *ratios;
 -- 
 2.1.0
 
