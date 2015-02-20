@@ -1,91 +1,211 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCHv2 10/15] clk: mvebu: extend common code to allow an optional
- refclk
-Date: Fri, 20 Feb 2015 10:21:34 -0800
-Message-ID: <20150220182134.421.95366@quantum>
-References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1424451874-25375-11-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Peter Meerwald <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2 14/18] ARM: Add STM32 family machine
+Date: Fri, 20 Feb 2015 19:33:26 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1502201930040.2739@pmeerw.net>
+References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com> <1424455277-29983-15-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1424451874-25375-11-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424455277-29983-15-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Thomas Petazzoni (2015-02-20 09:04:29)
-> The Armada 39x, contrary to its predecessor, has a configurable
-> reference clock frequency, of either 25 Mhz, or 40 Mhz. For the
-> previous SoCs, it was fixed to 25 Mhz and described directly as such
-> in the Device Tree.
-> 
-> For Armada 39x, we need to read certain registers to know whether the
-> frequency is 25 or 40 Mhz. Therefore, this commit extends the common
-> mvebu clock code to allow the SoC-specific code to say it wants to
-> register a reference clock, by giving a non-NULL ->get_refclk_freq()
-> function pointer in its coreclk_soc_desc structure.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
-Looks fine to me. I'll apply after -rc1 drops.
+> STMicrolectronics's STM32 series is a family of Cortex-M
+> microcontrollers. It is used in various applications, and
+> proposes a wide range of peripherals.
 
-Regards,
-Mike
+the text describing the STM32 could be a bit more specific :)
+some more nitpicking below
 
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 > ---
->  drivers/clk/mvebu/common.c | 17 +++++++++++++++++
->  drivers/clk/mvebu/common.h |  1 +
->  2 files changed, 18 insertions(+)
+>  Documentation/arm/stm32/overview.txt           | 32 ++++++++++++++++++++++++++
+>  Documentation/arm/stm32/stm32f429-overview.txt | 22 ++++++++++++++++++
+>  arch/arm/Kconfig                               | 22 ++++++++++++++++++
+>  arch/arm/Makefile                              |  1 +
+>  arch/arm/mach-stm32/Makefile                   |  1 +
+>  arch/arm/mach-stm32/Makefile.boot              |  0
+>  arch/arm/mach-stm32/board-dt.c                 | 31 +++++++++++++++++++++++++
+>  7 files changed, 109 insertions(+)
+>  create mode 100644 Documentation/arm/stm32/overview.txt
+>  create mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
+>  create mode 100644 arch/arm/mach-stm32/Makefile
+>  create mode 100644 arch/arm/mach-stm32/Makefile.boot
+>  create mode 100644 arch/arm/mach-stm32/board-dt.c
 > 
-> diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
-> index 0d4d121..15b370f 100644
-> --- a/drivers/clk/mvebu/common.c
-> +++ b/drivers/clk/mvebu/common.c
-> @@ -121,6 +121,11 @@ void __init mvebu_coreclk_setup(struct device_node *np,
->  
->         /* Allocate struct for TCLK, cpu clk, and core ratio clocks */
->         clk_data.clk_num = 2 + desc->num_ratios;
+> diff --git a/Documentation/arm/stm32/overview.txt b/Documentation/arm/stm32/overview.txt
+> new file mode 100644
+> index 0000000..d8bf6bb
+> --- /dev/null
+> +++ b/Documentation/arm/stm32/overview.txt
+> @@ -0,0 +1,32 @@
+> +			STM32 ARM Linux Overview
+> +			==========================
+
+overlong ===
+
 > +
-> +       /* One more clock for the optional refclk */
-> +       if (desc->get_refclk_freq)
-> +               clk_data.clk_num += 1;
+> +Introduction
+> +------------
 > +
->         clk_data.clks = kzalloc(clk_data.clk_num * sizeof(struct clk *),
->                                 GFP_KERNEL);
->         if (WARN_ON(!clk_data.clks)) {
-> @@ -162,6 +167,18 @@ void __init mvebu_coreclk_setup(struct device_node *np,
->                 WARN_ON(IS_ERR(clk_data.clks[2+n]));
->         };
->  
-> +       /* Register optional refclk */
-> +       if (desc->get_refclk_freq) {
-> +               const char *name = "refclk";
-> +               of_property_read_string_index(np, "clock-output-names",
-> +                                             2 + desc->num_ratios, &name);
-> +               rate = desc->get_refclk_freq(base);
-> +               clk_data.clks[2 + desc->num_ratios] =
-> +                       clk_register_fixed_rate(NULL, name, NULL,
-> +                                               CLK_IS_ROOT, rate);
-> +               WARN_ON(IS_ERR(clk_data.clks[2 + desc->num_ratios]));
-> +       }
+> +  The STMicroelectronics family of Cortex-M based MCUs are supported by the
+> +  'STM32' platform of ARM Linux. Currently only the STM32F429 is supported.
 > +
->         /* SAR register isn't needed anymore */
->         iounmap(base);
+> +
+> +Configuration
+> +-------------
+> +
+> +  A generic configuration is provided for STM32 family, and can be used as the
+> +  default by
+> +	make stm32_defconfig
+> +
+> +Layout
+> +------
+> +
+> +  All the files for multiple machine families are located in the platform code
+> +  contained in arch/arm/mach-stm32
+> +
+> +  There is a generic board board-dt.c in the mach folder which support
+> +  Flattened Device Tree, which means, It works with any compatible board with
+
+it (lowercase)
+
+> +  Device Trees.
+> +
+> +
+> +Document Author
+> +---------------
+> +
+> +  Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> diff --git a/Documentation/arm/stm32/stm32f429-overview.txt b/Documentation/arm/stm32/stm32f429-overview.txt
+> new file mode 100644
+> index 0000000..5206822
+> --- /dev/null
+> +++ b/Documentation/arm/stm32/stm32f429-overview.txt
+> @@ -0,0 +1,22 @@
+> +			STM32F429 Overview
+> +			==================
+> +
+> +  Introduction
+> +  ------------
+> +	The STM32F429 is a Cortex-M4 MCU aimed at various applications.
+> +	It features:
+> +	- ARM Cortex-M4 up to 180MHz with FPU
+> +	- 2MB internal Flash Memory
+> +	- External memory support through FMC controller (PSRAM, SDRAM, NOR, NAND)
+> +	- I2C, SPI, SAI, CAN, USB OTG, Ethernet controllers
+> +	- LCD controller & Camera interface
+> +	- Cryptographic processor
+> +
+> +  Resources
+> +  ---------
+> +	Datasheet and reference manual are publicly available on ST website:
+> +	- http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1577/LN1806?ecmp=stm32f429-439_pron_pr-ces2014_nov2013
+> +
+> +  Document Author
+> +  ---------------
+> +	Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 97d07ed..cfd9532 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -774,6 +774,28 @@ config ARCH_OMAP1
+>  	help
+>  	  Support for older TI OMAP1 (omap7xx, omap15xx or omap16xx)
 >  
-> diff --git a/drivers/clk/mvebu/common.h b/drivers/clk/mvebu/common.h
-> index 783b563..f0de6c8 100644
-> --- a/drivers/clk/mvebu/common.h
-> +++ b/drivers/clk/mvebu/common.h
-> @@ -30,6 +30,7 @@ struct coreclk_soc_desc {
->         u32 (*get_tclk_freq)(void __iomem *sar);
->         u32 (*get_cpu_freq)(void __iomem *sar);
->         void (*get_clk_ratio)(void __iomem *sar, int id, int *mult, int *div);
-> +       u32 (*get_refclk_freq)(void __iomem *sar);
->         bool (*is_sscg_enabled)(void __iomem *sar);
->         u32 (*fix_sscg_deviation)(u32 system_clk);
->         const struct coreclk_ratio *ratios;
-> -- 
-> 2.1.0
+> +config ARCH_STM32
+> +	bool "STMicrolectronics STM32"
+> +	depends on !MMU
+> +	select ARCH_REQUIRE_GPIOLIB
+> +	select ARM_NVIC
+> +	select AUTO_ZRELADDR
+> +	select ARCH_HAS_RESET_CONTROLLER
+> +	select RESET_CONTROLLER
+> +	select PINCTRL
+> +	select PINCTRL_STM32
+> +	select CLKSRC_OF
+> +	select ARMV7M_SYSTICK
+> +	select COMMON_CLK
+> +	select CPU_V7M
+> +	select GENERIC_CLOCKEVENTS
+> +	select NO_DMA
+> +	select NO_IOPORT_MAP
+> +	select SPARSE_IRQ
+> +	select USE_OF
+> +	help
+> +	  Support for STMicorelectronics STM32 processors.
+
+STMicroelectronics
+
+> +
+>  endchoice
+>  
+>  menu "Multiple platform selection"
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index c1785ee..7d00659 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -196,6 +196,7 @@ machine-$(CONFIG_ARCH_SHMOBILE) 	+= shmobile
+>  machine-$(CONFIG_ARCH_SIRF)		+= prima2
+>  machine-$(CONFIG_ARCH_SOCFPGA)		+= socfpga
+>  machine-$(CONFIG_ARCH_STI)		+= sti
+> +machine-$(CONFIG_ARCH_STM32)		+= stm32
+>  machine-$(CONFIG_ARCH_SUNXI)		+= sunxi
+>  machine-$(CONFIG_ARCH_TEGRA)		+= tegra
+>  machine-$(CONFIG_ARCH_U300)		+= u300
+> diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
+> new file mode 100644
+> index 0000000..bd0b7b5
+> --- /dev/null
+> +++ b/arch/arm/mach-stm32/Makefile
+> @@ -0,0 +1 @@
+> +obj-y += board-dt.o
+> diff --git a/arch/arm/mach-stm32/Makefile.boot b/arch/arm/mach-stm32/Makefile.boot
+> new file mode 100644
+> index 0000000..e69de29
+> diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-dt.c
+> new file mode 100644
+> index 0000000..1d681b3
+> --- /dev/null
+> +++ b/arch/arm/mach-stm32/board-dt.c
+> @@ -0,0 +1,31 @@
+> +/*
+> + * Copyright (C) Maxime Coquelin 2015
+> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> + * License terms:  GNU General Public License (GPL), version 2
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/reset-controller.h>
+> +#include <asm/v7m.h>
+> +#include <asm/mach/arch.h>
+> +
+> +static const char *const stm32_compat[] __initconst = {
+> +	"st,stm32f429",
+> +	NULL
+> +};
+> +
+> +static void __init stm32_timer_init(void)
+> +{
+> +	of_clk_init(NULL);
+> +	reset_controller_of_init();
+> +	clocksource_of_init();
+> +
+> +}
+> +
+> +DT_MACHINE_START(STM32DT, "STM32 (Device Tree Support)")
+> +	.init_time = stm32_timer_init,
+> +	.dt_compat = stm32_compat,
+> +	.restart = armv7m_restart,
+> +MACHINE_END
 > 
+
+-- 
+
+Peter Meerwald
++43-664-2444418 (mobile)
