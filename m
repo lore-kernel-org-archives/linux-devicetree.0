@@ -1,153 +1,149 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
-Date: Fri, 20 Feb 2015 17:02:57 +0100
-Message-ID: <87a9088tam.fsf@free.fr>
-References: <20150216130549.GF14545@x1>
- <1170550770.470129293.1424093248596.JavaMail.root@zimbra1-e1.priv.proxad.net>
- <20150216162712.GR14545@x1> <87fva5a4i2.fsf@free.fr>
- <20150217074310.GT14545@x1>
- <alpine.LFD.2.11.1502171221300.22104@knanqh.ubzr>
- <20150218080719.GB5781@x1>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
+Date: Fri, 20 Feb 2015 10:06:10 -0600
+Message-ID: <20150220160610.GB6430@saruman.tx.rr.com>
+References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org>
+ <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org>
+ <20150220144119.GB1707@saruman.tx.rr.com>
+ <54E75665.6050205@linaro.org>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150218080719.GB5781@x1> (Lee Jones's message of "Wed, 18 Feb
- 2015 08:07:19 +0000")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Daniel Mack <daniel@zonque.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54E75665.6050205@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: balbi@ti.com, Kishon Vijay Abraham I <kishon@ti.com>, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dan . zhao" <dan.zhao@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
->> > Arnd, Greg,
->> > 
->> >   Perhaps you have some ideas WRT programmables (PLDs/CPLDs/FPGAs)?
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Arnd and Greg,
+Hi,
 
-I have this driver I'm upstreaming, which comes out of
-arch/arm/mach-pxa/lubbock.c. As for the reason it is extracted, see submitted
-commit [1] for reference.
+On Fri, Feb 20, 2015 at 11:44:37PM +0800, zhangfei wrote:
+> Hi, Balbi
+>=20
+> On 02/20/2015 10:41 PM, Felipe Balbi wrote:
+>=20
+> >>+static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
+> >>+{
+> >>+	struct usb_otg *otg =3D priv->phy.otg;
+> >>+
+> >>+	if (!otg->gadget)
+> >>+		return;
+> >>+
+> >>+	if (on)
+> >>+		usb_gadget_connect(otg->gadget);
+> >>+	else
+> >>+		usb_gadget_disconnect(otg->gadget);
+> >
+> >why is the PHY fiddling with pullups ?
+>=20
+> We use this to enable/disable otg gadget mode.
 
-The main question is : where does it belong in the kernel ?
+I got that, but the pullups don't belong to the PHY, they belong to the
+gadget.
 
-The driver is :
- - for the CPLDs on the Lubbock development platform, which is more or less an
-   old motherboard for Intel Xscale pxa255 SoC (see [2] for more details)
- - these CPLDs control :
-   - interrupt muxing towards the SoC
-   - several leds
-   - switches read back
-   For the whole patch, see [4]
+> The gpio_id & gpio_vbus are used to distinguish otg gadget mode or
+> host mode.
+> When micro usb or otg device attached to otg, gpio_vbus falling down.
+> And gpio_id =3D 1 is micro usb, gpio_id =3D 0 is otg device.
 
-Lee's position is that it doesn't belong to drivers/mfd, see [3].
+all of that I understood clearly :-)
 
-So where should I submit it ? And more generally, where should CPLDs drivers be
-pushed in the kernel tree ?
+> So when micro usb attached, we enable gadget mode; while micro usb
+> detached, we disable gadget mode, and dwc2 will automatically set to
+> host mode.
 
-If there is no solution, I'll fallback through arch/arm/plat-pxa, not very nice,
-but it has to land somewhere, I don't want lubbock to remain broken.
+that's all fine, I'm concerned about letting the PHY fiddle with
+something it doesn't own. If I am to change pullups rules in udc-core,
+this is likely to break down miserably and I don't want to have to go
+through that.
 
-Cheers.
+> >>+static void hi6220_detect_work(struct work_struct *work)
+> >>+{
+> >>+	struct hi6220_priv *priv =3D
+> >>+		container_of(work, struct hi6220_priv, work.work);
+> >>+	int gpio_id, gpio_vbus;
+> >>+	enum usb_otg_state state;
+> >>+
+> >>+	if (!gpio_is_valid(priv->gpio_id) || !gpio_is_valid(priv->gpio_vbus))
+> >>+		return;
+> >>+
+> >>+	gpio_id =3D gpio_get_value_cansleep(priv->gpio_id);
+> >>+	gpio_vbus =3D gpio_get_value_cansleep(priv->gpio_vbus);
+> >
+> >looks like this should be using extcon
+> Not used extcon before.
+> However, we need gpio_vbus interrupt.
+> Checked phy-tahvo.c and phy-omap-otg.c, not find extcon related with
+> interrupt.
+> Will investigate tomorrow.
 
---
-Robert
+drivers/extcon/extcon-gpio.c
 
-[1] Reason of extraction / commit message
-    mfd: lubbock_cplds: add lubbock IO board
-    
-    Lubbock () board is the IO motherboard of the Intel PXA25x Development
-    Platform, which supports the Lubbock pxa25x soc board.
-    
-    Historically, this support was in arch/arm/mach-pxa/lubbock.c. When
-    gpio-pxa was moved to drivers/pxa, it became a driver, and its
-    initialization and probing happened at postcore initcall. The lubbock
-    code used to install the chained lubbock interrupt handler at init_irq()
-    time.
-    
-    The consequence of the gpio-pxa change is that the installed chained irq
-    handler lubbock_irq_handler() was overwritten in pxa_gpio_probe(_dt)(),
-    removing :
-     - the handler
-     - the falling edge detection setting of GPIO0, which revealed the
-       interrupt request from the lubbock IO board.
-    
-    As a fix, move the gpio0 chained handler setup to a place where we have
-    the guarantee that pxa_gpio_probe() was called before, so that lubbock
-    handler becomes the true IRQ chained handler of GPIO0, demuxing the
-    lubbock IO board interrupts.
-    
-    This patch moves all that handling to a mfd driver. It's only purpose
-    for the time being is the interrupt handling, but in the future it
-    should encompass all the motherboard CPLDs handling :
-     - leds
-     - switches
-     - hexleds
-    
-    Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+> >>+	if (gpio_vbus =3D=3D 0) {
+> >>+		if (gpio_id =3D=3D 1)
+> >>+			state =3D OTG_STATE_B_PERIPHERAL;
+> >>+		else
+> >>+			state =3D OTG_STATE_A_HOST;
+> >>+	} else {
+> >>+		state =3D OTG_STATE_A_HOST;
+> >>+	}
+> >>+
+> >>+	if (priv->state !=3D state) {
+> >>+		hi6220_start_peripheral(priv, state =3D=3D OTG_STATE_B_PERIPHERAL);
+> >>+		priv->state =3D state;
+> >>+	}
+> >>+}
+> >>+
+> >>+static irqreturn_t hiusb_gpio_intr(int irq, void *data)
+> >>+{
+> >>+	struct hi6220_priv *priv =3D (struct hi6220_priv *)data;
+> >>+
+> >>+	/* add debounce time */
+> >>+	schedule_delayed_work(&priv->work, msecs_to_jiffies(100));
+> >
+> >this is really bad. We have threaded interrupt support, right ?
+>=20
+> Since we use two gpio to distinguish gadget mode or host mode.
+> Debounce time can introduce more accuracy.
 
-[2] Board description by Nicolas
->> The Lubbock is an ancient development board (circa 2003) using a CPLD to 
->> multiplex a couple things on the board.  I really doubt anyone would 
->> reprogram this CPLD at this point. So I'd treat it just like another 
->> interrupt controller + random peripherals that will never change.  And 
->> yes, maybe a more appropriate name is needed.
+gpio_set_debounce() ?
 
-[3] Lee's position
->> > I don't think this is correct either.  CPLD handling would probably be
->> > slightly less out of place in drivers/misc, but perhaps a new
->> > subsystem for PLDs/CPLDs/FPGAs would be more appropriate
->> > drivers/programmables or similar maybe.
->> >
-...
->> > I'm pretty convinced that it doesn't belong in MFD now, but it doesn't
->> > mean I'm going to leave you on the curb.  I'd like to help you get it
->> > into a better home.
->> > 
->> > [...]
->> > > Is not only a irqchip because, as explained at the bottom of the commit message,
->> > > quoting myself :
->> > >   This patch moves all that handling to a mfd driver. It's only purpose
->> > >   for the time being is the interrupt handling, but in the future it
->> > >   should encompass all the motherboard CPLDs handling :
->> > >    - leds
->> > >    - switches
->> > >    - hexleds
->> > 
->> > I had a conversation about this on IRC yesterday and some good
->> > points/questions were posed.  This is a difficult area, because you
->> > can program these things to do whatever you like.  Depending on the
->> > 'intention' (and it is only an intention -- someone else can come
->> > along and reprogram these devices on a whim), the CPLD code could live
->> > anywhere.  If you wanted to put watchdog functionality in there, then
->> > there is an argument for it to live in drivers/watchdog, etc etc.  So
->> > just because the plan is to support a few (i.e. more than one) simple
->> > devices, it doesn't necessarily mean that the handling should be done
->> > in MFD.
->> > 
->> > Yesterday I was asked "Are you wanting to restrict drivers in
->> > drivers/mfd to those that make use of MFD_CORE functionality?".  My
->> > answer to that was "No, however; I only want devices which
->> > _intrinsically_ operate in multiple subsystems", which these
->> > programmables no not do.
->> > 
->> > FYI, you're not on your own here.  There is at least one of these
->> > devices in the kernel already and upon a short inspection there
->> > appears to be a number of Out-of-Tree (OoT) drivers out there which
->> > will require a home in Mainline sooner or later.
->> > 
+> I think threaded interrupt can not be used for adding debounce time.
+> Here add debounce is just for safety.
 
-[4] Whole patch
-https://lkml.org/lkml/2015/1/24/90
+add the debounce to the gpio itself.
 
--- 
-Robert
+--=20
+balbi
+
+--qlTNgmc+xy1dBmNv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU51tyAAoJEIaOsuA1yqRE4yIP/RimNedyzVc1YDZ9Fl+q3c5N
+R2tzvOQA0ZZ6W1UZFwscBjwXNWGFt7SbdsX7VDj1In8beHKSbXjAX8jmBzH8dKF7
+js5MwQlfeHiiRQRwkEsKsw3l6hS6bj8BDYdUMWMUCtXORg/OWYa8OAeucX8UnPU2
+Jqp7V0fbMvZsBCnqVTTSBMFwxsB5atQ7l8RbA6tgJhkZ4BLWwe5Z44xNjENzXzTI
+hieP0hzq2jHsWTG30xRtTowUF6yS3CETT6bOcKG5OnEOaMCvd5+W0FhXF20/NN+W
+4lXv1oHs/tMYhBzZ9cF1LIQhGxtFk5FrMaOsTej6a1huz7ClnJdGb7oGcHTfm7Mv
+GTk4iKjDiBfawMo9htPTEkZyrZJ6eaStNkJA5p0x27j9zZCw/iUvdCuD5yJzzbq3
+yWVYITm4Z6Zv126OJfGbYcPKcEx19nWv3biihU0w0Xj5hIIYjU5Td/1DhQFfXwMt
+A6rPLGjXNDyCNXcpvhS637mDwpVOuwAS5Ql2gWBmVJoY/Boc3anA+nZUKBaA0ljq
+P8umeF4h7uga56Ic2SGjJKgjqZKze1H3ZP5k4Fv65wDInlYsHmIuUbODNAv8FS7A
+HKM19GOp1xUBtMB0HCmktgEaBRJuScmbrCV4nYlBLEOpaxZTKFsQOcNSdPII8bBd
+Vyw93ChfGk4C+wZRBnpy
+=1lUT
+-----END PGP SIGNATURE-----
+
+--qlTNgmc+xy1dBmNv--
