@@ -1,53 +1,104 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: OMAP3-N900: Fix offset for smc91x ethernet
-Date: Fri, 20 Feb 2015 07:28:56 -0800
-Message-ID: <20150220152856.GH32521@atomide.com>
-References: <1424364590-14603-1-git-send-email-pali.rohar@gmail.com>
- <7411731.0J5JRAOyMm@wuerfel>
- <201502201052.47515@pali>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
+Date: Fri, 20 Feb 2015 23:44:37 +0800
+Message-ID: <54E75665.6050205@linaro.org>
+References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org> <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org> <20150220144119.GB1707@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201502201052.47515@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150220144119.GB1707-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Pali Roh=C3=A1r <pali.rohar@gmail.com> [150220 01:56]:
-> On Friday 20 February 2015 10:24:35 Arnd Bergmann wrote:
-> > On Thursday 19 February 2015 17:49:50 Pali Roh=C3=A1r wrote:
-> > > Offset for smc91x must be zero otherwise smc91x linux kernel
-> > > driver does not detect smc91x ethernet hardware in qemu
-> > > N900 machine.
-> > >=20
-> > > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> >=20
-> > Is that the same offset on real hardware, or could this be a
-> > mistake in the qemu model?
-> >=20
-> > 	Arnd
->=20
-> In original Nokia 2.6.28 kernel is offset also set to 0, see:
->=20
-> https://gitorious.org/linux-n900/linux-n900/source/629fc5ab00cafb3127=
-2c478efa2c2b35fabd4c70:arch/arm/mach-omap2/board-rx51-peripherals.c#L42
->=20
-> https://gitorious.org/linux-n900/linux-n900/source/629fc5ab00cafb3127=
-2c478efa2c2b35fabd4c70:arch/arm/mach-omap2/board-rx51-peripherals.c#L27=
-4
->=20
-> Tony already tested offset 0 on real HW and wrote that it is
-> working too, just show some warning. But qemu with offset 0x300
-> does not work.
+Hi, Balbi
 
-Yes it works with offset 0, except the smc91x warns about not
-using the default offset 0x300 based on the EEPROM. As only
-three address lines seem to be connected, we can use offset
-0 just fine, and update the EEPROM configuration as needed.
+On 02/20/2015 10:41 PM, Felipe Balbi wrote:
 
-Regards,
+>> +static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
+>> +{
+>> +	struct usb_otg *otg = priv->phy.otg;
+>> +
+>> +	if (!otg->gadget)
+>> +		return;
+>> +
+>> +	if (on)
+>> +		usb_gadget_connect(otg->gadget);
+>> +	else
+>> +		usb_gadget_disconnect(otg->gadget);
+>
+> why is the PHY fiddling with pullups ?
 
-Tony
+We use this to enable/disable otg gadget mode.
+
+The gpio_id & gpio_vbus are used to distinguish otg gadget mode or host 
+mode.
+When micro usb or otg device attached to otg, gpio_vbus falling down.
+And gpio_id = 1 is micro usb, gpio_id = 0 is otg device.
+
+So when micro usb attached, we enable gadget mode; while micro usb 
+detached, we disable gadget mode, and dwc2 will automatically set to 
+host mode.
+
+>
+>> +}
+>> +
+>> +static void hi6220_detect_work(struct work_struct *work)
+>> +{
+>> +	struct hi6220_priv *priv =
+>> +		container_of(work, struct hi6220_priv, work.work);
+>> +	int gpio_id, gpio_vbus;
+>> +	enum usb_otg_state state;
+>> +
+>> +	if (!gpio_is_valid(priv->gpio_id) || !gpio_is_valid(priv->gpio_vbus))
+>> +		return;
+>> +
+>> +	gpio_id = gpio_get_value_cansleep(priv->gpio_id);
+>> +	gpio_vbus = gpio_get_value_cansleep(priv->gpio_vbus);
+>
+> looks like this should be using extcon
+Not used extcon before.
+However, we need gpio_vbus interrupt.
+Checked phy-tahvo.c and phy-omap-otg.c, not find extcon related with 
+interrupt.
+Will investigate tomorrow.
+
+>
+>> +
+>> +	if (gpio_vbus == 0) {
+>> +		if (gpio_id == 1)
+>> +			state = OTG_STATE_B_PERIPHERAL;
+>> +		else
+>> +			state = OTG_STATE_A_HOST;
+>> +	} else {
+>> +		state = OTG_STATE_A_HOST;
+>> +	}
+>> +
+>> +	if (priv->state != state) {
+>> +		hi6220_start_peripheral(priv, state == OTG_STATE_B_PERIPHERAL);
+>> +		priv->state = state;
+>> +	}
+>> +}
+>> +
+>> +static irqreturn_t hiusb_gpio_intr(int irq, void *data)
+>> +{
+>> +	struct hi6220_priv *priv = (struct hi6220_priv *)data;
+>> +
+>> +	/* add debounce time */
+>> +	schedule_delayed_work(&priv->work, msecs_to_jiffies(100));
+>
+> this is really bad. We have threaded interrupt support, right ?
+
+Since we use two gpio to distinguish gadget mode or host mode.
+Debounce time can introduce more accuracy.
+I think threaded interrupt can not be used for adding debounce time.
+Here add debounce is just for safety.
+
+Thanks
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
