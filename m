@@ -1,100 +1,123 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine driver
- support
-Date: Fri, 20 Feb 2015 11:42:31 +0100
-Message-ID: <ad1002303e814d53866349674d22fc11@BY2FFO11FD039.protection.gbl>
-References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
- <3236720.MHeqOodrCV@wuerfel>
- <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
- <1967130.oYyZRWCcEF@wuerfel>
- <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
- <20150212093445.GM21387@intel.com>
- <ed439c7a25d0465d9dbf4c06987d42a1@BY2FFO11FD018.protection.gbl>
- <20150220062934.GX21387@intel.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power
+ subsystem
+Date: Fri, 20 Feb 2015 11:57:41 +0100 (CET)
+Message-ID: <1766258118.893447.1424429861770.JavaMail.open-xchange@oxbaltgw03.schlund.de>
+References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com> <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com> <20150121230148.GJ13715@earth.universe> <54C0AFE4.3020701@i2se.com> <20150125150431.GE2719@earth.universe> <1719204322.245040.1422301605670.JavaMail.open-xchange@oxbaltgw03.schlund.de> <20150127001629.GP21293@sirena.org.uk> <1954124242.301697.1422383709733.JavaMail.open-xchange@oxbaltgw09.schlund.de> <20150127194346.GN21293@sirena.org.uk> <443299280.47516.1422483725178.JavaMail.open-xchange@oxbaltgw03.schlund.de> <20150128225937.GA12749@earth.universe> <964800678.25817.1422996087477.JavaMail.open-xchange@oxbaltgw04.schlund.de>
+Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150220062934.GX21387@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <964800678.25817.1422996087477.JavaMail.open-xchange@oxbaltgw04.schlund.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, linux-pm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+> Stefan Wahren <stefan.wahren@i2se.com> hat am 3. Februar 2015 um 21:41
+> geschrieben:
+>
+>
+> Hi Sebastian,
+>
+> > Sebastian Reichel <sre@kernel.org> hat am 28. Januar 2015 um 23:59
+> > geschrieben:
+> >
+> >
+> > Hi,
+> >
+> > On Wed, Jan 28, 2015 at 11:22:05PM +0100, Stefan Wahren wrote:
+> > > > Mark Brown <broonie@kernel.org> hat am 27. Januar 2015 um 20:43
+> > > > geschrieben:
+> > > > On Tue, Jan 27, 2015 at 07:35:09PM +0100, Stefan Wahren wrote:
+> > > >
+> > > changing the switching frequency is not a common feature for this IC. In
+> > > most
+> > > cases the clock for the DC-DC switching frequency runs at 24 MHz
+> > > (ref_xtal).
+> > > Unfortunatelly this could cause interferences for example in UHF band. So
+> > > switching to ref_pll and changing clock divider is a option to avoid such
+> > > interferences without changing hardware.
+> > >
+> > > I decided to implement it as a module parameter, because i see it's a
+> > > configuration option.
+> >
+> > I think its best to use a DT property then. That way it can be set
+> > appropiatly for boards known to use a band, which could have
+> > interference problems.
+> >
+> > So just add a simple property (without a subnode). If I understand
+> > Mark correctly, there's a high chance more drivers will need to
+> > describe the switching frequency, so I suggest to use a vendor
+> > independent property name:
+> >
+> > switching-frequency = <12345>;
+>
+> i'm not sure. So here is the complete current state (power and regulator
+> binding
+> from imx28.dtsi) including my suggestion for the new property:
+>
+> power: power@80044000 {
+> compatible = "fsl,imx28-power"; /* handled by mxs_power.c */
+> #address-cells = <1>;
+> #size-cells = <1>;
+> reg = <0x80044000 0x2000>;
+> interrupts = <6>;
+> switching-frequency = <24000000>; /* new property */
+> ranges;
+>
+> reg_vddd: regulator@80044040 {
+> reg = <0x80044040 0x10>,
+> <0x80044010 0x10>,
+> <0x800440c0 0x10>;
+> reg-names = "base-address",
+> "v5ctrl-address",
+> "status-address";
+> compatible = "fsl,imx28-vddd"; /* handled by mxs-regulator.c */
+> regulator-name = "vddd";
+> regulator-min-microvolt = <1350000>;
+> regulator-max-microvolt = <1550000>;
+> vddd-supply = <&reg_vdda>;
+> };
+>
+> reg_vdda: regulator@80044050 {
+> reg = <0x80044050 0x10>,
+> <0x80044010 0x10>,
+> <0x800440c0 0x10>;
+> reg-names = "base-address",
+> "v5ctrl-address",
+> "status-address";
+> compatible = "fsl,imx28-vdda"; /* handled by mxs-regulator.c */
+> regulator-name = "vdda";
+> regulator-min-microvolt = <1725000>;
+> regulator-max-microvolt = <1950000>;
+> vdda-supply = <&reg_vddio>;
+> };
+>
+> reg_vddio: regulator@80044060 {
+> reg = <0x80044060 0x10>,
+> <0x80044010 0x10>,
+> <0x800440c0 0x10>;
+> reg-names = "base-address",
+> "v5ctrl-address",
+> "status-address";
+> compatible = "fsl,imx28-vddio"; /* handled by mxs-regulator.c */
+> regulator-name = "vddio";
+> regulator-min-microvolt = <3000000>;
+> regulator-max-microvolt = <3575000>;
+> regulator-microvolt-offset = <80000>;
+> };
+> };
+>
+> Please correct me if i'm wrong.
+>
+> Stefan
 
-On 02/20/2015 07:29 AM, Vinod Koul wrote:
-> On Sat, Feb 14, 2015 at 02:21:52PM +0000, Appana Durga Kedareswara Rao wrote:
->> Hi Vinod,
->>
->>
->>> -----Original Message-----
->>> From: Vinod Koul [mailto:vinod.koul@intel.com]
->>> Sent: Thursday, February 12, 2015 3:05 PM
->>> To: Appana Durga Kedareswara Rao
->>> Cc: Arnd Bergmann; linux-arm-kernel@lists.infradead.org;
->>> devicetree@vger.kernel.org; Srikanth Vemula; linux-
->>> kernel@vger.kernel.org; Srikanth Thokala; dmaengine@vger.kernel.org;
->>> robh+dt@kernel.org; Michal Simek; Anirudha Sarangi;
->>> grant.likely@linaro.org; dan.j.williams@intel.com
->>> Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
->>> driver support
->>>
->>> On Thu, Jan 29, 2015 at 11:24:41AM +0000, Appana Durga Kedareswara Rao
->>> wrote:
->>>>>  Earlier in the driver we are embedding dma_slave_config into custom
->>>>> structs But Lars suggested to modify it. please refer to the below
->>>>> thread for more details.
->>>>>  http://www.spinics.net/lists/dmaengine/msg00010.html
->>>>>
->>>>>  And later we thought of creating a separate private member in
->>>>> dma_slave_config for sharing additional configuration between slave
->>>>> device and dma engine Or a new dma_ctrl_cmd like
->>>>>
->>> FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
->>>>>
->>>>>  Finally Vinod was ok with the existing suggestion so we dropped the
->>>>> above thought.
->>>>>
->>>>>  @Vinod : Could you please comment on this.
->>> FSLDMA_EXTERNAL_START has been removed, and you cna use the removal
->>> as a guidance of how to solve your issue
->>>
->>
-> Please limit you mailer to set wrap at 80 chars, otherwise it becomes
-> unreadable
-> 
->> The current VDMA driver that got merged in the open source and the
->> current patch (dma: xilinx dma v4) Srikanth T submitted both contains the
->> Similar implementation that you pointed as above(I mean similar to the
->> free scale dma driver).
->>
->> The discussion starts here is why we need the header file(Xilinx_dma.h) in
->> the include/linux/amba/Xilinx_dma.h  folder.
->>
->> Like for FSL DMA it is got defined (fsl_dma_external_start) as a function
->> prototype in include/linux/fsldma.h And it is being getting used in the
->> drivers/misc/carma/carma-fpga-program.c
->>
->> Similarly in the Xilinx VDMA driver(xilinx_vdma_channel_set_config )
->> defined as a function prototype in the include/linux/amba/xilinx_dma.h And
->> is being used by Xilinx videos  drivers.  Those video driver need to use
->> the (xilinx_vdma_channel_set_config) which requires this global header
->> file.
->>
->> Could you please suggest us whether that header file (Xilinx_dma.h) should
->> be there  in include/linux/amba or we should move it to include/linux?
->> And any functional comments for this v4 patch?
-> Let me ask you a question, what is the relation of xilinx_dma with amba?
-> 
-> If none then only include/linux/ seems to be the right choice. If not then
-> amba maybe okay but you need to provide justfication why it should be in amba?
+Gentle Ping.
 
-I see your point. I think there is real reason to have this header in amba.
-The reason for that was that xilinx_dma.h was added there.
+Stefan
 
-Anyway there is include/linux/dma/ folder. Is it ok to move xilinx_dma.h there
-too? The same with this dma one.
-
-Thanks,
-Michal
+>
+> >
+> > -- Sebastian
