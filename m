@@ -1,39 +1,93 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] genirq: fix virtual irq demuxer related comments
-Date: Fri, 20 Feb 2015 16:12:59 +0000
-Message-ID: <20150220161259.GL13659@leverpostej>
-References: <20150210150013.GD7119@twins.programming.kicks-ass.net>
- <1423582992-8154-1-git-send-email-boris.brezillon@free-electrons.com>
- <20150210161425.GZ21418@twins.programming.kicks-ass.net>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
+ leds: flash: document sysfs interface
+Date: Fri, 20 Feb 2015 17:15:10 +0100
+Message-ID: <54E75D8E.40004@samsung.com>
+References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
+ <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
+ <20150218224747.GA3999@amd> <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
+ <20150219214043.GB29875@kroah.com> <54E6E89B.4050404@samsung.com>
+ <20150220153616.GB18111@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150210161425.GZ21418@twins.programming.kicks-ass.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20150220153616.GB18111@kroah.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Greg KH <greg@kroah.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On 02/20/2015 04:36 PM, Greg KH wrote:
+> On Fri, Feb 20, 2015 at 08:56:11AM +0100, Jacek Anaszewski wrote:
+>> On 02/19/2015 10:40 PM, Greg KH wrote:
+>>> On Thu, Feb 19, 2015 at 11:02:04AM +0200, Sakari Ailus wrote:
+>>>> On Wed, Feb 18, 2015 at 11:47:47PM +0100, Pavel Machek wrote:
+>>>>>
+>>>>> On Wed 2015-02-18 17:20:22, Jacek Anaszewski wrote:
+>>>>>> Add a documentation of LED Flash class specific sysfs attributes.
+>>>>>>
+>>>>>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>>>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>>>>> Cc: Bryan Wu <cooloney@gmail.com>
+>>>>>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>>>>>
+>>>>> NAK-ed-by: Pavel Machek
+>>>>>
+>>>>>> +What:		/sys/class/leds/<led>/available_sync_leds
+>>>>>> +Date:		February 2015
+>>>>>> +KernelVersion:	3.20
+>>>>>> +Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
+>>>>>> +Description:	read/write
+>>>>>> +		Space separated list of LEDs available for flash strobe
+>>>>>> +		synchronization, displayed in the format:
+>>>>>> +
+>>>>>> +		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
+>>>>>
+>>>>> Multiple values per file, with all the problems we had in /proc. I
+>>>>> assume led_id is an integer? What prevents space or dot in led name?
+>>>>
+>>>> Very good point. How about using a newline instead? That'd be a little bit
+>>>> easier to parse, too.
+>>>
+>>> No, please make it one value per-file, which is what sysfs requires.
+>>
+>> The purpose of this attribute is only to provide an information about
+>> the range of valid identifiers that can be written to the
+>> flash_sync_strobe attribute. Wouldn't splitting this to many attributes
+>> be an unnecessary inflation of sysfs files?
+>
+> Ok a list of allowed values to write is acceptable, as long as it is not
+> hard to parse and always is space separated.
 
-On Tue, Feb 10, 2015 at 04:14:25PM +0000, Peter Zijlstra wrote:
-> On Tue, Feb 10, 2015 at 04:43:12PM +0100, Boris Brezillon wrote:
-> > Replace remaining 'Dumb' occurrences by 'Virtual'.
-> > Remove inappropriate notes in kerneldoc headers.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> 
-> Thanks, squished into the other one.
+Is a new line character also acceptable as a delimiter?
 
-Would you be able to drop the virtual demuxer patch(es) for now?
+>> Apart from it, we have also flash_faults attribute, that currently
+>> provides a space separated list of flash faults that have occurred.
+>
+> That's crazy, what's to keep it from growing and growing to be larger
+> than is allowed to be read?
 
-The fundamental problem here is that a physical IRQ is shared by wakeup
-and IRQF_NO_SUSPEND handlers. Neither the virtual demuxer nor the flag
-approach solve that problem.
+The number of possible faults is fixed to 9 currently. They are 
+presented in the form of strings no longer currently than 40 characters.
+There can be maximum 9 faults reported at a time, this is not a kind of
+a log. This will allow to define roughly 100 types of faults, having
+that PAGE_SIZE is 4096. I think this is far more than it is conceivable
+for the simple LED flash device.
 
-Boris and I have spoken on IRC and have some ideas as to what we could
-do, but no code just yet.
+>> If we are to stick tightly to the one-value-per-file rule, then how
+>> we should approach flash_faults case? Should the separate file be
+>> dynamically created for each reported fault?
+>
+> I think you need to use something other than sysfs here, sorry.
+>
+> uevents for your faults?
+>
+> thanks,
+>
+> greg k-h
+>
 
-Thanks,
-Mark.
+-- 
+Best Regards,
+Jacek Anaszewski
