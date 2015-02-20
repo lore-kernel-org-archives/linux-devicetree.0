@@ -1,65 +1,32 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
-Date: Fri, 20 Feb 2015 11:07:21 +0800
-Message-ID: <54E6A4E9.4030401@linaro.org>
-References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org> <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org> <54E4249C.9050404@ti.com> <54E426B5.4070206@linaro.org> <20150218143546.GD3651@saruman.tx.rr.com>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: max98088: Add master clock handling
+Date: Fri, 20 Feb 2015 08:57:39 +0530
+Message-ID: <54E6A9AB.4070401@gmail.com>
+References: <1424283959-16289-3-git-send-email-afaerber@suse.de> <1424373526-4135-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150218143546.GD3651@saruman.tx.rr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dan . zhao" <dan.zhao@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1424373526-4135-1-git-send-email-afaerber@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Sangbeom Kim <sbkim73@samsung.com>, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.de>, Xiubo Li <Li.Xiubo@freescale.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org, Tushar Behera <tushar.behera@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Balbi
+On 02/20/2015 12:48 AM, Andreas F=C3=A4rber wrote:
+> If master clock is provided through device tree, then update
+> the master clock frequency during set_sysclk.
+>=20
+> Cc: Tushar Behera <tushar.behera@linaro.org>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+>  sound/soc/codecs/max98088.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>=20
 
-On 02/18/2015 10:35 PM, Felipe Balbi wrote:
-> On Wed, Feb 18, 2015 at 01:44:21PM +0800, zhangfei wrote:
->> Hi, Kishon
->>
->> On 02/18/2015 01:35 PM, Kishon Vijay Abraham I wrote:
->>> Hi,
->>>
->>> On Thursday 12 February 2015 01:07 PM, Zhangfei Gao wrote:
->>>> Add usb phy controller for hi6220 platform
->>>>
->>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->>>> ---
->>>>   drivers/phy/Kconfig          |   9 ++
->>>>   drivers/phy/Makefile         |   1 +
->>>>   drivers/phy/phy-hi6220-usb.c | 306
->>>> +++++++++++++++++++++++++++++++++++++++++++
->>>>   3 files changed, 316 insertions(+)
->>>>   create mode 100644 drivers/phy/phy-hi6220-usb.c
->>>
->>> why is this driver in drivers/phy when it doesn't use the generic PHY
->>> framework at all?
->>>
->>
->> Balbi recommended "new drivers only on drivers/phy/", including usb
->> phy.
->
-> but it should use the API too. It's not only about a directory, you need
-> to use the new API.
->
->> So Move drivers/usb/phy/phy-hi6220-usb.c to
->> drivers/phy/phy-hi6220-usb.c, required by Balbi.
->
-> you're reading what I stated the way you like.
+Looks good.
 
-Sorry for my bad understanding.
+Acked-by: Tushar Behera <trblinux@gmail.com>
 
-Still not clear about the otg_set_peripheral, which is required in 
-phy-hi6220-usb.c
-
-1. drivers/usb/dwc2/gadget.c use
-otg_set_peripheral(hsotg->uphy->otg, &hsotg->gadget);
-
-2. include/linux/phy/phy.h
-struct phy do not have member otg, while struct usb_phy has.
-
-Could you give more hints?
-
-Thanks
+--=20
+Tushar Behera
