@@ -1,56 +1,204 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv2 06/15] devicetree: bindings: add DT binding for the Marvell Armada 39x SoC family
-Date: Fri, 20 Feb 2015 18:04:25 +0100
-Message-ID: <1424451874-25375-7-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv2 05/15] ARM: mvebu: add stdout-path to all armada-*.dts
+Date: Fri, 20 Feb 2015 18:04:24 +0100
+Message-ID: <1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424451874-25375-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 39x is a family of two SoCs: the Armada 390 and the
-Armada 398, with a slightly different number of interfaces. This
-commit introduces the Device Tree binding that documents the top-level
-compatible strings for Armada 39x based platforms.
+This commit adds the stdout-path property in /chosen for all Armada
+boards that were not yet carrying this property.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- Documentation/devicetree/bindings/arm/armada-39x.txt | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/armada-39x.txt
+ arch/arm/boot/dts/armada-370-db.dts              | 1 +
+ arch/arm/boot/dts/armada-370-mirabox.dts         | 1 +
+ arch/arm/boot/dts/armada-370-netgear-rn102.dts   | 1 +
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts   | 1 +
+ arch/arm/boot/dts/armada-370-rd.dts              | 1 +
+ arch/arm/boot/dts/armada-375-db.dts              | 1 +
+ arch/arm/boot/dts/armada-388-db.dts              | 1 +
+ arch/arm/boot/dts/armada-388-rd.dts              | 1 +
+ arch/arm/boot/dts/armada-xp-axpwifiap.dts        | 1 +
+ arch/arm/boot/dts/armada-xp-db.dts               | 1 +
+ arch/arm/boot/dts/armada-xp-gp.dts               | 1 +
+ arch/arm/boot/dts/armada-xp-matrix.dts           | 1 +
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts   | 1 +
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 1 +
+ 14 files changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/armada-39x.txt b/Documentation/devicetree/bindings/arm/armada-39x.txt
-new file mode 100644
-index 0000000..53d4ff9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/armada-39x.txt
-@@ -0,0 +1,20 @@
-+Marvell Armada 39x Platforms Device Tree Bindings
-+-------------------------------------------------
-+
-+Boards with a SoC of the Marvell Armada 39x family shall have the
-+following property:
-+
-+Required root node property:
-+
-+ - compatible: must contain "marvell,armada390"
-+
-+In addition, boards using the Marvell Armada 398 SoC shall have the
-+following property before the previous one:
-+
-+Required root node property:
-+
-+compatible: must contain "marvell,armada398"
-+
-+Example:
-+
-+compatible = "marvell,a398-db", "marvell,armada398", "marvell,armada390";
+diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
+index e993c46..286bedd 100644
+--- a/arch/arm/boot/dts/armada-370-db.dts
++++ b/arch/arm/boot/dts/armada-370-db.dts
+@@ -56,6 +56,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
+index b10ceb4..ec77b86 100644
+--- a/arch/arm/boot/dts/armada-370-mirabox.dts
++++ b/arch/arm/boot/dts/armada-370-mirabox.dts
+@@ -52,6 +52,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+index 7c5c4ff..8c786cf 100644
+--- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
++++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+@@ -54,6 +54,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+index 1de53b5..1d64532 100644
+--- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
++++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+@@ -54,6 +54,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index 6ae36a3..f40d35b 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -65,6 +65,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-375-db.dts b/arch/arm/boot/dts/armada-375-db.dts
+index 0440891..033665c 100644
+--- a/arch/arm/boot/dts/armada-375-db.dts
++++ b/arch/arm/boot/dts/armada-375-db.dts
+@@ -56,6 +56,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-388-db.dts b/arch/arm/boot/dts/armada-388-db.dts
+index af6c74e..c56ccd74 100644
+--- a/arch/arm/boot/dts/armada-388-db.dts
++++ b/arch/arm/boot/dts/armada-388-db.dts
+@@ -55,6 +55,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-388-rd.dts b/arch/arm/boot/dts/armada-388-rd.dts
+index d99baac..e17edbb 100644
+--- a/arch/arm/boot/dts/armada-388-rd.dts
++++ b/arch/arm/boot/dts/armada-388-rd.dts
+@@ -56,6 +56,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+index c1fbab2..a7fd474 100644
+--- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
++++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+@@ -60,6 +60,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index 48bdafe..a12e159 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -65,6 +65,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 206aebb..8a2e49e 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -66,6 +66,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-xp-matrix.dts b/arch/arm/boot/dts/armada-xp-matrix.dts
+index 56f958e..3e81f22 100644
+--- a/arch/arm/boot/dts/armada-xp-matrix.dts
++++ b/arch/arm/boot/dts/armada-xp-matrix.dts
+@@ -53,6 +53,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+index a7ceafd..508a395 100644
+--- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
++++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+@@ -54,6 +54,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index 0c76d9f..7b2ea2060 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -55,6 +55,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
 -- 
 2.1.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
