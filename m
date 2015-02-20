@@ -1,110 +1,224 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv2 08/15] devicetree: bindings: add Device Tree bindings for Armada 39x pin-muxing controller
-Date: Fri, 20 Feb 2015 18:04:27 +0100
-Message-ID: <1424451874-25375-9-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv2 11/15] clk: mvebu: add Marvell Armada 39x driver
+Date: Fri, 20 Feb 2015 18:04:30 +0100
+Message-ID: <1424451874-25375-12-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424451874-25375-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the Device Tree binding documentation to describe the
-pin-muxing controller of the Marvell Armada 39x processors. Two
-variants are supported for the moment: the 88F6920 (Armada 390) and
-88F6928 (Armada 398).
+This commit adds a new clock driver for the Marvell Armada 39x family
+of processors. This driver is fairly similar to the ones already used
+on other Marvell EBU processors, with the following main differences:
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+ * Different set of ratios
+ * Different set of core clocks
+ * Configurable reference clock in frequency
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../pinctrl/marvell,armada-39x-pinctrl.txt         | 78 ++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-39x-pinctrl.txt
+ drivers/clk/mvebu/Kconfig      |   4 ++
+ drivers/clk/mvebu/Makefile     |   1 +
+ drivers/clk/mvebu/armada-39x.c | 156 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 161 insertions(+)
+ create mode 100644 drivers/clk/mvebu/armada-39x.c
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-39x-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-39x-pinctrl.txt
+diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
+index 3b34dba..2769625 100644
+--- a/drivers/clk/mvebu/Kconfig
++++ b/drivers/clk/mvebu/Kconfig
+@@ -21,6 +21,10 @@ config ARMADA_38X_CLK
+ 	bool
+ 	select MVEBU_CLK_COMMON
+ 
++config ARMADA_39X_CLK
++	bool
++	select MVEBU_CLK_COMMON
++
+ config ARMADA_XP_CLK
+ 	bool
+ 	select MVEBU_CLK_COMMON
+diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
+index a9a56fc..645ac7e 100644
+--- a/drivers/clk/mvebu/Makefile
++++ b/drivers/clk/mvebu/Makefile
+@@ -5,6 +5,7 @@ obj-$(CONFIG_MVEBU_CLK_COREDIV)	+= clk-corediv.o
+ obj-$(CONFIG_ARMADA_370_CLK)	+= armada-370.o
+ obj-$(CONFIG_ARMADA_375_CLK)	+= armada-375.o
+ obj-$(CONFIG_ARMADA_38X_CLK)	+= armada-38x.o
++obj-$(CONFIG_ARMADA_39X_CLK)	+= armada-39x.o
+ obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o
+ obj-$(CONFIG_DOVE_CLK)		+= dove.o
+ obj-$(CONFIG_KIRKWOOD_CLK)	+= kirkwood.o
+diff --git a/drivers/clk/mvebu/armada-39x.c b/drivers/clk/mvebu/armada-39x.c
 new file mode 100644
-index 0000000..5b1a9dc
+index 0000000..efb974d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-39x-pinctrl.txt
-@@ -0,0 +1,78 @@
-+* Marvell Armada 39x SoC pinctrl driver for mpp
++++ b/drivers/clk/mvebu/armada-39x.c
+@@ -0,0 +1,156 @@
++/*
++ * Marvell Armada 39x SoC clocks
++ *
++ * Copyright (C) 2015 Marvell
++ *
++ * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ * Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
 +
-+Please refer to marvell,mvebu-pinctrl.txt in this directory for common binding
-+part and usage.
++#include <linux/kernel.h>
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include "common.h"
 +
-+Required properties:
-+- compatible: "marvell,88f6920-pinctrl", "marvell,88f6928-pinctrl"
-+  depending on the specific variant of the SoC being used.
-+- reg: register specifier of MPP registers
++/*
++ * SARL[14:10] : Ratios between CPU, NBCLK, HCLK and DCLK.
++ *
++ * SARL[15]    : TCLK frequency
++ *		 0 = 250 MHz
++ *		 1 = 200 MHz
++ *
++ * SARH[0]     : Reference clock frequency
++ *               0 = 25 Mhz
++ *               1 = 40 Mhz
++ */
 +
-+Available mpp pins/groups and functions:
-+Note: brackets (x) are not part of the mpp name for marvell,function and given
-+only for more detailed description in this document.
++#define SARL 					0
++#define  SARL_A390_TCLK_FREQ_OPT		15
++#define  SARL_A390_TCLK_FREQ_OPT_MASK		0x1
++#define  SARL_A390_CPU_DDR_L2_FREQ_OPT		10
++#define  SARL_A390_CPU_DDR_L2_FREQ_OPT_MASK	0x1F
++#define SARH					4
++#define  SARH_A390_REFCLK_FREQ			BIT(0)
 +
-+name    pins    functions
-+================================================================================
-+mpp0	0	gpio, ua0(rxd)
-+mpp1	1	gpio, ua0(txd)
-+mpp2	2	gpio, i2c0(sck)
-+mpp3	3	gpio, i2c0(sda)
-+mpp4	4	gpio, ua1(txd), ua0(rts), smi(mdc)
-+mpp5	5	gpio, ua1(rxd), ua0(cts), smi(mdio)
-+mpp6	6	gpio, dev(cs3), xsmi(mdio)
-+mpp7	7	gpio, dev(ad9), xsmi(mdc)
-+mpp8	8	gpio, dev(ad10), ptp(trig)
-+mpp9	9	gpio, dev(ad11), ptp(clk)
-+mpp10	10	gpio, dev(ad12), ptp(event)
-+mpp11	11	gpio, dev(ad13), led(clk)
-+mpp12	12	gpio, pcie0(rstout), dev(ad14), led(stb)
-+mpp13	13	gpio, dev(ad15), led(data)
-+mpp14	14	gpio, m(vtt), dev(wen1), ua1(txd)
-+mpp15	15	gpio, pcie0(rstout), spi0(mosi), i2c1(sck)
-+mpp16	16	gpio, m(decc), spi0(miso), i2c1(sda)
-+mpp17	17	gpio, ua1(rxd), spi0(sck), smi(mdio)
-+mpp18	18	gpio, ua1(txd), spi0(cs0), i2c2(sck)
-+mpp19	19	gpio, sata1(present) [1], ua0(cts), ua1(rxd), i2c2(sda)
-+mpp20	20	gpio, sata0(present) [1], ua0(rts), ua1(txd), smi(mdc)
-+mpp21	21	gpio, spi0(cs1), sata0(present) [1], sd(cmd), dev(bootcs), ge(rxd0)
-+mpp22	22	gpio, spi0(mosi), dev(ad0)
-+mpp23	23	gpio, spi0(sck), dev(ad2)
-+mpp24	24	gpio, spi0(miso), ua0(cts), ua1(rxd), sd(d4), dev(readyn)
-+mpp25	25	gpio, spi0(cs0), ua0(rts), ua1(txd), sd(d5), dev(cs0)
-+mpp26	26	gpio, spi0(cs2), i2c1(sck), sd(d6), dev(cs1)
-+mpp27	27	gpio, spi0(cs3), i2c1(sda), sd(d7), dev(cs2), ge(txclkout)
-+mpp28	28	gpio, sd(clk), dev(ad5), ge(txd0)
-+mpp29	29	gpio, dev(ale0), ge(txd1)
-+mpp30	30	gpio, dev(oen), ge(txd2)
-+mpp31	31	gpio, dev(ale1), ge(txd3)
-+mpp32	32	gpio, dev(wen0), ge(txctl)
-+mpp33	33	gpio, m(decc), dev(ad3)
-+mpp34	34	gpio, dev(ad1)
-+mpp35	35	gpio, ref(clk), dev(a1)
-+mpp36	36	gpio, dev(a0)
-+mpp37	37	gpio, sd(d3), dev(ad8), ge(rxclk)
-+mpp38	38	gpio, ref(clk), sd(d0), dev(ad4), ge(rxd1)
-+mpp39	39	gpio, i2c1(sck), ua0(cts), sd(d1), dev(a2), ge(rxd2)
-+mpp40	40	gpio, i2c1(sda), ua0(rts), sd(d2), dev(ad6), ge(rxd3)
-+mpp41	41	gpio, ua1(rxd), ua0(cts), spi1(cs3), dev(burstn), nd(rbn0), ge(rxctl)
-+mpp42	42	gpio, ua1(txd), ua0(rts), dev(ad7)
-+mpp43	43	gpio, pcie0(clkreq), m(vtt), m(decc), spi1(cs2), dev(clkout), nd(rbn1)
-+mpp44	44	gpio, sata0(present) [1], sata1(present) [1], led(clk)
-+mpp45	45	gpio, ref(clk), pcie0(rstout), ua1(rxd)
-+mpp46	46	gpio, ref(clk), pcie0(rstout), ua1(txd), led(stb)
-+mpp47	47	gpio, sata0(present) [1], sata1(present) [1], led(data)
-+mpp48	48	gpio, sata0(present) [1], m(vtt), tdm(pclk) [1], audio(mclk) [1], sd(d4), pcie0(clkreq), ua1(txd)
-+mpp49	49	gpio, tdm(fsync) [1], audio(lrclk) [1], sd(d5), ua2(rxd)
-+mpp50	50	gpio, pcie0(rstout), tdm(drx) [1], audio(extclk) [1], sd(cmd), ua2(rxd)
-+mpp51	51	gpio, tdm(dtx) [1], audio(sdo) [1], m(decc), ua2(txd)
-+mpp52	52	gpio, pcie0(rstout), tdm(intn) [1], audio(sdi) [1], sd(d6), i2c3(sck)
-+mpp53	53	gpio, sata1(present) [1], sata0(present) [1], tdm(rstn) [1], audio(bclk) [1], sd(d7), i2c3(sda)
-+mpp54	54	gpio, sata0(present) [1], sata1(present) [1], pcie0(rstout), sd(d3), ua3(txd)
-+mpp55	55	gpio, ua1(cts), spi1(cs1), sd(d0), ua1(rxd), ua3(rxd)
-+mpp56	56	gpio, ua1(rts), m(decc), spi1(mosi), ua1(txd)
-+mpp57	57	gpio, spi1(sck), sd(clk), ua1(txd)
-+mpp58	58	gpio, i2c1(sck), pcie2(clkreq), spi1(miso), sd(d1), ua1(rxd)
-+mpp59	59	gpio, pcie0(rstout), i2c1(sda), spi1(cs0), sd(d2)
++static const u32 armada_39x_tclk_frequencies[] __initconst = {
++	250000000,
++	200000000,
++};
 +
-+[1]: only available on 88F6928
++static u32 __init armada_39x_get_tclk_freq(void __iomem *sar)
++{
++	u8 tclk_freq_select;
++
++	tclk_freq_select = ((readl(sar + SARL) >> SARL_A390_TCLK_FREQ_OPT) &
++			    SARL_A390_TCLK_FREQ_OPT_MASK);
++	return armada_39x_tclk_frequencies[tclk_freq_select];
++}
++
++static const u32 armada_39x_cpu_frequencies[] __initconst = {
++	[0x0] = 666 * 1000 * 1000,
++	[0x2] = 800 * 1000 * 1000,
++	[0x3] = 800 * 1000 * 1000,
++	[0x4] = 1066 * 1000 * 1000,
++	[0x5] = 1066 * 1000 * 1000,
++	[0x6] = 1200 * 1000 * 1000,
++	[0x8] = 1332 * 1000 * 1000,
++	[0xB] = 1600 * 1000 * 1000,
++	[0xC] = 1600 * 1000 * 1000,
++	[0x12] = 1800 * 1000 * 1000,
++	[0x1E] = 1800 * 1000 * 1000,
++};
++
++static u32 __init armada_39x_get_cpu_freq(void __iomem *sar)
++{
++	u8 cpu_freq_select;
++
++	cpu_freq_select = ((readl(sar + SARL) >> SARL_A390_CPU_DDR_L2_FREQ_OPT) &
++			   SARL_A390_CPU_DDR_L2_FREQ_OPT_MASK);
++	if (cpu_freq_select >= ARRAY_SIZE(armada_39x_cpu_frequencies)) {
++		pr_err("Selected CPU frequency (%d) unsupported\n",
++			cpu_freq_select);
++		return 0;
++	}
++
++	return armada_39x_cpu_frequencies[cpu_freq_select];
++}
++
++enum { A390_CPU_TO_NBCLK, A390_CPU_TO_HCLK, A390_CPU_TO_DCLK };
++
++static const struct coreclk_ratio armada_39x_coreclk_ratios[] __initconst = {
++	{ .id = A390_CPU_TO_NBCLK, .name = "nbclk" },
++	{ .id = A390_CPU_TO_HCLK, .name = "hclk" },
++	{ .id = A390_CPU_TO_DCLK, .name = "dclk" },
++};
++
++static void __init armada_39x_get_clk_ratio(
++	void __iomem *sar, int id, int *mult, int *div)
++{
++	switch (id) {
++	case A390_CPU_TO_NBCLK:
++		*mult = 1;
++		*div = 2;
++		break;
++	case A390_CPU_TO_HCLK:
++		*mult = 1;
++		*div = 4;
++		break;
++	case A390_CPU_TO_DCLK:
++		*mult = 1;
++		*div = 2;
++		break;
++	}
++}
++
++static u32 __init armada_39x_refclk_ratio(void __iomem *sar)
++{
++	if (readl(sar + SARH) & SARH_A390_REFCLK_FREQ)
++		return 40 * 1000 * 1000;
++	else
++		return 25 * 1000 * 1000;
++}
++
++static const struct coreclk_soc_desc armada_39x_coreclks = {
++	.get_tclk_freq = armada_39x_get_tclk_freq,
++	.get_cpu_freq = armada_39x_get_cpu_freq,
++	.get_clk_ratio = armada_39x_get_clk_ratio,
++	.get_refclk_freq = armada_39x_refclk_ratio,
++	.ratios = armada_39x_coreclk_ratios,
++	.num_ratios = ARRAY_SIZE(armada_39x_coreclk_ratios),
++};
++
++static void __init armada_39x_coreclk_init(struct device_node *np)
++{
++	mvebu_coreclk_setup(np, &armada_39x_coreclks);
++}
++CLK_OF_DECLARE(armada_39x_core_clk, "marvell,armada-390-core-clock",
++	       armada_39x_coreclk_init);
++
++/*
++ * Clock Gating Control
++ */
++static const struct clk_gating_soc_desc armada_39x_gating_desc[] __initconst = {
++	{ "pex1", NULL, 5 },
++	{ "pex2", NULL, 6 },
++	{ "pex3", NULL, 7 },
++	{ "pex0", NULL, 8 },
++	{ "usb3h0", NULL, 9 },
++	{ "sdio", NULL, 17 },
++	{ "xor0", NULL, 22 },
++	{ "xor1", NULL, 28 },
++	{ }
++};
++
++static void __init armada_39x_clk_gating_init(struct device_node *np)
++{
++	mvebu_clk_gating_setup(np, armada_39x_gating_desc);
++}
++CLK_OF_DECLARE(armada_39x_clk_gating, "marvell,armada-390-gating-clock",
++	       armada_39x_clk_gating_init);
 -- 
 2.1.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
