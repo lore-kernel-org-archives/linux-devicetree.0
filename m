@@ -1,98 +1,60 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
- if no bestdiv is normally found
-Date: Sat, 21 Feb 2015 09:56:20 +0100
-Message-ID: <20150221085620.GV19388@pengutronix.de>
-References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
- <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
- <20150212093356.GR12209@pengutronix.de>
- <20150212103944.GA1290@victor>
- <20150212122405.GW12209@pengutronix.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mfd: arizona: Move useful defines into a dt-binding
+ include
+Date: Sat, 21 Feb 2015 18:23:08 +0900
+Message-ID: <20150221092308.GC6236@finisterre.sirena.org.uk>
+References: <1424257419-28000-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150212122405.GW12209@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, andy.yan@rock-chips.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1424257419-28000-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kWeLe5EKmSxzQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563kn/h4/h/YSQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpPbiBUaHUsIEZlYiAxMiwgMjAxNSBhdCAwMToyNDowNVBNICswMTAwLCBTYXNjaGEg
-SGF1ZXIgd3JvdGU6Cj4gT24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMDY6Mzk6NDVQTSArMDgwMCwg
-TGl1IFlpbmcgd3JvdGU6Cj4gPiBPbiBUaHUsIEZlYiAxMiwgMjAxNSBhdCAxMDozMzo1NkFNICsw
-MTAwLCBTYXNjaGEgSGF1ZXIgd3JvdGU6Cj4gPiA+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDAy
-OjAxOjI0UE0gKzA4MDAsIExpdSBZaW5nIHdyb3RlOgo+ID4gPiA+IElmIG5vIGJlc3QgZGl2aWRl
-ciBpcyBub3JtYWxseSBmb3VuZCwgd2Ugd2lsbCB0cnkgdG8gdXNlIHRoZSBtYXhpbXVtIGRpdmlk
-ZXIuCj4gPiA+ID4gV2Ugc2hvdWxkIG5vdCBzZXQgdGhlIHBhcmVudCBjbG9jayByYXRlIHRvIGJl
-IDFIeiBieSBmb3JjZSBmb3IgYmVpbmcgcm91bmRlZC4KPiA+ID4gPiBJbnN0ZWFkLCB3ZSBzaG91
-bGQgdGFrZSB0aGUgbWF4aW11bSBkaXZpZGVyIGFzIGEgYmFzZSBhbmQgY2FsY3VsYXRlIGEgY29y
-cmVjdAo+ID4gPiA+IHBhcmVudCBjbG9jayByYXRlIGZvciBiZWluZyByb3VuZGVkLgo+ID4gPiAK
-PiA+ID4gUGxlYXNlIGFkZCBhbiBleHBsYW5hdGlvbiB3aHkgeW91IHRoaW5rIHRoZSBjdXJyZW50
-IGNvZGUgaXMgd3JvbmcgYW5kCj4gPiA+IHdoYXQgdGhpcyBhY3R1YWxseSBmaXhlcywgbWF5YmUg
-YW4gZXhhbXBsZT8KPiA+IAo+ID4gVGhlIE1JUEkgRFNJIHBhbmVsJ3MgcGl4ZWwgY2xvY2sgcmF0
-ZSBpcyAyNi40TUh6IGFuZCBpdCdzIGRlcml2ZWQgZnJvbSBQTEw1IG9uCj4gPiB0aGUgTVg2REwg
-U2FicmVTRCBib2FyZC4KPiA+IAo+ID4gVGhlc2UgYXJlIHRoZSBjbG9jayB0cmVlIHN1bW1hcmll
-cyB3aXRoIG9yIHdpdGhvdXQgdGhlIHBhdGNoIGFwcGxpZWQ6Cj4gPiAxKSBXaXRoIHRoZSBwYXRj
-aCBhcHBsaWVkOgo+ID4gcGxsNV9ieXBhc3Nfc3JjICAgICAgICAgICAgICAgICAgICAgICAxICAg
-ICAgICAgICAgMSAgICAyNDAwMDAwMCAgICAgICAgICAwIDAKPiA+ICAgIHBsbDUgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA4NDQ4MDAwNDggICAgICAgICAg
-MCAwCj4gPiAgICAgICBwbGw1X2J5cGFzcyAgICAgICAgICAgICAgICAgICAgIDEgICAgICAgICAg
-ICAxICAgODQ0ODAwMDQ4ICAgICAgICAgIDAgMAo+ID4gICAgICAgICAgcGxsNV92aWRlbyAgICAg
-ICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDg0NDgwMDA0OCAgICAgICAgICAwIDAKPiA+
-ICAgICAgICAgICAgIHBsbDVfcG9zdF9kaXYgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAy
-MTEyMDAwMTIgICAgICAgICAgMCAwCj4gPiAgICAgICAgICAgICAgICBwbGw1X3ZpZGVvX2RpdiAg
-ICAgICAgICAgMSAgICAgICAgICAgIDEgICAyMTEyMDAwMTIgICAgICAgIDAgMAo+ID4gICAgICAg
-ICAgICAgICAgICAgaXB1MV9kaTBfcHJlX3NlbCAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAy
-MTEyMDAwMTIgICAwIDAKPiA+ICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwX3ByZSAgICAg
-ICAgICAgMSAgICAgICAgICAgIDEgICAgMjY0MDAwMDIgICAgMCAwCj4gPiAgICAgICAgICAgICAg
-ICAgICAgICAgICBpcHUxX2RpMF9zZWwgICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDI2NDAw
-MDAyIDAgMAo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTAgICAgICAgICAg
-IDEgICAgICAgICAgICAxICAgIDI2NDAwMDAyICAwIDAKPiA+IAo+ID4gMikgV2l0aG91dCB0aGUg
-cGF0Y2ggYXBwbGllZDoKPiA+IHBsbDVfYnlwYXNzX3NyYyAgICAgICAgICAgICAgICAgICAgICAg
-MSAgICAgICAgICAgIDEgICAgMjQwMDAwMDAgICAgICAgICAgMCAwCj4gPiAgICBwbGw1ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIDEgICAgICAgICAgICAxICAgNjQ4MDAwMDAwICAgICAg
-ICAgIDAgMAo+ID4gICAgICAgcGxsNV9ieXBhc3MgICAgICAgICAgICAgICAgICAgICAxICAgICAg
-ICAgICAgMSAgIDY0ODAwMDAwMCAgICAgICAgICAwIDAKPiA+ICAgICAgICAgIHBsbDVfdmlkZW8g
-ICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA2NDgwMDAwMDAgICAgICAgICAgMCAw
-Cj4gPiAgICAgICAgICAgICBwbGw1X3Bvc3RfZGl2ICAgICAgICAgICAgIDEgICAgICAgICAgICAx
-ICAgMTYyMDAwMDAwICAgICAgICAgIDAgMAo+ID4gICAgICAgICAgICAgICAgcGxsNV92aWRlb19k
-aXYgICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDQwNTAwMDAwICAgICAgICAwIDAKPiA+ICAg
-ICAgICAgICAgICAgICAgIGlwdTFfZGkwX3ByZV9zZWwgICAgICAgICAgIDEgICAgICAgICAgICAx
-ICAgIDQwNTAwMDAwICAgMCAwCj4gPiAgICAgICAgICAgICAgICAgICAgICBpcHUxX2RpMF9wcmUg
-ICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDIwMjUwMDAwICAgIDAgMAo+ID4gICAgICAgICAg
-ICAgICAgICAgICAgICAgaXB1MV9kaTBfc2VsICAgICAgICAgICAxICAgICAgICAgICAgMSAgICAy
-MDI1MDAwMCAwIDAKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwICAgICAg
-ICAgICAxICAgICAgICAgICAgMSAgICAyMDI1MDAwMCAgMCAwCj4gCj4gVGhpcyBzZWVtcyB0byBi
-ZSBicm9rZW4gc2luY2U6Cj4gCj4gfCBjb21taXQgYjExZDI4MmRiZWEyN2RiMTc4ODg5MzExNWRm
-Y2E4YTc4NTZiZjIwNQo+IHwgQXV0aG9yOiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5A
-dGkuY29tPgo+IHwgRGF0ZTogICBUaHUgRmViIDEzIDEyOjAzOjU5IDIwMTQgKzAyMDAKPiB8IAo+
-IHwgICAgIGNsazogZGl2aWRlcjogZml4IHJhdGUgY2FsY3VsYXRpb24gZm9yIGZyYWN0aW9uYWwg
-cmF0ZXMKPiAKPiBUaGlzIHBhdGNoIGZpeGVkIGEgY2FzZSB3aGVuIGNsa19zZXRfcmF0ZShjbGtf
-cm91bmRfcmF0ZShyYXRlKSkgcmVzdWx0ZWQKPiBpbiBhIGxvd2VyIGZyZXF1ZW5jeSB0aGFuIGNs
-a19yb3VuZF9yYXRlKHJhdGUpIHJldHVybmVkLgo+IAo+IFNpbmNlIHRoZW4gdGhlIE1VTFRfUk9V
-TkRfVVAgaW4gY2xrX2RpdmlkZXJfYmVzdGRpdigpIGlzIGluY29uc2lzdGVudCB0bwo+IHRoZSBy
-ZXN0IG9mIHRoZSBkaXZpZGVyLiBNYXliZSB0aGlzIHNob3VsZCBiZSBhIHNpbXBsZSByYXRlICog
-aSBub3csIGJ1dAo+IEknbSB1bnN1cmUgd2hhdCBzaWRlIGVmZmVjdHMgdGhpcyBoYXMuCkkgdGhp
-bmsgdGhpcyBpcyB0aGUgcmlnaHQgZml4IHRoYXQgSSBmb3VuZCwgdG9vLCB3aGlsZSBmaXhpbmcg
-YWxsCnByb2JsZW1zIHRoYXQgeW91ciB0ZXN0IGNvZGUgd2l0aCB0aGUgdGhyZWUgZGl2aWRlcnMg
-c2hvd3MgKGF0IGxlYXN0IHRoZQpzdWJzZXQgb2YgYWxsIHByb2JsZW0gSSB3YXMgYWJsZSB0byBp
-ZGVudGlmeSkuCgo+IEkgdGhpbmsgeW91ciBwYXRjaCBvbmx5IGZpeGVzIHRoZSBiZWhhdmlvdXIg
-aW4geW91ciBjYXNlIGJ5IGFjY2lkZW50LAo+IGl0J3Mgbm90IGEgY29ycmVjdCBmaXggZm9yIHRo
-aXMgaXNzdWUuClJpZ2h0LgoKSSB3aWxsIGZvbGxvdyB1cCB3aXRoIGEgcGF0Y2ggKGFuZCB0d28g
-bW9yZSB0aGF0IGZpeCBkaWZmZXJlbnQgdGhpbmdzKS4KCkJlc3QgcmVnYXJkcwpVd2UKCi0tIApQ
-ZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCBVd2UgS2xlaW5lLUvD
-tm5pZyAgICAgICAgICAgIHwKSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAg
-ICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8gIHwKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--xo44VMWPx7vlQ2+2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Feb 18, 2015 at 11:03:39AM +0000, Charles Keepax wrote:
+
+> --- a/include/linux/mfd/arizona/pdata.h
+> +++ b/include/linux/mfd/arizona/pdata.h
+> @@ -7,61 +7,17 @@
+>   * it under the terms of the GNU General Public License version 2 as
+>   * published by the Free Software Foundation.
+>   */
+> +#include <dt-bindings/mfd/arizona.h>
+> =20
+>  #ifndef _ARIZONA_PDATA_H
+>  #define _ARIZONA_PDATA_H
+
+It's a bit odd to have the include outside the guards, is there any
+great reason for doing so?
+
+--xo44VMWPx7vlQ2+2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU6E57AAoJECTWi3JdVIfQRd0H/0TbequL2UmzCGdkzXzYdkhn
+J5UGuhxnwyPm+ABdx98An/SJKZA5M0p1MnZE1ANe9epwboGb0GZYoDG2BUDIwEnS
+lLh+B2R7BiOVSaee7sfH2kK6uZWhy0l2vt5Y9S1b2MjZKd1IeCuaX1zTLgbLNIcR
+5pFB35z2PgAcVu8qNkjN4VUvs30XAGeCOcxw4U1ObPXiOea8qP0ivl8jEX/6dIek
+Oqz/V+R47QyLfmvbCyjodKPKW1pihDLfdNr96Fh+vEZLOpoQ/uEQBjdFYYqgVXfV
+Ugw/Ku8gn2ShOm8V7PpUE83g/7WX0RqBT345mObrdV6V0rGnRG+CBt2YSvT8GQ4=
+=Y9fs
+-----END PGP SIGNATURE-----
+
+--xo44VMWPx7vlQ2+2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
