@@ -1,121 +1,82 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: shmobile: r8a7794: add GPIO DT support
-Date: Sun, 22 Feb 2015 01:12:31 +0300
-Message-ID: <3082195.zNdUtZ8oMM@wasted.cogentembedded.com>
-References: <6954455.LyoCrfjM8R@wasted.cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO
+ accesses via DT
+Date: Sat, 21 Feb 2015 16:18:44 -0600
+Message-ID: <CAL_JsqKCnD2-=pepcnianeVCw=Knn5Audt_EL0sHVszmTVc8KA@mail.gmail.com>
+References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
+ <20141125151018.359EAC44343@trevor.secretlab.ca> <20141125173859.GA27287@kroah.com>
+ <20141125211116.GA9997@kroah.com> <CACxGe6uifCPz6RM59MVODWo2WGoVBMWSFzmL9Uz3AVJ0C9-hig@mail.gmail.com>
+ <CAJiQ=7AMG44h7d2Fuw_ZLynPP62EcD++_kttBymqZgcKK=V8Ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <6954455.LyoCrfjM8R@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJiQ=7AMG44h7d2Fuw_ZLynPP62EcD++_kttBymqZgcKK=V8Ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe GPIO[0-6] controllers in the R8A7794 device tree.
+On Sat, Feb 21, 2015 at 2:53 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Nov 26, 2014 at 5:14 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Tue, Nov 25, 2014 at 9:11 PM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+>>> On Tue, Nov 25, 2014 at 09:38:59AM -0800, Greg KH wrote:
+>>>> On Tue, Nov 25, 2014 at 03:10:18PM +0000, Grant Likely wrote:
+>>>> > On Mon, 24 Nov 2014 15:36:15 -0800
+>>>> > , Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> >  wrote:
+>>>> > > My last submission attempted to work around serial driver coexistence
+>>>> > > problems on multiplatform kernels.  Since there are still questions
+>>>> > > surrounding the best way to solve that problem, this patch series
+>>>> > > will focus on the narrower topic of big endian MMIO support on serial.
+>>>> > >
+>>>> > >
+>>>> > > V2->V3:
+>>>> > >
+>>>> > >  - Document the new DT properties.
+>>>> > >
+>>>> > >  - Add libfdt-based wrapper, to complement the "struct device_node" based
+>>>> > >    version.
+>>>> > >
+>>>> > >  - Restructure early_init_dt_scan_chosen_serial() changes to use a
+>>>> > >    temporary variable, so it is easy to add more of_setup_earlycon()
+>>>> > >    properties later.
+>>>> > >
+>>>> > >  - Make of_serial and serial8250 honor the new "big-endian" property.
+>>>> > >
+>>>> > >
+>>>> > > This series applies cleanly to:
+>>>> > >
+>>>> > > git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
+>>>> > >
+>>>> > > but was tested on the mips-for-linux-next branch because my BE platform
+>>>> > > isn't supported in mainline yet.
+>>>> >
+>>>> > For the whole series:
+>>>> > Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> >
+>>>> > Greg, which tree do you want to merge this through? My DT tree, or the
+>>>> > tty tree?
+>>>>
+>>>> I can take these through my tty tree, thanks.
+>>>
+>>> I take that back, it doesn't apply to my tty tree due to changes in the
+>>> of codebase.  So feel free to take all of these through your DT tree
+>>> please:
+>>>
+>>> Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>>
+>> Applied all 7 patches. Thanks.
+>
+> Hi guys,
+>
+> I don't see these patches in devicetree-next or mainline.  Would you
+> like me to rebase + resend?
 
-Based on original patch by Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>.
+Not sure what happened there, but since they conflicted for Greg, it's
+probably best to rebase to 3.20-rc and resend them.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
- arch/arm/boot/dts/r8a7794.dtsi |   84 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-@@ -50,6 +50,90 @@
- 		interrupts = <1 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
- 	};
- 
-+	gpio0: gpio@e6050000 {
-+		compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
-+		reg = <0 0xe6050000 0 0x50>;
-+		interrupts = <0 4 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 0 32>;
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		clocks = <&mstp9_clks R8A7794_CLK_GPIO0>;
-+	};
-+
-+	gpio1: gpio@e6051000 {
-+		compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
-+		reg = <0 0xe6051000 0 0x50>;
-+		interrupts = <0 5 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 32 32>;
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		clocks = <&mstp9_clks R8A7794_CLK_GPIO1>;
-+	};
-+
-+	gpio2: gpio@e6052000 {
-+		compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
-+		reg = <0 0xe6052000 0 0x50>;
-+		interrupts = <0 6 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 64 32>;
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		clocks = <&mstp9_clks R8A7794_CLK_GPIO2>;
-+	};
-+
-+	gpio3: gpio@e6053000 {
-+		compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
-+		reg = <0 0xe6053000 0 0x50>;
-+		interrupts = <0 7 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 96 32>;
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		clocks = <&mstp9_clks R8A7794_CLK_GPIO3>;
-+	};
-+
-+	gpio4: gpio@e6054000 {
-+		compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
-+		reg = <0 0xe6054000 0 0x50>;
-+		interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 128 32>;
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		clocks = <&mstp9_clks R8A7794_CLK_GPIO4>;
-+	};
-+
-+	gpio5: gpio@e6055000 {
-+		compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
-+		reg = <0 0xe6055000 0 0x50>;
-+		interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 160 32>;
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		clocks = <&mstp9_clks R8A7794_CLK_GPIO5>;
-+	};
-+
-+	gpio6: gpio@e6055400 {
-+		compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
-+		reg = <0 0xe6055400 0 0x50>;
-+		interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 192 32>;
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		clocks = <&mstp9_clks R8A7794_CLK_GPIO6>;
-+	};
-+
- 	cmt0: timer@ffca0000 {
- 		compatible = "renesas,cmt-48-gen2";
- 		reg = <0 0xffca0000 0 0x1004>;
-
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
