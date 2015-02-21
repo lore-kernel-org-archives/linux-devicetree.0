@@ -1,96 +1,98 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Sat, 21 Feb 2015 00:31:36 -0600
-Message-ID: <alpine.DEB.2.10.1502210029200.2346@shineypoop>
-References: <20150113222450.GA17475@obsidianresearch.com>
- <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
- <20150115184726.GA23247@obsidianresearch.com>
- <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
- <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
- <20150121160151.453ba403@lxorguk.ukuu.org.uk>
- <D466D9FF-25DA-4765-9469-128733BEBC4D@konsulko.com>
- <20150121202700.GB4942@obsidianresearch.com> <20150215224006.GA5626@amd>
- <54E37569.80508@landley.net> <20150217191727.GA18429@amd>
- <0440c296085f48918e07134b07690a08@BY2FFO11FD028.protection.gbl>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH RFC v9 01/20] clk: divider: Correct parent clk round rate
+ if no bestdiv is normally found
+Date: Sat, 21 Feb 2015 09:56:20 +0100
+Message-ID: <20150221085620.GV19388@pengutronix.de>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+ <1423720903-24806-2-git-send-email-Ying.Liu@freescale.com>
+ <20150212093356.GR12209@pengutronix.de>
+ <20150212103944.GA1290@victor>
+ <20150212122405.GW12209@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <0440c296085f48918e07134b07690a08@BY2FFO11FD028.protection.gbl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Ming Lei <ming.lei@canonical.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: mark.rutland@arm.com, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, linux-doc@vger.kernel.org, rubini@gnudd.com, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, galak@codeaurora.org, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Alan
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150212122405.GW12209@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, andy.yan@rock-chips.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Feb 2015, Michal Simek wrote:
-
-> On 02/17/2015 08:17 PM, Pavel Machek wrote:
-> > On Tue 2015-02-17 11:07:53, Rob Landley wrote:
-> >>
-> >>
-> >> On 02/15/2015 04:40 PM, Pavel Machek wrote:
-> >>> On Wed 2015-01-21 13:27:00, Jason Gunthorpe wrote:
-> >>>> On Wed, Jan 21, 2015 at 06:33:12PM +0200, Pantelis Antoniou wrote:
-> >>>> My point is that the current firmware layer is overly cautious and
-> >>>> FPGAs are very big. My current project on small Xilinx device has a
-> >>>> 10MB programming file. The biggest Xilinx device today has a max
-> >>>> bitfile size around 122MB.
-> >>>>
-> >>>> So keeping that much memory pinned in the kernel when I can prove it
-> >>>> is uncessary for my system (either because there is no suspend/resume
-> >>>> possibility, or because I know the CPU can always access the
-> >>>> filesytem) is very undesirable.
-> >>>
-> >>> Well, your current device aalso has 1GB RAM, no?
-> >>
-> >> Unnecessarily pinning 10% of your ram is a good solution?
-> > 
-> > Never said that. But I'd rather have _some_ API proposed, then try to
-> > design in everthing including kitchen sink and do nothing.
-> 
-
-I propose an extension to the firmware class:
-
-int request_firmware_streamed(const struct firmware **firmware_p,
-                              const char *name,
-                              struct device *device,
-                              int (*consumer)(char *buf,
-                                              size_t size,
-                                              void *priv))
-
-This is a new function that streams the firmware file in 4k chunks to
-a callback function.  So firmware is not limited to the allocation
-size of vmalloc.
-
-This new function would have the same parameters as request_firmware except
-adding a pointer to a consumer function.  In the case of fpga's, the
-consumer function is writing the 4k chunks to the fpga.
-
-The new function will:
- * open the file
- * read 4k
- * hand that buffer to the consumer
- * sleep until the consumer returns
- * give up if consumer has a nonzero exit, continue reading otherwise
-
-Admittedly this is really different from the current firmeware class's
-structures.
-
-The real problem this is trying to solve is that bitstreams can be huge,
-especially as fpga's can be daisychained.  And the CPU doing the loading
-could be embedded (limited resources).  IFAIK fpga's don't need to have
-the whole image in a ram buffer.
-
-This gives us the convenience of request_firmware() and gives the kernel an
-extension of the firmware class that others might useful instead of solving
-this problem that we keep hovering around for fpga's only.
-
-Alan Tull
+SGVsbG8sCgpPbiBUaHUsIEZlYiAxMiwgMjAxNSBhdCAwMToyNDowNVBNICswMTAwLCBTYXNjaGEg
+SGF1ZXIgd3JvdGU6Cj4gT24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMDY6Mzk6NDVQTSArMDgwMCwg
+TGl1IFlpbmcgd3JvdGU6Cj4gPiBPbiBUaHUsIEZlYiAxMiwgMjAxNSBhdCAxMDozMzo1NkFNICsw
+MTAwLCBTYXNjaGEgSGF1ZXIgd3JvdGU6Cj4gPiA+IE9uIFRodSwgRmViIDEyLCAyMDE1IGF0IDAy
+OjAxOjI0UE0gKzA4MDAsIExpdSBZaW5nIHdyb3RlOgo+ID4gPiA+IElmIG5vIGJlc3QgZGl2aWRl
+ciBpcyBub3JtYWxseSBmb3VuZCwgd2Ugd2lsbCB0cnkgdG8gdXNlIHRoZSBtYXhpbXVtIGRpdmlk
+ZXIuCj4gPiA+ID4gV2Ugc2hvdWxkIG5vdCBzZXQgdGhlIHBhcmVudCBjbG9jayByYXRlIHRvIGJl
+IDFIeiBieSBmb3JjZSBmb3IgYmVpbmcgcm91bmRlZC4KPiA+ID4gPiBJbnN0ZWFkLCB3ZSBzaG91
+bGQgdGFrZSB0aGUgbWF4aW11bSBkaXZpZGVyIGFzIGEgYmFzZSBhbmQgY2FsY3VsYXRlIGEgY29y
+cmVjdAo+ID4gPiA+IHBhcmVudCBjbG9jayByYXRlIGZvciBiZWluZyByb3VuZGVkLgo+ID4gPiAK
+PiA+ID4gUGxlYXNlIGFkZCBhbiBleHBsYW5hdGlvbiB3aHkgeW91IHRoaW5rIHRoZSBjdXJyZW50
+IGNvZGUgaXMgd3JvbmcgYW5kCj4gPiA+IHdoYXQgdGhpcyBhY3R1YWxseSBmaXhlcywgbWF5YmUg
+YW4gZXhhbXBsZT8KPiA+IAo+ID4gVGhlIE1JUEkgRFNJIHBhbmVsJ3MgcGl4ZWwgY2xvY2sgcmF0
+ZSBpcyAyNi40TUh6IGFuZCBpdCdzIGRlcml2ZWQgZnJvbSBQTEw1IG9uCj4gPiB0aGUgTVg2REwg
+U2FicmVTRCBib2FyZC4KPiA+IAo+ID4gVGhlc2UgYXJlIHRoZSBjbG9jayB0cmVlIHN1bW1hcmll
+cyB3aXRoIG9yIHdpdGhvdXQgdGhlIHBhdGNoIGFwcGxpZWQ6Cj4gPiAxKSBXaXRoIHRoZSBwYXRj
+aCBhcHBsaWVkOgo+ID4gcGxsNV9ieXBhc3Nfc3JjICAgICAgICAgICAgICAgICAgICAgICAxICAg
+ICAgICAgICAgMSAgICAyNDAwMDAwMCAgICAgICAgICAwIDAKPiA+ICAgIHBsbDUgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA4NDQ4MDAwNDggICAgICAgICAg
+MCAwCj4gPiAgICAgICBwbGw1X2J5cGFzcyAgICAgICAgICAgICAgICAgICAgIDEgICAgICAgICAg
+ICAxICAgODQ0ODAwMDQ4ICAgICAgICAgIDAgMAo+ID4gICAgICAgICAgcGxsNV92aWRlbyAgICAg
+ICAgICAgICAgICAgICAxICAgICAgICAgICAgMSAgIDg0NDgwMDA0OCAgICAgICAgICAwIDAKPiA+
+ICAgICAgICAgICAgIHBsbDVfcG9zdF9kaXYgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAy
+MTEyMDAwMTIgICAgICAgICAgMCAwCj4gPiAgICAgICAgICAgICAgICBwbGw1X3ZpZGVvX2RpdiAg
+ICAgICAgICAgMSAgICAgICAgICAgIDEgICAyMTEyMDAwMTIgICAgICAgIDAgMAo+ID4gICAgICAg
+ICAgICAgICAgICAgaXB1MV9kaTBfcHJlX3NlbCAgICAgICAgICAgMSAgICAgICAgICAgIDEgICAy
+MTEyMDAwMTIgICAwIDAKPiA+ICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwX3ByZSAgICAg
+ICAgICAgMSAgICAgICAgICAgIDEgICAgMjY0MDAwMDIgICAgMCAwCj4gPiAgICAgICAgICAgICAg
+ICAgICAgICAgICBpcHUxX2RpMF9zZWwgICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDI2NDAw
+MDAyIDAgMAo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgaXB1MV9kaTAgICAgICAgICAg
+IDEgICAgICAgICAgICAxICAgIDI2NDAwMDAyICAwIDAKPiA+IAo+ID4gMikgV2l0aG91dCB0aGUg
+cGF0Y2ggYXBwbGllZDoKPiA+IHBsbDVfYnlwYXNzX3NyYyAgICAgICAgICAgICAgICAgICAgICAg
+MSAgICAgICAgICAgIDEgICAgMjQwMDAwMDAgICAgICAgICAgMCAwCj4gPiAgICBwbGw1ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDEgICAgICAgICAgICAxICAgNjQ4MDAwMDAwICAgICAg
+ICAgIDAgMAo+ID4gICAgICAgcGxsNV9ieXBhc3MgICAgICAgICAgICAgICAgICAgICAxICAgICAg
+ICAgICAgMSAgIDY0ODAwMDAwMCAgICAgICAgICAwIDAKPiA+ICAgICAgICAgIHBsbDVfdmlkZW8g
+ICAgICAgICAgICAgICAgICAgMSAgICAgICAgICAgIDEgICA2NDgwMDAwMDAgICAgICAgICAgMCAw
+Cj4gPiAgICAgICAgICAgICBwbGw1X3Bvc3RfZGl2ICAgICAgICAgICAgIDEgICAgICAgICAgICAx
+ICAgMTYyMDAwMDAwICAgICAgICAgIDAgMAo+ID4gICAgICAgICAgICAgICAgcGxsNV92aWRlb19k
+aXYgICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDQwNTAwMDAwICAgICAgICAwIDAKPiA+ICAg
+ICAgICAgICAgICAgICAgIGlwdTFfZGkwX3ByZV9zZWwgICAgICAgICAgIDEgICAgICAgICAgICAx
+ICAgIDQwNTAwMDAwICAgMCAwCj4gPiAgICAgICAgICAgICAgICAgICAgICBpcHUxX2RpMF9wcmUg
+ICAgICAgICAgIDEgICAgICAgICAgICAxICAgIDIwMjUwMDAwICAgIDAgMAo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgaXB1MV9kaTBfc2VsICAgICAgICAgICAxICAgICAgICAgICAgMSAgICAy
+MDI1MDAwMCAwIDAKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlwdTFfZGkwICAgICAg
+ICAgICAxICAgICAgICAgICAgMSAgICAyMDI1MDAwMCAgMCAwCj4gCj4gVGhpcyBzZWVtcyB0byBi
+ZSBicm9rZW4gc2luY2U6Cj4gCj4gfCBjb21taXQgYjExZDI4MmRiZWEyN2RiMTc4ODg5MzExNWRm
+Y2E4YTc4NTZiZjIwNQo+IHwgQXV0aG9yOiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5A
+dGkuY29tPgo+IHwgRGF0ZTogICBUaHUgRmViIDEzIDEyOjAzOjU5IDIwMTQgKzAyMDAKPiB8IAo+
+IHwgICAgIGNsazogZGl2aWRlcjogZml4IHJhdGUgY2FsY3VsYXRpb24gZm9yIGZyYWN0aW9uYWwg
+cmF0ZXMKPiAKPiBUaGlzIHBhdGNoIGZpeGVkIGEgY2FzZSB3aGVuIGNsa19zZXRfcmF0ZShjbGtf
+cm91bmRfcmF0ZShyYXRlKSkgcmVzdWx0ZWQKPiBpbiBhIGxvd2VyIGZyZXF1ZW5jeSB0aGFuIGNs
+a19yb3VuZF9yYXRlKHJhdGUpIHJldHVybmVkLgo+IAo+IFNpbmNlIHRoZW4gdGhlIE1VTFRfUk9V
+TkRfVVAgaW4gY2xrX2RpdmlkZXJfYmVzdGRpdigpIGlzIGluY29uc2lzdGVudCB0bwo+IHRoZSBy
+ZXN0IG9mIHRoZSBkaXZpZGVyLiBNYXliZSB0aGlzIHNob3VsZCBiZSBhIHNpbXBsZSByYXRlICog
+aSBub3csIGJ1dAo+IEknbSB1bnN1cmUgd2hhdCBzaWRlIGVmZmVjdHMgdGhpcyBoYXMuCkkgdGhp
+bmsgdGhpcyBpcyB0aGUgcmlnaHQgZml4IHRoYXQgSSBmb3VuZCwgdG9vLCB3aGlsZSBmaXhpbmcg
+YWxsCnByb2JsZW1zIHRoYXQgeW91ciB0ZXN0IGNvZGUgd2l0aCB0aGUgdGhyZWUgZGl2aWRlcnMg
+c2hvd3MgKGF0IGxlYXN0IHRoZQpzdWJzZXQgb2YgYWxsIHByb2JsZW0gSSB3YXMgYWJsZSB0byBp
+ZGVudGlmeSkuCgo+IEkgdGhpbmsgeW91ciBwYXRjaCBvbmx5IGZpeGVzIHRoZSBiZWhhdmlvdXIg
+aW4geW91ciBjYXNlIGJ5IGFjY2lkZW50LAo+IGl0J3Mgbm90IGEgY29ycmVjdCBmaXggZm9yIHRo
+aXMgaXNzdWUuClJpZ2h0LgoKSSB3aWxsIGZvbGxvdyB1cCB3aXRoIGEgcGF0Y2ggKGFuZCB0d28g
+bW9yZSB0aGF0IGZpeCBkaWZmZXJlbnQgdGhpbmdzKS4KCkJlc3QgcmVnYXJkcwpVd2UKCi0tIApQ
+ZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCBVd2UgS2xlaW5lLUvD
+tm5pZyAgICAgICAgICAgIHwKSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAg
+ICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8gIHwKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
