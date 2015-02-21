@@ -1,76 +1,58 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3 0/7] serial: Configure {big,native}-endian MMIO
- accesses via DT
-Date: Sat, 21 Feb 2015 12:53:09 -0800
-Message-ID: <CAJiQ=7AMG44h7d2Fuw_ZLynPP62EcD++_kttBymqZgcKK=V8Ug@mail.gmail.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
- <20141125151018.359EAC44343@trevor.secretlab.ca> <20141125173859.GA27287@kroah.com>
- <20141125211116.GA9997@kroah.com> <CACxGe6uifCPz6RM59MVODWo2WGoVBMWSFzmL9Uz3AVJ0C9-hig@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
+Date: Sat, 21 Feb 2015 15:56:17 -0600
+Message-ID: <CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg@mail.gmail.com>
+References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
+ <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com> <20150219190348.GB24460@cbox>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6uifCPz6RM59MVODWo2WGoVBMWSFzmL9Uz3AVJ0C9-hig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150219190348.GB24460@cbox>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+To: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 26, 2014 at 5:14 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Nov 25, 2014 at 9:11 PM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
->> On Tue, Nov 25, 2014 at 09:38:59AM -0800, Greg KH wrote:
->>> On Tue, Nov 25, 2014 at 03:10:18PM +0000, Grant Likely wrote:
->>> > On Mon, 24 Nov 2014 15:36:15 -0800
->>> > , Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> >  wrote:
->>> > > My last submission attempted to work around serial driver coexistence
->>> > > problems on multiplatform kernels.  Since there are still questions
->>> > > surrounding the best way to solve that problem, this patch series
->>> > > will focus on the narrower topic of big endian MMIO support on serial.
->>> > >
->>> > >
->>> > > V2->V3:
->>> > >
->>> > >  - Document the new DT properties.
->>> > >
->>> > >  - Add libfdt-based wrapper, to complement the "struct device_node" based
->>> > >    version.
->>> > >
->>> > >  - Restructure early_init_dt_scan_chosen_serial() changes to use a
->>> > >    temporary variable, so it is easy to add more of_setup_earlycon()
->>> > >    properties later.
->>> > >
->>> > >  - Make of_serial and serial8250 honor the new "big-endian" property.
->>> > >
->>> > >
->>> > > This series applies cleanly to:
->>> > >
->>> > > git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/next-overlay
->>> > >
->>> > > but was tested on the mips-for-linux-next branch because my BE platform
->>> > > isn't supported in mainline yet.
->>> >
->>> > For the whole series:
->>> > Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> >
->>> > Greg, which tree do you want to merge this through? My DT tree, or the
->>> > tty tree?
->>>
->>> I can take these through my tty tree, thanks.
+On Thu, Feb 19, 2015 at 1:03 PM, Christoffer Dall
+<christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Feb 19, 2015 at 12:23:15PM -0600, Rob Herring wrote:
+>> On Tue, Jan 27, 2015 at 1:03 AM, Pranavkumar Sawargaonkar
+>> <psawargaonkar-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> > In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
+>> > in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
+>> > size due to size alignment checking in vgic driver for VCPU Control and
+>> > VCPU register.
+>> >
+>> > This patch corrects the sizes to be inline with the hardware spec.
 >>
->> I take that back, it doesn't apply to my tty tree due to changes in the
->> of codebase.  So feel free to take all of these through your DT tree
->> please:
+>> This does not make sense. The GIC regions are still only 4 or 8KB and
+>> the h/w description should reflect that. For implementations using
+>> gic-400 and the addressing decode trick, the rest of the register
+>> range is also not safe to access given it is multiple mapped. Also,
+>> this wastes virtual space, but I guess we don't care on 64-bit.
 >>
->> Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
->
-> Applied all 7 patches. Thanks.
+>> KVM should be fixed to only check base address alignment. Size
+>> alignment does not matter (if it does, then you need to fix all
+>> register blocks).
+>>
+> It matters if you want to ensure that the 64K page you are assigning to
+> a guest for the GIC virtual CPU interface contains only GIC virtual CPU
+> mappings, and not other random stuff that the guest is not allowed to
+> touch.
 
-Hi guys,
+Good point.
 
-I don't see these patches in devicetree-next or mainline.  Would you
-like me to rebase + resend?
+> How else should this be enforced?
 
-Thanks.
+Rely on correct h/w design? You'll have to repeat this every time you
+want to do pass-thru of a device.
+
+What do you do if 64K mapping is not supported? Fallback to emulation
+of the CPU interface?
+
+Are there other DTSs that need to be fixed?
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
