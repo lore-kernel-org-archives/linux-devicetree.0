@@ -1,96 +1,145 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
- leds: flash: document sysfs interface
-Date: Sat, 21 Feb 2015 12:57:33 +0200
-Message-ID: <20150221105733.GO3915@valkosipuli.retiisi.org.uk>
-References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
- <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
- <20150218224747.GA3999@amd>
- <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
- <20150219214043.GB29875@kroah.com>
- <54E6E89B.4050404@samsung.com>
- <20150220153616.GB18111@kroah.com>
- <20150220205738.GA28995@amd>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
+Date: Sat, 21 Feb 2015 11:31:49 +0000
+Message-ID: <54E86CA5.2080907@linaro.org>
+References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug@mail.gmail.com> <54E78A31.9020306@linaro.org> <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150220205738.GA28995@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Greg KH <greg@kroah.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel and Greg,
 
-On Fri, Feb 20, 2015 at 09:57:38PM +0100, Pavel Machek wrote:
-> On Fri 2015-02-20 07:36:16, Greg KH wrote:
-> > On Fri, Feb 20, 2015 at 08:56:11AM +0100, Jacek Anaszewski wrote:
-> > > On 02/19/2015 10:40 PM, Greg KH wrote:
-> > > >On Thu, Feb 19, 2015 at 11:02:04AM +0200, Sakari Ailus wrote:
-> > > >>On Wed, Feb 18, 2015 at 11:47:47PM +0100, Pavel Machek wrote:
-> > > >>>
-> > > >>>On Wed 2015-02-18 17:20:22, Jacek Anaszewski wrote:
-> > > >>>>Add a documentation of LED Flash class specific sysfs attributes.
-> > > >>>>
-> > > >>>>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> > > >>>>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> > > >>>>Cc: Bryan Wu <cooloney@gmail.com>
-> > > >>>>Cc: Richard Purdie <rpurdie@rpsys.net>
-> > > >>>
-> > > >>>NAK-ed-by: Pavel Machek
-> > > >>>
-> > > >>>>+What:		/sys/class/leds/<led>/available_sync_leds
-> > > >>>>+Date:		February 2015
-> > > >>>>+KernelVersion:	3.20
-> > > >>>>+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-> > > >>>>+Description:	read/write
-> > > >>>>+		Space separated list of LEDs available for flash strobe
-> > > >>>>+		synchronization, displayed in the format:
-> > > >>>>+
-> > > >>>>+		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
-> > > >>>
-> > > >>>Multiple values per file, with all the problems we had in /proc. I
-> > > >>>assume led_id is an integer? What prevents space or dot in led name?
-> > > >>
-> > > >>Very good point. How about using a newline instead? That'd be a little bit
-> > > >>easier to parse, too.
-> > > >
-> > > >No, please make it one value per-file, which is what sysfs requires.
-> > > 
-> > > The purpose of this attribute is only to provide an information about
-> > > the range of valid identifiers that can be written to the
-> > > flash_sync_strobe attribute. Wouldn't splitting this to many attributes
-> > > be an unnecessary inflation of sysfs files?
-> > 
-> > Ok a list of allowed values to write is acceptable, as long as it is not
-> > hard to parse and always is space separated.
-> 
-> Well, this one is list of LED numbers and LED names.
 
-It'd be nice if these names would match the V4L2 sub-device names. We don't
-have any rules for them other than they must be unique, and there's the
-established practice that an I2C address follows the component name. We're
-about to discuss the matter on Monday on #v4l (11:00 Finnish time), but I
-don't think we can generally guarantee any of the names won't have spaces.
+On 20/02/15 22:01, Rob Herring wrote:
+> On Fri, Feb 20, 2015 at 1:25 PM, Srinivas Kandagatla
+> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>
+>>
+>> On 20/02/15 17:21, Rob Herring wrote:
+>>>
+>>> On Thu, Feb 19, 2015 at 11:08 AM, Srinivas Kandagatla
+>>> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>
+>>>> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>>
+>>>> Up until now, EEPROM drivers were stored in drivers/misc, where they all
+>>>> had to
+>>>> duplicate pretty much the same code to register a sysfs file, allow
+>>>> in-kernel
+>>>> users to access the content of the devices they were driving, etc.
+>>>>
+>>>> This was also a problem as far as other in-kernel users were involved,
+>>>> since
+>>>> the solutions used were pretty much different from on driver to another,
+>>>> there
+>>>> was a rather big abstraction leak.
+>>>>
+>>>> This introduction of this framework aims at solving this. It also
+>>>> introduces DT
+>>>> representation for consumer devices to go get the data they require (MAC
+>>>> Addresses, SoC/Revision ID, part numbers, and so on) from the EEPROMs.
+>>>>
+>>>> Having regmap interface to this framework would give much better
+>>>> abstraction for eeproms on different buses.
+>>>>
+>>>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>> [srinivas.kandagatla: Moved to regmap based and cleanedup apis]
+>>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>    .../devicetree/bindings/eeprom/eeprom.txt          |  48 ++++
+>>>>    drivers/Kconfig                                    |   2 +
+>>>>    drivers/Makefile                                   |   1 +
+>>>>    drivers/eeprom/Kconfig                             |  19 ++
+>>>>    drivers/eeprom/Makefile                            |   9 +
+>>>>    drivers/eeprom/core.c                              | 290
+>>>> +++++++++++++++++++++
+>>>>    include/linux/eeprom-consumer.h                    |  73 ++++++
+>>>>    include/linux/eeprom-provider.h                    |  51 ++++
+>>>
+>>>
+>>> Who is going to be the maintainer for this?
+>>
+>>
+>> Am happy to be one.
+>
+> So please add a MAINTAINERS entry.
+Yep, I will do that in next version.
 
-Separate files, then?
+>
+> [...]
+>
+>>>> += Data consumers =
+>>>> +
+>>>> +Required properties:
+>>>> +
+>>>> +eeproms: List of phandle and data cell specifier triplet, one triplet
+>>>> +        for each data cell the device might be interested in. The
+>>>> +        triplet consists of the phandle to the eeprom provider, then
+>>>> +        the offset in byte within that storage device, and the length
+>>>> +        in byte of the data we care about.
+>>>
+>>>
+>>> The problem with this is it assumes you know who the consumer is and
+>>> that it is a DT node. For example, how would you describe a serial
+>>> number?
+>>
+>> Correct me if I miss understood.
+>> Is serial number any different?
+>> Am hoping that the eeprom consumer would be aware of offset and size of
+>> serial number in the eeprom
+>>
+>> Cant the consumer do:
+>>
+>> eeprom-consumer {
+>>          eeproms = <&at24 0 4>;
+>>          eeprom-names = "device-serial-number";
+>
+> Yes, but who is "eeprom-consumer"? DT nodes generally describe a h/w
+> block, but it this case, the consumer depends on the OS, not the h/w.
 
-> > > Apart from it, we have also flash_faults attribute, that currently
-> > > provides a space separated list of flash faults that have occurred.
-> > 
-> > That's crazy, what's to keep it from growing and growing to be larger
-> > than is allowed to be read?
-> 
-> Umm. Actually, this one is less crazy, I'd say. List of faults is
-> fixed, and you can have them all-at-once, at most, which is way below
-> 4K limit.
+Consumer could be any driver for the IP on the SOC, for example an 
+ethernet driver which needs Mac Address from eeprom or an thermal sensor 
+which requires cablibration values or an cpufreq driver which requires 
+OPP settings. Am not sure who could be the consumer for serial number, I 
+guess it should some soc specific driver.
 
-We'd first run out of V4L2 bitmask control bits --- there are 32 of them.
-I'm frankly not really worried about that either.
+> I'm not saying you can't describe where things are, but I don't think
+> you should imply who is the consumer and doing so is unnecessarily
+> complicated.
+>
+> Also, the layout of EEPROM is likely very much platform specific. Some
+> could have a more complex structure perhaps with key ids and linked
+> list structure.
+I agree, the data layout is very specific to platform and could vary in 
+complexity.
+This simple framework is attempting to solve most common usecase where 
+in the consumer drivers like thermal-sensor/network/cpufreq needs to 
+read an location in the eeprom. Am sure we can find a way to accommodate 
+the complex layout as well.
+>
+> I would do something more simple that is just a list of keys and their
+> location like this:
+>
+> device-serial-number = <start size>;
+> key1 = <start size>;
+> key2 = <start size>;
+>
+There are pros and cons doing it as list of keys.
 
--- 
-Kind regards,
+One reason for doing it as fixed properties("eeproms", "eemprom-names") 
+is "consistency and familiarity" like interrupts, regs, dmas, clocks, 
+pinctrl, reset, pwm have fixed property names, trying to get most 
+subsystems to do it the same way makes it easier for people to write dts 
+files.
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+
+--srini
+
+
+> Rob
+>
