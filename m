@@ -1,119 +1,138 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
-Date: Fri, 20 Feb 2015 16:01:55 -0600
-Message-ID: <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw@mail.gmail.com>
-References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org>
- <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug@mail.gmail.com> <54E78A31.9020306@linaro.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 7/8] hwmon: pwm-fan: Read PWM FAN configuration from
+ device tree
+Date: Fri, 20 Feb 2015 16:26:27 -0800
+Message-ID: <54E7D0B3.7040800@roeck-us.net>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com> <1424254056-5904-1-git-send-email-l.majewski@samsung.com> <1424254056-5904-8-git-send-email-l.majewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54E78A31.9020306-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424254056-5904-8-git-send-email-l.majewski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>
+Cc: lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 20, 2015 at 1:25 PM, Srinivas Kandagatla
-<srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On 02/18/2015 02:07 AM, Lukasz Majewski wrote:
+> This patch provides code for reading PWM FAN configuration data via
+> device tree. The pwm-fan can work with full speed when configuration
+> is not provided. However, errors are propagated when wrong DT bindings
+> are found.
+> Additionally the struct pwm_fan_ctx has been extended.
+>
+> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> ---
+> Changes for v2:
+> - Rename pwm_fan_max_states to pwm_fan_cooling_levels
+> - Moving pwm_fan_of_get_cooling_data() call after setting end enabling PWM FAN
+> - pwm_fan_of_get_cooling_data() now can fail - preserving old behaviour
+> - Remove unnecessary dev_err() call
+> Changes for v3:
+> - Patch's headline has been reedited
+> - pwm_fan_of_get_cooling_data() return code is now being checked.
+> - of_property_count_elems_of_size() is now used instead of_find_property()
+> - More verbose patch description added
+> Changes for v4:
+> - dev_err() has been removed from pwm_fan_of_get_cooling_data()
+> - Returning -EINVAL when "cooling-levels" are defined in DT, but doesn't
+>    have the value
+> ---
+>   drivers/hwmon/pwm-fan.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 51 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index bd42d39..82cd06a 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -30,7 +30,10 @@
+>   struct pwm_fan_ctx {
+>   	struct mutex lock;
+>   	struct pwm_device *pwm;
+> -	unsigned char pwm_value;
+> +	unsigned int pwm_value;
+> +	unsigned int pwm_fan_state;
+> +	unsigned int pwm_fan_max_state;
+> +	unsigned int *pwm_fan_cooling_levels;
+>   };
+>
+>   static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
+> @@ -100,6 +103,48 @@ static struct attribute *pwm_fan_attrs[] = {
+>
+>   ATTRIBUTE_GROUPS(pwm_fan);
+>
+> +int pwm_fan_of_get_cooling_data(struct device *dev, struct pwm_fan_ctx *ctx)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	int num, i, ret;
+> +
+> +	ret = of_property_count_elems_of_size(np, "cooling-levels",
+> +					      sizeof(u32));
+> +
+> +	if (ret == -EINVAL)
+> +		return 0;
+
+The function returns -EINVAL if there is no such property,
+but also if prop->length % elem_size != 0. The latter _would_
+be an error.
+
+Overall I don't entirely understand why you do not call
+of_find_property first. If that returns NULL, you would know for sure
+that the property does not exist, and you would not have to second
+guess the returned error from of_property_count_elems_of_size.
+
+On a side note, there is of_property_count_u32_elems() to count
+properties of size u32.
+
+> +
+> +	if (ret <= 0) {
+> +		dev_err(dev, "Wrong data!\n");
+> +		return ret ? ret : -EINVAL;
+> +	}
+
+If devicetree is not configured, of_property_count_elems_of_size
+returns -ENOSYS, which is returned, causing the driver to fail loading.
+
+> +
+> +	num = ret;
+> +	ctx->pwm_fan_cooling_levels = devm_kzalloc(dev, num * sizeof(u32),
+> +						   GFP_KERNEL);
+> +	if (!ctx->pwm_fan_cooling_levels)
+> +		return -ENOMEM;
+> +
+> +	ret = of_property_read_u32_array(np, "cooling-levels",
+> +					 ctx->pwm_fan_cooling_levels, num);
+> +	if (ret) {
+> +		dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < num; i++) {
+> +		if (ctx->pwm_fan_cooling_levels[i] > MAX_PWM) {
+> +			dev_err(dev, "PWM fan state[%d]:%d > %d\n", i,
+> +				ctx->pwm_fan_cooling_levels[i], MAX_PWM);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	ctx->pwm_fan_max_state = num - 1;
+> +
+> +	return 0;
+> +}
+> +
+>   static int pwm_fan_probe(struct platform_device *pdev)
+>   {
+>   	struct device *hwmon;
+> @@ -145,6 +190,11 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>   		pwm_disable(ctx->pwm);
+>   		return PTR_ERR(hwmon);
+>   	}
+> +
+> +	ret = pwm_fan_of_get_cooling_data(&pdev->dev, ctx);
+> +	if (ret)
+> +		return ret;
+> +
+>   	return 0;
+>   }
 >
 >
-> On 20/02/15 17:21, Rob Herring wrote:
->>
->> On Thu, Feb 19, 2015 at 11:08 AM, Srinivas Kandagatla
->> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>
->>> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>
->>> Up until now, EEPROM drivers were stored in drivers/misc, where they all
->>> had to
->>> duplicate pretty much the same code to register a sysfs file, allow
->>> in-kernel
->>> users to access the content of the devices they were driving, etc.
->>>
->>> This was also a problem as far as other in-kernel users were involved,
->>> since
->>> the solutions used were pretty much different from on driver to another,
->>> there
->>> was a rather big abstraction leak.
->>>
->>> This introduction of this framework aims at solving this. It also
->>> introduces DT
->>> representation for consumer devices to go get the data they require (MAC
->>> Addresses, SoC/Revision ID, part numbers, and so on) from the EEPROMs.
->>>
->>> Having regmap interface to this framework would give much better
->>> abstraction for eeproms on different buses.
->>>
->>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> [srinivas.kandagatla: Moved to regmap based and cleanedup apis]
->>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>>   .../devicetree/bindings/eeprom/eeprom.txt          |  48 ++++
->>>   drivers/Kconfig                                    |   2 +
->>>   drivers/Makefile                                   |   1 +
->>>   drivers/eeprom/Kconfig                             |  19 ++
->>>   drivers/eeprom/Makefile                            |   9 +
->>>   drivers/eeprom/core.c                              | 290
->>> +++++++++++++++++++++
->>>   include/linux/eeprom-consumer.h                    |  73 ++++++
->>>   include/linux/eeprom-provider.h                    |  51 ++++
->>
->>
->> Who is going to be the maintainer for this?
->
->
-> Am happy to be one.
-
-So please add a MAINTAINERS entry.
-
-[...]
-
->>> += Data consumers =
->>> +
->>> +Required properties:
->>> +
->>> +eeproms: List of phandle and data cell specifier triplet, one triplet
->>> +        for each data cell the device might be interested in. The
->>> +        triplet consists of the phandle to the eeprom provider, then
->>> +        the offset in byte within that storage device, and the length
->>> +        in byte of the data we care about.
->>
->>
->> The problem with this is it assumes you know who the consumer is and
->> that it is a DT node. For example, how would you describe a serial
->> number?
->
-> Correct me if I miss understood.
-> Is serial number any different?
-> Am hoping that the eeprom consumer would be aware of offset and size of
-> serial number in the eeprom
->
-> Cant the consumer do:
->
-> eeprom-consumer {
->         eeproms = <&at24 0 4>;
->         eeprom-names = "device-serial-number";
-
-Yes, but who is "eeprom-consumer"? DT nodes generally describe a h/w
-block, but it this case, the consumer depends on the OS, not the h/w.
-I'm not saying you can't describe where things are, but I don't think
-you should imply who is the consumer and doing so is unnecessarily
-complicated.
-
-Also, the layout of EEPROM is likely very much platform specific. Some
-could have a more complex structure perhaps with key ids and linked
-list structure.
-
-I would do something more simple that is just a list of keys and their
-location like this:
-
-device-serial-number = <start size>;
-key1 = <start size>;
-key2 = <start size>;
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
