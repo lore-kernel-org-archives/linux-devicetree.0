@@ -1,139 +1,45 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: shmobile: silk: add SDHI0/1 DT support
-Date: Sun, 22 Feb 2015 01:27:42 +0300
-Message-ID: <2348421.LHyZ4ZOiiG@wasted.cogentembedded.com>
-References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
+From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
+Date: Sun, 22 Feb 2015 08:58:15 +0900
+Message-ID: <CAFEAcA9pg5v_+RAehwf5XWopgeJtWfDb+Xej+579ikeiRjhg_Q@mail.gmail.com>
+References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
+ <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com>
+ <20150219190348.GB24460@cbox> <CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>, Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the SILK board dependent parts of the SDHI0  (connected to SDIO Wi-Fi
-chip)  and SDHI1  (connected to micro-SD slot) device nodes along with the
-necessary voltage regulators.
+On 22 February 2015 at 06:56, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Feb 19, 2015 at 1:03 PM, Christoffer Dall
+> <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> It matters if you want to ensure that the 64K page you are assigning to
+>> a guest for the GIC virtual CPU interface contains only GIC virtual CPU
+>> mappings, and not other random stuff that the guest is not allowed to
+>> touch.
+>
+> Good point.
+>
+>> How else should this be enforced?
+>
+> Rely on correct h/w design? You'll have to repeat this every time you
+> want to do pass-thru of a device.
 
-Based on the original patch by Vladimir Barinov
-<vladimir.barinov@cogentembedded.com>.
+The idea is that the device tree lets us describe whether
+the hardware design is correct or not :-)
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> What do you do if 64K mapping is not supported? Fallback to emulation
+> of the CPU interface?
 
----
- arch/arm/boot/dts/r8a7794-silk.dts |   81 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+In this case KVM can't be supported -- use 4K host pages with this
+hardware, or don't use KVM...
 
-Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -12,6 +12,7 @@
- 
- /dts-v1/;
- #include "r8a7794.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "SILK";
-@@ -39,6 +40,54 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	vcc_sdhi0: regulator@1 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "SDHI0 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&gpio2 26 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vccq_sdhi0: regulator@2 {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "SDHI0 VccQ";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio2 29 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <1>;
-+		states = <3300000 1
-+			  1800000 0>;
-+	};
-+
-+	vcc_sdhi1: regulator@3 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "SDHI1 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&gpio4 26 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vccq_sdhi1: regulator@4 {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "SDHI1 VccQ";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio4 29 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <1>;
-+		states = <3300000 1
-+			  1800000 0>;
-+	};
- };
- 
- &extal_clk {
-@@ -65,6 +114,16 @@
- 		renesas,groups = "mmc_data8", "mmc_ctrl";
- 		renesas,function = "mmc";
- 	};
-+
-+	sdhi0_pins: sd0 {
-+		renesas,groups = "sdhi0_data4", "sdhi0_ctrl";
-+		renesas,function = "sdhi0";
-+	};
-+
-+	sdhi1_pins: sd1 {
-+		renesas,groups = "sdhi1_data4", "sdhi1_ctrl";
-+		renesas,function = "sdhi1";
-+	};
- };
- 
- &scif2 {
-@@ -100,3 +159,25 @@
- 	non-removable;
- 	status = "okay";
- };
-+
-+&sdhi0 {
-+	pinctrl-0 = <&sdhi0_pins>;
-+	pinctrl-names = "default";
-+
-+	vmmc-supply = <&vcc_sdhi0>;
-+	vqmmc-supply = <&vccq_sdhi0>;
-+	cd-gpios = <&gpio6 6 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&sdhi1 {
-+	pinctrl-0 = <&sdhi1_pins>;
-+	pinctrl-names = "default";
-+
-+	vmmc-supply = <&vcc_sdhi1>;
-+	vqmmc-supply = <&vccq_sdhi1>;
-+	cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-
+-- PMM
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
