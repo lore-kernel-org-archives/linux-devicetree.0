@@ -1,59 +1,53 @@
-From: Mathieu Olivari <mathieu@codeaurora.org>
-Subject: [PATCH 2/3] ARM: qcom: add description of KPSS WDT for IPQ8064
-Date: Fri, 20 Feb 2015 18:19:35 -0800
-Message-ID: <1424485176-8348-3-git-send-email-mathieu@codeaurora.org>
-References: <1424485176-8348-1-git-send-email-mathieu@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 5/6] ASoC: samsung: Extend Snow driver to support max98089
+Date: Sat, 21 Feb 2015 11:40:25 +0900
+Message-ID: <20150221024025.GB6236@finisterre.sirena.org.uk>
+References: <1424283959-16289-1-git-send-email-afaerber@suse.de>
+ <1424283959-16289-6-git-send-email-afaerber@suse.de>
+ <20150219094425.GB3198@finisterre.sirena.org.uk>
+ <CAD=FV=WkieDSSB_-a6DtH1hmq6SyZk4NAR-eXQ11hxUDMTvRfg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424485176-8348-1-git-send-email-mathieu@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WkieDSSB_-a6DtH1hmq6SyZk4NAR-eXQ11hxUDMTvRfg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, wim@iguana.be, corbet@lwn.net, standby24x7@gmail.com, mathieu@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, Josh Cartwright <joshc@codeaurora.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Sangbeom Kim <sbkim73@samsung.com>, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Add the watchdog related entries to the Krait Processor Sub-system
-(KPSS) timer IPQ8064 devicetree section. Also, add a fixed-clock
-description of SLEEP_CLK, which will do for now.
 
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
----
- arch/arm/boot/dts/qcom-ipq8064.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+--ZoaI/ZTpAVc4A5k6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-index cb225da..d01f618 100644
---- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-@@ -60,6 +60,14 @@
- 		};
- 	};
- 
-+	clocks {
-+		sleep_clk: sleep_clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+			#clock-cells = <0>;
-+		};
-+	};
-+
- 	soc: soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -89,10 +97,14 @@
- 			compatible = "qcom,kpss-timer", "qcom,msm-timer";
- 			interrupts = <1 1 0x301>,
- 				     <1 2 0x301>,
--				     <1 3 0x301>;
-+				     <1 3 0x301>,
-+				     <1 4 0x301>,
-+				     <1 5 0x301>;
- 			reg = <0x0200a000 0x100>;
- 			clock-frequency = <25000000>,
- 					  <32768>;
-+			clocks = <&sleep_clk>;
-+			clock-names = "sleep";
- 			cpu-offset = <0x80000>;
- 		};
- 
--- 
-1.9.1
+On Thu, Feb 19, 2015 at 09:44:08AM -0800, Doug Anderson wrote:
+> On Thu, Feb 19, 2015 at 1:44 AM, Mark Brown <broonie@kernel.org> wrote:
+
+> I think what you're suggesting is that here we should add a new
+> compatible string "google,snow-audio" instead of adding
+> "google,snow-audio-max98089" here.  Then the sound node in the spring
+> DTS would look like:
+
+>   compatible = "google,snow-audio-max98089", "google,snow-audio";
+
+Yes.
+
+--ZoaI/ZTpAVc4A5k6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU5/AYAAoJECTWi3JdVIfQ2uEH/ji13tl3wMeBeylmEMkTfB0w
+PX75Whi9IvG0iu4deHgZY8n1AVWjGff2jRgtL9ESwvudME8WOPC2NJvXeH4XGVdo
+zyMvLgyY46T/9fvJjQcYd8ducE6ofsLf+B/AqEw1iCBKkBVbzYnBLetZFGUI+S2m
+B2Ib6tjSllapIRmPyO0v0ocYigP0ef/EI3LgYqyvkmDbmuWx0wf684W2Y8lvXimk
+8WiTfJ5DABTZYj2LFnXnccfgEKsbomhiTogU7Kvdk4cX47wzJGR2LBjYvWOP+0Dw
+POBpON1VZD9uSXjjYOM4ecpyMFMWD/K/bFcea2j9Zccx4YILYlhkSOHIFLwGmjU=
+=C0V4
+-----END PGP SIGNATURE-----
+
+--ZoaI/ZTpAVc4A5k6--
