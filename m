@@ -1,151 +1,98 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH] ARM: bcm2835: Add header file for pinctrl constants
-Date: Sun, 22 Feb 2015 16:59:56 +0000
-Message-ID: <1424624396-812-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Rabin Vincent <rabin@rab.in>
+Subject: [PATCHv2 1/2] CRISv32: add irq domains support
+Date: Sun, 22 Feb 2015 20:42:33 +0100
+Message-ID: <1424634154-21358-1-git-send-email-rabin@rab.in>
+References: <1423409745-2230-1-git-send-email-rabin@rab.in>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1423409745-2230-1-git-send-email-rabin@rab.in>
 Sender: linux-kernel-owner@vger.kernel.org
-To: swarren@wwwdotorg.org, lee@kernel.org
-Cc: linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: jesper.nilsson@axis.com
+Cc: linux-kernel@vger.kernel.org, linux-cris-kernel@axis.com, devicetree@vger.kernel.org, Rabin Vincent <rabin@rab.in>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a header file for the constants used in pincontrol
-configuration for the bcm2835.
+Add support for IRQ domains to the CRISv32 interrupt controller.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Signed-off-by: Rabin Vincent <rabin@rab.in>
 ---
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts      |    4 +-
- arch/arm/boot/dts/bcm2835-rpi-b.dts           |    4 +-
- arch/arm/boot/dts/bcm2835-rpi.dtsi            |    8 ++--
- arch/arm/boot/dts/bcm2835.dtsi                |    4 ++-
- include/dt-bindings/pinctrl/pinctrl-bcm2835.h |   39 +++++++++++++++++++++++++
- 5 files changed, 50 insertions(+), 9 deletions(-)
- create mode 100644 include/dt-bindings/pinctrl/pinctrl-bcm2835.h
+V2: No changes, but reorder so that this patch is before the OF patch, to avoid
+build errors.
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index e479515..e3418c2 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -1,5 +1,5 @@
- /dts-v1/;
--/include/ "bcm2835-rpi.dtsi"
-+#include "bcm2835-rpi.dtsi"
+ arch/cris/Kconfig               |  1 +
+ arch/cris/arch-v32/kernel/irq.c | 28 +++++++++++++++++++++++++---
+ 2 files changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/arch/cris/Kconfig b/arch/cris/Kconfig
+index 8474c66..3c94c96 100644
+--- a/arch/cris/Kconfig
++++ b/arch/cris/Kconfig
+@@ -53,6 +53,7 @@ config CRIS
+ 	select OLD_SIGSUSPEND
+ 	select OLD_SIGACTION
+ 	select ARCH_REQUIRE_GPIOLIB
++	select IRQ_DOMAIN if ETRAX_ARCH_V32
  
- / {
- 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
-@@ -25,6 +25,6 @@
- 	/* I2S interface */
- 	i2s_alt0: i2s_alt0 {
- 		brcm,pins = <18 19 20 21>;
--		brcm,function = <4>; /* alt0 */
-+		brcm,function = <BCM2835_PIN_FUNC_ALT0>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-index bafa46f..541788a 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -1,5 +1,5 @@
- /dts-v1/;
--/include/ "bcm2835-rpi.dtsi"
-+#include "bcm2835-rpi.dtsi"
+ config HZ
+ 	int
+diff --git a/arch/cris/arch-v32/kernel/irq.c b/arch/cris/arch-v32/kernel/irq.c
+index 25437ae..bc871d2 100644
+--- a/arch/cris/arch-v32/kernel/irq.c
++++ b/arch/cris/arch-v32/kernel/irq.c
+@@ -10,6 +10,8 @@
+ #include <linux/errno.h>
+ #include <linux/init.h>
+ #include <linux/profile.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
+ #include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
+ #include <linux/threads.h>
+@@ -431,6 +433,19 @@ crisv32_do_multiple(struct pt_regs* regs)
+ 	irq_exit();
+ }
  
- / {
- 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
-@@ -18,6 +18,6 @@
- 	/* I2S interface */
- 	i2s_alt2: i2s_alt2 {
- 		brcm,pins = <28 29 30 31>;
--		brcm,function = <6>; /* alt2 */
-+		brcm,function = <BCM2835_PIN_FUNC_ALT2>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index c706448..76b0a40 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -1,4 +1,4 @@
--/include/ "bcm2835.dtsi"
-+#include "bcm2835.dtsi"
- 
- / {
- 	memory {
-@@ -21,17 +21,17 @@
- 
- 	gpioout: gpioout {
- 		brcm,pins = <6>;
--		brcm,function = <1>; /* GPIO out */
-+		brcm,function = <BCM2835_PIN_FUNC_GPIO_OUT>;
- 	};
- 
- 	alt0: alt0 {
- 		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 14 15 40 45>;
--		brcm,function = <4>; /* alt0 */
-+		brcm,function = <BCM2835_PIN_FUNC_ALT0>;
- 	};
- 
- 	alt3: alt3 {
- 		brcm,pins = <48 49 50 51 52 53>;
--		brcm,function = <7>; /* alt3 */
-+		brcm,function = <BCM2835_PIN_FUNC_ALT3>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index 3342cb1..31f6586 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -1,4 +1,6 @@
--/include/ "skeleton.dtsi"
-+#include <dt-bindings/pinctrl/pinctrl-bcm2835.h>
++static int crisv32_irq_map(struct irq_domain *h, unsigned int virq,
++			   irq_hw_number_t hw_irq_num)
++{
++	irq_set_chip_and_handler(virq, &crisv32_irq_type, handle_simple_irq);
 +
-+#include "skeleton.dtsi"
++	return 0;
++}
++
++static struct irq_domain_ops crisv32_irq_ops = {
++	.map	= crisv32_irq_map,
++	.xlate	= irq_domain_xlate_onecell,
++};
++
+ /*
+  * This is called by start_kernel. It fixes the IRQ masks and setup the
+  * interrupt vector table to point to bad_interrupt pointers.
+@@ -441,6 +456,8 @@ init_IRQ(void)
+ 	int i;
+ 	int j;
+ 	reg_intr_vect_rw_mask vect_mask = {0};
++	struct device_node *np;
++	struct irq_domain *domain;
  
- / {
- 	compatible = "brcm,bcm2835";
-diff --git a/include/dt-bindings/pinctrl/pinctrl-bcm2835.h b/include/dt-bindings/pinctrl/pinctrl-bcm2835.h
-new file mode 100644
-index 0000000..c74532e
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/pinctrl-bcm2835.h
-@@ -0,0 +1,39 @@
-+/*
-+ * This header provides constants for BCM2835 pinctrl bindings.
-+ *
-+ * Copyright 2015, Cirrus Logic Inc.
-+ *
-+ * Author: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
+ 	/* Clear all interrupts masks. */
+ 	for (i = 0; i < NBR_REGS; i++)
+@@ -449,10 +466,15 @@ init_IRQ(void)
+ 	for (i = 0; i < 256; i++)
+ 		etrax_irv->v[i] = weird_irq;
+ 
+-	/* Point all IRQ's to bad handlers. */
++	np = of_find_compatible_node(NULL, NULL, "axis,crisv32-intc");
++	domain = irq_domain_add_legacy(np, NR_IRQS - FIRST_IRQ,
++				       FIRST_IRQ, FIRST_IRQ,
++				       &crisv32_irq_ops, NULL);
++	BUG_ON(!domain);
++	irq_set_default_host(domain);
++	of_node_put(np);
 +
-+#ifndef _DT_BINDINGS_PINCTRL_BCM2835_H
-+#define _DT_BINDINGS_PINCTRL_BCM2835_H
-+
-+/* IRQ Flags */
-+#define BCM2835_PIN_IRQ_RISING				1
-+#define BCM2835_PIN_IRQ_FALLING				2
-+#define BCM2835_PIN_IRQ_EDGE	(BCM2835_PIN_IRQ_RISING | \
-+				 BCM2835_PIN_IRQ_FALLING)
-+#define BCM2835_PIN_IRQ_LOW				4
-+#define BCM2835_PIN_IRQ_HIGH				8
-+
-+/* Pin Function Settings */
-+#define BCM2835_PIN_FUNC_GPIO_IN			0
-+#define BCM2835_PIN_FUNC_GPIO_OUT			1
-+#define BCM2835_PIN_FUNC_ALT5				2
-+#define BCM2835_PIN_FUNC_ALT4				3
-+#define BCM2835_PIN_FUNC_ALT0				4
-+#define BCM2835_PIN_FUNC_ALT1				5
-+#define BCM2835_PIN_FUNC_ALT2				6
-+#define BCM2835_PIN_FUNC_ALT3				7
-+
-+/* Pin Pull Settings */
-+#define BCM2835_PIN_PULL_NONE				0
-+#define BCM2835_PIN_PULL_DOWN				1
-+#define BCM2835_PIN_PULL_UP				2
-+
-+#endif
+ 	for (i = FIRST_IRQ, j = 0; j < NR_IRQS; i++, j++) {
+-		irq_set_chip_and_handler(j, &crisv32_irq_type,
+-					 handle_simple_irq);
+ 		set_exception_vector(i, interrupt[j]);
+ 	}
+ 
 -- 
-1.7.2.5
+2.1.4
