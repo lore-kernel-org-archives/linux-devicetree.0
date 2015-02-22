@@ -1,98 +1,157 @@
 From: Rabin Vincent <rabin@rab.in>
-Subject: [PATCHv2 1/2] CRISv32: add irq domains support
-Date: Sun, 22 Feb 2015 20:42:33 +0100
-Message-ID: <1424634154-21358-1-git-send-email-rabin@rab.in>
+Subject: [PATCHv2 2/2] CRISv32: add device tree support
+Date: Sun, 22 Feb 2015 20:42:34 +0100
+Message-ID: <1424634154-21358-2-git-send-email-rabin@rab.in>
 References: <1423409745-2230-1-git-send-email-rabin@rab.in>
+ <1424634154-21358-1-git-send-email-rabin@rab.in>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423409745-2230-1-git-send-email-rabin@rab.in>
+In-Reply-To: <1424634154-21358-1-git-send-email-rabin@rab.in>
 Sender: linux-kernel-owner@vger.kernel.org
 To: jesper.nilsson@axis.com
 Cc: linux-kernel@vger.kernel.org, linux-cris-kernel@axis.com, devicetree@vger.kernel.org, Rabin Vincent <rabin@rab.in>
 List-Id: devicetree@vger.kernel.org
 
-Add support for IRQ domains to the CRISv32 interrupt controller.
+Add support for booting CRISv32 with a built-in device tree.
 
 Signed-off-by: Rabin Vincent <rabin@rab.in>
 ---
-V2: No changes, but reorder so that this patch is before the OF patch, to avoid
-build errors.
+V2: Reorder to be after irqdomains patch and restrict to CRISv32 for now to
+avoid build errors on CRISv10.
 
- arch/cris/Kconfig               |  1 +
- arch/cris/arch-v32/kernel/irq.c | 28 +++++++++++++++++++++++++---
- 2 files changed, 26 insertions(+), 3 deletions(-)
+ arch/cris/Kconfig             |  6 ++++++
+ arch/cris/Makefile            |  4 ++++
+ arch/cris/boot/dts/Makefile   |  6 ++++++
+ arch/cris/kernel/Makefile     |  1 +
+ arch/cris/kernel/devicetree.c | 14 ++++++++++++++
+ arch/cris/kernel/setup.c      | 15 +++++++++++++++
+ 6 files changed, 46 insertions(+)
+ create mode 100644 arch/cris/boot/dts/Makefile
+ create mode 100644 arch/cris/kernel/devicetree.c
 
 diff --git a/arch/cris/Kconfig b/arch/cris/Kconfig
-index 8474c66..3c94c96 100644
+index 3c94c96..eb11774 100644
 --- a/arch/cris/Kconfig
 +++ b/arch/cris/Kconfig
-@@ -53,6 +53,7 @@ config CRIS
- 	select OLD_SIGSUSPEND
+@@ -54,11 +54,17 @@ config CRIS
  	select OLD_SIGACTION
  	select ARCH_REQUIRE_GPIOLIB
-+	select IRQ_DOMAIN if ETRAX_ARCH_V32
+ 	select IRQ_DOMAIN if ETRAX_ARCH_V32
++	select OF if ETRAX_ARCH_V32
++	select OF_EARLY_FLATTREE if ETRAX_ARCH_V32
  
  config HZ
  	int
-diff --git a/arch/cris/arch-v32/kernel/irq.c b/arch/cris/arch-v32/kernel/irq.c
-index 25437ae..bc871d2 100644
---- a/arch/cris/arch-v32/kernel/irq.c
-+++ b/arch/cris/arch-v32/kernel/irq.c
-@@ -10,6 +10,8 @@
- #include <linux/errno.h>
- #include <linux/init.h>
- #include <linux/profile.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
- #include <linux/threads.h>
-@@ -431,6 +433,19 @@ crisv32_do_multiple(struct pt_regs* regs)
- 	irq_exit();
- }
+ 	default 100
  
-+static int crisv32_irq_map(struct irq_domain *h, unsigned int virq,
-+			   irq_hw_number_t hw_irq_num)
-+{
-+	irq_set_chip_and_handler(virq, &crisv32_irq_type, handle_simple_irq);
++config BUILTIN_DTB
++	string "DTB to build into the kernel image"
++	depends on OF
 +
-+	return 0;
+ source "init/Kconfig"
+ 
+ source "kernel/Kconfig.freezer"
+diff --git a/arch/cris/Makefile b/arch/cris/Makefile
+index 39dc7d0..4a5404b 100644
+--- a/arch/cris/Makefile
++++ b/arch/cris/Makefile
+@@ -40,6 +40,10 @@ else
+ MACH :=
+ endif
+ 
++ifneq ($(CONFIG_BUILTIN_DTB),"")
++core-$(CONFIG_OF) += arch/cris/boot/dts/
++endif
++
+ LD = $(CROSS_COMPILE)ld -mcrislinux
+ 
+ OBJCOPYFLAGS := -O binary -R .note -R .comment -S
+diff --git a/arch/cris/boot/dts/Makefile b/arch/cris/boot/dts/Makefile
+new file mode 100644
+index 0000000..faf69fb
+--- /dev/null
++++ b/arch/cris/boot/dts/Makefile
+@@ -0,0 +1,6 @@
++BUILTIN_DTB := $(patsubst "%",%,$(CONFIG_BUILTIN_DTB)).dtb.o
++ifneq ($(CONFIG_BUILTIN_DTB),"")
++obj-$(CONFIG_OF) += $(BUILTIN_DTB)
++endif
++
++clean-files := *.dtb.S
+diff --git a/arch/cris/kernel/Makefile b/arch/cris/kernel/Makefile
+index b45640b..edef71f 100644
+--- a/arch/cris/kernel/Makefile
++++ b/arch/cris/kernel/Makefile
+@@ -7,6 +7,7 @@ CPPFLAGS_vmlinux.lds := -DDRAM_VIRTUAL_BASE=0x$(CONFIG_ETRAX_DRAM_VIRTUAL_BASE)
+ extra-y	:= vmlinux.lds
+ 
+ obj-y   := process.o traps.o irq.o ptrace.o setup.o time.o sys_cris.o
++obj-y += devicetree.o
+ 
+ obj-$(CONFIG_MODULES)    += crisksyms.o
+ obj-$(CONFIG_MODULES)	 += module.o
+diff --git a/arch/cris/kernel/devicetree.c b/arch/cris/kernel/devicetree.c
+new file mode 100644
+index 0000000..53ff8d7
+--- /dev/null
++++ b/arch/cris/kernel/devicetree.c
+@@ -0,0 +1,14 @@
++#include <linux/init.h>
++#include <linux/bootmem.h>
++#include <linux/printk.h>
++
++void __init early_init_dt_add_memory_arch(u64 base, u64 size)
++{
++	pr_err("%s(%llx, %llx)\n",
++	       __func__, base, size);
 +}
 +
-+static struct irq_domain_ops crisv32_irq_ops = {
-+	.map	= crisv32_irq_map,
-+	.xlate	= irq_domain_xlate_onecell,
-+};
++void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
++{
++	return alloc_bootmem_align(size, align);
++}
+diff --git a/arch/cris/kernel/setup.c b/arch/cris/kernel/setup.c
+index 905b70e..bb12aa9 100644
+--- a/arch/cris/kernel/setup.c
++++ b/arch/cris/kernel/setup.c
+@@ -19,6 +19,9 @@
+ #include <linux/utsname.h>
+ #include <linux/pfn.h>
+ #include <linux/cpu.h>
++#include <linux/of.h>
++#include <linux/of_fdt.h>
++#include <linux/of_platform.h>
+ #include <asm/setup.h>
+ #include <arch/system.h>
+ 
+@@ -64,6 +67,10 @@ void __init setup_arch(char **cmdline_p)
+ 	unsigned long start_pfn, max_pfn;
+ 	unsigned long memory_start;
+ 
++#ifdef CONFIG_OF
++	early_init_dt_scan(__dtb_start);
++#endif
 +
- /*
-  * This is called by start_kernel. It fixes the IRQ masks and setup the
-  * interrupt vector table to point to bad_interrupt pointers.
-@@ -441,6 +456,8 @@ init_IRQ(void)
- 	int i;
- 	int j;
- 	reg_intr_vect_rw_mask vect_mask = {0};
-+	struct device_node *np;
-+	struct irq_domain *domain;
+ 	/* register an initial console printing routine for printk's */
  
- 	/* Clear all interrupts masks. */
- 	for (i = 0; i < NBR_REGS; i++)
-@@ -449,10 +466,15 @@ init_IRQ(void)
- 	for (i = 0; i < 256; i++)
- 		etrax_irv->v[i] = weird_irq;
+ 	init_etrax_debug();
+@@ -141,6 +148,8 @@ void __init setup_arch(char **cmdline_p)
  
--	/* Point all IRQ's to bad handlers. */
-+	np = of_find_compatible_node(NULL, NULL, "axis,crisv32-intc");
-+	domain = irq_domain_add_legacy(np, NR_IRQS - FIRST_IRQ,
-+				       FIRST_IRQ, FIRST_IRQ,
-+				       &crisv32_irq_ops, NULL);
-+	BUG_ON(!domain);
-+	irq_set_default_host(domain);
-+	of_node_put(np);
+ 	reserve_bootmem(PFN_PHYS(start_pfn), bootmap_size, BOOTMEM_DEFAULT);
+ 
++	unflatten_and_copy_device_tree();
 +
- 	for (i = FIRST_IRQ, j = 0; j < NR_IRQS; i++, j++) {
--		irq_set_chip_and_handler(j, &crisv32_irq_type,
--					 handle_simple_irq);
- 		set_exception_vector(i, interrupt[j]);
- 	}
+ 	/* paging_init() sets up the MMU and marks all pages as reserved */
  
+ 	paging_init();
+@@ -204,3 +213,9 @@ static int __init topology_init(void)
+ 
+ subsys_initcall(topology_init);
+ 
++static int __init cris_of_init(void)
++{
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++	return 0;
++}
++core_initcall(cris_of_init);
 -- 
 2.1.4
