@@ -1,252 +1,124 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: nand: driver for Conexant Digicolor NAND Flash
- Controller
-Date: Sun, 22 Feb 2015 10:19:23 +0200
-Message-ID: <20150222081923.GB2402@tarshish>
-References: <e6a998f130c40cee0a72e23b4f7f65bece0d6b21.1423739332.git.baruch@tkos.co.il>
- <ffec2fc232083355fdb171efb9daf59686ac2fed.1423739332.git.baruch@tkos.co.il>
- <20150219001704.40874da0@bbrezillon>
- <20150219094301.GE2937@tarshish>
- <20150219115223.40378b17@bbrezillon>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
+Date: Sun, 22 Feb 2015 15:32:11 +0100
+Message-ID: <20150222143211.GX25269@lukather>
+References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug@mail.gmail.com>
+ <54E78A31.9020306@linaro.org>
+ <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7WMexqIhC8AwFtpM"
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150219115223.40378b17@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
 
-On Thu, Feb 19, 2015 at 11:52:23AM +0100, Boris Brezillon wrote:
-> On Thu, 19 Feb 2015 11:43:01 +0200
-> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-> > On Thu, Feb 19, 2015 at 12:17:04AM +0100, Boris Brezillon wrote:
-> > > On Thu, 12 Feb 2015 13:10:19 +0200
-> > > Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-> > I understand you concern. However, since I don't have the needed hardware 
-> > to test the multi nand chip setup I want to keep the code simple. These 
-> > two fields are separated from the others by a blank line on purpose, and 
-> > I'll also add a comment to explain that these are per nand chip files.
-> 
-> I'm not asking you to support multiple chips right now.
-> What I'm asking here is to dispatch NFC and NAND fields in different
-> structures:
-> 
-> struct digicolor_nand {
-> 	struct mtd_info		mtd;
-> 	struct nand_chip	nand;
-> 
-> 	u32 nand_cs;
-> 	int t_ccs;
-> }
-> 
-> struct digicolor_nfc {
-> 	struct nand_hw_control	base;
-> 	void __iomem		*regs;
-> 	struct device		*dev;
-> 
-> 	unsigned long		clk_rate;
-> 
-> 	u32 ale_cmd;
-> 	u32 ale_data;
-> 	int ale_data_bytes;
-> 
-> 	/* Only support one NAND for now */
-> 	struct digicolor_nand	nand;
-> };
-> 
-> You'll keep the same logic except that this separation will be clearly
-> visible.
+--7WMexqIhC8AwFtpM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sounds reasonable. Will do.
+On Fri, Feb 20, 2015 at 04:01:55PM -0600, Rob Herring wrote:
+> [...]
+>=20
+> >>> +=3D Data consumers =3D
+> >>> +
+> >>> +Required properties:
+> >>> +
+> >>> +eeproms: List of phandle and data cell specifier triplet, one triplet
+> >>> +        for each data cell the device might be interested in. The
+> >>> +        triplet consists of the phandle to the eeprom provider, then
+> >>> +        the offset in byte within that storage device, and the length
+> >>> +        in byte of the data we care about.
+> >>
+> >>
+> >> The problem with this is it assumes you know who the consumer is and
+> >> that it is a DT node. For example, how would you describe a serial
+> >> number?
+> >
+> > Correct me if I miss understood.
+> > Is serial number any different?
+> > Am hoping that the eeprom consumer would be aware of offset and size of
+> > serial number in the eeprom
+> >
+> > Cant the consumer do:
+> >
+> > eeprom-consumer {
+> >         eeproms =3D <&at24 0 4>;
+> >         eeprom-names =3D "device-serial-number";
+>=20
+> Yes, but who is "eeprom-consumer"?
 
-[...]
+Any device that should lookup values in one of the EEPROM.
 
-> > It's just that the INT flag name is quite long, and it make the code using 
-> > it less readable IMO. Maybe some macro trickery would do the job here.
-> 
-> Yep, if that's about avoiding over 80 character lines you could define
-> such a macro:
-> 
-> #define NFC_RDY(flag)		NFC_INT_ ## flag ## _READY
+> DT nodes generally describe a h/w block, but it this case, the
+> consumer depends on the OS, not the h/w.=20
 
-Thanks for the tip. Will do.
+Not really, or at least, not more than any similar binding we
+currently have.
 
-[...]
+The fact that a MAC-address for the first ethernet chip is stored at a
+given offset in a given eeprom has nothing to do with the OS.
 
-> > I have no control of that. This command goes into a pipe that is managed 
-> > at the hardware level. If the nand device does not activate the ready/busy 
-> > signal, the pipe will just stall, and the command FIFO will overflow (the 
-> > command FIFO has 8 entries). So you will notice the error eventually.
-> 
-> My point is: you should not return 1 if the NAND is not ready,
-> waiting forever is not what I'm suggesting here, but you should find a
-> way to return the actual NAND chip R/B status.
-> If you don't have any solution to do that from your controller then you
-> might consider relying on the default dev_ready implementation which is
-> sending a NAND STATUS command to retrieve the R/B status.
-> 
-> What I'll say is in contradiction with what's done in the sunxi
-> driver :-) (actually I'm considering fixing that), but after taking a
-> closer look, dev_ready should only return the status of the NAND, and
-> not wait for the NAND to be ready.
-> The function responsible for waiting is waitfunc, maybe this is the one
-> you should overload.
+> I'm not saying you can't describe where things are, but I don't
+> think you should imply who is the consumer and doing so is
+> unnecessarily complicated.
 
-OK. I'll look into overloading waitfunc.
+If you only take the case of a serial number, indeed. If you take
+other usage into account, you can't really do without it.
 
-[...]
+> Also, the layout of EEPROM is likely very much platform specific.
 
-> > > > +static void digicolor_nfc_cmd_ctrl(struct mtd_info *mtd, int cmd,
-> > > > +				   unsigned int ctrl)
-> > > > +{
-> > > > +	struct nand_chip *chip = mtd->priv;
-> > > > +	struct digicolor_nfc *nfc = chip->priv;
-> > > > +	u32 cs = nfc->nand_cs;
-> > > > +
-> > > > +	if (ctrl & NAND_CLE) {
-> > > > +		digicolor_nfc_cmd_write(nfc,
-> > > > +					CMD_CLE | CMD_CHIP_ENABLE(cs) | cmd);
-> > > > +		if (cmd == NAND_CMD_RNDOUTSTART || cmd == NAND_CMD_RNDIN) {
-> > > > +			digicolor_nfc_wait_ns(nfc, nfc->t_ccs);
-> > > > +		} else if (cmd == NAND_CMD_RESET) {
-> > > > +			digicolor_nfc_wait_ns(nfc, 200);
-> > > > +			digicolor_nfc_dev_ready(mtd);
-> > > > +		}
-> > > 
-> > > These wait and dev_ready calls are supposed to be part of the generic
-> > > cmdfunc implementation, did you encounter any issues when relying on the
-> > > default implementation ?
-> > 
-> > The generic code just waits. This doesn't help here. Hardware does all the 
-> > command processing in its own schedule. To make the hardware wait I must 
-> > explicitly insert a wait command into the pipe.
-> 
-> I'm not sure to understand here.
-> There's a difference between:
-> 1/ waiting for a NAND command to be send on the NAND bus
-> 2/ waiting for the NAND to be ready (for DATA read or after a PROGRAM
->    operation)
-> 
-> NAND core is taking care of the 2/, but 1/ is your responsibility
-> (and this is what you have to wait for here).
+Indeed, which is why it should be in the DT.
 
-The generic code in nand_command_lp() sends NAND_CMD_STATUS immediately after 
-NAND_CMD_RESET. According to the datasheet you must wait tWB (200ns max) 
-before sending any command, including NAND_CMD_STATUS. Setting chip_delay is 
-not enough as I explain above. That's way I added digicolor_nfc_wait_ns(). 
-That timed wait is what I referred to. You are right that the 
-digicolor_nfc_dev_ready() call is not needed here. Will remove.
+> Some could have a more complex structure perhaps with key ids and
+> linked list structure.
 
-[...]
+Then just request the size of the whole list, and parse it afterwards
+in your driver?
 
-> > > > +	while (len >= 4) {
-> > > > +		if (digicolor_nfc_wait_ready(nfc, op))
-> > > > +			return;
-> > > > +		if (op == DATA_READ)
-> > > > +			*pr++ = readl_relaxed(nfc->regs + NFC_DATA);
-> > > > +		else
-> > > > +			writel_relaxed(*pw++, nfc->regs + NFC_DATA);
-> > > > +		len -= 4;
-> > > > +	}
-> > > 
-> > > How about using readsl/writesl here (instead of this loop) ?
-> > 
-> > How can I add the wait condition in readsl/writesl?
-> 
-> Are you sure you have to wait after each readl access (is NFC_DATA
-> interfaced with a FIFO or directly doing PIO access) ?
+> I would do something more simple that is just a list of keys and their
+> location like this:
+>=20
+> device-serial-number =3D <start size>;
+> key1 =3D <start size>;
+> key2 =3D <start size>;
 
-That's what the datasheet says. There is no mention of data FIFO in the 
-datasheet.
+I'm sorry, but what's the difference?
 
-[...]
+Maxime
 
-> > > > +	/*
-> > > > +	 * Maximum assert/deassert time; asynchronous SDR mode 0
-> > > > +	 * Deassert time = max(tWH,tREH) = 30ns
-> > > > +	 * Assert time = max(tRC,tRP,tWC,tWP) = 100ns
-> > > > +	 * Sample time = 0
-> > > > +	 */
-> > > > +	timing |= TIMING_DEASSERT(DIV_ROUND_UP(30, ns_per_clk));
-> > > > +	timing |= TIMING_ASSERT(DIV_ROUND_UP(100, ns_per_clk));
-> > > > +	timing |= TIMING_SAMPLE(0);
-> > > > +	writel_relaxed(timing, nfc->regs + NFC_TIMING_CONFIG);
-> > > > +	writel_relaxed(NFC_CONTROL_ENABLE, nfc->regs + NFC_CONTROL);
-> > > 
-> > > Helper functions are provided to extract timings from ONFI timing modes
-> > > (either those defined by the chip if it supports ONFI commands, or
-> > > those extracted from the datasheet):
-> > > 
-> > > http://lxr.free-electrons.com/source/include/linux/mtd/nand.h#L976
-> > 
-> > I wanted to keep that for future improvement. The NAND chip on the EVK board 
-> > is actually an old style one, neither ONFI nor JEDEC. I expect to test this 
-> > driver on our target hardware that should have something newer.
-> 
-> Timings are not only related to ONFI chips, and
-> onfi_timing_mode_default is extracted from the nand_ids table which is
-> describing non-ONFI chips.
-> 
-> This is not my call to make, but IMHO, dynamic NAND timing
-> configuration should be mandatory for new drivers.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-I'll look into this for v2.
+--7WMexqIhC8AwFtpM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> > > > +static int digicolor_nfc_ecc_init(struct digicolor_nfc *nfc,
-> > > > +				  struct device_node *np)
-> > > > +{
-> > > > +	struct mtd_info *mtd = &nfc->mtd;
-> > > > +	struct nand_chip *chip = &nfc->nand;
-> > > > +	int bch_data_range, bch_t, steps, mode, i;
-> > > > +	u32 ctrl = NFC_CONTROL_ENABLE | NFC_CONTROL_BCH_KCONFIG;
-> > > > +	struct nand_ecclayout *layout;
-> > > > +
-> > > > +	mode = of_get_nand_ecc_mode(np);
-> > > > +	if (mode < 0)
-> > > > +		return mode;
-> > > > +	if (mode != NAND_ECC_HW_SYNDROME) {
-> > > > +		dev_err(nfc->dev, "unsupported ECC mode\n");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	bch_data_range = of_get_nand_ecc_step_size(np);
-> > > > +	if (bch_data_range < 0)
-> > > > +		return bch_data_range;
-> > > > +	if (bch_data_range != 512 && bch_data_range != 1024) {
-> > > > +		dev_err(nfc->dev, "unsupported nand-ecc-step-size value\n");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +	if (bch_data_range == 1024)
-> > > > +		ctrl |= NFC_CONTROL_BCH_DATA_FIELD_RANGE_1024;
-> > > > +	steps = mtd->writesize / bch_data_range;
-> > > > +
-> > > > +	bch_t = of_get_nand_ecc_strength(np);
-> > > > +	if (bch_t < 0)
-> > > > +		return bch_t;
-> > > 
-> > > You should fallback to datasheet values (ecc_strength_ds and
-> > > ecc_step_ds) if ECC strength and step are not specified in the DT.
-> > 
-> > I can only choose from a fix number of strength configuration alternatives. 
-> > Should I choose the lowest value that is larger than ecc_strength_ds?
-> 
-> Yep, this applies to both cases (information extracted from the DT and
-> _ds values).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-OK. Will do.
+iQIcBAEBAgAGBQJU6ehqAAoJEBx+YmzsjxAgzvoP/3krU3TAK3RrWI6sp78v0ccX
+AOae/LuZTMjoxWRi7qebL5ffSoC9CKDahg7fVtFM3EDj9NOutEgJJgZsfbfCgTWS
+i1J0NG1rLSWXMNKJbwQ+28Mc7LEoxxsf4BmSrGW4zRGslzbkcytVhW3irW1kS9Je
+j0quEjm/cfMYuEMn5DUpBnO4gsNEFRFZYbxtfyG72AXZIBjPGXkOa+Hu99b1BVgp
+H3D80FcNP0z4EVeU+vZm/w0wOwcP9vB4yiVfXf8Y1S/4YTinfgQ2NyM5mfphB7Ax
+9gtyvo8oHebXPlQM412y1tiYzLPn+GQKALk/vNkI5RmyqfP8pGDQRoAjJz2bvhY6
+Yu7pWIDjxkp+zW12kXvAlaO2nVPmhQNu4XBPLufGD6hHHLeBnw6qpyQvP2twhQdl
+Y34Ttj/dU+VapjMWBZXkiP0L9VwPpqvuTdfXZ7jNG3czy+N3xCkixSmNDvpQKMkI
+v4xzcxoIZppX0XaFthHoORntHdi87yZqjtP7VAxqFDs2Tvmvcvs8wWryHE0MovJB
+Or94janCx80k0VRq+i9PLKOf6N+gLahbFATYI8Chv1HljfmlsXRrlbEHj4W6rLyl
+R6FXh5CFdfkBJOLILYHGj3nv/O/pjvXy68L53VehhB8Mn3h/pWuPlVdy1lDHi75O
+t67tr2HpzgriH8YSP9Tp
+=vjrF
+-----END PGP SIGNATURE-----
 
-Thanks again for your valuable feedback,
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--7WMexqIhC8AwFtpM--
