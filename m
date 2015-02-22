@@ -1,77 +1,76 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
-Date: Sun, 22 Feb 2015 15:34:05 +0100
-Message-ID: <20150222143405.GY25269@lukather>
-References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org>
- <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug@mail.gmail.com>
- <54E78A31.9020306@linaro.org>
- <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw@mail.gmail.com>
- <54E86CA5.2080907@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add SDHI0/1 DT support
+Date: Sun, 22 Feb 2015 17:54:13 +0300
+Message-ID: <54E9ED95.8070702@cogentembedded.com>
+References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>	<2348421.LHyZ4ZOiiG@wasted.cogentembedded.com> <CANqRtoRnDzTSvKYcNDHKHbeaN7jp1VvKnk1jTHDvNt1oyBzwKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HSHpc5A+GJc9BHcd"
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54E86CA5.2080907-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoRnDzTSvKYcNDHKHbeaN7jp1VvKnk1jTHDvNt1oyBzwKg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---HSHpc5A+GJc9BHcd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 02/22/2015 03:45 AM, Magnus Damm wrote:
 
-On Sat, Feb 21, 2015 at 11:31:49AM +0000, Srinivas Kandagatla wrote:
-> >I would do something more simple that is just a list of keys and their
-> >location like this:
-> >
-> >device-serial-number =3D <start size>;
-> >key1 =3D <start size>;
-> >key2 =3D <start size>;
-> >
-> There are pros and cons doing it as list of keys.
->=20
-> One reason for doing it as fixed properties("eeproms", "eemprom-names") is
-> "consistency and familiarity" like interrupts, regs, dmas, clocks, pinctr=
-l,
-> reset, pwm have fixed property names, trying to get most subsystems to do=
- it
-> the same way makes it easier for people to write dts files.
+>> Define the SILK board dependent parts of the SDHI0  (connected to SDIO Wi-Fi
+>> chip)  and SDHI1  (connected to micro-SD slot) device nodes along with the
+>> necessary voltage regulators.
 
-And eeprom-names was something that was asked for last time we
-discussed it (I don't really remember who though, maybe Arnd?)
+>> Based on the original patch by Vladimir Barinov
+>> <vladimir.barinov@cogentembedded.com>.
 
-Maxime
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> Thanks for your patch. One question - above you write that SDHI1 is micro-SD...
 
---HSHpc5A+GJc9BHcd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+    Yes, have double-checked now.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>> @@ -100,3 +159,25 @@
+>>          non-removable;
+>>          status = "okay";
+>>   };
+>> +
+>> +&sdhi0 {
+>> +       pinctrl-0 = <&sdhi0_pins>;
+>> +       pinctrl-names = "default";
+>> +
+>> +       vmmc-supply = <&vcc_sdhi0>;
+>> +       vqmmc-supply = <&vccq_sdhi0>;
+>> +       cd-gpios = <&gpio6 6 GPIO_ACTIVE_LOW>;
+>> +       wp-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+>> +       status = "okay";
+>> +};
+>> +
+>> +&sdhi1 {
+>> +       pinctrl-0 = <&sdhi1_pins>;
+>> +       pinctrl-names = "default";
+>> +
+>> +       vmmc-supply = <&vcc_sdhi1>;
+>> +       vqmmc-supply = <&vccq_sdhi1>;
+>> +       cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
+>> +       wp-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
+>> +       status = "okay";
+>> +};
 
-iQIcBAEBAgAGBQJU6ejdAAoJEBx+YmzsjxAg+EoQAKYte/SRe29klKRirGbmTnMT
-Uc/BXt9W3/deGFsw/Ap3lFPLJ9wPU6jf6RipWhAKHSTf72kHLAEEyDBarULA7r65
-OfRNXdSGXtkf3ZETkgXJOKV1WXvfg4OlyoumFicGbDCr3i9Jsp967SWEBJtjwZqm
-imNF92NkplwefgxX8u/UzMKDKuLLo8q/skilRdl2Y4IzxZ1tTVrAwbm33j0+S1XJ
-ApjnRmYzJF+R67DjwG2NgjiomF14lZXSe9Zv3VXg0fApo9Nwdo8490S4OFq9fQwS
-EoaoX9VUc7sCAZtErT2qXrsTXivuBIiSb8GEVq0ctKKbvlHT8+k/xd1AezjBh+nq
-dOIrCUPN02x2VqkVsWOpBya5VN8WuEfVf9QvLv8K2p5tpe9gY/Si9wjLXbTM1p5V
-klABGuD6BUj+posvI+jikz39q2g+iLHOsAm2zCVbX7Dk4QWWeYgnAcYnr/omfm5R
-glI37Cf6CRxA0KqSCuVW7SjqhsmR1ReYQTUMc5VnrJzDTQcbmw25D6WzkLlNm9cc
-jQQDxrqURrr4aXBQcwtP94r0VVsJXV6pSsJ04fATM0pV+fLFhdBoBE9UGLI+Q531
-j+YkujncVZmvTqEYkGsuufaGZjRr/dIXGFj8GPv+iuYshngpR+G00KSLH44fIPfP
-x3x/KowtlvCtxKZIw5+L
-=Wcno
------END PGP SIGNATURE-----
+> ... however here the WP signal is assigned.
 
---HSHpc5A+GJc9BHcd--
+> I believe micro-SD doesn't use the WP signal, so either I'm wrong or
+> the patch needs to be updated to reflect reality. =)
+
+    Both seem correct: SD1_WP signal is just tied to VCCQ_SD1. Do you think we 
+should still drop it?
+
+> Also, I doubt that an on-board SDIO module makes use of CD and/or WP signals?
+
+    Those two are tied to VCCQ_SD0 as well. Do you think we should drop them?
+
+> Thanks,
+> / magnus
+
+WBR, Sergei
+
