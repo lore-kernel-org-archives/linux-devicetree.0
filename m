@@ -1,45 +1,69 @@
-From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
-Date: Sun, 22 Feb 2015 08:58:15 +0900
-Message-ID: <CAFEAcA9pg5v_+RAehwf5XWopgeJtWfDb+Xej+579ikeiRjhg_Q@mail.gmail.com>
-References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
- <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com>
- <20150219190348.GB24460@cbox> <CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg@mail.gmail.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add SDHI0/1 DT support
+Date: Sat, 21 Feb 2015 16:45:45 -0800
+Message-ID: <CANqRtoRnDzTSvKYcNDHKHbeaN7jp1VvKnk1jTHDvNt1oyBzwKg@mail.gmail.com>
+References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
+	<2348421.LHyZ4ZOiiG@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>, Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2348421.LHyZ4ZOiiG@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 February 2015 at 06:56, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Feb 19, 2015 at 1:03 PM, Christoffer Dall
-> <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> It matters if you want to ensure that the 64K page you are assigning to
->> a guest for the GIC virtual CPU interface contains only GIC virtual CPU
->> mappings, and not other random stuff that the guest is not allowed to
->> touch.
+Hi Sergei,
+
+On Sat, Feb 21, 2015 at 2:27 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the SILK board dependent parts of the SDHI0  (connected to SDIO Wi-Fi
+> chip)  and SDHI1  (connected to micro-SD slot) device nodes along with the
+> necessary voltage regulators.
 >
-> Good point.
+> Based on the original patch by Vladimir Barinov
+> <vladimir.barinov@cogentembedded.com>.
 >
->> How else should this be enforced?
->
-> Rely on correct h/w design? You'll have to repeat this every time you
-> want to do pass-thru of a device.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-The idea is that the device tree lets us describe whether
-the hardware design is correct or not :-)
+Thanks for your patch. One question - above you write that SDHI1 is micro-SD...
 
-> What do you do if 64K mapping is not supported? Fallback to emulation
-> of the CPU interface?
+> @@ -100,3 +159,25 @@
+>         non-removable;
+>         status = "okay";
+>  };
+> +
+> +&sdhi0 {
+> +       pinctrl-0 = <&sdhi0_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       vmmc-supply = <&vcc_sdhi0>;
+> +       vqmmc-supply = <&vccq_sdhi0>;
+> +       cd-gpios = <&gpio6 6 GPIO_ACTIVE_LOW>;
+> +       wp-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+> +       status = "okay";
+> +};
+> +
+> +&sdhi1 {
+> +       pinctrl-0 = <&sdhi1_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       vmmc-supply = <&vcc_sdhi1>;
+> +       vqmmc-supply = <&vccq_sdhi1>;
+> +       cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
+> +       wp-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
+> +       status = "okay";
+> +};
 
-In this case KVM can't be supported -- use 4K host pages with this
-hardware, or don't use KVM...
+... however here the WP signal is assigned.
 
--- PMM
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I believe micro-SD doesn't use the WP signal, so either I'm wrong or
+the patch needs to be updated to reflect reality. =)
+
+Also, I doubt that an on-board SDIO module makes use of CD and/or WP signals?
+
+Any ideas?
+
+Thanks,
+
+/ magnus
