@@ -1,76 +1,151 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add SDHI0/1 DT support
-Date: Sun, 22 Feb 2015 17:54:13 +0300
-Message-ID: <54E9ED95.8070702@cogentembedded.com>
-References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>	<2348421.LHyZ4ZOiiG@wasted.cogentembedded.com> <CANqRtoRnDzTSvKYcNDHKHbeaN7jp1VvKnk1jTHDvNt1oyBzwKg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoRnDzTSvKYcNDHKHbeaN7jp1VvKnk1jTHDvNt1oyBzwKg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH] ARM: bcm2835: Add header file for pinctrl constants
+Date: Sun, 22 Feb 2015 16:59:56 +0000
+Message-ID: <1424624396-812-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: swarren@wwwdotorg.org, lee@kernel.org
+Cc: linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patch adds a header file for the constants used in pincontrol
+configuration for the bcm2835.
 
-On 02/22/2015 03:45 AM, Magnus Damm wrote:
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts      |    4 +-
+ arch/arm/boot/dts/bcm2835-rpi-b.dts           |    4 +-
+ arch/arm/boot/dts/bcm2835-rpi.dtsi            |    8 ++--
+ arch/arm/boot/dts/bcm2835.dtsi                |    4 ++-
+ include/dt-bindings/pinctrl/pinctrl-bcm2835.h |   39 +++++++++++++++++++++++++
+ 5 files changed, 50 insertions(+), 9 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-bcm2835.h
 
->> Define the SILK board dependent parts of the SDHI0  (connected to SDIO Wi-Fi
->> chip)  and SDHI1  (connected to micro-SD slot) device nodes along with the
->> necessary voltage regulators.
-
->> Based on the original patch by Vladimir Barinov
->> <vladimir.barinov@cogentembedded.com>.
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-> Thanks for your patch. One question - above you write that SDHI1 is micro-SD...
-
-    Yes, have double-checked now.
-
->> @@ -100,3 +159,25 @@
->>          non-removable;
->>          status = "okay";
->>   };
->> +
->> +&sdhi0 {
->> +       pinctrl-0 = <&sdhi0_pins>;
->> +       pinctrl-names = "default";
->> +
->> +       vmmc-supply = <&vcc_sdhi0>;
->> +       vqmmc-supply = <&vccq_sdhi0>;
->> +       cd-gpios = <&gpio6 6 GPIO_ACTIVE_LOW>;
->> +       wp-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
->> +       status = "okay";
->> +};
->> +
->> +&sdhi1 {
->> +       pinctrl-0 = <&sdhi1_pins>;
->> +       pinctrl-names = "default";
->> +
->> +       vmmc-supply = <&vcc_sdhi1>;
->> +       vqmmc-supply = <&vccq_sdhi1>;
->> +       cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
->> +       wp-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
->> +       status = "okay";
->> +};
-
-> ... however here the WP signal is assigned.
-
-> I believe micro-SD doesn't use the WP signal, so either I'm wrong or
-> the patch needs to be updated to reflect reality. =)
-
-    Both seem correct: SD1_WP signal is just tied to VCCQ_SD1. Do you think we 
-should still drop it?
-
-> Also, I doubt that an on-board SDIO module makes use of CD and/or WP signals?
-
-    Those two are tied to VCCQ_SD0 as well. Do you think we should drop them?
-
-> Thanks,
-> / magnus
-
-WBR, Sergei
-
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index e479515..e3418c2 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -1,5 +1,5 @@
+ /dts-v1/;
+-/include/ "bcm2835-rpi.dtsi"
++#include "bcm2835-rpi.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
+@@ -25,6 +25,6 @@
+ 	/* I2S interface */
+ 	i2s_alt0: i2s_alt0 {
+ 		brcm,pins = <18 19 20 21>;
+-		brcm,function = <4>; /* alt0 */
++		brcm,function = <BCM2835_PIN_FUNC_ALT0>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index bafa46f..541788a 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -1,5 +1,5 @@
+ /dts-v1/;
+-/include/ "bcm2835-rpi.dtsi"
++#include "bcm2835-rpi.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
+@@ -18,6 +18,6 @@
+ 	/* I2S interface */
+ 	i2s_alt2: i2s_alt2 {
+ 		brcm,pins = <28 29 30 31>;
+-		brcm,function = <6>; /* alt2 */
++		brcm,function = <BCM2835_PIN_FUNC_ALT2>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index c706448..76b0a40 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -1,4 +1,4 @@
+-/include/ "bcm2835.dtsi"
++#include "bcm2835.dtsi"
+ 
+ / {
+ 	memory {
+@@ -21,17 +21,17 @@
+ 
+ 	gpioout: gpioout {
+ 		brcm,pins = <6>;
+-		brcm,function = <1>; /* GPIO out */
++		brcm,function = <BCM2835_PIN_FUNC_GPIO_OUT>;
+ 	};
+ 
+ 	alt0: alt0 {
+ 		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 14 15 40 45>;
+-		brcm,function = <4>; /* alt0 */
++		brcm,function = <BCM2835_PIN_FUNC_ALT0>;
+ 	};
+ 
+ 	alt3: alt3 {
+ 		brcm,pins = <48 49 50 51 52 53>;
+-		brcm,function = <7>; /* alt3 */
++		brcm,function = <BCM2835_PIN_FUNC_ALT3>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 3342cb1..31f6586 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -1,4 +1,6 @@
+-/include/ "skeleton.dtsi"
++#include <dt-bindings/pinctrl/pinctrl-bcm2835.h>
++
++#include "skeleton.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm2835";
+diff --git a/include/dt-bindings/pinctrl/pinctrl-bcm2835.h b/include/dt-bindings/pinctrl/pinctrl-bcm2835.h
+new file mode 100644
+index 0000000..c74532e
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/pinctrl-bcm2835.h
+@@ -0,0 +1,39 @@
++/*
++ * This header provides constants for BCM2835 pinctrl bindings.
++ *
++ * Copyright 2015, Cirrus Logic Inc.
++ *
++ * Author: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef _DT_BINDINGS_PINCTRL_BCM2835_H
++#define _DT_BINDINGS_PINCTRL_BCM2835_H
++
++/* IRQ Flags */
++#define BCM2835_PIN_IRQ_RISING				1
++#define BCM2835_PIN_IRQ_FALLING				2
++#define BCM2835_PIN_IRQ_EDGE	(BCM2835_PIN_IRQ_RISING | \
++				 BCM2835_PIN_IRQ_FALLING)
++#define BCM2835_PIN_IRQ_LOW				4
++#define BCM2835_PIN_IRQ_HIGH				8
++
++/* Pin Function Settings */
++#define BCM2835_PIN_FUNC_GPIO_IN			0
++#define BCM2835_PIN_FUNC_GPIO_OUT			1
++#define BCM2835_PIN_FUNC_ALT5				2
++#define BCM2835_PIN_FUNC_ALT4				3
++#define BCM2835_PIN_FUNC_ALT0				4
++#define BCM2835_PIN_FUNC_ALT1				5
++#define BCM2835_PIN_FUNC_ALT2				6
++#define BCM2835_PIN_FUNC_ALT3				7
++
++/* Pin Pull Settings */
++#define BCM2835_PIN_PULL_NONE				0
++#define BCM2835_PIN_PULL_DOWN				1
++#define BCM2835_PIN_PULL_UP				2
++
++#endif
+-- 
+1.7.2.5
