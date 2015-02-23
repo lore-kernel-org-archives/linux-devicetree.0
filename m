@@ -1,77 +1,110 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Input: bcm-keypad: add device tree bindings
-Date: Mon, 23 Feb 2015 09:49:13 -0800
-Message-ID: <20150223174913.GB604@dtor-glaptop>
-References: <sbranden@broadcom.com>
- <1423526861-29579-1-git-send-email-sbranden@broadcom.com>
- <1423526861-29579-2-git-send-email-sbranden@broadcom.com>
- <20150210005134.GA13695@dtor-ws>
- <54DF7C8B.3050103@broadcom.com>
- <20150216051751.GA15948@dtor-ws>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCHv2 10/15] clk: mvebu: extend common code to allow an optional
+ refclk
+Date: Mon, 23 Feb 2015 19:06:24 +0100
+Message-ID: <54EB6C20.8070102@free-electrons.com>
+References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com> <1424451874-25375-11-git-send-email-thomas.petazzoni@free-electrons.com> <20150220182134.421.95366@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150216051751.GA15948@dtor-ws>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150220182134.421.95366@quantum>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Scott,
+Hi Mike,
 
-On Sun, Feb 15, 2015 at 09:17:51PM -0800, Dmitry Torokhov wrote:
-> On Sat, Feb 14, 2015 at 08:49:15AM -0800, Scott Branden wrote:
-> > On 15-02-09 04:51 PM, Dmitry Torokhov wrote:
-> > >On Mon, Feb 09, 2015 at 04:07:40PM -0800, Scott Branden wrote:
-> > >>+
-> > >>+- col-debounce-filter-period: The debounce period for the Column filter.
-> > >>+
-> > >>+	KEYPAD_DEBOUNCE_1_ms	=	0
-> > >>+	KEYPAD_DEBOUNCE_2_ms	=	1
-> > >>+	KEYPAD_DEBOUNCE_4_ms	=	2
-> > >>+	KEYPAD_DEBOUNCE_8_ms	=	3
-> > >
-> > >>+	KEYPAD_DEBOUNCE_16_ms	=	4
-> > >>+	KEYPAD_DEBOUNCE_32_ms	=	5
-> > >>+	KEYPAD_DEBOUNCE_64_ms	=	6
-> > >>+	KEYPAD_DEBOUNCE_128_ms	=	7
-> > >>+
-> > >>+- status-debounce-filter-period: The debounce period for the Status filter.
-> > >>+
-> > >>+	KEYPAD_DEBOUNCE_1_ms	=	0
-> > >>+	KEYPAD_DEBOUNCE_2_ms	=	1
-> > >>+	KEYPAD_DEBOUNCE_4_ms	=	2
-> > >>+	KEYPAD_DEBOUNCE_8_ms	=	3
-> > >>+	KEYPAD_DEBOUNCE_16_ms	=	4
-> > >>+	KEYPAD_DEBOUNCE_32_ms	=	5
-> > >>+	KEYPAD_DEBOUNCE_64_ms	=	6
-> > >>+	KEYPAD_DEBOUNCE_128_ms	=	7
-> > >
-> > >I could swear device-specific properties should be in form of
-> > ><vendor-prefix>,<property-name> to ensure it won't clash with changes on
-> > >subsystem level later on. Device-tree folks, what say you?
-> > I see examples with and without vendor-prefix.
-> > qcom,pm8xxx-keypad.txt does not have prefixes
-> > st-keyscan.txt does have a prefix
-> > 
-> > I can't find any documented guidelines for this.
+On 20/02/2015 19:21, Mike Turquette wrote:
+> Quoting Thomas Petazzoni (2015-02-20 09:04:29)
+>> The Armada 39x, contrary to its predecessor, has a configurable
+>> reference clock frequency, of either 25 Mhz, or 40 Mhz. For the
+>> previous SoCs, it was fixed to 25 Mhz and described directly as such
+>> in the Device Tree.
+>>
+>> For Armada 39x, we need to read certain registers to know whether the
+>> frequency is 25 or 40 Mhz. Therefore, this commit extends the common
+>> mvebu clock code to allow the SoC-specific code to say it wants to
+>> register a reference clock, by giving a non-NULL ->get_refclk_freq()
+>> function pointer in its coreclk_soc_desc structure.
+>>
+>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 > 
-> As I mentioned I'll try to get clarification on this.
+> Looks fine to me. I'll apply after -rc1 drops.
 
-I have chatted with a couple of people on this and it is acceptable to
-omit vendor prefix in bindings when we are using a specific driver like
-we have here (i.e. when driver's compatible string already includes
-vendor prefix). Vendor prefixes on properties are required when we
-augment a generic driver's binding.
+What about the other clock related patch: "clk: mvebu: add Marvell
+Armada 39x driver" ? Will you apply it too, or do you expect a pull request
+for the mvebu related clocks ?
 
-So the above 2 entries are fine as is.
 
-Thanks.
+Thanks,
+
+Gregory
+
+> 
+> Regards,
+> Mike
+> 
+>> ---
+>>  drivers/clk/mvebu/common.c | 17 +++++++++++++++++
+>>  drivers/clk/mvebu/common.h |  1 +
+>>  2 files changed, 18 insertions(+)
+>>
+>> diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
+>> index 0d4d121..15b370f 100644
+>> --- a/drivers/clk/mvebu/common.c
+>> +++ b/drivers/clk/mvebu/common.c
+>> @@ -121,6 +121,11 @@ void __init mvebu_coreclk_setup(struct device_node *np,
+>>  
+>>         /* Allocate struct for TCLK, cpu clk, and core ratio clocks */
+>>         clk_data.clk_num = 2 + desc->num_ratios;
+>> +
+>> +       /* One more clock for the optional refclk */
+>> +       if (desc->get_refclk_freq)
+>> +               clk_data.clk_num += 1;
+>> +
+>>         clk_data.clks = kzalloc(clk_data.clk_num * sizeof(struct clk *),
+>>                                 GFP_KERNEL);
+>>         if (WARN_ON(!clk_data.clks)) {
+>> @@ -162,6 +167,18 @@ void __init mvebu_coreclk_setup(struct device_node *np,
+>>                 WARN_ON(IS_ERR(clk_data.clks[2+n]));
+>>         };
+>>  
+>> +       /* Register optional refclk */
+>> +       if (desc->get_refclk_freq) {
+>> +               const char *name = "refclk";
+>> +               of_property_read_string_index(np, "clock-output-names",
+>> +                                             2 + desc->num_ratios, &name);
+>> +               rate = desc->get_refclk_freq(base);
+>> +               clk_data.clks[2 + desc->num_ratios] =
+>> +                       clk_register_fixed_rate(NULL, name, NULL,
+>> +                                               CLK_IS_ROOT, rate);
+>> +               WARN_ON(IS_ERR(clk_data.clks[2 + desc->num_ratios]));
+>> +       }
+>> +
+>>         /* SAR register isn't needed anymore */
+>>         iounmap(base);
+>>  
+>> diff --git a/drivers/clk/mvebu/common.h b/drivers/clk/mvebu/common.h
+>> index 783b563..f0de6c8 100644
+>> --- a/drivers/clk/mvebu/common.h
+>> +++ b/drivers/clk/mvebu/common.h
+>> @@ -30,6 +30,7 @@ struct coreclk_soc_desc {
+>>         u32 (*get_tclk_freq)(void __iomem *sar);
+>>         u32 (*get_cpu_freq)(void __iomem *sar);
+>>         void (*get_clk_ratio)(void __iomem *sar, int id, int *mult, int *div);
+>> +       u32 (*get_refclk_freq)(void __iomem *sar);
+>>         bool (*is_sscg_enabled)(void __iomem *sar);
+>>         u32 (*fix_sscg_deviation)(u32 system_clk);
+>>         const struct coreclk_ratio *ratios;
+>> -- 
+>> 2.1.0
+>>
+
 
 -- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
