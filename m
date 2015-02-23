@@ -1,110 +1,121 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCHv2 10/15] clk: mvebu: extend common code to allow an optional
- refclk
-Date: Mon, 23 Feb 2015 19:06:24 +0100
-Message-ID: <54EB6C20.8070102@free-electrons.com>
-References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com> <1424451874-25375-11-git-send-email-thomas.petazzoni@free-electrons.com> <20150220182134.421.95366@quantum>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Mon, 23 Feb 2015 18:14:48 +0000
+Message-ID: <20150223181448.GQ9714@leverpostej>
+References: <20150211151237.GN9154@leverpostej>
+ <1487331.cgC9j5u0aF@vostro.rjw.lan>
+ <20150211155720.GQ9154@leverpostej>
+ <20150211171515.55d5066f@bbrezillon>
+ <20150211163231.GR9154@leverpostej>
+ <20150211173823.30c42c6a@bbrezillon>
+ <20150220142208.GJ13659@leverpostej>
+ <20150220155347.1477b02d@bbrezillon>
+ <20150220151655.GK13659@leverpostej>
+ <20150223180057.513b069c@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150220182134.421.95366@quantum>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150223180057.513b069c@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
-
-On 20/02/2015 19:21, Mike Turquette wrote:
-> Quoting Thomas Petazzoni (2015-02-20 09:04:29)
->> The Armada 39x, contrary to its predecessor, has a configurable
->> reference clock frequency, of either 25 Mhz, or 40 Mhz. For the
->> previous SoCs, it was fixed to 25 Mhz and described directly as such
->> in the Device Tree.
->>
->> For Armada 39x, we need to read certain registers to know whether the
->> frequency is 25 or 40 Mhz. Therefore, this commit extends the common
->> mvebu clock code to allow the SoC-specific code to say it wants to
->> register a reference clock, by giving a non-NULL ->get_refclk_freq()
->> function pointer in its coreclk_soc_desc structure.
->>
->> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+On Mon, Feb 23, 2015 at 05:00:57PM +0000, Boris Brezillon wrote:
+> Hi Mark,
 > 
-> Looks fine to me. I'll apply after -rc1 drops.
+> Thanks for the clarification, and sorry if I've been a bit harsh to you
+> in my previous answer, but this whole shared irq thing is starting to
+> drive me crazy.
 
-What about the other clock related patch: "clk: mvebu: add Marvell
-Armada 39x driver" ? Will you apply it too, or do you expect a pull request
-for the mvebu related clocks ?
+No worries. Having lost a few days exploring the core and call sites,
+and having seen how widesrpead IRQF_NO_SUSPEND misuse is, it's beginning
+to grate on me too.
 
+[...]
 
-Thanks,
+> On at91 platforms, irq line 1 is shared by a timer (PIT) and some
+> devices that can register themselves as wakeup sources (especially the
+> RTC IP).
+> I doubt at91 users will agree on dropping either of these features (the
+> timer or the wakeup on RTC/UART/...), so, can we try to find a solution
+> that would both make irq, DT and at91 guys happy (that doesn't sound
+> like an easy task :-)) ?
 
-Gregory
+>From the DT side, I think all the necessary information is there. We
+know how the interrupts are wired, so nothing needs to change w.r.t. the
+topology description. I hope that we have sufficient information to when
+a device may operate and raise interrupts during suspend.
 
+So the fun part is how we solve this within Linux.
+
+> The whole problem here is that we can't have both IRQF_NO_SUSPEND flag
+> set on one of the shared action and others that are configuring the irq
+> as a wakeup source, because it would always lead to the system being
+> woken up (even when the only thing we were supposed to do is handle the
+> timer event).
 > 
-> Regards,
-> Mike
+> This is because irq_may_run [1], which is called to decide whether we
+> should handle this irq or just wake the system up [2], will always
+> return true if at least one of the shared action has tagged the irq
+> line as a wakeup source.
+
+I assume you mean we return false in this case (having triggered the
+wakeup within irq_pm_check_wakeup, which returned true), but otherwise
+agreed.
+
+I can envisage problems if the irq handler of a wakeup device can't be
+run safely until resume time, though I'm not sure if that happens in
+practice given the device is necessarily going to be active.
+
+> Sorry for summarizing things you most likely already know, but I want
+> to be sure I'm actually understanding it correctly.
 > 
->> ---
->>  drivers/clk/mvebu/common.c | 17 +++++++++++++++++
->>  drivers/clk/mvebu/common.h |  1 +
->>  2 files changed, 18 insertions(+)
->>
->> diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
->> index 0d4d121..15b370f 100644
->> --- a/drivers/clk/mvebu/common.c
->> +++ b/drivers/clk/mvebu/common.c
->> @@ -121,6 +121,11 @@ void __init mvebu_coreclk_setup(struct device_node *np,
->>  
->>         /* Allocate struct for TCLK, cpu clk, and core ratio clocks */
->>         clk_data.clk_num = 2 + desc->num_ratios;
->> +
->> +       /* One more clock for the optional refclk */
->> +       if (desc->get_refclk_freq)
->> +               clk_data.clk_num += 1;
->> +
->>         clk_data.clks = kzalloc(clk_data.clk_num * sizeof(struct clk *),
->>                                 GFP_KERNEL);
->>         if (WARN_ON(!clk_data.clks)) {
->> @@ -162,6 +167,18 @@ void __init mvebu_coreclk_setup(struct device_node *np,
->>                 WARN_ON(IS_ERR(clk_data.clks[2+n]));
->>         };
->>  
->> +       /* Register optional refclk */
->> +       if (desc->get_refclk_freq) {
->> +               const char *name = "refclk";
->> +               of_property_read_string_index(np, "clock-output-names",
->> +                                             2 + desc->num_ratios, &name);
->> +               rate = desc->get_refclk_freq(base);
->> +               clk_data.clks[2 + desc->num_ratios] =
->> +                       clk_register_fixed_rate(NULL, name, NULL,
->> +                                               CLK_IS_ROOT, rate);
->> +               WARN_ON(IS_ERR(clk_data.clks[2 + desc->num_ratios]));
->> +       }
->> +
->>         /* SAR register isn't needed anymore */
->>         iounmap(base);
->>  
->> diff --git a/drivers/clk/mvebu/common.h b/drivers/clk/mvebu/common.h
->> index 783b563..f0de6c8 100644
->> --- a/drivers/clk/mvebu/common.h
->> +++ b/drivers/clk/mvebu/common.h
->> @@ -30,6 +30,7 @@ struct coreclk_soc_desc {
->>         u32 (*get_tclk_freq)(void __iomem *sar);
->>         u32 (*get_cpu_freq)(void __iomem *sar);
->>         void (*get_clk_ratio)(void __iomem *sar, int id, int *mult, int *div);
->> +       u32 (*get_refclk_freq)(void __iomem *sar);
->>         bool (*is_sscg_enabled)(void __iomem *sar);
->>         u32 (*fix_sscg_deviation)(u32 system_clk);
->>         const struct coreclk_ratio *ratios;
->> -- 
->> 2.1.0
->>
+> Now, let's look at how this could be solved.
+> Here is a proposal [3] that does the following:
 
+This would be a lot easier to follow/review as an RFC post to the
+mailing list. Otherwise I have some high-level comments on the stuff
+below, which I think matches the shape of what we discussed on IRC.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+>  1/ prevent a system wakeup when at least one of the action handler
+>     has set the IRQF_NO_SUSPEND flag
+
+We might need to add some logic to enable_irq_wake and
+irq_pm_install_action to prevent some of the horrible mismatch cases we
+can get here (e.g. if we have a wakeup handler, a IRQF_NO_SUSPEND
+handler, and another handler which is neither). We may need to
+reconsider temporarily stashing the other potential interrupts.
+
+Do we perhaps need an IRQF_SHARED_WAKEUP_SIBLING_OK for timer drivers to
+assert their handlers are safe for the whole suspend period rather than
+just the period they expect to be enabled for? Or do those always
+happen to be safe in practice?
+
+>  2/ Add a few helpers to deal with system wakeup from drivers code
+
+The irq_pm_force_wakeup part looks like what I had in mind.
+
+>  3/ Rework the at91 RTC driver to show how such weird cases could be
+>     handled
+
+It might be simpler to do this with a PM notifier within the driver
+rather than having to traverse all the irq_descs, though perhaps not.
+
+> Of course, I'll need the IRQF_SHARED_TIMER_OK patch to prevent the
+> WARN_ON backtrace.
+
+That should be fine; it's backed up in the list archive ;)
+
+> Please, let me know if I missed anything important, share your opinion
+> on this proposal, and feel free to propose any other solution.
+
+Hopefully the above covers that!
+
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
