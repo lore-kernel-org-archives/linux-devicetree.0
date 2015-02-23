@@ -1,65 +1,68 @@
-From: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
-Date: Mon, 23 Feb 2015 09:37:24 +0000
-Message-ID: <54EAF4D4.4090505@linn.co.uk>
-References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk> <20150218210830.GA7778@localhost.localdomain>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH v3 7/8] rtc: st: add new driver for ST's
+ LPC RTC
+Date: Mon, 23 Feb 2015 10:12:23 +0000
+Message-ID: <20150223101223.GA14142@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1424260154-12868-1-git-send-email-lee.jones@linaro.org>
+ <1424260154-12868-8-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150218210830.GA7778-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1424260154-12868-8-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+Hi Lee,
 
-On 18/02/15 21:08, Richard Cochran wrote:
-> On Tue, Feb 17, 2015 at 02:03:30PM +0000, Stathis Voukelatos wrote:
->> The command string for packet matching is stored in module RAM
->> and consists of a sequence of 16-bit entries. Each entry includes
->> an 8-bit command code and and 8-bit data value. Valid command
->> codes are:
->> 0 - Don't care
->> 1 - Match: packet data must match command string byte
->> 2 - Copy: packet data will be copied to FIFO
->> 3 - Match/Stamp: if packet data matches string byte, a timestamp
->>                   is copied into the FIFO
->> 4 - Copy/Done: packet data will be copied into the FIFO.
->>                 This command terminates the command string.
->
-> Why do you need to expose this interface to user space at all?  Why
-> not just time stamp every frame?
+On Wed, 18 Feb 2015, Lee Jones wrote:
 
-To put this into context with an example, the use case this H/W module 
-was originally developed for was to allow multiple audio receivers to 
-synchronize with a single transmitter, eg. multi-room synchronised audio.
-The interface needs to be public so that a user-space application can 
-program a command string that will match packets that belong to the 
-audio stream of interest, for this example.
-In addition returning just a timestamp would not be enough in many 
-cases. In the audio streaming use case mentioned above some additional
-bytes from the packet payload need to be returned (with Copy commands) 
-in order to associate the timestamp with a certain point in the audio 
-stream.
+> ST's Low Power Controller (LPC) controls two devices; watchdog and RTC.
+> Only one of the devices can be used at any one time.  This is enforced
+> by the correlating MFD driver.  This portion of the driver-set controls
+> the Real Time Clock.
 
->
-> How does the "Match" command work?  The frame must have one particular
-> byte?  That can't be right.  Please explain.
+<snip>
 
-Actually, that is how the H/W works. Each Match command is followed by
-a data value which must match the packet data byte at the corresponding
-location. If there is no match processing of the packet stops.
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&rtc->lock, flags);
+> +
+> +	writel(1, rtc->ioaddr + LPC_WDT_OFF);
+> +
+> +	writel(msb, rtc->ioaddr + LPC_LPA_MSB_OFF);
+> +	writel(lsb, rtc->ioaddr + LPC_LPA_LSB_OFF);
+> +	writel(1, rtc->ioaddr + LPC_LPA_START_OFF);
+> +
+> +	writel(0, rtc->ioaddr + LPC_WDT_OFF);
 
->
-> Thanks,
-> Richard
->
+I think all the writel IO accessors in this driver can be replaced
+with the *_relaxed variant. This will avoid the overhead of taking a
+spinlock in the l2 outer cache part of writel.
 
-Thank you,
-Stathis
+<snip>
+
+> +#ifdef CONFIG_PM_SLEEP
+> +static int st_rtc_suspend(struct device *dev)
+> +{
+> +	struct st_rtc *rtc = dev_get_drvdata(dev);
+> +
+> +	if (device_may_wakeup(dev))
+> +		return 0;
+> +
+> +	writel(1, rtc->ioaddr + LPC_WDT_OFF);
+> +	writel(0, rtc->ioaddr + LPC_LPA_START_OFF);
+> +	writel(0, rtc->ioaddr + LPC_WDT_OFF);
+
+Is there a reason for not disabling the IP clock in suspend / resume functions?
+
+regards,
+
+Peter.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
