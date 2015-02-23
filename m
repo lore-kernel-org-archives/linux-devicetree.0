@@ -1,102 +1,61 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Mon, 23 Feb 2015 18:00:57 +0100
-Message-ID: <20150223180057.513b069c@bbrezillon>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
-	<2437801.56xPyk3atd@vostro.rjw.lan>
-	<20150211151237.GN9154@leverpostej>
-	<1487331.cgC9j5u0aF@vostro.rjw.lan>
-	<20150211155720.GQ9154@leverpostej>
-	<20150211171515.55d5066f@bbrezillon>
-	<20150211163231.GR9154@leverpostej>
-	<20150211173823.30c42c6a@bbrezillon>
-	<20150220142208.GJ13659@leverpostej>
-	<20150220155347.1477b02d@bbrezillon>
-	<20150220151655.GK13659@leverpostej>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv2 05/15] ARM: mvebu: add stdout-path to all armada-*.dts
+Date: Mon, 23 Feb 2015 17:13:34 +0000
+Message-ID: <20150223171334.GP9714@leverpostej>
+References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150220151655.GK13659@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-Thanks for the clarification, and sorry if I've been a bit harsh to you
-in my previous answer, but this whole shared irq thing is starting to
-drive me crazy.
-
-On Fri, 20 Feb 2015 15:16:56 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
-
-[...]
- 
+On Fri, Feb 20, 2015 at 05:04:24PM +0000, Thomas Petazzoni wrote:
+> This commit adds the stdout-path property in /chosen for all Armada
+> boards that were not yet carrying this property.
 > 
-> An IRQ cannot be shared between a device with IRQF_NO_SUSPEND and a
-> device that wishes to operate as a wakeup device, because the semantics
-> don't align. One wishes to handle IRQs continuously and one wants to
-> abort suspend at the first IRQ (waiting until part-way through the
-> resume before handling it).
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> ---
+>  arch/arm/boot/dts/armada-370-db.dts              | 1 +
+>  arch/arm/boot/dts/armada-370-mirabox.dts         | 1 +
+>  arch/arm/boot/dts/armada-370-netgear-rn102.dts   | 1 +
+>  arch/arm/boot/dts/armada-370-netgear-rn104.dts   | 1 +
+>  arch/arm/boot/dts/armada-370-rd.dts              | 1 +
+>  arch/arm/boot/dts/armada-375-db.dts              | 1 +
+>  arch/arm/boot/dts/armada-388-db.dts              | 1 +
+>  arch/arm/boot/dts/armada-388-rd.dts              | 1 +
+>  arch/arm/boot/dts/armada-xp-axpwifiap.dts        | 1 +
+>  arch/arm/boot/dts/armada-xp-db.dts               | 1 +
+>  arch/arm/boot/dts/armada-xp-gp.dts               | 1 +
+>  arch/arm/boot/dts/armada-xp-matrix.dts           | 1 +
+>  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts   | 1 +
+>  arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 1 +
+>  14 files changed, 14 insertions(+)
 > 
-> So those devices above which wish to operate as wakeup devices are
-> either irrelevant or unsalvageable with the current approaches.
-> 
-> The flag or demux chip only happens to mask the problem in the absence
-> of strict sanity checking.
-> 
-> If you want to be able to share the line then you will need to
-> fundamentally rework the way wakeup interrupts work in order to be able
-> to decide when you've encountered a real wakeup event.
+> diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
+> index e993c46..286bedd 100644
+> --- a/arch/arm/boot/dts/armada-370-db.dts
+> +++ b/arch/arm/boot/dts/armada-370-db.dts
+> @@ -56,6 +56,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
 
-Okay, I'll try to summarize the discussion we had on IRC regarding this
-aspect.
+stdout-path can now take a config too (including the rate), which will
+avoid any reliance on the serial core choosing the right rate by
+default.
 
-On at91 platforms, irq line 1 is shared by a timer (PIT) and some
-devices that can register themselves as wakeup sources (especially the
-RTC IP).
-I doubt at91 users will agree on dropping either of these features (the
-timer or the wakeup on RTC/UART/...), so, can we try to find a solution
-that would both make irq, DT and at91 guys happy (that doesn't sound
-like an easy task :-)) ?
+If you have an alias serial0, this could be:
 
-The whole problem here is that we can't have both IRQF_NO_SUSPEND flag
-set on one of the shared action and others that are configuring the irq
-as a wakeup source, because it would always lead to the system being
-woken up (even when the only thing we were supposed to do is handle the
-timer event).
+	stdout-path = "serial0:115200n8";
 
-This is because irq_may_run [1], which is called to decide whether we
-should handle this irq or just wake the system up [2], will always
-return true if at least one of the shared action has tagged the irq
-line as a wakeup source.
+Otherwise you can use the full path instead of serial0.
 
-Sorry for summarizing things you most likely already know, but I want
-to be sure I'm actually understanding it correctly.
+That's documented in Documentation/devicetree/bindings/chosen.txt
 
-Now, let's look at how this could be solved.
-Here is a proposal [3] that does the following:
- 1/ prevent a system wakeup when at least one of the action handler
-    has set the IRQF_NO_SUSPEND flag
- 2/ Add a few helpers to deal with system wakeup from drivers code
- 3/ Rework the at91 RTC driver to show how such weird cases could be
-    handled
-
-Of course, I'll need the IRQF_SHARED_TIMER_OK patch to prevent the
-WARN_ON backtrace.
-
-Please, let me know if I missed anything important, share your opinion
-on this proposal, and feel free to propose any other solution.
-
-[1]http://lxr.free-electrons.com/source/kernel/irq/chip.c#L348
-[2]http://lxr.free-electrons.com/source/kernel/irq/chip.c#L386
-[3]http://code.bulix.org/gboee1-87936
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Mark.
