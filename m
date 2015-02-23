@@ -1,38 +1,50 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 RESEND 4/4] ARM: bcm2835: Use pinctrl header
-Date: Mon, 23 Feb 2015 12:09:39 -0700
-Message-ID: <54EB7AF3.7030004@wwwdotorg.org>
-References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com> <1422555050-28509-5-git-send-email-stefan.wahren@i2se.com> <54D8F7EE.2060607@wwwdotorg.org> <570054632.932648.1424518777174.JavaMail.open-xchange@oxbaltgw02.schlund.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] ARM: bcm2835: Add header file for pinctrl constants
+Date: Mon, 23 Feb 2015 12:11:05 -0700
+Message-ID: <54EB7B49.8050706@wwwdotorg.org>
+References: <1424624396-812-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <5700696.0jJhSRhno5@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <570054632.932648.1424518777174.JavaMail.open-xchange-h4m1HHXQYNFuz1KIG1bTI8gmgJlYmuWJ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5700696.0jJhSRhno5@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: lee@kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/21/2015 04:39 AM, Stefan Wahren wrote:
->> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> hat am 9. Februar 2015 um 19:09
->> geschrieben:
->>
->>
->> On 01/29/2015 11:10 AM, Stefan Wahren wrote:
->>> This patch converts all bcm2835 dts and dtsi files to use the pinctrl
->>> header file.
->>
->> The series,
->> Reviewed-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>
->> Sorry for taking a while with this.
+On 02/22/2015 01:13 PM, Arnd Bergmann wrote:
+> On Sunday 22 February 2015 16:59:56 Charles Keepax wrote:
+>> +
+>> +/* IRQ Flags */
+>> +#define BCM2835_PIN_IRQ_RISING                         1
+>> +#define BCM2835_PIN_IRQ_FALLING                                2
+>> +#define BCM2835_PIN_IRQ_EDGE   (BCM2835_PIN_IRQ_RISING | \
+>> +                                BCM2835_PIN_IRQ_FALLING)
+>> +#define BCM2835_PIN_IRQ_LOW                            4
+>> +#define BCM2835_PIN_IRQ_HIGH                           8
 >
-> Fine, but is this series already applied?
+> Are these different from the standard definitions?
+>
+>> +/* Pin Function Settings */
+>> +#define BCM2835_PIN_FUNC_GPIO_IN                       0
+>> +#define BCM2835_PIN_FUNC_GPIO_OUT                      1
+>> +#define BCM2835_PIN_FUNC_ALT5                          2
+>> +#define BCM2835_PIN_FUNC_ALT4                          3
+>> +#define BCM2835_PIN_FUNC_ALT0                          4
+>> +#define BCM2835_PIN_FUNC_ALT1                          5
+>> +#define BCM2835_PIN_FUNC_ALT2                          6
+>> +#define BCM2835_PIN_FUNC_ALT3                          7
+>
+> Why are these required? They don't seem to be used by any driver,
+> which leads me to suspect that they are just the hardware numbers.
+>
+> In that case, don't add any syntactical sugar like that and just
+> use the hardware numbers directly.
+>
+> What's with the strange mapping of numbers anyway?
 
-It doesn't look like it. I was under the impression that Lee was 
-applying bcm2835 patches now, hence why I simply gave my reviewed-by tag 
-rather than doing anything else. Lee, can you comment?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Especially given that the number->semantics meaning is a little 
+non-linear it seems like using #defines/... to document what the numbers 
+mean seems reasonable. It allows easily validating the DT files without 
+having to go look up the meaning of the numbers in the documentation.
