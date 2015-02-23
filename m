@@ -1,77 +1,79 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v2 1/2] remoteproc: microblaze: Document device tree bindings
-Date: Mon, 23 Feb 2015 12:37:25 +0100
-Message-ID: <78fba33b1c38941a03996c8fe5bd3d3613314d56.1424688478.git.michal.simek@xilinx.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 06/12] ARM: DT: apq8064: add pci support in CM QS600
+Date: Mon, 23 Feb 2015 11:43:01 +0000
+Message-ID: <54EB1245.3030902@linaro.org>
+References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org> <1424678135-13178-1-git-send-email-srinivas.kandagatla@linaro.org> <54EB0F7F.1050307@compulab.co.il>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54EB0F7F.1050307@compulab.co.il>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+To: Igor Grinberg <grinberg@compulab.co.il>, Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the Microblaze remoteproc
-on Xilinx Zynq.
+Hi Kumar,
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+Sorry, I should have dropped this patch.. PCIE is still not in the 
+mainline.. :-)
 
-Changes in v2:
-- Applied changed reported by Mark Rutland here
-  https://lkml.org/lkml/2015/1/19/198
+Will fix it in next version.
 
- .../bindings/remoteproc/mb_remoteproc.txt          | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mb_remoteproc.txt
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/mb_remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/mb_remoteproc.txt
-new file mode 100644
-index 000000000000..3a454f01f5f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/mb_remoteproc.txt
-@@ -0,0 +1,45 @@
-+Xilinx ARM-Microblaze remoteproc driver
-+
-+A Microblaze is added to the programmable logic on Xilinx Zynq.
-+The Microblaze is connected with PS block via axi bus connected to PS HP port
-+to ensure access to PS DDR.
-+Communication channels are done via soft GPIO IP connected to PS block
-+and to Microblaze. There are also 2 gpio control signals reset and debug
-+which are used for resetting Microblaze.
-+
-+Required properties:
-+- compatible : Should be "xlnx,mb-remoteproc"
-+- reg : Address and length of the ddr address space
-+- bram: Phandle to bram controller which can access Microblaze BRAM
-+- bram-firmware : Microblaze BRAM bootloader name
-+- firmware : Default firmware name which can be override by
-+	     "firmware" module parameter
-+- reset-gpio : Gpio phandle which reset Microblaze remoteproc
-+- debug-gpio : Gpio phandle which setup Microblaze to debug state
-+- ipino-gpio : Gpio phandle for Microblaze to ARM communication
-+- vring0-gpio : Gpio phandle for ARM to Microblaze communication vring 0
-+- vring1-gpio : Gpio phandle for ARM to Microblaze communication vring 1
-+
-+Microblaze SoC can be also connected to the PS block via an axi bus.
-+That's why there is the option to allocate interrupts for Microblaze use only.
-+The driver will allocate interrupts to itself and Microblaze sw has to ensure
-+that interrupts are properly enabled and handled by Microblaze interrupt
-+controller.
-+
-+Optional properties:
-+ - interrupts : Interrupt mapping for remoteproc
-+ - interrupt-parent : Phandle for the interrupt controller
-+
-+Example:
-+mb_remoteproc@800000 {
-+	compatible = "xlnx,mb-remoteproc";
-+	reg = < 0x8000000 0x8000000 >;
-+	bram = <&axi_bram_ctrl_0>;
-+	bram-firmware = "mb.bin";
-+	firmware = "image.elf";
-+	reset-gpio = <&zynq_gpio_reset 1 0>;
-+	debug-gpio = <&zynq_gpio_reset 0 0>;
-+	ipino-gpio = <&zynq_gpio_vring 0 0>;
-+	vring0-gpio = <&zynq_gpio_vring 1 0>;
-+	vring1-gpio = <&zynq_gpio_vring 2 0>;
-+};
--- 
-1.8.2.3
+--srini
+On 23/02/15 11:31, Igor Grinberg wrote:
+> Hi Srini,
+>
+> On 02/23/15 09:55, Srinivas Kandagatla wrote:
+>> From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+>>
+>> This patch adds PCIE support to APQ8064, tested with Ethernet on Compulab QS600 board.
+>>
+>> Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+>
+> Thanks for submitting these!
+> I currently have a hard time submitting anything...
+>
+> Acked-by: Igor Grinberg <grinberg@compulab.co.il>
+>
+>> ---
+>>   arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+>> index 5d75666..6e62f24 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+>> +++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+>> @@ -1,4 +1,5 @@
+>>   #include "qcom-apq8064-v2.0.dtsi"
+>> +#include <dt-bindings/gpio/gpio.h>
+>>
+>>   / {
+>>   	model = "CompuLab CM-QS600";
+>> @@ -40,6 +41,24 @@
+>>   			};
+>>   		};
+>>
+>> +		/* on board fixed 3.3v supply */
+>> +		v3p3_pcieclk: v3p3-pcieclk {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "PCIE V3P3";
+>> +			regulator-min-microvolt = <3300000>;
+>> +			regulator-max-microvolt = <3300000>;
+>> +			regulator-always-on;
+>> +		};
+>> +
+>> +		pci@1b500000 {
+>> +			status = "ok";
+>> +			pcie-clk-supply	= <&v3p3_pcieclk>;
+>> +			avdd-supply	= <&pm8921_s3>;
+>> +			vdd-supply	= <&pm8921_lvs6>;
+>> +			qcom,external-phy-refclk;
+>> +			reset-gpio = <&tlmm_pinmux 27 GPIO_ACTIVE_LOW>;
+>> +		};
+>> +
+>>   		amba {
+>>   			/* eMMC */
+>>   			sdcc1: sdcc@12400000 {
+>>
+>
