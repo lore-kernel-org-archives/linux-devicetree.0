@@ -1,57 +1,82 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: max98088: Add master clock handling
-Date: Mon, 23 Feb 2015 13:23:21 +0100
-Message-ID: <54EB1BB9.4030205@suse.de>
-References: <1424283959-16289-3-git-send-email-afaerber@suse.de> <1424373526-4135-1-git-send-email-afaerber@suse.de> <54E6A9AB.4070401@gmail.com> <54EAE4DF.3040607@collabora.co.uk>
+From: Jon Masters <jcm@redhat.com>
+Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
+Date: Mon, 23 Feb 2015 07:24:04 -0500 (EST)
+Message-ID: <898480616.21888431.1424694244176.JavaMail.zimbra@zmail15.collab.prod.int.phx2.redhat.com>
+References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
+ <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com>
+ <20150219190348.GB24460@cbox>
+ <CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg@mail.gmail.com>
+ <20150223120744.GA5609@cbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54EAE4DF.3040607-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+In-Reply-To: <20150223120744.GA5609@cbox>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Christoffer Dall <christoffer.dall@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Feng Kan <fkan@apm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, "patches@apm.com" <patches@apm.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>, Rob Herring <robherring2@gmail.com>, Tushar Jagad <tjagad@apm.com>, Pranavkumar Sawargaonkar <psawargaonkar@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Sorry about top post. Quick comment in reply to Seattle point below - yes, it does indeed support 64K and already has the right DTS.
 
-Am 23.02.2015 um 09:29 schrieb Javier Martinez Canillas:
-> On 02/20/2015 04:27 AM, Tushar Behera wrote:
->> On 02/20/2015 12:48 AM, Andreas F=C3=A4rber wrote:
->>> If master clock is provided through device tree, then update
->>> the master clock frequency during set_sysclk.
->>>
->>> Cc: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
->>> ---
->>>  sound/soc/codecs/max98088.c | 24 ++++++++++++++++++++++++
->>>  1 file changed, 24 insertions(+)
->>>
->>
->> Looks good.
->>
->> Acked-by: Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->=20
-> Looks good to me as well.
->=20
-> Reviewed-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8oXa1LcwEujcA@public.gmane.org=
-k>
+-- 
+Computer Architect | Sent from my #ARM Powered Mobile Device
 
-Thanks guys. One self-doubt: Is there any downside to returning
--EPROBE_DEFER after regcache_mark_dirty(max98088->regmap)? I.e., should
-I move the last hunk some lines up to be the very first thing executed?
+On Feb 23, 2015 4:14 AM, Christoffer Dall <christoffer.dall@linaro.org> wrote:
+>
+> On Sat, Feb 21, 2015 at 03:56:17PM -0600, Rob Herring wrote: 
+> > On Thu, Feb 1On Sat, Feb 21, 2015 at 03:56:17PM -0600, Rob Herring wrote:
+> On Thu, Feb 19, 2015 at 1:03 PM, Christoffer Dall
+> <christoffer.dall@linaro.org> wrote:
+> > On Thu, Feb 19, 2015 at 12:23:15PM -0600, Rob Herring wrote:
+> >> On Tue, Jan 27, 2015 at 1:03 AM, Pranavkumar Sawargaonkar
+> >> <psawargaonkar@apm.com> wrote:
+> >> > In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
+> >> > in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
+> >> > size due to size alignment checking in vgic driver for VCPU Control and
+> >> > VCPU register.
+> >> >
+> >> > This patch corrects the sizes to be inline with the hardware spec.
+> >>
+> >> This does not make sense. The GIC regions are still only 4 or 8KB and
+> >> the h/w description should reflect that. For implementations using
+> >> gic-400 and the addressing decode trick, the rest of the register
+> >> range is also not safe to access given it is multiple mapped. Also,
+> >> this wastes virtual space, but I guess we don't care on 64-bit.
+> >>
+> >> KVM should be fixed to only check base address alignment. Size
+> >> alignment does not matter (if it does, then you need to fix all
+> >> register blocks).
+> >>
+> > It matters if you want to ensure that the 64K page you are assigning to
+> > a guest for the GIC virtual CPU interface contains only GIC virtual CPU
+> > mappings, and not other random stuff that the guest is not allowed to
+> > touch.
+> 
+> Good point.
+> 
+> > How else should this be enforced?
+> 
+> Rely on correct h/w design? You'll have to repeat this every time you
+> want to do pass-thru of a device.
+> 
+> What do you do if 64K mapping is not supported? Fallback to emulation
+> of the CPU interface?
 
-Cheers,
-Andreas
+Agree with Peter on these two points.
 
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Jennifer Guild, Dilip Upmany=
-u,
-Graham Norton; HRB 21284 (AG N=C3=BCrnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Are there other DTSs that need to be fixed?
+> 
+Not sure really, AMD Seattle works with 64K pages IIRC.
+
+Thanks,
+-Christoffer
