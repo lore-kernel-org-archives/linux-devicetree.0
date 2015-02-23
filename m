@@ -1,82 +1,101 @@
-From: Jon Masters <jcm@redhat.com>
-Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
-Date: Mon, 23 Feb 2015 07:24:04 -0500 (EST)
-Message-ID: <898480616.21888431.1424694244176.JavaMail.zimbra@zmail15.collab.prod.int.phx2.redhat.com>
-References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
- <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com>
- <20150219190348.GB24460@cbox>
- <CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg@mail.gmail.com>
- <20150223120744.GA5609@cbox>
+From: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
+Subject: [PATCH v3 0/3] net: Linn Ethernet Packet Sniffer driver
+Date: Mon, 23 Feb 2015 14:26:19 +0000
+Message-ID: <cover.1424698609.git.stathis.voukelatos@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <20150223120744.GA5609@cbox>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Christoffer Dall <christoffer.dall@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Feng Kan <fkan@apm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, "patches@apm.com" <patches@apm.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>, Rob Herring <robherring2@gmail.com>, Tushar Jagad <tjagad@apm.com>, Pranavkumar Sawargaonkar <psawargaonkar@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry about top post. Quick comment in reply to Seattle point below - yes, it does indeed support 64K and already has the right DTS.
+This patch adds support the Ethernet Packet Sniffer H/W module
+developed by Linn Products Ltd and found in the IMG Pistachio SoC.
+The module allows Ethernet packets to be parsed, matched against
+a user-defined pattern and timestamped. It sits between a 100M
+Ethernet MAC and PHY and is completely passive with respect to
+Ethernet frames.
+
+Matched packet bytes and timestamp values are returned through a
+FIFO. Timestamps are provided to the module through an externally
+generated Gray-encoded counter.
+
+The command string for packet matching is stored in module RAM
+and consists of a sequence of 16-bit entries. Each entry includes
+an 8-bit command code and and 8-bit data value. Valid command
+codes are:
+0 - Don't care
+1 - Match: packet data must match command string byte
+2 - Copy: packet data will be copied to FIFO
+3 - Match/Stamp: if packet data matches string byte, a timestamp
+                 is copied into the FIFO
+4 - Copy/Done: packet data will be copied into the FIFO.
+               This command terminates the command string.
+
+The driver consists of two modules:
+- Core: it provides a common framework for managing backend packet
+        sniffer implementations. Each backend channel is registered
+        by the core as a netdev, which can be accessed from user
+        space through a raw packet socket. 
+
+- Ethernet Packet Sniffer backend: provides the driver for the
+        Linn Ethernet Packet Sniffer H/W modules.
+
+The split between a core and backend modules allows for other
+implementations to be added in the future apart of the Ethernet
+packet sniffer presented in this patch set.
+
+Changes for v3:
+* Code moved into vendor specific directory
+* Device tree binding updated and streamlined. Cyclecounter params
+  are now calculated dynamically.
+
+Changes for v2:
+* Complete redesign of core framework to use netdev instead of 
+the generic netlink framework
+* Updated device tree binding
+* A number of minor code improvements suggested by code review
+
+Stathis Voukelatos (3):
+  Ethernet packet sniffer: device tree binding and vendor prefix
+  Packet sniffer core framework
+  Linn Ethernet packet sniffer driver
+
+ .../bindings/net/linn-ether-packet-sniffer.txt     |  39 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |   6 +
+ drivers/net/ethernet/Kconfig                       |   1 +
+ drivers/net/ethernet/Makefile                      |   1 +
+ drivers/net/ethernet/linn/Kconfig                  |  36 ++
+ drivers/net/ethernet/linn/Makefile                 |  20 +
+ .../linn/pkt-sniffer/backends/ether/Makefile       |  20 +
+ .../linn/pkt-sniffer/backends/ether/channel.c      | 455 +++++++++++++++++++++
+ .../linn/pkt-sniffer/backends/ether/channel.h      |  80 ++++
+ .../ethernet/linn/pkt-sniffer/backends/ether/hw.h  |  46 +++
+ .../linn/pkt-sniffer/backends/ether/platform.c     | 286 +++++++++++++
+ .../net/ethernet/linn/pkt-sniffer/core/Makefile    |  20 +
+ .../net/ethernet/linn/pkt-sniffer/core/module.c    |  37 ++
+ .../net/ethernet/linn/pkt-sniffer/core/netdev.c    | 254 ++++++++++++
+ .../net/ethernet/linn/pkt-sniffer/core/snf_core.h  |  60 +++
+ 16 files changed, 1362 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
+ create mode 100644 drivers/net/ethernet/linn/Kconfig
+ create mode 100644 drivers/net/ethernet/linn/Makefile
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/Makefile
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/channel.c
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/channel.h
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/hw.h
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/platform.c
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/core/Makefile
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/core/module.c
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/core/netdev.c
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/core/snf_core.h
 
 -- 
-Computer Architect | Sent from my #ARM Powered Mobile Device
+1.9.1
 
-On Feb 23, 2015 4:14 AM, Christoffer Dall <christoffer.dall@linaro.org> wrote:
->
-> On Sat, Feb 21, 2015 at 03:56:17PM -0600, Rob Herring wrote: 
-> > On Thu, Feb 1On Sat, Feb 21, 2015 at 03:56:17PM -0600, Rob Herring wrote:
-> On Thu, Feb 19, 2015 at 1:03 PM, Christoffer Dall
-> <christoffer.dall@linaro.org> wrote:
-> > On Thu, Feb 19, 2015 at 12:23:15PM -0600, Rob Herring wrote:
-> >> On Tue, Jan 27, 2015 at 1:03 AM, Pranavkumar Sawargaonkar
-> >> <psawargaonkar@apm.com> wrote:
-> >> > In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
-> >> > in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
-> >> > size due to size alignment checking in vgic driver for VCPU Control and
-> >> > VCPU register.
-> >> >
-> >> > This patch corrects the sizes to be inline with the hardware spec.
-> >>
-> >> This does not make sense. The GIC regions are still only 4 or 8KB and
-> >> the h/w description should reflect that. For implementations using
-> >> gic-400 and the addressing decode trick, the rest of the register
-> >> range is also not safe to access given it is multiple mapped. Also,
-> >> this wastes virtual space, but I guess we don't care on 64-bit.
-> >>
-> >> KVM should be fixed to only check base address alignment. Size
-> >> alignment does not matter (if it does, then you need to fix all
-> >> register blocks).
-> >>
-> > It matters if you want to ensure that the 64K page you are assigning to
-> > a guest for the GIC virtual CPU interface contains only GIC virtual CPU
-> > mappings, and not other random stuff that the guest is not allowed to
-> > touch.
-> 
-> Good point.
-> 
-> > How else should this be enforced?
-> 
-> Rely on correct h/w design? You'll have to repeat this every time you
-> want to do pass-thru of a device.
-> 
-> What do you do if 64K mapping is not supported? Fallback to emulation
-> of the CPU interface?
-
-Agree with Peter on these two points.
-
-> 
-> Are there other DTSs that need to be fixed?
-> 
-Not sure really, AMD Seattle works with 64K pages IIRC.
-
-Thanks,
--Christoffer
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
