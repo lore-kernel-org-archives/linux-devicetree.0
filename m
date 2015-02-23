@@ -1,76 +1,106 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add SDHI0/1 DT support
-Date: Tue, 24 Feb 2015 07:01:16 +0900
-Message-ID: <20150223220116.GC29878@verge.net.au>
-References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
- <2348421.LHyZ4ZOiiG@wasted.cogentembedded.com>
- <CANqRtoRnDzTSvKYcNDHKHbeaN7jp1VvKnk1jTHDvNt1oyBzwKg@mail.gmail.com>
- <54E9ED95.8070702@cogentembedded.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] arm: msm: Use timer DT node for qcom watchdog config
+Date: Mon, 23 Feb 2015 14:07:30 -0800
+Message-ID: <54EBA4A2.1050607@codeaurora.org>
+References: <1424485176-8348-1-git-send-email-mathieu@codeaurora.org> <5879121.Ud0l5ICsCF@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54E9ED95.8070702@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5879121.Ud0l5ICsCF@wuerfel>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 22, 2015 at 05:54:13PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 02/22/2015 03:45 AM, Magnus Damm wrote:
-> 
-> >>Define the SILK board dependent parts of the SDHI0  (connected to SDIO Wi-Fi
-> >>chip)  and SDHI1  (connected to micro-SD slot) device nodes along with the
-> >>necessary voltage regulators.
-> 
-> >>Based on the original patch by Vladimir Barinov
-> >><vladimir.barinov@cogentembedded.com>.
-> 
-> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> >Thanks for your patch. One question - above you write that SDHI1 is micro-SD...
-> 
->    Yes, have double-checked now.
-> 
-> >>@@ -100,3 +159,25 @@
-> >>         non-removable;
-> >>         status = "okay";
-> >>  };
-> >>+
-> >>+&sdhi0 {
-> >>+       pinctrl-0 = <&sdhi0_pins>;
-> >>+       pinctrl-names = "default";
-> >>+
-> >>+       vmmc-supply = <&vcc_sdhi0>;
-> >>+       vqmmc-supply = <&vccq_sdhi0>;
-> >>+       cd-gpios = <&gpio6 6 GPIO_ACTIVE_LOW>;
-> >>+       wp-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
-> >>+       status = "okay";
-> >>+};
-> >>+
-> >>+&sdhi1 {
-> >>+       pinctrl-0 = <&sdhi1_pins>;
-> >>+       pinctrl-names = "default";
-> >>+
-> >>+       vmmc-supply = <&vcc_sdhi1>;
-> >>+       vqmmc-supply = <&vccq_sdhi1>;
-> >>+       cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
-> >>+       wp-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
-> >>+       status = "okay";
-> >>+};
-> 
-> >... however here the WP signal is assigned.
-> 
-> >I believe micro-SD doesn't use the WP signal, so either I'm wrong or
-> >the patch needs to be updated to reflect reality. =)
-> 
->    Both seem correct: SD1_WP signal is just tied to VCCQ_SD1. Do you think
-> we should still drop it?
-> 
-> >Also, I doubt that an on-board SDIO module makes use of CD and/or WP signals?
-> 
->    Those two are tied to VCCQ_SD0 as well. Do you think we should drop them?
+On 02/23/15 13:35, Arnd Bergmann wrote:
+> On Friday 20 February 2015 18:19:33 Mathieu Olivari wrote:
+>> This change is done as a follow-up to the following thread:
+>> https://lkml.org/lkml/2014/10/1/436
+>>
+>> qcom-wdt is currently assuming the presence of a dedicated node in DT
+>> to gets its configuration. However, on msm architecture, the watchdog is
+>> usually part of the timer block. So this patch-set is changing the driver
+>> and slightly enhancing the timer DT bindings to provide the relevant clocks
+>> and interrupts.
+>>
+>> Mathieu Olivari (3):
+>>   watchdog: qcom: use timer devicetree binding
+>>   ARM: qcom: add description of KPSS WDT for IPQ8064
+>>   ARM: msm: add watchdog entries to DT timer binding doc
+>>
+>>  Documentation/devicetree/bindings/arm/msm/timer.txt | 16 +++++++++++++---
+>>  arch/arm/boot/dts/qcom-ipq8064.dtsi                 | 14 +++++++++++++-
+>>  drivers/watchdog/qcom-wdt.c                         | 21 +++++++++++++++------
+>>  3 files changed, 41 insertions(+), 10 deletions(-)
+>>
+>>
+> What about the binding document in
+> Documentation/devicetree/bindings/watchdog/qcom-wdt.txt?
+>
+>
 
-I am holding off on queuing this up until some consensus is reached.
+We can rewrite it for platforms starting with msm8974 and beyond or
+delete it and write a new binding. It's a similar hardware block split
+out from the timers and then made to use a SPI instead of a PPI for the
+interrupt sources. We also lost the CPU remapping feature so there is
+really only one watchdog instead of 2 per cpu. Oh and the register
+offsets are different, but otherwise the registers are the same.
+
+---8<-----
+
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH] Documentation: qcom-wdt: Update binding for individual block
+
+On msm8974 and beyond the KPSS watchdog is split out of the timer
+block and made to be a single instance instead of per-cpu. Let's
+update the binding to reflect this and replace the binding that
+is handled by the qcom,kpss-timer binding.
+
+Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/watchdog/qcom-wdt.txt | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+index 4726924d034e..78b92bec4c3a 100644
+--- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+@@ -2,14 +2,10 @@ Qualcomm Krait Processor Sub-system (KPSS) Watchdog
+ ---------------------------------------------------
+ 
+ Required properties :
+-- compatible : shall contain only one of the following:
+-
+-			"qcom,kpss-wdt-msm8960"
+-			"qcom,kpss-wdt-apq8064"
+-			"qcom,kpss-wdt-ipq8064"
+-
++- compatible : shall contain "qcom,kpss-wdt"
+ - reg : shall contain base register location and length
+ - clocks : shall contain the input clock
++- interrupts : shall contain the bark and bite interrupts in that order
+ 
+ Optional properties :
+ - timeout-sec : shall contain the default watchdog timeout in seconds,
+@@ -17,8 +13,9 @@ Optional properties :
+ 
+ Example:
+ 	watchdog@208a038 {
+-		compatible = "qcom,kpss-wdt-ipq8064";
+-		reg = <0x0208a038 0x40>;
++		compatible = "qcom,kpss-wdt";
++		reg = <0xf9017000 0x1000>;
++		interrupts = <0 3 0>, <0 4 0>;
+ 		clocks = <&sleep_clk>;
+ 		timeout-sec = <10>;
+ 	};
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
