@@ -1,78 +1,86 @@
-From: Igor Grinberg <grinberg@compulab.co.il>
-Subject: Re: [PATCH 08/12] ARM: DT: apq8064: Add USB OTG support for CM QS-600
-Date: Mon, 23 Feb 2015 13:31:40 +0200
-Message-ID: <54EB0F9C.90500@compulab.co.il>
-References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1424678152-13266-1-git-send-email-srinivas.kandagatla@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1424678152-13266-1-git-send-email-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Jaewon Kim <jaewon02.kim@samsung.com>
+Subject: [PATCH v5 0/5] Add new MFD drvier for MAX77843
+Date: Mon, 23 Feb 2015 20:34:08 +0900
+Message-ID: <1424691253-11429-1-git-send-email-jaewon02.kim@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Beomho Seo <beomho.seo@samsung.com>, Jaewon Kim <jaewon02.kim@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds MAX77843(Multi Function Device) driver.
+The MAX77843 includes MUIC(Micro USB Interface Controller), Li+ Charger
+with Fuel Gauge, 2 safeout LDOs for USB device and haptic controller using PWM.
+It is interfaced to host controller using I2C. 
 
+Changes in v5:
+MFD Core
+ - Use bracket in complex define.
+ - Delete unnecessary letter '++'
+Charger
+ - fix Kconfig merge conflict with Kernel version4.0
 
-On 02/23/15 09:55, Srinivas Kandagatla wrote:
-> From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-> 
-> This patch adds USB OTG support on USB1 for Compulab QS-600 Board.
-> 
-> Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Changes in v4:
+MFD Core
+ - Fix indentation
+ - Add haptic register define in header
+HAPTIC
+ - Add haptic driver
 
-Acked-by: Igor Grinberg <grinberg@compulab.co.il>
+Changes in v3:
+MFD Core
+ - Fix wrong description and indentation in header.
+ - Remove unnecessary variable.
+Regulator
+ - Use ARRAY_SIZE() instead of define.
 
-> ---
->  arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-> index af2e075..6349f24 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-> @@ -41,6 +41,11 @@
->  			};
->  		};
->  
-> +		/* OTG */
-> +		usb1_phy:phy@12500000 {
-> +			status = "ok";
-> +		};
-> +
->  		usb3_phy:phy@12520000 {
->  			status = "ok";
->  		};
-> @@ -48,7 +53,16 @@
->  		usb4_phy:phy@12530000 {
->  			status = "ok";
->  		};
-> -		
-> +
-> +		gadget1:gadget@12500000 {
-> +			status = "ok";
-> +		};
-> +
-> +		/* OTG */
-> +		usb1: usb@12500000 {
-> +			status = "ok";
-> +		};
-> +
->  		usb3: usb@12520000 {
->  			status = "ok";
->  		};
-> 
+Changes in v2:
+MFD Core
+ - Fix charger regmap handle and typo.
+MUIC
+ - Cleanup enum list.
+ - Set path before send excon event.
+ - Fix variable names and typos for readability.
+Charger
+ - Remove unnecessary header.
+ - Chnage error message more readable.
+ - Remove unnecessary lines.
+Fuelgauge
+ - Fix regmap_config and use regmap_read.
+ - Add i2c_unregister_device function on *_remove function.
+ - Fix typo in Kconfig.
+Doc
+ - Remove unnecessary lines.
+ - Add example of charger regulator.
+
+Beomho Seo (2):
+  power: max77843_charger: Add Max77843 charger device driver
+  power: max77843_battery: Add Max77843 fuel gauge device driver
+
+Jaewon Kim (3):
+  mfd: max77843: Add max77843 MFD driver core driver
+  Input: add haptic drvier on max77843
+  Documentation: Add device tree bindings document for max77843
+
+ Documentation/devicetree/bindings/mfd/max77843.txt |  110 +++++
+ drivers/input/misc/Kconfig                         |   12 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/max77843-haptic.c               |  356 ++++++++++++++
+ drivers/mfd/Kconfig                                |   14 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/max77843.c                             |  248 ++++++++++
+ drivers/power/Kconfig                              |   16 +
+ drivers/power/Makefile                             |    2 +
+ drivers/power/max77843_battery.c                   |  286 +++++++++++
+ drivers/power/max77843_charger.c                   |  508 ++++++++++++++++++++
+ include/linux/mfd/max77843-private.h               |  454 +++++++++++++++++
+ 12 files changed, 2008 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77843.txt
+ create mode 100644 drivers/input/misc/max77843-haptic.c
+ create mode 100644 drivers/mfd/max77843.c
+ create mode 100644 drivers/power/max77843_battery.c
+ create mode 100644 drivers/power/max77843_charger.c
+ create mode 100644 include/linux/mfd/max77843-private.h
 
 -- 
-Regards,
-Igor.
+1.7.9.5
