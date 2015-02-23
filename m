@@ -1,57 +1,53 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 10/12] ARM: dts: apq8064: Remove incorrect gsbi2 node.
-Date: Mon, 23 Feb 2015 07:56:09 +0000
-Message-ID: <1424678169-13350-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 09/12] ARM: qcom: Add DT alias for serial port
+Date: Mon, 23 Feb 2015 07:55:59 +0000
+Message-ID: <1424678159-13308-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pramod Gurav <pramod.gurav@smartplayin.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit 8c3166f5d74b7936d29dc44f778e759c1b9fb43a (ARM: DT: apq8064: Add i2c device nodes)
-added a new gsbi2 node which is totally wrong for 2 reasons.
-First the address range is not something which maps to gsbi2 according
-to datasheet and 3.4 sources.
-Secondly 8064 devices do not use gsbi2 for i2c according to 3.4 kernel sources.
-Removing this node as this node would never get tested.
+From: Pramod Gurav <pramod.gurav@smartplayin.com>
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Define an alias for serial port present on ifc6410 which is used as
+console.
+
+Signed-off-by: Pramod Gurav <pramod.gurav@smartplayin.com>
 ---
- arch/arm/boot/dts/qcom-apq8064.dtsi | 20 --------------------
- 1 file changed, 20 deletions(-)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 4 ++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi        | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 3164197..7a6a076 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -5,6 +5,10 @@
+ 	model = "Qualcomm APQ8064/IFC6410";
+ 	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
+ 
++	aliases {
++		serial0 = &serial0;
++	};
++
+ 	soc {
+ 		pinctrl@800000 {
+ 			i2c1_pins: i2c1 {
 diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 63edafc..ba44f30 100644
+index 9c2e9b2..63edafc 100644
 --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
 +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -201,26 +201,6 @@
- 			};
- 		};
+@@ -232,7 +232,7 @@
+ 			#size-cells = <1>;
+ 			ranges;
  
--		gsbi2: gsbi@12480000 {
--			status = "disabled";
--			compatible = "qcom,gsbi-v1.0.0";
--			reg = <0x12480000 0x100>;
--			clocks = <&gcc GSBI2_H_CLK>;
--			clock-names = "iface";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges;
--
--			i2c2: i2c@124a0000 {
--				compatible = "qcom,i2c-qup-v1.1.1";
--				reg = <0x124a0000 0x1000>;
--				interrupts = <0 196 IRQ_TYPE_NONE>;
--				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
--				clock-names = "core", "iface";
--				#address-cells = <1>;
--				#size-cells = <0>;
--			};
--		};
- 
- 		gsbi7: gsbi@16600000 {
- 			status = "disabled";
+-			serial@16640000 {
++			serial0: serial@16640000 {
+ 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+ 				reg = <0x16640000 0x1000>,
+ 				      <0x16600000 0x1000>;
 -- 
 1.9.1
