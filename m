@@ -1,100 +1,114 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
-Date: Mon, 23 Feb 2015 10:39:20 -0600
-Message-ID: <CAL_JsqJ6E+05psDCXS7k74Mz-DgSEroQ2ODpe2Bp2_50fL3imA@mail.gmail.com>
-References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
- <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com>
- <20150219190348.GB24460@cbox> <CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg@mail.gmail.com>
- <20150223120744.GA5609@cbox>
+Subject: Re: [PATCH v2] of: add helper for getting endpoint node of specific identifiers
+Date: Mon, 23 Feb 2015 10:44:27 -0600
+Message-ID: <CAL_JsqLPbX6JbB269V1cT6OjitJtKwxNNkBYYP-PG4HcbUAdOQ@mail.gmail.com>
+References: <1424655686-15219-1-git-send-email-human.hwang@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150223120744.GA5609@cbox>
+In-Reply-To: <1424655686-15219-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+To: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 23, 2015 at 6:07 AM, Christoffer Dall
-<christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Sat, Feb 21, 2015 at 03:56:17PM -0600, Rob Herring wrote:
->> On Thu, Feb 19, 2015 at 1:03 PM, Christoffer Dall
->> <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Thu, Feb 19, 2015 at 12:23:15PM -0600, Rob Herring wrote:
->> >> On Tue, Jan 27, 2015 at 1:03 AM, Pranavkumar Sawargaonkar
->> >> <psawargaonkar-qTEPVZfXA3Y@public.gmane.org> wrote:
->> >> > In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
->> >> > in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
->> >> > size due to size alignment checking in vgic driver for VCPU Control and
->> >> > VCPU register.
->> >> >
->> >> > This patch corrects the sizes to be inline with the hardware spec.
->> >>
->> >> This does not make sense. The GIC regions are still only 4 or 8KB and
->> >> the h/w description should reflect that. For implementations using
->> >> gic-400 and the addressing decode trick, the rest of the register
->> >> range is also not safe to access given it is multiple mapped. Also,
->> >> this wastes virtual space, but I guess we don't care on 64-bit.
->> >>
->> >> KVM should be fixed to only check base address alignment. Size
->> >> alignment does not matter (if it does, then you need to fix all
->> >> register blocks).
->> >>
->> > It matters if you want to ensure that the 64K page you are assigning to
->> > a guest for the GIC virtual CPU interface contains only GIC virtual CPU
->> > mappings, and not other random stuff that the guest is not allowed to
->> > touch.
->>
->> Good point.
->>
->> > How else should this be enforced?
->>
->> Rely on correct h/w design? You'll have to repeat this every time you
->> want to do pass-thru of a device.
->>
->> What do you do if 64K mapping is not supported? Fallback to emulation
->> of the CPU interface?
+On Sun, Feb 22, 2015 at 7:41 PM, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> When there are multiple ports or multiple endpoints in a port, they have to be
+> distinguished by the value of reg property. It is common. The drivers can get
+> the specific endpoint in the specific port via this function. Now the drivers
+> have to implement this code in themselves or have to force the order of dt nodes
+> to get the right node.
 >
-> Agree with Peter on these two points.
->
->>
->> Are there other DTSs that need to be fixed?
->>
-> Not sure really, AMD Seattle works with 64K pages IIRC.
+> Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Well, looks we have been inconsistent here:
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-           reg = <0x0
-0xe1110000 0 0x1000>,
-arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-                 <0x0
-0xe112f000 0 0x2000>,
-arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-                 <0x0
-0xe1140000 0 0x10000>,
-arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-                 <0x0
-0xe1160000 0 0x10000>;
-
-arch/arm64/boot/dts/arm/juno.dts-               reg = <0x0 0x2c010000 0 0x1000>,
-arch/arm64/boot/dts/arm/juno.dts-                     <0x0 0x2c02f000 0 0x2000>,
-arch/arm64/boot/dts/arm/juno.dts-                     <0x0 0x2c04f000 0 0x2000>,
-arch/arm64/boot/dts/arm/juno.dts-                     <0x0 0x2c06f000 0 0x2000>;
-
-If we are going to use 64K sizes, can we have some consistency here
-please. Which ranges really need 64KB sizes? It should only be the
-VCPU interface. right? Why does XGene need 128K? If XGene is doing
-address swizzling, then the CPU and VCPU base addresses are wrong.
-Seattle is also wrong for the VCPU, but no one has noticed because we
-don't use the DIR register IIRC.
-
-XGene should also add an "arm,gic-400" compatible string or something
-XGene specific if in fact it is not GIC-400.
-
-I think perhaps we need a specific compatible property to indicate a
-GIC-400 with address swizzling. While we could get away with using the
-aliased addresses, that seems to be hard to get right and we may
-regret not doing it in the long term. It would indicate at least it is
-64K page safe for example.
+I'm not applying as there is no user, so apply this patch along with a
+user of the function.
 
 Rob
+
+> ---
+> Changes for v2:
+> - Add the empty verion of the new function
+> - Remove the unnecessary type casting from signed int to unsigned int
+>  drivers/of/base.c        | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/of_graph.h |  8 ++++++++
+>  2 files changed, 41 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 0a8aeb8..8f6bc41 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -2156,6 +2156,39 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+>  EXPORT_SYMBOL(of_graph_get_next_endpoint);
+>
+>  /**
+> + * of_graph_get_endpoint_by_regs() - get endpoint node of specific identifiers
+> + * @parent: pointer to the parent device node
+> + * @port_reg: identifier (value of reg property) of the parent port node
+> + * @reg: identifier (value of reg property) of the endpoint node
+> + *
+> + * Return: An 'endpoint' node pointer which is identified by reg and at the same
+> + * is the child of a port node identified by port_reg. reg and port_reg are
+> + * ignored when they are -1.
+> + */
+> +struct device_node *of_graph_get_endpoint_by_regs(
+> +       const struct device_node *parent, int port_reg, int reg)
+> +{
+> +       struct of_endpoint endpoint;
+> +       struct device_node *node, *prev_node = NULL;
+> +
+> +       while (1) {
+> +               node = of_graph_get_next_endpoint(parent, prev_node);
+> +               of_node_put(prev_node);
+> +               if (!node)
+> +                       break;
+> +
+> +               of_graph_parse_endpoint(node, &endpoint);
+> +               if (((port_reg == -1) || (endpoint.port == port_reg)) &&
+> +                       ((reg == -1) || (endpoint.id == reg)))
+> +                       return node;
+> +
+> +               prev_node = node;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +/**
+>   * of_graph_get_remote_port_parent() - get remote port's parent node
+>   * @node: pointer to a local endpoint device_node
+>   *
+> diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+> index befef42..e859eb7 100644
+> --- a/include/linux/of_graph.h
+> +++ b/include/linux/of_graph.h
+> @@ -31,6 +31,8 @@ int of_graph_parse_endpoint(const struct device_node *node,
+>                                 struct of_endpoint *endpoint);
+>  struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+>                                         struct device_node *previous);
+> +struct device_node *of_graph_get_endpoint_by_regs(
+> +               const struct device_node *parent, int port_reg, int reg);
+>  struct device_node *of_graph_get_remote_port_parent(
+>                                         const struct device_node *node);
+>  struct device_node *of_graph_get_remote_port(const struct device_node *node);
+> @@ -49,6 +51,12 @@ static inline struct device_node *of_graph_get_next_endpoint(
+>         return NULL;
+>  }
+>
+> +struct device_node *of_graph_get_endpoint_by_regs(
+> +               const struct device_node *parent, int port_reg, int reg)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline struct device_node *of_graph_get_remote_port_parent(
+>                                         const struct device_node *node)
+>  {
+> --
+> 1.9.1
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
