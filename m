@@ -1,135 +1,159 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
-Date: Mon, 23 Feb 2015 08:00:06 +0100
-Message-ID: <20150223070006.GD29908@odux.rfo.atmel.com>
-References: <FE61DD1C-51DA-4869-8A62-C019C3D70577@konsulko.com>
- <20150218173115.GG29429@leverpostej>
+Date: Mon, 23 Feb 2015 08:30:09 +0100
+Message-ID: <20150223073009.GE29908@odux.rfo.atmel.com>
+References: <20150218173115.GG29429@leverpostej>
  <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com>
  <54E613E7.2020405@gmail.com>
  <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com>
  <54E61DD2.3060002@gmail.com>
  <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com>
  <54E742F2.80506@hurleysoftware.com>
- <20150220143533.GA29908@odux.rfo.atmel.com>
- <CAL_JsqLENvqsG+vjK740Aw4yKYONwHB1b-B7mKvE_iAZ1JSdNw@mail.gmail.com>
+ <20150220164753.GC22752@roeck-us.net>
+ <54E77876.9020500@hurleysoftware.com>
+ <20150220184818.GC26698@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLENvqsG+vjK740Aw4yKYONwHB1b-B7mKvE_iAZ1JSdNw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Peter Hurley <peter@hurleysoftware.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Porter <matt.porter@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Ludovic Desroches <ludovic.desroches@atmel.com>
+In-Reply-To: <20150220184818.GC26698-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Fri, Feb 20, 2015 at 10:48:18AM -0800, Guenter Roeck wrote:
+> On Fri, Feb 20, 2015 at 01:09:58PM -0500, Peter Hurley wrote:
+> > Hi Guenter,
+> > 
+> > On 02/20/2015 11:47 AM, Guenter Roeck wrote:
+> > 
+> > [...]
+> > 
+> > > I am open to hearing your suggestions for our use case, where the CPU card with
+> > > the eeprom is manufactured separately from its carier cards.
+> > 
+> > I think your use case may be more compelling than two flavors of Beaglebone
+> > (one of which is pretty much a dead stick), but it's also less clear what your
+> > design constraints are (not that I really want to know, 'cause I don't).
+> > 
+> > But the logical extension of this is an N-way dtb that supports unrelated SOCs,
+> > and I think most would agree that's not an acceptable outcome.
+> > 
+> With this logic you can pretty much refuse to accept anything new, anywhere.
+> Including everything old, for that matter.
+> 
+> Food can be abused to poison people, therefore no one should be permitted to
+> distribute food. Houses can be abused to falsely imprison people, therefore
+> no one should live in houses. And don't even start talking about guns.
+> Everything can be abused, therefore we should not do anything.
+> 
+> Discussions about possible abuse are for sure valid, and reducing the potential
+> for abuse is a worthy goal, but not as argument to reject a solution for an
+> existing and real roblem outright.
+> 
+> > My thought was that every design that can afford an EEPROM to probe can afford
+> > a bootloader to select the appropriate dtb, and can afford the extra space
+> > required for multiple dtbs.
+> > 
+> There are many more use cases where this is simply not the case. Another one,
+> for example, is a system where the devicetree is loaded through u-boot using
+> tftp. In this case, u-boot would have some information about the hardware
+> to request the correct devicetree file, but it may not know about hardware
+> variants.
+> 
+> Sure, one could solve that problem by making u-boot aware of such variants
+> and maintaining a large number of dtb files as you suggest. That means,
+> however, that there would be that need to maintain all those dtb files
+> just to address minor differences, and having modify every piece of the
+> system for each new variant. In essence you put a lot of burden on pretty
+> much everyone from software to manufacturing to testing, plus possibly
+> hardware, just for the purpose of rejecting a relatively simple solution
+> for the problem Pantelis' patch set is trying to address.
+> 
 
-On Fri, Feb 20, 2015 at 11:30:12AM -0600, Rob Herring wrote:
-> On Fri, Feb 20, 2015 at 8:35 AM, Ludovic Desroches
-> <ludovic.desroches@atmel.com> wrote:
-> > On Fri, Feb 20, 2015 at 09:21:38AM -0500, Peter Hurley wrote:
-> >> On 02/19/2015 12:38 PM, Pantelis Antoniou wrote:
-> >> >
-> >> >> On Feb 19, 2015, at 19:30 , Frank Rowand <frowand.list@gmail.co=
-m> wrote:
-> >> >>
-> >> >> On 2/19/2015 9:00 AM, Pantelis Antoniou wrote:
-> >> >>> Hi Frank,
->=20
-> [...]
->=20
-> >> >>> This is one of those things that the kernel community doesn=E2=
-=80=99t understand which makes people
-> >> >>> who push product quite mad.
-> >> >>>
-> >> >>> Engineering a product is not only about meeting customer spec,=
- in order to turn a profit
-> >> >>> the whole endeavor must be engineered as well for manufacturab=
-ility.
-> >> >>>
-> >> >>> Yes, you can always manually install files in the bootloader. =
-=46or 1 board no problem.
-> >> >>> For 10 doable. For 100 I guess you can hire an extra guy. For =
-1 million? Guess what,
-> >> >>> instead of turning a profit you=E2=80=99re losing money if you=
- only have a few cents of profit
-> >> >>> per unit.
-> >> >>
-> >> >> I'm not installing physical components manually.  Why would I b=
-e installing software
-> >> >> manually?  (rhetorical question)
-> >> >>
-> >> >
-> >> > Because on high volume product runs the flash comes preprogramme=
-d and is soldered as is.
-> >> >
-> >> > Having a single binary to flash to every revision of the board m=
-akes logistics considerably
-> >> > easier.
-> >> >
-> >> > Having to boot and tweak the bootloader settings to select the c=
-orrect dtb (even if it=E2=80=99s present
-> >> > on the flash medium) takes time and is error-prone.
-> >> >
-> >> > Factory time =3D=3D money, errors =3D=3D money.
-> >> >
-> >> >>>
-> >> >>> No knobs to tweak means no knobs to break. And a broken knob c=
-an have pretty bad consequences
-> >> >>> for a few million units.
-> >> >>
-> >> >> And you produce a few million units before testing that the fir=
-st one off the line works?
-> >> >>
-> >> >
-> >> > The first one off the line works. The rest will get some burn in=
- and functional testing if you=E2=80=99re
-> >> > lucky. In many cases where the product is very cheap it might ma=
-ke financial sense to just ship
-> >> > as is and deal with recalls, if you=E2=80=99re reasonably happy =
-after a little bit of statistical sampling.
-> >> >
-> >> > Hardware is hard :)
-> >>
-> >> I'm failing to see how this series improves your manufacturing pro=
-cess at all.
-> >>
-> >> 1. Won't you have to provide the factory with different eeprom ima=
-ges for the
-> >>    White and Black?  You _trust_ them to get that right, or more l=
-ikely, you
-> >>    have process control procedures in place so that you don't get =
-1 million Blacks
-> >>    flashed with the White eeprom image.
-> >>
-> >> 2. The White and Black use different memory technology so it's not=
- as if the
-> >>    eMMC from the Black will end up on the White SMT line (or vice =
-versa).
-> >>
-> >> 3  For that matter, why wouldn't you worry that all the microSD ca=
-rds intended
-> >>    for the White were accidentally assembled with the first 50,000=
- Blacks; at
-> >>    that point you're losing a lot more than a few cents of profit.=
- And that has
-> >>    nothing to do with what image you provided.
-> >>
-> >
-> > As you said, we can imagine many reasons to have a failure during t=
-he
-> > production, having several DTB files will increase the risk.
->=20
-> Then package them as a single file. You can even use DT to do that.
-> See u-boot FIT image.
->=20
-> Rob
+Other example that show how it becomes a mess. Tell me if we do that in
+a wrong way but I don't think.
 
-It is acualyy what we did but we are not happy with this solution
-because as said previously we rely on U-Boot and on dts/dtsi side we
-have too many files.
+We have the following source files:
+- a dtsi file for the SoC family
+- a dtsi file for SoC variant enabling the devices available
+- a dtsi file for the CPU module describing components on this module:
+  the ethernet phy, the nand flash, etc.
+- a dtsi file for the motherboard
+- several dtsi files for different kind of display modules
+- many dts file for the final board, it includes the SoC variant, the
+  CPU module, the motherboard and one of the display module if needed.
+
+At the end we have something like this (from our github, not all these
+boards have been sent to the mainline)
+
+arch/arm/boot/dts/sama5d3.dtsi
+arch/arm/boot/dts/sama5d34ek_pda7.dts
+arch/arm/boot/dts/sama5d36ek_revc_pda7.dts
+arch/arm/boot/dts/sama5d31ek.dts
+arch/arm/boot/dts/sama5d34ek_revc.dts
+arch/arm/boot/dts/sama5d3xcm.dtsi
+arch/arm/boot/dts/sama5d31ek_pda4.dts
+arch/arm/boot/dts/sama5d34ek_revc_pda4.dts
+arch/arm/boot/dts/sama5d3xdm.dtsi
+arch/arm/boot/dts/sama5d31ek_pda7.dts
+arch/arm/boot/dts/sama5d34ek_revc_pda7.dts
+arch/arm/boot/dts/sama5d3xdm_pda4.dtsi
+arch/arm/boot/dts/sama5d31ek_revc.dts
+arch/arm/boot/dts/sama5d35ek.dts
+arch/arm/boot/dts/sama5d3xdm_pda7.dtsi
+arch/arm/boot/dts/sama5d31ek_revc_pda4.dts
+arch/arm/boot/dts/sama5d35ek_revc.dts
+arch/arm/boot/dts/sama5d3xek.its
+arch/arm/boot/dts/sama5d31ek_revc_pda7.dts
+arch/arm/boot/dts/sama5d36ek.dts
+arch/arm/boot/dts/sama5d3xek_pda4.its
+arch/arm/boot/dts/sama5d33ek.dts
+arch/arm/boot/dts/sama5d36ek_cmp.dts
+arch/arm/boot/dts/sama5d3xek_pda7.its
+arch/arm/boot/dts/sama5d33ek_pda4.dts
+arch/arm/boot/dts/sama5d36ek_cmp_pins_sleep.dtsi
+arch/arm/boot/dts/sama5d3xmb.dtsi
+arch/arm/boot/dts/sama5d33ek_pda7.dts
+arch/arm/boot/dts/sama5d36ek_hdmi.dts
+arch/arm/boot/dts/sama5d3xmb_revc.dtsi
+arch/arm/boot/dts/sama5d33ek_revc.dts
+arch/arm/boot/dts/sama5d36ek_pda4.dts
+arch/arm/boot/dts/sama5d3xmb_revc_isi.dtsi
+arch/arm/boot/dts/sama5d33ek_revc_pda4.dts
+arch/arm/boot/dts/sama5d36ek_pda7.dts
+arch/arm/boot/dts/sama5d4.dtsi
+arch/arm/boot/dts/sama5d33ek_revc_pda7.dts
+arch/arm/boot/dts/sama5d36ek_revc.dts
+arch/arm/boot/dts/sama5d4ek.dts
+arch/arm/boot/dts/sama5d34ek.dts
+arch/arm/boot/dts/sama5d36ek_revc_cmp.dts
+arch/arm/boot/dts/sama5d4ek_hdmi.dts
+arch/arm/boot/dts/sama5d34ek_pda4.dts
+arch/arm/boot/dts/sama5d36ek_revc_pda4.dts
+arch/arm/boot/dts/sama5d4ek_pin_sleep_state.dtsi
+
+
+> Ultimately, no matter what the kernel community ends up doing, Pantelis'
+> solution or something similar _will_ find its way into our system.
+> I would very much prefer to have the code upstream, but we will carry
+> his patches along in our vendor branch if necessary. The functionality
+> and its benefits for our development, manufacturing, and testing process
+> are way too valuable to ignore, and it actually solves problems for which
+> we don't have an acceptable solution today. I would be quite surprised
+> if other vendors would not end up doing the same.
+
+We'll probably do the same. Beaglebone is only an example.
+
+> 
+> Guenter
+
 
 Regards
 
 Ludovic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
