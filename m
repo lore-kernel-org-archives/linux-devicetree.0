@@ -1,92 +1,48 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v9 1/5] Documentation: Add device tree bindings for Freescale i.MX GPC
-Date: Mon, 23 Feb 2015 18:40:11 +0100
-Message-ID: <1424713215-3357-2-git-send-email-p.zabel@pengutronix.de>
-References: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v9 0/5] i.MX6 PU power domain support
+Date: Mon, 23 Feb 2015 18:40:10 +0100
+Message-ID: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424713215-3357-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The i.MX6 contains a power controller that controls power gating and
-sequencing for the SoC's power domains.
+this is a rebased and updated version of the series I sent previously:
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
+http://www.spinics.net/lists/arm-kernel/msg360709.html
+
 Changes since v8:
- - Updated example with IRQ_TYPE_... and IMX6QDL_CLK_... defines
----
- .../devicetree/bindings/power/fsl,imx-gpc.txt      | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ - Updated DT documentation example with IRQ_TYPE_... and
+   IMX6QDL_CLK_... defines
+ - Made PU regulator optional to support i.MX6SX, suggested by
+   Robin Gong
+ - Removed regulator_enable() call in the probe function, stopped
+   disabling the regulator in imx6q_pm_pu_power_off() - the regulator
+   framework will disable unused regulators.
+ - Changed the GPC driver to enable pu power if CONFIG_PM is not
+   enabled, as some bootloaders disable pu power on boot.
+
+regards
+Philipp
+
+Philipp Zabel (6):
+  Documentation: Add device tree bindings for Freescale i.MX GPC
+  ARM: imx6: gpc: Add PU power domain for GPU/VPU
+  ARM: dts: imx6qdl: Add power-domain information to gpc node
+  ARM: dts: imx6sl: Add power-domain information to gpc node
+  ARM: dts: imx6qdl: Allow disabling the PU regulator, add a enable ramp
+    delay
+  ARM: imx6: gpc: Allow PU regulator bypass
+
+ .../devicetree/bindings/power/fsl,imx-gpc.txt      |  59 ++++++
+ arch/arm/boot/dts/imx6qdl.dtsi                     |  10 +-
+ arch/arm/boot/dts/imx6sl.dtsi                      |   4 +
+ arch/arm/mach-imx/Kconfig                          |   1 +
+ arch/arm/mach-imx/gpc.c                            | 216 +++++++++++++++++++++
+ 5 files changed, 289 insertions(+), 1 deletion(-)
  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
 
-diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-new file mode 100644
-index 0000000..65cc034
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-@@ -0,0 +1,59 @@
-+Freescale i.MX General Power Controller
-+=======================================
-+
-+The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
-+counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
-+domains.
-+
-+Required properties:
-+- compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
-+- reg: should be register base and length as documented in the
-+  datasheet
-+- interrupts: Should contain GPC interrupt request 1
-+- pu-supply: Link to the LDO regulator powering the PU power domain
-+- clocks: Clock phandles to devices in the PU power domain that need
-+	  to be enabled during domain power-up for reset propagation.
-+- #power-domain-cells: Should be 1, see below:
-+
-+The gpc node is a power-controller as documented by the generic power domain
-+bindings in Documentation/devicetree/bindings/power/power_domain.txt.
-+
-+Example:
-+
-+	gpc: gpc@020dc000 {
-+		compatible = "fsl,imx6q-gpc";
-+		reg = <0x020dc000 0x4000>;
-+		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
-+		pu-supply = <&reg_pu>;
-+		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-+			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-+			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
-+			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
-+			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
-+			 <&clks IMX6QDL_CLK_VPU_AXI>;
-+		#power-domain-cells = <1>;
-+	};
-+
-+
-+Specifying power domain for IP modules
-+======================================
-+
-+IP cores belonging to a power domain should contain a 'power-domains' property
-+that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
-+the power domain the device belongs to.
-+
-+Example of a device that is part of the PU power domain:
-+
-+	vpu: vpu@02040000 {
-+		reg = <0x02040000 0x3c000>;
-+		/* ... */
-+		power-domains = <&gpc 1>;
-+		/* ... */
-+	};
-+
-+The following DOMAIN_INDEX values are valid for i.MX6Q:
-+ARM_DOMAIN     0
-+PU_DOMAIN      1
-+The following additional DOMAIN_INDEX value is valid for i.MX6SL:
-+DISPLAY_DOMAIN 2
 -- 
 2.1.4
 
