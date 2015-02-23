@@ -1,108 +1,40 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v4 7/8] hwmon: pwm-fan: Read PWM FAN configuration from
- device tree
-Date: Mon, 23 Feb 2015 17:51:22 +0100
-Message-ID: <20150223175122.2c0a4645@amdc2363>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-8-git-send-email-l.majewski@samsung.com>
- <54E7D0B3.7040800@roeck-us.net> <20150223171336.2e09ce50@amdc2363>
- <20150223162305.GB2165@roeck-us.net>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv2 05/15] ARM: mvebu: add stdout-path to all armada-*.dts
+Date: Mon, 23 Feb 2015 17:56:14 +0100
+Message-ID: <20150223175614.5c8462de@free-electrons.com>
+References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
+	<54EB4E9B.6010001@free-electrons.com>
+	<CAL_JsqJZJMkH953hq0_sOvEEu9o4pXxs0sdP5=7c2EXXNSyA9A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20150223162305.GB2165@roeck-us.net>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJZJMkH953hq0_sOvEEu9o4pXxs0sdP5=7c2EXXNSyA9A@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-ele>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+Dear Rob Herring,
 
-> On Mon, Feb 23, 2015 at 05:13:36PM +0100, Lukasz Majewski wrote:
-> > Hi Guenter,
-> > 
-> [ ... ]
+On Mon, 23 Feb 2015 10:50:26 -0600, Rob Herring wrote:
+
+> Not exactly, stdout-path allows for removing "console" from the
+> command line. earlyprintk is a debug/developer option, so it should
+> not be in a default command line IMO.
 > 
-> > > 
-> > > If devicetree is not configured, of_property_count_elems_of_size
-> > > returns -ENOSYS, which is returned, causing the driver to fail
-> > > loading.
-> > 
-> > Has of_property_count_elems_of_size() returns -ENOSYS?
-> > 
-> > Maybe something has changed, but in my linux-vanila (3.19-rc4)
-> > at ./drivers/of/base.c it returns -EINVAL, -ENODATA or number of
-> > elements.
-> > 
-> > Have I missed something?
-> > 
-> Hi Lukasz,
-> 
-> Yes, you have. Check include/linux/of.h, line 484, in latest mainline.
+> So bootargs should be removed entirely.
 
-Ok. Now I got it.
+Ok, will be in v3, rebased on top of 4.0-rc1.
 
-The above situation shouldn't happen if I put of_find_property() check
-on the very beginning of this function (it returns NULL when DT support
-is not compiled).
+I also noticed another issue in the patch series: missing Armada 375
+UART aliases. I'll fix that up as well when sending v3.
 
-The function would look as follows:
+Thanks for the feedback!
 
-int 
-pwm_fan_of_get_cooling_data(struct device *dev, struct pwm_fan_ctx
-*ctx) 
-{       
-        struct device_node *np = dev->of_node;
-	int num, i, ret;
-
-	if (!of_find_property(np, "cooling-levels", NULL))
-		return 0;
-
-	ret = of_property_count_u32_elems(np, "cooling-levels");
-	if (ret <= 0) {
-		dev_err(dev, "Wrong data!\n");
-		return ret;
-	}
-
-	num = ret;
-	ctx->pwm_fan_cooling_levels = devm_kzalloc(dev, num *
-					sizeof(u32), GFP_KERNEL); 
-	if (!ctx->pwm_fan_cooling_levels) 
-		return -ENOMEM;
-
-	ret = of_property_read_u32_array(np, "cooling-levels",
-					 ctx->pwm_fan_cooling_levels,
-					 num); 
-	if (ret) {
-		dev_err(dev, "Property 'cooling-levels' cannot be
-			read!\n"); 
-		return ret;
-	}
-
-	for (i = 0; i < num; i++) {
-		if (ctx->pwm_fan_cooling_levels[i] > MAX_PWM) {
-			dev_err(dev, "PWM fan state[%d]:%d > %d\n", i,
-				ctx->pwm_fan_cooling_levels[i],
-				MAX_PWM); 
-			return -EINVAL;
-		}
-	}
-
-	ctx->pwm_fan_max_state = num - 1;
-
-	return 0;
-}
-
-> 
-> Guenter
-
-
-
+Thomas
 -- 
-Best regards,
-
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
