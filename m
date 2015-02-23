@@ -1,159 +1,45 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] of: DT quirks infrastructure
-Date: Mon, 23 Feb 2015 08:30:09 +0100
-Message-ID: <20150223073009.GE29908@odux.rfo.atmel.com>
-References: <20150218173115.GG29429@leverpostej>
- <76BD1B22-BAED-4205-9B34-186907CE0217@konsulko.com>
- <54E613E7.2020405@gmail.com>
- <670D0881-DBF0-45E8-A502-A6DB2B77A750@konsulko.com>
- <54E61DD2.3060002@gmail.com>
- <53F2F94C-0C43-4A54-B8CD-EEC454A0AC19@konsulko.com>
- <54E742F2.80506@hurleysoftware.com>
- <20150220164753.GC22752@roeck-us.net>
- <54E77876.9020500@hurleysoftware.com>
- <20150220184818.GC26698@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150220184818.GC26698-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 00/12] ARM: dts: apq8064 dt patches.
+Date: Mon, 23 Feb 2015 07:53:55 +0000
+Message-ID: <1424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 20, 2015 at 10:48:18AM -0800, Guenter Roeck wrote:
-> On Fri, Feb 20, 2015 at 01:09:58PM -0500, Peter Hurley wrote:
-> > Hi Guenter,
-> > 
-> > On 02/20/2015 11:47 AM, Guenter Roeck wrote:
-> > 
-> > [...]
-> > 
-> > > I am open to hearing your suggestions for our use case, where the CPU card with
-> > > the eeprom is manufactured separately from its carier cards.
-> > 
-> > I think your use case may be more compelling than two flavors of Beaglebone
-> > (one of which is pretty much a dead stick), but it's also less clear what your
-> > design constraints are (not that I really want to know, 'cause I don't).
-> > 
-> > But the logical extension of this is an N-way dtb that supports unrelated SOCs,
-> > and I think most would agree that's not an acceptable outcome.
-> > 
-> With this logic you can pretty much refuse to accept anything new, anywhere.
-> Including everything old, for that matter.
-> 
-> Food can be abused to poison people, therefore no one should be permitted to
-> distribute food. Houses can be abused to falsely imprison people, therefore
-> no one should live in houses. And don't even start talking about guns.
-> Everything can be abused, therefore we should not do anything.
-> 
-> Discussions about possible abuse are for sure valid, and reducing the potential
-> for abuse is a worthy goal, but not as argument to reject a solution for an
-> existing and real roblem outright.
-> 
-> > My thought was that every design that can afford an EEPROM to probe can afford
-> > a bootloader to select the appropriate dtb, and can afford the extra space
-> > required for multiple dtbs.
-> > 
-> There are many more use cases where this is simply not the case. Another one,
-> for example, is a system where the devicetree is loaded through u-boot using
-> tftp. In this case, u-boot would have some information about the hardware
-> to request the correct devicetree file, but it may not know about hardware
-> variants.
-> 
-> Sure, one could solve that problem by making u-boot aware of such variants
-> and maintaining a large number of dtb files as you suggest. That means,
-> however, that there would be that need to maintain all those dtb files
-> just to address minor differences, and having modify every piece of the
-> system for each new variant. In essence you put a lot of burden on pretty
-> much everyone from software to manufacturing to testing, plus possibly
-> hardware, just for the purpose of rejecting a relatively simple solution
-> for the problem Pantelis' patch set is trying to address.
-> 
-
-Other example that show how it becomes a mess. Tell me if we do that in
-a wrong way but I don't think.
-
-We have the following source files:
-- a dtsi file for the SoC family
-- a dtsi file for SoC variant enabling the devices available
-- a dtsi file for the CPU module describing components on this module:
-  the ethernet phy, the nand flash, etc.
-- a dtsi file for the motherboard
-- several dtsi files for different kind of display modules
-- many dts file for the final board, it includes the SoC variant, the
-  CPU module, the motherboard and one of the display module if needed.
-
-At the end we have something like this (from our github, not all these
-boards have been sent to the mainline)
-
-arch/arm/boot/dts/sama5d3.dtsi
-arch/arm/boot/dts/sama5d34ek_pda7.dts
-arch/arm/boot/dts/sama5d36ek_revc_pda7.dts
-arch/arm/boot/dts/sama5d31ek.dts
-arch/arm/boot/dts/sama5d34ek_revc.dts
-arch/arm/boot/dts/sama5d3xcm.dtsi
-arch/arm/boot/dts/sama5d31ek_pda4.dts
-arch/arm/boot/dts/sama5d34ek_revc_pda4.dts
-arch/arm/boot/dts/sama5d3xdm.dtsi
-arch/arm/boot/dts/sama5d31ek_pda7.dts
-arch/arm/boot/dts/sama5d34ek_revc_pda7.dts
-arch/arm/boot/dts/sama5d3xdm_pda4.dtsi
-arch/arm/boot/dts/sama5d31ek_revc.dts
-arch/arm/boot/dts/sama5d35ek.dts
-arch/arm/boot/dts/sama5d3xdm_pda7.dtsi
-arch/arm/boot/dts/sama5d31ek_revc_pda4.dts
-arch/arm/boot/dts/sama5d35ek_revc.dts
-arch/arm/boot/dts/sama5d3xek.its
-arch/arm/boot/dts/sama5d31ek_revc_pda7.dts
-arch/arm/boot/dts/sama5d36ek.dts
-arch/arm/boot/dts/sama5d3xek_pda4.its
-arch/arm/boot/dts/sama5d33ek.dts
-arch/arm/boot/dts/sama5d36ek_cmp.dts
-arch/arm/boot/dts/sama5d3xek_pda7.its
-arch/arm/boot/dts/sama5d33ek_pda4.dts
-arch/arm/boot/dts/sama5d36ek_cmp_pins_sleep.dtsi
-arch/arm/boot/dts/sama5d3xmb.dtsi
-arch/arm/boot/dts/sama5d33ek_pda7.dts
-arch/arm/boot/dts/sama5d36ek_hdmi.dts
-arch/arm/boot/dts/sama5d3xmb_revc.dtsi
-arch/arm/boot/dts/sama5d33ek_revc.dts
-arch/arm/boot/dts/sama5d36ek_pda4.dts
-arch/arm/boot/dts/sama5d3xmb_revc_isi.dtsi
-arch/arm/boot/dts/sama5d33ek_revc_pda4.dts
-arch/arm/boot/dts/sama5d36ek_pda7.dts
-arch/arm/boot/dts/sama5d4.dtsi
-arch/arm/boot/dts/sama5d33ek_revc_pda7.dts
-arch/arm/boot/dts/sama5d36ek_revc.dts
-arch/arm/boot/dts/sama5d4ek.dts
-arch/arm/boot/dts/sama5d34ek.dts
-arch/arm/boot/dts/sama5d36ek_revc_cmp.dts
-arch/arm/boot/dts/sama5d4ek_hdmi.dts
-arch/arm/boot/dts/sama5d34ek_pda4.dts
-arch/arm/boot/dts/sama5d36ek_revc_pda4.dts
-arch/arm/boot/dts/sama5d4ek_pin_sleep_state.dtsi
+Hi Kumar, 
+Now that the rpm header file dependency is resolved, Could you
+queue these dt patches for rc2.
 
 
-> Ultimately, no matter what the kernel community ends up doing, Pantelis'
-> solution or something similar _will_ find its way into our system.
-> I would very much prefer to have the code upstream, but we will carry
-> his patches along in our vendor branch if necessary. The functionality
-> and its benefits for our development, manufacturing, and testing process
-> are way too valuable to ignore, and it actually solves problems for which
-> we don't have an acceptable solution today. I would be quite surprised
-> if other vendors would not end up doing the same.
+Thanks,
+srini
 
-We'll probably do the same. Beaglebone is only an example.
+Nicolas Dechesne (3):
+  ARM: DT: apq8064: add pci support in CM QS600
+  ARM: DT: apq8064: Add usb host support to CM QS-600
+  ARM: DT: apq8064: Add USB OTG support for CM QS-600
 
-> 
-> Guenter
+Pramod Gurav (1):
+  ARM: qcom: Add DT alias for serial port
 
+Rob Clark (1):
+  ARM: dts: APQ8064: Add MDP support
 
-Regards
+Srinivas Kandagatla (7):
+  ARM: dts: apq8064: add RPM regulators support
+  ARM: dts: apq8064: Add usb host support.
+  ARM: dts: apq8064: Add USB OTG support
+  ARM: dts: apq8064: Add SATA controller support.
+  ARM: dts: apq8064: Remove incorrect gsbi2 node.
+  ARM: dts: Move i2c1 pinctrl to apq8064.dtsi
+  ARM: dts: apq8064 add i2c3 node for panel.
 
-Ludovic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts |  49 +++
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts  |  98 +++++-
+ arch/arm/boot/dts/qcom-apq8064.dtsi         | 499 +++++++++++++++++++++++++++-
+ 3 files changed, 629 insertions(+), 17 deletions(-)
+
+-- 
+1.9.1
