@@ -1,51 +1,123 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCHv2 03/15] ARM: mvebu: add missing UART alias on Armada
- 38x
-Date: Mon, 23 Feb 2015 16:16:39 +0100
-Message-ID: <54EB4457.50208@free-electrons.com>
-References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com> <1424451874-25375-4-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v4 0/7] Fixes and improvements for SDHCI on Armada 38x
+Date: Mon, 23 Feb 2015 16:17:34 +0100
+Message-ID: <54EB448E.8030006@free-electrons.com>
+References: <1422531390-31038-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1424451874-25375-4-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1422531390-31038-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-
-On 20/02/2015 18:04, Thomas Petazzoni wrote:
-> The Armada 38x had an alias for UART0, but not UART1. This commit
-> fixes that.
+On 29/01/2015 12:36, Gregory CLEMENT wrote:
+> Hi,
 > 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm/boot/dts/armada-38x.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> this series brings fixes and improvements for the SDHCI controller of
+> the Armada 38x SoCs.
 > 
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 96d7cf0..8c76a8d 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -216,7 +216,7 @@
->  				status = "disabled";
->  			};
->  
-> -			serial@12100 {
-> +			uart1: serial@12100 {
->  				compatible = "snps,dw-apb-uart";
->  				reg = <0x12100 0x100>;
->  				reg-shift = <2>;
+> The changes for this forth version was done on the 1st and 4th
+> patches, see the changelog for the details.
+> 
+> The first two patches are fixes and should be also applied on the
+> stable branch (I added stable in copy for this).
+> 
+> The first one removes the SDR50 and DDR50 mode timing from the
+> capabilities of the controller because the current implementation
+> doesn't support it.
+> 
+> The second one fix controller's caps according to the limitation of
+> the hardware.
+> 
+> The third one extends the Device Tree binding of the Armada 38x. It
+> allows using the SDIO3 configuration register.
+> 
+> The forth patch adds the support of this new register in the
+> driver. Thanks to this one, specific clock adjustments can be done in
+> order to support the SDR50 and DDR50 modes timing.
+> 
+> The fifth patch is device tree clean-up.
+> 
+> The sixth patch update the SDHCI node on Armada 38x in order to use
+> the new register and then to be able to support the SDR50 and DDR50
+> modes timing.
+> 
+> Finally, the seventh patch add the description of SDHCI for the Armada
+> 388 RD board which was missing.
+> 
+> Patches 1 to 4 should be merged through the mmc tree and patches 5 to
+> 7 should be merged through mvebu and then arm-soc.
+> 
+> Patch 4 depend on patch 2.
+> Patch 2 depend on patch 1.
+> And patch 1 depend on commit aa8165f91442 "mmc: sdhci-pxav3: do the
+> mbus window configuration after enabling clocks" which have been
+> merged.
+> 
+> But as all this patch should be merged through the same tree it would
+> not be a problem
+> 
+> The patches 5 to 7 depend on the patches already merged in mvebu.
+> 
+> As they are fixes, patches 1 and 2 should be merged in 3.18-rc or at
+> least in 3.19 and then they will be part of 3.18.1. For the other
+> patches it would be nice if they could be part of 3.19.
+> 
+
+Patches 5 to 7 have been applied on mvebu/dt.
+
+> Thanks,
+> 
+> Gregory
+> 
+> Changelog:
+> 
+> v3 -> v4:
+> - Merge the 3 dev_wanr message in a single one
+> - Remove err_quirks label
+> 
+> v2 -> v3:
+> - Use of_property_read_bool() instead of of_get_property
+> - Brace the else case according to the Documentation/CodingStyle
+> - Move the setting of MMC_CAP_1_8V_DDR before the armada_38x_quirks
+>   calls
+> 
+> v1 -> v2:
+> - Put back Marcin as author of patch 2 and 3
+> - Removed MMC_CAP_1_8V_DDR in the probe function
+> 
+> Gregory CLEMENT (5):
+>   mmc: sdhci-pxav3: Fix SDR50 and DDR50 capabilities for the Armada 38x
+>     flavor
+>   mmc: sdhci-pxav3: Extend binding with SDIO3 conf reg for the Armada
+>     38x
+>   ARM: mvebu: Use macros for interrupt flags on Armada 38x sdhci node
+>   ARM: mvebu: Update the SDHCI node on Armada 38x
+>   ARM: mvebu: Add Device Tree description of SDHCI for Armada 388 RD
+> 
+> 
+> Gregory CLEMENT (5):
+>   mmc: sdhci-pxav3: Fix SDR50 and DDR50 capabilities for the Armada 38x
+>     flavor
+>   mmc: sdhci-pxav3: Extend binding with SDIO3 conf reg for the Armada
+>     38x
+>   ARM: mvebu: Use macros for interrupt flags on Armada 38x sdhci node
+>   ARM: mvebu: Update the SDHCI node on Armada 38x
+>   ARM: mvebu: Add Device Tree description of SDHCI for Armada 388 RD
+> 
+> Marcin Wojtas (2):
+>   mmc: sdhci-pxav3: Fix Armada 38x controller's caps according to
+>     erratum ERR-7878951
+>   mmc: sdhci-pxav3: Modify clock settings for the SDR50 and DDR50 modes
+> 
+>  .../devicetree/bindings/mmc/sdhci-pxa.txt          | 15 ++--
+>  arch/arm/boot/dts/armada-388-rd.dts                | 10 +++
+>  arch/arm/boot/dts/armada-38x.dtsi                  |  7 +-
+>  drivers/mmc/host/sdhci-pxav3.c                     | 83 +++++++++++++++++++++-
+>  4 files changed, 106 insertions(+), 9 deletions(-)
 > 
 
 
