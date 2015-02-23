@@ -1,152 +1,159 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] PCI: get DMA configuration from parent device
-Date: Mon, 23 Feb 2015 17:44:07 -0500
-Message-ID: <54EBAD37.4020502@ti.com>
-References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
-	<20150206151542.GD23190@e104818-lin.cambridge.arm.com>
-	<54D4DD95.7000303@ti.com>
-	<CAErSpo6GOXHeKKfU8s5jCS3+Mui=HupZd=jpkLEyWAE94Ory5w@mail.gmail.com>
-	<54D509C9.9010204@ti.com> <54DB8960.9010707@ti.com>
-	<54DB8A4C.9050002@ti.com> <54EBA4D0.1060705@ti.com>
-	<CAErSpo6fWjibM-Lm54ESBpgMUi8w2q6YVzNAK5rHvR4+ydq6ZA@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
+Date: Mon, 23 Feb 2015 15:11:40 -0800
+Message-ID: <54EBB3AC.30000@codeaurora.org>
+References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug@mail.gmail.com> <54E78A31.9020306@linaro.org> <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw@mail.gmail.com> <20150222143211.GX25269@lukather> <CAL_JsqLqqw5DyUqCaOTSKPwF-Ms5EU4f_OPoW9YVpMCo8A_bbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAErSpo6fWjibM-Lm54ESBpgMUi8w2q6YVzNAK5rHvR4+ydq6ZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLqqw5DyUqCaOTSKPwF-Ms5EU4f_OPoW9YVpMCo8A_bbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2015 05:15 PM, Bjorn Helgaas wrote:
-> On Mon, Feb 23, 2015 at 4:08 PM, Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>  wrote:
->> On 02/11/2015 11:58 AM, Murali Karicheri wrote:
+On 02/22/15 16:57, Rob Herring wrote:
+> On Sun, Feb 22, 2015 at 8:32 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> On Fri, Feb 20, 2015 at 04:01:55PM -0600, Rob Herring wrote:
+>>> [...]
 >>>
->>> On 02/11/2015 11:54 AM, Murali Karicheri wrote:
+>>>>>> += Data consumers =
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +
+>>>>>> +eeproms: List of phandle and data cell specifier triplet, one triplet
+>>>>>> +        for each data cell the device might be interested in. The
+>>>>>> +        triplet consists of the phandle to the eeprom provider, then
+>>>>>> +        the offset in byte within that storage device, and the length
+>>>>>> +        in byte of the data we care about.
+>>>>>
+>>>>> The problem with this is it assumes you know who the consumer is and
+>>>>> that it is a DT node. For example, how would you describe a serial
+>>>>> number?
+>>>> Correct me if I miss understood.
+>>>> Is serial number any different?
+>>>> Am hoping that the eeprom consumer would be aware of offset and size of
+>>>> serial number in the eeprom
 >>>>
->>>> On 02/06/2015 01:36 PM, Murali Karicheri wrote:
->>>>>
->>>>> On 02/06/2015 12:53 PM, Bjorn Helgaas wrote:
->>>>>>
->>>>>> On Fri, Feb 6, 2015 at 9:28 AM, Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
->>>>>> wrote:
->>>>>>>
->>>>>>> On 02/06/2015 10:15 AM, Catalin Marinas wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On Thu, Feb 05, 2015 at 09:52:52PM +0000, Murali Karicheri wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> This patch add an important capability to PCI driver on Keystone. I
->>>>>>>>> hope
->>>>>>>>> to
->>>>>>>>> have this merged to the upstream branch so that it is available for
->>>>>>>>> v3.20.
->>>>>>>>
->>>>>>>>
->>>>>>>> It's very late for 3.20 and the code hasn't been in linux-next at all
->>>>>>>> (but it's not me who's merging this code), unless you can squeeze
->>>>>>>> it in
->>>>>>>> as a bug-fix.
->>>>>>>
->>>>>>>
->>>>>>> This is in fact a bug fix as PCI on Keystone is broken without this.
->>>>>>
->>>>>>
->>>>>> Oh, sorry, I didn't realize that this was so urgent. I guess I read
->>>>>> "this adds an important capability" in the cover letter and concluded
->>>>>> that it was new functionality.
->>>>>
->>>>> Bjorn,
->>>>>
->>>>> Thanks for responding.
->>>>>
->>>>> Let me give you some context on this without which my explanation won't
->>>>> be complete. For using PCI driver on Keystone, I had submitted patches
->>>>> related to machine and DTS to the arm mailing list to enable the driver
->>>>> on Keystone. Subsequenty one of the patch from my series was Nack-ed and
->>>>> I was asked to implememented in a different way and started this series.
->>>>> You can refer to the discussion of this at
->>>>>
->>>>> http://www.gossamer-threads.com/lists/linux/kernel/2024591
->>>>>
->>>>> The PCI driver enablement on Keystone is still a working in progress and
->>>>> I am trying to get it fully functional on the upstream. Another missing
->>>>> piece is the SerDes phy driver patch. We have started working on the
->>>>> other part (SerDes phy driver) already as the initial one was not
->>>>> accepted. So it is fine if we are too late for the v3.20 merge window to
->>>>> merge this series and this can be applied to the next branch for v3.21.
->>>>>
->>>>>>
->>>>>> Anyway, if it's broken, presumably PCI on Keystone *did* work at one
->>>>>> point. Can you identify the commit that broke it and requires these
->>>>>> fixes, so we can figure out how far the fixes need to be backported?
->>>>>>
->>>>>
->>>>> I am trying to get this driver enabled on Keystone by adding the missing
->>>>> pieces as described above. So I guess we don't have to back port
->>>>> anything here.
->>>>>
->>>>>> If I merge it, I would like to get into my for-linus branch and get a
->>>>>> little time in -next before asking Linus to pull it. The merge window
->>>>>> is a little wrinkle there -- I don't like to add new things to the mix
->>>>>> during the window. But if it's an important fix we can still get it
->>>>>> in before the final v3.20.
->>>>>
->>>>>
->>>>> Please apply this to next branch for v3.21. It currently apply cleanly
->>>>> to v3.19-rc7. If you want me rebase to another branch, let me know I can
->>>>> apply and send you an updated patch.
->>>>>
->>>> Bjorn, Arnd,
+>>>> Cant the consumer do:
 >>>>
->>>> I am assuming, Bjorn is going to merge this to his next branch for
->>>> v3.21. If not, it might have to be merged through the arm soc? There are
->>>> a couple of Tested-by and Acked-by received after v7. Do you want me to
->>>> post v8 with these updated in the patches?
->>>
->>> FYI.
->>>
->>> These are the updates.
->>> Series was
->>>
->>> 1) Tested-by: Suravee Suthikulpanit<Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->>> (on AMD Seattle platform w/ PCI Generic Host controller)
->>> 2) Acked-by: Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>
->>> 3) Reviewed-by: Catalin Marinas<catalin.marinas-5wv7dgnIgG8@public.gmane.org>
->>>
->> Bjorn,
+>>>> eeprom-consumer {
+>>>>         eeproms = <&at24 0 4>;
+>>>>         eeprom-names = "device-serial-number";
+>>> Yes, but who is "eeprom-consumer"?
+>> Any device that should lookup values in one of the EEPROM.
 >>
->> I haven't seen a reply from my above email. As soon as you are ready to pull
->> this to v4.1 next (originally requested for v3.21 as per above email)branch,
->> please let me know and I can send you an updated version rebased to your
->> next branch and with the above acks.
+>>> DT nodes generally describe a h/w block, but it this case, the
+>>> consumer depends on the OS, not the h/w.
+>> Not really, or at least, not more than any similar binding we
+>> currently have.
+>>
+>> The fact that a MAC-address for the first ethernet chip is stored at a
+>> given offset in a given eeprom has nothing to do with the OS.
+> So MAC address would be a valid use to link to a h/w device, but there
+> are certainly cases that don't correspond to a device.
 >
-> My "next" and "for-linus" branches will be based on v4.0-rc1, so
-> that's the ideal base for patches.  I don't expect any significant
-> changes that would require a rebase, so unless something in your
-> patches themselves has changed since you last posted them, you don't
-> need to repost them just for a rebase.
+>>> I'm not saying you can't describe where things are, but I don't
+>>> think you should imply who is the consumer and doing so is
+>>> unnecessarily complicated.
+>> If you only take the case of a serial number, indeed. If you take
+>> other usage into account, you can't really do without it.
+>>
+>>> Also, the layout of EEPROM is likely very much platform specific.
+>> Indeed, which is why it should be in the DT.
+> Agreed. I'm not saying the layout should not be.
 >
-Bjorn,
+>>> Some could have a more complex structure perhaps with key ids and
+>>> linked list structure.
+>> Then just request the size of the whole list, and parse it afterwards
+>> in your driver?
+>>
+>>> I would do something more simple that is just a list of keys and their
+>>> location like this:
+>>>
+>>> device-serial-number = <start size>;
+>>> key1 = <start size>;
+>>> key2 = <start size>;
+>> I'm sorry, but what's the difference?
+> It can describe the layout completely whether the fields are tied to a
+> h/w device or not.
+>
+> What I would like to see here is the entire layout described covering
+> both types of fields.
+>
 
-Thanks for the response.
+I was thinking the DT might be like this on the provider side:
 
-Nothing from my side except for the above acks/tested-by/reviewed-by
+   qfprom@1000000 {
+      reg = <0x1000000 0x1000>;
+      ranges = <0 0x1000000 0x1000>;
+      compatible = "qcom,qfprom-msm8960"
 
-Murali
-> Bjorn
+      pvs-data: pvs-data@40 {
+            compatible = "qcom,pvs-a";
+            reg = <0x40 0x20>,
+	    #eeprom-cells = <0>;
+      };
 
+       tsens-data: tmdata@10 {
+            compatible = "qcom,tsens-data-msm8960";
+            reg = <0x10 4>, <0x16 4>;
+	    #eeprom-cells = <0>;
+
+      };
+
+      serial-number: serial@50 {
+            compatible = "qcom,serial-msm8960";
+            reg = <0x50 4>, <0x60 4>;
+	    #eeprom-cells = <0>;
+
+      };
+   };
+
+and then on the consumer side:
+
+	device {
+		eeproms = <&serial-number>;
+		eeprom-names = "soc-rev-id";
+	};
+
+
+This would solve a problem where the consumer device is some standard
+off-the-shelf IP block that needs to get some SoC specific calibration
+data from the eeprom. I may want to interpret the bits differently
+depending on which eeprom is connected to my SoC. Sometimes that data
+format may be the same across many variations of the SoC (e.g. the
+qcom,pvs-a node) or it may be completely different for a given SoC (e.g.
+qcom,serial-msm8960 node). I imagine for other SoCs out there it could
+be different depending on which eeprom the board manufacturer decides to
+wire onto their board and how they choose to program the data.
+
+So this is where I think the eeprom-cells and offset + length starts to
+fall apart. It forces us to make up a bunch of different compatible
+strings for our consumer device just so that we can parse the eeprom
+that we decided to use for some SoC/board specific data. Instead I'd
+like to see some framework that expresses exactly which eeprom is on my
+board and how to interpret the bits in a way that doesn't require me to
+keep refining the compatible string for my generic IP block.
+
+I worry that if we put all those details in DT we'll end up having to
+describe individual bits like serial-number-bit-2, serial-number-bit-3,
+etc. because sometimes these pieces of data are scattered all around the
+eeprom and aren't contiguous or aligned on a byte boundary. It may be
+easier to just have a way to express that this is an eeprom with this
+specific layout and my device has data stored in there. Then the driver
+can be told what layout it is (via compatible or some other string based
+means if we're not using DT?) and match that up with some driver data if
+it needs to know how to understand the bits it can read with the
+eeprom_read() API.
 
 -- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
