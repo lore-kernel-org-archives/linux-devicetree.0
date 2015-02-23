@@ -1,115 +1,433 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCHv2 13/15] ARM: mvebu: add core support for Armada 39x
-Date: Mon, 23 Feb 2015 19:16:07 +0100
-Message-ID: <54EB6E67.5070400@free-electrons.com>
-References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com> <1424451874-25375-14-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv3] mvebu: add Linksys WRT1900AC (Mamba) support
+Date: Mon, 23 Feb 2015 19:32:53 +0100
+Message-ID: <54EB7255.7090806@free-electrons.com>
+References: <1424089864-15651-1-git-send-email-kaloz@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1424451874-25375-14-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424089864-15651-1-git-send-email-kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+Hi Imre,
 
-
-On 20/02/2015 18:04, Thomas Petazzoni wrote:
-> This commit adds the core support for Armada 39x, which is quite
-> simple:
+On 16/02/2015 13:31, Imre Kaloz wrote:
+> The Linksys WRT1900AC (Mamba) is a router that has
 > 
->  - a new Kconfig option which selects the appropriate clock and
->    pinctrl drivers as well as other common features (GIC, L2 cache,
->    SMP, etc.)
+> - 2 mini-PCIe slots with Marvell 88W8864 radios
+> - 1 USB 3.0 port
+> - 1 USB 2.0/eSATAp port
+> - 2 Ethernet interfaces connected to a 88E6172 switch (1x WAN + 4x LAN)
+> - 128MB NAND flash
+> - 256MB RAM
 > 
->  - a new DT_MACHINE_START which references the top-level compatible
->    strings supported for the Marvell Armada 39x.
-> 
->  - a new SMP enable-method. The mechanism to enable CPUs for Armada
->    39x appears to be the same as Armada 38x. However, we do not want
->    to use marvell,armada-380-smp in the Device Tree, in the case of
->    the discovery of a subtle difference in the future, which would
->    require changing the Device Tree. And the enable-method isn't a
->    compatible string: you can't specify several values and expect a
->    fallback on the second string if the first one isn't
->    supported. Therefore, we simply declare the SMP enable method
->    "marvell,armada-390-smp" as doing the same thing as the
->    "marvell,armada-380-smp" one.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 > ---
->  arch/arm/mach-mvebu/Kconfig      | 14 ++++++++++++++
->  arch/arm/mach-mvebu/board-v7.c   | 14 ++++++++++++++
->  arch/arm/mach-mvebu/platsmp-a9.c |  2 ++
->  3 files changed, 30 insertions(+)
+> Changes since v2:
+>   * added tlc59116 leds
+>   * added an extra partition for the unused space
+>   * added serial console pinout
+>   * renamed the dts to armada-xp-linksys-mamba.dts
 > 
-> diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
-> index c1e4567..9747316 100644
-> --- a/arch/arm/mach-mvebu/Kconfig
-> +++ b/arch/arm/mach-mvebu/Kconfig
-> @@ -64,6 +64,20 @@ config MACH_ARMADA_38X
->  	  Say 'Y' here if you want your kernel to support boards based
->  	  on the Marvell Armada 380/385 SoC with device tree.
->  
-> +config MACH_ARMADA_39X
-> +	bool "Marvell Armada 39x boards" if ARCH_MULTI_V7
+> Changes since v1:
+>   * add dual license
+>   * lower SPI speed to meet the chip's maximum
+>   * pinctrl cleanups based on Andrew Lunn's suggestions
+> ---
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 348 ++++++++++++++++++++++++++
+>  2 files changed, 349 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 91bd5bd..a84063f 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -541,6 +541,7 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
+>  	armada-xp-db.dtb \
+>  	armada-xp-gp.dtb \
+>  	armada-xp-lenovo-ix4-300d.dtb \
+> +	armada-xp-linksys-mamba.dtb \
+>  	armada-xp-matrix.dtb \
+>  	armada-xp-netgear-rn2120.dtb \
+>  	armada-xp-openblocks-ax3-4.dtb \
+> diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+> new file mode 100644
+> index 0000000..0a3d1d6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+> @@ -0,0 +1,348 @@
+> +/*
+> + * Device Tree file for the Linksys WRT1900AC (Mamba).
+> + *
+> + * Note: this board is shipped with a new generation boot loader that
+> + * remaps internal registers at 0xf1000000. Therefore, if earlyprintk
+> + * is used, the CONFIG_DEBUG_MVEBU_UART_ALTERNATE option should be
 
-As you don't select it by default we should update the mvebu_v7_defconfig
-with this symbol.
+This symbol name has been removed and DEBUG_MVEBU_UART0_ALTERNATE would
+be used instead.
+
+Besides this,
+
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+You don't have to resend a new version for this, I can amend
+your patch while applying it. So unless there is new comments
+I will add your patch to the mvebu tree in a couple of days.
+
 
 Thanks,
 
 Gregory
 
-> +	select ARM_GIC
-> +	select ARMADA_39X_CLK
-> +	select CACHE_L2X0
-> +	select HAVE_ARM_SCU
-> +	select HAVE_ARM_TWD if SMP
-> +	select HAVE_SMP
-> +	select MACH_MVEBU_V7
-> +	select PINCTRL_ARMADA_39X
-> +	help
-> +	  Say 'Y' here if you want your kernel to support boards based
-> +	  on the Marvell Armada 39x SoC with device tree.
+
+
+> + * used.
+> + *
+> + * Copyright (C) 2014 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> + *
+> + * Based on armada-xp-axpwifiap.dts:
+> + *
+> + *     Copyright (C) 2013 Marvell
+> + *
+> + *     Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is licensed under the terms of the GNU General Public
+> + *     License version 2.  This program is licensed "as is" without
+> + *     any warranty of any kind, whether express or implied.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 > +
->  config MACH_ARMADA_XP
->  	bool "Marvell Armada XP boards" if ARCH_MULTI_V7
->  	select ARMADA_XP_CLK
-> diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
-> index 31b66f2..afee908 100644
-> --- a/arch/arm/mach-mvebu/board-v7.c
-> +++ b/arch/arm/mach-mvebu/board-v7.c
-> @@ -232,3 +232,17 @@ DT_MACHINE_START(ARMADA_38X_DT, "Marvell Armada 380/385 (Device Tree)")
->  	.restart	= mvebu_restart,
->  	.dt_compat	= armada_38x_dt_compat,
->  MACHINE_END
+> +/dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include "armada-xp-mv78230.dtsi"
 > +
-> +static const char * const armada_39x_dt_compat[] __initconst = {
-> +	"marvell,armada390",
-> +	"marvell,armada398",
-> +	NULL,
+> +/ {
+> +	model = "Linksys WRT1900AC";
+> +	compatible = "linksys,mamba", "marvell,armadaxp-mv78230",
+> +		     "marvell,armadaxp", "marvell,armada-370-xp";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200";
+> +		stdout-path = &uart0;
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x00000000 0x00000000 0x10000000>; /* 256MB */
+> +	};
+> +
+> +	soc {
+> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
+> +			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
+> +
+> +		pcie-controller {
+> +			status = "okay";
+> +
+> +			/* Etron EJ168 USB 3.0 controller */
+> +			pcie@1,0 {
+> +				/* Port 0, Lane 0 */
+> +				status = "okay";
+> +			};
+> +
+> +			/* First mini-PCIe port */
+> +			pcie@2,0 {
+> +				/* Port 0, Lane 1 */
+> +				status = "okay";
+> +			};
+> +
+> +			/* Second mini-PCIe port */
+> +			pcie@3,0 {
+> +				/* Port 0, Lane 3 */
+> +				status = "okay";
+> +			};
+> +		};
+> +
+> +		internal-regs {
+> +
+> +			/* J10: VCC, NC, RX, NC, TX, GND  */
+> +			serial@12000 {
+> +				status = "okay";
+> +			};
+> +
+> +			sata@a0000 {
+> +				nr-ports = <1>;
+> +				status = "okay";
+> +			};
+> +
+> +			ethernet@70000 {
+> +				pinctrl-0 = <&ge0_rgmii_pins>;
+> +				pinctrl-names = "default";
+> +				status = "okay";
+> +				phy-mode = "rgmii-id";
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+> +			ethernet@74000 {
+> +				pinctrl-0 = <&ge1_rgmii_pins>;
+> +				pinctrl-names = "default";
+> +				status = "okay";
+> +				phy-mode = "rgmii-id";
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+> +			/* USB part of the eSATA/USB 2.0 port */
+> +			usb@50000 {
+> +				status = "okay";
+> +			};
+> +
+> +			i2c@11000 {
+> +				status = "okay";
+> +				clock-frequency = <100000>;
+> +
+> +				tmp421@4c {
+> +					compatible = "ti,tmp421";
+> +					reg = <0x4c>;
+> +				};
+> +
+> +				tlc59116@68 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					#gpio-cells = <2>;
+> +					compatible = "ti,tlc59116";
+> +					reg = <0x68>;
+> +
+> +					wan_amber@0 {
+> +						label = "mamba:amber:wan";
+> +						reg = <0x0>;
+> +					};
+> +
+> +					wan_white@1 {
+> +						label = "mamba:white:wan";
+> +						reg = <0x1>;
+> +					};
+> +
+> +					wlan_2g@2 {
+> +						label = "mamba:white:wlan_2g";
+> +						reg = <0x2>;
+> +					};
+> +
+> +					wlan_5g@3 {
+> +						label = "mamba:white:wlan_5g";
+> +						reg = <0x3>;
+> +					};
+> +
+> +					esata@4 {
+> +						label = "mamba:white:esata";
+> +						reg = <0x4>;
+> +					};
+> +
+> +					usb2@5 {
+> +						label = "mamba:white:usb2";
+> +						reg = <0x5>;
+> +					};
+> +
+> +					usb3_1@6 {
+> +						label = "mamba:white:usb3_1";
+> +						reg = <0x6>;
+> +					};
+> +
+> +					usb3_2@7 {
+> +						label = "mamba:white:usb3_2";
+> +						reg = <0x7>;
+> +					};
+> +
+> +					wps_white@8 {
+> +						label = "mamba:white:wps";
+> +						reg = <0x8>;
+> +					};
+> +
+> +					wps_amber@9 {
+> +						label = "mamba:amber:wps";
+> +						reg = <0x9>;
+> +					};
+> +				};
+> +			};
+> +
+> +			nand@d0000 {
+> +				status = "okay";
+> +				num-cs = <1>;
+> +				marvell,nand-keep-config;
+> +				marvell,nand-enable-arbiter;
+> +				nand-on-flash-bbt;
+> +				nand-ecc-strength = <4>;
+> +				nand-ecc-step-size = <512>;
+> +
+> +				partition@0 {
+> +					label = "u-boot";
+> +					reg = <0x0000000 0x100000>;  /* 1MB */
+> +					read-only;
+> +				};
+> +
+> +				partition@100000 {
+> +					label = "u_env";
+> +					reg = <0x100000 0x40000>;    /* 256KB */
+> +				};
+> +
+> +				partition@140000 {
+> +					label = "s_env";
+> +					reg = <0x140000 0x40000>;    /* 256KB */
+> +				};
+> +
+> +				partition@900000 {
+> +					label = "devinfo";
+> +					reg = <0x900000 0x100000>;   /* 1MB */
+> +					read-only;
+> +				};
+> +
+> +				/* kernel1 overlaps with rootfs1 by design */
+> +				partition@a00000 {
+> +					label = "kernel1";
+> +					reg = <0xa00000 0x2800000>;  /* 40MB */
+> +				};
+> +
+> +				partition@d00000 {
+> +					label = "rootfs1";
+> +					reg = <0xd00000 0x2500000>;  /* 37MB */
+> +				};
+> +
+> +				/* kernel2 overlaps with rootfs2 by design */
+> +				partition@3200000 {
+> +					label = "kernel2";
+> +					reg = <0x3200000 0x2800000>; /* 40MB */
+> +				};
+> +
+> +				partition@3500000 {
+> +					label = "rootfs2";
+> +					reg = <0x3500000 0x2500000>; /* 37MB */
+> +				};
+> +
+> +				/*
+> +				 * 38MB, last MB is for the BBT, not writable */
+> +				 */
+> +				partition@5a00000 {
+> +					label = "syscfg";
+> +					reg = <0x5a00000 0x2600000>;
+> +				};
+> +
+> +				/*
+> +				 * Unused area between "s_env" and "devinfo".
+> +				 * Moved here because otherwise the renumbered
+> +				 * partitions would break the bootloader
+> +				 * supplied bootargs
+> +				 */
+> +				partition@180000 {
+> +					label = "unused_area";
+> +					reg = <0x180000 0x780000>;   /* 7.5MB */
+> +				};
+> +			};
+> +
+> +			spi0: spi@10600 {
+> +				status = "okay";
+> +
+> +				spi-flash@0 {
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +					compatible = "everspin,mr25h256";
+> +					reg = <0>; /* Chip select 0 */
+> +					spi-max-frequency = <40000000>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-0 = <&keys_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		button@1 {
+> +			label = "WPS";
+> +			linux,code = <KEY_WPS_BUTTON>;
+> +			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		button@2 {
+> +			label = "Factory Reset Button";
+> +			linux,code = <KEY_RESTART>;
+> +			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-0 = <&power_led_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		power {
+> +			label = "mamba:white:power";
+> +			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +	};
+> +
+> +	gpio_fan {
+> +		/* SUNON HA4010V4-0000-C99 */
+> +		compatible = "gpio-fan";
+> +		gpios = <&gpio0 24 0>;
+> +
+> +		gpio-fan,speed-map = <0    0
+> +				      4500 1>;
+> +	};
 > +};
 > +
-> +DT_MACHINE_START(ARMADA_39X_DT, "Marvell Armada 39x (Device Tree)")
-> +	.l2c_aux_val	= 0,
-> +	.l2c_aux_mask	= ~0,
-> +	.init_irq       = mvebu_init_irq,
-> +	.restart	= mvebu_restart,
-> +	.dt_compat	= armada_39x_dt_compat,
-> +MACHINE_END
-> diff --git a/arch/arm/mach-mvebu/platsmp-a9.c b/arch/arm/mach-mvebu/platsmp-a9.c
-> index 2ec1a42..df0a9cc 100644
-> --- a/arch/arm/mach-mvebu/platsmp-a9.c
-> +++ b/arch/arm/mach-mvebu/platsmp-a9.c
-> @@ -110,3 +110,5 @@ CPU_METHOD_OF_DECLARE(mvebu_armada_375_smp, "marvell,armada-375-smp",
->  		      &mvebu_cortex_a9_smp_ops);
->  CPU_METHOD_OF_DECLARE(mvebu_armada_380_smp, "marvell,armada-380-smp",
->  		      &armada_38x_smp_ops);
-> +CPU_METHOD_OF_DECLARE(mvebu_armada_390_smp, "marvell,armada-390-smp",
-> +		      &armada_38x_smp_ops);
+> +&pinctrl {
+> +
+> +	keys_pin: keys-pin {
+> +		marvell,pins = "mpp32", "mpp33";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	power_led_pin: power-led-pin {
+> +		marvell,pins = "mpp40";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	gpio_fan_pin: gpio-fan-pin {
+> +		marvell,pins = "mpp24";
+> +		marvell,function = "gpio";
+> +	};
+> +};
 > 
 
 
@@ -118,3 +436,7 @@ Gregory Clement, Free Electrons
 Kernel, drivers, real-time and embedded Linux
 development, consulting, training and support.
 http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
