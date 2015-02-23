@@ -1,115 +1,53 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] of: add helper for getting endpoint node of specific identifiers
-Date: Mon, 23 Feb 2015 10:44:27 -0600
-Message-ID: <CAL_JsqLPbX6JbB269V1cT6OjitJtKwxNNkBYYP-PG4HcbUAdOQ@mail.gmail.com>
-References: <1424655686-15219-1-git-send-email-human.hwang@samsung.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/6] ASoC: max98088: Document DT bindings
+Date: Mon, 23 Feb 2015 17:46:17 +0100
+Message-ID: <54EB5959.90606@collabora.co.uk>
+References: <1424283959-16289-1-git-send-email-afaerber@suse.de> <1424283959-16289-2-git-send-email-afaerber@suse.de> <54E5EB36.9020007@collabora.co.uk> <54E5EF73.2090302@suse.de> <CAD=FV=VoFnbEsKi4mDDkaTrTXboJmm0UNV5iCk1CvV5ndEZtsA@mail.gmail.com> <54E62E1C.4030105@suse.de> <54E6314E.5060509@suse.de> <54E64C09.5000505@collabora.co.uk> <54E681A8.6040702@suse.de> <54E7249F.2020900@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424655686-15219-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54E7249F.2020900@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, =?UTF-8?B?QW5kcmVhcyBGw6Q=?= =?UTF-8?B?cmJlcg==?= <afaerber@suse.de>
+Cc: Doug Anderson <dianders@chromium.org>, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 22, 2015 at 7:41 PM, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> When there are multiple ports or multiple endpoints in a port, they have to be
-> distinguished by the value of reg property. It is common. The drivers can get
-> the specific endpoint in the specific port via this function. Now the drivers
-> have to implement this code in themselves or have to force the order of dt nodes
-> to get the right node.
->
-> Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Hello Sylwester,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On 02/20/2015 01:12 PM, Sylwester Nawrocki wrote:
+> On 20/02/15 01:36, Andreas F=C3=A4rber wrote:
+>>>> >> So it seems the mclk is not always set up properly by the kerne=
+l,
+>>>> >> relying on firmware. Who's in charge of setting that clock up?
+>>> >=20
+>>> > Right, it seems audio is only working due the firmware doing some=
+ previous
+>>> > setup. Probably it works on every boot if you have "sound init" a=
+s a part of
+>>> > the u-boot boot commands?
+>>
+>> Indeed it does, 24 MHz without the reparenting patch, and sound work=
+ing.
+>=20
+> You can have parent of the CLKOUT clock set by the clk core if it is
+> specified in device tree in the PMU (the clkout clock supplier) devic=
+e
+> node.
+>=20
+> Similarly as we did for the Odroix U3:
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/=
+arch/arm/boot/dts/exynos4412-odroid-common.dtsi#n39
+>=20
+> Relying on the clk_set_rate() to set the parent clock is not optimal
+> IMO. Presumably you need to set select stable parent clock for clkout
+> like XXTI. But I'm not very familiar with exyno5250 and that might be
+> something different.
+>=20
 
-I'm not applying as there is no user, so apply this patch along with a
-user of the function.
+Thanks a lot for your suggestion. I'll drop Tushar's patch to allow
+clkout to be reparent during set_rate then and change his DTS patch
+to set a default parent for CLKOUT using "assigned-clock-parents".
 
-Rob
-
-> ---
-> Changes for v2:
-> - Add the empty verion of the new function
-> - Remove the unnecessary type casting from signed int to unsigned int
->  drivers/of/base.c        | 33 +++++++++++++++++++++++++++++++++
->  include/linux/of_graph.h |  8 ++++++++
->  2 files changed, 41 insertions(+)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 0a8aeb8..8f6bc41 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -2156,6 +2156,39 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
->  EXPORT_SYMBOL(of_graph_get_next_endpoint);
->
->  /**
-> + * of_graph_get_endpoint_by_regs() - get endpoint node of specific identifiers
-> + * @parent: pointer to the parent device node
-> + * @port_reg: identifier (value of reg property) of the parent port node
-> + * @reg: identifier (value of reg property) of the endpoint node
-> + *
-> + * Return: An 'endpoint' node pointer which is identified by reg and at the same
-> + * is the child of a port node identified by port_reg. reg and port_reg are
-> + * ignored when they are -1.
-> + */
-> +struct device_node *of_graph_get_endpoint_by_regs(
-> +       const struct device_node *parent, int port_reg, int reg)
-> +{
-> +       struct of_endpoint endpoint;
-> +       struct device_node *node, *prev_node = NULL;
-> +
-> +       while (1) {
-> +               node = of_graph_get_next_endpoint(parent, prev_node);
-> +               of_node_put(prev_node);
-> +               if (!node)
-> +                       break;
-> +
-> +               of_graph_parse_endpoint(node, &endpoint);
-> +               if (((port_reg == -1) || (endpoint.port == port_reg)) &&
-> +                       ((reg == -1) || (endpoint.id == reg)))
-> +                       return node;
-> +
-> +               prev_node = node;
-> +       }
-> +
-> +       return NULL;
-> +}
-> +
-> +/**
->   * of_graph_get_remote_port_parent() - get remote port's parent node
->   * @node: pointer to a local endpoint device_node
->   *
-> diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-> index befef42..e859eb7 100644
-> --- a/include/linux/of_graph.h
-> +++ b/include/linux/of_graph.h
-> @@ -31,6 +31,8 @@ int of_graph_parse_endpoint(const struct device_node *node,
->                                 struct of_endpoint *endpoint);
->  struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
->                                         struct device_node *previous);
-> +struct device_node *of_graph_get_endpoint_by_regs(
-> +               const struct device_node *parent, int port_reg, int reg);
->  struct device_node *of_graph_get_remote_port_parent(
->                                         const struct device_node *node);
->  struct device_node *of_graph_get_remote_port(const struct device_node *node);
-> @@ -49,6 +51,12 @@ static inline struct device_node *of_graph_get_next_endpoint(
->         return NULL;
->  }
->
-> +struct device_node *of_graph_get_endpoint_by_regs(
-> +               const struct device_node *parent, int port_reg, int reg)
-> +{
-> +       return NULL;
-> +}
-> +
->  static inline struct device_node *of_graph_get_remote_port_parent(
->                                         const struct device_node *node)
->  {
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
