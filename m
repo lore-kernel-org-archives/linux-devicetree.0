@@ -1,102 +1,58 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 04/12] ARM: dts: apq8064: Add SATA controller support.
-Date: Mon, 23 Feb 2015 07:55:17 +0000
-Message-ID: <1424678117-13094-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 06/12] ARM: DT: apq8064: add pci support in CM QS600
+Date: Mon, 23 Feb 2015 07:55:35 +0000
+Message-ID: <1424678135-13178-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds AHCI based SATA controller support to APQ8064.
-Tested on IFC6410 board.
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+This patch adds PCIE support to APQ8064, tested with Ethernet on Compulab QS600 board.
+
+Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 15 +++++++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi        | 35 ++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 1723cdf..3164197 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -56,6 +56,12 @@
- 				qcom,switch-mode-frequency	= <4800000>;
- 			};
+diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+index 5d75666..6e62f24 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+@@ -1,4 +1,5 @@
+ #include "qcom-apq8064-v2.0.dtsi"
++#include <dt-bindings/gpio/gpio.h>
  
-+			pm8921_s4: pm8921-s4 {
-+				regulator-min-microvolt		= <1800000>;
-+				regulator-max-microvolt		= <1800000>;
-+				qcom,switch-mode-frequency	= <3200000>;
-+			};
-+
- 			pm8921_l3: pm8921-l3 {
- 				regulator-min-microvolt = <3050000>;
- 				regulator-max-microvolt = <3300000>;
-@@ -72,6 +78,15 @@
+ / {
+ 	model = "CompuLab CM-QS600";
+@@ -40,6 +41,24 @@
  			};
  		};
  
-+		sata_phy0: sata-phy@1b400000{
-+			status = "okay";
++		/* on board fixed 3.3v supply */
++		v3p3_pcieclk: v3p3-pcieclk {
++			compatible = "regulator-fixed";
++			regulator-name = "PCIE V3P3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
 +		};
 +
-+		sata0: sata@29000000 {
-+			status		= "okay";
-+			target-supply	= <&pm8921_s4>;
++		pci@1b500000 {
++			status = "ok";
++			pcie-clk-supply	= <&v3p3_pcieclk>;
++			avdd-supply	= <&pm8921_s3>;
++			vdd-supply	= <&pm8921_lvs6>;
++			qcom,external-phy-refclk;
++			reset-gpio = <&tlmm_pinmux 27 GPIO_ACTIVE_LOW>;
 +		};
 +
- 		/* OTG */
- 		usb1_phy: phy@12500000 {
- 			status		= "okay";
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index c251c72..e65aff0 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -566,6 +566,41 @@
- 			usb-phy		= <&usb4_phy>;
- 		};
- 
-+		sata_phy0: sata-phy@1b400000{
-+			compatible	= "qcom,apq8064-sata-phy";
-+			status		= "disabled";
-+			reg		= <0x1b400000 0x200>;
-+			reg-names	= "phy_mem";
-+			clocks		= <&gcc SATA_PHY_CFG_CLK>;
-+			clock-names	= "cfg";
-+			#phy-cells	= <0>;
-+		};
-+
-+		sata0: sata@29000000 {
-+			compatible		= "generic-ahci";
-+			status			= "disabled";
-+			reg			= <0x29000000 0x180>;
-+			interrupts		= <0 209 0>;
-+
-+			clocks			= <&gcc SFAB_SATA_S_H_CLK>,
-+						<&gcc SATA_H_CLK>,
-+						<&gcc SATA_A_CLK>,
-+						<&gcc SATA_RXOOB_CLK>,
-+						<&gcc SATA_PMALIVE_CLK>;
-+			clock-names		= "slave_iface",
-+						"iface",
-+						"bus",
-+						"rxoob",
-+						"core_pmalive";
-+
-+			assigned-clocks		= <&gcc SATA_RXOOB_CLK>,
-+						<&gcc SATA_PMALIVE_CLK>;
-+			assigned-clock-rates	= <100000000>, <100000000>;
-+
-+			phys			= <&sata_phy0>;
-+			phy-names		= "sata-phy";
-+		};
-+
- 		/* Temporary fixed regulator */
- 		vsdcc_fixed: vsdcc-regulator {
- 			compatible = "regulator-fixed";
+ 		amba {
+ 			/* eMMC */
+ 			sdcc1: sdcc@12400000 {
 -- 
 1.9.1
