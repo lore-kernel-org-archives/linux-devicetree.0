@@ -1,50 +1,35 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Subject: Re: [PATCH] ARM: bcm2835: Add header file for pinctrl constants
-Date: Mon, 23 Feb 2015 12:11:05 -0700
-Message-ID: <54EB7B49.8050706@wwwdotorg.org>
-References: <1424624396-812-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <5700696.0jJhSRhno5@wuerfel>
+Date: Mon, 23 Feb 2015 12:08:33 -0700
+Message-ID: <54EB7AB1.5060200@wwwdotorg.org>
+References: <1424624396-812-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5700696.0jJhSRhno5@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: lee@kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424624396-812-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/22/2015 01:13 PM, Arnd Bergmann wrote:
-> On Sunday 22 February 2015 16:59:56 Charles Keepax wrote:
->> +
->> +/* IRQ Flags */
->> +#define BCM2835_PIN_IRQ_RISING                         1
->> +#define BCM2835_PIN_IRQ_FALLING                                2
->> +#define BCM2835_PIN_IRQ_EDGE   (BCM2835_PIN_IRQ_RISING | \
->> +                                BCM2835_PIN_IRQ_FALLING)
->> +#define BCM2835_PIN_IRQ_LOW                            4
->> +#define BCM2835_PIN_IRQ_HIGH                           8
->
-> Are these different from the standard definitions?
->
->> +/* Pin Function Settings */
->> +#define BCM2835_PIN_FUNC_GPIO_IN                       0
->> +#define BCM2835_PIN_FUNC_GPIO_OUT                      1
->> +#define BCM2835_PIN_FUNC_ALT5                          2
->> +#define BCM2835_PIN_FUNC_ALT4                          3
->> +#define BCM2835_PIN_FUNC_ALT0                          4
->> +#define BCM2835_PIN_FUNC_ALT1                          5
->> +#define BCM2835_PIN_FUNC_ALT2                          6
->> +#define BCM2835_PIN_FUNC_ALT3                          7
->
-> Why are these required? They don't seem to be used by any driver,
-> which leads me to suspect that they are just the hardware numbers.
->
-> In that case, don't add any syntactical sugar like that and just
-> use the hardware numbers directly.
->
-> What's with the strange mapping of numbers anyway?
+On 02/22/2015 09:59 AM, Charles Keepax wrote:
+> This patch adds a header file for the constants used in pincontrol
+> configuration for the bcm2835.
 
-Especially given that the number->semantics meaning is a little 
-non-linear it seems like using #defines/... to document what the numbers 
-mean seems reasonable. It allows easily validating the DT files without 
-having to go look up the meaning of the numbers in the documentation.
+This seems like a duplicate of the following series:
+
+https://lkml.org/lkml/2015/1/16/402
+[PATCH 0/4] ARM: bcm2835: DT improvements
+[PATCH 1/4] dt-bindings: Add vendor prefix for Raspberry Pi
+[PATCH 2/4] dt-bindings: Add root properties for Raspberry Pi B and B+
+[PATCH 3/4] ARM: bcm2835: Add header file for pinctrl constants
+
+https://lkml.org/lkml/2015/1/16/405
+[PATCH 4/4] ARM: bcm2835: Use pinctrl header
+
+Lee, are you planning on applying one/both/some of these?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
