@@ -1,113 +1,50 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
-Date: Mon, 23 Feb 2015 15:38:28 +0000
-Message-ID: <54EB4974.2040801@linaro.org>
-References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <20150223150415.GF6236@finisterre.sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] mfd: arizona: Move useful defines into a dt-binding
+ include
+Date: Tue, 24 Feb 2015 00:49:57 +0900
+Message-ID: <20150223154957.GI6236@finisterre.sirena.org.uk>
+References: <1424521077-5954-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150223150415.GF6236-bheZrs9scGb3/WHNxyQH9YN0K6Il/+VY@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="D+WCZLadiceW8Bs8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1424521077-5954-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thankyou for the comments.
 
-On 23/02/15 15:04, Mark Brown wrote:
-> On Thu, Feb 19, 2015 at 05:08:28PM +0000, Srinivas Kandagatla wrote:
->
->>   .../devicetree/bindings/eeprom/eeprom.txt          |  48 ++++
->>   drivers/Kconfig                                    |   2 +
->>   drivers/Makefile                                   |   1 +
->>   drivers/eeprom/Kconfig                             |  19 ++
->>   drivers/eeprom/Makefile                            |   9 +
->>   drivers/eeprom/core.c                              | 290 +++++++++++++++++++++
->>   include/linux/eeprom-consumer.h                    |  73 ++++++
->>   include/linux/eeprom-provider.h                    |  51 ++++
->
-> This seems to have a bunch of different things in it - there's some
-> binding, there's some framework code, there's some user code for the
-> framework...  splitting it up more would probably help with review.
-> I'd at least make sure the framework is split from the DT code, that
-> will cut down on the bulk and help make sure the framework isn't too DT
-> tied.
+--D+WCZLadiceW8Bs8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes I agree, will make sure that I split it into different patches in 
-next version.
->
->> +	if (read)
->> +		rc = regmap_bulk_read(eeprom->regmap, offset,
->> +				      buf, count/eeprom->stride);
->> +	else
->> +		rc = regmap_bulk_write(eeprom->regmap, offset,
->> +				       buf, count/eeprom->stride);
->> +
->> +	if (IS_ERR_VALUE(rc))
->> +		return 0;
->> +
->> +	return count;
->> +}
->
->> +static ssize_t bin_attr_eeprom_read(struct file *filp, struct kobject *kobj,
->> +				    struct bin_attribute *attr,
->> +				    char *buf, loff_t offset, size_t count)
->> +{
->> +	return bin_attr_eeprom_read_write(kobj, buf, offset, count, true);
->> +}
->
-> I'm not sure the factoring out is actually helping the clarity here TBH.
->
-ok.
+On Sat, Feb 21, 2015 at 12:17:57PM +0000, Charles Keepax wrote:
+> Move parts of linux/mfd/arizona/pdata.h and gpio.h into a new file in
+> the dt-binding directory for use by device tree bindings. This also
+> makes gpio.h redundant so remove it in the process.
 
->> +int eeprom_unregister(struct eeprom_device *eeprom)
->> +{
->> +	device_del(&eeprom->edev);
->> +
->> +	mutex_lock(&eeprom_list_mutex);
->> +	list_del(&eeprom->list);
->> +	mutex_unlock(&eeprom_list_mutex);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(eeprom_unregister);
->
-> Here we return having dropped the lock without doing anything else with
-> the eeprom, meaning the caller could delete it.
->
->> +	mutex_lock(&eeprom_list_mutex);
->> +
->> +	list_for_each_entry(e, &eeprom_list, list) {
->> +		if (args.np == e->edev.of_node) {
->> +			eeprom = e;
->> +			break;
->> +		}
->> +	}
->> +	mutex_unlock(&eeprom_list_mutex);
->
-> Here we iterate the list, find the relevant eeprom and drop the lock
-> while still holding a reference to the eeprom we just found.  This means
-> that a removal could race with us and free the eeprom underneath us.
-> I'm also not seeing anything stopping or even noticing a device being
-> removed with a cell active on it.
->
-As suggested by Stephen Boyd reference counting on eeprom should ensure 
-safe removal of eeprom.
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->> +/**
->> + * eeprom_cell_get(): Get eeprom cell of device form a given index.
->> + *
->> + * @dev: Device that will be interacted with
->> + * @index: Index of the eeprom cell.
->> + *
->> + * The return value will be an ERR_PTR() on error or a valid pointer
->> + * to a struct eeprom_cell.  The eeprom_cell will be freed by the
->> + * eeprom_cell_put().
->> + */
->> +struct eeprom_cell *eeprom_cell_get(struct device *dev, int index);
->
-> Normally the kerneldoc goes with the function definition, not the
-> prototype.
-Thats true, will fix it in next version.
->
+--D+WCZLadiceW8Bs8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU60wkAAoJECTWi3JdVIfQxSYH/jDCuvUl1sc5DL9Ce5Avx/tn
+Xdj5g8YuG0R+24cAnU6AV7NG9P2RuvBAhBVRssuq6Ogf9mu8Vqcz8qyN+ahpEyAF
+pqje2AB7/qwzuAve8RGVHqFBdWL1hykd9gDRB3qrk5WILHet/WnMFL8Sf7CZl7op
+jUj+O31gygSsj4Xy+hlGYmNA0Xie6VbLO2pqbJTMRFetFM4mHBzp44EOnc8SI2uV
+8JM5HeCPgqqHdT38MK1HKdge5MYIWNzbslzOtmonAbGo6AwQtS3+TE3K9fTgWKmq
+cH+fGdkUZhsFmkgbiHbvkPkdvIOc+OASdUgHNPDf0q6096/bE+7MtqN3tsWGRA4=
+=Hwfp
+-----END PGP SIGNATURE-----
+
+--D+WCZLadiceW8Bs8--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
