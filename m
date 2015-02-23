@@ -1,29 +1,38 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/3] ARM: qcom: add description of KPSS WDT for IPQ8064
-Date: Mon, 23 Feb 2015 11:05:18 -0800
-Message-ID: <54EB79EE.5000205@codeaurora.org>
-References: <1424485176-8348-1-git-send-email-mathieu@codeaurora.org> <1424485176-8348-3-git-send-email-mathieu@codeaurora.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 RESEND 4/4] ARM: bcm2835: Use pinctrl header
+Date: Mon, 23 Feb 2015 12:09:39 -0700
+Message-ID: <54EB7AF3.7030004@wwwdotorg.org>
+References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com> <1422555050-28509-5-git-send-email-stefan.wahren@i2se.com> <54D8F7EE.2060607@wwwdotorg.org> <570054632.932648.1424518777174.JavaMail.open-xchange@oxbaltgw02.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424485176-8348-3-git-send-email-mathieu@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Olivari <mathieu@codeaurora.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, wim@iguana.be, corbet@lwn.net, standby24x7@gmail.com
-Cc: devicetree@vger.kernel.org, Josh Cartwright <joshc@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <570054632.932648.1424518777174.JavaMail.open-xchange-h4m1HHXQYNFuz1KIG1bTI8gmgJlYmuWJ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/20/15 18:19, Mathieu Olivari wrote:
-> Add the watchdog related entries to the Krait Processor Sub-system
-> (KPSS) timer IPQ8064 devicetree section. Also, add a fixed-clock
-> description of SLEEP_CLK, which will do for now.
+On 02/21/2015 04:39 AM, Stefan Wahren wrote:
+>> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> hat am 9. Februar 2015 um 19:09
+>> geschrieben:
+>>
+>>
+>> On 01/29/2015 11:10 AM, Stefan Wahren wrote:
+>>> This patch converts all bcm2835 dts and dtsi files to use the pinctrl
+>>> header file.
+>>
+>> The series,
+>> Reviewed-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>
+>> Sorry for taking a while with this.
 >
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
->
+> Fine, but is this series already applied?
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+It doesn't look like it. I was under the impression that Lee was 
+applying bcm2835 patches now, hence why I simply gave my reviewed-by tag 
+rather than doing anything else. Lee, can you comment?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
