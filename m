@@ -1,43 +1,93 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 7/8] hwmon: pwm-fan: Read PWM FAN configuration from
- device tree
-Date: Mon, 23 Feb 2015 08:23:05 -0800
-Message-ID: <20150223162305.GB2165@roeck-us.net>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-8-git-send-email-l.majewski@samsung.com>
- <54E7D0B3.7040800@roeck-us.net>
- <20150223171336.2e09ce50@amdc2363>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150223171336.2e09ce50@amdc2363>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2] drivers/base: cacheinfo: validate device node for all the caches
+Date: Mon, 23 Feb 2015 16:32:39 +0000
+Message-ID: <1424709159-13152-1-git-send-email-sudeep.holla@arm.com>
+References: <1424095816-4414-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424095816-4414-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 23, 2015 at 05:13:36PM +0100, Lukasz Majewski wrote:
-> Hi Guenter,
-> 
-[ ... ]
+On architectures that depend on DT for obtaining cache hierarcy, we need
+to validate the device node for all the cache indices, failing to do so
+might result in wrong information being exposed to the userspace.
 
-> > 
-> > If devicetree is not configured, of_property_count_elems_of_size
-> > returns -ENOSYS, which is returned, causing the driver to fail
-> > loading.
-> 
-> Has of_property_count_elems_of_size() returns -ENOSYS?
-> 
-> Maybe something has changed, but in my linux-vanila (3.19-rc4)
-> at ./drivers/of/base.c it returns -EINVAL, -ENODATA or number of
-> elements.
-> 
-> Have I missed something?
-> 
-Hi Lukasz,
+This is quite possible on initial/incomplete versions of the device
+trees. In such cases, it's better to bail out if all the required device
+nodes are not present.
 
-Yes, you have. Check include/linux/of.h, line 484, in latest mainline.
+This patch adds checks for the validation of device node for all the
+caches and doesn't initialise the cacheinfo if there's any error.
 
-Guenter
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Reported-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+---
+ drivers/base/cacheinfo.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+v1->v2:
+ - Updated log information as suggested by Mark
+ - Added Mark's ACK
+
+Hi Greg,
+
+Can you please pick this fix for the next rc ?
+
+Without this there's possibility that erroneous information is exposed
+to userspace on architecture depending on DT especially if DT lacks
+cache hierarcy information.
+
+Regards,
+Sudeep
+
+diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
+index 6e64563361f0..9c2ba1c97c42 100644
+--- a/drivers/base/cacheinfo.c
++++ b/drivers/base/cacheinfo.c
+@@ -62,15 +62,21 @@ static int cache_setup_of_node(unsigned int cpu)
+ 		return -ENOENT;
+ 	}
+ 
+-	while (np && index < cache_leaves(cpu)) {
++	while (index < cache_leaves(cpu)) {
+ 		this_leaf = this_cpu_ci->info_list + index;
+ 		if (this_leaf->level != 1)
+ 			np = of_find_next_cache_node(np);
+ 		else
+ 			np = of_node_get(np);/* cpu node itself */
++		if (!np)
++			break;
+ 		this_leaf->of_node = np;
+ 		index++;
+ 	}
++
++	if (index != cache_leaves(cpu)) /* not all OF nodes populated */
++		return -ENOENT;
++
+ 	return 0;
+ }
+ 
+@@ -189,8 +195,11 @@ static int detect_cache_attributes(unsigned int cpu)
+ 	 * will be set up here only if they are not populated already
+ 	 */
+ 	ret = cache_shared_cpu_map_setup(cpu);
+-	if (ret)
++	if (ret) {
++		pr_warn("Unable to detect cache hierarcy from DT for CPU %d\n",
++			cpu);
+ 		goto free_ci;
++	}
+ 	return 0;
+ 
+ free_ci:
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
