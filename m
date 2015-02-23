@@ -1,135 +1,65 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
-Date: Mon, 23 Feb 2015 10:15:59 +0100
-Message-ID: <20150223091559.GA28214@pengutronix.de>
-References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org>
- <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug@mail.gmail.com>
- <54E78A31.9020306@linaro.org>
- <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw@mail.gmail.com>
+From: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
+Date: Mon, 23 Feb 2015 09:37:24 +0000
+Message-ID: <54EAF4D4.4090505@linn.co.uk>
+References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk> <20150218210830.GA7778@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150218210830.GA7778-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 20, 2015 at 04:01:55PM -0600, Rob Herring wrote:
-> On Fri, Feb 20, 2015 at 1:25 PM, Srinivas Kandagatla
-> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >
-> >
-> > On 20/02/15 17:21, Rob Herring wrote:
-> >>
-> >> On Thu, Feb 19, 2015 at 11:08 AM, Srinivas Kandagatla
-> >> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >>>
-> >>> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >>>
-> >>> Up until now, EEPROM drivers were stored in drivers/misc, where they all
-> >>> had to
-> >>> duplicate pretty much the same code to register a sysfs file, allow
-> >>> in-kernel
-> >>> users to access the content of the devices they were driving, etc.
-> >>>
-> >>> This was also a problem as far as other in-kernel users were involved,
-> >>> since
-> >>> the solutions used were pretty much different from on driver to another,
-> >>> there
-> >>> was a rather big abstraction leak.
-> >>>
-> >>> This introduction of this framework aims at solving this. It also
-> >>> introduces DT
-> >>> representation for consumer devices to go get the data they require (MAC
-> >>> Addresses, SoC/Revision ID, part numbers, and so on) from the EEPROMs.
-> >>>
-> >>> Having regmap interface to this framework would give much better
-> >>> abstraction for eeproms on different buses.
-> >>>
-> >>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >>> [srinivas.kandagatla: Moved to regmap based and cleanedup apis]
-> >>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>> ---
-> >>>   .../devicetree/bindings/eeprom/eeprom.txt          |  48 ++++
-> >>>   drivers/Kconfig                                    |   2 +
-> >>>   drivers/Makefile                                   |   1 +
-> >>>   drivers/eeprom/Kconfig                             |  19 ++
-> >>>   drivers/eeprom/Makefile                            |   9 +
-> >>>   drivers/eeprom/core.c                              | 290
-> >>> +++++++++++++++++++++
-> >>>   include/linux/eeprom-consumer.h                    |  73 ++++++
-> >>>   include/linux/eeprom-provider.h                    |  51 ++++
-> >>
-> >>
-> >> Who is going to be the maintainer for this?
-> >
-> >
-> > Am happy to be one.
-> 
-> So please add a MAINTAINERS entry.
-> 
-> [...]
-> 
-> >>> += Data consumers =
-> >>> +
-> >>> +Required properties:
-> >>> +
-> >>> +eeproms: List of phandle and data cell specifier triplet, one triplet
-> >>> +        for each data cell the device might be interested in. The
-> >>> +        triplet consists of the phandle to the eeprom provider, then
-> >>> +        the offset in byte within that storage device, and the length
-> >>> +        in byte of the data we care about.
-> >>
-> >>
-> >> The problem with this is it assumes you know who the consumer is and
-> >> that it is a DT node. For example, how would you describe a serial
-> >> number?
-> >
-> > Correct me if I miss understood.
-> > Is serial number any different?
-> > Am hoping that the eeprom consumer would be aware of offset and size of
-> > serial number in the eeprom
-> >
-> > Cant the consumer do:
-> >
-> > eeprom-consumer {
-> >         eeproms = <&at24 0 4>;
-> >         eeprom-names = "device-serial-number";
-> 
-> Yes, but who is "eeprom-consumer"? DT nodes generally describe a h/w
-> block, but it this case, the consumer depends on the OS, not the h/w.
-> I'm not saying you can't describe where things are, but I don't think
-> you should imply who is the consumer and doing so is unnecessarily
-> complicated.
-> 
-> Also, the layout of EEPROM is likely very much platform specific. Some
-> could have a more complex structure perhaps with key ids and linked
-> list structure.
-> 
-> I would do something more simple that is just a list of keys and their
-> location like this:
-> 
-> device-serial-number = <start size>;
-> key1 = <start size>;
-> key2 = <start size>;
+Hi Richard,
 
-Maybe better a node instead of a property. That would allow to use the
-standard reg property to describe the position in the eeprom. Also it
-would give consumers in dt a possibility to use a phandle to point to a
-variable:
+On 18/02/15 21:08, Richard Cochran wrote:
+> On Tue, Feb 17, 2015 at 02:03:30PM +0000, Stathis Voukelatos wrote:
+>> The command string for packet matching is stored in module RAM
+>> and consists of a sequence of 16-bit entries. Each entry includes
+>> an 8-bit command code and and 8-bit data value. Valid command
+>> codes are:
+>> 0 - Don't care
+>> 1 - Match: packet data must match command string byte
+>> 2 - Copy: packet data will be copied to FIFO
+>> 3 - Match/Stamp: if packet data matches string byte, a timestamp
+>>                   is copied into the FIFO
+>> 4 - Copy/Done: packet data will be copied into the FIFO.
+>>                 This command terminates the command string.
+>
+> Why do you need to expose this interface to user space at all?  Why
+> not just time stamp every frame?
 
-	serial_number: var@c {
-		reg = <0xc 0x8>;
-		name = <?>;
-	};
+To put this into context with an example, the use case this H/W module 
+was originally developed for was to allow multiple audio receivers to 
+synchronize with a single transmitter, eg. multi-room synchronised audio.
+The interface needs to be public so that a user-space application can 
+program a command string that will match packets that belong to the 
+audio stream of interest, for this example.
+In addition returning just a timestamp would not be enough in many 
+cases. In the audio streaming use case mentioned above some additional
+bytes from the packet payload need to be returned (with Copy commands) 
+in order to associate the timestamp with a certain point in the audio 
+stream.
 
-Sascha
+>
+> How does the "Match" command work?  The frame must have one particular
+> byte?  That can't be right.  Please explain.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Actually, that is how the H/W works. Each Match command is followed by
+a data value which must match the packet data byte at the corresponding
+location. If there is no match processing of the packet stops.
+
+>
+> Thanks,
+> Richard
+>
+
+Thank you,
+Stathis
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
