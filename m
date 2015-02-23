@@ -1,82 +1,102 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 7/8] hwmon: pwm-fan: Read PWM FAN configuration from
- device tree
-Date: Mon, 23 Feb 2015 08:59:55 -0800
-Message-ID: <20150223165955.GA9417@roeck-us.net>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-8-git-send-email-l.majewski@samsung.com>
- <54E7D0B3.7040800@roeck-us.net>
- <20150223171336.2e09ce50@amdc2363>
- <20150223162305.GB2165@roeck-us.net>
- <20150223175122.2c0a4645@amdc2363>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
+ demuxer chip
+Date: Mon, 23 Feb 2015 18:00:57 +0100
+Message-ID: <20150223180057.513b069c@bbrezillon>
+References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
+	<2437801.56xPyk3atd@vostro.rjw.lan>
+	<20150211151237.GN9154@leverpostej>
+	<1487331.cgC9j5u0aF@vostro.rjw.lan>
+	<20150211155720.GQ9154@leverpostej>
+	<20150211171515.55d5066f@bbrezillon>
+	<20150211163231.GR9154@leverpostej>
+	<20150211173823.30c42c6a@bbrezillon>
+	<20150220142208.GJ13659@leverpostej>
+	<20150220155347.1477b02d@bbrezillon>
+	<20150220151655.GK13659@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150223175122.2c0a4645@amdc2363>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150220151655.GK13659@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 23, 2015 at 05:51:22PM +0100, Lukasz Majewski wrote:
-> Hi Guenter,
-> 
-> > On Mon, Feb 23, 2015 at 05:13:36PM +0100, Lukasz Majewski wrote:
-> > > Hi Guenter,
-> > > 
-> > [ ... ]
-> > 
-> > > > 
-> > > > If devicetree is not configured, of_property_count_elems_of_size
-> > > > returns -ENOSYS, which is returned, causing the driver to fail
-> > > > loading.
-> > > 
-> > > Has of_property_count_elems_of_size() returns -ENOSYS?
-> > > 
-> > > Maybe something has changed, but in my linux-vanila (3.19-rc4)
-> > > at ./drivers/of/base.c it returns -EINVAL, -ENODATA or number of
-> > > elements.
-> > > 
-> > > Have I missed something?
-> > > 
-> > Hi Lukasz,
-> > 
-> > Yes, you have. Check include/linux/of.h, line 484, in latest mainline.
-> 
-> Ok. Now I got it.
-> 
-> The above situation shouldn't happen if I put of_find_property() check
-> on the very beginning of this function (it returns NULL when DT support
-> is not compiled).
-> 
+Hi Mark,
 
-Correct.
+Thanks for the clarification, and sorry if I've been a bit harsh to you
+in my previous answer, but this whole shared irq thing is starting to
+drive me crazy.
 
-> The function would look as follows:
+On Fri, 20 Feb 2015 15:16:56 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
+
+[...]
+ 
 > 
-> int 
-> pwm_fan_of_get_cooling_data(struct device *dev, struct pwm_fan_ctx
-> *ctx) 
-> {       
->         struct device_node *np = dev->of_node;
-> 	int num, i, ret;
+> An IRQ cannot be shared between a device with IRQF_NO_SUSPEND and a
+> device that wishes to operate as a wakeup device, because the semantics
+> don't align. One wishes to handle IRQs continuously and one wants to
+> abort suspend at the first IRQ (waiting until part-way through the
+> resume before handling it).
 > 
-> 	if (!of_find_property(np, "cooling-levels", NULL))
-> 		return 0;
+> So those devices above which wish to operate as wakeup devices are
+> either irrelevant or unsalvageable with the current approaches.
 > 
-> 	ret = of_property_count_u32_elems(np, "cooling-levels");
-> 	if (ret <= 0) {
-> 		dev_err(dev, "Wrong data!\n");
-> 		return ret;
+> The flag or demux chip only happens to mask the problem in the absence
+> of strict sanity checking.
+> 
+> If you want to be able to share the line then you will need to
+> fundamentally rework the way wakeup interrupts work in order to be able
+> to decide when you've encountered a real wakeup event.
 
-This should probably be something like 
+Okay, I'll try to summarize the discussion we had on IRC regarding this
+aspect.
 
-		return ret ? : -EINVAL;
+On at91 platforms, irq line 1 is shared by a timer (PIT) and some
+devices that can register themselves as wakeup sources (especially the
+RTC IP).
+I doubt at91 users will agree on dropping either of these features (the
+timer or the wakeup on RTC/UART/...), so, can we try to find a solution
+that would both make irq, DT and at91 guys happy (that doesn't sound
+like an easy task :-)) ?
 
-or ret == 0 is not an error, and you should not display an error message
-in that case.
+The whole problem here is that we can't have both IRQF_NO_SUSPEND flag
+set on one of the shared action and others that are configuring the irq
+as a wakeup source, because it would always lead to the system being
+woken up (even when the only thing we were supposed to do is handle the
+timer event).
 
-Thanks,
-Guenter
+This is because irq_may_run [1], which is called to decide whether we
+should handle this irq or just wake the system up [2], will always
+return true if at least one of the shared action has tagged the irq
+line as a wakeup source.
+
+Sorry for summarizing things you most likely already know, but I want
+to be sure I'm actually understanding it correctly.
+
+Now, let's look at how this could be solved.
+Here is a proposal [3] that does the following:
+ 1/ prevent a system wakeup when at least one of the action handler
+    has set the IRQF_NO_SUSPEND flag
+ 2/ Add a few helpers to deal with system wakeup from drivers code
+ 3/ Rework the at91 RTC driver to show how such weird cases could be
+    handled
+
+Of course, I'll need the IRQF_SHARED_TIMER_OK patch to prevent the
+WARN_ON backtrace.
+
+Please, let me know if I missed anything important, share your opinion
+on this proposal, and feel free to propose any other solution.
+
+[1]http://lxr.free-electrons.com/source/kernel/irq/chip.c#L348
+[2]http://lxr.free-electrons.com/source/kernel/irq/chip.c#L386
+[3]http://code.bulix.org/gboee1-87936
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
