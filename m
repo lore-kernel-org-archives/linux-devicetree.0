@@ -1,45 +1,41 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 0/3] arm: msm: Use timer DT node for qcom watchdog config
-Date: Mon, 23 Feb 2015 22:35:04 +0100
-Message-ID: <5879121.Ud0l5ICsCF@wuerfel>
-References: <1424485176-8348-1-git-send-email-mathieu@codeaurora.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3 2/3] Packet sniffer core framework
+Date: Mon, 23 Feb 2015 16:37:17 -0500 (EST)
+Message-ID: <20150223.163717.356301805782993412.davem@davemloft.net>
+References: <cover.1424698609.git.stathis.voukelatos@linn.co.uk>
+	<3f43e4376bec64ded755e202c11d2f07886194af.1424698609.git.stathis.voukelatos@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424485176-8348-1-git-send-email-mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3f43e4376bec64ded755e202c11d2f07886194af.1424698609.git.stathis.voukelatos@linn.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stathis.voukelatos@linn.co.uk
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 February 2015 18:19:33 Mathieu Olivari wrote:
-> This change is done as a follow-up to the following thread:
-> https://lkml.org/lkml/2014/10/1/436
-> 
-> qcom-wdt is currently assuming the presence of a dedicated node in DT
-> to gets its configuration. However, on msm architecture, the watchdog is
-> usually part of the timer block. So this patch-set is changing the driver
-> and slightly enhancing the timer DT bindings to provide the relevant clocks
-> and interrupts.
-> 
-> Mathieu Olivari (3):
->   watchdog: qcom: use timer devicetree binding
->   ARM: qcom: add description of KPSS WDT for IPQ8064
->   ARM: msm: add watchdog entries to DT timer binding doc
-> 
->  Documentation/devicetree/bindings/arm/msm/timer.txt | 16 +++++++++++++---
->  arch/arm/boot/dts/qcom-ipq8064.dtsi                 | 14 +++++++++++++-
->  drivers/watchdog/qcom-wdt.c                         | 21 +++++++++++++++------
->  3 files changed, 41 insertions(+), 10 deletions(-)
-> 
-> 
+From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Date: Mon, 23 Feb 2015 14:26:21 +0000
 
-What about the binding document in
-Documentation/devicetree/bindings/watchdog/qcom-wdt.txt?
+> +	spin_lock_irqsave(&priv->lock, flags);
+> +	/* Stop the hardware */
+> +	sch->stop(sch);
+> +	/* Set the new command pattern */
+> +	ret = sch->set_pattern(sch, skb->data, skb->len / 2);
+> +	/* Restart the hardware */
+> +	sch->start(sch);
+> +	spin_unlock_irqrestore(&priv->lock, flags);
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These comments are excessive.
+
+When someone calls ops->stop() what are they supposed to think the
+thing does?  Open a can of tuna?  Mow the lawn?  Wash the dishes?  No,
+it stops the thing.  Everyone understands that and you don't have to
+explicitly say it.
+
+Saying "stop the hardware" does not add anything to the source code
+that is not already implicitly there.  They just take up space and
+keep more useful information from being displayed at once on the
+screen.  Please remove all of these things.
+
+Thanks.
