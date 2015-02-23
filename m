@@ -1,35 +1,29 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] watchdog: qcom: use timer devicetree binding
-Date: Mon, 23 Feb 2015 11:04:36 -0800
-Message-ID: <54EB79C4.50405@codeaurora.org>
-References: <1424485176-8348-1-git-send-email-mathieu@codeaurora.org> <1424485176-8348-2-git-send-email-mathieu@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/3] ARM: qcom: add description of KPSS WDT for IPQ8064
+Date: Mon, 23 Feb 2015 11:05:18 -0800
+Message-ID: <54EB79EE.5000205@codeaurora.org>
+References: <1424485176-8348-1-git-send-email-mathieu@codeaurora.org> <1424485176-8348-3-git-send-email-mathieu@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424485176-8348-2-git-send-email-mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424485176-8348-3-git-send-email-mathieu@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Olivari <mathieu@codeaurora.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, wim@iguana.be, corbet@lwn.net, standby24x7@gmail.com
+Cc: devicetree@vger.kernel.org, Josh Cartwright <joshc@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 02/20/15 18:19, Mathieu Olivari wrote:
-> MSM watchdog configuration happens in the same register block as the
-> timer, so we'll use the same binding as the existing timer.
+> Add the watchdog related entries to the Krait Processor Sub-system
+> (KPSS) timer IPQ8064 devicetree section. Also, add a fixed-clock
+> description of SLEEP_CLK, which will do for now.
 >
-> The qcom-wdt will now be probed when devicetree has an entry compatible
-> with "qcom,kpss-timer" or "qcom-scss-timer".
->
-> Signed-off-by: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
 >
 
-Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
