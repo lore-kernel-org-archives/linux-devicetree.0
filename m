@@ -1,50 +1,226 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] mfd: arizona: Move useful defines into a dt-binding
- include
-Date: Tue, 24 Feb 2015 00:49:57 +0900
-Message-ID: <20150223154957.GI6236@finisterre.sirena.org.uk>
-References: <1424521077-5954-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCHv2 05/15] ARM: mvebu: add stdout-path to all armada-*.dts
+Date: Mon, 23 Feb 2015 17:00:27 +0100
+Message-ID: <54EB4E9B.6010001@free-electrons.com>
+References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com> <1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="D+WCZLadiceW8Bs8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424521077-5954-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Thomas,
 
---D+WCZLadiceW8Bs8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 20/02/2015 18:04, Thomas Petazzoni wrote:
+> This commit adds the stdout-path property in /chosen for all Armada
+> boards that were not yet carrying this property.
 
-On Sat, Feb 21, 2015 at 12:17:57PM +0000, Charles Keepax wrote:
-> Move parts of linux/mfd/arizona/pdata.h and gpio.h into a new file in
-> the dt-binding directory for use by device tree bindings. This also
-> makes gpio.h redundant so remove it in the process.
+I though the main motivation for using the stdout-path property was
+for removing the earlyprintk in the command line. Arnd told that there
+should be a mean to use stdout-path instead of earlyprintk.
 
-Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+So what about going further and removing "earlyprintk" in the same time?
 
---D+WCZLadiceW8Bs8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Gregory
 
-iQEcBAEBCAAGBQJU60wkAAoJECTWi3JdVIfQxSYH/jDCuvUl1sc5DL9Ce5Avx/tn
-Xdj5g8YuG0R+24cAnU6AV7NG9P2RuvBAhBVRssuq6Ogf9mu8Vqcz8qyN+ahpEyAF
-pqje2AB7/qwzuAve8RGVHqFBdWL1hykd9gDRB3qrk5WILHet/WnMFL8Sf7CZl7op
-jUj+O31gygSsj4Xy+hlGYmNA0Xie6VbLO2pqbJTMRFetFM4mHBzp44EOnc8SI2uV
-8JM5HeCPgqqHdT38MK1HKdge5MYIWNzbslzOtmonAbGo6AwQtS3+TE3K9fTgWKmq
-cH+fGdkUZhsFmkgbiHbvkPkdvIOc+OASdUgHNPDf0q6096/bE+7MtqN3tsWGRA4=
-=Hwfp
------END PGP SIGNATURE-----
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> ---
+>  arch/arm/boot/dts/armada-370-db.dts              | 1 +
+>  arch/arm/boot/dts/armada-370-mirabox.dts         | 1 +
+>  arch/arm/boot/dts/armada-370-netgear-rn102.dts   | 1 +
+>  arch/arm/boot/dts/armada-370-netgear-rn104.dts   | 1 +
+>  arch/arm/boot/dts/armada-370-rd.dts              | 1 +
+>  arch/arm/boot/dts/armada-375-db.dts              | 1 +
+>  arch/arm/boot/dts/armada-388-db.dts              | 1 +
+>  arch/arm/boot/dts/armada-388-rd.dts              | 1 +
+>  arch/arm/boot/dts/armada-xp-axpwifiap.dts        | 1 +
+>  arch/arm/boot/dts/armada-xp-db.dts               | 1 +
+>  arch/arm/boot/dts/armada-xp-gp.dts               | 1 +
+>  arch/arm/boot/dts/armada-xp-matrix.dts           | 1 +
+>  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts   | 1 +
+>  arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 1 +
+>  14 files changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
+> index e993c46..286bedd 100644
+> --- a/arch/arm/boot/dts/armada-370-db.dts
+> +++ b/arch/arm/boot/dts/armada-370-db.dts
+> @@ -56,6 +56,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
+> index b10ceb4..ec77b86 100644
+> --- a/arch/arm/boot/dts/armada-370-mirabox.dts
+> +++ b/arch/arm/boot/dts/armada-370-mirabox.dts
+> @@ -52,6 +52,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+> index 7c5c4ff..8c786cf 100644
+> --- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+> +++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+> @@ -54,6 +54,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+> index 1de53b5..1d64532 100644
+> --- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+> +++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+> @@ -54,6 +54,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+> index 6ae36a3..f40d35b 100644
+> --- a/arch/arm/boot/dts/armada-370-rd.dts
+> +++ b/arch/arm/boot/dts/armada-370-rd.dts
+> @@ -65,6 +65,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-375-db.dts b/arch/arm/boot/dts/armada-375-db.dts
+> index 0440891..033665c 100644
+> --- a/arch/arm/boot/dts/armada-375-db.dts
+> +++ b/arch/arm/boot/dts/armada-375-db.dts
+> @@ -56,6 +56,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-388-db.dts b/arch/arm/boot/dts/armada-388-db.dts
+> index af6c74e..c56ccd74 100644
+> --- a/arch/arm/boot/dts/armada-388-db.dts
+> +++ b/arch/arm/boot/dts/armada-388-db.dts
+> @@ -55,6 +55,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-388-rd.dts b/arch/arm/boot/dts/armada-388-rd.dts
+> index d99baac..e17edbb 100644
+> --- a/arch/arm/boot/dts/armada-388-rd.dts
+> +++ b/arch/arm/boot/dts/armada-388-rd.dts
+> @@ -56,6 +56,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+> index c1fbab2..a7fd474 100644
+> --- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+> +++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+> @@ -60,6 +60,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+> index 48bdafe..a12e159 100644
+> --- a/arch/arm/boot/dts/armada-xp-db.dts
+> +++ b/arch/arm/boot/dts/armada-xp-db.dts
+> @@ -65,6 +65,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+> index 206aebb..8a2e49e 100644
+> --- a/arch/arm/boot/dts/armada-xp-gp.dts
+> +++ b/arch/arm/boot/dts/armada-xp-gp.dts
+> @@ -66,6 +66,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-xp-matrix.dts b/arch/arm/boot/dts/armada-xp-matrix.dts
+> index 56f958e..3e81f22 100644
+> --- a/arch/arm/boot/dts/armada-xp-matrix.dts
+> +++ b/arch/arm/boot/dts/armada-xp-matrix.dts
+> @@ -53,6 +53,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+> index a7ceafd..508a395 100644
+> --- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+> +++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+> @@ -54,6 +54,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+> index 0c76d9f..7b2ea2060 100644
+> --- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+> +++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+> @@ -55,6 +55,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> +		stdout-path = &uart0;
+>  	};
+>  
+>  	memory {
+> 
 
---D+WCZLadiceW8Bs8--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
