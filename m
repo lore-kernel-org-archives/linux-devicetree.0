@@ -1,28 +1,39 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: msm: add watchdog entries to DT timer binding
- doc
-Date: Mon, 23 Feb 2015 11:33:23 -0800
-Message-ID: <20150223193323.GE26070@roeck-us.net>
-References: <1424485176-8348-1-git-send-email-mathieu@codeaurora.org>
- <1424485176-8348-4-git-send-email-mathieu@codeaurora.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v4 1/5] ARM: dts: pxa: add pwri2c to pxa device-tree
+Date: Mon, 23 Feb 2015 20:39:06 +0100
+Message-ID: <87pp905sf9.fsf@free.fr>
+References: <1423761758-29159-1-git-send-email-robert.jarzmik@free.fr>
+	<87y4o04k21.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424485176-8348-4-git-send-email-mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87y4o04k21.fsf@free.fr> (Robert Jarzmik's message of "Sat, 14
+	Feb 2015 15:57:58 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 20, 2015 at 06:19:36PM -0800, Mathieu Olivari wrote:
-> The watchdog has been reworked to use the same DT node as the timer.
-> This change is updating the device tree doc accordingly.
-> 
-> Signed-off-by: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Robert Jarzmik <robert.jarzmik@free.fr> writes:
 
-Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Robert Jarzmik <robert.jarzmik@free.fr> writes:
+>
+>> pxa27x variant has 2 I2C busses on the SoC :
+>>  - the casual I2C
+>>  - the power I2C, normally driving power regulators, and capable of
+>>  receiving orders on core frequency modifications
+>>
+>> Add the missing pwri2c to pxa27x description.
+>>
+>> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+>
+> Hi Rob, Mark, Sergei,
+>
+> I'd like to queue that into the pxa/dt tree next week.
+> Could I have a "Reviewed-by" ?
+Queued in pxa/dt.
+
+Cheers.
+
+-- 
+Robert
