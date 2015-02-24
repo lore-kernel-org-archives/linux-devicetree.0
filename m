@@ -1,44 +1,75 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit Exynos5433 SoC
-Date: Tue, 24 Feb 2015 10:50:47 +0100
-Message-ID: <5937606.zM91rlE7sS@wuerfel>
-References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com> <19309272.tlWX2xvTnx@wuerfel> <54EC3DE7.7070306@samsung.com>
+From: <thloh@altera.com>
+Subject: [PATCH v10 0/2] drivers/gpio: Altera soft IP GPIO driver
+Date: Tue, 24 Feb 2015 01:53:01 -0800
+Message-ID: <1424771583-4404-1-git-send-email-thloh@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <54EC3DE7.7070306@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: kgene@kernel.org, mark.rutland@arm.com, marc.zyngier@arm.com, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: dinguyen@altera.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, grant.likely@linaro.org, akpm@linux-foundation.org, davem@davemloft.net, gregkh@linuxfoundation.org, joe@perches.com, mchehab@osg.samsung.com, crope@iki.fi, linux-gpio@vger.kernel.org
+Cc: thloh.linux@gmail.com, thloh@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 24 February 2015 18:01:27 Chanwoo Choi wrote:
-> On 02/24/2015 05:33 PM, Arnd Bergmann wrote:
-> > On Tuesday 24 February 2015 14:16:45 Chanwoo Choi wrote:
-> >> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
-> >> Octal core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
-> >> PSCI (Power State Coordination Interface) v0.1.
-> >>
-> >> This patch includes following dt node to support Exynos5433 SoC:
-> >> 1. Octa core for big.LITTLE architecture
-> >> - Cortex-A53 LITTLE Quad-core
-> >> - Cortex-A57 big Quad-core
-> >> - Support PSCI v0.1
-> > 
-> > Should we try to come up with a way to better share parts of this with the
-> > exynos5 dtsi files you already have in arm32? I suspect that there is a
-> > significant overlap.
-> 
-> Currently, 32-bit Exynos5 SoC (which is included in arch/arm/boot/dts)
-> didn't support the Cortex-A53/A57 and PSCI.
-> 
-> The 32-bit Exynos5 SoC support the Coretex-A7 or A15 and big.LITTLE Exynos5 SoC
-> use the MCPM (Multi-Cluster PM) driver for secondary cpu on/off instead of PSCI.
-> 
+From: Tien Hock Loh <thloh@altera.com>
 
-Yes, I understand that. What I meant is sharing the nodes that are identical
-between e.g. all exynos54xx by using a common .dtsi file that can be included
-by 5420, 5433 and 5440.
+Adds a new device tree binding and driver for Altera soft GPIO IP.
+The driver is able to do read/write and allows GPIO to be a interrupt controller.
 
-	Arnd
+Tested on Altera GHRD on interrupt handling and IO.
+
+v10:
+Updated conflicting device tree parameters
+Removed unused headers
+Used macro instead of magic numbers for ngpio
+Code readability cleanup using ?: and temporal variables
+Removed leftover garbage and unnecessary function calls
+Checked bgpio_init but unusable because Altera GPIO may not be a multiple of 8 bits
+
+v9:
+Removed duplicated initialization on set_type using temporals to improve code readability in calling generic_handle_irq Using ?: ternary to reduce code size
+
+v8:
+Using for_each_set_bit
+added const for struct definition
+removed naggy pr_err
+sort alpha header
+remove unused macros
+use fixed width data types instead of unsigned long whitespace issue fixes removed _relaxed function for better compatibility across different CPU changed irq_create_mapping to platform_get_irq updated implementation to use gpiochip_irqchip_add reserve interrupt-cells number 2 in device tree binding for future use remove confusing sections on devicetree bindings Added tristate Kconfig help text
+
+v7:
+used dev_warn instead of pr_warn
+clean up unnecesarry if else indentation
+
+v6:
+Added irq_startup and irq_shutdown
+changed bitwise clamping style
+cleanup bitwise operation to improve readability change naming of mapped irqs from virq to mapped_irq
+
+v5:
+dispose irq_domain mapping correctly
+update optional binding description in binding docs
+
+v4:
+added vendor prefix to devicetree binding for IP specific properties using MMIO GPIO helper library instead of manually map PIO to memory altera_gpio_chip inline struct documentation to kerneldoc using dev_ print to print a better failure message
+
+v2, v3:
+Do not reference NO_IRQ
+Updated irq_set_type to only allow the hardware configured irq type
+
+
+Tien Hock Loh (2):
+  drivers/gpio: Altera soft IP GPIO driver device tree binding
+  drivers/gpio: Altera soft IP GPIO driver
+
+ .../devicetree/bindings/gpio/gpio-altera.txt       |  43 +++
+ MAINTAINERS                                        |   6 +
+ drivers/gpio/Kconfig                               |  10 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-altera.c                         | 374 +++++++++++++++++++++
+ 5 files changed, 434 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
+ create mode 100644 drivers/gpio/gpio-altera.c
+
+-- 
+1.7.11.GIT
+
