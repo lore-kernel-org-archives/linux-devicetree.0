@@ -1,108 +1,109 @@
-From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/1] ARM: dts: Enable Broadcom Cygnus BCM958305K
-Date: Tue, 24 Feb 2015 11:13:11 -0800
-Message-ID: <1424805191-10675-2-git-send-email-jonathar@broadcom.com>
-References: <Jonathan Richardson <jonathar@broadcom.com>
- <1424805191-10675-1-git-send-email-jonathar@broadcom.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v4 2/8] thermal: Provide stub for thermal_cdev_update()
+ function
+Date: Tue, 24 Feb 2015 15:21:11 -0400
+Message-ID: <20150224192109.GG3448@developer.amazonguestwifi.org>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1424254056-5904-1-git-send-email-l.majewski@samsung.com>
+ <1424254056-5904-3-git-send-email-l.majewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424805191-10675-1-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PyMzGVE0NRonI6bs"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1424254056-5904-3-git-send-email-l.majewski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-DT file to enable the Wireless Audio reference design based on the
-BCM58305.
 
-Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Tested-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/Makefile       |    3 ++-
- arch/arm/boot/dts/bcm958305k.dts |   53 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm958305k.dts
+--PyMzGVE0NRonI6bs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 91bd5bd..24b6084 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -64,7 +64,8 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
- dtb-$(CONFIG_ARCH_BCM_63XX) += bcm963138dvt.dtb
- dtb-$(CONFIG_ARCH_BCM_CYGNUS) += bcm911360_entphn.dtb \
- 	bcm911360k.dtb \
--	bcm958300k.dtb
-+	bcm958300k.dtb \
-+	bcm958305k.dtb
- dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm28155-ap.dtb \
- 	bcm21664-garnet.dtb
- dtb-$(CONFIG_ARCH_BERLIN) += \
-diff --git a/arch/arm/boot/dts/bcm958305k.dts b/arch/arm/boot/dts/bcm958305k.dts
-new file mode 100644
-index 0000000..56b429a
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm958305k.dts
-@@ -0,0 +1,53 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom Corporation nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm-cygnus.dtsi"
-+
-+/ {
-+	model = "Cygnus Wireless Audio (BCM958305K)";
-+	compatible = "brcm,bcm58305", "brcm,cygnus";
-+
-+	aliases {
-+		serial0 = &uart3;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart3;
-+		bootargs = "console=ttyS0,115200";
-+	};
-+
-+	uart3: serial@18023000 {
-+		status = "okay";
-+	};
-+};
--- 
-1.7.9.5
+On Wed, Feb 18, 2015 at 11:07:30AM +0100, Lukasz Majewski wrote:
+> Odroid U3 fan can work without being registered as OF cooling device
+> (with CONFIG_THERMAL{_OF|} disabled).
+> In this situation it can be controlled via PWM entry at
+> /sys/class/hwmon/hwmon0/pwm1.
+>=20
+> Therefore, the thermal_cdev_update() function needs a stub
+> to allow clean compilation.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've just applied a patch on this same matter from Nishanth Menon [1].
+Can you please check if his patch is enough for you?
+
+[1] -
+https://git.kernel.org/cgit/linux/kernel/git/evalenti/linux-soc-thermal.git=
+/commit/?h=3Dfixes&id=3D12ca7188468ee29c4e717f73db4bf43c90954fc7
+
+>=20
+> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> ---
+> Changes for v2:
+> - New patch
+> Changes for v3:
+> - thermal_cdev_update() now depends on CONFIG_THERMAL flag
+> Changes for v4:
+> - None
+> ---
+>  include/linux/thermal.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index eacf2de..25382e6 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -298,6 +298,7 @@ struct thermal_cooling_device *
+>  thermal_of_cooling_device_register(struct device_node *np,
+>  				   char *type, void *devdata,
+>  				   const struct thermal_cooling_device_ops *);
+> +void thermal_cdev_update(struct thermal_cooling_device *);
+>  #else
+>  static inline struct thermal_cooling_device *
+>  thermal_of_cooling_device_register(struct device_node *np,
+> @@ -306,6 +307,9 @@ thermal_of_cooling_device_register(struct device_node=
+ *np,
+>  {
+>  	return NULL;
+>  }
+> +static inline void thermal_cdev_update(struct thermal_cooling_device *cd=
+ev)
+> +{
+> +}
+>  #endif
+>  #ifdef CONFIG_THERMAL_OF
+>  struct thermal_zone_device *
+> @@ -349,7 +353,6 @@ int thermal_zone_get_temp(struct thermal_zone_device =
+*tz, unsigned long *temp);
+>  int get_tz_trend(struct thermal_zone_device *, int);
+>  struct thermal_instance *get_thermal_instance(struct thermal_zone_device=
+ *,
+>  		struct thermal_cooling_device *, int);
+> -void thermal_cdev_update(struct thermal_cooling_device *);
+>  void thermal_notify_framework(struct thermal_zone_device *, int);
+> =20
+>  #ifdef CONFIG_NET
+> --=20
+> 2.0.0.rc2
+>=20
+
+--PyMzGVE0NRonI6bs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJU7M8aAAoJEMLUO4d9pOJW8k4H/jEF+Q+GzlaavuULZiqwHnyU
+Zzl4V4x/LhdTTUlmZD5VttjW+1YUTiYu/DFOss9RHiXGYRwiUJWypztt3SxtbC0x
+q4qdNxEd+6k0zE7c+9xTgBfiE+0MtdKxijUCMEG55XWvZO3IJuNLeNDIA6mU2gkD
+fQr0Hda1GTaLINcwJef/9V+K1lYCgi87d1HZ0BFeRmib5CJ5V1sco+oSmeax5J1U
+IwN1OKG5BB3sO6bQEyFpcBwIjKe3b1JorLu4Ib32F7ZxED04EcOktJ4wKmHNH7XT
+vmCqPpRX0t3c8tntIJxAkIgwEdWKvViDZXFJbclgTY83ZON7F0HVjimRihnU7dM=
+=YtLR
+-----END PGP SIGNATURE-----
+
+--PyMzGVE0NRonI6bs--
