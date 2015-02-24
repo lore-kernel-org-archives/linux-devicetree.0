@@ -1,37 +1,43 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 3/3] MAINTAINERS: Add Ingenic JZ4780 DMA driver maintainer entry
-Date: Tue, 24 Feb 2015 18:08:17 +0000
-Message-ID: <1424801297-18354-4-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1424801297-18354-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am335x-bone*: usb0 is hardwired for peripheral
+Date: Tue, 24 Feb 2015 10:03:10 -0800
+Message-ID: <20150224180309.GH11056@atomide.com>
+References: <1424794243-23394-1-git-send-email-robertcnelson@gmail.com>
+ <20150224161941.GM29829@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424801297-18354-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com
-Cc: dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex@alex-smith.me.uk, Zubair.Kakakhel@imgtec.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20150224161941.GM29829@saruman.tx.rr.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
----
- MAINTAINERS | 5 +++++
- 1 file changed, 5 insertions(+)
+* Felipe Balbi <balbi@ti.com> [150224 08:23]:
+> On Tue, Feb 24, 2015 at 10:10:43AM -0600, Robert Nelson wrote:
+> > Fixes: http://bugs.elinux.org/issues/127
+> > 
+> > the bb.org community was seeing random reboots before this change.
+> > 
+> > Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> 
+> that's a dead giveaway considering the connector in the board :-)
+> 
+> Thanks
+> 
+> Reviewed-by: Felipe Balbi <balbi@ti.com>
+> Acked-by: Felipe Balbi <balbi@ti.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ddc5a8c..be98874 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4962,6 +4962,11 @@ W:	http://industrypack.sourceforge.net
- S:	Maintained
- F:	drivers/ipack/
- 
-+INGENIC JZ4780 DMA Driver
-+M:	Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-+S:	Maintained
-+F:	drivers/dma/dma-jz4780.c
-+
- INTEGRITY MEASUREMENT ARCHITECTURE (IMA)
- M:	Mimi Zohar <zohar@linux.vnet.ibm.com>
- M:	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
--- 
-1.9.1
+Applying into omap-for-v4.0/fixes thanks.
+
+Tony
