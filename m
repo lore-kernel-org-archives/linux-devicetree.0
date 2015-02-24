@@ -1,33 +1,46 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 06/12] ARM: DT: apq8064: add pci support in CM QS600
-Date: Tue, 24 Feb 2015 12:23:35 +0200
-Message-ID: <54EC5127.1090504@mm-sol.com>
-References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org> <1424678135-13178-1-git-send-email-srinivas.kandagatla@linaro.org> <54EB0F7F.1050307@compulab.co.il> <54EB1245.3030902@linaro.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 4/4] ARM: dts: sun8i: ippo-q8h-v5: Enable
+ Reduced Serial Bus controller
+Date: Tue, 24 Feb 2015 18:29:04 +0800
+Message-ID: <1424773744-15106-5-git-send-email-wens@csie.org>
+References: <1424773744-15106-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54EB1245.3030902@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Igor Grinberg <grinberg@compulab.co.il>, Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBAFFWGTQKGQEFHIC47Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1424773744-15106-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2015 01:43 PM, Srinivas Kandagatla wrote:
-> Hi Kumar,
-> 
-> Sorry, I should have dropped this patch.. PCIE is still not in the
-> mainline.. :-)
-> 
+The Reduced Serial Bus controller is used to talk to the onboard PMIC.
 
-Srini,
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Does it possible to reuse the driver which I'm trying to upstream at [1]
-? I'm planing to send v2 soon.
-
-
-[1] https://lkml.org/lkml/2014/12/12/557
-
+diff --git a/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts b/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts
+index 4cb25f8267c8..31882e6e7a38 100644
+--- a/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts
++++ b/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts
+@@ -125,6 +125,10 @@
+ 	};
+ };
+ 
++&r_rsb {
++	status = "okay";
++};
++
+ &r_uart {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&r_uart_pins_a>;
 -- 
-regards,
-Stan
+2.1.4
