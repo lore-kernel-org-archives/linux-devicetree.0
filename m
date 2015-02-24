@@ -1,64 +1,60 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/5] ARM: DTS: OMAP/DRA7: dma property name correction
-Date: Tue, 24 Feb 2015 10:02:47 -0800
-Message-ID: <20150224180246.GE11056@atomide.com>
-References: <1424439726-31994-1-git-send-email-peter.ujfalusi@ti.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V2 0/3] dma: dt: Add DMA driver for jz4780
+Date: Tue, 24 Feb 2015 18:08:14 +0000
+Message-ID: <1424801297-18354-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1424439726-31994-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: vinod.koul@intel.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [150220 05:45]:
-> Hi,
-> 
-> While working on the DMA crossbar support for DRA7 typo of devices I have
-> noticed that the dma-channels and dma-requests properties of sdma wrongly
-> has # at the beginning.
-> According to the documentation, it should not have:
-> Documentation/devicetree/bindings/dma/dma.txt
-> 
-> Since these properties are not in use at the moment, but it is going to be needed
-> for the crossbar driver it is better to fix it right now so we do not need to
-> patch .dtsi and .c files at the same time later.
-> 
-> Tony: I would really appreciate if this could go in within the current merge
-> window.
+Hi,
 
-Yeah applying into omap-for-v4.0/fixes, let's get it out of the
-way to avoid more cut-n-paste errors.
+Here we have three patches that add a DMA driver for the Ingenic JZ4780 SoC.
 
-Regards,
+JZ4780 support is still in-flight.
 
-Tony
- 
-> Peter Ujfalusi (5):
->   ARM: DTS: omap2: Correct the dma controller's property names
->   ARM: DTS: omap3: Correct the dma controller's property names
->   ARM: DTS: omap4: Correct the dma controller's property names
->   ARM: DTS: omap5: Correct the dma controller's property names
->   ARM: DTS: dra7: Correct the dma controller's property names
-> 
->  arch/arm/boot/dts/dra7.dtsi  | 4 ++--
->  arch/arm/boot/dts/omap2.dtsi | 4 ++--
->  arch/arm/boot/dts/omap3.dtsi | 4 ++--
->  arch/arm/boot/dts/omap4.dtsi | 4 ++--
->  arch/arm/boot/dts/omap5.dtsi | 4 ++--
->  5 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 2.3.0
-> 
+See http://patchwork.linux-mips.org/bundle/paulburton/ci20-v3.20/
+
+These are based on 4.0-rc1.
+
+Apart from the channel numbers, jz4740 and jz4780 are quite different.
+jz4780 has many more features in hardware.
+
+Hence, we are unable to use the jz4740-dma driver.
+
+V1->V2 changes
+Updates for dmaengine api changes.
+Add residue support.
+Details in the patch commit message
+
+ZubairLK
+
+
+Alex Smith (2):
+  dt-bindings: dma: Add binding for jz4780-dma
+  dma: jz4780: add driver for the Ingenic JZ4780 DMA controller
+
+Zubair Lutfullah Kakakhel (1):
+  MAINTAINERS: Add Ingenic JZ4780 DMA driver maintainer entry
+
+ .../devicetree/bindings/dma/jz4780-dma.txt         |  61 ++
+ MAINTAINERS                                        |   5 +
+ drivers/dma/Kconfig                                |  10 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/dma-jz4780.c                           | 877 +++++++++++++++++++++
+ include/dt-bindings/dma/jz4780-dma.h               |  49 ++
+ 6 files changed, 1003 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/jz4780-dma.txt
+ create mode 100644 drivers/dma/dma-jz4780.c
+ create mode 100644 include/dt-bindings/dma/jz4780-dma.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
