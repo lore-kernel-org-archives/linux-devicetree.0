@@ -1,95 +1,50 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH][v4.0-rc] ARM: dts: dra7x-evm: beagle-x15: Fix USB Host
-Date: Tue, 24 Feb 2015 14:37:07 +0200
-Message-ID: <1424781427-15356-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v6 0/3] dmaengine: APM X-Gene SoC DMA engine driver support
+Date: Tue, 24 Feb 2015 18:23:56 +0530
+Message-ID: <1424782439-31485-1-git-send-email-rsahu@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: balbi-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In commit 87517d26d888 ("ARM: dts: dra7-evm: Add extcon nodes for USB")
-we enabled Extcon USB gpio to tackle the USB ID pin and get
-peripheral mode to work.
+This patch set implements the APM X-Gene SoC DMA driver
+support to offload the DMA operations such as memory copy(memcpy),
+scatter gather memory copy.
 
-But the extcon-gpio-usb driver [1] didn't make it into v4.0
-and this makes the USB driver defer probe indefinitely breaking
-USB Host functionality.
+v6 changes:
+	1. Maintained sw queue for pending, running, and completed
+	   requests. Used link list as queue.
+	2. Fixed issue_pending and tx_submit routines.
+	3. Fixed prep_dma routines.
+	4. Fixed free_irqs.
 
-As a temporary fix we remove the extcon handle from the
-USB controller and add it back when the extcon driver
-merges in v4.1.
+v5 changes:
+	1. Minor changes in coding style.
+	2. Added DMA_CTRL_ACK flag initialization
+v4 changes:
+	1. Fixed dma-ranges property on DTS.
 
-[1] - https://lkml.org/lkml/2015/2/2/187
-
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 ---
- arch/arm/boot/dts/am57xx-beagle-x15.dts | 8 --------
- arch/arm/boot/dts/dra7-evm.dts          | 8 --------
- arch/arm/boot/dts/dra72-evm.dts         | 8 --------
- 3 files changed, 24 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index 03750af..6463f9e 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-@@ -549,14 +549,6 @@
- 	pinctrl-0 = <&usb1_pins>;
- };
- 
--&omap_dwc3_1 {
--	extcon = <&extcon_usb1>;
--};
--
--&omap_dwc3_2 {
--	extcon = <&extcon_usb2>;
--};
--
- &usb2 {
- 	dr_mode = "peripheral";
- };
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 746cddb..3290a96 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -543,14 +543,6 @@
- 	};
- };
- 
--&omap_dwc3_1 {
--	extcon = <&extcon_usb1>;
--};
--
--&omap_dwc3_2 {
--	extcon = <&extcon_usb2>;
--};
--
- &usb1 {
- 	dr_mode = "peripheral";
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
-index 4d87117..e0264d0 100644
---- a/arch/arm/boot/dts/dra72-evm.dts
-+++ b/arch/arm/boot/dts/dra72-evm.dts
-@@ -380,14 +380,6 @@
- 	phy-supply = <&ldo4_reg>;
- };
- 
--&omap_dwc3_1 {
--	extcon = <&extcon_usb1>;
--};
--
--&omap_dwc3_2 {
--	extcon = <&extcon_usb2>;
--};
--
- &usb1 {
- 	dr_mode = "peripheral";
- 	pinctrl-names = "default";
--- 
-2.1.0
+Rameshwar Prasad Sahu (3):
+  dmaengine: Add support for APM X-Gene SoC DMA engine driver
+  arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
+  Documentation: dma: Add APM X-Gene SoC DMA engine driver documentation
+
+ .../devicetree/bindings/dma/apm-xgene-dma.txt      |   49 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   26 +
+ drivers/dma/Kconfig                                |    8 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/xgene-dma.c                            | 1738 ++++++++++++++++++++
+ 5 files changed, 1822 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+ create mode 100755 drivers/dma/xgene-dma.c
+
+--
+1.8.2.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
