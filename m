@@ -1,56 +1,52 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] ARM64: Add new Xilinx ZynqMP SoC
-Date: Tue, 24 Feb 2015 10:29:57 -0600
-Message-ID: <CAL_JsqJVdZMwweta=N-P-d=C6JNsXk0BsGcrexe2yDPm7c5pfg@mail.gmail.com>
-References: <8ac3037c175711dec0adcd0d898be7d9722e0ed0.1424764548.git.michal.simek@xilinx.com>
- <CAL_JsqKkVHaf_U0nU9nqa2q5XwfsuCu-ZWVEHx6b5Mv9Hgen1Q@mail.gmail.com> <9bffa4683bd6478993de6bea1d3027af@BN1AFFO11FD048.protection.gbl>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/2] ARM: DRA7x/OMAP5: Clock: DPLL Clock fixes
+Date: Tue, 24 Feb 2015 08:27:20 -0800
+Message-ID: <20150224162719.GA28244@atomide.com>
+References: <1422724005-9415-1-git-send-email-rk@ti.com>
+ <54E5FC6D.7040701@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9bffa4683bd6478993de6bea1d3027af@BN1AFFO11FD048.protection.gbl>
+Content-Disposition: inline
+In-Reply-To: <54E5FC6D.7040701@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Ravikumar Kattekola <rk@ti.com>, Tero Kristo <t-kristo@ti.com>
+Cc: bcousson@baylibre.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 24, 2015 at 8:58 AM, Michal Simek <michal.simek@xilinx.com>=
- wrote:
-> On 02/24/2015 03:42 PM, Rob Herring wrote:
->> On Tue, Feb 24, 2015 at 1:56 AM, Michal Simek <michal.simek@xilinx.c=
-om> wrote:
->>> Initial version of device tree for Xilinx ZynqMP SoC.
->>>
->>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>> Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
->>> ---
->>
->> [...]
->>
->>> +               gic: interrupt-controller@f9010000 {
->>> +                       compatible =3D "arm,cortex-a15-gic", "arm,c=
-ortex-a9-gic";
->>
->> gic-400, right?
->
-> yep
->
->>
->>> +                       #interrupt-cells =3D <3>;
->>> +                       reg =3D <0x0 0xf9010000 0x10000>,
->>> +                             <0x0 0xf9020000 0x20000>,
->>> +                             <0x0 0xf9040000 0x20000>,
->>> +                             <0x0 0xf9060000 0x20000>;
->>
->> These addresses are wrong if you are doing address swizzling to do 6=
-4K
->> offsets. We don't really have an answer yet as to what is the right
->> way. See the XGene GIC discussion[1].
->
-> Is this better for GICC?
-> <0x0 0xf902f000 0x2000>
+* Ravikumar Kattekola <rk@ti.com> [150219 08:13]:
+> On 1/31/2015 10:36 PM, Ravikumar Kattekola wrote:
+> >Fix bypass clock source for a few DPLLs.
+> >
+> >On DRA7x/OMAP5, for a few DPLLs, both CLKINP and CLKINPULOW are connected
+> >to a mux and the output from mux is routed to the bypass clkout.
+> >Add a mux-clock as bypass clock with CLKINP and CLKINPULOW as parents.
+> >
+> >Tested against:
+> >	tree: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
+> >	branch: master
+> >On:
+> >CPU  : OMAP5432 ES2.0
+> >Board: OMAP5432 uEVM
+> >and
+> >CPU  : DRA752 ES1.0
+> >Board: DRA7xx
+> >
+> >
+> >Ravikumar Kattekola (2):
+> >   ARM: DRA7x: dts: Fix the bypass clock source for dpll_iva and others
+> >   ARM: OMAP5: dts: Fix the bypass clock source for dpll_iva and others
+> >
+> >  arch/arm/boot/dts/dra7xx-clocks.dtsi   |   90 ++++++++++++++++++++++++++++----
+> >  arch/arm/boot/dts/omap54xx-clocks.dtsi |   41 +++++++++++++--
+> >  2 files changed, 118 insertions(+), 13 deletions(-)
+> >
+> Hi Benoit,
+>     Can these fixes be looked into for 3.20-rc?
 
-Yes, and the VCPU interface needs this as well. As far as sizes, we're
-still discussing that.
+Seem like valid fixes to me. Tero, care to take a look at these and ack
+if OK?
 
-Rob
+Regards,
+
+Tony
