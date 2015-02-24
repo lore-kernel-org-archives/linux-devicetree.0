@@ -1,42 +1,34 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Tue, 24 Feb 2015 18:01:27 +0900
-Message-ID: <54EC3DE7.7070306@samsung.com>
-References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com>
- <1424755011-15999-3-git-send-email-cw00.choi@samsung.com>
- <19309272.tlWX2xvTnx@wuerfel>
+From: vichy <vichy.kuo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: possible add CONFIG define in dts?
+Date: Tue, 24 Feb 2015 17:03:06 +0800
+Message-ID: <CAOVJa8FmpFFk=3YwgTX4N3u5AKmM05jpbzww4_xNvS3d=W8sRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <19309272.tlWX2xvTnx@wuerfel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: kgene@kernel.org, mark.rutland@arm.com, marc.zyngier@arm.com, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/24/2015 05:33 PM, Arnd Bergmann wrote:
-> On Tuesday 24 February 2015 14:16:45 Chanwoo Choi wrote:
->> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
->> Octal core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
->> PSCI (Power State Coordination Interface) v0.1.
->>
->> This patch includes following dt node to support Exynos5433 SoC:
->> 1. Octa core for big.LITTLE architecture
->> - Cortex-A53 LITTLE Quad-core
->> - Cortex-A57 big Quad-core
->> - Support PSCI v0.1
-> 
-> Should we try to come up with a way to better share parts of this with the
-> exynos5 dtsi files you already have in arm32? I suspect that there is a
-> significant overlap.
+hi all:
+I want to share 1 dts when my linux kernel running on different platform.
+is it possible to use #ifdef CONFIGxxx like below?
+( Compile is pass, but I still get arm,data-latency, arm,tag-latency as <6 6 6>
+Sincerely appreciate your kind help in advance,
 
-Currently, 32-bit Exynos5 SoC (which is included in arch/arm/boot/dts)
-didn't support the Cortex-A53/A57 and PSCI.
-
-The 32-bit Exynos5 SoC support the Coretex-A7 or A15 and big.LITTLE Exynos5 SoC
-use the MCPM (Multi-Cluster PM) driver for secondary cpu on/off instead of PSCI.
-
-Thanks,
-Chanwoo Choi
+        L2: cache-controller@ffe00000 {
+                compatible = "arm,pl310-cache";
+                reg = <0xffe00000 0x1000>;
+                interrupts = <0 96 4>;
+                cache-level = <2>;
+#ifdef CONFIG_ARCH_PLAT_FPGA
+                arm,data-latency = <0 0 0>;
+                arm,tag-latency = <0 0 0>;
+#else
+                arm,data-latency = <6 6 6>;
+                arm,tag-latency = <6 6 6>;
+#endif
+        };
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
