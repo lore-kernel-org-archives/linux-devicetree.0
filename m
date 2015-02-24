@@ -1,75 +1,98 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/7] OPP: Redefine bindings to overcome shortcomings
-Date: Tue, 24 Feb 2015 09:54:59 +0530
-Message-ID: <CAKohpo=CRkJTkp2FXgYNwd2eEtMVRFuwJ=GPtX7+9WnQD6CK2Q@mail.gmail.com>
-References: <cover.1423642246.git.viresh.kumar@linaro.org>
-	<be795ef7ec98669bc5aa90ec426a1ec1fbc32b6c.1423642246.git.viresh.kumar@linaro.org>
-	<7ha904b6hp.fsf@deeprootsystems.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add SDHI0/1 DT support
+Date: Mon, 23 Feb 2015 20:28:03 -0800
+Message-ID: <CANqRtoQhGOob734kNqNNjMxPcT2Fz=1X6J4M1iobzyiF8Cp8nQ@mail.gmail.com>
+References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
+	<2348421.LHyZ4ZOiiG@wasted.cogentembedded.com>
+	<CANqRtoRnDzTSvKYcNDHKHbeaN7jp1VvKnk1jTHDvNt1oyBzwKg@mail.gmail.com>
+	<54E9ED95.8070702@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <7ha904b6hp.fsf@deeprootsystems.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <54E9ED95.8070702@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24 February 2015 at 04:06, Kevin Hilman <khilman@kernel.org> wrote:
-> Viresh Kumar <viresh.kumar@linaro.org> writes:
+Hi Sergei,
 
->> +Optional properties:
->> +- shared-opp: Indicates that device nodes using this OPP descriptor's phandle
->> +  switch their DVFS state together, i.e. they share clock lines.
+On Sun, Feb 22, 2015 at 6:54 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Hello.
 >
-> ... or shared voltage rail?
-
-The point is that they switch their frequencies together. Which means,
-sharing voltage
-rail + PLLs .. How do we write it properly ?
-
->> +  Missing property means devices have independent clock lines, but they share OPPs.
+> On 02/22/2015 03:45 AM, Magnus Damm wrote:
 >
-> huh?  missing 'shared-opp' property means they share OPPs?  -ECONFUSED.
+>>> Define the SILK board dependent parts of the SDHI0  (connected to SDIO
+>>> Wi-Fi
+>>> chip)  and SDHI1  (connected to micro-SD slot) device nodes along with
+>>> the
+>>> necessary voltage regulators.
+>
+>
+>>> Based on the original patch by Vladimir Barinov
+>>> <vladimir.barinov@cogentembedded.com>.
+>
+>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+>
+>> Thanks for your patch. One question - above you write that SDHI1 is
+>> micro-SD...
+>
+>
+>    Yes, have double-checked now.
+>
+>
+>>> @@ -100,3 +159,25 @@
+>>>          non-removable;
+>>>          status = "okay";
+>>>   };
+>>> +
+>>> +&sdhi0 {
+>>> +       pinctrl-0 = <&sdhi0_pins>;
+>>> +       pinctrl-names = "default";
+>>> +
+>>> +       vmmc-supply = <&vcc_sdhi0>;
+>>> +       vqmmc-supply = <&vccq_sdhi0>;
+>>> +       cd-gpios = <&gpio6 6 GPIO_ACTIVE_LOW>;
+>>> +       wp-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&sdhi1 {
+>>> +       pinctrl-0 = <&sdhi1_pins>;
+>>> +       pinctrl-names = "default";
+>>> +
+>>> +       vmmc-supply = <&vcc_sdhi1>;
+>>> +       vqmmc-supply = <&vccq_sdhi1>;
+>>> +       cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
+>>> +       wp-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
+>>> +       status = "okay";
+>>> +};
+>
+>
+>> ... however here the WP signal is assigned.
+>
+>
+>> I believe micro-SD doesn't use the WP signal, so either I'm wrong or
+>> the patch needs to be updated to reflect reality. =)
+>
+>
+>    Both seem correct: SD1_WP signal is just tied to VCCQ_SD1. Do you think
+> we should still drop it?
 
-Right. s/OPPs/OPP tables ..
+If the signal is not exposed to the card connector then I believe the
+correct approach is to omit it. So yes, please drop it.
 
-Makes sense now ?
+>> Also, I doubt that an on-board SDIO module makes use of CD and/or WP
+>> signals?
+>
+>    Those two are tied to VCCQ_SD0 as well. Do you think we should drop them?
 
-> Maybe I missed some of the discussion of why this property is needed,
-> but I'm left wondering why it's needed explicitly.  With the OPPs as
+Since the on-board SDIO chip does not support hotplug and cannot be
+write-protected I think those should be dropped too.
 
-So that same OPP tables can be shared across CPUs which don't share
-voltage rails..
-For example, Krait. We only need to define single set of tables and
-all CPUs will point
-to it. But this property would be missing in that case as CPUs don't
-change their DVFS
-state together.
+Thanks,
 
-> part of the CPU nodes, shouldnt' the "shared" nature of the OPP be
-> easily derived from the clock and or regulator (opp-supply) property of
-> the CPU nodes?  IOW, if two CPU nodes share a clock and/or a regulator,
-> the framework should know it's "shared".
-
-So you missed all earlier discussions :), there were lots of concerns
-around that.
-And the best solution we found out is to do it this way..
-
-- There can be multiple clocks/regulators present in CPU's DT node and
-that makes
-it complex.
-- There are cases where immediate clock parents of CPUs are different
-but somewhere
-higher in the hierarchy they have a common ancestor, which is
-responsible for rate
-change. And so it would be difficult to find out if they share
-clock/regulator or not..
-- People wanted it to be some static data instead of trying to find
-with help of some
-algorithms..
-
-> Or, were there other reasons besides clocks/regulators why this property
-> was needed (if so, the documentation doesn't describe them.)
-
-I am not sure if we need to mention anything else.. But yes, please let me know
-if it can be improved a bit.
+/ magnus
