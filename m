@@ -1,38 +1,64 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: DTS: omap3-n900.dts: fix i2c bus numbering
-Date: Tue, 24 Feb 2015 10:02:17 -0800
-Message-ID: <20150224180217.GB11056@atomide.com>
-References: <1423410536-16579-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20150209150245.GC21362@kahuna>
- <54D8DA56.8060400@gmail.com>
+Subject: Re: [PATCH 0/5] ARM: DTS: OMAP/DRA7: dma property name correction
+Date: Tue, 24 Feb 2015 10:02:47 -0800
+Message-ID: <20150224180246.GE11056@atomide.com>
+References: <1424439726-31994-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <54D8DA56.8060400@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, pali.rohar@gmail.com, pavel@ucw.cz, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1424439726-31994-1-git-send-email-peter.ujfalusi@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: vinod.koul@intel.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com> [150209 08:07]:
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [150220 05:45]:
+> Hi,
 > 
+> While working on the DMA crossbar support for DRA7 typo of devices I have
+> noticed that the dma-channels and dma-requests properties of sdma wrongly
+> has # at the beginning.
+> According to the documentation, it should not have:
+> Documentation/devicetree/bindings/dma/dma.txt
 > 
-> On  9.02.2015 17:02, Nishanth Menon wrote:
-> >On 17:48-20150208, Ivaylo Dimitrov wrote:
-> >>With legacy boot i2c buses on Nokia N900 are numbered i2c1, i2c2 and i2c3.
-> >>Commit 20b80942ef4e ("ARM: dts: OMAP3+: Add i2c aliases") fixed the
-> >>numbering with DT boot, but introduced a regression on N900 - aliases
-> >>become i2c0, i2c1 and i2c2. Fix that by providing the correct aliases in
-> >>the board dts.
-> >>
-> >>Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> >>---
-> >I suppose this is due to some legacy userspace breakage?
-> >if yes, we do not intend to break userspace :), So:
+> Since these properties are not in use at the moment, but it is going to be needed
+> for the crossbar driver it is better to fix it right now so we do not need to
+> patch .dtsi and .c files at the same time later.
 > 
-> Yes, legacy userspace breakage :)
+> Tony: I would really appreciate if this could go in within the current merge
+> window.
 
-Applying into omap-for-v4.0/fixes thanks,
+Yeah applying into omap-for-v4.0/fixes, let's get it out of the
+way to avoid more cut-n-paste errors.
+
+Regards,
 
 Tony
+ 
+> Peter Ujfalusi (5):
+>   ARM: DTS: omap2: Correct the dma controller's property names
+>   ARM: DTS: omap3: Correct the dma controller's property names
+>   ARM: DTS: omap4: Correct the dma controller's property names
+>   ARM: DTS: omap5: Correct the dma controller's property names
+>   ARM: DTS: dra7: Correct the dma controller's property names
+> 
+>  arch/arm/boot/dts/dra7.dtsi  | 4 ++--
+>  arch/arm/boot/dts/omap2.dtsi | 4 ++--
+>  arch/arm/boot/dts/omap3.dtsi | 4 ++--
+>  arch/arm/boot/dts/omap4.dtsi | 4 ++--
+>  arch/arm/boot/dts/omap5.dtsi | 4 ++--
+>  5 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> -- 
+> 2.3.0
+> 
