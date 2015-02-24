@@ -1,39 +1,54 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 06/12] ARM: DT: apq8064: add pci support in CM QS600
-Date: Tue, 24 Feb 2015 10:47:28 +0000
-Message-ID: <54EC56C0.1010705@linaro.org>
-References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org> <1424678135-13178-1-git-send-email-srinivas.kandagatla@linaro.org> <54EB0F7F.1050307@compulab.co.il> <54EB1245.3030902@linaro.org> <54EC5127.1090504@mm-sol.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: possible add CONFIG define in dts?
+Date: Tue, 24 Feb 2015 11:02:11 +0000
+Message-ID: <20150224110210.GS9714@leverpostej>
+References: <CAOVJa8FmpFFk=3YwgTX4N3u5AKmM05jpbzww4_xNvS3d=W8sRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <54EC5127.1090504@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Igor Grinberg <grinberg@compulab.co.il>, Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOVJa8FmpFFk=3YwgTX4N3u5AKmM05jpbzww4_xNvS3d=W8sRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vichy <vichy.kuo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 24, 2015 at 09:03:06AM +0000, vichy wrote:
+> hi all:
+> I want to share 1 dts when my linux kernel running on different platform.
+> is it possible to use #ifdef CONFIGxxx like below?
+> ( Compile is pass, but I still get arm,data-latency, arm,tag-latency as <6 6 6>
+> Sincerely appreciate your kind help in advance,
+> 
+>         L2: cache-controller@ffe00000 {
+>                 compatible = "arm,pl310-cache";
+>                 reg = <0xffe00000 0x1000>;
+>                 interrupts = <0 96 4>;
+>                 cache-level = <2>;
+> #ifdef CONFIG_ARCH_PLAT_FPGA
+>                 arm,data-latency = <0 0 0>;
+>                 arm,tag-latency = <0 0 0>;
+> #else
+>                 arm,data-latency = <6 6 6>;
+>                 arm,tag-latency = <6 6 6>;
+> #endif
+>         };
 
+The DTB should describe the HW, and thus should be separate from the
+CONFIG options, which control the behaviour of the kernel. So CONFIG_*
+in DTBs doesn't make much sense.
 
-On 24/02/15 10:23, Stanimir Varbanov wrote:
-> On 02/23/2015 01:43 PM, Srinivas Kandagatla wrote:
->> Hi Kumar,
->>
->> Sorry, I should have dropped this patch.. PCIE is still not in the
->> mainline.. :-)
->>
->
-> Srini,
->
-> Does it possible to reuse the driver which I'm trying to upstream at [1]
+This is broken for a multi-platform kernel, no?
 
-Yes, it should be possible, that's the plan anyway for A family.
+If you want to build DTBs for platforms with slight differences as
+above, place the common portion in a shared dtsi, and override the parts
+which are different in each dts. You'll end up with a dtb for each
+variation, but you don't need to repeat all the common parts in each
+dts.
 
-> ? I'm planing to send v2 soon.
-Great.
-
---srini
->
->
-> [1] https://lkml.org/lkml/2014/12/12/557
->
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
