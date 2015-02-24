@@ -1,52 +1,83 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq demuxer chip
-Date: Tue, 24 Feb 2015 02:02:59 +0100
-Message-ID: <5209097.N5537nGsQV@vostro.rjw.lan>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com> <5225828.OI8hbGqrC4@vostro.rjw.lan> <20150220103144.GI13659@leverpostej>
+From: Jaewon Kim <jaewon02.kim@samsung.com>
+Subject: Re: [PATCH v4 4/5] Input: add haptic drvier on max77843
+Date: Tue, 24 Feb 2015 09:59:15 +0900
+Message-ID: <54EBCCE3.8070404@samsung.com>
+References: <1424678991-13978-1-git-send-email-jaewon02.kim@samsung.com>
+ <1424678991-13978-5-git-send-email-jaewon02.kim@samsung.com>
+ <20150223172658.GA604@dtor-glaptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150220103144.GI13659@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-reply-to: <20150223172658.GA604@dtor-glaptop>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Beomho Seo <beomho.seo@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, February 20, 2015 10:31:44 AM Mark Rutland wrote:
-> [...]
+Hi Dmitry Torokhov,
 
-[cut]
- 
-> Given all of the above I'll go back to the IRQF_SHARED_TIMER_OK approach
-> you proposed, along with documentation updates and comments at usage
-> sites to make it clear when it is valid to use.
-> 
-> Thank you for bearing with me so far.
+On 02/24/2015 02:26 AM, Dmitry Torokhov wrote:
+> Hi Jaew9on,
+>
+> On Mon, Feb 23, 2015 at 05:09:50PM +0900, Jaewon Kim wrote:
+>> This patch adds support for haptic driver on max77843
+>> MFD(Multi Function Device) with PMIC, MUIC, LED, CHARGER.
+>>
+>> This driver supports external pwm and LRA(Linear Resonant Actuator) motor.
+>> And it supports ff-memless interface from inpu framework.
+>>
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+> ...
+>
+>> +static void max77843_haptic_play_work(struct work_struct *work)
+>> +{
+>> +	struct max77843_haptic *haptic =
+>> +			container_of(work, struct max77843_haptic, work);
+>> +	int error;
+>> +
+>> +	mutex_lock(&haptic->mutex);
+>> +
+>> +	if (haptic->suspended)
+>> +		mutex_unlock(&haptic->mutex);
+> Huh?
+This code prevent to play haptic when entering suspend state.
+But I forgot return.
+I will add return 0 in version 6.
 
-No prob. :-)
+>
+>> +
+>> +	error = max77843_haptic_set_duty_cycle(haptic);
+>> +	if (error) {
+>> +		dev_err(haptic->dev, "failed to set duty cycle: %d\n", error);
+>> +		return;
+> Here you are leaving with the mutex held.
+Okay, I will add mutex_unlock().
+>
+>> +	}
+>> +
+>> +	if (haptic->magnitude) {
+>> +		error = max77843_haptic_enable(haptic);
+>> +		if (error)
+>> +			dev_err(haptic->dev,
+>> +					"cannot enable haptic: %d\n", error);
+>> +	} else {
+>> +		max77843_haptic_disable(haptic);
+>> +		if (error)
+>> +			dev_err(haptic->dev,
+>> +					"cannot disable haptic: %d\n", error);
+>> +	}
+>> +
+>> +	mutex_unlock(&haptic->mutex);
+>> +}
+>> +
+> The rest seems quite reasonable.
+>
+> Thanks.
+>
+Thanks to review my patch.
 
-Actually, there's one more approach possible.  Thomas might not like it, but
-here it goes anyway for consideration.
 
-What about making it possible to provide a special irqaction to be called
-while suspended for the shared IRQF_NO_SUSPEND interrupts.
-
-Say we have a "suspended_action" pointer in struct irq_desc in addition to
-"action" and we swap them in suspend_device_irq() if desc->no_suspend_depth is
-nonzero and "suspended_action" is not NULL (and then back in resume_irq()).
-Then, the platform might supply "suspended_action" that will do the right
-thing for the IRQ.
-
-So the requirement would be to have "suspended_action" set to start with
-and then the WARN_ON() in irq_pm_install_action() may check if that is present
-and only trigger the warning if it isn't.
-
-Thoughs?
-
-Rafael
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Jaewon Kim
