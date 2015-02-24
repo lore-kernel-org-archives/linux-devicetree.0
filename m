@@ -1,139 +1,33 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ARM64: Add new Xilinx ZynqMP SoC
-Date: Tue, 24 Feb 2015 18:38:31 +0000
-Message-ID: <20150224183831.GZ9714@leverpostej>
-References: <8ac3037c175711dec0adcd0d898be7d9722e0ed0.1424764548.git.michal.simek@xilinx.com>
+From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/1] Enable Broadcom Cygnus BCM958305K
+Date: Tue, 24 Feb 2015 11:13:10 -0800
+Message-ID: <1424805191-10675-1-git-send-email-jonathar@broadcom.com>
+References: <Jonathan Richardson <jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8ac3037c175711dec0adcd0d898be7d9722e0ed0.1424764548.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+This patchset adds a DTS file to enable the BCM58305 Wireless Audio reference
+design based on Cygnus. It will be kept up to date as Cygnus drivers are
+accepted into the mainline.
 
-I have a few minor comments below, but generally this is looking like
-one of the best dts submissions I've seen!
+Jonathan Richardson (1):
+  ARM: dts: Enable Broadcom Cygnus BCM958305K
 
-[...]
+ arch/arm/boot/dts/Makefile       |    3 ++-
+ arch/arm/boot/dts/bcm958305k.dts |   53 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/bcm958305k.dts
 
-> +/ {
-> +       model = "ZynqMP EP108";
-> +
-> +       aliases {
-> +               serial0 = &uart0;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = "serial0:115200n8";
-> +       };
+-- 
+1.7.9.5
 
-Thanks for using stdout-path with the full parameters.
-
-Does your UART have earlycon support?
-
-[...]
-
-> +/ {
-> +       compatible = "xlnx,zynqmp";
-> +       #address-cells = <2>;
-> +       #size-cells = <1>;
-
-I guess this is fine, though to me it feels more natural to use
-#size-cells = <2> in case we need to describe larger ranges for some bus
-later.
-
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       compatible = "arm,cortex-a53", "arm,armv8";
-> +                       device_type = "cpu";
-> +                       enable-method = "psci";
-> +                       reg = <0x0>;
-> +               };
-> +
-> +               cpu@1 {
-> +                       compatible = "arm,cortex-a53", "arm,armv8";
-> +                       device_type = "cpu";
-> +                       enable-method = "psci";
-> +                       reg = <0x1>;
-> +               };
-> +
-> +               cpu@2 {
-> +                       compatible = "arm,cortex-a53", "arm,armv8";
-> +                       device_type = "cpu";
-> +                       enable-method = "psci";
-> +                       reg = <0x2>;
-> +               };
-> +
-> +               cpu@3 {
-> +                       compatible = "arm,cortex-a53", "arm,armv8";
-> +                       device_type = "cpu";
-> +                       enable-method = "psci";
-> +                       reg = <0x3>;
-> +               };
-> +       };
-
-These look fine.
-
-> +
-> +       psci {
-> +               compatible = "arm,psci-0.2";
-> +               method = "smc";
-> +       };
-
-Neat!
-
-What are you using as your implementation? Are all the mandatory
-PSCIv0.2 features implemented (e.g. MIGRATE_INFO_TYPE)?
-
-I take it this boots at EL2 on all CPUs?
-
-Does CPU0 hotplug work?
-
-Do you need to keep a CPU online or do you require MIGRATE? e.g. does
-MIGRATE_INFO_TYPE return something other than 2 ("MP or not present")?
-
-[...]
-
-> +       amba_apu {
-> +               compatible = "simple-bus";
-> +               #address-cells = <2>;
-> +               #size-cells = <1>;
-> +               ranges;
-> +
-> +               timer {
-> +                       compatible = "arm,armv8-timer";
-> +                       interrupt-parent = <&gic>;
-> +                       interrupts = <1 13 0xff01>,
-> +                                    <1 14 0xff01>,
-> +                                    <1 11 0xff01>,
-> +                                    <1 10 0xff01>;
-> +               };
-
-The architected timer should just be under the root node, given it's a
-component of the CPU -- it doesn't live on any bus.
-
-I take it CNTFRQ is configured appropriately on all CPUs?
-
-[...]
-
-> +               i2c_clk: i2c_clk {
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0x0>;
-> +                       clock-frequency = <111111111>;
-> +               };
-
-That clock-frequency looks a little odd. Is that right?
-
-I haven't taken an in-depth look at the other nodes. They look sane at a
-high-level, and assuming they are all already documented and supported
-they look fine to me.
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
