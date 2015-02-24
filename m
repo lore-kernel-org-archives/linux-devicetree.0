@@ -1,98 +1,99 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add SDHI0/1 DT support
-Date: Mon, 23 Feb 2015 20:28:03 -0800
-Message-ID: <CANqRtoQhGOob734kNqNNjMxPcT2Fz=1X6J4M1iobzyiF8Cp8nQ@mail.gmail.com>
-References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
-	<2348421.LHyZ4ZOiiG@wasted.cogentembedded.com>
-	<CANqRtoRnDzTSvKYcNDHKHbeaN7jp1VvKnk1jTHDvNt1oyBzwKg@mail.gmail.com>
-	<54E9ED95.8070702@cogentembedded.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v4 02/10] mtd: st_spi_fsm: Fetch boot device locations
+ from DT match tables
+Date: Mon, 23 Feb 2015 21:04:52 -0800
+Message-ID: <20150224050452.GG18140@ld-irv-0074>
+References: <1421853868-8262-1-git-send-email-lee.jones@linaro.org>
+ <1421853868-8262-3-git-send-email-lee.jones@linaro.org>
+ <20150206042744.GK18140@ld-irv-0074>
+ <20150210074634.GD8020@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <54E9ED95.8070702@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150210074634.GD8020@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On Tue, Feb 10, 2015 at 03:46:34PM +0800, Lee Jones wrote:
+> On Thu, 05 Feb 2015, Brian Norris wrote:
+> > On Wed, Jan 21, 2015 at 03:24:20PM +0000, Lee Jones wrote:
+> > > To trim down on the amount of properties used by this driver and to conform
+> > > to the newly agreed method of acquiring syscfg registers/offsets, we now
+> > > obtain this information using match tables.
+> > 
+> > Where did this agreement happen? Are you only referring to the previous
+> > patch?
+> 
+> I think your interpretation of the above text and my intentions are
+> not the same.
 
-On Sun, Feb 22, 2015 at 6:54 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Hello.
->
-> On 02/22/2015 03:45 AM, Magnus Damm wrote:
->
->>> Define the SILK board dependent parts of the SDHI0  (connected to SDIO
->>> Wi-Fi
->>> chip)  and SDHI1  (connected to micro-SD slot) device nodes along with
->>> the
->>> necessary voltage regulators.
->
->
->>> Based on the original patch by Vladimir Barinov
->>> <vladimir.barinov@cogentembedded.com>.
->
->
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
->
->> Thanks for your patch. One question - above you write that SDHI1 is
->> micro-SD...
->
->
->    Yes, have double-checked now.
->
->
->>> @@ -100,3 +159,25 @@
->>>          non-removable;
->>>          status = "okay";
->>>   };
->>> +
->>> +&sdhi0 {
->>> +       pinctrl-0 = <&sdhi0_pins>;
->>> +       pinctrl-names = "default";
->>> +
->>> +       vmmc-supply = <&vcc_sdhi0>;
->>> +       vqmmc-supply = <&vccq_sdhi0>;
->>> +       cd-gpios = <&gpio6 6 GPIO_ACTIVE_LOW>;
->>> +       wp-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
->>> +       status = "okay";
->>> +};
->>> +
->>> +&sdhi1 {
->>> +       pinctrl-0 = <&sdhi1_pins>;
->>> +       pinctrl-names = "default";
->>> +
->>> +       vmmc-supply = <&vcc_sdhi1>;
->>> +       vqmmc-supply = <&vccq_sdhi1>;
->>> +       cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
->>> +       wp-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
->>> +       status = "okay";
->>> +};
->
->
->> ... however here the WP signal is assigned.
->
->
->> I believe micro-SD doesn't use the WP signal, so either I'm wrong or
->> the patch needs to be updated to reflect reality. =)
->
->
->    Both seem correct: SD1_WP signal is just tied to VCCQ_SD1. Do you think
-> we should still drop it?
+To be clear: I'm simply asking what do you mean by "agreed method". I
+never agreed to syscfg registers/offsets. So who did? Are you agreeing
+with yourself?
 
-If the signal is not exposed to the card connector then I believe the
-correct approach is to omit it. So yes, please drop it.
+> I have no idea why there is a different configuration
+> depending on if we booted from SPI NOR or not and hence can not answer
+> your query below.
 
->> Also, I doubt that an on-board SDIO module makes use of CD and/or WP
->> signals?
->
->    Those two are tied to VCCQ_SD0 as well. Do you think we should drop them?
+Seriously? That's all you can come up with? Sheesh. And you wonder why I
+called you out on not understanding the code that you're sending me.
 
-Since the on-board SDIO chip does not support hotplug and cannot be
-write-protected I think those should be dropped too.
+> The description above is pertaining to the
+> different/new way in which we obtain and request syscfg registers.
 
-Thanks,
+OK. So you're dealing with the "how" but not the "why." That is not a
+reasonable way to develop good code.
 
-/ magnus
+> In previous incarnations of this patchset, we were defining new vendor
+> specific properties in order to request and register and the mask:
+> 
+>   st,boot-device-reg = <0x958>;
+>   st,boot-device-spi = <0x1a>;
+> 
+> ... this is not optimal, as DT properties should only be created if
+> there are no other way to obtain platform specific information.  As
+> there are few supported platforms and this configuration does not
+> change through variants, we are now supplying it via static tables,
+> which can be obtained easily using the DT match framework.
+
+I understand what you're doing with syscfg and these register offsets.
+But if you follow the code as to what they're actually producing, you
+see that it yields the 'booted_from_spi' boolean. That's a pretty simple
+concept.
+
+Now, unless you were able to provide an additional enlightening
+viewpoint, then the following paragraph likely all holds true:
+
+> > Also, I realized that all this boot device / syscfg gymnastics is just
+> > for one simple fact; your driver is trying to hide the fact that your
+> > system can't reliably handle 4-byte addressing for the boot device. Even
+> > if you try your best at toggling 4-byte addressing before/after each
+> > read/write/erase, you still are vulnerable to power cuts during the
+> > operation. This is a bad design, and we have consistently agreed that we
+> > aren't going to work around that in Linux.
+> > 
+> > Better solutions: hook up a reset line to your flash; improve your boot
+> > ROM / bootloader to handle 4-byte addressing for large flash.
+> 
+> You have reached the boundaries of my knowledge on this.  Perhaps
+> Angus (BCC'ed) would be kind enough to assist.
+
+And so we have also reached the boundaries of my willingness to review
+your code. There's a significant technical point here that drove you to
+define several new DT compatible strings. I propose (and am now more
+convinced) that this is not actually necessary. But apparently you are
+not equipped to have a discussion about this.
+
+I'm tempted to:
+
+  git rm drivers/mtd/devices/st_spi_fsm.c
+
+(Along with the appropriate Kconfig and Makefile entries, of course.)
+
+> > What's the possibility of dropping all this 4-byte address toggling
+> > shenanigans? This will be a blocker to merging with spi-nor.c.
+
+Brian
