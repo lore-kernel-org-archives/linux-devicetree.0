@@ -1,47 +1,72 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 5/6] dmaengine: omap-dma: Remove mapping between virtual
- channels and requests
-Date: Tue, 24 Feb 2015 19:01:41 +0200
-Message-ID: <54ECAE75.3070501@ti.com>
-References: <1424787683-19151-1-git-send-email-peter.ujfalusi@ti.com> <1424787683-19151-6-git-send-email-peter.ujfalusi@ti.com> <20150224142833.GI8670@n2100.arm.linux.org.uk>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v2] spi: qup: Add DMA capabilities
+Date: Tue, 24 Feb 2015 19:11:56 +0200
+Message-ID: <1424797916.2340.19.camel@mm-sol.com>
+References: <1424782803-13103-1-git-send-email-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150224142833.GI8670@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: vinod.koul@intel.com, Tony Lindgren <tony@atomide.com>, grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1424782803-13103-1-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/24/2015 04:28 PM, Russell King - ARM Linux wrote:
-> On Tue, Feb 24, 2015 at 04:21:22PM +0200, Peter Ujfalusi wrote:
->> Do not direct map the virtual channels to sDMA request number. When =
-the
->> sDMA is behind of a crossbar this direct mapping can cause situation=
-s when
->> certain channel can not be requested since the crossbar request numb=
-er
->> will no longer match with the sDMA request line.
->> The direct mapping for virtual channels with HW request lines will m=
-ake it
->> harder to implement MEM_TO_MEM mode for the driver.
->=20
-> I assume when you talk about MEM_TO_MEM, you're referring to a DMA_ME=
-MCPY
-> driver.
->=20
-> mem2mem should not be handled by the slave driver.  This should be a
-> separate DMA engine driver structure which does not have DMA_SLAVE se=
-t.
->=20
-> See how amba-pl08x handles this.
 
-Thanks for the pointer. I'm just planning to add the DMA_MEMCPY support=
- for
-omap-dma. With that in place we can convert the remaining legacy API us=
-ers to
-use dmaengine (as I recall all of them are using DMA for memcopy)
+Hi Stan, 
 
---=20
-P=E9ter
+Sorry I didn't saw this first look.
+
+On Tue, 2015-02-24 at 15:00 +0200, Stanimir Varbanov wrote:
+
+<snip>
+
+> 
+> +static bool spi_qup_can_dma(struct spi_master *master, struct spi_device *spi,
+> +                                                       struct spi_transfer *xfer)
+> +{
+> +       struct spi_qup *qup = spi_master_get_devdata(master);
+> +       size_t dma_align = dma_get_cache_alignment();
+> +       int n_words, w_size;
+> +
+> +       qup->dma_available = 0;
+> +
+> +       if (xfer->rx_buf && xfer->len % qup->in_blk_sz)
+> +               return false;
+> +
+> +       if (xfer->tx_buf && xfer->len % qup->out_blk_sz)
+> +               return false;
+> +
+
+Actually we can end up here with tx_buf or rx_buf to be NULL.
+Which voids my previous comments about these pointers.
+
+It will be simpler if you just check transfer length.
+
+And better return false if both are NULL.
+
+> +       if (IS_ERR_OR_NULL(master->dma_rx) || IS_ERR_OR_NULL(master->dma_tx))
+> +               return false;
+> +
+> +       if (!IS_ALIGNED((size_t)xfer->tx_buf, dma_align) ||
+> +                                       !IS_ALIGNED((size_t)xfer->rx_buf, dma_align))
+> +               return false;
+
+Testing NULL for alignment is fine, right?
+
+> +       w_size = spi_qup_get_word_sz(xfer);
+> +       n_words = xfer->len / w_size;
+> +
+> +       /* will use fifo mode */
+> +       if (n_words <= (qup->in_fifo_sz / sizeof(u32)))
+> +               return false;
+> +
+> +       qup->dma_available = 1;
+> +
+> +       return true;
+> +}
+> +
+
+Regards,
+Ivan
