@@ -1,46 +1,70 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
-Date: Tue, 24 Feb 2015 15:14:14 +0000
-Message-ID: <54EC9546.50005@arm.com>
-References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com> <1542574.d99bFx24pn@wuerfel>
+From: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] spi: qup: Add DMA capabilities
+Date: Tue, 24 Feb 2015 18:08:54 +0200
+Message-ID: <54ECA216.306@linaro.org>
+References: <1424782803-13103-1-git-send-email-stanimir.varbanov@linaro.org> <20150224135622.GH6236@finisterre.sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1542574.d99bFx24pn@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150224135622.GH6236-bheZrs9scGb3/WHNxyQH9YN0K6Il/+VY@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Sneddon <dsneddon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 02/24/2015 03:56 PM, Mark Brown wrote:
+> On Tue, Feb 24, 2015 at 03:00:03PM +0200, Stanimir Varbanov wrote:
+> 
+>> +static void spi_qup_dma_done(void *data)
+>> +{
+>> +	struct spi_qup *qup = data;
+>> +
+>> +	if (atomic_dec_and_test(&qup->dma_outstanding))
+>> +		complete(&qup->done);
+>> +}
+> 
+> I'm finding it hard to be thrilled about the use of atomics for
+> synchronization (they're just generally hard to work with) and...
+> 
+>> +	cookie = dmaengine_submit(desc);
+>> +	ret = dma_submit_error(cookie);
+>> +	if (ret)
+>> +		return ret;
+> 
+>> +	atomic_inc(&qup->dma_outstanding);
+> 
+> ..don't we have two potential races here: one if somehow the DMA manages
+> to complete prior to the atomic_inc() (unlikely but that's what race
+> conditions are all about really) and one if we are issuing multiple DMAs
+> and the early ones complete before the later ones are issued?
+> 
 
-On 21/01/15 14:43, Arnd Bergmann wrote:
-> On Wednesday 21 January 2015 12:02:30 Sudeep Holla wrote:
->>
->> Hi Arnd/Olof,
->>
->> Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
->> support for cpu cache information") which is in -next(via arm64) are
->> dependent to provide desired functionality, then can go indepedently
->> if you think there could be conflicts if this change is taken via arm64.
->> If not, Catalin can pick up with your acks after the review.
->
-> I think it would be better to take this through arm-soc. It's not
-> extremely likely to cause conflicts, but as you say there are no
-> strict dependencies on which goes in first, so there is no harm
-> in merging them separately.
->
+yes, there is a potential race between atomic_inc and dma callback. I
+reordered these calls to save few checks, and now it returns to me.
 
-I think this patch got missed for -rc1. The arm64 architectural
-support patch for cacheinfo got merged via arm64 tree. It would be good
-if this is also merged so that cache information can be exposed
-to the user-space on ARM Ltd boards.
+I imagine few options here:
 
-Regards,
-Sudeep
+ - reorder the dmaengine calls and atomic operations, i.e.
+call atomic_inc for rx and tx channels before corresponding
+dmaengine_submit and dmaengine_issue_pending.
+
+ - have two different dma callbacks and two completions and waiting for
+the two.
+
+ - manage to receive only one dma callback, i.e. the last transfer in
+case of presence of the rx_buf and tx_buf at the same time.
+
+ - let me see for better solution.
+
+Thanks for the comments.
+
+regards,
+Stan
+
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
