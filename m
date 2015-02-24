@@ -1,99 +1,58 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v4 02/10] mtd: st_spi_fsm: Fetch boot device locations
- from DT match tables
-Date: Mon, 23 Feb 2015 21:04:52 -0800
-Message-ID: <20150224050452.GG18140@ld-irv-0074>
-References: <1421853868-8262-1-git-send-email-lee.jones@linaro.org>
- <1421853868-8262-3-git-send-email-lee.jones@linaro.org>
- <20150206042744.GK18140@ld-irv-0074>
- <20150210074634.GD8020@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150210074634.GD8020@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH v4 5/8] arm64: dts: exynos: Add PMU dt node for Exynos5433
+Date: Tue, 24 Feb 2015 14:16:48 +0900
+Message-ID: <1424755011-15999-6-git-send-email-cw00.choi@samsung.com>
+References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene@kernel.org
+Cc: mark.rutland@arm.com, marc.zyngier@arm.com, arnd@arndb.de, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, cw00.choi@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 10, 2015 at 03:46:34PM +0800, Lee Jones wrote:
-> On Thu, 05 Feb 2015, Brian Norris wrote:
-> > On Wed, Jan 21, 2015 at 03:24:20PM +0000, Lee Jones wrote:
-> > > To trim down on the amount of properties used by this driver and to conform
-> > > to the newly agreed method of acquiring syscfg registers/offsets, we now
-> > > obtain this information using match tables.
-> > 
-> > Where did this agreement happen? Are you only referring to the previous
-> > patch?
-> 
-> I think your interpretation of the above text and my intentions are
-> not the same.
+This patch adds PMU (Power Management Unit) dt node for Exynos5433 SoC and
+set the source clock for CLKOUT register as xxti .
 
-To be clear: I'm simply asking what do you mean by "agreed method". I
-never agreed to syscfg registers/offsets. So who did? Are you agreeing
-with yourself?
+Cc: Kukjin Kim <kgene@kernel.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+[ideal.song: Add the setting of CLKOUT register]
+Signed-off-by: Inha Song <ideal.song@samsung.com>
+Acked-by: Inki Dae <inki.dae@samsung.com>
+---
+ Documentation/devicetree/bindings/arm/samsung/pmu.txt | 1 +
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi            | 8 ++++++++
+ 2 files changed, 9 insertions(+)
 
-> I have no idea why there is a different configuration
-> depending on if we booted from SPI NOR or not and hence can not answer
-> your query below.
-
-Seriously? That's all you can come up with? Sheesh. And you wonder why I
-called you out on not understanding the code that you're sending me.
-
-> The description above is pertaining to the
-> different/new way in which we obtain and request syscfg registers.
-
-OK. So you're dealing with the "how" but not the "why." That is not a
-reasonable way to develop good code.
-
-> In previous incarnations of this patchset, we were defining new vendor
-> specific properties in order to request and register and the mask:
-> 
->   st,boot-device-reg = <0x958>;
->   st,boot-device-spi = <0x1a>;
-> 
-> ... this is not optimal, as DT properties should only be created if
-> there are no other way to obtain platform specific information.  As
-> there are few supported platforms and this configuration does not
-> change through variants, we are now supplying it via static tables,
-> which can be obtained easily using the DT match framework.
-
-I understand what you're doing with syscfg and these register offsets.
-But if you follow the code as to what they're actually producing, you
-see that it yields the 'booted_from_spi' boolean. That's a pretty simple
-concept.
-
-Now, unless you were able to provide an additional enlightening
-viewpoint, then the following paragraph likely all holds true:
-
-> > Also, I realized that all this boot device / syscfg gymnastics is just
-> > for one simple fact; your driver is trying to hide the fact that your
-> > system can't reliably handle 4-byte addressing for the boot device. Even
-> > if you try your best at toggling 4-byte addressing before/after each
-> > read/write/erase, you still are vulnerable to power cuts during the
-> > operation. This is a bad design, and we have consistently agreed that we
-> > aren't going to work around that in Linux.
-> > 
-> > Better solutions: hook up a reset line to your flash; improve your boot
-> > ROM / bootloader to handle 4-byte addressing for large flash.
-> 
-> You have reached the boundaries of my knowledge on this.  Perhaps
-> Angus (BCC'ed) would be kind enough to assist.
-
-And so we have also reached the boundaries of my willingness to review
-your code. There's a significant technical point here that drove you to
-define several new DT compatible strings. I propose (and am now more
-convinced) that this is not actually necessary. But apparently you are
-not equipped to have a discussion about this.
-
-I'm tempted to:
-
-  git rm drivers/mtd/devices/st_spi_fsm.c
-
-(Along with the appropriate Kconfig and Makefile entries, of course.)
-
-> > What's the possibility of dropping all this 4-byte address toggling
-> > shenanigans? This will be a blocker to merging with spi-nor.c.
-
-Brian
+diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+index 67b2113..a87fc43 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+@@ -10,6 +10,7 @@ Properties:
+ 		   - "samsung,exynos5260-pmu" - for Exynos5260 SoC.
+ 		   - "samsung,exynos5410-pmu" - for Exynos5410 SoC,
+ 		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
++		   - "samsung,exynos5433-pmu" - for Exynos5433 SoC.
+ 		   - "samsung,exynos7-pmu" - for Exynos7 SoC.
+ 		second value must be always "syscon".
+ 
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index 1b18fd3..84be8e2 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -844,6 +844,14 @@
+ 			status = "disabled";
+ 		};
+ 
++		pmu_system_controller: system-controller@105c0000 {
++			compatible = "samsung,exynos5433-pmu", "syscon";
++			reg = <0x105c0000 0x5008>;
++			#clock-cells = <1>;
++			clock-names = "clkout16";
++			clocks = <&xxti>;
++		};
++
+ 		timer {
+ 			compatible = "arm,armv8-timer";
+ 			interrupts = <1 13 0xff04>,
+-- 
+1.8.5.5
