@@ -1,128 +1,171 @@
-From: Pranavkumar Sawargaonkar <psawargaonkar@apm.com>
-Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
-Date: Tue, 24 Feb 2015 12:04:52 +0530
-Message-ID: <CANFfpkQF-8Kzq-UoP=xLpkTafGn6ScyiEb6oCs-Lxygb+ummLA@mail.gmail.com>
-References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
- <CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com>
- <20150219190348.GB24460@cbox>
- <CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg@mail.gmail.com>
- <20150223120744.GA5609@cbox>
- <CAL_JsqJ6E+05psDCXS7k74Mz-DgSEroQ2ODpe2Bp2_50fL3imA@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/3] eeprom: Add a simple EEPROM framework
+Date: Tue, 24 Feb 2015 07:08:40 +0000
+Message-ID: <54EC2378.5040202@linaro.org>
+References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org> <1424365708-26681-1-git-send-email-srinivas.kandagatla@linaro.org> <CAL_Jsq+SeuoojgTpv1y_aPJ_jzDr3HqZhYEBQ3_vYGBHvcccug@mail.gmail.com> <54E78A31.9020306@linaro.org> <CAL_Jsq+mvpRjYfL_8OseTDCB-6aBhwhNKLBQXXJeVQLDwWm8Nw@mail.gmail.com> <20150222143211.GX25269@lukather> <CAL_JsqLqqw5DyUqCaOTSKPwF-Ms5EU4f_OPoW9YVpMCo8A_bbw@mail.gmail.com> <54EBB3AC.30000@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <CAL_JsqJ6E+05psDCXS7k74Mz-DgSEroQ2ODpe2Bp2_50fL3imA@mail.gmail.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Feng Kan <fkan@apm.com>, Marc Zyngier <marc.zyngier@arm.com>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tushar Jagad <tjagad@apm.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54EBB3AC.30000-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Thanks Stephen for the comments.
 
-On Mon, Feb 23, 2015 at 10:09 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On Mon, Feb 23, 2015 at 6:07 AM, Christoffer Dall
-> <christoffer.dall@linaro.org> wrote:
->> On Sat, Feb 21, 2015 at 03:56:17PM -0600, Rob Herring wrote:
->>> On Thu, Feb 19, 2015 at 1:03 PM, Christoffer Dall
->>> <christoffer.dall@linaro.org> wrote:
->>> > On Thu, Feb 19, 2015 at 12:23:15PM -0600, Rob Herring wrote:
->>> >> On Tue, Jan 27, 2015 at 1:03 AM, Pranavkumar Sawargaonkar
->>> >> <psawargaonkar@apm.com> wrote:
->>> >> > In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
->>> >> > in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
->>> >> > size due to size alignment checking in vgic driver for VCPU Control and
->>> >> > VCPU register.
->>> >> >
->>> >> > This patch corrects the sizes to be inline with the hardware spec.
->>> >>
->>> >> This does not make sense. The GIC regions are still only 4 or 8KB and
->>> >> the h/w description should reflect that. For implementations using
->>> >> gic-400 and the addressing decode trick, the rest of the register
->>> >> range is also not safe to access given it is multiple mapped. Also,
->>> >> this wastes virtual space, but I guess we don't care on 64-bit.
->>> >>
->>> >> KVM should be fixed to only check base address alignment. Size
->>> >> alignment does not matter (if it does, then you need to fix all
->>> >> register blocks).
->>> >>
->>> > It matters if you want to ensure that the 64K page you are assigning to
->>> > a guest for the GIC virtual CPU interface contains only GIC virtual CPU
->>> > mappings, and not other random stuff that the guest is not allowed to
->>> > touch.
+On 23/02/15 23:11, Stephen Boyd wrote:
+> On 02/22/15 16:57, Rob Herring wrote:
+>> On Sun, Feb 22, 2015 at 8:32 AM, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>> On Fri, Feb 20, 2015 at 04:01:55PM -0600, Rob Herring wrote:
+>>>> [...]
+>>>>
+>>>>>>> += Data consumers =
+>>>>>>> +
+>>>>>>> +Required properties:
+>>>>>>> +
+>>>>>>> +eeproms: List of phandle and data cell specifier triplet, one triplet
+>>>>>>> +        for each data cell the device might be interested in. The
+>>>>>>> +        triplet consists of the phandle to the eeprom provider, then
+>>>>>>> +        the offset in byte within that storage device, and the length
+>>>>>>> +        in byte of the data we care about.
+>>>>>>
+>>>>>> The problem with this is it assumes you know who the consumer is and
+>>>>>> that it is a DT node. For example, how would you describe a serial
+>>>>>> number?
+>>>>> Correct me if I miss understood.
+>>>>> Is serial number any different?
+>>>>> Am hoping that the eeprom consumer would be aware of offset and size of
+>>>>> serial number in the eeprom
+>>>>>
+>>>>> Cant the consumer do:
+>>>>>
+>>>>> eeprom-consumer {
+>>>>>          eeproms = <&at24 0 4>;
+>>>>>          eeprom-names = "device-serial-number";
+>>>> Yes, but who is "eeprom-consumer"?
+>>> Any device that should lookup values in one of the EEPROM.
 >>>
->>> Good point.
+>>>> DT nodes generally describe a h/w block, but it this case, the
+>>>> consumer depends on the OS, not the h/w.
+>>> Not really, or at least, not more than any similar binding we
+>>> currently have.
 >>>
->>> > How else should this be enforced?
->>>
->>> Rely on correct h/w design? You'll have to repeat this every time you
->>> want to do pass-thru of a device.
->>>
->>> What do you do if 64K mapping is not supported? Fallback to emulation
->>> of the CPU interface?
+>>> The fact that a MAC-address for the first ethernet chip is stored at a
+>>> given offset in a given eeprom has nothing to do with the OS.
+>> So MAC address would be a valid use to link to a h/w device, but there
+>> are certainly cases that don't correspond to a device.
 >>
->> Agree with Peter on these two points.
+>>>> I'm not saying you can't describe where things are, but I don't
+>>>> think you should imply who is the consumer and doing so is
+>>>> unnecessarily complicated.
+>>> If you only take the case of a serial number, indeed. If you take
+>>> other usage into account, you can't really do without it.
+>>>
+>>>> Also, the layout of EEPROM is likely very much platform specific.
+>>> Indeed, which is why it should be in the DT.
+>> Agreed. I'm not saying the layout should not be.
 >>
+>>>> Some could have a more complex structure perhaps with key ids and
+>>>> linked list structure.
+>>> Then just request the size of the whole list, and parse it afterwards
+>>> in your driver?
 >>>
->>> Are there other DTSs that need to be fixed?
->>>
->> Not sure really, AMD Seattle works with 64K pages IIRC.
+>>>> I would do something more simple that is just a list of keys and their
+>>>> location like this:
+>>>>
+>>>> device-serial-number = <start size>;
+>>>> key1 = <start size>;
+>>>> key2 = <start size>;
+>>> I'm sorry, but what's the difference?
+>> It can describe the layout completely whether the fields are tied to a
+>> h/w device or not.
+>>
+>> What I would like to see here is the entire layout described covering
+>> both types of fields.
+>>
 >
-> Well, looks we have been inconsistent here:
+> I was thinking the DT might be like this on the provider side:
 >
-> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-           reg = <0x0
-> 0xe1110000 0 0x1000>,
-> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-                 <0x0
-> 0xe112f000 0 0x2000>,
-> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-                 <0x0
-> 0xe1140000 0 0x10000>,
-> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-                 <0x0
-> 0xe1160000 0 0x10000>;
+>     qfprom@1000000 {
+>        reg = <0x1000000 0x1000>;
+>        ranges = <0 0x1000000 0x1000>;
+>        compatible = "qcom,qfprom-msm8960"
 >
-> arch/arm64/boot/dts/arm/juno.dts-               reg = <0x0 0x2c010000 0 0x1000>,
-> arch/arm64/boot/dts/arm/juno.dts-                     <0x0 0x2c02f000 0 0x2000>,
-> arch/arm64/boot/dts/arm/juno.dts-                     <0x0 0x2c04f000 0 0x2000>,
-> arch/arm64/boot/dts/arm/juno.dts-                     <0x0 0x2c06f000 0 0x2000>;
->
-> If we are going to use 64K sizes, can we have some consistency here
-> please. Which ranges really need 64KB sizes? It should only be the
-> VCPU interface. right? Why does XGene need 128K? If XGene is doing
-> address swizzling, then the CPU and VCPU base addresses are wrong.
-> Seattle is also wrong for the VCPU, but no one has noticed because we
-> don't use the DIR register IIRC.
->
-> XGene should also add an "arm,gic-400" compatible string or something
-> XGene specific if in fact it is not GIC-400.
+>        pvs-data: pvs-data@40 {
+>              compatible = "qcom,pvs-a";
 
-X-Gene has gic-400 as an interrupt controller.
-Only thing is GIC pages are mapped at 64K boundary (with 64K page size)
-Hence CPU, VCPU interfaces has a size of 128K (2GIC pages)
-Regarding GICC_DIR, yes there is a problem which needs to be solved
-since the first page size is 64K.
-In XEN we already have a small fix to access GICC_DIR with 64K page
-offset instead of standard 4K.
-I remember a small discussion in this regard in past
-(http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266468.html)
-which was deferred at that time.
-Once this patch is accepted we can post RFC patch to address GICC_DIR
-and discuss further.
+These compatibles could be optional. As it might not be required for 
+devices which are simple and do not require any special interpretation 
+of eeprom data.
+
+>              reg = <0x40 0x20>,
+> 	    #eeprom-cells = <0>;
+
+Do we still need eeprom-cells if we are moving to use reg property here?
+
+>        };
+>
+>         tsens-data: tmdata@10 {
+>              compatible = "qcom,tsens-data-msm8960";
+>              reg = <0x10 4>, <0x16 4>;
+> 	    #eeprom-cells = <0>;
+>
+>        };
+>
+>        serial-number: serial@50 {
+>              compatible = "qcom,serial-msm8960";
+>              reg = <0x50 4>, <0x60 4>;
+> 	    #eeprom-cells = <0>;
+>
+>        };
+>     };
+>
+> and then on the consumer side:
+>
+> 	device {
+> 		eeproms = <&serial-number>;
+> 		eeprom-names = "soc-rev-id";
+> 	};
+>
+
+Yes, this looks good, and Sasha was also recommending something on these 
+lines too. Also this addresses the use cases like serial number too.
 
 >
-> I think perhaps we need a specific compatible property to indicate a
-> GIC-400 with address swizzling. While we could get away with using the
-> aliased addresses, that seems to be hard to get right and we may
-> regret not doing it in the long term. It would indicate at least it is
-> 64K page safe for example.
+> This would solve a problem where the consumer device is some standard
+> off-the-shelf IP block that needs to get some SoC specific calibration
+> data from the eeprom. I may want to interpret the bits differently
+> depending on which eeprom is connected to my SoC. Sometimes that data
+> format may be the same across many variations of the SoC (e.g. the
+> qcom,pvs-a node) or it may be completely different for a given SoC (e.g.
+> qcom,serial-msm8960 node). I imagine for other SoCs out there it could
+> be different depending on which eeprom the board manufacturer decides to
+> wire onto their board and how they choose to program the data.
 >
-> Rob
+> So this is where I think the eeprom-cells and offset + length starts to
+> fall apart. It forces us to make up a bunch of different compatible
+> strings for our consumer device just so that we can parse the eeprom
+> that we decided to use for some SoC/board specific data. Instead I'd
+> like to see some framework that expresses exactly which eeprom is on my
+> board and how to interpret the bits in a way that doesn't require me to
+> keep refining the compatible string for my generic IP block.
+>
+> I worry that if we put all those details in DT we'll end up having to
+> describe individual bits like serial-number-bit-2, serial-number-bit-3,
+> etc. because sometimes these pieces of data are scattered all around the
+> eeprom and aren't contiguous or aligned on a byte boundary. It may be
+> easier to just have a way to express that this is an eeprom with this
+> specific layout and my device has data stored in there. Then the driver
+> can be told what layout it is (via compatible or some other string based
+> means if we're not using DT?) and match that up with some driver data if
+> it needs to know how to understand the bits it can read with the
+> eeprom_read() API.
+Yes this sounds more sensible to let the consumer driver interpret the 
+eeprom data than the eeprom framework itself.
 
-Thanks,
-Pranav
+
+--srini
+>
