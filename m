@@ -1,98 +1,52 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 1/3] dt-bindings: dma: Add binding for jz4780-dma
-Date: Tue, 24 Feb 2015 18:08:15 +0000
-Message-ID: <1424801297-18354-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1424801297-18354-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 0/4] phy: ti-pipe3: fixes for 3.19-rc
+Date: Tue, 24 Feb 2015 10:02:06 -0800
+Message-ID: <20150224180206.GA11056@atomide.com>
+References: <1421151802-7396-1-git-send-email-rogerq@ti.com>
+ <20150113155409.GA2419@atomide.com>
+ <54E44694.4070801@ti.com>
+ <54E448B2.80103@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424801297-18354-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Content-Disposition: inline
+In-Reply-To: <54E448B2.80103@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com
-Cc: dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex@alex-smith.me.uk, Zubair.Kakakhel@imgtec.com
+To: Roger Quadros <rogerq@ti.com>
+Cc: kishon@ti.com, nm@ti.com, balbi@ti.com, george.cherian@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+* Roger Quadros <rogerq@ti.com> [150218 00:13]:
+> On 18/02/15 10:00, Roger Quadros wrote:
+> > On 13/01/15 17:54, Tony Lindgren wrote:
+> >> * Roger Quadros <rogerq@ti.com> [150113 04:26]:
+> >>> Hi,
+> >>>
+> >>> During system suspend L3INIT_960M_GFCLK and L3INIT_480M_GFCLK clocks remain
+> >>> active on the DRA7 platform. This is because the pipe3 driver doesn't shut
+> >>> them off as part of .suspend(). Patch 1 addresses this issue.
+> >>>
+> >>> SATA on both OMAP5 and DRA7 breaks when SATA drive is plugged in after a
+> >>> system suspend/resume or if AHCI_PLATFORM driver is used as module.
+> >>> Patches 2,3,4 fix it.
+> >>>
+> >>> Hope to get these patches in through the 3.19-rc cycle.
+> >>>
+> >>> Tony,
+> >>>
+> >>> Do you wish to take the DTS patches or let them go in through PHY tree?
+> >>
+> >> Those look ok to me to merge along with the fixes, will ack those two.
+> >>
+> > 
+> > Looks like this missed 3.19-rc. My bad for not following up.
+> > 
+> > Kishon, can you please queue these for 3.20-rc? Thanks.
+> 
+> Well the PHY patches (1 and 2) are already queued for v3.20-rc1 via Greg's usb-next tree.
+> Tony can you please queue the DT side patches for v3.20? Thanks.
 
-Add device tree bindings for the DMA controller on JZ4780 SoCs, used by
-the dma-jz4780 driver.
+Applying these into omap-for-v4.0/fixes. Lookse like we're a few
+kernel releases behind with these :)
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-
----
-V1 -> V2 None
----
- .../devicetree/bindings/dma/jz4780-dma.txt         | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/jz4780-dma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-new file mode 100644
-index 0000000..ce90011
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-@@ -0,0 +1,61 @@
-+* Ingenic JZ4780 DMA Controller
-+
-+Required properties:
-+
-+- compatible: Should be "ingenic,jz4780-dma"
-+- reg: Should contain the DMA controller registers location and length.
-+- interrupts: Should contain the interrupt specifier of the DMA controller.
-+- interrupt-parent: Should be the phandle of the interrupt controller that
-+- clocks: Should contain a clock specifier for the JZ4780 PDMA clock.
-+- #dma-cells: Must be <3>. Number of integer cells in the dmas property of
-+  DMA clients (see below).
-+
-+Optional properties:
-+
-+- ingenic,reserved-channels: Bitmask of channels to reserve for devices that
-+  need a specific channel. These channels will only be assigned when explicitly
-+  requested by a client. The primary use for this is channels 0 and 1, which
-+  can be configured to have special behaviour for NAND/BCH when using
-+  programmable firmware.
-+
-+Example:
-+
-+dma: dma@13420000 {
-+	compatible = "ingenic,jz4780-dma";
-+	reg = <0x13420000 0x10000>;
-+
-+	interrupt-parent = <&intc>;
-+	interrupts = <10>;
-+
-+	clocks = <&cgu JZ4780_CLK_PDMA>;
-+
-+	#dma-cells = <3>;
-+
-+	ingenic,reserved-channels = <0x3>;
-+};
-+
-+DMA clients must use the format described in dma.txt, giving a phandle to the
-+DMA controller plus the following 3 integer cells:
-+
-+1. Transmit request type: The DMA request type for transfers to the device on
-+   the allocated channel, as defined in the SoC documentation. If set to 0,
-+   transfers to the device will not be allowed on the channel.
-+
-+2. Receive request type: The DMA request type for transfers from the device on
-+   the allocated channel, as defined in the SoC documentation. If set to 0,
-+   transfers from the device will not be allowed on the channel.
-+
-+3. Channel: If set to 0xffffffff, any available channel will be allocated for
-+   the client. Otherwise, the exact channel specified will be used. The channel
-+   should be reserved on the DMA controller using the ingenic,reserved-channels
-+   property.
-+
-+Example:
-+
-+uart0: serial@10030000 {
-+	...
-+	dmas = <&dma 0x14 0 0xffffffff
-+		&dma 0 0x15 0xffffffff>;
-+	dma-names = "tx", "rx";
-+	...
-+};
--- 
-1.9.1
+Tony
