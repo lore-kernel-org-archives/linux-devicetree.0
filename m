@@ -1,53 +1,54 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: possible add CONFIG define in dts?
-Date: Tue, 24 Feb 2015 11:02:11 +0000
-Message-ID: <20150224110210.GS9714@leverpostej>
-References: <CAOVJa8FmpFFk=3YwgTX4N3u5AKmM05jpbzww4_xNvS3d=W8sRA@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Tue, 24 Feb 2015 20:04:17 +0900
+Message-ID: <54EC5AB1.5090802@samsung.com>
+References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com>
+ <7139111.LGA4lhSjob@wuerfel> <54EC3BB1.1020701@samsung.com>
+ <7412525.l6YnQcTxtg@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOVJa8FmpFFk=3YwgTX4N3u5AKmM05jpbzww4_xNvS3d=W8sRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-reply-to: <7412525.l6YnQcTxtg@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vichy <vichy.kuo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 24, 2015 at 09:03:06AM +0000, vichy wrote:
-> hi all:
-> I want to share 1 dts when my linux kernel running on different platform.
-> is it possible to use #ifdef CONFIGxxx like below?
-> ( Compile is pass, but I still get arm,data-latency, arm,tag-latency as <6 6 6>
-> Sincerely appreciate your kind help in advance,
+On 02/24/2015 06:48 PM, Arnd Bergmann wrote:
+> On Tuesday 24 February 2015 17:52:01 Chanwoo Choi wrote:
+>>
+>> But, I have a question.
+>> If we put the aliases into the board dts file instaed of SoC dtsi,
+>> each board dts file may use the different alias name about same phandle.
 > 
->         L2: cache-controller@ffe00000 {
->                 compatible = "arm,pl310-cache";
->                 reg = <0xffe00000 0x1000>;
->                 interrupts = <0 96 4>;
->                 cache-level = <2>;
-> #ifdef CONFIG_ARCH_PLAT_FPGA
->                 arm,data-latency = <0 0 0>;
->                 arm,tag-latency = <0 0 0>;
-> #else
->                 arm,data-latency = <6 6 6>;
->                 arm,tag-latency = <6 6 6>;
-> #endif
->         };
+> Yes, that is the idea. In particular with the uarts, the intention is
+> that the numbering of the device nodes in /dev is the same that is
+> printed on the board (if any), which may be different from the numbering
+> internal to the SoC.
 
-The DTB should describe the HW, and thus should be separate from the
-CONFIG options, which control the behaviour of the kernel. So CONFIG_*
-in DTBs doesn't make much sense.
+I check the uart device with Exynos5433 SoC based on Linux 4.0-rc1
+If some board use the serial_0 and serial_3 as following in board dtsi,
 
-This is broken for a multi-platform kernel, no?
+	&serial_0 {		--> UART 0 device
+		status = "okay";
+	};
 
-If you want to build DTBs for platforms with slight differences as
-above, place the common portion in a shared dtsi, and override the parts
-which are different in each dts. You'll end up with a dtb for each
-variation, but you don't need to repeat all the common parts in each
-dts.
+	&serial_3 {		--> UART 3 device
+		status = "okay";
+	};
+
+The serial core driver create the follwoing /dev/ttySACx device node
+by using the number of alias. It maintain the same device number of internel to the SoC.
+
+	root@localhost:~# ls /dev/ttySAC
+	ttySAC1  ttySAC3  
 
 Thanks,
-Mark.
+Chanwoo Choi
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
