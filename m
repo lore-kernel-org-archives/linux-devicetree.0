@@ -1,30 +1,38 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH 2/2] dma: jz4780: add driver for the Ingenic JZ4780 DMA
- controller
-Date: Tue, 24 Feb 2015 18:04:53 +0000
-Message-ID: <54ECBD45.3070205@imgtec.com>
-References: <1422533980-42761-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1422533980-42761-3-git-send-email-Zubair.Kakakhel@imgtec.com> <20150223111544.GA5208@intel.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: DTS: omap3-n900.dts: fix i2c bus numbering
+Date: Tue, 24 Feb 2015 10:02:17 -0800
+Message-ID: <20150224180217.GB11056@atomide.com>
+References: <1423410536-16579-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <20150209150245.GC21362@kahuna>
+ <54D8DA56.8060400@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150223111544.GA5208@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54D8DA56.8060400@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: Nishanth Menon <nm@ti.com>, pali.rohar@gmail.com, pavel@ucw.cz, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+* Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com> [150209 08:07]:
+> 
+> 
+> On  9.02.2015 17:02, Nishanth Menon wrote:
+> >On 17:48-20150208, Ivaylo Dimitrov wrote:
+> >>With legacy boot i2c buses on Nokia N900 are numbered i2c1, i2c2 and i2c3.
+> >>Commit 20b80942ef4e ("ARM: dts: OMAP3+: Add i2c aliases") fixed the
+> >>numbering with DT boot, but introduced a regression on N900 - aliases
+> >>become i2c0, i2c1 and i2c2. Fix that by providing the correct aliases in
+> >>the board dts.
+> >>
+> >>Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> >>---
+> >I suppose this is due to some legacy userspace breakage?
+> >if yes, we do not intend to break userspace :), So:
+> 
+> Yes, legacy userspace breakage :)
 
-On 23/02/15 11:15, Vinod Koul wrote:
-> On Thu, Jan 29, 2015 at 12:19:39PM +0000, Zubair Lutfullah Kakakhel wrote:
->> From: Alex Smith <alex.smith@imgtec.com>
->>
->> This patch adds a driver for the DMA controller found in the Ingenic
->> JZ4780.
+Applying into omap-for-v4.0/fixes thanks,
 
-Thank-you for the detailed review.
-
-I'm sending another series.
-
-Regards,
-ZubairLK
+Tony
