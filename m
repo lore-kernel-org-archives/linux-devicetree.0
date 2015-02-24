@@ -1,72 +1,62 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v4 3/5] irqchip: Add DT binding doc for the virtual irq
- demuxer chip
-Date: Tue, 24 Feb 2015 09:42:15 +0100
-Message-ID: <20150224094215.13416570@bbrezillon>
-References: <1422527620-8308-1-git-send-email-boris.brezillon@free-electrons.com>
-	<5225828.OI8hbGqrC4@vostro.rjw.lan>
-	<20150220103144.GI13659@leverpostej>
-	<5209097.N5537nGsQV@vostro.rjw.lan>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Tue, 24 Feb 2015 17:52:01 +0900
+Message-ID: <54EC3BB1.1020701@samsung.com>
+References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com>
+ <1424755011-15999-3-git-send-email-cw00.choi@samsung.com>
+ <7139111.LGA4lhSjob@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5209097.N5537nGsQV@vostro.rjw.lan>
+In-reply-to: <7139111.LGA4lhSjob@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: kgene@kernel.org, mark.rutland@arm.com, marc.zyngier@arm.com, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, inki.dae@samsung.com, chanho61.park@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, ideal.song@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
-
-On Tue, 24 Feb 2015 02:02:59 +0100
-"Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
-
-> On Friday, February 20, 2015 10:31:44 AM Mark Rutland wrote:
-> > [...]
+On 02/24/2015 05:35 PM, Arnd Bergmann wrote:
+> On Tuesday 24 February 2015 14:16:45 Chanwoo Choi wrote:
+>> +       aliases {
+>> +               pinctrl0 = &pinctrl_alive;
+>> +               pinctrl1 = &pinctrl_aud;
+>> +               pinctrl2 = &pinctrl_cpif;
+>> +               pinctrl3 = &pinctrl_ese;
+>> +               pinctrl4 = &pinctrl_finger;
+>> +               pinctrl5 = &pinctrl_fsys;
+>> +               pinctrl6 = &pinctrl_imem;
+>> +               pinctrl7 = &pinctrl_nfc;
+>> +               pinctrl8 = &pinctrl_peric;
+>> +               pinctrl9 = &pinctrl_touch;
+>> +               serial0 = &serial_0;
+>> +               serial1 = &serial_1;
+>> +               serial2 = &serial_2;
+>> +               i2c0 = &hsi2c_0;
+>> +               i2c1 = &hsi2c_1;
+>> +               i2c2 = &hsi2c_2;
+>> +               i2c3 = &hsi2c_3;
+>> +               i2c4 = &hsi2c_4;
+>> +               i2c5 = &hsi2c_5;
+>> +               i2c6 = &hsi2c_6;
+>> +               i2c7 = &hsi2c_7;
+>> +               i2c8 = &hsi2c_8;
+>> +               i2c9 = &hsi2c_9;
+>> +               i2c10 = &hsi2c_10;
+>> +               i2c11 = &hsi2c_11;
+>> +       };
+>> +
+>>
 > 
-> [cut]
->  
-> > Given all of the above I'll go back to the IRQF_SHARED_TIMER_OK approach
-> > you proposed, along with documentation updates and comments at usage
-> > sites to make it clear when it is valid to use.
-> > 
-> > Thank you for bearing with me so far.
-> 
-> No prob. :-)
-> 
-> Actually, there's one more approach possible.  Thomas might not like it, but
-> here it goes anyway for consideration.
-> 
-> What about making it possible to provide a special irqaction to be called
-> while suspended for the shared IRQF_NO_SUSPEND interrupts.
-> 
-> Say we have a "suspended_action" pointer in struct irq_desc in addition to
-> "action" and we swap them in suspend_device_irq() if desc->no_suspend_depth is
-> nonzero and "suspended_action" is not NULL (and then back in resume_irq()).
-> Then, the platform might supply "suspended_action" that will do the right
-> thing for the IRQ.
-> 
-> So the requirement would be to have "suspended_action" set to start with
-> and then the WARN_ON() in irq_pm_install_action() may check if that is present
-> and only trigger the warning if it isn't.
-> 
-> Thoughs?
+> Can you put the aliases into the per-board files? There might be boards that
+> do not support all the uarts and all the i2c controllers but only want to
+> provide aliases for a subset of them, without holes in the numbering.
 
-That should work for my case.
-Note that I also proposed a version that does not touch the irq_desc
-struct, but I had to add an irq_is_wakeup_armed helper function to
-test in which state the irq handler is called. Your solution would make
-this easier.
+OK, I'm not opposite with you opinion.
 
-Could you remind me what was Thomas concern regarding this suspended
-action list approach ?
+But, I have a question.
+If we put the aliases into the board dts file instaed of SoC dtsi,
+each board dts file may use the different alias name about same phandle.
 
-Boris
-
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Thanks,
+Chanwoo Choi
