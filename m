@@ -1,52 +1,46 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH] ARM64: Add new Xilinx ZynqMP SoC
-Date: Tue, 24 Feb 2015 15:58:47 +0100
-Message-ID: <9bffa4683bd6478993de6bea1d3027af@BN1AFFO11FD048.protection.gbl>
-References: <8ac3037c175711dec0adcd0d898be7d9722e0ed0.1424764548.git.michal.simek@xilinx.com>
- <CAL_JsqKkVHaf_U0nU9nqa2q5XwfsuCu-ZWVEHx6b5Mv9Hgen1Q@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
+Date: Tue, 24 Feb 2015 15:14:14 +0000
+Message-ID: <54EC9546.50005@arm.com>
+References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com> <1542574.d99bFx24pn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKkVHaf_U0nU9nqa2q5XwfsuCu-ZWVEHx6b5Mv9Hgen1Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1542574.d99bFx24pn@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/24/2015 03:42 PM, Rob Herring wrote:
-> On Tue, Feb 24, 2015 at 1:56 AM, Michal Simek <michal.simek@xilinx.co=
-m> wrote:
->> Initial version of device tree for Xilinx ZynqMP SoC.
+Hi Arnd,
+
+On 21/01/15 14:43, Arnd Bergmann wrote:
+> On Wednesday 21 January 2015 12:02:30 Sudeep Holla wrote:
 >>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
->> ---
->=20
-> [...]
->=20
->> +               gic: interrupt-controller@f9010000 {
->> +                       compatible =3D "arm,cortex-a15-gic", "arm,co=
-rtex-a9-gic";
->=20
-> gic-400, right?
+>> Hi Arnd/Olof,
+>>
+>> Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
+>> support for cpu cache information") which is in -next(via arm64) are
+>> dependent to provide desired functionality, then can go indepedently
+>> if you think there could be conflicts if this change is taken via arm64.
+>> If not, Catalin can pick up with your acks after the review.
+>
+> I think it would be better to take this through arm-soc. It's not
+> extremely likely to cause conflicts, but as you say there are no
+> strict dependencies on which goes in first, so there is no harm
+> in merging them separately.
+>
 
-yep
+I think this patch got missed for -rc1. The arm64 architectural
+support patch for cacheinfo got merged via arm64 tree. It would be good
+if this is also merged so that cache information can be exposed
+to the user-space on ARM Ltd boards.
 
->=20
->> +                       #interrupt-cells =3D <3>;
->> +                       reg =3D <0x0 0xf9010000 0x10000>,
->> +                             <0x0 0xf9020000 0x20000>,
->> +                             <0x0 0xf9040000 0x20000>,
->> +                             <0x0 0xf9060000 0x20000>;
->=20
-> These addresses are wrong if you are doing address swizzling to do 64=
-K
-> offsets. We don't really have an answer yet as to what is the right
-> way. See the XGene GIC discussion[1].
+Regards,
+Sudeep
 
-Is this better for GICC?
-<0x0 0xf902f000 0x2000>
-
-Thanks,
-Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
