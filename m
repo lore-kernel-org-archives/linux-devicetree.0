@@ -1,61 +1,115 @@
-From: Ashwin Chaugule <ashwin.chaugule@linaro.org>
-Subject: Re: [PATCH v2 2/2] ARM: perf: Add support for Scorpion PMUs
-Date: Tue, 24 Feb 2015 12:23:36 -0500
-Message-ID: <CAJ5Y-eYLeeNDcBtdvMf-k0XGxq-P21FDq-VMHPJsp4=ccuemig@mail.gmail.com>
-References: <1423851849-6069-1-git-send-email-sboyd@codeaurora.org>
-	<1423851849-6069-3-git-send-email-sboyd@codeaurora.org>
-	<20150220193552.GE1767@arm.com>
-	<20150220201627.GD24928@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v3 3/4] clk: Provide an always-on clock domain framework
+Date: Tue, 24 Feb 2015 17:33:41 +0000
+Message-ID: <1424799222-9301-4-git-send-email-lee.jones@linaro.org>
+References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150220201627.GD24928@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: lee.jones@linaro.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 20 February 2015 at 15:16, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 02/20, Will Deacon wrote:
->> On Fri, Feb 13, 2015 at 06:24:09PM +0000, Stephen Boyd wrote:
->>
->> > +static void scorpion_evt_setup(int idx, u32 config_base)
->> > +{
->> > +       u32 val;
->> > +       u32 mask;
->> > +       u32 vval, fval;
->> > +       unsigned int region;
->> > +       unsigned int group;
->> > +       unsigned int code;
->> > +       unsigned int group_shift;
->> > +       bool venum_event;
->> > +
->> > +       krait_decode_event(config_base, &region, &group, &code, &venum_event,
->> > +                          NULL);
->> > +
->> > +       group_shift = group * 8;
->> > +       mask = 0xff << group_shift;
->> > +
->> > +       /* Configure evtsel for the region and group */
->> > +       if (venum_event)
->> > +               val = SCORPION_VLPM_GROUP0;
->> > +       else
->> > +               val = scorpion_get_pmresrn_event(region);
->> > +       val += group;
->> > +       /* Mix in mode-exclusion bits */
->> > +       val |= config_base & (ARMV7_EXCLUDE_USER | ARMV7_EXCLUDE_PL1);
->> > +       armv7_pmnc_write_evtsel(idx, val);
->> > +
->> > +       asm volatile("mcr p15, 0, %0, c9, c15, 0" : : "r" (0));
->>
->> What's this guy doing?
->
-> This is the same as Krait. It's clearing some implementation
-> defined register. From what I can tell it's a per-event register
-> (i.e. PMSELR decides which event this register write actually
-> affects) and we do this here to reset this register to some
-> defined value, zero. Otherwise the reset value of this register
-> is UNPREDICTABLE and that would be bad. I think we might be able
-> to move it to the pmu reset path, but I don't know. Ashwin?
+Lots of platforms contain clocks which if turned off would prove fatal.
+The only way to recover is to restart the board(s).  This driver takes
+references to clocks which are required to be always-on in order to
+prevent the common clk framework from trying to turn them off during
+the clk_disabled_unused() procedure.
 
-Will have to check once I get to office tomorrow.
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/clk/Makefile        |  1 +
+ drivers/clk/clk-always-on.c | 62 +++++++++++++++++++++++++++++++++++++=
+++++++++
+ 2 files changed, 63 insertions(+)
+ create mode 100644 drivers/clk/clk-always-on.c
+
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index d478ceb..0d42541 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -3,6 +3,7 @@ obj-$(CONFIG_HAVE_CLK)		+=3D clk-devres.o
+ obj-$(CONFIG_CLKDEV_LOOKUP)	+=3D clkdev.o
+ obj-$(CONFIG_COMMON_CLK)	+=3D clk.o
+ obj-$(CONFIG_COMMON_CLK)	+=3D clk-divider.o
++obj-$(CONFIG_COMMON_CLK)	+=3D clk-always-on.o
+ obj-$(CONFIG_COMMON_CLK)	+=3D clk-fixed-factor.o
+ obj-$(CONFIG_COMMON_CLK)	+=3D clk-fixed-rate.o
+ obj-$(CONFIG_COMMON_CLK)	+=3D clk-gate.o
+diff --git a/drivers/clk/clk-always-on.c b/drivers/clk/clk-always-on.c
+new file mode 100644
+index 0000000..f3d90ac
+--- /dev/null
++++ b/drivers/clk/clk-always-on.c
+@@ -0,0 +1,62 @@
++/*
++ * Always-on Clock Domain
++ *
++ * Copyright (C) 2015 STMicroelectronics =E2=80=93 All Rights Reserved
++ *
++ * Author: Lee Jones <lee.jones@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License as published b=
+y
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/of_address.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++static void ao_clock_domain_hog_clock(struct platform_device *pdev, in=
+t index)
++{
++	struct device_node *np =3D pdev->dev.of_node;
++	struct clk *clk;
++	int ret;
++
++	clk =3D of_clk_get(np, index);
++	if (IS_ERR(clk)) {
++		dev_warn(&pdev->dev, "Failed get clock %s[%d]: %li\n",
++			 np->full_name, index, PTR_ERR(clk));
++		return;
++	}
++
++	ret =3D clk_prepare_enable(clk);
++	if (ret)
++		dev_warn(&pdev->dev, "Failed to enable clock: %s\n", __clk_get_name(=
+clk));
++}
++
++static int ao_clock_domain_probe(struct platform_device *pdev)
++{
++	struct device_node *np =3D pdev->dev.of_node;
++	int nclks, i;
++
++	nclks =3D of_count_phandle_with_args(np, "clocks", "#clock-cells");
++
++	for (i =3D 0; i < nclks; i++)
++		ao_clock_domain_hog_clock(pdev, i);
++
++	return 0;
++}
++
++static const struct of_device_id ao_clock_domain_match[] =3D {
++	{ .compatible =3D "clk-always-on" },
++	{ },
++};
++
++static struct platform_driver ao_clock_domain_driver =3D {
++	.probe =3D ao_clock_domain_probe,
++	.driver =3D {
++		.name =3D "clk-always-on",
++		.of_match_table =3D ao_clock_domain_match,
++	},
++};
++module_platform_driver(ao_clock_domain_driver);
+--=20
+1.9.1
