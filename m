@@ -1,463 +1,228 @@
-From: <thloh@altera.com>
-Subject: [PATCH v10 2/2] drivers/gpio: Altera soft IP GPIO driver
-Date: Tue, 24 Feb 2015 01:53:03 -0800
-Message-ID: <1424771583-4404-3-git-send-email-thloh@altera.com>
-References: <1424771583-4404-1-git-send-email-thloh@altera.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
+Date: Tue, 24 Feb 2015 12:13:30 +0200
+Message-ID: <54EC4ECA.2090300@ti.com>
+References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org> <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org> <20150220144119.GB1707@saruman.tx.rr.com> <54E75665.6050205@linaro.org> <20150220160610.GB6430@saruman.tx.rr.com> <54E89E29.4010807@linaro.org> <20150221162102.GA1784@saruman.tx.rr.com> <54E948AC.2010609@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1424771583-4404-1-git-send-email-thloh@altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: dinguyen@altera.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, grant.likely@linaro.org, akpm@linux-foundation.org, davem@davemloft.net, gregkh@linuxfoundation.org, joe@perches.com, mchehab@osg.samsung.com, crope@iki.fi, linux-gpio@vger.kernel.org
-Cc: thloh.linux@gmail.com, thloh@altera.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54E948AC.2010609@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>, balbi@ti.com
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dan . zhao" <dan.zhao@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tien Hock Loh <thloh@altera.com>
+Hi Zhangfei,
 
-Adds a new driver for Altera soft GPIO IP. The driver is able to do
-read/write and allows GPIO to be a interrupt controller.
+On 22/02/15 05:10, zhangfei wrote:
+> Hi, Balbi
+> 
+> On 02/22/2015 12:21 AM, Felipe Balbi wrote:
+>> Hi,
+>>
+>> On Sat, Feb 21, 2015 at 11:03:05PM +0800, zhangfei wrote:
+>>>>>>> +static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
+>>>>>>> +{
+>>>>>>> +    struct usb_otg *otg = priv->phy.otg;
+>>>>>>> +
+>>>>>>> +    if (!otg->gadget)
+>>>>>>> +        return;
+>>>>>>> +
+>>>>>>> +    if (on)
+>>>>>>> +        usb_gadget_connect(otg->gadget);
+>>>>>>> +    else
+>>>>>>> +        usb_gadget_disconnect(otg->gadget);
+>>>>>>
+>>>>>> why is the PHY fiddling with pullups ?
+>>>>>
+>>>>> We use this to enable/disable otg gadget mode.
+>>>>
+>>>> I got that, but the pullups don't belong to the PHY, they belong to the
+>>>> gadget.
+>>>>
+>>>>> The gpio_id & gpio_vbus are used to distinguish otg gadget mode or
+>>>>> host mode.
+>>>>> When micro usb or otg device attached to otg, gpio_vbus falling down.
+>>>>> And gpio_id = 1 is micro usb, gpio_id = 0 is otg device.
+>>>>
+>>>> all of that I understood clearly :-)
+>>>>
+>>>>> So when micro usb attached, we enable gadget mode; while micro usb
+>>>>> detached, we disable gadget mode, and dwc2 will automatically set to
+>>>>> host mode.
+>>>>
+>>>> that's all fine, I'm concerned about letting the PHY fiddle with
+>>>> something it doesn't own. If I am to change pullups rules in udc-core,
+>>>> this is likely to break down miserably and I don't want to have to go
+>>>> through that.
+>>>
+>>> Thanks for the clarifying.
+>>
+>> no problem.
+>>
+>>> How about using usb_gadget_vbus_connect/disconnect, which are used in many
+>>> files under drivers/usb/phy.
+>>> There is no vbus_session in dwc2/gadget.c, I thought it would be same as
+>>> pullup.
+>>>
+>>> However, usb_gadget_vbus_connect still need para gadget, where should we put
+>>> this file, drivers/usb/phy or drivers/phy
+>>
+>> drivers/phy, if the framework misses anything you need, it's a great
+>> opportunity to give back to the community by extending the framework.
+> 
+> Sorry, I am a little confused.
+> I need some concrete suggestion for the next step of this patch, which is required for the community board, hikey board.
+> 
+> Do you mean in the future we need use hsotg->phy instead of hsotg->uphy.
+>         struct phy *phy;
+>         struct usb_phy *uphy;
+> usb_phy has many members that struct phy does not have, including otg.
+> struct usb_otg          *otg;
+> Is that mean we need port such member from usb_phy to phy.
 
-Tested on Altera GHRD on interrupt handling and IO.
+In my opinion otg structure should belong to the USB core part that takes care
+of the OTG/DRD state machine. We still don't have a clear solution here and
+I'm currently investigating this.
+My current work is to get Dual role functionality working with DWC3 controller and TI
+platforms.
 
-Signed-off-by: Tien Hock Loh <thloh@altera.com>
----
- MAINTAINERS                |   6 +
- drivers/gpio/Kconfig       |  10 ++
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-altera.c | 374 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 391 insertions(+)
- create mode 100644 drivers/gpio/gpio-altera.c
+Currently phy drivers take care of OTG operation themselves but there is an opportunity
+to share code and centralize USB role switching.
+The USB core should be the owner of the Host controller, Gadget controller and the OTG phy
+and should take care of the that.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5a6cdfb..70292df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -563,6 +563,12 @@ S:	Odd Fixes
- L:	linux-alpha@vger.kernel.org
- F:	arch/alpha/
- 
-+ALTERA PIO DRIVER
-+M:	Tien Hock Loh <thloh@altera.com>
-+L:	linux-gpio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/gpio/gpio-altera.c
-+
- ALTERA TRIPLE SPEED ETHERNET DRIVER
- M:	Vince Bridgers <vbridger@opensource.altera.com>
- L:	netdev@vger.kernel.org
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index ae5cb4d..b7c5838 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -156,6 +156,16 @@ config GPIO_DWAPB
- 	  Say Y or M here to build support for the Synopsys DesignWare APB
- 	  GPIO block.
- 
-+config GPIO_ALTERA
-+	tristate "Altera GPIO"
-+	depends on OF_GPIO
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say Y or M here to build support for the Altera PIO device.
-+
-+	  If driver is built as a module it will be called gpio-altera.
-+
- config GPIO_IT8761E
- 	tristate "IT8761E GPIO support"
- 	depends on X86  # unconditional access to IO space.
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index bdda6a9..a452b14 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_GPIO_74XX_MMIO)	+= gpio-74xx-mmio.o
- obj-$(CONFIG_GPIO_ADNP)		+= gpio-adnp.o
- obj-$(CONFIG_GPIO_ADP5520)	+= gpio-adp5520.o
- obj-$(CONFIG_GPIO_ADP5588)	+= gpio-adp5588.o
-+obj-$(CONFIG_GPIO_ALTERA)  	+= gpio-altera.o
- obj-$(CONFIG_GPIO_AMD8111)	+= gpio-amd8111.o
- obj-$(CONFIG_GPIO_ARIZONA)	+= gpio-arizona.o
- obj-$(CONFIG_GPIO_BCM_KONA)	+= gpio-bcm-kona.o
-diff --git a/drivers/gpio/gpio-altera.c b/drivers/gpio/gpio-altera.c
-new file mode 100644
-index 0000000..4d41196
---- /dev/null
-+++ b/drivers/gpio/gpio-altera.c
-@@ -0,0 +1,374 @@
-+/*
-+ * Copyright (C) 2013 Altera Corporation
-+ * Based on gpio-mpc8xxx.c
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+
-+#define ALTERA_GPIO_MAX_NGPIO		32
-+#define ALTERA_GPIO_DATA		0x0
-+#define ALTERA_GPIO_DIR			0x4
-+#define ALTERA_GPIO_IRQ_MASK		0x8
-+#define ALTERA_GPIO_EDGE_CAP		0xc
-+
-+/**
-+* struct altera_gpio_chip
-+* @mmchip		: memory mapped chip structure.
-+* @gpio_lock		: synchronization lock so that new irq/set/get requests
-+			  will be blocked until the current one completes.
-+* @interrupt_trigger	: specifies the hardware configured IRQ trigger type
-+			  (rising, falling, both, high)
-+* @mapped_irq		: kernel mapped irq number.
-+*/
-+struct altera_gpio_chip {
-+	struct of_mm_gpio_chip mmchip;
-+	spinlock_t gpio_lock;
-+	int interrupt_trigger;
-+	int mapped_irq;
-+};
-+
-+static void altera_gpio_irq_unmask(struct irq_data *d)
-+{
-+	struct altera_gpio_chip *altera_gc;
-+	struct of_mm_gpio_chip *mm_gc;
-+	unsigned long flags;
-+	u32 intmask;
-+
-+	altera_gc = irq_data_get_irq_chip_data(d);
-+	mm_gc = &altera_gc->mmchip;
-+
-+	spin_lock_irqsave(&altera_gc->gpio_lock, flags);
-+	intmask = readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
-+	/* Set ALTERA_GPIO_IRQ_MASK bit to unmask */
-+	intmask |= BIT(irqd_to_hwirq(d));
-+	writel(intmask, mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
-+	spin_unlock_irqrestore(&altera_gc->gpio_lock, flags);
-+}
-+
-+static void altera_gpio_irq_mask(struct irq_data *d)
-+{
-+	struct altera_gpio_chip *altera_gc;
-+	struct of_mm_gpio_chip *mm_gc;
-+	unsigned long flags;
-+	u32 intmask;
-+
-+	altera_gc = irq_data_get_irq_chip_data(d);
-+	mm_gc = &altera_gc->mmchip;
-+
-+	spin_lock_irqsave(&altera_gc->gpio_lock, flags);
-+	intmask = readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
-+	/* Clear ALTERA_GPIO_IRQ_MASK bit to mask */
-+	intmask &= ~BIT(irqd_to_hwirq(d));
-+	writel(intmask, mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
-+	spin_unlock_irqrestore(&altera_gc->gpio_lock, flags);
-+}
-+
-+/**
-+ * This controller's IRQ type is synthesized in hardware, so this function
-+ * just checks if the requested set_type matches the synthesized IRQ type
-+ */
-+static int altera_gpio_irq_set_type(struct irq_data *d,
-+				   unsigned int type)
-+{
-+	struct altera_gpio_chip *altera_gc;
-+
-+	altera_gc = irq_data_get_irq_chip_data(d);
-+
-+	if (type == IRQ_TYPE_NONE)
-+		return 0;
-+	if (type == IRQ_TYPE_LEVEL_HIGH &&
-+		altera_gc->interrupt_trigger == IRQ_TYPE_LEVEL_HIGH)
-+		return 0;
-+	if (type == IRQ_TYPE_EDGE_RISING &&
-+		altera_gc->interrupt_trigger == IRQ_TYPE_EDGE_RISING)
-+		return 0;
-+	if (type == IRQ_TYPE_EDGE_FALLING &&
-+		altera_gc->interrupt_trigger == IRQ_TYPE_EDGE_FALLING)
-+		return 0;
-+	if (type == IRQ_TYPE_EDGE_BOTH &&
-+		altera_gc->interrupt_trigger == IRQ_TYPE_EDGE_BOTH)
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
-+static unsigned int altera_gpio_irq_startup(struct irq_data *d) {
-+	altera_gpio_irq_unmask(d);
-+
-+	return 0;
-+}
-+
-+static struct irq_chip altera_irq_chip = {
-+	.name		= "altera-gpio",
-+	.irq_mask	= altera_gpio_irq_mask,
-+	.irq_unmask	= altera_gpio_irq_unmask,
-+	.irq_set_type	= altera_gpio_irq_set_type,
-+	.irq_startup	= altera_gpio_irq_startup,
-+	.irq_shutdown	= altera_gpio_irq_mask,
-+};
-+
-+static int altera_gpio_get(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct of_mm_gpio_chip *mm_gc;
-+
-+	mm_gc = to_of_mm_gpio_chip(gc);
-+
-+	return !!(readl(mm_gc->regs + ALTERA_GPIO_DATA) & BIT(offset));
-+}
-+
-+static void altera_gpio_set(struct gpio_chip *gc, unsigned offset, int value)
-+{
-+	struct of_mm_gpio_chip *mm_gc;
-+	struct altera_gpio_chip *chip;
-+	unsigned long flags;
-+	unsigned int data_reg;
-+
-+	mm_gc = to_of_mm_gpio_chip(gc);
-+	chip = container_of(mm_gc, struct altera_gpio_chip, mmchip);
-+
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
-+	data_reg = readl(mm_gc->regs + ALTERA_GPIO_DATA);
-+	if (value)
-+		data_reg |= BIT(offset);
-+	else
-+		data_reg &= ~BIT(offset);
-+	writel(data_reg, mm_gc->regs + ALTERA_GPIO_DATA);
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+}
-+
-+static int altera_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct of_mm_gpio_chip *mm_gc;
-+	struct altera_gpio_chip *chip;
-+	unsigned long flags;
-+	unsigned int gpio_ddr;
-+
-+	mm_gc = to_of_mm_gpio_chip(gc);
-+	chip = container_of(mm_gc, struct altera_gpio_chip, mmchip);
-+
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
-+	/* Set pin as input, assumes software controlled IP */
-+	gpio_ddr = readl(mm_gc->regs + ALTERA_GPIO_DIR);
-+	gpio_ddr &= ~BIT(offset);
-+	writel(gpio_ddr, mm_gc->regs + ALTERA_GPIO_DIR);
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int altera_gpio_direction_output(struct gpio_chip *gc,
-+		unsigned offset, int value)
-+{
-+	struct of_mm_gpio_chip *mm_gc;
-+	struct altera_gpio_chip *chip;
-+	unsigned long flags;
-+	unsigned int data_reg, gpio_ddr;
-+
-+	mm_gc = to_of_mm_gpio_chip(gc);
-+	chip = container_of(mm_gc, struct altera_gpio_chip, mmchip);
-+
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
-+	/* Sets the GPIO value */
-+	data_reg = readl(mm_gc->regs + ALTERA_GPIO_DATA);
-+	if (value)
-+		data_reg |= BIT(offset);
-+	else
-+		data_reg &= ~BIT(offset);
-+	writel(data_reg, mm_gc->regs + ALTERA_GPIO_DATA);
-+
-+	/* Set pin as output, assumes software controlled IP */
-+	gpio_ddr = readl(mm_gc->regs + ALTERA_GPIO_DIR);
-+	gpio_ddr |= BIT(offset);
-+	writel(gpio_ddr, mm_gc->regs + ALTERA_GPIO_DIR);
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+static void altera_gpio_irq_edge_handler(unsigned int irq,
-+					struct irq_desc *desc)
-+{
-+	struct altera_gpio_chip *altera_gc;
-+	struct irq_chip *chip;
-+	struct of_mm_gpio_chip *mm_gc;
-+	struct irq_domain *irqdomain;
-+	unsigned long status;
-+	int i;
-+
-+	altera_gc = irq_desc_get_handler_data(desc);
-+	chip = irq_desc_get_chip(desc);
-+	mm_gc = &altera_gc->mmchip;
-+	irqdomain = altera_gc->mmchip.gc.irqdomain;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	while ((status =
-+	      (readl(mm_gc->regs + ALTERA_GPIO_EDGE_CAP) &
-+	      readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK)))) {
-+		writel(status, mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
-+		for_each_set_bit(i, &status, mm_gc->gc.ngpio) {
-+			generic_handle_irq(irq_find_mapping(irqdomain, i));
-+		}
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+
-+static void altera_gpio_irq_leveL_high_handler(unsigned int irq,
-+					      struct irq_desc *desc)
-+{
-+	struct altera_gpio_chip *altera_gc;
-+	struct irq_chip *chip;
-+	struct of_mm_gpio_chip *mm_gc;
-+	struct irq_domain *irqdomain;
-+	unsigned long status;
-+	int i;
-+
-+	altera_gc = irq_desc_get_handler_data(desc);
-+	chip = irq_desc_get_chip(desc);
-+	mm_gc = &altera_gc->mmchip;
-+	irqdomain = altera_gc->mmchip.gc.irqdomain;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	status = readl(mm_gc->regs + ALTERA_GPIO_DATA);
-+	status &= readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
-+
-+	for_each_set_bit(i, &status, mm_gc->gc.ngpio) {
-+		generic_handle_irq(irq_find_mapping(irqdomain, i));
-+	}
-+	chained_irq_exit(chip, desc);
-+}
-+
-+int altera_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	int reg, ret;
-+	struct altera_gpio_chip *altera_gc;
-+
-+	altera_gc = devm_kzalloc(&pdev->dev, sizeof(*altera_gc), GFP_KERNEL);
-+	if (!altera_gc)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&altera_gc->gpio_lock);
-+
-+	if (of_property_read_u32(node, "altr,ngpio", &reg))
-+		/* By default assume maximum ngpio */
-+		altera_gc->mmchip.gc.ngpio = ALTERA_GPIO_MAX_NGPIO;
-+	else
-+		altera_gc->mmchip.gc.ngpio = reg;
-+
-+	if (altera_gc->mmchip.gc.ngpio > ALTERA_GPIO_MAX_NGPIO) {
-+		dev_warn(&pdev->dev,
-+			"ngpio is greater than %d, defaulting to %d\n",
-+			ALTERA_GPIO_MAX_NGPIO, ALTERA_GPIO_MAX_NGPIO);
-+		altera_gc->mmchip.gc.ngpio = ALTERA_GPIO_MAX_NGPIO;
-+	}
-+
-+	altera_gc->mmchip.gc.direction_input	= altera_gpio_direction_input;
-+	altera_gc->mmchip.gc.direction_output	= altera_gpio_direction_output;
-+	altera_gc->mmchip.gc.get		= altera_gpio_get;
-+	altera_gc->mmchip.gc.set		= altera_gpio_set;
-+	altera_gc->mmchip.gc.owner		= THIS_MODULE;
-+	altera_gc->mmchip.gc.dev		= &pdev->dev;
-+
-+	ret = of_mm_gpiochip_add(node, &altera_gc->mmchip);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed adding memory mapped gpiochip\n");
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, altera_gc);
-+
-+	altera_gc->mapped_irq = platform_get_irq(pdev, 0);
-+
-+	if (altera_gc->mapped_irq < 0)
-+		goto skip_irq;
-+
-+	if (of_property_read_u32(node, "altr,interrupt-type", &reg)) {
-+		ret = -EINVAL;
-+		dev_err(&pdev->dev,
-+			"altr,interrupt-type value not set in device tree\n");
-+		goto teardown;
-+	}
-+	altera_gc->interrupt_trigger = reg;
-+
-+	ret = gpiochip_irqchip_add(&altera_gc->mmchip.gc, &altera_irq_chip, 0,
-+		handle_simple_irq, IRQ_TYPE_NONE);
-+
-+	if (ret) {
-+		dev_info(&pdev->dev, "could not add irqchip\n");
-+		return ret;
-+	}
-+
-+	gpiochip_set_chained_irqchip(&altera_gc->mmchip.gc,
-+		&altera_irq_chip,
-+		altera_gc->mapped_irq,
-+		altera_gc->interrupt_trigger == IRQ_TYPE_LEVEL_HIGH ?
-+		altera_gpio_irq_leveL_high_handler :
-+		altera_gpio_irq_edge_handler);
-+
-+skip_irq:
-+	return 0;
-+teardown:
-+	pr_err("%s: registration failed with status %d\n",
-+		node->full_name, ret);
-+
-+	return ret;
-+}
-+
-+static int altera_gpio_remove(struct platform_device *pdev)
-+{
-+	struct altera_gpio_chip *altera_gc = platform_get_drvdata(pdev);
-+
-+	gpiochip_remove(&altera_gc->mmchip.gc);
-+
-+	return -EIO;
-+}
-+
-+static const struct of_device_id altera_gpio_of_match[] = {
-+	{ .compatible = "altr,pio-1.0", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, altera_gpio_of_match);
-+
-+static struct platform_driver altera_gpio_driver = {
-+	.driver = {
-+		.name	= "altera_gpio",
-+		.of_match_table = of_match_ptr(altera_gpio_of_match),
-+	},
-+	.probe		= altera_gpio_probe,
-+	.remove		= altera_gpio_remove,
-+};
-+
-+static int __init altera_gpio_init(void)
-+{
-+	return platform_driver_register(&altera_gpio_driver);
-+}
-+subsys_initcall(altera_gpio_init);
-+
-+static void __exit altera_gpio_exit(void)
-+{
-+	platform_driver_unregister(&altera_gpio_driver);
-+}
-+module_exit(altera_gpio_exit);
-+
-+MODULE_AUTHOR("Tien Hock Loh <thloh@altera.com>");
-+MODULE_DESCRIPTION("Altera GPIO driver");
-+MODULE_LICENSE("GPL");
--- 
-1.7.11.GIT
+> 
+> Besides, are you ok with using usb_gadget_vbus_connect/disconnect.
 
+I don't think PHY is the right place for this even though older drivers seem to be doing so.
+But at the same time there is nowhere else to add this at the moment.
+The right place should be the USB core that is aware of host/gadget, phy and the state of the bus.
+
+> 
+>>
+>> Scratching one's own itch kinda thing...
+>>
+>>>>>>> +static void hi6220_detect_work(struct work_struct *work)
+>>>>>>> +{
+>>>>>>> +    struct hi6220_priv *priv =
+>>>>>>> +        container_of(work, struct hi6220_priv, work.work);
+>>>>>>> +    int gpio_id, gpio_vbus;
+>>>>>>> +    enum usb_otg_state state;
+>>>>>>> +
+>>>>>>> +    if (!gpio_is_valid(priv->gpio_id) || !gpio_is_valid(priv->gpio_vbus))
+>>>>>>> +        return;
+>>>>>>> +
+>>>>>>> +    gpio_id = gpio_get_value_cansleep(priv->gpio_id);
+>>>>>>> +    gpio_vbus = gpio_get_value_cansleep(priv->gpio_vbus);
+>>>>>>
+>>>>>> looks like this should be using extcon
+>>>>> Not used extcon before.
+>>>>> However, we need gpio_vbus interrupt.
+>>>>> Checked phy-tahvo.c and phy-omap-otg.c, not find extcon related with
+>>>>> interrupt.
+>>>>> Will investigate tomorrow.
+>>>>
+>>>> drivers/extcon/extcon-gpio.c
+>>> I think there is no need to use extcon, gpio is clear enough.
+>>> extcon-gpio.c even do not support dt.
+>>
+>> well, add DT. The whole idea of free software is that we improve on
+>> things we already have. EXTCON is *the* API to handle such things.
+> 
+
+I wrote the extcon-gpio-usb.c driver for exactly your use case. It is
+queued for v4.1
+https://lkml.org/lkml/2015/2/2/187
+
+It takes care of debouncing for you. Although currently it supports only ID gpio,
+it should be very easy to extend to VBUS sense GPIO.
+
+> I think I am still not understanding extcon-gpio, not sure why need use this API here.
+
+several reasons. Let me list a few.
+1) Code reuse. Every PHY driver doesn't need to implement GPIO/interrupt handling and debouncing.
+It just registers what cable events it wants to hear and gets a notification.
+2) The events (ID/VBUS) are not only interesting for the PHY driver but also the controller
+driver and the OTG state machine (whenever it exists at a common place) ;).
+3) standardization because of common API.
+
+> 
+> Here two gpio requires, one gpio as interrupt, in the interrupt handler, we detect the gpio status judging the otg status.
+> extcon-gpio.c use the interrupt, then can we also use the gpio interrupt.
+> Using extcon-gpio is used for saving gpio_request?
+> 
+>>
+>> Quite frankly, though, Roger Quadros (now in Cc) has been working to get
+>> DT support on extcon-gpio, so perhaps wait for that and base your
+>> patches on top of his.
+>>
+>> Now your statement that GPIO is clear enough is completely bogus to me.
+>>
+>> Why do we have fixed regulators with GPIO enable signals, right ? Might
+>> as well just fiddle with the GPIO directly, right ? Wrong, the idea of
+>> using these frameworks is to encapsulate implementation details and make
+>> sure that if things change from one board to another, we can still use
+>> our SW without major modifications.
+>>
+>>>>>>> +    if (gpio_vbus == 0) {
+>>>>>>> +        if (gpio_id == 1)
+>>>>>>> +            state = OTG_STATE_B_PERIPHERAL;
+>>>>>>> +        else
+>>>>>>> +            state = OTG_STATE_A_HOST;
+>>>>>>> +    } else {
+>>>>>>> +        state = OTG_STATE_A_HOST;
+>>>>>>> +    }
+>>>>>>> +
+>>>>>>> +    if (priv->state != state) {
+>>>>>>> +        hi6220_start_peripheral(priv, state == OTG_STATE_B_PERIPHERAL);
+>>>>>>> +        priv->state = state;
+>>>>>>> +    }
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static irqreturn_t hiusb_gpio_intr(int irq, void *data)
+>>>>>>> +{
+>>>>>>> +    struct hi6220_priv *priv = (struct hi6220_priv *)data;
+>>>>>>> +
+>>>>>>> +    /* add debounce time */
+>>>>>>> +    schedule_delayed_work(&priv->work, msecs_to_jiffies(100));
+>>>>>>
+>>>>>> this is really bad. We have threaded interrupt support, right ?
+>>>>>
+>>>>> Since we use two gpio to distinguish gadget mode or host mode.
+>>>>> Debounce time can introduce more accuracy.
+>>>>
+>>>> gpio_set_debounce() ?
+>>> Not all gpio.c support set_debounce, including gpio-pl061.c.
+>>
+>> then the framework should implement it in SW. That was the whole idea of
+>> adding set_debounce() to gpiolib. If the controller can't handle it,
+>> gpiolib handles it in SW. Again, encapsulating details.
+>>
+>>>>> I think threaded interrupt can not be used for adding debounce time.
+>>>>> Here add debounce is just for safety.
+>>>>
+>>>> add the debounce to the gpio itself.
+>>>
+>>> Here the debounce added only for safety.
+>>> gpio_id may mis-report when unplug usb, but it is correct for plug usb & otg
+>>> device.
+>>> So debounce can be omitted.
+>>> If you think using delayed work for debounce is ugly, it is fine switch to
+>>> threaded_irq.
+>>
+>> debounce might be very well needed. We *do* want to filter out the
+>> transient period. I'm just telling you there are better ways of doing
+>> so; and your response to that is "let's just remove it" and I'm not
+>> really comfortable with that attitude.
+>>
+>> That's the attitude of a lazy person which, I hope, you are not ;)
+> 
+> Understand.
+> What I mean here is gpio_id is not used when unplug, it is only used after plug.
+> 
+> Thanks
+
+cheers,
+-roger
