@@ -1,52 +1,102 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/2] ARM: DRA7x/OMAP5: Clock: DPLL Clock fixes
-Date: Tue, 24 Feb 2015 08:27:20 -0800
-Message-ID: <20150224162719.GA28244@atomide.com>
-References: <1422724005-9415-1-git-send-email-rk@ti.com>
- <54E5FC6D.7040701@ti.com>
+From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Subject: [PATCH net-next v4 0/3] Linn Ethernet Packet Sniffer driver
+Date: Tue, 24 Feb 2015 16:48:08 +0000
+Message-ID: <cover.1424796018.git.stathis.voukelatos@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54E5FC6D.7040701@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ravikumar Kattekola <rk@ti.com>, Tero Kristo <t-kristo@ti.com>
-Cc: bcousson@baylibre.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-* Ravikumar Kattekola <rk@ti.com> [150219 08:13]:
-> On 1/31/2015 10:36 PM, Ravikumar Kattekola wrote:
-> >Fix bypass clock source for a few DPLLs.
-> >
-> >On DRA7x/OMAP5, for a few DPLLs, both CLKINP and CLKINPULOW are connected
-> >to a mux and the output from mux is routed to the bypass clkout.
-> >Add a mux-clock as bypass clock with CLKINP and CLKINPULOW as parents.
-> >
-> >Tested against:
-> >	tree: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
-> >	branch: master
-> >On:
-> >CPU  : OMAP5432 ES2.0
-> >Board: OMAP5432 uEVM
-> >and
-> >CPU  : DRA752 ES1.0
-> >Board: DRA7xx
-> >
-> >
-> >Ravikumar Kattekola (2):
-> >   ARM: DRA7x: dts: Fix the bypass clock source for dpll_iva and others
-> >   ARM: OMAP5: dts: Fix the bypass clock source for dpll_iva and others
-> >
-> >  arch/arm/boot/dts/dra7xx-clocks.dtsi   |   90 ++++++++++++++++++++++++++++----
-> >  arch/arm/boot/dts/omap54xx-clocks.dtsi |   41 +++++++++++++--
-> >  2 files changed, 118 insertions(+), 13 deletions(-)
-> >
-> Hi Benoit,
->     Can these fixes be looked into for 3.20-rc?
+This patch adds support for the Ethernet Packet Sniffer H/W module
+developed by Linn Products Ltd and found in the IMG Pistachio SoC.
+The module allows Ethernet packets to be parsed, matched against
+a user-defined pattern and timestamped. It sits between a 100M
+Ethernet MAC and PHY and is completely passive with respect to
+Ethernet frames.
 
-Seem like valid fixes to me. Tero, care to take a look at these and ack
-if OK?
+Selected packet bytes from matched packets and timestamp values are
+returned through a H/W FIFO. Timestamps are provided to the module
+through an externally generated Gray-encoded counter.
 
-Regards,
+The command string for packet matching is stored in module RAM
+and consists of a sequence of 16-bit entries. Each entry includes
+an 8-bit command code and and 8-bit data value. Valid command
+codes are:
+0 - Don't care
+1 - Match: packet data must match command string byte
+2 - Copy: packet data will be copied to FIFO
+3 - Match/Stamp: if packet data matches string byte, a timestamp
+                 is copied into the FIFO
+4 - Copy/Done: packet data will be copied into the FIFO.
+               This command terminates the command string.
 
-Tony
+The driver consists of two modules:
+- Core: it provides a common framework for managing backend packet
+        sniffer implementations. Each backend channel is registered
+        by the core as a netdev, which can be accessed from user
+        space through AF_PACKET sockets. 
+
+- Ethernet Packet Sniffer backend: provides the driver for the
+        Linn Ethernet Packet Sniffer H/W modules.
+
+The split between a core and backend modules allows for other
+implementations to be added in the future apart of the Ethernet
+packet sniffer presented in this patch set.
+
+Changelog:
+
+v4:
+* More detailed documentation on driver usage (in snf_core.c) and 
+  H/W operation (in platform.c)
+* Some source file renaming in the core module.
+* Rebased against linux-net-next
+
+v3:
+* Code moved into vendor specific directory
+* Device tree binding updated and streamlined. Cyclecounter params
+  are now calculated dynamically.
+
+v2:
+* Complete redesign of core framework to use netdev instead of 
+the generic netlink framework
+* Updated device tree binding
+* A number of minor code improvements suggested by code review
+
+Stathis Voukelatos (3):
+  Linn Ethernet packet sniffer: device tree binding and vendor prefix
+  Linn packet sniffer core framework
+  Linn Ethernet packet sniffer driver
+
+ .../bindings/net/linn-ether-packet-sniffer.txt     |  39 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |   6 +
+ drivers/net/ethernet/Kconfig                       |   1 +
+ drivers/net/ethernet/Makefile                      |   1 +
+ drivers/net/ethernet/linn/Kconfig                  |  36 ++
+ drivers/net/ethernet/linn/Makefile                 |  20 +
+ .../linn/pkt-sniffer/backends/ether/Makefile       |  20 +
+ .../linn/pkt-sniffer/backends/ether/channel.c      | 444 +++++++++++++++++++++
+ .../linn/pkt-sniffer/backends/ether/channel.h      |  80 ++++
+ .../ethernet/linn/pkt-sniffer/backends/ether/hw.h  |  46 +++
+ .../linn/pkt-sniffer/backends/ether/platform.c     | 318 +++++++++++++++
+ .../net/ethernet/linn/pkt-sniffer/core/Makefile    |  19 +
+ .../net/ethernet/linn/pkt-sniffer/core/snf_core.c  | 344 ++++++++++++++++
+ .../net/ethernet/linn/pkt-sniffer/core/snf_core.h  |  60 +++
+ 15 files changed, 1435 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/linn-ether-packet-sniffer.txt
+ create mode 100644 drivers/net/ethernet/linn/Kconfig
+ create mode 100644 drivers/net/ethernet/linn/Makefile
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/Makefile
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/channel.c
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/channel.h
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/hw.h
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/backends/ether/platform.c
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/core/Makefile
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/core/snf_core.c
+ create mode 100644 drivers/net/ethernet/linn/pkt-sniffer/core/snf_core.h
+
+-- 
+1.9.1
