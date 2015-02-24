@@ -1,1805 +1,503 @@
-From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v6 1/3] dmaengine: Add support for APM X-Gene SoC DMA engine driver
-Date: Tue, 24 Feb 2015 18:23:57 +0530
-Message-ID: <1424782439-31485-2-git-send-email-rsahu@apm.com>
-References: <1424782439-31485-1-git-send-email-rsahu@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424782439-31485-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+From: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] spi: qup: Add DMA capabilities
+Date: Tue, 24 Feb 2015 15:00:03 +0200
+Message-ID: <1424782803-13103-1-git-send-email-stanimir.varbanov@linaro.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Sneddon <dsneddon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch implements the APM X-Gene SoC DMA engine driver. The APM X-Gene
-SoC DMA engine consists of 4 DMA channels for performing DMA operations.
-These DMA operations include memory copy and scatter-gather memory copy
-offloading.
+From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+This patch adds DMA capabilities to the spi-qup driver.  If DMA channels are
+present, the QUP will use DMA instead of block mode for transfers to/from SPI
+peripherals for transactions larger than the length of a block.
+
+Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/dma/Kconfig     |    8 +
- drivers/dma/Makefile    |    1 +
- drivers/dma/xgene-dma.c | 1738 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1747 insertions(+)
- create mode 100755 drivers/dma/xgene-dma.c
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index a874b6e..0e05831 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -425,6 +425,14 @@ config IMG_MDC_DMA
- 	help
- 	  Enable support for the IMG multi-threaded DMA controller (MDC).
+This is reworked version with comments addressed
+ - use SPI core DMA mapping code
+ - implemented .can_dma callback
+ - use dmaengine api's to account deferred_probe
 
-+config XGENE_DMA
-+	tristate "APM X-Gene DMA support"
-+	depends on ARCH_XGENE
-+	select DMA_ENGINE
-+	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
-+	help
-+	  Enable support for the APM X-Gene SoC DMA engine.
+First version can be found at [1].
+
+[1] https://lkml.org/lkml/2014/6/26/481
+
+regards,
+Stan
+
+ .../devicetree/bindings/spi/qcom,spi-qup.txt       |    8 +
+ drivers/spi/spi-qup.c                              |  300 +++++++++++++++++++-
+ 2 files changed, 293 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
+index e2c88df..a0357c7 100644
+--- a/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
++++ b/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
+@@ -33,6 +33,11 @@ Optional properties:
+ 		nodes.  If unspecified, a single SPI device without a chip
+ 		select can be used.
+ 
++- dmas:         Two DMA channel specifiers following the convention outlined
++                in bindings/dma/dma.txt
++- dma-names:    Names for the dma channels, if present. There must be at
++                least one channel named "tx" for transmit and named "rx" for
++                receive.
+ 
+ SPI slave nodes must be children of the SPI master node and can contain
+ properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -51,6 +56,9 @@ Example:
+ 		clocks = <&gcc GCC_BLSP2_QUP2_SPI_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
+ 		clock-names = "core", "iface";
+ 
++		dmas = <&blsp1_bam 13>, <&blsp2_bam 12>;
++		dma-names = "rx", "tx";
 +
- config DMA_ENGINE
- 	bool
-
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index f915f61..06c1576 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -51,3 +51,4 @@ obj-$(CONFIG_INTEL_MIC_X100_DMA) += mic_x100_dma.o
- obj-$(CONFIG_NBPFAXI_DMA) += nbpfaxi.o
- obj-$(CONFIG_DMA_SUN6I) += sun6i-dma.o
- obj-$(CONFIG_IMG_MDC_DMA) += img-mdc-dma.o
-+obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-new file mode 100755
-index 0000000..e736c2e
---- /dev/null
-+++ b/drivers/dma/xgene-dma.c
-@@ -0,0 +1,1738 @@
-+/*
-+ * Applied Micro X-Gene SoC DMA engine Driver
-+ *
-+ * Copyright (c) 2015, Applied Micro Circuits Corporation
-+ * Authors: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-+ *	    Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * NOTE: PM support is currently not available.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&spi8_default>;
+ 
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index e7fb5a0..386ae69 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -22,6 +22,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/spi/spi.h>
 +#include <linux/dmaengine.h>
-+#include <linux/dmapool.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
++#include <linux/dma-mapping.h>
+ 
+ #define QUP_CONFIG			0x0000
+ #define QUP_STATE			0x0004
+@@ -116,6 +118,8 @@
+ 
+ #define SPI_NUM_CHIPSELECTS		4
+ 
++#define SPI_MAX_DMA_XFER		(SZ_64K - 64)
 +
-+#include "dmaengine.h"
+ /* high speed mode is when bus rate is greater then 26MHz */
+ #define SPI_HS_MIN_RATE			26000000
+ #define SPI_MAX_RATE			50000000
+@@ -143,6 +147,11 @@ struct spi_qup {
+ 	int			tx_bytes;
+ 	int			rx_bytes;
+ 	int			qup_v1;
 +
-+/* DMA ring csr registers and bit definations */
-+#define DMA_RING_CONFIG			0x04
-+#define DMA_RING_ENABLE			BIT(31)
-+#define DMA_RING_ID			0x08
-+#define DMA_RING_ID_SETUP(v)		((v) | BIT(31))
-+#define DMA_RING_ID_BUF			0x0C
-+#define DMA_RING_ID_BUF_SETUP(v)	(((v) << 9) | BIT(21))
-+#define DMA_RING_THRESLD0_SET1		0x30
-+#define DMA_RING_THRESLD0_SET1_VAL	0X64
-+#define DMA_RING_THRESLD1_SET1		0x34
-+#define DMA_RING_THRESLD1_SET1_VAL	0xC8
-+#define DMA_RING_HYSTERESIS		0x68
-+#define DMA_RING_HYSTERESIS_VAL		0xFFFFFFFF
-+#define DMA_RING_STATE			0x6C
-+#define DMA_RING_STATE_WR_BASE		0x70
-+#define DMA_RING_NE_INT_MODE		0x017C
-+#define DMA_RING_NE_INT_MODE_SET(m, v)	\
-+	((m) = ((m) & ~BIT(31 - (v))) | BIT(31 - (v)))
-+#define DMA_RING_NE_INT_MODE_RESET(m, v)	\
-+	((m) &= (~BIT(31 - (v))))
-+#define DMA_RING_CLKEN			0xC208
-+#define DMA_RING_SRST			0xC200
-+#define DMA_RING_MEM_RAM_SHUTDOWN	0xD070
-+#define DMA_RING_BLK_MEM_RDY		0xD074
-+#define DMA_RING_BLK_MEM_RDY_VAL	0xFFFFFFFF
-+#define DMA_RING_DESC_CNT(v)		(((v) & 0x0001FFFE) >> 1)
-+#define DMA_RING_ID_GET(owner, num)	(((owner) << 6) | (num))
-+#define DMA_RING_DST_ID(v)		((1 << 10) | (v))
-+#define DMA_RING_CMD_OFFSET		0x2C
-+#define DMA_RING_CMD_BASE_OFFSET(v)	((v) << 6)
-+#define DMA_RING_COHERENT_SET(m)	(((u32 *)(m))[2] |= BIT(4))
-+#define DMA_RING_ADDRL_SET(m, v)	(((u32 *)(m))[2] |= (((v) >> 8) << 5))
-+#define DMA_RING_ADDRH_SET(m, v)	(((u32 *)(m))[3] |= ((v) >> 35))
-+#define DMA_RING_ACCEPTLERR_SET(m)	(((u32 *)(m))[3] |= BIT(19))
-+#define DMA_RING_SIZE_SET(m, v)		(((u32 *)(m))[3] |= ((v) << 23))
-+#define DMA_RING_RECOMBBUF_SET(m)	(((u32 *)(m))[3] |= BIT(27))
-+#define DMA_RING_RECOMTIMEOUTL_SET(m)	(((u32 *)(m))[3] |= (0x7 << 28))
-+#define DMA_RING_RECOMTIMEOUTH_SET(m)	(((u32 *)(m))[4] |= 0x3)
-+#define DMA_RING_SELTHRSH_SET(m)	(((u32 *)(m))[4] |= BIT(3))
-+#define DMA_RING_TYPE_SET(m, v)		(((u32 *)(m))[4] |= ((v) << 19))
-+
-+/* DMA device csr registers and bit definitions */
-+#define DMA_IPBRR		0x0
-+#define DMA_DEV_ID_RD(v)	((v) & 0x00000FFF)
-+#define DMA_BUS_ID_RD(v)	(((v) >> 12) & 3)
-+#define DMA_REV_NO_RD(v)	(((v) >> 14) & 3)
-+#define DMA_GCR			0x10
-+#define DMA_CH_SETUP(v)		((v) = ((v) & ~0x000FFFFF) | 0x000AAFFF)
-+#define DMA_ENABLE(v)		((v) |= BIT(31))
-+#define DMA_DISABLE(v)		((v) &= ~BIT(31))
-+#define DMA_INT			0x70
-+#define DMA_INT_MASK		0x74
-+#define DMA_INT_ALL_MASK	0xFFFFFFFF
-+#define DMA_INT_ALL_UNMASK	0x0
-+#define DMA_INT_MASK_SHIFT	0x14
-+#define DMA_RING_INT0_MASK	0x90A0
-+#define DMA_RING_INT1_MASK	0x90A8
-+#define DMA_RING_INT2_MASK	0x90B0
-+#define DMA_RING_INT3_MASK	0x90B8
-+#define DMA_RING_INT4_MASK	0x90C0
-+#define DMA_CFG_RING_WQ_ASSOC	0x90E0
-+#define DMA_ASSOC_RING_MNGR1	0xFFFFFFFF
-+#define DMA_MEM_RAM_SHUTDOWN	0xD070
-+#define DMA_BLK_MEM_RDY		0xD074
-+#define DMA_BLK_MEM_RDY_VAL	0xFFFFFFFF
-+
-+/* DMA Descriptor format */
-+#define DMA_DESC_ELERR_RD(m)		(((m) >> 46) & 0x3)
-+#define DMA_DESC_NV_SET(m)		(((u64 *)(m))[0] |= BIT_ULL(50))
-+#define DMA_DESC_IN_SET(m)		(((u64 *)(m))[0] |= BIT_ULL(55))
-+#define DMA_DESC_RTYPE_SET(m, v)	(((u64 *)(m))[0] |= ((u64)(v) << 56))
-+#define DMA_DESC_LERR_RD(m)		(((m) >> 60) & 0x7)
-+#define DMA_DESC_BUFADDR_SET(m, v)	(((u64 *)(m))[0] |= (v))
-+#define DMA_DESC_BUFLEN_SET(m, v)	(((u64 *)(m))[0] |= ((u64)(v) << 48))
-+#define DMA_DESC_C_SET(m)		(((u64 *)(m))[1] |= BIT_ULL(63))
-+#define DMA_DESC_DR_SET(m)		(((u64 *)(m))[2] |= BIT_ULL(61))
-+#define DMA_DESC_DST_ADDR_SET(m, v)	(((u64 *)(m))[3] |= (v))
-+#define DMA_DESC_H0ENQ_NUM_SET(m, v)	(((u64 *)(m))[3] |= ((u64)(v) << 48))
-+#define DMA_DESC_STATUS(x, y)		(((x) << 4) | (y))
-+
-+/* DMA descriptor empty s/w signature */
-+#define DMA_DESC_EMPTY_INDEX		0
-+#define DMA_DESC_EMPTY_SIGNATURE	~0ULL
-+#define DMA_DESC_SET_EMPTY(m)		\
-+	(((u64 *)(m))[DMA_DESC_EMPTY_INDEX] = DMA_DESC_EMPTY_SIGNATURE)
-+#define DMA_DESC_IS_EMPTY(m)		\
-+	(((u64 *)(m))[DMA_DESC_EMPTY_INDEX] == DMA_DESC_EMPTY_SIGNATURE)
-+
-+/* DMA configurable parameters defines */
-+#define DMA_RING_NUM			512
-+#define DMA_BUFNUM			0x0
-+#define DMA_CPU_BUFNUM			0x18
-+#define DMA_RING_OWNER_DMA		0x03
-+#define DMA_RING_OWNER_CPU		0x0F
-+#define DMA_RING_TYPE_REGULAR		0x01
-+#define DMA_RING_WQ_DESC_SIZE		32
-+#define DMA_RING_NUM_CONFIG		5
-+#define DMA_MAX_CHANNEL			4
-+#define DMA_MAX_BYTE_CNT		0x4000	/* 16 KB */
-+#define DMA_MAX_64B_DESC_BYTE_CNT	0x14000	/* 80 KB */
-+#define DMA_16K_BUFFER_LEN_CODE		0x0
-+#define DMA_INVALID_LEN_CODE		0x7800
-+
-+/* DMA descriptor error codes */
-+#define ERR_DESC_AXI		0x01
-+#define ERR_BAD_DESC		0x02
-+#define ERR_READ_DATA_AXI	0x03
-+#define ERR_WRITE_DATA_AXI	0x04
-+#define ERR_FBP_TIMEOUT		0x05
-+#define ERR_ECC			0x06
-+#define ERR_DIFF_SIZE		0x08
-+#define ERR_SCT_GAT_LEN		0x09
-+#define ERR_CRC_ERR		0x11
-+#define ERR_CHKSUM		0x12
-+#define ERR_DIF			0x13
-+
-+/* DMA error interrupt codes */
-+#define ERR_DIF_SIZE_INT	0x0
-+#define ERR_GS_ERR_INT		0x1
-+#define ERR_FPB_TIMEO_INT	0x2
-+#define ERR_WFIFO_OVF_INT	0x3
-+#define ERR_RFIFO_OVF_INT	0x4
-+#define ERR_WR_TIMEO_INT	0x5
-+#define ERR_RD_TIMEO_INT	0x6
-+#define ERR_WR_ERR_INT		0x7
-+#define ERR_RD_ERR_INT		0x8
-+#define ERR_BAD_DESC_INT	0x9
-+#define ERR_DESC_DST_INT	0xA
-+#define ERR_DESC_SRC_INT	0xB
-+
-+/* Define to dump DMA descriptor */
-+#define DMA_DESC_ERR_DUMP(desc)	\
-+	print_hex_dump(KERN_ERR, "X-Gene DMA: Rx ERR DESC ",	\
-+			DUMP_PREFIX_ADDRESS, 16, 8, (desc), 32, 0)
-+
-+#define to_dma_desc_sw(tx)	\
-+	container_of(tx, struct xgene_dma_desc_sw, tx)
-+#define to_dma_chan(dchan)	\
-+	container_of(dchan, struct xgene_dma_chan, dma_chan)
-+
-+#define chan_dbg(chan, fmt, arg...)	\
-+	dev_dbg(chan->dev, "%s: " fmt, chan->name, ##arg)
-+#define chan_err(chan, fmt, arg...)	\
-+	dev_err(chan->dev, "%s: " fmt, chan->name, ##arg)
-+
-+struct xgene_dma_desc_hw {
-+	u64 m0;
-+	u64 m1;
-+	u64 m2;
-+	u64 m3;
-+};
-+
-+enum xgene_dma_ring_cfgsize {
-+	DMA_RING_CFG_SIZE_512B,
-+	DMA_RING_CFG_SIZE_2KB,
-+	DMA_RING_CFG_SIZE_16KB,
-+	DMA_RING_CFG_SIZE_64KB,
-+	DMA_RING_CFG_SIZE_512KB,
-+	DMA_RING_CFG_SIZE_INVALID
-+};
-+
-+struct xgene_dma_ring {
-+	struct xgene_dma *pdma;
-+	u8 buf_num;
-+	u16 id;
-+	u16 num;
-+	u16 head;
-+	u16 owner;
-+	u16 slots;
-+	u16 dst_ring_num;
-+	u32 size;
-+	void __iomem *cmd;
-+	void __iomem *cmd_base;
-+	dma_addr_t desc_paddr;
-+	u32 state[DMA_RING_NUM_CONFIG];
-+	enum xgene_dma_ring_cfgsize cfgsize;
-+	union {
-+		void *desc_vaddr;
-+		struct xgene_dma_desc_hw *desc_hw;
-+	};
-+};
-+
-+struct xgene_dma_desc_sw {
-+	struct xgene_dma_desc_hw desc1;
-+	struct xgene_dma_desc_hw desc2;
-+	u8 desc_cnt;
-+	struct list_head node;
-+	struct list_head tx_list;
-+	struct dma_async_tx_descriptor tx;
-+};
-+
-+/**
-+ * struct xgene_dma_chan - internal representation of an DMA channel
-+ * @dma_chan: dmaengine channel object member
-+ * @pdma: DMA device structure reference
-+ * @dev: struct device reference for dma mapping api
-+ * @id: raw id of this channel
-+ * @rx_irq: channel IRQ
-+ * @name: name of DMA channel
-+ * @lock: serializes enqueue/dequeue operations to the descriptor pool
-+ * @pending: number of transaction request pushed to DMA controller for
-+ *	execution, but still waiting for completion,
-+ * @ld_pending: descriptors which are queued to run, but have not yet been
-+ *	submitted to the hardware for execution
-+ * @ld_running: descriptors which are currently being executing by the hardware
-+ * @ld_completed: descriptors which have finished execution by the hardware.
-+ *	These descriptors have already had their cleanup actions run. They
-+ *	are waiting for the ACK bit to be set by the async tx API.
-+ * @desc_pool: descriptor pool for DMA operations
-+ * @tasklet: bottom half where all completed descriptors cleans
-+ * @tx_ring: transmit ring descriptor that we use to prepare actual
-+ *	descriptors for further executions
-+ * @rx_ring: receive ring descriptor that we use to get completed DMA
-+ *	descriptors during cleanup time
-+ */
-+struct xgene_dma_chan {
-+	struct dma_chan dma_chan;
-+	struct xgene_dma *pdma;
-+	struct device *dev;
-+	int id;
-+	int rx_irq;
-+	char name[8];
-+	spinlock_t lock;
-+	int pending;
-+	struct list_head ld_pending;
-+	struct list_head ld_running;
-+	struct list_head ld_completed;
-+	struct dma_pool *desc_pool;
-+	struct tasklet_struct tasklet;
-+	struct xgene_dma_ring tx_ring;
-+	struct xgene_dma_ring rx_ring;
-+};
-+
-+/**
-+ * struct xgene_dma - internal representation of an DMA device
-+ * @err_irq: DMA error irq number
-+ * @ring_num: start id number for DMA ring
-+ * @csr_dma: base for DMA register access
-+ * @csr_ring: base for DMA ring register access
-+ * @csr_ring_cmd: base for DMA ring command register access
-+ * @dma_dev: embedded struct dma_device
-+ * @chan: reference to DMA channels
-+ */
-+struct xgene_dma {
-+	struct device *dev;
-+	struct clk *clk;
-+	int err_irq;
-+	int ring_num;
-+	void __iomem *csr_dma;
-+	void __iomem *csr_ring;
-+	void __iomem *csr_ring_cmd;
-+	struct dma_device dma_dev[DMA_MAX_CHANNEL];
-+	struct xgene_dma_chan chan[DMA_MAX_CHANNEL];
-+};
-+
-+static const char * const xgene_dma_desc_hw_err[] = {
-+	[ERR_DESC_AXI] = "AXI error when reading src/dst link list",
-+	[ERR_BAD_DESC] = "ERR or El_ERR fields not set to zero in desc",
-+	[ERR_READ_DATA_AXI] = "AXI error when reading data",
-+	[ERR_WRITE_DATA_AXI] = "AXI error when writing data",
-+	[ERR_FBP_TIMEOUT] = "Timeout on bufpool fetch",
-+	[ERR_ECC] = "ECC double bit error",
-+	[ERR_DIFF_SIZE] = "Bufpool too small to hold all the DIF result",
-+	[ERR_SCT_GAT_LEN] = "Gather and scatter data length not same",
-+	[ERR_CRC_ERR] = "CRC error",
-+	[ERR_CHKSUM] = "Checksum error",
-+	[ERR_DIF] = "DIF error",
-+};
-+
-+static const char * const xgene_dma_err[] = {
-+	[ERR_DIF_SIZE_INT] = "DIF size error",
-+	[ERR_GS_ERR_INT] = "Gather scatter not same size error",
-+	[ERR_FPB_TIMEO_INT] = "Free pool time out error",
-+	[ERR_WFIFO_OVF_INT] = "Write FIFO over flow error",
-+	[ERR_RFIFO_OVF_INT] = "Read FIFO over flow error",
-+	[ERR_WR_TIMEO_INT] = "Write time out error",
-+	[ERR_RD_TIMEO_INT] = "Read time out error",
-+	[ERR_WR_ERR_INT] = "HBF bus write error",
-+	[ERR_RD_ERR_INT] = "HBF bus read error",
-+	[ERR_BAD_DESC_INT] = "Ring descriptor HE0 not set error",
-+	[ERR_DESC_DST_INT] = "HFB reading dst link address error",
-+	[ERR_DESC_SRC_INT] = "HFB reading src link address error",
-+};
-+
-+static void xgene_dma_cpu_to_le64(u64 *desc, int count)
++	int			dma_available;
++	struct dma_slave_config	rx_conf;
++	struct dma_slave_config	tx_conf;
++	atomic_t		dma_outstanding;
+ };
+ 
+ 
+@@ -198,6 +207,16 @@ static int spi_qup_set_state(struct spi_qup *controller, u32 state)
+ 	return 0;
+ }
+ 
++static int spi_qup_get_word_sz(struct spi_transfer *xfer)
 +{
-+	int i;
-+
-+	for (i = 0; i < count; i++)
-+		desc[i] = cpu_to_le64(desc[i]);
-+}
-+
-+static u16 xgene_dma_encode_len(u32 len)
-+{
-+	return (len < DMA_MAX_BYTE_CNT) ?
-+		len : DMA_16K_BUFFER_LEN_CODE;
-+}
-+
-+static u32 xgene_dma_ring_desc_cnt(struct xgene_dma_ring *ring)
-+{
-+	u32 __iomem *cmd_base = ring->cmd_base;
-+	u32 ring_state = ioread32(&cmd_base[1]);
-+
-+	return DMA_RING_DESC_CNT(ring_state);
-+}
-+
-+static void xgene_dma_set_src_buffer(void *ext8, size_t *len,
-+				     dma_addr_t *paddr)
-+{
-+	size_t nbytes = (*len < DMA_MAX_BYTE_CNT) ?
-+			*len : DMA_MAX_BYTE_CNT;
-+
-+	DMA_DESC_BUFADDR_SET(ext8, *paddr);
-+	DMA_DESC_BUFLEN_SET(ext8, xgene_dma_encode_len(*len));
-+	*len -= nbytes;
-+	*paddr += nbytes;
-+}
-+
-+static void xgene_dma_invalidate_buffer(void *ext8)
-+{
-+	DMA_DESC_BUFLEN_SET(ext8, DMA_INVALID_LEN_CODE);
-+}
-+
-+static void *xgene_dma_lookup_ext8(u64 *desc, int idx)
-+{
-+	return (idx % 2) ? (desc + idx - 1) : (desc + idx + 1);
-+}
-+
-+static void xgene_dma_init_desc(void *desc, u16 dst_ring_num)
-+{
-+	DMA_DESC_C_SET(desc); /* Coherent IO */
-+	DMA_DESC_IN_SET(desc);
-+	DMA_DESC_DR_SET(desc);
-+	DMA_DESC_RTYPE_SET(desc, DMA_RING_OWNER_DMA);
-+	DMA_DESC_H0ENQ_NUM_SET(desc, dst_ring_num);
-+}
-+
-+static void xgene_dma_prep_cpy_desc(struct xgene_dma_chan *chan,
-+				    struct xgene_dma_desc_sw *desc_sw,
-+				    dma_addr_t dst, dma_addr_t src,
-+				    size_t len)
-+{
-+	struct xgene_dma_ring *ring = &chan->tx_ring;
-+	void *desc1, *desc2;
-+	int i;
-+
-+	/* Get 1st descriptor */
-+	desc1 = &desc_sw->desc1;
-+	xgene_dma_init_desc(desc1, ring->dst_ring_num);
-+	DMA_DESC_DST_ADDR_SET(desc1, dst);
-+
-+	/* Set 1st source address */
-+	xgene_dma_set_src_buffer(desc1 + 8, &len, &src);
-+
-+	if (len <= 0) {
-+		desc2 = NULL;
-+		desc_sw->desc_cnt = 1;
-+		goto skip_additional_src;
-+	}
-+
-+	/*
-+	 * We need to split this source buffer,
-+	 * and need to use 2nd descriptor
-+	 */
-+	desc2 = &desc_sw->desc2;
-+	DMA_DESC_NV_SET(desc1);
-+
-+	/* Set 2nd to 5th source address */
-+	for (i = 0; i < 4 && len; i++)
-+		xgene_dma_set_src_buffer(xgene_dma_lookup_ext8(desc2, i),
-+					 &len, &src);
-+
-+	/* Invalidate unused source address field */
-+	for (; i < 4; i++)
-+		xgene_dma_invalidate_buffer(xgene_dma_lookup_ext8(desc2, i));
-+
-+	desc_sw->desc_cnt = 2;
-+
-+skip_additional_src:
-+	/* Hardware stores descriptor in little endian format */
-+	xgene_dma_cpu_to_le64(desc1, 4);
-+	if (desc2)
-+		xgene_dma_cpu_to_le64(desc2, 4);
-+}
-+
-+static dma_cookie_t xgene_dma_tx_submit(struct dma_async_tx_descriptor *tx)
-+{
-+	struct xgene_dma_desc_sw *desc;
-+	struct xgene_dma_chan *chan;
-+	dma_cookie_t cookie;
-+
-+	if (unlikely(!tx))
-+		return -EINVAL;
-+
-+	chan = to_dma_chan(tx->chan);
-+	desc = to_dma_desc_sw(tx);
-+
-+	spin_lock_bh(&chan->lock);
-+
-+	cookie = dma_cookie_assign(tx);
-+
-+	/* Add this transaction list onto the tail of the pending queue */
-+	list_splice_tail_init(&desc->tx_list, &chan->ld_pending);
-+
-+	spin_unlock_bh(&chan->lock);
-+
-+	return cookie;
-+}
-+
-+static void xgene_dma_free_descriptor(struct xgene_dma_chan *chan,
-+				      struct xgene_dma_desc_sw *desc)
-+{
-+	list_del(&desc->node);
-+	chan_dbg(chan, "LD %p free\n", desc);
-+	dma_pool_free(chan->desc_pool, desc, desc->tx.phys);
-+}
-+
-+static struct xgene_dma_desc_sw *xgene_dma_alloc_descriptor(
-+				 struct xgene_dma_chan *chan)
-+{
-+	struct xgene_dma_desc_sw *desc;
-+	dma_addr_t phys;
-+
-+	desc = dma_pool_alloc(chan->desc_pool, GFP_NOWAIT, &phys);
-+	if (!desc) {
-+		chan_dbg(chan, "Failed to allocate LDs\n");
-+		return NULL;
-+	}
-+
-+	memset(desc, 0, sizeof(*desc));
-+
-+	INIT_LIST_HEAD(&desc->tx_list);
-+	desc->tx.phys = phys;
-+	desc->tx.tx_submit = xgene_dma_tx_submit;
-+	dma_async_tx_descriptor_init(&desc->tx, &chan->dma_chan);
-+
-+	chan_dbg(chan, "LD %p allocated\n", desc);
-+
-+	return desc;
-+}
-+
-+/**
-+ * xgene_dma_clean_completed_descriptor - free all descriptors which
-+ * has been completed and acked
-+ * @chan: DMA channel
-+ *
-+ * This function is used on all completed and acked descriptors.
-+ * All descriptors should only be freed in this function.
-+ */
-+static void xgene_dma_clean_completed_descriptor(struct xgene_dma_chan *chan)
-+{
-+	struct xgene_dma_desc_sw *desc, *_desc;
-+
-+	/* Run the callback for each descriptor, in order */
-+	list_for_each_entry_safe(desc, _desc, &chan->ld_completed, node) {
-+		if (async_tx_test_ack(&desc->tx))
-+			xgene_dma_free_descriptor(chan, desc);
-+	}
-+}
-+
-+/**
-+ * xgene_dma_run_tx_complete_actions - cleanup a single link descriptor
-+ * @chan: DMA channel
-+ * @desc: descriptor to cleanup and free
-+ *
-+ * This function is used on a descriptor which has been executed by the DMA
-+ * controller. It will run any callbacks, submit any dependencies.
-+ */
-+static void xgene_dma_run_tx_complete_actions(struct xgene_dma_chan *chan,
-+					      struct xgene_dma_desc_sw *desc)
-+{
-+	struct dma_async_tx_descriptor *tx = &desc->tx;
-+
-+	if (tx->cookie == 0)
-+		return;
-+
-+	dma_cookie_complete(tx);
-+
-+	/* Run the link descriptor callback function */
-+	if (tx->callback)
-+		tx->callback(tx->callback_param);
-+
-+	dma_descriptor_unmap(tx);
-+
-+	/* Run any dependencies */
-+	dma_run_dependencies(tx);
-+}
-+
-+/**
-+ * xgene_dma_clean_running_descriptor - move the completed descriptor from
-+ * ld_running to ld_completed
-+ * @chan: DMA channel
-+ * @desc: the descriptor which is completed
-+ *
-+ * Free the descriptor directly if acked by async_tx api, or move it to
-+ * queue ld_completed.
-+ */
-+static void xgene_dma_clean_running_descriptor(struct xgene_dma_chan *chan,
-+					       struct xgene_dma_desc_sw *desc)
-+{
-+	/* Remove from the list of transactions */
-+	list_del(&desc->node);
-+
-+	/*
-+	 * the client is allowed to attach dependent operations
-+	 * until 'ack' is set
-+	 */
-+	if (!async_tx_test_ack(&desc->tx)) {
-+		/*
-+		 * Move this descriptor to the list of descriptors which is
-+		 * completed, but still awaiting the 'ack' bit to be set.
-+		 */
-+		list_add_tail(&desc->node, &chan->ld_completed);
-+		return;
-+	}
-+
-+	chan_dbg(chan, "LD %p free\n", desc);
-+	dma_pool_free(chan->desc_pool, desc, desc->tx.phys);
-+}
-+
-+/**
-+ * xgene_chan_xfer_ld_pending - push any pending transactions to hw
-+ * @chan : DMA channel
-+ *
-+ * LOCKING: must hold chan->desc_lock
-+ */
-+static void xgene_chan_xfer_ld_pending(struct xgene_dma_chan *chan)
-+{
-+	struct xgene_dma_ring *ring = &chan->tx_ring;
-+	struct xgene_dma_desc_sw *desc_sw, *_desc_sw;
-+	struct xgene_dma_desc_hw *desc_hw;
-+
-+	/*
-+	 * If the list of pending descriptors is empty, then we
-+	 * don't need to do any work at all
-+	 */
-+	if (list_empty(&chan->ld_pending)) {
-+		chan_dbg(chan, "No pending LDs\n");
-+		return;
-+	}
-+
-+	/*
-+	 * Move elements from the queue of pending transactions onto the list
-+	 * of running transactions and push it to hw for further executions
-+	 */
-+
-+	list_for_each_entry_safe(desc_sw, _desc_sw, &chan->ld_pending, node) {
-+		/*
-+		 * Check if have pushed max number of transactions to hw
-+		 * as capable, so let's stop here and will push remaining
-+		 * elements from pening ld queue after completing some
-+		 * descriptors that we have already pushed
-+		 */
-+		if ((chan->pending >= ring->slots) ||
-+		    (xgene_dma_ring_desc_cnt(ring) > (ring->slots - 2)))
-+			break;
-+
-+		/* Get hw descriptor from DMA tx ring */
-+		desc_hw = &ring->desc_hw[ring->head];
-+
-+		/*
-+		 * Increment the head count to point next
-+		 * descriptor for next time
-+		 */
-+		if (++ring->head == ring->slots)
-+			ring->head = 0;
-+
-+		/* Copy prepared sw descriptor data to hw descriptor */
-+		memcpy(desc_hw, &desc_sw->desc1, sizeof(*desc_hw));
-+
-+		/*
-+		 * Check if we have prepared 64B descriptor,
-+		 * in this case we need one more hw descriptor
-+		 */
-+		if (desc_sw->desc_cnt == 2) {
-+			desc_hw = &ring->desc_hw[ring->head];
-+
-+			if (++ring->head == ring->slots)
-+				ring->head = 0;
-+
-+			memcpy(desc_hw, &desc_sw->desc2, sizeof(*desc_hw));
-+		}
-+
-+		/*
-+		 * Delete this element from ld pending queue and append it to
-+		 * ld running queue
-+		 */
-+		list_move_tail(&desc_sw->node, &chan->ld_running);
-+
-+		/* Increment the pending transaction count */
-+		chan->pending++;
-+
-+		/* Notify the hw that we have descriptor ready for execution */
-+		iowrite32(desc_sw->desc_cnt, ring->cmd);
-+	}
-+}
-+
-+/**
-+ * xgene_dma_cleanup_descriptors - cleanup link descriptors which are completed
-+ * and move them to ld_completed to free until flag 'ack' is set
-+ * @chan: DMA channel
-+ *
-+ * This function is used on descriptors which have been executed by the DMA
-+ * controller. It will run any callbacks, submit any dependencies, then
-+ * free these descriptors if flag 'ack' is set.
-+ */
-+static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
-+{
-+	struct xgene_dma_ring *ring = &chan->rx_ring;
-+	struct xgene_dma_desc_sw *desc_sw, *_desc_sw;
-+	struct xgene_dma_desc_hw *desc_hw;
-+	u8 status;
-+
-+	/* Clean already completed and acked descriptors */
-+	xgene_dma_clean_completed_descriptor(chan);
-+
-+	/* Run the callback for each descriptor, in order */
-+	list_for_each_entry_safe(desc_sw, _desc_sw, &chan->ld_running, node) {
-+		/* Get subsequent hw descriptor from DMA rx ring */
-+		desc_hw = &ring->desc_hw[ring->head];
-+
-+		/* Check if this descriptor has been completed */
-+		if (unlikely(DMA_DESC_IS_EMPTY(desc_hw)))
-+			break;
-+
-+		if (++ring->head == ring->slots)
-+			ring->head = 0;
-+
-+		/* Check if we have any error with DMA transactions */
-+		status = DMA_DESC_STATUS(
-+				DMA_DESC_ELERR_RD(le64_to_cpu(desc_hw->m0)),
-+				DMA_DESC_LERR_RD(le64_to_cpu(desc_hw->m0)));
-+		if (status) {
-+			chan_err(chan, "%s\n", xgene_dma_desc_hw_err[status]);
-+			DMA_DESC_ERR_DUMP(desc_hw);
-+		}
-+
-+		/* Notify the hw about this completed descriptor */
-+		iowrite32(-1, ring->cmd);
-+
-+		/* Mark this hw descriptor as processed */
-+		DMA_DESC_SET_EMPTY(desc_hw);
-+
-+		xgene_dma_run_tx_complete_actions(chan, desc_sw);
-+
-+		xgene_dma_clean_running_descriptor(chan, desc_sw);
-+
-+		/*
-+		 * Decrement the pending transaction count
-+		 * as we have processed one
-+		 */
-+		chan->pending--;
-+	}
-+
-+	/*
-+	 * Start any pending transactions automatically
-+	 *
-+	 * In the ideal case, we keep the DMA controller busy while we go
-+	 * ahead and free the descriptors below.
-+	 */
-+	xgene_chan_xfer_ld_pending(chan);
-+}
-+
-+static int xgene_dma_alloc_chan_resources(struct dma_chan *dchan)
-+{
-+	struct xgene_dma_chan *chan = to_dma_chan(dchan);
-+
-+	/* Has this channel already been allocated? */
-+	if (chan->desc_pool)
++	if (xfer->bits_per_word <= 8)
 +		return 1;
 +
-+	chan->desc_pool = dma_pool_create(chan->name, chan->dev,
-+					  sizeof(struct xgene_dma_desc_sw),
-+					  0, 0);
-+	if (!chan->desc_pool) {
-+		chan_err(chan, "Failed to allocate descriptor pool\n");
-+		return -ENOMEM;
++	if (xfer->bits_per_word <= 16)
++		return 2;
++
++	return 4;
++}
+ 
+ static void spi_qup_fifo_read(struct spi_qup *controller,
+ 			    struct spi_transfer *xfer)
+@@ -266,6 +285,101 @@ static void spi_qup_fifo_write(struct spi_qup *controller,
+ 	}
+ }
+ 
++static void spi_qup_dma_done(void *data)
++{
++	struct spi_qup *qup = data;
++
++	if (atomic_dec_and_test(&qup->dma_outstanding))
++		complete(&qup->done);
++}
++
++static int spi_qup_prep_sg(struct spi_master *master, struct spi_transfer *xfer,
++			   enum dma_transfer_direction dir)
++{
++	struct spi_qup *qup = spi_master_get_devdata(master);
++	unsigned long flags = DMA_PREP_INTERRUPT | DMA_PREP_FENCE;
++	struct dma_async_tx_descriptor *desc;
++	struct scatterlist *sgl;
++	dma_cookie_t cookie;
++	unsigned int nents;
++	struct dma_chan *chan;
++	int ret;
++
++	if (dir == DMA_MEM_TO_DEV) {
++		chan = master->dma_tx;
++		nents = xfer->tx_sg.nents;
++		sgl = xfer->tx_sg.sgl;
++	} else {
++		chan = master->dma_rx;
++		nents = xfer->rx_sg.nents;
++		sgl = xfer->rx_sg.sgl;
 +	}
 +
-+	chan_dbg(chan, "Allocate descripto pool\n");
-+
-+	return 1;
-+}
-+
-+/**
-+ * xgene_dma_free_desc_list - Free all descriptors in a queue
-+ * @chan: DMA channel
-+ * @list: the list to free
-+ *
-+ * LOCKING: must hold chan->desc_lock
-+ */
-+static void xgene_dma_free_desc_list(struct xgene_dma_chan *chan,
-+				     struct list_head *list)
-+{
-+	struct xgene_dma_desc_sw *desc, *_desc;
-+
-+	list_for_each_entry_safe(desc, _desc, list, node)
-+		xgene_dma_free_descriptor(chan, desc);
-+}
-+
-+static void xgene_dma_free_desc_list_reverse(struct xgene_dma_chan *chan,
-+					     struct list_head *list)
-+{
-+	struct xgene_dma_desc_sw *desc, *_desc;
-+
-+	list_for_each_entry_safe_reverse(desc, _desc, list, node)
-+		xgene_dma_free_descriptor(chan, desc);
-+}
-+
-+static void xgene_dma_free_chan_resources(struct dma_chan *dchan)
-+{
-+	struct xgene_dma_chan *chan = to_dma_chan(dchan);
-+
-+	chan_dbg(chan, "Free all resources\n");
-+
-+	if (!chan->desc_pool)
-+		return;
-+
-+	spin_lock_bh(&chan->lock);
-+
-+	/* Process all running descriptor */
-+	xgene_dma_cleanup_descriptors(chan);
-+
-+	/* Clean all link descriptor queues */
-+	xgene_dma_free_desc_list(chan, &chan->ld_pending);
-+	xgene_dma_free_desc_list(chan, &chan->ld_running);
-+	xgene_dma_free_desc_list(chan, &chan->ld_completed);
-+
-+	/* Delete this channel DMA pool */
-+	dma_pool_destroy(chan->desc_pool);
-+	chan->desc_pool = NULL;
-+
-+	spin_unlock_bh(&chan->lock);
-+}
-+
-+static struct dma_async_tx_descriptor *xgene_dma_prep_memcpy(
-+	struct dma_chan *dchan, dma_addr_t dst, dma_addr_t src,
-+	size_t len, unsigned long flags)
-+{
-+	struct xgene_dma_desc_sw *first = NULL, *new;
-+	struct xgene_dma_chan *chan;
-+	size_t copy;
-+
-+	if (unlikely(!dchan || (len == 0)))
-+		return NULL;
-+
-+	chan = to_dma_chan(dchan);
-+
-+	do {
-+		/* Allocate the link descriptor from DMA pool */
-+		new = xgene_dma_alloc_descriptor(chan);
-+		if (!new)
-+			goto fail;
-+
-+		/* Create the largest transaction possible */
-+		copy = min_t(size_t, len, DMA_MAX_64B_DESC_BYTE_CNT);
-+
-+		/* Prepare DMA descriptor */
-+		xgene_dma_prep_cpy_desc(chan, new, dst, src, copy);
-+
-+		if (!first)
-+			first = new;
-+
-+		new->tx.cookie = 0;
-+		async_tx_ack(&new->tx);
-+
-+		/* Update metadata */
-+		len -= copy;
-+		dst += copy;
-+		src += copy;
-+
-+		/* Insert the link descriptor to the LD ring */
-+		list_add_tail(&new->node, &first->tx_list);
-+	} while (len);
-+
-+	new->tx.flags = flags; /* client is in control of this ack */
-+	new->tx.cookie = -EBUSY;
-+	list_splice(&first->tx_list, &new->tx_list);
-+
-+	return &new->tx;
-+
-+fail:
-+	if (!first)
-+		return NULL;
-+
-+	xgene_dma_free_desc_list_reverse(chan, &first->tx_list);
-+	return NULL;
-+}
-+
-+static struct dma_async_tx_descriptor *xgene_dma_prep_sg(
-+	struct dma_chan *dchan, struct scatterlist *dst_sg,
-+	unsigned int dst_nents, struct scatterlist *src_sg,
-+	unsigned int src_nents, unsigned long flags)
-+{
-+	struct xgene_dma_desc_sw *first = NULL, *new = NULL;
-+	struct xgene_dma_chan *chan;
-+	size_t dst_avail, src_avail;
-+	dma_addr_t dst, src;
-+	size_t len;
-+
-+	if (unlikely(!dchan))
-+		return NULL;
-+
-+	if (unlikely(dst_nents == 0 || src_nents == 0))
-+		return NULL;
-+
-+	if (unlikely(!dst_sg || !src_sg))
-+		return NULL;
-+
-+	chan = to_dma_chan(dchan);
-+
-+	/* Get prepared for the loop */
-+	dst_avail = sg_dma_len(dst_sg);
-+	src_avail = sg_dma_len(src_sg);
-+	dst_nents--;
-+	src_nents--;
-+
-+	/* Run until we are out of scatterlist entries */
-+	while (true) {
-+		/* Create the largest transaction possible */
-+		len = min_t(size_t, src_avail, dst_avail);
-+		len = min_t(size_t, len, DMA_MAX_64B_DESC_BYTE_CNT);
-+		if (len == 0)
-+			goto fetch;
-+
-+		dst = sg_dma_address(dst_sg) + sg_dma_len(dst_sg) - dst_avail;
-+		src = sg_dma_address(src_sg) + sg_dma_len(src_sg) - src_avail;
-+
-+		/* Allocate the link descriptor from DMA pool */
-+		new = xgene_dma_alloc_descriptor(chan);
-+		if (!new)
-+			goto fail;
-+
-+		/* Prepare DMA descriptor */
-+		xgene_dma_prep_cpy_desc(chan, new, dst, src, len);
-+
-+		if (!first)
-+			first = new;
-+
-+		new->tx.cookie = 0;
-+		async_tx_ack(&new->tx);
-+
-+		/* update metadata */
-+		dst_avail -= len;
-+		src_avail -= len;
-+
-+		/* Insert the link descriptor to the LD ring */
-+		list_add_tail(&new->node, &first->tx_list);
-+
-+fetch:
-+		/* fetch the next dst scatterlist entry */
-+		if (dst_avail == 0) {
-+			/* no more entries: we're done */
-+			if (dst_nents == 0)
-+				break;
-+
-+			/* fetch the next entry: if there are no more: done */
-+			dst_sg = sg_next(dst_sg);
-+			if (!dst_sg)
-+				break;
-+
-+			dst_nents--;
-+			dst_avail = sg_dma_len(dst_sg);
-+		}
-+
-+		/* fetch the next src scatterlist entry */
-+		if (src_avail == 0) {
-+			/* no more entries: we're done */
-+			if (src_nents == 0)
-+				break;
-+
-+			/* fetch the next entry: if there are no more: done */
-+			src_sg = sg_next(src_sg);
-+			if (!src_sg)
-+				break;
-+
-+			src_nents--;
-+			src_avail = sg_dma_len(src_sg);
-+		}
-+	}
-+
-+	if (!new)
-+		return NULL;
-+
-+	new->tx.flags = flags; /* client is in control of this ack */
-+	new->tx.cookie = -EBUSY;
-+	list_splice(&first->tx_list, &new->tx_list);
-+
-+	return &new->tx;
-+
-+fail:
-+	if (!first)
-+		return NULL;
-+
-+	xgene_dma_free_desc_list_reverse(chan, &first->tx_list);
-+	return NULL;
-+}
-+
-+static void xgene_dma_issue_pending(struct dma_chan *dchan)
-+{
-+	struct xgene_dma_chan *chan = to_dma_chan(dchan);
-+
-+	spin_lock_bh(&chan->lock);
-+	xgene_chan_xfer_ld_pending(chan);
-+	spin_unlock_bh(&chan->lock);
-+}
-+
-+static enum dma_status xgene_dma_tx_status(struct dma_chan *dchan,
-+					   dma_cookie_t cookie,
-+					   struct dma_tx_state *txstate)
-+{
-+	struct xgene_dma_chan *chan = to_dma_chan(dchan);
-+	enum dma_status status;
-+
-+	status = dma_cookie_status(dchan, cookie, txstate);
-+	if (status == DMA_COMPLETE)
-+		return status;
-+
-+	/* Cleanup any running and executed descriptors */
-+	spin_lock_bh(&chan->lock);
-+	xgene_dma_cleanup_descriptors(chan);
-+	spin_unlock_bh(&chan->lock);
-+
-+	return dma_cookie_status(dchan, cookie, txstate);
-+}
-+
-+static void xgene_dma_tasklet_cb(unsigned long data)
-+{
-+	struct xgene_dma_chan *chan = (struct xgene_dma_chan *)data;
-+
-+	spin_lock_bh(&chan->lock);
-+
-+	/* Run all cleanup for descriptors which have been completed */
-+	xgene_dma_cleanup_descriptors(chan);
-+
-+	/* Re-enable DMA channel IRQ */
-+	enable_irq(chan->rx_irq);
-+
-+	spin_unlock_bh(&chan->lock);
-+}
-+
-+static irqreturn_t xgene_dma_chan_ring_isr(int irq, void *id)
-+{
-+	struct xgene_dma_chan *chan = (struct xgene_dma_chan *)id;
-+
-+	BUG_ON(!chan);
-+
-+	/*
-+	 * Disable DMA channel IRQ until we process completed
-+	 * descriptors
-+	 */
-+	disable_irq_nosync(chan->rx_irq);
-+
-+	/*
-+	 * Schedule the tasklet to handle all cleanup of the current
-+	 * transaction. It will start a new transaction if there is
-+	 * one pending.
-+	 */
-+	tasklet_schedule(&chan->tasklet);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t xgene_dma_err_isr(int irq, void *id)
-+{
-+	struct xgene_dma *pdma = (struct xgene_dma *)id;
-+	unsigned long int_mask;
-+	u32 val, i;
-+
-+	val = ioread32(pdma->csr_dma + DMA_INT);
-+
-+	/* Clear DMA interrupts */
-+	iowrite32(val, pdma->csr_dma + DMA_INT);
-+
-+	/* Print DMA error info */
-+	int_mask = val >> DMA_INT_MASK_SHIFT;
-+	for_each_set_bit(i, &int_mask, ARRAY_SIZE(xgene_dma_err))
-+		dev_err(pdma->dev,
-+			"Interrupt status 0x%08X %s\n", val, xgene_dma_err[i]);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void xgene_dma_wr_ring_state(struct xgene_dma_ring *ring)
-+{
-+	int i;
-+
-+	iowrite32(ring->num, ring->pdma->csr_ring + DMA_RING_STATE);
-+
-+	for (i = 0; i < DMA_RING_NUM_CONFIG; i++)
-+		iowrite32(ring->state[i], ring->pdma->csr_ring +
-+			  DMA_RING_STATE_WR_BASE + (i * 4));
-+}
-+
-+static void xgene_dma_clr_ring_state(struct xgene_dma_ring *ring)
-+{
-+	memset(ring->state, 0, sizeof(u32) * DMA_RING_NUM_CONFIG);
-+	xgene_dma_wr_ring_state(ring);
-+}
-+
-+static void xgene_dma_setup_ring(struct xgene_dma_ring *ring)
-+{
-+	void *ring_cfg = ring->state;
-+	u64 addr = ring->desc_paddr;
-+	void *desc;
-+	u32 i, val;
-+
-+	ring->slots = ring->size / DMA_RING_WQ_DESC_SIZE;
-+
-+	/* Clear DMA ring state */
-+	xgene_dma_clr_ring_state(ring);
-+
-+	/* Set DMA ring type */
-+	DMA_RING_TYPE_SET(ring_cfg, DMA_RING_TYPE_REGULAR);
-+
-+	if (ring->owner == DMA_RING_OWNER_DMA) {
-+		/* Set recombination buffer and timeout */
-+		DMA_RING_RECOMBBUF_SET(ring_cfg);
-+		DMA_RING_RECOMTIMEOUTL_SET(ring_cfg);
-+		DMA_RING_RECOMTIMEOUTH_SET(ring_cfg);
-+	}
-+
-+	/* Initialize DMA ring state */
-+	DMA_RING_SELTHRSH_SET(ring_cfg);
-+	DMA_RING_ACCEPTLERR_SET(ring_cfg);
-+	DMA_RING_COHERENT_SET(ring_cfg);
-+	DMA_RING_ADDRL_SET(ring_cfg, addr);
-+	DMA_RING_ADDRH_SET(ring_cfg, addr);
-+	DMA_RING_SIZE_SET(ring_cfg, ring->cfgsize);
-+
-+	/* Write DMA ring configurations */
-+	xgene_dma_wr_ring_state(ring);
-+
-+	/* Set DMA ring id */
-+	iowrite32(DMA_RING_ID_SETUP(ring->id),
-+		  ring->pdma->csr_ring + DMA_RING_ID);
-+
-+	/* Set DMA ring buffer */
-+	iowrite32(DMA_RING_ID_BUF_SETUP(ring->num),
-+		  ring->pdma->csr_ring + DMA_RING_ID_BUF);
-+
-+	if (ring->owner != DMA_RING_OWNER_CPU)
-+		return;
-+
-+	/* Set empty signature to DMA Rx ring descriptors */
-+	for (i = 0; i < ring->slots; i++) {
-+		desc = &ring->desc_hw[i];
-+		DMA_DESC_SET_EMPTY(desc);
-+	}
-+
-+	/* Enable DMA Rx ring interrupt */
-+	val = ioread32(ring->pdma->csr_ring + DMA_RING_NE_INT_MODE);
-+	DMA_RING_NE_INT_MODE_SET(val, ring->buf_num);
-+	iowrite32(val, ring->pdma->csr_ring + DMA_RING_NE_INT_MODE);
-+}
-+
-+static void xgene_dma_clear_ring(struct xgene_dma_ring *ring)
-+{
-+	u32 ring_id, val;
-+
-+	if (ring->owner == DMA_RING_OWNER_CPU) {
-+		/* Disable DMA Rx ring interrupt */
-+		val = ioread32(ring->pdma->csr_ring + DMA_RING_NE_INT_MODE);
-+		DMA_RING_NE_INT_MODE_RESET(val, ring->buf_num);
-+		iowrite32(val, ring->pdma->csr_ring + DMA_RING_NE_INT_MODE);
-+	}
-+
-+	/* Clear DMA ring state */
-+	ring_id = DMA_RING_ID_SETUP(ring->id);
-+	iowrite32(ring_id, ring->pdma->csr_ring + DMA_RING_ID);
-+
-+	iowrite32(0, ring->pdma->csr_ring + DMA_RING_ID_BUF);
-+	xgene_dma_clr_ring_state(ring);
-+}
-+
-+static void xgene_dma_set_ring_cmd(struct xgene_dma_ring *ring)
-+{
-+	ring->cmd_base = ring->pdma->csr_ring_cmd +
-+			DMA_RING_CMD_BASE_OFFSET((ring->num - DMA_RING_NUM));
-+	ring->cmd = ring->cmd_base + DMA_RING_CMD_OFFSET;
-+}
-+
-+static int xgene_dma_get_ring_size(struct xgene_dma_chan *chan,
-+				   enum xgene_dma_ring_cfgsize cfgsize)
-+{
-+	int size;
-+
-+	switch (cfgsize) {
-+	case DMA_RING_CFG_SIZE_512B:
-+		size = 0x200;
-+		break;
-+	case DMA_RING_CFG_SIZE_2KB:
-+		size = 0x800;
-+		break;
-+	case DMA_RING_CFG_SIZE_16KB:
-+		size = 0x4000;
-+		break;
-+	case DMA_RING_CFG_SIZE_64KB:
-+		size = 0x10000;
-+		break;
-+	case DMA_RING_CFG_SIZE_512KB:
-+		size = 0x80000;
-+		break;
-+	default:
-+		chan_err(chan, "Unsupported cfg ring size %d\n", cfgsize);
++	desc = dmaengine_prep_slave_sg(chan, sgl, nents, dir, flags);
++	if (!desc)
 +		return -EINVAL;
-+	}
 +
-+	return size;
-+}
++	desc->callback = spi_qup_dma_done;
++	desc->callback_param = qup;
 +
-+static void xgene_dma_delete_ring_one(struct xgene_dma_ring *ring)
-+{
-+	/* Clear DMA ring configurations */
-+	xgene_dma_clear_ring(ring);
++	cookie = dmaengine_submit(desc);
++	ret = dma_submit_error(cookie);
++	if (ret)
++		return ret;
 +
-+	/* De-allocate DMA ring descriptor */
-+	if (ring->desc_vaddr) {
-+		dma_free_coherent(ring->pdma->dev, ring->size,
-+				  ring->desc_vaddr, ring->desc_paddr);
-+		ring->desc_vaddr = NULL;
-+	}
-+}
-+
-+static void xgene_dma_delete_chan_rings(struct xgene_dma_chan *chan)
-+{
-+	xgene_dma_delete_ring_one(&chan->rx_ring);
-+	xgene_dma_delete_ring_one(&chan->tx_ring);
-+}
-+
-+static int xgene_dma_create_ring_one(struct xgene_dma_chan *chan,
-+				     struct xgene_dma_ring *ring,
-+				     enum xgene_dma_ring_cfgsize cfgsize)
-+{
-+	/* Setup DMA ring descriptor variables */
-+	ring->pdma = chan->pdma;
-+	ring->cfgsize = cfgsize;
-+	ring->num = chan->pdma->ring_num++;
-+	ring->id = DMA_RING_ID_GET(ring->owner, ring->buf_num);
-+
-+	ring->size = xgene_dma_get_ring_size(chan, cfgsize);
-+	if (ring->size <= 0)
-+		return ring->size;
-+
-+	/* Allocate memory for DMA ring descriptor */
-+	ring->desc_vaddr = dma_zalloc_coherent(chan->dev, ring->size,
-+					       &ring->desc_paddr, GFP_KERNEL);
-+	if (!ring->desc_vaddr) {
-+		chan_err(chan, "Failed to allocate ring desc\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Configure and enable DMA ring */
-+	xgene_dma_set_ring_cmd(ring);
-+	xgene_dma_setup_ring(ring);
++	atomic_inc(&qup->dma_outstanding);
 +
 +	return 0;
 +}
 +
-+static int xgene_dma_create_chan_rings(struct xgene_dma_chan *chan)
++static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer)
 +{
-+	struct xgene_dma_ring *rx_ring = &chan->rx_ring;
-+	struct xgene_dma_ring *tx_ring = &chan->tx_ring;
++	struct spi_qup *qup = spi_master_get_devdata(master);
 +	int ret;
 +
-+	/* Create DMA Rx ring descriptor */
-+	rx_ring->owner = DMA_RING_OWNER_CPU;
-+	rx_ring->buf_num = DMA_CPU_BUFNUM + chan->id;
++	atomic_set(&qup->dma_outstanding, 0);
 +
-+	ret = xgene_dma_create_ring_one(chan, rx_ring, DMA_RING_CFG_SIZE_64KB);
-+	if (ret)
-+		return ret;
++	reinit_completion(&qup->done);
 +
-+	chan_dbg(chan, "Rx ring id 0x%X num %d desc 0x%p\n",
-+		 rx_ring->id, rx_ring->num, rx_ring->desc_vaddr);
-+
-+	/* Create DMA Tx ring descriptor */
-+	tx_ring->owner = DMA_RING_OWNER_DMA;
-+	tx_ring->buf_num = DMA_BUFNUM + chan->id;
-+
-+	ret = xgene_dma_create_ring_one(chan, tx_ring, DMA_RING_CFG_SIZE_64KB);
-+	if (ret) {
-+		xgene_dma_delete_ring_one(rx_ring);
-+		return ret;
-+	}
-+
-+	tx_ring->dst_ring_num = DMA_RING_DST_ID(rx_ring->num);
-+
-+	chan_dbg(chan,
-+		 "Tx ring id 0x%X num %d desc 0x%p\n",
-+		 tx_ring->id, tx_ring->num, tx_ring->desc_vaddr);
-+
-+	return ret;
-+}
-+
-+static int xgene_dma_init_rings(struct xgene_dma *pdma)
-+{
-+	int ret, i, j;
-+
-+	for (i = 0; i < DMA_MAX_CHANNEL; i++) {
-+		ret = xgene_dma_create_chan_rings(&pdma->chan[i]);
-+		if (ret) {
-+			for (j = 0; j < i; j++)
-+				xgene_dma_delete_chan_rings(&pdma->chan[j]);
++	if (xfer->rx_buf) {
++		ret = spi_qup_prep_sg(master, xfer, DMA_DEV_TO_MEM);
++		if (ret)
 +			return ret;
-+		}
++
++		dma_async_issue_pending(master->dma_rx);
 +	}
 +
-+	return ret;
-+}
++	if (xfer->tx_buf) {
++		ret = spi_qup_prep_sg(master, xfer, DMA_MEM_TO_DEV);
++		if (ret)
++			goto err_rx;
 +
-+static void xgene_dma_enable(struct xgene_dma *pdma)
-+{
-+	u32 val;
-+
-+	/* Configure and enable DMA engine */
-+	val = ioread32(pdma->csr_dma + DMA_GCR);
-+	DMA_CH_SETUP(val);
-+	DMA_ENABLE(val);
-+	iowrite32(val, pdma->csr_dma + DMA_GCR);
-+}
-+
-+static void xgene_dma_disable(struct xgene_dma *pdma)
-+{
-+	u32 val;
-+
-+	val = ioread32(pdma->csr_dma + DMA_GCR);
-+	DMA_DISABLE(val);
-+	iowrite32(val, pdma->csr_dma + DMA_GCR);
-+}
-+
-+static void xgene_dma_mask_interrupts(struct xgene_dma *pdma)
-+{
-+	/*
-+	 * Mask DMA ring overflow, underflow and
-+	 * AXI write/read error interrupts
-+	 */
-+	iowrite32(DMA_INT_ALL_MASK, pdma->csr_dma + DMA_RING_INT0_MASK);
-+	iowrite32(DMA_INT_ALL_MASK, pdma->csr_dma + DMA_RING_INT1_MASK);
-+	iowrite32(DMA_INT_ALL_MASK, pdma->csr_dma + DMA_RING_INT2_MASK);
-+	iowrite32(DMA_INT_ALL_MASK, pdma->csr_dma + DMA_RING_INT3_MASK);
-+	iowrite32(DMA_INT_ALL_MASK, pdma->csr_dma + DMA_RING_INT4_MASK);
-+
-+	/* Mask DMA error interrupts */
-+	iowrite32(DMA_INT_ALL_MASK, pdma->csr_dma + DMA_INT_MASK);
-+}
-+
-+static void xgene_dma_unmask_interrupts(struct xgene_dma *pdma)
-+{
-+	/*
-+	 * Unmask DMA ring overflow, underflow and
-+	 * AXI write/read error interrupts
-+	 */
-+	iowrite32(DMA_INT_ALL_UNMASK, pdma->csr_dma + DMA_RING_INT0_MASK);
-+	iowrite32(DMA_INT_ALL_UNMASK, pdma->csr_dma + DMA_RING_INT1_MASK);
-+	iowrite32(DMA_INT_ALL_UNMASK, pdma->csr_dma + DMA_RING_INT2_MASK);
-+	iowrite32(DMA_INT_ALL_UNMASK, pdma->csr_dma + DMA_RING_INT3_MASK);
-+	iowrite32(DMA_INT_ALL_UNMASK, pdma->csr_dma + DMA_RING_INT4_MASK);
-+
-+	/* Unmask DMA error interrupts */
-+	iowrite32(DMA_INT_ALL_UNMASK, pdma->csr_dma + DMA_INT_MASK);
-+}
-+
-+static void xgene_dma_init_hw(struct xgene_dma *pdma)
-+{
-+	u32 val;
-+
-+	/* Associate DMA ring to corresponding ring HW */
-+	iowrite32(DMA_ASSOC_RING_MNGR1,
-+		  pdma->csr_dma + DMA_CFG_RING_WQ_ASSOC);
-+
-+	xgene_dma_enable(pdma);
-+	xgene_dma_unmask_interrupts(pdma);
-+
-+	/* Get DMA id and version info */
-+	val = ioread32(pdma->csr_dma + DMA_IPBRR);
-+
-+	/* DMA device info */
-+	dev_info(pdma->dev,
-+		 "X-Gene DMA v%d.%02d.%02d driver registered %d channels",
-+		 DMA_REV_NO_RD(val), DMA_BUS_ID_RD(val),
-+		 DMA_DEV_ID_RD(val), DMA_MAX_CHANNEL);
-+}
-+
-+int xgene_dma_init_ring_mngr(struct xgene_dma *pdma)
-+{
-+	if (ioread32(pdma->csr_ring + DMA_RING_CLKEN) &&
-+	    (!ioread32(pdma->csr_ring + DMA_RING_SRST)))
-+		return 0;
-+
-+	iowrite32(0x3, pdma->csr_ring + DMA_RING_CLKEN);
-+	iowrite32(0x0, pdma->csr_ring + DMA_RING_SRST);
-+
-+	/* Bring up memory */
-+	iowrite32(0x0, pdma->csr_ring + DMA_RING_MEM_RAM_SHUTDOWN);
-+
-+	/* Force a barrier */
-+	ioread32(pdma->csr_ring + DMA_RING_MEM_RAM_SHUTDOWN);
-+
-+	/* reset may take up to 1ms */
-+	usleep_range(1000, 1100);
-+
-+	if (ioread32(pdma->csr_ring + DMA_RING_BLK_MEM_RDY)
-+		!= DMA_RING_BLK_MEM_RDY_VAL) {
-+		dev_err(pdma->dev,
-+			"Failed to release ring mngr memory from shutdown\n");
-+		return -ENODEV;
++		dma_async_issue_pending(master->dma_tx);
 +	}
 +
-+	/* program threshold set 1 and all hysteresis */
-+	iowrite32(DMA_RING_THRESLD0_SET1_VAL,
-+		  pdma->csr_ring + DMA_RING_THRESLD0_SET1);
-+	iowrite32(DMA_RING_THRESLD1_SET1_VAL,
-+		  pdma->csr_ring + DMA_RING_THRESLD1_SET1);
-+	iowrite32(DMA_RING_HYSTERESIS_VAL,
-+		  pdma->csr_ring + DMA_RING_HYSTERESIS);
++	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
++	if (ret) {
++		dev_warn(qup->dev, "cannot set RUN state\n");
++		goto err_tx;
++	}
 +
-+	/* Enable QPcore and assign error queue */
-+	iowrite32(DMA_RING_ENABLE, pdma->csr_ring + DMA_RING_CONFIG);
++	if (!wait_for_completion_timeout(&qup->done, msecs_to_jiffies(1000))) {
++		ret = -ETIMEDOUT;
++		goto err_tx;
++	}
 +
 +	return 0;
++
++err_tx:
++	if (xfer->tx_buf)
++		dmaengine_terminate_all(master->dma_tx);
++err_rx:
++	if (xfer->rx_buf)
++		dmaengine_terminate_all(master->dma_rx);
++
++	return ret;
 +}
 +
-+static int xgene_dma_init_mem(struct xgene_dma *pdma)
+ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+ {
+ 	struct spi_qup *controller = dev_id;
+@@ -315,11 +429,13 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+ 		error = -EIO;
+ 	}
+ 
+-	if (opflags & QUP_OP_IN_SERVICE_FLAG)
+-		spi_qup_fifo_read(controller, xfer);
++	if (!controller->dma_available) {
++		if (opflags & QUP_OP_IN_SERVICE_FLAG)
++			spi_qup_fifo_read(controller, xfer);
+ 
+-	if (opflags & QUP_OP_OUT_SERVICE_FLAG)
+-		spi_qup_fifo_write(controller, xfer);
++		if (opflags & QUP_OP_OUT_SERVICE_FLAG)
++			spi_qup_fifo_write(controller, xfer);
++	}
+ 
+ 	spin_lock_irqsave(&controller->lock, flags);
+ 	controller->error = error;
+@@ -358,12 +474,7 @@ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
+ 		return -EIO;
+ 	}
+ 
+-	w_size = 4;
+-	if (xfer->bits_per_word <= 8)
+-		w_size = 1;
+-	else if (xfer->bits_per_word <= 16)
+-		w_size = 2;
+-
++	w_size = spi_qup_get_word_sz(xfer);
+ 	n_words = xfer->len / w_size;
+ 	controller->w_size = w_size;
+ 
+@@ -374,19 +485,46 @@ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
+ 		/* must be zero for FIFO */
+ 		writel_relaxed(0, controller->base + QUP_MX_INPUT_CNT);
+ 		writel_relaxed(0, controller->base + QUP_MX_OUTPUT_CNT);
+-	} else {
++	} else if (!controller->dma_available) {
+ 		mode = QUP_IO_M_MODE_BLOCK;
+ 		writel_relaxed(n_words, controller->base + QUP_MX_INPUT_CNT);
+ 		writel_relaxed(n_words, controller->base + QUP_MX_OUTPUT_CNT);
+ 		/* must be zero for BLOCK and BAM */
+ 		writel_relaxed(0, controller->base + QUP_MX_READ_CNT);
+ 		writel_relaxed(0, controller->base + QUP_MX_WRITE_CNT);
++	} else {
++		mode = QUP_IO_M_MODE_BAM;
++		writel_relaxed(0, controller->base + QUP_MX_READ_CNT);
++		writel_relaxed(0, controller->base + QUP_MX_WRITE_CNT);
++
++		if (!controller->qup_v1) {
++			void __iomem *input_cnt;
++
++			input_cnt = controller->base + QUP_MX_INPUT_CNT;
++			/*
++			 * for DMA transfers, both QUP_MX_INPUT_CNT and
++			 * QUP_MX_OUTPUT_CNT must be zero to all cases but one.
++			 * That case is a non-balanced transfer when there is
++			 * only a rx_buf.
++			 */
++			if (xfer->tx_buf)
++				writel_relaxed(0, input_cnt);
++			else
++				writel_relaxed(n_words, input_cnt);
++
++			writel_relaxed(0, controller->base + QUP_MX_OUTPUT_CNT);
++		}
+ 	}
+ 
+ 	iomode = readl_relaxed(controller->base + QUP_IO_M_MODES);
+ 	/* Set input and output transfer mode */
+ 	iomode &= ~(QUP_IO_M_INPUT_MODE_MASK | QUP_IO_M_OUTPUT_MODE_MASK);
+-	iomode &= ~(QUP_IO_M_PACK_EN | QUP_IO_M_UNPACK_EN);
++
++	if (!controller->dma_available)
++		iomode &= ~(QUP_IO_M_PACK_EN | QUP_IO_M_UNPACK_EN);
++	else
++		iomode |= QUP_IO_M_PACK_EN | QUP_IO_M_UNPACK_EN;
++
+ 	iomode |= (mode << QUP_IO_M_OUTPUT_MODE_MASK_SHIFT);
+ 	iomode |= (mode << QUP_IO_M_INPUT_MODE_MASK_SHIFT);
+ 
+@@ -419,11 +557,31 @@ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
+ 	config &= ~(QUP_CONFIG_NO_INPUT | QUP_CONFIG_NO_OUTPUT | QUP_CONFIG_N);
+ 	config |= xfer->bits_per_word - 1;
+ 	config |= QUP_CONFIG_SPI_MODE;
++
++	if (controller->dma_available) {
++		if (!xfer->tx_buf)
++			config |= QUP_CONFIG_NO_OUTPUT;
++		if (!xfer->rx_buf)
++			config |= QUP_CONFIG_NO_INPUT;
++	}
++
+ 	writel_relaxed(config, controller->base + QUP_CONFIG);
+ 
+ 	/* only write to OPERATIONAL_MASK when register is present */
+-	if (!controller->qup_v1)
+-		writel_relaxed(0, controller->base + QUP_OPERATIONAL_MASK);
++	if (!controller->qup_v1) {
++		u32 mask = 0;
++
++		/*
++		 * mask INPUT and OUTPUT service flags to prevent IRQs on FIFO
++		 * status change in BAM mode
++		 */
++
++		if (mode == QUP_IO_M_MODE_BAM)
++			mask = QUP_OP_IN_SERVICE_FLAG | QUP_OP_OUT_SERVICE_FLAG;
++
++		writel_relaxed(mask, controller->base + QUP_OPERATIONAL_MASK);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -452,6 +610,11 @@ static int spi_qup_transfer_one(struct spi_master *master,
+ 	controller->tx_bytes = 0;
+ 	spin_unlock_irqrestore(&controller->lock, flags);
+ 
++	if (controller->dma_available) {
++		ret = spi_qup_do_dma(master, xfer);
++		goto exit;
++	}
++
+ 	if (spi_qup_set_state(controller, QUP_STATE_RUN)) {
+ 		dev_warn(controller->dev, "cannot set RUN state\n");
+ 		goto exit;
+@@ -471,6 +634,7 @@ static int spi_qup_transfer_one(struct spi_master *master,
+ 
+ 	if (!wait_for_completion_timeout(&controller->done, timeout))
+ 		ret = -ETIMEDOUT;
++
+ exit:
+ 	spi_qup_set_state(controller, QUP_STATE_RESET);
+ 	spin_lock_irqsave(&controller->lock, flags);
+@@ -478,6 +642,100 @@ exit:
+ 	if (!ret)
+ 		ret = controller->error;
+ 	spin_unlock_irqrestore(&controller->lock, flags);
++
++	return ret;
++}
++
++static bool spi_qup_can_dma(struct spi_master *master, struct spi_device *spi,
++			    struct spi_transfer *xfer)
 +{
++	struct spi_qup *qup = spi_master_get_devdata(master);
++	size_t dma_align = dma_get_cache_alignment();
++	int n_words, w_size;
++
++	qup->dma_available = 0;
++
++	if (xfer->rx_buf && xfer->len % qup->in_blk_sz)
++		return false;
++
++	if (xfer->tx_buf && xfer->len % qup->out_blk_sz)
++		return false;
++
++	if (IS_ERR_OR_NULL(master->dma_rx) || IS_ERR_OR_NULL(master->dma_tx))
++		return false;
++
++	if (!IS_ALIGNED((size_t)xfer->tx_buf, dma_align) ||
++	    !IS_ALIGNED((size_t)xfer->rx_buf, dma_align))
++		return false;
++
++	w_size = spi_qup_get_word_sz(xfer);
++	n_words = xfer->len / w_size;
++
++	/* will use fifo mode */
++	if (n_words <= (qup->in_fifo_sz / sizeof(u32)))
++		return false;
++
++	qup->dma_available = 1;
++
++	return true;
++}
++
++static void spi_qup_release_dma(struct spi_master *master)
++{
++	if (!IS_ERR_OR_NULL(master->dma_rx))
++		dma_release_channel(master->dma_rx);
++	if (!IS_ERR_OR_NULL(master->dma_tx))
++		dma_release_channel(master->dma_tx);
++}
++
++static int spi_qup_init_dma(struct spi_master *master, resource_size_t base)
++{
++	struct spi_qup *spi = spi_master_get_devdata(master);
++	struct dma_slave_config *rx_conf = &spi->rx_conf,
++				*tx_conf = &spi->tx_conf;
++	struct device *dev = spi->dev;
 +	int ret;
 +
-+	ret = xgene_dma_init_ring_mngr(pdma);
-+	if (ret)
-+		return ret;
++	/* allocate dma resources, if available */
++	master->dma_rx = dma_request_slave_channel_reason(dev, "rx");
++	if (IS_ERR(master->dma_rx))
++		return PTR_ERR(master->dma_rx);
 +
-+	/* Bring up memory */
-+	iowrite32(0x0, pdma->csr_dma + DMA_MEM_RAM_SHUTDOWN);
-+
-+	/* Force a barrier */
-+	ioread32(pdma->csr_dma + DMA_MEM_RAM_SHUTDOWN);
-+
-+	/* reset may take up to 1ms */
-+	usleep_range(1000, 1100);
-+
-+	if (ioread32(pdma->csr_dma + DMA_BLK_MEM_RDY)
-+		!= DMA_BLK_MEM_RDY_VAL) {
-+		dev_err(pdma->dev,
-+			"Failed to release DMA memory from shutdown\n");
-+		return -ENODEV;
++	master->dma_tx = dma_request_slave_channel_reason(dev, "tx");
++	if (IS_ERR(master->dma_tx)) {
++		ret = PTR_ERR(master->dma_tx);
++		goto err_tx;
 +	}
 +
-+	return 0;
-+}
++	/* set DMA parameters */
++	rx_conf->direction = DMA_DEV_TO_MEM;
++	rx_conf->device_fc = 1;
++	rx_conf->src_addr = base + QUP_INPUT_FIFO;
++	rx_conf->src_maxburst = spi->in_blk_sz;
 +
-+static int xgene_dma_request_irqs(struct xgene_dma *pdma)
-+{
-+	struct xgene_dma_chan *chan;
-+	int ret, i, j;
++	tx_conf->direction = DMA_MEM_TO_DEV;
++	tx_conf->device_fc = 1;
++	tx_conf->dst_addr = base + QUP_OUTPUT_FIFO;
++	tx_conf->dst_maxburst = spi->out_blk_sz;
 +
-+	/* Register DMA error irq */
-+	ret = devm_request_irq(pdma->dev, pdma->err_irq, xgene_dma_err_isr,
-+			       0, "dma_error", pdma);
++	ret = dmaengine_slave_config(master->dma_rx, rx_conf);
 +	if (ret) {
-+		dev_err(pdma->dev,
-+			"Failed to register error IRQ %d\n", pdma->err_irq);
-+		return ret;
++		dev_err(dev, "failed to configure RX channel\n");
++		goto err;
 +	}
 +
-+	/* Register DMA channel rx irq */
-+	for (i = 0; i < DMA_MAX_CHANNEL; i++) {
-+		chan = &pdma->chan[i];
-+		ret = devm_request_irq(chan->dev, chan->rx_irq,
-+				       xgene_dma_chan_ring_isr,
-+				       0, chan->name, chan);
-+		if (ret) {
-+			chan_err(chan, "Failed to register Rx IRQ %d\n",
-+				 chan->rx_irq);
-+			devm_free_irq(pdma->dev, pdma->err_irq, pdma);
-+
-+			for (j = 0; j < i; j++) {
-+				chan = &pdma->chan[i];
-+				devm_free_irq(chan->dev, chan->rx_irq, chan);
-+			}
-+
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void xgene_dma_free_irqs(struct xgene_dma *pdma)
-+{
-+	struct xgene_dma_chan *chan;
-+	int i;
-+
-+	/* Free DMA device error irq */
-+	devm_free_irq(pdma->dev, pdma->err_irq, pdma);
-+
-+	for (i = 0; i < DMA_MAX_CHANNEL; i++) {
-+		chan = &pdma->chan[i];
-+		devm_free_irq(chan->dev, chan->rx_irq, chan);
-+	}
-+}
-+
-+static void xgene_dma_set_caps(struct xgene_dma_chan *chan,
-+			       struct dma_device *dma_dev)
-+{
-+	/* Initialize DMA device capability mask */
-+	dma_cap_zero(dma_dev->cap_mask);
-+
-+	/* Set DMA device capability */
-+	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-+	dma_cap_set(DMA_SG, dma_dev->cap_mask);
-+
-+	/* Set base and prep routines */
-+	dma_dev->dev = chan->dev;
-+	dma_dev->device_alloc_chan_resources = xgene_dma_alloc_chan_resources;
-+	dma_dev->device_free_chan_resources = xgene_dma_free_chan_resources;
-+	dma_dev->device_issue_pending = xgene_dma_issue_pending;
-+	dma_dev->device_tx_status = xgene_dma_tx_status;
-+	dma_dev->device_prep_dma_memcpy = xgene_dma_prep_memcpy;
-+	dma_dev->device_prep_dma_sg = xgene_dma_prep_sg;
-+}
-+
-+static int xgene_dma_async_register(struct xgene_dma *pdma, int id)
-+{
-+	struct xgene_dma_chan *chan = &pdma->chan[id];
-+	struct dma_device *dma_dev = &pdma->dma_dev[id];
-+	int ret;
-+
-+	chan->dma_chan.device = dma_dev;
-+
-+	spin_lock_init(&chan->lock);
-+	INIT_LIST_HEAD(&chan->ld_pending);
-+	INIT_LIST_HEAD(&chan->ld_running);
-+	INIT_LIST_HEAD(&chan->ld_completed);
-+	tasklet_init(&chan->tasklet, xgene_dma_tasklet_cb,
-+		     (unsigned long)chan);
-+
-+	chan->pending = 0;
-+	chan->desc_pool = NULL;
-+	dma_cookie_init(&chan->dma_chan);
-+
-+	/* Setup dma device capabilities and prep routines */
-+	xgene_dma_set_caps(chan, dma_dev);
-+
-+	/* Initialize DMA device list head */
-+	INIT_LIST_HEAD(&dma_dev->channels);
-+	list_add_tail(&chan->dma_chan.device_node, &dma_dev->channels);
-+
-+	/* Register with Linux async DMA framework*/
-+	ret = dma_async_device_register(dma_dev);
++	ret = dmaengine_slave_config(master->dma_tx, tx_conf);
 +	if (ret) {
-+		chan_err(chan, "Failed to register async device %d", ret);
-+		tasklet_kill(&chan->tasklet);
-+
-+		return ret;
-+	}
-+
-+	/* DMA capability info */
-+	dev_info(pdma->dev,
-+		 "%s: CAPABILITY ( %s%s)\n", dma_chan_name(&chan->dma_chan),
-+		 dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask) ? "MEMCPY " : "",
-+		 dma_has_cap(DMA_SG, dma_dev->cap_mask) ? "SGCPY " : "");
-+
-+	return 0;
-+}
-+
-+static int xgene_dma_init_async(struct xgene_dma *pdma)
-+{
-+	int ret, i, j;
-+
-+	for (i = 0; i < DMA_MAX_CHANNEL ; i++) {
-+		ret = xgene_dma_async_register(pdma, i);
-+		if (ret) {
-+			for (j = 0; j < i; j++) {
-+				dma_async_device_unregister(&pdma->dma_dev[j]);
-+				tasklet_kill(&pdma->chan[j].tasklet);
-+			}
-+
-+			return ret;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static void xgene_dma_async_unregister(struct xgene_dma *pdma)
-+{
-+	int i;
-+
-+	for (i = 0; i < DMA_MAX_CHANNEL; i++)
-+		dma_async_device_unregister(&pdma->dma_dev[i]);
-+}
-+
-+static void xgene_dma_init_channels(struct xgene_dma *pdma)
-+{
-+	struct xgene_dma_chan *chan;
-+	int i;
-+
-+	pdma->ring_num = DMA_RING_NUM;
-+
-+	for (i = 0; i < DMA_MAX_CHANNEL; i++) {
-+		chan = &pdma->chan[i];
-+		chan->dev = pdma->dev;
-+		chan->pdma = pdma;
-+		chan->id = i;
-+		sprintf(chan->name, "chan%d", chan->id);
-+	}
-+}
-+
-+static int xgene_dma_get_resources(struct platform_device *pdev,
-+				   struct xgene_dma *pdma)
-+{
-+	struct resource *res;
-+	int irq, i;
-+
-+	/* Get DMA csr region */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dma_csr");
-+	if (!res) {
-+		dev_err(&pdev->dev, "Failed to get csr region\n");
-+		return -ENXIO;
-+	}
-+
-+	pdma->csr_dma = devm_ioremap(&pdev->dev, res->start,
-+				     resource_size(res));
-+	if (IS_ERR(pdma->csr_dma)) {
-+		dev_err(&pdev->dev, "Failed to ioremap csr region");
-+		return PTR_ERR(pdma->csr_dma);
-+	}
-+
-+	/* Get DMA ring csr region */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ring_csr");
-+	if (!res) {
-+		dev_err(&pdev->dev, "Failed to get ring csr region\n");
-+		return -ENXIO;
-+	}
-+
-+	pdma->csr_ring =  devm_ioremap(&pdev->dev, res->start,
-+				       resource_size(res));
-+	if (IS_ERR(pdma->csr_ring)) {
-+		dev_err(&pdev->dev, "Failed to ioremap ring csr region");
-+		return PTR_ERR(pdma->csr_ring);
-+	}
-+
-+	/* Get DMA ring cmd csr region */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "ring_cmd_csr");
-+	if (!res) {
-+		dev_err(&pdev->dev, "Failed to get ring cmd csr region\n");
-+		return -ENXIO;
-+	}
-+
-+	pdma->csr_ring_cmd = devm_ioremap(&pdev->dev, res->start,
-+					  resource_size(res));
-+	if (IS_ERR(pdma->csr_ring_cmd)) {
-+		dev_err(&pdev->dev, "Failed to ioremap ring cmd csr region");
-+		return PTR_ERR(pdma->csr_ring_cmd);
-+	}
-+
-+	/* Get DMA error interrupt */
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq <= 0) {
-+		dev_err(&pdev->dev, "Failed to get Error IRQ\n");
-+		return -ENXIO;
-+	}
-+
-+	pdma->err_irq = irq;
-+
-+	/* Get DMA Rx ring descriptor interrupts for all DMA channels */
-+	for (i = 1; i <= DMA_MAX_CHANNEL; i++) {
-+		irq = platform_get_irq(pdev, i);
-+		if (irq <= 0) {
-+			dev_err(&pdev->dev, "Failed to get Rx IRQ\n");
-+			return -ENXIO;
-+		}
-+
-+		pdma->chan[i - 1].rx_irq = irq;
++		dev_err(dev, "failed to configure TX channel\n");
++		goto err;
 +	}
 +
 +	return 0;
-+}
 +
-+static int xgene_dma_probe(struct platform_device *pdev)
-+{
-+	struct xgene_dma *pdma;
-+	int ret, i;
++err:
++	dma_release_channel(master->dma_tx);
++err_tx:
++	dma_release_channel(master->dma_rx);
+ 	return ret;
+ }
+ 
+@@ -553,6 +811,8 @@ static int spi_qup_probe(struct platform_device *pdev)
+ 	master->transfer_one = spi_qup_transfer_one;
+ 	master->dev.of_node = pdev->dev.of_node;
+ 	master->auto_runtime_pm = true;
++	master->dma_alignment = dma_get_cache_alignment();
++	master->max_dma_len = SPI_MAX_DMA_XFER;
+ 
+ 	platform_set_drvdata(pdev, master);
+ 
+@@ -621,10 +881,16 @@ static int spi_qup_probe(struct platform_device *pdev)
+ 	writel_relaxed(0, base + SPI_CONFIG);
+ 	writel_relaxed(SPI_IO_C_NO_TRI_STATE, base + SPI_IO_CONTROL);
+ 
++	ret = spi_qup_init_dma(master, res->start);
++	if (ret == -EPROBE_DEFER)
++		goto error;
++	else if (!ret)
++		master->can_dma = spi_qup_can_dma;
 +
-+	pdma = devm_kzalloc(&pdev->dev, sizeof(*pdma), GFP_KERNEL);
-+	if (!pdma)
-+		return -ENOMEM;
+ 	ret = devm_request_irq(dev, irq, spi_qup_qup_irq,
+ 			       IRQF_TRIGGER_HIGH, pdev->name, controller);
+ 	if (ret)
+-		goto error;
++		goto error_dma;
+ 
+ 	pm_runtime_set_autosuspend_delay(dev, MSEC_PER_SEC);
+ 	pm_runtime_use_autosuspend(dev);
+@@ -639,6 +905,8 @@ static int spi_qup_probe(struct platform_device *pdev)
+ 
+ disable_pm:
+ 	pm_runtime_disable(&pdev->dev);
++error_dma:
++	spi_qup_release_dma(master);
+ error:
+ 	clk_disable_unprepare(cclk);
+ 	clk_disable_unprepare(iclk);
+@@ -730,6 +998,8 @@ static int spi_qup_remove(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	spi_qup_release_dma(master);
 +
-+	pdma->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, pdma);
-+
-+	ret = xgene_dma_get_resources(pdev, pdma);
-+	if (ret)
-+		return ret;
-+
-+	pdma->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(pdma->clk)) {
-+		dev_err(&pdev->dev, "Failed to get clk\n");
-+		return PTR_ERR(pdma->clk);
-+	}
-+
-+	/* Enable clk before accessing registers */
-+	ret = clk_prepare_enable(pdma->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to enable clk %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Remove DMA RAM out of shutdown */
-+	ret = xgene_dma_init_mem(pdma);
-+	if (ret)
-+		goto err_clk_enable;
-+
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(42));
-+	if (ret) {
-+		dev_err(&pdev->dev, "No usable DMA configuration\n");
-+		goto err_dma_mask;
-+	}
-+
-+	/* Initialize DMA channels software state */
-+	xgene_dma_init_channels(pdma);
-+
-+	/* Configue DMA rings */
-+	ret = xgene_dma_init_rings(pdma);
-+	if (ret)
-+		goto err_clk_enable;
-+
-+	ret = xgene_dma_request_irqs(pdma);
-+	if (ret)
-+		goto err_request_irq;
-+
-+	/* Configure and enable DMA engine */
-+	xgene_dma_init_hw(pdma);
-+
-+	/* Register DMA device with linux async framework */
-+	ret = xgene_dma_init_async(pdma);
-+	if (ret)
-+		goto err_async_init;
-+
-+	return 0;
-+
-+err_async_init:
-+	xgene_dma_free_irqs(pdma);
-+
-+err_request_irq:
-+	for (i = 0; i < DMA_MAX_CHANNEL; i++)
-+		xgene_dma_delete_chan_rings(&pdma->chan[i]);
-+
-+err_dma_mask:
-+err_clk_enable:
-+	clk_disable_unprepare(pdma->clk);
-+
-+	return ret;
-+}
-+
-+static int xgene_dma_remove(struct platform_device *pdev)
-+{
-+	struct xgene_dma *pdma = platform_get_drvdata(pdev);
-+	struct xgene_dma_chan *chan;
-+	int i;
-+
-+	xgene_dma_async_unregister(pdma);
-+
-+	/* Mask interrupts and disable DMA engine */
-+	xgene_dma_mask_interrupts(pdma);
-+	xgene_dma_disable(pdma);
-+	xgene_dma_free_irqs(pdma);
-+
-+	for (i = 0; i < DMA_MAX_CHANNEL; i++) {
-+		chan = &pdma->chan[i];
-+		tasklet_kill(&chan->tasklet);
-+		xgene_dma_delete_chan_rings(chan);
-+	}
-+
-+	clk_disable_unprepare(pdma->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id xgene_dma_of_match_ptr[] = {
-+	{.compatible = "apm,xgene-dma",},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, xgene_dma_of_match_ptr);
-+
-+static struct platform_driver xgene_dma_driver = {
-+	.probe = xgene_dma_probe,
-+	.remove = xgene_dma_remove,
-+	.driver = {
-+		.name = "X-Gene-DMA",
-+		.owner = THIS_MODULE,
-+		.of_match_table = xgene_dma_of_match_ptr,
-+	},
-+};
-+
-+module_platform_driver(xgene_dma_driver);
-+
-+MODULE_DESCRIPTION("APM X-Gene SoC DMA driver");
-+MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>");
-+MODULE_AUTHOR("Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_VERSION("1.0");
---
-1.8.2.1
+ 	clk_disable_unprepare(controller->cclk);
+ 	clk_disable_unprepare(controller->iclk);
+ 
+-- 
+1.7.0.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
