@@ -1,31 +1,82 @@
-From: viresh kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/7] OPP: Redefine bindings to overcome shortcomings
-Date: Wed, 25 Feb 2015 09:15:32 +0530
-Message-ID: <54ED455C.3010700@linaro.org>
-References: <cover.1423642246.git.viresh.kumar@linaro.org>	<be795ef7ec98669bc5aa90ec426a1ec1fbc32b6c.1423642246.git.viresh.kumar@linaro.org>	<7ha904b6hp.fsf@deeprootsystems.com>	<CAKohpo=CRkJTkp2FXgYNwd2eEtMVRFuwJ=GPtX7+9WnQD6CK2Q@mail.gmail.com> <7h8ufn8c8q.fsf@deeprootsystems.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v3 1/2] leds: add DT binding for Qualcomm PM8941 WLED block
+Date: Tue, 24 Feb 2015 19:49:35 -0800
+Message-ID: <1424836176-9578-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <7h8ufn8c8q.fsf@deeprootsystems.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, Rob Herring <rob.herring@linaro.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, santosh shilimkar <santosh.shilimkar@oracle.com>, Rafael Wysocki <rjw@rjwysocki.net>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>
+Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 24 February 2015 10:42 PM, Kevin Hilman wrote:
-> Viresh Kumar <viresh.kumar@linaro.org> writes:
+From: Courtney Cavin <courtney.cavin@sonymobile.com>
 
-> s/they share clock lines/they share clock and/or voltage lines/
+This adds device tree binding documentation for the WLED ('White' LED)
+block on Qualcomm's PM8941 PMICs.
 
-Hmm, will update that.
+Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
 
-> OK, fair enough.  Looks like it's been thought through.  
-> 
-> However, in the end, I don't think it's going to avoid the "help of some
-> algorithms."  The flag will tell you it's shared, but not how, and that
-> will likely still need to be determined.
+Changes since v2:
+- None
 
-What did you mean by 'how' here? You wanted to say which devices share the
-OPP? Yeah, a small piece of code is required and that's present in my patchset.
+Changes since v1:
+- None
 
+ .../devicetree/bindings/leds/leds-pm8941-wled.txt  | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+new file mode 100644
+index 0000000..a85a964
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+@@ -0,0 +1,43 @@
++Binding for Qualcomm PM8941 WLED driver
++
++Required properties:
++- compatible: should be "qcom,pm8941-wled"
++- reg: slave address
++
++Optional properties:
++- label: The label for this led
++  See Documentation/devicetree/bindings/leds/common.txt
++- linux,default-trigger: Default trigger assigned to the LED
++  See Documentation/devicetree/bindings/leds/common.txt
++- qcom,cs-out: bool; enable current sink output
++- qcom,cabc: bool; enable content adaptive backlight control
++- qcom,ext-gen: bool; use externally generated modulator signal to dim
++- qcom,current-limit: mA; per-string current limit; value from 0 to 25
++	default: 20mA
++- qcom,current-boost-limit: mA; boost current limit; one of:
++	105, 385, 525, 805, 980, 1260, 1400, 1680
++	default: 805mA
++- qcom,switching-freq: kHz; switching frequency; one of:
++	600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371,
++	1600, 1920, 2400, 3200, 4800, 9600,
++	default: 1600kHz
++- qcom,ovp: V; Over-voltage protection limit; one of:
++	27, 29, 32, 35
++	default: 29V
++- qcom,num-strings: #; number of led strings attached; value from 1 to 3
++	default: 2
++
++Example:
++
++pm8941-wled@d800 {
++	compatible = "qcom,pm8941-wled";
++	reg = <0xd800>;
++	label = "backlight";
++
++	qcom,cs-out;
++	qcom,current-limit = <20>;
++	qcom,current-boost-limit = <805>;
++	qcom,switching-freq = <1600>;
++	qcom,ovp = <29>;
++	qcom,num-strings = <2>;
++};
+-- 
+1.9.1
