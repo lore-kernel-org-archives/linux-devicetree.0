@@ -1,70 +1,38 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH net-next v4 0/3] Linn Ethernet Packet Sniffer driver
-Date: Wed, 25 Feb 2015 16:19:45 +0100
-Message-ID: <20150225151945.GB7703@localhost.localdomain>
-References: <cover.1424796018.git.stathis.voukelatos@linn.co.uk>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: DT: STi: STiH407: Add dwc3 usb3 DT node.
+Date: Wed, 25 Feb 2015 15:22:01 +0000
+Message-ID: <20150225152201.GA14329@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org>
+ <1424871377-1795-5-git-send-email-peter.griffin@linaro.org>
+ <20150225151229.GE5132@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1424796018.git.stathis.voukelatos@linn.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20150225151229.GE5132@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 24, 2015 at 04:48:08PM +0000, Stathis Voukelatos wrote:
-> This patch adds support for the Ethernet Packet Sniffer H/W module
-> developed by Linn Products Ltd and found in the IMG Pistachio SoC.
-> The module allows Ethernet packets to be parsed, matched against
-> a user-defined pattern and timestamped. It sits between a 100M
-> Ethernet MAC and PHY and is completely passive with respect to
-> Ethernet frames.
+Hi Lee,
 
-First off, please stop calling this device a "sniffer".  Real sniffers
-are able to deliver whole frames.  Real sniffers are most commonly
-used to inspect traffic between two or more nodes, but from a third
-host.
+On Wed, 25 Feb 2015, Lee Jones wrote:
 
-Instead, this device really is a time stamping unit with a
-programmable frame matching engine.  So, the approach of this driver
-is totally wrong.  It runs contrary to how time stamping is handled in
-the kernel.
+> > +			resets		= <&powerdown STIH407_USB3_POWERDOWN>,
+> > +					  <&softreset STIH407_MIPHY2_SOFTRESET>;
+> > +			reset-names	= "powerdown",
+> > +					  "softreset";
+> 
+> Nit: What's the purpose of having these on separate lines?
 
-- This driver delivers time stamps "out of band" from a separate
-  interface.  The other kernel drivers deliver time stamps "in band",
-  using the same socket from the requesting process.
+The only reason was to stay aligned with the example in
+Documentation/devicetree/bindings/usb/dwc3-st.txt.
 
-- This driver requires user space to match time stamps with packets.
-  The other kernel drivers perform the matching automatically.
+regards,
 
-- This driver requires user space to program a vendor specific
-  matching engine.  The other kernel drivers program their matching
-  engines automatically.
-
-Let me suggest another approach that stays in line with the existing
-frame work.  Based on the device's limitations and your own example,
-it seems clear that the intended use case is synchronization for AVB
-applications using gPTP.
-
-Your time stamping unit is conceptually the same a PHY with hardware
-time stamping, and you should treat it as such.  This means using the
-CONFIG_NETWORK_PHY_TIMESTAMPING kernel option.  There is one mainline
-PHY driver as an example, dp83640.c.
-
-You will have to hard code command strings in the driver, one for each
-of the SIOCSHWTSTAMP filter types that you want to support.  I would
-recommend supporting just HWTSTAMP_FILTER_PTP_V2_EVENT.  You will
-probably need different filters for L2, IPv4, and IPv6, with and
-without VLAN.  For the transmit case, you can limit the match to PTP
-events as well.  Your filters should at least return the sequenceId
-and the messageType back to the driver.
-
-The only (small) difficulty I can see would be how to arrange for your
-driver to be called back just like a PHY driver would be.  We might
-need to adapt or expand the internal PHY timestamping framework within
-the kernel, but if you are willing to rework your driver, then I can
-help with that part.
-
-Thanks,
-Richard
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
