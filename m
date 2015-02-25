@@ -1,118 +1,144 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v4 5/8] ARM: dts: Add properties to use pwm-fan device as a
- cooling device in Odroid U3
-Date: Wed, 25 Feb 2015 14:28:15 +0100
-Message-ID: <20150225142815.562fe22b@amdc2363>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-6-git-send-email-l.majewski@samsung.com>
- <20150224193711.GA353@developer.amazonguestwifi.org>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
+Date: Wed, 25 Feb 2015 21:28:36 +0800
+Message-ID: <54EDCE04.3040404@linaro.org>
+References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org> <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org> <20150220144119.GB1707@saruman.tx.rr.com> <54E75665.6050205@linaro.org> <20150220160610.GB6430@saruman.tx.rr.com> <54E89E29.4010807@linaro.org> <20150221162102.GA1784@saruman.tx.rr.com> <54E948AC.2010609@linaro.org> <20150223153612.GF32701@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20150224193711.GA353@developer.amazonguestwifi.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150223153612.GF32701@saruman.tx.rr.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dan . zhao" <dan.zhao@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
-
-> On Wed, Feb 18, 2015 at 11:07:33AM +0100, Lukasz Majewski wrote:
-> > With those bindings it is possible to use pwm-fan device available
-> > in Odroid U3 as a cooling device.
-> > 
-> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> > ---
-> > Changes for v2:
-> > - Rename cooling-pwm-values property to cooling-levels
-> > Changes for v3:
-> > - Change patch's topic to "ARM dts"
-> > - Reduce maximal cooling-level to 230 from 255
-> > Changes for v4:
-> > - None
-> > ---
-> >  arch/arm/boot/dts/exynos4412-odroidu3.dts | 33
-> > ++++++++++++++++++++++++++++++- 1 file changed, 32 insertions(+), 1
-> > deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> > b/arch/arm/boot/dts/exynos4412-odroidu3.dts index 60bd1e4..3e5df3e
-> > 100644 --- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> > +++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> > @@ -32,11 +32,42 @@
-> >  		};
-> >  	};
-> >  
-> > -	pwm-fan {
-> > +	fan0: pwm-fan {
-> >  		compatible = "pwm-fan";
-> >  		pwms = <&pwm 0 10000 0>;
-> > +		cooling-min-state = <0>;
-> > +		cooling-max-state = <3>;
-> > +		#cooling-cells = <2>;
-> > +		cooling-levels = <0 102 170 230>;
-> >  		status = "okay";
-> >  	};
-> > +
-> > +	thermal-zones {
-> > +		cpu_thermal: cpu-thermal {
-> 
-> 
-> This thermal zone misses the mandatory properties as per 
->  Documentation/devicetree/bindings/thermal/thermal.txt
-
-Following mandatory properties:
-		thermal-sensors = <&tmu 0>;
-		polling-delay-passive = <0>;
-		polling-delay = <0>;
-		trips {
-
-		}
-
-are defined in exynos4-cpu-thermal.dtsi included by this file.
-
-In this patch only device dependent changes are stated.
-
-> 
-> > +			cooling-maps {
-> > +				map0 {
-> > +				     trip = <&cpu_alert1>;
-> > +				     cooling-device = <&cpu0 7 7>;
-> > +				};
-> > +				map1 {
-> > +				     trip = <&cpu_alert2>;
-> > +				     cooling-device = <&cpu0 13
-> > 13>;
-> > +				};
-> > +				map2 {
-> > +				     trip = <&cpu_alert0>;
-> > +				     cooling-device = <&fan0 0 1>;
-> > +				};
-> > +				map3 {
-> > +				     trip = <&cpu_alert1>;
-> > +				     cooling-device = <&fan0 1 2>;
-> > +				};
-> > +				map4 {
-> > +				     trip = <&cpu_alert2>;
-> > +				     cooling-device = <&fan0 2 3>;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> >  };
-> >  
-> >  &pwm {
-> > -- 
-> > 2.0.0.rc2
-> > 
 
 
+On 02/23/2015 11:36 PM, Felipe Balbi wrote:
+> Hi,
+>
+> On Sun, Feb 22, 2015 at 11:10:36AM +0800, zhangfei wrote:
+>>>>>>>> +static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
+>>>>>>>> +{
+>>>>>>>> +	struct usb_otg *otg = priv->phy.otg;
+>>>>>>>> +
+>>>>>>>> +	if (!otg->gadget)
+>>>>>>>> +		return;
+>>>>>>>> +
+>>>>>>>> +	if (on)
+>>>>>>>> +		usb_gadget_connect(otg->gadget);
+>>>>>>>> +	else
+>>>>>>>> +		usb_gadget_disconnect(otg->gadget);
+>>>>>>>
+>>>>>>> why is the PHY fiddling with pullups ?
+>>>>>>
+>>>>>> We use this to enable/disable otg gadget mode.
+>>>>>
+>>>>> I got that, but the pullups don't belong to the PHY, they belong to the
+>>>>> gadget.
+>>>>>
+>>>>>> The gpio_id & gpio_vbus are used to distinguish otg gadget mode or
+>>>>>> host mode.
+>>>>>> When micro usb or otg device attached to otg, gpio_vbus falling down.
+>>>>>> And gpio_id = 1 is micro usb, gpio_id = 0 is otg device.
+>>>>>
+>>>>> all of that I understood clearly :-)
+>>>>>
+>>>>>> So when micro usb attached, we enable gadget mode; while micro usb
+>>>>>> detached, we disable gadget mode, and dwc2 will automatically set to
+>>>>>> host mode.
+>>>>>
+>>>>> that's all fine, I'm concerned about letting the PHY fiddle with
+>>>>> something it doesn't own. If I am to change pullups rules in udc-core,
+>>>>> this is likely to break down miserably and I don't want to have to go
+>>>>> through that.
+>>>>
+>>>> Thanks for the clarifying.
+>>>
+>>> no problem.
+>>>
+>>>> How about using usb_gadget_vbus_connect/disconnect, which are used in many
+>>>> files under drivers/usb/phy.
+>>>> There is no vbus_session in dwc2/gadget.c, I thought it would be same as
+>>>> pullup.
+>>>>
+>>>> However, usb_gadget_vbus_connect still need para gadget, where should we put
+>>>> this file, drivers/usb/phy or drivers/phy
+>>>
+>>> drivers/phy, if the framework misses anything you need, it's a great
+>>> opportunity to give back to the community by extending the framework.
+>>
+>> Sorry, I am a little confused.
+>> I need some concrete suggestion for the next step of this patch, which is
+>> required for the community board, hikey board.
+>>
+>> Do you mean in the future we need use hsotg->phy instead of hsotg->uphy.
+>>          struct phy *phy;
+>>          struct usb_phy *uphy;
+>
+> yes, we need to move everybody to use struct phy, instead of struct
+> usb_phy.
+>
+>> usb_phy has many members that struct phy does not have, including otg.
+>> struct usb_otg          *otg;
+>> Is that mean we need port such member from usb_phy to phy.
+>
+> This means we have a little ground work to do before we can add your phy
+> driver to that framework, right ? As I said, if the framework is missing
+> anything, work with Kishon (generic phy maintainer) to add those missing
+> pieces generically.
 
--- 
-Best regards,
+OK, got it.
+>
+>> Besides, are you ok with using usb_gadget_vbus_connect/disconnect.
+>>
+>>>
+>>> Scratching one's own itch kinda thing...
+>>>
+>>>>>>>> +static void hi6220_detect_work(struct work_struct *work)
+>>>>>>>> +{
+>>>>>>>> +	struct hi6220_priv *priv =
+>>>>>>>> +		container_of(work, struct hi6220_priv, work.work);
+>>>>>>>> +	int gpio_id, gpio_vbus;
+>>>>>>>> +	enum usb_otg_state state;
+>>>>>>>> +
+>>>>>>>> +	if (!gpio_is_valid(priv->gpio_id) || !gpio_is_valid(priv->gpio_vbus))
+>>>>>>>> +		return;
+>>>>>>>> +
+>>>>>>>> +	gpio_id = gpio_get_value_cansleep(priv->gpio_id);
+>>>>>>>> +	gpio_vbus = gpio_get_value_cansleep(priv->gpio_vbus);
+>>>>>>>
+>>>>>>> looks like this should be using extcon
+>>>>>> Not used extcon before.
+>>>>>> However, we need gpio_vbus interrupt.
+>>>>>> Checked phy-tahvo.c and phy-omap-otg.c, not find extcon related with
+>>>>>> interrupt.
+>>>>>> Will investigate tomorrow.
+>>>>>
+>>>>> drivers/extcon/extcon-gpio.c
+>>>> I think there is no need to use extcon, gpio is clear enough.
+>>>> extcon-gpio.c even do not support dt.
+>>>
+>>> well, add DT. The whole idea of free software is that we improve on
+>>> things we already have. EXTCON is *the* API to handle such things.
+>>
+>> I think I am still not understanding extcon-gpio, not sure why need
+>> use this API here.
+>
+> because extcon is the API to use for external connectors. The same way
+> you use regulator framework to control that single GPIO tied to an
+> enable signal of a fixed regulator, you use extcon when you need to read
+> that gpio signal tied to id pin of the USB connector.
+>
+>> Here two gpio requires, one gpio as interrupt, in the interrupt
+>> handler, we detect the gpio status judging the otg status.
+>> extcon-gpio.c use the interrupt, then can we also use the gpio
+>> interrupt.  Using extcon-gpio is used for saving gpio_request?
+>
+> extcon is used to hide gpio_request from dwc2. dwc2 only knows about
+> extcon, not gpios. extcon will request the gpio and use it as interrupt
+> source. When an IRQ fires, it will read the gpio state and decide if it
+> should broadcast a message to tell dwc2 to become host or peripheral.
 
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+Thanks for the kind education, understand now.
