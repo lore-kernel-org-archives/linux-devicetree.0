@@ -1,101 +1,67 @@
-From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Subject: Re: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
-Date: Wed, 25 Feb 2015 10:53:11 +0000
-Message-ID: <54EDA997.1080005@linn.co.uk>
-References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk> <20150218210830.GA7778@localhost.localdomain> <54EAF4D4.4090505@linn.co.uk> <20150225095056.GB4293@localhost.localdomain>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/3] arm64: mediatek: Add config option for mt8173.
+Date: Wed, 25 Feb 2015 11:51:57 +0100
+Message-ID: <5948977.qlhSVy9R5i@wuerfel>
+References: <1422342836-27689-1-git-send-email-hongzhou.yang@mediatek.com> <1422342836-27689-2-git-send-email-hongzhou.yang@mediatek.com> <1424855242.7845.9.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150225095056.GB4293@localhost.localdomain>
+In-Reply-To: <1424855242.7845.9.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, abrestic@chromium.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Hongzhou Yang <hongzhou.yang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, eddie.huang@mediatek.com, linux-kernel@vger.kernel.org, alan.cheng@mediatek.com, maoguang.meng@mediatek.com, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+On Wednesday 25 February 2015 17:07:22 Yingjoe Chen wrote:
+> On Tue, 2015-01-27 at 15:13 +0800, Hongzhou Yang wrote:
+> > From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> > 
+> > The upcoming MTK pinctrl driver have a big pin table for each SoC,
+> > and we don't want to bloat the kernel binary if we don't need it.
+> > Add config options so we can build for one SoC only.
+> > 
+> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> > ---
+> >  arch/arm64/Kconfig | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index e627ead..6213dac 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -151,9 +151,15 @@ menu "Platform selection"
+> >  config ARCH_MEDIATEK
+> >       bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
+> >       select ARM_GIC
+> > +     select PINCTRL
+> >       help
+> >         Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
+> >  
+> > +config MACH_MT8173
+> > +     bool "Mediatek 8173 Soc Supprt"
+> > +     depends on ARCH_MEDIATEK
+> > +     default y
+> > +
+> >  config ARCH_SEATTLE
+> >       bool "AMD Seattle SoC Family"
+> >       help
+> 
+> Hi Arnd/Matthias,
+> 
+> Any comments on this patch?
 
-On 25/02/15 09:50, Richard Cochran wrote:
->
-> The Linux kernel already fully supports this kind of application via
-> the SIOCSHWTSTAMP, SO_TIMESTAMPING, and PHC mechanisms.  We certainly
-> don't need another another interface just for someone's warped
-> hardware design.
->
-> I suggest that you find a way to make your HW work within the existing
-> frame work.
+Hi Joe,
 
-The driver already uses that framework for returning timestamps to user 
-space. It does not introduce any new interface.
+Actually I just commented on a similar patch from Samsung the other
+day, and I think we should make a more general decision about these:
 
->
->> The interface needs to be public so that a user-space application
->> can program a command string that will match packets that belong to
->> the audio stream of interest, for this example.
->
-> Let the user program simply use a BPF for that.
->
->> In addition returning just a timestamp would not be enough in many
->> cases. In the audio streaming use case mentioned above some
->> additional
->> bytes from the packet payload need to be returned (with Copy
->> commands) in order to associate the timestamp with a certain point
->> in the audio stream.
->
-> The time stamp is *already* associated with a particular frame.
->
-> Just tell your driver to program the hardware to:
->
-> 1. time stamp every frame
-> 2. deliver every frame
->
-> Thats all you need.
->
+I would rather see only one Kconfig option per SoC family and use
+ARCH_MEDIATEK without any MACH_* options. We can have other options
+for e.g. networking chips from Mediatek that are not closely related
+but I would group all the phone and tablet chips under one option
+here. Same for the other vendors of course.
 
-The H/W could not support that:
-We have a "Match/Stamp" command, so the packet byte needs to match the 
-value following the command, in order for a timestamp to be generated, 
-otherwise the packet is dropped.
-In addition, due to FIFO size limitations up to 128 bytes (including the 
-timestamp) can be returned (through Copy commands) from each packet.
+Any other opinions?
 
-The module was designed to be able to configure it to sniff packets 
-belonging to a certain application level stream and from each matching 
-packet return a timestamp and some bytes (from eg. the application layer 
-protocol header) that would be useful to the application.
-
-BPF could accomplish that too, but timestamps will not be as accurate
-without H/W support.
-
-I understand that the device needs to be configured with a proprietary
-command stream, but all interfacing with user-space is done using 
-existing frameworks (AF_PACKET, SIOCSHWTSTAMP, cmsg)
-
->> Actually, that is how the H/W works. Each Match command is followed by
->> a data value which must match the packet data byte at the corresponding
->> location. If there is no match processing of the packet stops.
->
-> And just what is the "corresponding location"?
-
-The command string is made up of a sequence of <CMD><DATA> pairs. Take 
-this for example: {0x00, 0x00, 0x01, 0x55, 0x02, 0x00, 0x04, 0x00}.
-First command is Don't Care (0x00), ie 1st byte of Ethernet frame is 
-just skipped.
-Second command is Match (0x01), ie if the 2nd byte of the Ethernet frame 
-is 0x55 processing continues otherwise packet is dropped.
-Third command is Copy (0x02), ie 3rd byte of the packet is copied to the 
-H/W FIFO to be returned to the user
-Fourth command is Copy/Done (0x04), ie 4th packet byte is also copied to 
-the FIFO and processing stops.
-Then an IRQ is generated, data (2 bytes) are read from the FIFO and
-delivered through an AF_PACKET socket.
-
-In v4 of the patch I tried to improve the documentation of some of these 
-points.
->
-> Thanks,
-> Richard
->
-
-Thanks,
-Stathis
+	Arnd
