@@ -1,61 +1,83 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: mediatek: Add config option for mt8173.
-Date: Wed, 25 Feb 2015 17:07:22 +0800
-Message-ID: <1424855242.7845.9.camel@mtksdaap41>
-References: <1422342836-27689-1-git-send-email-hongzhou.yang@mediatek.com>
-	 <1422342836-27689-2-git-send-email-hongzhou.yang@mediatek.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
+Date: Wed, 25 Feb 2015 10:50:56 +0100
+Message-ID: <20150225095056.GB4293@localhost.localdomain>
+References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
+ <20150218210830.GA7778@localhost.localdomain>
+ <54EAF4D4.4090505@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422342836-27689-2-git-send-email-hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alan.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, maoguang.meng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, toby.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54EAF4D4.4090505@linn.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, abrestic@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-01-27 at 15:13 +0800, Hongzhou Yang wrote:
-> From: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Mon, Feb 23, 2015 at 09:37:24AM +0000, Stathis Voukelatos wrote:
+> Hi Richard,
 > 
-> The upcoming MTK pinctrl driver have a big pin table for each SoC,
-> and we don't want to bloat the kernel binary if we don't need it.
-> Add config options so we can build for one SoC only.
+> On 18/02/15 21:08, Richard Cochran wrote:
+> >On Tue, Feb 17, 2015 at 02:03:30PM +0000, Stathis Voukelatos wrote:
+> >>The command string for packet matching is stored in module RAM
+> >>and consists of a sequence of 16-bit entries. Each entry includes
+> >>an 8-bit command code and and 8-bit data value. Valid command
+> >>codes are:
+> >>0 - Don't care
+> >>1 - Match: packet data must match command string byte
+> >>2 - Copy: packet data will be copied to FIFO
+> >>3 - Match/Stamp: if packet data matches string byte, a timestamp
+> >>                  is copied into the FIFO
+> >>4 - Copy/Done: packet data will be copied into the FIFO.
+> >>                This command terminates the command string.
+> >
+> >Why do you need to expose this interface to user space at all?  Why
+> >not just time stamp every frame?
 > 
-> Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/Kconfig | 6 ++++++
->  1 file changed, 6 insertions(+)
+> To put this into context with an example, the use case this H/W
+> module was originally developed for was to allow multiple audio
+> receivers to synchronize with a single transmitter, eg. multi-room
+> synchronised audio.
+
+The Linux kernel already fully supports this kind of application via
+the SIOCSHWTSTAMP, SO_TIMESTAMPING, and PHC mechanisms.  We certainly
+don't need another another interface just for someone's warped
+hardware design.
+
+I suggest that you find a way to make your HW work within the existing
+frame work.
+
+> The interface needs to be public so that a user-space application
+> can program a command string that will match packets that belong to
+> the audio stream of interest, for this example.
+
+Let the user program simply use a BPF for that.
+
+> In addition returning just a timestamp would not be enough in many
+> cases. In the audio streaming use case mentioned above some
+> additional
+> bytes from the packet payload need to be returned (with Copy
+> commands) in order to associate the timestamp with a certain point
+> in the audio stream.
+
+The time stamp is *already* associated with a particular frame.
+
+Just tell your driver to program the hardware to:
+
+1. time stamp every frame
+2. deliver every frame
+
+Thats all you need.
+
+> >How does the "Match" command work?  The frame must have one particular
+> >byte?  That can't be right.  Please explain.
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index e627ead..6213dac 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -151,9 +151,15 @@ menu "Platform selection"
->  config ARCH_MEDIATEK
->  	bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
->  	select ARM_GIC
-> +	select PINCTRL
->  	help
->  	  Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
->  
-> +config MACH_MT8173
-> +	bool "Mediatek 8173 Soc Supprt"
-> +	depends on ARCH_MEDIATEK
-> +	default y
-> +
->  config ARCH_SEATTLE
->  	bool "AMD Seattle SoC Family"
->  	help
+> Actually, that is how the H/W works. Each Match command is followed by
+> a data value which must match the packet data byte at the corresponding
+> location. If there is no match processing of the packet stops.
 
-Hi Arnd/Matthias,
+And just what is the "corresponding location"?
 
-Any comments on this patch?
-
-Joe.C
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Richard
