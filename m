@@ -1,90 +1,119 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 0/7] PCI: get DMA configuration from parent device
-Date: Wed, 25 Feb 2015 16:20:49 -0600
-Message-ID: <20150225222049.GP6220@google.com>
-References: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
+From: Tyler Hall <tylerwhall@gmail.com>
+Subject: Re: [PATCH] thermal: armada: read stable temp on Armada XP
+Date: Wed, 25 Feb 2015 17:39:45 -0500
+Message-ID: <CAOjnSCZJiREja3JWvhmTi+rqRCkm8+bhZ+YQifWXB8VSxQwFHQ@mail.gmail.com>
+References: <1423608615-6575-1-git-send-email-tylerwhall@gmail.com>
+ <20150224183616.GD3448@developer.amazonguestwifi.org> <CAOjnSCaH5NtcYGdfQ+=XY9ZJtjYEEgLWKCGUeFXBsM1f+va-LA@mail.gmail.com>
+ <54EDF3E6.6040409@free-electrons.com> <20150225183901.GD2306@developer.amazonguestwifi.org>
+ <CAOjnSCZa+H+KRDJ+rug4OoinYEVN_fRrh4-fd4u_zzMEVNzjbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1423173179-10227-1-git-send-email-m-karicheri2@ti.com>
+In-Reply-To: <CAOjnSCZa+H+KRDJ+rug4OoinYEVN_fRrh4-fd4u_zzMEVNzjbQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-pm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 05, 2015 at 04:52:52PM -0500, Murali Karicheri wrote:
-> This patch add an important capability to PCI driver on Keystone. I hope to
-> have this merged to the upstream branch so that it is available for v3.20.
-> Also would like thank everyone for the contribution.
-> 
-> PCI devices on Keystone doesn't have correct dma_pfn_offset set. This patch
-> add capability to set the dma configuration such as dma-mask, dma_pfn_offset,
-> and dma ops etc using the information from DT. The prior RFCs and discussions
-> are available at [1] and [2] below.
-> 
-> [2] : https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg790244.html
-> [1] : http://www.gossamer-threads.com/lists/linux/kernel/2024591
-> 
-> Change history:
-> 	v6 - Rebased to v3.19-v7
-> 	   - Addressed some minor comments about node name and DT size validation.
-> 	   - Pulled out 8/8 of v5 and plan to send a patch for enhancing
-> 	     of_dma_configure() to use size to calculate dma mask.
-> 	   - Added Acks from reviewers.
-> 	v5 - moved the dma_mask update in device from ARM specific API to
-> 	     of_dma_configure to allow this across other architecture as well
-> 	   - improved sanity check for DT dma-range size in of_dma_configure()
-> 	   - moved API to get parent bridge device to PCI (host-bridge.c)
-> 	v4 - moved size adjustments in of_iommu_configure() to a separate patch
-> 	   - consistent node name comment from Rob
-> 	   - patch 6 added for dma_mask adjustment and iommu mapping size
-> 	     limiting.
-> 	v3 - addressed comments to re-use of_dma_configure() for PCI
-> 	   - To help re-use, change of_iommu_configure() function argument
-> 		- Move of_dma_configure to of/device.c
-> 		- Limit the of_iommu_configure to non pci devices
-> 	v2 - update size to coherent_dma_mask + 1 if dma-range info is missing
-> 	   - also check the np for null.
-> 	v1 - updates based on the comments against initial RFC.
-> 	   - Added a helper function to get the OF node of the parent
-> 	   - Added an API in of_pci.c to update DMA configuration of the pci
-> 	     device.
-> 
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Acked-by: Murali Karicheri <m-karicheri2@ti.com>
-> 
-> Murali Karicheri (7):
->   of: iommu: add ptr to OF node arg to of_iommu_configure()
->   of: move of_dma_configure() to device.c to help re-use
->   of: fix size when dma-range is not used
->   PCI: add helper functions pci_get[put]_host_bridge_device()
->   of/pci: add of_pci_dma_configure() update dma configuration
->   PCI: update dma configuration from DT
->   arm: dma-mapping: limit iommu mapping size
-> 
->  arch/arm/mm/dma-mapping.c |    7 +++++
->  drivers/iommu/of_iommu.c  |   10 ++++--
->  drivers/of/device.c       |   74 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/of_pci.c       |   19 ++++++++++++
->  drivers/of/platform.c     |   58 ++---------------------------------
->  drivers/pci/host-bridge.c |   14 +++++++++
->  drivers/pci/probe.c       |    2 ++
->  include/linux/of_device.h |    2 ++
->  include/linux/of_iommu.h  |    6 ++--
->  include/linux/of_pci.h    |    5 +++
->  include/linux/pci.h       |    3 ++
->  11 files changed, 140 insertions(+), 60 deletions(-)
+Gregory,
 
-Applied with additional acks/tested-by to pci/iommu for v4.1, thanks!
+I instantiated both configurations and verified I get essentially the
+same temperature from both, with the original register having a
+slightly larger spread. I didn't reproduce any outliers in this run,
+but I'll keep it running for a while to see if any occur.
 
-Bjorn
+I'm running this to gather samples.
+# while true; do echo $(</sys/class/thermal/thermal_zone0/temp),
+$(</sys/class/thermal/thermal_zone1/temp); done
+
+https://i.imgur.com/c5wfPuy.png
+
+I just got some information from our vendor indicating there's an
+erratum for the register I'm proposing to use. The workaround is to
+read repeatedly until the value is consistent. I still have open
+questions:
+1. Why is the current register exhibiting behavior that would be
+described by the erratum while the proposed register seems more
+reliable?
+2. What is the underlying hardware difference between the two?
+
+This is my hardware revision, though the registers in question appear
+in the functional spec for Armada XP, so I would think they would
+apply to all flavors.
+mvebu-soc-id: MVEBU SoC ID=0x7846, Rev=0x2
+
+Hopefully either of our queries will be answered and we can make a
+more informed decision on this.
+
+Thanks,
+Tyler
+
+On Wed, Feb 25, 2015 at 2:47 PM, Tyler Hall <tylerwhall@gmail.com> wrote:
+> Hi Gregory, Eduardo,
+>
+> On Wed, Feb 25, 2015 at 05:10:14PM +0100, Gregory CLEMENT wrote:
+>> By using it by default do you mean removing marvell,armadaxp-thermal
+>> and adding armadaxp-filtered-thermal instead ?
+>
+> Yes, replacing it in device tree. For me,
+> /sys/class/thermal/thermal_zone0/temp returns the same temperature but
+> with less variability between samples. My intent was to switch the
+> source of the data and not affect user space other than providing a
+> more stable reading.
+>
+>> Tyler,
+>> In the meantime could you double check your values? The temperature on my board
+>> seemed broken on my board. If needed I can check on an other board. By the way
+>> on which board/product did you try it?
+>
+> I'm on a custom board with the 4-core MV78460. In addition to my
+> patch, this is new device tree entry.
+>
+>                         thermal@184c4 {
+>                                compatible = "marvell,armadaxp-filtered-thermal";
+>                                reg = <0x184c4 0x4
+>                                         0x184d0 0x4>;
+>                                 status = "okay";
+>                         };
+>
+> I dumped some raw samples of the temperature fields in each of these
+> registers. This CSV contains the raw values converted to decimal.
+> http://pastebin.com/Umc3cy5L
+> The first column is the current register at 0x182b0 27:19 and the
+> second is the register at 0x184c4 9:1.
+>
+> Here's a quick plot of a larger sample size while the temperature was rising.
+> https://imgur.com/E9HlSBx
+> The blue value is the current 0x182b0 register which seems to bounce
+> around the green value from 0x184c4.
+>
+> I'll try a test of instantiating both at the same time and comparing
+> the final output of the driver.
+>
+> On Wed, Feb 25, 2015 at 1:39 PM, Eduardo Valentin <edubezval@gmail.com> wrote:
+>>> Does that new thermal sensors only improve the stability or does it
+>>> also modify the value?
+>>>
+>>> In the second case it will more or less break the user space expectation.
+>>
+>> Yeah, I agree here. We need to understand if this is:
+>> (1) a fix of which register to use. In that case, the old dtbs are
+>> essentially wrong, and the driver would need to adapt, I would say.
+>> (2) a way to report better temperature extrapolations. then, this is
+>> essentially a new temp sensor, and we should have two separated
+>> compatible. in other words, just keep the patch the way it is.
+>
+> This *might* be a different physical sensor, or it could be from the
+> same source with some averaging/filtering applied in hardware. The
+> conversion formula is the same, however, and I get similar raw values
+> from both.
+>
+>> Yes. Typically I ask to see the complete series, even if I am not taking
+>> the DTS changes. That is, you send a complete series, with changes in
+>> the kernel code and in the DTS, copying the required audience (from
+>> kernel side and from DT side). Once the changes are accepted, the
+>> patches will be picked by the correct tree maintainer. It is common that
+>> DTS changes go via the platform tree, to avoid conflicts though.
+>
+> Thanks for the clarification. I'll send both in the next version as I
+> suspect there will be a v2 of this change.
