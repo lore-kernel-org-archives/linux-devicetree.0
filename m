@@ -1,183 +1,117 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH] ARM64: Add new Xilinx ZynqMP SoC
-Date: Wed, 25 Feb 2015 15:21:33 +0100
-Message-ID: <BY2FFO11FD04863C0B4C8C0A6C8EBA183E2170@BY2FFO11FD048.protection.gbl>
-References: <8ac3037c175711dec0adcd0d898be7d9722e0ed0.1424764548.git.michal.simek@xilinx.com>
- <20150224183831.GZ9714@leverpostej>
+From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 RESEND 4/4] ARM: bcm2835: Use pinctrl header
+Date: Wed, 25 Feb 2015 14:22:23 +0000
+Message-ID: <20150225142222.GA4641@x1>
+References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com>
+ <1422555050-28509-5-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150224183831.GZ9714@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?windows-1252?Q?S=F6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Zach Pfeffer <zachp@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1422555050-28509-5-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Thu, 29 Jan 2015, Stefan Wahren wrote:
 
-On 02/24/2015 07:38 PM, Mark Rutland wrote:
-> Hi Michal,
+> This patch converts all bcm2835 dts and dtsi files to use the pinctrl
+> header file.
 > 
-> I have a few minor comments below, but generally this is looking like
-> one of the best dts submissions I've seen!
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/bcm2835-rpi-b-plus.dts |    4 ++--
+>  arch/arm/boot/dts/bcm2835-rpi-b.dts      |    4 ++--
+>  arch/arm/boot/dts/bcm2835-rpi.dtsi       |    8 ++++----
+>  arch/arm/boot/dts/bcm2835.dtsi           |    3 ++-
+>  4 files changed, 10 insertions(+), 9 deletions(-)
 
-thanks appreciate it.
+Applied with Rob's Ack.
 
-> 
-> [...]
-> 
->> +/ {
->> +       model = "ZynqMP EP108";
->> +
->> +       aliases {
->> +               serial0 = &uart0;
->> +       };
->> +
->> +       chosen {
->> +               stdout-path = "serial0:115200n8";
->> +       };
-> 
-> Thanks for using stdout-path with the full parameters.
-> 
-> Does your UART have earlycon support?
+NB: And Stephen's for the set.
 
-yes earlycon support is already in the kernel.
-
-btw: I found that only stdout-path has different behavior
-compare to console=ttyPS0,115200 passed via bootargs.
-But I have to look at details to be accurate.
-
-
->> +/ {
->> +       compatible = "xlnx,zynqmp";
->> +       #address-cells = <2>;
->> +       #size-cells = <1>;
-> 
-> I guess this is fine, though to me it feels more natural to use
-> #size-cells = <2> in case we need to describe larger ranges for some bus
-> later.
-
-I can fix it when it is needed.
-
-> 
->> +       cpus {
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               cpu@0 {
->> +                       compatible = "arm,cortex-a53", "arm,armv8";
->> +                       device_type = "cpu";
->> +                       enable-method = "psci";
->> +                       reg = <0x0>;
->> +               };
->> +
->> +               cpu@1 {
->> +                       compatible = "arm,cortex-a53", "arm,armv8";
->> +                       device_type = "cpu";
->> +                       enable-method = "psci";
->> +                       reg = <0x1>;
->> +               };
->> +
->> +               cpu@2 {
->> +                       compatible = "arm,cortex-a53", "arm,armv8";
->> +                       device_type = "cpu";
->> +                       enable-method = "psci";
->> +                       reg = <0x2>;
->> +               };
->> +
->> +               cpu@3 {
->> +                       compatible = "arm,cortex-a53", "arm,armv8";
->> +                       device_type = "cpu";
->> +                       enable-method = "psci";
->> +                       reg = <0x3>;
->> +               };
->> +       };
-> 
-> These look fine.
-
-good
-
-
->> +
->> +       psci {
->> +               compatible = "arm,psci-0.2";
->> +               method = "smc";
->> +       };
-> 
-> Neat!
-> 
-> What are you using as your implementation? Are all the mandatory
-> PSCIv0.2 features implemented (e.g. MIGRATE_INFO_TYPE)?
-
-ATF.
-
-> 
-> I take it this boots at EL2 on all CPUs?
-
-yep.
-
-> 
-> Does CPU0 hotplug work?
-
-cpu shutdown is working fine with the current firmware.
-I didn't try anything else.
-
-> 
-> Do you need to keep a CPU online or do you require MIGRATE? e.g. does
-> MIGRATE_INFO_TYPE return something other than 2 ("MP or not present")?
-
-We are not require migrate and we don't need to keep CPU online now.
-Migrate should return -1.
-
-> 
-> [...]
-> 
->> +       amba_apu {
->> +               compatible = "simple-bus";
->> +               #address-cells = <2>;
->> +               #size-cells = <1>;
->> +               ranges;
->> +
->> +               timer {
->> +                       compatible = "arm,armv8-timer";
->> +                       interrupt-parent = <&gic>;
->> +                       interrupts = <1 13 0xff01>,
->> +                                    <1 14 0xff01>,
->> +                                    <1 11 0xff01>,
->> +                                    <1 10 0xff01>;
->> +               };
-> 
-> The architected timer should just be under the root node, given it's a
-> component of the CPU -- it doesn't live on any bus.
-
-Fair enough - will add it there.
-
-> 
-> I take it CNTFRQ is configured appropriately on all CPUs?
-
-I believe so. :-)
-
-
-> [...]
-> 
->> +               i2c_clk: i2c_clk {
->> +                       compatible = "fixed-clock";
->> +                       #clock-cells = <0x0>;
->> +                       clock-frequency = <111111111>;
->> +               };
-> 
-> That clock-frequency looks a little odd. Is that right?
-
-why is it odd? Is value too high?
-It is exactly what we need to get to get i2c working.
-
-> 
-> I haven't taken an in-depth look at the other nodes. They look sane at a
-> high-level, and assuming they are all already documented and supported
-> they look fine to me.
-
-I was checking that and hopefully I didn't miss anything.
-
-Thanks,
-Michal
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+> index e479515..668442b 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+> +++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+> @@ -1,5 +1,5 @@
+>  /dts-v1/;
+> -/include/ "bcm2835-rpi.dtsi"
+> +#include "bcm2835-rpi.dtsi"
+>  
+>  / {
+>  	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
+> @@ -25,6 +25,6 @@
+>  	/* I2S interface */
+>  	i2s_alt0: i2s_alt0 {
+>  		brcm,pins = <18 19 20 21>;
+> -		brcm,function = <4>; /* alt0 */
+> +		brcm,function = <BCM2835_FSEL_ALT0>;
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+> index bafa46f..ee89b79 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
+> +++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+> @@ -1,5 +1,5 @@
+>  /dts-v1/;
+> -/include/ "bcm2835-rpi.dtsi"
+> +#include "bcm2835-rpi.dtsi"
+>  
+>  / {
+>  	compatible = "raspberrypi,model-b", "brcm,bcm2835";
+> @@ -18,6 +18,6 @@
+>  	/* I2S interface */
+>  	i2s_alt2: i2s_alt2 {
+>  		brcm,pins = <28 29 30 31>;
+> -		brcm,function = <6>; /* alt2 */
+> +		brcm,function = <BCM2835_FSEL_ALT2>;
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> index c706448..46780bb 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> @@ -1,4 +1,4 @@
+> -/include/ "bcm2835.dtsi"
+> +#include "bcm2835.dtsi"
+>  
+>  / {
+>  	memory {
+> @@ -21,17 +21,17 @@
+>  
+>  	gpioout: gpioout {
+>  		brcm,pins = <6>;
+> -		brcm,function = <1>; /* GPIO out */
+> +		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
+>  	};
+>  
+>  	alt0: alt0 {
+>  		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 14 15 40 45>;
+> -		brcm,function = <4>; /* alt0 */
+> +		brcm,function = <BCM2835_FSEL_ALT0>;
+>  	};
+>  
+>  	alt3: alt3 {
+>  		brcm,pins = <48 49 50 51 52 53>;
+> -		brcm,function = <7>; /* alt3 */
+> +		brcm,function = <BCM2835_FSEL_ALT3>;
+>  	};
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+> index 3342cb1..be9c914 100644
+> --- a/arch/arm/boot/dts/bcm2835.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+> @@ -1,4 +1,5 @@
+> -/include/ "skeleton.dtsi"
+> +#include <dt-bindings/pinctrl/bcm2835.h>
+> +#include "skeleton.dtsi"
+>  
+>  / {
+>  	compatible = "brcm,bcm2835";
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
