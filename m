@@ -1,130 +1,71 @@
-From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] video: ARM CLCD: Added support for FBIOPAN_DISPLAY and virtual y resolution
-Date: Wed, 25 Feb 2015 13:01:20 -0800
-Message-ID: <1424898082-1522-2-git-send-email-arun.ramamurthy@broadcom.com>
+From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Subject: [PATCH] video: ARM CLCD: Correcting timing checks for STN and TFT dispalys
+Date: Wed, 25 Feb 2015 13:01:22 -0800
+Message-ID: <1424898082-1522-4-git-send-email-arun.ramamurthy@broadcom.com>
 References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424898082-1522-1-git-send-email-arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Arun Ramamurthy <arun.ramamurthy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Added code to support FBIOPAN_DISPLAY. Also added yres_virtual
-parameter to device tree to set the virtual y resolution
+The minimum values for timing parameters such as left margin,
+right margin etc are different for STN and TFT dispalys.
+This commit fixes a check that does not account for
+this difference.
 
-Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Scott Branden <sbranden@broadcom.com>
+Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
 ---
- .../devicetree/bindings/video/arm,pl11x.txt        |  4 +++
- drivers/video/fbdev/amba-clcd.c                    | 31 +++++++++++++++++++---
- 2 files changed, 31 insertions(+), 4 deletions(-)
+ include/linux/amba/clcd.h | 32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/video/arm,pl11x.txt b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-index 14d6f87..2262cdb 100644
---- a/Documentation/devicetree/bindings/video/arm,pl11x.txt
-+++ b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-@@ -50,6 +50,10 @@ Optional properties:
- 	display mode, data is driven onto the LCD data lines at the
- 	programmed edge of CLCP when CLAC is in its active state.
+diff --git a/include/linux/amba/clcd.h b/include/linux/amba/clcd.h
+index 6a3bc2d..0fe8a17 100644
+--- a/include/linux/amba/clcd.h
++++ b/include/linux/amba/clcd.h
+@@ -288,16 +288,28 @@ static inline int clcdfb_check(struct clcd_fb *fb, struct fb_var_screeninfo *var
+ 	var->xres_virtual = var->xres = (var->xres + 15) & ~15;
+ 	var->yres_virtual = var->yres = (var->yres + 1) & ~1;
  
-+- yres_virtual: Virtual Y resolution,
-+	It can be used to configure a virtual y resolution. It
-+	must be a value larger than the actual y resolution.
-+
- Required sub-nodes:
+-#define CHECK(e,l,h) (var->e < l || var->e > h)
+-	if (CHECK(right_margin, (5+1), 256) ||	/* back porch */
+-	    CHECK(left_margin, (5+1), 256) ||	/* front porch */
+-	    CHECK(hsync_len, (5+1), 256) ||
+-	    var->xres > 4096 ||
+-	    var->lower_margin > 255 ||		/* back porch */
+-	    var->upper_margin > 255 ||		/* front porch */
+-	    var->vsync_len > 32 ||
+-	    var->yres > 1024)
+-		return -EINVAL;
++#define CHECK(e, l, h) (var->e < l || var->e > h)
++	if (!(fb->panel->cntl & CNTL_LCDTFT)) {
++		if (CHECK(right_margin, (5+1), 256) ||	/* back porch */
++		CHECK(left_margin, (5+1), 256) ||	/* front porch */
++		CHECK(hsync_len, (5+1), 256) ||
++		var->xres > 4096 ||
++		var->lower_margin > 255 ||	/* back porch */
++		var->upper_margin > 255 ||	/* front porch */
++		var->vsync_len > 32 ||
++		var->yres > 1024)
++			return -EINVAL;
++	} else {
++		if (CHECK(right_margin, 1, 256) ||	/* back porch */
++		CHECK(left_margin, 1, 256) ||	/* front porch */
++		CHECK(hsync_len, 1, 256) ||
++		var->xres > 4096 ||
++		var->lower_margin > 255 ||	/* back porch */
++		var->upper_margin > 255 ||	/* front porch */
++		var->vsync_len > 32 ||
++		var->yres > 1024)
++			return -EINVAL;
++	}
+ #undef CHECK
  
- - port: describes LCD panel signals, following the common binding
-diff --git a/drivers/video/fbdev/amba-clcd.c b/drivers/video/fbdev/amba-clcd.c
-index 4e4e50f..3bc09ad 100644
---- a/drivers/video/fbdev/amba-clcd.c
-+++ b/drivers/video/fbdev/amba-clcd.c
-@@ -454,6 +454,18 @@ static int clcdfb_mmap(struct fb_info *info,
- 	return ret;
- }
- 
-+static int clcdfb_pan_display(struct fb_var_screeninfo *var,
-+			      struct fb_info *info)
-+{
-+	struct clcd_fb *fb;
-+
-+	info->var = *var;
-+	fb = to_clcd(info);
-+	clcdfb_set_start(fb);
-+
-+	return 0;
-+}
-+
- static struct fb_ops clcdfb_ops = {
- 	.owner		= THIS_MODULE,
- 	.fb_check_var	= clcdfb_check_var,
-@@ -464,6 +476,7 @@ static struct fb_ops clcdfb_ops = {
- 	.fb_copyarea	= cfb_copyarea,
- 	.fb_imageblit	= cfb_imageblit,
- 	.fb_mmap	= clcdfb_mmap,
-+	.fb_pan_display	= clcdfb_pan_display,
- };
- 
- static int clcdfb_register(struct clcd_fb *fb)
-@@ -517,14 +530,16 @@ static int clcdfb_register(struct clcd_fb *fb)
- 	fb->fb.fix.type		= FB_TYPE_PACKED_PIXELS;
- 	fb->fb.fix.type_aux	= 0;
- 	fb->fb.fix.xpanstep	= 0;
--	fb->fb.fix.ypanstep	= 0;
-+	if (fb->fb.var.yres_virtual > fb->panel->mode.yres)
-+		fb->fb.fix.ypanstep = 1;
-+	else
-+		fb->fb.fix.ypanstep = 0;
- 	fb->fb.fix.ywrapstep	= 0;
- 	fb->fb.fix.accel	= FB_ACCEL_NONE;
- 
- 	fb->fb.var.xres		= fb->panel->mode.xres;
- 	fb->fb.var.yres		= fb->panel->mode.yres;
- 	fb->fb.var.xres_virtual	= fb->panel->mode.xres;
--	fb->fb.var.yres_virtual	= fb->panel->mode.yres;
- 	fb->fb.var.bits_per_pixel = fb->panel->bpp;
- 	fb->fb.var.grayscale	= fb->panel->grayscale;
- 	fb->fb.var.pixclock	= fb->panel->mode.pixclock;
-@@ -690,7 +705,7 @@ static int clcdfb_of_init_display(struct clcd_fb *fb)
- 	struct device_node *endpoint;
- 	int err;
- 	unsigned int bpp;
--	u32 max_bandwidth;
-+	u32 max_bandwidth, yres_virtual;
- 	u32 tft_r0b0g0[3];
- 
- 	fb->panel = devm_kzalloc(&fb->dev->dev, sizeof(*fb->panel), GFP_KERNEL);
-@@ -730,6 +745,14 @@ static int clcdfb_of_init_display(struct clcd_fb *fb)
- 	fb->panel->width = -1;
- 	fb->panel->height = -1;
- 
-+	/* if yres_virtual property is not specified in device tree,
-+	 * set it as the actual y resolution */
-+	if (of_property_read_u32(fb->dev->dev.of_node,
-+				"yres_virtual", &yres_virtual))
-+		fb->fb.var.yres_virtual = fb->panel->mode.yres;
-+	else
-+		fb->fb.var.yres_virtual = yres_virtual;
-+
- 	if (of_property_read_u32_array(endpoint,
- 			"arm,pl11x,tft-r0g0b0-pads",
- 			tft_r0b0g0, ARRAY_SIZE(tft_r0b0g0)) == 0)
-@@ -797,7 +820,7 @@ static int clcdfb_of_dma_setup(struct clcd_fb *fb)
- 	if (err)
- 		return err;
- 
--	framesize = fb->panel->mode.xres * fb->panel->mode.yres *
-+	framesize = fb->panel->mode.xres * fb->fb.var.yres_virtual *
- 			fb->panel->bpp / 8;
- 	fb->fb.screen_base = dma_alloc_coherent(&fb->dev->dev, framesize,
- 			&dma, GFP_KERNEL);
+ 	/* single panel mode: PCD = max(PCD, 1) */
 -- 
 2.3.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
