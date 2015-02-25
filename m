@@ -1,81 +1,46 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 RESEND 2/4] dt-bindings: Add root properties for
- Raspberry Pi
-Date: Wed, 25 Feb 2015 14:20:52 +0000
-Message-ID: <20150225142052.GL21323@x1>
-References: <1422555050-28509-1-git-send-email-stefan.wahren@i2se.com>
- <1422555050-28509-3-git-send-email-stefan.wahren@i2se.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
+Date: Wed, 25 Feb 2015 15:21:30 +0100
+Message-ID: <20150225142130.GA7703@localhost.localdomain>
+References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
+ <20150218210830.GA7778@localhost.localdomain>
+ <54EAF4D4.4090505@linn.co.uk>
+ <20150225095056.GB4293@localhost.localdomain>
+ <54EDA997.1080005@linn.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1422555050-28509-3-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <54EDA997.1080005@linn.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, abrestic@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Jan 2015, Stefan Wahren wrote:
-
-> This patch adds root compatible properties for the following boards:
-> - Raspberry Pi Model A
-> - Raspberry Pi Model A+
-> - Raspberry Pi Model B
-> - Raspberry Pi Model B (no P5)
-> - Raspberry Pi Model B rev2
-> - Raspberry Pi Model B+
-> - Raspberry Pi Compute Module
+On Wed, Feb 25, 2015 at 10:53:11AM +0000, Stathis Voukelatos wrote:
+> On 25/02/15 09:50, Richard Cochran wrote:
+> >
+> >The Linux kernel already fully supports this kind of application via
+> >the SIOCSHWTSTAMP, SO_TIMESTAMPING, and PHC mechanisms.  We certainly
+> >don't need another another interface just for someone's warped
+> >hardware design.
+> >
+> >I suggest that you find a way to make your HW work within the existing
+> >frame work.
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/bcm2835.txt |   31 +++++++++++++++++++--
->  1 file changed, 29 insertions(+), 2 deletions(-)
+> The driver already uses that framework for returning timestamps to
+> user space. It does not introduce any new interface.
 
-Applied, with Rob's Ack.
+No, it only abuses the interfaces that we already have.  The time
+stamp handling is not "within the existing frame work" by any means.
+However, there is a way to integrate this hardware properly...
 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm2835.txt
-> index ac68348..c78576b 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm2835.txt
-> +++ b/Documentation/devicetree/bindings/arm/bcm2835.txt
-> @@ -1,8 +1,35 @@
->  Broadcom BCM2835 device tree bindings
->  -------------------------------------------
->  
-> -Boards with the BCM2835 SoC shall have the following properties:
-> +Raspberry Pi Model A
-> +Required root node properties:
-> +compatible = "raspberrypi,model-a", "brcm,bcm2835";
->  
-> -Required root node property:
-> +Raspberry Pi Model A+
-> +Required root node properties:
-> +compatible = "raspberrypi,model-a-plus", "brcm,bcm2835";
->  
-> +Raspberry Pi Model B
-> +Required root node properties:
-> +compatible = "raspberrypi,model-b", "brcm,bcm2835";
-> +
-> +Raspberry Pi Model B (no P5)
-> +early model B with I2C0 rather than I2C1 routed to the expansion header
-> +Required root node properties:
-> +compatible = "raspberrypi,model-b-i2c0", "brcm,bcm2835";
-> +
-> +Raspberry Pi Model B rev2
-> +Required root node properties:
-> +compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
-> +
-> +Raspberry Pi Model B+
-> +Required root node properties:
-> +compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
-> +
-> +Raspberry Pi Compute Module
-> +Required root node properties:
-> +compatible = "raspberrypi,compute-module", "brcm,bcm2835";
-> +
-> +Generic BCM2835 board
-> +Required root node properties:
->  compatible = "brcm,bcm2835";
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The H/W could not support that:
+
+With these new explanations, now I understand the code and how this is
+supposed to work.
+
+I'll put further comments in a reply to your newer series.
+
+Thanks,
+Richard
