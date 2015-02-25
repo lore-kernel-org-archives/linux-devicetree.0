@@ -1,43 +1,48 @@
-From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] New of_io_release_and_unmap()
-Date: Wed, 25 Feb 2015 12:00:45 -0800
-Message-ID: <CAMB+bfKOX5y5hgGwDzg+=SfYO+MRgr815J-teV=xxAR8uS4TFQ@mail.gmail.com>
-References: <cover.1424889345.git.stillcompiling@gmail.com>
-	<7444779.882rMgOx5D@wuerfel>
+From: Jonathan Richardson <jonathar@broadcom.com>
+Subject: Re: [PATCH 1/1] serial: 8250_dw: Fix get_mctrl behaviour
+Date: Wed, 25 Feb 2015 12:00:15 -0800
+Message-ID: <54EE29CF.6090208@broadcom.com>
+References: <1424891056-1222-2-git-send-email-jonathar@broadcom.com> <3836329.RsbZqYqPAB@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7444779.882rMgOx5D@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3836329.RsbZqYqPAB@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 25, 2015 at 11:23 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 25 February 2015 11:20:41 Joshua Clayton wrote:
->> Hello folks,
->> I notice that io_request_and_map has no inverse.
->> I would like to add a new function to undo what it does.
+Hi Arnd,
+
+On 15-02-25 11:21 AM, Arnd Bergmann wrote:
+> On Wednesday 25 February 2015 11:04:16 Jonathan Richardson wrote:
+>> +- msr-override : array of strings to be used to override the individual
+>> +  modem status signals for DCD, DSR, CTS, and RI.  If the property is not
+>> +  present, the individual signals are obtained from the modem status register.
+>> +  Strings accepted are "dcd", "dsr", "cts", and "ri". If "dcd", "dsr", or
+>> +  "cts" are present, these signals will always be reported as active. If
+>> +  "ri" is present, this signal will always be reported as inactive.
 >>
->
-> What do you want to use this for? So far all users are in essential drivers
-> (clk and clocksource) that result in a boot failure if this goes wrong.
->
-That explains a lot. It looks (to my n00b eye) like this function leaks some
-references, which is more ok if  the ref counters should never be
-decremented to 0.
+> 
+> Did you copy this definition from another driver? If not, we should try
+> to come up with a more natural way to do it. How about defining four
+> boolean properties instead, like
+> 
+> 	dcd-override
+> 	dsr-override
+> 	cts-override
+> 	ri-override
+> 
+> Simplifies the parser and the binding.
 
-> Normal drivers can probably always use devm_ioremap_resource(), which
-> has an automatic cleanup.
->
-Hmmm.
-My use case is indeed a normal driver, which could definitely
-use devm_ioremap_resource()
+I didn't see anything similar in another driver. I agree with the bools
+instead of strings. Did you want to keep these in the Synopsis driver
+for now or were you thinking of putting them somewhere that they could
+be re-used?
 
->         Arnd
+Thanks.
 
-That would leave only "completeness" as a reason. Probably not needed.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 	Arnd
+> 
