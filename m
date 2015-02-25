@@ -1,66 +1,101 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] ARM: shmobile: r8a7794: add GPIO DT support
-Date: Wed, 25 Feb 2015 11:27:37 +0100
-Message-ID: <CAMuHMdU9QD_4UOBPm850HtUPAOOEY4JA7cztpUyKSGog6VYUNA@mail.gmail.com>
-References: <6954455.LyoCrfjM8R@wasted.cogentembedded.com>
-	<3082195.zNdUtZ8oMM@wasted.cogentembedded.com>
-	<2292882.LbM0mNWfOj@avalon>
+From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Subject: Re: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
+Date: Wed, 25 Feb 2015 10:53:11 +0000
+Message-ID: <54EDA997.1080005@linn.co.uk>
+References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk> <20150218210830.GA7778@localhost.localdomain> <54EAF4D4.4090505@linn.co.uk> <20150225095056.GB4293@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2292882.LbM0mNWfOj@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150225095056.GB4293@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, abrestic@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Richard,
 
-On Wed, Feb 25, 2015 at 11:11 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->> --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
->> +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
->> @@ -50,6 +50,90 @@
-
->> +     gpio1: gpio@e6051000 {
->> +             compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
->> +             reg = <0 0xe6051000 0 0x50>;
->> +             interrupts = <0 5 IRQ_TYPE_LEVEL_HIGH>;
->> +             #gpio-cells = <2>;
->> +             gpio-controller;
->> +             gpio-ranges = <&pfc 0 32 32>;
+On 25/02/15 09:50, Richard Cochran wrote:
 >
-> This GPIO block has 26 GPIOs only.
-
->> +     gpio5: gpio@e6055000 {
->> +             compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
->> +             reg = <0 0xe6055000 0 0x50>;
->> +             interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
->> +             #gpio-cells = <2>;
->> +             gpio-controller;
->> +             gpio-ranges = <&pfc 0 160 32>;
+> The Linux kernel already fully supports this kind of application via
+> the SIOCSHWTSTAMP, SO_TIMESTAMPING, and PHC mechanisms.  We certainly
+> don't need another another interface just for someone's warped
+> hardware design.
 >
-> This GPIO block has 28 GPIOs only.
+> I suggest that you find a way to make your HW work within the existing
+> frame work.
 
->> +     gpio6: gpio@e6055400 {
->> +             compatible = "renesas,gpio-r8a7794", "renesas,gpio-rcar";
->> +             reg = <0 0xe6055400 0 0x50>;
->> +             interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>;
->> +             #gpio-cells = <2>;
->> +             gpio-controller;
->> +             gpio-ranges = <&pfc 0 192 32>;
+The driver already uses that framework for returning timestamps to user 
+space. It does not introduce any new interface.
+
 >
-> This GPIO block has 26 GPIOs only.
+>> The interface needs to be public so that a user-space application
+>> can program a command string that will match packets that belong to
+>> the audio stream of interest, for this example.
+>
+> Let the user program simply use a BPF for that.
+>
+>> In addition returning just a timestamp would not be enough in many
+>> cases. In the audio streaming use case mentioned above some
+>> additional
+>> bytes from the packet payload need to be returned (with Copy
+>> commands) in order to associate the timestamp with a certain point
+>> in the audio stream.
+>
+> The time stamp is *already* associated with a particular frame.
+>
+> Just tell your driver to program the hardware to:
+>
+> 1. time stamp every frame
+> 2. deliver every frame
+>
+> Thats all you need.
+>
 
-I guess you hear me coming... r8a779[01].dtsi need to be fixed, too.
+The H/W could not support that:
+We have a "Match/Stamp" command, so the packet byte needs to match the 
+value following the command, in order for a timestamp to be generated, 
+otherwise the packet is dropped.
+In addition, due to FIFO size limitations up to 128 bytes (including the 
+timestamp) can be returned (through Copy commands) from each packet.
 
-Gr{oetje,eeting}s,
+The module was designed to be able to configure it to sniff packets 
+belonging to a certain application level stream and from each matching 
+packet return a timestamp and some bytes (from eg. the application layer 
+protocol header) that would be useful to the application.
 
-                        Geert
+BPF could accomplish that too, but timestamps will not be as accurate
+without H/W support.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I understand that the device needs to be configured with a proprietary
+command stream, but all interfacing with user-space is done using 
+existing frameworks (AF_PACKET, SIOCSHWTSTAMP, cmsg)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>> Actually, that is how the H/W works. Each Match command is followed by
+>> a data value which must match the packet data byte at the corresponding
+>> location. If there is no match processing of the packet stops.
+>
+> And just what is the "corresponding location"?
+
+The command string is made up of a sequence of <CMD><DATA> pairs. Take 
+this for example: {0x00, 0x00, 0x01, 0x55, 0x02, 0x00, 0x04, 0x00}.
+First command is Don't Care (0x00), ie 1st byte of Ethernet frame is 
+just skipped.
+Second command is Match (0x01), ie if the 2nd byte of the Ethernet frame 
+is 0x55 processing continues otherwise packet is dropped.
+Third command is Copy (0x02), ie 3rd byte of the packet is copied to the 
+H/W FIFO to be returned to the user
+Fourth command is Copy/Done (0x04), ie 4th packet byte is also copied to 
+the FIFO and processing stops.
+Then an IRQ is generated, data (2 bytes) are read from the FIFO and
+delivered through an AF_PACKET socket.
+
+In v4 of the patch I tried to improve the documentation of some of these 
+points.
+>
+> Thanks,
+> Richard
+>
+
+Thanks,
+Stathis
