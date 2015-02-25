@@ -1,47 +1,50 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6] ahci: st: Update the DT example for how to obtain
- the PHY.
-Date: Wed, 25 Feb 2015 15:08:53 +0000
-Message-ID: <20150225150853.GC5132@x1>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 6/6] MAINTAINERS: Add phy-miphy28lp.c to ARCH/STI
+ architecture
+Date: Wed, 25 Feb 2015 15:10:00 +0000
+Message-ID: <20150225151000.GD5132@x1>
 References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org>
- <1424871377-1795-3-git-send-email-peter.griffin@linaro.org>
- <CAL_JsqLbQWK-iZ+bH7SJzUjUZzYkdPVoDFSjaFd9TS29YOVQkA@mail.gmail.com>
+ <1424871377-1795-7-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLbQWK-iZ+bH7SJzUjUZzYkdPVoDFSjaFd9TS29YOVQkA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424871377-1795-7-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, kishon@ti.com, balbi@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Feb 2015, Rob Herring wrote:
+On Wed, 25 Feb 2015, Peter Griffin wrote:
 
-> On Wed, Feb 25, 2015 at 7:36 AM, Peter Griffin <peter.griffin@linaro.=
-org> wrote:
-> > The example is wrong in that the phys property should take a
-> > phandle to the phy port.
-> >
-> > Also with the changing over to generic PHY type constants we also
-> > update this as well.
-> >
-> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> This patch adds the phy-miphy28lp.c phy driver found on STMicroelectr=
+onics
+> stih407 family SoC's into the STI arch section of the maintainers fil=
+e.
 >=20
-> We seem to have a variety of ways to describe phy's with SATA
-> controllers. Some consistency would have been nice.
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 
-This way is the correct way.  I worked closely with Kishon to get it
-right.  He even used this code as an example at ELC, Dusseldorf.
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ddc5a8c..1a6180a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1457,6 +1457,7 @@ F:	drivers/clocksource/arm_global_timer.c
+>  F:	drivers/i2c/busses/i2c-st.c
+>  F:	drivers/media/rc/st_rc.c
+>  F:	drivers/mmc/host/sdhci-st.c
+> +F:	drivers/phy/phy-miphy28lp.c
+>  F:	drivers/phy/phy-stih407-usb.c
+>  F:	drivers/phy/phy-stih41x-usb.c
+>  F:	drivers/pinctrl/pinctrl-st.c
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
