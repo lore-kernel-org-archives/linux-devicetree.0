@@ -1,41 +1,57 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 9/9] MAINTAINERS: Add Watchdog and RTC files to STI's maintainer entry
-Date: Wed, 25 Feb 2015 13:52:29 +0000
-Message-ID: <1424872349-4155-10-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v4 1/9] mfd: dt-bindings: Provide human readable defines for
+ LPC mode choosing
+Date: Wed, 25 Feb 2015 13:52:21 +0000
+Message-ID: <1424872349-4155-2-git-send-email-lee.jones@linaro.org>
 References: <1424872349-4155-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424872349-4155-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, david.paris-qxv4g6HH51o@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1424872349-4155-1-git-send-email-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com, a.zummo@towertech.it
+Cc: lee.jones@linaro.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ST's Low Power Controller can currently operate in two supported modes;
+Watchdog and Real Time Clock.  These defines will aid engineers to easily
+identify the selected mode.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ddc5a8c..19af007 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1461,10 +1461,12 @@ F:	drivers/phy/phy-stih407-usb.c
- F:	drivers/phy/phy-stih41x-usb.c
- F:	drivers/pinctrl/pinctrl-st.c
- F:	drivers/reset/sti/
-+F:	drivers/rtc/rtc-st-lpc.c
- F:	drivers/tty/serial/st-asc.c
- F:	drivers/usb/dwc3/dwc3-st.c
- F:	drivers/usb/host/ehci-st.c
- F:	drivers/usb/host/ohci-st.c
-+F:	drivers/watchdog/st_lpc_wdt.c
- F:	drivers/ata/ahci_st.c
- 
- ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ include/dt-bindings/mfd/st-lpc.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 include/dt-bindings/mfd/st-lpc.h
+
+diff --git a/include/dt-bindings/mfd/st-lpc.h b/include/dt-bindings/mfd/st-lpc.h
+new file mode 100644
+index 0000000..e3e6c75
+--- /dev/null
++++ b/include/dt-bindings/mfd/st-lpc.h
+@@ -0,0 +1,15 @@
++/*
++ * This header provides shared DT/Driver defines for ST's LPC device
++ *
++ * Copyright (C) 2014 STMicroelectronics -- All Rights Reserved
++ *
++ * Author: Lee Jones <lee.jones@linaro.org> for STMicroelectronics
++ */
++
++#ifndef __DT_BINDINGS_ST_LPC_H__
++#define __DT_BINDINGS_ST_LPC_H__
++
++#define ST_LPC_MODE_RTC		0
++#define ST_LPC_MODE_WDT		1
++
++#endif /* __DT_BINDINGS_ST_LPC_H__ */
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
