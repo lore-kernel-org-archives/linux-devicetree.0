@@ -1,65 +1,52 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 3/4] clk: Provide an always-on clock domain framework
-Date: Wed, 25 Feb 2015 09:24:43 -0600
-Message-ID: <CAL_Jsq+N4D8fUCwrYwxLaRpbhsgi5eZy5cLpsSmp8VoTQZUqow@mail.gmail.com>
-References: <1424276101-30137-1-git-send-email-lee.jones@linaro.org>
- <1424276101-30137-4-git-send-email-lee.jones@linaro.org> <20150223172344.421.62815@quantum>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150223172344.421.62815@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, kernel@stlinux.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: [PATCH v5 0/6] hwmon: thermal: Odroid U3: Provide support for Odroid
+ U3 fan
+Date: Wed, 25 Feb 2015 16:34:16 +0100
+Message-ID: <1424878462-15511-1-git-send-email-l.majewski@samsung.com>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>
+Cc: lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 23, 2015 at 11:23 AM, Mike Turquette <mturquette@linaro.org> wrote:
-> Quoting Lee Jones (2015-02-18 08:15:00)
->> Much h/w contain clocks which if turned off would prove fatal.  The
->> only way to recover is to restart the board(s).  This driver takes
->> references to clocks which are required to be always-on in order to
->> prevent the common clk framework from trying to turn them off during
->> the clk_disabled_unused() procedure.
+Presented patches add support for Odroid's U3 optional CPU FAN, which uses PWM
+subsystem for low level control.
 
-[...]
+After successful probe it registers itself as a cooling device for thermal
+subsystem.
 
->> +static int ao_clock_domain_probe(struct platform_device *pdev)
->> +{
->> +       struct device_node *np = pdev->dev.of_node;
->> +       int nclks, i;
->> +
->> +       nclks = of_count_phandle_with_args(np, "clocks", "#clock-cells");
->
-> Minor nitpick: please use of_clk_get_parent_count. I spent a solid 5
-> minutes writing that function and I need people to use it so I can get a
-> return on my investment.
->
-> Otherwise the patch looks good. I believe that this method is targeting
-> always-on clock in a production environment, which is different from the
-> CLK_IGNORE_UNUSED stuff which typically is helpful while bringing up new
-> hardware or dealing with a platform that has incomplete driver support.
+This driver also supports devices without DTS specified.
 
-There is also the usecase of keep clocks on until I load a module that
-properly handles my hardware (e.g simplefb). We have a simplefb node
-with clocks and the simplefb driver jumps thru some hoops to hand-off
-clocks to the real driver. I don't really like it and don't want to
-see more examples. And there is the case of I thought I would never
-manage this clock, but kernel subsystems evolve and now I want to
-manage a clock. This should not require a DT update to do so.
+To provide correct functionality, new properties to device tree description for
+Exynos4412 and in particular Odroid U3 have been added.
 
-Neither of these may be Lee's usecase, but I want to see them covered
-by the binding.
+Those patches were tested at Exynos4412 - Odroid U3 board.
 
-> I wonder if there is a clever way for existing clock providers
-> (expressed in DT) to use this without having to create a separate node
-> of clocks with the "always-on-clk-domain" flag. Possibly the common
-> clock binding could declare some always-on flag that is standardized?
-> Then the framework core could use this code easily. Not sure if that is
-> a good idea though...
+Patches were applied on:
+linux-soc-thermal/fixes branch (Linux v4.0-rc1)
+SHA1: b71d399c7f2fe06b60b96155ec0b9ae167334e4a
 
-I would prefer to see the always on clocks just listed within the
-clock controller's node rather than creating made up nodes with clock
-properties. This should be always-on until claimed IMO, but that
-aspect is the OS's problem, not a DT problem.
+Kamil Debski (1):
+  ARM: dts: Add pwm-fan node to the Odroid-U3 board
 
-Rob
+Lukasz Majewski (5):
+  Documentation: dts: Documentation entry to explain how to use PWM FAN
+    as a cooling device
+  ARM: dts: Add properties to use pwm-fan device as a cooling device in
+    Odroid U3
+  hwmon: pwm-fan: Extract __set_pwm() function to only modify PWM duty
+    cycle
+  hwmon: pwm-fan: Read PWM FAN configuration from device tree
+  hwmon: pwm-fan: Code for using PWM FAN as a cooling device
+
+ .../devicetree/bindings/hwmon/pwm-fan.txt          |  25 +++-
+ arch/arm/boot/dts/exynos4.dtsi                     |   2 +-
+ arch/arm/boot/dts/exynos4412-odroidu3.dts          |  43 ++++++
+ drivers/hwmon/pwm-fan.c                            | 166 +++++++++++++++++++--
+ 4 files changed, 220 insertions(+), 16 deletions(-)
+
+-- 
+2.0.0.rc2
+
