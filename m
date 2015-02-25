@@ -1,81 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/4] i2c: sunxi: Add Reduced Serial Bus (RSB) DT bindings documentation
-Date: Wed, 25 Feb 2015 17:10:49 +0100
-Message-ID: <2832810.NHVTmhf5rK@wuerfel>
-References: <1424773744-15106-1-git-send-email-wens@csie.org> <16025407.hQRFhlbHKD@wuerfel> <CAGb2v675oV60cont4JPX0Cy-5oaqXSz+74kC4JFeJYja6SSV+A@mail.gmail.com>
+From: Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] Add common clock support for Broadcom iProc
+ architecture
+Date: Wed, 25 Feb 2015 11:33:46 -0800
+Message-ID: <20150225193346.GD3215@dtor-ws>
+References: <rjui@broadcom.com>
+ <1423097705-22939-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v675oV60cont4JPX0Cy-5oaqXSz+74kC4JFeJYja6SSV+A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-i2c@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1423097705-22939-1-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 24 February 2015 22:32:57 Chen-Yu Tsai wrote:
-> On Tue, Feb 24, 2015 at 10:17 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tuesday 24 February 2015 22:01:26 Chen-Yu Tsai wrote:
-> >> On Tue, Feb 24, 2015 at 6:37 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> > On Tuesday 24 February 2015 18:29:02 Chen-Yu Tsai wrote:
-> >> >>
-> >> >> +       rsb@01f03400 {
-> >> >> +               compatible = "allwinner,sun8i-a23-rsb";
-> >> >> +               reg = <0x01f03400 0x400>;
-> >> >> +               interrupts = <0 39 4>;
-> >> >> +               clocks = <&apb0_gates 3>;
-> >> >> +               clock-frequency = <3000000>;
-> >> >> +               resets = <&apb0_rst 3>;
-> >> >> +
-> >> >> +               axp223: pmic@2d {
-> >> >> +                       compatible = "x-powers,axp223", "x-powers,axp221";
-> >> >> +                       reg = <0x2d>;
-> >> >> +                       allwinner,rsb-hw-addr = <0x3e3>;
-> >> >> +
-> >> >> +                       /* ... */
-> >> >> +               };
-> >> >> +       };
-> >>
-> >> > I don't really understand the need for having two addresses (runtime
-> >> > and hardware). Could the runtime address be configured at runtime?
-> >>
-> >> You can, though the driver doesn't support this. I don't think the
-> >> I2C subsystem allows arbitrary device insertion during normal
-> >> operation, but maybe i2c-dev? I've tried using different addresses
-> >> for devices so they do get changed during the probe phase, just
-> >> to be sure that the code works, and it's not just sitting at
-> >> the address the bootloader used.
-> >>
-> >> In any case, the distinction is more like burnt-in or hardwired
-> >> addresses vs software configurable addresses.
-> >
-> > The simplest binding would the probably be to only put the
-> > hardware address into the 'reg' property and always assign the
-> > logical addresses dynamically.
-> >
-> > Would that add a lot of complexity or does it have any other
-> > downsides?
+On Wed, Feb 04, 2015 at 04:54:59PM -0800, Ray Jui wrote:
+> This patchset contains the initial common clock support for Broadcom's iProc
+> family of SoCs. The iProc clock architecture comprises of various PLLs, e.g.,
+> ARMPLL, GENPLL, LCPLL0, MIPIPLL, and etc. An onboard crystal serves as the
+> basic reference clock for these PLLs. Each PLL may have several leaf clocks.
+> One special group of clocks is the ASIU clocks, which are dervied directly
+> from the crystal reference clock.
 > 
-> The hardware address is 12 bits wide. Any address higher than
-> 0x3ff will be rejected by the I2C core. The AC100 is at 0xe89.
+> This patchset also contains the basic clock support for the Broadcom Cygnus
+> SoC, which implements the iProc clock architecture
 > 
-> Assigning addresses dynamically means the driver has to keep
-> a lookup table to map the hardware address to the logical
-> address to issue the command to.
+> Changes from v4:
+>  - Add of_clk_get_parent_rate helper function into the clock framework
+>  - Switch to use of_clk_get_parent_rate in the iProc PLL clock driver
 > 
-> There's also the issue of dynamically assigned address colliding
-> with unlisted devices, though I think this would only happen in
-> the development / bring up phase of the device.
+> Changes from v3:
+>  - Fix incorrect use of passing in of_clk_src_onecell_get when adding ARM PLL
+>    and other iProc PLLs as clock provider. These PLLs have zero cells in DT and
+>    thefore of_clk_src_simple_get should be used instead
+>  - Rename Cygnus MIPI PLL Channel 2 clock from BCM_CYGNUS_MIPIPLL_CH2_UNUSED
+>    to BCM_CYGNUS_MIPIPLL_CH2_V3D, since a 3D graphic rendering engine has been
+>    integrated into Cygnus revision B0 and has its core clock running off
+>    MIPI PLL Channel 2
+>  - Changed default MIPI PLL VCO frequency from 1.75 GHz to 2.1 GHz. This allows
+>    us to derive 300 MHz V3D clock from channel 2 through the post divisor
 > 
-> I think the first issue pretty much rules out putting the
-> hardware address into 'reg'.
+> Changes from v2:
+>  - Re-arrange Cygnus clock/pll init functions so each init function is right
+>    next to its clock table
+>  - Removed #defines for number of clocks in Cygnus. Have the number of clocks
+>    automatically determined based on array size of the clock table
 > 
-> Putting the logical address in the 'reg' property allows the
-> user to poke unlisted devices using i2c-tools, though this
-> is not so useful to the average user.
+> Changes from v1:
+>  - Separate drivers/clk/Makefile change for drivers/clk/bcm out to a standalone patch
 
-Ok, fair enough. Your approach seems reasonable then, but it
-might be helpful to add your explanation to the changelog of the
-patch that introduces the binding.
+FWIW I tested this series on BCM958305K SVK.
 
-	Arnd
+Tested-by: Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Thanks.
+
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
