@@ -1,74 +1,26 @@
-From: Ashwin Chaugule <ashwin.chaugule@linaro.org>
-Subject: Re: [PATCH v2 2/2] ARM: perf: Add support for Scorpion PMUs
-Date: Wed, 25 Feb 2015 11:58:11 -0500
-Message-ID: <CAJ5Y-ea8LBji1L3Q+NMgA9+eOrDVwWNodqPDD9XsyCzi=LMj9g@mail.gmail.com>
-References: <1423851849-6069-1-git-send-email-sboyd@codeaurora.org>
-	<1423851849-6069-3-git-send-email-sboyd@codeaurora.org>
-	<20150220193552.GE1767@arm.com>
-	<20150220201627.GD24928@codeaurora.org>
-	<CAJ5Y-eYLeeNDcBtdvMf-k0XGxq-P21FDq-VMHPJsp4=ccuemig@mail.gmail.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next v4 0/3] Linn Ethernet Packet Sniffer driver
+Date: Wed, 25 Feb 2015 18:01:27 +0100
+Message-ID: <20150225170127.GD7703@localhost.localdomain>
+References: <cover.1424796018.git.stathis.voukelatos@linn.co.uk>
+ <20150225151945.GB7703@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJ5Y-eYLeeNDcBtdvMf-k0XGxq-P21FDq-VMHPJsp4=ccuemig@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150225151945.GB7703@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24 February 2015 at 12:23, Ashwin Chaugule
-<ashwin.chaugule@linaro.org> wrote:
-> On 20 February 2015 at 15:16, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> On 02/20, Will Deacon wrote:
->>> On Fri, Feb 13, 2015 at 06:24:09PM +0000, Stephen Boyd wrote:
->>>
->>> > +static void scorpion_evt_setup(int idx, u32 config_base)
->>> > +{
->>> > +       u32 val;
->>> > +       u32 mask;
->>> > +       u32 vval, fval;
->>> > +       unsigned int region;
->>> > +       unsigned int group;
->>> > +       unsigned int code;
->>> > +       unsigned int group_shift;
->>> > +       bool venum_event;
->>> > +
->>> > +       krait_decode_event(config_base, &region, &group, &code, &venum_event,
->>> > +                          NULL);
->>> > +
->>> > +       group_shift = group * 8;
->>> > +       mask = 0xff << group_shift;
->>> > +
->>> > +       /* Configure evtsel for the region and group */
->>> > +       if (venum_event)
->>> > +               val = SCORPION_VLPM_GROUP0;
->>> > +       else
->>> > +               val = scorpion_get_pmresrn_event(region);
->>> > +       val += group;
->>> > +       /* Mix in mode-exclusion bits */
->>> > +       val |= config_base & (ARMV7_EXCLUDE_USER | ARMV7_EXCLUDE_PL1);
->>> > +       armv7_pmnc_write_evtsel(idx, val);
->>> > +
->>> > +       asm volatile("mcr p15, 0, %0, c9, c15, 0" : : "r" (0));
->>>
->>> What's this guy doing?
->>
->> This is the same as Krait. It's clearing some implementation
->> defined register. From what I can tell it's a per-event register
->> (i.e. PMSELR decides which event this register write actually
->> affects) and we do this here to reset this register to some
->> defined value, zero. Otherwise the reset value of this register
->> is UNPREDICTABLE and that would be bad. I think we might be able
->> to move it to the pmu reset path, but I don't know. Ashwin?
->
+On Wed, Feb 25, 2015 at 04:19:45PM +0100, Richard Cochran wrote:
+> Let me suggest another approach that stays in line with the existing
+> frame work.  Based on the device's limitations and your own example,
+> it seems clear that the intended use case is synchronization for AVB
+> applications using gPTP.
 
-Its a count control register (PMxEVCNTCR). Theres various conditions
-on which you can select when to start/stop counting. e.g. start when
-another counter register overflows. Setting it to 0 was the
-recommended default value on Scorpions and Kraits. Reset value is
-unpredictable. So, just need to make sure this is set every time a
-counter is setup. Will that still work if this is moved to the reset
-path?
+Also, forgot to say, expose your clock as a PTP Hardware Clock (PHC).
 
-Cheers,
-Ashwin.
+Thanks,
+Richard
