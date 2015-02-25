@@ -1,63 +1,87 @@
-From: Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] Add common clock support for Broadcom iProc
- architecture
-Date: Wed, 25 Feb 2015 11:33:46 -0800
-Message-ID: <20150225193346.GD3215@dtor-ws>
-References: <rjui@broadcom.com>
- <1423097705-22939-1-git-send-email-rjui@broadcom.com>
+From: Tyler Hall <tylerwhall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] thermal: armada: read stable temp on Armada XP
+Date: Wed, 25 Feb 2015 14:47:11 -0500
+Message-ID: <CAOjnSCZa+H+KRDJ+rug4OoinYEVN_fRrh4-fd4u_zzMEVNzjbQ@mail.gmail.com>
+References: <1423608615-6575-1-git-send-email-tylerwhall@gmail.com>
+ <20150224183616.GD3448@developer.amazonguestwifi.org> <CAOjnSCaH5NtcYGdfQ+=XY9ZJtjYEEgLWKCGUeFXBsM1f+va-LA@mail.gmail.com>
+ <54EDF3E6.6040409@free-electrons.com> <20150225183901.GD2306@developer.amazonguestwifi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1423097705-22939-1-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20150225183901.GD2306-ld4jwAGwUXRveXEdyy5Li2QTnQI6vUnv7KzsFvvc4iU@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 04, 2015 at 04:54:59PM -0800, Ray Jui wrote:
-> This patchset contains the initial common clock support for Broadcom's iProc
-> family of SoCs. The iProc clock architecture comprises of various PLLs, e.g.,
-> ARMPLL, GENPLL, LCPLL0, MIPIPLL, and etc. An onboard crystal serves as the
-> basic reference clock for these PLLs. Each PLL may have several leaf clocks.
-> One special group of clocks is the ASIU clocks, which are dervied directly
-> from the crystal reference clock.
-> 
-> This patchset also contains the basic clock support for the Broadcom Cygnus
-> SoC, which implements the iProc clock architecture
-> 
-> Changes from v4:
->  - Add of_clk_get_parent_rate helper function into the clock framework
->  - Switch to use of_clk_get_parent_rate in the iProc PLL clock driver
-> 
-> Changes from v3:
->  - Fix incorrect use of passing in of_clk_src_onecell_get when adding ARM PLL
->    and other iProc PLLs as clock provider. These PLLs have zero cells in DT and
->    thefore of_clk_src_simple_get should be used instead
->  - Rename Cygnus MIPI PLL Channel 2 clock from BCM_CYGNUS_MIPIPLL_CH2_UNUSED
->    to BCM_CYGNUS_MIPIPLL_CH2_V3D, since a 3D graphic rendering engine has been
->    integrated into Cygnus revision B0 and has its core clock running off
->    MIPI PLL Channel 2
->  - Changed default MIPI PLL VCO frequency from 1.75 GHz to 2.1 GHz. This allows
->    us to derive 300 MHz V3D clock from channel 2 through the post divisor
-> 
-> Changes from v2:
->  - Re-arrange Cygnus clock/pll init functions so each init function is right
->    next to its clock table
->  - Removed #defines for number of clocks in Cygnus. Have the number of clocks
->    automatically determined based on array size of the clock table
-> 
-> Changes from v1:
->  - Separate drivers/clk/Makefile change for drivers/clk/bcm out to a standalone patch
+Hi Gregory, Eduardo,
 
-FWIW I tested this series on BCM958305K SVK.
+On Wed, Feb 25, 2015 at 05:10:14PM +0100, Gregory CLEMENT wrote:
+> By using it by default do you mean removing marvell,armadaxp-thermal
+> and adding armadaxp-filtered-thermal instead ?
 
-Tested-by: Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Yes, replacing it in device tree. For me,
+/sys/class/thermal/thermal_zone0/temp returns the same temperature but
+with less variability between samples. My intent was to switch the
+source of the data and not affect user space other than providing a
+more stable reading.
 
-Thanks.
+> Tyler,
+> In the meantime could you double check your values? The temperature on my board
+> seemed broken on my board. If needed I can check on an other board. By the way
+> on which board/product did you try it?
 
--- 
-Dmitry
+I'm on a custom board with the 4-core MV78460. In addition to my
+patch, this is new device tree entry.
+
+                        thermal@184c4 {
+                               compatible = "marvell,armadaxp-filtered-thermal";
+                               reg = <0x184c4 0x4
+                                        0x184d0 0x4>;
+                                status = "okay";
+                        };
+
+I dumped some raw samples of the temperature fields in each of these
+registers. This CSV contains the raw values converted to decimal.
+http://pastebin.com/Umc3cy5L
+The first column is the current register at 0x182b0 27:19 and the
+second is the register at 0x184c4 9:1.
+
+Here's a quick plot of a larger sample size while the temperature was rising.
+https://imgur.com/E9HlSBx
+The blue value is the current 0x182b0 register which seems to bounce
+around the green value from 0x184c4.
+
+I'll try a test of instantiating both at the same time and comparing
+the final output of the driver.
+
+On Wed, Feb 25, 2015 at 1:39 PM, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Does that new thermal sensors only improve the stability or does it
+>> also modify the value?
+>>
+>> In the second case it will more or less break the user space expectation.
+>
+> Yeah, I agree here. We need to understand if this is:
+> (1) a fix of which register to use. In that case, the old dtbs are
+> essentially wrong, and the driver would need to adapt, I would say.
+> (2) a way to report better temperature extrapolations. then, this is
+> essentially a new temp sensor, and we should have two separated
+> compatible. in other words, just keep the patch the way it is.
+
+This *might* be a different physical sensor, or it could be from the
+same source with some averaging/filtering applied in hardware. The
+conversion formula is the same, however, and I get similar raw values
+from both.
+
+> Yes. Typically I ask to see the complete series, even if I am not taking
+> the DTS changes. That is, you send a complete series, with changes in
+> the kernel code and in the DTS, copying the required audience (from
+> kernel side and from DT side). Once the changes are accepted, the
+> patches will be picked by the correct tree maintainer. It is common that
+> DTS changes go via the platform tree, to avoid conflicts though.
+
+Thanks for the clarification. I'll send both in the next version as I
+suspect there will be a v2 of this change.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
