@@ -1,103 +1,42 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v4 1/8] thermal: Provide stub for
- thermal_of_cooling_device_register() function
-Date: Wed, 25 Feb 2015 13:26:23 +0100
-Message-ID: <20150225132623.753adaca@amdc2363>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-1-git-send-email-l.majewski@samsung.com>
- <1424254056-5904-2-git-send-email-l.majewski@samsung.com>
- <20150224192153.GH3448@developer.amazonguestwifi.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 3/7] drivers: Introduce new eFuse subsystem stub
+Date: Wed, 25 Feb 2015 13:29:24 +0100
+Message-ID: <54EDC024.2040804@i2se.com>
+References: <1424864719-3390-1-git-send-email-ezequiel.garcia@imgtec.com> <1424864719-3390-4-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150224192153.GH3448@developer.amazonguestwifi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424864719-3390-4-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+Hi,
 
-> On Wed, Feb 18, 2015 at 11:07:29AM +0100, Lukasz Majewski wrote:
-> > Odroid U3 fan can work without being registered as OF cooling device
-> > (with CONFIG_THERMAL_OF disabled).
-> > In this situation it can be controlled via PWM entry at
-> > /sys/class/hwmon/hwmon0/pwm1.
-> > 
-> > Therefore, the thermal_of_cooling_device_register() function needs
-> > a stub to allow clean compilation.
-> 
-> 
-> I've just applied a patch on this same matter from Nishanth Menon [1].
-> Can you please check if his patch is enough for you?
-> 
-> [1] -
-> https://git.kernel.org/cgit/linux/kernel/git/evalenti/linux-soc-thermal.git/commit/?h=fixes&id=12ca7188468ee29c4e717f73db4bf43c90954fc7
-> 
+[adding devicetree list]
 
-I will prepare new PWM-FAN patch set with above changes in mind.
+Am 25.02.2015 um 12:45 schrieb Ezequiel Garcia:
+> This commit introduces a new eFuse subsystem stub to hold all the eFuse-like
+> device drivers. This will be used to host the currently supported Tegra
+> eFuse driver, and will allow to add support for other platforms as well.
 
+as i mentioned in the old discussion it would be nice to keep drivers
+and devicetree binding documentation consistent.
 
-> 
-> > 
-> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> > ---
-> > Changes for v2:
-> > - None
-> > Changes for v3:
-> > - Provide stub declaration when CONFIG_THERMAL is not set
-> > Changes for v4:
-> > - None
-> > ---
-> >  include/linux/thermal.h | 17 ++++++++++++++---
-> >  1 file changed, 14 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> > index fc52e30..eacf2de 100644
-> > --- a/include/linux/thermal.h
-> > +++ b/include/linux/thermal.h
-> > @@ -293,6 +293,20 @@ struct thermal_trip {
-> >  };
-> >  
-> >  /* Function declarations */
-> > +#ifdef CONFIG_THERMAL
-> > +struct thermal_cooling_device *
-> > +thermal_of_cooling_device_register(struct device_node *np,
-> > +				   char *type, void *devdata,
-> > +				   const struct
-> > thermal_cooling_device_ops *); +#else
-> > +static inline struct thermal_cooling_device *
-> > +thermal_of_cooling_device_register(struct device_node *np,
-> > +				   char *type, void *devdata,
-> > +				   const struct
-> > thermal_cooling_device_ops *ops) +{
-> > +	return NULL;
-> > +}
-> > +#endif
-> >  #ifdef CONFIG_THERMAL_OF
-> >  struct thermal_zone_device *
-> >  thermal_zone_of_sensor_register(struct device *dev, int id, void
-> > *data, @@ -328,9 +342,6 @@ void thermal_zone_device_update(struct
-> > thermal_zone_device *); 
-> >  struct thermal_cooling_device
-> > *thermal_cooling_device_register(char *, void *, const struct
-> > thermal_cooling_device_ops *); -struct thermal_cooling_device *
-> > -thermal_of_cooling_device_register(struct device_node *np, char *,
-> > void *,
-> > -				   const struct
-> > thermal_cooling_device_ops *); void
-> > thermal_cooling_device_unregister(struct thermal_cooling_device *);
-> > struct thermal_zone_device *thermal_zone_get_zone_by_name(const
-> > char *name); int thermal_zone_get_temp(struct thermal_zone_device
-> > *tz, unsigned long *temp); -- 2.0.0.rc2
-> > 
+So how about renaming?
+
+Documentation/devicetree/bindings/fuse/ ->
+Documentation/devicetree/bindings/efuse/
+
+Best regards
+Stefan
 
 
 
--- 
-Best regards,
 
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
