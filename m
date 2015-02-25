@@ -1,54 +1,66 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: at91sam9263/dt: Fixup sram1 device tree node
-Date: Wed, 25 Feb 2015 22:28:56 +0100
-Message-ID: <20150225212856.GE3630@piout.net>
-References: <1424853304-32197-1-git-send-email-alexanders83@web.de>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: SPDX-License-Identifier
+Date: Wed, 25 Feb 2015 22:49:51 +0100
+Message-ID: <20150225214950.GB29527@amd>
+References: <20140220182257.GF23217@saruman.home>
+ <5306F458.9010706@monstr.eu>
+ <20140221160442.GA17506@kroah.com>
+ <5307790A.4050806@monstr.eu>
+ <20140221161246.GM31902@saruman.home>
+ <53077C5F.9000407@monstr.eu>
+ <54CF9B12.2070807@denx.de>
+ <20150202160622.GA9852@kroah.com>
+ <54D24BA4.3070509@denx.de>
+ <20150205064130.GB22075@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1424853304-32197-1-git-send-email-alexanders83-S0/GAf8tV78@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Cc: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20150205064130.GB22075@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Stefan Roese <sr@denx.de>, monstr@monstr.eu, balbi@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Denk <wd@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On 25/02/2015 at 09:35:04 +0100, Alexander Stein wrote :
-> Commit ff04660e48b20 ("ARM: at91/dt: add SRAM nodes") used the same base
-> address for sram0 and sram1 leading to the following warning:
-> WARNING: CPU: 0 PID: 1 at fs/sysfs/dir.c:31 sysfs_warn_dup+0x50/0x70()
-> sysfs: cannot create duplicate filename '/devices/platform/300000.sram'
-> Fix the base address for sram1.
-> 
-> Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hi!
 
-> ---
->  arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >Is one tag per directory sufficient?  Is one tag per file sufficient?
+> > >How about one tag per package?  If package, then isn't a single tag for
+> > >the whole kernel source tree sufficient, as we all know the overall
+> > >license for the kernel source tree.
+> > 
+> > We really need one tag per file.
 > 
-> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-> index cdb7d03..76bb849 100644
-> --- a/arch/arm/boot/dts/at91sam9263.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
-> @@ -69,7 +69,7 @@
->  
->  	sram1: sram@00500000 {
->  		compatible = "mmio-sram";
-> -		reg = <0x00300000 0x4000>;
-> +		reg = <0x00500000 0x4000>;
->  	};
->  
->  	ahb {
-> -- 
-> 2.3.0
+> I fail to see the justification for this, why?  Why not per directory?
+> Why not per function?  Why not per driver?  Why not per line?  Why not
+> per project?  Who has dictated this seemingly arbitrary rule?
+
+That's how licenses are done today.
+
+Why would I like to see SPDX?
+
+So that GPL header at begining of each file becomes one line... and so
+that if it is BSD/GPL dual licensed is plain to see, and I don't have
+to read the notices saying "oh this is gpl.. but if you want to,
+delete gpl above and use license below".
+
+> Our DCO process ensures that.
 > 
+> > - Some parts of the Linux source code are also used by other projects.
+> >   Or are derived from other projects. Because of this they are
+> >   explicitly licensed under different licenses than the GPLv2
+> >   (compatible to it though of course). Or are dual-licensed. So that
+> >   they can be used by these other projects.
+> 
+> That's fine, we encourage that and want to see that happen.  How will
+> SPDX change that at all?  It's obvious as to the license of the files
+> that this happens with, why do anything extra?
+
+Well, sometimes parsing license agreements at the top of file is
+interesting, that's where SPDX would help, and that's why having
+single SPDX per linux kernel would not work.
+									Pavel
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
