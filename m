@@ -1,48 +1,47 @@
-From: Jonathan Richardson <jonathar@broadcom.com>
-Subject: Re: [PATCH 1/1] serial: 8250_dw: Fix get_mctrl behaviour
-Date: Wed, 25 Feb 2015 12:00:15 -0800
-Message-ID: <54EE29CF.6090208@broadcom.com>
-References: <1424891056-1222-2-git-send-email-jonathar@broadcom.com> <3836329.RsbZqYqPAB@wuerfel>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3] sh-pfc: add R8A7794 PFC support
+Date: Wed, 25 Feb 2015 23:03:52 +0300
+Message-ID: <54EE2AA8.9000604@cogentembedded.com>
+References: <2084538.pWCX8EzoLe@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3836329.RsbZqYqPAB@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2084538.pWCX8EzoLe@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linus.walleij@linaro.org, linux-sh@vger.kernel.org, laurent.pinchart@ideasonboard.com, linux-gpio@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hello.
 
-On 15-02-25 11:21 AM, Arnd Bergmann wrote:
-> On Wednesday 25 February 2015 11:04:16 Jonathan Richardson wrote:
->> +- msr-override : array of strings to be used to override the individual
->> +  modem status signals for DCD, DSR, CTS, and RI.  If the property is not
->> +  present, the individual signals are obtained from the modem status register.
->> +  Strings accepted are "dcd", "dsr", "cts", and "ri". If "dcd", "dsr", or
->> +  "cts" are present, these signals will always be reported as active. If
->> +  "ri" is present, this signal will always be reported as inactive.
->>
-> 
-> Did you copy this definition from another driver? If not, we should try
-> to come up with a more natural way to do it. How about defining four
-> boolean properties instead, like
-> 
-> 	dcd-override
-> 	dsr-override
-> 	cts-override
-> 	ri-override
-> 
-> Simplifies the parser and the binding.
+On 02/23/2015 12:33 AM, Sergei Shtylyov wrote:
 
-I didn't see anything similar in another driver. I agree with the bools
-instead of strings. Did you want to keep these in the Synopsis driver
-for now or were you thinking of putting them somewhere that they could
-be re-used?
+> From: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
 
-Thanks.
+> Add PFC support for  the  R8A7794 SoC  including pin groups for some on-chip
+> devices such as ETH, I2C, INTC, MSIOF, QSPI, [H]SCIF...
 
-> 
-> 	Arnd
-> 
+> Signed-off-by: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
+> [Sergei: squashed together several patches, fixed the MLB_CLK typo, added IRQ4..
+> IRQ9 pin groups,  fixed IRQn comments, added ETH B pin group names, removed
+> stray new line and fixed typos in the  comments in the pinmux_config_regs[]
+> initializer, removed the platform device ID, took into account limited number of
+> signals in the GPIO1/5/6 controllers, added reasonable and removed unreasonable
+> copyrights, modified the bindings document, renamed, added changelog.]
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+> ---
+> Changes in version 3:
+> - removed the platform device ID;
+> - added PORT_GP_26() and PORT_GP_28() macros, used them for GPIO1/5/6 in the
+>    CPU_ALL_PORT() macto.
+
+    Don't apply this patch! The change above causes the driver to fail probing 
+and the eventual kernel hang somehow... :-(
+
+> Changes in version 2:
+> - rebased the patch.
+
+WBR, Sergei
+
