@@ -1,67 +1,74 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/3] arm64: mediatek: Add config option for mt8173.
-Date: Wed, 25 Feb 2015 11:51:57 +0100
-Message-ID: <5948977.qlhSVy9R5i@wuerfel>
-References: <1422342836-27689-1-git-send-email-hongzhou.yang@mediatek.com> <1422342836-27689-2-git-send-email-hongzhou.yang@mediatek.com> <1424855242.7845.9.camel@mtksdaap41>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH v3 7/8] rtc: st: add new driver for ST's
+ LPC RTC
+Date: Wed, 25 Feb 2015 11:08:09 +0000
+Message-ID: <20150225110809.GH21323@x1>
+References: <1424260154-12868-1-git-send-email-lee.jones@linaro.org>
+ <1424260154-12868-8-git-send-email-lee.jones@linaro.org>
+ <20150223101223.GA14142@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424855242.7845.9.camel@mtksdaap41>
+Content-Disposition: inline
+In-Reply-To: <20150223101223.GA14142@griffinp-ThinkPad-X1-Carbon-2nd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Hongzhou Yang <hongzhou.yang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, eddie.huang@mediatek.com, linux-kernel@vger.kernel.org, alan.cheng@mediatek.com, maoguang.meng@mediatek.com, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@stlinux.com, rtc-linux@googlegroups.com, wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 25 February 2015 17:07:22 Yingjoe Chen wrote:
-> On Tue, 2015-01-27 at 15:13 +0800, Hongzhou Yang wrote:
-> > From: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> > 
-> > The upcoming MTK pinctrl driver have a big pin table for each SoC,
-> > and we don't want to bloat the kernel binary if we don't need it.
-> > Add config options so we can build for one SoC only.
-> > 
-> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> > ---
-> >  arch/arm64/Kconfig | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > index e627ead..6213dac 100644
-> > --- a/arch/arm64/Kconfig
-> > +++ b/arch/arm64/Kconfig
-> > @@ -151,9 +151,15 @@ menu "Platform selection"
-> >  config ARCH_MEDIATEK
-> >       bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
-> >       select ARM_GIC
-> > +     select PINCTRL
-> >       help
-> >         Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
-> >  
-> > +config MACH_MT8173
-> > +     bool "Mediatek 8173 Soc Supprt"
-> > +     depends on ARCH_MEDIATEK
-> > +     default y
+On Mon, 23 Feb 2015, Peter Griffin wrote:
+> On Wed, 18 Feb 2015, Lee Jones wrote:
+>=20
+> > ST's Low Power Controller (LPC) controls two devices; watchdog and =
+RTC.
+> > Only one of the devices can be used at any one time.  This is enfor=
+ced
+> > by the correlating MFD driver.  This portion of the driver-set cont=
+rols
+> > the Real Time Clock.
+>=20
+> <snip>
+>=20
+> > +{
+> > +	unsigned long flags;
 > > +
-> >  config ARCH_SEATTLE
-> >       bool "AMD Seattle SoC Family"
-> >       help
-> 
-> Hi Arnd/Matthias,
-> 
-> Any comments on this patch?
+> > +	spin_lock_irqsave(&rtc->lock, flags);
+> > +
+> > +	writel(1, rtc->ioaddr + LPC_WDT_OFF);
+> > +
+> > +	writel(msb, rtc->ioaddr + LPC_LPA_MSB_OFF);
+> > +	writel(lsb, rtc->ioaddr + LPC_LPA_LSB_OFF);
+> > +	writel(1, rtc->ioaddr + LPC_LPA_START_OFF);
+> > +
+> > +	writel(0, rtc->ioaddr + LPC_WDT_OFF);
+>=20
+> I think all the writel IO accessors in this driver can be replaced
+> with the *_relaxed variant. This will avoid the overhead of taking a
+> spinlock in the l2 outer cache part of writel.
 
-Hi Joe,
+Yes, there is no technical reason why we can't use the relaxed
+variants.  Will fix.
 
-Actually I just commented on a similar patch from Samsung the other
-day, and I think we should make a more general decision about these:
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int st_rtc_suspend(struct device *dev)
+> > +{
+> > +	struct st_rtc *rtc =3D dev_get_drvdata(dev);
+> > +
+> > +	if (device_may_wakeup(dev))
+> > +		return 0;
+> > +
+> > +	writel(1, rtc->ioaddr + LPC_WDT_OFF);
+> > +	writel(0, rtc->ioaddr + LPC_LPA_START_OFF);
+> > +	writel(0, rtc->ioaddr + LPC_WDT_OFF);
+>=20
+> Is there a reason for not disabling the IP clock in suspend / resume =
+functions?
 
-I would rather see only one Kconfig option per SoC family and use
-ARCH_MEDIATEK without any MACH_* options. We can have other options
-for e.g. networking chips from Mediatek that are not closely related
-but I would group all the phone and tablet chips under one option
-here. Same for the other vendors of course.
+There is.  It will stop the alarm timer, which is undesirable.
 
-Any other opinions?
-
-	Arnd
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
