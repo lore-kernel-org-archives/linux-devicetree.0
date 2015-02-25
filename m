@@ -1,41 +1,83 @@
-From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Subject: [PATCH 1/1] ARM: at91sam9263/dt: Fixup sram1 device tree node
-Date: Wed, 25 Feb 2015 09:35:04 +0100
-Message-ID: <1424853304-32197-1-git-send-email-alexanders83@web.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [Patch V6 08/10] ASoC: qcom: Add ability to build QCOM drivers
+Date: Wed, 25 Feb 2015 08:40:50 +0000
+Message-ID: <54ED8A92.2030702@linaro.org>
+References: <1424846385-23700-1-git-send-email-kwestfie@codeaurora.org> <1424846385-23700-9-git-send-email-kwestfie@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424846385-23700-9-git-send-email-kwestfie@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>
+Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit ff04660e48b20 ("ARM: at91/dt: add SRAM nodes") used the same base
-address for sram0 and sram1 leading to the following warning:
-WARNING: CPU: 0 PID: 1 at fs/sysfs/dir.c:31 sysfs_warn_dup+0x50/0x70()
-sysfs: cannot create duplicate filename '/devices/platform/300000.sram'
-Fix the base address for sram1.
 
-Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index cdb7d03..76bb849 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -69,7 +69,7 @@
- 
- 	sram1: sram@00500000 {
- 		compatible = "mmio-sram";
--		reg = <0x00300000 0x4000>;
-+		reg = <0x00500000 0x4000>;
- 	};
- 
- 	ahb {
--- 
-2.3.0
+On 25/02/15 06:39, Kenneth Westfield wrote:
+> From: Kenneth Westfield <kwestfie@codeaurora.org>
+>
+> Define the LPASS platform driver, the LPASS
+> CPU DAI driver and the Storm machine driver
+> configurations, and how to build them.
+>
+> Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
+> Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
+> ---
+>   sound/soc/qcom/Kconfig  | 23 +++++++++++++++++++++++
+>   sound/soc/qcom/Makefile | 11 +++++++++++
+>   2 files changed, 34 insertions(+)
+>   create mode 100644 sound/soc/qcom/Kconfig
+>   create mode 100644 sound/soc/qcom/Makefile
+>
+> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..90e686be613a5ef7689582a9d085835d2fe12678
+> --- /dev/null
+> +++ b/sound/soc/qcom/Kconfig
+> @@ -0,0 +1,23 @@
+> +config SND_SOC_QCOM
+> +	tristate "ASoC support for QCOM platforms"
+> +	help
+> +          Say Y or M if you want to add support to use audio devices
+> +          in Qualcomm Technologies SOC-based platforms.
+> +
+> +config SND_SOC_LPASS_CPU
+> +	tristate
+> +	depends on SND_SOC_QCOM
+> +
+> +config SND_SOC_LPASS_PLATFORM
+> +	tristate
+> +	depends on SND_SOC_QCOM
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think both of the above configs should select REGMAP_MMIO.
+
+> +
+> +config SND_SOC_STORM
+> +	tristate "ASoC I2S support for Storm boards"
+> +	depends on (ARCH_QCOM && SND_SOC_QCOM) || COMPILE_TEST
+> +	select SND_SOC_LPASS_CPU
+> +	select SND_SOC_LPASS_PLATFORM
+> +	select SND_SOC_MAX98357A
+> +	help
+> +          Say Y or M if you want add support for SoC audio on the
+> +          Qualcomm Technologies IPQ806X-based Storm board.
+> diff --git a/sound/soc/qcom/Makefile b/sound/soc/qcom/Makefile
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..c5ce96c761c47b3a1b98e27d863fe0b5b9bc019e
+> --- /dev/null
+> +++ b/sound/soc/qcom/Makefile
+> @@ -0,0 +1,11 @@
+> +# Platform
+> +snd-soc-lpass-cpu-objs := lpass-cpu.o
+> +snd-soc-lpass-platform-objs := lpass-platform.o
+> +
+> +obj-$(CONFIG_SND_SOC_LPASS_CPU) += snd-soc-lpass-cpu.o
+> +obj-$(CONFIG_SND_SOC_LPASS_PLATFORM) += snd-soc-lpass-platform.o
+> +
+> +# Machine
+> +snd-soc-storm-objs := storm.o
+> +
+> +obj-$(CONFIG_SND_SOC_STORM) += snd-soc-storm.o
+>
