@@ -1,42 +1,118 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 3/7] drivers: Introduce new eFuse subsystem stub
-Date: Wed, 25 Feb 2015 13:29:24 +0100
-Message-ID: <54EDC024.2040804@i2se.com>
-References: <1424864719-3390-1-git-send-email-ezequiel.garcia@imgtec.com> <1424864719-3390-4-git-send-email-ezequiel.garcia@imgtec.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH v4 5/8] ARM: dts: Add properties to use pwm-fan device as a
+ cooling device in Odroid U3
+Date: Wed, 25 Feb 2015 14:28:15 +0100
+Message-ID: <20150225142815.562fe22b@amdc2363>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1424254056-5904-1-git-send-email-l.majewski@samsung.com>
+ <1424254056-5904-6-git-send-email-l.majewski@samsung.com>
+ <20150224193711.GA353@developer.amazonguestwifi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424864719-3390-4-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20150224193711.GA353@developer.amazonguestwifi.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Eduardo,
 
-[adding devicetree list]
+> On Wed, Feb 18, 2015 at 11:07:33AM +0100, Lukasz Majewski wrote:
+> > With those bindings it is possible to use pwm-fan device available
+> > in Odroid U3 as a cooling device.
+> > 
+> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > ---
+> > Changes for v2:
+> > - Rename cooling-pwm-values property to cooling-levels
+> > Changes for v3:
+> > - Change patch's topic to "ARM dts"
+> > - Reduce maximal cooling-level to 230 from 255
+> > Changes for v4:
+> > - None
+> > ---
+> >  arch/arm/boot/dts/exynos4412-odroidu3.dts | 33
+> > ++++++++++++++++++++++++++++++- 1 file changed, 32 insertions(+), 1
+> > deletion(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts
+> > b/arch/arm/boot/dts/exynos4412-odroidu3.dts index 60bd1e4..3e5df3e
+> > 100644 --- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
+> > +++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+> > @@ -32,11 +32,42 @@
+> >  		};
+> >  	};
+> >  
+> > -	pwm-fan {
+> > +	fan0: pwm-fan {
+> >  		compatible = "pwm-fan";
+> >  		pwms = <&pwm 0 10000 0>;
+> > +		cooling-min-state = <0>;
+> > +		cooling-max-state = <3>;
+> > +		#cooling-cells = <2>;
+> > +		cooling-levels = <0 102 170 230>;
+> >  		status = "okay";
+> >  	};
+> > +
+> > +	thermal-zones {
+> > +		cpu_thermal: cpu-thermal {
+> 
+> 
+> This thermal zone misses the mandatory properties as per 
+>  Documentation/devicetree/bindings/thermal/thermal.txt
 
-Am 25.02.2015 um 12:45 schrieb Ezequiel Garcia:
-> This commit introduces a new eFuse subsystem stub to hold all the eFuse-like
-> device drivers. This will be used to host the currently supported Tegra
-> eFuse driver, and will allow to add support for other platforms as well.
+Following mandatory properties:
+		thermal-sensors = <&tmu 0>;
+		polling-delay-passive = <0>;
+		polling-delay = <0>;
+		trips {
 
-as i mentioned in the old discussion it would be nice to keep drivers
-and devicetree binding documentation consistent.
+		}
 
-So how about renaming?
+are defined in exynos4-cpu-thermal.dtsi included by this file.
 
-Documentation/devicetree/bindings/fuse/ ->
-Documentation/devicetree/bindings/efuse/
+In this patch only device dependent changes are stated.
 
-Best regards
-Stefan
+> 
+> > +			cooling-maps {
+> > +				map0 {
+> > +				     trip = <&cpu_alert1>;
+> > +				     cooling-device = <&cpu0 7 7>;
+> > +				};
+> > +				map1 {
+> > +				     trip = <&cpu_alert2>;
+> > +				     cooling-device = <&cpu0 13
+> > 13>;
+> > +				};
+> > +				map2 {
+> > +				     trip = <&cpu_alert0>;
+> > +				     cooling-device = <&fan0 0 1>;
+> > +				};
+> > +				map3 {
+> > +				     trip = <&cpu_alert1>;
+> > +				     cooling-device = <&fan0 1 2>;
+> > +				};
+> > +				map4 {
+> > +				     trip = <&cpu_alert2>;
+> > +				     cooling-device = <&fan0 2 3>;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> >  };
+> >  
+> >  &pwm {
+> > -- 
+> > 2.0.0.rc2
+> > 
 
 
 
+-- 
+Best regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lukasz Majewski
+
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
