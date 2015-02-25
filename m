@@ -1,132 +1,108 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 3/4] clk: Provide an always-on clock domain framework
-Date: Wed, 25 Feb 2015 10:26:29 -0800
-Message-ID: <20150225182629.421.37835@quantum>
-References: <1424276101-30137-1-git-send-email-lee.jones@linaro.org>
- <1424276101-30137-4-git-send-email-lee.jones@linaro.org>
- <20150223172344.421.62815@quantum>
- <CAL_Jsq+N4D8fUCwrYwxLaRpbhsgi5eZy5cLpsSmp8VoTQZUqow@mail.gmail.com>
- <20150225154808.GD6688@x1>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v5 0/6] hwmon: thermal: Odroid U3: Provide support for
+ Odroid U3 fan
+Date: Wed, 25 Feb 2015 14:29:18 -0400
+Message-ID: <20150225182917.GB2306@developer.amazonguestwifi.org>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1424878462-15511-1-git-send-email-l.majewski@samsung.com>
+ <20150225171820.GA2400@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150225154808.GD6688@x1>
+Content-Disposition: inline
+In-Reply-To: <20150225171820.GA2400@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robherring2@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, kernel@stlinux.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Lukasz Majewski <l.majewski@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lee Jones (2015-02-25 07:48:08)
-> On Wed, 25 Feb 2015, Rob Herring wrote:
->=20
-> > On Mon, Feb 23, 2015 at 11:23 AM, Mike Turquette <mturquette@linaro=
-=2Eorg> wrote:
-> > > Quoting Lee Jones (2015-02-18 08:15:00)
-> > >> Much h/w contain clocks which if turned off would prove fatal.  =
-The
-> > >> only way to recover is to restart the board(s).  This driver tak=
-es
-> > >> references to clocks which are required to be always-on in order=
- to
-> > >> prevent the common clk framework from trying to turn them off du=
-ring
-> > >> the clk_disabled_unused() procedure.
-> >=20
-> > [...]
-> >=20
-> > >> +static int ao_clock_domain_probe(struct platform_device *pdev)
-> > >> +{
-> > >> +       struct device_node *np =3D pdev->dev.of_node;
-> > >> +       int nclks, i;
-> > >> +
-> > >> +       nclks =3D of_count_phandle_with_args(np, "clocks", "#clo=
-ck-cells");
-> > >
-> > > Minor nitpick: please use of_clk_get_parent_count. I spent a soli=
-d 5
-> > > minutes writing that function and I need people to use it so I ca=
-n get a
-> > > return on my investment.
-> > >
-> > > Otherwise the patch looks good. I believe that this method is tar=
-geting
-> > > always-on clock in a production environment, which is different f=
-rom the
-> > > CLK_IGNORE_UNUSED stuff which typically is helpful while bringing=
- up new
-> > > hardware or dealing with a platform that has incomplete driver su=
-pport.
-> >=20
-> > There is also the usecase of keep clocks on until I load a module t=
-hat
-> > properly handles my hardware (e.g simplefb). We have a simplefb nod=
-e
-> > with clocks and the simplefb driver jumps thru some hoops to hand-o=
-ff
-> > clocks to the real driver. I don't really like it and don't want to
-> > see more examples. And there is the case of I thought I would never
-> > manage this clock, but kernel subsystems evolve and now I want to
-> > manage a clock. This should not require a DT update to do so.
-> >=20
-> > Neither of these may be Lee's usecase, but I want to see them cover=
-ed
-> > by the binding.
-> >=20
-> > > I wonder if there is a clever way for existing clock providers
-> > > (expressed in DT) to use this without having to create a separate=
- node
-> > > of clocks with the "always-on-clk-domain" flag. Possibly the comm=
-on
-> > > clock binding could declare some always-on flag that is standardi=
-zed?
-> > > Then the framework core could use this code easily. Not sure if t=
-hat is
-> > > a good idea though...
-> >=20
-> > I would prefer to see the always on clocks just listed within the
-> > clock controller's node rather than creating made up nodes with clo=
-ck
-> > properties.
->=20
-> > This should be always-on until claimed IMO, but that
-> > aspect is the OS's problem, not a DT problem.
->=20
-> I disagree with this point.  There are likely to be many unclaimed,
-> but perfectly gateable clocks in a system, which will consume power
-> unnecessarily.  The clk framework does the right thing by turning all
-> unclaimed clocks off IMHO.  This only leaves a small use-case where w=
-e
-> need to artificially claim some which must not be gated.
 
-I might have misread both of your mails, but I think you two are
-actually in agreement. You both support a common property which lists
-the always-on clocks inside of the common clock binding, no?
+--dc+cDN39EJAMEtIO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Guenter,
+
+On Wed, Feb 25, 2015 at 09:18:20AM -0800, Guenter Roeck wrote:
+> On Wed, Feb 25, 2015 at 04:34:16PM +0100, Lukasz Majewski wrote:
+> > Presented patches add support for Odroid's U3 optional CPU FAN, which u=
+ses PWM
+> > subsystem for low level control.
+> >=20
+> > After successful probe it registers itself as a cooling device for ther=
+mal
+> > subsystem.
+> >=20
+> > This driver also supports devices without DTS specified.
+> >=20
+> > To provide correct functionality, new properties to device tree descrip=
+tion for
+> > Exynos4412 and in particular Odroid U3 have been added.
+> >=20
+> > Those patches were tested at Exynos4412 - Odroid U3 board.
+> >=20
+> > Patches were applied on:
+> > linux-soc-thermal/fixes branch (Linux v4.0-rc1)
+> > SHA1: b71d399c7f2fe06b60b96155ec0b9ae167334e4a
+> >=20
+> > Kamil Debski (1):
+> >   ARM: dts: Add pwm-fan node to the Odroid-U3 board
+> >=20
+> > Lukasz Majewski (5):
+> >   Documentation: dts: Documentation entry to explain how to use PWM FAN
+> >     as a cooling device
+> >   ARM: dts: Add properties to use pwm-fan device as a cooling device in
+> >     Odroid U3
+> >   hwmon: pwm-fan: Extract __set_pwm() function to only modify PWM duty
+> >     cycle
+> >   hwmon: pwm-fan: Read PWM FAN configuration from device tree
+> >   hwmon: pwm-fan: Code for using PWM FAN as a cooling device
+> >=20
+> >  .../devicetree/bindings/hwmon/pwm-fan.txt          |  25 +++-
+> >  arch/arm/boot/dts/exynos4.dtsi                     |   2 +-
+> >  arch/arm/boot/dts/exynos4412-odroidu3.dts          |  43 ++++++
+> >  drivers/hwmon/pwm-fan.c                            | 166 +++++++++++++=
+++++++--
+> >  4 files changed, 220 insertions(+), 16 deletions(-)
+> >=20
+> For the series:
+>=20
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+>=20
+> Should I take it through hwmon ? Might make sense given the majority
+> of the changes is in hwmon code.
+
+I believe the series should go via your tree, yes. I had only minor
+comments in the code added for the cooling device code, as it lacks the
+unregistration call in the .remove callback.=20
+
+Also, the DTS changes may generate conflicts with platform code. Lukasz
+may probably ask  Kukjin Kim to add them via the samsung tree.
+
+BR,
+
+Eduardo Valentin
 
 >=20
-> The other way to do is, as you mentioned is list the clocks which mus=
-t
-> stay on in the clock source node, but this will still require a
-> binding.  It will also require a much more complicated framework
-> driver.
->=20
->     clkprovider@xxxxxxxx {
->             always-on-clks =3D <1, 2, 4, 5, 7>;
->     };
+> Thanks,
+> Guenter
 
-This should pose no burden on the driver. Since always-on-clks is in th=
-e
-common clock binding it should be handled by the framework core. At
-clk_register-time we can check for always-on-clks, walk the list and se=
-e
-if we have a match. It's ugly O(n^2) but it works.
+--dc+cDN39EJAMEtIO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thoughts?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Mike
+iQEcBAEBAgAGBQJU7hR1AAoJEMLUO4d9pOJWX7YH/0AzszI7w0H1frCpqPJsXquO
+KpIe4Y1HMvlWtagEzrHvF2SZxchatenIWoEksAvWvny/gqD8LkgS9JyRt5b5SBSt
+spm4Ossrt5DE3IyxIVZyShloL/m4XTSF68ufhkIFzveTRQaftoY4P+ar/D4v5OUM
+jyQwJZzP5/CXir9SWhAeVkfcvuUTya/OyG8fXjgvdxKMyOjF4MHR5BvQ4aDfz/gv
+QGNj3angjL9RvLsGkVg5w+QwUcS5c8R0lE28gsfdUKcnqnw4M8KI1O0H1nUiEC3u
+zXe2XMOFr3o7NXmxZgQ6Or1ArCtBvG5uWImMmM8klzslaM/vL8y6Z8vL4TmwAcw=
+=6xG6
+-----END PGP SIGNATURE-----
 
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+--dc+cDN39EJAMEtIO--
