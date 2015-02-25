@@ -1,83 +1,46 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
-Date: Wed, 25 Feb 2015 10:50:56 +0100
-Message-ID: <20150225095056.GB4293@localhost.localdomain>
-References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
- <20150218210830.GA7778@localhost.localdomain>
- <54EAF4D4.4090505@linn.co.uk>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH][v4.0-rc] ARM: dts: dra7x-evm: beagle-x15: Fix USB Host
+Date: Wed, 25 Feb 2015 11:51:19 +0200
+Message-ID: <54ED9B17.4060906@ti.com>
+References: <1424781427-15356-1-git-send-email-rogerq@ti.com> <20150224180303.GG11056@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54EAF4D4.4090505@linn.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, abrestic@chromium.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150224180303.GG11056@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: balbi@ti.com, nsekhar@ti.com, nm@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 23, 2015 at 09:37:24AM +0000, Stathis Voukelatos wrote:
-> Hi Richard,
+On 24/02/15 20:03, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [150224 04:40]:
+>> In commit 87517d26d888 ("ARM: dts: dra7-evm: Add extcon nodes for USB")
+>> we enabled Extcon USB gpio to tackle the USB ID pin and get
+>> peripheral mode to work.
+>>
+>> But the extcon-gpio-usb driver [1] didn't make it into v4.0
+>> and this makes the USB driver defer probe indefinitely breaking
+>> USB Host functionality.
+>>
+>> As a temporary fix we remove the extcon handle from the
+>> USB controller and add it back when the extcon driver
+>> merges in v4.1.
 > 
-> On 18/02/15 21:08, Richard Cochran wrote:
-> >On Tue, Feb 17, 2015 at 02:03:30PM +0000, Stathis Voukelatos wrote:
-> >>The command string for packet matching is stored in module RAM
-> >>and consists of a sequence of 16-bit entries. Each entry includes
-> >>an 8-bit command code and and 8-bit data value. Valid command
-> >>codes are:
-> >>0 - Don't care
-> >>1 - Match: packet data must match command string byte
-> >>2 - Copy: packet data will be copied to FIFO
-> >>3 - Match/Stamp: if packet data matches string byte, a timestamp
-> >>                  is copied into the FIFO
-> >>4 - Copy/Done: packet data will be copied into the FIFO.
-> >>                This command terminates the command string.
-> >
-> >Why do you need to expose this interface to user space at all?  Why
-> >not just time stamp every frame?
+> Uhh OK, If there are dependencies, can you please start splitting
+> your patches so the dts changes that cause issues are sent only
+> after the related driver changes are in Linux next?
+
+Sure. Will be more careful next time.
+
 > 
-> To put this into context with an example, the use case this H/W
-> module was originally developed for was to allow multiple audio
-> receivers to synchronize with a single transmitter, eg. multi-room
-> synchronised audio.
+> Anyways, applying into omap-for-v4.0/fixes.
 
-The Linux kernel already fully supports this kind of application via
-the SIOCSHWTSTAMP, SO_TIMESTAMPING, and PHC mechanisms.  We certainly
-don't need another another interface just for someone's warped
-hardware design.
+Thanks.
 
-I suggest that you find a way to make your HW work within the existing
-frame work.
+cheers,
+-roger
 
-> The interface needs to be public so that a user-space application
-> can program a command string that will match packets that belong to
-> the audio stream of interest, for this example.
+>  
+>> [1] - https://lkml.org/lkml/2015/2/2/187
 
-Let the user program simply use a BPF for that.
-
-> In addition returning just a timestamp would not be enough in many
-> cases. In the audio streaming use case mentioned above some
-> additional
-> bytes from the packet payload need to be returned (with Copy
-> commands) in order to associate the timestamp with a certain point
-> in the audio stream.
-
-The time stamp is *already* associated with a particular frame.
-
-Just tell your driver to program the hardware to:
-
-1. time stamp every frame
-2. deliver every frame
-
-Thats all you need.
-
-> >How does the "Match" command work?  The frame must have one particular
-> >byte?  That can't be right.  Please explain.
-> 
-> Actually, that is how the H/W works. Each Match command is followed by
-> a data value which must match the packet data byte at the corresponding
-> location. If there is no match processing of the packet stops.
-
-And just what is the "corresponding location"?
-
-Thanks,
-Richard
