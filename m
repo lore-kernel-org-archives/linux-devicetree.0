@@ -1,46 +1,183 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v2 0/3] net: Linn Ethernet Packet Sniffer driver
-Date: Wed, 25 Feb 2015 15:21:30 +0100
-Message-ID: <20150225142130.GA7703@localhost.localdomain>
-References: <cover.1424181053.git.stathis.voukelatos@linn.co.uk>
- <20150218210830.GA7778@localhost.localdomain>
- <54EAF4D4.4090505@linn.co.uk>
- <20150225095056.GB4293@localhost.localdomain>
- <54EDA997.1080005@linn.co.uk>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] ARM64: Add new Xilinx ZynqMP SoC
+Date: Wed, 25 Feb 2015 15:21:33 +0100
+Message-ID: <BY2FFO11FD04863C0B4C8C0A6C8EBA183E2170@BY2FFO11FD048.protection.gbl>
+References: <8ac3037c175711dec0adcd0d898be7d9722e0ed0.1424764548.git.michal.simek@xilinx.com>
+ <20150224183831.GZ9714@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54EDA997.1080005@linn.co.uk>
+In-Reply-To: <20150224183831.GZ9714@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, abrestic@chromium.org
+To: Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?windows-1252?Q?S=F6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Zach Pfeffer <zachp@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 25, 2015 at 10:53:11AM +0000, Stathis Voukelatos wrote:
-> On 25/02/15 09:50, Richard Cochran wrote:
-> >
-> >The Linux kernel already fully supports this kind of application via
-> >the SIOCSHWTSTAMP, SO_TIMESTAMPING, and PHC mechanisms.  We certainly
-> >don't need another another interface just for someone's warped
-> >hardware design.
-> >
-> >I suggest that you find a way to make your HW work within the existing
-> >frame work.
+Hi Mark,
+
+On 02/24/2015 07:38 PM, Mark Rutland wrote:
+> Hi Michal,
 > 
-> The driver already uses that framework for returning timestamps to
-> user space. It does not introduce any new interface.
+> I have a few minor comments below, but generally this is looking like
+> one of the best dts submissions I've seen!
 
-No, it only abuses the interfaces that we already have.  The time
-stamp handling is not "within the existing frame work" by any means.
-However, there is a way to integrate this hardware properly...
+thanks appreciate it.
 
-> The H/W could not support that:
+> 
+> [...]
+> 
+>> +/ {
+>> +       model = "ZynqMP EP108";
+>> +
+>> +       aliases {
+>> +               serial0 = &uart0;
+>> +       };
+>> +
+>> +       chosen {
+>> +               stdout-path = "serial0:115200n8";
+>> +       };
+> 
+> Thanks for using stdout-path with the full parameters.
+> 
+> Does your UART have earlycon support?
 
-With these new explanations, now I understand the code and how this is
-supposed to work.
+yes earlycon support is already in the kernel.
 
-I'll put further comments in a reply to your newer series.
+btw: I found that only stdout-path has different behavior
+compare to console=ttyPS0,115200 passed via bootargs.
+But I have to look at details to be accurate.
+
+
+>> +/ {
+>> +       compatible = "xlnx,zynqmp";
+>> +       #address-cells = <2>;
+>> +       #size-cells = <1>;
+> 
+> I guess this is fine, though to me it feels more natural to use
+> #size-cells = <2> in case we need to describe larger ranges for some bus
+> later.
+
+I can fix it when it is needed.
+
+> 
+>> +       cpus {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +
+>> +               cpu@0 {
+>> +                       compatible = "arm,cortex-a53", "arm,armv8";
+>> +                       device_type = "cpu";
+>> +                       enable-method = "psci";
+>> +                       reg = <0x0>;
+>> +               };
+>> +
+>> +               cpu@1 {
+>> +                       compatible = "arm,cortex-a53", "arm,armv8";
+>> +                       device_type = "cpu";
+>> +                       enable-method = "psci";
+>> +                       reg = <0x1>;
+>> +               };
+>> +
+>> +               cpu@2 {
+>> +                       compatible = "arm,cortex-a53", "arm,armv8";
+>> +                       device_type = "cpu";
+>> +                       enable-method = "psci";
+>> +                       reg = <0x2>;
+>> +               };
+>> +
+>> +               cpu@3 {
+>> +                       compatible = "arm,cortex-a53", "arm,armv8";
+>> +                       device_type = "cpu";
+>> +                       enable-method = "psci";
+>> +                       reg = <0x3>;
+>> +               };
+>> +       };
+> 
+> These look fine.
+
+good
+
+
+>> +
+>> +       psci {
+>> +               compatible = "arm,psci-0.2";
+>> +               method = "smc";
+>> +       };
+> 
+> Neat!
+> 
+> What are you using as your implementation? Are all the mandatory
+> PSCIv0.2 features implemented (e.g. MIGRATE_INFO_TYPE)?
+
+ATF.
+
+> 
+> I take it this boots at EL2 on all CPUs?
+
+yep.
+
+> 
+> Does CPU0 hotplug work?
+
+cpu shutdown is working fine with the current firmware.
+I didn't try anything else.
+
+> 
+> Do you need to keep a CPU online or do you require MIGRATE? e.g. does
+> MIGRATE_INFO_TYPE return something other than 2 ("MP or not present")?
+
+We are not require migrate and we don't need to keep CPU online now.
+Migrate should return -1.
+
+> 
+> [...]
+> 
+>> +       amba_apu {
+>> +               compatible = "simple-bus";
+>> +               #address-cells = <2>;
+>> +               #size-cells = <1>;
+>> +               ranges;
+>> +
+>> +               timer {
+>> +                       compatible = "arm,armv8-timer";
+>> +                       interrupt-parent = <&gic>;
+>> +                       interrupts = <1 13 0xff01>,
+>> +                                    <1 14 0xff01>,
+>> +                                    <1 11 0xff01>,
+>> +                                    <1 10 0xff01>;
+>> +               };
+> 
+> The architected timer should just be under the root node, given it's a
+> component of the CPU -- it doesn't live on any bus.
+
+Fair enough - will add it there.
+
+> 
+> I take it CNTFRQ is configured appropriately on all CPUs?
+
+I believe so. :-)
+
+
+> [...]
+> 
+>> +               i2c_clk: i2c_clk {
+>> +                       compatible = "fixed-clock";
+>> +                       #clock-cells = <0x0>;
+>> +                       clock-frequency = <111111111>;
+>> +               };
+> 
+> That clock-frequency looks a little odd. Is that right?
+
+why is it odd? Is value too high?
+It is exactly what we need to get to get i2c working.
+
+> 
+> I haven't taken an in-depth look at the other nodes. They look sane at a
+> high-level, and assuming they are all already documented and supported
+> they look fine to me.
+
+I was checking that and hopefully I didn't miss anything.
 
 Thanks,
-Richard
+Michal
