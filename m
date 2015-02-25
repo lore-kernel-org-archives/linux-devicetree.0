@@ -1,74 +1,31 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 0/9] mfd: watchdog: rtc: New driver for ST's LPC IP
-Date: Wed, 25 Feb 2015 13:52:20 +0000
-Message-ID: <1424872349-4155-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, david.paris-qxv4g6HH51o@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v4 2/9] ARM: multi_v7_defconfig: Enable support for ST's LPC Watchdog
+Date: Wed, 25 Feb 2015 13:52:22 +0000
+Message-ID: <1424872349-4155-3-git-send-email-lee.jones@linaro.org>
+References: <1424872349-4155-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424872349-4155-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com, a.zummo@towertech.it
+Cc: lee.jones@linaro.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-ST's Low Power Controller (LPC) controls two devices; watchdog and RTC.
-Only one of the devices can be used at any one time, which is enforced
-by the correlating MFD driver.
-  
-This driver set provides everything you need to choose one (and only
-one) of the LPC devices to run per I/P block, of which there are two
-on the enabled STiH407 h/w.
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Version 4:
- - Use {readl,writel}_relaxed() calls
- - Add Guenter's Reviewed-by
- - Rebased onto v4.0-rc1
-  
-Version 3:
- - Move Regmap pointer into core device data structure
- - Remove error message from devm_ioremap_resource
-  
-Version 2:
- - Only calculate keepalive once in probe()
- - Check for a 0 clk_rate
- - Set limits using predefined attributes from watchdog_device
- - CONFIG_PM => CONFIG_SLEEP
- - Call st_wdog_setup() on resume
- - Remove MFD driver -- instead rely on driver probing mechanism
-   which continues attempting to bind to different drivers until
-   one does not return -ENODEV
-
-Lee Jones (9):
-  mfd: dt-bindings: Provide human readable defines for LPC mode choosing
-  ARM: multi_v7_defconfig: Enable support for ST's LPC Watchdog
-  ARM: multi_v7_defconfig: Enable support for ST's LPC RTC
-  ARM: STi: DT: STiH407: Add Device Tree node for the LPC
-  watchdog: bindings: Provide ST bindings for ST's LPC Watchdog device
-  watchdog: st_wdt: Add new driver for ST's LPC Watchdog
-  rtc: bindings: Provide ST bindings for ST's LPC RTC device
-  rtc: st: add new driver for ST's LPC RTC
-  MAINTAINERS: Add Watchdog and RTC files to STI's maintainer entry
-
- .../devicetree/bindings/rtc/rtc-st-lpc.txt         |  25 ++
- .../devicetree/bindings/watchdog/st_lpc_wdt.txt    |  38 +++
- MAINTAINERS                                        |   2 +
- arch/arm/boot/dts/stih407-family.dtsi              |  20 ++
- arch/arm/configs/multi_v7_defconfig                |   2 +
- drivers/rtc/Kconfig                                |  12 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-st-lpc.c                           | 354 +++++++++++++++++++++
- drivers/watchdog/Kconfig                           |  13 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/st_lpc_wdt.c                      | 333 +++++++++++++++++++
- include/dt-bindings/mfd/st-lpc.h                   |  15 +
- 12 files changed, 816 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-st-lpc.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
- create mode 100644 drivers/rtc/rtc-st-lpc.c
- create mode 100644 drivers/watchdog/st_lpc_wdt.c
- create mode 100644 include/dt-bindings/mfd/st-lpc.h
-
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index e8a4c95..0f172f8 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -288,6 +288,7 @@ CONFIG_WATCHDOG=y
+ CONFIG_XILINX_WATCHDOG=y
+ CONFIG_ARM_SP805_WATCHDOG=y
+ CONFIG_ORION_WATCHDOG=y
++CONFIG_ST_LPC_WATCHDOG=y
+ CONFIG_SUNXI_WATCHDOG=y
+ CONFIG_MESON_WATCHDOG=y
+ CONFIG_MFD_AS3722=y
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
