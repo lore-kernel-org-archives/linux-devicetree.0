@@ -1,178 +1,442 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/6] phy: miphy365x: Use the generic phy type constants
- in dt-bindings/phy/phy.h
-Date: Wed, 25 Feb 2015 15:15:02 +0000
-Message-ID: <20150225151502.GH5132@x1>
-References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org>
- <1424871377-1795-2-git-send-email-peter.griffin@linaro.org>
+Subject: Re: [PATCH v2] mfd: arizona: Move useful defines into a dt-binding
+ include
+Date: Wed, 25 Feb 2015 15:17:58 +0000
+Message-ID: <20150225151758.GI5132@x1>
+References: <1424873385-29315-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1424871377-1795-2-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <1424873385-29315-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, kishon@ti.com, balbi@ti.com, devicetree@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: lee@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Feb 2015, Peter Griffin wrote:
+On Wed, 25 Feb 2015, Charles Keepax wrote:
 
-> Now there are generic phy type constants declared in phy.h, migrate o=
-ver to
-> using them rather than defining our own. This change has been done as=
- one
-> atomic commit to be bisectable.
+> Move parts of linux/mfd/arizona/pdata.h and gpio.h into a new file in
+> the dt-binding directory for use by device tree bindings. This also
+> makes gpio.h redundant so remove it in the process.
 >=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
 > ---
->  Documentation/devicetree/bindings/phy/phy-miphy365x.txt |  8 ++++---=
--
->  arch/arm/boot/dts/stih416.dtsi                          |  4 ++--
->  drivers/phy/phy-miphy365x.c                             | 14 +++++++=
--------
->  include/dt-bindings/phy/phy-miphy365x.h                 | 14 -------=
--------
->  4 files changed, 13 insertions(+), 27 deletions(-)
->  delete mode 100644 include/dt-bindings/phy/phy-miphy365x.h
+>=20
+> Changes since v1:
+>  - Removed some defines that will never be used in DT from the
+>    dt-binding include
+>  - Added some convience defines for the most common pin configs
+>    (input/output/default)
+>  - Updated the binding documentation to use the new defines to
+>    give some context to their usage
+>=20
+> Thanks,
+> Charles
+>=20
+>  Documentation/devicetree/bindings/mfd/arizona.txt |   20 ++--
+>  include/dt-bindings/mfd/arizona.h                 |   93 +++++++++++=
++++++++++
+>  include/linux/mfd/arizona/gpio.h                  |   96 -----------=
+----------
 
-Nice.
+The patch looks good, but can you use `git format-patch -M`, so we can
+easily see what the differences are between these two files please?
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
-> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt =
-b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> index 9802d5d..8772900 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> @@ -20,8 +20,8 @@ Required nodes	:  A sub-node is required for each c=
-hannel the controller
->  Required properties (port (child) node):
->  - #phy-cells 	: Should be 1 (See second example)
->  		  Cell after port phandle is device type from:
-> -			- MIPHY_TYPE_SATA
-> -			- MIPHY_TYPE_PCI
-> +			- PHY_TYPE_SATA
-> +			- PHY_TYPE_PCI
->  - reg        	: Address and length of register sets for each device =
-in
->  		  "reg-names"
->  - reg-names     : The names of the register addresses corresponding =
-to the
-> @@ -68,10 +68,10 @@ property, containing a phandle to the phy port no=
-de and a device type.
+>  include/linux/mfd/arizona/pdata.h                 |   22 +-----
+>  sound/soc/codecs/arizona.c                        |    1 -
+>  5 files changed, 105 insertions(+), 127 deletions(-)
+>  create mode 100644 include/dt-bindings/mfd/arizona.h
+>  delete mode 100644 include/linux/mfd/arizona/gpio.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Docu=
+mentation/devicetree/bindings/mfd/arizona.txt
+> index 7bd1273..bfef000 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -36,11 +36,11 @@ Optional properties:
+>    - wlf,reset : GPIO specifier for the GPIO controlling /RESET
+>    - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
 > =20
->  Example:
+> -  - wlf,gpio-defaults : A list of GPIO configuration register values=
+=2E If
+> -    absent, no configuration of these registers is performed. If any
+> -    entry has a value that is out of range for a 16 bit register the=
+n
+> -    the chip default will be used.  If present exactly five values m=
+ust
+> -    be specified.
+> +  - wlf,gpio-defaults : A list of GPIO configuration register values=
+=2E Defines
+> +    for the appropriate values can found in <dt-bindings/mfd/arizona=
+=2Etxt>. If
+> +    absent, no configuration of these registers is performed. If any=
+ entry has
+> +    a value that is out of range for a 16 bit register then the chip=
+ default
+> +    will be used. If present exactly five values must be specified.
 > =20
-> -#include <dt-bindings/phy/phy-miphy365x.h>
-> +#include <dt-bindings/phy/phy.h>
+>    - wlf,inmode : A list of INn_MODE register values, where n is the =
+number
+>      of input signals. Valid values are 0 (Differential), 1 (Single-e=
+nded) and
+> @@ -73,10 +73,10 @@ codec: wm5102@1a {
+>  	#gpio-cells =3D <2>;
 > =20
->  	sata0: sata@fe380000 {
->  		...
-> -		phys	  =3D <&phy_port0 MIPHY_TYPE_SATA>;
-> +		phys	  =3D <&phy_port0 PHY_TYPE_SATA>;
->  		...
->  	};
-> diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih4=
-16.dtsi
-> index ea28eba..eeb7afe 100644
-> --- a/arch/arm/boot/dts/stih416.dtsi
-> +++ b/arch/arm/boot/dts/stih416.dtsi
-> @@ -10,7 +10,7 @@
->  #include "stih416-clock.dtsi"
->  #include "stih416-pinctrl.dtsi"
-> =20
-> -#include <dt-bindings/phy/phy-miphy365x.h>
-> +#include <dt-bindings/phy/phy.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/reset-controller/stih416-resets.h>
->  / {
-> @@ -306,7 +306,7 @@
->  			reg             =3D <0xfe380000 0x1000>;
->  			interrupts      =3D <GIC_SPI 157 IRQ_TYPE_NONE>;
->  			interrupt-names =3D "hostc";
-> -			phys	        =3D <&phy_port0 MIPHY_TYPE_SATA>;
-> +			phys	        =3D <&phy_port0 PHY_TYPE_SATA>;
->  			phy-names       =3D "sata-phy";
->  			resets	        =3D <&powerdown STIH416_SATA0_POWERDOWN>,
->  					  <&softreset STIH416_SATA0_SOFTRESET>;
-> diff --git a/drivers/phy/phy-miphy365x.c b/drivers/phy/phy-miphy365x.=
-c
-> index 6c80154..98bffbc 100644
-> --- a/drivers/phy/phy-miphy365x.c
-> +++ b/drivers/phy/phy-miphy365x.c
-> @@ -25,7 +25,7 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/regmap.h>
-> =20
-> -#include <dt-bindings/phy/phy-miphy365x.h>
-> +#include <dt-bindings/phy/phy.h>
-> =20
->  #define HFC_TIMEOUT		100
-> =20
-> @@ -176,7 +176,7 @@ static u8 rx_tx_spd[] =3D {
->  static int miphy365x_set_path(struct miphy365x_phy *miphy_phy,
->  			      struct miphy365x_dev *miphy_dev)
->  {
-> -	bool sata =3D (miphy_phy->type =3D=3D MIPHY_TYPE_SATA);
-> +	bool sata =3D (miphy_phy->type =3D=3D PHY_TYPE_SATA);
-> =20
->  	return regmap_update_bits(miphy_dev->regmap,
->  				  miphy_phy->ctrlreg,
-> @@ -430,7 +430,7 @@ static int miphy365x_init(struct phy *phy)
->  	}
-> =20
->  	/* Initialise Miphy for PCIe or SATA */
-> -	if (miphy_phy->type =3D=3D MIPHY_TYPE_PCIE)
-> +	if (miphy_phy->type =3D=3D PHY_TYPE_PCIE)
->  		ret =3D miphy365x_init_pcie_port(miphy_phy, miphy_dev);
->  	else
->  		ret =3D miphy365x_init_sata_port(miphy_phy, miphy_dev);
-> @@ -454,8 +454,8 @@ int miphy365x_get_addr(struct device *dev, struct=
- miphy365x_phy *miphy_phy,
->  		return ret;
->  	}
-> =20
-> -	if (!((!strncmp(name, "sata", 4) && type =3D=3D MIPHY_TYPE_SATA) ||
-> -	      (!strncmp(name, "pcie", 4) && type =3D=3D MIPHY_TYPE_PCIE)))
-> +	if (!((!strncmp(name, "sata", 4) && type =3D=3D PHY_TYPE_SATA) ||
-> +	      (!strncmp(name, "pcie", 4) && type =3D=3D PHY_TYPE_PCIE)))
->  		return 0;
-> =20
->  	miphy_phy->base =3D of_iomap(phynode, index);
-> @@ -498,8 +498,8 @@ static struct phy *miphy365x_xlate(struct device =
-*dev,
-> =20
->  	miphy_phy->type =3D args->args[0];
-> =20
-> -	if (!(miphy_phy->type =3D=3D MIPHY_TYPE_SATA ||
-> -	      miphy_phy->type =3D=3D MIPHY_TYPE_PCIE)) {
-> +	if (!(miphy_phy->type =3D=3D PHY_TYPE_SATA ||
-> +	      miphy_phy->type =3D=3D PHY_TYPE_PCIE)) {
->  		dev_err(dev, "Unsupported device type: %d\n", miphy_phy->type);
->  		return ERR_PTR(-EINVAL);
->  	}
-> diff --git a/include/dt-bindings/phy/phy-miphy365x.h b/include/dt-bin=
-dings/phy/phy-miphy365x.h
+>  	wlf,gpio-defaults =3D <
+> -		0x00000000 /* AIF1TXLRCLK */
+> -		0xffffffff
+> -		0xffffffff
+> -		0xffffffff
+> -		0xffffffff
+> +		ARIZONA_GP_FN_TXLRCLK
+> +		ARIZONA_GP_DEFAULT
+> +		ARIZONA_GP_DEFAULT
+> +		ARIZONA_GP_DEFAULT
+> +		ARIZONA_GP_DEFAULT
+>  	>;
+>  };
+> diff --git a/include/dt-bindings/mfd/arizona.h b/include/dt-bindings/=
+mfd/arizona.h
+> new file mode 100644
+> index 0000000..c7af7c7
+> --- /dev/null
+> +++ b/include/dt-bindings/mfd/arizona.h
+> @@ -0,0 +1,93 @@
+> +/*
+> + * Device Tree defines for Arizona devices
+> + *
+> + * Copyright 2015 Cirrus Logic Inc.
+> + *
+> + * Author: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_MFD_ARIZONA_H
+> +#define _DT_BINDINGS_MFD_ARIZONA_H
+> +
+> +/* GPIO Function Definitions */
+> +#define ARIZONA_GP_FN_TXLRCLK                    0x00
+> +#define ARIZONA_GP_FN_GPIO                       0x01
+> +#define ARIZONA_GP_FN_IRQ1                       0x02
+> +#define ARIZONA_GP_FN_IRQ2                       0x03
+> +#define ARIZONA_GP_FN_OPCLK                      0x04
+> +#define ARIZONA_GP_FN_FLL1_OUT                   0x05
+> +#define ARIZONA_GP_FN_FLL2_OUT                   0x06
+> +#define ARIZONA_GP_FN_PWM1                       0x08
+> +#define ARIZONA_GP_FN_PWM2                       0x09
+> +#define ARIZONA_GP_FN_SYSCLK_UNDERCLOCKED        0x0A
+> +#define ARIZONA_GP_FN_ASYNCCLK_UNDERCLOCKED      0x0B
+> +#define ARIZONA_GP_FN_FLL1_LOCK                  0x0C
+> +#define ARIZONA_GP_FN_FLL2_LOCK                  0x0D
+> +#define ARIZONA_GP_FN_FLL1_CLOCK_OK              0x0F
+> +#define ARIZONA_GP_FN_FLL2_CLOCK_OK              0x10
+> +#define ARIZONA_GP_FN_HEADPHONE_DET              0x12
+> +#define ARIZONA_GP_FN_MIC_DET                    0x13
+> +#define ARIZONA_GP_FN_WSEQ_STATUS                0x15
+> +#define ARIZONA_GP_FN_CIF_ADDRESS_ERROR          0x16
+> +#define ARIZONA_GP_FN_ASRC1_LOCK                 0x1A
+> +#define ARIZONA_GP_FN_ASRC2_LOCK                 0x1B
+> +#define ARIZONA_GP_FN_ASRC_CONFIG_ERROR          0x1C
+> +#define ARIZONA_GP_FN_DRC1_SIGNAL_DETECT         0x1D
+> +#define ARIZONA_GP_FN_DRC1_ANTICLIP              0x1E
+> +#define ARIZONA_GP_FN_DRC1_DECAY                 0x1F
+> +#define ARIZONA_GP_FN_DRC1_NOISE                 0x20
+> +#define ARIZONA_GP_FN_DRC1_QUICK_RELEASE         0x21
+> +#define ARIZONA_GP_FN_DRC2_SIGNAL_DETECT         0x22
+> +#define ARIZONA_GP_FN_DRC2_ANTICLIP              0x23
+> +#define ARIZONA_GP_FN_DRC2_DECAY                 0x24
+> +#define ARIZONA_GP_FN_DRC2_NOISE                 0x25
+> +#define ARIZONA_GP_FN_DRC2_QUICK_RELEASE         0x26
+> +#define ARIZONA_GP_FN_MIXER_DROPPED_SAMPLE       0x27
+> +#define ARIZONA_GP_FN_AIF1_CONFIG_ERROR          0x28
+> +#define ARIZONA_GP_FN_AIF2_CONFIG_ERROR          0x29
+> +#define ARIZONA_GP_FN_AIF3_CONFIG_ERROR          0x2A
+> +#define ARIZONA_GP_FN_SPK_TEMP_SHUTDOWN          0x2B
+> +#define ARIZONA_GP_FN_SPK_TEMP_WARNING           0x2C
+> +#define ARIZONA_GP_FN_UNDERCLOCKED               0x2D
+> +#define ARIZONA_GP_FN_OVERCLOCKED                0x2E
+> +#define ARIZONA_GP_FN_DSP_IRQ1                   0x35
+> +#define ARIZONA_GP_FN_DSP_IRQ2                   0x36
+> +#define ARIZONA_GP_FN_ASYNC_OPCLK                0x3D
+> +#define ARIZONA_GP_FN_BOOT_DONE                  0x44
+> +#define ARIZONA_GP_FN_DSP1_RAM_READY             0x45
+> +#define ARIZONA_GP_FN_SYSCLK_ENA_STATUS          0x4B
+> +#define ARIZONA_GP_FN_ASYNCCLK_ENA_STATUS        0x4C
+> +
+> +/* GPIO Configuration Bits */
+> +#define ARIZONA_GPN_DIR                          0x8000
+> +#define ARIZONA_GPN_PU                           0x4000
+> +#define ARIZONA_GPN_PD                           0x2000
+> +#define ARIZONA_GPN_LVL                          0x0800
+> +#define ARIZONA_GPN_POL                          0x0400
+> +#define ARIZONA_GPN_OP_CFG                       0x0200
+> +#define ARIZONA_GPN_DB                           0x0100
+> +
+> +/* Provide some defines for the most common configs */
+> +#define ARIZONA_GP_DEFAULT             0xffffffff
+> +#define ARIZONA_GP_OUTPUT              (ARIZONA_GP_FN_GPIO)
+> +#define ARIZONA_GP_INPUT               (ARIZONA_GP_FN_GPIO | \
+> +					ARIZONA_GPN_DIR)
+> +
+> +#define ARIZONA_32KZ_MCLK1 1
+> +#define ARIZONA_32KZ_MCLK2 2
+> +#define ARIZONA_32KZ_NONE  3
+> +
+> +#define ARIZONA_DMIC_MICVDD   0
+> +#define ARIZONA_DMIC_MICBIAS1 1
+> +#define ARIZONA_DMIC_MICBIAS2 2
+> +#define ARIZONA_DMIC_MICBIAS3 3
+> +
+> +#define ARIZONA_INMODE_DIFF 0
+> +#define ARIZONA_INMODE_SE   1
+> +#define ARIZONA_INMODE_DMIC 2
+> +
+> +#endif
+> diff --git a/include/linux/mfd/arizona/gpio.h b/include/linux/mfd/ari=
+zona/gpio.h
 > deleted file mode 100644
-> index 8ef8aba..0000000
-> --- a/include/dt-bindings/phy/phy-miphy365x.h
+> index d2146bb..0000000
+> --- a/include/linux/mfd/arizona/gpio.h
 > +++ /dev/null
-> @@ -1,14 +0,0 @@
+> @@ -1,96 +0,0 @@
 > -/*
-> - * This header provides constants for the phy framework
-> - * based on the STMicroelectronics MiPHY365x.
+> - * GPIO configuration for Arizona devices
 > - *
-> - * Author: Lee Jones <lee.jones@linaro.org>
+> - * Copyright 2013 Wolfson Microelectronics. PLC.
+> - *
+> - * Author: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> - *
+> - * This program is free software; you can redistribute it and/or mod=
+ify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
 > - */
-> -#ifndef _DT_BINDINGS_PHY_MIPHY
-> -#define _DT_BINDINGS_PHY_MIPHY
 > -
-> -#define MIPHY_TYPE_SATA		1
-> -#define MIPHY_TYPE_PCIE		2
-> -#define MIPHY_TYPE_USB		3
+> -#ifndef _ARIZONA_GPIO_H
+> -#define _ARIZONA_GPIO_H
 > -
-> -#endif /* _DT_BINDINGS_PHY_MIPHY */
+> -#define ARIZONA_GP_FN_TXLRCLK                    0x00
+> -#define ARIZONA_GP_FN_GPIO                       0x01
+> -#define ARIZONA_GP_FN_IRQ1                       0x02
+> -#define ARIZONA_GP_FN_IRQ2                       0x03
+> -#define ARIZONA_GP_FN_OPCLK                      0x04
+> -#define ARIZONA_GP_FN_FLL1_OUT                   0x05
+> -#define ARIZONA_GP_FN_FLL2_OUT                   0x06
+> -#define ARIZONA_GP_FN_PWM1                       0x08
+> -#define ARIZONA_GP_FN_PWM2                       0x09
+> -#define ARIZONA_GP_FN_SYSCLK_UNDERCLOCKED        0x0A
+> -#define ARIZONA_GP_FN_ASYNCCLK_UNDERCLOCKED      0x0B
+> -#define ARIZONA_GP_FN_FLL1_LOCK                  0x0C
+> -#define ARIZONA_GP_FN_FLL2_LOCK                  0x0D
+> -#define ARIZONA_GP_FN_FLL1_CLOCK_OK              0x0F
+> -#define ARIZONA_GP_FN_FLL2_CLOCK_OK              0x10
+> -#define ARIZONA_GP_FN_HEADPHONE_DET              0x12
+> -#define ARIZONA_GP_FN_MIC_DET                    0x13
+> -#define ARIZONA_GP_FN_WSEQ_STATUS                0x15
+> -#define ARIZONA_GP_FN_CIF_ADDRESS_ERROR          0x16
+> -#define ARIZONA_GP_FN_ASRC1_LOCK                 0x1A
+> -#define ARIZONA_GP_FN_ASRC2_LOCK                 0x1B
+> -#define ARIZONA_GP_FN_ASRC_CONFIG_ERROR          0x1C
+> -#define ARIZONA_GP_FN_DRC1_SIGNAL_DETECT         0x1D
+> -#define ARIZONA_GP_FN_DRC1_ANTICLIP              0x1E
+> -#define ARIZONA_GP_FN_DRC1_DECAY                 0x1F
+> -#define ARIZONA_GP_FN_DRC1_NOISE                 0x20
+> -#define ARIZONA_GP_FN_DRC1_QUICK_RELEASE         0x21
+> -#define ARIZONA_GP_FN_DRC2_SIGNAL_DETECT         0x22
+> -#define ARIZONA_GP_FN_DRC2_ANTICLIP              0x23
+> -#define ARIZONA_GP_FN_DRC2_DECAY                 0x24
+> -#define ARIZONA_GP_FN_DRC2_NOISE                 0x25
+> -#define ARIZONA_GP_FN_DRC2_QUICK_RELEASE         0x26
+> -#define ARIZONA_GP_FN_MIXER_DROPPED_SAMPLE       0x27
+> -#define ARIZONA_GP_FN_AIF1_CONFIG_ERROR          0x28
+> -#define ARIZONA_GP_FN_AIF2_CONFIG_ERROR          0x29
+> -#define ARIZONA_GP_FN_AIF3_CONFIG_ERROR          0x2A
+> -#define ARIZONA_GP_FN_SPK_TEMP_SHUTDOWN          0x2B
+> -#define ARIZONA_GP_FN_SPK_TEMP_WARNING           0x2C
+> -#define ARIZONA_GP_FN_UNDERCLOCKED               0x2D
+> -#define ARIZONA_GP_FN_OVERCLOCKED                0x2E
+> -#define ARIZONA_GP_FN_DSP_IRQ1                   0x35
+> -#define ARIZONA_GP_FN_DSP_IRQ2                   0x36
+> -#define ARIZONA_GP_FN_ASYNC_OPCLK                0x3D
+> -#define ARIZONA_GP_FN_BOOT_DONE                  0x44
+> -#define ARIZONA_GP_FN_DSP1_RAM_READY             0x45
+> -#define ARIZONA_GP_FN_SYSCLK_ENA_STATUS          0x4B
+> -#define ARIZONA_GP_FN_ASYNCCLK_ENA_STATUS        0x4C
+> -
+> -#define ARIZONA_GPN_DIR                          0x8000  /* GPN_DIR =
+*/
+> -#define ARIZONA_GPN_DIR_MASK                     0x8000  /* GPN_DIR =
+*/
+> -#define ARIZONA_GPN_DIR_SHIFT                        15  /* GPN_DIR =
+*/
+> -#define ARIZONA_GPN_DIR_WIDTH                         1  /* GPN_DIR =
+*/
+> -#define ARIZONA_GPN_PU                           0x4000  /* GPN_PU *=
+/
+> -#define ARIZONA_GPN_PU_MASK                      0x4000  /* GPN_PU *=
+/
+> -#define ARIZONA_GPN_PU_SHIFT                         14  /* GPN_PU *=
+/
+> -#define ARIZONA_GPN_PU_WIDTH                          1  /* GPN_PU *=
+/
+> -#define ARIZONA_GPN_PD                           0x2000  /* GPN_PD *=
+/
+> -#define ARIZONA_GPN_PD_MASK                      0x2000  /* GPN_PD *=
+/
+> -#define ARIZONA_GPN_PD_SHIFT                         13  /* GPN_PD *=
+/
+> -#define ARIZONA_GPN_PD_WIDTH                          1  /* GPN_PD *=
+/
+> -#define ARIZONA_GPN_LVL                          0x0800  /* GPN_LVL =
+*/
+> -#define ARIZONA_GPN_LVL_MASK                     0x0800  /* GPN_LVL =
+*/
+> -#define ARIZONA_GPN_LVL_SHIFT                        11  /* GPN_LVL =
+*/
+> -#define ARIZONA_GPN_LVL_WIDTH                         1  /* GPN_LVL =
+*/
+> -#define ARIZONA_GPN_POL                          0x0400  /* GPN_POL =
+*/
+> -#define ARIZONA_GPN_POL_MASK                     0x0400  /* GPN_POL =
+*/
+> -#define ARIZONA_GPN_POL_SHIFT                        10  /* GPN_POL =
+*/
+> -#define ARIZONA_GPN_POL_WIDTH                         1  /* GPN_POL =
+*/
+> -#define ARIZONA_GPN_OP_CFG                       0x0200  /* GPN_OP_C=
+=46G */
+> -#define ARIZONA_GPN_OP_CFG_MASK                  0x0200  /* GPN_OP_C=
+=46G */
+> -#define ARIZONA_GPN_OP_CFG_SHIFT                      9  /* GPN_OP_C=
+=46G */
+> -#define ARIZONA_GPN_OP_CFG_WIDTH                      1  /* GPN_OP_C=
+=46G */
+> -#define ARIZONA_GPN_DB                           0x0100  /* GPN_DB *=
+/
+> -#define ARIZONA_GPN_DB_MASK                      0x0100  /* GPN_DB *=
+/
+> -#define ARIZONA_GPN_DB_SHIFT                          8  /* GPN_DB *=
+/
+> -#define ARIZONA_GPN_DB_WIDTH                          1  /* GPN_DB *=
+/
+> -#define ARIZONA_GPN_FN_MASK                      0x007F  /* GPN_DB *=
+/
+> -#define ARIZONA_GPN_FN_SHIFT                          0  /* GPN_DB *=
+/
+> -#define ARIZONA_GPN_FN_WIDTH                          7  /* GPN_DB *=
+/
+> -
+> -#endif
+> diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/ar=
+izona/pdata.h
+> index 4578c72..48fe313 100644
+> --- a/include/linux/mfd/arizona/pdata.h
+> +++ b/include/linux/mfd/arizona/pdata.h
+> @@ -11,31 +11,26 @@
+>  #ifndef _ARIZONA_PDATA_H
+>  #define _ARIZONA_PDATA_H
+> =20
+> -#define ARIZONA_GPN_DIR                          0x8000  /* GPN_DIR =
+*/
+> +#include <dt-bindings/mfd/arizona.h>
+> +
+>  #define ARIZONA_GPN_DIR_MASK                     0x8000  /* GPN_DIR =
+*/
+>  #define ARIZONA_GPN_DIR_SHIFT                        15  /* GPN_DIR =
+*/
+>  #define ARIZONA_GPN_DIR_WIDTH                         1  /* GPN_DIR =
+*/
+> -#define ARIZONA_GPN_PU                           0x4000  /* GPN_PU *=
+/
+>  #define ARIZONA_GPN_PU_MASK                      0x4000  /* GPN_PU *=
+/
+>  #define ARIZONA_GPN_PU_SHIFT                         14  /* GPN_PU *=
+/
+>  #define ARIZONA_GPN_PU_WIDTH                          1  /* GPN_PU *=
+/
+> -#define ARIZONA_GPN_PD                           0x2000  /* GPN_PD *=
+/
+>  #define ARIZONA_GPN_PD_MASK                      0x2000  /* GPN_PD *=
+/
+>  #define ARIZONA_GPN_PD_SHIFT                         13  /* GPN_PD *=
+/
+>  #define ARIZONA_GPN_PD_WIDTH                          1  /* GPN_PD *=
+/
+> -#define ARIZONA_GPN_LVL                          0x0800  /* GPN_LVL =
+*/
+>  #define ARIZONA_GPN_LVL_MASK                     0x0800  /* GPN_LVL =
+*/
+>  #define ARIZONA_GPN_LVL_SHIFT                        11  /* GPN_LVL =
+*/
+>  #define ARIZONA_GPN_LVL_WIDTH                         1  /* GPN_LVL =
+*/
+> -#define ARIZONA_GPN_POL                          0x0400  /* GPN_POL =
+*/
+>  #define ARIZONA_GPN_POL_MASK                     0x0400  /* GPN_POL =
+*/
+>  #define ARIZONA_GPN_POL_SHIFT                        10  /* GPN_POL =
+*/
+>  #define ARIZONA_GPN_POL_WIDTH                         1  /* GPN_POL =
+*/
+> -#define ARIZONA_GPN_OP_CFG                       0x0200  /* GPN_OP_C=
+=46G */
+>  #define ARIZONA_GPN_OP_CFG_MASK                  0x0200  /* GPN_OP_C=
+=46G */
+>  #define ARIZONA_GPN_OP_CFG_SHIFT                      9  /* GPN_OP_C=
+=46G */
+>  #define ARIZONA_GPN_OP_CFG_WIDTH                      1  /* GPN_OP_C=
+=46G */
+> -#define ARIZONA_GPN_DB                           0x0100  /* GPN_DB *=
+/
+>  #define ARIZONA_GPN_DB_MASK                      0x0100  /* GPN_DB *=
+/
+>  #define ARIZONA_GPN_DB_SHIFT                          8  /* GPN_DB *=
+/
+>  #define ARIZONA_GPN_DB_WIDTH                          1  /* GPN_DB *=
+/
+> @@ -45,23 +40,10 @@
+> =20
+>  #define ARIZONA_MAX_GPIO 5
+> =20
+> -#define ARIZONA_32KZ_MCLK1 1
+> -#define ARIZONA_32KZ_MCLK2 2
+> -#define ARIZONA_32KZ_NONE  3
+> -
+>  #define ARIZONA_MAX_INPUT 4
+> =20
+> -#define ARIZONA_DMIC_MICVDD   0
+> -#define ARIZONA_DMIC_MICBIAS1 1
+> -#define ARIZONA_DMIC_MICBIAS2 2
+> -#define ARIZONA_DMIC_MICBIAS3 3
+> -
+>  #define ARIZONA_MAX_MICBIAS 3
+> =20
+> -#define ARIZONA_INMODE_DIFF 0
+> -#define ARIZONA_INMODE_SE   1
+> -#define ARIZONA_INMODE_DMIC 2
+> -
+>  #define ARIZONA_MAX_OUTPUT 6
+> =20
+>  #define ARIZONA_MAX_AIF 3
+> diff --git a/sound/soc/codecs/arizona.c b/sound/soc/codecs/arizona.c
+> index 9550d74..3ff2be9 100644
+> --- a/sound/soc/codecs/arizona.c
+> +++ b/sound/soc/codecs/arizona.c
+> @@ -19,7 +19,6 @@
+>  #include <sound/tlv.h>
+> =20
+>  #include <linux/mfd/arizona/core.h>
+> -#include <linux/mfd/arizona/gpio.h>
+>  #include <linux/mfd/arizona/registers.h>
+> =20
+>  #include "arizona.h"
 
 --=20
 Lee Jones
