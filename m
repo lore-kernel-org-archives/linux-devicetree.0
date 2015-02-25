@@ -1,45 +1,366 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V5 1/2] mmc: dw_mmc: exynos: Support eMMC's HS400 mode
-Date: Wed, 25 Feb 2015 08:38:42 -0600
-Message-ID: <CAL_Jsq+Mr=WOoCjWRnHnUqo8+UmqxxHbMG3M8+kLNgfhPASteA@mail.gmail.com>
-References: <1422499318-13726-1-git-send-email-alim.akhtar@samsung.com> <1422499318-13726-2-git-send-email-alim.akhtar@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] mfd: arizona: Move useful defines into a dt-binding include
+Date: Wed, 25 Feb 2015 08:43:21 -0600
+Message-ID: <CAL_Jsq+Ud3V6yxkFTKSgsoZUL7d5q6z1ZvEuvYo7mDjtH9fCew@mail.gmail.com>
+References: <1424873385-29315-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1422499318-13726-2-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, "chris@printf.net" <chris@printf.net>, Doug Anderson <dianders@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, a.kesavan@samsung.com, alim.akhtar@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424873385-29315-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 28, 2015 at 8:41 PM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
-> From: Seungwon Jeon <tgih.jun@samsung.com>
+On Wed, Feb 25, 2015 at 8:09 AM, Charles Keepax
+<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> Move parts of linux/mfd/arizona/pdata.h and gpio.h into a new file in
+> the dt-binding directory for use by device tree bindings. This also
+> makes gpio.h redundant so remove it in the process.
 >
-> Implements HS400 mode support for exynos host driver.
-> This also include some updates as new mode is added.
->
-> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> [Alim: addressed review comments]
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > ---
->  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    7 +
->  drivers/mmc/host/dw_mmc-exynos.c                   |  185 ++++++++++++++++----
->  drivers/mmc/host/dw_mmc-exynos.h                   |   19 +-
->  drivers/mmc/host/dw_mmc.c                          |   16 +-
->  drivers/mmc/host/dw_mmc.h                          |    2 +
->  5 files changed, 195 insertions(+), 34 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> index ee4fc05..aad9844 100644
-> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> @@ -36,6 +36,8 @@ Required Properties:
->    in transmit mode and CIU clock phase shift value in receive mode for double
->    data rate mode operation. Refer notes below for the order of the cells and the
->    valid values.
-> +* samsung,dw-mshc-hs400-timing: Specifies the value of CIU TX and RX clock phase
-> +  shift value for hs400 mode operation.
-
-What are the units?
-
-Rob
+> Changes since v1:
+>  - Removed some defines that will never be used in DT from the
+>    dt-binding include
+>  - Added some convience defines for the most common pin configs
+>    (input/output/default)
+>  - Updated the binding documentation to use the new defines to
+>    give some context to their usage
+>
+> Thanks,
+> Charles
+>
+>  Documentation/devicetree/bindings/mfd/arizona.txt |   20 ++--
+>  include/dt-bindings/mfd/arizona.h                 |   93 ++++++++++++++++++++
+>  include/linux/mfd/arizona/gpio.h                  |   96 ---------------------
+>  include/linux/mfd/arizona/pdata.h                 |   22 +-----
+>  sound/soc/codecs/arizona.c                        |    1 -
+>  5 files changed, 105 insertions(+), 127 deletions(-)
+>  create mode 100644 include/dt-bindings/mfd/arizona.h
+>  delete mode 100644 include/linux/mfd/arizona/gpio.h
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index 7bd1273..bfef000 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -36,11 +36,11 @@ Optional properties:
+>    - wlf,reset : GPIO specifier for the GPIO controlling /RESET
+>    - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
+>
+> -  - wlf,gpio-defaults : A list of GPIO configuration register values. If
+> -    absent, no configuration of these registers is performed. If any
+> -    entry has a value that is out of range for a 16 bit register then
+> -    the chip default will be used.  If present exactly five values must
+> -    be specified.
+> +  - wlf,gpio-defaults : A list of GPIO configuration register values. Defines
+> +    for the appropriate values can found in <dt-bindings/mfd/arizona.txt>. If
+> +    absent, no configuration of these registers is performed. If any entry has
+> +    a value that is out of range for a 16 bit register then the chip default
+> +    will be used. If present exactly five values must be specified.
+>
+>    - wlf,inmode : A list of INn_MODE register values, where n is the number
+>      of input signals. Valid values are 0 (Differential), 1 (Single-ended) and
+> @@ -73,10 +73,10 @@ codec: wm5102@1a {
+>         #gpio-cells = <2>;
+>
+>         wlf,gpio-defaults = <
+> -               0x00000000 /* AIF1TXLRCLK */
+> -               0xffffffff
+> -               0xffffffff
+> -               0xffffffff
+> -               0xffffffff
+> +               ARIZONA_GP_FN_TXLRCLK
+> +               ARIZONA_GP_DEFAULT
+> +               ARIZONA_GP_DEFAULT
+> +               ARIZONA_GP_DEFAULT
+> +               ARIZONA_GP_DEFAULT
+>         >;
+>  };
+> diff --git a/include/dt-bindings/mfd/arizona.h b/include/dt-bindings/mfd/arizona.h
+> new file mode 100644
+> index 0000000..c7af7c7
+> --- /dev/null
+> +++ b/include/dt-bindings/mfd/arizona.h
+> @@ -0,0 +1,93 @@
+> +/*
+> + * Device Tree defines for Arizona devices
+> + *
+> + * Copyright 2015 Cirrus Logic Inc.
+> + *
+> + * Author: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_MFD_ARIZONA_H
+> +#define _DT_BINDINGS_MFD_ARIZONA_H
+> +
+> +/* GPIO Function Definitions */
+> +#define ARIZONA_GP_FN_TXLRCLK                    0x00
+> +#define ARIZONA_GP_FN_GPIO                       0x01
+> +#define ARIZONA_GP_FN_IRQ1                       0x02
+> +#define ARIZONA_GP_FN_IRQ2                       0x03
+> +#define ARIZONA_GP_FN_OPCLK                      0x04
+> +#define ARIZONA_GP_FN_FLL1_OUT                   0x05
+> +#define ARIZONA_GP_FN_FLL2_OUT                   0x06
+> +#define ARIZONA_GP_FN_PWM1                       0x08
+> +#define ARIZONA_GP_FN_PWM2                       0x09
+> +#define ARIZONA_GP_FN_SYSCLK_UNDERCLOCKED        0x0A
+> +#define ARIZONA_GP_FN_ASYNCCLK_UNDERCLOCKED      0x0B
+> +#define ARIZONA_GP_FN_FLL1_LOCK                  0x0C
+> +#define ARIZONA_GP_FN_FLL2_LOCK                  0x0D
+> +#define ARIZONA_GP_FN_FLL1_CLOCK_OK              0x0F
+> +#define ARIZONA_GP_FN_FLL2_CLOCK_OK              0x10
+> +#define ARIZONA_GP_FN_HEADPHONE_DET              0x12
+> +#define ARIZONA_GP_FN_MIC_DET                    0x13
+> +#define ARIZONA_GP_FN_WSEQ_STATUS                0x15
+> +#define ARIZONA_GP_FN_CIF_ADDRESS_ERROR          0x16
+> +#define ARIZONA_GP_FN_ASRC1_LOCK                 0x1A
+> +#define ARIZONA_GP_FN_ASRC2_LOCK                 0x1B
+> +#define ARIZONA_GP_FN_ASRC_CONFIG_ERROR          0x1C
+> +#define ARIZONA_GP_FN_DRC1_SIGNAL_DETECT         0x1D
+> +#define ARIZONA_GP_FN_DRC1_ANTICLIP              0x1E
+> +#define ARIZONA_GP_FN_DRC1_DECAY                 0x1F
+> +#define ARIZONA_GP_FN_DRC1_NOISE                 0x20
+> +#define ARIZONA_GP_FN_DRC1_QUICK_RELEASE         0x21
+> +#define ARIZONA_GP_FN_DRC2_SIGNAL_DETECT         0x22
+> +#define ARIZONA_GP_FN_DRC2_ANTICLIP              0x23
+> +#define ARIZONA_GP_FN_DRC2_DECAY                 0x24
+> +#define ARIZONA_GP_FN_DRC2_NOISE                 0x25
+> +#define ARIZONA_GP_FN_DRC2_QUICK_RELEASE         0x26
+> +#define ARIZONA_GP_FN_MIXER_DROPPED_SAMPLE       0x27
+> +#define ARIZONA_GP_FN_AIF1_CONFIG_ERROR          0x28
+> +#define ARIZONA_GP_FN_AIF2_CONFIG_ERROR          0x29
+> +#define ARIZONA_GP_FN_AIF3_CONFIG_ERROR          0x2A
+> +#define ARIZONA_GP_FN_SPK_TEMP_SHUTDOWN          0x2B
+> +#define ARIZONA_GP_FN_SPK_TEMP_WARNING           0x2C
+> +#define ARIZONA_GP_FN_UNDERCLOCKED               0x2D
+> +#define ARIZONA_GP_FN_OVERCLOCKED                0x2E
+> +#define ARIZONA_GP_FN_DSP_IRQ1                   0x35
+> +#define ARIZONA_GP_FN_DSP_IRQ2                   0x36
+> +#define ARIZONA_GP_FN_ASYNC_OPCLK                0x3D
+> +#define ARIZONA_GP_FN_BOOT_DONE                  0x44
+> +#define ARIZONA_GP_FN_DSP1_RAM_READY             0x45
+> +#define ARIZONA_GP_FN_SYSCLK_ENA_STATUS          0x4B
+> +#define ARIZONA_GP_FN_ASYNCCLK_ENA_STATUS        0x4C
+> +
+> +/* GPIO Configuration Bits */
+> +#define ARIZONA_GPN_DIR                          0x8000
+> +#define ARIZONA_GPN_PU                           0x4000
+> +#define ARIZONA_GPN_PD                           0x2000
+> +#define ARIZONA_GPN_LVL                          0x0800
+> +#define ARIZONA_GPN_POL                          0x0400
+> +#define ARIZONA_GPN_OP_CFG                       0x0200
+> +#define ARIZONA_GPN_DB                           0x0100
+> +
+> +/* Provide some defines for the most common configs */
+> +#define ARIZONA_GP_DEFAULT             0xffffffff
+> +#define ARIZONA_GP_OUTPUT              (ARIZONA_GP_FN_GPIO)
+> +#define ARIZONA_GP_INPUT               (ARIZONA_GP_FN_GPIO | \
+> +                                       ARIZONA_GPN_DIR)
+> +
+> +#define ARIZONA_32KZ_MCLK1 1
+> +#define ARIZONA_32KZ_MCLK2 2
+> +#define ARIZONA_32KZ_NONE  3
+> +
+> +#define ARIZONA_DMIC_MICVDD   0
+> +#define ARIZONA_DMIC_MICBIAS1 1
+> +#define ARIZONA_DMIC_MICBIAS2 2
+> +#define ARIZONA_DMIC_MICBIAS3 3
+> +
+> +#define ARIZONA_INMODE_DIFF 0
+> +#define ARIZONA_INMODE_SE   1
+> +#define ARIZONA_INMODE_DMIC 2
+> +
+> +#endif
+> diff --git a/include/linux/mfd/arizona/gpio.h b/include/linux/mfd/arizona/gpio.h
+> deleted file mode 100644
+> index d2146bb..0000000
+> --- a/include/linux/mfd/arizona/gpio.h
+> +++ /dev/null
+> @@ -1,96 +0,0 @@
+> -/*
+> - * GPIO configuration for Arizona devices
+> - *
+> - * Copyright 2013 Wolfson Microelectronics. PLC.
+> - *
+> - * Author: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - */
+> -
+> -#ifndef _ARIZONA_GPIO_H
+> -#define _ARIZONA_GPIO_H
+> -
+> -#define ARIZONA_GP_FN_TXLRCLK                    0x00
+> -#define ARIZONA_GP_FN_GPIO                       0x01
+> -#define ARIZONA_GP_FN_IRQ1                       0x02
+> -#define ARIZONA_GP_FN_IRQ2                       0x03
+> -#define ARIZONA_GP_FN_OPCLK                      0x04
+> -#define ARIZONA_GP_FN_FLL1_OUT                   0x05
+> -#define ARIZONA_GP_FN_FLL2_OUT                   0x06
+> -#define ARIZONA_GP_FN_PWM1                       0x08
+> -#define ARIZONA_GP_FN_PWM2                       0x09
+> -#define ARIZONA_GP_FN_SYSCLK_UNDERCLOCKED        0x0A
+> -#define ARIZONA_GP_FN_ASYNCCLK_UNDERCLOCKED      0x0B
+> -#define ARIZONA_GP_FN_FLL1_LOCK                  0x0C
+> -#define ARIZONA_GP_FN_FLL2_LOCK                  0x0D
+> -#define ARIZONA_GP_FN_FLL1_CLOCK_OK              0x0F
+> -#define ARIZONA_GP_FN_FLL2_CLOCK_OK              0x10
+> -#define ARIZONA_GP_FN_HEADPHONE_DET              0x12
+> -#define ARIZONA_GP_FN_MIC_DET                    0x13
+> -#define ARIZONA_GP_FN_WSEQ_STATUS                0x15
+> -#define ARIZONA_GP_FN_CIF_ADDRESS_ERROR          0x16
+> -#define ARIZONA_GP_FN_ASRC1_LOCK                 0x1A
+> -#define ARIZONA_GP_FN_ASRC2_LOCK                 0x1B
+> -#define ARIZONA_GP_FN_ASRC_CONFIG_ERROR          0x1C
+> -#define ARIZONA_GP_FN_DRC1_SIGNAL_DETECT         0x1D
+> -#define ARIZONA_GP_FN_DRC1_ANTICLIP              0x1E
+> -#define ARIZONA_GP_FN_DRC1_DECAY                 0x1F
+> -#define ARIZONA_GP_FN_DRC1_NOISE                 0x20
+> -#define ARIZONA_GP_FN_DRC1_QUICK_RELEASE         0x21
+> -#define ARIZONA_GP_FN_DRC2_SIGNAL_DETECT         0x22
+> -#define ARIZONA_GP_FN_DRC2_ANTICLIP              0x23
+> -#define ARIZONA_GP_FN_DRC2_DECAY                 0x24
+> -#define ARIZONA_GP_FN_DRC2_NOISE                 0x25
+> -#define ARIZONA_GP_FN_DRC2_QUICK_RELEASE         0x26
+> -#define ARIZONA_GP_FN_MIXER_DROPPED_SAMPLE       0x27
+> -#define ARIZONA_GP_FN_AIF1_CONFIG_ERROR          0x28
+> -#define ARIZONA_GP_FN_AIF2_CONFIG_ERROR          0x29
+> -#define ARIZONA_GP_FN_AIF3_CONFIG_ERROR          0x2A
+> -#define ARIZONA_GP_FN_SPK_TEMP_SHUTDOWN          0x2B
+> -#define ARIZONA_GP_FN_SPK_TEMP_WARNING           0x2C
+> -#define ARIZONA_GP_FN_UNDERCLOCKED               0x2D
+> -#define ARIZONA_GP_FN_OVERCLOCKED                0x2E
+> -#define ARIZONA_GP_FN_DSP_IRQ1                   0x35
+> -#define ARIZONA_GP_FN_DSP_IRQ2                   0x36
+> -#define ARIZONA_GP_FN_ASYNC_OPCLK                0x3D
+> -#define ARIZONA_GP_FN_BOOT_DONE                  0x44
+> -#define ARIZONA_GP_FN_DSP1_RAM_READY             0x45
+> -#define ARIZONA_GP_FN_SYSCLK_ENA_STATUS          0x4B
+> -#define ARIZONA_GP_FN_ASYNCCLK_ENA_STATUS        0x4C
+> -
+> -#define ARIZONA_GPN_DIR                          0x8000  /* GPN_DIR */
+> -#define ARIZONA_GPN_DIR_MASK                     0x8000  /* GPN_DIR */
+> -#define ARIZONA_GPN_DIR_SHIFT                        15  /* GPN_DIR */
+> -#define ARIZONA_GPN_DIR_WIDTH                         1  /* GPN_DIR */
+> -#define ARIZONA_GPN_PU                           0x4000  /* GPN_PU */
+> -#define ARIZONA_GPN_PU_MASK                      0x4000  /* GPN_PU */
+> -#define ARIZONA_GPN_PU_SHIFT                         14  /* GPN_PU */
+> -#define ARIZONA_GPN_PU_WIDTH                          1  /* GPN_PU */
+> -#define ARIZONA_GPN_PD                           0x2000  /* GPN_PD */
+> -#define ARIZONA_GPN_PD_MASK                      0x2000  /* GPN_PD */
+> -#define ARIZONA_GPN_PD_SHIFT                         13  /* GPN_PD */
+> -#define ARIZONA_GPN_PD_WIDTH                          1  /* GPN_PD */
+> -#define ARIZONA_GPN_LVL                          0x0800  /* GPN_LVL */
+> -#define ARIZONA_GPN_LVL_MASK                     0x0800  /* GPN_LVL */
+> -#define ARIZONA_GPN_LVL_SHIFT                        11  /* GPN_LVL */
+> -#define ARIZONA_GPN_LVL_WIDTH                         1  /* GPN_LVL */
+> -#define ARIZONA_GPN_POL                          0x0400  /* GPN_POL */
+> -#define ARIZONA_GPN_POL_MASK                     0x0400  /* GPN_POL */
+> -#define ARIZONA_GPN_POL_SHIFT                        10  /* GPN_POL */
+> -#define ARIZONA_GPN_POL_WIDTH                         1  /* GPN_POL */
+> -#define ARIZONA_GPN_OP_CFG                       0x0200  /* GPN_OP_CFG */
+> -#define ARIZONA_GPN_OP_CFG_MASK                  0x0200  /* GPN_OP_CFG */
+> -#define ARIZONA_GPN_OP_CFG_SHIFT                      9  /* GPN_OP_CFG */
+> -#define ARIZONA_GPN_OP_CFG_WIDTH                      1  /* GPN_OP_CFG */
+> -#define ARIZONA_GPN_DB                           0x0100  /* GPN_DB */
+> -#define ARIZONA_GPN_DB_MASK                      0x0100  /* GPN_DB */
+> -#define ARIZONA_GPN_DB_SHIFT                          8  /* GPN_DB */
+> -#define ARIZONA_GPN_DB_WIDTH                          1  /* GPN_DB */
+> -#define ARIZONA_GPN_FN_MASK                      0x007F  /* GPN_DB */
+> -#define ARIZONA_GPN_FN_SHIFT                          0  /* GPN_DB */
+> -#define ARIZONA_GPN_FN_WIDTH                          7  /* GPN_DB */
+> -
+> -#endif
+> diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
+> index 4578c72..48fe313 100644
+> --- a/include/linux/mfd/arizona/pdata.h
+> +++ b/include/linux/mfd/arizona/pdata.h
+> @@ -11,31 +11,26 @@
+>  #ifndef _ARIZONA_PDATA_H
+>  #define _ARIZONA_PDATA_H
+>
+> -#define ARIZONA_GPN_DIR                          0x8000  /* GPN_DIR */
+> +#include <dt-bindings/mfd/arizona.h>
+> +
+>  #define ARIZONA_GPN_DIR_MASK                     0x8000  /* GPN_DIR */
+>  #define ARIZONA_GPN_DIR_SHIFT                        15  /* GPN_DIR */
+>  #define ARIZONA_GPN_DIR_WIDTH                         1  /* GPN_DIR */
+> -#define ARIZONA_GPN_PU                           0x4000  /* GPN_PU */
+>  #define ARIZONA_GPN_PU_MASK                      0x4000  /* GPN_PU */
+>  #define ARIZONA_GPN_PU_SHIFT                         14  /* GPN_PU */
+>  #define ARIZONA_GPN_PU_WIDTH                          1  /* GPN_PU */
+> -#define ARIZONA_GPN_PD                           0x2000  /* GPN_PD */
+>  #define ARIZONA_GPN_PD_MASK                      0x2000  /* GPN_PD */
+>  #define ARIZONA_GPN_PD_SHIFT                         13  /* GPN_PD */
+>  #define ARIZONA_GPN_PD_WIDTH                          1  /* GPN_PD */
+> -#define ARIZONA_GPN_LVL                          0x0800  /* GPN_LVL */
+>  #define ARIZONA_GPN_LVL_MASK                     0x0800  /* GPN_LVL */
+>  #define ARIZONA_GPN_LVL_SHIFT                        11  /* GPN_LVL */
+>  #define ARIZONA_GPN_LVL_WIDTH                         1  /* GPN_LVL */
+> -#define ARIZONA_GPN_POL                          0x0400  /* GPN_POL */
+>  #define ARIZONA_GPN_POL_MASK                     0x0400  /* GPN_POL */
+>  #define ARIZONA_GPN_POL_SHIFT                        10  /* GPN_POL */
+>  #define ARIZONA_GPN_POL_WIDTH                         1  /* GPN_POL */
+> -#define ARIZONA_GPN_OP_CFG                       0x0200  /* GPN_OP_CFG */
+>  #define ARIZONA_GPN_OP_CFG_MASK                  0x0200  /* GPN_OP_CFG */
+>  #define ARIZONA_GPN_OP_CFG_SHIFT                      9  /* GPN_OP_CFG */
+>  #define ARIZONA_GPN_OP_CFG_WIDTH                      1  /* GPN_OP_CFG */
+> -#define ARIZONA_GPN_DB                           0x0100  /* GPN_DB */
+>  #define ARIZONA_GPN_DB_MASK                      0x0100  /* GPN_DB */
+>  #define ARIZONA_GPN_DB_SHIFT                          8  /* GPN_DB */
+>  #define ARIZONA_GPN_DB_WIDTH                          1  /* GPN_DB */
+> @@ -45,23 +40,10 @@
+>
+>  #define ARIZONA_MAX_GPIO 5
+>
+> -#define ARIZONA_32KZ_MCLK1 1
+> -#define ARIZONA_32KZ_MCLK2 2
+> -#define ARIZONA_32KZ_NONE  3
+> -
+>  #define ARIZONA_MAX_INPUT 4
+>
+> -#define ARIZONA_DMIC_MICVDD   0
+> -#define ARIZONA_DMIC_MICBIAS1 1
+> -#define ARIZONA_DMIC_MICBIAS2 2
+> -#define ARIZONA_DMIC_MICBIAS3 3
+> -
+>  #define ARIZONA_MAX_MICBIAS 3
+>
+> -#define ARIZONA_INMODE_DIFF 0
+> -#define ARIZONA_INMODE_SE   1
+> -#define ARIZONA_INMODE_DMIC 2
+> -
+>  #define ARIZONA_MAX_OUTPUT 6
+>
+>  #define ARIZONA_MAX_AIF 3
+> diff --git a/sound/soc/codecs/arizona.c b/sound/soc/codecs/arizona.c
+> index 9550d74..3ff2be9 100644
+> --- a/sound/soc/codecs/arizona.c
+> +++ b/sound/soc/codecs/arizona.c
+> @@ -19,7 +19,6 @@
+>  #include <sound/tlv.h>
+>
+>  #include <linux/mfd/arizona/core.h>
+> -#include <linux/mfd/arizona/gpio.h>
+>  #include <linux/mfd/arizona/registers.h>
+>
+>  #include "arizona.h"
+> --
+> 1.7.2.5
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
