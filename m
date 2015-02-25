@@ -1,78 +1,103 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 14/18] ARM: Add STM32 family machine
-Date: Wed, 25 Feb 2015 13:04:47 +0100
-Message-ID: <CALszF6CGT35V71QKTrDx+1Ltrctv5F7t8Zq6Tq15zn2bZGQXwQ@mail.gmail.com>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1424455277-29983-15-git-send-email-mcoquelin.stm32@gmail.com>
-	<20150220200019.GU19388@pengutronix.de>
-	<1424468240.24292.5.camel@x220>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH v4 1/8] thermal: Provide stub for
+ thermal_of_cooling_device_register() function
+Date: Wed, 25 Feb 2015 13:26:23 +0100
+Message-ID: <20150225132623.753adaca@amdc2363>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1424254056-5904-1-git-send-email-l.majewski@samsung.com>
+ <1424254056-5904-2-git-send-email-l.majewski@samsung.com>
+ <20150224192153.GH3448@developer.amazonguestwifi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424468240.24292.5.camel@x220>
+In-reply-to: <20150224192153.GH3448@developer.amazonguestwifi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2015-02-20 22:37 GMT+01:00 Paul Bolle <pebolle@tiscali.nl>:
-> On Fri, 2015-02-20 at 21:00 +0100, Uwe Kleine-K=C3=B6nig wrote:
->> On Fri, Feb 20, 2015 at 07:01:13PM +0100, Maxime Coquelin wrote:
->> > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> > index 97d07ed..cfd9532 100644
->> > --- a/arch/arm/Kconfig
->> > +++ b/arch/arm/Kconfig
->> > @@ -774,6 +774,28 @@ config ARCH_OMAP1
->> >     help
->> >       Support for older TI OMAP1 (omap7xx, omap15xx or omap16xx)
->> >
->> > +config ARCH_STM32
->> > +   bool "STMicrolectronics STM32"
->> > +   depends on !MMU
->> > +   select ARCH_REQUIRE_GPIOLIB
->> > +   select ARM_NVIC
->> > +   select AUTO_ZRELADDR
->> > +   select ARCH_HAS_RESET_CONTROLLER
->> > +   select RESET_CONTROLLER
->> > +   select PINCTRL
->> > +   select PINCTRL_STM32
->> > +   select CLKSRC_OF
->> > +   select ARMV7M_SYSTICK
->> > +   select COMMON_CLK
->> > +   select CPU_V7M
->> > +   select GENERIC_CLOCKEVENTS
->> > +   select NO_DMA
->> > +   select NO_IOPORT_MAP
->> > +   select SPARSE_IRQ
->> > +   select USE_OF
->> Please sort this list alphabetically.
->
-> And drop
->     select NO_DMA
->
-> You copied that from ARCH_EFM32, but it's pointless on arm (as arch/a=
-rm/
-> doesn't provide a NO_DMA Kconfig symbol).
+Hi Eduardo,
 
-You are right, I will drop NO_DMA in v3.
+> On Wed, Feb 18, 2015 at 11:07:29AM +0100, Lukasz Majewski wrote:
+> > Odroid U3 fan can work without being registered as OF cooling device
+> > (with CONFIG_THERMAL_OF disabled).
+> > In this situation it can be controlled via PWM entry at
+> > /sys/class/hwmon/hwmon0/pwm1.
+> > 
+> > Therefore, the thermal_of_cooling_device_register() function needs
+> > a stub to allow clean compilation.
+> 
+> 
+> I've just applied a patch on this same matter from Nishanth Menon [1].
+> Can you please check if his patch is enough for you?
+> 
+> [1] -
+> https://git.kernel.org/cgit/linux/kernel/git/evalenti/linux-soc-thermal.git/commit/?h=fixes&id=12ca7188468ee29c4e717f73db4bf43c90954fc7
+> 
 
-Thanks,
-Maxime
+I will prepare new PWM-FAN patch set with above changes in mind.
 
->
-> I submitted a patch last year to drop it from ARCH_EFM32, which Uwe
-> Acked, but then nothing happened. I'm to blame, as I should have sent=
- a
-> reminder.
->
->> > +   help
->> > +     Support for STMicorelectronics STM32 processors.
->> > +
->> >  endchoice
->> >
->> >  menu "Multiple platform selection"
->
->
-> Paul Bolle
->
+
+> 
+> > 
+> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > ---
+> > Changes for v2:
+> > - None
+> > Changes for v3:
+> > - Provide stub declaration when CONFIG_THERMAL is not set
+> > Changes for v4:
+> > - None
+> > ---
+> >  include/linux/thermal.h | 17 ++++++++++++++---
+> >  1 file changed, 14 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> > index fc52e30..eacf2de 100644
+> > --- a/include/linux/thermal.h
+> > +++ b/include/linux/thermal.h
+> > @@ -293,6 +293,20 @@ struct thermal_trip {
+> >  };
+> >  
+> >  /* Function declarations */
+> > +#ifdef CONFIG_THERMAL
+> > +struct thermal_cooling_device *
+> > +thermal_of_cooling_device_register(struct device_node *np,
+> > +				   char *type, void *devdata,
+> > +				   const struct
+> > thermal_cooling_device_ops *); +#else
+> > +static inline struct thermal_cooling_device *
+> > +thermal_of_cooling_device_register(struct device_node *np,
+> > +				   char *type, void *devdata,
+> > +				   const struct
+> > thermal_cooling_device_ops *ops) +{
+> > +	return NULL;
+> > +}
+> > +#endif
+> >  #ifdef CONFIG_THERMAL_OF
+> >  struct thermal_zone_device *
+> >  thermal_zone_of_sensor_register(struct device *dev, int id, void
+> > *data, @@ -328,9 +342,6 @@ void thermal_zone_device_update(struct
+> > thermal_zone_device *); 
+> >  struct thermal_cooling_device
+> > *thermal_cooling_device_register(char *, void *, const struct
+> > thermal_cooling_device_ops *); -struct thermal_cooling_device *
+> > -thermal_of_cooling_device_register(struct device_node *np, char *,
+> > void *,
+> > -				   const struct
+> > thermal_cooling_device_ops *); void
+> > thermal_cooling_device_unregister(struct thermal_cooling_device *);
+> > struct thermal_zone_device *thermal_zone_get_zone_by_name(const
+> > char *name); int thermal_zone_get_temp(struct thermal_zone_device
+> > *tz, unsigned long *temp); -- 2.0.0.rc2
+> > 
+
+
+
+-- 
+Best regards,
+
+Lukasz Majewski
+
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
