@@ -1,116 +1,40 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v5 3/6] ARM: dts: Add properties to use pwm-fan device as
- a cooling device in Odroid U3
-Date: Wed, 25 Feb 2015 14:49:17 -0400
-Message-ID: <20150225184914.GF2306@developer.amazonguestwifi.org>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424878462-15511-1-git-send-email-l.majewski@samsung.com>
- <1424878462-15511-4-git-send-email-l.majewski@samsung.com>
+From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/1] Synopsis 8250 serial port driver fix
+Date: Wed, 25 Feb 2015 11:04:15 -0800
+Message-ID: <1424891056-1222-1-git-send-email-jonathar@broadcom.com>
+References: <Jonathan Richardson <jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ni93GHxFvA+th69W"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1424878462-15511-4-git-send-email-l.majewski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---ni93GHxFvA+th69W
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset fixes a bug in the Synopsis 8250 serial driver which causes the
+driver to hang. The bug occurs on simple 2 wire serial ports when modem control
+signalling has been enabled. It can be reproduced from user space by enabling
+modem control signals (stty -clocal), then opening a serial port and polling for
+data available to read with a timeout. A properly implemented driver will
+ignore the control signals and the call to poll will return. The current
+version of the driver hangs forever on the call to poll despite the timeout.
 
-On Wed, Feb 25, 2015 at 04:34:19PM +0100, Lukasz Majewski wrote:
-> With those bindings it is possible to use pwm-fan device available in
-> Odroid U3 as a cooling device.
->=20
-> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+Jon
 
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
+Desmond Liu (1):
+  serial: 8250_dw: Fix get_mctrl behaviour
 
-> ---
-> Changes for v2:
-> - Rename cooling-pwm-values property to cooling-levels
-> Changes for v3:
-> - Change patch's topic to "ARM dts"
-> - Reduce maximal cooling-level to 230 from 255
-> Changes for v4:
-> - None
-> Changes for v5:
-> - None
-> ---
->  arch/arm/boot/dts/exynos4412-odroidu3.dts | 33 +++++++++++++++++++++++++=
-+++++-
->  1 file changed, 32 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dt=
-s/exynos4412-odroidu3.dts
-> index 4c04837..abcfa3c 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> +++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> @@ -32,9 +32,40 @@
->  		};
->  	};
-> =20
-> -	pwm-fan {
-> +	fan0: pwm-fan {
->  		compatible =3D "pwm-fan";
->  		pwms =3D <&pwm 0 10000 0>;
-> +		cooling-min-state =3D <0>;
-> +		cooling-max-state =3D <3>;
-> +		#cooling-cells =3D <2>;
-> +		cooling-levels =3D <0 102 170 230>;
-> +	};
-> +
-> +	thermal-zones {
-> +		cpu_thermal: cpu-thermal {
-> +			cooling-maps {
-> +				map0 {
-> +				     trip =3D <&cpu_alert1>;
-> +				     cooling-device =3D <&cpu0 7 7>;
-> +				};
-> +				map1 {
-> +				     trip =3D <&cpu_alert2>;
-> +				     cooling-device =3D <&cpu0 13 13>;
-> +				};
-> +				map2 {
-> +				     trip =3D <&cpu_alert0>;
-> +				     cooling-device =3D <&fan0 0 1>;
-> +				};
-> +				map3 {
-> +				     trip =3D <&cpu_alert1>;
-> +				     cooling-device =3D <&fan0 1 2>;
-> +				};
-> +				map4 {
-> +				     trip =3D <&cpu_alert2>;
-> +				     cooling-device =3D <&fan0 2 3>;
-> +				};
-> +			};
-> +		};
->  	};
->  };
-> =20
-> --=20
-> 2.0.0.rc2
->=20
+ .../bindings/serial/snps-dw-apb-uart.txt           |    7 ++++
+ drivers/tty/serial/8250/8250_dw.c                  |   41 ++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
---ni93GHxFvA+th69W
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+-- 
+1.7.9.5
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJU7hkjAAoJEMLUO4d9pOJWiKMIAJjWBv/CyV5+Zi5W8+cbna4P
-kqlNOKLVit8KArv7/oIsd1A546GmHjlr9e+Si+VrIoaTy6VR2bmb7xnbne2iBjxM
-npc/iy93Fm4kFgtrhE2AkArR62pVVBRln8OcxVRtJSgUWdzNWORmIgTiu20iF96U
-F1i+9Evy7z9+qsUwS8+e5WvAI/+82upbwwb7yKjQg6KbHOfEk4idDQHzm/nNJJR/
-BXARxmzpUlPW68tyn1M6sMt6l6P8qW7O+T5HwAaSXLhYs3F6aXB1/vRmGVSkTWJP
-ufMNpraa+MtLkM/Z2aQt1lKHSqIborsiZ96nPDdbfSqsdLWO+SNNVNyqxUA0bKs=
-=JciM
------END PGP SIGNATURE-----
-
---ni93GHxFvA+th69W--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
