@@ -1,39 +1,48 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 0/2] fix ehrpwm tbclk data on am33xx and am43xx
-Date: Wed, 25 Feb 2015 09:35:38 +0200
-Message-ID: <54ED7B4A.2030201@ti.com>
-References: <1423546542-29664-1-git-send-email-vigneshr@ti.com> <20150224171546.GB28244@atomide.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] Add R8A7794 GPIO DT support
+Date: Wed, 25 Feb 2015 17:07:11 +0900
+Message-ID: <20150225080707.GB31211@verge.net.au>
+References: <6954455.LyoCrfjM8R@wasted.cogentembedded.com>
+ <20150223220030.GA29878@verge.net.au>
+ <20150223231901.GD29878@verge.net.au>
+ <54EC8E07.1030301@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150224171546.GB28244@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54EC8E07.1030301@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/24/2015 07:15 PM, Tony Lindgren wrote:
-> * Vignesh R <vigneshr@ti.com> [150209 22:43]:
->> In am33xx and am43xx, ehrpwm tbclk is derived from functional clock of
->> PWMSS. The schematics and TRMs show that there is only one input clock to
->> the PWMSS. But currently, tbclk is wrongly shown to be deriving from
->> dpll_per_m2_ck instead of functional clock l4ls_gclk in the DT.
->>
->> Fixing ehrpwm tbclk data to reflect the right clk source.
->> Tested on beaglebone and am437x-gp-evm.
->>
->> Vignesh R (2):
->>    ARM: dts: am33xx-clocks: Fix ehrpwm tbclk data on am33xx
->>    ARM: dts: am43xx-clocks: Fix ehrpwm tbclk data on am43xx
->>
->>   arch/arm/boot/dts/am33xx-clocks.dtsi |  6 +++---
->>   arch/arm/boot/dts/am43xx-clocks.dtsi | 12 ++++++------
->>   2 files changed, 9 insertions(+), 9 deletions(-)
->
-> Tero, care to check this one too and ack if OK?
+On Tue, Feb 24, 2015 at 05:43:19PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 02/24/2015 02:19 AM, Simon Horman wrote:
+> 
+> >>>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> >>>'renesas-devel-20150220-v3.19' tag. Here we add the GPIO device tree support
+> >>>for the R8A7794 SoC. It depends on the R8A7794 PFC/MMCIF device tree patches
+> >>>posted recently in order to apply.
+> 
+> >>>[1/2] ARM: shmobile: r8a7794: add GPIO clocks
+> >>>[2/2] ARM: shmobile: r8a7794: add GPIO DT support
+> 
+> >>Thanks,  I have queued these up with Geert's Acks.
+> 
+> >Sorry, I was too hasty again. I have dropped these pending the
+> >dependencies being queued up.
+> 
+>    Ah, I just didn't mention that the PFC patch is necessary for the latter
+> patch to compile (but I don't expect it to change, so IMHO you can apply the
+> PFC patch now). The former patch still can be merged, I think.
 
-These look fine also, just verified from TRM. These two were actually 
-buried in my mailbox, sorry about that.
+Thanks, I am coming around to your view that it is unlikely that the PFC
+bindings will to change at this point.
 
-Acked-by: Tero Kristo <t-kristo@ti.com>
+It would help me greatly if you could put together all the silk/R8A7794
+.dts and .dtsi patches that you think are ready to be merged into a single
+series for me to look over (again).
+
+Thanks in advance.
