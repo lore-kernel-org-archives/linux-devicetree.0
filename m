@@ -1,57 +1,68 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v4 1/9] mfd: dt-bindings: Provide human readable defines for
- LPC mode choosing
-Date: Wed, 25 Feb 2015 13:52:21 +0000
-Message-ID: <1424872349-4155-2-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v4 5/9] watchdog: bindings: Provide ST bindings for ST's LPC Watchdog device
+Date: Wed, 25 Feb 2015 13:52:25 +0000
+Message-ID: <1424872349-4155-6-git-send-email-lee.jones@linaro.org>
 References: <1424872349-4155-1-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1424872349-4155-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com, a.zummo@towertech.it
 Cc: lee.jones@linaro.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-ST's Low Power Controller can currently operate in two supported modes;
-Watchdog and Real Time Clock.  These defines will aid engineers to easily
-identify the selected mode.
+On current ST platforms the LPC controls a number of functions including
+Watchdog and Real Time Clock.  This patch provides the bindings used to
+configure LPC in Watchdog mode.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- include/dt-bindings/mfd/st-lpc.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 include/dt-bindings/mfd/st-lpc.h
+ .../devicetree/bindings/watchdog/st_lpc_wdt.txt    | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
 
-diff --git a/include/dt-bindings/mfd/st-lpc.h b/include/dt-bindings/mfd/st-lpc.h
+diff --git a/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
 new file mode 100644
-index 0000000..e3e6c75
+index 0000000..1bdf023
 --- /dev/null
-+++ b/include/dt-bindings/mfd/st-lpc.h
-@@ -0,0 +1,15 @@
-+/*
-+ * This header provides shared DT/Driver defines for ST's LPC device
-+ *
-+ * Copyright (C) 2014 STMicroelectronics -- All Rights Reserved
-+ *
-+ * Author: Lee Jones <lee.jones@linaro.org> for STMicroelectronics
-+ */
++++ b/Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
+@@ -0,0 +1,38 @@
++STMicroelectronics Low Power Controller (LPC) - Watchdog
++========================================================
 +
-+#ifndef __DT_BINDINGS_ST_LPC_H__
-+#define __DT_BINDINGS_ST_LPC_H__
++LPC currently supports Watchdog OR Real Time Clock functionality.
 +
-+#define ST_LPC_MODE_RTC		0
-+#define ST_LPC_MODE_WDT		1
++[See: ../rtc/rtc-st-lpc.txt for RTC options]
 +
-+#endif /* __DT_BINDINGS_ST_LPC_H__ */
++Required properties
++
++- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-lpc"
++				  "st,stih415-lpc" "st,stid127-lpc"
++- reg		: LPC registers base address + size
++- interrupts    : LPC interrupt line number and associated flags
++- clocks	: Clock used by LPC device (See: ../clock/clock-bindings.txt)
++- st,lpc-mode	: The LPC can run either one of two modes ST_LPC_MODE_RTC [0] or
++		  ST_LPC_MODE_WDT [1].  One (and only one) mode must be
++		  selected.
++
++Required properties [watchdog mode]
++
++- st,syscfg	: Phandle to syscfg node used to enable watchdog and configure
++		  CPU reset type.
++- timeout-sec	: Watchdog timeout in seconds
++
++Optional properties [watchdog mode]
++
++- st,warm-reset	: If present reset type will be 'warm' - if not it will be cold
++
++Example:
++	lpc@fde05000 {
++		compatible	= "st,stih416-lpc-watchdog";
++		reg		= <0xfde05000 0x1000>;
++		clocks 		= <&clk_s_d3_flexgen CLK_LPC_0>;
++		st,syscfg	= <&syscfg_core>;
++		timeout-sec	= <120>;
++		st,lpc-mode	= <ST_LPC_MODE_WDT>;
++		st,warm-reset;
++	};
 -- 
 1.9.1
