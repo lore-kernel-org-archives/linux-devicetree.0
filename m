@@ -1,53 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit Exynos5433 SoC
-Date: Tue, 24 Feb 2015 12:59:06 +0100
-Message-ID: <6850624.bdB2Ab6zJx@wuerfel>
-References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com> <7412525.l6YnQcTxtg@wuerfel> <54EC5AB1.5090802@samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/6] ahci: st: Update the DT example for how to obtain
+ the PHY.
+Date: Wed, 25 Feb 2015 15:08:53 +0000
+Message-ID: <20150225150853.GC5132@x1>
+References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org>
+ <1424871377-1795-3-git-send-email-peter.griffin@linaro.org>
+ <CAL_JsqLbQWK-iZ+bH7SJzUjUZzYkdPVoDFSjaFd9TS29YOVQkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54EC5AB1.5090802@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, mark.rutland@arm.com, jh80.chung@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, a.kesavan@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, kgene@kernel.org, olof@lixom.net, chanho61.park@samsung.com, ideal.song@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLbQWK-iZ+bH7SJzUjUZzYkdPVoDFSjaFd9TS29YOVQkA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 24 February 2015 20:04:17 Chanwoo Choi wrote:
-> On 02/24/2015 06:48 PM, Arnd Bergmann wrote:
-> > On Tuesday 24 February 2015 17:52:01 Chanwoo Choi wrote:
-> >>
-> >> But, I have a question.
-> >> If we put the aliases into the board dts file instaed of SoC dtsi,
-> >> each board dts file may use the different alias name about same phandle.
-> > 
-> > Yes, that is the idea. In particular with the uarts, the intention is
-> > that the numbering of the device nodes in /dev is the same that is
-> > printed on the board (if any), which may be different from the numbering
-> > internal to the SoC.
-> 
-> I check the uart device with Exynos5433 SoC based on Linux 4.0-rc1
-> If some board use the serial_0 and serial_3 as following in board dtsi,
-> 
->         &serial_0 {             --> UART 0 device
->                 status = "okay";
->         };
-> 
->         &serial_3 {             --> UART 3 device
->                 status = "okay";
->         };
-> 
-> The serial core driver create the follwoing /dev/ttySACx device node
-> by using the number of alias. It maintain the same device number of internel to the SoC.
-> 
->         root@localhost:~# ls /dev/ttySAC
->         ttySAC1  ttySAC3  
-> 
+On Wed, 25 Feb 2015, Rob Herring wrote:
 
-I'm not completely following. So you have set the serial1 alias to
-the &serial_0 device node and serial3 to &serial_3?
+> On Wed, Feb 25, 2015 at 7:36 AM, Peter Griffin <peter.griffin@linaro.=
+org> wrote:
+> > The example is wrong in that the phys property should take a
+> > phandle to the phy port.
+> >
+> > Also with the changing over to generic PHY type constants we also
+> > update this as well.
+> >
+> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
+> We seem to have a variety of ways to describe phy's with SATA
+> controllers. Some consistency would have been nice.
 
-Why not use serial0=&serial_0 and serial1=&serial_3? Does the serial0
-alias have a special meaning?
+This way is the correct way.  I worked closely with Kishon to get it
+right.  He even used this code as an example at ELC, Dusseldorf.
 
-	Arnd
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
