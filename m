@@ -1,128 +1,52 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v5 1/6] Documentation: dts: Documentation entry to
- explain how to use PWM FAN as a cooling device
-Date: Wed, 25 Feb 2015 15:13:03 -0400
-Message-ID: <20150225191301.GA2983@developer.amazonguestwifi.org>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424878462-15511-1-git-send-email-l.majewski@samsung.com>
- <1424878462-15511-2-git-send-email-l.majewski@samsung.com>
- <20150225191123.GA2950@developer.amazonguestwifi.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] hwrng: iproc-rng200 - Add Broadcom IPROC RNG driver
+Date: Wed, 25 Feb 2015 20:17:42 +0100
+Message-ID: <3062825.7b1oYP4yuL@wuerfel>
+References: <1424888184-22180-3-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150225191123.GA2950@developer.amazonguestwifi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424888184-22180-3-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 25 February 2015 10:16:24 Scott Branden wrote:
+> This adds a driver for random number generator present on Broadcom
+> IPROC devices.
+> 
+> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The driver looks reasonable overall, I have just one question about
+something that sticks out:
 
-On Wed, Feb 25, 2015 at 03:11:24PM -0400, Eduardo Valentin wrote:
-> On Wed, Feb 25, 2015 at 04:34:17PM +0100, Lukasz Majewski wrote:
-> > Explanation of several properties, which allow PWM fan working as a coo=
-ling
-> > device, have been embraced in this commit.
-> >=20
-> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> > ---
-> > Changes for v2:
-> > - Rename cooling-pwm-values to cooling-levels
-> > - Remove default-pulse-width property and stick to default hwmon policy
-> > Changes for v3:
-> > - Changing commit title from "hwmon: dts: Doc:" to "Documentation: dts"
-> > - Remove unnecessary properties
-> > - Set maximal cooling level to 230 instead of 255
-> > Changes for v4:
-> > - None
-> > Changes for v5:
-> > - Move thermal-zones description to example section
-> > - Extending example section
-> >=20
-> > ---
-> >  .../devicetree/bindings/hwmon/pwm-fan.txt          | 25 ++++++++++++++=
-+++++++-
-> >  1 file changed, 24 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Docu=
-mentation/devicetree/bindings/hwmon/pwm-fan.txt
-> > index 610757c..645251b 100644
-> > --- a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> > +++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> > @@ -3,10 +3,33 @@ Bindings for a fan connected to the PWM lines
-> >  Required properties:
-> >  - compatible	: "pwm-fan"
-> >  - pwms		: the PWM that is used to control the PWM fan
-> > +- cooling-levels      : PWM duty cycle values in a range from 0 to 255
-> > +			which correspond to thermal cooling states
-> > =20
-> >  Example:
-> > -	pwm-fan {
-> > +	fan0: pwm-fan {
-> >  		compatible =3D "pwm-fan";
-> >  		status =3D "okay";
-> >  		pwms =3D <&pwm 0 10000 0>;
-> > +		cooling-levels =3D <0 102 170 230>;
-> > +	};
-> > +
-> > +	thermal-zones {
-> > +		cpu_thermal: cpu-thermal {
-> > +		cooling-min-state =3D <0>;
-> > +		cooling-max-state =3D <3>;
-> > +		#cooling-cells =3D <2>;
-> > +		trips {
-> > +			cpu_alert1: cpu-alert1 {
-> > +				temperature =3D <100000>; /* millicelsius */
-> > +				hysteresis =3D <2000>; /* millicelsius */
-> > +				type =3D "passive";
-> > +			};
-> > +		};
-> > +		cooling-maps {
-> > +			map0 {
-> > +			     trip =3D <&cpu_alert1>;
-> > +			     cooling-device =3D <&fan0 0 1>;
-> > +			};
-> > +		};
->=20
-> The above example has two issues:
-> (1) it is wrong, as the cooling device properties are in the thermal
-> zone node.
-> (2) has a misalignment / tabulation
->=20
-> Can you please fix that in your next version too?
+> +	while ((num_remaining > 0) && time_before(jiffies, idle_endtime)) {
+...
+> +
+> +		/* Are there any random numbers available? */
+> +		if ((ioread32(rng_base + RNG_FIFO_COUNT_OFFSET) &
+> +				RNG_FIFO_COUNT_RNG_FIFO_COUNT_MASK) > 0) {
+...
+> +		} else {
+> +			if (!wait)
+> +				/* Cannot wait, return immediately */
+> +				return max - num_remaining;
+> +
+> +			/* Can wait, give others chance to run */
+> +			cpu_relax();
+> +		}
+> +	}
+> +
 
+It looks like you do a busy-loop around cpu_relax here if asked to wait.
+Is this intentional? I would normally expect either cond_resched() or
+some msleep() instead.
 
-Apart from the above two issues you may add my=20
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
-
->=20
-> >  	};
-> > --=20
-> > 2.0.0.rc2
-> >=20
-
-
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJU7h60AAoJEMLUO4d9pOJWXwwH/ic5KhV2vXDFG0IMmnOlSIma
-ZtJas8ij2hCaO90lPWoNvBgOmsxdA/EMLjaKFxkiB54HGO5Pcnc3r7RylN9u3uRy
-X4SMc0RAzOB0pX85P/tM0k1XnejJylZe7Z/LF0lTYAab3FVLgqZ6JU2S0jSAVlkv
-pidXPyCmEFJ3SYX/OcJZk92WGJYRyEbEDEmiKfuZ6ExmmvaERr+rmzRGbc8VLW+L
-s4t9G62IhhgrXKS2zzsze4ZScFDPe81gEqXaXkar0UPJFb4Cxgkx0atFH5xdVDPI
-eirEFtUxmzvyOCP92IoFvPBV4eq0W1+4An1V8h5U+Yj5R+N3qtMN/I1YLLPXVDs=
-=pmq/
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
