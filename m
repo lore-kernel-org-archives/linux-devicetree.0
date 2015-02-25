@@ -1,64 +1,53 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 2/6] ahci: st: Update the DT example for how to obtain the PHY.
-Date: Wed, 25 Feb 2015 08:33:20 -0600
-Message-ID: <CAL_JsqLbQWK-iZ+bH7SJzUjUZzYkdPVoDFSjaFd9TS29YOVQkA@mail.gmail.com>
-References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org> <1424871377-1795-3-git-send-email-peter.griffin@linaro.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/6] usb: dwc3: dwc3-st: Update the DT example.
+Date: Wed, 25 Feb 2015 08:34:14 -0600
+Message-ID: <CAL_JsqKD1xorXX_2v=Lv4mNg7roAd6+jBKrFRQefV3eVhrQKTg@mail.gmail.com>
+References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org> <1424871377-1795-6-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424871377-1795-3-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, patrice.chotard@st.com, Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424871377-1795-6-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 25, 2015 at 7:36 AM, Peter Griffin <peter.griffin@linaro.org> wrote:
-> The example is wrong in that the phys property should take a
-> phandle to the phy port.
+On Wed, Feb 25, 2015 at 7:36 AM, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> There is a subtle type phys-names should be phy-names. Using the
+> current example means you don't have working usb. Also update
+> the example to use the generic phy type constants which are now
+> used for miphy28.
 >
-> Also with the changing over to generic PHY type constants we also
-> update this as well.
->
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-We seem to have a variety of ways to describe phy's with SATA
-controllers. Some consistency would have been nice.
-
-However, as this is a doc correction:
-
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  Documentation/devicetree/bindings/ata/ahci-st.txt | 4 ++--
+>  Documentation/devicetree/bindings/usb/dwc3-st.txt | 4 ++--
 >  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt b/Documentation/devicetree/bindings/ata/ahci-st.txt
-> index 0574a77..1331202 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-st.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
-> @@ -11,7 +11,7 @@ Required properties:
->   - reset-names    :   Associated names must be; "pwr-dwn" and "sw-rst"
->   - clocks         : The phandle for the clock
->   - clock-names    :   Associated name must be; "ahci_clk"
-> - - phys                   : The phandle for the PHY device
-> + - phys                   : The phandle for the PHY port
->   - phy-names      :   Associated name must be; "ahci_phy"
->
->  Example:
-> @@ -21,7 +21,7 @@ Example:
->                 reg             = <0xfe380000 0x1000>;
->                 interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
->                 interrupt-names = "hostc";
-> -               phys            = <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-> +               phys            = <&phy_port0 PHY_TYPE_SATA>;
->                 phy-names       = "ahci_phy";
->                 resets          = <&powerdown STIH416_SATA0_POWERDOWN>,
->                                   <&softreset STIH416_SATA0_SOFTRESET>;
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3-st.txt b/Documentation/devicetree/bindings/usb/dwc3-st.txt
+> index f9d7025..6634064 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3-st.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3-st.txt
+> @@ -62,7 +62,7 @@ st_dwc3: dwc3@8f94000 {
+>                 reg             = <0x09900000 0x100000>;
+>                 interrupts      = <GIC_SPI 155 IRQ_TYPE_NONE>;
+>                 dr_mode         = "host";
+> -               phys-names      = "usb2-phy", "usb3-phy";
+> -               phys            = <&usb2_picophy2>, <&phy_port2 MIPHY_TYPE_USB>;
+> +               phy-names       = "usb2-phy", "usb3-phy";
+> +               phys            = <&usb2_picophy2>, <&phy_port2 PHY_TYPE_USB3>;
+>         };
+>  };
 > --
 > 1.9.1
 >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
