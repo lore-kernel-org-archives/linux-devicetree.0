@@ -1,111 +1,77 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH_V2 1/3] dt-bindings: dma: Add binding for jz4780-dma
-Date: Wed, 25 Feb 2015 09:52:57 +0000
-Message-ID: <54ED9B79.3040501@imgtec.com>
-References: <1424801297-18354-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1424801297-18354-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7794: add GPIO clocks
+Date: Wed, 25 Feb 2015 11:57:50 +0200
+Message-ID: <4073135.p5DxpngjLk@avalon>
+References: <6954455.LyoCrfjM8R@wasted.cogentembedded.com> <1831753.Dnjo3xKPJv@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424801297-18354-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com
-Cc: dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex@alex-smith.me.uk
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1831753.Dnjo3xKPJv@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sergei,
 
+Thank you for the patch.
 
-On 24/02/15 18:08, Zubair Lutfullah Kakakhel wrote:
-> From: Alex Smith <alex.smith@imgtec.com>
+On Sunday 22 February 2015 01:11:25 Sergei Shtylyov wrote:
+> Describe the GPIO clocks in the R8A7794 device tree.
 > 
-> Add device tree bindings for the DMA controller on JZ4780 SoCs, used by
-> the dma-jz4780 driver.
+> Based on the original patch by Koji Matsuoka <koji.matsuoka.xm@renesas.com>.
 > 
-> Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > 
 > ---
-> V1 -> V2 None
-> ---
->  .../devicetree/bindings/dma/jz4780-dma.txt         | 61 ++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/jz4780-dma.txt
+>  arch/arm/boot/dts/r8a7794.dtsi |   22 ++++++++++++++--------
+>  1 file changed, 14 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-> new file mode 100644
-> index 0000000..ce90011
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-> @@ -0,0 +1,61 @@
-> +* Ingenic JZ4780 DMA Controller
-> +
-> +Required properties:
-> +
-> +- compatible: Should be "ingenic,jz4780-dma"
-> +- reg: Should contain the DMA controller registers location and length.
-> +- interrupts: Should contain the interrupt specifier of the DMA controller.
-> +- interrupt-parent: Should be the phandle of the interrupt controller that
-> +- clocks: Should contain a clock specifier for the JZ4780 PDMA clock.
-> +- #dma-cells: Must be <3>. Number of integer cells in the dmas property of
-> +  DMA clients (see below).
-> +
-> +Optional properties:
-> +
-> +- ingenic,reserved-channels: Bitmask of channels to reserve for devices that
-> +  need a specific channel. These channels will only be assigned when explicitly
-> +  requested by a client. The primary use for this is channels 0 and 1, which
-> +  can be configured to have special behaviour for NAND/BCH when using
-> +  programmable firmware.
-> +
-> +Example:
-> +
-> +dma: dma@13420000 {
-> +	compatible = "ingenic,jz4780-dma";
-> +	reg = <0x13420000 0x10000>;
-> +
-> +	interrupt-parent = <&intc>;
-> +	interrupts = <10>;
-> +
-> +	clocks = <&cgu JZ4780_CLK_PDMA>;
-> +
-> +	#dma-cells = <3>;
-> +
-> +	ingenic,reserved-channels = <0x3>;
-> +};
-> +
-> +DMA clients must use the format described in dma.txt, giving a phandle to the
-> +DMA controller plus the following 3 integer cells:
-> +
-> +1. Transmit request type: The DMA request type for transfers to the device on
-> +   the allocated channel, as defined in the SoC documentation. If set to 0,
-> +   transfers to the device will not be allowed on the channel.
-> +
-> +2. Receive request type: The DMA request type for transfers from the device on
-> +   the allocated channel, as defined in the SoC documentation. If set to 0,
-> +   transfers from the device will not be allowed on the channel.
-> +
-> +3. Channel: If set to 0xffffffff, any available channel will be allocated for
-> +   the client. Otherwise, the exact channel specified will be used. The channel
-> +   should be reserved on the DMA controller using the ingenic,reserved-channels
-> +   property.
+> Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+> @@ -651,16 +651,22 @@
+>  		mstp9_clks: mstp9_clks@e6150994 {
+>  			compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-
+clocks";
+>  			reg = <0 0xe6150994 0 4>, <0 0xe61509a4 0 4>;
+> -			clocks = <&cpg_clocks R8A7794_CLK_QSPI>, <&hp_clk>, <&hp_clk>,
+> -				<&hp_clk>, <&hp_clk>, <&hp_clk>, <&hp_clk>;
+> +			clocks = <&cp_clk>, <&cp_clk>, <&cp_clk>, <&cp_clk>,
+> +				 <&cp_clk>, <&cp_clk>, <&cp_clk>,
+> +				 <&cpg_clocks R8A7794_CLK_QSPI>, <&hp_clk>, <&hp_clk>,
+> +				 <&hp_clk>, <&hp_clk>, <&hp_clk>, <&hp_clk>;
+>  			#clock-cells = <1>;
+> -			clock-indices = <
+> -				R8A7794_CLK_QSPI_MOD R8A7794_CLK_I2C5 R8A7794_CLK_I2C4
+> -				R8A7794_CLK_I2C3 R8A7794_CLK_I2C2 R8A7794_CLK_I2C1
+> -				R8A7794_CLK_I2C0
+> -			>;
+> +			clock-indices = <R8A7794_CLK_GPIO6 R8A7794_CLK_GPIO5
+> +					 R8A7794_CLK_GPIO4 R8A7794_CLK_GPIO3
+> +					 R8A7794_CLK_GPIO2 R8A7794_CLK_GPIO1
+> +					 R8A7794_CLK_GPIO0 R8A7794_CLK_QSPI_MOD
+> +					 R8A7794_CLK_I2C5 R8A7794_CLK_I2C4
+> +					 R8A7794_CLK_I2C3 R8A7794_CLK_I2C2
+> +					 R8A7794_CLK_I2C1 R8A7794_CLK_I2C0>;
+>  			clock-output-names =
+> -				"qspi_mod", "i2c5", "i2c4", "i2c3", "i2c2", "i2c1", "i2c0";
+> +				"gpio6", "gpio5", "gpio4", "gpio3", "gpio2",
+> +				"gpio1", "gpio0", "qspi_mod",
+> +				"i2c5", "i2c4", "i2c3", "i2c2", "i2c1", "i2c0";
+>  		};
+>  		mstp11_clks: mstp11_clks@e615099c {
+>  			compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-
+clocks";
 
-Update. 
-I'm taking a look at these bindings again and see if Transmit/Receive request types 'need' to be separate.
-mmc driver is the only one using it like that.
 
-Sorry for the spam.
-
+-- 
 Regards,
-ZubairLK
 
-> +
-> +Example:
-> +
-> +uart0: serial@10030000 {
-> +	...
-> +	dmas = <&dma 0x14 0 0xffffffff
-> +		&dma 0 0x15 0xffffffff>;
-> +	dma-names = "tx", "rx";
-> +	...
-> +};
-> 
+Laurent Pinchart
+
