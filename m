@@ -1,194 +1,100 @@
-From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Subject: [PATCH] video: ARM CLCD: Added support for FBIO_WAITFORVSYNC
-Date: Wed, 25 Feb 2015 13:01:21 -0800
-Message-ID: <1424898082-1522-3-git-send-email-arun.ramamurthy@broadcom.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V6 00/12] Tegra xHCI support
+Date: Wed, 25 Feb 2015 22:15:45 +0100
+Message-ID: <20150225211539.GA7884@mithrandir>
+References: <1416874644-12070-1-git-send-email-abrestic@chromium.org>
+ <20150225160110.GA26610@ulmo>
+ <CAL1qeaEmSphLd=k3f6865OEO_rcwO3+Hv5KDvCN2_=7nDdZJzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <CAL1qeaEmSphLd=k3f6865OEO_rcwO3+Hv5KDvCN2_=7nDdZJzA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>"linux-arm-kernel@lists.infradead.org" <linux>
 List-Id: devicetree@vger.kernel.org
 
-Added ioctl and interrupt handler functions to support FBIO_WAITFORVSYNC
-Also corrected documentation to make interrupts and interrupt-names
-optional as they are not required properties.
 
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
-Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>0
----
- .../devicetree/bindings/video/arm,pl11x.txt        | 11 +--
- drivers/video/fbdev/amba-clcd.c                    | 82 ++++++++++++++++++++++
- include/linux/amba/clcd.h                          |  4 ++
- 3 files changed, 89 insertions(+), 8 deletions(-)
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/video/arm,pl11x.txt b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-index 2262cdb..7d19024 100644
---- a/Documentation/devicetree/bindings/video/arm,pl11x.txt
-+++ b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-@@ -10,14 +10,6 @@ Required properties:
- 
- - reg: base address and size of the control registers block
- 
--- interrupt-names: either the single entry "combined" representing a
--	combined interrupt output (CLCDINTR), or the four entries
--	"mbe", "vcomp", "lnbu", "fuf" representing the individual
--	CLCDMBEINTR, CLCDVCOMPINTR, CLCDLNBUINTR, CLCDFUFINTR interrupts
--
--- interrupts: contains an interrupt specifier for each entry in
--	interrupt-names
--
- - clock-names: should contain "clcdclk" and "apb_pclk"
- 
- - clocks: contains phandle and clock specifier pairs for the entries
-@@ -54,6 +46,9 @@ Optional properties:
- 	It can be used to configure a virtual y resolution. It
- 	must be a value larger than the actual y resolution.
- 
-+- interrupts: contains an interrupt specifier for the clcd vcomp interrupt
-+	 This is required for the driver to handle FBIO_WAITFORVSYNC ioctls.
-+
- Required sub-nodes:
- 
- - port: describes LCD panel signals, following the common binding
-diff --git a/drivers/video/fbdev/amba-clcd.c b/drivers/video/fbdev/amba-clcd.c
-index 3bc09ad..9f7a58c 100644
---- a/drivers/video/fbdev/amba-clcd.c
-+++ b/drivers/video/fbdev/amba-clcd.c
-@@ -30,6 +30,8 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_graph.h>
-+#include <linux/of_irq.h>
-+#include <linux/interrupt.h>
- #include <video/display_timing.h>
- #include <video/of_display_timing.h>
- #include <video/videomode.h>
-@@ -466,6 +468,73 @@ static int clcdfb_pan_display(struct fb_var_screeninfo *var,
- 	return 0;
- }
- 
-+static int clcdfb_ioctl(struct fb_info *info,
-+			unsigned int cmd, unsigned long args)
-+{
-+	struct clcd_fb *fb = to_clcd(info);
-+	int retval = 0;
-+	u32 val, ienb_val;
-+
-+	switch (cmd) {
-+	case FBIO_WAITFORVSYNC:{
-+		if (fb->lcd_irq <= 0) {
-+			retval = -EINVAL;
-+			break;
-+		}
-+		/* disable Vcomp interrupts */
-+		ienb_val = readl(fb->regs + fb->off_ienb);
-+		ienb_val &= ~CLCD_PL111_IENB_VCOMP;
-+		writel(ienb_val, fb->regs + fb->off_ienb);
-+
-+		/* clear Vcomp interrupt */
-+		writel(CLCD_PL111_IENB_VCOMP, fb->regs + CLCD_PL111_ICR);
-+
-+		/* Generate Interrupt at the start of Vsync */
-+		reinit_completion(&fb->wait);
-+		val = readl(fb->regs +  fb->off_cntl);
-+		val &= ~(CNTL_LCDVCOMP(3));
-+		writel(val, fb->regs + fb->off_cntl);
-+
-+		/* enable Vcomp interrupt */
-+		ienb_val = readl(fb->regs + fb->off_ienb);
-+		ienb_val |= CLCD_PL111_IENB_VCOMP;
-+		writel(ienb_val, fb->regs + fb->off_ienb);
-+		if (!wait_for_completion_interruptible_timeout
-+			(&fb->wait, HZ/10))
-+			retval = -ETIMEDOUT;
-+		break;
-+	}
-+	default:
-+		retval = -ENOIOCTLCMD;
-+		break;
-+	}
-+	return retval;
-+}
-+
-+static irqreturn_t clcd_interrupt(int irq, void *data)
-+{
-+	struct clcd_fb *fb = data;
-+	u32 val;
-+
-+	/* check for vsync interrupt */
-+	val = readl(fb->regs + CLCD_PL111_MIS);
-+
-+	if (val & CLCD_PL111_IENB_VCOMP) {
-+		val = readl(fb->regs + fb->off_ienb);
-+		val &= ~CLCD_PL111_IENB_VCOMP;
-+
-+		/* disable Vcomp interrupts */
-+		writel(val, fb->regs + fb->off_ienb);
-+
-+		/* clear Vcomp interrupt */
-+		writel(CLCD_PL111_IENB_VCOMP, fb->regs + CLCD_PL111_ICR);
-+
-+		complete(&fb->wait);
-+		return IRQ_HANDLED;
-+	}
-+	return IRQ_NONE;
-+}
-+
- static struct fb_ops clcdfb_ops = {
- 	.owner		= THIS_MODULE,
- 	.fb_check_var	= clcdfb_check_var,
-@@ -477,6 +546,7 @@ static struct fb_ops clcdfb_ops = {
- 	.fb_imageblit	= cfb_imageblit,
- 	.fb_mmap	= clcdfb_mmap,
- 	.fb_pan_display	= clcdfb_pan_display,
-+	.fb_ioctl	= clcdfb_ioctl,
- };
- 
- static int clcdfb_register(struct clcd_fb *fb)
-@@ -753,6 +823,18 @@ static int clcdfb_of_init_display(struct clcd_fb *fb)
- 	else
- 		fb->fb.var.yres_virtual = yres_virtual;
- 
-+	fb->lcd_irq = irq_of_parse_and_map(fb->dev->dev.of_node, 0);
-+	if (fb->lcd_irq > 0) {
-+		err = devm_request_irq(&fb->dev->dev,
-+					fb->lcd_irq, clcd_interrupt,
-+					IRQF_SHARED, "clcd", fb);
-+		if (err < 0) {
-+			dev_err(&fb->dev->dev, "unable to register CLCD interrupt\n");
-+			return err;
-+		}
-+		init_completion(&fb->wait);
-+	}
-+
- 	if (of_property_read_u32_array(endpoint,
- 			"arm,pl11x,tft-r0g0b0-pads",
- 			tft_r0b0g0, ARRAY_SIZE(tft_r0b0g0)) == 0)
-diff --git a/include/linux/amba/clcd.h b/include/linux/amba/clcd.h
-index e82e3ee..6a3bc2d 100644
---- a/include/linux/amba/clcd.h
-+++ b/include/linux/amba/clcd.h
-@@ -28,6 +28,8 @@
- #define CLCD_PL110_UCUR		0x00000028
- #define CLCD_PL110_LCUR		0x0000002C
- 
-+#define CLCD_PL111_IENB_VCOMP	(1 << 3)
-+
- #define CLCD_PL111_CNTL		0x00000018
- #define CLCD_PL111_IENB		0x0000001c
- #define CLCD_PL111_RIS		0x00000020
-@@ -184,6 +186,8 @@ struct clcd_fb {
- 	u32			clcd_cntl;
- 	u32			cmap[16];
- 	bool			clk_enabled;
-+	struct completion	wait;
-+	int			lcd_irq;
- };
- 
- static inline void clcdfb_decode(struct clcd_fb *fb, struct clcd_regs *regs)
--- 
-2.3.0
+On Wed, Feb 25, 2015 at 09:27:36AM -0800, Andrew Bresticker wrote:
+> Hi Thierry,
+>=20
+> > Sorry for taking so awfully long to look at this. I've spent some time
+> > looking at various pieces of documentation and I concluded that
+> > representing the port assignment as muxing options doesn't seem right
+> > after all. Instead I've come up with an alternate proposal (attached).
+> > Could you take a look and see if that sounds reasonable to you?
+>=20
+> Thanks for taking a look at this.  I've been meaning to pick this
+> series back up, but haven't had quite enough bandwidth lately.
+>=20
+> This all looks good to me, just one comment below:
+>=20
+> > +PHY nodes:
+> > +----------
+> > +
+> > +An optional child node named "phys" can contain nodes describing addit=
+ional
+> > +properties of each PHY. Only USB3 and UTMI PHYs can be complemented in=
+ this
+> > +way, in which case the name of each node must match one of the followi=
+ng:
+> > +
+> > +  usb3-0, usb3-1, utmi-0, utmi-1, utmi-2
+> > +
+> > +Required properties for USB3 PHYs:
+> > +- nvidia,lanes: specifies the name of the lane that this USB3 PHY uses
+> > +- nvidia,port: specifies the number of the USB2 port that is used for =
+this
+> > +  USB3 PHY
+> > +
+> > +Optional properties for UTMI PHYs:
+> > +- vbus-supply: regulator providing the VBUS voltage for the UTMI pad
+>=20
+> What about the HSIC PHYs?  Shouldn't they be represented as PHY nodes as =
+well?
+
+Yes, they could. The PCIe and SATA PHYs could as well. I haven't
+included them because they currently don't take any properties. In
+addition to that, perhaps some of the nvidia,hsic-* properties could be
+moved into the PHY nodes, too. But they're also properties of the pin,
+so keeping them in the pinmux nodes seems fine as well.
+
+On a slightly different topic, I've been trying to wrap my head around
+the use of the nvidia,port property and my conclusion was that in fact
+one of the physical ports is shared between USB2 and USB3. That is the
+utmi-2 PHY and usb3-0 PHY go to the very same port. The vbus-supply
+specified in the Jetson TK1 DTS would support that (it's associated with
+utmi-2 but named vdd_usb3_reg, and the USB3 port doesn't work without
+it). Can you confirm that?
+
+Thierry
+
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJU7jt0AAoJEN0jrNd/PrOhzSMP/0Q40Ixv0t+IhXpCoNr8m32K
+DV2spBizq/lpeCC5HCQ1OXF51r9zNuD+ikKtQ6MwFGAZdAoQxLCVwLrCIRtK+h/J
+DbJut3sc7OMflFYgGwLqAKzXo5Qc2W6wwp89I0Ntsvyyct35ycbQVIT6EIhcW1Iy
+ONa+8/uGN4l++DM5Vr46vUPvu3f6CKz0zSNLOu7L5y6Rc3W3lgU4haUd/XtkmRN8
+yubu/i5+fx3A9f+3PJXXWw8MsYrUUxl/sqnnOUfNM6XYnrMRu9/UqeKs9SHx7Utk
+HuiDH54h1vaIIinxGUspZV18Oeg6ZShlTs3JDSvmB7z5tHg6OnpmA/En4mtoBaEi
+WWF/TESPNWJaR3lQmncshqKB848iJnFq9aAKg47CMNbke6LLyCSFv6qhhG30qkvu
+dFUQFb+uoUU201KHGZ1hu+QCJpALpfg+R+OHGMauXuohqirb1ei7pGCJV+0kXqKf
+Q9fDwqwVCvF+Ax6caILCE+XEWR3xbWmTJhKEsH26ZRMkdBTUbn3uJ9trU1Z1TO4Z
+hS/YYkNiexvu1z7fO7LlTHVHuWQy/HejGW06eg7oS9urJeNTi0yOR5JzLOexa1A3
+AHuM4pkNqF9gOf+MLml7UbuFBbc9Lxp2++U+GextNxK1ZWN1xQ1vGIWcUKYh3FH5
+Ol1yNiP53x6iUlADSPDz
+=IcuG
+-----END PGP SIGNATURE-----
+
+--BOKacYhQ+x31HxR3--
