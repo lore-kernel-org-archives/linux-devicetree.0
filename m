@@ -1,63 +1,46 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5 0/6] hwmon: thermal: Odroid U3: Provide support for
- Odroid U3 fan
-Date: Wed, 25 Feb 2015 09:18:20 -0800
-Message-ID: <20150225171820.GA2400@roeck-us.net>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424878462-15511-1-git-send-email-l.majewski@samsung.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH V6 00/12] Tegra xHCI support
+Date: Wed, 25 Feb 2015 09:27:36 -0800
+Message-ID: <CAL1qeaEmSphLd=k3f6865OEO_rcwO3+Hv5KDvCN2_=7nDdZJzA@mail.gmail.com>
+References: <1416874644-12070-1-git-send-email-abrestic@chromium.org>
+	<20150225160110.GA26610@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1424878462-15511-1-git-send-email-l.majewski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150225160110.GA26610@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>"linux-arm-kernel@lists.infradead.org" <linux>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 25, 2015 at 04:34:16PM +0100, Lukasz Majewski wrote:
-> Presented patches add support for Odroid's U3 optional CPU FAN, which uses PWM
-> subsystem for low level control.
-> 
-> After successful probe it registers itself as a cooling device for thermal
-> subsystem.
-> 
-> This driver also supports devices without DTS specified.
-> 
-> To provide correct functionality, new properties to device tree description for
-> Exynos4412 and in particular Odroid U3 have been added.
-> 
-> Those patches were tested at Exynos4412 - Odroid U3 board.
-> 
-> Patches were applied on:
-> linux-soc-thermal/fixes branch (Linux v4.0-rc1)
-> SHA1: b71d399c7f2fe06b60b96155ec0b9ae167334e4a
-> 
-> Kamil Debski (1):
->   ARM: dts: Add pwm-fan node to the Odroid-U3 board
-> 
-> Lukasz Majewski (5):
->   Documentation: dts: Documentation entry to explain how to use PWM FAN
->     as a cooling device
->   ARM: dts: Add properties to use pwm-fan device as a cooling device in
->     Odroid U3
->   hwmon: pwm-fan: Extract __set_pwm() function to only modify PWM duty
->     cycle
->   hwmon: pwm-fan: Read PWM FAN configuration from device tree
->   hwmon: pwm-fan: Code for using PWM FAN as a cooling device
-> 
->  .../devicetree/bindings/hwmon/pwm-fan.txt          |  25 +++-
->  arch/arm/boot/dts/exynos4.dtsi                     |   2 +-
->  arch/arm/boot/dts/exynos4412-odroidu3.dts          |  43 ++++++
->  drivers/hwmon/pwm-fan.c                            | 166 +++++++++++++++++++--
->  4 files changed, 220 insertions(+), 16 deletions(-)
-> 
-For the series:
+Hi Thierry,
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+> Sorry for taking so awfully long to look at this. I've spent some time
+> looking at various pieces of documentation and I concluded that
+> representing the port assignment as muxing options doesn't seem right
+> after all. Instead I've come up with an alternate proposal (attached).
+> Could you take a look and see if that sounds reasonable to you?
 
-Should I take it through hwmon ? Might make sense given the majority
-of the changes is in hwmon code.
+Thanks for taking a look at this.  I've been meaning to pick this
+series back up, but haven't had quite enough bandwidth lately.
 
-Thanks,
-Guenter
+This all looks good to me, just one comment below:
+
+> +PHY nodes:
+> +----------
+> +
+> +An optional child node named "phys" can contain nodes describing additional
+> +properties of each PHY. Only USB3 and UTMI PHYs can be complemented in this
+> +way, in which case the name of each node must match one of the following:
+> +
+> +  usb3-0, usb3-1, utmi-0, utmi-1, utmi-2
+> +
+> +Required properties for USB3 PHYs:
+> +- nvidia,lanes: specifies the name of the lane that this USB3 PHY uses
+> +- nvidia,port: specifies the number of the USB2 port that is used for this
+> +  USB3 PHY
+> +
+> +Optional properties for UTMI PHYs:
+> +- vbus-supply: regulator providing the VBUS voltage for the UTMI pad
+
+What about the HSIC PHYs?  Shouldn't they be represented as PHY nodes as well?
