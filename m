@@ -1,49 +1,74 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
-Date: Wed, 25 Feb 2015 17:14:09 +0100
-Message-ID: <2231708.1y1gnmyPQn@wuerfel>
-References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com> <1542574.d99bFx24pn@wuerfel> <54EC9546.50005@arm.com>
+From: Ashwin Chaugule <ashwin.chaugule@linaro.org>
+Subject: Re: [PATCH v2 2/2] ARM: perf: Add support for Scorpion PMUs
+Date: Wed, 25 Feb 2015 11:58:11 -0500
+Message-ID: <CAJ5Y-ea8LBji1L3Q+NMgA9+eOrDVwWNodqPDD9XsyCzi=LMj9g@mail.gmail.com>
+References: <1423851849-6069-1-git-send-email-sboyd@codeaurora.org>
+	<1423851849-6069-3-git-send-email-sboyd@codeaurora.org>
+	<20150220193552.GE1767@arm.com>
+	<20150220201627.GD24928@codeaurora.org>
+	<CAJ5Y-eYLeeNDcBtdvMf-k0XGxq-P21FDq-VMHPJsp4=ccuemig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54EC9546.50005-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAJ5Y-eYLeeNDcBtdvMf-k0XGxq-P21FDq-VMHPJsp4=ccuemig@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 24 February 2015 15:14:14 Sudeep Holla wrote:
-> Hi Arnd,
-> 
-> On 21/01/15 14:43, Arnd Bergmann wrote:
-> > On Wednesday 21 January 2015 12:02:30 Sudeep Holla wrote:
-> >>
-> >> Hi Arnd/Olof,
-> >>
-> >> Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
-> >> support for cpu cache information") which is in -next(via arm64) are
-> >> dependent to provide desired functionality, then can go indepedently
-> >> if you think there could be conflicts if this change is taken via arm64.
-> >> If not, Catalin can pick up with your acks after the review.
-> >
-> > I think it would be better to take this through arm-soc. It's not
-> > extremely likely to cause conflicts, but as you say there are no
-> > strict dependencies on which goes in first, so there is no harm
-> > in merging them separately.
-> >
-> 
-> I think this patch got missed for -rc1. The arm64 architectural
-> support patch for cacheinfo got merged via arm64 tree. It would be good
-> if this is also merged so that cache information can be exposed
-> to the user-space on ARM Ltd boards.
-> 
+On 24 February 2015 at 12:23, Ashwin Chaugule
+<ashwin.chaugule@linaro.org> wrote:
+> On 20 February 2015 at 15:16, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>> On 02/20, Will Deacon wrote:
+>>> On Fri, Feb 13, 2015 at 06:24:09PM +0000, Stephen Boyd wrote:
+>>>
+>>> > +static void scorpion_evt_setup(int idx, u32 config_base)
+>>> > +{
+>>> > +       u32 val;
+>>> > +       u32 mask;
+>>> > +       u32 vval, fval;
+>>> > +       unsigned int region;
+>>> > +       unsigned int group;
+>>> > +       unsigned int code;
+>>> > +       unsigned int group_shift;
+>>> > +       bool venum_event;
+>>> > +
+>>> > +       krait_decode_event(config_base, &region, &group, &code, &venum_event,
+>>> > +                          NULL);
+>>> > +
+>>> > +       group_shift = group * 8;
+>>> > +       mask = 0xff << group_shift;
+>>> > +
+>>> > +       /* Configure evtsel for the region and group */
+>>> > +       if (venum_event)
+>>> > +               val = SCORPION_VLPM_GROUP0;
+>>> > +       else
+>>> > +               val = scorpion_get_pmresrn_event(region);
+>>> > +       val += group;
+>>> > +       /* Mix in mode-exclusion bits */
+>>> > +       val |= config_base & (ARMV7_EXCLUDE_USER | ARMV7_EXCLUDE_PL1);
+>>> > +       armv7_pmnc_write_evtsel(idx, val);
+>>> > +
+>>> > +       asm volatile("mcr p15, 0, %0, c9, c15, 0" : : "r" (0));
+>>>
+>>> What's this guy doing?
+>>
+>> This is the same as Krait. It's clearing some implementation
+>> defined register. From what I can tell it's a per-event register
+>> (i.e. PMSELR decides which event this register write actually
+>> affects) and we do this here to reset this register to some
+>> defined value, zero. Otherwise the reset value of this register
+>> is UNPREDICTABLE and that would be bad. I think we might be able
+>> to move it to the pmu reset path, but I don't know. Ashwin?
+>
 
-Ah, bummer. I've applied this one as a fix for 4.0 because I said we'd
-take it and dropped the ball on it.
+Its a count control register (PMxEVCNTCR). Theres various conditions
+on which you can select when to start/stop counting. e.g. start when
+another counter register overflows. Setting it to 0 was the
+recommended default value on Scorpions and Kraits. Reset value is
+unpredictable. So, just need to make sure this is set every time a
+counter is setup. Will that still work if this is moved to the reset
+path?
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Ashwin.
