@@ -1,54 +1,110 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 0/2] ARM: imx6sx-sdb: add revb board
-Date: Thu, 26 Feb 2015 16:28:28 +0800
-Message-ID: <1424939310-19282-1-git-send-email-peter.chen@freescale.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH] pinctrl: dt: at91: new binding
+Date: Thu, 26 Feb 2015 10:34:54 +0100
+Message-ID: <1424943294-8805-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Changes for v3:
-- Rebased on v4.0-rc1
+Today if we want to disable a pio bank we may will siliently break pinctrl
+configuration in the DT. This will be detected only at runtime.
 
-Changes for v2:
+So move the pinctrl configuration to the bank instead of the bus.
+This allow to detect pinctrl issue at DT compiling time when disable a bank.
 
-- Add missing Makefile entries for both dts files. [Patch 1/2] and [Patch 2/2]
-- Delete OOP setting changed at imx6sx-sdb-reva, it is SoC feature,
-  it doesn't need to be change unless board limitations. [Patch 1/2]
-- Add explanation why OOP setting need to changed at imx6sx-sdb revb board. [Patch 2/2]
-- Make imx6sx-sdb revb board as default imx6sx-sdb board. [Patch 2/2]
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org
+---
+ .../bindings/pinctrl/atmel,at91-pinctrl.txt        | 66 ++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
-Hi Shawn,
-
-The imx6sx-sdb board has two revisions, the current mainline is the
-reva which is experimental and will not be released, the revb board
-is used widely for internal and external users.
-
-The main changes between reva and revb board:
-- OOP setting
-- pfuse
-- qspi
-- can transceiver (not mainlined)
-
-Peter Chen (2):
-  ARM: imx6sx-sdb: change default board as reva board
-  ARM: imx6sx-sdb: add revb board and make it default
-
- arch/arm/boot/dts/Makefile            |   1 +
- arch/arm/boot/dts/imx6sx-sdb-reva.dts | 143 ++++++++
- arch/arm/boot/dts/imx6sx-sdb.dts      | 603 ++--------------------------------
- arch/arm/boot/dts/imx6sx-sdb.dtsi     | 562 +++++++++++++++++++++++++++++++
- 4 files changed, 734 insertions(+), 575 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx6sx-sdb-reva.dts
- create mode 100644 arch/arm/boot/dts/imx6sx-sdb.dtsi
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+index b7a93e8..78355ee 100644
+--- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+@@ -148,3 +148,69 @@ dbgu: serial@fffff200 {
+ 	pinctrl-0 = <&pinctrl_dbgu>;
+ 	status = "disabled";
+ };
++
++II) New Bindings per PIO Block
++
++This allow to detect pinctrl issue at DT compiling time when disable a bank
++
++Required properties for iomux controller:
++- compatible: "atmel,at91rm9200-pio-pinctrl" or "atmel,at91sam9x5-pio-pinctrl"
++		or "atmel,sama5d3-pio-pinctrl"
++- atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
++  configured in this periph mode. All the periph and bank need to be describe.
++
++How to create such array:
++
++Each column will represent the possible peripheral of the pinctrl for the bank
++
++Take an example on the 9260
++Peripheral: 2 ( A and B)
++=>
++
++  /*    A         B     */
++  0xffffffff 0xffc00c3b  /* pioA */
++
++For each peripheral/bank we will descibe in a u32 if a pin can be
++configured in it by putting 1 to the pin bit (1 << pin)
++
++Required properties for pin configuration node:
++- atmel,pins: 3 integers array, represents a group of pins mux and config
++  setting. The format is atmel,pins = <PIN_NUM PERIPH CONFIG>.
++  The PERIPH 0 means gpio, PERIPH 1 is periph A, PERIPH 2 is periph B...
++
++Bits used for CONFIG:
++cf atmel,at91-pinctrl
++
++pioB: gpio@fffff600 {
++	compatible = "atmel,at91rm9200-gpio", "atmel,at91rm9200-pio-pinctrl";
++	reg = <0xfffff600 0x200>;
++	interrupts = <3 IRQ_TYPE_LEVEL_HIGH 1>;
++	#gpio-cells = <2>;
++	gpio-controller;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	clocks = <&pioB_clk>;
++
++			 /*    A         B     */
++	atmel,mux-mask = <0xffffffff 0x7fff3ccf>;
++
++	dbgu {
++		pinctrl_dbgu: dbgu-0 {
++			atmel,pins =
++				<14 0x1 0x0	/* PB14 periph A */
++				 15 0x1 0x1>;	/* PB15 periph A with pullup */
++		};
++	};
++};
++
++dbgu: serial@fffff200 {
++	compatible = "atmel,at91sam9260-usart";
++	reg = <0xfffff200 0x200>;
++	interrupts = <1 4 7>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_dbgu>;
++	status = "disabled";
++};
++
++if you have to use multiple bank
++	pinctrl-0 = <&pinctrl_ip_piaa>, <&pinctrl_ip_piab>;
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
