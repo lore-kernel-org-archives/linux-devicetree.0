@@ -1,82 +1,35 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v6 6/6] hwmon: pwm-fan: Code for using PWM FAN as a cooling
- device
-Date: Thu, 26 Feb 2015 15:40:33 +0100
-Message-ID: <20150226154033.301a699d@amdc2363>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424959177-28739-1-git-send-email-l.majewski@samsung.com>
- <1424959177-28739-7-git-send-email-l.majewski@samsung.com>
- <54EF29D4.7040508@roeck-us.net>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 3/3] of: support passing console options with
+ stdout-path
+Date: Thu, 26 Feb 2015 15:44:00 +0100
+Message-ID: <20150226144400.GC8806@lunn.ch>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org>
+ <1417110967-16284-4-git-send-email-leif.lindholm@linaro.org>
+ <54EF09AA.2080706@hurleysoftware.com>
+ <20150226134646.GB8806@lunn.ch>
+ <54EF2933.3020408@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <54EF29D4.7040508@roeck-us.net>
+Content-Disposition: inline
+In-Reply-To: <54EF2933.3020408@hurleysoftware.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: Leif Lindholm <leif.lindholm@linaro.org>, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, plagnioj@jcrosoft.com, ijc@debian.org, s.hauer@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
-
-> On 02/26/2015 05:59 AM, Lukasz Majewski wrote:
-> > The PWM FAN device can now be used as a thermal cooling device.
-> > Necessary infrastructure has been added in this commit.
-> >
-> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> > Acked-by: Eduardo Valentin <edubezval@gmail.com>
-> > ---
-> > Changes for v2:
-> > - Replace pwm_fan_cooling_states with pwm_fan_cooling_levels
-> > - Update ctx->pwm_fan_state when correct data from device tree is
-> > available
-> > - Using therma_cdev_update() when thermal is ready for controlling
-> > the fan Changes for v3:
-> > - Rename patch heading
-> > - pwm_fan_of_get_cooling_data() now returns -EINVAL when no
-> > "cooling-levels" property defined
-> > - register of cooling device only when proper cooling data is
-> > present Changes for v4:
-> > - None
-> > Changes for v5:
-> > - Check for IS_ENABLED(CONFIG_THERMAL) has been added to prevent
-> > from executing thermal_* specific functions
-> > Changes for v6:
-> > - Adding missing ctx == NULL check in pwm_fan_get_max_state()
-> > - Call to thermal_cooling_device_unregister(ctx->cdev); at
-> > pwm_fan_remove()
-> > - struct thermal_cooling_device *cdev; added to struct pwm_fan_ctx
-> > ---
-> >   drivers/hwmon/pwm-fan.c | 89
-> > ++++++++++++++++++++++++++++++++++++++++++++++++- 1 file changed,
-> > 88 insertions(+), 1 deletion(-)
-> [ ... ]
-> >
-> > @@ -200,6 +286,7 @@ static int pwm_fan_remove(struct
-> > platform_device *pdev) {
-> >   	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
-> >
-> > +	thermal_cooling_device_unregister(ctx->cdev);
+> Sorry if I was unclear. My question was not _whether_ to fix this
+> for earlycon, but rather _how_.
 > 
-> Unfortunately there is still no prototype for this if CONFIG_THERMAL
-> is not configured.
+> IOW, is the ':' character accepted as a path terminator for
+> 1. all nodes, so fix this in fdt_path_offset();
+> 2. only chosen nodes;
+> 3. unique to stdout-path, so fix this in early_init_dt_scan_chosen_serial()?
 
-Yes... since Nishanth Menon's changes are now only in
-linux-soc-thermal/fixes
+Ah, sorry.
 
-> 
-> Two options: Yet another revision, or wait a week until the prototypes
-> are (hopefully) available and submit a patch without the conditionals.
+The ':' character is accepted as a path terminator for stdout-path and
+stdin-path within chosen node. It does not appear to be mentioned
+anywhere else in the standard.
 
-No problem, I will wait a bit and resend this patch set.
-
-> 
-> Guenter
-> 
-
--- 
-Best regards,
-
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+	 Andrew
