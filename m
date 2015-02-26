@@ -1,54 +1,86 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: [PATCH] Documentation: DT: omap_serial: document missing properties and add an example
-Date: Thu, 26 Feb 2015 10:38:45 -0500
-Message-ID: <1424965125-31714-1-git-send-email-mporter@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Devicetree List <devicetree@vger.kernel.org>
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit Exynos5433 SoC
+Date: Thu, 26 Feb 2015 16:42:09 +0100
+Message-ID: <2707354.mhmQEHxoKV@wuerfel>
+References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com> <6850624.bdB2Ab6zJx@wuerfel> <54EED6E1.4060908@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <54EED6E1.4060908@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, olof@lixom.net, will.deacon@arm.com, linux-kernel@vger.kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, kgene@kernel.org, a.kesavan@samsung.com, chanho61.park@samsung.com, inki.dae@samsung.com, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-The omap_serial.txt binding documentation lacks a number of properties
-that are used in DTS files for platforms incorporating this peripheral.
-Fix this by documenting the missing required and optional fields and
-add an example.
+On Thursday 26 February 2015 17:18:41 Chanwoo Choi wrote:
+> I add following aliases and serial_1/serial_3 dt node in board dtsi:
+> I tested that change the alias of serial_x node.
+>         
+>         aliases {
+>                 serial0 = &serial_1;
+>                 serial1 = &serial_3;
+>         };
+> 
+>         /* Add 'linux,stdout-path' property to print kernel log by using ealycon */
+>         chosen {
+>                 linux,stdout-path = &serial_1;
+>         };
+> 
+>         [snip]
+> 
+>         /* serial_1 is used for printing kernel log throught JIG cable */
+>         &serial_1 {
+>                 status = "okay";
+>         };
+> 
+>         &serial_3 {
+>                 status = "okay";
+>         };
+> 
+> In result, serial driver create the /dev/ttySAC0 for serial_1 and /dev/ttySAC1 for serial_3.
+> But, I cannot complete the kernel booting and stop it with following kernel log
+> 
+> [    0.000000] Booting Linux on physical CPU 0x100
+> [    0.000000] Initializing cgroup subsys cpuset
+> [    0.000000] Initializing cgroup subsys cpu
+> [    0.000000] Initializing cgroup subsys cpuacct
+> [    0.000000] Linux version 4.0.0-rc1-00066-g49bfcec-dirty (cwchoi00@chan) (gcc version 4.9.2 20140904 (prerelease) (crosstool-NG l5
+> [snip]
+> [    0.000000] Kernel command line: console=ttySAC1,115200 earlycon=exynos4210,0x14C20000
 
-Signed-off-by: Matt Porter <mporter@konsulko.com>
----
- .../devicetree/bindings/serial/omap_serial.txt       | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+What is the "earlycon=exynos4210,0x14C20000" doing here? Should that not just be
+"earlycon=exynos" or something like that when you set the correct stdout-path?
 
-diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
-index 342eedd..54c2a15 100644
---- a/Documentation/devicetree/bindings/serial/omap_serial.txt
-+++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
-@@ -4,7 +4,27 @@ Required properties:
- - compatible : should be "ti,omap2-uart" for OMAP2 controllers
- - compatible : should be "ti,omap3-uart" for OMAP3 controllers
- - compatible : should be "ti,omap4-uart" for OMAP4 controllers
-+- reg : address and length of the register space
-+- interrupts or interrupts-extended : Should contain the uart interrupt
-+                                      specifier or both the interrupt
-+                                      controller phandle and interrupt
-+                                      specifier.
- - ti,hwmods : Must be "uart<n>", n being the instance number (1-based)
- 
- Optional properties:
- - clock-frequency : frequency of the clock input to the UART
-+- dmas : DMA specifier, consisting of a phandle to the DMA controller
-+         node and a DMA channel number.
-+- dma-names : "rx" for receive channel, "tx" for transmit channel.
-+
-+Example:
-+
-+                uart4: serial@49042000 {
-+                        compatible = "ti,omap3-uart";
-+                        reg = <0x49042000 0x400>;
-+                        interrupts = <80>;
-+                        dmas = <&sdma 81 &sdma 82>;
-+                        dma-names = "tx", "rx";
-+                        ti,hwmods = "uart4";
-+                        clock-frequency = <48000000>;
-+                };
--- 
-1.8.4
+> [snip]
+> [    0.651647] dma-pl330 15610000.pdma: Loaded driver for PL330 DMAC-341330
+> [    0.651851] dma-pl330 15610000.pdma:         DBUFF-32x4bytes Num_Chans-8 Num_Peri-32 Num_Events-32
+> [    0.658566] dma-pl330 15600000.pdma: Loaded driver for PL330 DMAC-341330
+> [    0.662872] dma-pl330 15600000.pdma:         DBUFF-32x4bytes Num_Chans-8 Num_Peri-32 Num_Events-32
+> [    0.672487] dma-pl330 11420000.adma: Loaded driver for PL330 DMAC-341330
+> [ 8466.414900] dma-pl330 11420000.adma:         DBUFF-8x8bytes Num_Chans-8 Num_Peri-16 Num_Events-8
+> [ 8466.481648] 14c20000.serial: ttySAC0 at MMIO 0x14c20000 (irq = 21, base_baud = 0) is a S3C6400/10
+> (dont' print any kernel log)
+> 
+> So, I change the kernel command line about ('console' bootparam) as following:
+> because tty framework must use the 'console' bootparam to print kernel log.
+> - original     : Kernel command line: console=ttySAC1,115200 ... (cannot the kernel log from serial driver probed)
+> - modification : Kernel command line: console=ttySAC0,115200 ... (got the successful kernel booting)
+> 
+> After modification, I got the successful kernel booting.
+> 
+> If should use the serial_0 device and then modify the 'aliases' as following:
+> I have to modify the commandline of bootloader if the commandline of bootloader is used
+> instad of default kernel command line.
+> 
+>         aliases {
+>                 serial0 = &serial_0;
+>                 serial1 = &serial_1;
+>                 serial2 = &serial_3;
+>         };
+
+If you need the numbers to match, maybe there is still a bug in the serial port
+driver and it uses some arbitrary number (e.g. probe order, or ascending
+MMIO address) for the console instead of the alias?
+
+	Arnd
