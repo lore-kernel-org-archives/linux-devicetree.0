@@ -1,35 +1,55 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 3/3] of: support passing console options with
- stdout-path
-Date: Thu, 26 Feb 2015 15:44:00 +0100
-Message-ID: <20150226144400.GC8806@lunn.ch>
-References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org>
- <1417110967-16284-4-git-send-email-leif.lindholm@linaro.org>
- <54EF09AA.2080706@hurleysoftware.com>
- <20150226134646.GB8806@lunn.ch>
- <54EF2933.3020408@hurleysoftware.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH RFC 0/6] Use DRM component API in tilcdc to connect to tda998x
+Date: Thu, 26 Feb 2015 16:55:29 +0200
+Message-ID: <cover.1424961754.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54EF2933.3020408@hurleysoftware.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, plagnioj@jcrosoft.com, ijc@debian.org, s.hauer@pengutronix.de
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com
+Cc: tomi.valkeinen@ti.com, detheridge@ti.com, moinejf@free.fr, linux@arm.linux.org.uk, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-> Sorry if I was unclear. My question was not _whether_ to fix this
-> for earlycon, but rather _how_.
-> 
-> IOW, is the ':' character accepted as a path terminator for
-> 1. all nodes, so fix this in fdt_path_offset();
-> 2. only chosen nodes;
-> 3. unique to stdout-path, so fix this in early_init_dt_scan_chosen_serial()?
+Remove tilcdc slave support and connect to tda998x trough its
+component DRM API. For dtb backward compatibility the code creates at
+boot time a DT overlay based on the earlier binding. The overlay
+conforms to the new graph based binding.
 
-Ah, sorry.
+The first patch is just a bugfix and can be applied or dropped
+independenty.
 
-The ':' character is accepted as a path terminator for stdout-path and
-stdin-path within chosen node. It does not appear to be mentioned
-anywhere else in the standard.
+Jyri Sarha (6):
+  drm/tilcdc: Fix module unloading
+  drm/tilcdc: Remove tilcdc slave support for tda998x driver
+  drm/tilcdc: Add support for external compontised DRM encoder
+  drm/tilcdc: Add DRM_TILCDC_INIT for "ti,tilcdc,slave" binding support
+  drm/tilcdc: Force building of DRM_TILCDC_INIT
+  ARM: dts: am335x-boneblack: Use new binding for HDMI
 
-	 Andrew
+ .../devicetree/bindings/drm/tilcdc/slave.txt       |  18 -
+ .../devicetree/bindings/drm/tilcdc/tilcdc.txt      |  27 ++
+ arch/arm/boot/dts/am335x-boneblack.dts             |  20 +-
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/tilcdc/Kconfig                     |   6 +
+ drivers/gpu/drm/tilcdc/Makefile                    |   4 +-
+ drivers/gpu/drm/tilcdc/tilcdc_boot_init.c          | 270 ++++++++++++++
+ drivers/gpu/drm/tilcdc/tilcdc_crtc.c               |  36 +-
+ drivers/gpu/drm/tilcdc/tilcdc_drv.c                |  69 ++--
+ drivers/gpu/drm/tilcdc/tilcdc_drv.h                |   3 +-
+ drivers/gpu/drm/tilcdc/tilcdc_external.c           | 105 ++++++
+ drivers/gpu/drm/tilcdc/tilcdc_external.h           |  24 ++
+ drivers/gpu/drm/tilcdc/tilcdc_slave.c              | 411 ---------------------
+ drivers/gpu/drm/tilcdc/tilcdc_slave.h              |  26 --
+ drivers/gpu/drm/tilcdc/tilcdc_slave_convert.dts    |  70 ++++
+ 15 files changed, 601 insertions(+), 489 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/drm/tilcdc/slave.txt
+ create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_boot_init.c
+ create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_external.c
+ create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_external.h
+ delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave.c
+ delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave.h
+ create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave_convert.dts
+
+-- 
+1.9.1
+
