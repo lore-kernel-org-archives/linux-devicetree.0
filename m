@@ -1,68 +1,160 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 01/12] ARM: dts: apq8064: add RPM regulators support
-Date: Thu, 26 Feb 2015 18:26:40 +0000
-Message-ID: <54EF6560.6080703@linaro.org>
-References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org> <1424678093-12966-1-git-send-email-srinivas.kandagatla@linaro.org> <A5AB3F5F-7942-4DA0-925E-9033EC929174@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 02/12] ARM: dts: apq8064: Add usb host support.
+Date: Thu, 26 Feb 2015 12:27:18 -0600
+Message-ID: <8D3BE083-44A4-4BCD-B09F-F6EC3EFECD77@codeaurora.org>
+References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org> <1424678101-13009-1-git-send-email-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <A5AB3F5F-7942-4DA0-925E-9033EC929174@codeaurora.org>
+In-Reply-To: <1424678101-13009-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+On Feb 23, 2015, at 1:55 AM, Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
 
-On 26/02/15 18:25, Kumar Gala wrote:
->
-> On Feb 23, 2015, at 1:54 AM, Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
->
->> This patch adds rpm node to apq8064 dt as rpm would be used by other
->> devices for regulator support. Also adds all the regulators in the rpm.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->> arch/arm/boot/dts/qcom-apq8064.dtsi | 241 ++++++++++++++++++++++++++++++++++++
->> 1 file changed, 241 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
->> index b3154c0..db5fc59 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
->> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
->> @@ -3,6 +3,7 @@
->> #include "skeleton.dtsi"
->> #include <dt-bindings/clock/qcom,gcc-msm8960.h>
->> #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
->> +#include <dt-bindings/mfd/qcom-rpm.h>
->> #include <dt-bindings/soc/qcom,gsbi.h>
->> #include <dt-bindings/interrupt-controller/arm-gic.h>
->>
->> @@ -246,6 +247,246 @@
->> 			#reset-cells = <1>;
->> 		};
->>
->> +		l2cc: clock-controller@2011000 {
->> +			compatible	= "syscon";
->> +			reg		= <0x2011000 0x1000>;
->> +		};
->> +
->> +		rpm@108000 {
->> +			compatible	= "qcom,rpm-apq8064";
->> +			reg		= <0x108000 0x1000>;
->> +			qcom,ipc	= <&l2cc 0x8 2>;
->> +
->> +			interrupts	= <0 19 0>, <0 21 0>, <0 22 0>;
->> +			interrupt-names	= "ack", "err", "wakeup";
->> +
->
-> Can you use the defines for GIC for the interrupts.  Also, I think the last property should probably be level high instead of 0.
-Yep, I will fix it.
+> This patch adds device tree nodes to support two usb hosts on APQ8064
+> SOC.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 40 +++++++++++++++++++++++++
+> arch/arm/boot/dts/qcom-apq8064.dtsi        | 47 ++++++++++++++++++++++++++++++
+> 2 files changed, 87 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> index e641001..40657a4 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> @@ -49,6 +49,46 @@
+> 			};
+> 		};
+> 
+> +		rpm@108000 {
+> +			pm8921_s3: pm8921-s3 {
+> +				regulator-min-microvolt		= <1000000>;
+> +				regulator-max-microvolt		= <1400000>;
+> +				qcom,switch-mode-frequency	= <4800000>;
+> +			};
+> +
+> +			pm8921_l3: pm8921-l3 {
+> +				regulator-min-microvolt = <3050000>;
+> +				regulator-max-microvolt = <3300000>;
+> +			};
+> +
+> +			pm8921_l23: pm8921-l23 {
+> +				regulator-min-microvolt = <1700000>;
+> +				regulator-max-microvolt = <1900000>;
+> +			};
+> +		};
+> +
+> +		usb3_phy: phy@12520000 {
+> +			status		= "okay";
+> +			vddcx-supply	= <&pm8921_s3>;
+> +			v3p3-supply	= <&pm8921_l3>;
+> +			v1p8-supply	= <&pm8921_l23>;
+> +		};
+> +
+> +		usb4_phy: phy@12530000 {
+> +			status		= "okay";
+> +			vddcx-supply	= <&pm8921_s3>;
+> +			v3p3-supply	= <&pm8921_l3>;
+> +			v1p8-supply	= <&pm8921_l23>;
+> +		};
+> +
+> +		usb3: usb@12520000 {
+> +			status = "okay";
+> +		};
+> +
+> +		usb4: usb@12530000 {
+> +			status = "okay";
+> +		};
+> +
+> 		amba {
+> 			/* eMMC */
+> 			sdcc1: sdcc@12400000 {
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> index db5fc59..e33eb03 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> @@ -2,6 +2,7 @@
+> 
+> #include "skeleton.dtsi"
+> #include <dt-bindings/clock/qcom,gcc-msm8960.h>
+> +#include <dt-bindings/reset/qcom,gcc-msm8960.h>
+> #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
+> #include <dt-bindings/mfd/qcom-rpm.h>
+> #include <dt-bindings/soc/qcom,gsbi.h>
+> @@ -487,6 +488,52 @@
+> 			};
+> 		};
+> 
+> +		usb3_phy: phy@12520000 {
+> +			compatible	= "qcom,usb-otg-ci";
+> +			reg		= <0x12520000 0x400>;
+> +			interrupts	= <0 188 IRQ_TYPE_NONE>;
 
---srini
+I think the IRQ_TYPE should be IRQ_TYPE_LEVEL_HIGH (same for all other interrupts)
 
+Also can we use GIC_SPI
 
->
-> - k
->
+> +			status		= "disabled";
+> +			dr_mode		= "host";
+> +
+> +			clocks		= <&gcc USB_HS3_XCVR_CLK>,
+> +					  <&gcc USB_HS3_H_CLK>;
+> +			clock-names	= "core", "iface";
+> +
+> +			resets		= <&gcc USB_HS3_RESET>;
+> +			reset-names	= "link";
+> +		};
+> +
+> +		usb4_phy: phy@12530000 {
+> +			compatible	= "qcom,usb-otg-ci";
+> +			reg		= <0x12530000 0x400>;
+> +			interrupts	= <0 215 IRQ_TYPE_NONE>;
+> +			status		= "disabled";
+> +			dr_mode		= "host";
+> +
+> +			clocks		= <&gcc USB_HS4_XCVR_CLK>,
+> +					  <&gcc USB_HS4_H_CLK>;
+> +			clock-names	= "core", "iface";
+> +
+> +			resets		= <&gcc USB_HS4_RESET>;
+> +			reset-names	= "link";
+> +		};
+> +
+> +		usb3: usb@12520000 {
+> +			compatible	= "qcom,ehci-host";
+> +			reg		= <0x12520000 0x400>;
+> +			interrupts	= <0 188 IRQ_TYPE_NONE>;
+> +			status		= "disabled";
+> +			usb-phy		= <&usb3_phy>;
+> +		};
+> +
+> +		usb4: usb@12530000 {
+> +			compatible	= "qcom,ehci-host";
+> +			reg		= <0x12530000 0x400>;
+> +			interrupts	= <0 215 IRQ_TYPE_NONE>;
+> +			status		= "disabled";
+> +			usb-phy		= <&usb4_phy>;
+> +		};
+> +
+> 		/* Temporary fixed regulator */
+> 		vsdcc_fixed: vsdcc-regulator {
+> 			compatible = "regulator-fixed";
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
