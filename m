@@ -1,61 +1,98 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv3] mvebu: add Linksys WRT1900AC (Mamba) support
-Date: Thu, 26 Feb 2015 18:52:57 +0100
-Message-ID: <54EF5D79.9060503@free-electrons.com>
-References: <1424089864-15651-1-git-send-email-kaloz@openwrt.org> <54EB7255.7090806@free-electrons.com> <op.xuiwzhcu2s3iss@ecaz>
+Subject: Re: [PATCH 0/8] Add proper support for Compulab CM-A510/SBC-A510
+Date: Thu, 26 Feb 2015 18:55:35 +0100
+Message-ID: <54EF5E17.1070005@free-electrons.com>
+References: <1424199129-22099-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <op.xuiwzhcu2s3iss@ecaz>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424199129-22099-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Imre,
+Hi Sebastian,
 
-On 23/02/2015 19:43, Imre Kaloz wrote:
-> Hi Gregory,
+On 17/02/2015 19:52, Sebastian Hesselbarth wrote:
+> This patch set improves current mainline support for the Compulab
+> CM-A510 System-on-Module (SoM) and its default Compulab SBC-A510
+> base board. Thanks to Gabriel Dobato who agreed to remote debug and
+> test the provided DT changes.
 > 
-> On Mon, 23 Feb 2015 19:32:53 +0100, Gregory CLEMENT  
-> <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On the way to proper support, we
+> - Rework i2c-mux-pinctrl to honor disabled sub-bus nodes
+> - Add missing "compulab" vendor prefix
+> - Fix broken uart[23] reg properties
+> - Beautify Dove's dtsi files by adding gpio/irq includes, node
+>   labels for pcie, and some additional pinctrl settings
+> - Add a node for the internal i2c mux mechanism on Dove SoCs
 > 
-> ...
+> And finally add a DT include for the Compulab CM-A510 SoM and a DT
+> board file for the SBC-A510 base board.
 > 
->>> @@ -0,0 +1,348 @@
->>> +/*
->>> + * Device Tree file for the Linksys WRT1900AC (Mamba).
->>> + *
->>> + * Note: this board is shipped with a new generation boot loader that
->>> + * remaps internal registers at 0xf1000000. Therefore, if earlyprintk
->>> + * is used, the CONFIG_DEBUG_MVEBU_UART_ALTERNATE option should be
->>
->> This symbol name has been removed and DEBUG_MVEBU_UART0_ALTERNATE would
->> be used instead.
->>
->> Besides this,
->>
->> Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>
->> You don't have to resend a new version for this, I can amend
->> your patch while applying it. So unless there is new comments
->> I will add your patch to the mvebu tree in a couple of days.
+> Patches are based on stable v3.19 and are indended for the next
+> merge window (either v3.21 or v4.1). Compulab related changes have
+> been tested by Gabriel Dobato, I tested on SolidRun CuBox that it
+> does not break existing Dove boards.
 > 
-> I knew I will forget something - this has been noted by Andrew back then  
-> :) Thank you for taking care of this.
+> For the i2c-mux-pinctrl, a Tested-by from any user of Tegra20
+> Seaboard, Tamonten, or Ventana would be nice to see if it is fully
+> compatible.
+> 
+> I have added MVEBU maintainers to all patches, Wolfram for i2c and
+> Stephen as the i2c-mux-pinctrl author i2c-mux-pinctrl related patches,
+> and corresponding lists. As there is no important DT work in here,
+> I decided to not explicitly add each of the DT maintainers except for
+> the vendor prefix patch.
+> 
+> Sebastian Hesselbarth (8):
+>   i2c: mux-pinctrl: Rework to honor disabled child nodes
+>   devicetree: vendor-prefixes: Add CompuLab to known vendors
+>   ARM: dts: dove: Fix uart[23] reg property
+>   ARM: dts: dove: Always include gpio and interrupt-controller headers
+>   ARM: dts: dove: Add node labels for PCIe ports 0 and 1
+>   ARM: dts: dove: Add some more common pinctrl settings
+>   ARM: dts: dove: Add internal i2c multiplexer node
+>   ARM: dts: dove: Add proper support for Compulab CM-A510/SBC-A510
+
+Patches 3 to 6 applied on mvebu/dt
+
+If I understood well patches 7 and 8 depend on patch 1 which had not been
+taken yet.
 
 
-Now applied (amended) on mvebu/dt
 Thanks,
 
 Gregory
 
+
 > 
+>  .../devicetree/bindings/i2c/i2c-mux-pinctrl.txt    |  28 +--
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  arch/arm/boot/dts/Makefile                         |   5 +-
+>  arch/arm/boot/dts/dove-cm-a510.dts                 |  38 ----
+>  arch/arm/boot/dts/dove-cm-a510.dtsi                | 195 +++++++++++++++++++++
+>  arch/arm/boot/dts/dove-sbc-a510.dts                | 182 +++++++++++++++++++
+>  arch/arm/boot/dts/dove.dtsi                        | 103 ++++++++++-
+>  drivers/i2c/muxes/i2c-mux-pinctrl.c                |  70 +++++---
+>  8 files changed, 537 insertions(+), 85 deletions(-)
+>  delete mode 100644 arch/arm/boot/dts/dove-cm-a510.dts
+>  create mode 100644 arch/arm/boot/dts/dove-cm-a510.dtsi
+>  create mode 100644 arch/arm/boot/dts/dove-sbc-a510.dts
 > 
-> Best,
-> 
-> Imre
+> ---
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > 
 
 
@@ -64,7 +101,3 @@ Gregory Clement, Free Electrons
 Kernel, drivers, real-time and embedded Linux
 development, consulting, training and support.
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
