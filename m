@@ -1,194 +1,58 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: [PATCH v6 6/6] hwmon: pwm-fan: Code for using PWM FAN as a cooling
- device
-Date: Thu, 26 Feb 2015 14:59:37 +0100
-Message-ID: <1424959177-28739-7-git-send-email-l.majewski@samsung.com>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1424959177-28739-1-git-send-email-l.majewski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1424959177-28739-1-git-send-email-l.majewski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>
-Cc: lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] of: support passing console options with stdout-path
+Date: Thu, 26 Feb 2015 09:09:55 -0500
+Message-ID: <54EF2933.3020408@hurleysoftware.com>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org> <1417110967-16284-4-git-send-email-leif.lindholm@linaro.org> <54EF09AA.2080706@hurleysoftware.com> <20150226134646.GB8806@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150226134646.GB8806-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The PWM FAN device can now be used as a thermal cooling device. Necessary
-infrastructure has been added in this commit.
+Hi Andrew,
 
-Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
----
-Changes for v2:
-- Replace pwm_fan_cooling_states with pwm_fan_cooling_levels
-- Update ctx->pwm_fan_state when correct data from device tree is available
-- Using therma_cdev_update() when thermal is ready for controlling the fan
-Changes for v3:
-- Rename patch heading
-- pwm_fan_of_get_cooling_data() now returns -EINVAL when no "cooling-levels"
-  property defined
-- register of cooling device only when proper cooling data is present
-Changes for v4:
-- None
-Changes for v5:
-- Check for IS_ENABLED(CONFIG_THERMAL) has been added to prevent from
-  executing thermal_* specific functions
-Changes for v6:
-- Adding missing ctx == NULL check in pwm_fan_get_max_state()
-- Call to thermal_cooling_device_unregister(ctx->cdev); at pwm_fan_remove()
-- struct thermal_cooling_device *cdev; added to struct pwm_fan_ctx
----
- drivers/hwmon/pwm-fan.c | 89 ++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 88 insertions(+), 1 deletion(-)
+On 02/26/2015 08:46 AM, Andrew Lunn wrote:
+> On Thu, Feb 26, 2015 at 06:55:22AM -0500, Peter Hurley wrote:
+>> On 11/27/2014 12:56 PM, Leif Lindholm wrote:
+>>> Support specifying console options (like with console=ttyXN,<options>)
+>>> by appending them to the stdout-path property after a separating ':'.
+>>>
+>>> Example:
+>>>         stdout-path = "uart0:115200";
+>>
+>> This format breaks DT earlycon because libfdt doesn't recognize ':' as a
+>> path terminator.
+>>
+>> It's simple enough to fix this directly in early_init_dt_scan_chosen_serial()
+>> but perhaps it would better to teach fdt_path_offset() to recognize ':'?
+> 
+> Hi Peter
+> 
+> ePAPR says for stdout-path in Chosen:
+> 
+> A string that specifies the full path to the node representing the
+> device to be used for boot console output. If the character ":" is
+> present in the value it terminates the path. The value may be an
+> alias.
+> 
+> So it is probably wise to implement this properly.
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index e6ed353..7c83dc4 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- #include <linux/sysfs.h>
-+#include <linux/thermal.h>
- 
- #define MAX_PWM 255
- 
-@@ -34,6 +35,7 @@ struct pwm_fan_ctx {
- 	unsigned int pwm_fan_state;
- 	unsigned int pwm_fan_max_state;
- 	unsigned int *pwm_fan_cooling_levels;
-+	struct thermal_cooling_device *cdev;
- };
- 
- static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
-@@ -68,6 +70,17 @@ exit_set_pwm_err:
- 	return ret;
- }
- 
-+static void pwm_fan_update_state(struct pwm_fan_ctx *ctx, unsigned long pwm)
-+{
-+	int i;
-+
-+	for (i = 0; i < ctx->pwm_fan_max_state; ++i)
-+		if (pwm < ctx->pwm_fan_cooling_levels[i + 1])
-+			break;
-+
-+	ctx->pwm_fan_state = i;
-+}
-+
- static ssize_t set_pwm(struct device *dev, struct device_attribute *attr,
- 		       const char *buf, size_t count)
- {
-@@ -82,6 +95,7 @@ static ssize_t set_pwm(struct device *dev, struct device_attribute *attr,
- 	if (ret)
- 		return ret;
- 
-+	pwm_fan_update_state(ctx, pwm);
- 	return count;
- }
- 
-@@ -103,6 +117,62 @@ static struct attribute *pwm_fan_attrs[] = {
- 
- ATTRIBUTE_GROUPS(pwm_fan);
- 
-+/* thermal cooling device callbacks */
-+static int pwm_fan_get_max_state(struct thermal_cooling_device *cdev,
-+				 unsigned long *state)
-+{
-+	struct pwm_fan_ctx *ctx = cdev->devdata;
-+
-+	if (!ctx)
-+		return -EINVAL;
-+
-+	*state = ctx->pwm_fan_max_state;
-+
-+	return 0;
-+}
-+
-+static int pwm_fan_get_cur_state(struct thermal_cooling_device *cdev,
-+				 unsigned long *state)
-+{
-+	struct pwm_fan_ctx *ctx = cdev->devdata;
-+
-+	if (!ctx)
-+		return -EINVAL;
-+
-+	*state = ctx->pwm_fan_state;
-+
-+	return 0;
-+}
-+
-+static int
-+pwm_fan_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
-+{
-+	struct pwm_fan_ctx *ctx = cdev->devdata;
-+	int ret;
-+
-+	if (!ctx || (state > ctx->pwm_fan_max_state))
-+		return -EINVAL;
-+
-+	if (state == ctx->pwm_fan_state)
-+		return 0;
-+
-+	ret = __set_pwm(ctx, ctx->pwm_fan_cooling_levels[state]);
-+	if (ret) {
-+		dev_err(&cdev->device, "Cannot set pwm!\n");
-+		return ret;
-+	}
-+
-+	ctx->pwm_fan_state = state;
-+
-+	return ret;
-+}
-+
-+static const struct thermal_cooling_device_ops pwm_fan_cooling_ops = {
-+	.get_max_state = pwm_fan_get_max_state,
-+	.get_cur_state = pwm_fan_get_cur_state,
-+	.set_cur_state = pwm_fan_set_cur_state,
-+};
-+
- int pwm_fan_of_get_cooling_data(struct device *dev, struct pwm_fan_ctx *ctx)
- {
- 	struct device_node *np = dev->of_node;
-@@ -145,8 +215,9 @@ int pwm_fan_of_get_cooling_data(struct device *dev, struct pwm_fan_ctx *ctx)
- 
- static int pwm_fan_probe(struct platform_device *pdev)
- {
--	struct device *hwmon;
-+	struct thermal_cooling_device *cdev;
- 	struct pwm_fan_ctx *ctx;
-+	struct device *hwmon;
- 	int duty_cycle;
- 	int ret;
- 
-@@ -193,6 +264,21 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	ctx->pwm_fan_state = ctx->pwm_fan_max_state;
-+	if (IS_ENABLED(CONFIG_THERMAL)) {
-+		cdev = thermal_of_cooling_device_register(pdev->dev.of_node,
-+							  "pwm-fan", ctx,
-+							  &pwm_fan_cooling_ops);
-+		if (IS_ERR(cdev)) {
-+			dev_err(&pdev->dev,
-+				"Failed to register pwm-fan as cooling device");
-+			pwm_disable(ctx->pwm);
-+			return PTR_ERR(cdev);
-+		}
-+		ctx->cdev = cdev;
-+		thermal_cdev_update(cdev);
-+	}
-+
- 	return 0;
- }
- 
-@@ -200,6 +286,7 @@ static int pwm_fan_remove(struct platform_device *pdev)
- {
- 	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
- 
-+	thermal_cooling_device_unregister(ctx->cdev);
- 	if (ctx->pwm_value)
- 		pwm_disable(ctx->pwm);
- 	return 0;
--- 
-2.0.0.rc2
+Sorry if I was unclear. My question was not _whether_ to fix this
+for earlycon, but rather _how_.
+
+IOW, is the ':' character accepted as a path terminator for
+1. all nodes, so fix this in fdt_path_offset();
+2. only chosen nodes;
+3. unique to stdout-path, so fix this in early_init_dt_scan_chosen_serial()?
+
+Regards,
+Peter Hurley
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
