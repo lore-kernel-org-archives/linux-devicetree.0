@@ -1,48 +1,68 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch] ASoC: max98357a: Use standard DAI names
-Date: Thu, 26 Feb 2015 11:26:38 +0900
-Message-ID: <20150226022638.GC6236@finisterre.sirena.org.uk>
-References: <1424846344-23665-1-git-send-email-kwestfie@codeaurora.org>
+Subject: Re: [PATCH v2] spi: qup: Add DMA capabilities
+Date: Thu, 26 Feb 2015 11:33:17 +0900
+Message-ID: <20150226023317.GE6236@finisterre.sirena.org.uk>
+References: <1424782803-13103-1-git-send-email-stanimir.varbanov@linaro.org>
+ <20150224135622.GH6236@finisterre.sirena.org.uk>
+ <54ECA216.306@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ftjCgYj7ABv2ooUJ"
+	protocol="application/pgp-signature"; boundary="LuH5Zozo3bmn6wjd"
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1424846344-23665-1-git-send-email-kwestfie@codeaurora.org>
+In-Reply-To: <54ECA216.306@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ftjCgYj7ABv2ooUJ
+--LuH5Zozo3bmn6wjd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 24, 2015 at 10:39:04PM -0800, Kenneth Westfield wrote:
-> From: Kenneth Westfield <kwestfie@codeaurora.org>
->=20
-> Use the standard naming convention for the codec DAI.
+On Tue, Feb 24, 2015 at 06:08:54PM +0200, Stanimir Varbanov wrote:
 
-Applied, thanks.  Please pay attention to who you're CCing and try to
-only include relevant people/lists - mail volumes are often very high
-and sending people irrelevant stuff adds to the problem.
+> yes, there is a potential race between atomic_inc and dma callback. I
+> reordered these calls to save few checks, and now it returns to me.
 
---ftjCgYj7ABv2ooUJ
+> I imagine few options here:
+
+>  - reorder the dmaengine calls and atomic operations, i.e.
+> call atomic_inc for rx and tx channels before corresponding
+> dmaengine_submit and dmaengine_issue_pending.
+
+>  - have two different dma callbacks and two completions and waiting for
+> the two.
+
+>  - manage to receive only one dma callback, i.e. the last transfer in
+> case of presence of the rx_buf and tx_buf at the same time.
+
+>  - let me see for better solution.
+
+Any solution which doesn't make use of atomics is likely to be better,
+as I said they are enormously error prone.  A more common approach is a
+single completion triggering on the RX (for RX only or bidirectional
+transfers) or TX if that's the only thing active.  For most hardware you
+can just use the RX to manage completion since it must of necessity
+complete at the same time as or later than the transmit side, transmit
+often completes early since the DMA completes when the FIFO is full not
+when the data is on the wire.
+
+--LuH5Zozo3bmn6wjd
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJU7oRdAAoJECTWi3JdVIfQa14H/2YuFP5It3lMmITeExg8UZru
-0OCWYM6jQSAdzqmKM+J3q/6ey4Tgz2AewFNw3YvE4PKjhuHAobH60JGnTlmTU+6c
-qSsIYVuzQBdbeub7LP5xqvXoSLSAyvE7vHv+gCl/uUCJA6UpOHY8uomI102IUnZV
-zjeFGWvBPIIyFGNBQOOwo36WcVvhUwRRSyizDyZHsvRHCOoCaizfhGUX6UftAXXc
-2TOyjKGo+O87DxZK67pIBpVOpUZCMdCrvGMeQd5Qc4i9atyrAMsQuYj0rnIebGY3
-4oNroQJ8LvGd+h9WpKECmMRGWejvZx+iowt7aUv2zfKzNsY7ZwqayUOF2+8algw=
-=E28j
+iQEcBAEBCAAGBQJU7oXsAAoJECTWi3JdVIfQ6dEH/i01U4dPHFLAyECWxZgarSWL
+6/8J05YeGghSPz6NRFt5yjegy/vuTyyEptgrKzyy+hd23Iq6bl7RMa28YbEuAd8m
+9gsa/azVnI7RIPoh8qkyjTSceF6kEe4OJ0C46V6gvBjS4mwHyUWH8nJOYX9AL45q
+izl6VvwhTOZXZtZaCm9mSw48Q8bhL7r0/NJL6ysa3Di3oYQNZ0cfIlhuzmy73NqT
+zr9e+2LEJzQm4oXS30GxJD0Eu4eH2Pq5k9yJZm9DoAfmQVY9+VIZmQ4C9IhP/VYB
+Cc4APLjLaEQZb92RwdcHa4rbTNlwhnBSkY+SnMigDN4q0n1TamEslat1tcctXcI=
+=x3K5
 -----END PGP SIGNATURE-----
 
---ftjCgYj7ABv2ooUJ--
+--LuH5Zozo3bmn6wjd--
