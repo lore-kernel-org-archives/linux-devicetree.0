@@ -1,103 +1,52 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/8] Add proper support for Compulab CM-A510/SBC-A510
-Date: Thu, 26 Feb 2015 18:55:35 +0100
-Message-ID: <54EF5E17.1070005@free-electrons.com>
-References: <1424199129-22099-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 02/11] drm: add bindings for simple vga encoders
+Date: Thu, 26 Feb 2015 20:25:45 +0200
+Message-ID: <4359857.jM6TFsquHC@avalon>
+References: <1422721984-27782-1-git-send-email-heiko@sntech.de>
+ <1422721984-27782-3-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424199129-22099-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1422721984-27782-3-git-send-email-heiko@sntech.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
-
-On 17/02/2015 19:52, Sebastian Hesselbarth wrote:
-> This patch set improves current mainline support for the Compulab
-> CM-A510 System-on-Module (SoM) and its default Compulab SBC-A510
-> base board. Thanks to Gabriel Dobato who agreed to remote debug and
-> test the provided DT changes.
-> 
-> On the way to proper support, we
-> - Rework i2c-mux-pinctrl to honor disabled sub-bus nodes
-> - Add missing "compulab" vendor prefix
-> - Fix broken uart[23] reg properties
-> - Beautify Dove's dtsi files by adding gpio/irq includes, node
->   labels for pcie, and some additional pinctrl settings
-> - Add a node for the internal i2c mux mechanism on Dove SoCs
-> 
-> And finally add a DT include for the Compulab CM-A510 SoM and a DT
-> board file for the SBC-A510 base board.
-> 
-> Patches are based on stable v3.19 and are indended for the next
-> merge window (either v3.21 or v4.1). Compulab related changes have
-> been tested by Gabriel Dobato, I tested on SolidRun CuBox that it
-> does not break existing Dove boards.
-> 
-> For the i2c-mux-pinctrl, a Tested-by from any user of Tegra20
-> Seaboard, Tamonten, or Ventana would be nice to see if it is fully
-> compatible.
-> 
-> I have added MVEBU maintainers to all patches, Wolfram for i2c and
-> Stephen as the i2c-mux-pinctrl author i2c-mux-pinctrl related patches,
-> and corresponding lists. As there is no important DT work in here,
-> I decided to not explicitly add each of the DT maintainers except for
-> the vendor prefix patch.
-> 
-> Sebastian Hesselbarth (8):
->   i2c: mux-pinctrl: Rework to honor disabled child nodes
->   devicetree: vendor-prefixes: Add CompuLab to known vendors
->   ARM: dts: dove: Fix uart[23] reg property
->   ARM: dts: dove: Always include gpio and interrupt-controller headers
->   ARM: dts: dove: Add node labels for PCIe ports 0 and 1
->   ARM: dts: dove: Add some more common pinctrl settings
->   ARM: dts: dove: Add internal i2c multiplexer node
->   ARM: dts: dove: Add proper support for Compulab CM-A510/SBC-A510
-
-Patches 3 to 6 applied on mvebu/dt
-
-If I understood well patches 7 and 8 depend on patch 1 which had not been
-taken yet.
-
-
-Thanks,
-
-Gregory
-
-
-> 
->  .../devicetree/bindings/i2c/i2c-mux-pinctrl.txt    |  28 +--
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  arch/arm/boot/dts/Makefile                         |   5 +-
->  arch/arm/boot/dts/dove-cm-a510.dts                 |  38 ----
->  arch/arm/boot/dts/dove-cm-a510.dtsi                | 195 +++++++++++++++++++++
->  arch/arm/boot/dts/dove-sbc-a510.dts                | 182 +++++++++++++++++++
->  arch/arm/boot/dts/dove.dtsi                        | 103 ++++++++++-
->  drivers/i2c/muxes/i2c-mux-pinctrl.c                |  70 +++++---
->  8 files changed, 537 insertions(+), 85 deletions(-)
->  delete mode 100644 arch/arm/boot/dts/dove-cm-a510.dts
->  create mode 100644 arch/arm/boot/dts/dove-cm-a510.dtsi
->  create mode 100644 arch/arm/boot/dts/dove-sbc-a510.dts
-> 
-> ---
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Gabriel Dobato <dobatog-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+SGkgSGVpa28sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFNhdHVyZGF5IDMxIEphbnVh
+cnkgMjAxNSAxNzozMjo1NSBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiBBZGQgdGhlIG5lY2Vzc2Fy
+eSBkZXZpY2V0cmVlIGJpbmRpbmcgZG9jdW1lbnQgZm9yIHNpbXBsZSB2Z2EgZW5jb2RlcnMuCj4g
+Cj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiAtLS0K
+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2kyYy92Z2Etc2ltcGxlLnR4dCAgICAgICAg
+IHwgMTggKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCsp
+Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZHJtL2kyYy92Z2Etc2ltcGxlLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZHJtL2kyYy92Z2Etc2ltcGxlLnR4dAo+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pMmMvdmdhLXNpbXBsZS50eHQgbmV3IGZpbGUgbW9k
+ZQo+IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjI3MWRmOWEKPiAtLS0gL2Rldi9udWxsCj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pMmMvdmdhLXNpbXBsZS50
+eHQKPiBAQCAtMCwwICsxLDE4IEBACj4gK0RldmljZS1UcmVlIGJpbmRpbmdzIGZvciBnZW5lcmlj
+IHZnYSBlbmNvZGVycwo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczsKPiArICAtIGNvbXBhdGli
+bGU6IG11c3QgYmUgImFkaSxhZHY3MTIzIgoKQmluZGluZ3MgYWxyZWFkeSBleGlzdCBmb3IgdGhh
+dCBkZXZpY2UsIHRoZXkgaGF2ZSBiZWVuIGFkZGVkIGluIGNvbW1pdCAKOGQwZjE5NTZmN2MxMTIw
+MiAoInZpZGVvOiBBZGQgQURWNzEyMyBEVCBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIikuCgo+ICtP
+cHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsgIC0gZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJD
+IGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQgcHJvYmluZwo+ICsgIC0gZW5hYmxlLWdwaW86
+IEdQSU8gcGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBlbmNvZGVyCj4gKyAgLSB2YWEtc3Vw
+cGx5OiByZWd1bGF0b3IgZm9yIHRoZSBhbmFsb2cgcG93ZXIgc3VwcGx5Cj4gKwo+ICtFeGFtcGxl
+Ogo+ICsKPiArCWFkdjcxMjM6IHZnYS1lbmNvZGVyIHsKPiArCQljb21wYXRpYmxlID0gImFkaSxh
+ZHY3MTIzIjsKPiArCQlkZGMtaTJjLWJ1cyA9IDwmaTJjND47Cj4gKwkJdmFhLXN1cHBseSA9IDwm
+dmNjX2lvPjsKPiArCQllbmFibGUtZ3BpbyA9IDwmZ3BpbzAgMTcgR1BJT19BQ1RJVkVfSElHSD47
+Cj4gKwl9OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
