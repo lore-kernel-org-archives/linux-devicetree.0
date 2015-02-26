@@ -1,95 +1,109 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] pinctrl: dt: at91: new binding
-Date: Thu, 26 Feb 2015 19:03:56 +0800
-Message-ID: <F74AA2E0-606F-419D-9ADD-3C24CA0973DD@jcrosoft.com>
-References: <1424943294-8805-1-git-send-email-plagnioj@jcrosoft.com>
- <20150226104319.GE20718@odux.rfo.atmel.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150226104319.GE20718@odux.rfo.atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC] pwm-backlight: Allow backlight to remain disabled on boot
+Date: Thu, 26 Feb 2015 11:06:59 +0000
+Message-ID: <20150226110659.GO6688@x1>
+References: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Russell King <linux@arm.linux.org.uk>, Eric Miao <eric.y.miao@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gRmViIDI2LCAyMDE1LCBhdCA2OjQzIFBNLCBMdWRvdmljIERlc3JvY2hlcyA8bHVkb3Zp
-Yy5kZXNyb2NoZXNAYXRtZWwuY29tPiB3cm90ZToKPiAKPiBIaSBKZWFuLUNocmlzdG9waGUsCj4g
-Cj4gT24gVGh1LCBGZWIgMjYsIDIwMTUgYXQgMTA6MzQ6NTRBTSArMDEwMCwgSmVhbi1DaHJpc3Rv
-cGhlIFBMQUdOSU9MLVZJTExBUkQgd3JvdGU6Cj4+IFRvZGF5IGlmIHdlIHdhbnQgdG8gZGlzYWJs
-ZSBhIHBpbyBiYW5rIHdlIG1heSB3aWxsIHNpbGllbnRseSBicmVhayBwaW5jdHJsCj4+IGNvbmZp
-Z3VyYXRpb24gaW4gdGhlIERULiBUaGlzIHdpbGwgYmUgZGV0ZWN0ZWQgb25seSBhdCBydW50aW1l
-Lgo+IAo+IERvIHlvdSBoYXZlIGEgY2FzZSB3aGVyZSBpdCBicmVha3MgcGluY3RybD8gSSBjYW4g
-ZG8gbW9yZSB0ZXN0cyBidXQgd2l0aAo+IHRoZSBsYXRlc3QgcGF0Y2ggInBpbmN0cmw6IGF0OTE6
-IGFsbG93IHRvIGhhdmUgZGlzYWJsZWQgZ3BpbyBiYW5rIiwgSQo+IGhhZCBubyBpc3N1ZS4KCnNp
-bXBsZSBkaXNhYmxlIHRoZSBQSU8gYmFuayBhbmQgaWYgb25lIGRldmljZSB1c2UgaXQgYXMgcGlu
-Y3RybCBhbmQgbm8gZ3BpbyBpcyB1c2VkIGluIHRoZSBEVAp0aGVuIHlvdSBnZXQgYSBicm9rZW4g
-cGxhdGZvcm0gYnV0IGR0YiBpcyBnZW5lcmF0ZWQKCmFzIGFsbCB0aGUgbm9kZSBhcmUgZW5hYmxl
-ZCBmb3IgcGluY3RybAoKPiAKPj4gCj4+IFNvIG1vdmUgdGhlIHBpbmN0cmwgY29uZmlndXJhdGlv
-biB0byB0aGUgYmFuayBpbnN0ZWFkIG9mIHRoZSBidXMuCj4+IFRoaXMgYWxsb3cgdG8gZGV0ZWN0
-IHBpbmN0cmwgaXNzdWUgYXQgRFQgY29tcGlsaW5nIHRpbWUgd2hlbiBkaXNhYmxlIGEgYmFuay4K
-Pj4gCj4+IFNpZ25lZC1vZmYtYnk6IEplYW4tQ2hyaXN0b3BoZSBQTEFHTklPTC1WSUxMQVJEIDxw
-bGFnbmlvakBqY3Jvc29mdC5jb20+Cj4+IENjOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlq
-QGxpbmFyby5vcmc+Cj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+PiAtLS0KPj4g
-Li4uL2JpbmRpbmdzL3BpbmN0cmwvYXRtZWwsYXQ5MS1waW5jdHJsLnR4dCAgICAgICAgfCA2NiAr
-KysrKysrKysrKysrKysrKysrKysrCj4+IDEgZmlsZSBjaGFuZ2VkLCA2NiBpbnNlcnRpb25zKCsp
-Cj4+IAo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bp
-bmN0cmwvYXRtZWwsYXQ5MS1waW5jdHJsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9waW5jdHJsL2F0bWVsLGF0OTEtcGluY3RybC50eHQKPj4gaW5kZXggYjdhOTNlOC4u
-NzgzNTVlZSAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BpbmN0cmwvYXRtZWwsYXQ5MS1waW5jdHJsLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9hdG1lbCxhdDkxLXBpbmN0cmwudHh0Cj4+IEBAIC0x
-NDgsMyArMTQ4LDY5IEBAIGRiZ3U6IHNlcmlhbEBmZmZmZjIwMCB7Cj4+IAlwaW5jdHJsLTAgPSA8
-JnBpbmN0cmxfZGJndT47Cj4+IAlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiB9Owo+PiArCj4+ICtJ
-SSkgTmV3IEJpbmRpbmdzIHBlciBQSU8gQmxvY2sKPj4gKwo+PiArVGhpcyBhbGxvdyB0byBkZXRl
-Y3QgcGluY3RybCBpc3N1ZSBhdCBEVCBjb21waWxpbmcgdGltZSB3aGVuIGRpc2FibGUgYSBiYW5r
-Cj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIGlvbXV4IGNvbnRyb2xsZXI6Cj4+ICst
-IGNvbXBhdGlibGU6ICJhdG1lbCxhdDkxcm05MjAwLXBpby1waW5jdHJsIiBvciAiYXRtZWwsYXQ5
-MXNhbTl4NS1waW8tcGluY3RybCIKPj4gKwkJb3IgImF0bWVsLHNhbWE1ZDMtcGlvLXBpbmN0cmwi
-Cj4+ICstIGF0bWVsLG11eC1tYXNrOiBhcnJheSBvZiBtYXNrIChwZXJpcGggcGVyIGJhbmspIHRv
-IGRlc2NyaWJlIGlmIGEgcGluIGNhbiBiZQo+PiArICBjb25maWd1cmVkIGluIHRoaXMgcGVyaXBo
-IG1vZGUuIEFsbCB0aGUgcGVyaXBoIGFuZCBiYW5rIG5lZWQgdG8gYmUgZGVzY3JpYmUuCj4+ICsK
-Pj4gK0hvdyB0byBjcmVhdGUgc3VjaCBhcnJheToKPj4gKwo+PiArRWFjaCBjb2x1bW4gd2lsbCBy
-ZXByZXNlbnQgdGhlIHBvc3NpYmxlIHBlcmlwaGVyYWwgb2YgdGhlIHBpbmN0cmwgZm9yIHRoZSBi
-YW5rCj4+ICsKPj4gK1Rha2UgYW4gZXhhbXBsZSBvbiB0aGUgOTI2MAo+PiArUGVyaXBoZXJhbDog
-MiAoIEEgYW5kIEIpCj4+ICs9Pgo+PiArCj4+ICsgIC8qICAgIEEgICAgICAgICBCICAgICAqLwo+
-PiArICAweGZmZmZmZmZmIDB4ZmZjMDBjM2IgIC8qIHBpb0EgKi8KPj4gKwo+PiArRm9yIGVhY2gg
-cGVyaXBoZXJhbC9iYW5rIHdlIHdpbGwgZGVzY2liZSBpbiBhIHUzMiBpZiBhIHBpbiBjYW4gYmUK
-Pj4gK2NvbmZpZ3VyZWQgaW4gaXQgYnkgcHV0dGluZyAxIHRvIHRoZSBwaW4gYml0ICgxIDw8IHBp
-bikKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgcGluIGNvbmZpZ3VyYXRpb24gbm9k
-ZToKPj4gKy0gYXRtZWwscGluczogMyBpbnRlZ2VycyBhcnJheSwgcmVwcmVzZW50cyBhIGdyb3Vw
-IG9mIHBpbnMgbXV4IGFuZCBjb25maWcKPj4gKyAgc2V0dGluZy4gVGhlIGZvcm1hdCBpcyBhdG1l
-bCxwaW5zID0gPFBJTl9OVU0gUEVSSVBIIENPTkZJRz4uCj4+ICsgIFRoZSBQRVJJUEggMCBtZWFu
-cyBncGlvLCBQRVJJUEggMSBpcyBwZXJpcGggQSwgUEVSSVBIIDIgaXMgcGVyaXBoIEIuLi4KPj4g
-Kwo+PiArQml0cyB1c2VkIGZvciBDT05GSUc6Cj4+ICtjZiBhdG1lbCxhdDkxLXBpbmN0cmwKPj4g
-Kwo+PiArcGlvQjogZ3Bpb0BmZmZmZjYwMCB7Cj4+ICsJY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkx
-cm05MjAwLWdwaW8iLCAiYXRtZWwsYXQ5MXJtOTIwMC1waW8tcGluY3RybCI7Cj4+ICsJcmVnID0g
-PDB4ZmZmZmY2MDAgMHgyMDA+Owo+PiArCWludGVycnVwdHMgPSA8MyBJUlFfVFlQRV9MRVZFTF9I
-SUdIIDE+Owo+PiArCSNncGlvLWNlbGxzID0gPDI+Owo+PiArCWdwaW8tY29udHJvbGxlcjsKPj4g
-KwlpbnRlcnJ1cHQtY29udHJvbGxlcjsKPj4gKwkjaW50ZXJydXB0LWNlbGxzID0gPDI+Owo+PiAr
-CWNsb2NrcyA9IDwmcGlvQl9jbGs+Owo+PiArCj4+ICsJCQkgLyogICAgQSAgICAgICAgIEIgICAg
-ICovCj4+ICsJYXRtZWwsbXV4LW1hc2sgPSA8MHhmZmZmZmZmZiAweDdmZmYzY2NmPjsKPj4gKwo+
-PiArCWRiZ3Ugewo+PiArCQlwaW5jdHJsX2RiZ3U6IGRiZ3UtMCB7Cj4+ICsJCQlhdG1lbCxwaW5z
-ID0KPj4gKwkJCQk8MTQgMHgxIDB4MAkvKiBQQjE0IHBlcmlwaCBBICovCj4+ICsJCQkJIDE1IDB4
-MSAweDE+OwkvKiBQQjE1IHBlcmlwaCBBIHdpdGggcHVsbHVwICovCj4+ICsJCX07Cj4+ICsJfTsK
-PiAKPiBTbyB3ZSBoYXZlIHRvIHVwZGF0ZSBhbGwgZGV2aWNlIHRyZWUgZmlsZXMsIHRoYXQncyBh
-IGxvdCBvZiB3b3Jr4oCmCmJyZWFrIG5vdGhpbmcgYm90aCBiaW5kaW5nIHN1cHBvcnQgd2lsbCBi
-ZSBpbiB0aGUga2VybmVsCgpidXQgb25seSBvbmUgZW5hYmxlIGF0IGEgdGltZSwgc28gYmFzaWNh
-bGx5IG1haW5saW5lIHdpbGwgZHJvcCB0aGUgb2xkIG9uZQoKYW5kIGFzIHRvZGF5IDk5JSBvZiB0
-aGUgcGluY3RybCBhcmUgYXQgU29DIGxldmVsIHNvIGl04oCZcyBub3QgYSBiaWcgd29yayBhdCBh
-bGwKPiBNb3Jlb3ZlciBpdCBhZGRzIGNvbXBsZXhpdHkgaWYgd2UgaGF2ZSBhIGRldmljZSB1c2lu
-ZyBwaW5zIGZyb20KPiBkaWZmZXJlbnQgcGlvIGNvbnRyb2xsZXJzLgoKcHV0IDIgcGhhbmRsZSBt
-ZWFucyBjb21wbGV4aXR5IHBsZWFzZQoKYW5kIGl04oCZcyB0aGUga2V5IHBvaW50IG9mIHRoZSBu
-ZXcgYmluZGluZwoKQmVzdCBSZWdhcmRzLApKLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, 31 Jul 2014, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+>=20
+> The default for backlight devices is to be enabled immediately when
+> registering with the backlight core. This can be useful for setups th=
+at
+> use a simple framebuffer device and where the backlight cannot otherw=
+ise
+> be hooked up to the panel.
+>=20
+> However, when dealing with more complex setups, such as those of rece=
+nt
+> ARM SoCs, this can be problematic. Since the backlight is usually set=
+up
+> separately from the display controller, the probe order is not usuall=
+y
+> deterministic. That can lead to situations where the backlight will b=
+e
+> powered up and the panel will show an uninitialized framebuffer.
+>=20
+> Furthermore, subsystems such as DRM have advanced functionality to se=
+t
+> the power mode of a panel. In order to allow such setups to power up =
+the
+> panel at exactly the right moment, a way is needed to prevent the
+> backlight core from powering the backlight up automatically when it i=
+s
+> registered.
+>=20
+> This commit introduces a new boot_off field in the platform data (and
+> also implements getting the same information from device tree). When =
+set
+> the initial backlight power mode will be set to "off".
+>=20
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> I've been meaning to send this for a while but was always holding bac=
+k
+> because of the indoctrination that this type of configuration shouldn=
+'t
+> be part of device tree. However this issue was recently raised again =
+in
+> the context of power up sequences for display panels. As described ab=
+ove
+> the issue is that panel datasheets recommend that the backlight attac=
+hed
+> to a panel be turned on at the very last step to avoid visual glitche=
+s
+> during the panel's power up sequence. With the current implementation=
+ it
+> is typical for the backlight to be probed before the display panel. T=
+hat
+> has, in many cases, the side-effect of enabling the backlight, theref=
+ore
+> making the screen content visible before it's actually initialized.
+>=20
+> Some panels come up with random garbage when uninitialized, others sh=
+ow
+> all white. With some luck the panel will be all black and users won't
+> really notice.
+>=20
+> This patch is an attempt to enable boards to override the default of
+> turning on the backlight for the pwm-backlight driver. I'm not sure i=
+f
+> there was a specific reason to turn on the backlight by default when
+> this driver was initially written, but the fact is that since it has
+> pretty much always been like this we can't really go and change the
+> default, otherwise a lot of people may end up with no backlight and n=
+o
+> clue as to how to enable it. So the only reasonable thing we can do i=
+s
+> to keep the old behaviour and give new boards a way to override it if
+> they know that some other part of the stack will enable it at the rig=
+ht
+> moment.
+>=20
+>  .../devicetree/bindings/video/backlight/pwm-backlight.txt         | =
+1 +
+>  drivers/video/backlight/pwm_bl.c                                  | =
+8 ++++++++
+>  include/linux/pwm_backlight.h                                     | =
+2 ++
+>  3 files changed, 11 insertions(+)
+
+Some people on the list are talking about this again.
+
+What was the verdict?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
