@@ -1,109 +1,76 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC] pwm-backlight: Allow backlight to remain disabled on boot
-Date: Thu, 26 Feb 2015 11:06:59 +0000
-Message-ID: <20150226110659.GO6688@x1>
-References: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Russell King <linux@arm.linux.org.uk>, Eric Miao <eric.y.miao@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: atmel_nand: move the hsmc_clk from nfc node to nand node
+Date: Thu, 26 Feb 2015 19:49:09 +0800
+Message-ID: <C9CC8708-B99A-47F4-AC57-1A92B302E1C9@jcrosoft.com>
+References: <1423548885-27589-1-git-send-email-josh.wu@atmel.com> <20150226101857.59104e97@bbrezillon>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150226101857.59104e97@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Nicolas FERRE <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jul 2014, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
->=20
-> The default for backlight devices is to be enabled immediately when
-> registering with the backlight core. This can be useful for setups th=
-at
-> use a simple framebuffer device and where the backlight cannot otherw=
-ise
-> be hooked up to the panel.
->=20
-> However, when dealing with more complex setups, such as those of rece=
-nt
-> ARM SoCs, this can be problematic. Since the backlight is usually set=
-up
-> separately from the display controller, the probe order is not usuall=
-y
-> deterministic. That can lead to situations where the backlight will b=
-e
-> powered up and the panel will show an uninitialized framebuffer.
->=20
-> Furthermore, subsystems such as DRM have advanced functionality to se=
-t
-> the power mode of a panel. In order to allow such setups to power up =
-the
-> panel at exactly the right moment, a way is needed to prevent the
-> backlight core from powering the backlight up automatically when it i=
-s
-> registered.
->=20
-> This commit introduces a new boot_off field in the platform data (and
-> also implements getting the same information from device tree). When =
-set
-> the initial backlight power mode will be set to "off".
->=20
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-> I've been meaning to send this for a while but was always holding bac=
-k
-> because of the indoctrination that this type of configuration shouldn=
-'t
-> be part of device tree. However this issue was recently raised again =
-in
-> the context of power up sequences for display panels. As described ab=
-ove
-> the issue is that panel datasheets recommend that the backlight attac=
-hed
-> to a panel be turned on at the very last step to avoid visual glitche=
-s
-> during the panel's power up sequence. With the current implementation=
- it
-> is typical for the backlight to be probed before the display panel. T=
-hat
-> has, in many cases, the side-effect of enabling the backlight, theref=
-ore
-> making the screen content visible before it's actually initialized.
->=20
-> Some panels come up with random garbage when uninitialized, others sh=
-ow
-> all white. With some luck the panel will be all black and users won't
-> really notice.
->=20
-> This patch is an attempt to enable boards to override the default of
-> turning on the backlight for the pwm-backlight driver. I'm not sure i=
-f
-> there was a specific reason to turn on the backlight by default when
-> this driver was initially written, but the fact is that since it has
-> pretty much always been like this we can't really go and change the
-> default, otherwise a lot of people may end up with no backlight and n=
-o
-> clue as to how to enable it. So the only reasonable thing we can do i=
-s
-> to keep the old behaviour and give new boards a way to override it if
-> they know that some other part of the stack will enable it at the rig=
-ht
-> moment.
->=20
->  .../devicetree/bindings/video/backlight/pwm-backlight.txt         | =
-1 +
->  drivers/video/backlight/pwm_bl.c                                  | =
-8 ++++++++
->  include/linux/pwm_backlight.h                                     | =
-2 ++
->  3 files changed, 11 insertions(+)
 
-Some people on the list are talking about this again.
+> On Feb 26, 2015, at 5:18 PM, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> Hi Josh,
+> 
+> On Tue, 10 Feb 2015 14:14:43 +0800
+> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> Also add a new sama5d3_nand compatiable string for sama5d3 nand.
+>> 
+>> For sama5d3, sama5d4 chip, the pmecc became part of HSMC, they need the
+>> HSMC clock enabled to work.
+>> The NFC is a sub feature for current nand driver, it can be disabled.
+>> But if HSMC clock is controlled by NFC, so disable NFC will also disable
+>> the HSMC clock. then, it will make the PMECC fail to work.
+>> 
+>> So the solution is move the HSMC clock out of NFC to nand node. When
+>> nand driver probed, it will check whether the chip has HSMC, if yes then
+>> it will require a HSMC clock.
+> 
+> Do you plan to use the NAND chip without the NFC (I mean, is there a
+> reason for not using the NFC to access the NAND ?) ?
+> If you don't, why don't you just wait for the NFC before probing the
+> NAND chip it is attached to, so that the hmsc clk is properly claimed.
+you can as you can have 2 Nand on the d3 but only 1 NFC
 
-What was the verdict?
+Best Regards,
+J.
+> 
+> I'm not convinced that moving a clk reference out of the controller
+> node can address the fact that the nand/nand-controller DT
+> representation is inappropriate (your embedding controller specific
+> information in your NAND chip definition).
+> I think we should reconsider this problem with a controller/chip
+> approach:
+> - which parts are representing the NAND controller: the PMECC engine,
+>  the NFC if available, ...
+> - which parts are representing the NAND chip: the EBI mem range, the
+>  R/B pin, the ALE/CLE information, ...
+> 
+> And of course, we should take the EBI/SMC rework into account ;-).
+> 
+> Best Regards,
+> 
+> Boris
+> 
+> 
+> -- 
+> Boris Brezillon, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
