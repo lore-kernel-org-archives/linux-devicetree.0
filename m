@@ -1,147 +1,82 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v6 6/8] input: touchscreen: imx25 tcq driver
-Date: Thu, 26 Feb 2015 15:30:51 +0100
-Message-ID: <20150226143051.GA10070@pengutronix.de>
-References: <1422540556-14828-1-git-send-email-mpa@pengutronix.de>
- <1422540556-14828-7-git-send-email-mpa@pengutronix.de>
- <54CA4320.4030607@gmail.com>
- <20150130185721.GA11695@dtor-ws>
- <20150202160539.GS16879@pengutronix.de>
- <20150202175134.GB23909@dtor-ws>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH v6 6/6] hwmon: pwm-fan: Code for using PWM FAN as a cooling
+ device
+Date: Thu, 26 Feb 2015 15:40:33 +0100
+Message-ID: <20150226154033.301a699d@amdc2363>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1424959177-28739-1-git-send-email-l.majewski@samsung.com>
+ <1424959177-28739-7-git-send-email-l.majewski@samsung.com>
+ <54EF29D4.7040508@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150202175134.GB23909@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Varka Bhadram <varkabhadram@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Fabio Estevam <festevam@gmail.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Denis Carikli <denis@eukrea.com>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <54EF29D4.7040508@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Kukjin Kim <kgene@kernel.org>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Guenter,
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 02/26/2015 05:59 AM, Lukasz Majewski wrote:
+> > The PWM FAN device can now be used as a thermal cooling device.
+> > Necessary infrastructure has been added in this commit.
+> >
+> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > Acked-by: Eduardo Valentin <edubezval@gmail.com>
+> > ---
+> > Changes for v2:
+> > - Replace pwm_fan_cooling_states with pwm_fan_cooling_levels
+> > - Update ctx->pwm_fan_state when correct data from device tree is
+> > available
+> > - Using therma_cdev_update() when thermal is ready for controlling
+> > the fan Changes for v3:
+> > - Rename patch heading
+> > - pwm_fan_of_get_cooling_data() now returns -EINVAL when no
+> > "cooling-levels" property defined
+> > - register of cooling device only when proper cooling data is
+> > present Changes for v4:
+> > - None
+> > Changes for v5:
+> > - Check for IS_ENABLED(CONFIG_THERMAL) has been added to prevent
+> > from executing thermal_* specific functions
+> > Changes for v6:
+> > - Adding missing ctx == NULL check in pwm_fan_get_max_state()
+> > - Call to thermal_cooling_device_unregister(ctx->cdev); at
+> > pwm_fan_remove()
+> > - struct thermal_cooling_device *cdev; added to struct pwm_fan_ctx
+> > ---
+> >   drivers/hwmon/pwm-fan.c | 89
+> > ++++++++++++++++++++++++++++++++++++++++++++++++- 1 file changed,
+> > 88 insertions(+), 1 deletion(-)
+> [ ... ]
+> >
+> > @@ -200,6 +286,7 @@ static int pwm_fan_remove(struct
+> > platform_device *pdev) {
+> >   	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
+> >
+> > +	thermal_cooling_device_unregister(ctx->cdev);
+> 
+> Unfortunately there is still no prototype for this if CONFIG_THERMAL
+> is not configured.
 
-Hi,
+Yes... since Nishanth Menon's changes are now only in
+linux-soc-thermal/fixes
 
-On Mon, Feb 02, 2015 at 09:51:34AM -0800, Dmitry Torokhov wrote:
-> On Mon, Feb 02, 2015 at 05:05:39PM +0100, Markus Pargmann wrote:
-> > Hi,
-> >=20
-> > On Fri, Jan 30, 2015 at 10:57:21AM -0800, Dmitry Torokhov wrote:
-> > > On Thu, Jan 29, 2015 at 07:56:40PM +0530, Varka Bhadram wrote:
-> > > > Hi,
-> > > >=20
-> > > > On Thursday 29 January 2015 07:39 PM, Markus Pargmann wrote:
-> > > > >This is a driver for the imx25 ADC/TSC module. It controls the
-> > > > >touchscreen conversion queue and creates a touchscreen input devic=
-e.
-> > > > >The driver currently only supports 4 wire touchscreens. The driver=
- uses
-> > > > >a simple conversion queue of precharge, touch detection, X measure=
-ment,
-> > > > >Y measurement, precharge and another touch detection.
-> > > > >
-> > > > >This driver uses the regmap from the parent to setup some touch sp=
-ecific
-> > > > >settings in the core driver and setup a idle configuration with to=
-uch
-> > > > >detection.
-> > > > >
-> > > > >Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> > > > >Signed-off-by: Denis Carikli <denis@eukrea.com>
-> > > > >Acked-by: Dmitry Torokhov <dtor@vmware.com>
-> > > > >Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> > > > >---
-> > > > >  drivers/input/touchscreen/Kconfig         |   6 +
-> > > > >  drivers/input/touchscreen/Makefile        |   1 +
-> > > > >  drivers/input/touchscreen/fsl-imx25-tcq.c | 587 ++++++++++++++++=
-++++++++++++++
-> > > > >  3 files changed, 594 insertions(+)
-> > > > >  create mode 100644 drivers/input/touchscreen/fsl-imx25-tcq.c
-> > > > >
-> > > > (...)
-> > > >=20
-> > > > >+	ret =3D request_threaded_irq(priv->irq, mx25_tcq_irq, mx25_tcq_i=
-rq_thread,
-> > > > >+				   IRQF_ONESHOT, pdev->name, priv);
-> > > >=20
-> > > > We can use devres API for request_thread_irq()...
-> > > >=20
-> > > > >+	if (ret) {
-> > > > >+		dev_err(dev, "Failed requesting IRQ\n");
-> > > > >+		goto err_clk_unprepare;
-> > > > >+	}
-> > > > >+
-> > > > >+	ret =3D mx25_tcq_init(priv);
-> > > > >+	if (ret) {
-> > > > >+		dev_err(dev, "Failed to init tcq\n");
-> > > > >+		goto error_free_irq;
-> > > > >+	}
-> > > > >+
-> > > > >+	platform_set_drvdata(pdev, priv);
-> > > > >+
-> > > > >+	return 0;
-> > > > >+
-> > > > >+error_free_irq:
-> > > > >+	free_irq(priv->irq, priv);
-> > > >=20
-> > > > This is not required if we use devres API
-> > >=20
-> > > Yes it does - you do not really want to stop clocks in the middle of
-> > > servicing interrupt.
-> >=20
-> > Thanks, I missed the clocks. I will not use devm here then.
->=20
-> Actually, you still can if you move clock enabling/disabling and
-> mx25_tcq_init() into input_dev->open() and ->close() callbacks. Close
-> will be called during input device un-registration which happens (given
-> your current sequence) after freeing irq by devm.
+> 
+> Two options: Yet another revision, or wait a week until the prototypes
+> are (hopefully) available and submit a patch without the conditionals.
 
-Thank you. I now moved that code into open() and close(), replaced the
-irq_request() with devm_irq_request. mx25_tcq_remove() is gone now.
+No problem, I will wait a bit and resend this patch set.
 
->=20
-> By the way, I used my old @vmware address by accident. Can you please
-> replace the original acked by with:
->=20
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> 
+> Guenter
+> 
 
-Replaced it.
+-- 
+Best regards,
 
-Thanks,
+Lukasz Majewski
 
-Markus
-
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU7y4bAAoJEEpcgKtcEGQQ5K8P/2OQsxrAuCynIXRsWX4v/lgM
-qzGWwcyy76b5P/u4+JQUBk0MSXeYFVL5q70/Bd6bvT0sc9K4O2TcIFOuKhpQHjsB
-D2vTB1cE+WV7F83nCUyiHUO5ylNJfsWS2ZZvB28u+y2p/Q7DpGSio1IdI8juED4o
-pIHBfdXFjy6ilQ2H5yy8MX4LBSC5u2ZyvMXV1Aw+1J3oqy3rdFlMJm/42uULbc9R
-GeMNQWqc8VsKbb367cXT7asDBYnHNjKy9yQq8M8yiZkk2fwFY4ScphnmzwVZ+U9w
-lXmJMJ3nT36rLE7NzgrogyrYOlq07xw8Wbrf8+0N/ePM11i1CuKwUtDxYTUUaBOc
-qo0ReVAwcM8+QuERGS0UuXTAuUWpTMDbkkU21c3H521KaK9Rrh2YeM+HZ2JBPQyY
-IJKFy6C7azlxmvev3lUq77lN5lYrp2VjD+4P+S91WkY2EJVXhTkvuomj8VEVkQxV
-jH7ZByI7qWT7/2AlDgUmmPVYjZgxyLUDmm4+mvcccRME+ZEFxyfNTeyZ0XryP8RN
-BbiJoArDkQTzfAc5sLu4N9qiYySQGAoaCjw0X2Rv9+jIJlYWtBmI1yFzrMYtdaLc
-59u47WBBfx8zQ1MMwaQL2pvGOFcQUl/vcx2Q+D7MM4Lzmcnr3I8cvNqTDIzDx/LO
-Ac4HluBGLED45gCNZuIA
-=oSst
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
