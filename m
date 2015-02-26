@@ -1,35 +1,33 @@
-From: George McCollister <george.mccollister@gmail.com>
-Subject: [PATCH] ARM: dts: am335x-lxm: Use rmii-clock-ext
-Date: Thu, 26 Feb 2015 10:48:14 -0600
-Message-ID: <1424969294-5993-1-git-send-email-george.mccollister@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] ARM: kexec: Relax SMP validation to improve DT compatibility
+Date: Thu, 26 Feb 2015 10:21:19 -0700
+Message-ID: <54EF560F.3070805@wwwdotorg.org>
+References: <1424947028-7438-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424947028-7438-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, George McCollister <george.mccollister@gmail.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Stephen Warren <swarren@nvidia.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use external clock for RMII since the internal clock doesn't meet the
-jitter requirements.
+On 02/26/2015 03:37 AM, Geert Uytterhoeven wrote:
+> When trying to kexec into a new kernel on a platform where multiple CPU
+> cores are present, but no SMP bringup code is available yet, the
+> kexec_load system call fails with:
+>
+>      kexec_load failed: Invalid argument
+>
+> The SMP test added to machine_kexec_prepare() in commit 2103f6cba61a8b8b
+> ("ARM: 7807/1: kexec: validate CPU hotplug support") wants to prohibit
+> kexec on SMP platforms where it cannot disable secondary CPUs.
+> However, this test is too strict: if the secondary CPUs couldn't be
+> enabled in the first place, there's no need to disable them later at
+> kexec time.  Hence skip the test in the absence of SMP bringup code.
+>
+> This allows to add all CPU cores to the DTS from the beginning, without
+> having to implement SMP bringup first, improving DT compatibility.
 
-Signed-off-by: George McCollister <george.mccollister@gmail.com>
----
- arch/arm/boot/dts/am335x-lxm.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am335x-lxm.dts b/arch/arm/boot/dts/am335x-lxm.dts
-index 7266a00..5c5667a 100644
---- a/arch/arm/boot/dts/am335x-lxm.dts
-+++ b/arch/arm/boot/dts/am335x-lxm.dts
-@@ -328,6 +328,10 @@
- 	dual_emac_res_vlan = <3>;
- };
- 
-+&phy_sel {
-+	rmii-clock-ext;
-+};
-+
- &mac {
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&cpsw_default>;
--- 
-2.2.2
+Acked-by: Stephen Warren <swarren@nvidia.com>
