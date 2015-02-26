@@ -1,88 +1,120 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 2/7] mfd: da9150: Add DT binding documentation for core
-Date: Thu, 26 Feb 2015 08:43:15 +0000
-Message-ID: <20150226084315.GJ6688@x1>
-References: <cover.1424267009.git.Adam.Thomson.Opensource@diasemi.com>
- <d3c040b8f0c74a7d731b36e24384215327b83725.1424267009.git.Adam.Thomson.Opensource@diasemi.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v5 1/6] clk: add of_clk_get_parent_rate function
+Date: Thu, 26 Feb 2015 09:43:19 +0100
+Message-ID: <20150226084319.GZ12209@pengutronix.de>
+References: <rjui@broadcom.com>
+ <1423097705-22939-1-git-send-email-rjui@broadcom.com>
+ <1423097705-22939-2-git-send-email-rjui@broadcom.com>
+ <20150226055406.GB28214@pengutronix.de>
+ <54EEB97B.6080006@broadcom.com>
+ <20150226065155.GY12209@pengutronix.de>
+ <54EECE74.8050108@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d3c040b8f0c74a7d731b36e24384215327b83725.1424267009.git.Adam.Thomson.Opensource@diasemi.com>
+In-Reply-To: <54EECE74.8050108@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+To: Ray Jui <rjui@broadcom.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Feb 2015, Adam Thomson wrote:
+On Wed, Feb 25, 2015 at 11:42:44PM -0800, Ray Jui wrote:
+> On 2/25/2015 10:51 PM, Sascha Hauer wrote:
+> > On Wed, Feb 25, 2015 at 10:13:15PM -0800, Ray Jui wrote:
+> >> Hi Sascha,
+> >>
+> >> On 2/25/2015 9:54 PM, Sascha Hauer wrote:
+> >>> Hi Ray,
+> >>>
+> >>> On Wed, Feb 04, 2015 at 04:55:00PM -0800, Ray Jui wrote:
+> >>>> Sometimes a clock needs to know the rate of its parent before itself is
+> >>>> registered to the framework. An example is that a PLL may need to
+> >>>> initialize itself to a specific VCO frequency, before registering to the
+> >>>> framework. The parent rate needs to be known, for PLL multipliers and
+> >>>> divisors to be configured properly.
+> >>>>
+> >>>> Introduce helper function of_clk_get_parent_rate, which can be used to
+> >>>> obtain the parent rate of a clock, given a device node and index.
+> >>>
+> >>> I can't see how this patch helps you. First it's not guaranteed that
+> >>> the parent is already registered, what do you do in this case?
+> >>
+> >> In the case when clock parent is not found, as you can see from the
+> >> code, it simply returns zero, just like other clk get rate APIs.
+> > 
+> > Yes, but what do you do with the 0 result then in your PLL initialization?
+> > 
+> 
+> As of the current code, it fails the PLL frequency initialization and
+> bails out. Thinking about it more, it actually makes more sense to just
+> warn and still go ahead to register the clock, in which case it will use
+> whatever default frequency after chip power on reset or a frequency
+> configured in the bootloader.
+> 
+> >>
+> >> I thought the order of clock registration is based on order of the clock
+> >> nodes in device tree. It makes sense to me to declare the parent clock
+> >> before a child clock, so it's guaranteed that the parent is registered
+> >> before the child.
+> > 
+> > No, you can't rely on that. The order of the device nodes may happen to
+> > define the order of clock initialization now, but that may change.
+> > device nodes are usually ordered by bus addresses, not by intended
+> > initialization order. Even if you reorder them everything must still
+> > work.
+> > 
+> 
+> Okay I get your point that the order of device nodes may not be relied
+> on for device initialization order. But then another mechanism should be
+> deployed to give developers the option to decide on the clock
+> initialization sequence. It can be optional but it should be there.
+> 
+> >>
+> >>> Then the clock framework doesn't require that you initialize the PLL
+> >>> before registering. That can be done in the clk ops later.
+> >>
+> >> Sure it's not mandatory. But what's wrong with me choosing to initialize
+> >> the PLL clock to a known frequency before registering it to the framework?
+> > 
+> > Appearantly you don't know the (input) frequency of the PLL when
+> > registering it to the framework, so the question must be: What's wrong
+> > with keeping it uninitialized?
+> > 
+> > If the PLL is unused then you don't care about it's initialization
+> > status. If it happens to be enabled by a bootloader and still unused
+> > at late_initcall time the clock framework will disable it so you
+> > have a known state then. If a consumer for the PLL appears it's its
+> > job to initialize it through the clk api.
+> > 
+> > Sascha
+> > 
+> 
+> Okay, what we need here is to initialize the PLL to a desired frequency,
+> based on device tree settings (since it will be configured differently,
+> among different boards). This is a PLL that 1) has limited options of
+> frequencies which it can be configured to, and 2) has multiple child
+> clocks, where is a more suitable place to initialize it to the desired
+> frequency than right before registering it to the framework? I know a
+> lot of people do it in the bootloader, but I thought we should be given
+> the flexibility of configuring it in the kernel.
+> 
+> When you say "consumers", do you mean 1) the device driver that uses the
+> PLL; or 2) the device driver that use the child clock of the PLL? If
+> it's case 1), then we don't really have a device driver that directly
+> uses the PLL, and I thought that's quite normal, as most PLLs don't
+> directly feed into any peripherals.
 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> ---
->  Documentation/devicetree/bindings/mfd/da9150.txt | 43 ++++++++++++++=
-++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/da9150.txt
+I meant 1) and 2). Before a consumer comes along the state of the PLL
+doesn't matter. When a consumer shows up it has to call
+clk_prepare_enable which (directly or indirectly) will enable your PLL.
+Then it's still time to apply the default settings you found out during
+probe of the PLL.
 
-Applied, thanks.
+Sascha
 
-> diff --git a/Documentation/devicetree/bindings/mfd/da9150.txt b/Docum=
-entation/devicetree/bindings/mfd/da9150.txt
-> new file mode 100644
-> index 0000000..d0588ea
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/da9150.txt
-> @@ -0,0 +1,43 @@
-> +Dialog Semiconductor DA9150 Combined Charger/Fuel-Gauge MFD bindings
-> +
-> +DA9150 consists of a group of sub-devices:
-> +
-> +Device			 Description
-> +------			 -----------
-> +da9150-gpadc		: General Purpose ADC
-> +da9150-charger		: Battery Charger
-> +
-> +=3D=3D=3D=3D=3D=3D
-> +
-> +Required properties:
-> +- compatible : Should be "dlg,da9150"
-> +- reg: Specifies the I2C slave address
-> +- interrupt-parent: Specifies the phandle of the interrupt controlle=
-r to which
-> +  the IRQs from da9150 are delivered to.
-> +- interrupts: IRQ line info for da9150 chip.
-> +- interrupt-controller: da9150 has internal IRQs (own IRQ domain).
-> +  (See Documentation/devicetree/bindings/interrupt-controller/interr=
-upts.txt for
-> +   further information relating to interrupt properties)
-> +
-> +Sub-devices:
-> +- da9150-gpadc: See Documentation/devicetree/bindings/iio/adc/da9150=
--gpadc.txt
-> +- da9150-charger: See Documentation/devicetree/bindings/power/da9150=
--charger.txt
-> +
-> +
-> +Example:
-> +
-> +	charger_fg: da9150@58 {
-> +		compatible =3D "dlg,da9150";
-> +		reg =3D <0x58>;
-> +		interrupt-parent =3D <&gpio6>;
-> +		interrupts =3D <11 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-controller;
-> +
-> +		gpadc: da9150-gpadc {
-> +			...
-> +		};
-> +
-> +		da9150-charger {
-> +			...
-> +		};
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
