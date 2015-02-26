@@ -1,83 +1,53 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/6] clk: add of_clk_get_parent_rate function
-Date: Thu, 26 Feb 2015 07:51:55 +0100
-Message-ID: <20150226065155.GY12209@pengutronix.de>
-References: <rjui@broadcom.com>
- <1423097705-22939-1-git-send-email-rjui@broadcom.com>
- <1423097705-22939-2-git-send-email-rjui@broadcom.com>
- <20150226055406.GB28214@pengutronix.de>
- <54EEB97B.6080006@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54EEB97B.6080006-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 1/1] ARM: at91sam9263/dt: Fixup sram1 device tree node
+Date: Thu, 26 Feb 2015 14:33:38 +0800
+Message-ID: <795C3E78-C488-4C3A-AEBB-0ADAB41A8676@jcrosoft.com>
+References: <1424853304-32197-1-git-send-email-alexanders83@web.de>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1424853304-32197-1-git-send-email-alexanders83@web.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Stein <alexanders83@web.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas FERRE <nicolas.ferre@atmel.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 25, 2015 at 10:13:15PM -0800, Ray Jui wrote:
-> Hi Sascha,
+ack
+> On Feb 25, 2015, at 4:35 PM, Alexander Stein <alexanders83@web.de> wrote:
 > 
-> On 2/25/2015 9:54 PM, Sascha Hauer wrote:
-> > Hi Ray,
-> > 
-> > On Wed, Feb 04, 2015 at 04:55:00PM -0800, Ray Jui wrote:
-> >> Sometimes a clock needs to know the rate of its parent before itself is
-> >> registered to the framework. An example is that a PLL may need to
-> >> initialize itself to a specific VCO frequency, before registering to the
-> >> framework. The parent rate needs to be known, for PLL multipliers and
-> >> divisors to be configured properly.
-> >>
-> >> Introduce helper function of_clk_get_parent_rate, which can be used to
-> >> obtain the parent rate of a clock, given a device node and index.
-> > 
-> > I can't see how this patch helps you. First it's not guaranteed that
-> > the parent is already registered, what do you do in this case?
+> Commit ff04660e48b20 ("ARM: at91/dt: add SRAM nodes") used the same base
+> address for sram0 and sram1 leading to the following warning:
+> WARNING: CPU: 0 PID: 1 at fs/sysfs/dir.c:31 sysfs_warn_dup+0x50/0x70()
+> sysfs: cannot create duplicate filename '/devices/platform/300000.sram'
+> Fix the base address for sram1.
 > 
-> In the case when clock parent is not found, as you can see from the
-> code, it simply returns zero, just like other clk get rate APIs.
-
-Yes, but what do you do with the 0 result then in your PLL initialization?
-
+> Signed-off-by: Alexander Stein <alexanders83@web.de>
+> ---
+> arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I thought the order of clock registration is based on order of the clock
-> nodes in device tree. It makes sense to me to declare the parent clock
-> before a child clock, so it's guaranteed that the parent is registered
-> before the child.
-
-No, you can't rely on that. The order of the device nodes may happen to
-define the order of clock initialization now, but that may change.
-device nodes are usually ordered by bus addresses, not by intended
-initialization order. Even if you reorder them everything must still
-work.
-
+> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+> index cdb7d03..76bb849 100644
+> --- a/arch/arm/boot/dts/at91sam9263.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
+> @@ -69,7 +69,7 @@
 > 
-> > Then the clock framework doesn't require that you initialize the PLL
-> > before registering. That can be done in the clk ops later.
+> 	sram1: sram@00500000 {
+> 		compatible = "mmio-sram";
+> -		reg = <0x00300000 0x4000>;
+> +		reg = <0x00500000 0x4000>;
+> 	};
 > 
-> Sure it's not mandatory. But what's wrong with me choosing to initialize
-> the PLL clock to a known frequency before registering it to the framework?
-
-Appearantly you don't know the (input) frequency of the PLL when
-registering it to the framework, so the question must be: What's wrong
-with keeping it uninitialized?
-
-If the PLL is unused then you don't care about it's initialization
-status. If it happens to be enabled by a bootloader and still unused
-at late_initcall time the clock framework will disable it so you
-have a known state then. If a consumer for the PLL appears it's its
-job to initialize it through the clk api.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 	ahb {
+> -- 
+> 2.3.0
+> 
