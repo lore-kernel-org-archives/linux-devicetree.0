@@ -1,79 +1,62 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 04/11] dt-bindings: Add documentation for rockchip lvds
-Date: Thu, 26 Feb 2015 20:46:47 +0200
-Message-ID: <11587309.c7unAcH6bR@avalon>
-References: <1422721984-27782-1-git-send-email-heiko@sntech.de>
- <1422721984-27782-5-git-send-email-heiko@sntech.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] ARM: kexec: Relax SMP validation to improve DT compatibility
+Date: Thu, 26 Feb 2015 12:00:26 -0700
+Message-ID: <54EF6D4A.6000603@wwwdotorg.org>
+References: <1424947028-7438-1-git-send-email-geert+renesas@glider.be> <20150226174206.GL8656@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1422721984-27782-5-git-send-email-heiko@sntech.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Mark Yao <yzq@rock-chips.com>, robh+dt@kernel.org, galak@codeaurora.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150226174206.GL8656@n2100.arm.linux.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Stephen Warren <swarren@nvidia.com>, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFNhdHVyZGF5IDMxIEphbnVh
-cnkgMjAxNSAxNzozMjo1NyBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiBGcm9tOiBNYXJrIFlhbyA8
-eXpxQHJvY2stY2hpcHMuY29tPgo+IAo+IEFkZCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIFJv
-Y2tjaGlwIFNvQyBMVkRTIGRyaXZlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXJrIFlhbyA8eXpx
-QHJvY2stY2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0Bz
-bnRlY2guZGU+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL3JvY2tjaGlw
-LWx2ZHMudHh0ICAgIHwgNTkgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwg
-NTkgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQKPiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvdmlkZW8vcm9ja2NoaXAtbHZkcy50eHQKPiAKPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL3JvY2tjaGlwLWx2ZHMu
-dHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vcm9ja2NoaXAt
-bHZkcy50eHQgbmV3IGZpbGUgbW9kZQo+IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjE2MTZkN2UK
-PiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3ZpZGVvL3JvY2tjaGlwLWx2ZHMudHh0Cj4gQEAgLTAsMCArMSw1OSBAQAo+ICtSb2NrY2hpcCBS
-SzMyODggTFZEUyBpbnRlcmZhY2UKPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
-PiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogInJvY2tjaGlwLHJr
-MzI4OC1sdmRzIjsKPiArCj4gKy0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNv
-bnRyb2xsZXIgYW5kIGxlbmd0aAo+ICsJb2YgbWVtb3J5IG1hcHBlZCByZWdpb24uCj4gKy0gY2xv
-Y2tzOiBtdXN0IGluY2x1ZGUgY2xvY2sgc3BlY2lmaWVycyBjb3JyZXNwb25kaW5nIHRvIGVudHJp
-ZXMgaW4gdGhlCj4gKwljbG9jay1uYW1lcyBwcm9wZXJ0eS4KPiArLSBjbG9jay1uYW1lczogbXVz
-dCBjb250YWluICJwY2xrX2x2ZHMiCj4gKwo+ICstIGF2ZGQxdjAtc3VwcGx5OiByZWd1bGF0b3Ig
-cGhhbmRsZSBmb3IgMS4wViBhbmFsb2cgcG93ZXIKPiArLSBhdmRkMXY4LXN1cHBseTogcmVndWxh
-dG9yIHBoYW5kbGUgZm9yIDEuOFYgYW5hbG9nIHBvd2VyCj4gKy0gYXZkZDN2My1zdXBwbHk6IHJl
-Z3VsYXRvciBwaGFuZGxlIGZvciAzLjNWIGFuYWxvZyBwb3dlcgo+ICsKPiArLSByb2NrY2hpcCxn
-cmY6IHBoYW5kbGUgdG8gdGhlIGdlbmVyYWwgcmVnaXN0ZXIgZmlsZXMgc3lzY29uCj4gKy0gcm9j
-a2NoaXAscGFuZWw6IHBoYW5kbGUgdG8gYSBwYW5lbCBub2RlIGFzIGRlc2NyaWJlZCBieQo+ICsJ
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsLyoKCkRvZXNuJ3QgdGhpcyBk
-dXBsaWNhdGUgdGhlIGluZm9ybWF0aW9uIHByb3ZpZGVkIGJ5IHRoZSBwb3J0cyA/Cgo+ICstIHJv
-Y2tjaGlwLGRhdGEtbWFwcGluZzogc2hvdWxkIGJlICJ2ZXNhIiBvciAiamVpZGEiLAo+ICsJVGhp
-cyBkZXNjcmliZXMgaG93IHRoZSBjb2xvciBiaXRzIGFyZSBsYWlkIG91dCBpbiB0aGUKPiArCXNl
-cmlhbGl6ZWQgTFZEUyBzaWduYWwuCj4gKy0gcm9ja2NoaXAsZGF0YS13aWR0aCA6IHNob3VsZCBi
-ZSA8MTg+IG9yIDwyND47Cj4gKy0gcm9ja2NoaXAsb3V0cHV0OiBzaG91bGQgYmUgInJnYiIsICJs
-dmRzIiBvciAiZHVhbGx2ZHMiLAo+ICsJVGhpcyBkZXNjcmliZXMgdGhlIG91dHB1dCBmYWNlLgoK
-SXNuJ3QgYWxsIHRoaXMgcGFuZWwtZGVwZW5kZW50ID8gQ291bGQgd2UgcXVlcnkgdGhlIGluZm9y
-bWF0aW9uIGZyb20gdGhlIHBhbmVsIAphdCBydW50aW1lIGluc3RlYWQgPwoKPiArLSBwb3J0czog
-Y29udGFpbiBhIHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmluaXRpb25zIGFzIGRlZmluZWQg
-aW4KPiArCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRl
-cmZhY2VzLnR4dC4KPiArCj4gK0V4YW1wbGU6Cj4gKwlsdmRzOiBsdmRzQGZmOTZjMDAwIHsKPiAr
-CQljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzI4OC1sdmRzIjsKPiArCQlyb2NrY2hpcCxncmYg
-PSA8JmdyZj47Cj4gKwkJcmVnID0gPDB4ZmY5NmMwMDAgMHg0MDAwPjsKPiArCQljbG9ja3MgPSA8
-JmNydSBQQ0xLX0xWRFNfUEhZPjsKPiArCQljbG9jay1uYW1lcyA9ICJwY2xrX2x2ZHMiOwo+ICsJ
-CWF2ZGQxdjAtc3VwcGx5ID0gPCZ2ZGQxMF9sY2Q+Owo+ICsJCWF2ZGQxdjgtc3VwcGx5ID0gPCZ2
-Y2MxOF9sY2Q+Owo+ICsJCWF2ZGQzdjMtc3VwcGx5ID0gPCZ2Y2NhXzMzPjsKPiArCQlyb2NrY2hp
-cCxwYW5lbCA9IDwmcGFuZWw+Owo+ICsJCXJvY2tjaGlwLGRhdGEtbWFwcGluZyA9ICJqZWlkYSI7
-Cj4gKwkJcm9ja2NoaXAsZGF0YS13aWR0aCA9IDwyND47Cj4gKwkJcm9ja2NoaXAsb3V0cHV0ID0g
-InJnYiI7Cj4gKwkJcG9ydHMgewo+ICsJCQlsdmRzX2luOiBwb3J0IHsKPiArCQkJCSNhZGRyZXNz
-LWNlbGxzID0gPDE+Owo+ICsJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJCQlsdmRzX2luX3Zv
-cGI6IGVuZHBvaW50QDAgewo+ICsJCQkJCXJlZyA9IDwwPjsKPiArCQkJCQlyZW1vdGUtZW5kcG9p
-bnQgPSA8JnZvcGJfb3V0X2x2ZHM+Owo+ICsJCQkJfTsKPiArCQkJCWx2ZHNfaW5fdm9wbDogZW5k
-cG9pbnRAMSB7Cj4gKwkJCQkJcmVnID0gPDE+Owo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
-dm9wbF9vdXRfbHZkcz47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9OwoKLS0gClJl
-Z2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+On 02/26/2015 10:42 AM, Russell King - ARM Linux wrote:
+> On Thu, Feb 26, 2015 at 11:37:08AM +0100, Geert Uytterhoeven wrote:
+>> When trying to kexec into a new kernel on a platform where multiple CPU
+>> cores are present, but no SMP bringup code is available yet, the
+>> kexec_load system call fails with:
+>>
+>>      kexec_load failed: Invalid argument
+>>
+>> The SMP test added to machine_kexec_prepare() in commit 2103f6cba61a8b8b
+>> ("ARM: 7807/1: kexec: validate CPU hotplug support") wants to prohibit
+>> kexec on SMP platforms where it cannot disable secondary CPUs.
+>> However, this test is too strict: if the secondary CPUs couldn't be
+>> enabled in the first place, there's no need to disable them later at
+>> kexec time.  Hence skip the test in the absence of SMP bringup code.
+>
+> Hmm.  I don't think we should relax it in this manner - I think there's
+> an easier solution to this.
+>
+>> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+>> index de2b085ad7535da7..8bf3b7c098881b95 100644
+>> --- a/arch/arm/kernel/machine_kexec.c
+>> +++ b/arch/arm/kernel/machine_kexec.c
+>> @@ -46,7 +46,8 @@ int machine_kexec_prepare(struct kimage *image)
+>>   	 * and implements CPU hotplug for the current HW. If not, we won't be
+>>   	 * able to kexec reliably, so fail the prepare operation.
+>>   	 */
+>> -	if (num_possible_cpus() > 1 && !platform_can_cpu_hotplug())
+>> +	if (num_possible_cpus() > 1 && platform_can_secondary_boot() &&
+>> +	    !platform_can_cpu_hotplug())
+>
+> 	if (num_online_cpus() > 1 && !platform_can_cpu_hotplug())
+
+I can't remember the call stack here. Is num_online_cpus() guaranteed 
+not to change from this point through to when the kexec actually happens?
+
+>
+>>   		return -EINVAL;
+>
+> Neither test is actually accurate though: when we have implementations
+> where the secondary CPUs spin inside the kernel when they're "unplugged"
+> that is not sufficient to be able to kexec.
+>
+> We should probably fix that, and make platform_can_cpu_hotplug() report
+> whether it really is possible to hotplug all secondary CPUs into such
+> a state that kexec can work.
+>
+
