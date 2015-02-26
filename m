@@ -1,54 +1,63 @@
-From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v2 0/2] ARM: imx6sx-sdb: add revb board
-Date: Thu, 26 Feb 2015 09:18:24 +0000
-Message-ID: <BN3PR0301MB084995583E88A7A53E5D5A0F81140@BN3PR0301MB0849.namprd03.prod.outlook.com>
-References: <1421804094-26379-1-git-send-email-peter.chen@freescale.com>
- <20150226075838.GF20028@dragon>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: atmel_nand: move the hsmc_clk from nfc node to
+ nand node
+Date: Thu, 26 Feb 2015 10:18:57 +0100
+Message-ID: <20150226101857.59104e97@bbrezillon>
+References: <1423548885-27589-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150226075838.GF20028@dragon>
-Content-Language: en-US
+In-Reply-To: <1423548885-27589-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Josh,
 
- 
-> >
-> > The main changes between reva and revb board:
-> > - OOP setting
-> > - pfuse
-> > - qspi
-> > - can transceiver (not mainlined)
-> >
-> > Changes for v2:
-> >
-> > - Add missing Makefile entries for both dts files. [Patch 1/2] and
-> > [Patch 2/2]
-> > - Delete OOP setting changed at imx6sx-sdb-reva, it is SoC feature,
-> >   it doesn't need to be change unless board limitations. [Patch 1/2]
-> > - Add explanation why OOP setting need to changed at imx6sx-sdb revb
-> > board. [Patch 2/2]
-> > - Make imx6sx-sdb revb board as default imx6sx-sdb board. [Patch 2/2]
-> >
-> > Peter Chen (2):
-> >   ARM: imx6sx-sdb: change default board as reva board
-> >   ARM: imx6sx-sdb: add revb board and make it default
-> 
-> Peter,
-> 
-> What branch did you generate these patches on?  I'm trying to apply them, but
-> they do not apply on any reasonable branch.  Can you re-spin against v4.0-rc1?
-> Thanks.
-> 
+On Tue, 10 Feb 2015 14:14:43 +0800
+Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
 
-I did it based on two or three weeks Linux-next tree, I will send it based on
-v4.0-rc1 today.
+> Also add a new sama5d3_nand compatiable string for sama5d3 nand.
+> 
+> For sama5d3, sama5d4 chip, the pmecc became part of HSMC, they need the
+> HSMC clock enabled to work.
+> The NFC is a sub feature for current nand driver, it can be disabled.
+> But if HSMC clock is controlled by NFC, so disable NFC will also disable
+> the HSMC clock. then, it will make the PMECC fail to work.
+> 
+> So the solution is move the HSMC clock out of NFC to nand node. When
+> nand driver probed, it will check whether the chip has HSMC, if yes then
+> it will require a HSMC clock.
 
-Peter
+Do you plan to use the NAND chip without the NFC (I mean, is there a
+reason for not using the NFC to access the NAND ?) ?
+If you don't, why don't you just wait for the NFC before probing the
+NAND chip it is attached to, so that the hmsc clk is properly claimed.
+
+I'm not convinced that moving a clk reference out of the controller
+node can address the fact that the nand/nand-controller DT
+representation is inappropriate (your embedding controller specific
+information in your NAND chip definition).
+I think we should reconsider this problem with a controller/chip
+approach:
+- which parts are representing the NAND controller: the PMECC engine,
+  the NFC if available, ...
+- which parts are representing the NAND chip: the EBI mem range, the
+  R/B pin, the ALE/CLE information, ...
+
+And of course, we should take the EBI/SMC rework into account ;-).
+
+Best Regards,
+
+Boris
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
