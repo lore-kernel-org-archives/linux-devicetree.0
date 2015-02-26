@@ -1,51 +1,60 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/4] Add support for IPROC SDHCI controller
-Date: Thu, 26 Feb 2015 09:28:06 -0800
-Message-ID: <54EF57A6.8070607@broadcom.com>
-References: <Scott Branden <sbranden@broadcom.com> <1423526791-29453-1-git-send-email-sbranden@broadcom.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ARM: kexec: Relax SMP validation to improve DT
+ compatibility
+Date: Thu, 26 Feb 2015 17:42:06 +0000
+Message-ID: <20150226174206.GL8656@n2100.arm.linux.org.uk>
+References: <1424947028-7438-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423526791-29453-1-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1424947028-7438-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Stephen Warren <swarren@nvidia.com>, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+On Thu, Feb 26, 2015 at 11:37:08AM +0100, Geert Uytterhoeven wrote:
+> When trying to kexec into a new kernel on a platform where multiple CPU
+> cores are present, but no SMP bringup code is available yet, the
+> kexec_load system call fails with:
+> 
+>     kexec_load failed: Invalid argument
+> 
+> The SMP test added to machine_kexec_prepare() in commit 2103f6cba61a8b8b
+> ("ARM: 7807/1: kexec: validate CPU hotplug support") wants to prohibit
+> kexec on SMP platforms where it cannot disable secondary CPUs.
+> However, this test is too strict: if the secondary CPUs couldn't be
+> enabled in the first place, there's no need to disable them later at
+> kexec time.  Hence skip the test in the absence of SMP bringup code.
 
-I have not heard any more feedback on this patchset.  Is it in your 
-queue to review or merge into your tree?
+Hmm.  I don't think we should relax it in this manner - I think there's
+an easier solution to this.
 
-Thanks,
-  Scott
+> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+> index de2b085ad7535da7..8bf3b7c098881b95 100644
+> --- a/arch/arm/kernel/machine_kexec.c
+> +++ b/arch/arm/kernel/machine_kexec.c
+> @@ -46,7 +46,8 @@ int machine_kexec_prepare(struct kimage *image)
+>  	 * and implements CPU hotplug for the current HW. If not, we won't be
+>  	 * able to kexec reliably, so fail the prepare operation.
+>  	 */
+> -	if (num_possible_cpus() > 1 && !platform_can_cpu_hotplug())
+> +	if (num_possible_cpus() > 1 && platform_can_secondary_boot() &&
+> +	    !platform_can_cpu_hotplug())
 
-On 15-02-09 04:06 PM, Scott Branden wrote:
-> This series of patchsets contains the IPROC SDHCI driver used
-> in a series of Broadcom SoCs
-> Quirks are also added to support this controller.
->
-> Corneliu Doban (1):
->    mmc: sdhci: do not set AUTO_CMD12 for multi-block CMD53
->
-> Scott Branden (3):
->    mmc: sdhci: add quirk for ACMD23 broken
->    mmc: sdhci-iproc: add IPROC SDHCI driver
->    mmc: sdhci-iproc: add device tree bindings
->
->   .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  23 ++
->   drivers/mmc/host/Kconfig                           |  14 ++
->   drivers/mmc/host/Makefile                          |   1 +
->   drivers/mmc/host/sdhci-iproc.c                     | 241 +++++++++++++++++++++
->   drivers/mmc/host/sdhci.c                           |   7 +-
->   include/linux/mmc/sdhci.h                          |   2 +
->   6 files changed, 286 insertions(+), 2 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
->   create mode 100644 drivers/mmc/host/sdhci-iproc.c
->
+	if (num_online_cpus() > 1 && !platform_can_cpu_hotplug())
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  		return -EINVAL;
+
+Neither test is actually accurate though: when we have implementations
+where the secondary CPUs spin inside the kernel when they're "unplugged"
+that is not sufficient to be able to kexec.
+
+We should probably fix that, and make platform_can_cpu_hotplug() report
+whether it really is possible to hotplug all secondary CPUs into such
+a state that kexec can work.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
