@@ -1,76 +1,73 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: atmel_nand: move the hsmc_clk from nfc node to nand node
-Date: Thu, 26 Feb 2015 19:49:09 +0800
-Message-ID: <C9CC8708-B99A-47F4-AC57-1A92B302E1C9@jcrosoft.com>
-References: <1423548885-27589-1-git-send-email-josh.wu@atmel.com> <20150226101857.59104e97@bbrezillon>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150226101857.59104e97@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Nicolas FERRE <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH v3 3/3] of: support passing console options with stdout-path
+Date: Thu, 26 Feb 2015 06:55:22 -0500
+Message-ID: <54EF09AA.2080706@hurleysoftware.com>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org> <1417110967-16284-4-git-send-email-leif.lindholm@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417110967-16284-4-git-send-email-leif.lindholm@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leif Lindholm <leif.lindholm@linaro.org>, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, plagnioj@jcrosoft.com, ijc@debian.org, andrew@lunn.ch, s.hauer@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+On 11/27/2014 12:56 PM, Leif Lindholm wrote:
+> Support specifying console options (like with console=ttyXN,<options>)
+> by appending them to the stdout-path property after a separating ':'.
+> 
+> Example:
+>         stdout-path = "uart0:115200";
 
-> On Feb 26, 2015, at 5:18 PM, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> Hi Josh,
-> 
-> On Tue, 10 Feb 2015 14:14:43 +0800
-> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> 
->> Also add a new sama5d3_nand compatiable string for sama5d3 nand.
->> 
->> For sama5d3, sama5d4 chip, the pmecc became part of HSMC, they need the
->> HSMC clock enabled to work.
->> The NFC is a sub feature for current nand driver, it can be disabled.
->> But if HSMC clock is controlled by NFC, so disable NFC will also disable
->> the HSMC clock. then, it will make the PMECC fail to work.
->> 
->> So the solution is move the HSMC clock out of NFC to nand node. When
->> nand driver probed, it will check whether the chip has HSMC, if yes then
->> it will require a HSMC clock.
-> 
-> Do you plan to use the NAND chip without the NFC (I mean, is there a
-> reason for not using the NFC to access the NAND ?) ?
-> If you don't, why don't you just wait for the NFC before probing the
-> NAND chip it is attached to, so that the hmsc clk is properly claimed.
-you can as you can have 2 Nand on the d3 but only 1 NFC
+This format breaks DT earlycon because libfdt doesn't recognize ':' as a
+path terminator.
 
-Best Regards,
-J.
-> 
-> I'm not convinced that moving a clk reference out of the controller
-> node can address the fact that the nand/nand-controller DT
-> representation is inappropriate (your embedding controller specific
-> information in your NAND chip definition).
-> I think we should reconsider this problem with a controller/chip
-> approach:
-> - which parts are representing the NAND controller: the PMECC engine,
->  the NFC if available, ...
-> - which parts are representing the NAND chip: the EBI mem range, the
->  R/B pin, the ALE/CLE information, ...
-> 
-> And of course, we should take the EBI/SMC rework into account ;-).
-> 
-> Best Regards,
-> 
-> Boris
-> 
-> 
-> -- 
-> Boris Brezillon, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+It's simple enough to fix this directly in early_init_dt_scan_chosen_serial()
+but perhaps it would better to teach fdt_path_offset() to recognize ':'?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Peter Hurley
+
+> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
+> ---
+>  drivers/of/base.c |    9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 7f0e5f7..6d2d45e 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -37,6 +37,7 @@ EXPORT_SYMBOL(of_allnodes);
+>  struct device_node *of_chosen;
+>  struct device_node *of_aliases;
+>  struct device_node *of_stdout;
+> +static const char *of_stdout_options;
+>  
+>  struct kset *of_kset;
+>  
+> @@ -1844,7 +1845,7 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+>  		if (IS_ENABLED(CONFIG_PPC) && !name)
+>  			name = of_get_property(of_aliases, "stdout", NULL);
+>  		if (name)
+> -			of_stdout = of_find_node_by_path(name);
+> +			of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
+>  	}
+>  
+>  	if (!of_aliases)
+> @@ -1968,9 +1969,13 @@ EXPORT_SYMBOL_GPL(of_prop_next_string);
+>   */
+>  bool of_console_check(struct device_node *dn, char *name, int index)
+>  {
+> +	char *console_options;
+> +
+>  	if (!dn || dn != of_stdout || console_set_on_cmdline)
+>  		return false;
+> -	return !add_preferred_console(name, index, NULL);
+> +
+> +	console_options = kstrdup(of_stdout_options, GFP_KERNEL);
+> +	return !add_preferred_console(name, index, console_options);
+>  }
+>  EXPORT_SYMBOL_GPL(of_console_check);
+>  
+> 
