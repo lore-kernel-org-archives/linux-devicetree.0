@@ -1,81 +1,348 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [Patch v6 0/2] gpio: add GPIO hogging mechanism
-Date: Thu, 26 Feb 2015 18:38:37 +0900
-Message-ID: <CAAVeFuL3yrsysB2N7auaTR5CVy5D=6jvnEMEY6RxO37xrn46Fw@mail.gmail.com>
-References: <1422899085-678-1-git-send-email-bparrot@ti.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3 1/2] ARM: imx6sx-sdb: change default board as reva board
+Date: Thu, 26 Feb 2015 16:28:29 +0800
+Message-ID: <1424939310-19282-2-git-send-email-peter.chen@freescale.com>
+References: <1424939310-19282-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1422899085-678-1-git-send-email-bparrot@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Benoit Parrot <bparrot@ti.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424939310-19282-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Linus, this looks good to me in its current form, what are your thoughts?
+The imx6sx sdb board has two revisions, the current mainline one
+is reva which is experimental and mainly for internal use. In
+this commit, we rename imx6sx-sdb.dts to imx6sx-sdb.dtsi, and
+move the reva dedicated contents to imx6sx-sdb-reva.dts.
 
-On Tue, Feb 3, 2015 at 2:44 AM, Benoit Parrot <bparrot@ti.com> wrote:
-> This patch set re-introduces the gpio hogging concept first
-> presented by Boris Brezillion.
-> This patch set provides a way to initially configure specific GPIO
-> when the GPIO controller is probed.
->
-> The actual DT scanning to collect the GPIO specific data is performed
-> as part of of_gpiochip_add().
->
-> The purpose of this is to allow specific GPIOs to be configured
-> without any driver specific code.
-> This is particularly useful because board design are getting
-> increasingly complex and given SoC pins can now have more
-> than 10 mux values a lot of connections are now dependent on
-> external IO muxes to switch various modes.
->
-> Specific drivers should not necessarily need to be aware of
-> what accounts to a specific board implementation. This board level
-> "description" should be best kept as part of the dts file.
->
-> Changes since v5:
->  * Addressed review comment from Linus Walleij
->  * Replace "state" property back with separate boolean properties
->  * Renamed helper function
->  * Refactored pr_* calls to remove "__func__"
->
-> Changes since v4:
->  * Addressed review comments from Alexandre Courbot
->
-> Changes since v3:
->  * Relocated the non-DT "hog" function to gpiolib.c.
->  * Rename some of the function to be clearer and remove _ prefixes.
->  * Replace the gpiod_request/gpiod_put usage with
->    gpiochip_request_own_desc/free_own_desc version instead.
->  * Refactor some of the logic to better handle error condition/reporting
->  * Renamed the "direction" DT properties to "state".
->
-> Changes since v2:
->  * Refactor the gpio-hog mechanism to split the DT related action
->    from the actual "hogging" operation.
->  * This allows non-DT providers to implement hogs as well.
->  * Added FLAG_IS_HOGGED to mark hogged gpio and make gpiochip removal
->    able to release hogged gpio.
->  * Similarly to the hogging, the cleanup is performed as part of
->    of_gpiochip_remove
->
-> Changes since v1:
->  * Split the devicetree bindings documentation in its own patch.
->  * Refactor the gpio-hog mechanism as private functions meant to
->    be to invoked from of_gpiochip_add().
->
->
-> Benoit Parrot (2):
->   gpio: add GPIO hogging mechanism
->   gpio: Document GPIO hogging mechanism
->
->  Documentation/devicetree/bindings/gpio/gpio.txt |  30 ++++++
->  drivers/gpio/gpiolib-of.c                       | 111 +++++++++++++++++++++
->  drivers/gpio/gpiolib.c                          | 124 ++++++++++++++++++++----
->  drivers/gpio/gpiolib.h                          |   3 +
->  4 files changed, 249 insertions(+), 19 deletions(-)
->
-> --
-> 1.8.5.1
->
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                         |   2 +-
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts              | 143 +++++++++++++++++++++
+ .../boot/dts/{imx6sx-sdb.dts => imx6sx-sdb.dtsi}   | 130 -------------------
+ 3 files changed, 144 insertions(+), 131 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6sx-sdb-reva.dts
+ rename arch/arm/boot/dts/{imx6sx-sdb.dts => imx6sx-sdb.dtsi} (84%)
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a1c776b..92d0389 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -302,7 +302,7 @@ dtb-$(CONFIG_SOC_IMX6SL) += \
+ 	imx6sl-evk.dtb
+ dtb-$(CONFIG_SOC_IMX6SX) += \
+ 	imx6sx-sabreauto.dtb \
+-	imx6sx-sdb.dtb
++	imx6sx-sdb-reva.dtb
+ dtb-$(CONFIG_SOC_LS1021A) += \
+ 	ls1021a-qds.dtb \
+ 	ls1021a-twr.dtb
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+new file mode 100644
+index 0000000..c76b87c
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+@@ -0,0 +1,143 @@
++/*
++ * Copyright (C) 2015 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "imx6sx-sdb.dtsi"
++
++/ {
++	model = "Freescale i.MX6 SoloX SDB RevA Board";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	pmic: pfuze100@08 {
++		compatible = "fsl,pfuze100";
++		reg = <0x08>;
++
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3a {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3b_reg: sw3b {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vgen1 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-always-on;
++			};
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&qspi2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi2>;
++	status = "okay";
++
++	flash0: s25fl128s@0 {
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl128s";
++		spi-max-frequency = <66000000>;
++	};
++
++	flash1: s25fl128s@1 {
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl128s";
++		spi-max-frequency = <66000000>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+similarity index 84%
+rename from arch/arm/boot/dts/imx6sx-sdb.dts
+rename to arch/arm/boot/dts/imx6sx-sdb.dtsi
+index 32f07d6..cef04ce 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -184,114 +184,6 @@
+ 	status = "okay";
+ };
+ 
+-&i2c1 {
+-        clock-frequency = <100000>;
+-        pinctrl-names = "default";
+-        pinctrl-0 = <&pinctrl_i2c1>;
+-        status = "okay";
+-
+-	pmic: pfuze100@08 {
+-		compatible = "fsl,pfuze100";
+-		reg = <0x08>;
+-
+-		regulators {
+-			sw1a_reg: sw1ab {
+-				regulator-min-microvolt = <300000>;
+-				regulator-max-microvolt = <1875000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <6250>;
+-			};
+-
+-			sw1c_reg: sw1c {
+-				regulator-min-microvolt = <300000>;
+-				regulator-max-microvolt = <1875000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <6250>;
+-			};
+-
+-			sw2_reg: sw2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3a_reg: sw3a {
+-				regulator-min-microvolt = <400000>;
+-				regulator-max-microvolt = <1975000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3b_reg: sw3b {
+-				regulator-min-microvolt = <400000>;
+-				regulator-max-microvolt = <1975000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw4_reg: sw4 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <3300000>;
+-			};
+-
+-			swbst_reg: swbst {
+-				regulator-min-microvolt = <5000000>;
+-				regulator-max-microvolt = <5150000>;
+-			};
+-
+-			snvs_reg: vsnvs {
+-				regulator-min-microvolt = <1000000>;
+-				regulator-max-microvolt = <3000000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vref_reg: vrefddr {
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vgen1_reg: vgen1 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen2_reg: vgen2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-			};
+-
+-			vgen3_reg: vgen3 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen4_reg: vgen4 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen5_reg: vgen5 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen6_reg: vgen6 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-		};
+-	};
+-};
+-
+ &i2c4 {
+         clock-frequency = <100000>;
+         pinctrl-names = "default";
+@@ -355,28 +247,6 @@
+ 	status = "okay";
+ };
+ 
+-&qspi2 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_qspi2>;
+-	status = "okay";
+-
+-	flash0: s25fl128s@0 {
+-		reg = <0>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "spansion,s25fl128s";
+-		spi-max-frequency = <66000000>;
+-	};
+-
+-	flash1: s25fl128s@1 {
+-		reg = <1>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "spansion,s25fl128s";
+-		spi-max-frequency = <66000000>;
+-	};
+-};
+-
+ &ssi2 {
+ 	status = "okay";
+ };
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
