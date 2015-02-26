@@ -1,49 +1,67 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 01/12] ARM: dts: apq8064: add RPM regulators support
-Date: Thu, 26 Feb 2015 12:11:41 -0800
-Message-ID: <54EF7DFD.9020609@codeaurora.org>
-References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org> <1424678093-12966-1-git-send-email-srinivas.kandagatla@linaro.org> <54EF748B.3090404@codeaurora.org> <54EF7D74.7060906@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/2] hwrng: iproc-rng200 - Add Broadcom IPROC RNG driver
+Date: Thu, 26 Feb 2015 21:15:49 +0100
+Message-ID: <4488852.TuVxKbAYde@wuerfel>
+References: <1424888184-22180-3-git-send-email-sbranden@broadcom.com> <3062825.7b1oYP4yuL@wuerfel> <54EF75F0.7000901@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54EF7D74.7060906-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54EF75F0.7000901@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Grant Likely <grant.likely@linaro.org>, Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/15 12:09, Srinivas Kandagatla wrote:
->
->
-> On 26/02/15 19:31, Stephen Boyd wrote:
->> On 02/22/15 23:54, Srinivas Kandagatla wrote:
->>> +            pm8921_s5: pm8921-s5 {
->>> +                compatible    = "qcom,rpm-pm8921-ftsmps";
->>> +                reg        = <QCOM_RPM_PM8921_SMPS5>;
->>> +            };
->>> +
->>> +            pm8921_s6: pm8921-s6 {
->>> +                compatible    = "qcom,rpm-pm8921-ftsmps";
->>> +                reg        = <QCOM_RPM_PM8921_SMPS6>;
->>> +            };
->>> +
->>
->> There's no RPM control for S5 and S6. Please remove. Also, has this been
->> tested?
->>
-> Ahh. these are SAW regulators, I will remove it from the list.
-> Obviously, I did not test all the regulators.
+On Thursday 26 February 2015 11:37:20 Scott Branden wrote:
+> Response inline.
+> 
+> On 15-02-25 11:17 AM, Arnd Bergmann wrote:
+> > On Wednesday 25 February 2015 10:16:24 Scott Branden wrote:
+> >> This adds a driver for random number generator present on Broadcom
+> >> IPROC devices.
+> >>
+> >> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> >> Signed-off-by: Scott Branden <sbranden@broadcom.com>
+> >
+> > The driver looks reasonable overall, I have just one question about
+> > something that sticks out:
+> >
+> >> +    while ((num_remaining > 0) && time_before(jiffies, idle_endtime)) {
+> > ...
+> >> +
+> >> +            /* Are there any random numbers available? */
+> >> +            if ((ioread32(rng_base + RNG_FIFO_COUNT_OFFSET) &
+> >> +                            RNG_FIFO_COUNT_RNG_FIFO_COUNT_MASK) > 0) {
+> > ...
+> >> +            } else {
+> >> +                    if (!wait)
+> >> +                            /* Cannot wait, return immediately */
+> >> +                            return max - num_remaining;
+> >> +
+> >> +                    /* Can wait, give others chance to run */
+> >> +                    cpu_relax();
+> >> +            }
+> >> +    }
+> >> +
+> >
+> > It looks like you do a busy-loop around cpu_relax here if asked to wait.
+> > Is this intentional? I would normally expect either cond_resched() or
+> > some msleep() instead.
+> 
+> This code was following examples of other open source drivers - bcm2835 
+> and exynos both use cpu_relax.  I'll have to look into this more to 
+> understand.
+> 
 
-There are some more that don't seem to match what we have downstream.
-L26 is also SAW related, and the usb and hdmi switches are "locally"
-controlled via ssbi pmic writes.
+The majority of the driver apparently use udelay(10) to wait, which is
+not much better but at least consistent. The cpu_relax() call probably
+gives better throughput.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I don't understand why none of the drivers actually attempts to
+msleep(), but that may be because the delay is much too long.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you find out what the expected latency is for new data to
+become available on your hardware?
+
+	Arnd
