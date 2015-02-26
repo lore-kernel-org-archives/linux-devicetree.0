@@ -1,60 +1,77 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: atmel_nand: move the hsmc_clk from nfc node to
- nand node
-Date: Thu, 26 Feb 2015 13:57:15 +0100
-Message-ID: <20150226135715.7e6c199c@bbrezillon>
-References: <1423548885-27589-1-git-send-email-josh.wu@atmel.com>
-	<20150226101857.59104e97@bbrezillon>
-	<C9CC8708-B99A-47F4-AC57-1A92B302E1C9@jcrosoft.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C9CC8708-B99A-47F4-AC57-1A92B302E1C9-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Nicolas FERRE <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v2 0/8] Add sd/emmc support for stih407 family silicon
+Date: Thu, 26 Feb 2015 13:10:19 +0000
+Message-ID: <1424956227-18258-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, chris@printf.net, ulf.hansson@linaro.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, peppe.cavallaro@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Christophe,
+Hi,
 
-On Thu, 26 Feb 2015 19:49:09 +0800
-Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+This series adds sd/emmc support to the sdhci-st.c driver for stih407
+family silicon. The changes mainly involve congiguring some extra glue
+registers in the flashSS which configure the Arasan controller.
 
-> 
-> > On Feb 26, 2015, at 5:18 PM, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > 
-> > Hi Josh,
-> > 
-> > On Tue, 10 Feb 2015 14:14:43 +0800
-> > Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> > 
-> >> Also add a new sama5d3_nand compatiable string for sama5d3 nand.
-> >> 
-> >> For sama5d3, sama5d4 chip, the pmecc became part of HSMC, they need the
-> >> HSMC clock enabled to work.
-> >> The NFC is a sub feature for current nand driver, it can be disabled.
-> >> But if HSMC clock is controlled by NFC, so disable NFC will also disable
-> >> the HSMC clock. then, it will make the PMECC fail to work.
-> >> 
-> >> So the solution is move the HSMC clock out of NFC to nand node. When
-> >> nand driver probed, it will check whether the chip has HSMC, if yes then
-> >> it will require a HSMC clock.
-> > 
-> > Do you plan to use the NAND chip without the NFC (I mean, is there a
-> > reason for not using the NFC to access the NAND ?) ?
-> > If you don't, why don't you just wait for the NFC before probing the
-> > NAND chip it is attached to, so that the hmsc clk is properly claimed.
-> you can as you can have 2 Nand on the d3 but only 1 NFC
+This series also adds support for UHS modes for eMMC. To allow
+UHS HS200/SD104 modes to function correctly, due to the
+tight timing constriants, support for delay management is also added.
+Two types of delay management are supported, static delay management and
+dynamic delay management, this delay management is only available
+on eMMC pads on stih410 and later silicon.
 
-I don't get your point ?
-You can control several NAND chips with the same NFC.
+This series has been tested with stih410-b2120 on eMMC and sd, at various
+clock speeds. As part of this testing a bug was also found in the
+upstream flexgen clock set_rate implementation (now fixed upstream).
+
+    max-frequency = 200Mhz
+    /dev/mmcblk0p1:
+     Timing buffered disk reads: 270 MB in  3.02 seconds =  89.54 MB/sec
+    
+    max-frequency = 100Mhz
+    root@debian-armhf:~# hdparm -t /dev/mmcblk0p1
+    /dev/mmcblk0p1:
+     Timing buffered disk reads: 210 MB in  3.00 seconds =  70.00 MB/sec
+    
+    max-frequency = 50Mhz
+    root@debian-armhf:~# hdparm -t /dev/mmcblk0p1
+    /dev/mmcblk0p1:
+     Timing buffered disk reads: 118 MB in  3.00 seconds =  39.28 MB/sec
+
+It has also been tested on stih416-b2020 to ensure we have caused no
+regressions. Finally the dt documentation has been updated to reflect
+the changes in the driver code. Intrestingly it seems we are the first
+upstream platform to be using some of the uhs bindings such as
+sd-uhs-sdr104.
+
+Changes since v1:
+ - Partition the changes into smaller patches to aid review process (Ulf)
+
+regards,
+
+Peter.
+
+Peter Griffin (8):
+  mmc: sdhci-st: Add macros for register offsets and bitfields for mmcss
+    glue regs
+  mmc: sdhci-st: Add support for de-asserting reset signal and top regs
+    resource
+  mmc: sdhci-st: Add delay management functions for top registers
+    (eMMC).
+  mmc: sdhci-st: Add st_mmcss_cconfig function to configure mmcss glue
+    registers.
+  mmc: sdhci-st: Add sdhci_st_set_uhs_signaling function.
+  mmc: sdhci-st: Update the quirks for this controller.
+  mmc: sdhci-st: Update ST SDHCI binding documentation.
+  ARM: STi: DT: STiH407: Add dt nodes for sdhci and emmc.
+
+ Documentation/devicetree/bindings/mmc/sdhci-st.txt | 100 +++++-
+ arch/arm/boot/dts/stih407-family.dtsi              |  30 ++
+ arch/arm/boot/dts/stih410-b2120.dts                |  10 +
+ arch/arm/boot/dts/stihxxx-b2120.dtsi               |   8 +
+ drivers/mmc/host/sdhci-st.c                        | 344 ++++++++++++++++++++-
+ 5 files changed, 478 insertions(+), 14 deletions(-)
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
