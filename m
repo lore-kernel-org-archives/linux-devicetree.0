@@ -1,120 +1,166 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v5 1/6] clk: add of_clk_get_parent_rate function
-Date: Thu, 26 Feb 2015 09:43:19 +0100
-Message-ID: <20150226084319.GZ12209@pengutronix.de>
-References: <rjui@broadcom.com>
- <1423097705-22939-1-git-send-email-rjui@broadcom.com>
- <1423097705-22939-2-git-send-email-rjui@broadcom.com>
- <20150226055406.GB28214@pengutronix.de>
- <54EEB97B.6080006@broadcom.com>
- <20150226065155.GY12209@pengutronix.de>
- <54EECE74.8050108@broadcom.com>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
+Date: Thu, 26 Feb 2015 16:48:30 +0800
+Message-ID: <54EEDDDE.9010608@linaro.org>
+References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org> <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org> <20150220144119.GB1707@saruman.tx.rr.com> <54E75665.6050205@linaro.org> <20150220160610.GB6430@saruman.tx.rr.com> <54E89E29.4010807@linaro.org> <20150221162102.GA1784@saruman.tx.rr.com> <54E948AC.2010609@linaro.org> <54EC4ECA.2090300@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54EECE74.8050108@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54EC4ECA.2090300-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 25, 2015 at 11:42:44PM -0800, Ray Jui wrote:
-> On 2/25/2015 10:51 PM, Sascha Hauer wrote:
-> > On Wed, Feb 25, 2015 at 10:13:15PM -0800, Ray Jui wrote:
-> >> Hi Sascha,
-> >>
-> >> On 2/25/2015 9:54 PM, Sascha Hauer wrote:
-> >>> Hi Ray,
-> >>>
-> >>> On Wed, Feb 04, 2015 at 04:55:00PM -0800, Ray Jui wrote:
-> >>>> Sometimes a clock needs to know the rate of its parent before itself is
-> >>>> registered to the framework. An example is that a PLL may need to
-> >>>> initialize itself to a specific VCO frequency, before registering to the
-> >>>> framework. The parent rate needs to be known, for PLL multipliers and
-> >>>> divisors to be configured properly.
-> >>>>
-> >>>> Introduce helper function of_clk_get_parent_rate, which can be used to
-> >>>> obtain the parent rate of a clock, given a device node and index.
-> >>>
-> >>> I can't see how this patch helps you. First it's not guaranteed that
-> >>> the parent is already registered, what do you do in this case?
-> >>
-> >> In the case when clock parent is not found, as you can see from the
-> >> code, it simply returns zero, just like other clk get rate APIs.
-> > 
-> > Yes, but what do you do with the 0 result then in your PLL initialization?
-> > 
-> 
-> As of the current code, it fails the PLL frequency initialization and
-> bails out. Thinking about it more, it actually makes more sense to just
-> warn and still go ahead to register the clock, in which case it will use
-> whatever default frequency after chip power on reset or a frequency
-> configured in the bootloader.
-> 
-> >>
-> >> I thought the order of clock registration is based on order of the clock
-> >> nodes in device tree. It makes sense to me to declare the parent clock
-> >> before a child clock, so it's guaranteed that the parent is registered
-> >> before the child.
-> > 
-> > No, you can't rely on that. The order of the device nodes may happen to
-> > define the order of clock initialization now, but that may change.
-> > device nodes are usually ordered by bus addresses, not by intended
-> > initialization order. Even if you reorder them everything must still
-> > work.
-> > 
-> 
-> Okay I get your point that the order of device nodes may not be relied
-> on for device initialization order. But then another mechanism should be
-> deployed to give developers the option to decide on the clock
-> initialization sequence. It can be optional but it should be there.
-> 
-> >>
-> >>> Then the clock framework doesn't require that you initialize the PLL
-> >>> before registering. That can be done in the clk ops later.
-> >>
-> >> Sure it's not mandatory. But what's wrong with me choosing to initialize
-> >> the PLL clock to a known frequency before registering it to the framework?
-> > 
-> > Appearantly you don't know the (input) frequency of the PLL when
-> > registering it to the framework, so the question must be: What's wrong
-> > with keeping it uninitialized?
-> > 
-> > If the PLL is unused then you don't care about it's initialization
-> > status. If it happens to be enabled by a bootloader and still unused
-> > at late_initcall time the clock framework will disable it so you
-> > have a known state then. If a consumer for the PLL appears it's its
-> > job to initialize it through the clk api.
-> > 
-> > Sascha
-> > 
-> 
-> Okay, what we need here is to initialize the PLL to a desired frequency,
-> based on device tree settings (since it will be configured differently,
-> among different boards). This is a PLL that 1) has limited options of
-> frequencies which it can be configured to, and 2) has multiple child
-> clocks, where is a more suitable place to initialize it to the desired
-> frequency than right before registering it to the framework? I know a
-> lot of people do it in the bootloader, but I thought we should be given
-> the flexibility of configuring it in the kernel.
-> 
-> When you say "consumers", do you mean 1) the device driver that uses the
-> PLL; or 2) the device driver that use the child clock of the PLL? If
-> it's case 1), then we don't really have a device driver that directly
-> uses the PLL, and I thought that's quite normal, as most PLLs don't
-> directly feed into any peripherals.
+Hi, Roger
 
-I meant 1) and 2). Before a consumer comes along the state of the PLL
-doesn't matter. When a consumer shows up it has to call
-clk_prepare_enable which (directly or indirectly) will enable your PLL.
-Then it's still time to apply the default settings you found out during
-probe of the PLL.
+On 02/24/2015 06:13 PM, Roger Quadros wrote:
+>>> On Sat, Feb 21, 2015 at 11:03:05PM +0800, zhangfei wrote:
+>>>>>>>> +static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
+>>>>>>>> +{
+>>>>>>>> +    struct usb_otg *otg = priv->phy.otg;
+>>>>>>>> +
+>>>>>>>> +    if (!otg->gadget)
+>>>>>>>> +        return;
+>>>>>>>> +
+>>>>>>>> +    if (on)
+>>>>>>>> +        usb_gadget_connect(otg->gadget);
+>>>>>>>> +    else
+>>>>>>>> +        usb_gadget_disconnect(otg->gadget);
+>>>>>>>
+>>>>>>> why is the PHY fiddling with pullups ?
+>>>>>>
+>>>>>> We use this to enable/disable otg gadget mode.
+>>>>>
+>>>>> I got that, but the pullups don't belong to the PHY, they belong to the
+>>>>> gadget.
+>>>>>
+>>>>>> The gpio_id & gpio_vbus are used to distinguish otg gadget mode or
+>>>>>> host mode.
+>>>>>> When micro usb or otg device attached to otg, gpio_vbus falling down.
+>>>>>> And gpio_id = 1 is micro usb, gpio_id = 0 is otg device.
+>>>>>
+>>>>> all of that I understood clearly :-)
+>>>>>
+>>>>>> So when micro usb attached, we enable gadget mode; while micro usb
+>>>>>> detached, we disable gadget mode, and dwc2 will automatically set to
+>>>>>> host mode.
+>>>>>
+>>>>> that's all fine, I'm concerned about letting the PHY fiddle with
+>>>>> something it doesn't own. If I am to change pullups rules in udc-core,
+>>>>> this is likely to break down miserably and I don't want to have to go
+>>>>> through that.
+>>>>
+>>>> Thanks for the clarifying.
+>>>
+>>> no problem.
+>>>
+>>>> How about using usb_gadget_vbus_connect/disconnect, which are used in many
+>>>> files under drivers/usb/phy.
+>>>> There is no vbus_session in dwc2/gadget.c, I thought it would be same as
+>>>> pullup.
+>>>>
+>>>> However, usb_gadget_vbus_connect still need para gadget, where should we put
+>>>> this file, drivers/usb/phy or drivers/phy
+>>>
+>>> drivers/phy, if the framework misses anything you need, it's a great
+>>> opportunity to give back to the community by extending the framework.
+>>
+>> Sorry, I am a little confused.
+>> I need some concrete suggestion for the next step of this patch, which is required for the community board, hikey board.
+>>
+>> Do you mean in the future we need use hsotg->phy instead of hsotg->uphy.
+>>          struct phy *phy;
+>>          struct usb_phy *uphy;
+>> usb_phy has many members that struct phy does not have, including otg.
+>> struct usb_otg          *otg;
+>> Is that mean we need port such member from usb_phy to phy.
+>
+> In my opinion otg structure should belong to the USB core part that takes care
+> of the OTG/DRD state machine. We still don't have a clear solution here and
+> I'm currently investigating this.
+> My current work is to get Dual role functionality working with DWC3 controller and TI
+> platforms.
+>
+> Currently phy drivers take care of OTG operation themselves but there is an opportunity
+> to share code and centralize USB role switching.
+> The USB core should be the owner of the Host controller, Gadget controller and the OTG phy
+> and should take care of the that.
 
-Sascha
+Good idea.
+If you have any patch, I will be very happy to verify.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+How about adding these things in drivers/phy/phy-core.c, it is also 
+sharable, though not in usb core.
+
+Just tried adding one member struct usb_otg otg to struct phy, since not 
+find any good member can hold usb_otg.
+In drivers/phy/phy-core.c, adding extcon_register_interest, 
+phy_vbus_notifier, phy_set_peripheral, it works for me, dwc2 on hikey board.
+
+>
+>>
+>> Besides, are you ok with using usb_gadget_vbus_connect/disconnect.
+>
+> I don't think PHY is the right place for this even though older drivers seem to be doing so.
+> But at the same time there is nowhere else to add this at the moment.
+> The right place should be the USB core that is aware of host/gadget, phy and the state of the bus.
+
+Understand.
+
+>>> Scratching one's own itch kinda thing...
+>>>
+>>>>>>>> +static void hi6220_detect_work(struct work_struct *work)
+>>>>>>>> +{
+>>>>>>>> +    struct hi6220_priv *priv =
+>>>>>>>> +        container_of(work, struct hi6220_priv, work.work);
+>>>>>>>> +    int gpio_id, gpio_vbus;
+>>>>>>>> +    enum usb_otg_state state;
+>>>>>>>> +
+>>>>>>>> +    if (!gpio_is_valid(priv->gpio_id) || !gpio_is_valid(priv->gpio_vbus))
+>>>>>>>> +        return;
+>>>>>>>> +
+>>>>>>>> +    gpio_id = gpio_get_value_cansleep(priv->gpio_id);
+>>>>>>>> +    gpio_vbus = gpio_get_value_cansleep(priv->gpio_vbus);
+>>>>>>>
+>>>>>>> looks like this should be using extcon
+>>>>>> Not used extcon before.
+>>>>>> However, we need gpio_vbus interrupt.
+>>>>>> Checked phy-tahvo.c and phy-omap-otg.c, not find extcon related with
+>>>>>> interrupt.
+>>>>>> Will investigate tomorrow.
+>>>>>
+>>>>> drivers/extcon/extcon-gpio.c
+>>>> I think there is no need to use extcon, gpio is clear enough.
+>>>> extcon-gpio.c even do not support dt.
+>>>
+>>> well, add DT. The whole idea of free software is that we improve on
+>>> things we already have. EXTCON is *the* API to handle such things.
+>>
+>
+> I wrote the extcon-gpio-usb.c driver for exactly your use case. It is
+> queued for v4.1
+> https://lkml.org/lkml/2015/2/2/187
+
+That's great, thanks.
+>
+> It takes care of debouncing for you. Although currently it supports only ID gpio,
+> it should be very easy to extend to VBUS sense GPIO.
+>
+>> I think I am still not understanding extcon-gpio, not sure why need use this API here.
+>
+> several reasons. Let me list a few.
+> 1) Code reuse. Every PHY driver doesn't need to implement GPIO/interrupt handling and debouncing.
+> It just registers what cable events it wants to hear and gets a notification.
+> 2) The events (ID/VBUS) are not only interesting for the PHY driver but also the controller
+> driver and the OTG state machine (whenever it exists at a common place) ;).
+> 3) standardization because of common API.
+
+Thanks for the explanation.
+
+Zhangfei
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
