@@ -1,174 +1,81 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
-Date: Thu, 26 Feb 2015 11:36:10 +0200
-Message-ID: <54EEE90A.8070906@ti.com>
-References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org> <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org> <20150220144119.GB1707@saruman.tx.rr.com> <54E75665.6050205@linaro.org> <20150220160610.GB6430@saruman.tx.rr.com> <54E89E29.4010807@linaro.org> <20150221162102.GA1784@saruman.tx.rr.com> <54E948AC.2010609@linaro.org> <54EC4ECA.2090300@ti.com> <54EEDDDE.9010608@linaro.org>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [Patch v6 0/2] gpio: add GPIO hogging mechanism
+Date: Thu, 26 Feb 2015 18:38:37 +0900
+Message-ID: <CAAVeFuL3yrsysB2N7auaTR5CVy5D=6jvnEMEY6RxO37xrn46Fw@mail.gmail.com>
+References: <1422899085-678-1-git-send-email-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54EEDDDE.9010608@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zhangfei <zhangfei.gao@linaro.org>, balbi@ti.com
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dan . zhao" <dan.zhao@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1422899085-678-1-git-send-email-bparrot@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Benoit Parrot <bparrot@ti.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Zhangfei,
+Linus, this looks good to me in its current form, what are your thoughts?
 
-On 26/02/15 10:48, zhangfei wrote:
-> Hi, Roger
-> 
-> On 02/24/2015 06:13 PM, Roger Quadros wrote:
->>>> On Sat, Feb 21, 2015 at 11:03:05PM +0800, zhangfei wrote:
->>>>>>>>> +static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
->>>>>>>>> +{
->>>>>>>>> +    struct usb_otg *otg = priv->phy.otg;
->>>>>>>>> +
->>>>>>>>> +    if (!otg->gadget)
->>>>>>>>> +        return;
->>>>>>>>> +
->>>>>>>>> +    if (on)
->>>>>>>>> +        usb_gadget_connect(otg->gadget);
->>>>>>>>> +    else
->>>>>>>>> +        usb_gadget_disconnect(otg->gadget);
->>>>>>>>
->>>>>>>> why is the PHY fiddling with pullups ?
->>>>>>>
->>>>>>> We use this to enable/disable otg gadget mode.
->>>>>>
->>>>>> I got that, but the pullups don't belong to the PHY, they belong to the
->>>>>> gadget.
->>>>>>
->>>>>>> The gpio_id & gpio_vbus are used to distinguish otg gadget mode or
->>>>>>> host mode.
->>>>>>> When micro usb or otg device attached to otg, gpio_vbus falling down.
->>>>>>> And gpio_id = 1 is micro usb, gpio_id = 0 is otg device.
->>>>>>
->>>>>> all of that I understood clearly :-)
->>>>>>
->>>>>>> So when micro usb attached, we enable gadget mode; while micro usb
->>>>>>> detached, we disable gadget mode, and dwc2 will automatically set to
->>>>>>> host mode.
->>>>>>
->>>>>> that's all fine, I'm concerned about letting the PHY fiddle with
->>>>>> something it doesn't own. If I am to change pullups rules in udc-core,
->>>>>> this is likely to break down miserably and I don't want to have to go
->>>>>> through that.
->>>>>
->>>>> Thanks for the clarifying.
->>>>
->>>> no problem.
->>>>
->>>>> How about using usb_gadget_vbus_connect/disconnect, which are used in many
->>>>> files under drivers/usb/phy.
->>>>> There is no vbus_session in dwc2/gadget.c, I thought it would be same as
->>>>> pullup.
->>>>>
->>>>> However, usb_gadget_vbus_connect still need para gadget, where should we put
->>>>> this file, drivers/usb/phy or drivers/phy
->>>>
->>>> drivers/phy, if the framework misses anything you need, it's a great
->>>> opportunity to give back to the community by extending the framework.
->>>
->>> Sorry, I am a little confused.
->>> I need some concrete suggestion for the next step of this patch, which is required for the community board, hikey board.
->>>
->>> Do you mean in the future we need use hsotg->phy instead of hsotg->uphy.
->>>          struct phy *phy;
->>>          struct usb_phy *uphy;
->>> usb_phy has many members that struct phy does not have, including otg.
->>> struct usb_otg          *otg;
->>> Is that mean we need port such member from usb_phy to phy.
->>
->> In my opinion otg structure should belong to the USB core part that takes care
->> of the OTG/DRD state machine. We still don't have a clear solution here and
->> I'm currently investigating this.
->> My current work is to get Dual role functionality working with DWC3 controller and TI
->> platforms.
->>
->> Currently phy drivers take care of OTG operation themselves but there is an opportunity
->> to share code and centralize USB role switching.
->> The USB core should be the owner of the Host controller, Gadget controller and the OTG phy
->> and should take care of the that.
-> 
-> Good idea.
-> If you have any patch, I will be very happy to verify.
-
-Not yet. but expect some RFC patches in a few days.
-
-> 
-> How about adding these things in drivers/phy/phy-core.c, it is also sharable, though not in usb core.
-
-Not the best place IMO. Kishon can give his views if he sees it as a temporary solution.
-
-> 
-> Just tried adding one member struct usb_otg otg to struct phy, since not find any good member can hold usb_otg.
-> In drivers/phy/phy-core.c, adding extcon_register_interest, phy_vbus_notifier, phy_set_peripheral, it works for me, dwc2 on hikey board.
-
-cool.
-
-> 
->>
->>>
->>> Besides, are you ok with using usb_gadget_vbus_connect/disconnect.
->>
->> I don't think PHY is the right place for this even though older drivers seem to be doing so.
->> But at the same time there is nowhere else to add this at the moment.
->> The right place should be the USB core that is aware of host/gadget, phy and the state of the bus.
-> 
-> Understand.
-> 
->>>> Scratching one's own itch kinda thing...
->>>>
->>>>>>>>> +static void hi6220_detect_work(struct work_struct *work)
->>>>>>>>> +{
->>>>>>>>> +    struct hi6220_priv *priv =
->>>>>>>>> +        container_of(work, struct hi6220_priv, work.work);
->>>>>>>>> +    int gpio_id, gpio_vbus;
->>>>>>>>> +    enum usb_otg_state state;
->>>>>>>>> +
->>>>>>>>> +    if (!gpio_is_valid(priv->gpio_id) || !gpio_is_valid(priv->gpio_vbus))
->>>>>>>>> +        return;
->>>>>>>>> +
->>>>>>>>> +    gpio_id = gpio_get_value_cansleep(priv->gpio_id);
->>>>>>>>> +    gpio_vbus = gpio_get_value_cansleep(priv->gpio_vbus);
->>>>>>>>
->>>>>>>> looks like this should be using extcon
->>>>>>> Not used extcon before.
->>>>>>> However, we need gpio_vbus interrupt.
->>>>>>> Checked phy-tahvo.c and phy-omap-otg.c, not find extcon related with
->>>>>>> interrupt.
->>>>>>> Will investigate tomorrow.
->>>>>>
->>>>>> drivers/extcon/extcon-gpio.c
->>>>> I think there is no need to use extcon, gpio is clear enough.
->>>>> extcon-gpio.c even do not support dt.
->>>>
->>>> well, add DT. The whole idea of free software is that we improve on
->>>> things we already have. EXTCON is *the* API to handle such things.
->>>
->>
->> I wrote the extcon-gpio-usb.c driver for exactly your use case. It is
->> queued for v4.1
->> https://lkml.org/lkml/2015/2/2/187
-> 
-> That's great, thanks.
->>
->> It takes care of debouncing for you. Although currently it supports only ID gpio,
->> it should be very easy to extend to VBUS sense GPIO.
->>
->>> I think I am still not understanding extcon-gpio, not sure why need use this API here.
->>
->> several reasons. Let me list a few.
->> 1) Code reuse. Every PHY driver doesn't need to implement GPIO/interrupt handling and debouncing.
->> It just registers what cable events it wants to hear and gets a notification.
->> 2) The events (ID/VBUS) are not only interesting for the PHY driver but also the controller
->> driver and the OTG state machine (whenever it exists at a common place) ;).
->> 3) standardization because of common API.
-> 
-> Thanks for the explanation.
-
-no problem :).
-
-cheers,
--roger
+On Tue, Feb 3, 2015 at 2:44 AM, Benoit Parrot <bparrot@ti.com> wrote:
+> This patch set re-introduces the gpio hogging concept first
+> presented by Boris Brezillion.
+> This patch set provides a way to initially configure specific GPIO
+> when the GPIO controller is probed.
+>
+> The actual DT scanning to collect the GPIO specific data is performed
+> as part of of_gpiochip_add().
+>
+> The purpose of this is to allow specific GPIOs to be configured
+> without any driver specific code.
+> This is particularly useful because board design are getting
+> increasingly complex and given SoC pins can now have more
+> than 10 mux values a lot of connections are now dependent on
+> external IO muxes to switch various modes.
+>
+> Specific drivers should not necessarily need to be aware of
+> what accounts to a specific board implementation. This board level
+> "description" should be best kept as part of the dts file.
+>
+> Changes since v5:
+>  * Addressed review comment from Linus Walleij
+>  * Replace "state" property back with separate boolean properties
+>  * Renamed helper function
+>  * Refactored pr_* calls to remove "__func__"
+>
+> Changes since v4:
+>  * Addressed review comments from Alexandre Courbot
+>
+> Changes since v3:
+>  * Relocated the non-DT "hog" function to gpiolib.c.
+>  * Rename some of the function to be clearer and remove _ prefixes.
+>  * Replace the gpiod_request/gpiod_put usage with
+>    gpiochip_request_own_desc/free_own_desc version instead.
+>  * Refactor some of the logic to better handle error condition/reporting
+>  * Renamed the "direction" DT properties to "state".
+>
+> Changes since v2:
+>  * Refactor the gpio-hog mechanism to split the DT related action
+>    from the actual "hogging" operation.
+>  * This allows non-DT providers to implement hogs as well.
+>  * Added FLAG_IS_HOGGED to mark hogged gpio and make gpiochip removal
+>    able to release hogged gpio.
+>  * Similarly to the hogging, the cleanup is performed as part of
+>    of_gpiochip_remove
+>
+> Changes since v1:
+>  * Split the devicetree bindings documentation in its own patch.
+>  * Refactor the gpio-hog mechanism as private functions meant to
+>    be to invoked from of_gpiochip_add().
+>
+>
+> Benoit Parrot (2):
+>   gpio: add GPIO hogging mechanism
+>   gpio: Document GPIO hogging mechanism
+>
+>  Documentation/devicetree/bindings/gpio/gpio.txt |  30 ++++++
+>  drivers/gpio/gpiolib-of.c                       | 111 +++++++++++++++++++++
+>  drivers/gpio/gpiolib.c                          | 124 ++++++++++++++++++++----
+>  drivers/gpio/gpiolib.h                          |   3 +
+>  4 files changed, 249 insertions(+), 19 deletions(-)
+>
+> --
+> 1.8.5.1
+>
