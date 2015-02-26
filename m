@@ -1,158 +1,59 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/7] clk: Add clock driver for mb86s7x
-Date: Thu, 26 Feb 2015 11:36:00 +0530
-Message-ID: <CAJe_Zhdx446EjgD9FFgNt34vXErTaG0d3AJwda5+A7CL7M=ENg@mail.gmail.com>
-References: <1423188007-17047-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<1423188649-17216-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<20150225195912.421.69267@quantum>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v5 1/6] clk: add of_clk_get_parent_rate function
+Date: Wed, 25 Feb 2015 22:13:15 -0800
+Message-ID: <54EEB97B.6080006@broadcom.com>
+References: <rjui@broadcom.com>
+ <1423097705-22939-1-git-send-email-rjui@broadcom.com>
+ <1423097705-22939-2-git-send-email-rjui@broadcom.com>
+ <20150226055406.GB28214@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150225195912.421.69267@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150226055406.GB28214@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, bcm-kernel-feedback-list@broadcom.com, Stephen Boyd <sboyd@codeaurora.org>, Scott Branden <sbranden@broadcom.com>, Matt Porter <mporter@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Anatol Pomazau <anatol@google.com>, Dmitry Torokhov <dtor@google.com>, Alex Elder <elder@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 February 2015 at 01:29, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Quoting Vincent Yang (2015-02-05 18:10:49)
+Hi Sascha,
 
->> +static struct clk *crg11_get(struct of_phandle_args *clkspec, void *data)
->> +{
->> +       struct mb86s70_crg11 *crg11 = data;
->> +       struct clk_init_data init;
->> +       u32 cntrlr, domain, port;
->> +       struct crg_clk *crgclk;
->> +       struct clk *clk;
->> +       char clkp[20];
->> +
->> +       if (clkspec->args_count != 3)
->> +               return ERR_PTR(-EINVAL);
->> +
->> +       cntrlr = clkspec->args[0];
->> +       domain = clkspec->args[1];
->> +       port = clkspec->args[2];
->> +
->> +       if (port > 7)
->> +               snprintf(clkp, 20, "UngatedCLK%d_%X", cntrlr, domain);
->> +       else
->> +               snprintf(clkp, 20, "CLK%d_%X_%d", cntrlr, domain, port);
->> +
->> +       mutex_lock(&crg11->lock);
->> +
->> +       clk = __clk_lookup(clkp);
->> +       if (clk) {
->> +               mutex_unlock(&crg11->lock);
->> +               return clk;
->> +       }
->
-> What is the above code doing? It looks like you are checking to see if
-> you are trying to register a clock that is already registered. Why do
-> you need this?
->
-The clocks are populated runtime as clients need them. If two clients
-need a clock the second shouldn't populate a copy. Please see the
-bindings specified in this patch.
+On 2/25/2015 9:54 PM, Sascha Hauer wrote:
+> Hi Ray,
+> 
+> On Wed, Feb 04, 2015 at 04:55:00PM -0800, Ray Jui wrote:
+>> Sometimes a clock needs to know the rate of its parent before itself is
+>> registered to the framework. An example is that a PLL may need to
+>> initialize itself to a specific VCO frequency, before registering to the
+>> framework. The parent rate needs to be known, for PLL multipliers and
+>> divisors to be configured properly.
+>>
+>> Introduce helper function of_clk_get_parent_rate, which can be used to
+>> obtain the parent rate of a clock, given a device node and index.
+> 
+> I can't see how this patch helps you. First it's not guaranteed that
+> the parent is already registered, what do you do in this case?
 
->> +
->> +       crgclk = kzalloc(sizeof(*crgclk), GFP_KERNEL);
->> +       if (!crgclk) {
->> +               mutex_unlock(&crg11->lock);
->> +               return ERR_PTR(-ENOMEM);
->> +       }
->> +
->> +       init.name = clkp;
->> +       init.num_parents = 0;
->> +       init.ops = &crg_port_ops;
->> +       init.flags = CLK_IS_ROOT;
->> +       crgclk->hw.init = &init;
->> +       crgclk->cntrlr = cntrlr;
->> +       crgclk->domain = domain;
->> +       crgclk->port = port;
->> +       clk = clk_register(NULL, &crgclk->hw);
->> +       if (IS_ERR(clk))
->> +               pr_err("%s:%d Error!\n", __func__, __LINE__);
->> +       else
->> +               pr_debug("Registered %s\n", clkp);
->> +
->> +       clk_register_clkdev(clk, clkp, NULL);
->> +       mutex_unlock(&crg11->lock);
->> +       return clk;
->> +}
->> +
->> +static void __init crg_port_init(struct device_node *node)
->> +{
->> +       struct mb86s70_crg11 *crg11;
->> +
->> +       crg11 = kzalloc(sizeof(*crg11), GFP_KERNEL);
->> +       if (!crg11)
->> +               return;
->> +
->> +       mutex_init(&crg11->lock);
->> +
->> +       of_clk_add_provider(node, crg11_get, crg11);
->> +}
->> +CLK_OF_DECLARE(crg11_gate, "fujitsu,mb86s70-crg11", crg_port_init);
->> +
->> +struct cl_clk {
->> +       struct clk_hw hw;
->> +       int cluster;
->> +};
->> +
->> +struct mb86s7x_cpu_freq {
->> +       u32 payload_size;
->> +       u32 cluster_class;
->> +       u32 cluster_id;
->> +       u32 cpu_id;
->> +       u64 freqency;
->
-> s/freqency/frequency/
->
-:)
+In the case when clock parent is not found, as you can see from the
+code, it simply returns zero, just like other clk get rate APIs.
 
->> +};
->> +
->> +static void mhu_cluster_rate(struct clk_hw *hw, unsigned long *rate, int get)
->> +{
->> +       struct cl_clk *clc = to_clc_clk(hw);
->> +       struct mb86s7x_cpu_freq cmd;
->> +       int code, ret;
->> +
->> +       cmd.payload_size = sizeof(cmd);
->> +       cmd.cluster_class = 0;
->> +       cmd.cluster_id = clc->cluster;
->> +       cmd.cpu_id = 0;
->> +       cmd.freqency = *rate;
->> +
->> +       if (get)
->> +               code = CMD_CPU_CLOCK_RATE_GET_REQ;
->> +       else
->> +               code = CMD_CPU_CLOCK_RATE_SET_REQ;
->> +
->> +       pr_debug("%s:%d CMD Cl_Class-%u CL_ID-%u CPU_ID-%u Freq-%llu}\n",
->> +                __func__, __LINE__, cmd.cluster_class,
->> +                cmd.cluster_id, cmd.cpu_id, cmd.freqency);
->> +
->> +       ret = mb86s7x_send_packet(code, &cmd, sizeof(cmd));
->> +       if (ret < 0) {
->> +               pr_err("%s:%d failed!\n", __func__, __LINE__);
->> +               return;
->> +       }
->> +
->> +       pr_debug("%s:%d REP Cl_Class-%u CL_ID-%u CPU_ID-%u Freq-%llu}\n",
->> +                __func__, __LINE__, cmd.cluster_class,
->> +                cmd.cluster_id, cmd.cpu_id, cmd.freqency);
->> +
->> +       *rate = cmd.freqency;
->
-> Also why is this frequency u64 when all of the uses of it are unsigned
-> long?
->
-The firmware of remote has chosen to report frequency as a u64.
+I thought the order of clock registration is based on order of the clock
+nodes in device tree. It makes sense to me to declare the parent clock
+before a child clock, so it's guaranteed that the parent is registered
+before the child.
 
-Thanks
-Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Then the clock framework doesn't require that you initialize the PLL
+> before registering. That can be done in the clk ops later.
+
+Sure it's not mandatory. But what's wrong with me choosing to initialize
+the PLL clock to a known frequency before registering it to the framework?
+
+Ray
