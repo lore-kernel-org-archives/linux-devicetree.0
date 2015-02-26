@@ -1,65 +1,66 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH V5 1/2] mmc: dw_mmc: exynos: Support eMMC's HS400 mode
-Date: Thu, 26 Feb 2015 10:22:28 +0900
-Message-ID: <54EE7554.6060506@samsung.com>
-References: <1422499318-13726-1-git-send-email-alim.akhtar@samsung.com>
- <1422499318-13726-2-git-send-email-alim.akhtar@samsung.com>
- <CAL_Jsq+Mr=WOoCjWRnHnUqo8+UmqxxHbMG3M8+kLNgfhPASteA@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 4/5] Input: add haptic drvier on max77843
+Date: Wed, 25 Feb 2015 17:23:53 -0800
+Message-ID: <20150226012353.GC25965@dtor-ws>
+References: <1424741348-8728-1-git-send-email-jaewon02.kim@samsung.com>
+ <1424741348-8728-5-git-send-email-jaewon02.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <CAL_Jsq+Mr=WOoCjWRnHnUqo8+UmqxxHbMG3M8+kLNgfhPASteA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, "chris@printf.net" <chris@printf.net>, Doug Anderson <dianders@chromium.org>, "kgene@kernel.org" <kgene@kernel.org>, a.kesavan@samsung.com, alim.akhtar@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1424741348-8728-5-git-send-email-jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaewon Kim <jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, SangBae Lee <sangbae90.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear, Rob.
+Hi Jaewon,
 
-On 02/25/2015 11:38 PM, Rob Herring wrote:
-> On Wed, Jan 28, 2015 at 8:41 PM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
->> From: Seungwon Jeon <tgih.jun@samsung.com>
->>
->> Implements HS400 mode support for exynos host driver.
->> This also include some updates as new mode is added.
->>
->> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
->> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->> [Alim: addressed review comments]
->> ---
->>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    7 +
->>  drivers/mmc/host/dw_mmc-exynos.c                   |  185 ++++++++++++++++----
->>  drivers/mmc/host/dw_mmc-exynos.h                   |   19 +-
->>  drivers/mmc/host/dw_mmc.c                          |   16 +-
->>  drivers/mmc/host/dw_mmc.h                          |    2 +
->>  5 files changed, 195 insertions(+), 34 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->> index ee4fc05..aad9844 100644
->> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->> @@ -36,6 +36,8 @@ Required Properties:
->>    in transmit mode and CIU clock phase shift value in receive mode for double
->>    data rate mode operation. Refer notes below for the order of the cells and the
->>    valid values.
->> +* samsung,dw-mshc-hs400-timing: Specifies the value of CIU TX and RX clock phase
->> +  shift value for hs400 mode operation.
-> 
-> What are the units?
+On Tue, Feb 24, 2015 at 10:29:07AM +0900, Jaewon Kim wrote:
+> +static void max77843_haptic_play_work(struct work_struct *work)
+> +{
+> +	struct max77843_haptic *haptic =
+> +			container_of(work, struct max77843_haptic, work);
+> +	int error;
+> +
+> +	mutex_lock(&haptic->mutex);
+> +
+> +	if (haptic->suspended) {
+> +		goto err_play;
+> +	}
+> +
 
-Do you means what is "sumsung,dw-mshci-hs400-timing" unit?
-It's timing value for eMMC/SD/SDIO clock phase.(It's exynos specific value.)
-Using timing value can shift the H/W clock phase.
-If invalid timing value is set, eMMC/SD/SDIO can produce the CRC error.
+You do not need braces around single statement. Also, this is not error
+that you are handling, I'd prefer if we called this label out_unlock.
 
-Do you think it can't include into device-tree?
-I want to know your thinking. let me know, plz.
+> +	error = max77843_haptic_set_duty_cycle(haptic);
+> +	if (error) {
+> +		dev_err(haptic->dev, "failed to set duty cycle: %d\n", error);
+> +		goto err_play;
+> +	}
 
-Best Regards,
-Jaehoon Chung
+Do you need to configure duty cycle if you stopping the playback? Or
+maybe disabling pwm is enough?
 
-> 
-> Rob
-> 
+> +
+> +	if (haptic->magnitude) {
+> +		error = max77843_haptic_enable(haptic);
+> +		if (error)
+> +			dev_err(haptic->dev,
+> +					"cannot enable haptic: %d\n", error);
+> +	} else {
+> +		max77843_haptic_disable(haptic);
+> +		if (error)
+> +			dev_err(haptic->dev,
+> +					"cannot disable haptic: %d\n", error);
 
+What error? You did not assign it...
+
+Thanks.
+
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
