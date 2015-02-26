@@ -1,63 +1,68 @@
-From: Kumar Gala <galak@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Subject: Re: [PATCH 01/12] ARM: dts: apq8064: add RPM regulators support
-Date: Thu, 26 Feb 2015 12:25:03 -0600
-Message-ID: <A5AB3F5F-7942-4DA0-925E-9033EC929174@codeaurora.org>
-References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org> <1424678093-12966-1-git-send-email-srinivas.kandagatla@linaro.org>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+Date: Thu, 26 Feb 2015 18:26:40 +0000
+Message-ID: <54EF6560.6080703@linaro.org>
+References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org> <1424678093-12966-1-git-send-email-srinivas.kandagatla@linaro.org> <A5AB3F5F-7942-4DA0-925E-9033EC929174@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1424678093-12966-1-git-send-email-srinivas.kandagatla@linaro.org>
+In-Reply-To: <A5AB3F5F-7942-4DA0-925E-9033EC929174@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Kumar Gala <galak@codeaurora.org>
 Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Feb 23, 2015, at 1:54 AM, Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
 
-> This patch adds rpm node to apq8064 dt as rpm would be used by other
-> devices for regulator support. Also adds all the regulators in the rpm.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> arch/arm/boot/dts/qcom-apq8064.dtsi | 241 ++++++++++++++++++++++++++++++++++++
-> 1 file changed, 241 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> index b3154c0..db5fc59 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> @@ -3,6 +3,7 @@
-> #include "skeleton.dtsi"
-> #include <dt-bindings/clock/qcom,gcc-msm8960.h>
-> #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
-> +#include <dt-bindings/mfd/qcom-rpm.h>
-> #include <dt-bindings/soc/qcom,gsbi.h>
-> #include <dt-bindings/interrupt-controller/arm-gic.h>
-> 
-> @@ -246,6 +247,246 @@
-> 			#reset-cells = <1>;
-> 		};
-> 
-> +		l2cc: clock-controller@2011000 {
-> +			compatible	= "syscon";
-> +			reg		= <0x2011000 0x1000>;
-> +		};
-> +
-> +		rpm@108000 {
-> +			compatible	= "qcom,rpm-apq8064";
-> +			reg		= <0x108000 0x1000>;
-> +			qcom,ipc	= <&l2cc 0x8 2>;
-> +
-> +			interrupts	= <0 19 0>, <0 21 0>, <0 22 0>;
-> +			interrupt-names	= "ack", "err", "wakeup";
-> +
+On 26/02/15 18:25, Kumar Gala wrote:
+>
+> On Feb 23, 2015, at 1:54 AM, Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+>
+>> This patch adds rpm node to apq8064 dt as rpm would be used by other
+>> devices for regulator support. Also adds all the regulators in the rpm.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>> arch/arm/boot/dts/qcom-apq8064.dtsi | 241 ++++++++++++++++++++++++++++++++++++
+>> 1 file changed, 241 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> index b3154c0..db5fc59 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> @@ -3,6 +3,7 @@
+>> #include "skeleton.dtsi"
+>> #include <dt-bindings/clock/qcom,gcc-msm8960.h>
+>> #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
+>> +#include <dt-bindings/mfd/qcom-rpm.h>
+>> #include <dt-bindings/soc/qcom,gsbi.h>
+>> #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>
+>> @@ -246,6 +247,246 @@
+>> 			#reset-cells = <1>;
+>> 		};
+>>
+>> +		l2cc: clock-controller@2011000 {
+>> +			compatible	= "syscon";
+>> +			reg		= <0x2011000 0x1000>;
+>> +		};
+>> +
+>> +		rpm@108000 {
+>> +			compatible	= "qcom,rpm-apq8064";
+>> +			reg		= <0x108000 0x1000>;
+>> +			qcom,ipc	= <&l2cc 0x8 2>;
+>> +
+>> +			interrupts	= <0 19 0>, <0 21 0>, <0 22 0>;
+>> +			interrupt-names	= "ack", "err", "wakeup";
+>> +
+>
+> Can you use the defines for GIC for the interrupts.  Also, I think the last property should probably be level high instead of 0.
+Yep, I will fix it.
 
-Can you use the defines for GIC for the interrupts.  Also, I think the last property should probably be level high instead of 0.
+--srini
 
-- k
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+
+>
+> - k
+>
