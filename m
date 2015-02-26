@@ -1,166 +1,63 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
-Date: Thu, 26 Feb 2015 16:48:30 +0800
-Message-ID: <54EEDDDE.9010608@linaro.org>
-References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org> <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org> <20150220144119.GB1707@saruman.tx.rr.com> <54E75665.6050205@linaro.org> <20150220160610.GB6430@saruman.tx.rr.com> <54E89E29.4010807@linaro.org> <20150221162102.GA1784@saruman.tx.rr.com> <54E948AC.2010609@linaro.org> <54EC4ECA.2090300@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 00/11] drm/rockchip: add support for lvds controller and
+ external encoders
+Date: Thu, 26 Feb 2015 09:52:48 +0100
+Message-ID: <5725053.2iB7qVhEzL@diego>
+References: <1422721984-27782-1-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54EC4ECA.2090300-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "dan . zhao" <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1422721984-27782-1-git-send-email-heiko@sntech.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: airlied@linux.ie, mark.yao@rock-chips.com, robdclark@gmail.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Roger
-
-On 02/24/2015 06:13 PM, Roger Quadros wrote:
->>> On Sat, Feb 21, 2015 at 11:03:05PM +0800, zhangfei wrote:
->>>>>>>> +static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
->>>>>>>> +{
->>>>>>>> +    struct usb_otg *otg = priv->phy.otg;
->>>>>>>> +
->>>>>>>> +    if (!otg->gadget)
->>>>>>>> +        return;
->>>>>>>> +
->>>>>>>> +    if (on)
->>>>>>>> +        usb_gadget_connect(otg->gadget);
->>>>>>>> +    else
->>>>>>>> +        usb_gadget_disconnect(otg->gadget);
->>>>>>>
->>>>>>> why is the PHY fiddling with pullups ?
->>>>>>
->>>>>> We use this to enable/disable otg gadget mode.
->>>>>
->>>>> I got that, but the pullups don't belong to the PHY, they belong to the
->>>>> gadget.
->>>>>
->>>>>> The gpio_id & gpio_vbus are used to distinguish otg gadget mode or
->>>>>> host mode.
->>>>>> When micro usb or otg device attached to otg, gpio_vbus falling down.
->>>>>> And gpio_id = 1 is micro usb, gpio_id = 0 is otg device.
->>>>>
->>>>> all of that I understood clearly :-)
->>>>>
->>>>>> So when micro usb attached, we enable gadget mode; while micro usb
->>>>>> detached, we disable gadget mode, and dwc2 will automatically set to
->>>>>> host mode.
->>>>>
->>>>> that's all fine, I'm concerned about letting the PHY fiddle with
->>>>> something it doesn't own. If I am to change pullups rules in udc-core,
->>>>> this is likely to break down miserably and I don't want to have to go
->>>>> through that.
->>>>
->>>> Thanks for the clarifying.
->>>
->>> no problem.
->>>
->>>> How about using usb_gadget_vbus_connect/disconnect, which are used in many
->>>> files under drivers/usb/phy.
->>>> There is no vbus_session in dwc2/gadget.c, I thought it would be same as
->>>> pullup.
->>>>
->>>> However, usb_gadget_vbus_connect still need para gadget, where should we put
->>>> this file, drivers/usb/phy or drivers/phy
->>>
->>> drivers/phy, if the framework misses anything you need, it's a great
->>> opportunity to give back to the community by extending the framework.
->>
->> Sorry, I am a little confused.
->> I need some concrete suggestion for the next step of this patch, which is required for the community board, hikey board.
->>
->> Do you mean in the future we need use hsotg->phy instead of hsotg->uphy.
->>          struct phy *phy;
->>          struct usb_phy *uphy;
->> usb_phy has many members that struct phy does not have, including otg.
->> struct usb_otg          *otg;
->> Is that mean we need port such member from usb_phy to phy.
->
-> In my opinion otg structure should belong to the USB core part that takes care
-> of the OTG/DRD state machine. We still don't have a clear solution here and
-> I'm currently investigating this.
-> My current work is to get Dual role functionality working with DWC3 controller and TI
-> platforms.
->
-> Currently phy drivers take care of OTG operation themselves but there is an opportunity
-> to share code and centralize USB role switching.
-> The USB core should be the owner of the Host controller, Gadget controller and the OTG phy
-> and should take care of the that.
-
-Good idea.
-If you have any patch, I will be very happy to verify.
-
-How about adding these things in drivers/phy/phy-core.c, it is also 
-sharable, though not in usb core.
-
-Just tried adding one member struct usb_otg otg to struct phy, since not 
-find any good member can hold usb_otg.
-In drivers/phy/phy-core.c, adding extcon_register_interest, 
-phy_vbus_notifier, phy_set_peripheral, it works for me, dwc2 on hikey board.
-
->
->>
->> Besides, are you ok with using usb_gadget_vbus_connect/disconnect.
->
-> I don't think PHY is the right place for this even though older drivers seem to be doing so.
-> But at the same time there is nowhere else to add this at the moment.
-> The right place should be the USB core that is aware of host/gadget, phy and the state of the bus.
-
-Understand.
-
->>> Scratching one's own itch kinda thing...
->>>
->>>>>>>> +static void hi6220_detect_work(struct work_struct *work)
->>>>>>>> +{
->>>>>>>> +    struct hi6220_priv *priv =
->>>>>>>> +        container_of(work, struct hi6220_priv, work.work);
->>>>>>>> +    int gpio_id, gpio_vbus;
->>>>>>>> +    enum usb_otg_state state;
->>>>>>>> +
->>>>>>>> +    if (!gpio_is_valid(priv->gpio_id) || !gpio_is_valid(priv->gpio_vbus))
->>>>>>>> +        return;
->>>>>>>> +
->>>>>>>> +    gpio_id = gpio_get_value_cansleep(priv->gpio_id);
->>>>>>>> +    gpio_vbus = gpio_get_value_cansleep(priv->gpio_vbus);
->>>>>>>
->>>>>>> looks like this should be using extcon
->>>>>> Not used extcon before.
->>>>>> However, we need gpio_vbus interrupt.
->>>>>> Checked phy-tahvo.c and phy-omap-otg.c, not find extcon related with
->>>>>> interrupt.
->>>>>> Will investigate tomorrow.
->>>>>
->>>>> drivers/extcon/extcon-gpio.c
->>>> I think there is no need to use extcon, gpio is clear enough.
->>>> extcon-gpio.c even do not support dt.
->>>
->>> well, add DT. The whole idea of free software is that we improve on
->>> things we already have. EXTCON is *the* API to handle such things.
->>
->
-> I wrote the extcon-gpio-usb.c driver for exactly your use case. It is
-> queued for v4.1
-> https://lkml.org/lkml/2015/2/2/187
-
-That's great, thanks.
->
-> It takes care of debouncing for you. Although currently it supports only ID gpio,
-> it should be very easy to extend to VBUS sense GPIO.
->
->> I think I am still not understanding extcon-gpio, not sure why need use this API here.
->
-> several reasons. Let me list a few.
-> 1) Code reuse. Every PHY driver doesn't need to implement GPIO/interrupt handling and debouncing.
-> It just registers what cable events it wants to hear and gets a notification.
-> 2) The events (ID/VBUS) are not only interesting for the PHY driver but also the controller
-> driver and the OTG state machine (whenever it exists at a common place) ;).
-> 3) standardization because of common API.
-
-Thanks for the explanation.
-
-Zhangfei
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpBbSBTYW1zdGFnLCAzMS4gSmFudWFyIDIwMTUsIDE3OjMyOjUzIHNjaHJpZWIgSGVpa28g
+U3R1ZWJuZXI6Cj4gVGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciB0aGUgbHZkcyBlbmNvZGVy
+IHByZXNlbnQgb24gcmszMjg4IHNvYyBhbmQKPiBhbGxvd3MgZXh0ZXJuYWwgY29ubmVjdG9ycyB0
+byB1c2UgdGhlIGdlbmVyaWMgcmdiIHBpbnMuCj4gCj4gT24gdGhlIG9sZGVyIHNvY3MgKHJrMzE4
+OCwgcmszMDY2LCBldGMpIHRoZXNlIHBpbnMgd2hlcmUgYWNjZXNzaWJsZSBieQo+IGFueW9uZSwg
+d2hpbGUgb24gdGhlIHJrMzI4OCB0aGUgbHZkcyBjb250cm9sbGVyIGNvbnRyb2xzIGFjY2VzcyB0
+byB0aGVtLgo+IAo+IFNvIHdoaWxlIG9uIHRoZSBvbGQgc29jcyBhbiBleHRlcm5hbCBlbmNvZGVy
+IHdhcyBleHBsaWNpdGx5IGNvbm5lY3RlZAo+IHRvIG9uZSBvZiB0aGUgdHdvIGxjZC1jb250cm9s
+bGVycywgb24gdGhlIHJrMzI4OCB0aGUgbHZkcyBpbiBiZXR3ZWVuCj4gY2FuIHRvZ2dsZSB3aGlj
+aCBjb250cm9sbGVyIHNob3VsZCBiZSB0aGUgc291cmNlLgo+IAo+IFRvIGZhY2lsaXRhdGUgdGhp
+cyB0aGUgbHZkcyBlbmNvZGVyIGNhbiB1c2UgdHdvIG1vZGVzLiBXaGVuIGEgcGFuZWwgaXMKPiBh
+dHRhY2hlZCBpdCBhY3RzIGFzIGVuY29kZXIgYW5kIHdpdGhvdXQgcGFuZWwgaXQganVzdCByZWdp
+c3RlcnMgYSBicmlkZ2UKPiB0aGF0IGNhbiBiZSB1c2VkIGxhdGVyLgo+IAo+IFRoZSBicmlkZ2Ug
+YXNzb2NpYXRpb24gdG8gYW4gZW5jb2RlciBpcyBkb25lIHZpYSBhIHJvY2tjaGlwLHJnYi1icmlk
+Z2UKPiBwcm9wZXJ0eSBpbiB0aGUgZW5jb2RlciBub2RlIGl0c2VsZiBhbmQgaGFuZGxlZCBpbiBy
+b2NrY2hpcF9kcm1fbG9hZAo+IHRvIG5vdCBsZWFrIHJvY2tjaGlwLXNwZWNpZmljIGhhbmRsaW5n
+IGludG8gZ2VuZXJpYyBlbmNvZGVyIGRyaXZlcnMuCj4gCj4gCj4gQXMgZXhhbXBsZSBvbiBob3cg
+dGhpcyBjYW4gd29yaywgSSd2ZSBpbmNsdWRlZCBhIGRyaXZlciBmb3Igc2ltcGxlCj4gKGR1bWIp
+IHZnYSBlbmNvZGVycywgbGlrZSB0aGUgYWR2NzEyMyAoYW5kIGNsb25lcykgYXMgdXNlZCBvbiB0
+aGUKPiByazMyODgtZmlyZWZseSBib2FyZC4gVGhpcyBzYW1lIGVuY29kZXIgaXMgdXNlZCBvbiB0
+aGUgUmF5ZWFnZXItcHgyCj4gYm9hcmQgYnV0IHRoZXJlIGNvbm5lY3RlZCBkaXJlY3RseSB0byB0
+aGUgcmdiIHBpbnMgb2YgdGhlIHJrMzA2Ngo+IHdoaWNoIHdpbGwgaG9wZWZ1bGx5IGFsc28gYmUg
+c3VwcG9ydGVkIGluIHRoZSBmdXR1cmUuCj4gCj4gSSd2ZSBuYW1lZCB0aGlzIGN1cnJlbnRseSB2
+Z2Etc2ltcGx5IChpbnNwaXJlZCBieSBwYW5lbC1zaW1wbGUpLCBiZWNhdXNlCj4gc28gZmFyIEkg
+aGF2ZSBmb3VuZCB0aGUgYWR2NzEyMyAoYW5kIHR3byBjbG9uZXMpIGJ1dCBJIGd1ZXNzIHRoZXJl
+IHdpbGwKPiBiZSBtb3JlIGR1bWIgdmdhIGVuY29kZXJzIGFyb3VuZCB0aGF0IG9ubHkgZGlmZmVy
+IGluIG1pbmltYWwgdGhpbmdzLgo+IAo+IAo+IFNpbWlsYXJseSwgbW9zdCBvZiB0aGUgcmszMjg4
+LWJhc2VkIFRWLWJveGVzIHVzZSBhIHJrMTAwMCBpMmMgdHYgZW5jb2Rlcgo+IGNvbm5lY3RlZCBp
+biBhIHNpbWlsYXIgd2F5IC0gYW5kIGFnYWluIGRpcmVjdGx5IGNvbm5lY3RlZCBvbiB0aGUKPiBy
+azMxODgtcmFkeGFyb2NrLgo+IAo+IAo+IENhdmVhdHM6Cj4gLSB0aGUgaTJjIHN1YmRpcmVjdG9y
+eSBpcyBwcm9iYWJseSBub3QgdGhlIHJpZ2h0IG9uZSBmb3IgbXkgdmdhIGVuY29kZXIKPiAgIHNv
+IGlmIHNvbWVib2R5IGNvdWxkIHN1Z2dlc3Qgd2hlcmUgdGhpcyBzaG91bGQgbGl2ZSwgSSdkIGJl
+IHZlcnkgaGFwcHkKPiAtIEknbSBub3Qgc3VyZSBpZiBJJ20gYWJ1c2luZyBzb21lIGRybS1BUElz
+IGluIGEgd3Jvbmcgd2F5IDotKQoKYW55IGNvbW1lbnRzIG9yIHN1Z2dlc3Rpb25zPwoKRXNwZWNp
+YWxseSBvbiB0aGUgY29yZSBkcm0gaW50ZWdyYXRpb24/IEFtIEkgYWJ1c2luZyBzdHVmZiBvciBk
+b2VzIHRoaXMgbG9vayAKc29tZXdoYXQgc2FuZT8KCgpUaGFua3MKSGVpa28KX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
