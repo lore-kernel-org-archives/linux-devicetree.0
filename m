@@ -1,101 +1,48 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V3 1/3] dt-bindings: dma: Add binding for jz4780-dma
-Date: Thu, 26 Feb 2015 12:43:32 +0000
-Message-ID: <1424954614-12589-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1424954614-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] ARM: imx6sx-sdb: add revb board
+Date: Thu, 26 Feb 2015 20:56:44 +0800
+Message-ID: <20150226125642.GI20028@dragon>
+References: <1424939310-19282-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424954614-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com
-Cc: dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex@alex-smith.me.uk, Zubair.Kakakhel@imgtec.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1424939310-19282-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+On Thu, Feb 26, 2015 at 04:28:28PM +0800, Peter Chen wrote:
+> Changes for v3:
+> - Rebased on v4.0-rc1
+> 
+> Changes for v2:
+> 
+> - Add missing Makefile entries for both dts files. [Patch 1/2] and [Patch 2/2]
+> - Delete OOP setting changed at imx6sx-sdb-reva, it is SoC feature,
+>   it doesn't need to be change unless board limitations. [Patch 1/2]
+> - Add explanation why OOP setting need to changed at imx6sx-sdb revb board. [Patch 2/2]
+> - Make imx6sx-sdb revb board as default imx6sx-sdb board. [Patch 2/2]
+> 
+> Hi Shawn,
+> 
+> The imx6sx-sdb board has two revisions, the current mainline is the
+> reva which is experimental and will not be released, the revb board
+> is used widely for internal and external users.
+> 
+> The main changes between reva and revb board:
+> - OOP setting
+> - pfuse
+> - qspi
+> - can transceiver (not mainlined)
+> 
+> Peter Chen (2):
+>   ARM: imx6sx-sdb: change default board as reva board
+>   ARM: imx6sx-sdb: add revb board and make it default
 
-Add device tree bindings for the DMA controller on JZ4780 SoCs, used by
-the dma-jz4780 driver.
-
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-
----
-V3 -> V2
-Changed binding.
-Used to be 3 DMA cells required. <&dma TX_type RX_type Reserved>
-Now 2 DMA cells are required. <&dma Transfer_type Reserved>
-
-This is more common in DMA bindings.
-And I couldn't figure any reason that 3 cells were used.
-
-V1 -> V2 None
----
- .../devicetree/bindings/dma/jz4780-dma.txt         | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/jz4780-dma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-new file mode 100644
-index 0000000..f25feee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-@@ -0,0 +1,56 @@
-+* Ingenic JZ4780 DMA Controller
-+
-+Required properties:
-+
-+- compatible: Should be "ingenic,jz4780-dma"
-+- reg: Should contain the DMA controller registers location and length.
-+- interrupts: Should contain the interrupt specifier of the DMA controller.
-+- interrupt-parent: Should be the phandle of the interrupt controller that
-+- clocks: Should contain a clock specifier for the JZ4780 PDMA clock.
-+- #dma-cells: Must be <2>. Number of integer cells in the dmas property of
-+  DMA clients (see below).
-+
-+Optional properties:
-+
-+- ingenic,reserved-channels: Bitmask of channels to reserve for devices that
-+  need a specific channel. These channels will only be assigned when explicitly
-+  requested by a client. The primary use for this is channels 0 and 1, which
-+  can be configured to have special behaviour for NAND/BCH when using
-+  programmable firmware.
-+
-+Example:
-+
-+dma: dma@13420000 {
-+	compatible = "ingenic,jz4780-dma";
-+	reg = <0x13420000 0x10000>;
-+
-+	interrupt-parent = <&intc>;
-+	interrupts = <10>;
-+
-+	clocks = <&cgu JZ4780_CLK_PDMA>;
-+
-+	#dma-cells = <2>;
-+
-+	ingenic,reserved-channels = <0x3>;
-+};
-+
-+DMA clients must use the format described in dma.txt, giving a phandle to the
-+DMA controller plus the following 2 integer cells:
-+
-+1. Request type: The DMA request type for transfers to/from the device on
-+   the allocated channel, as defined in the SoC documentation.
-+
-+2. Channel: If set to 0xffffffff, any available channel will be allocated for
-+   the client. Otherwise, the exact channel specified will be used. The channel
-+   should be reserved on the DMA controller using the ingenic,reserved-channels
-+   property.
-+
-+Example:
-+
-+uart0: serial@10030000 {
-+	...
-+	dmas = <&dma 0x14 0xffffffff
-+		&dma 0x15 0xffffffff>;
-+	dma-names = "tx", "rx";
-+	...
-+};
--- 
-1.9.1
+Applied both, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
