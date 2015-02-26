@@ -1,52 +1,63 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 02/11] drm: add bindings for simple vga encoders
-Date: Thu, 26 Feb 2015 20:25:45 +0200
-Message-ID: <4359857.jM6TFsquHC@avalon>
-References: <1422721984-27782-1-git-send-email-heiko@sntech.de>
- <1422721984-27782-3-git-send-email-heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1422721984-27782-3-git-send-email-heiko@sntech.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 01/12] ARM: dts: apq8064: add RPM regulators support
+Date: Thu, 26 Feb 2015 12:25:03 -0600
+Message-ID: <A5AB3F5F-7942-4DA0-925E-9033EC929174@codeaurora.org>
+References: <424678035-12862-1-git-send-email-srinivas.kandagatla@linaro.org> <1424678093-12966-1-git-send-email-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1424678093-12966-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFNhdHVyZGF5IDMxIEphbnVh
-cnkgMjAxNSAxNzozMjo1NSBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiBBZGQgdGhlIG5lY2Vzc2Fy
-eSBkZXZpY2V0cmVlIGJpbmRpbmcgZG9jdW1lbnQgZm9yIHNpbXBsZSB2Z2EgZW5jb2RlcnMuCj4g
-Cj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiAtLS0K
-PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2kyYy92Z2Etc2ltcGxlLnR4dCAgICAgICAg
-IHwgMTggKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCsp
-Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZHJtL2kyYy92Z2Etc2ltcGxlLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZHJtL2kyYy92Z2Etc2ltcGxlLnR4dAo+IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pMmMvdmdhLXNpbXBsZS50eHQgbmV3IGZpbGUgbW9k
-ZQo+IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjI3MWRmOWEKPiAtLS0gL2Rldi9udWxsCj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pMmMvdmdhLXNpbXBsZS50
-eHQKPiBAQCAtMCwwICsxLDE4IEBACj4gK0RldmljZS1UcmVlIGJpbmRpbmdzIGZvciBnZW5lcmlj
-IHZnYSBlbmNvZGVycwo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczsKPiArICAtIGNvbXBhdGli
-bGU6IG11c3QgYmUgImFkaSxhZHY3MTIzIgoKQmluZGluZ3MgYWxyZWFkeSBleGlzdCBmb3IgdGhh
-dCBkZXZpY2UsIHRoZXkgaGF2ZSBiZWVuIGFkZGVkIGluIGNvbW1pdCAKOGQwZjE5NTZmN2MxMTIw
-MiAoInZpZGVvOiBBZGQgQURWNzEyMyBEVCBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIikuCgo+ICtP
-cHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsgIC0gZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJD
-IGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQgcHJvYmluZwo+ICsgIC0gZW5hYmxlLWdwaW86
-IEdQSU8gcGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBlbmNvZGVyCj4gKyAgLSB2YWEtc3Vw
-cGx5OiByZWd1bGF0b3IgZm9yIHRoZSBhbmFsb2cgcG93ZXIgc3VwcGx5Cj4gKwo+ICtFeGFtcGxl
-Ogo+ICsKPiArCWFkdjcxMjM6IHZnYS1lbmNvZGVyIHsKPiArCQljb21wYXRpYmxlID0gImFkaSxh
-ZHY3MTIzIjsKPiArCQlkZGMtaTJjLWJ1cyA9IDwmaTJjND47Cj4gKwkJdmFhLXN1cHBseSA9IDwm
-dmNjX2lvPjsKPiArCQllbmFibGUtZ3BpbyA9IDwmZ3BpbzAgMTcgR1BJT19BQ1RJVkVfSElHSD47
-Cj4gKwl9OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+On Feb 23, 2015, at 1:54 AM, Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+
+> This patch adds rpm node to apq8064 dt as rpm would be used by other
+> devices for regulator support. Also adds all the regulators in the rpm.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> arch/arm/boot/dts/qcom-apq8064.dtsi | 241 ++++++++++++++++++++++++++++++++++++
+> 1 file changed, 241 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> index b3154c0..db5fc59 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> @@ -3,6 +3,7 @@
+> #include "skeleton.dtsi"
+> #include <dt-bindings/clock/qcom,gcc-msm8960.h>
+> #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
+> +#include <dt-bindings/mfd/qcom-rpm.h>
+> #include <dt-bindings/soc/qcom,gsbi.h>
+> #include <dt-bindings/interrupt-controller/arm-gic.h>
+> 
+> @@ -246,6 +247,246 @@
+> 			#reset-cells = <1>;
+> 		};
+> 
+> +		l2cc: clock-controller@2011000 {
+> +			compatible	= "syscon";
+> +			reg		= <0x2011000 0x1000>;
+> +		};
+> +
+> +		rpm@108000 {
+> +			compatible	= "qcom,rpm-apq8064";
+> +			reg		= <0x108000 0x1000>;
+> +			qcom,ipc	= <&l2cc 0x8 2>;
+> +
+> +			interrupts	= <0 19 0>, <0 21 0>, <0 22 0>;
+> +			interrupt-names	= "ack", "err", "wakeup";
+> +
+
+Can you use the defines for GIC for the interrupts.  Also, I think the last property should probably be level high instead of 0.
+
+- k
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
