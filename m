@@ -1,164 +1,54 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH 1/3] powerpc/mpc85xx: Add FMan clock nodes
-Date: Thu, 26 Feb 2015 09:26:55 -0600
-Message-ID: <1424964417-13760-1-git-send-email-Emilian.Medve@Freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: scottwood@Freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
-Cc: Igal Liberman <Igal.Liberman@Freescale.com>, afleming@gmail.com
+From: Matt Porter <mporter@konsulko.com>
+Subject: [PATCH] Documentation: DT: omap_serial: document missing properties and add an example
+Date: Thu, 26 Feb 2015 10:38:45 -0500
+Message-ID: <1424965125-31714-1-git-send-email-mporter@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Devicetree List <devicetree@vger.kernel.org>
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKU2lnbmVk
-LW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgotLS0K
-IGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kgICAgfCAxMSArKysrKysr
-KysrKwogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0MXNpLXBvc3QuZHRzaSB8ICA4ICsr
-KysrKysrCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNpIHwgIDgg
-KysrKysrKysKIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQwODBzaS1wb3N0LmR0c2kgfCAx
-NiArKysrKysrKysrKysrKysrCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcG9z
-dC5kdHNpIHwgMTMgKysrKysrKysrKysrKwogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0
-MHNpLXBvc3QuZHRzaSB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysrKysrCiBhcmNoL3Bvd2Vy
-cGMvYm9vdC9kdHMvZnNsL3QxMDQwc2ktcG9zdC5kdHNpIHwgIDggKysrKysrKysKIGFyY2gvcG93
-ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1wb3N0LmR0c2kgfCAxMSArKysrKysrKysrKwogYXJj
-aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90NDI0MHNpLXBvc3QuZHRzaSB8IDIwICsrKysrKysrKysr
-KysrKysrKysrCiA5IGZpbGVzIGNoYW5nZWQsIDEyMSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0
-IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kKaW5kZXggZjhjMzI1ZS4uMzg2MjFlZiAxMDA2
-NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaQorKysgYi9h
-cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpCkBAIC0zOTUsNiArMzk1LDE3
-IEBACiAJCXJlZyA9IDwweGUwMDAwIDB4ZTAwPjsKIAkJZnNsLGhhcy1yc3RjcjsKIAkJZnNsLGxp
-b2RuLWJpdHMgPSA8MTI+OworCisJCWZtMGNsazogZm0wLWNsay1tdXggeworCQkJI2Nsb2NrLWNl
-bGxzID0gPDA+OworCQkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1jbGstbXV4IjsKKwkJCWNsb2Nr
-cyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAgMj4sIDwmcGxsMCAzPiwKKwkJCQkgPCZw
-bGF0Zm9ybV9wbGwgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+OworCQkJY2xvY2stbmFtZXMgPSAi
-cGxsMCIsICJwbGwwLWRpdjIiLCAicGxsMC1kaXYzIiwKKwkJCQkgICAgICAicGxsMC1kaXY0Iiwg
-InBsYXRmb3JtLXBsbCIsICJwbGwxLWRpdjIiLAorCQkJCSAgICAgICJwbGwxLWRpdjMiOworCQkJ
-Y2xvY2stb3V0cHV0LW5hbWVzID0gImZtMC1jbGsiOworCQl9OwogCX07CiAKIC9pbmNsdWRlLyAi
-cW9yaXEtY2xvY2tnZW4yLmR0c2kiCmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3AyMDQxc2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0MXNp
-LXBvc3QuZHRzaQppbmRleCAxZjE4YjhiLi42MGY2M2RjIDEwMDY0NAotLS0gYS9hcmNoL3Bvd2Vy
-cGMvYm9vdC9kdHMvZnNsL3AyMDQxc2ktcG9zdC5kdHNpCisrKyBiL2FyY2gvcG93ZXJwYy9ib290
-L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kKQEAgLTMxNiw2ICszMTYsMTQgQEAKIAkJZnNsLGhh
-cy1yc3RjcjsKIAkJI3NsZWVwLWNlbGxzID0gPDE+OwogCQlmc2wsbGlvZG4tYml0cyA9IDwxMj47
-CisKKwkJZm0wY2xrOiBmbTAtY2xrLW11eCB7CisJCQkjY2xvY2stY2VsbHMgPSA8MD47CisJCQlj
-b21wYXRpYmxlID0gImZzbCxmbWFuLWNsay1tdXgiOworCQkJY2xvY2tzID0gPCZwbGF0Zm9ybV9w
-bGwgMT4sIDwmcGxsMSAxPjsKKwkJCWNsb2NrLW5hbWVzID0gInBsYXRmb3JtLXBsbC1kaXYyIiwg
-InBsbDEtZGl2MiI7CisJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAiZm0wLWNsayI7CisJCX07CiAJ
-fTsKIAogCXBpbnM6IGdsb2JhbC11dGlsaXRpZXNAZTBlMDAgewpkaWZmIC0tZ2l0IGEvYXJjaC9w
-b3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJwYy9ib290
-L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kKaW5kZXggYTU1NWQyNC4uZDRlNjY3NyAxMDA2NDQK
-LS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaQorKysgYi9h
-cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNpCkBAIC0zNDMsNiArMzQz
-LDE0IEBACiAJCWZzbCxoYXMtcnN0Y3I7CiAJCSNzbGVlcC1jZWxscyA9IDwxPjsKIAkJZnNsLGxp
-b2RuLWJpdHMgPSA8MTI+OworCisJCWZtMGNsazogZm0wLWNsay1tdXggeworCQkJI2Nsb2NrLWNl
-bGxzID0gPDA+OworCQkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1jbGstbXV4IjsKKwkJCWNsb2Nr
-cyA9IDwmcGxhdGZvcm1fcGxsIDE+LCA8JnBsbDEgMT47CisJCQljbG9jay1uYW1lcyA9ICJwbGF0
-Zm9ybS1wbGwtZGl2MiIsICJwbGwxLWRpdjIiOworCQkJY2xvY2stb3V0cHV0LW5hbWVzID0gImZt
-MC1jbGsiOworCQl9OwogCX07CiAKIAlwaW5zOiBnbG9iYWwtdXRpbGl0aWVzQGUwZTAwIHsKZGlm
-ZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQwODBzaS1wb3N0LmR0c2kgYi9h
-cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpCmluZGV4IDBmZTcyODEu
-LmQxY2I2OTEgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQwODBzaS1w
-b3N0LmR0c2kKKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3QuZHRz
-aQpAQCAtMzYzLDYgKzM2MywyMiBAQAogCQlmc2wsaGFzLXJzdGNyOwogCQkjc2xlZXAtY2VsbHMg
-PSA8MT47CiAJCWZzbCxsaW9kbi1iaXRzID0gPDEyPjsKKworCQlmbTBjbGs6IGZtMC1jbGstbXV4
-IHsKKwkJCSNjbG9jay1jZWxscyA9IDwwPjsKKwkJCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tY2xr
-LW11eCI7CisJCQljbG9ja3MgPSA8JnBsYXRmb3JtX3BsbCAxPiwgPCZwbGwyIDE+OworCQkJY2xv
-Y2stbmFtZXMgPSAicGxhdGZvcm0tcGxsLWRpdjIiLCAicGxsMi1kaXYyIjsKKwkJCWNsb2NrLW91
-dHB1dC1uYW1lcyA9ICJmbTAtY2xrIjsKKwkJfTsKKworCQlmbTFjbGs6IGZtMS1jbGstbXV4IHsK
-KwkJCSNjbG9jay1jZWxscyA9IDwwPjsKKwkJCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tY2xrLW11
-eCI7CisJCQljbG9ja3MgPSA8JnBsYXRmb3JtX3BsbCAxPiwgPCZwbGwyIDE+OworCQkJY2xvY2st
-bmFtZXMgPSAicGxhdGZvcm0tcGxsLWRpdjIiLCAicGxsMi1kaXYyIjsKKwkJCWNsb2NrLW91dHB1
-dC1uYW1lcyA9ICJmbTEtY2xrIjsKKwkJfTsKIAl9OwogCiAJcGluczogZ2xvYmFsLXV0aWxpdGll
-c0BlMGUwMCB7CmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2kt
-cG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTAyMHNpLXBvc3QuZHRzaQpp
-bmRleCBhMzRjYTIwLi45ZjMwNDlkIDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3A1MDIwc2ktcG9zdC5kdHNpCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUw
-MjBzaS1wb3N0LmR0c2kKQEAgLTM0OCw2ICszNDgsMTUgQEAKIAkJZnNsLGhhcy1yc3RjcjsKIAkJ
-I3NsZWVwLWNlbGxzID0gPDE+OwogCQlmc2wsbGlvZG4tYml0cyA9IDwxMj47CisKKwkJZm0wY2xr
-OiBmbTAtY2xrLW11eCB7CisJCQkjY2xvY2stY2VsbHMgPSA8MD47CisJCQljb21wYXRpYmxlID0g
-ImZzbCxmbWFuLWNsay1tdXgiOworCQkJY2xvY2tzID0gPCZwbGF0Zm9ybV9wbGwgMT4sIDwmcGxs
-MSAxPiwgPCZwbGwxIDI+OworCQkJY2xvY2stbmFtZXMgPSAicGxhdGZvcm0tcGxsLWRpdjIiLCAi
-cGxsMS1kaXYyIiwKKwkJCQkgICAgICAicGxsMS1kaXY0IjsKKwkJCWNsb2NrLW91dHB1dC1uYW1l
-cyA9ICJmbTAtY2xrIjsKKwkJfTsKIAl9OwogCiAJcGluczogZ2xvYmFsLXV0aWxpdGllc0BlMGUw
-MCB7CkBAIC0zNTksNiArMzY4LDEwIEBACiAvaW5jbHVkZS8gInFvcmlxLWNsb2NrZ2VuMS5kdHNp
-IgogCWdsb2JhbC11dGlsaXRpZXNAZTEwMDAgewogCQljb21wYXRpYmxlID0gImZzbCxwNTAyMC1j
-bG9ja2dlbiIsICJmc2wscW9yaXEtY2xvY2tnZW4tMS4wIjsKKworCQlwbGwxOiBwbGwxQDgyMCB7
-CisJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAicGxsMSIsICJwbGwxLWRpdjIiLCAicGxsMS1kaXY0
-IjsKKwkJfTsKIAl9OwogCiAJcmNwbTogZ2xvYmFsLXV0aWxpdGllc0BlMjAwMCB7CmRpZmYgLS1n
-aXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDQwc2ktcG9zdC5kdHNpIGIvYXJjaC9w
-b3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXBvc3QuZHRzaQppbmRleCBiZjU3NTEzLi4zZGVh
-NGI2IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDQwc2ktcG9zdC5k
-dHNpCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwNDBzaS1wb3N0LmR0c2kKQEAg
-LTMwOCw2ICszMDgsMjQgQEAKIAkJZnNsLGhhcy1yc3RjcjsKIAkJI3NsZWVwLWNlbGxzID0gPDE+
-OwogCQlmc2wsbGlvZG4tYml0cyA9IDwxMj47CisKKwkJZm0wY2xrOiBmbTAtY2xrLW11eCB7CisJ
-CQkjY2xvY2stY2VsbHMgPSA8MD47CisJCQljb21wYXRpYmxlID0gImZzbCxmbWFuLWNsay1tdXgi
-OworCQkJY2xvY2tzID0gPCZwbGF0Zm9ybV9wbGwgMT4sIDwmcGxsMiAxPiwgPCZwbGwyIDI+Owor
-CQkJY2xvY2stbmFtZXMgPSAicGxhdGZvcm0tcGxsLWRpdjIiLCAicGxsMi1kaXYyIiwKKwkJCQkg
-ICAgICAicGxsMi1kaXY0IjsKKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJmbTAtY2xrIjsKKwkJ
-fTsKKworCQlmbTFjbGs6IGZtMS1jbGstbXV4IHsKKwkJCSNjbG9jay1jZWxscyA9IDwwPjsKKwkJ
-CWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tY2xrLW11eCI7CisJCQljbG9ja3MgPSA8JnBsYXRmb3Jt
-X3BsbCAxPiwgPCZwbGwyIDE+LCA8JnBsbDIgMj47CisJCQljbG9jay1uYW1lcyA9ICJwbGF0Zm9y
-bS1wbGwtZGl2MiIsICJwbGwyLWRpdjIiLAorCQkJCSAgICAgICJwbGwyLWRpdjQiOworCQkJY2xv
-Y2stb3V0cHV0LW5hbWVzID0gImZtMS1jbGsiOworCQl9OwogCX07CiAKIAlwaW5zOiBnbG9iYWwt
-dXRpbGl0aWVzQGUwZTAwIHsKQEAgLTMyMCw2ICszMzgsMTQgQEAKIAlnbG9iYWwtdXRpbGl0aWVz
-QGUxMDAwIHsKIAkJY29tcGF0aWJsZSA9ICJmc2wscDUwNDAtY2xvY2tnZW4iLCAiZnNsLHFvcmlx
-LWNsb2NrZ2VuLTEuMCI7CiAKKwkJcGxsMjogcGxsMkA4NDAgeworCQkJI2Nsb2NrLWNlbGxzID0g
-PDE+OworCQkJcmVnID0gPDB4ODQwIDB4ND47CisJCQljb21wYXRpYmxlID0gImZzbCxxb3JpcS1j
-b3JlLXBsbC0xLjAiOworCQkJY2xvY2tzID0gPCZzeXNjbGs+OworCQkJY2xvY2stb3V0cHV0LW5h
-bWVzID0gInBsbDIiLCAicGxsMi1kaXYyIiwgInBsbDItZGl2NCI7CisJCX07CisKIAkJbXV4Mjog
-bXV4MkA0MCB7CiAJCQkjY2xvY2stY2VsbHMgPSA8MD47CiAJCQlyZWcgPSA8MHg0MCAweDQ+Owpk
-aWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTA0MHNpLXBvc3QuZHRzaSBi
-L2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1wb3N0LmR0c2kKaW5kZXggNGQ0MWNl
-MS4uOGY3MThjNiAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTA0MHNp
-LXBvc3QuZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDQwc2ktcG9zdC5k
-dHNpCkBAIC00MTgsNiArNDE4LDE0IEBACiAJCXJlZyA9IDwweGUwMDAwIDB4ZTAwPjsKIAkJZnNs
-LGhhcy1yc3RjcjsKIAkJZnNsLGxpb2RuLWJpdHMgPSA8MTI+OworCisJCWZtMGNsazogZm0wLWNs
-ay1tdXggeworCQkJI2Nsb2NrLWNlbGxzID0gPDA+OworCQkJY29tcGF0aWJsZSA9ICJmc2wsZm1h
-bi1jbGstbXV4IjsKKwkJCWNsb2NrcyA9IDwmcGxhdGZvcm1fcGxsIDA+OworCQkJY2xvY2stbmFt
-ZXMgPSAicGxhdGZvcm0tcGxsIjsKKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJmbTAtY2xrIjsK
-KwkJfTsKIAl9OwogCiAvaW5jbHVkZS8gInFvcmlxLWNsb2NrZ2VuMi5kdHNpIgpkaWZmIC0tZ2l0
-IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4MXNpLXBvc3QuZHRzaSBiL2FyY2gvcG93
-ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1wb3N0LmR0c2kKaW5kZXggYzJjYjBmMy4uMDZlNzZl
-YyAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4MXNpLXBvc3QuZHRz
-aQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpCkBAIC01
-MzAsNiArNTMwLDE3IEBACiAJCXJlZyA9IDwweGUwMDAwIDB4ZTAwPjsKIAkJZnNsLGhhcy1yc3Rj
-cjsKIAkJZnNsLGxpb2RuLWJpdHMgPSA8MTI+OworCisJCWZtMGNsazogZm0wLWNsay1tdXggewor
-CQkJI2Nsb2NrLWNlbGxzID0gPDA+OworCQkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1jbGstbXV4
-IjsKKwkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDAgMj4sIDwmcGxsMCAz
-PiwKKwkJCQkgPCZwbGF0Zm9ybV9wbGwgMD4sIDwmcGxsMSAxPiwgPCZwbGwxIDI+OworCQkJY2xv
-Y2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAicGxsMC1kaXYzIiwKKwkJCQkgICAgICAi
-cGxsMC1kaXY0IiwgInBsYXRmb3JtLXBsbCIsICJwbGwxLWRpdjIiLAorCQkJCSAgICAgICJwbGwx
-LWRpdjMiOworCQkJY2xvY2stb3V0cHV0LW5hbWVzID0gImZtMC1jbGsiOworCQl9OwogCX07CiAK
-IC9pbmNsdWRlLyAicW9yaXEtY2xvY2tnZW4yLmR0c2kiCmRpZmYgLS1naXQgYS9hcmNoL3Bvd2Vy
-cGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
-L2ZzbC90NDI0MHNpLXBvc3QuZHRzaQppbmRleCBjMTgyNDVlLi41ZWY1ZmYwIDEwMDY0NAotLS0g
-YS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpCisrKyBiL2FyY2gv
-cG93ZXJwYy9ib290L2R0cy9mc2wvdDQyNDBzaS1wb3N0LmR0c2kKQEAgLTk0NSw2ICs5NDUsMjYg
-QEAKIAkJcmVnID0gPDB4ZTAwMDAgMHhlMDA+OwogCQlmc2wsaGFzLXJzdGNyOwogCQlmc2wsbGlv
-ZG4tYml0cyA9IDwxMj47CisKKwkJZm0wY2xrOiBmbTAtY2xrLW11eCB7CisJCQkjY2xvY2stY2Vs
-bHMgPSA8MD47CisJCQljb21wYXRpYmxlID0gImZzbCxmbWFuLWNsay1tdXgiOworCQkJY2xvY2tz
-ID0gPCZwbGwwIDE+LCA8JnBsbDAgMj4sIDwmcGxsMCAzPiwKKwkJCQkgPCZwbGF0Zm9ybV9wbGwg
-MD4sIDwmcGxsMSAxPjsKKwkJCWNsb2NrLW5hbWVzID0gInBsbDAtZGl2MiIsICJwbGwwLWRpdjMi
-LCAicGxsMC1kaXY0IiwKKwkJCQkgICAgICAicGxhdGZvcm0tcGxsIiwgInBsbDEtZGl2MiI7CisJ
-CQljbG9jay1vdXRwdXQtbmFtZXMgPSAiZm0wLWNsayI7CisJCX07CisKKwkJZm0xY2xrOiBmbTEt
-Y2xrLW11eCB7CisJCQkjY2xvY2stY2VsbHMgPSA8MD47CisJCQljb21wYXRpYmxlID0gImZzbCxm
-bWFuLWNsay1tdXgiOworCQkJY2xvY2tzID0gPCZwbGwxIDE+LCA8JnBsbDEgMj4sIDwmcGxsMSAz
-PiwKKwkJCQkgPCZwbGF0Zm9ybV9wbGwgMD4sIDwmcGxsMCAxPiwgPCZwbGwwIDI+OworCQkJY2xv
-Y2stbmFtZXMgPSAicGxsMS1kaXYyIiwgInBsbDEtZGl2MyIsICJwbGwxLWRpdjQiLAorCQkJCSAg
-ICAgICJwbGF0Zm9ybS1wbGwiLCAicGxsMC1kaXYyIiwgInBsbDAtZGl2MyI7CisJCQljbG9jay1v
-dXRwdXQtbmFtZXMgPSAiZm0xLWNsayI7CisJCX07CiAJfTsKIAogL2luY2x1ZGUvICJxb3JpcS1j
-bG9ja2dlbjIuZHRzaSIKLS0gCjIuMy4wCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxp
-c3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBj
-LWRldg==
+The omap_serial.txt binding documentation lacks a number of properties
+that are used in DTS files for platforms incorporating this peripheral.
+Fix this by documenting the missing required and optional fields and
+add an example.
+
+Signed-off-by: Matt Porter <mporter@konsulko.com>
+---
+ .../devicetree/bindings/serial/omap_serial.txt       | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
+index 342eedd..54c2a15 100644
+--- a/Documentation/devicetree/bindings/serial/omap_serial.txt
++++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
+@@ -4,7 +4,27 @@ Required properties:
+ - compatible : should be "ti,omap2-uart" for OMAP2 controllers
+ - compatible : should be "ti,omap3-uart" for OMAP3 controllers
+ - compatible : should be "ti,omap4-uart" for OMAP4 controllers
++- reg : address and length of the register space
++- interrupts or interrupts-extended : Should contain the uart interrupt
++                                      specifier or both the interrupt
++                                      controller phandle and interrupt
++                                      specifier.
+ - ti,hwmods : Must be "uart<n>", n being the instance number (1-based)
+ 
+ Optional properties:
+ - clock-frequency : frequency of the clock input to the UART
++- dmas : DMA specifier, consisting of a phandle to the DMA controller
++         node and a DMA channel number.
++- dma-names : "rx" for receive channel, "tx" for transmit channel.
++
++Example:
++
++                uart4: serial@49042000 {
++                        compatible = "ti,omap3-uart";
++                        reg = <0x49042000 0x400>;
++                        interrupts = <80>;
++                        dmas = <&sdma 81 &sdma 82>;
++                        dma-names = "tx", "rx";
++                        ti,hwmods = "uart4";
++                        clock-frequency = <48000000>;
++                };
+-- 
+1.8.4
