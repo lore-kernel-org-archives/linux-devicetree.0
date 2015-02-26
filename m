@@ -1,53 +1,95 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 02/18] ARM: ARMv7M: Enlarge vector table to 256 entries
-Date: Thu, 26 Feb 2015 11:43:04 +0100
-Message-ID: <20150226104304.GK7789@pengutronix.de>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
- <1424455277-29983-3-git-send-email-mcoquelin.stm32@gmail.com>
- <20150220194756.GS19388@pengutronix.de>
- <CALszF6CB9YU7ashQ-y_zx58Mkf=sbrBfa2dAOdQm7FkmcuE7PA@mail.gmail.com>
- <CALszF6B6A=de_TK0e-iJHuW4MfD9xbd-yHZHaD-JmZXwZ9CW2A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALszF6B6A=de_TK0e-iJHuW4MfD9xbd-yHZHaD-JmZXwZ9CW2A@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@a>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH] pinctrl: dt: at91: new binding
+Date: Thu, 26 Feb 2015 19:03:56 +0800
+Message-ID: <F74AA2E0-606F-419D-9ADD-3C24CA0973DD@jcrosoft.com>
+References: <1424943294-8805-1-git-send-email-plagnioj@jcrosoft.com>
+ <20150226104319.GE20718@odux.rfo.atmel.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150226104319.GE20718@odux.rfo.atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 26, 2015 at 11:29:52AM +0100, Maxime Coquelin wrote:
-> 2015-02-23 11:33 GMT+01:00 Maxime Coquelin <mcoquelin.stm32@gmail.com=
->:
-> > 2015-02-20 20:47 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@peng=
-utronix.de>:
-> >> Who do you target to apply this series?
-> >
-> > I guess it should go through Russell's Patch Tracking System?
->=20
-> Sorry, I answered your question too quickly.
-> I meant this patch should go through Russell's Patch Tracking System.
->=20
-> For the other patches, I think it should be picked by their respectiv=
-e
-> maintainers.
-> Or I can create an immutable tag (on github or kernel.org?) that will
-> be merged by the different sub-systems?
-> What would you advise?
-Depends on the interdependencies of your patches. If each maintainer ca=
-n
-just pick up the patches affecting his area on top of (say) 4.0-rc1 tha=
-t
-would be good.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Cj4gT24gRmViIDI2LCAyMDE1LCBhdCA2OjQzIFBNLCBMdWRvdmljIERlc3JvY2hlcyA8bHVkb3Zp
+Yy5kZXNyb2NoZXNAYXRtZWwuY29tPiB3cm90ZToKPiAKPiBIaSBKZWFuLUNocmlzdG9waGUsCj4g
+Cj4gT24gVGh1LCBGZWIgMjYsIDIwMTUgYXQgMTA6MzQ6NTRBTSArMDEwMCwgSmVhbi1DaHJpc3Rv
+cGhlIFBMQUdOSU9MLVZJTExBUkQgd3JvdGU6Cj4+IFRvZGF5IGlmIHdlIHdhbnQgdG8gZGlzYWJs
+ZSBhIHBpbyBiYW5rIHdlIG1heSB3aWxsIHNpbGllbnRseSBicmVhayBwaW5jdHJsCj4+IGNvbmZp
+Z3VyYXRpb24gaW4gdGhlIERULiBUaGlzIHdpbGwgYmUgZGV0ZWN0ZWQgb25seSBhdCBydW50aW1l
+Lgo+IAo+IERvIHlvdSBoYXZlIGEgY2FzZSB3aGVyZSBpdCBicmVha3MgcGluY3RybD8gSSBjYW4g
+ZG8gbW9yZSB0ZXN0cyBidXQgd2l0aAo+IHRoZSBsYXRlc3QgcGF0Y2ggInBpbmN0cmw6IGF0OTE6
+IGFsbG93IHRvIGhhdmUgZGlzYWJsZWQgZ3BpbyBiYW5rIiwgSQo+IGhhZCBubyBpc3N1ZS4KCnNp
+bXBsZSBkaXNhYmxlIHRoZSBQSU8gYmFuayBhbmQgaWYgb25lIGRldmljZSB1c2UgaXQgYXMgcGlu
+Y3RybCBhbmQgbm8gZ3BpbyBpcyB1c2VkIGluIHRoZSBEVAp0aGVuIHlvdSBnZXQgYSBicm9rZW4g
+cGxhdGZvcm0gYnV0IGR0YiBpcyBnZW5lcmF0ZWQKCmFzIGFsbCB0aGUgbm9kZSBhcmUgZW5hYmxl
+ZCBmb3IgcGluY3RybAoKPiAKPj4gCj4+IFNvIG1vdmUgdGhlIHBpbmN0cmwgY29uZmlndXJhdGlv
+biB0byB0aGUgYmFuayBpbnN0ZWFkIG9mIHRoZSBidXMuCj4+IFRoaXMgYWxsb3cgdG8gZGV0ZWN0
+IHBpbmN0cmwgaXNzdWUgYXQgRFQgY29tcGlsaW5nIHRpbWUgd2hlbiBkaXNhYmxlIGEgYmFuay4K
+Pj4gCj4+IFNpZ25lZC1vZmYtYnk6IEplYW4tQ2hyaXN0b3BoZSBQTEFHTklPTC1WSUxMQVJEIDxw
+bGFnbmlvakBqY3Jvc29mdC5jb20+Cj4+IENjOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlq
+QGxpbmFyby5vcmc+Cj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+PiAtLS0KPj4g
+Li4uL2JpbmRpbmdzL3BpbmN0cmwvYXRtZWwsYXQ5MS1waW5jdHJsLnR4dCAgICAgICAgfCA2NiAr
+KysrKysrKysrKysrKysrKysrKysrCj4+IDEgZmlsZSBjaGFuZ2VkLCA2NiBpbnNlcnRpb25zKCsp
+Cj4+IAo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bp
+bmN0cmwvYXRtZWwsYXQ5MS1waW5jdHJsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9waW5jdHJsL2F0bWVsLGF0OTEtcGluY3RybC50eHQKPj4gaW5kZXggYjdhOTNlOC4u
+NzgzNTVlZSAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BpbmN0cmwvYXRtZWwsYXQ5MS1waW5jdHJsLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9hdG1lbCxhdDkxLXBpbmN0cmwudHh0Cj4+IEBAIC0x
+NDgsMyArMTQ4LDY5IEBAIGRiZ3U6IHNlcmlhbEBmZmZmZjIwMCB7Cj4+IAlwaW5jdHJsLTAgPSA8
+JnBpbmN0cmxfZGJndT47Cj4+IAlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiB9Owo+PiArCj4+ICtJ
+SSkgTmV3IEJpbmRpbmdzIHBlciBQSU8gQmxvY2sKPj4gKwo+PiArVGhpcyBhbGxvdyB0byBkZXRl
+Y3QgcGluY3RybCBpc3N1ZSBhdCBEVCBjb21waWxpbmcgdGltZSB3aGVuIGRpc2FibGUgYSBiYW5r
+Cj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIGlvbXV4IGNvbnRyb2xsZXI6Cj4+ICst
+IGNvbXBhdGlibGU6ICJhdG1lbCxhdDkxcm05MjAwLXBpby1waW5jdHJsIiBvciAiYXRtZWwsYXQ5
+MXNhbTl4NS1waW8tcGluY3RybCIKPj4gKwkJb3IgImF0bWVsLHNhbWE1ZDMtcGlvLXBpbmN0cmwi
+Cj4+ICstIGF0bWVsLG11eC1tYXNrOiBhcnJheSBvZiBtYXNrIChwZXJpcGggcGVyIGJhbmspIHRv
+IGRlc2NyaWJlIGlmIGEgcGluIGNhbiBiZQo+PiArICBjb25maWd1cmVkIGluIHRoaXMgcGVyaXBo
+IG1vZGUuIEFsbCB0aGUgcGVyaXBoIGFuZCBiYW5rIG5lZWQgdG8gYmUgZGVzY3JpYmUuCj4+ICsK
+Pj4gK0hvdyB0byBjcmVhdGUgc3VjaCBhcnJheToKPj4gKwo+PiArRWFjaCBjb2x1bW4gd2lsbCBy
+ZXByZXNlbnQgdGhlIHBvc3NpYmxlIHBlcmlwaGVyYWwgb2YgdGhlIHBpbmN0cmwgZm9yIHRoZSBi
+YW5rCj4+ICsKPj4gK1Rha2UgYW4gZXhhbXBsZSBvbiB0aGUgOTI2MAo+PiArUGVyaXBoZXJhbDog
+MiAoIEEgYW5kIEIpCj4+ICs9Pgo+PiArCj4+ICsgIC8qICAgIEEgICAgICAgICBCICAgICAqLwo+
+PiArICAweGZmZmZmZmZmIDB4ZmZjMDBjM2IgIC8qIHBpb0EgKi8KPj4gKwo+PiArRm9yIGVhY2gg
+cGVyaXBoZXJhbC9iYW5rIHdlIHdpbGwgZGVzY2liZSBpbiBhIHUzMiBpZiBhIHBpbiBjYW4gYmUK
+Pj4gK2NvbmZpZ3VyZWQgaW4gaXQgYnkgcHV0dGluZyAxIHRvIHRoZSBwaW4gYml0ICgxIDw8IHBp
+bikKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgcGluIGNvbmZpZ3VyYXRpb24gbm9k
+ZToKPj4gKy0gYXRtZWwscGluczogMyBpbnRlZ2VycyBhcnJheSwgcmVwcmVzZW50cyBhIGdyb3Vw
+IG9mIHBpbnMgbXV4IGFuZCBjb25maWcKPj4gKyAgc2V0dGluZy4gVGhlIGZvcm1hdCBpcyBhdG1l
+bCxwaW5zID0gPFBJTl9OVU0gUEVSSVBIIENPTkZJRz4uCj4+ICsgIFRoZSBQRVJJUEggMCBtZWFu
+cyBncGlvLCBQRVJJUEggMSBpcyBwZXJpcGggQSwgUEVSSVBIIDIgaXMgcGVyaXBoIEIuLi4KPj4g
+Kwo+PiArQml0cyB1c2VkIGZvciBDT05GSUc6Cj4+ICtjZiBhdG1lbCxhdDkxLXBpbmN0cmwKPj4g
+Kwo+PiArcGlvQjogZ3Bpb0BmZmZmZjYwMCB7Cj4+ICsJY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkx
+cm05MjAwLWdwaW8iLCAiYXRtZWwsYXQ5MXJtOTIwMC1waW8tcGluY3RybCI7Cj4+ICsJcmVnID0g
+PDB4ZmZmZmY2MDAgMHgyMDA+Owo+PiArCWludGVycnVwdHMgPSA8MyBJUlFfVFlQRV9MRVZFTF9I
+SUdIIDE+Owo+PiArCSNncGlvLWNlbGxzID0gPDI+Owo+PiArCWdwaW8tY29udHJvbGxlcjsKPj4g
+KwlpbnRlcnJ1cHQtY29udHJvbGxlcjsKPj4gKwkjaW50ZXJydXB0LWNlbGxzID0gPDI+Owo+PiAr
+CWNsb2NrcyA9IDwmcGlvQl9jbGs+Owo+PiArCj4+ICsJCQkgLyogICAgQSAgICAgICAgIEIgICAg
+ICovCj4+ICsJYXRtZWwsbXV4LW1hc2sgPSA8MHhmZmZmZmZmZiAweDdmZmYzY2NmPjsKPj4gKwo+
+PiArCWRiZ3Ugewo+PiArCQlwaW5jdHJsX2RiZ3U6IGRiZ3UtMCB7Cj4+ICsJCQlhdG1lbCxwaW5z
+ID0KPj4gKwkJCQk8MTQgMHgxIDB4MAkvKiBQQjE0IHBlcmlwaCBBICovCj4+ICsJCQkJIDE1IDB4
+MSAweDE+OwkvKiBQQjE1IHBlcmlwaCBBIHdpdGggcHVsbHVwICovCj4+ICsJCX07Cj4+ICsJfTsK
+PiAKPiBTbyB3ZSBoYXZlIHRvIHVwZGF0ZSBhbGwgZGV2aWNlIHRyZWUgZmlsZXMsIHRoYXQncyBh
+IGxvdCBvZiB3b3Jr4oCmCmJyZWFrIG5vdGhpbmcgYm90aCBiaW5kaW5nIHN1cHBvcnQgd2lsbCBi
+ZSBpbiB0aGUga2VybmVsCgpidXQgb25seSBvbmUgZW5hYmxlIGF0IGEgdGltZSwgc28gYmFzaWNh
+bGx5IG1haW5saW5lIHdpbGwgZHJvcCB0aGUgb2xkIG9uZQoKYW5kIGFzIHRvZGF5IDk5JSBvZiB0
+aGUgcGluY3RybCBhcmUgYXQgU29DIGxldmVsIHNvIGl04oCZcyBub3QgYSBiaWcgd29yayBhdCBh
+bGwKPiBNb3Jlb3ZlciBpdCBhZGRzIGNvbXBsZXhpdHkgaWYgd2UgaGF2ZSBhIGRldmljZSB1c2lu
+ZyBwaW5zIGZyb20KPiBkaWZmZXJlbnQgcGlvIGNvbnRyb2xsZXJzLgoKcHV0IDIgcGhhbmRsZSBt
+ZWFucyBjb21wbGV4aXR5IHBsZWFzZQoKYW5kIGl04oCZcyB0aGUga2V5IHBvaW50IG9mIHRoZSBu
+ZXcgYmluZGluZwoKQmVzdCBSZWdhcmRzLApKLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
