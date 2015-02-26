@@ -1,54 +1,65 @@
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v5 3/4] media: ov2640: add primary dt support
-Date: Thu, 26 Feb 2015 00:36:05 +0000
-Message-ID: <CA+V-a8s_PosECku7Pzg4Rt4Mq7_mMtvo3ZGDxUByx__XEgUxcA@mail.gmail.com>
-References: <1423560696-12304-1-git-send-email-josh.wu@atmel.com>
- <1423560696-12304-4-git-send-email-josh.wu@atmel.com> <CA+V-a8vkd2Q714s=o9WZZvPWJQATp=6POb8VYdSgarKxxEKqyQ@mail.gmail.com>
- <54ED4772.902@atmel.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH V5 1/2] mmc: dw_mmc: exynos: Support eMMC's HS400 mode
+Date: Thu, 26 Feb 2015 10:22:28 +0900
+Message-ID: <54EE7554.6060506@samsung.com>
+References: <1422499318-13726-1-git-send-email-alim.akhtar@samsung.com>
+ <1422499318-13726-2-git-send-email-alim.akhtar@samsung.com>
+ <CAL_Jsq+Mr=WOoCjWRnHnUqo8+UmqxxHbMG3M8+kLNgfhPASteA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <54ED4772.902@atmel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Josh Wu <josh.wu@atmel.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <CAL_Jsq+Mr=WOoCjWRnHnUqo8+UmqxxHbMG3M8+kLNgfhPASteA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, "chris@printf.net" <chris@printf.net>, Doug Anderson <dianders@chromium.org>, "kgene@kernel.org" <kgene@kernel.org>, a.kesavan@samsung.com, alim.akhtar@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
+Dear, Rob.
 
-On Wed, Feb 25, 2015 at 3:54 AM, Josh Wu <josh.wu@atmel.com> wrote:
-> Hi, Prabhakar Lad
->
->
-> On 2/17/2015 12:48 AM, Lad, Prabhakar wrote:
+On 02/25/2015 11:38 PM, Rob Herring wrote:
+> On Wed, Jan 28, 2015 at 8:41 PM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
+>> From: Seungwon Jeon <tgih.jun@samsung.com>
 >>
->> Hi Josh,
+>> Implements HS400 mode support for exynos host driver.
+>> This also include some updates as new mode is added.
 >>
->> Thanks for the patch.
+>> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
+>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>> [Alim: addressed review comments]
+>> ---
+>>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    7 +
+>>  drivers/mmc/host/dw_mmc-exynos.c                   |  185 ++++++++++++++++----
+>>  drivers/mmc/host/dw_mmc-exynos.h                   |   19 +-
+>>  drivers/mmc/host/dw_mmc.c                          |   16 +-
+>>  drivers/mmc/host/dw_mmc.h                          |    2 +
+>>  5 files changed, 195 insertions(+), 34 deletions(-)
 >>
->> On Tue, Feb 10, 2015 at 9:31 AM, Josh Wu <josh.wu@atmel.com> wrote:
->> [Snip]
->>>
->>> -       priv->clk =3D v4l2_clk_get(&client->dev, "mclk");
->>> +       priv->clk =3D v4l2_clk_get(&client->dev, "xvclk");
->>
->> with this change don=E2=80=99t you need to update the board file usi=
-ng this
->> driver/
->> the bridge driver ?
->
-> I think no.
->
-> First, my patch should be on top of the following two patches, which =
-changed
-> the *v4l2_clk_get()* behavior:
-> [v3,1/2] V4L: remove clock name from v4l2_clk API
-> https://patchwork.linuxtv.org/patch/28108/
-> [v4,2/2] V4L: add CCF support to the v4l2_clk API
-> https://patchwork.linuxtv.org/patch/28111/
->
-Thanks I missed the dependent patches.
+>> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> index ee4fc05..aad9844 100644
+>> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> @@ -36,6 +36,8 @@ Required Properties:
+>>    in transmit mode and CIU clock phase shift value in receive mode for double
+>>    data rate mode operation. Refer notes below for the order of the cells and the
+>>    valid values.
+>> +* samsung,dw-mshc-hs400-timing: Specifies the value of CIU TX and RX clock phase
+>> +  shift value for hs400 mode operation.
+> 
+> What are the units?
 
-Cheers,
---Prabhakar Lad
+Do you means what is "sumsung,dw-mshci-hs400-timing" unit?
+It's timing value for eMMC/SD/SDIO clock phase.(It's exynos specific value.)
+Using timing value can shift the H/W clock phase.
+If invalid timing value is set, eMMC/SD/SDIO can produce the CRC error.
+
+Do you think it can't include into device-tree?
+I want to know your thinking. let me know, plz.
+
+Best Regards,
+Jaehoon Chung
+
+> 
+> Rob
+> 
+
