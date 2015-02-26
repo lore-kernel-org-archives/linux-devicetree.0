@@ -1,106 +1,123 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH 2/3] soc: ti: Add wkup_m3_ipc driver
-Date: Thu, 26 Feb 2015 14:01:20 -0600
-Message-ID: <54EF7B90.3050702@ti.com>
-References: <1420228817-41310-1-git-send-email-d-gerlach@ti.com> <1420228817-41310-3-git-send-email-d-gerlach@ti.com> <20150102201643.GE4920@saruman> <54AB14E4.2010607@ti.com> <20150105225134.GN4081@atomide.com>
+From: Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>
+Subject: Re: [PATCH_V3 1/3] dt-bindings: dma: Add binding for jz4780-dma
+Date: Thu, 26 Feb 2015 20:04:12 +0000
+Message-ID: <CAOFt0_CiopFkYECuQUczOtNoo6D8zbCOaE6attP6=KU4zicV7w@mail.gmail.com>
+References: <1424954614-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+	<1424954614-12589-2-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150105225134.GN4081@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: balbi@ti.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424954614-12589-2-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tony,
-On 01/05/2015 04:51 PM, Tony Lindgren wrote:
-> * Dave Gerlach <d-gerlach@ti.com> [150105 14:51]:
->> Felipe,
->> On 01/02/2015 02:16 PM, Felipe Balbi wrote:
->>> On Fri, Jan 02, 2015 at 02:00:16PM -0600, Dave Gerlach wrote:
->>>> Introduce a wkup_m3_ipc driver to handle communication between the MPU
->>>> and Cortex M3 wkup_m3 present on am335x.
->>>>
->>>> This driver is responsible for actually booting the wkup_m3_rproc and
->>>> also handling all IPC which is done using the IPC registers in the control
->>>> module, a mailbox, and a separate interrupt back from the wkup_m3. A small
->>>> API is exposed for executing specific power commands, which include
->>>> configuring for low power mode, request a transition to a low power mode,
->>>> and status info on a previous transition.
->>>>
->>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->>>> ---
->>>>  drivers/soc/ti/Kconfig       |  11 ++
->>>>  drivers/soc/ti/Makefile      |   1 +
->>>>  drivers/soc/ti/wkup_m3_ipc.c | 451 +++++++++++++++++++++++++++++++++++++++++++
->>>>  include/linux/wkup_m3_ipc.h  |  33 ++++
->>>>  4 files changed, 496 insertions(+)
->>>>  create mode 100644 drivers/soc/ti/wkup_m3_ipc.c
->>>>  create mode 100644 include/linux/wkup_m3_ipc.h
->>>>
->>>> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
->>>> index 7266b21..61cda85 100644
->>>> --- a/drivers/soc/ti/Kconfig
->>>> +++ b/drivers/soc/ti/Kconfig
->>>> @@ -28,4 +28,15 @@ config KEYSTONE_NAVIGATOR_DMA
->>>>  
->>>>  	  If unsure, say N.
->>>>  
->>>> +config WKUP_M3_IPC
->>>> +	bool "TI AM33XX Wkup-M3 IPC Driver"
->>>
->>> tristate ?
->>
->> If we want to allow this and the rproc driver to be built as modules than we can
->> change this.
-> 
-> Yes please, the PM is never needed early, and should be optional.
-> And doing that will make it a lot easier for you to do further work
-> on your driver ;)
-> 
-> And it will also make it easier to add support for other SoCs as
-> it seems the same M3 is used at least on am437x.
->  
+Hi Zubair,
 
-I can not build the PM code as a module at this time due to many mach-omap
-function calls it uses which are not exported, so I need handles to all five
-functions in this driver used in pm33xx to call from built-in PM code. Do you
-have a preference on how these function handles get passed?
+On 26 February 2015 at 12:43, Zubair Lutfullah Kakakhel
+<Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> From: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>
+> Add device tree bindings for the DMA controller on JZ4780 SoCs, used by
+> the dma-jz4780 driver.
+>
+> Signed-off-by: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>
+> ---
+> V3 -> V2
+> Changed binding.
+> Used to be 3 DMA cells required. <&dma TX_type RX_type Reserved>
+> Now 2 DMA cells are required. <&dma Transfer_type Reserved>
+>
+> This is more common in DMA bindings.
+> And I couldn't figure any reason that 3 cells were used.
 
-I currently have added a pdata-quirks implementation that passes a function to
-the wkup_m3_ipc driver through it's pdata which it then calls at probe to pass a
-struct containing all used function pointers to the pm code that were previously
-called directly. Is that what you would prefer or something else? I had also
-looked at making the struct of function pointers in the driver global and just
-picking it up from the pm code with an extern declaration or even putting a bus
-notifier in the PM code and watching for the wkup_m3_ipc driver to be bound.
+There are different request type numbers for transfers to/from the
+same device (see the JZ4780 programmers manual, page 505). While only
+having the option to specify one transfer type is OK when the driver
+is using separate channels for read/writes, I recall seeing/writing
+some other drivers which use a single channel for both reads and
+writes. This would not be possible if we can only specify one transfer
+type, you'd have to have them separate.
 
-Thought I would see what you prefer and possibly avoid an unnecessary re-spin.
+Thanks,
+Alex
 
-Regards,
-Dave
-
->>>
->>>> +	depends on WKUP_M3_RPROC
->>>> +	select MAILBOX
->>>> +	select OMAP2PLUS_MBOX
->>>
->>> selects are usually frowned upon.
->>
->> Followed example set by OMAP_REMOTEPROC which selects the mailbox, thought that
->> would be alright.
-> 
-> The select should be only done if the option selected is a silen
-> Kconfig option where it's never selectable by the user. Otherwise
-> you will errors sooner or later with make randconfig builds as the
-> dependencies change. Using depends on is better for those cases.
-> 
-> Regards,
-> 
-> Tony 
+>
+> V1 -> V2 None
+> ---
+>  .../devicetree/bindings/dma/jz4780-dma.txt         | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/jz4780-dma.txt
+>
+> diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+> new file mode 100644
+> index 0000000..f25feee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+> @@ -0,0 +1,56 @@
+> +* Ingenic JZ4780 DMA Controller
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "ingenic,jz4780-dma"
+> +- reg: Should contain the DMA controller registers location and length.
+> +- interrupts: Should contain the interrupt specifier of the DMA controller.
+> +- interrupt-parent: Should be the phandle of the interrupt controller that
+> +- clocks: Should contain a clock specifier for the JZ4780 PDMA clock.
+> +- #dma-cells: Must be <2>. Number of integer cells in the dmas property of
+> +  DMA clients (see below).
+> +
+> +Optional properties:
+> +
+> +- ingenic,reserved-channels: Bitmask of channels to reserve for devices that
+> +  need a specific channel. These channels will only be assigned when explicitly
+> +  requested by a client. The primary use for this is channels 0 and 1, which
+> +  can be configured to have special behaviour for NAND/BCH when using
+> +  programmable firmware.
+> +
+> +Example:
+> +
+> +dma: dma@13420000 {
+> +       compatible = "ingenic,jz4780-dma";
+> +       reg = <0x13420000 0x10000>;
+> +
+> +       interrupt-parent = <&intc>;
+> +       interrupts = <10>;
+> +
+> +       clocks = <&cgu JZ4780_CLK_PDMA>;
+> +
+> +       #dma-cells = <2>;
+> +
+> +       ingenic,reserved-channels = <0x3>;
+> +};
+> +
+> +DMA clients must use the format described in dma.txt, giving a phandle to the
+> +DMA controller plus the following 2 integer cells:
+> +
+> +1. Request type: The DMA request type for transfers to/from the device on
+> +   the allocated channel, as defined in the SoC documentation.
+> +
+> +2. Channel: If set to 0xffffffff, any available channel will be allocated for
+> +   the client. Otherwise, the exact channel specified will be used. The channel
+> +   should be reserved on the DMA controller using the ingenic,reserved-channels
+> +   property.
+> +
+> +Example:
+> +
+> +uart0: serial@10030000 {
+> +       ...
+> +       dmas = <&dma 0x14 0xffffffff
+> +               &dma 0x15 0xffffffff>;
+> +       dma-names = "tx", "rx";
+> +       ...
+> +};
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
