@@ -1,86 +1,42 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit Exynos5433 SoC
-Date: Thu, 26 Feb 2015 16:42:09 +0100
-Message-ID: <2707354.mhmQEHxoKV@wuerfel>
-References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com> <6850624.bdB2Ab6zJx@wuerfel> <54EED6E1.4060908@samsung.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/2] Add support for Broadcom keypad controller
+Date: Thu, 26 Feb 2015 08:08:47 -0800
+Message-ID: <1424966930-28097-1-git-send-email-sbranden@broadcom.com>
+References: <Scott Branden <sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <54EED6E1.4060908@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, olof@lixom.net, will.deacon@arm.com, linux-kernel@vger.kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, kgene@kernel.org, a.kesavan@samsung.com, chanho61.park@samsung.com, inki.dae@samsung.com, ideal.song@samsung.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 26 February 2015 17:18:41 Chanwoo Choi wrote:
-> I add following aliases and serial_1/serial_3 dt node in board dtsi:
-> I tested that change the alias of serial_x node.
->         
->         aliases {
->                 serial0 = &serial_1;
->                 serial1 = &serial_3;
->         };
-> 
->         /* Add 'linux,stdout-path' property to print kernel log by using ealycon */
->         chosen {
->                 linux,stdout-path = &serial_1;
->         };
-> 
->         [snip]
-> 
->         /* serial_1 is used for printing kernel log throught JIG cable */
->         &serial_1 {
->                 status = "okay";
->         };
-> 
->         &serial_3 {
->                 status = "okay";
->         };
-> 
-> In result, serial driver create the /dev/ttySAC0 for serial_1 and /dev/ttySAC1 for serial_3.
-> But, I cannot complete the kernel booting and stop it with following kernel log
-> 
-> [    0.000000] Booting Linux on physical CPU 0x100
-> [    0.000000] Initializing cgroup subsys cpuset
-> [    0.000000] Initializing cgroup subsys cpu
-> [    0.000000] Initializing cgroup subsys cpuacct
-> [    0.000000] Linux version 4.0.0-rc1-00066-g49bfcec-dirty (cwchoi00@chan) (gcc version 4.9.2 20140904 (prerelease) (crosstool-NG l5
-> [snip]
-> [    0.000000] Kernel command line: console=ttySAC1,115200 earlycon=exynos4210,0x14C20000
+This series of patchsets contains the Broadcom keypad controller driver
+and device tree binding documentation.
 
-What is the "earlycon=exynos4210,0x14C20000" doing here? Should that not just be
-"earlycon=exynos" or something like that when you set the correct stdout-path?
+Changes from v1:
+- updated dt documentation to remove to matrix-keymap.txt
+- removed bcm_kp_remove as it is not necessary
+- removed key-interrupt-trigger-type dt binding
+- added bcm_kp_report_keys and call to process key registers
 
-> [snip]
-> [    0.651647] dma-pl330 15610000.pdma: Loaded driver for PL330 DMAC-341330
-> [    0.651851] dma-pl330 15610000.pdma:         DBUFF-32x4bytes Num_Chans-8 Num_Peri-32 Num_Events-32
-> [    0.658566] dma-pl330 15600000.pdma: Loaded driver for PL330 DMAC-341330
-> [    0.662872] dma-pl330 15600000.pdma:         DBUFF-32x4bytes Num_Chans-8 Num_Peri-32 Num_Events-32
-> [    0.672487] dma-pl330 11420000.adma: Loaded driver for PL330 DMAC-341330
-> [ 8466.414900] dma-pl330 11420000.adma:         DBUFF-8x8bytes Num_Chans-8 Num_Peri-16 Num_Events-8
-> [ 8466.481648] 14c20000.serial: ttySAC0 at MMIO 0x14c20000 (irq = 21, base_baud = 0) is a S3C6400/10
-> (dont' print any kernel log)
-> 
-> So, I change the kernel command line about ('console' bootparam) as following:
-> because tty framework must use the 'console' bootparam to print kernel log.
-> - original     : Kernel command line: console=ttySAC1,115200 ... (cannot the kernel log from serial driver probed)
-> - modification : Kernel command line: console=ttySAC0,115200 ... (got the successful kernel booting)
-> 
-> After modification, I got the successful kernel booting.
-> 
-> If should use the serial_0 device and then modify the 'aliases' as following:
-> I have to modify the commandline of bootloader if the commandline of bootloader is used
-> instad of default kernel command line.
-> 
->         aliases {
->                 serial0 = &serial_0;
->                 serial1 = &serial_1;
->                 serial2 = &serial_3;
->         };
+Scott Branden (2):
+  Input: bcm-keypad: add device tree bindings
+  Input: bcm-keypad: Add Broadcom keypad controller
 
-If you need the numbers to match, maybe there is still a bug in the serial port
-driver and it uses some arbitrary number (e.g. probe order, or ascending
-MMIO address) for the console instead of the alias?
+ .../devicetree/bindings/input/brcm,bcm-keypad.txt  | 108 +++++
+ drivers/input/keyboard/Kconfig                     |  10 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/bcm-keypad.c                | 464 +++++++++++++++++++++
+ 4 files changed, 583 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
+ create mode 100644 drivers/input/keyboard/bcm-keypad.c
 
-	Arnd
+-- 
+2.3.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
