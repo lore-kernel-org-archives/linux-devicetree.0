@@ -1,78 +1,124 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] ARM: kexec: Relax SMP validation to improve DT compatibility
-Date: Thu, 26 Feb 2015 11:37:08 +0100
-Message-ID: <1424947028-7438-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Stephen Warren <swarren@nvidia.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: dt: at91: new binding
+Date: Thu, 26 Feb 2015 11:43:19 +0100
+Message-ID: <20150226104319.GE20718@odux.rfo.atmel.com>
+References: <1424943294-8805-1-git-send-email-plagnioj@jcrosoft.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1424943294-8805-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When trying to kexec into a new kernel on a platform where multiple CPU
-cores are present, but no SMP bringup code is available yet, the
-kexec_load system call fails with:
+Hi Jean-Christophe,
 
-    kexec_load failed: Invalid argument
+On Thu, Feb 26, 2015 at 10:34:54AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> Today if we want to disable a pio bank we may will siliently break pinctrl
+> configuration in the DT. This will be detected only at runtime.
 
-The SMP test added to machine_kexec_prepare() in commit 2103f6cba61a8b8b
-("ARM: 7807/1: kexec: validate CPU hotplug support") wants to prohibit
-kexec on SMP platforms where it cannot disable secondary CPUs.
-However, this test is too strict: if the secondary CPUs couldn't be
-enabled in the first place, there's no need to disable them later at
-kexec time.  Hence skip the test in the absence of SMP bringup code.
+Do you have a case where it breaks pinctrl? I can do more tests but with
+the latest patch "pinctrl: at91: allow to have disabled gpio bank", I
+had no issue.
 
-This allows to add all CPU cores to the DTS from the beginning, without
-having to implement SMP bringup first, improving DT compatibility.
+> 
+> So move the pinctrl configuration to the bank instead of the bus.
+> This allow to detect pinctrl issue at DT compiling time when disable a bank.
+> 
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  .../bindings/pinctrl/atmel,at91-pinctrl.txt        | 66 ++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> index b7a93e8..78355ee 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> @@ -148,3 +148,69 @@ dbgu: serial@fffff200 {
+>  	pinctrl-0 = <&pinctrl_dbgu>;
+>  	status = "disabled";
+>  };
+> +
+> +II) New Bindings per PIO Block
+> +
+> +This allow to detect pinctrl issue at DT compiling time when disable a bank
+> +
+> +Required properties for iomux controller:
+> +- compatible: "atmel,at91rm9200-pio-pinctrl" or "atmel,at91sam9x5-pio-pinctrl"
+> +		or "atmel,sama5d3-pio-pinctrl"
+> +- atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
+> +  configured in this periph mode. All the periph and bank need to be describe.
+> +
+> +How to create such array:
+> +
+> +Each column will represent the possible peripheral of the pinctrl for the bank
+> +
+> +Take an example on the 9260
+> +Peripheral: 2 ( A and B)
+> +=>
+> +
+> +  /*    A         B     */
+> +  0xffffffff 0xffc00c3b  /* pioA */
+> +
+> +For each peripheral/bank we will descibe in a u32 if a pin can be
+> +configured in it by putting 1 to the pin bit (1 << pin)
+> +
+> +Required properties for pin configuration node:
+> +- atmel,pins: 3 integers array, represents a group of pins mux and config
+> +  setting. The format is atmel,pins = <PIN_NUM PERIPH CONFIG>.
+> +  The PERIPH 0 means gpio, PERIPH 1 is periph A, PERIPH 2 is periph B...
+> +
+> +Bits used for CONFIG:
+> +cf atmel,at91-pinctrl
+> +
+> +pioB: gpio@fffff600 {
+> +	compatible = "atmel,at91rm9200-gpio", "atmel,at91rm9200-pio-pinctrl";
+> +	reg = <0xfffff600 0x200>;
+> +	interrupts = <3 IRQ_TYPE_LEVEL_HIGH 1>;
+> +	#gpio-cells = <2>;
+> +	gpio-controller;
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +	clocks = <&pioB_clk>;
+> +
+> +			 /*    A         B     */
+> +	atmel,mux-mask = <0xffffffff 0x7fff3ccf>;
+> +
+> +	dbgu {
+> +		pinctrl_dbgu: dbgu-0 {
+> +			atmel,pins =
+> +				<14 0x1 0x0	/* PB14 periph A */
+> +				 15 0x1 0x1>;	/* PB15 periph A with pullup */
+> +		};
+> +	};
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/include/asm/smp_plat.h | 1 +
- arch/arm/kernel/machine_kexec.c | 3 ++-
- arch/arm/kernel/smp.c           | 5 +++++
- 3 files changed, 8 insertions(+), 1 deletion(-)
+So we have to update all device tree files, that's a lot of work...
+Moreover it adds complexity if we have a device using pins from
+different pio controllers.
 
-diff --git a/arch/arm/include/asm/smp_plat.h b/arch/arm/include/asm/smp_plat.h
-index 0ad7d490ee6f2657..993e5224d8f7eeeb 100644
---- a/arch/arm/include/asm/smp_plat.h
-+++ b/arch/arm/include/asm/smp_plat.h
-@@ -104,6 +104,7 @@ static inline u32 mpidr_hash_size(void)
- 	return 1 << mpidr_hash.bits;
- }
- 
-+extern int platform_can_secondary_boot(void);
- extern int platform_can_cpu_hotplug(void);
- 
- #endif
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index de2b085ad7535da7..8bf3b7c098881b95 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -46,7 +46,8 @@ int machine_kexec_prepare(struct kimage *image)
- 	 * and implements CPU hotplug for the current HW. If not, we won't be
- 	 * able to kexec reliably, so fail the prepare operation.
- 	 */
--	if (num_possible_cpus() > 1 && !platform_can_cpu_hotplug())
-+	if (num_possible_cpus() > 1 && platform_can_secondary_boot() &&
-+	    !platform_can_cpu_hotplug())
- 		return -EINVAL;
- 
- 	/*
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 86ef244c5a24b4fa..cca5b87581855244 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -145,6 +145,11 @@ void __init smp_init_cpus(void)
- 		smp_ops.smp_init_cpus();
- }
- 
-+int platform_can_secondary_boot(void)
-+{
-+	return !!smp_ops.smp_boot_secondary;
-+}
-+
- int platform_can_cpu_hotplug(void)
- {
- #ifdef CONFIG_HOTPLUG_CPU
--- 
-1.9.1
+> +};
+> +
+> +dbgu: serial@fffff200 {
+> +	compatible = "atmel,at91sam9260-usart";
+> +	reg = <0xfffff200 0x200>;
+> +	interrupts = <1 4 7>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_dbgu>;
+> +	status = "disabled";
+> +};
+> +
+> +if you have to use multiple bank
+> +	pinctrl-0 = <&pinctrl_ip_piaa>, <&pinctrl_ip_piab>;
 
+You mean pio I think.
+
+
+Ludovic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
