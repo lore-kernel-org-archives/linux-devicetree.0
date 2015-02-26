@@ -1,41 +1,92 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: SPDX-License-Identifier
-Date: Thu, 26 Feb 2015 22:53:18 +0100
-Message-ID: <20150226215318.GB10204@amd>
-References: <20140221160442.GA17506@kroah.com>
- <5307790A.4050806@monstr.eu>
- <20140221161246.GM31902@saruman.home>
- <53077C5F.9000407@monstr.eu>
- <54CF9B12.2070807@denx.de>
- <20150202160622.GA9852@kroah.com>
- <54D24BA4.3070509@denx.de>
- <20150205064130.GB22075@kroah.com>
- <20150225214950.GB29527@amd>
- <20150226102650.7407cf02@lxorguk.ukuu.org.uk>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH RESEND] coresight-stm: Bindings for System Trace Macrocell
+Date: Thu, 26 Feb 2015 16:08:19 -0600
+Message-ID: <CAL_Jsq+qPRh5DSH2bqzbHngtUMdmFkuATY169C0v6gs-x+izgA@mail.gmail.com>
+References: <1424967258-28573-1-git-send-email-mathieu.poirier@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150226102650.7407cf02@lxorguk.ukuu.org.uk>
+In-Reply-To: <1424967258-28573-1-git-send-email-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stefan Roese <sr@denx.de>, monstr@monstr.eu, balbi@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Denk <wd@denx.de>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, zhang.chunyan@linaro.org, Kaixu Xia <kaixu.xia@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 2015-02-26 10:26:50, One Thousand Gnomes wrote:
-> > So that GPL header at begining of each file becomes one line... and so
-> > that if it is BSD/GPL dual licensed is plain to see, and I don't have
-> > to read the notices saying "oh this is gpl.. but if you want to,
-> > delete gpl above and use license below".
-> 
-> That won't happen though. You'd require every single corporate legal
-> department of every large company that touched the file to agree that the
-> SPDX was equivalent to the content, and some of them probably won't.
-> Lawyers don't seem to believe in #include <legalese.h>
+On Thu, Feb 26, 2015 at 10:14 AM, Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+> The System Trace Macrocell (STM) is an IP block falling under the
+> CoreSight umbrella.  It's main purpose it so expose stimulus channels
+> to any system component for the purpose of information logging.
+>
+> Bindings for this IP block adds a couple of items to the current
+> mandatory definition for CoreSight components.  The driver has been posted
+> here[1].
+>
+> [1]. https://lkml.org/lkml/2015/2/25/743
+>
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Umm. I'd still like to see SPDX where corporate lawyers allow that,
-and for new files.
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Seems reasonable, but a couple minor comments below. Merge this with the driver:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  .../devicetree/bindings/arm/coresight.txt          | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index a3089359aaa6..854127578718 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -17,6 +17,7 @@ its hardware characteristcs.
+>                 - "arm,coresight-tmc", "arm,primecell";
+>                 - "arm,coresight-funnel", "arm,primecell";
+>                 - "arm,coresight-etm3x", "arm,primecell";
+> +               - "arm,coresight-stm", "arm,primecell";
+
+No versions of STM?
+
+>         * reg: physical base address and length of the register
+>           set(s) of the component.
+> @@ -31,6 +32,14 @@ its hardware characteristcs.
+>           layout using the generic DT graph presentation found in
+>           "bindings/graph.txt".
+>
+> +* Additional required properly for System Trace Macrocells (STM):
+> +       * reg: along with the physical base address and length of the register
+> +         set as described above, another entry is required to describe the
+> +         mapping of the extended stimulus port area.
+> +
+> +       * reg-names: the only acceptable values are "stm-base" and
+> +         "stm-channel-base", each corresponding to the areas defined in "reg".
+
+It is not really clear that "extended stimulus port area" corresponds
+to "stm-channel-base".
+
+> +
+>  * Required properties for devices that don't show up on the AMBA bus, such as
+>    non-configurable replicators:
+>
+> @@ -198,3 +207,19 @@ Example:
+>                         };
+>                 };
+>         };
+> +
+> +4. STM
+> +       stm@20100000 {
+> +               compatible = "arm,coresight-stm", "arm,primecell";
+> +               reg = <0 0x20100000 0 0x1000>,
+> +                     <0 0x28000000 0 0x180000>;
+> +               reg-names = "stm-base", "stm-channel-base";
+> +
+> +               clocks = <&soc_smc50mhz>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       stm_out_port: endpoint {
+> +                               remote-endpoint = <&main_funnel_in_port2>;
+> +                       };
+> +               };
+> +       };
+> --
+> 1.9.1
+>
