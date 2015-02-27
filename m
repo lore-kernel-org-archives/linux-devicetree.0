@@ -1,314 +1,335 @@
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 2/3] dtc: Plugin (object) device tree support.
-Date: Fri, 27 Feb 2015 20:55:45 +0200
-Message-ID: <1425063346-14554-3-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v4 3/3] dtc: Document the dynamic plugin internals
+Date: Fri, 27 Feb 2015 20:55:46 +0200
+Message-ID: <1425063346-14554-4-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1425063346-14554-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1425063346-14554-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enables the generation of a __fixups__ node for trees compiled
-using the -@ option that are using the /plugin/ tag.
-
-The __fixups__ node make possible the dynamic resolution of phandle
-references which are present in the plugin tree but lie in the
-tree that are applying the overlay against.
+Provides the document explaining the internal mechanics of
+plugins and options.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/manual.txt |  5 ++++
- checks.c                 | 45 ++++++++++++++++++++++++++++++++--
- dtc-lexer.l              |  5 ++++
- dtc-parser.y             | 22 ++++++++++++++---
- dtc.h                    | 12 +++++++++
- flattree.c               | 63 ++++++++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 147 insertions(+), 5 deletions(-)
+ Documentation/dt-object-internal.txt | 301 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 301 insertions(+)
+ create mode 100644 Documentation/dt-object-internal.txt
 
-diff --git a/Documentation/manual.txt b/Documentation/manual.txt
-index 4359958..18d1333 100644
---- a/Documentation/manual.txt
-+++ b/Documentation/manual.txt
-@@ -124,6 +124,9 @@ Options:
- 	for any node labels used, and for any local references using phandles
- 	it also generates a __local_fixups__ node that tracks them.
- 
-+	When using the /plugin/ tag all unresolved label references to
-+	be tracked in the __fixups__ node, making dynamic resolution possible.
+diff --git a/Documentation/dt-object-internal.txt b/Documentation/dt-object-internal.txt
+new file mode 100644
+index 0000000..b5ce9b4
+--- /dev/null
++++ b/Documentation/dt-object-internal.txt
+@@ -0,0 +1,301 @@
++Device Tree Dynamic Object format internals
++-------------------------------------------
 +
-     -S <bytes>
- 	Ensure the blob at least <bytes> long, adding additional
- 	space if needed.
-@@ -158,6 +161,8 @@ Here is a very rough overview of the layout of a DTS source file:
- 
-     devicetree:   '/' nodedef
- 
-+    plugindecl:   '/' 'plugin' '/' ';'
++The Device Tree for most platforms is a static representation of
++the hardware capabilities. This is insufficient for many platforms
++that need to dynamically insert device tree fragments to the
++running kernel's live tree.
 +
-     nodedef:      '{' list_of_property list_of_subnode '}' ';'
- 
-     property:     label PROPNAME '=' propdata ';'
-diff --git a/checks.c b/checks.c
-index 103ca52..4be5233 100644
---- a/checks.c
-+++ b/checks.c
-@@ -458,6 +458,7 @@ static void fixup_phandle_references(struct check *c, struct node *dt,
- 				     struct node *node, struct property *prop)
- {
- 	struct marker *m = prop->val.markers;
-+	struct fixup *f, **fp;
- 	struct fixup_entry *fe, **fep;
- 	struct node *refnode;
- 	cell_t phandle;
-@@ -467,8 +468,48 @@ static void fixup_phandle_references(struct check *c, struct node *dt,
- 
- 		refnode = get_node_by_ref(dt, m->ref);
- 		if (! refnode) {
--			FAIL(c, "Reference to non-existent node or label \"%s\"\n",
--			     m->ref);
-+			if (!dt->is_plugin) {
-+				FAIL(c, "Reference to non-existent node or label \"%s\"\n",
-+					m->ref);
-+				continue;
++This document explains the the device tree object format and the
++modifications made to the device tree compiler, which make it possible.
++
++1. Simplified Problem Definition
++--------------------------------
++
++Assume we have a platform which boots using following simplified device tree.
++
++---- foo.dts -----------------------------------------------------------------
++	/* FOO platform */
++	/ {
++		compatible = "corp,foo";
++
++		/* shared resources */
++		res: res {
++		};
++
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
++		}
++	};
++---- foo.dts -----------------------------------------------------------------
++
++We have a number of peripherals that after probing (using some undefined method)
++should result in different device tree configuration.
++
++We cannot boot with this static tree because due to the configuration of the
++foo platform there exist multiple conficting peripherals DT fragments.
++
++So for the bar peripheral we would have this:
++
++---- foo+bar.dts -------------------------------------------------------------
++	/* FOO platform + bar peripheral */
++	/ {
++		compatible = "corp,foo";
++
++		/* shared resources */
++		res: res {
++		};
++
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
++
++			/* bar peripheral */
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
 +			}
++		}
++	};
++---- foo+bar.dts -------------------------------------------------------------
 +
-+			/* allocate fixup entry */
-+			fe = xmalloc(sizeof(*fe));
++While for the baz peripheral we would have this:
 +
-+			fe->node = node;
-+			fe->prop = prop;
-+			fe->offset = m->offset;
-+			fe->next = NULL;
++---- foo+baz.dts -------------------------------------------------------------
++	/* FOO platform + baz peripheral */
++	/ {
++		compatible = "corp,foo";
 +
-+			/* search for an already existing fixup */
-+			for_each_fixup(dt, f)
-+				if (strcmp(f->ref, m->ref) == 0)
-+					break;
++		/* shared resources */
++		res: res {
++			/* baz resources */
++			baz_res: res_baz { ... };
++		};
 +
-+			/* no fixup found, add new */
-+			if (f == NULL) {
-+				f = xmalloc(sizeof(*f));
-+				f->ref = m->ref;
-+				f->entries = NULL;
-+				f->next = NULL;
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
 +
-+				/* add it to the tree */
-+				fp = &dt->fixups;
-+				while (*fp)
-+					fp = &(*fp)->next;
-+				*fp = f;
++			/* baz peripheral */
++			baz {
++				compatible = "corp,baz";
++				/* reference to another point in the tree */
++				ref-to-res = <&baz_res>;
++				... /* various properties and child nodes */
 +			}
-+
-+			/* and now append fixup entry */
-+			fep = &f->entries;
-+			while (*fep)
-+				fep = &(*fep)->next;
-+			*fep = fe;
-+
-+			/* mark the entry as unresolved */
-+			*((cell_t *)(prop->val.val + m->offset)) =
-+				cpu_to_fdt32(0xdeadbeef);
- 			continue;
- 		}
- 
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 0ee1caf..dd44ba2 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -113,6 +113,11 @@ static void lexical_error(const char *fmt, ...);
- 			return DT_V1;
- 		}
- 
-+<*>"/plugin/"	{
-+			DPRINT("Keyword: /plugin/\n");
-+			return DT_PLUGIN;
 +		}
++	};
++---- foo+baz.dts -------------------------------------------------------------
 +
- <*>"/memreserve/"	{
- 			DPRINT("Keyword: /memreserve/\n");
- 			BEGIN_DEFAULT();
-diff --git a/dtc-parser.y b/dtc-parser.y
-index 5a897e3..d23927d 100644
---- a/dtc-parser.y
-+++ b/dtc-parser.y
-@@ -19,6 +19,7 @@
-  */
- %{
- #include <stdio.h>
-+#include <inttypes.h>
- 
- #include "dtc.h"
- #include "srcpos.h"
-@@ -52,9 +53,11 @@ extern bool treesource_error;
- 	struct node *nodelist;
- 	struct reserve_info *re;
- 	uint64_t integer;
-+	bool is_plugin;
- }
- 
- %token DT_V1
-+%token DT_PLUGIN
- %token DT_MEMRESERVE
- %token DT_LSHIFT DT_RSHIFT DT_LE DT_GE DT_EQ DT_NE DT_AND DT_OR
- %token DT_BITS
-@@ -71,6 +74,7 @@ extern bool treesource_error;
- 
- %type <data> propdata
- %type <data> propdataprefix
-+%type <is_plugin> plugindecl
- %type <re> memreserve
- %type <re> memreserves
- %type <array> arrayprefix
-@@ -101,10 +105,22 @@ extern bool treesource_error;
- %%
- 
- sourcefile:
--	  DT_V1 ';' memreserves devicetree
-+	  DT_V1 ';' plugindecl memreserves devicetree
- 		{
--			the_boot_info = build_boot_info($3, $4,
--							guess_boot_cpuid($4));
-+			$5->is_plugin = $3;
-+			the_boot_info = build_boot_info($4, $5,
-+							guess_boot_cpuid($5));
-+		}
-+	;
++We note that the baz case is more complicated, since the baz peripheral needs to
++reference another node in the DT tree.
 +
-+plugindecl:
-+	/* empty */
-+		{
-+			$$ = false;
-+		}
-+	| DT_PLUGIN ';'
-+		{
-+			$$ = true;
- 		}
- 	;
- 
-diff --git a/dtc.h b/dtc.h
-index 16354fa..f163b22 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -141,6 +141,12 @@ struct fixup_entry {
- 	bool local_fixup_generated;
- };
- 
-+struct fixup {
-+	char *ref;
-+	struct fixup_entry *entries;
-+	struct fixup *next;
++2. Device Tree Object Format Requirements
++-----------------------------------------
++
++Since the device tree is used for booting a number of very different hardware
++platforms it is imperative that we tread very carefully.
++
++2.a) No changes to the Device Tree binary format. We cannot modify the tree
++format at all and all the information we require should be encoded using device
++tree itself. We can add nodes that can be safely ignored by both bootloaders and
++the kernel.
++
++2.b) Changes to the DTS source format should be absolutely minimal, and should
++only be needed for the DT fragment definitions, and not the base boot DT.
++
++2.c) An explicit option should be used to instruct DTC to generate the required
++information needed for object resolution. Platforms that don't use the
++dynamic object format can safely ignore it.
++
++2.d) Finally, DT syntax changes should be kept to a minimum. It should be
++possible to express everything using the existing DT syntax.
++
++3. Implementation
++-----------------
++
++The basic unit of addressing in Device Tree is the phandle. Turns out it's
++relatively simple to extend the way phandles are generated and referenced
++so that it's possible to dynamically convert symbolic references (labels)
++to phandle values.
++
++We can roughly divide the operation into two steps.
++
++3.a) Compilation of the base board DTS file using the '-@' option
++generates a valid DT blob with an added __symbols__ node at the root node,
++containing a list of all nodes that are marked with a label.
++
++Using the foo.dts file above the following node will be generated;
++
++$ dtc -@ -O dtb -o foo.dtb -b 0 foo.dts
++$ fdtdump foo.dtb
++...
++/ {
++	...
++	res {
++		...
++		linux,phandle = <0x00000001>;
++		phandle = <0x00000001>;
++		...
++	};
++	ocp {
++		...
++		linux,phandle = <0x00000002>;
++		phandle = <0x00000002>;
++		...
++	};
++	__symbols__ {
++		res="/res";
++		ocp="/ocp";
++	};
 +};
 +
- struct symbol {
- 	struct label *label;
- 	struct node *node;
-@@ -177,6 +183,9 @@ struct node {
- 	struct symbol *symbols;
- 	struct fixup_entry *local_fixups;
- 	bool emit_local_fixup_node;
++Notice that all the nodes that had a label have been recorded, and that
++phandles have been generated for them.
 +
-+	bool is_plugin;
-+	struct fixup *fixups;
- };
- 
- #define for_each_label_withdel(l0, l) \
-@@ -200,6 +209,9 @@ struct node {
- 	for_each_child_withdel(n, c) \
- 		if (!(c)->deleted)
- 
-+#define for_each_fixup(n, f) \
-+	for ((f) = (n)->fixups; (f); (f) = (f)->next)
++This blob can be used to boot the board normally, the __symbols__ node will
++be safely ignored both by the bootloader and the kernel (the only loss will
++be a few bytes of memory and disk space).
 +
- #define for_each_fixup_entry(f, fe) \
- 	for ((fe) = (f)->entries; (fe); (fe) = (fe)->next)
- 
-diff --git a/flattree.c b/flattree.c
-index 3a58949..2385137 100644
---- a/flattree.c
-+++ b/flattree.c
-@@ -391,6 +391,68 @@ static void emit_local_fixups_node(struct node *tree, struct emitter *emit,
- 	emit->endnode(etarget, tree->labels);
- }
- 
-+static void emit_fixups_node(struct node *tree, struct emitter *emit,
-+			     void *etarget, struct data *strbuf,
-+			     struct version_info *vi)
-+{
-+	struct fixup *f;
-+	struct fixup_entry *fe;
-+	char *name, *s;
-+	const char *fullpath;
-+	int namesz, nameoff, vallen;
++3.b) The Device Tree fragments must be compiled with the same option but they
++must also have a tag (/plugin/) that allows undefined references to labels
++that are not present at compilation time to be recorded so that the runtime
++loader can fix them.
 +
-+	/* do nothing if no fixups */
-+	if (!tree->fixups)
-+		return;
++So the bar peripheral's DTS format would be of the form:
 +
-+	/* emit the external fixups */
-+	emit->beginnode(etarget, NULL);
-+	emit->string(etarget, "__fixups__", 0);
-+	emit->align(etarget, sizeof(cell_t));
++/plugin/;	/* allow undefined label references and record them */
++/ {
++	....	/* various properties for loader use; i.e. part id etc. */
++	fragment@0 {
++		target = <&ocp>;
++		__overlay__ {
++			/* bar peripheral */
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
++			}
++		};
++	};
++};
 +
-+	for_each_fixup(tree, f) {
++Note that there's a target property that specifies the location where the
++contents of the overlay node will be placed, and it references the label
++in the foo.dts file.
 +
-+		namesz = 0;
-+		for_each_fixup_entry(f, fe) {
-+			fullpath = fe->node->fullpath;
-+			if (fullpath[0] == '\0')
-+				fullpath = "/";
-+			namesz += strlen(fullpath) + 1;
-+			namesz += strlen(fe->prop->name) + 1;
-+			namesz += 32;	/* space for :<number> + '\0' */
-+		}
++$ dtc -@ -O dtb -o bar.dtbo -b 0 bar.dts
++$ fdtdump bar.dtbo
++...
++/ {
++	... /* properties */
++	fragment@0 {
++		target = <0xdeadbeef>;
++		__overlay__ {
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
++			}
++		};
++	};
++	__fixups__ {
++	    ocp = "/fragment@0:target:0";
++	};
++};
 +
-+		name = xmalloc(namesz);
++No __symbols__ has been generated (no label in bar.dts).
++Note that the target's ocp label is undefined, so the phandle handle
++value is filled with the illegal value '0xdeadbeef', while a __fixups__
++node has been generated, which marks the location in the tree where
++the label lookup should store the runtime phandle value of the ocp node.
 +
-+		s = name;
-+		for_each_fixup_entry(f, fe) {
-+			fullpath = fe->node->fullpath;
-+			if (fullpath[0] == '\0')
-+				fullpath = "/";
-+			snprintf(s, name + namesz - s, "%s:%s:%d", fullpath,
-+					fe->prop->name, fe->offset);
-+			s += strlen(s) + 1;
-+		}
++The format of the __fixups__ node entry is
 +
-+		nameoff = stringtable_insert(strbuf, f->ref);
-+		vallen = s - name - 1;
++	<label> = "<local-full-path>:<property-name>:<offset>";
 +
-+		emit->property(etarget, NULL);
-+		emit->cell(etarget, vallen + 1);
-+		emit->cell(etarget, nameoff);
++<label> 		Is the label we're referring
++<local-full-path>	Is the full path of the node the reference is
++<property-name>		Is the name of the property containing the
++			reference
++<offset>		The offset (in bytes) of where the property's
++			phandle value is located.
 +
-+		if ((vi->flags & FTF_VARALIGN) && vallen >= 8)
-+			emit->align(etarget, 8);
++Doing the same with the baz peripheral's DTS format is a little bit more
++involved, since baz contains references to local labels which require
++local fixups.
 +
-+		emit->string(etarget, name, vallen);
-+		emit->align(etarget, sizeof(cell_t));
++/plugin/;	/* allow undefined label references and record them */
++/ {
++	....	/* various properties for loader use; i.e. part id etc. */
++	fragment@0 {
++		target = <&res>;
++		__overlay__ {
++			/* baz resources */
++			baz_res: res_baz { ... };
++		};
++	};
++	fragment@1 {
++		target = <&ocp>;
++		__overlay__ {
++			/* baz peripheral */
++			baz {
++				compatible = "corp,baz";
++				/* reference to another point in the tree */
++				ref-to-res = <&baz_res>;
++				... /* various properties and child nodes */
++			}
++		};
++	};
++};
 +
-+		free(name);
-+	}
++Note that &bar_res reference.
 +
-+	emit->endnode(etarget, tree->labels);
-+}
++$ dtc -@ -O dtb -o baz.dtbo -b 0 baz.dts
++$ fdtdump baz.dtbo
++...
++/ {
++	... /* properties */
++	fragment@0 {
++		target = <0xdeadbeef>;
++		__overlay__ {
++			res_baz {
++				....
++				linux,phandle = <0x00000001>;
++				phandle = <0x00000001>;
++			};
++		};
++	};
++	fragment@1 {
++		target = <0xdeadbeef>;
++		__overlay__ {
++			baz {
++				compatible = "corp,baz";
++				... /* various properties and child nodes */
++				ref-to-res = <0x00000001>;
++			}
++		};
++	};
++	__fixups__ {
++		res = "/fragment@0:target:0";
++		ocp = "/fragment@1:target:0";
++	};
++	__local_fixups__ {
++		fragment@1 {
++			__overlay__ {
++				baz {
++					ref-to-res = <0>;
++				};
++			};
++		};
++	};
++};
 +
- static void flatten_tree(struct node *tree, struct emitter *emit,
- 			 void *etarget, struct data *strbuf,
- 			 struct version_info *vi)
-@@ -448,6 +510,7 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
- 
- 	emit_symbols_node(tree, emit, etarget, strbuf, vi);
- 	emit_local_fixups_node(tree, emit, etarget, strbuf, vi);
-+	emit_fixups_node(tree, emit, etarget, strbuf, vi);
- 
- 	emit->endnode(etarget, tree->labels);
- }
++This is similar to the bar case, but the reference of a local label by the
++baz node generates a __local_fixups__ entry that records the place that the
++local reference is being made. Since phandles are allocated starting at 1
++the run time loader must apply an offset to each phandle in every dynamic
++DT object loaded. The __local_fixups__ node records the place of every
++local reference so that the loader can apply the offset.
 -- 
 1.7.12
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
