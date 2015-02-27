@@ -1,114 +1,42 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/3] soc: ti: Add wkup_m3_ipc driver
-Date: Fri, 27 Feb 2015 09:09:29 -0800
-Message-ID: <20150227170928.GZ11056@atomide.com>
-References: <1420228817-41310-1-git-send-email-d-gerlach@ti.com>
- <1420228817-41310-3-git-send-email-d-gerlach@ti.com>
- <20150102201643.GE4920@saruman> <54AB14E4.2010607@ti.com>
- <20150105225134.GN4081@atomide.com> <54EF7B90.3050702@ti.com>
- <20150226220817.GR11056@atomide.com> <54F0A2C4.1060401@ti.com>
+From: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Subject: Re: [PATCH net-next v4 0/3] Linn Ethernet Packet Sniffer driver
+Date: Fri, 27 Feb 2015 17:22:35 +0000
+Message-ID: <54F0A7DB.9070103@linn.co.uk>
+References: <cover.1424796018.git.stathis.voukelatos@linn.co.uk> <20150225151945.GB7703@localhost.localdomain> <20150225170127.GD7703@localhost.localdomain> <54EE0268.2040201@linn.co.uk> <20150225173053.GE7703@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <54F0A2C4.1060401@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, balbi@ti.com, Kevin Hilman <khilman@linaro.org>, Benoit Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150225173053.GE7703@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Dave Gerlach <d-gerlach@ti.com> [150227 09:04]:
-> Tony,
-> On 02/26/2015 04:08 PM, Tony Lindgren wrote:
-> > * Dave Gerlach <d-gerlach@ti.com> [150226 12:05]:
-> >> Tony,
-> >> On 01/05/2015 04:51 PM, Tony Lindgren wrote:
-> >>> * Dave Gerlach <d-gerlach@ti.com> [150105 14:51]:
-> >>>> Felipe,
-> >>>> On 01/02/2015 02:16 PM, Felipe Balbi wrote:
-> >>>>> On Fri, Jan 02, 2015 at 02:00:16PM -0600, Dave Gerlach wrote:
-> >>>>>> Introduce a wkup_m3_ipc driver to handle communication between the MPU
-> >>>>>> and Cortex M3 wkup_m3 present on am335x.
-> >>>>>>
-> >>>>>> This driver is responsible for actually booting the wkup_m3_rproc and
-> >>>>>> also handling all IPC which is done using the IPC registers in the control
-> >>>>>> module, a mailbox, and a separate interrupt back from the wkup_m3. A small
-> >>>>>> API is exposed for executing specific power commands, which include
-> >>>>>> configuring for low power mode, request a transition to a low power mode,
-> >>>>>> and status info on a previous transition.
-> >>>>>>
-> >>>>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> >>>>>> ---
-> >>>>>>  drivers/soc/ti/Kconfig       |  11 ++
-> >>>>>>  drivers/soc/ti/Makefile      |   1 +
-> >>>>>>  drivers/soc/ti/wkup_m3_ipc.c | 451 +++++++++++++++++++++++++++++++++++++++++++
-> >>>>>>  include/linux/wkup_m3_ipc.h  |  33 ++++
-> >>>>>>  4 files changed, 496 insertions(+)
-> >>>>>>  create mode 100644 drivers/soc/ti/wkup_m3_ipc.c
-> >>>>>>  create mode 100644 include/linux/wkup_m3_ipc.h
-> >>>>>>
-> >>>>>> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-> >>>>>> index 7266b21..61cda85 100644
-> >>>>>> --- a/drivers/soc/ti/Kconfig
-> >>>>>> +++ b/drivers/soc/ti/Kconfig
-> >>>>>> @@ -28,4 +28,15 @@ config KEYSTONE_NAVIGATOR_DMA
-> >>>>>>  
-> >>>>>>  	  If unsure, say N.
-> >>>>>>  
-> >>>>>> +config WKUP_M3_IPC
-> >>>>>> +	bool "TI AM33XX Wkup-M3 IPC Driver"
-> >>>>>
-> >>>>> tristate ?
-> >>>>
-> >>>> If we want to allow this and the rproc driver to be built as modules than we can
-> >>>> change this.
-> >>>
-> >>> Yes please, the PM is never needed early, and should be optional.
-> >>> And doing that will make it a lot easier for you to do further work
-> >>> on your driver ;)
-> >>>
-> >>> And it will also make it easier to add support for other SoCs as
-> >>> it seems the same M3 is used at least on am437x.
-> >>>  
-> >>
-> >> I can not build the PM code as a module at this time due to many mach-omap
-> >> function calls it uses which are not exported, so I need handles to all five
-> >> functions in this driver used in pm33xx to call from built-in PM code. Do you
-> >> have a preference on how these function handles get passed?
-> > 
-> > OK, you can pass the function pointers in platform_data. Care to
-> > list those functions? That might allow us to make other omap PM
-> > code into loadable modules in drivers/* :)
-> 
-> Sure, apart from the dependencies I create for myself in other modules that I
-> introduce I see:
-> 
-> ERROR: "omap_pm_clkdms_setup" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> ERROR: "clkdm_for_each" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> ERROR: "clkdm_lookup" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> ERROR: "pwrdm_lookup" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> ERROR: "pwrdm_post_transition" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> ERROR: "clkdm_sleep" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> ERROR: "clkdm_wakeup" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> ERROR: "pwrdm_read_pwrst" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> ERROR: "cpu_suspend" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> ERROR: "omap_set_pwrdm_state" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-> 
-> So the mach-omap2 clockdomain and power domain functions along with arch arm
-> cpu_suspend code. I see similar dependencies in the other mach-omap2/pmxxxx.c
-> code also.
+Hi Richard,
 
-OK thanks for the list.
+On 25/02/15 17:30, Richard Cochran wrote:
+>> I need some more time to study your other suggestions regarding the
+>> PHY timestamping framework.
+>
+>  From my (limited) understanding of your HW device, I should think that
+> it will work.  The PHY time stamping subsystem is not the most obvious
+> code in the world.  Please feel free to ask if you have any questions.
+>
 
-Regards,
+To summarize (and confirm my understanding) your suggestion is for the
+sniffer to be configured to match PTP packets and (similarly to the
+dp83640) return the Message Type and Sequence Id fields that will allow
+them to be matched to an sk_buf that has been passed from the stack.
+Then the sk_buf can be timestamped using the sniffer timestamp.
 
-Tony
+The H/W does have the capability to do that. However, in order to
+implement it there will be some architectural changes needed
+in the kernel. This module cannot really pretend to be a PHY.
+In the real world it sits between the MAC and the PHY.
+
+> Thanks,
+> Richard
+>
+
+Thanks,
+Stathis
