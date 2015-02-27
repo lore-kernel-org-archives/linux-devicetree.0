@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4/4] clk: dt: Introduce binding for always-on clock support
-Date: Fri, 27 Feb 2015 21:14:34 +0000
-Message-ID: <1425071674-16995-5-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH 2/4] ARM: sti: stih410-clocks: Identify critical clocks as always-on
+Date: Fri, 27 Feb 2015 21:14:32 +0000
+Message-ID: <1425071674-16995-3-git-send-email-lee.jones@linaro.org>
 References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
@@ -10,55 +10,61 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: lee.jones@linaro.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Lots of platforms contain clocks which if turned off would prove fatal.
+The only way to recover is to restart the board(s).  This driver takes
+references to clocks which are required to be always-on in order to
+prevent the common clk framework from trying to turn them off during
+the clk_disabled_unused() procedure.
+
+In this patch we are identifying clocks, which if gated would render
+the STiH410 development board unserviceable.
+
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../devicetree/bindings/clock/clock-bindings.txt   | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/arm/boot/dts/stih410-clock.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-index 06fc6d5..ad17121 100644
---- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-+++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -44,6 +44,40 @@ For example:
-   clocks by index. The names should reflect the clock output signal
-   names for the device.
+diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
+index 6b5803a..7b257c2 100644
+--- a/arch/arm/boot/dts/stih410-clock.dtsi
++++ b/arch/arm/boot/dts/stih410-clock.dtsi
+@@ -103,6 +103,7 @@
+ 				clocks = <&clk_sysin>;
  
-+clock-always-on:    Some hardware contains bunches of clocks which must never be
-+		    turned off.  If drivers a) fail to obtain a reference to any
-+		    of these or b) give up a previously obtained reference
-+		    during suspend, the common clk framework will attempt to
-+		    disable them and a platform can fail irrecoverably as a
-+		    result.  Usually the only way to recover from these failures
-+		    is to reboot.
+ 				clock-output-names = "clk-s-a0-pll-ofd-0";
++				clock-always-on = "clk-s-a0-pll-ofd-0";
+ 			};
+ 
+ 			clk_s_a0_flexgen: clk-s-a0-flexgen {
+@@ -115,6 +116,8 @@
+ 
+ 				clock-output-names = "clk-ic-lmi0",
+ 						     "clk-ic-lmi1";
 +
-+		    To avoid either of these two scenarios from catastrophically
-+		    disabling an otherwise perfectly healthy running system,
-+		    clocks can be identified as always-on using this property
-+		    from inside a clocksource's node.  The CLK_IGNORE_UNUSED
-+		    flag will be applied to each clock instance named in this
-+		    property, thus preventing them from being shut down by the
-+		    framework.
++				clock-always-on = "clk-ic-lmi0";
+ 			};
+ 		};
+ 
+@@ -142,6 +145,7 @@
+ 				clocks = <&clk_sysin>;
+ 
+ 				clock-output-names = "clk-s-c0-pll0-odf-0";
++				clock-always-on = "clk-s-c0-pll0-odf-0";
+ 			};
+ 
+ 			clk_s_c0_pll1: clk-s-c0-pll1 {
+@@ -204,6 +208,12 @@
+ 						     "clk-clust-hades",
+ 						     "clk-hwpe-hades",
+ 						     "clk-fc-hades";
 +
-+		    This property is not to be abused.  It is only to be used to
-+		    protect platforms from being crippled by gated clocks, not
-+		    as a convenience function to avoid using the framework
-+		    correctly inside device drivers.
-+
-+For example:
-+
-+    oscillator {
-+        #clock-cells = <1>;
-+        clock-output-names = "ckil", "ckih";
-+        clock-always-on = "ckil";
-+    };
-+
-+- this node defines a device with two clock outputs, just as in the
-+  example above.  The only difference being that 'ckil' is now
-+  identified as an always-on clock, so the framework will know to
-+  never attempt to gate it.
-+
- clock-indices:	   If the identifying number for the clocks in the node
- 		   is not linear from zero, then this allows the mapping of
- 		   identifiers into the clock-output-names array.
++				clock-always-on = "clk-icn-cpu",
++						  "clk-tx-icn-dmu",
++						  "clk-ext2fa9",
++						  "clk-icn-lmi",
++						  "clk-icn-sbc";
+ 			};
+ 		};
+ 
 -- 
 1.9.1
