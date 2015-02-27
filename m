@@ -1,67 +1,80 @@
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 1/3] dtc: Symbol and local fixup generation support
-Date: Fri, 27 Feb 2015 20:55:44 +0200
-Message-ID: <1425063346-14554-2-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v4 2/3] dtc: Plugin (object) device tree support.
+Date: Fri, 27 Feb 2015 20:55:45 +0200
+Message-ID: <1425063346-14554-3-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1425063346-14554-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1425063346-14554-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the generation of symbols & local fixup information
-for trees compiled with the -@ (--symbols) option.
+Enables the generation of a __fixups__ node for trees compiled
+using the -@ option that are using the /plugin/ tag.
 
-Using this patch labels in the tree and their users emit information
-in __symbols__ and __local_fixups__ nodes. Using this information
-it is possible to implement run time dynamic tree loading.
+The __fixups__ node make possible the dynamic resolution of phandle
+references which are present in the plugin tree but lie in the
+tree that are applying the overlay against.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/manual.txt |   5 ++
- checks.c                 |  61 +++++++++++++++++++++
- dtc.c                    |   9 ++-
- dtc.h                    |  28 ++++++++++
- flattree.c               | 139 +++++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 240 insertions(+), 2 deletions(-)
+ Documentation/manual.txt |  5 ++++
+ checks.c                 | 45 ++++++++++++++++++++++++++++++++--
+ dtc-lexer.l              |  5 ++++
+ dtc-parser.y             | 22 ++++++++++++++---
+ dtc.h                    | 12 +++++++++
+ flattree.c               | 63 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 147 insertions(+), 5 deletions(-)
 
 diff --git a/Documentation/manual.txt b/Documentation/manual.txt
-index 398de32..4359958 100644
+index 4359958..18d1333 100644
 --- a/Documentation/manual.txt
 +++ b/Documentation/manual.txt
-@@ -119,6 +119,11 @@ Options:
- 	Make space for <number> reserve map entries
- 	Relevant for dtb and asm output only.
+@@ -124,6 +124,9 @@ Options:
+ 	for any node labels used, and for any local references using phandles
+ 	it also generates a __local_fixups__ node that tracks them.
  
-+    -@
-+        Generates a __symbols__ node at the root node of the resulting blob
-+	for any node labels used, and for any local references using phandles
-+	it also generates a __local_fixups__ node that tracks them.
++	When using the /plugin/ tag all unresolved label references to
++	be tracked in the __fixups__ node, making dynamic resolution possible.
 +
      -S <bytes>
  	Ensure the blob at least <bytes> long, adding additional
  	space if needed.
+@@ -158,6 +161,8 @@ Here is a very rough overview of the layout of a DTS source file:
+ 
+     devicetree:   '/' nodedef
+ 
++    plugindecl:   '/' 'plugin' '/' ';'
++
+     nodedef:      '{' list_of_property list_of_subnode '}' ';'
+ 
+     property:     label PROPNAME '=' propdata ';'
 diff --git a/checks.c b/checks.c
-index e81a8c7..103ca52 100644
+index 103ca52..4be5233 100644
 --- a/checks.c
 +++ b/checks.c
 @@ -458,6 +458,7 @@ static void fixup_phandle_references(struct check *c, struct node *dt,
  				     struct node *node, struct property *prop)
  {
  	struct marker *m = prop->val.markers;
-+	struct fixup_entry *fe, **fep;
++	struct fixup *f, **fp;
+ 	struct fixup_entry *fe, **fep;
  	struct node *refnode;
  	cell_t phandle;
+@@ -467,8 +468,48 @@ static void fixup_phandle_references(struct check *c, struct node *dt,
  
-@@ -471,9 +472,28 @@ static void fixup_phandle_references(struct check *c, struct node *dt,
- 			continue;
- 		}
- 
-+		/* if it's a local reference, we need to record it */
-+		if (symbol_fixup_support) {
+ 		refnode = get_node_by_ref(dt, m->ref);
+ 		if (! refnode) {
+-			FAIL(c, "Reference to non-existent node or label \"%s\"\n",
+-			     m->ref);
++			if (!dt->is_plugin) {
++				FAIL(c, "Reference to non-existent node or label \"%s\"\n",
++					m->ref);
++				continue;
++			}
 +
-+			/* allocate a new local fixup entry */
++			/* allocate fixup entry */
 +			fe = xmalloc(sizeof(*fe));
 +
 +			fe->node = node;
@@ -69,281 +82,201 @@ index e81a8c7..103ca52 100644
 +			fe->offset = m->offset;
 +			fe->next = NULL;
 +
-+			/* append it to the local fixups */
-+			fep = &dt->local_fixups;
++			/* search for an already existing fixup */
++			for_each_fixup(dt, f)
++				if (strcmp(f->ref, m->ref) == 0)
++					break;
++
++			/* no fixup found, add new */
++			if (f == NULL) {
++				f = xmalloc(sizeof(*f));
++				f->ref = m->ref;
++				f->entries = NULL;
++				f->next = NULL;
++
++				/* add it to the tree */
++				fp = &dt->fixups;
++				while (*fp)
++					fp = &(*fp)->next;
++				*fp = f;
++			}
++
++			/* and now append fixup entry */
++			fep = &f->entries;
 +			while (*fep)
 +				fep = &(*fep)->next;
 +			*fep = fe;
++
++			/* mark the entry as unresolved */
++			*((cell_t *)(prop->val.val + m->offset)) =
++				cpu_to_fdt32(0xdeadbeef);
+ 			continue;
+ 		}
+ 
+diff --git a/dtc-lexer.l b/dtc-lexer.l
+index 0ee1caf..dd44ba2 100644
+--- a/dtc-lexer.l
++++ b/dtc-lexer.l
+@@ -113,6 +113,11 @@ static void lexical_error(const char *fmt, ...);
+ 			return DT_V1;
+ 		}
+ 
++<*>"/plugin/"	{
++			DPRINT("Keyword: /plugin/\n");
++			return DT_PLUGIN;
 +		}
 +
- 		phandle = get_node_phandle(dt, refnode);
- 		*((cell_t *)(prop->val.val + m->offset)) = cpu_to_fdt32(phandle);
- 	}
-+
+ <*>"/memreserve/"	{
+ 			DPRINT("Keyword: /memreserve/\n");
+ 			BEGIN_DEFAULT();
+diff --git a/dtc-parser.y b/dtc-parser.y
+index 5a897e3..d23927d 100644
+--- a/dtc-parser.y
++++ b/dtc-parser.y
+@@ -19,6 +19,7 @@
+  */
+ %{
+ #include <stdio.h>
++#include <inttypes.h>
+ 
+ #include "dtc.h"
+ #include "srcpos.h"
+@@ -52,9 +53,11 @@ extern bool treesource_error;
+ 	struct node *nodelist;
+ 	struct reserve_info *re;
+ 	uint64_t integer;
++	bool is_plugin;
  }
- ERROR(phandle_references, NULL, NULL, fixup_phandle_references, NULL,
-       &duplicate_node_names, &explicit_phandles);
-@@ -652,6 +672,45 @@ static void check_obsolete_chosen_interrupt_controller(struct check *c,
- }
- TREE_WARNING(obsolete_chosen_interrupt_controller, NULL);
  
-+static void check_auto_label_phandles(struct check *c, struct node *dt,
-+				       struct node *node)
-+{
-+	struct label *l;
-+	struct symbol *s, **sp;
-+	int has_label;
-+
-+	if (!symbol_fixup_support)
-+		return;
-+
-+	has_label = 0;
-+	for_each_label(node->labels, l) {
-+		has_label = 1;
-+		break;
-+	}
-+
-+	if (!has_label)
-+		return;
-+
-+	/* force allocation of a phandle for this node */
-+	(void)get_node_phandle(dt, node);
-+
-+	/* add the symbol */
-+	for_each_label(node->labels, l) {
-+
-+		s = xmalloc(sizeof(*s));
-+		s->label = l;
-+		s->node = node;
-+		s->next = NULL;
-+
-+		/* add it to the symbols list */
-+		sp = &dt->symbols;
-+		while (*sp)
-+			sp = &((*sp)->next);
-+		*sp = s;
-+	}
-+}
-+NODE_WARNING(auto_label_phandles, NULL);
-+
- static struct check *check_table[] = {
- 	&duplicate_node_names, &duplicate_property_names,
- 	&node_name_chars, &node_name_format, &property_name_chars,
-@@ -670,6 +729,8 @@ static struct check *check_table[] = {
- 	&avoid_default_addr_size,
- 	&obsolete_chosen_interrupt_controller,
+ %token DT_V1
++%token DT_PLUGIN
+ %token DT_MEMRESERVE
+ %token DT_LSHIFT DT_RSHIFT DT_LE DT_GE DT_EQ DT_NE DT_AND DT_OR
+ %token DT_BITS
+@@ -71,6 +74,7 @@ extern bool treesource_error;
  
-+	&auto_label_phandles,
+ %type <data> propdata
+ %type <data> propdataprefix
++%type <is_plugin> plugindecl
+ %type <re> memreserve
+ %type <re> memreserves
+ %type <array> arrayprefix
+@@ -101,10 +105,22 @@ extern bool treesource_error;
+ %%
+ 
+ sourcefile:
+-	  DT_V1 ';' memreserves devicetree
++	  DT_V1 ';' plugindecl memreserves devicetree
+ 		{
+-			the_boot_info = build_boot_info($3, $4,
+-							guess_boot_cpuid($4));
++			$5->is_plugin = $3;
++			the_boot_info = build_boot_info($4, $5,
++							guess_boot_cpuid($5));
++		}
++	;
 +
- 	&always_fail,
- };
++plugindecl:
++	/* empty */
++		{
++			$$ = false;
++		}
++	| DT_PLUGIN ';'
++		{
++			$$ = true;
+ 		}
+ 	;
  
-diff --git a/dtc.c b/dtc.c
-index 8c4add6..91e91e7 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -29,6 +29,7 @@ int reservenum;		/* Number of memory reservation slots */
- int minsize;		/* Minimum blob size */
- int padsize;		/* Additional padding to blob */
- int phandle_format = PHANDLE_BOTH;	/* Use linux,phandle or phandle properties */
-+int symbol_fixup_support = 0;
- 
- static void fill_fullpaths(struct node *tree, const char *prefix)
- {
-@@ -51,7 +52,7 @@ static void fill_fullpaths(struct node *tree, const char *prefix)
- #define FDT_VERSION(version)	_FDT_VERSION(version)
- #define _FDT_VERSION(version)	#version
- static const char usage_synopsis[] = "dtc [options] <input file>";
--static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sW:E:hv";
-+static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sW:E:@hv";
- static struct option const usage_long_opts[] = {
- 	{"quiet",            no_argument, NULL, 'q'},
- 	{"in-format",         a_argument, NULL, 'I'},
-@@ -69,6 +70,7 @@ static struct option const usage_long_opts[] = {
- 	{"phandle",           a_argument, NULL, 'H'},
- 	{"warning",           a_argument, NULL, 'W'},
- 	{"error",             a_argument, NULL, 'E'},
-+	{"symbols",	     no_argument, NULL, '@'},
- 	{"help",             no_argument, NULL, 'h'},
- 	{"version",          no_argument, NULL, 'v'},
- 	{NULL,               no_argument, NULL, 0x0},
-@@ -99,6 +101,7 @@ static const char * const usage_opts_help[] = {
- 	 "\t\tboth   - Both \"linux,phandle\" and \"phandle\" properties",
- 	"\n\tEnable/disable warnings (prefix with \"no-\")",
- 	"\n\tEnable/disable errors (prefix with \"no-\")",
-+	"\n\tEnable symbols/fixup support",
- 	"\n\tPrint this help and exit",
- 	"\n\tPrint version and exit",
- 	NULL,
-@@ -186,7 +189,9 @@ int main(int argc, char *argv[])
- 		case 'E':
- 			parse_checks_option(false, true, optarg);
- 			break;
--
-+		case '@':
-+			symbol_fixup_support = 1;
-+			break;
- 		case 'h':
- 			usage(NULL);
- 		default:
 diff --git a/dtc.h b/dtc.h
-index 56212c8..16354fa 100644
+index 16354fa..f163b22 100644
 --- a/dtc.h
 +++ b/dtc.h
-@@ -54,6 +54,7 @@ extern int reservenum;		/* Number of memory reservation slots */
- extern int minsize;		/* Minimum blob size */
- extern int padsize;		/* Additional padding to blob */
- extern int phandle_format;	/* Use linux,phandle or phandle properties */
-+extern int symbol_fixup_support;/* enable symbols & fixup support */
- 
- #define PHANDLE_LEGACY	0x1
- #define PHANDLE_EPAPR	0x2
-@@ -132,6 +133,20 @@ struct label {
- 	struct label *next;
+@@ -141,6 +141,12 @@ struct fixup_entry {
+ 	bool local_fixup_generated;
  };
  
-+struct fixup_entry {
-+	int offset;
-+	struct node *node;
-+	struct property *prop;
-+	struct fixup_entry *next;
-+	bool local_fixup_generated;
++struct fixup {
++	char *ref;
++	struct fixup_entry *entries;
++	struct fixup *next;
 +};
 +
-+struct symbol {
-+	struct label *label;
-+	struct node *node;
-+	struct symbol *next;
-+};
+ struct symbol {
+ 	struct label *label;
+ 	struct node *node;
+@@ -177,6 +183,9 @@ struct node {
+ 	struct symbol *symbols;
+ 	struct fixup_entry *local_fixups;
+ 	bool emit_local_fixup_node;
 +
- struct property {
- 	bool deleted;
- 	char *name;
-@@ -158,6 +173,10 @@ struct node {
- 	int addr_cells, size_cells;
- 
- 	struct label *labels;
-+
-+	struct symbol *symbols;
-+	struct fixup_entry *local_fixups;
-+	bool emit_local_fixup_node;
++	bool is_plugin;
++	struct fixup *fixups;
  };
  
  #define for_each_label_withdel(l0, l) \
-@@ -181,6 +200,15 @@ struct node {
+@@ -200,6 +209,9 @@ struct node {
  	for_each_child_withdel(n, c) \
  		if (!(c)->deleted)
  
-+#define for_each_fixup_entry(f, fe) \
-+	for ((fe) = (f)->entries; (fe); (fe) = (fe)->next)
++#define for_each_fixup(n, f) \
++	for ((f) = (n)->fixups; (f); (f) = (f)->next)
 +
-+#define for_each_symbol(n, s) \
-+	for ((s) = (n)->symbols; (s); (s) = (s)->next)
-+
-+#define for_each_local_fixup_entry(n, fe) \
-+	for ((fe) = (n)->local_fixups; (fe); (fe) = (fe)->next)
-+
- void add_label(struct label **labels, char *label);
- void delete_labels(struct label **labels);
+ #define for_each_fixup_entry(f, fe) \
+ 	for ((fe) = (f)->entries; (fe); (fe) = (fe)->next)
  
 diff --git a/flattree.c b/flattree.c
-index bd99fa2..3a58949 100644
+index 3a58949..2385137 100644
 --- a/flattree.c
 +++ b/flattree.c
-@@ -255,6 +255,142 @@ static int stringtable_insert(struct data *d, const char *str)
- 	return i;
+@@ -391,6 +391,68 @@ static void emit_local_fixups_node(struct node *tree, struct emitter *emit,
+ 	emit->endnode(etarget, tree->labels);
  }
  
-+static void emit_local_fixups(struct node *tree, struct emitter *emit,
-+		void *etarget, struct data *strbuf, struct version_info *vi,
-+		struct node *node)
++static void emit_fixups_node(struct node *tree, struct emitter *emit,
++			     void *etarget, struct data *strbuf,
++			     struct version_info *vi)
 +{
-+	struct fixup_entry *fe, *fen;
-+	struct node *child;
-+	int nameoff, count;
-+	cell_t *buf;
-+	struct data d;
++	struct fixup *f;
++	struct fixup_entry *fe;
++	char *name, *s;
++	const char *fullpath;
++	int namesz, nameoff, vallen;
 +
-+	if (node->emit_local_fixup_node) {
-+
-+		/* emit the external fixups (do not emit /) */
-+		if (node != tree) {
-+			emit->beginnode(etarget, NULL);
-+			emit->string(etarget, node->name, 0);
-+			emit->align(etarget, sizeof(cell_t));
-+		}
-+
-+		for_each_local_fixup_entry(tree, fe) {
-+			if (fe->node != node || fe->local_fixup_generated)
-+				continue;
-+
-+			/* count the number of fixup entries */
-+			count = 0;
-+			for_each_local_fixup_entry(tree, fen) {
-+				if (fen->prop != fe->prop)
-+					continue;
-+				fen->local_fixup_generated = true;
-+				count++;
-+			}
-+
-+			/* allocate buffer */
-+			buf = xmalloc(count * sizeof(cell_t));
-+
-+			/* collect all the offsets in buffer */
-+			count = 0;
-+			for_each_local_fixup_entry(tree, fen) {
-+				if (fen->prop != fe->prop)
-+					continue;
-+				fen->local_fixup_generated = true;
-+				buf[count++] = cpu_to_fdt32(fen->offset);
-+			}
-+			d = empty_data;
-+			d.len = count * sizeof(cell_t);
-+			d.val = (char *)buf;
-+
-+			nameoff = stringtable_insert(strbuf, fe->prop->name);
-+			emit->property(etarget, fe->prop->labels);
-+			emit->cell(etarget, count * sizeof(cell_t));
-+			emit->cell(etarget, nameoff);
-+
-+			if ((vi->flags & FTF_VARALIGN) &&
-+					(count * sizeof(cell_t)) >= 8)
-+				emit->align(etarget, 8);
-+
-+			emit->data(etarget, d);
-+			emit->align(etarget, sizeof(cell_t));
-+
-+			free(buf);
-+		}
-+	}
-+
-+	for_each_child(node, child)
-+		emit_local_fixups(tree, emit, etarget, strbuf, vi, child);
-+
-+	if (node->emit_local_fixup_node && node != tree)
-+		emit->endnode(etarget, tree->labels);
-+}
-+
-+static void emit_symbols_node(struct node *tree, struct emitter *emit,
-+			      void *etarget, struct data *strbuf,
-+			      struct version_info *vi)
-+{
-+	struct symbol *sym;
-+	int nameoff, vallen;
-+
-+	/* do nothing if no symbols */
-+	if (!tree->symbols)
++	/* do nothing if no fixups */
++	if (!tree->fixups)
 +		return;
 +
++	/* emit the external fixups */
 +	emit->beginnode(etarget, NULL);
-+	emit->string(etarget, "__symbols__", 0);
++	emit->string(etarget, "__fixups__", 0);
 +	emit->align(etarget, sizeof(cell_t));
 +
-+	for_each_symbol(tree, sym) {
++	for_each_fixup(tree, f) {
 +
-+		vallen = strlen(sym->node->fullpath);
++		namesz = 0;
++		for_each_fixup_entry(f, fe) {
++			fullpath = fe->node->fullpath;
++			if (fullpath[0] == '\0')
++				fullpath = "/";
++			namesz += strlen(fullpath) + 1;
++			namesz += strlen(fe->prop->name) + 1;
++			namesz += 32;	/* space for :<number> + '\0' */
++		}
 +
-+		nameoff = stringtable_insert(strbuf, sym->label->label);
++		name = xmalloc(namesz);
++
++		s = name;
++		for_each_fixup_entry(f, fe) {
++			fullpath = fe->node->fullpath;
++			if (fullpath[0] == '\0')
++				fullpath = "/";
++			snprintf(s, name + namesz - s, "%s:%s:%d", fullpath,
++					fe->prop->name, fe->offset);
++			s += strlen(s) + 1;
++		}
++
++		nameoff = stringtable_insert(strbuf, f->ref);
++		vallen = s - name - 1;
 +
 +		emit->property(etarget, NULL);
 +		emit->cell(etarget, vallen + 1);
@@ -352,40 +285,11 @@ index bd99fa2..3a58949 100644
 +		if ((vi->flags & FTF_VARALIGN) && vallen >= 8)
 +			emit->align(etarget, 8);
 +
-+		emit->string(etarget, sym->node->fullpath,
-+				strlen(sym->node->fullpath));
++		emit->string(etarget, name, vallen);
 +		emit->align(etarget, sizeof(cell_t));
++
++		free(name);
 +	}
-+
-+	emit->endnode(etarget, NULL);
-+}
-+
-+static void emit_local_fixups_node(struct node *tree, struct emitter *emit,
-+				   void *etarget, struct data *strbuf,
-+				   struct version_info *vi)
-+{
-+	struct fixup_entry *fe;
-+	struct node *node;
-+
-+	/* do nothing if no local fixups */
-+	if (!tree->local_fixups)
-+		return;
-+
-+	/* mark all nodes that need a local fixup generated (and parents) */
-+	for_each_local_fixup_entry(tree, fe) {
-+		node = fe->node;
-+		while (node != NULL && !node->emit_local_fixup_node) {
-+			node->emit_local_fixup_node = true;
-+			node = node->parent;
-+		}
-+	}
-+
-+	/* emit the local fixups node now */
-+	emit->beginnode(etarget, NULL);
-+	emit->string(etarget, "__local_fixups__", 0);
-+	emit->align(etarget, sizeof(cell_t));
-+
-+	emit_local_fixups(tree, emit, etarget, strbuf, vi, tree);
 +
 +	emit->endnode(etarget, tree->labels);
 +}
@@ -393,20 +297,18 @@ index bd99fa2..3a58949 100644
  static void flatten_tree(struct node *tree, struct emitter *emit,
  			 void *etarget, struct data *strbuf,
  			 struct version_info *vi)
-@@ -310,6 +446,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
- 		flatten_tree(child, emit, etarget, strbuf, vi);
- 	}
+@@ -448,6 +510,7 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
  
-+	emit_symbols_node(tree, emit, etarget, strbuf, vi);
-+	emit_local_fixups_node(tree, emit, etarget, strbuf, vi);
-+
+ 	emit_symbols_node(tree, emit, etarget, strbuf, vi);
+ 	emit_local_fixups_node(tree, emit, etarget, strbuf, vi);
++	emit_fixups_node(tree, emit, etarget, strbuf, vi);
+ 
  	emit->endnode(etarget, tree->labels);
  }
- 
 -- 
 1.7.12
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
