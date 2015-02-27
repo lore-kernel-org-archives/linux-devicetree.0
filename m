@@ -1,70 +1,51 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 2/4] ARM: sti: stih410-clocks: Identify critical clocks as always-on
-Date: Fri, 27 Feb 2015 21:14:32 +0000
-Message-ID: <1425071674-16995-3-git-send-email-lee.jones@linaro.org>
-References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
+From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH v3 0/3] ARM: dts: add openpandora device support
+Date: Fri, 27 Feb 2015 22:26:36 +0100
+Message-ID: <1425072399-23152-1-git-send-email-marek@goldelico.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Lots of platforms contain clocks which if turned off would prove fatal.
-The only way to recover is to restart the board(s).  This driver takes
-references to clocks which are required to be always-on in order to
-prevent the common clk framework from trying to turn them off during
-the clk_disabled_unused() procedure.
+changes from v2:
+- fix missing PIN_INPUT for penirq node
+- added Reviewed-by and Tested-by
 
-In this patch we are identifying clocks, which if gated would render
-the STiH410 development board unserviceable.
+changes from v1:
+- add new boards to makefile in patch 2,3 (don't add them
+in separate commit together), fix gpmc issues (reported by Tony Lindgren)
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/boot/dts/stih410-clock.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+- fix various issues reported by Grazvydas Ignotas
+(drop internal pullups from pinmux as external are in place,
+fix gpio buttons active state ...)
 
-diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
-index 6b5803a..7b257c2 100644
---- a/arch/arm/boot/dts/stih410-clock.dtsi
-+++ b/arch/arm/boot/dts/stih410-clock.dtsi
-@@ -103,6 +103,7 @@
- 				clocks = <&clk_sysin>;
- 
- 				clock-output-names = "clk-s-a0-pll-ofd-0";
-+				clock-always-on = "clk-s-a0-pll-ofd-0";
- 			};
- 
- 			clk_s_a0_flexgen: clk-s-a0-flexgen {
-@@ -115,6 +116,8 @@
- 
- 				clock-output-names = "clk-ic-lmi0",
- 						     "clk-ic-lmi1";
-+
-+				clock-always-on = "clk-ic-lmi0";
- 			};
- 		};
- 
-@@ -142,6 +145,7 @@
- 				clocks = <&clk_sysin>;
- 
- 				clock-output-names = "clk-s-c0-pll0-odf-0";
-+				clock-always-on = "clk-s-c0-pll0-odf-0";
- 			};
- 
- 			clk_s_c0_pll1: clk-s-c0-pll1 {
-@@ -204,6 +208,12 @@
- 						     "clk-clust-hades",
- 						     "clk-hwpe-hades",
- 						     "clk-fc-hades";
-+
-+				clock-always-on = "clk-icn-cpu",
-+						  "clk-tx-icn-dmu",
-+						  "clk-ext2fa9",
-+						  "clk-icn-lmi",
-+						  "clk-icn-sbc";
- 			};
- 		};
- 
+This series of patches adds initial device tree support for the
+OpenPandora. The most important parts are working (display, keyboard,
+touch, charging, fuel gauge, musb port, sd/mmc ports, leds, buttons).
+Not yet supported are: usb host port, nubs, wifi, bluetooth, audio.
+
+First patch add common dtsi file which is then used in 600mhz and 1ghz
+variants of openpandora which support is added in patches 2 and 3.
+
+H. Nikolaus Schaller (3):
+  ARM: dts: omap3-pandora: add common device tree
+  ARM: dts: omap3-pandora: add OMAP3530 600 MHz version
+  ARM: dts: omap3-pandora: add DM3730 1 GHz version
+
+ arch/arm/boot/dts/Makefile                  |   2 +
+ arch/arm/boot/dts/omap3-pandora-1ghz.dts    |  70 +++
+ arch/arm/boot/dts/omap3-pandora-600mhz.dts  |  65 +++
+ arch/arm/boot/dts/omap3-pandora-common.dtsi | 640 ++++++++++++++++++++++++++++
+ 4 files changed, 777 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap3-pandora-1ghz.dts
+ create mode 100644 arch/arm/boot/dts/omap3-pandora-600mhz.dts
+ create mode 100644 arch/arm/boot/dts/omap3-pandora-common.dtsi
+
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
