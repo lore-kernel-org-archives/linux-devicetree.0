@@ -1,57 +1,43 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 0/3] Add ktd2692 Flash LED driver
-Date: Fri, 27 Feb 2015 09:42:29 +0100
-Message-ID: <54F02DF5.1000706@samsung.com>
-References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
+From: Oliver Neukum <oneukum@suse.de>
+Subject: Re: [PATCH v11 2/6] backlight: Add support Skyworks SKY81452
+ backlight driver
+Date: Fri, 27 Feb 2015 09:58:38 +0100
+Message-ID: <1425027518.12236.5.camel@linux-0dmf.site>
+References: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
+	 <1425019346-4559-3-git-send-email-jack.yoo@skyworksinc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>
-Cc: robh+dt@kerner.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cooloney@gmail.com, rpurdie@rpsys.net, treding@nvidia.com, p.zabel@pengutronix.de, andrew@lunn.ch, gregkh@linuxfoundation.org, florian.vaussard@epfl.ch, arno@natisbad.org, kuninori.morimoto.gx@renesas.com, hytszk@gmail.com, antonynpavlov@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425019346-4559-3-git-send-email-jack.yoo@skyworksinc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gyungoh@gmail.com
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, robh+dt@kernel.org, jg1.han@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, broonie@kernel.org, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, treding@nvidia.com, p.zabel@pengutronix.de, arno@natisbad.org, kuninori.morimoto.gx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ingi,
+On Fri, 2015-02-27 at 15:42 +0900, gyungoh@gmail.com wrote:
+> +static ssize_t sky81452_bl_store_enable(struct device *dev,
+> +               struct device_attribute *attr, const char *buf, size_t
+> count)
+> +{
+> +       struct regmap *regmap = bl_get_data(to_backlight_device(dev));
+> +       unsigned long value;
+> +       int ret;
+> +
+> +       ret = kstrtoul(buf, 16, &value);
+> +       if (IS_ERR_VALUE(ret))
+> +               return ret;
 
-On 02/27/2015 02:01 AM, Ingi Kim wrote:
-> This patch supports KTD2692 flash LED driver
->
-> Ingi Kim (3):
->    of: Add vendor prefix for Kinetic technologies
->    leds: ktd2692: add device tree bindings for ktd2692
->    leds: Add ktd2692 flash LED driver
->
->   .../devicetree/bindings/leds/leds-ktd2692.txt      |   19 ++
->   .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->   drivers/leds/Kconfig                               |    8 +
->   drivers/leds/Makefile                              |    1 +
->   drivers/leds/leds-ktd2692.c                        |  245 ++++++++++++++++++++
->   5 files changed, 274 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
->   create mode 100644 drivers/leds/leds-ktd2692.c
->
+No range checking?
 
-In your device tree binding documentation there is torch-gpio mentioned,
-but you seem not to use it in the driver.
+> +
+> +       ret = regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN,
+> +                                       value << CTZ(SKY81452_EN));
+> +       if (IS_ERR_VALUE(ret))
+> +               return ret;
+> +
+> +       return count;
+> +}
 
-We have already LED Flash class (/drivers/leds/led-class-flash.c) for
-this type of devices, which handles both torch and flash modes
-(flash_strobe sysfs attribute is provided for strobing the flash).
-
-The reference drivers using LED Flash class are still pending [1], but I
-think that at least leds-aat1290 driver is almost ready for merging.
-It controls very similar device to yours.
-
-Another advantage of using LED Flash class is that it has been designed
-to be compatible with Video for Linux 2 subsystem, which will allow for 
-registering LED Flash class devices as a V4L2 sub-devices.
-
-Adding Sakari.
-
--- 
-Best Regards,
-Jacek Anaszewski
-
-[1] http://www.spinics.net/lists/linux-media/msg86632.html
+	Regards
+		Oliver
