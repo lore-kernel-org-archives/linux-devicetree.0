@@ -1,127 +1,306 @@
-From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/3] soc: ti: Add wkup_m3_ipc driver
-Date: Fri, 27 Feb 2015 11:00:52 -0600
-Message-ID: <54F0A2C4.1060401@ti.com>
-References: <1420228817-41310-1-git-send-email-d-gerlach@ti.com> <1420228817-41310-3-git-send-email-d-gerlach@ti.com> <20150102201643.GE4920@saruman> <54AB14E4.2010607@ti.com> <20150105225134.GN4081@atomide.com> <54EF7B90.3050702@ti.com> <20150226220817.GR11056@atomide.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] regulator: act8865: Add act8600 support
+Date: Fri, 27 Feb 2015 17:04:04 +0000
+Message-ID: <1425056644-29334-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150226220817.GR11056-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tony,
-On 02/26/2015 04:08 PM, Tony Lindgren wrote:
-> * Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150226 12:05]:
->> Tony,
->> On 01/05/2015 04:51 PM, Tony Lindgren wrote:
->>> * Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150105 14:51]:
->>>> Felipe,
->>>> On 01/02/2015 02:16 PM, Felipe Balbi wrote:
->>>>> On Fri, Jan 02, 2015 at 02:00:16PM -0600, Dave Gerlach wrote:
->>>>>> Introduce a wkup_m3_ipc driver to handle communication between the MPU
->>>>>> and Cortex M3 wkup_m3 present on am335x.
->>>>>>
->>>>>> This driver is responsible for actually booting the wkup_m3_rproc and
->>>>>> also handling all IPC which is done using the IPC registers in the control
->>>>>> module, a mailbox, and a separate interrupt back from the wkup_m3. A small
->>>>>> API is exposed for executing specific power commands, which include
->>>>>> configuring for low power mode, request a transition to a low power mode,
->>>>>> and status info on a previous transition.
->>>>>>
->>>>>> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
->>>>>> ---
->>>>>>  drivers/soc/ti/Kconfig       |  11 ++
->>>>>>  drivers/soc/ti/Makefile      |   1 +
->>>>>>  drivers/soc/ti/wkup_m3_ipc.c | 451 +++++++++++++++++++++++++++++++++++++++++++
->>>>>>  include/linux/wkup_m3_ipc.h  |  33 ++++
->>>>>>  4 files changed, 496 insertions(+)
->>>>>>  create mode 100644 drivers/soc/ti/wkup_m3_ipc.c
->>>>>>  create mode 100644 include/linux/wkup_m3_ipc.h
->>>>>>
->>>>>> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
->>>>>> index 7266b21..61cda85 100644
->>>>>> --- a/drivers/soc/ti/Kconfig
->>>>>> +++ b/drivers/soc/ti/Kconfig
->>>>>> @@ -28,4 +28,15 @@ config KEYSTONE_NAVIGATOR_DMA
->>>>>>  
->>>>>>  	  If unsure, say N.
->>>>>>  
->>>>>> +config WKUP_M3_IPC
->>>>>> +	bool "TI AM33XX Wkup-M3 IPC Driver"
->>>>>
->>>>> tristate ?
->>>>
->>>> If we want to allow this and the rproc driver to be built as modules than we can
->>>> change this.
->>>
->>> Yes please, the PM is never needed early, and should be optional.
->>> And doing that will make it a lot easier for you to do further work
->>> on your driver ;)
->>>
->>> And it will also make it easier to add support for other SoCs as
->>> it seems the same M3 is used at least on am437x.
->>>  
->>
->> I can not build the PM code as a module at this time due to many mach-omap
->> function calls it uses which are not exported, so I need handles to all five
->> functions in this driver used in pm33xx to call from built-in PM code. Do you
->> have a preference on how these function handles get passed?
-> 
-> OK, you can pass the function pointers in platform_data. Care to
-> list those functions? That might allow us to make other omap PM
-> code into loadable modules in drivers/* :)
+This patch adds act8600 support to the act8865 driver.
 
-Sure, apart from the dependencies I create for myself in other modules that I
-introduce I see:
+VBUS and USB charger supported by this chip can be added later
 
-ERROR: "omap_pm_clkdms_setup" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-ERROR: "clkdm_for_each" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-ERROR: "clkdm_lookup" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-ERROR: "pwrdm_lookup" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-ERROR: "pwrdm_post_transition" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-ERROR: "clkdm_sleep" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-ERROR: "clkdm_wakeup" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-ERROR: "pwrdm_read_pwrst" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-ERROR: "cpu_suspend" [arch/arm/mach-omap2/pm33xx.ko] undefined!
-ERROR: "omap_set_pwrdm_state" [arch/arm/mach-omap2/pm33xx.ko] undefined!
+Tested on MIPS Creator CI20
 
-So the mach-omap2 clockdomain and power domain functions along with arch arm
-cpu_suspend code. I see similar dependencies in the other mach-omap2/pmxxxx.c
-code also.
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
->  
->> I currently have added a pdata-quirks implementation that passes a function to
->> the wkup_m3_ipc driver through it's pdata which it then calls at probe to pass a
->> struct containing all used function pointers to the pm code that were previously
->> called directly. Is that what you would prefer or something else? I had also
->> looked at making the struct of function pointers in the driver global and just
->> picking it up from the pm code with an extern declaration or even putting a bus
->> notifier in the PM code and watching for the wkup_m3_ipc driver to be bound.
-> 
-> Yeah pdata-quirks.c is probably OK for populating the function pointers.
-> We may have already some place in the PM code to pass it too.
->  
+---
 
-Alright, thanks for your input.
+I've tried to be least intrusive.
 
->> Thought I would see what you prefer and possibly avoid an unnecessary re-spin.
-> 
-> Sounds like we're getting close to getting am335x/am437x PM code working :)
+But can't use the macro because of differences in SUDCDC and LDO9/10
 
-Getting there!
+Tried adding more variation in the macro but it resulted in unnecessary
+complexity for the other chips.
 
-Regards,
-Dave
+Patch based on 4.0-rc1
 
-> 
-> Regards,
-> 
-> Tony
-> 
+Tested on MIPS Creator CI20
+
+Cheers,
+ZubairLK
+---
+ .../bindings/regulator/act8865-regulator.txt       |   5 +-
+ drivers/regulator/act8865-regulator.c              | 120 ++++++++++++++++++++-
+ include/linux/regulator/act8865.h                  |  14 +++
+ 3 files changed, 137 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+index dad6358..e170df2 100644
+--- a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+@@ -2,7 +2,7 @@ ACT88xx regulators
+ -------------------
+ 
+ Required properties:
+-- compatible: "active-semi,act8846" or "active-semi,act8865"
++- compatible: "active-semi,act8846" or "active-semi,act8865" or "active-semi,act8600"
+ - reg: I2C slave address
+ 
+ Optional properties:
+@@ -16,6 +16,9 @@ The valid names for regulators are:
+ 	REG1, REG2, REG3, REG4, REG5, REG6, REG7, REG8, REG9, REG10, REG11, REG12
+ 	- for act8865:
+ 	DCDC_REG1, DCDC_REG2, DCDC_REG3, LDO_REG1, LDO_REG2, LDO_REG3, LDO_REG4.
++	- for act8600:
++	DCDC_REG1, DCDC_REG2, DCDC_REG3, SUDCDC_REG4, LDO_REG5, LDO_REG6, LDO_REG7,
++	LDO_REG8, LDO_REG9, LDO_REG10,
+ 
+ Example:
+ --------
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 9eec453..3781f6e 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -29,6 +29,35 @@
+ #include <linux/regmap.h>
+ 
+ /*
++ * ACT8600 Global Register Map.
++ */
++#define ACT8600_SYS_MODE	0x00
++#define ACT8600_SYS_CTRL	0x01
++#define ACT8600_DCDC1_VSET	0x10
++#define ACT8600_DCDC1_CTRL	0x12
++#define ACT8600_DCDC2_VSET	0x20
++#define ACT8600_DCDC2_CTRL	0x22
++#define ACT8600_DCDC3_VSET	0x30
++#define ACT8600_DCDC3_CTRL	0x32
++#define ACT8600_SUDCDC4_VSET	0x40
++#define ACT8600_SUDCDC4_CTRL	0x41
++#define ACT8600_LDO5_VSET	0x50
++#define ACT8600_LDO5_CTRL	0x51
++#define ACT8600_LDO6_VSET	0x60
++#define ACT8600_LDO6_CTRL	0x61
++#define ACT8600_LDO7_VSET	0x70
++#define ACT8600_LDO7_CTRL	0x71
++#define ACT8600_LDO8_VSET	0x80
++#define ACT8600_LDO8_CTRL	0x81
++#define ACT8600_LDO910_CTRL	0x91
++#define ACT8600_APCH0		0xA1
++#define ACT8600_APCH1		0xA8
++#define ACT8600_APCH2		0xA9
++#define ACT8600_APCH_STAT	0xAA
++#define ACT8600_OTG0		0xB0
++#define ACT8600_OTG1		0xB2
++
++/*
+  * ACT8846 Global Register Map.
+  */
+ #define	ACT8846_SYS0		0x00
+@@ -94,10 +123,15 @@
+ #define	ACT8865_ENA		0x80	/* ON - [7] */
+ #define	ACT8865_VSEL_MASK	0x3F	/* VSET - [5:0] */
+ 
++
++#define ACT8600_LDO10_ENA		0x40	/* ON - [6] */
++#define ACT8600_SUDCDC_VSEL_MASK	0xFF	/* SUDCDC VSET - [7:0] */
++
+ /*
+  * ACT8865 voltage number
+  */
+ #define	ACT8865_VOLTAGE_NUM	64
++#define ACT8600_SUDCDC_VOLTAGE_NUM	255
+ 
+ struct act8865 {
+ 	struct regmap *regmap;
+@@ -116,6 +150,13 @@ static const struct regulator_linear_range act8865_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(2400000, 48, 63, 100000),
+ };
+ 
++static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
++	REGULATOR_LINEAR_RANGE(3000000, 0, 63, 0),
++	REGULATOR_LINEAR_RANGE(3000000, 64, 159, 100000),
++	REGULATOR_LINEAR_RANGE(12600000, 160, 191, 200000),
++	REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
++};
++
+ static struct regulator_ops act8865_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear_range,
+ 	.map_voltage		= regulator_map_voltage_linear_range,
+@@ -126,6 +167,12 @@ static struct regulator_ops act8865_ops = {
+ 	.is_enabled		= regulator_is_enabled_regmap,
+ };
+ 
++static struct regulator_ops act8865_ldo_ops = {
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= regulator_is_enabled_regmap,
++};
++
+ #define ACT88xx_REG(_name, _family, _id, _vsel_reg)			\
+ 	[_family##_ID_##_id] = {					\
+ 		.name			= _name,			\
+@@ -142,6 +189,52 @@ static struct regulator_ops act8865_ops = {
+ 		.owner			= THIS_MODULE,			\
+ 	}
+ 
++static const struct regulator_desc act8600_regulators[] = {
++	ACT88xx_REG("DCDC1", ACT8600, DCDC1, VSET),
++	ACT88xx_REG("DCDC2", ACT8600, DCDC2, VSET),
++	ACT88xx_REG("DCDC3", ACT8600, DCDC3, VSET),
++	{
++		.name = "SUDCDC_REG4",
++		.id = ACT8600_ID_SUDCDC4,
++		.ops = &act8865_ops,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = ACT8600_SUDCDC_VOLTAGE_NUM,
++		.linear_ranges = act8600_sudcdc_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(act8600_sudcdc_voltage_ranges),
++		.vsel_reg = ACT8600_SUDCDC4_VSET,
++		.vsel_mask = ACT8600_SUDCDC_VSEL_MASK,
++		.enable_reg = ACT8600_SUDCDC4_CTRL,
++		.enable_mask = ACT8865_ENA,
++		.owner = THIS_MODULE,
++	},
++	ACT88xx_REG("LDO5", ACT8600, LDO5, VSET),
++	ACT88xx_REG("LDO6", ACT8600, LDO6, VSET),
++	ACT88xx_REG("LDO7", ACT8600, LDO7, VSET),
++	ACT88xx_REG("LDO8", ACT8600, LDO8, VSET),
++	{
++		.name = "LDO_REG9",
++		.id = ACT8600_ID_LDO9,
++		.ops = &act8865_ldo_ops,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = 1,
++		.fixed_uV = 1800000,
++		.enable_reg = ACT8600_LDO910_CTRL,
++		.enable_mask = ACT8865_ENA,
++		.owner = THIS_MODULE,
++	},
++	{
++		.name = "LDO_REG10",
++		.id = ACT8600_ID_LDO10,
++		.ops = &act8865_ldo_ops,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = 1,
++		.fixed_uV = 1200000,
++		.enable_reg = ACT8600_LDO910_CTRL,
++		.enable_mask = ACT8600_LDO10_ENA,
++		.owner = THIS_MODULE,
++	},
++};
++
+ static const struct regulator_desc act8846_regulators[] = {
+ 	ACT88xx_REG("REG1", ACT8846, REG1, VSET),
+ 	ACT88xx_REG("REG2", ACT8846, REG2, VSET0),
+@@ -169,6 +262,7 @@ static const struct regulator_desc act8865_regulators[] = {
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id act8865_dt_ids[] = {
++	{ .compatible = "active-semi,act8600", .data = (void *)ACT8600 },
+ 	{ .compatible = "active-semi,act8846", .data = (void *)ACT8846 },
+ 	{ .compatible = "active-semi,act8865", .data = (void *)ACT8865 },
+ 	{ }
+@@ -200,6 +294,19 @@ static struct of_regulator_match act8865_matches[] = {
+ 	[ACT8865_ID_LDO4]	= { .name = "LDO_REG4"},
+ };
+ 
++static struct of_regulator_match act8600_matches[] = {
++	[ACT8600_ID_DCDC1]	= { .name = "DCDC_REG1"},
++	[ACT8600_ID_DCDC2]	= { .name = "DCDC_REG2"},
++	[ACT8600_ID_DCDC3]	= { .name = "DCDC_REG3"},
++	[ACT8600_ID_SUDCDC4]	= { .name = "SUDCDC_REG4"},
++	[ACT8600_ID_LDO5]	= { .name = "LDO_REG5"},
++	[ACT8600_ID_LDO6]	= { .name = "LDO_REG6"},
++	[ACT8600_ID_LDO7]	= { .name = "LDO_REG7"},
++	[ACT8600_ID_LDO8]	= { .name = "LDO_REG8"},
++	[ACT8600_ID_LDO9]	= { .name = "LDO_REG9"},
++	[ACT8600_ID_LDO10]	= { .name = "LDO_REG10"},
++};
++
+ static int act8865_pdata_from_dt(struct device *dev,
+ 				 struct device_node **of_node,
+ 				 struct act8865_platform_data *pdata,
+@@ -217,6 +324,10 @@ static int act8865_pdata_from_dt(struct device *dev,
+ 	}
+ 
+ 	switch (type) {
++	case ACT8600:
++		matches = act8600_matches;
++		num_matches = ARRAY_SIZE(act8600_matches);
++		break;
+ 	case ACT8846:
+ 		matches = act8846_matches;
+ 		num_matches = ARRAY_SIZE(act8846_matches);
+@@ -317,6 +428,12 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 	}
+ 
+ 	switch (type) {
++	case ACT8600:
++		regulators = act8600_regulators;
++		num_regulators = ARRAY_SIZE(act8600_regulators);
++		off_reg = -1;
++		off_mask = -1;
++		break;
+ 	case ACT8846:
+ 		regulators = act8846_regulators;
+ 		num_regulators = ARRAY_SIZE(act8846_regulators);
+@@ -366,7 +483,7 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 	}
+ 
+ 	if (of_device_is_system_power_controller(dev->of_node)) {
+-		if (!pm_power_off) {
++		if (!pm_power_off && (off_reg > 0)) {
+ 			act8865_i2c_client = client;
+ 			act8865->off_reg = off_reg;
+ 			act8865->off_mask = off_mask;
+@@ -402,6 +519,7 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ }
+ 
+ static const struct i2c_device_id act8865_ids[] = {
++	{ .name = "act8600", .driver_data = ACT8600 },
+ 	{ .name = "act8846", .driver_data = ACT8846 },
+ 	{ .name = "act8865", .driver_data = ACT8865 },
+ 	{ },
+diff --git a/include/linux/regulator/act8865.h b/include/linux/regulator/act8865.h
+index b6c4909..15fa8f2 100644
+--- a/include/linux/regulator/act8865.h
++++ b/include/linux/regulator/act8865.h
+@@ -19,6 +19,19 @@
+ #include <linux/regulator/machine.h>
+ 
+ enum {
++	ACT8600_ID_DCDC1,
++	ACT8600_ID_DCDC2,
++	ACT8600_ID_DCDC3,
++	ACT8600_ID_SUDCDC4,
++	ACT8600_ID_LDO5,
++	ACT8600_ID_LDO6,
++	ACT8600_ID_LDO7,
++	ACT8600_ID_LDO8,
++	ACT8600_ID_LDO9,
++	ACT8600_ID_LDO10,
++};
++
++enum {
+ 	ACT8865_ID_DCDC1,
+ 	ACT8865_ID_DCDC2,
+ 	ACT8865_ID_DCDC3,
+@@ -46,6 +59,7 @@ enum {
+ };
+ 
+ enum {
++	ACT8600,
+ 	ACT8865,
+ 	ACT8846,
+ };
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
