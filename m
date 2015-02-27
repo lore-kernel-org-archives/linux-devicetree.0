@@ -1,76 +1,77 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/4] clk: Provide always-on clock support
-Date: Fri, 27 Feb 2015 21:51:20 +0000
-Message-ID: <20150227215120.GC12821@x1>
-References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
- <1425071674-16995-4-git-send-email-lee.jones@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for Qualcomm hwmutex
+Date: Fri, 27 Feb 2015 14:30:16 -0800
+Message-ID: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425071674-16995-4-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>
+Cc: Suman Anna <s-anna@ti.com>, linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Feb 2015, Lee Jones wrote:
+Add binding documentation for the Qualcomm Hardware Mutex.
 
-> Lots of platforms contain clocks which if turned off would prove fata=
-l.
-> The only way to recover from these catastrophic failures is to restar=
-t
-> the board(s).  Now, when a clock is registered with the framework it =
-is
-> compared against a list of provided always-on clock names which must =
-be
-> kept ungated.  If it matches, we enable the existing CLK_IGNORE_UNUSE=
-D
-> flag, which will prevent the common clk framework from attempting to
-> gate it during the clk_disable_unused() procedure.
->=20
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/clk/clk.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 61c3fc5..3aab75e 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -2856,6 +2856,9 @@ int of_clk_add_provider(struct device_node *np,
->  			void *data)
->  {
->  	struct of_clk_provider *cp;
-> +	struct property *prop;
-> +	struct clk *clk;
-> +	const char *clkname;
->  	int ret;
-> =20
->  	cp =3D kzalloc(sizeof(struct of_clk_provider), GFP_KERNEL);
-> @@ -2875,6 +2878,14 @@ int of_clk_add_provider(struct device_node *np=
-,
->  	if (ret < 0)
->  		of_clk_del_provider(np);
-> =20
-> +	of_property_for_each_string(np, "clock-always-on", prop, clkname) {
-> +		clk =3D __clk_lookup(clkname);
-> +		if (!clk)
-> +			continue;
-> +
-> +		clk->core->flags |=3D CLK_IGNORE_UNUSED;
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
 
-Might save a few cycles by breaking here.
+I think the conclusion on the dt binding discussion for hwspinlocks was that
+we're down to having the #hwlock-cells intact. So this version includes that,
+but non of the other previously discussed properties.
 
-> +	}
-> +
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(of_clk_add_provider);
+Changes since v5:
+- Extracted the dt binding documentation into a separate patch
+- Moved the driver to consume a syscon
+- Dropped previously suggested generic hwlock dt bindings
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+ .../devicetree/bindings/hwlock/qcom-hwspinlock.txt | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+
+diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+new file mode 100644
+index 0000000..28ade7d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+@@ -0,0 +1,39 @@
++Qualcomm Hardware Mutex Block:
++
++The hardware block provides mutexes utilized between different processors on
++the SoC as part of the communication protocol used by these processors.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,sfpb-mutex",
++		    "qcom,tcsr-mutex"
++
++- syscon:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: one cell containing:
++		    syscon phandle
++		    offset of the hwmutex block within the syscon
++		    stride of the hwmutex registers
++
++- #hwlock-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1, the specified cell represent the lock id
++		    (hwlock standard property, see hwlock.txt)
++
++Example:
++
++        tcsr: syscon@1a400000 {
++		compatible = "qcom,tcsr-msm8974", "syscon";
++		reg = <0xfd484000 0x2000>;
++	};
++
++	hwlock@fd484000 {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr 0 0x80>;
++
++		#hwlock-cells = <1>;
++	};
+-- 
+1.8.2.2
