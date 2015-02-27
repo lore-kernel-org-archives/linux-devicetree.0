@@ -1,54 +1,57 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH v2 0/3] ARM: dts: add openpandora device support
-Date: Fri, 27 Feb 2015 09:33:39 +0100
-Message-ID: <CAAfyv376B4CmzN7gtqdwdOE_URo0ksKDE6GXiiRjqNg0FX6WTw@mail.gmail.com>
-References: <1424202743-26387-1-git-send-email-marek@goldelico.com>
-	<CANOLnOOMLxDV6vQagfRaS7_YY6at91BbL0jPKkNQn-tYDnJEuw@mail.gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH 0/3] Add ktd2692 Flash LED driver
+Date: Fri, 27 Feb 2015 09:42:29 +0100
+Message-ID: <54F02DF5.1000706@samsung.com>
+References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CANOLnOOMLxDV6vQagfRaS7_YY6at91BbL0jPKkNQn-tYDnJEuw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Grazvydas Ignotas <notasas@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>
+Cc: robh+dt@kerner.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cooloney@gmail.com, rpurdie@rpsys.net, treding@nvidia.com, p.zabel@pengutronix.de, andrew@lunn.ch, gregkh@linuxfoundation.org, florian.vaussard@epfl.ch, arno@natisbad.org, kuninori.morimoto.gx@renesas.com, hytszk@gmail.com, antonynpavlov@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-Tony,
+Hi Ingi,
 
-should I send v3 (with updates) or can you apply current version? Thanks.
-
-On Thu, Feb 19, 2015 at 11:55 PM, Grazvydas Ignotas <notasas@gmail.com> wrote:
-> On Tue, Feb 17, 2015 at 9:52 PM, Marek Belisko <marek@goldelico.com> wrote:
->> changes from v1:
->> - add new boards to makefile in patch 2,3 (don't add them
->> in separate commit together), fix gpmc issues (reported by Tony Lindgren)
->>
->> - fix various issues reported by Grazvydas Ignotas
->> (drop internal pullups from pinmux as external are in place,
->> fix gpio buttons active state ...)
->>
->> This series of patches adds initial device tree support for the
->> OpenPandora. The most important parts are working (display, keyboard,
->> touch, charging, fuel gauge, musb port, sd/mmc ports, leds, buttons).
+On 02/27/2015 02:01 AM, Ingi Kim wrote:
+> This patch supports KTD2692 flash LED driver
 >
-> All of these have been tested to be working, after adding missing
-> input flag for touchscreen. Well except musb, but I often have trouble
-> with that in mainline, probably not a problem with this dts.
-> Tested-by: Grazvydas Ignotas <notasas@gmail.com>
+> Ingi Kim (3):
+>    of: Add vendor prefix for Kinetic technologies
+>    leds: ktd2692: add device tree bindings for ktd2692
+>    leds: Add ktd2692 flash LED driver
 >
-> And FWIW, the patches have been
-> Reviewed-by: Grazvydas Ignotas <notasas@gmail.com>
+>   .../devicetree/bindings/leds/leds-ktd2692.txt      |   19 ++
+>   .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>   drivers/leds/Kconfig                               |    8 +
+>   drivers/leds/Makefile                              |    1 +
+>   drivers/leds/leds-ktd2692.c                        |  245 ++++++++++++++++++++
+>   5 files changed, 274 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
+>   create mode 100644 drivers/leds/leds-ktd2692.c
+>
 
-Marek
+In your device tree binding documentation there is torch-gpio mentioned,
+but you seem not to use it in the driver.
+
+We have already LED Flash class (/drivers/leds/led-class-flash.c) for
+this type of devices, which handles both torch and flash modes
+(flash_strobe sysfs attribute is provided for strobing the flash).
+
+The reference drivers using LED Flash class are still pending [1], but I
+think that at least leds-aat1290 driver is almost ready for merging.
+It controls very similar device to yours.
+
+Another advantage of using LED Flash class is that it has been designed
+to be compatible with Video for Linux 2 subsystem, which will allow for 
+registering LED Flash class devices as a V4L2 sub-devices.
+
+Adding Sakari.
 
 -- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
+Best Regards,
+Jacek Anaszewski
 
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+[1] http://www.spinics.net/lists/linux-media/msg86632.html
