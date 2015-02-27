@@ -1,214 +1,110 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: [PATCH] ARM: dts: imx: Add dr_mode host setting to all host-only usb instances
-Date: Fri, 27 Feb 2015 09:06:00 -0500
-Message-ID: <1425045960-14191-1-git-send-email-mporter@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
+ leds: flash: document sysfs interface
+Date: Fri, 27 Feb 2015 15:34:22 +0100
+Message-ID: <54F0806E.2040309@samsung.com>
+References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
+ <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
+ <20150218224747.GA3999@amd> <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
+ <20150219214043.GB29875@kroah.com> <54E6E89B.4050404@samsung.com>
+ <20150220153616.GB18111@kroah.com> <20150220205738.GA28995@amd>
+ <20150221105733.GO3915@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20150221105733.GO3915@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Pavel Machek <pavel@ucw.cz>, Greg KH <greg@kroah.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-The chipidea driver adds an extra line of spam to the log when a
-host-only chipidea instance is left set to the default of a dual role
-controller.
+Hi Sakari,
 
-[    2.010873] ci_hdrc ci_hdrc.1: doesn't support gadget
+On 02/21/2015 11:57 AM, Sakari Ailus wrote:
+> Hi Pavel and Greg,
+>
+> On Fri, Feb 20, 2015 at 09:57:38PM +0100, Pavel Machek wrote:
+>> On Fri 2015-02-20 07:36:16, Greg KH wrote:
+>>> On Fri, Feb 20, 2015 at 08:56:11AM +0100, Jacek Anaszewski wrote:
+>>>> On 02/19/2015 10:40 PM, Greg KH wrote:
+>>>>> On Thu, Feb 19, 2015 at 11:02:04AM +0200, Sakari Ailus wrote:
+>>>>>> On Wed, Feb 18, 2015 at 11:47:47PM +0100, Pavel Machek wrote:
+>>>>>>>
+>>>>>>> On Wed 2015-02-18 17:20:22, Jacek Anaszewski wrote:
+>>>>>>>> Add a documentation of LED Flash class specific sysfs attributes.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>>>>>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>>>>>>> Cc: Bryan Wu <cooloney@gmail.com>
+>>>>>>>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>>>>>>>
+>>>>>>> NAK-ed-by: Pavel Machek
+>>>>>>>
+>>>>>>>> +What:		/sys/class/leds/<led>/available_sync_leds
+>>>>>>>> +Date:		February 2015
+>>>>>>>> +KernelVersion:	3.20
+>>>>>>>> +Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
+>>>>>>>> +Description:	read/write
+>>>>>>>> +		Space separated list of LEDs available for flash strobe
+>>>>>>>> +		synchronization, displayed in the format:
+>>>>>>>> +
+>>>>>>>> +		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
+>>>>>>>
+>>>>>>> Multiple values per file, with all the problems we had in /proc. I
+>>>>>>> assume led_id is an integer? What prevents space or dot in led name?
+>>>>>>
+>>>>>> Very good point. How about using a newline instead? That'd be a little bit
+>>>>>> easier to parse, too.
+>>>>>
+>>>>> No, please make it one value per-file, which is what sysfs requires.
+>>>>
+>>>> The purpose of this attribute is only to provide an information about
+>>>> the range of valid identifiers that can be written to the
+>>>> flash_sync_strobe attribute. Wouldn't splitting this to many attributes
+>>>> be an unnecessary inflation of sysfs files?
+>>>
+>>> Ok a list of allowed values to write is acceptable, as long as it is not
+>>> hard to parse and always is space separated.
+>>
+>> Well, this one is list of LED numbers and LED names.
+>
+> It'd be nice if these names would match the V4L2 sub-device names. We don't
 
-Set the dr_mode property to host on all the host-only nodes
-to avoid this warning.
+ From the discussion on IRC it turned out that one of components of the
+V4L2 sub-device name will be a media controller identifier.
 
-Signed-off-by: Matt Porter <mporter@konsulko.com>
----
- arch/arm/boot/dts/imx27.dtsi   | 2 ++
- arch/arm/boot/dts/imx28.dtsi   | 1 +
- arch/arm/boot/dts/imx35.dtsi   | 1 +
- arch/arm/boot/dts/imx50.dtsi   | 3 +++
- arch/arm/boot/dts/imx51.dtsi   | 3 +++
- arch/arm/boot/dts/imx53.dtsi   | 3 +++
- arch/arm/boot/dts/imx6qdl.dtsi | 3 +++
- arch/arm/boot/dts/imx6sl.dtsi  | 1 +
- arch/arm/boot/dts/imx6sx.dtsi  | 1 +
- 9 files changed, 18 insertions(+)
+This implies that if support for V4L2 Flash devices will be turned off
+in the kernel config the LED name will have to differ from the case
+when the support is on. I think that this is undesired.
 
-diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-index 4b063b6..6951b66 100644
---- a/arch/arm/boot/dts/imx27.dtsi
-+++ b/arch/arm/boot/dts/imx27.dtsi
-@@ -488,6 +488,7 @@
- 				interrupts = <54>;
- 				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
- 				fsl,usbmisc = <&usbmisc 1>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-@@ -497,6 +498,7 @@
- 				interrupts = <55>;
- 				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
- 				fsl,usbmisc = <&usbmisc 2>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 47f68ac..02330f4 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -1197,6 +1197,7 @@
- 			interrupts = <92>;
- 			clocks = <&clks 61>;
- 			fsl,usbphy = <&usbphy1>;
-+			dr_mode = "host";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
-index 6932928..b6478e9 100644
---- a/arch/arm/boot/dts/imx35.dtsi
-+++ b/arch/arm/boot/dts/imx35.dtsi
-@@ -318,6 +318,7 @@
- 				clocks = <&clks 73>;
- 				fsl,usbmisc = <&usbmisc 1>;
- 				fsl,usbphy = <&usbphy1>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-index 620b0f0..e245713 100644
---- a/arch/arm/boot/dts/imx50.dtsi
-+++ b/arch/arm/boot/dts/imx50.dtsi
-@@ -197,6 +197,7 @@
- 				reg = <0x53f80200 0x0200>;
- 				interrupts = <14>;
- 				clocks = <&clks IMX5_CLK_USB_PHY2_GATE>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-@@ -205,6 +206,7 @@
- 				reg = <0x53f80400 0x0200>;
- 				interrupts = <16>;
- 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-@@ -213,6 +215,7 @@
- 				reg = <0x53f80600 0x0200>;
- 				interrupts = <17>;
- 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index c0116cf..f46fe9b 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -265,6 +265,7 @@
- 				interrupts = <14>;
- 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
- 				fsl,usbmisc = <&usbmisc 1>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-@@ -274,6 +275,7 @@
- 				interrupts = <16>;
- 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
- 				fsl,usbmisc = <&usbmisc 2>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-@@ -283,6 +285,7 @@
- 				interrupts = <17>;
- 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
- 				fsl,usbmisc = <&usbmisc 3>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index ff4fa7e..c3e3ca9 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -309,6 +309,7 @@
- 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
- 				fsl,usbmisc = <&usbmisc 1>;
- 				fsl,usbphy = <&usbphy1>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-@@ -318,6 +319,7 @@
- 				interrupts = <16>;
- 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
- 				fsl,usbmisc = <&usbmisc 2>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-@@ -327,6 +329,7 @@
- 				interrupts = <17>;
- 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
- 				fsl,usbmisc = <&usbmisc 3>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index d6c69ec..9347c93 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -845,6 +845,7 @@
- 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
- 				fsl,usbphy = <&usbphy2>;
- 				fsl,usbmisc = <&usbmisc 1>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-@@ -854,6 +855,7 @@
- 				interrupts = <0 41 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
- 				fsl,usbmisc = <&usbmisc 2>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-@@ -863,6 +865,7 @@
- 				interrupts = <0 42 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
- 				fsl,usbmisc = <&usbmisc 3>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 36ab8e0..9bf1db3 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -699,6 +699,7 @@
- 				interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SL_CLK_USBOH3>;
- 				fsl,usbmisc = <&usbmisc 2>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 7a24fee..fdadd060 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -763,6 +763,7 @@
- 				fsl,usbmisc = <&usbmisc 2>;
- 				phy_type = "hsic";
- 				fsl,anatop = <&anatop>;
-+				dr_mode = "host";
- 				status = "disabled";
- 			};
- 
+> have any rules for them other than they must be unique, and there's the
+> established practice that an I2C address follows the component name. We're
+> about to discuss the matter on Monday on #v4l (11:00 Finnish time), but I
+> don't think we can generally guarantee any of the names won't have spaces.
+
+> Separate files, then?
+
+I tried to split this to separate files but it turned out to be awkward.
+Since the number of LEDs to synchronize can vary from device to device,
+the number of the related sysfs attributes cannot be fixed.
+
+As far as I know allocating the sysfs attributes dynamically is unsafe,
+and thus the maximum allowed number of synchronized LEDs would have to
+be agreed on for the whole led-class-flash and the relevant number of
+similar struct attribute instances and related callbacks would have to
+be created statically for every LED Flash class device, no matter if
+a device would need them.
+
+Of course the relevant sysfs group could be initialized only with
+the needed number of sync leds attributes, but still this is less
+than optimal design.
+
+It looks like this interface indeed doesn't fit for sysfs.
+
+I am leaning towards removing the support for synchronized flash LEDs
+from the LED subsystem entirely and leave it only to V4L2.
+
 -- 
-1.8.4
+Best Regards,
+Jacek Anaszewski
