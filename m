@@ -1,31 +1,53 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv2 04/15] ARM: mvebu: use IRQ macros to define the SDHCI
- interrupt on Armada 38x
-Date: Fri, 27 Feb 2015 15:48:15 +0100
-Message-ID: <20150227154815.7e3fd1ad@free-electrons.com>
-References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1424451874-25375-5-git-send-email-thomas.petazzoni@free-electrons.com>
-	<54EB46C6.6020506@free-electrons.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 07/10] ARM: dts: n9/n950: Enable omap crypto support
+Date: Fri, 27 Feb 2015 17:01:55 +0100
+Message-ID: <201502271701.56059@pali>
+References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com> <1424958600-18881-8-git-send-email-pali.rohar@gmail.com> <20150227154319.GT11056@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed;
+  boundary="nextPart3567900.KJ299vtNQS";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <54EB46C6.6020506@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150227154319.GT11056@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Gregory,
+--nextPart3567900.KJ299vtNQS
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 23 Feb 2015 16:27:02 +0100, Gregory CLEMENT wrote:
+On Friday 27 February 2015 16:43:20 Tony Lindgren wrote:
+> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [150226 05:54]:
+> > Harmattan system on Nokia N9 and N950 devices uses omap
+> > crypto support. Bootloader on those devices is known that
+> > it enables HW crypto support. This patch just include
+> > omap36xx.dtsi directly, so aes and sham is enabled.
+>=20
+> Let's also remove omap36xx-hs.dtsi with this patch if no other
+> users.
+>=20
 
-> I already submitted this fix as part of the "fixes and improvements for SDHCI" series.
+Removing both -hs files is done by last patch in this series.
 
-Ok, I will drop this patch from my series. Thanks!
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+--nextPart3567900.KJ299vtNQS
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlTwlPQACgkQi/DJPQPkQ1L9WwCgi5bGveyREntli9FX/OZjUauZ
+oDoAniRo/mlDpyOwfiptTJuL96NX/kFR
+=TnWn
+-----END PGP SIGNATURE-----
+
+--nextPart3567900.KJ299vtNQS--
