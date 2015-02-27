@@ -1,77 +1,53 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for Qualcomm hwmutex
-Date: Fri, 27 Feb 2015 14:30:16 -0800
-Message-ID: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
+Date: Sat, 28 Feb 2015 00:38:59 +0100
+Message-ID: <87sidq3ox8.fsf@free.fr>
+References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
+	<87385r3uk9.fsf@free.fr> <20150227214941.GB12821@x1>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>
-Cc: Suman Anna <s-anna@ti.com>, linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <agross@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150227214941.GB12821@x1> (Lee Jones's message of "Fri, 27 Feb
+	2015 21:49:41 +0000")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the Qualcomm Hardware Mutex.
+Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
+>> I wonder why there is a need for a new clock when CLK_IGNORE_UNUSED does
+>> exist. What is the usecase that is covered by this patchset which is not used by
+>> CLK_IGNORE_UNUSED clock flag ?
+>> 
+>> And if that reason exists, I'd like to find it in the commit message.
+>
+> The problem is applying that flag in a generic way.
+>
+> However, I guess you haven't seen this [1] yet?
+>
+> [1] https://lkml.org/lkml/2015/2/27/548
+I have.
 
-I think the conclusion on the dt binding discussion for hwspinlocks was that
-we're down to having the #hwlock-cells intact. So this version includes that,
-but non of the other previously discussed properties.
+And yet :
+ 1) This won't go in a _commit_ message (as opposed to cover-letter). Moreover
+    it doesn't specify which usecase is not covered by CLK_IGNORE_UNUSED, it
+    says, up to my understanding, that is it another way to have to
+    CLK_IGNORE_UNUSED flag applied.
 
-Changes since v5:
-- Extracted the dt binding documentation into a separate patch
-- Moved the driver to consume a syscon
-- Dropped previously suggested generic hwlock dt bindings
+ 2) I still fail to see why this is necessary
+    IOW why declaring the mandatory always-on clocks with the proper flag should
+    be augmented with a new clock list. Isn't the existing flag the generic way
+    ?
 
- .../devicetree/bindings/hwlock/qcom-hwspinlock.txt | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+I might not understand the real motivation behind that of course, that's why I'm
+asking.
 
-diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-new file mode 100644
-index 0000000..28ade7d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-@@ -0,0 +1,39 @@
-+Qualcomm Hardware Mutex Block:
-+
-+The hardware block provides mutexes utilized between different processors on
-+the SoC as part of the communication protocol used by these processors.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,sfpb-mutex",
-+		    "qcom,tcsr-mutex"
-+
-+- syscon:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: one cell containing:
-+		    syscon phandle
-+		    offset of the hwmutex block within the syscon
-+		    stride of the hwmutex registers
-+
-+- #hwlock-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 1, the specified cell represent the lock id
-+		    (hwlock standard property, see hwlock.txt)
-+
-+Example:
-+
-+        tcsr: syscon@1a400000 {
-+		compatible = "qcom,tcsr-msm8974", "syscon";
-+		reg = <0xfd484000 0x2000>;
-+	};
-+
-+	hwlock@fd484000 {
-+		compatible = "qcom,tcsr-mutex";
-+		syscon = <&tcsr 0 0x80>;
-+
-+		#hwlock-cells = <1>;
-+	};
+Cheers.
+
 -- 
-1.8.2.2
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
