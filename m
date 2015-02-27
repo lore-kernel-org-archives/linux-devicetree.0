@@ -1,35 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] w1: masters: omap_hdq: Add support for 1-wire mode
-Date: Fri, 27 Feb 2015 11:34:22 +0100
-Message-ID: <4111301.XAv3eRBo5S@wuerfel>
-References: <1425029057-5075-1-git-send-email-vigneshr@ti.com> <10805905.OnX7kRTk9d@wuerfel> <54F04767.5070001@ti.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH 1/6] phy: miphy365x: Use the generic phy type constants
+ in dt-bindings/phy/phy.h
+Date: Fri, 27 Feb 2015 10:41:21 +0000
+Message-ID: <20150227104121.GA9094@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org>
+ <1424871377-1795-2-git-send-email-peter.griffin@linaro.org>
+ <CAL_JsqJN2ya-iDDdt63z4u=N73sMz6_N=mqQpTyf7SY7NjrAmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <54F04767.5070001@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Evgeniy Polyakov <zbr@ioremap.net>, Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, NeilBrown <neilb@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJN2ya-iDDdt63z4u=N73sMz6_N=mqQpTyf7SY7NjrAmA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, patrice.chotard@st.com, Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 27 February 2015 16:01:03 Vignesh R wrote:
-> On Friday 27 February 2015 03:25 PM, Arnd Bergmann wrote:
-> > On Friday 27 February 2015 14:54:17 Vignesh R wrote:
-> >> +- compatible : should be "ti,omap3-1w" or "ti,am43xx-hdq"
-> >>
-> > 
-> > Do not use wildcards in the compatible string, use real part numbers
-> > if you don't know the actual name of the device.
-> 
-> 
-> The DT node for hdq on AM437x is already present in mainline
-> (commit: 741cac5f00beb) and it declares compatibility as
-> "ti,am43xx-hdq". Hence, I cannot change into anything different.
-> 
+Hi Rob,
 
-No, there is no driver using this device, and the binding was
-not documented, so there is no problem in changing it: nobody
-will notice a regression when it was never working before.
+On Wed, 25 Feb 2015, Rob Herring wrote:
 
-	Arnd
+> On Wed, Feb 25, 2015 at 7:36 AM, Peter Griffin <peter.griffin@linaro.org> wrote:
+> > Now there are generic phy type constants declared in phy.h, migrate over to
+> > using them rather than defining our own. This change has been done as one
+> > atomic commit to be bisectable.
+> 
+> You should note that the values of the defines are not changed. If
+> they did, that would be an ABI breakage.
+
+Yes your right, I was intending to explicity mention that, and then didn't.
+In V2 I will update the commit message, along with adding the Ack's.
+
+regards,
+
+Peter.
