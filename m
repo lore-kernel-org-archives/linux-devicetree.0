@@ -1,63 +1,110 @@
-From: gyungoh@gmail.com
-Subject: [PATCH v11 6/6] devicetree: Add SKY81452 to the Trivial Devices list
-Date: Fri, 27 Feb 2015 15:42:26 +0900
-Message-ID: <1425019346-4559-7-git-send-email-jack.yoo@skyworksinc.com>
-References: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, lee.jones@linaro.org, robh+dt@kernel.org, jg1.han@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org
-Cc: broonie@kernel.org, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, treding@nvidia.com, p.zabel@pengutronix.de, arno@natisbad.org, kuninori.morimoto.gx@renesas.com
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH 3/3] leds: Add ktd2692 flash LED driver
+Date: Fri, 27 Feb 2015 15:55:08 +0900
+Message-ID: <54F014CC.2000605@samsung.com>
+References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
+ <1424998891-25591-4-git-send-email-ingi2.kim@samsung.com>
+ <CAEUmHybnzdVk59UTsVczW59hpLrimoMeF+j5Gbtue2jNayHHuw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <CAEUmHybnzdVk59UTsVczW59hpLrimoMeF+j5Gbtue2jNayHHuw@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Varka Bhadram <varkabhadram@gmail.com>
+Cc: robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, rpurdie@rpsys.net, treding@nvidia.com, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, florian.vaussard@epfl.ch, arno@natisbad.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Hayato Suzuki <hytszk@gmail.com>, antonynpavlov@gmail.com, sw0312.kim@samsung.com, ideal.song@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 
-Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
----
-Changes v11:
-Nothing
+hi
 
-Changes v10:
-Nothing
+On 2015=EB=85=84 02=EC=9B=94 27=EC=9D=BC 12:36, Varka Bhadram wrote:
+> On 02/27/2015 06:31 AM, Ingi Kim wrote:
+>> This patch adds a driver to support the ktd2692 flash LEDs.
+>> ktd2692 can control flash current by ExpressWire interface.
+>>
+>> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+>> ---
+>>   drivers/leds/Kconfig        |    8 ++
+>>   drivers/leds/Makefile       |    1 +
+>>   drivers/leds/leds-ktd2692.c |  245 +++++++++++++++++++++++++++++++=
+++++++++++++
+>>   3 files changed, 254 insertions(+)
+>>   create mode 100644 drivers/leds/leds-ktd2692.c
+>>
+> (...)
+>=20
+>> +static struct ktd2692_context *ktd2692_parse_dt(struct device *dev)
+>> +{
+>> + struct device_node *np =3D dev->of_node;
+>> + struct ktd2692_context *led;
+>> +
+>> + led =3D devm_kzalloc(dev, sizeof(struct ktd2692_context), GFP_KERN=
+EL);
+>> + if (!led)
+>> + return ERR_PTR((long)led);
+>=20
+> What about using sizeof(*led) in place of sizeof(struct ktd2692_conte=
+xt)..?
+>=20
+> Also the error return for devm_kzalloc() should be -ENOMEM.
+>=20
 
-Changes v9:
-Nothing
+Thanks, I'll check and change sizeof() and error return style.
 
-Changes v8:
-Nothing
+>> +
+>> + led->strobe_gpio =3D of_get_named_gpio(np, "strobe-gpio", 0);
+>> + if (!gpio_is_valid(led->strobe_gpio)) {
+>> + dev_err(dev, "no strobe_gpio property found\n");
+>> + return ERR_PTR(led->strobe_gpio);
+>> + }
+>> +
+>> + return led;
+>> +}
+>> +
+>> +static int ktd2692_probe(struct platform_device *pdev)
+>> +{
+>> + struct device *dev =3D &pdev->dev;
+>> + struct ktd2692_context *led;
+>> + int ret;
+>> +
+>> + if (!dev->of_node)
+>> + return -ENODEV;
+>> +
+>> + led =3D ktd2692_parse_dt(dev);
+>> + if (IS_ERR(led))
+>> + return PTR_ERR(led);
+>> +
+>> + led->cdev.name =3D KTD2692_DEFAULT_NAME;
+>> + led->cdev.brightness =3D LED_OFF;
+>> + led->cdev.max_brightness =3D LED_FULL;
+>> + led->cdev.flags |=3D LED_CORE_SUSPENDRESUME;
+>> + led->cdev.brightness_set =3D ktd2692_brightness_set;
+>> + led->cdev.brightness_get =3D ktd2692_brightness_get;
+>> + led->mode =3D KTD2692_REG_MODE_BASE | KTD2692_MODE_DISABLE;
+>> +
+>> + platform_set_drvdata(pdev, led);
+>> +
+>> + ret =3D led_classdev_register(&pdev->dev, &led->cdev);
+>> + if (ret) {
+>> + dev_err(dev, "couldn't register LED %s\n", led->cdev.name);
+>> + return ret;
+>> + }
+>> +
+>> + ret =3D ktd2692_brightness_set_gpio(led);
+>> + if (ret) {
+>> + led_classdev_unregister(&led->cdev);
+>> + return ret;
+>> + }
+>> +
+>> + ktd2692_expresswire_reset(led);
+>> +
+>> + return ret;
+>=20
+> return 0 instead of ret...?
+>=20
+>=20
+>=20
 
-Changes v7:
-Nothing
-
-Changes v6:
-Nothing
-
-Changes v5:
-Nothing
-
-Changes v4:
-Nothing
-
-Changes v3:
-Nothing
-
-Changes v2:
-Add SKY81452 to the Trivial Devices list
-
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index aaa8325..003bd77 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -89,6 +89,7 @@ ricoh,rv5c386		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- ricoh,rv5c387a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
- sii,s35390a		2-wire CMOS real-time clock
-+skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
- st-micro,24c256		i2c serial eeprom  (24cxx)
- stm,m41t00		Serial Access TIMEKEEPER
- stm,m41t62		Serial real-time clock (RTC) with alarm
--- 
-1.9.1
+I'll check and try
+Thanks,
