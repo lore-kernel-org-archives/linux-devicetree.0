@@ -1,128 +1,295 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCHv2 10/15] clk: mvebu: extend common code to allow an
- optional refclk
-Date: Thu, 26 Feb 2015 16:05:38 -0800
-Message-ID: <20150227000538.421.75566@quantum>
-References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1424451874-25375-11-git-send-email-thomas.petazzoni@free-electrons.com>
- <20150220182134.421.95366@quantum> <54EB6C20.8070102@free-electrons.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] regulator: qcom-rpm: Rework for single device
+Date: Thu, 26 Feb 2015 16:16:14 -0800
+Message-ID: <54EFB74E.6050503@codeaurora.org>
+References: <1424995217-23381-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <54EB6C20.8070102@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1424995217-23381-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Gregory CLEMENT (2015-02-23 10:06:24)
-> Hi Mike,
-> 
-> On 20/02/2015 19:21, Mike Turquette wrote:
-> > Quoting Thomas Petazzoni (2015-02-20 09:04:29)
-> >> The Armada 39x, contrary to its predecessor, has a configurable
-> >> reference clock frequency, of either 25 Mhz, or 40 Mhz. For the
-> >> previous SoCs, it was fixed to 25 Mhz and described directly as such
-> >> in the Device Tree.
-> >>
-> >> For Armada 39x, we need to read certain registers to know whether the
-> >> frequency is 25 or 40 Mhz. Therefore, this commit extends the common
-> >> mvebu clock code to allow the SoC-specific code to say it wants to
-> >> register a reference clock, by giving a non-NULL ->get_refclk_freq()
-> >> function pointer in its coreclk_soc_desc structure.
-> >>
-> >> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> > 
-> > Looks fine to me. I'll apply after -rc1 drops.
-> 
-> What about the other clock related patch: "clk: mvebu: add Marvell
-> Armada 39x driver" ? Will you apply it too, or do you expect a pull request
-> for the mvebu related clocks ?
+On 02/26/15 16:00, Stephen Boyd wrote:
+> The RPM regulators are not individual devices. Creating platform
+> devices for each regulator bloats the kernel's runtime memory
+> footprint by ~12k. Let's rework this driver to be a single
+> platform device for all the RPM regulators. This makes the
+> DT match the schematic/datasheet closer too because now the
+> regulators node contains a list of supplies at the package level
+> for a particular PMIC model.
+>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>
 
-Both look fine to me, but a PR would be nice in case you have any other
-mvebu clk stuff besides these two patches.
 
-Regards,
-Mike
+This is the RPM node I used for testing so you can see the resulting DT.
 
-> 
-> 
-> Thanks,
-> 
-> Gregory
-> 
-> > 
-> > Regards,
-> > Mike
-> > 
-> >> ---
-> >>  drivers/clk/mvebu/common.c | 17 +++++++++++++++++
-> >>  drivers/clk/mvebu/common.h |  1 +
-> >>  2 files changed, 18 insertions(+)
-> >>
-> >> diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
-> >> index 0d4d121..15b370f 100644
-> >> --- a/drivers/clk/mvebu/common.c
-> >> +++ b/drivers/clk/mvebu/common.c
-> >> @@ -121,6 +121,11 @@ void __init mvebu_coreclk_setup(struct device_node *np,
-> >>  
-> >>         /* Allocate struct for TCLK, cpu clk, and core ratio clocks */
-> >>         clk_data.clk_num = 2 + desc->num_ratios;
-> >> +
-> >> +       /* One more clock for the optional refclk */
-> >> +       if (desc->get_refclk_freq)
-> >> +               clk_data.clk_num += 1;
-> >> +
-> >>         clk_data.clks = kzalloc(clk_data.clk_num * sizeof(struct clk *),
-> >>                                 GFP_KERNEL);
-> >>         if (WARN_ON(!clk_data.clks)) {
-> >> @@ -162,6 +167,18 @@ void __init mvebu_coreclk_setup(struct device_node *np,
-> >>                 WARN_ON(IS_ERR(clk_data.clks[2+n]));
-> >>         };
-> >>  
-> >> +       /* Register optional refclk */
-> >> +       if (desc->get_refclk_freq) {
-> >> +               const char *name = "refclk";
-> >> +               of_property_read_string_index(np, "clock-output-names",
-> >> +                                             2 + desc->num_ratios, &name);
-> >> +               rate = desc->get_refclk_freq(base);
-> >> +               clk_data.clks[2 + desc->num_ratios] =
-> >> +                       clk_register_fixed_rate(NULL, name, NULL,
-> >> +                                               CLK_IS_ROOT, rate);
-> >> +               WARN_ON(IS_ERR(clk_data.clks[2 + desc->num_ratios]));
-> >> +       }
-> >> +
-> >>         /* SAR register isn't needed anymore */
-> >>         iounmap(base);
-> >>  
-> >> diff --git a/drivers/clk/mvebu/common.h b/drivers/clk/mvebu/common.h
-> >> index 783b563..f0de6c8 100644
-> >> --- a/drivers/clk/mvebu/common.h
-> >> +++ b/drivers/clk/mvebu/common.h
-> >> @@ -30,6 +30,7 @@ struct coreclk_soc_desc {
-> >>         u32 (*get_tclk_freq)(void __iomem *sar);
-> >>         u32 (*get_cpu_freq)(void __iomem *sar);
-> >>         void (*get_clk_ratio)(void __iomem *sar, int id, int *mult, int *div);
-> >> +       u32 (*get_refclk_freq)(void __iomem *sar);
-> >>         bool (*is_sscg_enabled)(void __iomem *sar);
-> >>         u32 (*fix_sscg_deviation)(u32 system_clk);
-> >>         const struct coreclk_ratio *ratios;
-> >> -- 
-> >> 2.1.0
-> >>
-> 
-> 
-> -- 
-> Gregory Clement, Free Electrons
-> Kernel, drivers, real-time and embedded Linux
-> development, consulting, training and support.
-> http://free-electrons.com
+		rpm@108000 {
+			compatible	= "qcom,rpm-apq8064";
+			reg		= <0x108000 0x1000>;
+			qcom,ipc	= <&l2cc 0x8 2>;
+
+			interrupts	= <0 19 0>, <0 21 0>, <0 22 0>;
+			interrupt-names	= "ack", "err", "wakeup";
+
+			regulators {
+				compatible = "qcom,rpm-pm8921-regulators";
+				vin_l1_l2_l12_l18-supply = <&pm8921_s4>;
+				vin_lvs_1_3_6-supply = <&pm8921_s4>;
+				vin_lvs_4_5_7-supply = <&pm8921_s4>;
+				vin_ncp-supply = <&pm8921_l6>;
+				vin_lvs2-supply = <&pm8921_s4>;
+				vin_l24-supply = <&pm8921_s1>;
+				vin_l25-supply = <&pm8921_s1>;
+				vin_l27-supply = <&pm8921_s7>;
+				vin_l28-supply = <&pm8921_s7>;
+
+				/* Buck SMPS */
+				pm8921_s1: s1 {
+					regulator-always-on;
+					regulator-min-microvolt = <1225000>;
+					regulator-max-microvolt = <1225000>;
+					qcom,switch-mode-frequency = <3200000>;
+					bias-pull-down;
+				};
+
+				pm8921_s2: s2 {
+					regulator-min-microvolt = <1300000>;
+					regulator-max-microvolt = <1300000>;
+					qcom,switch-mode-frequency = <1600000>;
+					bias-pull-down;
+				};
+
+				pm8921_s3: s3 {
+					regulator-min-microvolt = <500000>;
+					regulator-max-microvolt = <1150000>;
+					qcom,switch-mode-frequency = <4800000>;
+					bias-pull-down;
+				};
+
+				pm8921_s4: s4 {
+					regulator-always-on;
+					regulator-min-microvolt = <1800000>;
+					regulator-max-microvolt = <1800000>;
+					qcom,switch-mode-frequency = <1600000>;
+					bias-pull-down;
+					qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
+				};
+
+				pm8921_s7: s7 {
+					regulator-min-microvolt = <1300000>;
+					regulator-max-microvolt = <1300000>;
+					qcom,switch-mode-frequency = <3200000>;
+				};
+
+				pm8921_s8: s8 {
+					regulator-min-microvolt = <2200000>;
+					regulator-max-microvolt = <2200000>;
+					qcom,switch-mode-frequency = <1600000>;
+				};
+
+				/* PMOS LDO */
+				pm8921_l1: l1 {
+					regulator-always-on;
+					regulator-min-microvolt = <1100000>;
+					regulator-max-microvolt = <1100000>;
+					bias-pull-down;
+				};
+
+				pm8921_l2: l2 {
+					regulator-min-microvolt = <1200000>;
+					regulator-max-microvolt = <1200000>;
+					bias-pull-down;
+				};
+
+				pm8921_l3: l3 {
+					regulator-min-microvolt = <3075000>;
+					regulator-max-microvolt = <3075000>;
+					bias-pull-down;
+				};
+
+				pm8921_l4: l4 {
+					regulator-always-on;
+					regulator-min-microvolt = <1800000>;
+					regulator-max-microvolt = <1800000>;
+					bias-pull-down;
+				};
+
+				pm8921_l5: l5 {
+					regulator-min-microvolt = <2950000>;
+					regulator-max-microvolt = <2950000>;
+					bias-pull-down;
+				};
+
+				pm8921_l6: l6 {
+					regulator-min-microvolt = <2950000>;
+					regulator-max-microvolt = <2950000>;
+					bias-pull-down;
+				};
+
+				pm8921_l7: l7 {
+					regulator-min-microvolt = <1850000>;
+					regulator-max-microvolt = <2950000>;
+					bias-pull-down;
+				};
+
+				pm8921_l8: l8 {
+					regulator-min-microvolt = <2800000>;
+					regulator-max-microvolt = <2800000>;
+					bias-pull-down;
+				};
+
+				pm8921_l9: l9 {
+					regulator-min-microvolt = <3000000>;
+					regulator-max-microvolt = <3000000>;
+					bias-pull-down;
+				};
+
+				pm8921_l10: l10 {
+					regulator-min-microvolt = <2900000>;
+					regulator-max-microvolt = <2900000>;
+					bias-pull-down;
+				};
+
+				pm8921_l11: l11 {
+					regulator-min-microvolt = <3000000>;
+					regulator-max-microvolt = <3000000>;
+					bias-pull-down;
+				};
+
+				pm8921_l12: l12 {
+					regulator-min-microvolt = <1200000>;
+					regulator-max-microvolt = <1200000>;
+					bias-pull-down;
+				};
+
+					    /*
+				pm8921_l13: l13 {
+					regulator-min-microvolt = <2220000>;
+					regulator-max-microvolt = <2220000>;
+				};
+				*/
+
+				pm8921_l14: l14 {
+					regulator-min-microvolt = <1800000>;
+					regulator-max-microvolt = <1800000>;
+					bias-pull-down;
+				};
+
+				pm8921_l15: l15 {
+					regulator-min-microvolt = <1800000>;
+					regulator-max-microvolt = <2950000>;
+					bias-pull-down;
+				};
+
+				pm8921_l16: l16 {
+					regulator-min-microvolt = <2800000>;
+					regulator-max-microvolt = <2800000>;
+					bias-pull-down;
+				};
+
+				pm8921_l17: l17 {
+					regulator-min-microvolt = <2000000>;
+					regulator-max-microvolt = <2000000>;
+					bias-pull-down;
+				};
+
+				pm8921_l18: l18 {
+					regulator-min-microvolt = <1300000>;
+					regulator-max-microvolt = <1800000>;
+					bias-pull-down;
+				};
+
+				pm8921_l21: l21 {
+					regulator-min-microvolt = <1050000>;
+					regulator-max-microvolt = <1050000>;
+					bias-pull-down;
+				};
+
+				pm8921_l22: l22 {
+					regulator-min-microvolt = <2600000>;
+					regulator-max-microvolt = <2600000>;
+					bias-pull-down;
+				};
+
+				pm8921_l23: l23 {
+					regulator-min-microvolt = <1800000>;
+					regulator-max-microvolt = <1800000>;
+					bias-pull-down;
+				};
+
+				pm8921_l24: l24 {
+					regulator-min-microvolt = <750000>;
+					regulator-max-microvolt = <1150000>;
+					bias-pull-down;
+				};
+
+				pm8921_l25: l25 {
+					regulator-always-on;
+					regulator-min-microvolt = <1250000>;
+					regulator-max-microvolt = <1250000>;
+					bias-pull-down;
+				};
+
+				pm8921_l27: l27 {
+					regulator-min-microvolt = <1100000>;
+					regulator-max-microvolt = <1100000>;
+				};
+
+				pm8921_l28: l28 {
+					regulator-min-microvolt = <1050000>;
+					regulator-max-microvolt = <1050000>;
+					bias-pull-down;
+				};
+
+				pm8921_l29: l29 {
+					regulator-min-microvolt = <2000000>;
+					regulator-max-microvolt = <2000000>;
+					bias-pull-down;
+				};
+
+				/* Low Voltage Switch */
+				pm8921_lvs1: lvs1 {
+					bias-pull-down;
+				};
+
+				pm8921_lvs2: lvs2 {
+					bias-pull-down;
+				};
+
+				pm8921_lvs3: lvs3 {
+					bias-pull-down;
+				};
+
+				pm8921_lvs4: lvs4 {
+					bias-pull-down;
+				};
+
+				pm8921_lvs5: lvs5 {
+					bias-pull-down;
+				};
+
+				pm8921_lvs6: lvs6 {
+					bias-pull-down;
+				};
+
+				pm8921_lvs7: lvs7 {
+					bias-pull-down;
+				};
+
+				pm8921_ncp: ncp {
+					regulator-min-microvolt = <2000000>;
+					regulator-max-microvolt = <2000000>;
+					qcom,switch-mode-frequency = <1600000>;
+				};
+			};
+		};
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
