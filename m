@@ -1,295 +1,133 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] regulator: qcom-rpm: Rework for single device
-Date: Thu, 26 Feb 2015 16:16:14 -0800
-Message-ID: <54EFB74E.6050503@codeaurora.org>
-References: <1424995217-23381-1-git-send-email-sboyd@codeaurora.org>
+From: Jonathan Richardson <jonathar@broadcom.com>
+Subject: [PATCH v2 1/1] serial: 8250_dw: Fix get_mctrl behaviour
+Date: Thu, 26 Feb 2015 16:35:57 -0800
+Message-ID: <1424997357-31487-2-git-send-email-jonathar@broadcom.com>
+References: <Jonathan Richardson <jonathar@broadcom.com>
+ <1424997357-31487-1-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1424995217-23381-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424997357-31487-1-git-send-email-jonathar@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Desmond Liu <desmondl@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/15 16:00, Stephen Boyd wrote:
-> The RPM regulators are not individual devices. Creating platform
-> devices for each regulator bloats the kernel's runtime memory
-> footprint by ~12k. Let's rework this driver to be a single
-> platform device for all the RPM regulators. This makes the
-> DT match the schematic/datasheet closer too because now the
-> regulators node contains a list of supplies at the package level
-> for a particular PMIC model.
->
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->
+From: Desmond Liu <desmondl@broadcom.com>
 
+Fixed behaviour of get_mctrl() serial driver function as documented in:
+https://www.kernel.org/doc/Documentation/serial/driver
 
-This is the RPM node I used for testing so you can see the resulting DT.
+Added device-tree properties 'dcd-override', 'dsr-override',
+'cts-override', and 'ri-override' specific to the Synopsis 8250
+DesignWare UART driver. Allows one to force Data Carrier Detect,
+Clear To Send, and Data Set Ready signals to permanently be reported as
+active. The Ring indicator can be forced to be reported as inactive.
 
-		rpm@108000 {
-			compatible	= "qcom,rpm-apq8064";
-			reg		= <0x108000 0x1000>;
-			qcom,ipc	= <&l2cc 0x8 2>;
+It is possible that if modem control signalling is enabled on a port
+that doesn't have these pins (e.g. - a simple two wire Tx/Rx port), the
+driver can hang indefinitely waiting for the state to change. The new
+DT properties allow the driver to ignore the state of these pins on
+serial ports that don't support them, as recommended in the kernel
+documentation.
 
-			interrupts	= <0 19 0>, <0 21 0>, <0 22 0>;
-			interrupt-names	= "ack", "err", "wakeup";
+Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
+Signed-off-by: Jonathan Richardson <jonathar@broadcom.com>
+---
+ .../bindings/serial/snps-dw-apb-uart.txt           |   16 ++++++++++
+ drivers/tty/serial/8250/8250_dw.c                  |   32 ++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-			regulators {
-				compatible = "qcom,rpm-pm8921-regulators";
-				vin_l1_l2_l12_l18-supply = <&pm8921_s4>;
-				vin_lvs_1_3_6-supply = <&pm8921_s4>;
-				vin_lvs_4_5_7-supply = <&pm8921_s4>;
-				vin_ncp-supply = <&pm8921_l6>;
-				vin_lvs2-supply = <&pm8921_s4>;
-				vin_l24-supply = <&pm8921_s1>;
-				vin_l25-supply = <&pm8921_s1>;
-				vin_l27-supply = <&pm8921_s7>;
-				vin_l28-supply = <&pm8921_s7>;
-
-				/* Buck SMPS */
-				pm8921_s1: s1 {
-					regulator-always-on;
-					regulator-min-microvolt = <1225000>;
-					regulator-max-microvolt = <1225000>;
-					qcom,switch-mode-frequency = <3200000>;
-					bias-pull-down;
-				};
-
-				pm8921_s2: s2 {
-					regulator-min-microvolt = <1300000>;
-					regulator-max-microvolt = <1300000>;
-					qcom,switch-mode-frequency = <1600000>;
-					bias-pull-down;
-				};
-
-				pm8921_s3: s3 {
-					regulator-min-microvolt = <500000>;
-					regulator-max-microvolt = <1150000>;
-					qcom,switch-mode-frequency = <4800000>;
-					bias-pull-down;
-				};
-
-				pm8921_s4: s4 {
-					regulator-always-on;
-					regulator-min-microvolt = <1800000>;
-					regulator-max-microvolt = <1800000>;
-					qcom,switch-mode-frequency = <1600000>;
-					bias-pull-down;
-					qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
-				};
-
-				pm8921_s7: s7 {
-					regulator-min-microvolt = <1300000>;
-					regulator-max-microvolt = <1300000>;
-					qcom,switch-mode-frequency = <3200000>;
-				};
-
-				pm8921_s8: s8 {
-					regulator-min-microvolt = <2200000>;
-					regulator-max-microvolt = <2200000>;
-					qcom,switch-mode-frequency = <1600000>;
-				};
-
-				/* PMOS LDO */
-				pm8921_l1: l1 {
-					regulator-always-on;
-					regulator-min-microvolt = <1100000>;
-					regulator-max-microvolt = <1100000>;
-					bias-pull-down;
-				};
-
-				pm8921_l2: l2 {
-					regulator-min-microvolt = <1200000>;
-					regulator-max-microvolt = <1200000>;
-					bias-pull-down;
-				};
-
-				pm8921_l3: l3 {
-					regulator-min-microvolt = <3075000>;
-					regulator-max-microvolt = <3075000>;
-					bias-pull-down;
-				};
-
-				pm8921_l4: l4 {
-					regulator-always-on;
-					regulator-min-microvolt = <1800000>;
-					regulator-max-microvolt = <1800000>;
-					bias-pull-down;
-				};
-
-				pm8921_l5: l5 {
-					regulator-min-microvolt = <2950000>;
-					regulator-max-microvolt = <2950000>;
-					bias-pull-down;
-				};
-
-				pm8921_l6: l6 {
-					regulator-min-microvolt = <2950000>;
-					regulator-max-microvolt = <2950000>;
-					bias-pull-down;
-				};
-
-				pm8921_l7: l7 {
-					regulator-min-microvolt = <1850000>;
-					regulator-max-microvolt = <2950000>;
-					bias-pull-down;
-				};
-
-				pm8921_l8: l8 {
-					regulator-min-microvolt = <2800000>;
-					regulator-max-microvolt = <2800000>;
-					bias-pull-down;
-				};
-
-				pm8921_l9: l9 {
-					regulator-min-microvolt = <3000000>;
-					regulator-max-microvolt = <3000000>;
-					bias-pull-down;
-				};
-
-				pm8921_l10: l10 {
-					regulator-min-microvolt = <2900000>;
-					regulator-max-microvolt = <2900000>;
-					bias-pull-down;
-				};
-
-				pm8921_l11: l11 {
-					regulator-min-microvolt = <3000000>;
-					regulator-max-microvolt = <3000000>;
-					bias-pull-down;
-				};
-
-				pm8921_l12: l12 {
-					regulator-min-microvolt = <1200000>;
-					regulator-max-microvolt = <1200000>;
-					bias-pull-down;
-				};
-
-					    /*
-				pm8921_l13: l13 {
-					regulator-min-microvolt = <2220000>;
-					regulator-max-microvolt = <2220000>;
-				};
-				*/
-
-				pm8921_l14: l14 {
-					regulator-min-microvolt = <1800000>;
-					regulator-max-microvolt = <1800000>;
-					bias-pull-down;
-				};
-
-				pm8921_l15: l15 {
-					regulator-min-microvolt = <1800000>;
-					regulator-max-microvolt = <2950000>;
-					bias-pull-down;
-				};
-
-				pm8921_l16: l16 {
-					regulator-min-microvolt = <2800000>;
-					regulator-max-microvolt = <2800000>;
-					bias-pull-down;
-				};
-
-				pm8921_l17: l17 {
-					regulator-min-microvolt = <2000000>;
-					regulator-max-microvolt = <2000000>;
-					bias-pull-down;
-				};
-
-				pm8921_l18: l18 {
-					regulator-min-microvolt = <1300000>;
-					regulator-max-microvolt = <1800000>;
-					bias-pull-down;
-				};
-
-				pm8921_l21: l21 {
-					regulator-min-microvolt = <1050000>;
-					regulator-max-microvolt = <1050000>;
-					bias-pull-down;
-				};
-
-				pm8921_l22: l22 {
-					regulator-min-microvolt = <2600000>;
-					regulator-max-microvolt = <2600000>;
-					bias-pull-down;
-				};
-
-				pm8921_l23: l23 {
-					regulator-min-microvolt = <1800000>;
-					regulator-max-microvolt = <1800000>;
-					bias-pull-down;
-				};
-
-				pm8921_l24: l24 {
-					regulator-min-microvolt = <750000>;
-					regulator-max-microvolt = <1150000>;
-					bias-pull-down;
-				};
-
-				pm8921_l25: l25 {
-					regulator-always-on;
-					regulator-min-microvolt = <1250000>;
-					regulator-max-microvolt = <1250000>;
-					bias-pull-down;
-				};
-
-				pm8921_l27: l27 {
-					regulator-min-microvolt = <1100000>;
-					regulator-max-microvolt = <1100000>;
-				};
-
-				pm8921_l28: l28 {
-					regulator-min-microvolt = <1050000>;
-					regulator-max-microvolt = <1050000>;
-					bias-pull-down;
-				};
-
-				pm8921_l29: l29 {
-					regulator-min-microvolt = <2000000>;
-					regulator-max-microvolt = <2000000>;
-					bias-pull-down;
-				};
-
-				/* Low Voltage Switch */
-				pm8921_lvs1: lvs1 {
-					bias-pull-down;
-				};
-
-				pm8921_lvs2: lvs2 {
-					bias-pull-down;
-				};
-
-				pm8921_lvs3: lvs3 {
-					bias-pull-down;
-				};
-
-				pm8921_lvs4: lvs4 {
-					bias-pull-down;
-				};
-
-				pm8921_lvs5: lvs5 {
-					bias-pull-down;
-				};
-
-				pm8921_lvs6: lvs6 {
-					bias-pull-down;
-				};
-
-				pm8921_lvs7: lvs7 {
-					bias-pull-down;
-				};
-
-				pm8921_ncp: ncp {
-					regulator-min-microvolt = <2000000>;
-					regulator-max-microvolt = <2000000>;
-					qcom,switch-mode-frequency = <1600000>;
-				};
-			};
-		};
-
+diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
+index 7f76214..289c40e 100644
+--- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
++++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
+@@ -21,6 +21,18 @@ Optional properties:
+ - reg-io-width : the size (in bytes) of the IO accesses that should be
+   performed on the device.  If this property is not present then single byte
+   accesses are used.
++- dcd-override : Override the DCD modem status signal. This signal will always
++  be reported as active instead of being obtained from the modem status
++  register. Define this if your serial port does not use this pin.
++- dsr-override : Override the DTS modem status signal. This signal will always
++  be reported as active instead of being obtained from the modem status
++  register. Define this if your serial port does not use this pin.
++- cts-override : Override the CTS modem status signal. This signal will always
++  be reported as active instead of being obtained from the modem status
++  register. Define this if your serial port does not use this pin.
++- ri-override : Override the RI modem status signal. This signal will always be
++  reported as inactive instead of being obtained from the modem status register.
++  Define this if your serial port does not use this pin.
+ 
+ Example:
+ 
+@@ -31,6 +43,10 @@ Example:
+ 		interrupts = <10>;
+ 		reg-shift = <2>;
+ 		reg-io-width = <4>;
++		dcd-override;
++		dsr-override;
++		cts-override;
++		ri-override;
+ 	};
+ 
+ Example with one clock:
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index 555de07..1f1d2e6 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -59,6 +59,8 @@ struct dw8250_data {
+ 	u8			usr_reg;
+ 	int			last_mcr;
+ 	int			line;
++	int			msr_mask_on;
++	int			msr_mask_off;
+ 	struct clk		*clk;
+ 	struct clk		*pclk;
+ 	struct reset_control	*rst;
+@@ -81,6 +83,12 @@ static inline int dw8250_modify_msr(struct uart_port *p, int offset, int value)
+ 		value &= ~UART_MSR_DCTS;
+ 	}
+ 
++	/* Override any modem control signals if needed */
++	if (offset == UART_MSR) {
++		value |= d->msr_mask_on;
++		value &= ~d->msr_mask_off;
++	}
++
+ 	return value;
+ }
+ 
+@@ -334,6 +342,30 @@ static int dw8250_probe_of(struct uart_port *p,
+ 	if (id >= 0)
+ 		p->line = id;
+ 
++	if (of_property_read_bool(np, "dcd-override")) {
++		/* Always report DCD as active */
++		data->msr_mask_on |= UART_MSR_DCD;
++		data->msr_mask_off |= UART_MSR_DDCD;
++	}
++
++	if (of_property_read_bool(np, "dsr-override")) {
++		/* Always report DSR as active */
++		data->msr_mask_on |= UART_MSR_DSR;
++		data->msr_mask_off |= UART_MSR_DDSR;
++	}
++
++	if (of_property_read_bool(np, "cts-override")) {
++		/* Always report DSR as active */
++		data->msr_mask_on |= UART_MSR_DSR;
++		data->msr_mask_off |= UART_MSR_DDSR;
++	}
++
++	if (of_property_read_bool(np, "ri-override")) {
++		/* Always report Ring indicator as inactive */
++		data->msr_mask_off |= UART_MSR_RI;
++		data->msr_mask_off |= UART_MSR_TERI;
++	}
++
+ 	/* clock got configured through clk api, all done */
+ 	if (p->uartclk)
+ 		return 0;
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.7.9.5
