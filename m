@@ -1,88 +1,214 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 00/10] omap3 crypto fixes
-Date: Fri, 27 Feb 2015 13:40:44 +0100
-Message-ID: <201502271340.44659@pali>
-References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com> <20150226224605.GC14117@fuloong-minipc.musicnaut.iki.fi>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart3273710.BD1604DdiW";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150226224605.GC14117@fuloong-minipc.musicnaut.iki.fi>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@kernel.org>
+From: Matt Porter <mporter@konsulko.com>
+Subject: [PATCH] ARM: dts: imx: Add dr_mode host setting to all host-only usb instances
+Date: Fri, 27 Feb 2015 09:06:00 -0500
+Message-ID: <1425045960-14191-1-git-send-email-mporter@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---nextPart3273710.BD1604DdiW
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+The chipidea driver adds an extra line of spam to the log when a
+host-only chipidea instance is left set to the default of a dual role
+controller.
 
-On Thursday 26 February 2015 23:46:05 Aaro Koskinen wrote:
-> Hi,
->=20
-> On Thu, Feb 26, 2015 at 02:49:50PM +0100, Pali Roh=C3=A1r wrote:
-> > This patch series fix crypto support for omap3 devices which
-> > use DT.
-> >=20
-> > It enables AES and SHAM on N9/N950 and SHAM on N900. AES is
-> > still disabled for N900.
->=20
-> (Please format your lines somewhere near < 76 chars,
-> especially in commit logs, otherwise "git log" looks ugly on
-> 80 char terminals.)
->=20
-> I tested these with stock bootloaders, and devices boot
-> normally and I can now modprobe omap-aes (on N9 and N950) and
-> omap-sham (on all three):
->=20
-> 	omap-aes 480c5000.aes: OMAP AES hw accel rev: 2.6
-> 	omap-sham 480c3000.sham: hw accel on OMAP rev 0.9
->=20
-> However I get these when CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
-> is not set:
->=20
-> 	alg: hash: Chunking test 1 failed for omap-sha1
-> 	alg: hash: Chunking test 1 failed for omap-md5
-> 	alg: hash: Chunking test 1 failed for omap-hmac-sha1
-> 	alg: hash: Chunking test 1 failed for omap-hmac-md5
->=20
-> But that's probably unrelated to this series. For patches 1-8,
-> feel free to add:
->=20
-> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
->=20
-> A.
+[    2.010873] ci_hdrc ci_hdrc.1: doesn't support gadget
 
-Hi, thanks for testing!
+Set the dr_mode property to host on all the host-only nodes
+to avoid this warning.
 
-Now I'm happy that I can load omap-aes and omap-sham drivers on=20
-real n900 device, qemu n900 and after your tests also on real n9=20
-and n950 without any kernel crash or oops. Of course omap-aes is=20
-disabled on n900, but loading omap-aes.ko (accidentally) does not=20
-hurt.
+Signed-off-by: Matt Porter <mporter@konsulko.com>
+---
+ arch/arm/boot/dts/imx27.dtsi   | 2 ++
+ arch/arm/boot/dts/imx28.dtsi   | 1 +
+ arch/arm/boot/dts/imx35.dtsi   | 1 +
+ arch/arm/boot/dts/imx50.dtsi   | 3 +++
+ arch/arm/boot/dts/imx51.dtsi   | 3 +++
+ arch/arm/boot/dts/imx53.dtsi   | 3 +++
+ arch/arm/boot/dts/imx6qdl.dtsi | 3 +++
+ arch/arm/boot/dts/imx6sl.dtsi  | 1 +
+ arch/arm/boot/dts/imx6sx.dtsi  | 1 +
+ 9 files changed, 18 insertions(+)
 
-It looks like there are other parts in md5 and sha broken, but=20
-first step is load & register all drivers without kernel crash.=20
-And this is working now.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart3273710.BD1604DdiW
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlTwZcwACgkQi/DJPQPkQ1JAmQCfXzpNKlP95Si6cJYsrpuDqdDo
-E70AoMQeM3yvnR7qRzKkoyB8U5mFd275
-=7JS1
------END PGP SIGNATURE-----
-
---nextPart3273710.BD1604DdiW--
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index 4b063b6..6951b66 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -488,6 +488,7 @@
+ 				interrupts = <54>;
+ 				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
+ 				fsl,usbmisc = <&usbmisc 1>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+@@ -497,6 +498,7 @@
+ 				interrupts = <55>;
+ 				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
+ 				fsl,usbmisc = <&usbmisc 2>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index 47f68ac..02330f4 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -1197,6 +1197,7 @@
+ 			interrupts = <92>;
+ 			clocks = <&clks 61>;
+ 			fsl,usbphy = <&usbphy1>;
++			dr_mode = "host";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
+index 6932928..b6478e9 100644
+--- a/arch/arm/boot/dts/imx35.dtsi
++++ b/arch/arm/boot/dts/imx35.dtsi
+@@ -318,6 +318,7 @@
+ 				clocks = <&clks 73>;
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				fsl,usbphy = <&usbphy1>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
+index 620b0f0..e245713 100644
+--- a/arch/arm/boot/dts/imx50.dtsi
++++ b/arch/arm/boot/dts/imx50.dtsi
+@@ -197,6 +197,7 @@
+ 				reg = <0x53f80200 0x0200>;
+ 				interrupts = <14>;
+ 				clocks = <&clks IMX5_CLK_USB_PHY2_GATE>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+@@ -205,6 +206,7 @@
+ 				reg = <0x53f80400 0x0200>;
+ 				interrupts = <16>;
+ 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+@@ -213,6 +215,7 @@
+ 				reg = <0x53f80600 0x0200>;
+ 				interrupts = <17>;
+ 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index c0116cf..f46fe9b 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -265,6 +265,7 @@
+ 				interrupts = <14>;
+ 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
+ 				fsl,usbmisc = <&usbmisc 1>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+@@ -274,6 +275,7 @@
+ 				interrupts = <16>;
+ 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
+ 				fsl,usbmisc = <&usbmisc 2>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+@@ -283,6 +285,7 @@
+ 				interrupts = <17>;
+ 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
+ 				fsl,usbmisc = <&usbmisc 3>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index ff4fa7e..c3e3ca9 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -309,6 +309,7 @@
+ 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				fsl,usbphy = <&usbphy1>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+@@ -318,6 +319,7 @@
+ 				interrupts = <16>;
+ 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
+ 				fsl,usbmisc = <&usbmisc 2>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+@@ -327,6 +329,7 @@
+ 				interrupts = <17>;
+ 				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
+ 				fsl,usbmisc = <&usbmisc 3>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index d6c69ec..9347c93 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -845,6 +845,7 @@
+ 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
+ 				fsl,usbphy = <&usbphy2>;
+ 				fsl,usbmisc = <&usbmisc 1>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+@@ -854,6 +855,7 @@
+ 				interrupts = <0 41 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
+ 				fsl,usbmisc = <&usbmisc 2>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+@@ -863,6 +865,7 @@
+ 				interrupts = <0 42 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
+ 				fsl,usbmisc = <&usbmisc 3>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 36ab8e0..9bf1db3 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -699,6 +699,7 @@
+ 				interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SL_CLK_USBOH3>;
+ 				fsl,usbmisc = <&usbmisc 2>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 7a24fee..fdadd060 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -763,6 +763,7 @@
+ 				fsl,usbmisc = <&usbmisc 2>;
+ 				phy_type = "hsic";
+ 				fsl,anatop = <&anatop>;
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+-- 
+1.8.4
