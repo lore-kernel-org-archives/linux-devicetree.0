@@ -1,101 +1,155 @@
-From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] leds: Add ktd2692 flash LED driver
-Date: Fri, 27 Feb 2015 09:06:45 +0530
-Message-ID: <CAEUmHybnzdVk59UTsVczW59hpLrimoMeF+j5Gbtue2jNayHHuw@mail.gmail.com>
-References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
-	<1424998891-25591-4-git-send-email-ingi2.kim@samsung.com>
+From: Pranavkumar Sawargaonkar <psawargaonkar-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Fix GIC reg sizes for APM X-Gene
+Date: Fri, 27 Feb 2015 09:27:13 +0530
+Message-ID: <CANFfpkR_atJn2bU2ZaFrpjRqSmOHKPnKFoXObNQeH-RQT225Jw@mail.gmail.com>
+References: <1422342206-4750-1-git-send-email-psawargaonkar@apm.com>
+	<CAL_JsqJQcuX2cp50oHod-QAbhdMg48TaRP+gLGEO2kbFnQ3B+A@mail.gmail.com>
+	<20150219190348.GB24460@cbox>
+	<CAL_JsqLcBOC+AnVe7oATjg2g6Fz2vqwacu8QzS4tXMaxxOP_Xg@mail.gmail.com>
+	<20150223120744.GA5609@cbox>
+	<CAL_JsqJ6E+05psDCXS7k74Mz-DgSEroQ2ODpe2Bp2_50fL3imA@mail.gmail.com>
+	<CANFfpkQF-8Kzq-UoP=xLpkTafGn6ScyiEb6oCs-Lxygb+ummLA@mail.gmail.com>
+	<CAL_JsqLs4HdT6N=Vb4s--x3ugXKbWYQ5R2WGbiWFhhnYxnK-xw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424998891-25591-4-git-send-email-ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CAL_JsqLs4HdT6N=Vb4s--x3ugXKbWYQ5R2WGbiWFhhnYxnK-xw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-SEjsEC/fJMIdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, florian.vaussard-p8DiymsW2f8@public.gmane.org, arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, Tushar Jagad <tjagad-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/27/2015 06:31 AM, Ingi Kim wrote:
-> This patch adds a driver to support the ktd2692 flash LEDs.
-> ktd2692 can control flash current by ExpressWire interface.
+Hi Rob,
+
+On Tue, Feb 24, 2015 at 8:00 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Feb 24, 2015 at 12:34 AM, Pranavkumar Sawargaonkar
+> <psawargaonkar-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> Hi Rob,
+>>
+>> On Mon, Feb 23, 2015 at 10:09 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Mon, Feb 23, 2015 at 6:07 AM, Christoffer Dall
+>>> <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Sat, Feb 21, 2015 at 03:56:17PM -0600, Rob Herring wrote:
+>>>>> On Thu, Feb 19, 2015 at 1:03 PM, Christoffer Dall
+>>>>> <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>> > On Thu, Feb 19, 2015 at 12:23:15PM -0600, Rob Herring wrote:
+>>>>> >> On Tue, Jan 27, 2015 at 1:03 AM, Pranavkumar Sawargaonkar
+>>>>> >> <psawargaonkar-qTEPVZfXA3Y@public.gmane.org> wrote:
+>>>>> >> > In APM X-Gene, GIC register space is 64K aligned while the sizes mentioned
+>>>>> >> > in the dt are 4K aligned. This breaks KVM when kernel is built with 64K page
+>>>>> >> > size due to size alignment checking in vgic driver for VCPU Control and
+>>>>> >> > VCPU register.
+>>>>> >> >
+>>>>> >> > This patch corrects the sizes to be inline with the hardware spec.
+>>>>> >>
+>>>>> >> This does not make sense. The GIC regions are still only 4 or 8KB and
+>>>>> >> the h/w description should reflect that. For implementations using
+>>>>> >> gic-400 and the addressing decode trick, the rest of the register
+>>>>> >> range is also not safe to access given it is multiple mapped. Also,
+>>>>> >> this wastes virtual space, but I guess we don't care on 64-bit.
+>>>>> >>
+>>>>> >> KVM should be fixed to only check base address alignment. Size
+>>>>> >> alignment does not matter (if it does, then you need to fix all
+>>>>> >> register blocks).
+>>>>> >>
+>>>>> > It matters if you want to ensure that the 64K page you are assigning to
+>>>>> > a guest for the GIC virtual CPU interface contains only GIC virtual CPU
+>>>>> > mappings, and not other random stuff that the guest is not allowed to
+>>>>> > touch.
+>>>>>
+>>>>> Good point.
+>>>>>
+>>>>> > How else should this be enforced?
+>>>>>
+>>>>> Rely on correct h/w design? You'll have to repeat this every time you
+>>>>> want to do pass-thru of a device.
+>>>>>
+>>>>> What do you do if 64K mapping is not supported? Fallback to emulation
+>>>>> of the CPU interface?
+>>>>
+>>>> Agree with Peter on these two points.
+>>>>
+>>>>>
+>>>>> Are there other DTSs that need to be fixed?
+>>>>>
+>>>> Not sure really, AMD Seattle works with 64K pages IIRC.
+>>>
+>>> Well, looks we have been inconsistent here:
+>>>
+>>> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-           reg = <0x0
+>>> 0xe1110000 0 0x1000>,
+>>> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-                 <0x0
+>>> 0xe112f000 0 0x2000>,
+>>> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-                 <0x0
+>>> 0xe1140000 0 0x10000>,
+>>> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi-                 <0x0
+>>> 0xe1160000 0 0x10000>;
+>>>
+>>> arch/arm64/boot/dts/arm/juno.dts-               reg = <0x0 0x2c010000 0 0x1000>,
+>>> arch/arm64/boot/dts/arm/juno.dts-                     <0x0 0x2c02f000 0 0x2000>,
+>>> arch/arm64/boot/dts/arm/juno.dts-                     <0x0 0x2c04f000 0 0x2000>,
+>>> arch/arm64/boot/dts/arm/juno.dts-                     <0x0 0x2c06f000 0 0x2000>;
+>>>
+>>> If we are going to use 64K sizes, can we have some consistency here
+>>> please. Which ranges really need 64KB sizes? It should only be the
+>>> VCPU interface. right? Why does XGene need 128K? If XGene is doing
+>>> address swizzling, then the CPU and VCPU base addresses are wrong.
+>>> Seattle is also wrong for the VCPU, but no one has noticed because we
+>>> don't use the DIR register IIRC.
+>>>
+>>> XGene should also add an "arm,gic-400" compatible string or something
+>>> XGene specific if in fact it is not GIC-400.
+>>
+>> X-Gene has gic-400 as an interrupt controller.
+>> Only thing is GIC pages are mapped at 64K boundary (with 64K page size)
+>> Hence CPU, VCPU interfaces has a size of 128K (2GIC pages)
+>> Regarding GICC_DIR, yes there is a problem which needs to be solved
+>> since the first page size is 64K.
+>> In XEN we already have a small fix to access GICC_DIR with 64K page
+>> offset instead of standard 4K.
 >
-> Signed-off-by: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->   drivers/leds/Kconfig        |    8 ++
->   drivers/leds/Makefile       |    1 +
->   drivers/leds/leds-ktd2692.c |  245 +++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 254 insertions(+)
->   create mode 100644 drivers/leds/leds-ktd2692.c
+> Right, and in order for this to work, you should use the last 4K alias
+> for the cpu interface(s). This is why other platforms use xxxf000 as
+> their cpu interface base.
 >
-(...)
+> It is of course possible that xgene does not properly do the address
+> swizzling and therefore you have to use 64K aligned addresses. But in
+> that case you need a unique compatible string.
+>
+>> I remember a small discussion in this regard in past
+>> (http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266468.html)
+>> which was deferred at that time.
+>> Once this patch is accepted we can post RFC patch to address GICC_DIR
+>> and discuss further.
+>
+> No, let's get this right now and not keep changing the dts.
+>
 
-> +static struct ktd2692_context *ktd2692_parse_dt(struct device *dev)
-> +{
-> + struct device_node *np = dev->of_node;
-> + struct ktd2692_context *led;
-> +
-> + led = devm_kzalloc(dev, sizeof(struct ktd2692_context), GFP_KERNEL);
-> + if (!led)
-> + return ERR_PTR((long)led);
-
-What about using sizeof(*led) in place of sizeof(struct ktd2692_context)..?
-
-Also the error return for devm_kzalloc() should be -ENOMEM.
-
-> +
-> + led->strobe_gpio = of_get_named_gpio(np, "strobe-gpio", 0);
-> + if (!gpio_is_valid(led->strobe_gpio)) {
-> + dev_err(dev, "no strobe_gpio property found\n");
-> + return ERR_PTR(led->strobe_gpio);
-> + }
-> +
-> + return led;
-> +}
-> +
-> +static int ktd2692_probe(struct platform_device *pdev)
-> +{
-> + struct device *dev = &pdev->dev;
-> + struct ktd2692_context *led;
-> + int ret;
-> +
-> + if (!dev->of_node)
-> + return -ENODEV;
-> +
-> + led = ktd2692_parse_dt(dev);
-> + if (IS_ERR(led))
-> + return PTR_ERR(led);
-> +
-> + led->cdev.name = KTD2692_DEFAULT_NAME;
-> + led->cdev.brightness = LED_OFF;
-> + led->cdev.max_brightness = LED_FULL;
-> + led->cdev.flags |= LED_CORE_SUSPENDRESUME;
-> + led->cdev.brightness_set = ktd2692_brightness_set;
-> + led->cdev.brightness_get = ktd2692_brightness_get;
-> + led->mode = KTD2692_REG_MODE_BASE | KTD2692_MODE_DISABLE;
-> +
-> + platform_set_drvdata(pdev, led);
-> +
-> + ret = led_classdev_register(&pdev->dev, &led->cdev);
-> + if (ret) {
-> + dev_err(dev, "couldn't register LED %s\n", led->cdev.name);
-> + return ret;
-> + }
-> +
-> + ret = ktd2692_brightness_set_gpio(led);
-> + if (ret) {
-> + led_classdev_unregister(&led->cdev);
-> + return ret;
-> + }
-> +
-> + ktd2692_expresswire_reset(led);
-> +
-> + return ret;
-
-return 0 instead of ret...?
+So should we add some string specific to apm/xgnene (something like
+apm,cortex-a15-gic) or specific to 64K GIC page size
+(arm,cortex-a15-gic-64Kpg) ?
+Also till 3.19, I am not sure if any code is accessing GICC_DIR so for
+now only thing which seems to be needed is a new dt string for 64K gic
+pages.
 
 
-
--- 
 Thanks,
-Varka Bhadram.
+Pranav
+
+> Rob
+>
+>>
+>>>
+>>> I think perhaps we need a specific compatible property to indicate a
+>>> GIC-400 with address swizzling. While we could get away with using the
+>>> aliased addresses, that seems to be hard to get right and we may
+>>> regret not doing it in the long term. It would indicate at least it is
+>>> 64K page safe for example.
+>>>
+>>> Rob
+>>
+>> Thanks,
+>> Pranav
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
