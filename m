@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [PATCH v11 4/6] devicetree: Add new SKY81452 backlight binding
-Date: Fri, 27 Feb 2015 15:42:24 +0900
-Message-ID: <1425019346-4559-5-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [PATCH v11 5/6] devicetree: Add vendor prefix for Skyworks Solutions, Inc.
+Date: Fri, 27 Feb 2015 15:42:25 +0900
+Message-ID: <1425019346-4559-6-git-send-email-jack.yoo@skyworksinc.com>
 References: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
@@ -13,11 +13,10 @@ List-Id: devicetree@vger.kernel.org
 From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 
 Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-Acked-by: Bryan Wu <cooloney@gmail.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
 Changes v11:
-Renamed 'skyworks,en-channels' property to led-sources.
-Removed unused property 'skyworks,ovp-level'.
+Nothing
 
 Changes v10:
 Nothing
@@ -26,9 +25,7 @@ Changes v9:
 Nothing
 
 Changes v8:
-Renamed property names for backlight with vendor prefix
-Modified gpio-enable property to generic property for GPIO
-Made up the example for backlight DT
+Nothing
 
 Changes v7:
 Nothing
@@ -46,46 +43,22 @@ Changes v3:
 Nothing
 
 Changes v2:
-Added reg attribute for I2C slave address
+Added vendor prefix for Skyworks Solutions, Inc.
 
- .../video/backlight/sky81452-backlight.txt         | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-new file mode 100644
-index 0000000..8bf2940
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-@@ -0,0 +1,29 @@
-+SKY81452-backlight bindings
-+
-+Required properties:
-+- compatible		: Must be "skyworks,sky81452-backlight"
-+
-+Optional properties:
-+- name			: Name of backlight device. Default is 'lcd-backlight'.
-+- gpios			: GPIO to use to EN pin.
-+			See Documentation/devicetree/bindings/gpio/gpio.txt
-+- led-sources		: List of enabled channels from 0 to 5.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+- skyworks,ignore-pwm	: Ignore both PWM input
-+- skyworks,dpwm-mode	: Enable DPWM dimming mode, otherwise Analog dimming.
-+- skyworks,phase-shift	: Enable phase shift mode
-+- skyworks,short-detection-threshold-volt
-+			: It should be one of 4, 5, 6 and 7V.
-+- skyworks,current-limit-mA
-+			: It should be 2300mA or 2750mA.
-+
-+Example:
-+
-+	backlight {
-+		compatible = "skyworks,sky81452-backlight";
-+		name = "pwm-backlight";
-+		led-sources = <0 1 2 5>;
-+		skyworks,ignore-pwm;
-+		skyworks,phase-shift;
-+		skyworks,current-limit-mA = <2300>;
-+	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 389ca13..c4fe9cc 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -165,6 +165,7 @@ sii	Seiko Instruments, Inc.
+ silergy	Silergy Corp.
+ sirf	SiRF Technology, Inc.
+ sitronix	Sitronix Technology Corporation
++skyworks	Skyworks Solutions, Inc.
+ smsc	Standard Microsystems Corporation
+ snps	Synopsys, Inc.
+ solidrun	SolidRun
 -- 
 1.9.1
