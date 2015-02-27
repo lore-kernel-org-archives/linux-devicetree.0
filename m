@@ -1,39 +1,47 @@
-From: Jonathan Richardson <jonathar@broadcom.com>
-Subject: [PATCH v2 0/1] Synopsis 8250 serial port driver fix
-Date: Thu, 26 Feb 2015 16:35:56 -0800
-Message-ID: <1424997357-31487-1-git-send-email-jonathar@broadcom.com>
-References: <Jonathan Richardson <jonathar@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: [PATCH 2/3] leds: ktd2692: add device tree bindings for ktd2692
+Date: Fri, 27 Feb 2015 10:01:30 +0900
+Message-ID: <1424998891-25591-3-git-send-email-ingi2.kim@samsung.com>
+References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <Jonathan Richardson <jonathar@broadcom.com>
+In-reply-to: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+To: robh+dt@kerner.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cooloney@gmail.com, rpurdie@rpsys.net, treding@nvidia.com, p.zabel@pengutronix.de, andrew@lunn.ch, gregkh@linuxfoundation.org, florian.vaussard@epfl.ch, arno@natisbad.org, kuninori.morimoto.gx@renesas.com, hytszk@gmail.com, antonynpavlov@gmail.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds the device tree bindings for ktd2692 flash LEDs
 
-This patchset fixes a bug in the Synopsis 8250 serial driver which causes the
-driver to hang. The bug occurs on simple 2 wire serial ports when modem control
-signalling has been enabled. It can be reproduced from user space by enabling
-modem control signals (stty -clocal), then opening a serial port and polling for
-data available to read with a timeout. A properly implemented driver will
-ignore the control signals and the call to poll will return. The current
-version of the driver hangs forever on the call to poll despite the timeout.
+Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+---
+ .../devicetree/bindings/leds/leds-ktd2692.txt      |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-ktd2692.txt
 
-Jon
-
-Changes from v1:
-- Changed DT properties from strings to booleans as suggested by Arnd. 
-  Documentation updated accordingly.
-
-Desmond Liu (1):
-  serial: 8250_dw: Fix get_mctrl behaviour
-
- .../bindings/serial/snps-dw-apb-uart.txt           |   16 ++++++++++
- drivers/tty/serial/8250/8250_dw.c                  |   32 ++++++++++++++++++++
- 2 files changed, 48 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-ktd2692.txt b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
+new file mode 100644
+index 0000000..b68faa6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-ktd2692.txt
+@@ -0,0 +1,19 @@
++* Kinetic Technologies - KTD2692 Flash LED Driver
++
++KTD2692 is the ideal power solution for high-power flash LEDs.
++It uses ExpressWire single-wire programming for maximum flexibility.
++
++Required properties:
++	- compatible: "kinetic,ktd2692"
++	- strobe-gpio: gpio pin to control movie mode current level.
++	- torch-gpio: gpio pin to control ON/OFF flash mode
++			 as a higher priority over strobe-gpio.
++
++Example:
++
++flash-led {
++	compatible = "kinetic,ktd2692";
++	strobe-gpio = <&gpc0 1 0>;
++	torch-gpio = <&gpc0 2 0>;
++	status = "okay";
++};
 -- 
 1.7.9.5
