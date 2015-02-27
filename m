@@ -1,75 +1,125 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/7] clk: Add clock driver for mb86s7x
-Date: Thu, 26 Feb 2015 17:28:22 -0800
-Message-ID: <20150227012822.421.16727@quantum>
-References: <1423188007-17047-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
- <1423188649-17216-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
+Date: Fri, 27 Feb 2015 10:07:55 +0800
+Message-ID: <20150227020753.GA28634@shlinux2>
+References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org>
+ <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org>
+ <20150220144119.GB1707@saruman.tx.rr.com> <54E75665.6050205@linaro.org>
+ <20150220160610.GB6430@saruman.tx.rr.com> <54E89E29.4010807@linaro.org>
+ <20150221162102.GA1784@saruman.tx.rr.com> <54E948AC.2010609@linaro.org>
+ <54EC4ECA.2090300@ti.com> <54EEDDDE.9010608@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423188649-17216-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <54EEDDDE.9010608@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: mark.rutland@arm.com, "dan . zhao" <dan.zhao@hisilicon.com>, linux-usb@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, balbi@ti.com, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vincent Yang (2015-02-05 18:10:49)
-> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Thu, Feb 26, 2015 at 04:48:30PM +0800, zhangfei wrote:
+> Hi, Roger
 > 
->  The CRG11 clock controller is managed by remote f/w.
-> This driver simply maps Linux CLK ops onto mailbox api.
+> On 02/24/2015 06:13 PM, Roger Quadros wrote:
+> >>>On Sat, Feb 21, 2015 at 11:03:05PM +0800, zhangfei wrote:
+> >>>>>>>>+static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
+> >>>>>>>>+{
+> >>>>>>>>+    struct usb_otg *otg = priv->phy.otg;
+> >>>>>>>>+
+> >>>>>>>>+    if (!otg->gadget)
+> >>>>>>>>+        return;
+> >>>>>>>>+
+> >>>>>>>>+    if (on)
+> >>>>>>>>+        usb_gadget_connect(otg->gadget);
+> >>>>>>>>+    else
+> >>>>>>>>+        usb_gadget_disconnect(otg->gadget);
+> >>>>>>>
+> >>>>>>>why is the PHY fiddling with pullups ?
+> >>>>>>
+> >>>>>>We use this to enable/disable otg gadget mode.
+> >>>>>
+> >>>>>I got that, but the pullups don't belong to the PHY, they belong to the
+> >>>>>gadget.
+> >>>>>
+> >>>>>>The gpio_id & gpio_vbus are used to distinguish otg gadget mode or
+> >>>>>>host mode.
+> >>>>>>When micro usb or otg device attached to otg, gpio_vbus falling down.
+> >>>>>>And gpio_id = 1 is micro usb, gpio_id = 0 is otg device.
+> >>>>>
+> >>>>>all of that I understood clearly :-)
+> >>>>>
+> >>>>>>So when micro usb attached, we enable gadget mode; while micro usb
+> >>>>>>detached, we disable gadget mode, and dwc2 will automatically set to
+> >>>>>>host mode.
+> >>>>>
+> >>>>>that's all fine, I'm concerned about letting the PHY fiddle with
+> >>>>>something it doesn't own. If I am to change pullups rules in udc-core,
+> >>>>>this is likely to break down miserably and I don't want to have to go
+> >>>>>through that.
+> >>>>
+> >>>>Thanks for the clarifying.
+> >>>
+> >>>no problem.
+> >>>
+> >>>>How about using usb_gadget_vbus_connect/disconnect, which are used in many
+> >>>>files under drivers/usb/phy.
+> >>>>There is no vbus_session in dwc2/gadget.c, I thought it would be same as
+> >>>>pullup.
+> >>>>
+> >>>>However, usb_gadget_vbus_connect still need para gadget, where should we put
+> >>>>this file, drivers/usb/phy or drivers/phy
+> >>>
+> >>>drivers/phy, if the framework misses anything you need, it's a great
+> >>>opportunity to give back to the community by extending the framework.
+> >>
+> >>Sorry, I am a little confused.
+> >>I need some concrete suggestion for the next step of this patch, which is required for the community board, hikey board.
+> >>
+> >>Do you mean in the future we need use hsotg->phy instead of hsotg->uphy.
+> >>         struct phy *phy;
+> >>         struct usb_phy *uphy;
+> >>usb_phy has many members that struct phy does not have, including otg.
+> >>struct usb_otg          *otg;
+> >>Is that mean we need port such member from usb_phy to phy.
+> >
+> >In my opinion otg structure should belong to the USB core part that takes care
+> >of the OTG/DRD state machine. We still don't have a clear solution here and
+> >I'm currently investigating this.
+> >My current work is to get Dual role functionality working with DWC3 controller and TI
+> >platforms.
+> >
+> >Currently phy drivers take care of OTG operation themselves but there is an opportunity
+> >to share code and centralize USB role switching.
+> >The USB core should be the owner of the Host controller, Gadget controller and the OTG phy
+> >and should take care of the that.
 > 
-> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
-> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
-> ---
->  .../bindings/clock/fujitsu,mb86s70-crg11.txt       |  26 ++
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/clk-mb86s7x.c                          | 386 +++++++++++++++++++++
->  3 files changed, 413 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
->  create mode 100644 drivers/clk/clk-mb86s7x.c
+> Good idea.
+> If you have any patch, I will be very happy to verify.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt b/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
-> new file mode 100644
-> index 0000000..3323962
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
-> @@ -0,0 +1,26 @@
-> +Fujitsu CRG11 clock driver bindings
-> +-----------------------------------
-> +
-> +Required properties :
-> +- compatible : Shall contain "fujitsu,mb86s70-crg11"
-> +- #clock-cells : Shall be 3 {cntrlr domain port}
-> +
-> +The consumer specifies the desired clock pointing to its phandle.
-> +
-> +Example:
-> +
-> +       clock: crg11 {
-> +               compatible = "fujitsu,mb86s70-crg11";
-> +               #clock-cells = <3>;
-> +       };
-> +
-> +       mhu: mhu0@2b1f0000 {
-> +               #mbox-cells = <1>;
-> +               compatible = "arm,mhu";
-> +               reg = <0 0x2B1F0000 0x1000>;
-> +               interrupts = <0 36 4>, /* LP Non-Sec */
-> +                            <0 35 4>, /* HP Non-Sec */
-> +                            <0 37 4>; /* Secure */
-> +               clocks = <&clock 0 2 1>; /* Cntrlr:0 Domain:2 Port:1 */
+> How about adding these things in drivers/phy/phy-core.c, it is also
+> sharable, though not in usb core.
+> 
+> Just tried adding one member struct usb_otg otg to struct phy, since
+> not find any good member can hold usb_otg.
+> In drivers/phy/phy-core.c, adding extcon_register_interest,
+> phy_vbus_notifier, phy_set_peripheral, it works for me, dwc2 on
+> hikey board.
 
-Some preprocessor definitions would be better than hardcoding the values
-for Cntrlr, Domain and Port. The DT include chroot should help you
-here. Doing so will help you maintain this stuff into the future :-)
+Just thinking if we can follow struct usb_hcd and struct ehci_hcd design
+way, the generic phy just like hcd, and the usb phy like ehci hcd which
+is a private data for hcd. zhangfei, maybe you can have a try.
 
-Regards,
-Mike
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+
+Best Regards,
+Peter Chen
