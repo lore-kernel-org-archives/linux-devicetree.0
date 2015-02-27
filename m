@@ -1,125 +1,102 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v4 4/4] phy: add phy-hi6220-usb
-Date: Fri, 27 Feb 2015 10:07:55 +0800
-Message-ID: <20150227020753.GA28634@shlinux2>
-References: <1423726646-30336-1-git-send-email-zhangfei.gao@linaro.org>
- <1423726646-30336-5-git-send-email-zhangfei.gao@linaro.org>
- <20150220144119.GB1707@saruman.tx.rr.com> <54E75665.6050205@linaro.org>
- <20150220160610.GB6430@saruman.tx.rr.com> <54E89E29.4010807@linaro.org>
- <20150221162102.GA1784@saruman.tx.rr.com> <54E948AC.2010609@linaro.org>
- <54EC4ECA.2090300@ti.com> <54EEDDDE.9010608@linaro.org>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] leds: Add ktd2692 flash LED driver
+Date: Fri, 27 Feb 2015 09:06:45 +0530
+Message-ID: <CAEUmHybnzdVk59UTsVczW59hpLrimoMeF+j5Gbtue2jNayHHuw@mail.gmail.com>
+References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
+	<1424998891-25591-4-git-send-email-ingi2.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <54EEDDDE.9010608@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: zhangfei <zhangfei.gao@linaro.org>
-Cc: mark.rutland@arm.com, "dan . zhao" <dan.zhao@hisilicon.com>, linux-usb@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Wangbinghui <wangbinghui@hisilicon.com>, linux-kernel@vger.kernel.org, balbi@ti.com, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1424998891-25591-4-git-send-email-ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-SEjsEC/fJMIdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, florian.vaussard-p8DiymsW2f8@public.gmane.org, arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 26, 2015 at 04:48:30PM +0800, zhangfei wrote:
-> Hi, Roger
-> 
-> On 02/24/2015 06:13 PM, Roger Quadros wrote:
-> >>>On Sat, Feb 21, 2015 at 11:03:05PM +0800, zhangfei wrote:
-> >>>>>>>>+static void hi6220_start_peripheral(struct hi6220_priv *priv, bool on)
-> >>>>>>>>+{
-> >>>>>>>>+    struct usb_otg *otg = priv->phy.otg;
-> >>>>>>>>+
-> >>>>>>>>+    if (!otg->gadget)
-> >>>>>>>>+        return;
-> >>>>>>>>+
-> >>>>>>>>+    if (on)
-> >>>>>>>>+        usb_gadget_connect(otg->gadget);
-> >>>>>>>>+    else
-> >>>>>>>>+        usb_gadget_disconnect(otg->gadget);
-> >>>>>>>
-> >>>>>>>why is the PHY fiddling with pullups ?
-> >>>>>>
-> >>>>>>We use this to enable/disable otg gadget mode.
-> >>>>>
-> >>>>>I got that, but the pullups don't belong to the PHY, they belong to the
-> >>>>>gadget.
-> >>>>>
-> >>>>>>The gpio_id & gpio_vbus are used to distinguish otg gadget mode or
-> >>>>>>host mode.
-> >>>>>>When micro usb or otg device attached to otg, gpio_vbus falling down.
-> >>>>>>And gpio_id = 1 is micro usb, gpio_id = 0 is otg device.
-> >>>>>
-> >>>>>all of that I understood clearly :-)
-> >>>>>
-> >>>>>>So when micro usb attached, we enable gadget mode; while micro usb
-> >>>>>>detached, we disable gadget mode, and dwc2 will automatically set to
-> >>>>>>host mode.
-> >>>>>
-> >>>>>that's all fine, I'm concerned about letting the PHY fiddle with
-> >>>>>something it doesn't own. If I am to change pullups rules in udc-core,
-> >>>>>this is likely to break down miserably and I don't want to have to go
-> >>>>>through that.
-> >>>>
-> >>>>Thanks for the clarifying.
-> >>>
-> >>>no problem.
-> >>>
-> >>>>How about using usb_gadget_vbus_connect/disconnect, which are used in many
-> >>>>files under drivers/usb/phy.
-> >>>>There is no vbus_session in dwc2/gadget.c, I thought it would be same as
-> >>>>pullup.
-> >>>>
-> >>>>However, usb_gadget_vbus_connect still need para gadget, where should we put
-> >>>>this file, drivers/usb/phy or drivers/phy
-> >>>
-> >>>drivers/phy, if the framework misses anything you need, it's a great
-> >>>opportunity to give back to the community by extending the framework.
-> >>
-> >>Sorry, I am a little confused.
-> >>I need some concrete suggestion for the next step of this patch, which is required for the community board, hikey board.
-> >>
-> >>Do you mean in the future we need use hsotg->phy instead of hsotg->uphy.
-> >>         struct phy *phy;
-> >>         struct usb_phy *uphy;
-> >>usb_phy has many members that struct phy does not have, including otg.
-> >>struct usb_otg          *otg;
-> >>Is that mean we need port such member from usb_phy to phy.
-> >
-> >In my opinion otg structure should belong to the USB core part that takes care
-> >of the OTG/DRD state machine. We still don't have a clear solution here and
-> >I'm currently investigating this.
-> >My current work is to get Dual role functionality working with DWC3 controller and TI
-> >platforms.
-> >
-> >Currently phy drivers take care of OTG operation themselves but there is an opportunity
-> >to share code and centralize USB role switching.
-> >The USB core should be the owner of the Host controller, Gadget controller and the OTG phy
-> >and should take care of the that.
-> 
-> Good idea.
-> If you have any patch, I will be very happy to verify.
-> 
-> How about adding these things in drivers/phy/phy-core.c, it is also
-> sharable, though not in usb core.
-> 
-> Just tried adding one member struct usb_otg otg to struct phy, since
-> not find any good member can hold usb_otg.
-> In drivers/phy/phy-core.c, adding extcon_register_interest,
-> phy_vbus_notifier, phy_set_peripheral, it works for me, dwc2 on
-> hikey board.
+On 02/27/2015 06:31 AM, Ingi Kim wrote:
+> This patch adds a driver to support the ktd2692 flash LEDs.
+> ktd2692 can control flash current by ExpressWire interface.
+>
+> Signed-off-by: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>   drivers/leds/Kconfig        |    8 ++
+>   drivers/leds/Makefile       |    1 +
+>   drivers/leds/leds-ktd2692.c |  245 +++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 254 insertions(+)
+>   create mode 100644 drivers/leds/leds-ktd2692.c
+>
+(...)
 
-Just thinking if we can follow struct usb_hcd and struct ehci_hcd design
-way, the generic phy just like hcd, and the usb phy like ehci hcd which
-is a private data for hcd. zhangfei, maybe you can have a try.
+> +static struct ktd2692_context *ktd2692_parse_dt(struct device *dev)
+> +{
+> + struct device_node *np = dev->of_node;
+> + struct ktd2692_context *led;
+> +
+> + led = devm_kzalloc(dev, sizeof(struct ktd2692_context), GFP_KERNEL);
+> + if (!led)
+> + return ERR_PTR((long)led);
+
+What about using sizeof(*led) in place of sizeof(struct ktd2692_context)..?
+
+Also the error return for devm_kzalloc() should be -ENOMEM.
+
+> +
+> + led->strobe_gpio = of_get_named_gpio(np, "strobe-gpio", 0);
+> + if (!gpio_is_valid(led->strobe_gpio)) {
+> + dev_err(dev, "no strobe_gpio property found\n");
+> + return ERR_PTR(led->strobe_gpio);
+> + }
+> +
+> + return led;
+> +}
+> +
+> +static int ktd2692_probe(struct platform_device *pdev)
+> +{
+> + struct device *dev = &pdev->dev;
+> + struct ktd2692_context *led;
+> + int ret;
+> +
+> + if (!dev->of_node)
+> + return -ENODEV;
+> +
+> + led = ktd2692_parse_dt(dev);
+> + if (IS_ERR(led))
+> + return PTR_ERR(led);
+> +
+> + led->cdev.name = KTD2692_DEFAULT_NAME;
+> + led->cdev.brightness = LED_OFF;
+> + led->cdev.max_brightness = LED_FULL;
+> + led->cdev.flags |= LED_CORE_SUSPENDRESUME;
+> + led->cdev.brightness_set = ktd2692_brightness_set;
+> + led->cdev.brightness_get = ktd2692_brightness_get;
+> + led->mode = KTD2692_REG_MODE_BASE | KTD2692_MODE_DISABLE;
+> +
+> + platform_set_drvdata(pdev, led);
+> +
+> + ret = led_classdev_register(&pdev->dev, &led->cdev);
+> + if (ret) {
+> + dev_err(dev, "couldn't register LED %s\n", led->cdev.name);
+> + return ret;
+> + }
+> +
+> + ret = ktd2692_brightness_set_gpio(led);
+> + if (ret) {
+> + led_classdev_unregister(&led->cdev);
+> + return ret;
+> + }
+> +
+> + ktd2692_expresswire_reset(led);
+> +
+> + return ret;
+
+return 0 instead of ret...?
+
+
 
 -- 
-
-Best Regards,
-Peter Chen
+Thanks,
+Varka Bhadram.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
