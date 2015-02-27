@@ -1,75 +1,106 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH_V3 1/3] dt-bindings: dma: Add binding for jz4780-dma
-Date: Fri, 27 Feb 2015 09:20:38 +0000
-Message-ID: <54F036E6.9010700@imgtec.com>
-References: <1424954614-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com>	<1424954614-12589-2-git-send-email-Zubair.Kakakhel@imgtec.com> <CAOFt0_CiopFkYECuQUczOtNoo6D8zbCOaE6attP6=KU4zicV7w@mail.gmail.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH 1/2] ARM: OMAP2: hwmod: AM43XX: Add hwmod support for HDQ-1W
+Date: Fri, 27 Feb 2015 14:54:16 +0530
+Message-ID: <1425029057-5075-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOFt0_CiopFkYECuQUczOtNoo6D8zbCOaE6attP6=KU4zicV7w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Smith <alex@alex-smith.me.uk>
-Cc: vinod.koul@intel.com, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Evgeniy Polyakov <zbr@ioremap.net>, Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, NeilBrown <neilb@suse.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
 
-On 26/02/15 20:04, Alex Smith wrote:
-> Hi Zubair,
-> 
-> On 26 February 2015 at 12:43, Zubair Lutfullah Kakakhel
-> <Zubair.Kakakhel@imgtec.com> wrote:
->> From: Alex Smith <alex.smith@imgtec.com>
->>
->> Add device tree bindings for the DMA controller on JZ4780 SoCs, used by
->> the dma-jz4780 driver.
->>
->> Signed-off-by: Alex Smith <alex.smith@imgtec.com>
->> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
->>
->> ---
->> V3 -> V2
->> Changed binding.
->> Used to be 3 DMA cells required. <&dma TX_type RX_type Reserved>
->> Now 2 DMA cells are required. <&dma Transfer_type Reserved>
->>
->> This is more common in DMA bindings.
->> And I couldn't figure any reason that 3 cells were used.
-> 
-> There are different request type numbers for transfers to/from the
-> same device (see the JZ4780 programmers manual, page 505). While only
-> having the option to specify one transfer type is OK when the driver
-> is using separate channels for read/writes, I recall seeing/writing
-> some other drivers which use a single channel for both reads and
-> writes. This would not be possible if we can only specify one transfer
-> type, you'd have to have them separate.
-> 
+This patch adds hwmod data for hdq/1w driver on AM43xx.
 
-I know. I looked at the drivers and did this on purpose.
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+[vigneshr@ti.com: Ported patch to v4.0-rc1]
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 36 ++++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/prcm43xx.h             |  1 +
+ 2 files changed, 37 insertions(+)
 
-We'd like to keep the same bindings/code for jz4740/jz4780 peripheral drivers and dma code.
+diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+index 8eb85925e444..d4f1df28475c 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+@@ -20,6 +20,7 @@
+ #include "omap_hwmod_33xx_43xx_common_data.h"
+ #include "prcm43xx.h"
+ #include "omap_hwmod_common_data.h"
++#include "hdq1w.h"
+ 
+ 
+ /* IP blocks */
+@@ -516,6 +517,33 @@ static struct omap_hwmod am43xx_dss_rfbi_hwmod = {
+ 	.parent_hwmod	= &am43xx_dss_core_hwmod,
+ };
+ 
++/* HDQ1W */
++static struct omap_hwmod_class_sysconfig am43xx_hdq1w_sysc = {
++	.rev_offs       = 0x0000,
++	.sysc_offs      = 0x0014,
++	.syss_offs      = 0x0018,
++	.sysc_flags     = (SYSC_HAS_SOFTRESET),
++	.sysc_fields    = &omap_hwmod_sysc_type1,
++};
++
++static struct omap_hwmod_class am43xx_hdq1w_hwmod_class = {
++	.name   = "hdq1w",
++	.sysc   = &am43xx_hdq1w_sysc,
++	.reset	= &omap_hdq1w_reset,
++};
++
++static struct omap_hwmod am43xx_hdq1w_hwmod = {
++	.name           = "hdq1w",
++	.class          = &am43xx_hdq1w_hwmod_class,
++	.clkdm_name     = "l4ls_clkdm",
++	.prcm = {
++		.omap4 = {
++			.clkctrl_offs = AM43XX_CM_PER_HDQ1W_CLKCTRL_OFFSET,
++			.modulemode   = MODULEMODE_SWCTRL,
++		},
++	},
++};
++
+ /* Interfaces */
+ static struct omap_hwmod_ocp_if am43xx_l3_main__l4_hs = {
+ 	.master		= &am33xx_l3_main_hwmod,
+@@ -790,6 +818,13 @@ static struct omap_hwmod_ocp_if am43xx_l4_ls__dss_rfbi = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
++static struct omap_hwmod_ocp_if am43xx_l4_ls__hdq1w = {
++	.master         = &am33xx_l4_ls_hwmod,
++	.slave          = &am43xx_hdq1w_hwmod,
++	.clk            = "l4ls_gclk",
++	.user           = OCP_USER_MPU | OCP_USER_SDMA,
++};
++
+ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am33xx_l4_wkup__synctimer,
+ 	&am43xx_l4_ls__timer8,
+@@ -889,6 +924,7 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am43xx_l4_ls__dss,
+ 	&am43xx_l4_ls__dss_dispc,
+ 	&am43xx_l4_ls__dss_rfbi,
++	&am43xx_l4_ls__hdq1w,
+ 	NULL,
+ };
+ 
+diff --git a/arch/arm/mach-omap2/prcm43xx.h b/arch/arm/mach-omap2/prcm43xx.h
+index ad7b3e9977f8..48df3b55057e 100644
+--- a/arch/arm/mach-omap2/prcm43xx.h
++++ b/arch/arm/mach-omap2/prcm43xx.h
+@@ -143,5 +143,6 @@
+ #define AM43XX_CM_PER_USB_OTG_SS1_CLKCTRL_OFFSET        0x0268
+ #define AM43XX_CM_PER_USBPHYOCP2SCP1_CLKCTRL_OFFSET	0x05C0
+ #define AM43XX_CM_PER_DSS_CLKCTRL_OFFSET		0x0a20
++#define AM43XX_CM_PER_HDQ1W_CLKCTRL_OFFSET		0x04a0
+ 
+ #endif
+-- 
+1.9.1
 
-Our jz47xx-mmc driver we had was the main culprit I found. As well as the jz4740-i2s one.
-
-However, jz4740-mmc upstream driver has improved already for dma and takes two dma channels.
-And the jz4740-i2s also takes two channels. One for Tx and one for Rx.
-
-If we move to 3 cells for jz4780-dma. Then 'ideally' jz4740-dma would need 3 cells too.
-Or we'd have a binding nightmare everywhere.
-
-But when we use jz4740-mmc and jz4740-i2s, we still have to change the driver to share one channel 
-or simply pass them
-<&dma Tx 0 Reserved>
-<&dma 0 Rx Reserved>
-
-Which makes the binding redundant.
-
-There isn't any particular reason a driver would need to share one channel only.
-The 'special' nand/nemc channels don't have a request type.
-
-Thanks,
-ZubairLK
-
-> Thanks,
-> Alex
