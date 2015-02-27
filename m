@@ -1,62 +1,73 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
-Date: Fri, 27 Feb 2015 21:49:41 +0000
-Message-ID: <20150227214941.GB12821@x1>
-References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
- <87385r3uk9.fsf@free.fr>
+Subject: Re: [PATCH 3/4] clk: Provide always-on clock support
+Date: Fri, 27 Feb 2015 21:51:20 +0000
+Message-ID: <20150227215120.GC12821@x1>
+References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
+ <1425071674-16995-4-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87385r3uk9.fsf@free.fr>
+In-Reply-To: <1425071674-16995-4-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, kernel@stlinux.com, devicetree@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Feb 2015, Robert Jarzmik wrote:
+On Fri, 27 Feb 2015, Lee Jones wrote:
 
-> Lee Jones <lee.jones@linaro.org> writes:
+> Lots of platforms contain clocks which if turned off would prove fata=
+l.
+> The only way to recover from these catastrophic failures is to restar=
+t
+> the board(s).  Now, when a clock is registered with the framework it =
+is
+> compared against a list of provided always-on clock names which must =
+be
+> kept ungated.  If it matches, we enable the existing CLK_IGNORE_UNUSE=
+D
+> flag, which will prevent the common clk framework from attempting to
+> gate it during the clk_disable_unused() procedure.
 >=20
-> > v2 =3D> v3:
-> >   - Ensure DT actually reflects h/w
-> >     - i.e. Nodes should not contain a mishmash of different IP
-> >       blocks, but should identify related h/w.  In the current
-> >       example we use interconnects
-> >   - Change naming from clkdomain to clk-always-on
-> >   - Place "do not abuse" warning in documentation
-> >
-> > v1 =3D> v2:
-> >   - Turned the ST specific driver into a generic one
-> >  =20
-> > Hardware can have a bunch of clocks which must not be turned off.
-> > If drivers a) fail to obtain a reference to any of these or b) give
-> > up a previously obtained reference during suspend, the common clk
-> > framework will attempt to turn them off and the hardware will
-> > subsequently die.  The only way to recover from this failure is to
-> > restart.
-> >  =20
-> > To avoid either of these two scenarios from catastrophically
-> > disabling the running system we have implemented a clock domain
-> > where clocks are consumed and references are taken, thus preventing
-> > them from being shut down by the framework.
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/clk/clk.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >=20
-> Hi Lee,
->=20
-> I wonder why there is a need for a new clock when CLK_IGNORE_UNUSED d=
-oes
-> exist. What is the usecase that is covered by this patchset which is =
-not used by
-> CLK_IGNORE_UNUSED clock flag ?
->=20
-> And if that reason exists, I'd like to find it in the commit message.
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 61c3fc5..3aab75e 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -2856,6 +2856,9 @@ int of_clk_add_provider(struct device_node *np,
+>  			void *data)
+>  {
+>  	struct of_clk_provider *cp;
+> +	struct property *prop;
+> +	struct clk *clk;
+> +	const char *clkname;
+>  	int ret;
+> =20
+>  	cp =3D kzalloc(sizeof(struct of_clk_provider), GFP_KERNEL);
+> @@ -2875,6 +2878,14 @@ int of_clk_add_provider(struct device_node *np=
+,
+>  	if (ret < 0)
+>  		of_clk_del_provider(np);
+> =20
+> +	of_property_for_each_string(np, "clock-always-on", prop, clkname) {
+> +		clk =3D __clk_lookup(clkname);
+> +		if (!clk)
+> +			continue;
+> +
+> +		clk->core->flags |=3D CLK_IGNORE_UNUSED;
 
-The problem is applying that flag in a generic way.
+Might save a few cycles by breaking here.
 
-However, I guess you haven't seen this [1] yet?
-
-[1] https://lkml.org/lkml/2015/2/27/548
+> +	}
+> +
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(of_clk_add_provider);
 
 --=20
 Lee Jones
