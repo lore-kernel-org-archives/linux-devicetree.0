@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [PATCH v11 5/6] devicetree: Add vendor prefix for Skyworks Solutions, Inc.
-Date: Fri, 27 Feb 2015 15:42:25 +0900
-Message-ID: <1425019346-4559-6-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [PATCH v11 6/6] devicetree: Add SKY81452 to the Trivial Devices list
+Date: Fri, 27 Feb 2015 15:42:26 +0900
+Message-ID: <1425019346-4559-7-git-send-email-jack.yoo@skyworksinc.com>
 References: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
@@ -13,7 +13,6 @@ List-Id: devicetree@vger.kernel.org
 From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 
 Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
 Changes v11:
 Nothing
@@ -43,22 +42,22 @@ Changes v3:
 Nothing
 
 Changes v2:
-Added vendor prefix for Skyworks Solutions, Inc.
+Add SKY81452 to the Trivial Devices list
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389ca13..c4fe9cc 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -165,6 +165,7 @@ sii	Seiko Instruments, Inc.
- silergy	Silergy Corp.
- sirf	SiRF Technology, Inc.
- sitronix	Sitronix Technology Corporation
-+skyworks	Skyworks Solutions, Inc.
- smsc	Standard Microsystems Corporation
- snps	Synopsys, Inc.
- solidrun	SolidRun
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index aaa8325..003bd77 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -89,6 +89,7 @@ ricoh,rv5c386		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+ ricoh,rv5c387a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+ samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
+ sii,s35390a		2-wire CMOS real-time clock
++skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
+ st-micro,24c256		i2c serial eeprom  (24cxx)
+ stm,m41t00		Serial Access TIMEKEEPER
+ stm,m41t62		Serial real-time clock (RTC) with alarm
 -- 
 1.9.1
