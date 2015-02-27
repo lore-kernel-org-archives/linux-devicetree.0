@@ -1,42 +1,34 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v2 2/2] ARM: perf: Add support for Scorpion PMUs
-Date: Fri, 27 Feb 2015 19:46:56 +0000
-Message-ID: <20150227194656.GB24818@arm.com>
-References: <1423851849-6069-1-git-send-email-sboyd@codeaurora.org>
- <1423851849-6069-3-git-send-email-sboyd@codeaurora.org>
- <20150220193552.GE1767@arm.com>
- <20150220201627.GD24928@codeaurora.org>
- <CAJ5Y-eYLeeNDcBtdvMf-k0XGxq-P21FDq-VMHPJsp4=ccuemig@mail.gmail.com>
- <CAJ5Y-ea8LBji1L3Q+NMgA9+eOrDVwWNodqPDD9XsyCzi=LMj9g@mail.gmail.com>
- <54F0C72B.2090501@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54F0C72B.2090501@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: [PATCH 0/3] Fix backward compatibility of newer firmware with older kernel
+Date: Fri, 27 Feb 2015 12:08:27 -0800
+Message-ID: <1425067710-14879-1-git-send-email-isubramanian@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 27, 2015 at 07:36:11PM +0000, Stephen Boyd wrote:
-> On 02/25/15 08:58, Ashwin Chaugule wrote:
-> > Its a count control register (PMxEVCNTCR). Theres various conditions
-> > on which you can select when to start/stop counting. e.g. start when
-> > another counter register overflows. Setting it to 0 was the
-> > recommended default value on Scorpions and Kraits. Reset value is
-> > unpredictable. So, just need to make sure this is set every time a
-> > counter is setup. Will that still work if this is moved to the reset
-> > path?
-> 
-> I don't think anything in this register changes unless we reset the CPU
-> or software changes it, right? We already have a hotplug notifier to
-> handle the case where the CPU is hotplugged out (and may get reset) and
-> we need to reset the PMU. The other case is deep idle, which we don't
-> have yet but we'll need to do a save/reset/restore across idle when we
-> get there. So it seems possible to move it to the PMU reset path.
+Kernel 3.17 driver supports only RGMII ethernet interface.
+Since the Tianocore DT contains same compatibility string for RGMII,
+SGMII based 1G and XFI based 10G interfaces, crash happens when probe called
+on SGMII based 1G and XFI based 10G interface.
 
-That would be my preference! Please respin the patches and I'll take another
-look.
+This patch fixes the backward compatibility of the older driver with the
+newer firmware by making the binding unique so that the older driver won't
+recognize the non-supported interfaces.
 
-Will
+---
+
+Iyappan Subramanian (3):
+  Documentation: dts: Update compatible field description for APM X-Gene
+  dtb: change binding name to match with newer firmware DT
+  drivers: net: xgene: fix new firmware backward compatibility with
+    older driver
+
+ Documentation/devicetree/bindings/net/apm-xgene-enet.txt | 3 ++-
+ arch/arm64/boot/dts/apm/apm-storm.dtsi                   | 4 ++--
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c         | 4 ++++
+ 3 files changed, 8 insertions(+), 3 deletions(-)
+
+-- 
+1.9.1
