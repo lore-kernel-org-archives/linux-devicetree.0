@@ -1,110 +1,54 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
- leds: flash: document sysfs interface
-Date: Fri, 27 Feb 2015 15:34:22 +0100
-Message-ID: <54F0806E.2040309@samsung.com>
-References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
- <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
- <20150218224747.GA3999@amd> <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
- <20150219214043.GB29875@kroah.com> <54E6E89B.4050404@samsung.com>
- <20150220153616.GB18111@kroah.com> <20150220205738.GA28995@amd>
- <20150221105733.GO3915@valkosipuli.retiisi.org.uk>
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] spi: qup: Add DMA capabilities
+Date: Fri, 27 Feb 2015 16:46:17 +0200
+Message-ID: <54F08339.5020708@mm-sol.com>
+References: <1424782803-13103-1-git-send-email-stanimir.varbanov@linaro.org> <20150224135622.GH6236@finisterre.sirena.org.uk> <54ECA216.306@linaro.org> <20150226023317.GE6236@finisterre.sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20150221105733.GO3915@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Pavel Machek <pavel@ucw.cz>, Greg KH <greg@kroah.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150226023317.GE6236-bheZrs9scGb3/WHNxyQH9YN0K6Il/+VY@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Sneddon <dsneddon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On 02/26/2015 04:33 AM, Mark Brown wrote:
+> On Tue, Feb 24, 2015 at 06:08:54PM +0200, Stanimir Varbanov wrote:
+> 
+>> yes, there is a potential race between atomic_inc and dma callback. I
+>> reordered these calls to save few checks, and now it returns to me.
+> 
+>> I imagine few options here:
+> 
+>>  - reorder the dmaengine calls and atomic operations, i.e.
+>> call atomic_inc for rx and tx channels before corresponding
+>> dmaengine_submit and dmaengine_issue_pending.
+> 
+>>  - have two different dma callbacks and two completions and waiting for
+>> the two.
+> 
+>>  - manage to receive only one dma callback, i.e. the last transfer in
+>> case of presence of the rx_buf and tx_buf at the same time.
+> 
+>>  - let me see for better solution.
+> 
+> Any solution which doesn't make use of atomics is likely to be better,
+> as I said they are enormously error prone.  A more common approach is a
+> single completion triggering on the RX (for RX only or bidirectional
+> transfers) or TX if that's the only thing active.  For most hardware you
+> can just use the RX to manage completion since it must of necessity
+> complete at the same time as or later than the transmit side, transmit
+> often completes early since the DMA completes when the FIFO is full not
+> when the data is on the wire.
+> 
 
-On 02/21/2015 11:57 AM, Sakari Ailus wrote:
-> Hi Pavel and Greg,
->
-> On Fri, Feb 20, 2015 at 09:57:38PM +0100, Pavel Machek wrote:
->> On Fri 2015-02-20 07:36:16, Greg KH wrote:
->>> On Fri, Feb 20, 2015 at 08:56:11AM +0100, Jacek Anaszewski wrote:
->>>> On 02/19/2015 10:40 PM, Greg KH wrote:
->>>>> On Thu, Feb 19, 2015 at 11:02:04AM +0200, Sakari Ailus wrote:
->>>>>> On Wed, Feb 18, 2015 at 11:47:47PM +0100, Pavel Machek wrote:
->>>>>>>
->>>>>>> On Wed 2015-02-18 17:20:22, Jacek Anaszewski wrote:
->>>>>>>> Add a documentation of LED Flash class specific sysfs attributes.
->>>>>>>>
->>>>>>>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->>>>>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>>>>>> Cc: Bryan Wu <cooloney@gmail.com>
->>>>>>>> Cc: Richard Purdie <rpurdie@rpsys.net>
->>>>>>>
->>>>>>> NAK-ed-by: Pavel Machek
->>>>>>>
->>>>>>>> +What:		/sys/class/leds/<led>/available_sync_leds
->>>>>>>> +Date:		February 2015
->>>>>>>> +KernelVersion:	3.20
->>>>>>>> +Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
->>>>>>>> +Description:	read/write
->>>>>>>> +		Space separated list of LEDs available for flash strobe
->>>>>>>> +		synchronization, displayed in the format:
->>>>>>>> +
->>>>>>>> +		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
->>>>>>>
->>>>>>> Multiple values per file, with all the problems we had in /proc. I
->>>>>>> assume led_id is an integer? What prevents space or dot in led name?
->>>>>>
->>>>>> Very good point. How about using a newline instead? That'd be a little bit
->>>>>> easier to parse, too.
->>>>>
->>>>> No, please make it one value per-file, which is what sysfs requires.
->>>>
->>>> The purpose of this attribute is only to provide an information about
->>>> the range of valid identifiers that can be written to the
->>>> flash_sync_strobe attribute. Wouldn't splitting this to many attributes
->>>> be an unnecessary inflation of sysfs files?
->>>
->>> Ok a list of allowed values to write is acceptable, as long as it is not
->>> hard to parse and always is space separated.
->>
->> Well, this one is list of LED numbers and LED names.
->
-> It'd be nice if these names would match the V4L2 sub-device names. We don't
-
- From the discussion on IRC it turned out that one of components of the
-V4L2 sub-device name will be a media controller identifier.
-
-This implies that if support for V4L2 Flash devices will be turned off
-in the kernel config the LED name will have to differ from the case
-when the support is on. I think that this is undesired.
-
-> have any rules for them other than they must be unique, and there's the
-> established practice that an I2C address follows the component name. We're
-> about to discuss the matter on Monday on #v4l (11:00 Finnish time), but I
-> don't think we can generally guarantee any of the names won't have spaces.
-
-> Separate files, then?
-
-I tried to split this to separate files but it turned out to be awkward.
-Since the number of LEDs to synchronize can vary from device to device,
-the number of the related sysfs attributes cannot be fixed.
-
-As far as I know allocating the sysfs attributes dynamically is unsafe,
-and thus the maximum allowed number of synchronized LEDs would have to
-be agreed on for the whole led-class-flash and the relevant number of
-similar struct attribute instances and related callbacks would have to
-be created statically for every LED Flash class device, no matter if
-a device would need them.
-
-Of course the relevant sysfs group could be initialized only with
-the needed number of sync leds attributes, but still this is less
-than optimal design.
-
-It looks like this interface indeed doesn't fit for sysfs.
-
-I am leaning towards removing the support for synchronized flash LEDs
-from the LED subsystem entirely and leave it only to V4L2.
+yep, that's what I wanted to express in third option above.
 
 -- 
-Best Regards,
-Jacek Anaszewski
+regards,
+Stan
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
