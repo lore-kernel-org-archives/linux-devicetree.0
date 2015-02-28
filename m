@@ -1,143 +1,92 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v4 2/4] mfd: lubbock_cplds: add lubbock IO board
-Date: Sat, 28 Feb 2015 10:57:30 +0100
-Message-ID: <87mw3y2wad.fsf@free.fr>
-References: <20150216130549.GF14545@x1>
-	<1170550770.470129293.1424093248596.JavaMail.root@zimbra1-e1.priv.proxad.net>
-	<20150216162712.GR14545@x1> <87fva5a4i2.fsf@free.fr>
-	<20150217074310.GT14545@x1>
-	<alpine.LFD.2.11.1502171221300.22104@knanqh.ubzr>
-	<20150218080719.GB5781@x1> <87a9088tam.fsf@free.fr>
+From: Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>
+Subject: Re: [PATCH_V3 1/3] dt-bindings: dma: Add binding for jz4780-dma
+Date: Sat, 28 Feb 2015 09:58:14 +0000
+Message-ID: <CAOFt0_ATY82+-0_yF3WsTMDYC9ApyK4FxTqNT3A8QK62awzOuQ@mail.gmail.com>
+References: <1424954614-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+	<1424954614-12589-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+	<CAOFt0_CiopFkYECuQUczOtNoo6D8zbCOaE6attP6=KU4zicV7w@mail.gmail.com>
+	<54F036E6.9010700@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87a9088tam.fsf@free.fr> (Robert Jarzmik's message of "Fri, 20
-	Feb 2015 17:02:57 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54F036E6.9010700-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Robert Jarzmik <robert.jarzmik@free.fr> writes:
+On 27 February 2015 at 09:20, Zubair Lutfullah Kakakhel
+<Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Alex,
+>
+> On 26/02/15 20:04, Alex Smith wrote:
+>> Hi Zubair,
+>>
+>> On 26 February 2015 at 12:43, Zubair Lutfullah Kakakhel
+>> <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>>> From: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Add device tree bindings for the DMA controller on JZ4780 SoCs, used by
+>>> the dma-jz4780 driver.
+>>>
+>>> Signed-off-by: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>>> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> ---
+>>> V3 -> V2
+>>> Changed binding.
+>>> Used to be 3 DMA cells required. <&dma TX_type RX_type Reserved>
+>>> Now 2 DMA cells are required. <&dma Transfer_type Reserved>
+>>>
+>>> This is more common in DMA bindings.
+>>> And I couldn't figure any reason that 3 cells were used.
+>>
+>> There are different request type numbers for transfers to/from the
+>> same device (see the JZ4780 programmers manual, page 505). While only
+>> having the option to specify one transfer type is OK when the driver
+>> is using separate channels for read/writes, I recall seeing/writing
+>> some other drivers which use a single channel for both reads and
+>> writes. This would not be possible if we can only specify one transfer
+>> type, you'd have to have them separate.
+>>
+>
+> I know. I looked at the drivers and did this on purpose.
+>
+> We'd like to keep the same bindings/code for jz4740/jz4780 peripheral drivers and dma code.
+>
+> Our jz47xx-mmc driver we had was the main culprit I found. As well as the jz4740-i2s one.
+>
+> However, jz4740-mmc upstream driver has improved already for dma and takes two dma channels.
+> And the jz4740-i2s also takes two channels. One for Tx and one for Rx.
+>
+> If we move to 3 cells for jz4780-dma. Then 'ideally' jz4740-dma would need 3 cells too.
+> Or we'd have a binding nightmare everywhere.
+>
+> But when we use jz4740-mmc and jz4740-i2s, we still have to change the driver to share one channel
+> or simply pass them
+> <&dma Tx 0 Reserved>
+> <&dma 0 Rx Reserved>
+>
+> Which makes the binding redundant.
+>
+> There isn't any particular reason a driver would need to share one channel only.
+> The 'special' nand/nemc channels don't have a request type.
 
-> Hi Arnd and Greg,
-It's been a week, backlog ping ?
+Ok, fair enough. I was just thinking that the bindings shouldn't be
+restrictive on the way that you can set things up, but if that's the
+way that things are already being done for jz4740 then as you say it's
+better to follow that.
+
+Thanks,
+Alex
 
 >
-> I have this driver I'm upstreaming, which comes out of
-> arch/arm/mach-pxa/lubbock.c. As for the reason it is extracted, see submitted
-> commit [1] for reference.
+> Thanks,
+> ZubairLK
 >
-> The main question is : where does it belong in the kernel ?
->
-> The driver is :
->  - for the CPLDs on the Lubbock development platform, which is more or less an
->    old motherboard for Intel Xscale pxa255 SoC (see [2] for more details)
->  - these CPLDs control :
->    - interrupt muxing towards the SoC
->    - several leds
->    - switches read back
->    For the whole patch, see [4]
->
-> Lee's position is that it doesn't belong to drivers/mfd, see [3].
->
-> So where should I submit it ? And more generally, where should CPLDs drivers be
-> pushed in the kernel tree ?
->
-> If there is no solution, I'll fallback through arch/arm/plat-pxa, not very nice,
-> but it has to land somewhere, I don't want lubbock to remain broken.
->
-> Cheers.
->
-> --
-> Robert
->
-> [1] Reason of extraction / commit message
->     mfd: lubbock_cplds: add lubbock IO board
->     
->     Lubbock () board is the IO motherboard of the Intel PXA25x Development
->     Platform, which supports the Lubbock pxa25x soc board.
->     
->     Historically, this support was in arch/arm/mach-pxa/lubbock.c. When
->     gpio-pxa was moved to drivers/pxa, it became a driver, and its
->     initialization and probing happened at postcore initcall. The lubbock
->     code used to install the chained lubbock interrupt handler at init_irq()
->     time.
->     
->     The consequence of the gpio-pxa change is that the installed chained irq
->     handler lubbock_irq_handler() was overwritten in pxa_gpio_probe(_dt)(),
->     removing :
->      - the handler
->      - the falling edge detection setting of GPIO0, which revealed the
->        interrupt request from the lubbock IO board.
->     
->     As a fix, move the gpio0 chained handler setup to a place where we have
->     the guarantee that pxa_gpio_probe() was called before, so that lubbock
->     handler becomes the true IRQ chained handler of GPIO0, demuxing the
->     lubbock IO board interrupts.
->     
->     This patch moves all that handling to a mfd driver. It's only purpose
->     for the time being is the interrupt handling, but in the future it
->     should encompass all the motherboard CPLDs handling :
->      - leds
->      - switches
->      - hexleds
->     
->     Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
->
-> [2] Board description by Nicolas
->>> The Lubbock is an ancient development board (circa 2003) using a CPLD to 
->>> multiplex a couple things on the board.  I really doubt anyone would 
->>> reprogram this CPLD at this point. So I'd treat it just like another 
->>> interrupt controller + random peripherals that will never change.  And 
->>> yes, maybe a more appropriate name is needed.
->
-> [3] Lee's position
->>> > I don't think this is correct either.  CPLD handling would probably be
->>> > slightly less out of place in drivers/misc, but perhaps a new
->>> > subsystem for PLDs/CPLDs/FPGAs would be more appropriate
->>> > drivers/programmables or similar maybe.
->>> >
-> ...
->>> > I'm pretty convinced that it doesn't belong in MFD now, but it doesn't
->>> > mean I'm going to leave you on the curb.  I'd like to help you get it
->>> > into a better home.
->>> > 
->>> > [...]
->>> > > Is not only a irqchip because, as explained at the bottom of the commit message,
->>> > > quoting myself :
->>> > >   This patch moves all that handling to a mfd driver. It's only purpose
->>> > >   for the time being is the interrupt handling, but in the future it
->>> > >   should encompass all the motherboard CPLDs handling :
->>> > >    - leds
->>> > >    - switches
->>> > >    - hexleds
->>> > 
->>> > I had a conversation about this on IRC yesterday and some good
->>> > points/questions were posed.  This is a difficult area, because you
->>> > can program these things to do whatever you like.  Depending on the
->>> > 'intention' (and it is only an intention -- someone else can come
->>> > along and reprogram these devices on a whim), the CPLD code could live
->>> > anywhere.  If you wanted to put watchdog functionality in there, then
->>> > there is an argument for it to live in drivers/watchdog, etc etc.  So
->>> > just because the plan is to support a few (i.e. more than one) simple
->>> > devices, it doesn't necessarily mean that the handling should be done
->>> > in MFD.
->>> > 
->>> > Yesterday I was asked "Are you wanting to restrict drivers in
->>> > drivers/mfd to those that make use of MFD_CORE functionality?".  My
->>> > answer to that was "No, however; I only want devices which
->>> > _intrinsically_ operate in multiple subsystems", which these
->>> > programmables no not do.
->>> > 
->>> > FYI, you're not on your own here.  There is at least one of these
->>> > devices in the kernel already and upon a short inspection there
->>> > appears to be a number of Out-of-Tree (OoT) drivers out there which
->>> > will require a home in Mainline sooner or later.
->>> > 
->
-> [4] Whole patch
-> https://lkml.org/lkml/2015/1/24/90
-
--- 
-Robert
+>> Thanks,
+>> Alex
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
