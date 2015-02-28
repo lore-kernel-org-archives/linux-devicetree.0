@@ -1,59 +1,56 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 05/10] ARM: dts: omap3 hs: Remove timer12
-Date: Sat, 28 Feb 2015 17:54:23 +0100
-Message-ID: <20150228165423.GJ4978@amd>
-References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com>
- <1424958600-18881-6-git-send-email-pali.rohar@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/2] dt-bindings: add root compatible property for
+ PopMetal board
+Date: Sat, 28 Feb 2015 18:43:19 +0100
+Message-ID: <20074998.Rot74D46YJ@diego>
+References: <1425034505-25163-1-git-send-email-andy.yan@rock-chips.com>
+ <1425034741-25229-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1424958600-18881-6-git-send-email-pali.rohar@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1425034741-25229-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, naobsd@gmail.com, b.galvani@gmail.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, romain.perier@gmail.com, linux-arm-kernel@lists.infradead.org, mark.yao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu 2015-02-26 14:49:55, Pali Roh=E1r wrote:
-> Device timer12 is automatically disabled on all HS devices via DTS pr=
-operty
-> "ti,timer-secure" in file omap3.dtsi so it can be safely removed. We =
-do not
-> need to disable it on another place.
+Hi Andy,
 
-Dunno. Theoretically, Linux is not the only user of dts... so even if
-linux handles ti,timer-secure as "don't use it", that may not be right
-for bootloaders etc.
+Am Freitag, 27. Februar 2015, 18:59:01 schrieb Andy Yan:
+> PopMetal board is a rk3288 based board made by ChipSpark,
+> this patch add root compatible property for it
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
+> ---
+> 
+>  Documentation/devicetree/bindings/arm/rockchip.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
+> b/Documentation/devicetree/bindings/arm/rockchip.txt index 6809e4e..818d249
+> 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -22,3 +22,7 @@ Rockchip platforms device tree bindings
+>        - compatible = "firefly,firefly-rk3288", "rockchip,rk3288";
+>      or
+>        - compatible = "firefly,firefly-rk3288-beta", "rockchip,rk3288";
+> +
+> +- PopMetal PopMetal-RK3288 board:
 
-> diff --git a/arch/arm/boot/dts/omap34xx-hs.dtsi b/arch/arm/boot/dts/o=
-map34xx-hs.dtsi
-> index 1ff6264..d4be302 100644
-> --- a/arch/arm/boot/dts/omap34xx-hs.dtsi
-> +++ b/arch/arm/boot/dts/omap34xx-hs.dtsi
-> @@ -10,7 +10,3 @@
->  &sham {
->  	status =3D "disabled";
->  };
-> -
-> -&timer12 {
-> -	status =3D "disabled";
-> -};
-> diff --git a/arch/arm/boot/dts/omap36xx-hs.dtsi b/arch/arm/boot/dts/o=
-map36xx-hs.dtsi
-> index 2c7febb..e93ff8d 100644
-> --- a/arch/arm/boot/dts/omap36xx-hs.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx-hs.dtsi
-> @@ -10,7 +10,3 @@
->  &sham {
->  	status =3D "disabled";
->  };
-> -
-> -&timer12 {
-> -	status =3D "disabled";
-> -};
+this should probably be
+	ChipSPARK PopMetal-RK3288 board:
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
+
+> +    Required root node properties:
+> +      - compatible = "chipspark,popmetal-rk3288", "rockchip,rk3288";
