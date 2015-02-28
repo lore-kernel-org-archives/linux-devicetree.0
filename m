@@ -1,49 +1,44 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v8 0/2] mtd: hisilicon: add a new driver for NAND controller
- of hisilicon hip04 Soc
-Date: Sat, 28 Feb 2015 14:01:51 +0800
-Message-ID: <54F159CF.9090208@hisilicon.com>
-References: <1422183194-10148-1-git-send-email-wangzhou1@hisilicon.com> <20150208083514.GD3670@norris-Latitude-E6410>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH 3/4] clk: Provide always-on clock support
+Date: Sat, 28 Feb 2015 08:52:23 +0100
+Message-ID: <54F173B7.9030305@st.com>
+References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org> <1425071674-16995-4-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150208083514.GD3670@norris-Latitude-E6410>
+In-Reply-To: <1425071674-16995-4-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015/2/8 16:35, Brian Norris wrote:
-> On Sun, Jan 25, 2015 at 06:53:12PM +0800, Zhou Wang wrote:
->> This patchset adds the support for NAND controller of hisilicon hip04 Soc.
->> The NAND controller IP was developed by hisilicon and needs a new driver to
->> support it. This patchset is based on l2-mtd/master.
->>
->> I have tested this NAND flash controller driver in Hip04 D01 board using MTD
->> test modules. All testes passed except mtd_nandbiterrs. The reason is that this
->> NAND controller doesn't support to write raw page in ECC mode. In the test of
->> mtd_nandbiterrs, when rewriting raw page(with some bits changed) back, this NAND
->> controller will also produce ECC codes and write into NAND flash OOB area. As
->> ECC codes in OOB area have been broken, read error comes out as follow.
->>
->> Hi Brian,
->>
->> As the patch have been reviewed for some time, could you consider to take this
->> driver for v3.20? If there is something still not good, please let me know.
-> 
-> It's all looking good. Pushed to l2-mtd.git, probably for 3.20. I have
-> one or two small comments that may be worth thinking about though.
-> 
-> Brian
-> 
-> .
->
-Hi Brian,
+Hi Lee,
 
-Thanks a lot.
+On 02/27/2015 10:14 PM, Lee Jones wrote:
+> Lots of platforms contain clocks which if turned off would prove fatal.
+> The only way to recover from these catastrophic failures is to restart
+> the board(s).  Now, when a clock is registered with the framework it is
+> compared against a list of provided always-on clock names which must be
+> kept ungated.  If it matches, we enable the existing CLK_IGNORE_UNUSED
+> flag, which will prevent the common clk framework from attempting to
+> gate it during the clk_disable_unused() procedure.
 
-Zhou Wang
+Please correct me if I'm wrong, but your patch does not fix the issue 
+you had initially.
+Let's take an example:
+A clock is critical for the system, and should never be gated, so you 
+add the CLK_IGNORE_UNUSED
+flag so that it is not disabled by clk_disable_unused() procedure.
+The same clock is also used by other IPs, for example spi 0 instance.
+When starting a spi transfer, clk_enable() is called on this clock, so 
+its usecount becomes 1.
+Once transfer done, clk_disable() is called, usecount becomes 0 and the 
+clock gets disabled: system freeze.
+
+BR,
+Maxime
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
