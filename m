@@ -1,132 +1,58 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 2/6] dmaengine: Add driver for TI DMA crossbar on DRA7x
-Date: Sat, 28 Feb 2015 17:00:58 +0100
-Message-ID: <1425139258.24292.56.camel@x220>
-References: <1424787683-19151-1-git-send-email-peter.ujfalusi@ti.com>
-	 <1424787683-19151-3-git-send-email-peter.ujfalusi@ti.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] hwrng: iproc-rng200 - Add Broadcom IPROC RNG driver
+Date: Sat, 28 Feb 2015 08:01:11 -0800
+Message-ID: <54F1E647.10106@broadcom.com>
+References: <1424888184-22180-3-git-send-email-sbranden@broadcom.com> <4488852.TuVxKbAYde@wuerfel> <54EF9D7A.3090707@broadcom.com> <2093191.gujNGSl66k@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1424787683-19151-3-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: vinod.koul@intel.com, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, grant.likely@linaro.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, nm@ti.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2093191.gujNGSl66k@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-02-24 at 16:21 +0200, Peter Ujfalusi wrote:
-> The DRA7x has more peripherals with DMA requests than the sDMA can handle:
-> 205 vs 127. All DMA requests are routed through the DMA crossbar, which can
-> be configured to route selected incoming DMA requests to specific sDMA
-> request.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/Kconfig           |   4 +
->  drivers/dma/Makefile          |   1 +
->  drivers/dma/ti-dma-crossbar.c | 191 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 196 insertions(+)
->  create mode 100644 drivers/dma/ti-dma-crossbar.c
+On 15-02-27 01:14 AM, Arnd Bergmann wrote:
+> On Thursday 26 February 2015 14:26:02 Scott Branden wrote:
+>> On 15-02-26 12:15 PM, Arnd Bergmann wrote:
+>>>> On 15-02-25 11:17 AM, Arnd Bergmann wrote:
+>>>>> On Wednesday 25 February 2015 10:16:24 Scott Branden wrote:
+>>>> This code was following examples of other open source drivers - bcm2835
+>>>> and exynos both use cpu_relax.  I'll have to look into this more to
+>>>> understand.
+>>>>
+>>>
+>>> The majority of the driver apparently use udelay(10) to wait, which is
+>>> not much better but at least consistent. The cpu_relax() call probably
+>>> gives better throughput.
+>>>
+>>> I don't understand why none of the drivers actually attempts to
+>>> msleep(), but that may be because the delay is much too long.
+>>>
+>>> Can you find out what the expected latency is for new data to
+>>> become available on your hardware?
+>> RNG generates at a nominal 1 Mbps.  So to generate 32 bits of data takes
+>> approximately 32 us.
+>
+> The udelay(10) that the other drivers have seems about appropriate then,
+> and we can independently think of a way to refine the interface.
+> Please add a comment that explains the rate. Also, is there some kind
+> of FIFO present in the hwrng device? If it can store close to 1ms work
+> of data (1000 bits), you can just use an msleep(1) to wait for the
+> pool to recover.
+FIFO is 512 bits.  I will look as to whether we can live with 1/2 
+throughput.
+>
+> Another option would be to use usleep_range() with the exact amount
+> of time to wait for, the lower bound being the minimum number of
+> bytes asked for and the fifo size, the upper bound being the fifo
+> size.
+>
+> 	Arnd
+>
 
-A simple observation follows.
-
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index a874b6ec6650..dfe72a0f46dc 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -245,6 +245,9 @@ config TI_EDMA
->  	  Enable support for the TI EDMA controller. This DMA
->  	  engine is found on TI DaVinci and AM33xx parts.
->  
-> +config TI_DMA_CROSSBAR
-> +	bool
-> +
-
-This is a bool symbol...
-
->  config ARCH_HAS_ASYNC_TX_FIND_CHANNEL
->  	bool
->  
-> @@ -330,6 +333,7 @@ config DMA_OMAP
->  	depends on ARCH_OMAP
->  	select DMA_ENGINE
->  	select DMA_VIRTUAL_CHANNELS
-> +	select TI_DMA_CROSSBAR if SOC_DRA7XX
->  
->  config DMA_BCM2835
->  	tristate "BCM2835 DMA engine support"
-> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> index f915f61ec574..bc12f9a4e62b 100644
-> --- a/drivers/dma/Makefile
-> +++ b/drivers/dma/Makefile
-> @@ -38,6 +38,7 @@ obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
->  obj-$(CONFIG_DMA_SA11X0) += sa11x0-dma.o
->  obj-$(CONFIG_MMP_TDMA) += mmp_tdma.o
->  obj-$(CONFIG_DMA_OMAP) += omap-dma.o
-> +obj-$(CONFIG_TI_DMA_CROSSBAR) += ti-dma-crossbar.o
-
-... so this file will be either not built or built into the kernel...
-
->  obj-$(CONFIG_DMA_BCM2835) += bcm2835-dma.o
->  obj-$(CONFIG_MMP_PDMA) += mmp_pdma.o
->  obj-$(CONFIG_DMA_JZ4740) += dma-jz4740.o
-> diff --git a/drivers/dma/ti-dma-crossbar.c b/drivers/dma/ti-dma-crossbar.c
-> new file mode 100644
-> index 000000000000..bf01434df46a
-> --- /dev/null
-> +++ b/drivers/dma/ti-dma-crossbar.c
-> @@ -0,0 +1,191 @@
-> +/*
-> + *  Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
-> + *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/list.h>
-> +#include <linux/io.h>
-> +#include <linux/regmap.h>
-> +#include <linux/idr.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_dma.h>
-> +#include <linux/module.h>
-
-...  this includes linux/module.h ...
-
-[...]
-
-> +static struct platform_driver ti_dma_xbar_driver = {
-> +	.probe	= ti_dma_xbar_probe,
-> +	.driver = {
-> +		.name = "ti-dma-crossbar",
-> +		.owner = THIS_MODULE,
-
-... is that needed to make this work?
-
-> +		.of_match_table = of_match_ptr(ti_dma_xbar_match),
-> +	},
-> +};
-> +
-> +int omap_dmaxbar_init(void)
-> +{
-> +	return platform_driver_register(&ti_dma_xbar_driver);
-> +}
-> +arch_initcall(omap_dmaxbar_init);
-> +
-> +MODULE_DESCRIPTION("TI DMA Crossbar");
-> +MODULE_AUTHOR("Peter Ujfalusi <peter.ujfalusi@ti.com>");
-> +MODULE_LICENSE("GPL");
-
-And why are these three macros needed?
-
-By the way: there's a mismatch between the header (which is GPL v2) and
-the MODULE_LICENSE() string (which means GPL v2 or later).
-
-Paul Bolle
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
