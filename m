@@ -1,48 +1,57 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v6 2/5] power: max77843_charger: Add Max77843 charger
- device driver
-Date: Sat, 28 Feb 2015 21:03:41 +0100
-Message-ID: <1425153821.24292.65.camel@x220>
-References: <1424741348-8728-1-git-send-email-jaewon02.kim@samsung.com>
-	 <1424741348-8728-3-git-send-email-jaewon02.kim@samsung.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] Input: bcm-keypad: Add Broadcom keypad controller
+Date: Sat, 28 Feb 2015 14:10:22 -0800
+Message-ID: <20150228221022.GA36282@dtor-ws>
+References: <sbranden@broadcom.com>
+ <1425141357-7807-1-git-send-email-sbranden@broadcom.com>
+ <1425141357-7807-3-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1424741348-8728-3-git-send-email-jaewon02.kim@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Beomho Seo <beomho.seo@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425141357-7807-3-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-02-24 at 10:29 +0900, Jaewon Kim wrote:
-> diff --git a/drivers/power/max77843_charger.c b/drivers/power/max77843_charger.c
-> new file mode 100644
-> index 0000000..392eebc1a
-> --- /dev/null
-> +++ b/drivers/power/max77843_charger.c
-> @@ -0,0 +1,508 @@
-> +/*
-> + * Charger driver for Maxim MAX77843
-> + *
-> + * Copyright (C) 2015 Samsung Electronics, Co., Ltd.
-> + * Author: Beomho Seo <beomho.seo@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published bythe Free Software Foundation.
+Hi Scott,
 
-There's "bythe" again.
+On Sat, Feb 28, 2015 at 08:35:57AM -0800, Scott Branden wrote:
+> +	/* Enable clock */
+> +
+> +	kp->clk = devm_clk_get(&pdev->dev, "peri_clk");
+> +	if (IS_ERR(kp->clk)) {
+> +		dev_info(&pdev->dev,
+> +			"No clock specified. Assuming it's enabled\n");
 
-> + */
+I was doing the final pass before applying and I think that this is not
+quite correct, as it does not handle -EPROBE_DEFER properly which is
+quite common. I think we should do something like this:
 
-[...]
+		error = PTR_ERR(kp->clk);
+		if (error != -ENOENT) {
+			if (error != -EPROBE_DEFER)
+				dev_err(.. "Failed to get clock" ...);
+			return error;
+		}
+		dev_dbg(... "No clock specified" ...);
 
-> +MODULE_LICENSE("GPL");
+No need to resubmit if you are OK with this, I can make the change
+locally.
 
-And that should probably be
-    MODULE_LICENSE("GPL v2");
+> +	}
+> +	else {
 
+Checkpach should have warned you that it should have been "} else {";
+I'll fix it up locally along with few other cosmetic changes and
+dropping a few extra headers.
 
-Paul Bolle
+Thanks.
 
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
