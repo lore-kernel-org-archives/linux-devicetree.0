@@ -1,68 +1,36 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v2 2/2] Input: bcm-keypad: Add Broadcom keypad controller
-Date: Sat, 28 Feb 2015 15:16:18 +0100
-Message-ID: <1425132978.24292.39.camel@x220>
-References: <Scott Branden <sbranden@broadcom.com>
-	 <1424966930-28097-1-git-send-email-sbranden@broadcom.com>
-	 <1424966930-28097-3-git-send-email-sbranden@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 4/5] mfd: arizona: Add DT binding documentation for DMIC references
+Date: Sat, 28 Feb 2015 14:54:27 +0000
+Message-ID: <1425135268-32340-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1425135268-32340-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424966930-28097-3-git-send-email-sbranden@broadcom.com>
+In-Reply-To: <1425135268-32340-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: lee@kernel.org
+Cc: sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-02-26 at 08:08 -0800, Scott Branden wrote:
-> Add driver for Broadcom's keypad controller.
-> 
-> Broadcom Keypad controller is used to interface a SoC with a matrix-type
-> keypad device. The keypad controller supports multiple row and column lines.
-> A key can be placed at each intersection of a unique row and a unique column.
-> The keypad controller can sense a key-press and key-release and report the
-> event using a interrupt to the cpu.
-> 
-> Reviewed-by: Ray Jui <rjui@broadcom.com>
-> Signed-off-by: Scott Branden <sbranden@broadcom.com>
-> ---
->  drivers/input/keyboard/Kconfig      |  10 +
->  drivers/input/keyboard/Makefile     |   1 +
->  drivers/input/keyboard/bcm-keypad.c | 464 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 475 insertions(+)
->  create mode 100644 drivers/input/keyboard/bcm-keypad.c
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ Documentation/devicetree/bindings/mfd/arizona.txt |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-License nit follows.
-
-> diff --git a/drivers/input/keyboard/bcm-keypad.c b/drivers/input/keyboard/bcm-keypad.c
-> new file mode 100644
-> index 0000000..f229ac0
-> --- /dev/null
-> +++ b/drivers/input/keyboard/bcm-keypad.c
-> @@ -0,0 +1,464 @@
-> +/*
-> + * Copyright (C) 2014 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-
-This states that the license is GPL v2 only.
-
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-
-[...]
-
-> +MODULE_LICENSE("GPL");
-
-So you probably want
-    MODULE_LICENSE("GPL v2");
-
-
-Paul Bolle
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index 7ca7c1f..8709f07 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -54,6 +54,12 @@ Optional properties:
+     input singals. If values less than the number of input signals, elements
+     that has not been specifed are set to 0 by default.
+ 
++  - wlf,dmic-ref : DMIC reference for each input, can be selected from either
++    MICVDD or one of the MICBIAS's, defines (ARIZONA_DMIC_xxxx) are provided
++    in <dt-bindings/mfd/arizona.txt>. If present, the number of values should
++    be less than or equal to the number of inputs, unspecified inputs will
++    use the chip default.
++
+   - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
+     they are being externally supplied. As covered in
+     Documentation/devicetree/bindings/regulator/regulator.txt
+-- 
+1.7.2.5
