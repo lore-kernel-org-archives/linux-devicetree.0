@@ -1,11 +1,11 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] ARM: sun7i: dt: Add new MK808C device
-Date: Sat, 28 Feb 2015 14:43:24 +0100
-Message-ID: <1425131004-8551-1-git-send-email-codekipper@gmail.com>
+Subject: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
+Date: Sat, 28 Feb 2015 14:48:05 +0100
+Message-ID: <1425131285-8640-1-git-send-email-codekipper@gmail.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBB7ULY6TQKGQEBGSPK5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBF4OY6TQKGQEOS325JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -19,42 +19,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The MK808C is an A20 based android stick, with 1G RAM, 8G NAND flash,
-a RTL8723au wifi + bt combo chip, a USB host ports using USB-A receptacles,
-a mini USB-B receptacle for USB OTG, mini HDMI and a TRS connector for AV.
+The Mele I7 is a Allwinner A31 based Android TV box, with 1G RAM,
+8GB NAND flash, a RTL8188etv wifi chip, 3 USB Host ports using
+USB-A receptacles, a micro USB-B receptacle for USB OTG, HDMI out,
+a TRS connector for A/V, SPDIF and IrDA.
 
-This patch adds basic support for the device, more information can be found
-here (http://linux-sunxi.org/MK808C).
+This patch adds basic support for the device, more information can
+be found here (http://linux-sunxi.org/Mele_I7).
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/sun7i-a20-mk808c.dts | 146 +++++++++++++++++++++++++++++++++
- 2 files changed, 147 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-mk808c.dts
+ arch/arm/boot/dts/Makefile         |   1 +
+ arch/arm/boot/dts/sun6i-a31-i7.dts | 150 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 151 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun6i-a31-i7.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9544768..eae7706 100644
+index eae7706..8d9d5ea 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -542,6 +542,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-hummingbird.dtb \
- 	sun7i-a20-i12-tvbox.dtb \
- 	sun7i-a20-m3.dtb \
-+	sun7i-a20-mk808c.dtb \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
- 	sun7i-a20-olinuxino-micro.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-mk808c.dts b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
+@@ -532,6 +532,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+ 	sun6i-a31-app4-evb1.dtb \
+ 	sun6i-a31-colombus.dtb \
+ 	sun6i-a31-hummingbird.dtb \
++	sun6i-a31-i7.dtb \
+ 	sun6i-a31-m9.dtb \
+ 	sun6i-a31s-cs908.dtb
+ dtb-$(CONFIG_MACH_SUN7I) += \
+diff --git a/arch/arm/boot/dts/sun6i-a31-i7.dts b/arch/arm/boot/dts/sun6i-a31-i7.dts
 new file mode 100644
-index 0000000..5722a03
+index 0000000..43fdcd5
 --- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
-@@ -0,0 +1,146 @@
++++ b/arch/arm/boot/dts/sun6i-a31-i7.dts
+@@ -0,0 +1,150 @@
 +/*
-+ * Copyright 2015 Marcus Cooper
-+ *
-+ * Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ * Copyright 2015 Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
 + * This file is dual-licensed: you can use it either under the terms
 + * of the GPL or the X11 license, at your option. Note that this dual
@@ -101,22 +100,30 @@ index 0000000..5722a03
 + */
 +
 +/dts-v1/;
-+#include "sun7i-a20.dtsi"
++#include "sun6i-a31.dtsi"
 +#include "sunxi-common-regulators.dtsi"
 +
 +#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
 +#include <dt-bindings/pinctrl/sun4i-a10.h>
 +
 +/ {
-+	model = "mk808c";
-+	compatible = "mk808c", "allwinner,sun7i-a20";
++	model = "Mele I7 Quad top set box";
++	compatible = "mele,i7", "allwinner,sun6i-a31";
 +
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart2;
++	chosen {
++		bootargs = "earlyprintk console=ttyS0,115200";
 +	};
 +
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_i7>;
++
++		blue {
++			label = "i7:blue:usr";
++			gpios = <&pio 7 13 GPIO_ACTIVE_HIGH>;
++		};
++	};
 +};
 +
 +&ehci0 {
@@ -127,56 +134,61 @@ index 0000000..5722a03
 +	status = "okay";
 +};
 +
-+&i2c0 {
++&gmac {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
++	pinctrl-0 = <&gmac_pins_mii_a>;
++	phy = <&phy1>;
++	phy-mode = "mii";
 +	status = "okay";
 +
-+	axp209: pmic@34 {
-+		compatible = "x-powers,axp209";
-+		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
++	phy1: ethernet-phy@1 {
++		reg = <1>;
 +	};
 +};
 +
-+&i2c1 {
++&ir {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
++	pinctrl-0 = <&ir_pins_a>;
 +	status = "okay";
 +};
 +
 +&mmc0 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	vmmc-supply = <&reg_vcc3v0>;
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_i7>;
++	vmmc-supply = <&reg_vcc3v3>;
 +	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
 +	cd-inverted;
 +	status = "okay";
 +};
 +
-+&ohci0 {
-+	status = "okay";
-+};
++&pio {
++	led_pins_i7: led_pins@0 {
++		allwinner,pins = "PH13";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
 +
-+&ohci1 {
-+	status = "okay";
++	mmc0_cd_pin_i7: mmc0_cd_pin@0 {
++		allwinner,pins = "PH22";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	usb1_vbus_pin_i7: usb1_vbus_pin@0 {
++		allwinner,pins = "PC27";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
 +};
 +
 +&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb1_vbus_pin_i7>;
++	gpio = <&pio 2 27 GPIO_ACTIVE_HIGH>;
 +	status = "okay";
 +};
 +
@@ -186,15 +198,8 @@ index 0000000..5722a03
 +	status = "okay";
 +};
 +
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins_a>;
-+	status = "okay";
-+};
-+
 +&usbphy {
 +	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
 +	status = "okay";
 +};
 -- 
