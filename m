@@ -1,7 +1,7 @@
 From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 4/5] mfd: arizona: Add DT binding documentation for DMIC references
-Date: Sat, 28 Feb 2015 14:54:27 +0000
-Message-ID: <1425135268-32340-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 3/5] mfd: arizona: Add DT binding for the DMIC references
+Date: Sat, 28 Feb 2015 14:54:26 +0000
+Message-ID: <1425135268-32340-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1425135268-32340-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1425135268-32340-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
@@ -12,25 +12,29 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
- Documentation/devicetree/bindings/mfd/arizona.txt |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+ drivers/mfd/arizona-core.c |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index 7ca7c1f..8709f07 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -54,6 +54,12 @@ Optional properties:
-     input singals. If values less than the number of input signals, elements
-     that has not been specifed are set to 0 by default.
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index dddaaef..6002ce9 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -564,6 +564,16 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+ 		count++;
+ 	}
  
-+  - wlf,dmic-ref : DMIC reference for each input, can be selected from either
-+    MICVDD or one of the MICBIAS's, defines (ARIZONA_DMIC_xxxx) are provided
-+    in <dt-bindings/mfd/arizona.txt>. If present, the number of values should
-+    be less than or equal to the number of inputs, unspecified inputs will
-+    use the chip default.
++	count = 0;
++	of_property_for_each_u32(arizona->dev->of_node, "wlf,dmic-ref", prop,
++				 cur, val) {
++		if (count == ARRAY_SIZE(arizona->pdata.dmic_ref))
++			break;
 +
-   - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
-     they are being externally supplied. As covered in
-     Documentation/devicetree/bindings/regulator/regulator.txt
++		arizona->pdata.dmic_ref[count] = val;
++		count++;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 1.7.2.5
