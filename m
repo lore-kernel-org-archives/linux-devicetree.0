@@ -1,30 +1,78 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/2] hwrng: iproc-rng200 - Add Broadcom IPROC RNG driver
-Date: Sat, 28 Feb 2015 20:31:27 +0100
-Message-ID: <2555599.AxGoQ20pkj@wuerfel>
-References: <1424888184-22180-3-git-send-email-sbranden@broadcom.com> <2093191.gujNGSl66k@wuerfel> <54F1E647.10106@broadcom.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v6 3/5] power: max77843_battery: Add Max77843 fuel gauge
+ device driver
+Date: Sat, 28 Feb 2015 21:00:26 +0100
+Message-ID: <1425153626.24292.62.camel@x220>
+References: <1424741348-8728-1-git-send-email-jaewon02.kim@samsung.com>
+	 <1424741348-8728-4-git-send-email-jaewon02.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54F1E647.10106@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Grant Likely <grant.likely@linaro.org>, Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1424741348-8728-4-git-send-email-jaewon02.kim@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jaewon Kim <jaewon02.kim@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Beomho Seo <beomho.seo@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 28 February 2015 08:01:11 Scott Branden wrote:
-> > The udelay(10) that the other drivers have seems about appropriate then,
-> > and we can independently think of a way to refine the interface.
-> > Please add a comment that explains the rate. Also, is there some kind
-> > of FIFO present in the hwrng device? If it can store close to 1ms work
-> > of data (1000 bits), you can just use an msleep(1) to wait for the
-> > pool to recover.
-> FIFO is 512 bits.  I will look as to whether we can live with 1/2 
-> throughput.
+On Tue, 2015-02-24 at 10:29 +0900, Jaewon Kim wrote:
+> diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
+> index 994793d..555e436 100644
+> --- a/drivers/power/Kconfig
+> +++ b/drivers/power/Kconfig
+> @@ -212,6 +212,15 @@ config BATTERY_MAX17042
+>  	  with MAX17042. This driver also supports max17047/50 chips which are
+>  	  improved version of max17042.
+>  
+> +config BATTERY_MAX77843
+> +	tristate "Maxim MAX77843 Fuel Gauge"
+> +	depends on MFD_MAX77843
+> +	help
+> +	  This adds support for battery fuel gauge in Maxim MAX77843. It is
+> +	  fuel-gauge for a lithium-ion batteries with a single cell and can be
+> +	  found in portable devices. The MAX17040 is configured to operate with
 
-In that case, I think usleep_range(min(len * 8, 500), 500)) would be
-a good compromise: it waits at most until the fifo is full, but might
-return earlier if enough bits are available to fulfill the request.
+Could MAX17040 be a copy/paste error?
 
-	Arnd
+> +	  a single lithium cell.
+> +
+>  config BATTERY_Z2
+>  	tristate "Z2 battery driver"
+>  	depends on I2C && MACH_ZIPIT2
+
+[...]
+
+> diff --git a/drivers/power/max77843_battery.c b/drivers/power/max77843_battery.c
+> new file mode 100644
+> index 0000000..0c59a16
+> --- /dev/null
+> +++ b/drivers/power/max77843_battery.c
+> @@ -0,0 +1,286 @@
+> +/*
+> + * Fuel gauge driver for Maxim MAX77843
+> + *
+> + * Copyright (C) 2015 Samsung Electronics, Co., Ltd.
+> + * Author: Beomho Seo <beomho.seo@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published bythe Free Software Foundation.
+> + */
+
+I did
+    git grep "bythe Free" next-20150227
+
+and it returned five hits. This would be the sixth.
+
+Anyhow, this states that this file is licensed GPL v2.
+
+[...]
+
+> +MODULE_LICENSE("GPL");
+
+So this should probably be
+    MODULE_LICENSE("GPL v2");
+
+
+Paul Bolle
+
