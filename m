@@ -1,35 +1,65 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] clk: Provide always-on clock support
-Date: Sat, 28 Feb 2015 14:51:17 +0530
-Message-ID: <CAJe_Zhf=GBb8AfnTLaGxGcZkVSm9TtdnTsmpH_MBmbMT8ViMDg@mail.gmail.com>
-References: <1425071674-16995-1-git-send-email-lee.jones@linaro.org>
-	<1425071674-16995-4-git-send-email-lee.jones@linaro.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv2 05/15] ARM: mvebu: add stdout-path to all armada-*.dts
+Date: Sat, 28 Feb 2015 10:55:51 +0100
+Message-ID: <20150228105551.7b6532f8@free-electrons.com>
+References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
+	<54EB4E9B.6010001@free-electrons.com>
+	<CAL_JsqJZJMkH953hq0_sOvEEu9o4pXxs0sdP5=7c2EXXNSyA9A@mail.gmail.com>
+	<20150227174851.390d9f58@free-electrons.com>
+	<CAL_Jsq+tP6wBcDti7x-B6ar8esE=65Ymg_CKANeOKSe=yYhNnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425071674-16995-4-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+tP6wBcDti7x-B6ar8esE=65Ymg_CKANeOKSe=yYhNnw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Lior Amsalem <alior@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth>
 List-Id: devicetree@vger.kernel.org
 
-On 28 February 2015 at 02:44, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Lots of platforms contain clocks which if turned off would prove fatal.
-> The only way to recover from these catastrophic failures is to restart
-> the board(s).  Now, when a clock is registered with the framework it is
-> compared against a list of provided always-on clock names which must be
-> kept ungated.  If it matches, we enable the existing CLK_IGNORE_UNUSED
-> flag, which will prevent the common clk framework from attempting to
-> gate it during the clk_disable_unused() procedure.
->
-If a clock is critical on a certain board, it could be got+enabled
-during early boot so there is always a user.
-To be able to do that from DT, maybe add a new, say, CLK_ALWAYS_ON
-flag could be made to initialize the clock with one phantom user
-already. Or just reuse the CLK_IGNORE_UNUSED?
+Dear Rob Herring,
 
--Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, 27 Feb 2015 11:42:43 -0600, Rob Herring wrote:
+
+> > Unfortunately, this doesn't seem to work at all:
+> 
+> This must have all been tested on QEMU (or Fast Models?) which ignores
+> baud rate.
+
+
+Ok.
+
+> >    So it gets the right port name, the right idx, just the options are
+> >    null. It shouldn't be an issue since the serial port is already
+> >    initialized by the bootloader.
+> 
+> I think the default baudrate is 9600, not what the bootloader set.
+
+That might explain the issue then.
+
+> You need the full path here though. But garbage should not crash things.
+
+Indeed, I was surprised that a different DT string was crashing the
+kernel.
+
+
+> > It is worth mentioning that this also happens with
+> >
+> >      stdout-path = "uart0:115200n8";
+> >
+> > which was explicitly suggested by Mark in his e-mail. uart0 is an alias
+> > to the proper DT node, since stdout-path = &uart0; works almost fine.
+> 
+> Mark forgot the '&'. So does 'stdout-path = "&uart0:115200n8";' work?
+
+I don't have the board at hand right now, will try this on Tuesday when
+coming back to the office. Thanks for the suggestion!
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
