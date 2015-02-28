@@ -1,76 +1,107 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] Input: bcm-keypad: Add Broadcom keypad controller
-Date: Sat, 28 Feb 2015 07:36:02 -0800
-Message-ID: <54F1E062.8070609@broadcom.com>
-References: <Scott Branden <sbranden@broadcom.com>	 <1424966930-28097-1-git-send-email-sbranden@broadcom.com>	 <1424966930-28097-3-git-send-email-sbranden@broadcom.com> <1425132978.24292.39.camel@x220>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v4 6/9] watchdog: st_wdt: Add new driver for ST's LPC
+ Watchdog
+Date: Sat, 28 Feb 2015 16:36:29 +0100
+Message-ID: <1425137789.24292.44.camel@x220>
+References: <1424872349-4155-1-git-send-email-lee.jones@linaro.org>
+	 <1424872349-4155-7-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425132978.24292.39.camel@x220>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424872349-4155-7-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com, a.zummo@towertech.it, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2015-02-25 at 13:52 +0000, Lee Jones wrote:
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: David Paris <david.paris@st.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/watchdog/Kconfig      |  13 ++
+>  drivers/watchdog/Makefile     |   1 +
+>  drivers/watchdog/st_lpc_wdt.c | 333 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 347 insertions(+)
+>  create mode 100644 drivers/watchdog/st_lpc_wdt.c
 
-Yes, will correct.  Thanks.
+A few nits follow.
 
-On 15-02-28 06:16 AM, Paul Bolle wrote:
-> On Thu, 2015-02-26 at 08:08 -0800, Scott Branden wrote:
->> Add driver for Broadcom's keypad controller.
->>
->> Broadcom Keypad controller is used to interface a SoC with a matrix-type
->> keypad device. The keypad controller supports multiple row and column lines.
->> A key can be placed at each intersection of a unique row and a unique column.
->> The keypad controller can sense a key-press and key-release and report the
->> event using a interrupt to the cpu.
->>
->> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>   drivers/input/keyboard/Kconfig      |  10 +
->>   drivers/input/keyboard/Makefile     |   1 +
->>   drivers/input/keyboard/bcm-keypad.c | 464 ++++++++++++++++++++++++++++++++++++
->>   3 files changed, 475 insertions(+)
->>   create mode 100644 drivers/input/keyboard/bcm-keypad.c
->
-> License nit follows.
->
->> diff --git a/drivers/input/keyboard/bcm-keypad.c b/drivers/input/keyboard/bcm-keypad.c
->> new file mode 100644
->> index 0000000..f229ac0
->> --- /dev/null
->> +++ b/drivers/input/keyboard/bcm-keypad.c
->> @@ -0,0 +1,464 @@
->> +/*
->> + * Copyright (C) 2014 Broadcom Corporation
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation version 2.
->
-> This states that the license is GPL v2 only.
->
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warranty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->
-> [...]
->
->> +MODULE_LICENSE("GPL");
->
-> So you probably want
->      MODULE_LICENSE("GPL v2");
->
->
-> Paul Bolle
->
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 16f2023..023df6d 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -471,6 +471,19 @@ config SIRFSOC_WATCHDOG
+>  	  Support for CSR SiRFprimaII and SiRFatlasVI watchdog. When
+>  	  the watchdog triggers the system will be reset.
+>  
+> +config ST_LPC_WATCHDOG
+> +	tristate "STMicroelectronics LPC Watchdog"
+> +	depends on ARCH_STI
+> +	depends on OF
+> +	select WATCHDOG_CORE
+> +	select MFD_ST_LPC
+> +	help
+> +	  Say Y here to include STMicroelectronics Low Power Controller
+> +	  (LPC) based Watchdog timer support.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called st_wdt.
+> +
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This calls the module st_wdt. So does the title.
+
+>  config TEGRA_WATCHDOG
+>  	tristate "Tegra watchdog"
+>  	depends on (ARCH_TEGRA || COMPILE_TEST) && HAS_IOMEM
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 5c19294..d98768c 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -59,6 +59,7 @@ obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
+>  obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
+>  obj-$(CONFIG_MOXART_WDT) += moxart_wdt.o
+>  obj-$(CONFIG_SIRFSOC_WATCHDOG) += sirfsoc_wdt.o
+> +obj-$(CONFIG_ST_LPC_WATCHDOG) += st_lpc_wdt.o
+
+But this makes it st_lpc_wdt, doesn't it?
+
+>  obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
+>  obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
+>  obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
+> diff --git a/drivers/watchdog/st_lpc_wdt.c b/drivers/watchdog/st_lpc_wdt.c
+> new file mode 100644
+> index 0000000..91bb631
+> --- /dev/null
+> +++ b/drivers/watchdog/st_lpc_wdt.c
+> @@ -0,0 +1,333 @@
+> +/*
+> + * st-wdt.c - ST's LPC Watchdog
+
+Mismatch between "st-wdt.c" and the actual filename. Perhaps just remove
+"st-wdt.c - "?
+
+> + *
+> + * Copyright (C) 2014 STMicroelectronics -- All Rights Reserved
+> + *
+> + * Author: David Paris <david.paris@st.com> for STMicroelectronics
+> + *         Lee Jones <lee.jones@linaro.org> for STMicroelectronics
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public Licence
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the Licence, or (at your option) any later version.
+> + */
+
+This states the license is "GPL v2 or later"
+
+[...]
+
+> +MODULE_LICENSE("GPL v2");
+
+So this should probably be
+    MODULE_LICENSE("GPL");
+
+
+Paul Bolle
