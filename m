@@ -1,47 +1,89 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH 1/2] pinctrl: am33xx: dt-bindings: fix SLEWCTRL_FAST binding
-Date: Fri, 27 Feb 2015 19:10:26 -0600
-Message-ID: <1425085827-4514-2-git-send-email-d-gerlach@ti.com>
-References: <1425085827-4514-1-git-send-email-d-gerlach@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1425085827-4514-1-git-send-email-d-gerlach@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Dave Gerlach <d-gerlach@ti.com>
+From: huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5] drm/panel: Add support for AUO b101ean01 panel
+Date: Sat, 28 Feb 2015 10:18:58 +0800
+Message-ID: <1425089938-27397-1-git-send-email-hl@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-According to AM335x TRM, Document spruh73l, Revised February 2015,
-Section 9.2.2 Pad Control Registers, setting bit 6 of the pad control
-registers actually sets the SLEWCTRL value to slow rather than fast as
-the current macro indicates. Introduce a new macro, SLEWCTRL_SLOW, that
-sets the bit, and modify SLEWCTRL_FAST to 0 but keep it for
-completeness.
+The AUO b101ean01 panel is a 10.1" 1280x800 panel,
+which can be supported by the simple panel driver.
 
-Current users of the macro (i2c and mdio) are left unmodified as
-SLEWCTRL_FAST was the macro used and actual desired state. Tested on
-am335x-gp-evm with no difference in software performance seen.
+Signed-off-by: huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
 ---
- include/dt-bindings/pinctrl/am33xx.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/pinctrl/am33xx.h b/include/dt-bindings/pinctrl/am33xx.h
-index 2fbc804..226f772 100644
---- a/include/dt-bindings/pinctrl/am33xx.h
-+++ b/include/dt-bindings/pinctrl/am33xx.h
-@@ -13,7 +13,8 @@
+Changes in v5:
+- increase the vsync time
+
+ .../devicetree/bindings/panel/auo,b101ean01.txt    |  7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/auo,b101ean01.txt
+
+diff --git a/Documentation/devicetree/bindings/panel/auo,b101ean01.txt b/Documentation/devicetree/bindings/panel/auo,b101ean01.txt
+new file mode 100644
+index 0000000..3590b07
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/auo,b101ean01.txt
+@@ -0,0 +1,7 @@
++AU Optronics Corporation 10.1" WSVGA TFT LCD panel
++
++Required properties:
++- compatible: should be "auo,b101ean01"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index e95385b..375812b 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -345,6 +345,29 @@ static const struct panel_desc auo_b101aw03 = {
+ 	},
+ };
  
- #define PULL_DISABLE		(1 << 3)
- #define INPUT_EN		(1 << 5)
--#define SLEWCTRL_FAST		(1 << 6)
-+#define SLEWCTRL_SLOW		(1 << 6)
-+#define SLEWCTRL_FAST		0
- 
- /* update macro depending on INPUT_EN and PULL_ENA */
- #undef PIN_OUTPUT
++static const struct drm_display_mode auo_b101ean01_mode = {
++	.clock = 72500,
++	.hdisplay = 1280,
++	.hsync_start = 1280 + 119,
++	.hsync_end = 1280 + 119 + 32,
++	.htotal = 1280 + 119 + 32 + 21,
++	.vdisplay = 800,
++	.vsync_start = 800 + 4,
++	.vsync_end = 800 + 4 + 20,
++	.vtotal = 800 + 4 + 20 + 8,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc auo_b101ean01 = {
++	.modes = &auo_b101ean01_mode,
++	.num_modes = 1,
++	.bpc = 6,
++	.size = {
++		.width = 217,
++		.height = 136,
++	},
++};
++
+ static const struct drm_display_mode auo_b101xtn01_mode = {
+ 	.clock = 72000,
+ 	.hdisplay = 1366,
+@@ -727,6 +750,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "auo,b101aw03",
+ 		.data = &auo_b101aw03,
+ 	}, {
++		.compatible = "auo,b101ean01",
++		.data = &auo_b101ean01,
++	}, {
+ 		.compatible = "auo,b101xtn01",
+ 		.data = &auo_b101xtn01,
+ 	}, {
 -- 
-2.3.0
+1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
