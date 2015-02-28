@@ -1,235 +1,106 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 03/11] drm: add driver for simple vga encoders
-Date: Sat, 28 Feb 2015 01:42:45 +0100
-Message-ID: <21277731.pHgJosY13N@diego>
-References: <1422721984-27782-1-git-send-email-heiko@sntech.de>
- <1422721984-27782-4-git-send-email-heiko@sntech.de>
- <10479896.3hQzemuBRM@avalon>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Sat, 28 Feb 2015 09:47:01 +0900
+Message-ID: <CAGTfZH0VVT0hMn4ooRNZxnqjUQ_hF8nHg-4NtNriayick50qgw@mail.gmail.com>
+References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com>
+	<6850624.bdB2Ab6zJx@wuerfel>
+	<54EED6E1.4060908@samsung.com>
+	<2707354.mhmQEHxoKV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <10479896.3hQzemuBRM@avalon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2707354.mhmQEHxoKV@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, "will.deacon@arm.com" <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCnRoYW5rcyBmb3IgdGhlIGNvbW1lbnRzCgpBbSBEb25uZXJzdGFnLCAyNi4g
-RmVicnVhciAyMDE1LCAyMDozMzozMyBzY2hyaWViIExhdXJlbnQgUGluY2hhcnQ6Cj4gT24gU2F0
-dXJkYXkgMzEgSmFudWFyeSAyMDE1IDE3OjMyOjU2IEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+ID4g
-VGhlcmUgZXhpc3Qgc2ltcGxlIHZnYSBlbmNvZGVycyB3aXRob3V0IGFueSB0eXBlIG9mIG1hbmFn
-ZW1lbnQgaW50ZXJmYWNlCj4gPiBhbmQganVzdCBtYXliZSBhIHNpbXBsZSBncGlvIGZvciB0dXJu
-aW5nIGl0IG9uIG9yIG9mZi4gRXhhbXBsZXMgZm9yIHRoZXNlCj4gPiBhcmUgdGhlIEFuYWxvZyBE
-ZXZpY2VzIEFEVjcxMjMsIENoaXBzZWEgQ1M3MTIzIG9yIE1pY3JvbmFzIFNEQTcxMjMuCj4gPiAK
-PiA+IEFkZCBhIGdlbmVyaWMgZW5jb2RlciBkcml2ZXIgZm9yIHRob3NlIHRoYXQgY2FuIGJlIHVz
-ZWQgYnkgZHJtIGRyaXZlcnMKPiA+IHVzaW5nIHRoZSBjb21wb25lbnQgZnJhbWV3b3JrLgo+IAo+
-IFRoZSByY2FyLWR1IGRyaXZlciBhbHJlYWR5IGhhbmRsZXMgdGhlIGFkaSxhZHY3MTIzIGNvbXBh
-dGlibGUgc3RyaW5nIHVzZWQgYnkKPiB0aGlzIGRyaXZlci4gQSBnZW5lcmljIGRyaXZlciBpcyBp
-biBteSBvcGluaW9uIGEgdmVyeSBnb29kIGlkZWEsIGJ1dCB3ZQo+IGNhbid0IGJyZWFrIHRoZSBl
-eGlzdGluZyBzdXBwb3J0LiBQb3J0aW5nIHRoZSByY2FyLWR1IGRyaXZlciB0byB0aGUKPiBjb21w
-b25lbnQgbW9kZWwgaXMgbmVlZGVkLgoKaXMgdGhpcyBpbiBzb21lb25lcyBwbGFucyBhbHJlYWR5
-PyBCZWNhdXNlIEknbSBzdGlsbCBoYXZpbmcgdHJvdWJsZSAKdW5kZXJzdGFuZGluZyBwYXJ0cyBv
-ZiB0aGUgcm9ja2NoaXAgZHJpdmVyIHNvbWV0aW1lcywgc28gZmVlbCBpbiBubyB3YXkgCnF1YWxp
-ZmllZCB0byB0cnkgdG8gZ2V0IHRoaXMgdGFja2xlZCBpbiBzb21lIHJlYXNvbmFibGUgdGltZWZy
-YW1lIDotKQoKCj4gPiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNo
-LmRlPgo+ID4gLS0tCj4gPiAKPiA+ICBkcml2ZXJzL2dwdS9kcm0vaTJjL0tjb25maWcgICAgICB8
-ICAgNiArCj4gPiAgZHJpdmVycy9ncHUvZHJtL2kyYy9NYWtlZmlsZSAgICAgfCAgIDIgKwo+ID4g
-IGRyaXZlcnMvZ3B1L2RybS9pMmMvdmdhLXNpbXBsZS5jIHwgMzI1Cj4gPiAgKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrCj4gCj4gZHJpdmVycy9ncHUvZHJtL2kyYy8gZmVlbHMg
-d3JvbmcgZm9yIGEgcGxhdGZvcm0gZGV2aWNlLgoKeWVwLCBpMmMgcHJvYmFibHkgYmVpbmcgdGhl
-IHdyb25nIHBsYWNlIHdhcyBvbmUgb2YgdGhlIGNhdmVhdHMgaW4gdGhlIGNvdmVyIApsZXR0ZXIg
-YW5kIEkgd2FzIGhvcGluZyBzb21lIG1vcmUgc2Vhc29uZWQgZHJtIHBlb3BsZSBjb3VsZCBzdWdn
-ZXN0IHdoZXJlIHRoaXMgCnNob3VsZCBsaXZlIGFmdGVyIGFsbC4KCkFzIHlvdXIgY29tbWVudHMg
-ZnVydGhlciBkb3duIHN1Z2dlc3QgdGhhdCB3ZSBtaWdodCBpbnRyb2R1Y2Ugc29tZSBkaWZmZXJl
-bnQgCmNvbXBvbmVudHMsIHNpbXBseSBjb25ncmVnYXRlIHRoZW0gaW4gYSAiY29tcG9uZW50cyIg
-c3ViZGlyIG9yIHNvbWV0aGluZyAKc3BsaXR0aW5nIHRoZW0gbW9yZT8KCgo+IAo+ID4gIDMgZmls
-ZXMgY2hhbmdlZCwgMzMzIGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL2kyYy92Z2Etc2ltcGxlLmMKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9pMmMvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9pMmMvS2NvbmZpZwo+ID4g
-aW5kZXggMjJjN2VkNi4uMzE5ZjJjYiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9p
-MmMvS2NvbmZpZwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2kyYy9LY29uZmlnCj4gPiBAQCAt
-MzEsNCArMzEsMTAgQEAgY29uZmlnIERSTV9JMkNfTlhQX1REQTk5OFgKPiA+IAo+ID4gIAloZWxw
-Cj4gPiAgCQo+ID4gIAkgIFN1cHBvcnQgZm9yIE5YUCBTZW1pY29uZHVjdG9ycyBUREE5OThYIEhE
-TUkgZW5jb2RlcnMuCj4gPiAKPiA+ICtjb25maWcgRFJNX1ZHQV9TSU1QTEUKPiA+ICsJdHJpc3Rh
-dGUgIkdlbmVyaWMgc2ltcGxlIHZnYSBlbmNvZGVyIgo+ID4gKwloZWxwCj4gPiArCSAgU3VwcG9y
-dCBmb3IgdmdhIGVuY29kZXIgY2hpcHMgd2l0aG91dCBhbnkgc3BlY2lhbCBzZXR0aW5ncwo+ID4g
-KwkgIGFuZCBhdCBtb3N0IGEgcG93ZXItY29udHJvbCBncGlvLgo+ID4gKwo+ID4gCj4gPiAgZW5k
-bWVudQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2kyYy9NYWtlZmlsZSBi
-L2RyaXZlcnMvZ3B1L2RybS9pMmMvTWFrZWZpbGUKPiA+IGluZGV4IDJjNzJlYjUuLjg1ODk2MWYg
-MTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vaTJjL01ha2VmaWxlCj4gPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vaTJjL01ha2VmaWxlCj4gPiBAQCAtMTAsMyArMTAsNSBAQCBvYmotJChD
-T05GSUdfRFJNX0kyQ19TSUwxNjQpICs9IHNpbDE2NC5vCj4gPiAKPiA+ICB0ZGE5OTh4LXkgOj0g
-dGRhOTk4eF9kcnYubwo+ID4gIG9iai0kKENPTkZJR19EUk1fSTJDX05YUF9UREE5OThYKSArPSB0
-ZGE5OTh4Lm8KPiA+IAo+ID4gKwo+ID4gK29iai0kKENPTkZJR19EUk1fVkdBX1NJTVBMRSkgKz0g
-dmdhLXNpbXBsZS5vCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2kyYy92Z2Etc2lt
-cGxlLmMKPiA+IGIvZHJpdmVycy9ncHUvZHJtL2kyYy92Z2Etc2ltcGxlLmMgbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLmJiOWQxOWMKPiA+IC0tLSAvZGV2L251bGwKPiA+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9pMmMvdmdhLXNpbXBsZS5jCj4gPiBAQCAtMCwwICsxLDMy
-NSBAQAo+ID4gKy8qCj4gPiArICogU2ltcGxlIHZnYSBlbmNvZGVyIGRyaXZlcgo+ID4gKyAqCj4g
-PiArICogQ29weXJpZ2h0IChDKSAyMDE0IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+
-Cj4gPiArICoKPiA+ICsgKiBUaGlzIHNvZnR3YXJlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSB0ZXJt
-cyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljCj4gPiArICogTGljZW5zZSB2ZXJzaW9uIDIsIGFz
-IHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLCBhbmQKPiA+ICsgKiBt
-YXkgYmUgY29waWVkLCBkaXN0cmlidXRlZCwgYW5kIG1vZGlmaWVkIHVuZGVyIHRob3NlIHRlcm1z
-Lgo+ID4gKyAqCj4gPiArICogVGhpcyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3Bl
-IHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsCj4gPiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZ
-OyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YKPiA+ICsgKiBNRVJDSEFOVEFC
-SUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlCj4gPiAr
-ICogR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPiA+ICsgKi8K
-PiA+ICsKPiA+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4
-L2NvbXBvbmVudC5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9ncGlvLmg+Cj4gPiArI2luY2x1ZGUg
-PGxpbnV4L2dwaW8vY29uc3VtZXIuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvaTJjLmg+Cj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPgo+ID4gKyNpbmNsdWRlIDxkcm0v
-ZHJtX29mLmg+Cj4gPiArI2luY2x1ZGUgPGRybS9kcm1QLmg+Cj4gPiArI2luY2x1ZGUgPGRybS9k
-cm1fY3J0Yy5oPgo+ID4gKyNpbmNsdWRlIDxkcm0vZHJtX2NydGNfaGVscGVyLmg+Cj4gPiArI2lu
-Y2x1ZGUgPGRybS9kcm1fZWRpZC5oPgo+ID4gKwo+ID4gKyNkZWZpbmUgY29ubmVjdG9yX3RvX3Zn
-YV9zaW1wbGUoeCkgY29udGFpbmVyX29mKHgsIHN0cnVjdCB2Z2Ffc2ltcGxlLAo+ID4gY29ubmVj
-dG9yKSArI2RlZmluZSBlbmNvZGVyX3RvX3ZnYV9zaW1wbGUoeCkgY29udGFpbmVyX29mKHgsIHN0
-cnVjdAo+ID4gdmdhX3NpbXBsZSwgZW5jb2RlcikgKwo+ID4gK3N0cnVjdCB2Z2Ffc2ltcGxlIHsK
-PiA+ICsJc3RydWN0IGRybV9jb25uZWN0b3IgY29ubmVjdG9yOwo+ID4gKwlzdHJ1Y3QgZHJtX2Vu
-Y29kZXIgZW5jb2RlcjsKPiA+ICsKPiA+ICsJc3RydWN0IGRldmljZSAqZGV2Owo+ID4gKwlzdHJ1
-Y3QgaTJjX2FkYXB0ZXIgKmRkYzsKPiA+ICsKPiA+ICsJc3RydWN0IHJlZ3VsYXRvciAqdmFhX3Jl
-ZzsKPiA+ICsJc3RydWN0IGdwaW9fZGVzYyAqZW5hYmxlX2dwaW87Cj4gPiArCj4gPiArCXN0cnVj
-dCBtdXRleCBlbmFibGVfbG9jazsKPiA+ICsJYm9vbCBlbmFibGVkOwo+ID4gK307Cj4gPiArCj4g
-PiArLyoKPiA+ICsgKiBDb25uZWN0b3IgZnVuY3Rpb25zCj4gPiArICovCj4gPiArCj4gPiArZW51
-bSBkcm1fY29ubmVjdG9yX3N0YXR1cyB2Z2Ffc2ltcGxlX2RldGVjdChzdHJ1Y3QgZHJtX2Nvbm5l
-Y3Rvcgo+ID4gKmNvbm5lY3RvciwgKwkJCQkJICAgIGJvb2wgZm9yY2UpCj4gPiArewo+ID4gKwlz
-dHJ1Y3QgdmdhX3NpbXBsZSAqdmdhID0gY29ubmVjdG9yX3RvX3ZnYV9zaW1wbGUoY29ubmVjdG9y
-KTsKPiA+ICsKPiA+ICsJaWYgKCF2Z2EtPmRkYykKPiA+ICsJCXJldHVybiBjb25uZWN0b3Jfc3Rh
-dHVzX3Vua25vd247Cj4gPiArCj4gPiArCWlmIChkcm1fcHJvYmVfZGRjKHZnYS0+ZGRjKSkKPiA+
-ICsJCXJldHVybiBjb25uZWN0b3Jfc3RhdHVzX2Nvbm5lY3RlZDsKPiA+ICsKPiA+ICsJcmV0dXJu
-IGNvbm5lY3Rvcl9zdGF0dXNfZGlzY29ubmVjdGVkOwo+ID4gK30KPiA+ICsKPiA+ICt2b2lkIHZn
-YV9zaW1wbGVfY29ubmVjdG9yX2Rlc3Ryb3koc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
-cikKPiA+ICt7Cj4gPiArCWRybV9jb25uZWN0b3JfdW5yZWdpc3Rlcihjb25uZWN0b3IpOwo+ID4g
-Kwlkcm1fY29ubmVjdG9yX2NsZWFudXAoY29ubmVjdG9yKTsKPiA+ICt9Cj4gPiArCj4gPiArc3Ry
-dWN0IGRybV9jb25uZWN0b3JfZnVuY3MgdmdhX3NpbXBsZV9jb25uZWN0b3JfZnVuY3MgPSB7Cj4g
-PiArCS5kcG1zID0gZHJtX2hlbHBlcl9jb25uZWN0b3JfZHBtcywKPiA+ICsJLmZpbGxfbW9kZXMg
-PSBkcm1faGVscGVyX3Byb2JlX3NpbmdsZV9jb25uZWN0b3JfbW9kZXMsCj4gPiArCS5kZXRlY3Qg
-PSB2Z2Ffc2ltcGxlX2RldGVjdCwKPiA+ICsJLmRlc3Ryb3kgPSB2Z2Ffc2ltcGxlX2Nvbm5lY3Rv
-cl9kZXN0cm95LAo+ID4gK307Cj4gPiArCj4gPiArLyoKPiA+ICsgKiBDb25uZWN0b3IgaGVscGVy
-IGZ1bmN0aW9ucwo+ID4gKyAqLwo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgdmdhX3NpbXBsZV9jb25u
-ZWN0b3JfZ2V0X21vZGVzKHN0cnVjdCBkcm1fY29ubmVjdG9yCj4gPiAqY29ubmVjdG9yKQo+ID4g
-K3sKPiA+ICsJc3RydWN0IHZnYV9zaW1wbGUgKnZnYSA9IGNvbm5lY3Rvcl90b192Z2Ffc2ltcGxl
-KGNvbm5lY3Rvcik7Cj4gPiArCXN0cnVjdCBlZGlkICplZGlkOwo+ID4gKwlpbnQgcmV0ID0gMDsK
-PiA+ICsKPiA+ICsJaWYgKCF2Z2EtPmRkYykKPiA+ICsJCXJldHVybiAwOwo+ID4gKwo+ID4gKwll
-ZGlkID0gZHJtX2dldF9lZGlkKGNvbm5lY3RvciwgdmdhLT5kZGMpOwo+ID4gKwlpZiAoZWRpZCkg
-ewo+ID4gKwkJZHJtX21vZGVfY29ubmVjdG9yX3VwZGF0ZV9lZGlkX3Byb3BlcnR5KGNvbm5lY3Rv
-ciwgZWRpZCk7Cj4gPiArCQlyZXQgPSBkcm1fYWRkX2VkaWRfbW9kZXMoY29ubmVjdG9yLCBlZGlk
-KTsKPiA+ICsJCWtmcmVlKGVkaWQpOwo+ID4gKwl9Cj4gPiArCj4gPiArCXJldHVybiByZXQ7Cj4g
-PiArfQo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgdmdhX3NpbXBsZV9jb25uZWN0b3JfbW9kZV92YWxp
-ZChzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcgo+ID4gKmNvbm5lY3RvciwgKwkJCQkJc3RydWN0IGRybV9k
-aXNwbGF5X21vZGUgKm1vZGUpCj4gPiArewo+ID4gKwlyZXR1cm4gTU9ERV9PSzsKPiA+ICt9Cj4g
-PiArCj4gPiArc3RhdGljIHN0cnVjdCBkcm1fZW5jb2Rlcgo+ID4gKyp2Z2Ffc2ltcGxlX2Nvbm5l
-Y3Rvcl9iZXN0X2VuY29kZXIoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiA+ICt7
-Cj4gPiArCXN0cnVjdCB2Z2Ffc2ltcGxlICp2Z2EgPSBjb25uZWN0b3JfdG9fdmdhX3NpbXBsZShj
-b25uZWN0b3IpOwo+ID4gKwo+ID4gKwlyZXR1cm4gJnZnYS0+ZW5jb2RlcjsKPiA+ICt9Cj4gPiAr
-Cj4gPiArc3RhdGljIHN0cnVjdCBkcm1fY29ubmVjdG9yX2hlbHBlcl9mdW5jcwo+ID4gdmdhX3Np
-bXBsZV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzCj4gPiA9IHsgKwkuZ2V0X21vZGVzID0gdmdhX3Np
-bXBsZV9jb25uZWN0b3JfZ2V0X21vZGVzLAo+ID4gKwkuYmVzdF9lbmNvZGVyID0gdmdhX3NpbXBs
-ZV9jb25uZWN0b3JfYmVzdF9lbmNvZGVyLAo+ID4gKwkubW9kZV92YWxpZCA9IHZnYV9zaW1wbGVf
-Y29ubmVjdG9yX21vZGVfdmFsaWQsCj4gPiArfTsKPiA+ICsKPiA+ICsvKgo+ID4gKyAqIEVuY29k
-ZXIgZnVuY3Rpb25zCj4gPiArICovCj4gPiArCj4gPiArc3RhdGljIHZvaWQgdmdhX3NpbXBsZV9l
-bmNvZGVyX2Rlc3Ryb3koc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQo+ID4gK3sKPiA+ICsJ
-ZHJtX2VuY29kZXJfY2xlYW51cChlbmNvZGVyKTsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBkcm1fZW5jb2Rlcl9mdW5jcyB2Z2Ffc2ltcGxlX2VuY29kZXJfZnVuY3MgPSB7
-Cj4gPiArCS5kZXN0cm95ID0gdmdhX3NpbXBsZV9lbmNvZGVyX2Rlc3Ryb3ksCj4gPiArfTsKPiA+
-ICsKPiA+ICsvKgo+ID4gKyAqIEVuY29kZXIgaGVscGVyIGZ1bmN0aW9ucwo+ID4gKyAqLwo+ID4g
-Kwo+ID4gK3N0YXRpYyB2b2lkIHZnYV9zaW1wbGVfZW5jb2Rlcl9kcG1zKHN0cnVjdCBkcm1fZW5j
-b2RlciAqZW5jb2RlciwgaW50Cj4gPiBtb2RlKQo+ID4gK3sKPiA+ICsJc3RydWN0IHZnYV9zaW1w
-bGUgKnZnYSA9IGVuY29kZXJfdG9fdmdhX3NpbXBsZShlbmNvZGVyKTsKPiA+ICsKPiA+ICsJbXV0
-ZXhfbG9jaygmdmdhLT5lbmFibGVfbG9jayk7Cj4gPiArCj4gPiArCXN3aXRjaCAobW9kZSkgewo+
-ID4gKwljYXNlIERSTV9NT0RFX0RQTVNfT046Cj4gPiArCQlpZiAodmdhLT5lbmFibGVkKQo+ID4g
-KwkJCWdvdG8gb3V0Owo+ID4gKwo+ID4gKwkJaWYgKCFJU19FUlIodmdhLT52YWFfcmVnKSkKPiA+
-ICsJCQlyZWd1bGF0b3JfZW5hYmxlKHZnYS0+dmFhX3JlZyk7Cj4gPiArCj4gPiArCQlpZiAodmdh
-LT5lbmFibGVfZ3BpbykKPiA+ICsJCQlncGlvZF9zZXRfdmFsdWUodmdhLT5lbmFibGVfZ3Bpbywg
-MSk7Cj4gPiArCj4gPiArCQl2Z2EtPmVuYWJsZWQgPSB0cnVlOwo+ID4gKwkJYnJlYWs7Cj4gPiAr
-CWNhc2UgRFJNX01PREVfRFBNU19TVEFOREJZOgo+ID4gKwljYXNlIERSTV9NT0RFX0RQTVNfU1VT
-UEVORDoKPiA+ICsJY2FzZSBEUk1fTU9ERV9EUE1TX09GRjoKPiA+ICsJCWlmICghdmdhLT5lbmFi
-bGVkKQo+ID4gKwkJCWdvdG8gb3V0Owo+ID4gKwo+ID4gKwkJaWYgKHZnYS0+ZW5hYmxlX2dwaW8p
-Cj4gPiArCQkJZ3Bpb2Rfc2V0X3ZhbHVlKHZnYS0+ZW5hYmxlX2dwaW8sIDApOwo+ID4gKwo+ID4g
-KwkJaWYgKCFJU19FUlIodmdhLT52YWFfcmVnKSkKPiA+ICsJCQlyZWd1bGF0b3JfZW5hYmxlKHZn
-YS0+dmFhX3JlZyk7Cj4gPiArCj4gPiArCQl2Z2EtPmVuYWJsZWQgPSBmYWxzZTsKPiA+ICsJCWJy
-ZWFrOwo+ID4gKwlkZWZhdWx0Ogo+ID4gKwkJYnJlYWs7Cj4gPiArCX0KPiA+ICsKPiA+ICtvdXQ6
-Cj4gPiArCW11dGV4X3VubG9jaygmdmdhLT5lbmFibGVfbG9jayk7Cj4gPiArfQo+ID4gKwo+ID4g
-K3N0YXRpYyBib29sIHZnYV9zaW1wbGVfbW9kZV9maXh1cChzdHJ1Y3QgZHJtX2VuY29kZXIgKmVu
-Y29kZXIsCj4gPiArCQkJCSAgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUsCj4g
-PiArCQkJCSAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKmFkanVzdGVkX21vZGUpCj4gPiArewo+
-ID4gKwlyZXR1cm4gdHJ1ZTsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIHZvaWQgdmdhX3NpbXBs
-ZV9lbmNvZGVyX3ByZXBhcmUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQo+ID4gK3sKPiA+
-ICt9Cj4gPiArCj4gPiArc3RhdGljIHZvaWQgdmdhX3NpbXBsZV9lbmNvZGVyX21vZGVfc2V0KHN0
-cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlciwKPiA+ICsJCQkJCXN0cnVjdCBkcm1fZGlzcGxheV9t
-b2RlICptb2RlLAo+ID4gKwkJCQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKmFkanVzdGVkX21v
-ZGUpCj4gPiArewo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgdm9pZCB2Z2Ffc2ltcGxlX2VuY29k
-ZXJfY29tbWl0KHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPiA+ICt7Cj4gPiArCXZnYV9z
-aW1wbGVfZW5jb2Rlcl9kcG1zKGVuY29kZXIsIERSTV9NT0RFX0RQTVNfT04pOwo+ID4gK30KPiA+
-ICsKPiA+ICtzdGF0aWMgdm9pZCB2Z2Ffc2ltcGxlX2VuY29kZXJfZGlzYWJsZShzdHJ1Y3QgZHJt
-X2VuY29kZXIgKmVuY29kZXIpCj4gPiArewo+ID4gKwl2Z2Ffc2ltcGxlX2VuY29kZXJfZHBtcyhl
-bmNvZGVyLCBEUk1fTU9ERV9EUE1TX09GRik7Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBjb25z
-dCBzdHJ1Y3QgZHJtX2VuY29kZXJfaGVscGVyX2Z1bmNzCj4gPiB2Z2Ffc2ltcGxlX2VuY29kZXJf
-aGVscGVyX2Z1bmNzID0gewo+ID4gKwkuZHBtcyA9IHZnYV9zaW1wbGVfZW5jb2Rlcl9kcG1zLAo+
-ID4gKwkubW9kZV9maXh1cCA9IHZnYV9zaW1wbGVfbW9kZV9maXh1cCwKPiA+ICsJLnByZXBhcmUg
-PSB2Z2Ffc2ltcGxlX2VuY29kZXJfcHJlcGFyZSwKPiA+ICsJLm1vZGVfc2V0ID0gdmdhX3NpbXBs
-ZV9lbmNvZGVyX21vZGVfc2V0LAo+ID4gKwkuY29tbWl0ID0gdmdhX3NpbXBsZV9lbmNvZGVyX2Nv
-bW1pdCwKPiA+ICsJLmRpc2FibGUgPSB2Z2Ffc2ltcGxlX2VuY29kZXJfZGlzYWJsZSwKPiAKPiB0
-aGlzIGlzIGludGVyZXN0aW5nLiBTb21lIHVzZXJzIG9mIHRoaXMgZW5jb2RlciAoSSdtIHRoaW5r
-aW5nIGFib3V0IHJjYXItZHUsCj4gZm9yIHdoaWNoIEkndmUganVzdCBwb3N0ZWQgdGhlIHBhdGNo
-ZXMpIGFyZSBhbHJlYWR5IHBvcnRlZCB0byBhdG9taWMKPiB1cGRhdGVzLCB3aGlsZSBvdGhlcnMg
-YXJlIG5vdC4gSG93IGNhbiB3ZSBzdXBwb3J0IGJvdGggPwoKV2lsZCBndWVzcywgc3VwcG9ydCBi
-b3RoIGluIHN1Y2ggZ2VuZXJpYyBjb21wb25lbnRzIGFuZCBsZXQgYmluZCBkZWNpZGUgd2hpY2gg
-CnRvIHVzZSAuLi4gaXMgdGhlcmUgc29tZSBzb3J0IG9mIGRybV9pc19hdG9taWMoKSBhZ2FpbnN0
-IHRoZSBtYXN0ZXIgZGV2aWNlLgoKCj4gCj4gPiArfTsKPiA+ICsKPiA+ICsvKgo+ID4gKyAqIENv
-bXBvbmVudCBoZWxwZXIgZnVuY3Rpb25zCj4gPiArICovCj4gPiArCj4gPiArc3RhdGljIGludCB2
-Z2Ffc2ltcGxlX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIs
-Cj4gPiArCQkJCSB2b2lkICpkYXRhKQo+ID4gK3sKPiA+ICsJc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldiA9IHRvX3BsYXRmb3JtX2RldmljZShkZXYpOwo+ID4gKwlzdHJ1Y3QgZHJtX2Rldmlj
-ZSAqZHJtID0gZGF0YTsKPiA+ICsKPiA+ICsJc3RydWN0IGRldmljZV9ub2RlICpkZGNfbm9kZSwg
-Km5wID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4gPiArCXN0cnVjdCB2Z2Ffc2ltcGxlICp2Z2E7Cj4g
-PiArCWludCByZXQ7Cj4gPiArCj4gPiArCWlmICghbnApCj4gPiArCQlyZXR1cm4gLUVOT0RFVjsK
-PiA+ICsKPiA+ICsJdmdhID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCp2Z2EpLCBHRlBfS0VS
-TkVMKTsKPiA+ICsJaWYgKCF2Z2EpCj4gPiArCQlyZXR1cm4gLUVOT01FTTsKPiA+ICsKPiA+ICsJ
-dmdhLT5kZXYgPSBkZXY7Cj4gPiArCWRldl9zZXRfZHJ2ZGF0YShkZXYsIHZnYSk7Cj4gPiArCW11
-dGV4X2luaXQoJnZnYS0+ZW5hYmxlX2xvY2spOwo+ID4gKwo+ID4gKwl2Z2EtPmVuYWJsZV9ncGlv
-ID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoZGV2LCAiZW5hYmxlIiwKPiA+ICsJCQkJCQkgICBH
-UElPRF9PVVRfTE9XKTsKPiA+ICsJaWYgKElTX0VSUih2Z2EtPmVuYWJsZV9ncGlvKSkgewo+ID4g
-KwkJcmV0ID0gUFRSX0VSUih2Z2EtPmVuYWJsZV9ncGlvKTsKPiA+ICsJCWRldl9lcnIoZGV2LCAi
-ZmFpbGVkIHRvIHJlcXVlc3QgR1BJTzogJWRcbiIsIHJldCk7Cj4gPiArCQlyZXR1cm4gcmV0Owo+
-ID4gKwl9Cj4gPiArCj4gPiArCXZnYS0+ZW5hYmxlZCA9IGZhbHNlOwo+ID4gKwo+ID4gKwlkZGNf
-bm9kZSA9IG9mX3BhcnNlX3BoYW5kbGUobnAsICJkZGMtaTJjLWJ1cyIsIDApOwo+ID4gKwlpZiAo
-ZGRjX25vZGUpIHsKPiA+ICsJCXZnYS0+ZGRjID0gb2ZfZmluZF9pMmNfYWRhcHRlcl9ieV9ub2Rl
-KGRkY19ub2RlKTsKPiA+ICsJCW9mX25vZGVfcHV0KGRkY19ub2RlKTsKPiA+ICsJCWlmICghdmdh
-LT5kZGMpIHsKPiA+ICsJCQlkZXZfZGJnKHZnYS0+ZGV2LCAiZmFpbGVkIHRvIHJlYWQgZGRjIG5v
-ZGVcbiIpOwo+ID4gKwkJCXJldHVybiAtRVBST0JFX0RFRkVSOwo+ID4gKwkJfQo+ID4gKwl9IGVs
-c2Ugewo+ID4gKwkJZGV2X2RiZyh2Z2EtPmRldiwgIm5vIGRkYyBwcm9wZXJ0eSBmb3VuZFxuIik7
-Cj4gPiArCX0KPiA+ICsKPiA+ICsJdmdhLT52YWFfcmVnID0gZGV2bV9yZWd1bGF0b3JfZ2V0X29w
-dGlvbmFsKGRldiwgInZhYSIpOwo+ID4gKwo+ID4gKwl2Z2EtPmVuY29kZXIucG9zc2libGVfY3J0
-Y3MgPSBkcm1fb2ZfZmluZF9wb3NzaWJsZV9jcnRjcyhkcm0sIG5wKTsKPiA+ICsJdmdhLT5lbmNv
-ZGVyLm9mX25vZGUgPSBucDsKPiA+ICsJdmdhLT5jb25uZWN0b3IucG9sbGVkID0gRFJNX0NPTk5F
-Q1RPUl9QT0xMX0NPTk5FQ1QgfAo+ID4gKwkJCQlEUk1fQ09OTkVDVE9SX1BPTExfRElTQ09OTkVD
-VDsKPiA+ICsKPiA+ICsJZHJtX2VuY29kZXJfaGVscGVyX2FkZCgmdmdhLT5lbmNvZGVyLCAKJnZn
-YV9zaW1wbGVfZW5jb2Rlcl9oZWxwZXJfZnVuY3MpOwo+ID4gKwlkcm1fZW5jb2Rlcl9pbml0KGRy
-bSwgJnZnYS0+ZW5jb2RlciwgJnZnYV9zaW1wbGVfZW5jb2Rlcl9mdW5jcywKPiA+ICsJCQkgRFJN
-X01PREVfRU5DT0RFUl9EQUMpOwo+ID4gKwo+ID4gKwlkcm1fY29ubmVjdG9yX2hlbHBlcl9hZGQo
-JnZnYS0+Y29ubmVjdG9yLAo+ID4gKwkJCQkgJnZnYV9zaW1wbGVfY29ubmVjdG9yX2hlbHBlcl9m
-dW5jcyk7Cj4gCj4gSSByZWFsbHkgZGlzbGlrZSB0aGlzLCB0aGlzIGlzIGFuIGVuY29kZXIgZHJp
-dmVyLCBub3QgYSBjb25uZWN0b3IgZHJpdmVyLiBJdAo+IHNob3VsZG4ndCBiZSByZXNwb25zaWJs
-ZSBmb3IgY3JlYXRpbmcgdGhlIGNvbm5lY3Rvci4gRm9yIGFsbCBpdCBrbm93cywKPiB0aGVyZSBt
-aWdodCBub3QgZXZlbiBiZSBhIFZHQSBjb25uZWN0b3IgY29ubmVjdGVkIHRvIHRoZSBlbmNvZGVy
-LCBWR0EKPiBzaWduYWxzIGNvdWxkIGJlIHNlbnQgdG8gYSBjaGFpbmVkIGVuY29kZXIuIFRoYXQg
-bWlnaHQgYmUgYSBiaXQgZmFyLWZldGNoZWQKPiBpbiB0aGUgVkdBIGNhc2UsIGJ1dCBpbiB0aGUg
-Z2VuZXJpYyBjYXNlIGVuY29kZXIgZHJpdmVycyBzaG91bGRuJ3QgY3JlYXRlCj4gY29ubmVjdG9y
-cy4KCm9rLCBzbyB5b3Ugc3VnZ2VzdCB0byBoYXZlIHRoaXMgc3BsaXQuIFRha2luZyBpbnRvIGFj
-Y291bnQgUm9iJ3MgY29tbWVudCAKcHJvYmFibHkgYSAic2ltcGxlLWVuY29kZXIiIGFuZCBhICJk
-ZGMtY29ubmVjdG9yIiBmb3IgY29ubmVjdG9ycyB1c2luZyBzeXN0ZW0gCmkyYyBidXNzZXM/IEFu
-ZCB0aGVuIGNvbm5lY3QgZXZlcnl0aGluZyB2aWEgcG9ydHMuCgoKVGhhbmtzCkhlaWtvCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, Feb 27, 2015 at 12:42 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 26 February 2015 17:18:41 Chanwoo Choi wrote:
+>> I add following aliases and serial_1/serial_3 dt node in board dtsi:
+>> I tested that change the alias of serial_x node.
+>>
+>>         aliases {
+>>                 serial0 = &serial_1;
+>>                 serial1 = &serial_3;
+>>         };
+>>
+>>         /* Add 'linux,stdout-path' property to print kernel log by using ealycon */
+>>         chosen {
+>>                 linux,stdout-path = &serial_1;
+>>         };
+>>
+>>         [snip]
+>>
+>>         /* serial_1 is used for printing kernel log throught JIG cable */
+>>         &serial_1 {
+>>                 status = "okay";
+>>         };
+>>
+>>         &serial_3 {
+>>                 status = "okay";
+>>         };
+>>
+>> In result, serial driver create the /dev/ttySAC0 for serial_1 and /dev/ttySAC1 for serial_3.
+>> But, I cannot complete the kernel booting and stop it with following kernel log
+>>
+>> [    0.000000] Booting Linux on physical CPU 0x100
+>> [    0.000000] Initializing cgroup subsys cpuset
+>> [    0.000000] Initializing cgroup subsys cpu
+>> [    0.000000] Initializing cgroup subsys cpuacct
+>> [    0.000000] Linux version 4.0.0-rc1-00066-g49bfcec-dirty (cwchoi00@chan) (gcc version 4.9.2 20140904 (prerelease) (crosstool-NG l5
+>> [snip]
+>> [    0.000000] Kernel command line: console=ttySAC1,115200 earlycon=exynos4210,0x14C20000
+>
+> What is the "earlycon=exynos4210,0x14C20000" doing here? Should that not just be
+> "earlycon=exynos" or something like that when you set the correct stdout-path?
+
+"earlycon=exynos4210,0x14C20000" is correct bootparam. You can check
+it on Documentation/kernel-parameters.txt as following.
+
+     exynos4210,<addr>
+                Use early console provided by serial driver available
+                on Samsung SoCs, requires selecting proper type and
+                a correct base address of the selected UART port. The
+                serial port must already be setup and configured.
+                Options are not yet supported.
+
+>
+>> [snip]
+>> [    0.651647] dma-pl330 15610000.pdma: Loaded driver for PL330 DMAC-341330
+>> [    0.651851] dma-pl330 15610000.pdma:         DBUFF-32x4bytes Num_Chans-8 Num_Peri-32 Num_Events-32
+>> [    0.658566] dma-pl330 15600000.pdma: Loaded driver for PL330 DMAC-341330
+>> [    0.662872] dma-pl330 15600000.pdma:         DBUFF-32x4bytes Num_Chans-8 Num_Peri-32 Num_Events-32
+>> [    0.672487] dma-pl330 11420000.adma: Loaded driver for PL330 DMAC-341330
+>> [ 8466.414900] dma-pl330 11420000.adma:         DBUFF-8x8bytes Num_Chans-8 Num_Peri-16 Num_Events-8
+>> [ 8466.481648] 14c20000.serial: ttySAC0 at MMIO 0x14c20000 (irq = 21, base_baud = 0) is a S3C6400/10
+>> (dont' print any kernel log)
+>>
+>> So, I change the kernel command line about ('console' bootparam) as following:
+>> because tty framework must use the 'console' bootparam to print kernel log.
+>> - original     : Kernel command line: console=ttySAC1,115200 ... (cannot the kernel log from serial driver probed)
+>> - modification : Kernel command line: console=ttySAC0,115200 ... (got the successful kernel booting)
+>>
+>> After modification, I got the successful kernel booting.
+>>
+>> If should use the serial_0 device and then modify the 'aliases' as following:
+>> I have to modify the commandline of bootloader if the commandline of bootloader is used
+>> instad of default kernel command line.
+>>
+>>         aliases {
+>>                 serial0 = &serial_0;
+>>                 serial1 = &serial_1;
+>>                 serial2 = &serial_3;
+>>         };
+>
+> If you need the numbers to match, maybe there is still a bug in the serial port
+> driver and it uses some arbitrary number (e.g. probe order, or ascending
+> MMIO address) for the console instead of the alias?
+
+The serial port driver request the 'tty' device information to print kernel log.
+So, bootloader is supposed to pass the 'tty' device as upper example.
+But, The bootloader could not get the the 'alias' information in board dtsi.
+
+Thanks,
+Chanwoo Choi
