@@ -1,92 +1,201 @@
-From: Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>
-Subject: Re: [PATCH_V3 1/3] dt-bindings: dma: Add binding for jz4780-dma
-Date: Sat, 28 Feb 2015 09:58:14 +0000
-Message-ID: <CAOFt0_ATY82+-0_yF3WsTMDYC9ApyK4FxTqNT3A8QK62awzOuQ@mail.gmail.com>
-References: <1424954614-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-	<1424954614-12589-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-	<CAOFt0_CiopFkYECuQUczOtNoo6D8zbCOaE6attP6=KU4zicV7w@mail.gmail.com>
-	<54F036E6.9010700@imgtec.com>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] ARM: sun7i: dt: Add new MK808C device
+Date: Sat, 28 Feb 2015 14:43:24 +0100
+Message-ID: <1425131004-8551-1-git-send-email-codekipper@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F036E6.9010700-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBB7ULY6TQKGQEBGSPK5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27 February 2015 at 09:20, Zubair Lutfullah Kakakhel
-<Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi Alex,
->
-> On 26/02/15 20:04, Alex Smith wrote:
->> Hi Zubair,
->>
->> On 26 February 2015 at 12:43, Zubair Lutfullah Kakakhel
->> <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->>> From: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>>
->>> Add device tree bindings for the DMA controller on JZ4780 SoCs, used by
->>> the dma-jz4780 driver.
->>>
->>> Signed-off-by: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>>
->>> ---
->>> V3 -> V2
->>> Changed binding.
->>> Used to be 3 DMA cells required. <&dma TX_type RX_type Reserved>
->>> Now 2 DMA cells are required. <&dma Transfer_type Reserved>
->>>
->>> This is more common in DMA bindings.
->>> And I couldn't figure any reason that 3 cells were used.
->>
->> There are different request type numbers for transfers to/from the
->> same device (see the JZ4780 programmers manual, page 505). While only
->> having the option to specify one transfer type is OK when the driver
->> is using separate channels for read/writes, I recall seeing/writing
->> some other drivers which use a single channel for both reads and
->> writes. This would not be possible if we can only specify one transfer
->> type, you'd have to have them separate.
->>
->
-> I know. I looked at the drivers and did this on purpose.
->
-> We'd like to keep the same bindings/code for jz4740/jz4780 peripheral drivers and dma code.
->
-> Our jz47xx-mmc driver we had was the main culprit I found. As well as the jz4740-i2s one.
->
-> However, jz4740-mmc upstream driver has improved already for dma and takes two dma channels.
-> And the jz4740-i2s also takes two channels. One for Tx and one for Rx.
->
-> If we move to 3 cells for jz4780-dma. Then 'ideally' jz4740-dma would need 3 cells too.
-> Or we'd have a binding nightmare everywhere.
->
-> But when we use jz4740-mmc and jz4740-i2s, we still have to change the driver to share one channel
-> or simply pass them
-> <&dma Tx 0 Reserved>
-> <&dma 0 Rx Reserved>
->
-> Which makes the binding redundant.
->
-> There isn't any particular reason a driver would need to share one channel only.
-> The 'special' nand/nemc channels don't have a request type.
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Ok, fair enough. I was just thinking that the bindings shouldn't be
-restrictive on the way that you can set things up, but if that's the
-way that things are already being done for jz4740 then as you say it's
-better to follow that.
+The MK808C is an A20 based android stick, with 1G RAM, 8G NAND flash,
+a RTL8723au wifi + bt combo chip, a USB host ports using USB-A receptacles,
+a mini USB-B receptacle for USB OTG, mini HDMI and a TRS connector for AV.
 
-Thanks,
-Alex
+This patch adds basic support for the device, more information can be found
+here (http://linux-sunxi.org/MK808C).
 
->
-> Thanks,
-> ZubairLK
->
->> Thanks,
->> Alex
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile             |   1 +
+ arch/arm/boot/dts/sun7i-a20-mk808c.dts | 146 +++++++++++++++++++++++++++++++++
+ 2 files changed, 147 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-mk808c.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 9544768..eae7706 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -542,6 +542,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-hummingbird.dtb \
+ 	sun7i-a20-i12-tvbox.dtb \
+ 	sun7i-a20-m3.dtb \
++	sun7i-a20-mk808c.dtb \
+ 	sun7i-a20-olinuxino-lime.dtb \
+ 	sun7i-a20-olinuxino-lime2.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-mk808c.dts b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
+new file mode 100644
+index 0000000..5722a03
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
+@@ -0,0 +1,146 @@
++/*
++ * Copyright 2015 Marcus Cooper
++ *
++ * Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "mk808c";
++	compatible = "mk808c", "allwinner,sun7i-a20";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart2;
++	};
++
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		compatible = "x-powers,axp209";
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v0>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
+-- 
+2.3.1
