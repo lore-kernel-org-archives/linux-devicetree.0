@@ -1,37 +1,118 @@
-Return-Path: <mcoquelin.stm32@gmail.com>
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v2 18/18] MAINTAINERS: Add entry for STM32 MCUs
-Date: Fri, 20 Feb 2015 19:01:17 +0100
-Message-Id: <1424455277-29983-19-git-send-email-mcoquelin.stm32@gmail.com>
-In-Reply-To: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
-To: u.kleine-koenig@pengutronix.de, afaerber@suse.de, geert@linux-m68k.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>, Nikolay Borisov <Nikolay.Borisov@arm.com>, Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, Michal Marek <mmarek@suse.cz>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-arch@vger.kernel.org, linux-api@vger.kernel.org
-List-ID: <devicetree@vger.kernel.org>
+From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 0/15] Those patches is used for dw_hdmi audio support
+Date: Sat, 28 Feb 2015 21:10:34 -0500
+Message-ID: <1425175834-24661-1-git-send-email-ykk@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ben Zhang <benzh-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
-Add a MAINTAINER entry covering all STM32 machine and drivers files.
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+We found Designware hdmi driver only support audio clock config, we can not play sound through it.
+To add Designware HDMI Audio support, we make those patch set:
+1): fixed dw_hdmi irq bug, add irq control to suspend/resume interfaces.
+2): add suspend/resume callback for dw_hdmi rockchip driver.
+3): Warp irq control in functions.
+4): Combine hdmi_set_clock_regenerator_n() and hdmi_regenerate_cts()
+5): Adjust n/cts config order.
+6): Set ncts_atomic_write & cts_manual, according to dw_hdmi document.
+7): Add audio support for more display resolutions(eg. 800x600).
+8): Add audio support for No-CEA display resolutions.
+9): Add Audio Sample Channel Status config interfaces to dw_hdmi driver.
+10): add audio clock control interfaces to dw_hdmi driver.
+11): creat "dw_hdmi-audio" platform device in dw_hdmi driver.
+12): add codec driver for hdmi audio, callback dw_hdmi audio config functions.
+13): add sound driver for hdmi audio, creat hdmi audio sound card.
+14): add dt-bings file and add hdmi_audio node to corresponding dt file.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d66a97d..559cd45 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1448,6 +1448,13 @@ F:	drivers/usb/host/ehci-st.c
- F:	drivers/usb/host/ohci-st.c
- F:	drivers/ata/ahci_st.c
- 
-+ARM/STM32 ARCHITECTURE
-+M:	Maxime Coquelin <mcoquelin.stm32@gmail.com>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+N:	stm32
-+F:	drivers/clocksource/armv7m_systick.c
-+
- ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
- M:	Lennert Buytenhek <kernel@wantstofly.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+Changes in v4:
+-Correct phy_type assignment bug
+- Combine CTS3 registers setting, reduce register operate times
+- Combine N3 registers setting
+- Add hdmi audio support when monitor support audio
+- Give HDMI_FC_AUD_SCHNL8 an readable value
+- Rename "hdmi_audio_*" to "dw_hdmi_audio_*"
+- Replace delaywork with irq thread, and add suspend/resume interfaces,
+  Replace "dw-hdmi-audio" with consecutive strings.
+- Add ".pm = &snd_soc_pm_ops,"
+
+Changes in v3:
+- Clear Hotplug interrupts before dw_hdmi_fb_register
+- Wrap irq control in fucntions
+- Setting the .pm member instead of suspend/resume
+- Add ID registers parse and record
+- Combine hdmi_set_clock_regenerator_n() and hdmi_regenerate_cts()
+- Only adjust the n/cts setting order
+- Set ncts_atomic_write & cts_manual
+- Determine whether sample channel should set by desig_id.
+- Delete hdmi_audio_config interface and modify audio clock control functions
+- Remove audio_config & get_connect_status callback functions
+  and add write/read/mod register callback functions
+- Keep audio format config function in dw-hdmi-audio driver
+  and remove audio_config & get_connect_status functions,
+  move jack control to dw-hdmi-audio completely.
+- Delete the operation of jack in rockchip-hdmi-audio driver,
+  get ready to switch to simple-audio-card driver.
+- modify cpu-of-node to i2s-controller
+
+Changes in v2:
+- Add irq control to suspend/resume interfaces
+- Add suspend/resume support for dw_hdmi_rockchip driver
+- add more n/cts combinations for more display resolutions
+- Enable audio support for No-CEA display mode
+- Add audio sample channel status setting
+- Add audio config interfaces to dw_hdmi driver
+- Update the audio control interfaces
+- Update dw_hdmi audio control interfaces, and adjust jack report process
+- give "codec-name" & "codec-dai-name" an const name
+- remove codec-name and codec-dai-name
+- rename rockchip,rockchip-hdmi-audio.txt to rockchip,rockchip-dw-hdmi-audio.txt
+
+Daniel Kurtz (3):
+  drm: bridge/dw_hdmi: adjust n/cts setting order
+  drm: bridge/dw_hdmi: set ncts_atomic_write & cts_manual
+  drm: bridge/dw_hdmi: add audio sample channel status setting
+
+Yakir Yang (12):
+  drm: bridge/dw_hdmi: add irq control to suspend/resume
+  drm: bridge/dw_hdmi: wrap irq control in fucntions
+  drm: rockchip/dw_hdmi_rockchip: add resume/suspend support
+  drm: bridge/dw_hdmi: add identification registers parse and record
+  drm: bridge/dw_hdmi: combine hdmi_set_clock_regenerator_n() and
+    hdmi_regenerate_cts()
+  drm: bridge/dw_hdmi: add audio support for more display resolutions
+  drm: bridge/dw_hdmi: enable audio support for No-CEA display
+    resolutions
+  drm: bridge/dw_hdmi: add enable/disable to dw_hdmi_audio callbacks
+  drm: bridge/dw_hdmi: creat dw-hdmi-audio platform device
+  ASoC: codec/dw-hdmi-audio: add codec driver for dw hdmi audio
+  ASoC: rockchip/rockchip-hdmi-audio: add sound driver for hdmi audio
+  dt-bindings: Add documentation for Rockchip dw-hdmi-audio
+
+ .../sound/rockchip,rockchip-dw-hdmi-audio.txt      |  12 +
+ drivers/gpu/drm/bridge/dw_hdmi.c                   | 385 ++++++++++++++++++---
+ drivers/gpu/drm/bridge/dw_hdmi.h                   |  53 ++-
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        |  16 +
+ include/drm/bridge/dw_hdmi.h                       |  17 +
+ sound/soc/codecs/Kconfig                           |   4 +
+ sound/soc/codecs/Makefile                          |   2 +
+ sound/soc/codecs/dw-hdmi-audio.c                   | 379 ++++++++++++++++++++
+ sound/soc/codecs/dw-hdmi-audio.h                   |  74 ++++
+ sound/soc/rockchip/Kconfig                         |   9 +
+ sound/soc/rockchip/Makefile                        |   2 +
+ sound/soc/rockchip/rockchip_hdmi_audio.c           | 169 +++++++++
+ 12 files changed, 1076 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rockchip-dw-hdmi-audio.txt
+ create mode 100644 sound/soc/codecs/dw-hdmi-audio.c
+ create mode 100644 sound/soc/codecs/dw-hdmi-audio.h
+ create mode 100644 sound/soc/rockchip/rockchip_hdmi_audio.c
+
 -- 
-1.9.1
+2.1.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
