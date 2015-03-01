@@ -1,44 +1,39 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 0/2] add dts for PopMetal board
-Date: Sun,  1 Mar 2015 17:25:14 +0800
-Message-ID: <1425201914-4695-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v2 1/2] dt-bindings: add root compatible property for PopMetal board
+Date: Sun,  1 Mar 2015 17:28:24 +0800
+Message-ID: <1425202104-4752-1-git-send-email-andy.yan@rock-chips.com>
+References: <1425201914-4695-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425201914-4695-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, devicetree@vger.kernel.org
+Cc: naobsd@gmail.com, romain.perier@gmail.com, b.galvani@gmail.com, galak@codeaurora.org, linux-kernel@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, mark.yao@rock-chips.com, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+PopMetal board is a rk3288 based board made by ChipSpark, this
+add root compatible property for it
 
-PopMetal is a rockchip rk3288 based board made by ChipSpark,
-which has many interface such as VGA,HDMI,usb,ir,sdcad and lots of
-sensors such as gyroscope(L3G4200D),accelerometer(mma8452),compass(AK8963C).
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-http://wiki.chipspark.com/en/index.php?title=PopMetal
-
-This patch add basic support for it, which can boot the board
-into a shell with linux boot logo on hdmi, sdcard and many
-sensors enabled. More feather will be enabled later.
+---
 
 Changes in v2:
 - change "PopMetal PopMetal-RK3288 board" to "ChipSPARK PopMetal-RK3288 board"
-- use GPL + X11 dual license, adviced by Heiko
-- indent pwrbtn
-- move node "ak8963" before "buttons"
 
-Andy Yan (2):
-  dt-bindings: add root compatible property for PopMetal board
-  ARM: dts: add rk3288 PopMetal board
+ Documentation/devicetree/bindings/arm/rockchip.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
- arch/arm/boot/dts/rk3288-popmetal.dts              | 447 +++++++++++++++++++++
- 2 files changed, 451 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-popmetal.dts
-
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+index 6809e4e..60d4a1e 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.txt
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -22,3 +22,7 @@ Rockchip platforms device tree bindings
+       - compatible = "firefly,firefly-rk3288", "rockchip,rk3288";
+     or
+       - compatible = "firefly,firefly-rk3288-beta", "rockchip,rk3288";
++
++- ChipSPARK PopMetal-RK3288 board:
++    Required root node properties:
++      - compatible = "chipspark,popmetal-rk3288", "rockchip,rk3288";
 -- 
 1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
