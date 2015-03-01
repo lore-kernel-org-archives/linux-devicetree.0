@@ -1,89 +1,35 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v3 1/2] dma: Add Xilinx Central DMA DT Binding Documentation
-Date: Mon, 2 Mar 2015 23:27:28 +0530
-Message-ID: <b45de5fb5ea2417e820418655e3e1fd2@BN1BFFO11FD018.protection.gbl>
+From: "Mr. Juan Sebastian Morato" <noreply-tdSkRB3LqS/QT0dZR+AlfA@public.gmane.org>
+Subject: Confidential Letter
+Date: Sun, 01 Mar 2015 20:51:13 +0100
+Message-ID: <20150301195120.4C8D43ECDF3@mail.quartzbg.ro>
+Reply-To: juan_morato-mRCrAkd8dF0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.co, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, appanad@xilinx.com, anirudh@xilinx.com, svemula@xilinx.com, devicetree@vger.kernel.org, Srikanth Thokala <sthokal@xilinx.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Description: Mail message body
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Recipients <noreply-tdSkRB3LqS/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Device-tree binding documentation of Xilinx Central DMA Engine.
+Dear Friend, 
 
-Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
----
-Changes in v3:
-- Used proper alignment for all the properties.
-Changes in v2:
-- Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
-  to match the implementation.
+I am Mr. Juan Sebastian Morato, the Auditor General of Unicaja Bank Madrid. In the course of my auditing, I discovered a floating fund in an account, which was opened in 1990 at Cam Bank before it was bought over by Unicaja Group which I am the auditor belonging to a dead foreigner Mr. Kenny who died in 2004. Every effort made to track any member of his family or next of kin has since failed; hence I got in contact with you to stand as his next of kin since you bear the same last name. He died leaving no heir or a will.
 
- .../devicetree/bindings/dma/xilinx/xilinx_cdma.txt | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+My intention is to transfer this sum of 5.5M in the aforementioned account to a safe account. I am therefore proposing that you quietly partner with me and provide an account or set up a new one that will serve the purpose of receiving this fund. For your assistance in this venture, I am ready to part with a good percentage of the entire funds. After going through the deceased person's records and files, I discovered that:
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
-new file mode 100644
-index 0000000..aba3b10
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
-@@ -0,0 +1,54 @@
-+Xilinx AXI CDMA engine, it does transfers between memory-mapped source
-+address and a memory-mapped destination address.
-+
-+Required properties:
-+- compatible		: Should be "xlnx,axi-cdma-1.00.a"
-+- #dma-cells		: Should be <1>, see "dmas" property below
-+- reg			: Should contain cdma registers location and length.
-+- dma-channel child node: Should have only one channel
-+
-+Optional properties:
-+- xlnx,include-sg	: Tells whether configured for Scatter-mode in
-+			  the hardware.
-+
-+Required child node properties:
-+- compatible		: It should be "xlnx,axi-cdma-channel".
-+- interrupts		: Should contain per channel CDMA interrupts.
-+- xlnx,datawidth	: Should contain the stream data width, take values
-+			  {32,64...1024}.
-+
-+Option child node properties:
-+- xlnx,include-dre	: Tells whether hardware is configured for Data
-+			  Realignment Engine.
-+
-+Example:
-+++++++++
-+
-+axi_cdma_0: axicdma@7e200000 {
-+       compatible = "xlnx,axi-cdma-1.00.a";
-+       #dma_cells = <1>;
-+       reg = < 0x7e200000 0x10000 >;
-+       dma-channel@7e200000 {
-+               compatible = "xlnx,axi-cdma-channel";
-+               interrupts = < 0 55 4 >;
-+               xlnx,datawidth = <0x40>;
-+       } ;
-+} ;
-+
-+
-+* DMA client
-+
-+Required properties:
-+- dmas		: a list of <[Central DMA device phandle] [Channel ID]> pairs,
-+		  where Channel ID is '0' for write/tx and '1' for read/rx
-+                  channel.
-+- dma-names	: a list of DMA channel names, one per "dmas" entry
-+
-+Example:
-+++++++++
-+
-+cdmatest_0: cdmatest@0 {
-+       compatible ="xlnx,axi-cdma-test-1.00.a";
-+       dmas = <&axi_cdma_0 0>;
-+       dma-names = "cdma0";
-+} ;
--- 
-2.1.2
+(1) No one has operated this account since 2004
+(2) He died without an heir; hence the money has been floating.
+(3) No other person knows about this account and there was no known beneficiary.
+
+If I do not remit this money urgently, it would be forfeited and subsequently converted to company's funds, which will benefit only the directors of my firm. This money can be approved to you legally as with all the necessary documentary approvals in your name. However, you would be required to show some proof of claim, which I will provide you with and also guide you on how to make your applications.
+
+Please do give me a reply on my private e-mail juan.morato1-MWBdxC+W4QGHXe+LvDLADg@public.gmane.org or fax 00 34 917 692 656 so that I can send you detailed information on the modalities of my proposition. I completely trust you to keep this proposition absolutely confidential. Kindly forward your telephone number where I can reach you easily. I look forward to your prompt response.
+
+Best Regards,
+Mr. Juan Sebastian Morato
+Fax: 00 34 917 692 656
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
