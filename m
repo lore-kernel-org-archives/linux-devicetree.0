@@ -1,95 +1,127 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC/PATCH] pinctrl: sh-pfc: Accept standard function, pins and groups properties
-Date: Sun, 01 Mar 2015 14:19:59 +0200
-Message-ID: <7128182.C0nStVbsie@avalon>
-References: <CACRpkda4SBof0EaZVWtEYaeb6j_BGAVj39kje+mBz90eB3qAwQ@mail.gmail.com> <CACRpkda6H7hbgXhmSbgtwOC_8PbHnES5syp-YEp1+V6s5Ym6Cw@mail.gmail.com> <12938873.nmb8Ng8mNb@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <12938873.nmb8Ng8mNb@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sascha Hauer <kernel@pengutronix.de>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niso@kth.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+From: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>
+Subject: [PATCH v8 01/18] clk: tegra: Add binding for the Tegra124 DFLL clocksource
+Date: Sun,  1 Mar 2015 14:44:24 +0200
+Message-ID: <1425213881-5262-2-git-send-email-mikko.perttunen@kapsi.fi>
+References: <1425213881-5262-1-git-send-email-mikko.perttunen@kapsi.fi>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425213881-5262-1-git-send-email-mikko.perttunen-/1wQRMveznE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tuomas.tynkkynen-X3B1VOXEql0@public.gmane.org, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+From: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-I'd like to move forward with this patch, could you please comment on my reply 
-?
+The DFLL is the main clocksource for the fast CPU cluster on Tegra124
+and also provides automatic CPU rail voltage scaling as well. The DFLL
+is a separate IP block from the usual Tegra124 clock-and-reset
+controller, so it gets its own node in the device tree.
 
-On Wednesday 04 February 2015 11:53:34 Laurent Pinchart wrote:
-> On Wednesday 04 February 2015 09:40:48 Linus Walleij wrote:
-> > On Tue, Jan 27, 2015 at 9:31 PM, Laurent Pinchart wrote:
-> >> The "function", "pins" and "groups" pinmux and pinctrl properties have
-> >> been standardized. Support them in addition to the custom "renesas,*"
-> >> properties. New-style and old-style properties can't be mixed in DT.
-> >> 
-> >> Signed-off-by: Laurent Pinchart
-> >> <laurent.pinchart+renesas@ideasonboard.com>
-> > 
-> > (...)
-> > 
-> >>> Would be nice if the PFC driver could be augmented to also accept the
-> >>> now standard bindings "groups" and "function" simply :) we're adding
-> >>> parse functions for those to the core.
-> >> 
-> >> Something like this ?
-> > 
-> > Yes :)
-> > 
-> >> Please note two differences between the Renesas PFC bindings and the
-> >> standard bindings:
-> >> 
-> >> - The standard bindings state that a pinctrl node must contain either a
-> >>   "pins" property or a "groups" property, while the Renesas bindings
-> >>   allows for both to coexist in the same node.
-> > 
-> > Sascha also says this makes sense for him so I guess I'm getting a bit
-> > soft on the issue.
-> > 
-> >> - The standard bindings don't allow a pinmux node to contain a "pins"
-> >>   property, while the Renesas bindings do.
-> > 
-> > Does that mean "pins" affect the muxing or that "pins" is about some
-> > per-pin config shoveled into the same node?
-> > 
-> > The former is not OK, the latter is.
-> 
-> It means "pins" affect the muxing. The sh-pfc driver supports both muxing
-> groups and muxing individual pins.
-> 
-> >>                 mmcif_pins: mmcif {
-> >>                 
-> >>                         mux {
-> >> 
-> >> -                               renesas,groups = "mmc0_data8_0",
-> >> "mmc0_ctrl_0";
-> >> -                               renesas,function = "mmc0";
-> >> +                               groups = "mmc0_data8_0", "mmc0_ctrl_0";
-> >> +                               function = "mmc0";
-> >> 
-> >>                         };
-> > 
-> > So that looks just very nice.
-> > 
-> >>                         cfg {
-> >> 
-> >> -                               renesas,groups = "mmc0_data8_0";
-> >> -                               renesas,pins = "PORT279";
-> >> +                               groups = "mmc0_data8_0";
-> >> +                               pins = "PORT279";
-> >> 
-> >>                                 bias-pull-up;
-> > 
-> > And here I can't see the use of "groups" in this node since it
-> > doesn't match a function. It's a bit ambiguous what "groups"
-> > mean when you run into it like this.
-> 
-> It means that the bias-pull-up configuration is applied to all pins of the
-> "mmc0_data8_0" group, as well as to pin 279.
+Signed-off-by: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+v8:
+- Changed dfll@ -> clock@
+- Changed compatibility string to "nvidia,tegra124-dfll"
+- Clarified how the vdd-cpu-supply property is used
+- Marked nvidia,cg-scale as optional since it is a boolean property
+- Expanded the 'FS mode' term to 'full speed mode'
+- Added dvco reset control
 
+ .../bindings/clock/nvidia,tegra124-dfll.txt        | 79 ++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+
+diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+new file mode 100644
+index 0000000..ee7e5fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+@@ -0,0 +1,79 @@
++NVIDIA Tegra124 DFLL FCPU clocksource
++
++This binding uses the common clock binding:
++Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++The DFLL IP block on Tegra is a root clocksource designed for clocking
++the fast CPU cluster. It consists of a free-running voltage controlled
++oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
++control module that will automatically adjust the VDD_CPU voltage by
++communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
++Currently only the I2C mode is supported by these bindings.
++
++Required properties:
++- compatible : should be "nvidia,tegra124-dfll"
++- reg : Defines the following set of registers, in the order listed:
++        - registers for the DFLL control logic.
++        - registers for the I2C output logic.
++        - registers for the integrated I2C master controller.
++        - look-up table RAM for voltage register values.
++- interrupts: Should contain the DFLL block interrupt.
++- clocks: Must contain an entry for each entry in clock-names.
++  See clock-bindings.txt for details.
++- clock-names: Must include the following entries:
++  - soc: Clock source for the DFLL control logic.
++  - ref: The closed loop reference clock
++  - i2c: Clock source for the integrated I2C master.
++- resets: Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names: Must include the following entries:
++  - dvco: Reset control for the DFLL DVCO.
++- #clock-cells: Must be 0.
++- clock-output-names: Name of the clock output.
++- vdd-cpu-supply: Regulator for the CPU voltage rail that the DFLL
++  hardware will start controlling. The regulator will be queried for
++  the I2C register, control values and supported voltages.
++
++Required properties for the control loop parameters:
++- nvidia,sample-rate: Sample rate of the DFLL control loop.
++- nvidia,droop-ctrl: See the register CL_DVFS_DROOP_CTRL in the TRM.
++- nvidia,force-mode: See the field DFLL_PARAMS_FORCE_MODE in the TRM.
++- nvidia,cf: Numeric value, see the field DFLL_PARAMS_CF_PARAM in the TRM.
++- nvidia,ci: Numeric value, see the field DFLL_PARAMS_CI_PARAM in the TRM.
++- nvidia,cg: Numeric value, see the field DFLL_PARAMS_CG_PARAM in the TRM.
++
++Optional properties for the control loop parameters:
++- nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
++
++Required properties for I2C mode:
++- nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
++
++Example:
++
++clock@0,70110000 {
++        compatible = "nvidia,tegra124-dfll";
++        reg = <0 0x70110000 0 0x100>, /* DFLL control */
++              <0 0x70110000 0 0x100>, /* I2C output control */
++              <0 0x70110100 0 0x100>, /* Integrated I2C controller */
++              <0 0x70110200 0 0x100>; /* Look-up table RAM */
++        interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&tegra_car TEGRA124_CLK_DFLL_SOC>,
++                 <&tegra_car TEGRA124_CLK_DFLL_REF>,
++                 <&tegra_car TEGRA124_CLK_I2C5>;
++        clock-names = "soc", "ref", "i2c";
++        resets = <&tegra_car TEGRA124_RST_DFLL_DVCO>;
++        reset-names = "dvco";
++        #clock-cells = <0>;
++        clock-output-names = "dfllCPU_out";
++        vdd-cpu-supply = <&vdd_cpu>;
++        status = "okay";
++
++        nvidia,sample-rate = <12500>;
++        nvidia,droop-ctrl = <0x00000f00>;
++        nvidia,force-mode = <1>;
++        nvidia,cf = <10>;
++        nvidia,ci = <0>;
++        nvidia,cg = <2>;
++
++        nvidia,i2c-fs-rate = <400000>;
++};
 -- 
-Regards,
+2.3.0
 
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
