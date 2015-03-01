@@ -1,33 +1,58 @@
-From: vichy <vichy.kuo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: possible add CONFIG define in dts?
-Date: Sun, 1 Mar 2015 12:56:41 +0800
-Message-ID: <CAOVJa8G8BSeR82gG+MAU5PbzXHTbFOfZJqpNL4sJ7rMP2pjuXQ@mail.gmail.com>
-References: <CAOVJa8FmpFFk=3YwgTX4N3u5AKmM05jpbzww4_xNvS3d=W8sRA@mail.gmail.com>
-	<20150224110210.GS9714@leverpostej>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH 1/2] dt-bindings: add root compatible property for PopMetal
+ board
+Date: Sun, 01 Mar 2015 14:49:39 +0800
+Message-ID: <54F2B683.9010205@rock-chips.com>
+References: <1425034505-25163-1-git-send-email-andy.yan@rock-chips.com> <1425034741-25229-1-git-send-email-andy.yan@rock-chips.com> <20074998.Rot74D46YJ@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150224110210.GS9714@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20074998.Rot74D46YJ@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, naobsd@gmail.com, romain.perier@gmail.com, b.galvani@gmail.com, galak@codeaurora.org, linux-kernel@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, mark.yao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-hi Mark:
-> The DTB should describe the HW, and thus should be separate from the
-> CONFIG options, which control the behaviour of the kernel. So CONFIG_*
-> in DTBs doesn't make much sense.
+Hi Heiko:
+
+On 2015=E5=B9=B403=E6=9C=8801=E6=97=A5 01:43, Heiko St=C3=BCbner wrote:
+> Hi Andy,
 >
-> This is broken for a multi-platform kernel, no?
+> Am Freitag, 27. Februar 2015, 18:59:01 schrieb Andy Yan:
+>> PopMetal board is a rk3288 based board made by ChipSpark,
+>> this patch add root compatible property for it
+>>
+>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>>
+>> ---
+>>
+>>   Documentation/devicetree/bindings/arm/rockchip.txt | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
+>> b/Documentation/devicetree/bindings/arm/rockchip.txt index 6809e4e..=
+818d249
+>> 100644
+>> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+>> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+>> @@ -22,3 +22,7 @@ Rockchip platforms device tree bindings
+>>         - compatible =3D "firefly,firefly-rk3288", "rockchip,rk3288"=
+;
+>>       or
+>>         - compatible =3D "firefly,firefly-rk3288-beta", "rockchip,rk=
+3288";
+>> +
+>> +- PopMetal PopMetal-RK3288 board:
+> this should probably be
+> 	ChipSPARK PopMetal-RK3288 board:
+   ok, this will be fixed in V2
 >
-> If you want to build DTBs for platforms with slight differences as
-> above, place the common portion in a shared dtsi, and override the parts
-> which are different in each dts. You'll end up with a dtb for each
-> variation, but you don't need to repeat all the common parts in each
-> dts.
-I found what you mention in the kernel for other disi example.
-Sincerely appreciate your kind explanation, ^^
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +    Required root node properties:
+>> +      - compatible =3D "chipspark,popmetal-rk3288", "rockchip,rk328=
+8";
+>
+>
+>
