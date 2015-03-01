@@ -1,39 +1,74 @@
-From: Roman Volkov <rvolkov@v1ros.org>
-Subject: [PATCH v3 RESEND 2/2] dts: vt8500: Fix errors in SDHC node for WM8505
-Date: Sun,  1 Mar 2015 23:48:07 +0300
-Message-ID: <1425242887-7594-3-git-send-email-rvolkov@v1ros.org>
-References: <1425226007-2757-3-git-send-email-rvolkov@v1ros.org>
- <1425242887-7594-1-git-send-email-rvolkov@v1ros.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 1/2] dts: vt8500: Add SDHC node to DTS file for WM8650
+Date: Sun, 01 Mar 2015 23:50:45 +0300
+Message-ID: <54F37BA5.2080605@cogentembedded.com>
+References: <1423130878-3894-1-git-send-email-v1ron@v1ros.org>	<1425226007-2757-1-git-send-email-rvolkov@v1ros.org>	<1425226007-2757-2-git-send-email-rvolkov@v1ros.org>	<54F35371.7020608@cogentembedded.com> <20150301224959.4a106bfd@v1ron-s7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425242887-7594-1-git-send-email-rvolkov@v1ros.org>
+In-Reply-To: <20150301224959.4a106bfd@v1ron-s7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Prisk <linux@prisktech.co.nz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexey Charkov <alchark@gmail.com>, Roman Volkov <rvolkov@v1ros.org>
+To: Roman Volkov <rvolkov@v1ros.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Alexey Charkov <alchark@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-According to datasheet, the registers space of SDHC controller is 1Kb,
-not '0x1000', the correct value should be '0x400'. Bracket interrupt
-numbers individually per recommendations.
+Hello.
 
-Signed-off-by: Roman Volkov <rvolkov@v1ros.org>
----
- arch/arm/boot/dts/wm8505.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 03/01/2015 10:49 PM, Roman Volkov wrote:
 
-diff --git a/arch/arm/boot/dts/wm8505.dtsi b/arch/arm/boot/dts/wm8505.dtsi
-index a1a854b..e9ef539 100644
---- a/arch/arm/boot/dts/wm8505.dtsi
-+++ b/arch/arm/boot/dts/wm8505.dtsi
-@@ -281,8 +281,8 @@
- 
- 		sdhc@d800a000 {
- 			compatible = "wm,wm8505-sdhc";
--			reg = <0xd800a000 0x1000>;
--			interrupts = <20 21>;
-+			reg = <0xd800a000 0x400>;
-+			interrupts = <20>, <21>;
- 			clocks = <&clksdhc>;
- 			bus-width = <4>;
- 		};
--- 
-2.3.1
+>>> Since WM8650 has the same 'WMT' SDHC controller as WM8505, and the
+>>> driver is already in the kernel, this node enables the controller
+>>> support for WM8650
+
+>>> Signed-off-by: Roman Volkov <rvolkov@v1ros.org>
+>>> Reviewed-by: Alexey Charkov <alchark@gmail.com>
+>>> ---
+>>>    arch/arm/boot/dts/wm8650.dtsi | 9 +++++++++
+>>>    1 file changed, 9 insertions(+)
+
+>>> diff --git a/arch/arm/boot/dts/wm8650.dtsi
+>>> b/arch/arm/boot/dts/wm8650.dtsi index b1c59a7..e12213d 100644
+>>> --- a/arch/arm/boot/dts/wm8650.dtsi
+>>> +++ b/arch/arm/boot/dts/wm8650.dtsi
+>>> @@ -187,6 +187,15 @@
+>>>    			interrupts = <43>;
+>>>    		};
+>>>
+>>> +		sdhc@d800a000 {
+
+>>      According to the ePAPR standard, the device nodes should have
+>> generic names according to their functions, so this node should be
+>> named just "sd@d800a000".
+
+>> WBR, Sergei
+
+> Sergei,
+
+> Why not "sdmmc" or "sdhci" or "sdio" then? It would be great to name
+
+    SDHCI is the SD host controller standard, while the names should describe 
+"the function of the device and not its precise programming model". SDIO isn't 
+the physical interface name, the physical interface underneath is still SD. 
+"mmcsd" or "mmc-sd" would be appropriate, however just "mmc" is typically used.
+
+> nodes in same way, but there is no exact requirement in ePAPR v1.1
+> regarding SD/MMC controllers.
+
+    Yes, MMC/SD node names are not yet standardized.
+
+> Also, in Linux I don't see that someone
+> strictly follows this requirement.
+
+    Because people for the most part are not aware of it, despite 
+http://www.devicetree.org/Device_Tree_Usage points to ePAPR and the section 
+2.4 of this page also tells to use generic names.
+
+> This renaming will affect driver,
+> since .compatible strings likely also need changing.
+
+    Why on earth they'll need change?!
+
+> Roman
+
+WBR, Sergei
