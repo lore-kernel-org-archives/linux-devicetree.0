@@ -1,74 +1,128 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 1/2] dts: vt8500: Add SDHC node to DTS file for WM8650
-Date: Sun, 01 Mar 2015 23:50:45 +0300
-Message-ID: <54F37BA5.2080605@cogentembedded.com>
-References: <1423130878-3894-1-git-send-email-v1ron@v1ros.org>	<1425226007-2757-1-git-send-email-rvolkov@v1ros.org>	<1425226007-2757-2-git-send-email-rvolkov@v1ros.org>	<54F35371.7020608@cogentembedded.com> <20150301224959.4a106bfd@v1ron-s7>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH v5 2/4] media: ov2640: add async probe function
+Date: Sun, 1 Mar 2015 22:06:50 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1503012202460.2412@axis700.grange>
+References: <1423560696-12304-1-git-send-email-josh.wu@atmel.com>
+ <1423560696-12304-3-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150301224959.4a106bfd@v1ron-s7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roman Volkov <rvolkov@v1ros.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Alexey Charkov <alchark@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1423560696-12304-3-git-send-email-josh.wu@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Josh Wu <josh.wu@atmel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Josh,
 
-On 03/01/2015 10:49 PM, Roman Volkov wrote:
+Thanks for a patch update. I think it looks good as a first step in your 
+patch series, just a minor comment below:
 
->>> Since WM8650 has the same 'WMT' SDHC controller as WM8505, and the
->>> driver is already in the kernel, this node enables the controller
->>> support for WM8650
+On Tue, 10 Feb 2015, Josh Wu wrote:
 
->>> Signed-off-by: Roman Volkov <rvolkov@v1ros.org>
->>> Reviewed-by: Alexey Charkov <alchark@gmail.com>
->>> ---
->>>    arch/arm/boot/dts/wm8650.dtsi | 9 +++++++++
->>>    1 file changed, 9 insertions(+)
+> In async probe, there is a case that ov2640 is probed before the
+> host device which provided 'mclk'.
+> To support this async probe, we will get 'mclk' at first in the probe(),
+> if failed it will return -EPROBE_DEFER. That will let ov2640 wait for
+> the host device probed.
+> 
+> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+> ---
+> 
+> Changes in v5:
+> - don't change the ov2640_s_power() code.
+> - will get 'mclk' at the beginning of ov2640_probe().
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/media/i2c/soc_camera/ov2640.c | 29 +++++++++++++++++++----------
+>  1 file changed, 19 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/soc_camera/ov2640.c b/drivers/media/i2c/soc_camera/ov2640.c
+> index 1fdce2f..057dd49 100644
+> --- a/drivers/media/i2c/soc_camera/ov2640.c
+> +++ b/drivers/media/i2c/soc_camera/ov2640.c
+> @@ -1068,6 +1068,10 @@ static int ov2640_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  	}
+>  
+> +	priv->clk = v4l2_clk_get(&client->dev, "mclk");
+> +	if (IS_ERR(priv->clk))
+> +		return -EPROBE_DEFER;
+> +
+>  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
+>  	v4l2_ctrl_handler_init(&priv->hdl, 2);
+>  	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
+> @@ -1075,24 +1079,28 @@ static int ov2640_probe(struct i2c_client *client,
+>  	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
+>  			V4L2_CID_HFLIP, 0, 1, 1, 0);
+>  	priv->subdev.ctrl_handler = &priv->hdl;
+> -	if (priv->hdl.error)
+> -		return priv->hdl.error;
+> -
+> -	priv->clk = v4l2_clk_get(&client->dev, "mclk");
+> -	if (IS_ERR(priv->clk)) {
+> -		ret = PTR_ERR(priv->clk);
+> -		goto eclkget;
+> +	if (priv->hdl.error) {
+> +		ret = priv->hdl.error;
+> +		goto err_clk;
+>  	}
+>  
+>  	ret = ov2640_video_probe(client);
+>  	if (ret) {
+> -		v4l2_clk_put(priv->clk);
+> -eclkget:
+> -		v4l2_ctrl_handler_free(&priv->hdl);
+> +		goto err_videoprobe;
 
->>> diff --git a/arch/arm/boot/dts/wm8650.dtsi
->>> b/arch/arm/boot/dts/wm8650.dtsi index b1c59a7..e12213d 100644
->>> --- a/arch/arm/boot/dts/wm8650.dtsi
->>> +++ b/arch/arm/boot/dts/wm8650.dtsi
->>> @@ -187,6 +187,15 @@
->>>    			interrupts = <43>;
->>>    		};
->>>
->>> +		sdhc@d800a000 {
+Since you add a "goto" here, you don't need an "else" after it, and the 
+"probed" success message should go down, so, just make it
 
->>      According to the ePAPR standard, the device nodes should have
->> generic names according to their functions, so this node should be
->> named just "sd@d800a000".
+	ret = ov2640_video_probe(client);
+	if (ret < 0)
+		goto err_videoprobe;
 
->> WBR, Sergei
+	ret = v4l2_async_register_subdev(&priv->subdev);
+	if (ret < 0)
+		goto err_videoprobe;
 
-> Sergei,
+	dev_info(&adapter->dev, "OV2640 Probed\n");
 
-> Why not "sdmmc" or "sdhci" or "sdio" then? It would be great to name
+	return 0;
 
-    SDHCI is the SD host controller standard, while the names should describe 
-"the function of the device and not its precise programming model". SDIO isn't 
-the physical interface name, the physical interface underneath is still SD. 
-"mmcsd" or "mmc-sd" would be appropriate, however just "mmc" is typically used.
+err_...
 
-> nodes in same way, but there is no exact requirement in ePAPR v1.1
-> regarding SD/MMC controllers.
+Thanks
+Guennadi
 
-    Yes, MMC/SD node names are not yet standardized.
-
-> Also, in Linux I don't see that someone
-> strictly follows this requirement.
-
-    Because people for the most part are not aware of it, despite 
-http://www.devicetree.org/Device_Tree_Usage points to ePAPR and the section 
-2.4 of this page also tells to use generic names.
-
-> This renaming will affect driver,
-> since .compatible strings likely also need changing.
-
-    Why on earth they'll need change?!
-
-> Roman
-
-WBR, Sergei
+>  	} else {
+>  		dev_info(&adapter->dev, "OV2640 Probed\n");
+>  	}
+>  
+> +	ret = v4l2_async_register_subdev(&priv->subdev);
+> +	if (ret < 0)
+> +		goto err_videoprobe;
+> +
+> +	return 0;
+> +
+> +err_videoprobe:
+> +	v4l2_ctrl_handler_free(&priv->hdl);
+> +err_clk:
+> +	v4l2_clk_put(priv->clk);
+>  	return ret;
+>  }
+>  
+> @@ -1100,6 +1108,7 @@ static int ov2640_remove(struct i2c_client *client)
+>  {
+>  	struct ov2640_priv       *priv = to_ov2640(client);
+>  
+> +	v4l2_async_unregister_subdev(&priv->subdev);
+>  	v4l2_clk_put(priv->clk);
+>  	v4l2_device_unregister_subdev(&priv->subdev);
+>  	v4l2_ctrl_handler_free(&priv->hdl);
+> -- 
+> 1.9.1
+> 
