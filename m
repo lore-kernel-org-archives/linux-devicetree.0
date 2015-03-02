@@ -1,92 +1,70 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: at919260/at91sam9g20: fix SRAM device tree node
-Date: Mon, 2 Mar 2015 10:53:59 +0100
-Message-ID: <20150302095359.GJ4094@piout.net>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: at919260/at91sam9g20: fix SRAM device tree
+ node
+Date: Mon, 2 Mar 2015 09:59:26 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641BFD772E3@penmbx01>
 References: <1425276209-4899-1-git-send-email-wenyou.yang@atmel.com>
+ <20150302095359.GJ4094@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425276209-4899-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150302095359.GJ4094-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org" <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wenyou,
-
-I'd prefer fixing the sram lookup in pm.c. I'll propose something
-however, I can't test on my side.
-
-On 02/03/2015 at 14:03:29 +0800, Wenyou Yang wrote :
-> Fix PM does not work on the at91sam9g20ek board
-> --->8---
-> at91_pm_sram_init: failed to find sram device!
-> ---<8---
-> 
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/at91sam9260.dtsi |    9 +++++++--
->  arch/arm/boot/dts/at91sam9g20.dtsi |    9 +++++----
->  2 files changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-> index fff0ee6..d1eb27c 100644
-> --- a/arch/arm/boot/dts/at91sam9260.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9260.dtsi
-> @@ -69,9 +69,14 @@
->  		};
->  	};
->  
-> -	sram0: sram@002ff000 {
-> +	sram0: sram@00200000 {
->  		compatible = "mmio-sram";
-> -		reg = <0x002ff000 0x2000>;
-> +		reg = <0x00200000 0x1000>;
-> +	};
-> +
-> +	sram1: sram@00300000 {
-> +		compatible = "mmio-sram";
-> +		reg = <0x00300000 0x1000>;
->  	};
->  
->  	ahb {
-> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-> index f593016..eb9a62d 100644
-> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-> @@ -16,13 +16,14 @@
->  		reg = <0x20000000 0x08000000>;
->  	};
->  
-> -	sram0: sram@002ff000 {
-> -		status = "disabled";
-> +	sram0: sram@00200000 {
-> +		compatible = "mmio-sram";
-> +		reg = <0x00200000 0x4000>;
->  	};
->  
-> -	sram1: sram@002fc000 {
-> +	sram1: sram@00300000 {
->  		compatible = "mmio-sram";
-> -		reg = <0x002fc000 0x8000>;
-> +		reg = <0x00300000 0x4000>;
->  	};
->  
->  	ahb {
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+SGkgQWxleGFuZHJlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFs
+ZXhhbmRyZSBCZWxsb25pIFttYWlsdG86YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMu
+Y29tXQ0KPiBTZW50OiAyMDE1xOoz1MIyyNUgMTc6NTQNCj4gVG86IFlhbmcsIFdlbnlvdQ0KPiBD
+YzogRmVycmUsIE5pY29sYXM7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZzsNCj4gbGludXhAYXJtLmxpbnV4Lm9yZy51azsgcGF3ZWwubW9sbEBhcm0uY29t
+OyBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgZ2FsYWtAY29kZWF1cm9yYS5vcmc7DQo+IGxp
+bnV4QG1heGltLm9yZy56YTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogZHRzOiBhdDkxOTI2MC9hdDkxc2FtOWcyMDogZml4
+IFNSQU0gZGV2aWNlIHRyZWUNCj4gbm9kZQ0KPiANCj4gSGkgV2VueW91LA0KPiANCj4gSSdkIHBy
+ZWZlciBmaXhpbmcgdGhlIHNyYW0gbG9va3VwIGluIHBtLmMuIEknbGwgcHJvcG9zZSBzb21ldGhp
+bmcgaG93ZXZlciwgSSBjYW4ndA0KPiB0ZXN0IG9uIG15IHNpZGUuDQpJIGNhbiBoZWxwIHRlc3Qg
+aXQgaWYgeW91IGdpdmUgbWUgeW91ciBwYXRjaGVzIHRvIG1lLg0KDQo+IA0KPiBPbiAwMi8wMy8y
+MDE1IGF0IDE0OjAzOjI5ICswODAwLCBXZW55b3UgWWFuZyB3cm90ZSA6DQo+ID4gRml4IFBNIGRv
+ZXMgbm90IHdvcmsgb24gdGhlIGF0OTFzYW05ZzIwZWsgYm9hcmQNCj4gPiAtLS0+OC0tLQ0KPiA+
+IGF0OTFfcG1fc3JhbV9pbml0OiBmYWlsZWQgdG8gZmluZCBzcmFtIGRldmljZSENCj4gPiAtLS08
+OC0tLQ0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VueW91IFlhbmcgPHdlbnlvdS55YW5nQGF0
+bWVsLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MXNhbTkyNjAuZHRz
+aSB8ICAgIDkgKysrKysrKy0tDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTFzYW05ZzIwLmR0
+c2kgfCAgICA5ICsrKysrLS0tLQ0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDEyIGluc2VydGlvbnMo
+KyksIDYgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
+dHMvYXQ5MXNhbTkyNjAuZHRzaQ0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MXNhbTkyNjAu
+ZHRzaQ0KPiA+IGluZGV4IGZmZjBlZTYuLmQxZWIyN2MgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvYXQ5MXNhbTkyNjAuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L2F0OTFzYW05MjYwLmR0c2kNCj4gPiBAQCAtNjksOSArNjksMTQgQEANCj4gPiAgCQl9Ow0KPiA+
+ICAJfTsNCj4gPg0KPiA+IC0Jc3JhbTA6IHNyYW1AMDAyZmYwMDAgew0KPiA+ICsJc3JhbTA6IHNy
+YW1AMDAyMDAwMDAgew0KPiA+ICAJCWNvbXBhdGlibGUgPSAibW1pby1zcmFtIjsNCj4gPiAtCQly
+ZWcgPSA8MHgwMDJmZjAwMCAweDIwMDA+Ow0KPiA+ICsJCXJlZyA9IDwweDAwMjAwMDAwIDB4MTAw
+MD47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiArCXNyYW0xOiBzcmFtQDAwMzAwMDAwIHsNCj4gPiAr
+CQljb21wYXRpYmxlID0gIm1taW8tc3JhbSI7DQo+ID4gKwkJcmVnID0gPDB4MDAzMDAwMDAgMHgx
+MDAwPjsNCj4gPiAgCX07DQo+ID4NCj4gPiAgCWFoYiB7DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gv
+YXJtL2Jvb3QvZHRzL2F0OTFzYW05ZzIwLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0
+OTFzYW05ZzIwLmR0c2kNCj4gPiBpbmRleCBmNTkzMDE2Li5lYjlhNjJkIDEwMDY0NA0KPiA+IC0t
+LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTFzYW05ZzIwLmR0c2kNCj4gPiArKysgYi9hcmNoL2Fy
+bS9ib290L2R0cy9hdDkxc2FtOWcyMC5kdHNpDQo+ID4gQEAgLTE2LDEzICsxNiwxNCBAQA0KPiA+
+ICAJCXJlZyA9IDwweDIwMDAwMDAwIDB4MDgwMDAwMDA+Ow0KPiA+ICAJfTsNCj4gPg0KPiA+IC0J
+c3JhbTA6IHNyYW1AMDAyZmYwMDAgew0KPiA+IC0JCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4g
+KwlzcmFtMDogc3JhbUAwMDIwMDAwMCB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJtbWlvLXNyYW0i
+Ow0KPiA+ICsJCXJlZyA9IDwweDAwMjAwMDAwIDB4NDAwMD47DQo+ID4gIAl9Ow0KPiA+DQo+ID4g
+LQlzcmFtMTogc3JhbUAwMDJmYzAwMCB7DQo+ID4gKwlzcmFtMTogc3JhbUAwMDMwMDAwMCB7DQo+
+ID4gIAkJY29tcGF0aWJsZSA9ICJtbWlvLXNyYW0iOw0KPiA+IC0JCXJlZyA9IDwweDAwMmZjMDAw
+IDB4ODAwMD47DQo+ID4gKwkJcmVnID0gPDB4MDAzMDAwMDAgMHg0MDAwPjsNCj4gPiAgCX07DQo+
+ID4NCj4gPiAgCWFoYiB7DQo+ID4gLS0NCj4gPiAxLjcuOS41DQo+ID4NCj4gPg0KPiA+IF9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4gbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcNCj4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwNCj4gDQo+IC0tDQo+IEFsZXhhbmRyZSBCZWxsb25pLCBGcmVlIEVsZWN0
+cm9ucw0KPiBFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRyb2lkIGVuZ2luZWVyaW5nIGh0
+dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20NCg0KQmVzdCBSZWdhcmRzLA0KV2VueW91IFlhbmcNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
