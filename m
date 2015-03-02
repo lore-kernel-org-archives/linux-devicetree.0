@@ -1,81 +1,111 @@
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Subject: [PATCH v2 0/5] arm-cci400: PMU monitoring support on ARM64
-Date: Mon,  2 Mar 2015 11:29:09 +0000
-Message-ID: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: nico@linaro.org, b.zolnierkie@samsung.com, kgene@kernel.org, a.kesavan@samsung.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liviu.Dudau@arm.com, Lorenzo.Pieralisi@arm.com, Pawel.Moll@arm.com, olof@lixom.net, Sudeep.Holla@arm.com, Punit.Agrawal@arm.com, Will.Deacon@arm.com, Catalin.Marinas@arm.com, "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: [PATCH v2 1/2] mtd: nand: dt binding documentation for digicolor NFC
+Date: Mon,  2 Mar 2015 13:28:22 +0200
+Message-ID: <fb9907fecb8b57d1b44ce03b97eb62225555de9f.1425295703.git.baruch@tkos.co.il>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+The CX92755 SoC is one of Conexant Digicolor series of SoCs. This devicetree
+binding document describes the NAND flash controller the is shared by some SoCs
+in the Digicolor series.
 
-This series enables the PMU monitoring support for CCI400 on ARM64.
-The existing CCI400 driver code is a mix of PMU driver and the MCPM
-driver code. The MCPM driver is only used on ARM(32) and contains
-arm32 assembly and hence can't be built on ARM64. This patch splits
-the code to
+Not all of the properties are currently actually used by the driver.
+Specifically, the driver doesn't make use of interrupts. This may change in the
+future.
 
- - ARM_CCI400_PORT_CTRL driver - depends on ARM && V7
- - ARM_CCI400_PMU driver
+Also worth noting that the only supported ECC mode is "hw_syndrome". In the
+future the driver may add support for additional modes.
 
-Accessing the Peripheral ID2 register(PID2) on CCI-400, to detect
-the revision of the chipset, is a secure operation. Hence, it prevents
-us from running this on non-secure platforms. The issue is overcome by
-explicitly mentioning the revision number of the CCI PMU in the device tree
-binding. The device-tree binding has been updated with the new bindings.
+Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+---
+ .../devicetree/bindings/mtd/digicolor-nand.txt     | 71 ++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/digicolor-nand.txt
 
-i.e,=09arm-cci-400-pmu,r0 =3D> revision 0
-=09arm-cci-400-pmu,r1 =3D> revision 1
-=09arm-cci-400-pmu =3D> (old) DEPRECATED
+diff --git a/Documentation/devicetree/bindings/mtd/digicolor-nand.txt b/Documentation/devicetree/bindings/mtd/digicolor-nand.txt
+new file mode 100644
+index 000000000000..60e2d9085b7a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/digicolor-nand.txt
+@@ -0,0 +1,71 @@
++Conexant Digicolor NAND Flash Controller (NFC)
++
++Required properties:
++- compatible : "cnxt,cx92755-nfc".
++- reg : shall contain registers location and length for data and reg.
++- interrupts : shall define the nand controller interrupt.
++- #address-cells: shall be set to 1. Encode the nand CS.
++- #size-cells : shall be set to 0.
++- clocks : shall reference nand controller clocks.
++
++Optional children nodes:
++Children nodes represent the available nand chips.
++
++Required children properties:
++- nand-ecc-mode : must be "hw_syndrome".
++- nand-ecc-strength : must be one of 6, 7, 8, 24, 28, 30.
++- nand-ecc-step-size : must be either 512 or 1024.
++
++see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
++
++Each nand chip child node may optionally have partition sub-nodes. See
++Documentation/devicetree/bindings/mtd/partition.txt for partitions binding.
++
++Example:
++nfc: nfc@f00a4000 {
++	compatible = "cnxt,cx92755-nfc";
++	reg = <0xf00a4000 0x200>;
++	interrupts = <26>;
++	clocks = <&main_clk>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	nand@0 {
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		nand-ecc-mode = "hw_syndrome";
++		nand-ecc-step-size = <1024>;
++		nand-ecc-strength = <28>;
++
++		partition@0 {
++			label = "boot";
++			reg = <0x00000000 0x00700000>;
++		};
++
++		partition@700000 {
++			label = "splash";
++			reg = <0x00700000 0x00500000>;
++		};
++
++		partition@c00000 {
++			label = "maint";
++			reg = <0x00c00000 0x00500000>;
++		};
++
++		partition@1100000 {
++			label = "kernel";
++			reg = <0x01100000 0x00500000>;
++		};
++
++		partition@1600000 {
++			label = "rootfs";
++			reg = <0x01600000 0x18000000>;
++		};
++
++		partition@19600000 {
++			label = "data1";
++			reg = <0x19600000 0x66a00000>;
++		};
++	};
++};
+-- 
+2.1.4
 
-The old binding has been DEPRECATED and must be used only on ARM32
-system with secure access. We don't have a reliable dynamic way to detect
-if the system is running secure. This series tries to use the best safe
-method by relying on the availability of MCPM(as it was prior to the series=
-).
-It is upto the MCPM platform driver to decide, if the system is secure befo=
-re
-it goes ahead and registers its drivers and pokes the CCI. This series does=
-n't
-address/solve the problem of MCPM. I will be happy to use a better approach=
-,
-if there is any.
-
-Tested on (non-secure)TC2 and Juno.
-
-Change since V1 (Suggestions from Nicolas Pitre):
-
- - Split Patch 2 to separate the 'PMU' abstraction(now Patch 2/5)
-   from the introduction of a new device-tree binding(now Patch 3/5)
- - Rename
-=09ARM_CCI400_MCPM =3D> ARM_CCI400_PORT_CTRL
-=09CCI400_MCPM_PORTS_DATA =3D> CCI400_PORTS_DATA
- - Select ARM_CCI400_COMMON for ARM_CCI400_PORT_CTRL
- - Better documentation in the git commit log about the ARM_CCI config.
- - Move the 'pr_info' to its apporpriate patch.
-
-Suzuki K. Poulose (5):
-  arm-cci: Rearrange code for splitting PMU vs driver code
-  arm-cci: Abstract the CCI400 PMU speicific definitions
-  arm-cci: Get rid of secure transactions for PMU driver
-  arm-cci: Split the code for PMU vs driver support
-  arm-cci: Fix CCI PMU event validation
-
- Documentation/devicetree/bindings/arm/cci.txt |    7 +-
- arch/arm/include/asm/arm-cci.h                |   42 +++
- arch/arm/mach-exynos/Kconfig                  |    2 +-
- arch/arm/mach-vexpress/Kconfig                |    4 +-
- arch/arm64/include/asm/arm-cci.h              |   27 ++
- drivers/bus/Kconfig                           |   27 +-
- drivers/bus/arm-cci.c                         |  483 ++++++++++++++-------=
-----
- include/linux/arm-cci.h                       |    9 +-
- 8 files changed, 383 insertions(+), 218 deletions(-)
- create mode 100644 arch/arm/include/asm/arm-cci.h
- create mode 100644 arch/arm64/include/asm/arm-cci.h
-
---=20
-1.7.9.5
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
