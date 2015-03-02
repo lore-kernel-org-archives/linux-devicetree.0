@@ -1,88 +1,25 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: hummingboard: enable pcf8523 rtc for i2eX
-Date: Mon, 2 Mar 2015 19:49:08 +0000
-Message-ID: <20150302194908.GU8656@n2100.arm.linux.org.uk>
-References: <1425322206-30115-1-git-send-email-mporter@konsulko.com>
- <20150302190204.GR8656@n2100.arm.linux.org.uk>
- <20150302190616.GS8656@n2100.arm.linux.org.uk>
- <20150302192116.GA30263@beef>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: simple-card: Add support for samplerate
+ and samplewidth constraints
+Date: Mon, 02 Mar 2015 20:58:42 +0100
+Message-ID: <54F4C0F2.8000201@metafoo.de>
+References: <cover.1425303942.git.jsarha@ti.com> <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150302192116.GA30263@beef>
+In-Reply-To: <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 02, 2015 at 02:21:16PM -0500, Matt Porter wrote:
-> [added Rabeeh]
-> 
-> On Mon, Mar 02, 2015 at 07:06:16PM +0000, Russell King wrote:
-> > On Mon, Mar 02, 2015 at 07:02:04PM +0000, Russell King - ARM Linux wrote:
-> > > On Mon, Mar 02, 2015 at 01:50:06PM -0500, Matt Porter wrote:
-> > > > The PCF8523 RTC is populated on the i2eX boards so
-> > > > enable the i2c1 controller and enable the device on
-> > > > that bus.
-> > > 
-> > > Hmm, I wonder where my update patches went... oh, they're still sitting
-> > > in my excessive backlog of patches in my tree as part of my "sgtl5000
-> > > hacks" patch...
-> > 
-> > Also note that before we accept patches to the SolidRun stuff, we should
-> > first re-license the file as GPLv2/X11.
-> 
-> Hi Russell,
-> 
-> Given that there's no license information at all on any of these three
-> dts files I think that's a good idea. I just realized I didn't copy
-> Rabeeh on this and he's apparently the original submitter based on
-> your work. Ideally Rabeeh should send a license update but I could do
-> so if you'd like and gather some acks.
+On 03/02/2015 03:14 PM, Jyri Sarha wrote:
+> Add DT properties to dailink for setting samplerate and samplewidth
+> constraints. The DT binding document has been updated.
 
-It's more up to me, as I ended up being the initial author of the
-mainline files - and if you look at:
-
-http://www.home.arm.linux.org.uk/~rmk/cubox/hummingboard-cubox-i-v3.16-rc2-20140624/0041-sgtl5000-hacks.patch
-
-you'll see the patch I refer to above, which is my own work, and it's
-hardly changed to the 3.18 patch:
-
-http://www.home.arm.linux.org.uk/~rmk/cubox/hummingboard-cubox-i-v3.18-20141216/0113-sgtl5000-hacks.patch
-
-> OTOH, did you already have a license update somewhere in your backlog
-> of patches?
-
-Well, I do now. :)
-
-I had dropped the ball on a load of kernel stuff as it seemed to be going
-nowhere, no one seemed interested in it, and my massive backlog of patches
-(especially things like the ethernet driver) just became far too difficult
-both to merge into mainline and to keep forward-porting.
-
-In any case, anyone who is serious about using the SolidRun hardware runs
-Jon Nettleton's fully featured kernel (which is the basis for SR's kernel)
-- sadly something which mainline likely is never going to be.
-
-It's a bit like the MMC stuff, I'm still carrying Olof's solution for
-the SDIO wifi/bt power and reset control stuff, and I'm not at present
-intending to do anything with it other than continue forward-porting it.
-I'm not interested in wasting free time trying to re-work that to suit
-some other solution, especially as people couldn't settle on a solution
-when I /did/ have an interest in it (not that I have much interest in
-wifi or BT - I tend to prefer old fashioned wired connections.  It also
-doesn't help that the Broadcom driver seemed to be very flakey with
-brcm4329 hardware for quite some time.)
-
-Anyway, you can find all my kernel patches in a suitably trimmed version
-of the above URL, and on http://ftp.arm.linux.org.uk/cgit/ is a huge pile
-of effort I put into an accelerated X server with etnaviv and /my/ kernel
-version of etnaviv drm, complete with Xv support.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+Can you include a description why this is needed and how and when it is 
+supposed to be used?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
