@@ -1,36 +1,50 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v3 0/3] Scorpion PMU support
-Date: Mon, 2 Mar 2015 18:24:24 +0000
-Message-ID: <20150302182424.GE7919@arm.com>
-References: <1425082295-10941-1-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425082295-10941-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Neil Leeder <nleeder@codeaurora.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sheetal Sahasrabudhe <sheetals@codeaurora.org>
+From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARM: dts: hummingboard: enable pcf8523 rtc for i2eX
+Date: Mon,  2 Mar 2015 13:50:06 -0500
+Message-ID: <1425322206-30115-1-git-send-email-mporter@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 28, 2015 at 12:11:32AM +0000, Stephen Boyd wrote:
-> These patches add support for the Scorpion PMU found on devices
-> such as msm8660, qsd8x50, etc. The first patch is some groundwork
-> to make functions more "generic". Even then we end up copying quite
-> a bit of code from the Krait part into the Scorpion part with only
-> subtle tweaks because two things happen:
-> 
->  1. We gain another "region" register, L2LPM
->  2. The way to access the region registers are with different cp15 instructions
-> 
-> I'm not sure how to make this better, suggestions are welcome. The second
-> patch is an optimization for an implementation defined register. The 
-> final patch is the one that actually adds support for Scorpion.
-> 
-> Changes from v2:
->  * New patch 2
->  * Macros instead of an inline function for patch 1
+The PCF8523 RTC is populated on the i2eX boards so
+enable the i2c1 controller and enable the device on
+that bus.
 
-Thanks, Stephen. I'll queue this for 4.1.
+Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Will
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+index 62841e8..38ebba9 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+@@ -73,18 +73,15 @@
+ };
+ 
+ &i2c1 {
++	clock-frequency = <400000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_hummingboard_i2c1>;
+-
+-	/*
+-	 * Not fitted on Carrier-1 board... yet
+ 	status = "okay";
+ 
+ 	rtc: pcf8523@68 {
+ 		compatible = "nxp,pcf8523";
+ 		reg = <0x68>;
+ 	};
+-	 */
+ };
+ 
+ &i2c2 {
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
