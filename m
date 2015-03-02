@@ -1,63 +1,50 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH RFC 6/6] ARM: dts: am335x-boneblack: Use new binding for
- HDMI
-Date: Mon, 2 Mar 2015 16:06:29 +0000
-Message-ID: <20150302160629.GB29584@n2100.arm.linux.org.uk>
-References: <cover.1424961754.git.jsarha@ti.com>
- <6d6653416fd87c678a80df1d422420877261c4a5.1424961754.git.jsarha@ti.com>
- <54F45778.6050406@ti.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH] video: ARM CLCD: Added support for FBIOPAN_DISPLAY and
+ virtual y resolution
+Date: Mon, 02 Mar 2015 16:08:29 +0000
+Message-ID: <1425312509.3092.7.camel@arm.com>
+References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+	 <1424898082-1522-2-git-send-email-arun.ramamurthy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <54F45778.6050406@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, detheridge@ti.com, tony@atomide.com, Jyri Sarha <jsarha@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424898082-1522-2-git-send-email-arun.ramamurthy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgMDIsIDIwMTUgYXQgMDI6Mjg6NDBQTSArMDIwMCwgVG9taSBWYWxrZWluZW4g
-d3JvdGU6Cj4gT24gMjYvMDIvMTUgMTY6NTUsIEp5cmkgU2FyaGEgd3JvdGU6Cj4gPiBVc2UgbmV3
-IGJpbmRpbmcgZm9yIHRoZSBleHRlcm5hbCB0ZGExOTk4OCBIRE1JIGVuY29kZXIuCj4gPiAKPiA+
-IFNpZ25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Cj4gPiAtLS0KPiA+ICBh
-cmNoL2FybS9ib290L2R0cy9hbTMzNXgtYm9uZWJsYWNrLmR0cyB8IDIwICsrKysrKysrKysrKysr
-Ky0tLS0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25z
-KC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtYm9uZWJs
-YWNrLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ib25lYmxhY2suZHRzCj4gPiBpbmRl
-eCA1YzQyZDI1Li5lYWRiYmEzIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYW0z
-MzV4LWJvbmVibGFjay5kdHMKPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ib25l
-YmxhY2suZHRzCj4gPiBAQCAtNjgsMTYgKzY4LDI2IEBACj4gPiAgCj4gPiAgJmxjZGMgewo+ID4g
-IAlzdGF0dXMgPSAib2theSI7Cj4gPiArCXBvcnQgewo+ID4gKwkJbGNkY18wOiBlbmRwb2ludEAw
-IHsKPiA+ICsJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfMD47Cj4gPiArCQl9Owo+ID4gKwl9
-Owo+ID4gIH07Cj4gPiAgCj4gPiAtLyB7Cj4gPiAtCWhkbWkgewo+ID4gLQkJY29tcGF0aWJsZSA9
-ICJ0aSx0aWxjZGMsc2xhdmUiOwo+ID4gLQkJaTJjID0gPCZpMmMwPjsKPiA+ICsmaTJjMCB7Cj4g
-PiArCXRkYTE5OTg4IHsKPiA+ICsJCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwo+ID4gKwkJ
-cmVnID0gPDB4NzA+Owo+ID4gIAkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IiwgIm9mZiI7Cj4g
-PiAgCQlwaW5jdHJsLTAgPSA8Jm54cF9oZG1pX2JvbmVsdF9waW5zPjsKPiA+ICAJCXBpbmN0cmwt
-MSA9IDwmbnhwX2hkbWlfYm9uZWx0X29mZl9waW5zPjsKPiA+IC0JCXN0YXR1cyA9ICJva2F5IjsK
-PiA+ICsKPiA+ICsJCXBvcnQgewo+ID4gKwkJCWhkbWlfMDogZW5kcG9pbnRAMCB7Cj4gPiArCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmbGNkY18wPjsKPiA+ICsJCQl9Owo+ID4gKwkJfTsKPiA+ICAJ
-fTsKPiA+ICB9Owo+IAo+IFRoaXMgaXMgbWlzc2luZyB0aGUgb3V0cHV0IG9mIHRkYTk5OHguIEl0
-IHNob3VsZCBoYXZlIHR3byBwb3J0cywgaW5wdXQKPiBhbmQgb3V0cHV0LCBvdXRwdXQgZ29pbmcg
-dG8gaGRtaS1jb25uZWN0b3IuCgpXZSBkb24ndCBoYXZlIHRoYXQga2luZCBvZiBsZXZlbCBvZiBt
-b2RlbGxpbmcgaW4gRFJNIHJpZ2h0IG5vdyAtIGFzIGZhcgphcyBEUk0gaXMgY29uY2VybmVkLCB0
-aGUgdGRhOTk4eCBpcyBib3RoIHRoZSBlbmNvZGVyIF9hbmRfIHRoZSBjb25uZWN0b3IKc2luY2Ug
-aXQgc3VwcGxpZXMgYm90aCBmdW5jdGlvbmFsaXRpZXMuCgpXZSBkaWQgZGlzY3VzcyB0aGlzIGFn
-ZXMgYWdvLCBidXQgYWZhaWsgbm8gY29uY2Vuc3VzIHdhcyByZWFjaGVkIGhvdyB0bwptb2RlbCBw
-aHlzaWNhbCBjb25uZWN0b3JzIGluIERULCBzbyBpdCBuZXZlciBtb3ZlZCBmb3J3YXJkIGluIERS
-TSAoYW5kCmJlc2lkZXMsIGV2ZXJ5b25lIHNlZW1zIHRvIGJlIG9mZiBkb2luZyB0aGVpciBvd24g
-dGhpbmcgd2hlbiBpdCBjb21lcwp0byB3cml0aW5nIERUIGRlc2NyaXB0aW9ucyBmb3IgdmlkZW8g
-aGFyZHdhcmUuKQoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRs
-eSBhdCAxMC41TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQu
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, 2015-02-25 at 21:01 +0000, Arun Ramamurthy wrote:
+> Added code to support FBIOPAN_DISPLAY. Also added yres_virtual
+> parameter to device tree to set the virtual y resolution
+> 
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+> ---
+>  .../devicetree/bindings/video/arm,pl11x.txt        |  4 +++
+>  drivers/video/fbdev/amba-clcd.c                    | 31 +++++++++++++++++++---
+>  2 files changed, 31 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/video/arm,pl11x.txt b/Documentation/devicetree/bindings/video/arm,pl11x.txt
+> index 14d6f87..2262cdb 100644
+> --- a/Documentation/devicetree/bindings/video/arm,pl11x.txt
+> +++ b/Documentation/devicetree/bindings/video/arm,pl11x.txt
+> @@ -50,6 +50,10 @@ Optional properties:
+>  	display mode, data is driven onto the LCD data lines at the
+>  	programmed edge of CLCP when CLAC is in its active state.
+>  
+> +- yres_virtual: Virtual Y resolution,
+> +	It can be used to configure a virtual y resolution. It
+> +	must be a value larger than the actual y resolution.
+> +
+
+I'm not sure about this... The word "virtual" never works well with
+device tree nodes defined as "hardware description".
+
+I understand what you're doing, but adding this property to the display
+controller's node doesn't sound right. How does this describe hardware?
+If anywhere, it's more like a job for the panel node?
+
+Pawel
