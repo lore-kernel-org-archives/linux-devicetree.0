@@ -1,147 +1,107 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
- leds: flash: document sysfs interface
-Date: Mon, 2 Mar 2015 14:54:14 +0200
-Message-ID: <20150302125414.GS6539@valkosipuli.retiisi.org.uk>
-References: <1424276441-3969-1-git-send-email-j.anaszewski@samsung.com>
- <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
- <20150218224747.GA3999@amd>
- <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
- <20150219214043.GB29875@kroah.com>
- <54E6E89B.4050404@samsung.com>
- <20150220153616.GB18111@kroah.com>
- <20150220205738.GA28995@amd>
- <20150221105733.GO3915@valkosipuli.retiisi.org.uk>
- <54F0806E.2040309@samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH RFC 5/6] drm/tilcdc: Force building of DRM_TILCDC_INIT
+Date: Mon, 2 Mar 2015 14:59:52 +0200
+Message-ID: <54F45EC8.4080202@ti.com>
+References: <cover.1424961754.git.jsarha@ti.com> <2f0e612a87ad97ff9a0b512456a2fe0880d99d54.1424961754.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54F0806E.2040309@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Greg KH <greg@kroah.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="asMBVcd9eN067Re5UPjvI7Kqi5jokOxAM"
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <2f0e612a87ad97ff9a0b512456a2fe0880d99d54.1424961754.git.jsarha@ti.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>, linux-kbuild@vger.kernel.org, Michal Marek <mmarek@suse.cz>
+Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, detheridge@ti.com, moinejf@free.fr, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+--asMBVcd9eN067Re5UPjvI7Kqi5jokOxAM
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 27, 2015 at 03:34:22PM +0100, Jacek Anaszewski wrote:
-> Hi Sakari,
-> 
-> On 02/21/2015 11:57 AM, Sakari Ailus wrote:
-> >Hi Pavel and Greg,
-> >
-> >On Fri, Feb 20, 2015 at 09:57:38PM +0100, Pavel Machek wrote:
-> >>On Fri 2015-02-20 07:36:16, Greg KH wrote:
-> >>>On Fri, Feb 20, 2015 at 08:56:11AM +0100, Jacek Anaszewski wrote:
-> >>>>On 02/19/2015 10:40 PM, Greg KH wrote:
-> >>>>>On Thu, Feb 19, 2015 at 11:02:04AM +0200, Sakari Ailus wrote:
-> >>>>>>On Wed, Feb 18, 2015 at 11:47:47PM +0100, Pavel Machek wrote:
-> >>>>>>>
-> >>>>>>>On Wed 2015-02-18 17:20:22, Jacek Anaszewski wrote:
-> >>>>>>>>Add a documentation of LED Flash class specific sysfs attributes.
-> >>>>>>>>
-> >>>>>>>>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> >>>>>>>>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >>>>>>>>Cc: Bryan Wu <cooloney@gmail.com>
-> >>>>>>>>Cc: Richard Purdie <rpurdie@rpsys.net>
-> >>>>>>>
-> >>>>>>>NAK-ed-by: Pavel Machek
-> >>>>>>>
-> >>>>>>>>+What:		/sys/class/leds/<led>/available_sync_leds
-> >>>>>>>>+Date:		February 2015
-> >>>>>>>>+KernelVersion:	3.20
-> >>>>>>>>+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-> >>>>>>>>+Description:	read/write
-> >>>>>>>>+		Space separated list of LEDs available for flash strobe
-> >>>>>>>>+		synchronization, displayed in the format:
-> >>>>>>>>+
-> >>>>>>>>+		led1_id.led1_name led2_id.led2_name led3_id.led3_name etc.
-> >>>>>>>
-> >>>>>>>Multiple values per file, with all the problems we had in /proc. I
-> >>>>>>>assume led_id is an integer? What prevents space or dot in led name?
-> >>>>>>
-> >>>>>>Very good point. How about using a newline instead? That'd be a little bit
-> >>>>>>easier to parse, too.
-> >>>>>
-> >>>>>No, please make it one value per-file, which is what sysfs requires.
-> >>>>
-> >>>>The purpose of this attribute is only to provide an information about
-> >>>>the range of valid identifiers that can be written to the
-> >>>>flash_sync_strobe attribute. Wouldn't splitting this to many attributes
-> >>>>be an unnecessary inflation of sysfs files?
-> >>>
-> >>>Ok a list of allowed values to write is acceptable, as long as it is not
-> >>>hard to parse and always is space separated.
-> >>
-> >>Well, this one is list of LED numbers and LED names.
-> >
-> >It'd be nice if these names would match the V4L2 sub-device names. We don't
-> 
-> From the discussion on IRC it turned out that one of components of the
-> V4L2 sub-device name will be a media controller identifier.
-> 
-> This implies that if support for V4L2 Flash devices will be turned off
-> in the kernel config the LED name will have to differ from the case
-> when the support is on. I think that this is undesired.
+On 26/02/15 16:55, Jyri Sarha wrote:
+> If I read Documentation/kbuild/makefiles.txt section 3.6 right, this
+> patch should not be needed. However, without this patch the objects
+> needed for DRM_TILCDC_INIT are not linked, if DRM_TILCDC is built as
+> module.
 
-Well... the media entity names need to be unique in the Media controller
-device. In the future we may have just a single Media controller device in
-the system, possibly depending on the driver so that some drivers can make
-use of that while some will have one on their own, mostly older drivers that
-is.
+I also think there's something funny either with the documentation or
+the kernel build system.
 
-I think what Laurent proposed to refer to an ID was the hardware device, so
-that in the future the hardware device / media entity name would be unique.
-That'd be a much more manageable and easier to verify for correctness than a
-global name that is defined by a driver.
+To summarize (Jyri correct me if I'm wrong):
 
-Older drivers wouldn't be affected. Old user space might not work with new
-drivers without taking the hwdev field into account.
+We enter tilcdc directory using "obj-$(CONFIG_DRM_TILCDC)", and
+CONFIG_DRM_TILCDC is either y or m. Inside the directory we have the
+necessary makefile and code to build the driver as module or built-in.
+And this works fine.
 
-So the hwdev (name or ID) would be part of the struct media_entity_desc, but
-*not* a part of the name field in the struct.
+But now Jyri added new piece of code to tilcdc directory, which is
+always built-in, even if the tilcdc driver itself is a module. So now if
+we enter the directory with "obj-m", and inside the tilcdc/Makefile we
+do "obj-y +=3D foo.o" line, the result is that foo.o is compiled, but it
+is not linked either to the kernel image nor to the tilcdc.ko.
 
-Cc Laurent and Hans.
+The doc says:
 
-> >have any rules for them other than they must be unique, and there's the
-> >established practice that an I2C address follows the component name. We're
-> >about to discuss the matter on Monday on #v4l (11:00 Finnish time), but I
-> >don't think we can generally guarantee any of the names won't have spaces.
-> 
-> >Separate files, then?
-> 
-> I tried to split this to separate files but it turned out to be awkward.
-> Since the number of LEDs to synchronize can vary from device to device,
-> the number of the related sysfs attributes cannot be fixed.
-> 
-> As far as I know allocating the sysfs attributes dynamically is unsafe,
+"Kbuild only uses this information to decide that it needs to visit
+the directory, it is the Makefile in the subdirectory that
+specifies what is modular and what is built-in."
 
-How so? I think most implementations use static variables because that's all
-they need.
+which doesn't seem to work for us.
 
-> and thus the maximum allowed number of synchronized LEDs would have to
-> be agreed on for the whole led-class-flash and the relevant number of
-> similar struct attribute instances and related callbacks would have to
-> be created statically for every LED Flash class device, no matter if
-> a device would need them.
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  drivers/gpu/drm/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 2c239b9..62c6158 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -60,6 +60,7 @@ obj-$(CONFIG_DRM_RCAR_DU) +=3D rcar-du/
+>  obj-$(CONFIG_DRM_SHMOBILE) +=3Dshmobile/
+>  obj-$(CONFIG_DRM_OMAP)	+=3D omapdrm/
+>  obj-$(CONFIG_DRM_TILCDC)	+=3D tilcdc/
+> +obj-$(CONFIG_DRM_TILCDC_INIT)	+=3D tilcdc/
+>  obj-$(CONFIG_DRM_QXL) +=3D qxl/
+>  obj-$(CONFIG_DRM_BOCHS) +=3D bochs/
+>  obj-$(CONFIG_DRM_MSM) +=3D msm/
 
-This could be handled in the framework instead.
+I don't think the above is right. You add two rules for tilcdc
+directory. I presume you meant to replace the current tilcdc line with
+the new one?
 
-> Of course the relevant sysfs group could be initialized only with
-> the needed number of sync leds attributes, but still this is less
-> than optimal design.
-> 
-> It looks like this interface indeed doesn't fit for sysfs.
-> 
-> I am leaning towards removing the support for synchronized flash LEDs
-> from the LED subsystem entirely and leave it only to V4L2.
+But I don't think the new line makes sense. Using
+obj-$(CONFIG_DRM_TILCDC) above makes sense, and also obj-y makes sense,
+but obj-$(CONFIG_DRM_TILCDC_INIT) doesn't.
 
-Perfectly fine for me as well, I guess the synchronised strobe has mostly
-use on V4L2. It could always be added later on if needed.
+So I think it should be just obj-y, if obj-$(CONFIG_DRM_TILCDC) does not
+work.
 
--- 
-Kind regards,
+ Tomi
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+
+
+--asMBVcd9eN067Re5UPjvI7Kqi5jokOxAM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU9F7IAAoJEPo9qoy8lh71NngP/0CsyvlUrIdh+qv04D/Tt/qC
+qssWL32MeJLa+2WD4M7r+R9CmeX+ncyTpMIIqA9gb1RgnOf5Vb+AGuHbKOklcIus
+r2vqYDkEkTp1w/EOg1UofWDcpkBJduZkddkNes1pMWbHp113pl//bM9cOViJzxkS
+zQFTW5YefidFxzHLMkgpjEkKLLbDix3QAqLGyEE5X7IEj9QC3Ikscf8W4vBKe3OB
+H3gpYNQ5dnh/Lhq2qGGz7wKPgzJXlHitmzbSBKP+9ytrOpuZv+1zhjgz0UOlwTTb
+lVOJRZ2w+SskFydMaDrsqH9R7w7+G8EMcCeZjsPEwaw8N7kIuwzV5aWt3179YDle
+20iyyM3uBdoxSl6gyvdQWt1J7LYzdt9W1JZ1TBXf2lx2MnZgzY4L/6jgn9pLXNjx
+65d4ZYcH4k++qz5bGwz71OThvuBOF7HaSzHx4lH+KrxZNs75TNHlQNxdjpku9XS7
+dR73tIiUh380Ga8AhIxWIB2GQbE0QncZ4ADi3nsuw51eoBfXjK9FlKTOBq5SQxEA
+dM5xKySyHYF0SKsHR5gTpdSOKJmz3Or8Dk/pG5cLGLTgPIwmuz9nRjQ3zn0YBppx
+llqSZ4n+XQ5ZLxY7nfjGGZeAGQQXiLiN99ElDT/G4yK6xNDTfAHEsayZfmFxeBV/
+eH6pkRSMo8oB/ANI2j/D
+=4SMJ
+-----END PGP SIGNATURE-----
+
+--asMBVcd9eN067Re5UPjvI7Kqi5jokOxAM--
