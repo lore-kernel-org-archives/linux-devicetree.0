@@ -1,65 +1,30 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] video: ARM CLCD: Added support for FBIO_WAITFORVSYNC
-Date: Mon, 2 Mar 2015 17:29:05 -0600
-Message-ID: <CAL_JsqJfA3Pxvdux-Um9nFoaZpRh30S9d1TQid_TchDH_qo7Ow@mail.gmail.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com> <1424898082-1522-3-git-send-email-arun.ramamurthy@broadcom.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/1] ARM: dts: Enable Broadcom Cygnus BCM958305K
+Date: Mon, 02 Mar 2015 15:45:20 -0800
+Message-ID: <54F4F610.3060102@gmail.com>
+References: <Jonathan Richardson <jonathar@broadcom.com> <1425336070-3414-1-git-send-email-jonathar@broadcom.com> <1425336070-3414-2-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424898082-1522-3-git-send-email-arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1425336070-3414-2-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 25, 2015 at 3:01 PM, Arun Ramamurthy
-<arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Added ioctl and interrupt handler functions to support FBIO_WAITFORVSYNC
-> Also corrected documentation to make interrupts and interrupt-names
-> optional as they are not required properties.
->
+On 02/03/15 14:41, Jonathan Richardson wrote:
+> DT file to enable the Wireless Audio reference design based on the
+> BCM58305.
+> 
 > Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>0
-> ---
->  .../devicetree/bindings/video/arm,pl11x.txt        | 11 +--
+> Tested-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-Please split bindings to separate patches.
-
->  drivers/video/fbdev/amba-clcd.c                    | 82 ++++++++++++++++++++++
->  include/linux/amba/clcd.h                          |  4 ++
->  3 files changed, 89 insertions(+), 8 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/video/arm,pl11x.txt b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-> index 2262cdb..7d19024 100644
-> --- a/Documentation/devicetree/bindings/video/arm,pl11x.txt
-> +++ b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-> @@ -10,14 +10,6 @@ Required properties:
->
->  - reg: base address and size of the control registers block
->
-> -- interrupt-names: either the single entry "combined" representing a
-> -       combined interrupt output (CLCDINTR), or the four entries
-> -       "mbe", "vcomp", "lnbu", "fuf" representing the individual
-> -       CLCDMBEINTR, CLCDVCOMPINTR, CLCDLNBUINTR, CLCDFUFINTR interrupts
-> -
-> -- interrupts: contains an interrupt specifier for each entry in
-> -       interrupt-names
-> -
->  - clock-names: should contain "clcdclk" and "apb_pclk"
->
->  - clocks: contains phandle and clock specifier pairs for the entries
-> @@ -54,6 +46,9 @@ Optional properties:
->         It can be used to configure a virtual y resolution. It
->         must be a value larger than the actual y resolution.
->
-> +- interrupts: contains an interrupt specifier for the clcd vcomp interrupt
-> +        This is required for the driver to handle FBIO_WAITFORVSYNC ioctls.
-> +
-
-What happened to interrupt-names?
-
-Rob
+Applied to devicetree/next at github.com/stblinux, thanks!
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
