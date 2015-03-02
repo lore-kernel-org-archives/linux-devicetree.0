@@ -1,92 +1,109 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3 3/7] of: Document {little,big,native}-endian bindings
-Date: Mon, 2 Mar 2015 08:28:53 -0800
-Message-ID: <CAJiQ=7CKE5Nw=maewN_ChkySh1NReoUnddLO_ohOJQfwo_FXAg@mail.gmail.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
- <1416872182-6440-4-git-send-email-cernekee@gmail.com> <54F4624D.6000909@hurleysoftware.com>
- <CAJiQ=7DQ6CRWddii_9HZqH0a_1ixos6FBQRzb+HM+YAh1jmkBA@mail.gmail.com> <54F48B03.5040205@hurleysoftware.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+ driver support
+Date: Mon, 2 Mar 2015 22:08:52 +0530
+Message-ID: <20150302163852.GA2613@intel.com>
+References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
+ <3236720.MHeqOodrCV@wuerfel>
+ <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
+ <1967130.oYyZRWCcEF@wuerfel>
+ <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
+ <20150212093445.GM21387@intel.com>
+ <ed439c7a25d0465d9dbf4c06987d42a1@BY2FFO11FD018.protection.gbl>
+ <20150220062934.GX21387@intel.com>
+ <ad1002303e814d53866349674d22fc11@BY2FFO11FD039.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F48B03.5040205-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ad1002303e814d53866349674d22fc11-neA4ZlFjCT0GPAd83OwqBWYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 2, 2015 at 8:08 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
-> On 03/02/2015 09:56 AM, Kevin Cernekee wrote:
->> On Mon, Mar 2, 2015 at 5:14 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
->>> On 11/24/2014 06:36 PM, Kevin Cernekee wrote:
->>>> These apply to newly converted drivers, like serial8250/libahci/...
->>>> The examples were adapted from the regmap bindings document.
->>>>
->>>> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
->>>>  1 file changed, 60 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/common-properties.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
->>>> new file mode 100644
->>>> index 0000000..21044a4
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/common-properties.txt
->>>> @@ -0,0 +1,60 @@
->>>> +Common properties
->>>> +
->>>> +The ePAPR specification does not define any properties related to hardware
->>>> +byteswapping, but endianness issues show up frequently in porting Linux to
->>>> +different machine types.  This document attempts to provide a consistent
->>>> +way of handling byteswapping across drivers.
->>>> +
->>>> +Optional properties:
->>>> + - big-endian: Boolean; force big endian register accesses
->>>> +   unconditionally (e.g. ioread32be/iowrite32be).  Use this if you
->>>> +   know the peripheral always needs to be accessed in BE mode.
->>>> + - little-endian: Boolean; force little endian register accesses
->>>> +   unconditionally (e.g. readl/writel).  Use this if you know the
->>>> +   peripheral always needs to be accessed in LE mode.  This is the
->>>> +   default.
->>>
->>> There is a fundamental problem with specifying the default in DT bindings.
->>> How can drivers which are currently native-endian support big-endian?
->>>
->>> If the driver is converted to support big-endian, every previous
->>> devicetree will be invalid with the new kernel (because those devicetrees
->>> don't specify 'native-endian').
->>>
->>> IOW, consider if the default were 'native-endian'. How would the 8250
->>> driver support existing devicetrees?
->>
->> Correct.  This scheme is intended for drivers like 8250 and libahci
->> which currently default to little-endian by virtue of using
->> readl/writel for MMIO accesses.  Drivers that default to native-endian
->> should specify that in their bindings documents, similar to
->> Documentation/devicetree/bindings/regmap/regmap.txt.
->
-> Which effectively means if a user can't upgrade their devicetree, they
-> can't upgrade their kernel. I don't think that flies.
+On Fri, Feb 20, 2015 at 11:42:31AM +0100, Michal Simek wrote:
+> Hi Vinod,
+> 
+> On 02/20/2015 07:29 AM, Vinod Koul wrote:
+> > On Sat, Feb 14, 2015 at 02:21:52PM +0000, Appana Durga Kedareswara Rao wrote:
+> >> Hi Vinod,
+> >>
+> >>
+> >>> -----Original Message-----
+> >>> From: Vinod Koul [mailto:vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org]
+> >>> Sent: Thursday, February 12, 2015 3:05 PM
+> >>> To: Appana Durga Kedareswara Rao
+> >>> Cc: Arnd Bergmann; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> >>> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Srikanth Vemula; linux-
+> >>> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Srikanth Thokala; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> >>> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Michal Simek; Anirudha Sarangi;
+> >>> grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> >>> Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+> >>> driver support
+> >>>
+> >>> On Thu, Jan 29, 2015 at 11:24:41AM +0000, Appana Durga Kedareswara Rao
+> >>> wrote:
+> >>>>>  Earlier in the driver we are embedding dma_slave_config into custom
+> >>>>> structs But Lars suggested to modify it. please refer to the below
+> >>>>> thread for more details.
+> >>>>>  http://www.spinics.net/lists/dmaengine/msg00010.html
+> >>>>>
+> >>>>>  And later we thought of creating a separate private member in
+> >>>>> dma_slave_config for sharing additional configuration between slave
+> >>>>> device and dma engine Or a new dma_ctrl_cmd like
+> >>>>>
+> >>> FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
+> >>>>>
+> >>>>>  Finally Vinod was ok with the existing suggestion so we dropped the
+> >>>>> above thought.
+> >>>>>
+> >>>>>  @Vinod : Could you please comment on this.
+> >>> FSLDMA_EXTERNAL_START has been removed, and you cna use the removal
+> >>> as a guidance of how to solve your issue
+> >>>
+> >>
+> > Please limit you mailer to set wrap at 80 chars, otherwise it becomes
+> > unreadable
+> > 
+> >> The current VDMA driver that got merged in the open source and the
+> >> current patch (dma: xilinx dma v4) Srikanth T submitted both contains the
+> >> Similar implementation that you pointed as above(I mean similar to the
+> >> free scale dma driver).
+> >>
+> >> The discussion starts here is why we need the header file(Xilinx_dma.h) in
+> >> the include/linux/amba/Xilinx_dma.h  folder.
+> >>
+> >> Like for FSL DMA it is got defined (fsl_dma_external_start) as a function
+> >> prototype in include/linux/fsldma.h And it is being getting used in the
+> >> drivers/misc/carma/carma-fpga-program.c
+> >>
+> >> Similarly in the Xilinx VDMA driver(xilinx_vdma_channel_set_config )
+> >> defined as a function prototype in the include/linux/amba/xilinx_dma.h And
+> >> is being used by Xilinx videos  drivers.  Those video driver need to use
+> >> the (xilinx_vdma_channel_set_config) which requires this global header
+> >> file.
+> >>
+> >> Could you please suggest us whether that header file (Xilinx_dma.h) should
+> >> be there  in include/linux/amba or we should move it to include/linux?
+> >> And any functional comments for this v4 patch?
+> > Let me ask you a question, what is the relation of xilinx_dma with amba?
+> > 
+> > If none then only include/linux/ seems to be the right choice. If not then
+> > amba maybe okay but you need to provide justfication why it should be in amba?
+> 
+> I see your point. I think there is real reason to have this header in amba.
+> The reason for that was that xilinx_dma.h was added there.
+and what would be that?
+> 
+> Anyway there is include/linux/dma/ folder. Is it ok to move xilinx_dma.h there
+> too? The same with this dma one.
+Yes that is fine too... As i said this or include/linux should be default
+location..
 
-This doesn't change the behavior of pre-existing drivers that
-implement the *-endian properties in a different way.  There are not
-many of these drivers and they can be documented as special cases.
+-- 
+~Vinod
 
-> It's exactly this kind of stuff that prompted Jonathan Corbet's article,
-> "Device trees as ABI"  http://lwn.net/Articles/561462
->
-> Why not leave the default unspecified?
-
-The document aims to provide a consistent way of handling DT
-endianness properties across (compliant) drivers.  It is confusing if
-one new driver defaults to little-endian, and another new driver
-defaults to native-endian.
-
-And since most of the commonly used drivers already implement
-little-endian MMIO accesses, that is the default.  My personal
-preference would have been native-endian since that seems more common
-on the hardware side, but defaulting to little-endian prevents
-breaking the device tree "ABI" on existing systems.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
