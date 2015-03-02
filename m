@@ -1,88 +1,112 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH RFC 1/6] drm/tilcdc: Fix module unloading
-Date: Mon, 2 Mar 2015 15:10:01 +0200
-Message-ID: <54F46129.1000703@ti.com>
-References: <cover.1424961754.git.jsarha@ti.com> <9ef213208e27b6f45b74a77b1c7902fa3910bf46.1424961754.git.jsarha@ti.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V3 3/7] of: Document {little,big,native}-endian bindings
+Date: Mon, 02 Mar 2015 08:14:53 -0500
+Message-ID: <54F4624D.6000909@hurleysoftware.com>
+References: <1416872182-6440-1-git-send-email-cernekee@gmail.com> <1416872182-6440-4-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="7K4e207lRo8DdjfP9ELSmjOTOnv1fEFJo"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <9ef213208e27b6f45b74a77b1c7902fa3910bf46.1424961754.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>
-Cc: airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, detheridge@ti.com, moinejf@free.fr, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1416872182-6440-4-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---7K4e207lRo8DdjfP9ELSmjOTOnv1fEFJo
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-On 26/02/15 16:55, Jyri Sarha wrote:
-> Force crtc dpms off before destroying the crtc instead of just
-> checking the dpms state. This fixes warning message and frozen picture
-> after tilcdc module unloading.
->=20
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+On 11/24/2014 06:36 PM, Kevin Cernekee wrote:
+> These apply to newly converted drivers, like serial8250/libahci/...
+> The examples were adapted from the regmap bindings document.
+> 
+> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/gpu/drm/tilcdc/tilcdc_crtc.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_crtc.c b/drivers/gpu/drm/til=
-cdc/tilcdc_crtc.c
-> index c735884..c2d5980 100644
-> --- a/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
-> +++ b/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
-> @@ -135,11 +135,12 @@ static void stop(struct drm_crtc *crtc)
->  	tilcdc_clear(dev, LCDC_RASTER_CTRL_REG, LCDC_RASTER_ENABLE);
->  }
-> =20
-> +static void tilcdc_crtc_dpms(struct drm_crtc *crtc, int mode);
->  static void tilcdc_crtc_destroy(struct drm_crtc *crtc)
->  {
->  	struct tilcdc_crtc *tilcdc_crtc =3D to_tilcdc_crtc(crtc);
-> =20
-> -	WARN_ON(tilcdc_crtc->dpms =3D=3D DRM_MODE_DPMS_ON);
-> +	tilcdc_crtc_dpms(crtc, DRM_MODE_DPMS_OFF);
-> =20
->  	drm_crtc_cleanup(crtc);
->  	drm_flip_work_cleanup(&tilcdc_crtc->unref_work);
->=20
+>  .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/common-properties.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
+> new file mode 100644
+> index 0000000..21044a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/common-properties.txt
+> @@ -0,0 +1,60 @@
+> +Common properties
+> +
+> +The ePAPR specification does not define any properties related to hardware
+> +byteswapping, but endianness issues show up frequently in porting Linux to
+> +different machine types.  This document attempts to provide a consistent
+> +way of handling byteswapping across drivers.
+> +
+> +Optional properties:
+> + - big-endian: Boolean; force big endian register accesses
+> +   unconditionally (e.g. ioread32be/iowrite32be).  Use this if you
+> +   know the peripheral always needs to be accessed in BE mode.
+> + - little-endian: Boolean; force little endian register accesses
+> +   unconditionally (e.g. readl/writel).  Use this if you know the
+> +   peripheral always needs to be accessed in LE mode.  This is the
+> +   default.
 
-Looks fine to me, but makes me wonder what is the proper way to handle
-this. I would presume that every DRM driver needs to shut down the
-display HW when it's being unloaded.
+There is a fundamental problem with specifying the default in DT bindings.
+How can drivers which are currently native-endian support big-endian?
 
-And the current WARN_ON suggests that something is supposed to turn the
-crtc off before it is destroyed. So either the tilcdc module unload has
-never worked, or something has changed in the drm framework (or maybe
-tilcdc).
+If the driver is converted to support big-endian, every previous
+devicetree will be invalid with the new kernel (because those devicetrees
+don't specify 'native-endian').
 
- Tomi
+IOW, consider if the default were 'native-endian'. How would the 8250
+driver support existing devicetrees?
+
+Regards,
+Peter Hurley
 
 
+> + - native-endian: Boolean; always use register accesses matched to the
+> +   endianness of the kernel binary (e.g. LE vmlinux -> readl/writel,
+> +   BE vmlinux -> ioread32be/iowrite32be).  In this case no byteswaps
+> +   will ever be performed.  Use this if the hardware "self-adjusts"
+> +   register endianness based on the CPU's configured endianness.
+> +
+> +Note that regmap, in contrast, defaults to native-endian.  But this
+> +document is targeted for existing drivers, most of which currently use
+> +readl/writel because they expect to be accessing PCI/PCIe devices rather
+> +than memory-mapped SoC peripherals.  Since the readl/writel accessors
+> +perform a byteswap on BE systems, this means that the drivers in question
+> +are implicitly "little-endian".
+> +
+> +Examples:
+> +Scenario 1 : CPU in LE mode & device in LE mode.
+> +dev: dev@40031000 {
+> +	      compatible = "name";
+> +	      reg = <0x40031000 0x1000>;
+> +	      ...
+> +	      native-endian;
+> +};
+> +
+> +Scenario 2 : CPU in LE mode & device in BE mode.
+> +dev: dev@40031000 {
+> +	      compatible = "name";
+> +	      reg = <0x40031000 0x1000>;
+> +	      ...
+> +	      big-endian;
+> +};
+> +
+> +Scenario 3 : CPU in BE mode & device in BE mode.
+> +dev: dev@40031000 {
+> +	      compatible = "name";
+> +	      reg = <0x40031000 0x1000>;
+> +	      ...
+> +	      native-endian;
+> +};
+> +
+> +Scenario 4 : CPU in BE mode & device in LE mode.
+> +dev: dev@40031000 {
+> +	      compatible = "name";
+> +	      reg = <0x40031000 0x1000>;
+> +	      ...
+> +	      little-endian;
+> +};
+> 
 
---7K4e207lRo8DdjfP9ELSmjOTOnv1fEFJo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU9GEpAAoJEPo9qoy8lh715uoQAK3q5nbBJ2F3LUcBA5pTmftB
-WmAIChHLjsfH8EB2vCN33P36KoyxPfSw03/u97mHEn6nWAoXtZW+GnAHOxJ4zsa9
-EWmliF5FECqRNK3pCbFf/SBGlm+1HwVvLkwwuBaVr0R5emtK6sRwD7qjo3pOpI5V
-CJW6SmA0MGrfdI2yqLizZmIzxL1SbuI3vAO4VJSAuFK0M8opinl98Aqbv9yrXvMH
-JFw6UOewFA8yhNquJAJyecx9xpzT5j1ywdyAbcaSZar8Mt1T0l8hWAR/25HlPjHU
-NE3FbV+Vug4oPhmytPQPbZFH8ReOgOa1BhwMIVZ0krWGVEgeZDKVwfE7mcqfof37
-YfELVUYBnXMQHusev+RQFwcSxYdIMNKUeH8l1TIZcWembW99IxlEXYANMj5Na4ha
-8OlVxS3khmTwrEbeThsflExQqdVv30ChrsoJ3gcTnRo9T5GQJJeTddwdYA7UdRGG
-defKY712+wdSKAjhyoTeqoAUMIA9rRYZWU5G1HJHAKSHui+EKIzJKyVevf7bVmau
-Ys7kWmmQiw6DfpI6j+NuK3nOyzaEINeKTAsp8AnMZY82SeHaERmnAiOSXt0NtPfM
-1SFUE3J90tJO3j/TLEQcOw6rwDxVrgvE0klytx4+QAvcY8txslnTcQy1/7yF35f9
-hpsKAzk+8hMhJrEotBNH
-=r84+
------END PGP SIGNATURE-----
-
---7K4e207lRo8DdjfP9ELSmjOTOnv1fEFJo--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
