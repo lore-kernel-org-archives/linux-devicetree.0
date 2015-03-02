@@ -1,61 +1,115 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [PATCH v6 2/5] power: max77843_charger: Add Max77843 charger
- device driver
-Date: Mon, 02 Mar 2015 09:05:19 +0900
-Message-ID: <54F3A93F.3050609@samsung.com>
-References: <1424741348-8728-1-git-send-email-jaewon02.kim@samsung.com>
- <1424741348-8728-3-git-send-email-jaewon02.kim@samsung.com>
- <1425153821.24292.65.camel@x220>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-reply-to: <1425153821.24292.65.camel@x220>
-Sender: linux-input-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>, Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, beomho.seo@samsung.com
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v5 0/8] Xilinx Video IP Core support
+Date: Mon,  2 Mar 2015 03:48:37 +0200
+Message-ID: <1425260925-12064-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/2015 05:03 AM, Paul Bolle wrote:
-> On Tue, 2015-02-24 at 10:29 +0900, Jaewon Kim wrote:
->> diff --git a/drivers/power/max77843_charger.c b/drivers/power/max77843_charger.c
->> new file mode 100644
->> index 0000000..392eebc1a
->> --- /dev/null
->> +++ b/drivers/power/max77843_charger.c
->> @@ -0,0 +1,508 @@
->> +/*
->> + * Charger driver for Maxim MAX77843
->> + *
->> + * Copyright (C) 2015 Samsung Electronics, Co., Ltd.
->> + * Author: Beomho Seo <beomho.seo@samsung.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published bythe Free Software Foundation.
-> 
-> There's "bythe" again.
-> 
->> + */
-> 
-> [...]
-> 
+Hello,
 
-OK, I will add spacer.
+Here's the fifth, latest and greatest version of the Xilinx FPGA Video IP
+Cores kernel drivers.
 
->> +MODULE_LICENSE("GPL");
-> 
-> And that should probably be
->     MODULE_LICENSE("GPL v2");
-> 
-> 
-> Paul Bolle
-> 
-> 
+I won't detail in great lengths the Xilinx Video IP architecture here, as that
+would result in dozens of pages of documentation. The interested reader can
+refer to the Zynq ZC702 Base TRD (Targeted Reference Design) User Guide
+(http://www.xilinx.com/support/documentation/boards_and_kits/zc702_zvik/2014_2/ug925-zynq-zc702-base-trd.pdf).
 
-OK, I will change license.
-Thank you for your review.
+In a nutshell, the Xilinx Video IP Cores architecture specifies how
+video-related IP cores need to be designed to interoperate and how to assemble
+them in pipelines of various complexities. The concepts map neatly to the
+media controller architecture, which this patch set uses extensively.
 
-Thanks,
-Beomho Seo
+The series starts with various new V4L2 core features, bug fixes or cleanups,
+with a small documentation enhancement (1/8), the addition of new media bus
+formats needed by the new drivers (2/8 to 4/8) and a new V4L2 OF link
+parsing function (5/8).
 
+The last three patches are the core of this series.
+
+Patch 6/8 adds support for the Xilinx Video IP architecture core in the form
+of a base object to model video IP cores (xilinx-vip.c - Video IP), a
+framework that parses a DT representation of a video pipeline and connects the
+corresponding V4L2 subdevices together (xilinx-vipp.c - Video IP Pipeline) and
+a glue between the Video DMA engine driver and the V4L2 API (xilinx-dma.c).
+
+Patch 7/8 adds a driver for the Video Timing Controller (VTC) IP core. While
+not strictly a video processing IP core, the VTC is required by other video IP
+core drivers.
+
+Finally, patch 8/8 adds a first video IP core driver for the Test Pattern
+Generator (TPG). Drivers for other IP cores will be added in the future.
+
+Changes since v4:
+
+- Clarify the v4l2_of_parse_link() documentation
+- Use a DT format description closer to the hardware
+- Document the xvip_device clk field
+- Fix a crash in the TPG probe error path
+
+Cc: devicetree@vger.kernel.org
+
+Hyun Kwon (2):
+  v4l: Sort YUV formats of v4l2_mbus_pixelcode
+  v4l: Add VUY8 24 bits bus format
+
+Laurent Pinchart (6):
+  media: entity: Document the media_entity_ops structure
+  v4l: Add RBG and RGB 8:8:8 media bus formats on 24 and 32 bit busses
+  v4l: of: Add v4l2_of_parse_link() function
+  v4l: xilinx: Add Xilinx Video IP core
+  v4l: xilinx: Add Video Timing Controller driver
+  v4l: xilinx: Add Test Pattern Generator driver
+
+ Documentation/DocBook/media/v4l/subdev-formats.xml | 719 +++++++++-------
+ .../devicetree/bindings/media/xilinx/video.txt     |  35 +
+ .../devicetree/bindings/media/xilinx/xlnx,v-tc.txt |  33 +
+ .../bindings/media/xilinx/xlnx,v-tpg.txt           |  71 ++
+ .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
+ MAINTAINERS                                        |  10 +
+ drivers/media/platform/Kconfig                     |   1 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/xilinx/Kconfig              |  23 +
+ drivers/media/platform/xilinx/Makefile             |   5 +
+ drivers/media/platform/xilinx/xilinx-dma.c         | 753 +++++++++++++++++
+ drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
+ drivers/media/platform/xilinx/xilinx-tpg.c         | 926 +++++++++++++++++++++
+ drivers/media/platform/xilinx/xilinx-vip.c         | 309 +++++++
+ drivers/media/platform/xilinx/xilinx-vip.h         | 236 ++++++
+ drivers/media/platform/xilinx/xilinx-vipp.c        | 669 +++++++++++++++
+ drivers/media/platform/xilinx/xilinx-vipp.h        |  49 ++
+ drivers/media/platform/xilinx/xilinx-vtc.c         | 380 +++++++++
+ drivers/media/platform/xilinx/xilinx-vtc.h         |  42 +
+ drivers/media/v4l2-core/v4l2-of.c                  |  61 ++
+ include/dt-bindings/media/xilinx-vip.h             |  39 +
+ include/media/media-entity.h                       |   9 +
+ include/media/v4l2-of.h                            |  27 +
+ include/uapi/linux/Kbuild                          |   1 +
+ include/uapi/linux/media-bus-format.h              |  19 +-
+ include/uapi/linux/xilinx-v4l2-controls.h          |  73 ++
+ 26 files changed, 4337 insertions(+), 319 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/video.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tc.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
+ create mode 100644 drivers/media/platform/xilinx/Kconfig
+ create mode 100644 drivers/media/platform/xilinx/Makefile
+ create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-tpg.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.h
+ create mode 100644 include/dt-bindings/media/xilinx-vip.h
+ create mode 100644 include/uapi/linux/xilinx-v4l2-controls.h
+
+-- 
+Regards,
+
+Laurent Pinchart
