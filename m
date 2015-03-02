@@ -1,55 +1,61 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/5] mfd: arizona: Add DT binding for the DMIC references
-Date: Mon, 2 Mar 2015 07:53:41 +0000
-Message-ID: <20150302075341.GA31325@x1>
-References: <1425135268-32340-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1425135268-32340-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH v3 5/8] watchdog: st_wdt: Add new driver
+ for ST's LPC Watchdog
+Date: Mon, 2 Mar 2015 07:56:41 +0000
+Message-ID: <20150302075641.GA17486@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1424260154-12868-1-git-send-email-lee.jones@linaro.org>
+ <1424260154-12868-6-git-send-email-lee.jones@linaro.org>
+ <20150223102526.GB14142@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425135268-32340-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: lee@kernel.org, sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+In-Reply-To: <20150223102526.GB14142@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 28 Feb 2015, Charles Keepax wrote:
+Hi Lee,
 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
->  drivers/mfd/arizona-core.c |   10 ++++++++++
->  1 files changed, 10 insertions(+), 0 deletions(-)
+On Mon, 23 Feb 2015, Peter Griffin wrote:
 
-Same here.  Requires DT/Clk Ack.
+> Hi Lee,
 
-> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> index dddaaef..6002ce9 100644
-> --- a/drivers/mfd/arizona-core.c
-> +++ b/drivers/mfd/arizona-core.c
-> @@ -564,6 +564,16 @@ static int arizona_of_get_core_pdata(struct ariz=
-ona *arizona)
->  		count++;
->  	}
-> =20
-> +	count =3D 0;
-> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,dmic-ref", pro=
-p,
-> +				 cur, val) {
-> +		if (count =3D=3D ARRAY_SIZE(arizona->pdata.dmic_ref))
-> +			break;
-> +
-> +		arizona->pdata.dmic_ref[count] =3D val;
-> +		count++;
-> +	}
-> +
->  	return 0;
->  }
-> =20
+I noticed you sent another version, but I didn't see a reply on this point below.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+As your now doing a re-spin for Pauls comments, I thought I would send a reminder
+just in case you hadn't seen it.
+
+regards,
+
+Peter.
+
+> 
+> <snip>
+> 
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int st_wdog_suspend(struct device *dev)
+> > +{
+> > +	struct st_wdog *st_wdog = watchdog_get_drvdata(&st_wdog_dev);
+> > +
+> > +	if (watchdog_active(&st_wdog_dev))
+> > +		st_wdog_stop(&st_wdog_dev);
+> > +
+> > +	st_wdog_setup(st_wdog, false);
+> 
+> I was expecting the suspend / resume callbacks would be disabling / enabling
+> the IP clock.
+> 
+> Is there a reason why it doesn't?
+> 
+> From looking at the code by this point the watchdog has already been disabled so gating
+> the IP seems reasonable.
+> 
+> regards,
+> 
+> Peter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
