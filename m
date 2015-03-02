@@ -1,102 +1,126 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 06/15] of: Add Tegra124 EMC bindings
-Date: Mon, 2 Mar 2015 17:47:02 +0900
-Message-ID: <CAAVeFuL71-VZxAxzGKdn0SebhYrCkFixOiLwq6Ebbih8B+NiRA@mail.gmail.com>
-References: <1423750042-6535-1-git-send-email-tomeu.vizoso@collabora.com> <1423750042-6535-7-git-send-email-tomeu.vizoso@collabora.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+ driver support
+Date: Mon, 2 Mar 2015 09:04:37 +0000
+Message-ID: <d7c0fad223754d6ebb3779312459915a@BL2FFO11FD010.protection.gbl>
+References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
+ <3236720.MHeqOodrCV@wuerfel>
+ <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
+ <1967130.oYyZRWCcEF@wuerfel>
+ <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
+ <20150212093445.GM21387@intel.com>
+ <ed439c7a25d0465d9dbf4c06987d42a1@BY2FFO11FD018.protection.gbl>
+ <20150220062934.GX21387@intel.com> <54E70F97.30908@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1423750042-6535-7-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54E70F97.30908@xilinx.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, Michal Simek <michals@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 12, 2015 at 11:06 PM, Tomeu Vizoso
-<tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
-> From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> Add binding documentation for the nvidia,tegra124-emc device tree node.
->
-> Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->
-> ---
->
-> v5:     * Add a short description for each of the register properties
->
-> v4:     * Remove mandatory naming of the timings subnode
->         * Remove constraint on the unit-address of the timings and timing subnodes
->         * Add some more information about nvidia,emc-configuration
->         * Make the example complete
->
-> v2:     * Specify the unit addresses for the timings and timing nodes
-> ---
->  .../bindings/memory-controllers/tegra-emc.txt      | 379 +++++++++++++++++++++
->  1 file changed, 379 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
->
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt b/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
-> new file mode 100644
-> index 0000000..da923b1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
-> @@ -0,0 +1,379 @@
-> +NVIDIA Tegra124 SoC EMC (external memory controller)
-> +====================================================
-> +
-> +Required properties :
-> +- compatible : Should be "nvidia,tegra124-emc".
-> +- reg : physical base address and length of the controller's registers.
-> +- nvidia,memory-controller : phandle of the MC driver.
-> +
-> +The node should contain a "emc-timings" subnode for each supported RAM type (see field RAM_CODE in
-> +register PMC_STRAPPING_OPT_A), with its unit address being its RAM_CODE.
-> +
-> +Required properties for "emc-timings" nodes :
-> +- nvidia,ram-code : Should contain the value of RAM_CODE this timing set is used for.
-> +
-> +Each "emc-timings" node should contain a "timing" subnode for every supported EMC clock rate. The
-> +"timing" subnodes should have the clock rate in Hz as their unit address.
-> +
-> +Required properties for "timing" nodes :
-> +- clock-frequency : Should contain the memory clock rate in Hz.
-> +- The following properties contain EMC timing characterization values (specified in the board
-> +documentation) :
-> +  - nvidia,emc-auto-cal-config : EMC_AUTO_CAL_CONFIG
-> +  - nvidia,emc-auto-cal-config2 : EMC_AUTO_CAL_CONFIG2
-> +  - nvidia,emc-auto-cal-config3 : EMC_AUTO_CAL_CONFIG3
-> +  - nvidia,emc-auto-cal-interval : EMC_AUTO_CAL_INTERVAL
-> +  - nvidia,emc-bgbias-ctl0 : EMC_BGBIAS_CTL0
-> +  - nvidia,emc-cfg : EMC_CFG
-> +  - nvidia,emc-cfg-2 : EMC_CFG_2
-> +  - nvidia,emc-cfg-dig-dll : EMC_CFG_DIG_DLL
-> +  - nvidia,emc-ctt-term-ctrl : EMC_CTT_TERM_CTRL
-> +  - nvidia,emc-mode-1 : Mode Register 1
-> +  - nvidia,emc-mode-2 : Mode Register 2
-> +  - nvidia,emc-mode-4 : Mode Register 4
-> +  - nvidia,emc-mode-reset : Mode Register 0
-> +  - nvidia,emc-mrs-wait-cnt : EMC_MRS_WAIT_CNT
-> +  - nvidia,emc-sel-dpd-ctrl : EMC_SEL_DPD_CTRL
-> +  - nvidia,emc-xm2dqspadctrl2 : EMC_XM2DQSPADCTRL2
-> +  - nvidia,emc-zcal-cnt-long : EMC_ZCAL_WAIT_CNT
-> +  - nvidia,emc-zcal-interval : EMC_ZCAL_INTERVAL
-> +- nvidia,emc-configuration : EMC timing characterization data. These are the registers (see section
-> +"15.6.2 EMC Registers" in the TRM) whose values need to be specified, according to the board
-> +documentation:
+Ping !
 
-I'm a little bit confused by this. On the one hand, some registers are
-defined by dedicated DT properties, and on the other some are simply
-specified in the nvidia,emc-configuration array. I guess the rationale
-for this is to isolate the registers whose value may control the
-driver vs. those that simply needs to be written as-is.
+> -----Original Message-----
+> From: Michal Simek [mailto:michal.simek@xilinx.com]
+> Sent: Friday, February 20, 2015 4:13 PM
+> To: Vinod Koul; Appana Durga Kedareswara Rao
+> Cc: Arnd Bergmann; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; Srikanth Vemula; linux-
+> kernel@vger.kernel.org; Srikanth Thokala; dmaengine@vger.kernel.org;
+> robh+dt@kernel.org; Anirudha Sarangi; grant.likely@linaro.org;
+> dan.j.williams@intel.com
+> Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+> driver support
+>
+> Hi Vinod,
+>
+> On 02/20/2015 07:29 AM, Vinod Koul wrote:
+> > On Sat, Feb 14, 2015 at 02:21:52PM +0000, Appana Durga Kedareswara Rao
+> wrote:
+> >> Hi Vinod,
+> >>
+> >>
+> >>> -----Original Message-----
+> >>> From: Vinod Koul [mailto:vinod.koul@intel.com]
+> >>> Sent: Thursday, February 12, 2015 3:05 PM
+> >>> To: Appana Durga Kedareswara Rao
+> >>> Cc: Arnd Bergmann; linux-arm-kernel@lists.infradead.org;
+> >>> devicetree@vger.kernel.org; Srikanth Vemula; linux-
+> >>> kernel@vger.kernel.org; Srikanth Thokala; dmaengine@vger.kernel.org;
+> >>> robh+dt@kernel.org; Michal Simek; Anirudha Sarangi;
+> >>> grant.likely@linaro.org; dan.j.williams@intel.com
+> >>> Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access
+> >>> Engine driver support
+> >>>
+> >>> On Thu, Jan 29, 2015 at 11:24:41AM +0000, Appana Durga Kedareswara
+> >>> Rao
+> >>> wrote:
+> >>>>>  Earlier in the driver we are embedding dma_slave_config into
+> >>>>> custom structs But Lars suggested to modify it. please refer to
+> >>>>> the below thread for more details.
+> >>>>>  http://www.spinics.net/lists/dmaengine/msg00010.html
+> >>>>>
+> >>>>>  And later we thought of creating a separate private member in
+> >>>>> dma_slave_config for sharing additional configuration between
+> >>>>> slave device and dma engine Or a new dma_ctrl_cmd like
+> >>>>>
+> >>>
+> FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
+> >>>>>
+> >>>>>  Finally Vinod was ok with the existing suggestion so we dropped
+> >>>>> the above thought.
+> >>>>>
+> >>>>>  @Vinod : Could you please comment on this.
+> >>> FSLDMA_EXTERNAL_START has been removed, and you cna use the
+> removal
+> >>> as a guidance of how to solve your issue
+> >>>
+> >>
+> > Please limit you mailer to set wrap at 80 chars, otherwise it becomes
+> > unreadable
+> >
+> >> The current VDMA driver that got merged in the open source and the
+> >> current patch (dma: xilinx dma v4) Srikanth T submitted both contains
+> >> the Similar implementation that you pointed as above(I mean similar
+> >> to the free scale dma driver).
+> >>
+> >> The discussion starts here is why we need the header
+> >> file(Xilinx_dma.h) in the include/linux/amba/Xilinx_dma.h  folder.
+> >>
+> >> Like for FSL DMA it is got defined (fsl_dma_external_start) as a
+> >> function prototype in include/linux/fsldma.h And it is being getting
+> >> used in the drivers/misc/carma/carma-fpga-program.c
+> >>
+> >> Similarly in the Xilinx VDMA driver(xilinx_vdma_channel_set_config )
+> >> defined as a function prototype in the
+> >> include/linux/amba/xilinx_dma.h And is being used by Xilinx videos
+> >> drivers.  Those video driver need to use the
+> >> (xilinx_vdma_channel_set_config) which requires this global header file.
+> >>
+> >> Could you please suggest us whether that header file (Xilinx_dma.h)
+> >> should be there  in include/linux/amba or we should move it to
+> include/linux?
+> >> And any functional comments for this v4 patch?
+> > Let me ask you a question, what is the relation of xilinx_dma with amba?
+> >
+> > If none then only include/linux/ seems to be the right choice. If not
+> > then amba maybe okay but you need to provide justfication why it should
+> be in amba?
+>
+> I see your point. I think there is real reason to have this header in amba.
+> The reason for that was that xilinx_dma.h was added there.
+>
+> Anyway there is include/linux/dma/ folder. Is it ok to move xilinx_dma.h
+> there too? The same with this dma one.
+>
+> Thanks,
+> Michal
+>
 
-But in this case, why are some registers (like EMC_CFG_DIG_DLL)
-present in both lists, sometimes with different values? In the case of
-EMC_CFG_DIG_DLL, I also see that the read value of
-"nvidia,emc-cfg-dig-dll" seems to never be used anywhere in
-tegra124-emc.c. Should this property exist at all? Note that I have
-only checked this one, there might be others in the same case.
 
-Or maybe I completely misunderstood the intent here, in which case,
-please enlighten me. :)
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
