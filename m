@@ -1,61 +1,49 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] video: ARM CLCD: Added support for FBIO_WAITFORVSYNC
-Date: Mon, 02 Mar 2015 16:00:29 +0000
-Message-ID: <1425312029.3092.1.camel@arm.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
-	 <1424898082-1522-3-git-send-email-arun.ramamurthy@broadcom.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH RFC 3/6] drm/tilcdc: Add support for external compontised
+ DRM encoder
+Date: Mon, 2 Mar 2015 16:01:35 +0000
+Message-ID: <20150302160135.GA29584@n2100.arm.linux.org.uk>
+References: <cover.1424961754.git.jsarha@ti.com>
+ <92792bb4f64fb1b7f26e687ec159d870d0e7a81a.1424961754.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1424898082-1522-3-git-send-email-arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <92792bb4f64fb1b7f26e687ec159d870d0e7a81a.1424961754.git.jsarha@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, detheridge@ti.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-02-25 at 21:01 +0000, Arun Ramamurthy wrote:
-> Added ioctl and interrupt handler functions to support FBIO_WAITFORVSYNC
-> Also corrected documentation to make interrupts and interrupt-names
-> optional as they are not required properties.
-
-You may not be aware of this fact, but its the "documentation" what
-defines what properties are required...
-
-> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>0
-> ---
->  .../devicetree/bindings/video/arm,pl11x.txt        | 11 +--
->  drivers/video/fbdev/amba-clcd.c                    | 82 ++++++++++++++++++++++
->  include/linux/amba/clcd.h                          |  4 ++
->  3 files changed, 89 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/arm,pl11x.txt b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-> index 2262cdb..7d19024 100644
-> --- a/Documentation/devicetree/bindings/video/arm,pl11x.txt
-> +++ b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-> @@ -10,14 +10,6 @@ Required properties:
->  
->  - reg: base address and size of the control registers block
->  
-> -- interrupt-names: either the single entry "combined" representing a
-> -	combined interrupt output (CLCDINTR), or the four entries
-> -	"mbe", "vcomp", "lnbu", "fuf" representing the individual
-> -	CLCDMBEINTR, CLCDVCOMPINTR, CLCDLNBUINTR, CLCDFUFINTR interrupts
-> -
-> -- interrupts: contains an interrupt specifier for each entry in
-> -	interrupt-names
-> -
->  - clock-names: should contain "clcdclk" and "apb_pclk"
->  
->  - clocks: contains phandle and clock specifier pairs for the entries
-
-So no, you can't do that.
-
-Pawel
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBGZWIgMjYsIDIwMTUgYXQgMDQ6NTU6MzJQTSArMDIwMCwgSnlyaSBTYXJoYSB3cm90
+ZToKPiArCXJldCA9IGNvbXBvbmVudF9iaW5kX2FsbChkZXYtPmRldiwgZGV2KTsKPiArCWlmIChy
+ZXQgPCAwKSB7Cj4gKwkJZGV2X2VycihkZXYtPmRldiwgIkJpbmRpbmcgc3ViY29tcG9uZW50cyBm
+YWlsZWQ6ICVkXG4iLCByZXQpOwoKRG8geW91IG5lZWQgdG8gcHJpbnQgdGhpcz8gIFRoZSBjb21w
+b25lbnQgaGVscGVyIGlzIGFscmVhZHkgZmFpcmx5CnZlcmJvc2UgYWJvdXQgd2hhdCBzdWNjZWVk
+cyBhbmQgZmFpbHMuCgo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNvbXBvbmVudF9tYXN0ZXJfb3Bz
+IHRpbGNkY19jb21wX29wcyA9IHsKPiArCS5hZGRfY29tcG9uZW50cyA9IHRpbGNkY19hZGRfZXh0
+ZXJuYWxfY29tcG9uZW50cywKCkknZCBtdWNoIHJhdGhlciB5b3UgdXNlZCB0aGUgbmV3IG1hdGNo
+aW5nIHN1cHBvcnQgcmF0aGVyIHRoYW4gdXNpbmcgdGhlCm9sZCAuYWRkX2NvbXBvbmVudHMuICBU
+aGUgbmV3IG1hdGNoaW5nIHN1cHBvcnQgaXMgbW9yZSBlZmZpY2llbnQgYXMgeW91Cm9ubHkgaGF2
+ZSB0byBzY2FuIERUIG9uY2UsIHJhdGhlciB0aGFuIGVhY2ggdGltZSB3ZSB0cnkgdG8gcHJvYmUu
+ICBUaGF0CndpbGwgbWVhbi4uLgoKPiBAQCAtNjEzLDEyICs2NDMsMTIgQEAgc3RhdGljIGludCB0
+aWxjZGNfcGRldl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJCXJldHVy
+biAtRU5YSU87Cj4gIAl9CgpZb3UgbmVlZCB0byBidWlsZCBhIHN0cnVjdCBjb21wb25lbnRfbWF0
+Y2ggYXJyYXkgaGVyZSB1c2luZwpjb21wb25lbnRfbWF0Y2hfYWRkKCkuLi4KCj4gIAo+IC0JcmV0
+dXJuIGRybV9wbGF0Zm9ybV9pbml0KCZ0aWxjZGNfZHJpdmVyLCBwZGV2KTsKPiArCXJldHVybiBj
+b21wb25lbnRfbWFzdGVyX2FkZCgmcGRldi0+ZGV2LCAmdGlsY2RjX2NvbXBfb3BzKTsKCmFuZCB0
+aGVuIGZpbmFsbHkgcmVnaXN0ZXIgdGhlIG9wcyB3aXRoIGNvbXBvbmVudF9tYXN0ZXJfYWRkX3dp
+dGhfbWF0Y2goKS4KClRoYW5rcy4KCi0tIApGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5l
+OiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBrYnBzIHVwCmFjY29yZGluZyB0byBzcGVl
+ZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
