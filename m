@@ -1,110 +1,90 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
- driver support
-Date: Mon, 2 Mar 2015 22:08:52 +0530
-Message-ID: <20150302163852.GA2613@intel.com>
-References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
- <3236720.MHeqOodrCV@wuerfel>
- <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
- <1967130.oYyZRWCcEF@wuerfel>
- <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
- <20150212093445.GM21387@intel.com>
- <ed439c7a25d0465d9dbf4c06987d42a1@BY2FFO11FD018.protection.gbl>
- <20150220062934.GX21387@intel.com>
- <ad1002303e814d53866349674d22fc11@BY2FFO11FD039.protection.gbl>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v2 04/18] clocksource: Add ARM System timer driver
+Date: Mon, 2 Mar 2015 17:53:09 +0100
+Message-ID: <CALszF6Bm_Y4ZLednjpmP-hMix3gA23FwLm5hViEjr1QojUY+Mg@mail.gmail.com>
+References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1424455277-29983-5-git-send-email-mcoquelin.stm32@gmail.com>
+	<20150220195437.GT19388@pengutronix.de>
+	<1424468908.24292.10.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ad1002303e814d53866349674d22fc11-neA4ZlFjCT0GPAd83OwqBWYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424468908.24292.10.camel@x220>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 20, 2015 at 11:42:31AM +0100, Michal Simek wrote:
-> Hi Vinod,
-> 
-> On 02/20/2015 07:29 AM, Vinod Koul wrote:
-> > On Sat, Feb 14, 2015 at 02:21:52PM +0000, Appana Durga Kedareswara Rao wrote:
-> >> Hi Vinod,
-> >>
-> >>
-> >>> -----Original Message-----
-> >>> From: Vinod Koul [mailto:vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org]
-> >>> Sent: Thursday, February 12, 2015 3:05 PM
-> >>> To: Appana Durga Kedareswara Rao
-> >>> Cc: Arnd Bergmann; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> >>> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Srikanth Vemula; linux-
-> >>> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Srikanth Thokala; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> >>> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Michal Simek; Anirudha Sarangi;
-> >>> grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-> >>> Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
-> >>> driver support
-> >>>
-> >>> On Thu, Jan 29, 2015 at 11:24:41AM +0000, Appana Durga Kedareswara Rao
-> >>> wrote:
-> >>>>>  Earlier in the driver we are embedding dma_slave_config into custom
-> >>>>> structs But Lars suggested to modify it. please refer to the below
-> >>>>> thread for more details.
-> >>>>>  http://www.spinics.net/lists/dmaengine/msg00010.html
-> >>>>>
-> >>>>>  And later we thought of creating a separate private member in
-> >>>>> dma_slave_config for sharing additional configuration between slave
-> >>>>> device and dma engine Or a new dma_ctrl_cmd like
-> >>>>>
-> >>> FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
-> >>>>>
-> >>>>>  Finally Vinod was ok with the existing suggestion so we dropped the
-> >>>>> above thought.
-> >>>>>
-> >>>>>  @Vinod : Could you please comment on this.
-> >>> FSLDMA_EXTERNAL_START has been removed, and you cna use the removal
-> >>> as a guidance of how to solve your issue
-> >>>
-> >>
-> > Please limit you mailer to set wrap at 80 chars, otherwise it becomes
-> > unreadable
-> > 
-> >> The current VDMA driver that got merged in the open source and the
-> >> current patch (dma: xilinx dma v4) Srikanth T submitted both contains the
-> >> Similar implementation that you pointed as above(I mean similar to the
-> >> free scale dma driver).
-> >>
-> >> The discussion starts here is why we need the header file(Xilinx_dma.h) in
-> >> the include/linux/amba/Xilinx_dma.h  folder.
-> >>
-> >> Like for FSL DMA it is got defined (fsl_dma_external_start) as a function
-> >> prototype in include/linux/fsldma.h And it is being getting used in the
-> >> drivers/misc/carma/carma-fpga-program.c
-> >>
-> >> Similarly in the Xilinx VDMA driver(xilinx_vdma_channel_set_config )
-> >> defined as a function prototype in the include/linux/amba/xilinx_dma.h And
-> >> is being used by Xilinx videos  drivers.  Those video driver need to use
-> >> the (xilinx_vdma_channel_set_config) which requires this global header
-> >> file.
-> >>
-> >> Could you please suggest us whether that header file (Xilinx_dma.h) should
-> >> be there  in include/linux/amba or we should move it to include/linux?
-> >> And any functional comments for this v4 patch?
-> > Let me ask you a question, what is the relation of xilinx_dma with amba?
-> > 
-> > If none then only include/linux/ seems to be the right choice. If not then
-> > amba maybe okay but you need to provide justfication why it should be in amba?
-> 
-> I see your point. I think there is real reason to have this header in amba.
-> The reason for that was that xilinx_dma.h was added there.
-and what would be that?
-> 
-> Anyway there is include/linux/dma/ folder. Is it ok to move xilinx_dma.h there
-> too? The same with this dma one.
-Yes that is fine too... As i said this or include/linux should be default
-location..
+Hi Paul, Uwe,
 
--- 
-~Vinod
+2015-02-20 22:48 GMT+01:00 Paul Bolle <pebolle@tiscali.nl>:
+> On Fri, 2015-02-20 at 20:54 +0100, Uwe Kleine-K=C3=B6nig wrote:
+>> On Fri, Feb 20, 2015 at 07:01:03PM +0100, Maxime Coquelin wrote:
+>> > This patch adds clocksource support for ARMv7-M's System timer,
+>> > also known as SysTick.
+>> >
+>> > Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> > ---
+>> >  drivers/clocksource/Kconfig          |  7 ++++
+>> >  drivers/clocksource/Makefile         |  1 +
+>> >  drivers/clocksource/armv7m_systick.c | 78 +++++++++++++++++++++++=
++++++++++++++
+>> >  3 files changed, 86 insertions(+)
+>> >  create mode 100644 drivers/clocksource/armv7m_systick.c
+>> >
+>> > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kco=
+nfig
+>> > index fc01ec2..fb6011e 100644
+>> > --- a/drivers/clocksource/Kconfig
+>> > +++ b/drivers/clocksource/Kconfig
+>> > @@ -124,6 +124,13 @@ config CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
+>> >     help
+>> >      Use ARM global timer clock source as sched_clock
+>> >
+>> > +config ARMV7M_SYSTICK
+>> > +   bool
+>> I assume this symbol is enabled later in the series.
+>
+> Yes, I noticed it was selected in 14/18 ("ARM: Add STM32 family
+> machine").
+>
+>> Would it make sense
+>> to allow enabing the symbol for compile test coverage?
+>>
+>> > +   select CLKSRC_OF if OF
+>> What happens if ARMV7M_SYSTICK=3Dy but OF=3Dn? Doesn't the driver fa=
+il to
+>> compile?
+>>
+>> > +   select CLKSRC_MMIO
+>> > +   help
+>> > +     This options enables support for the ARMv7M system timer uni=
+t
+>> the right spelling is ARMv7-M.
+>
+> This Kconfig entry has no prompt, so no one is going to see this text
+> during make *config. Perhaps this should be made a comment. In that c=
+ase
+> the right spelling should still be used.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, you are right.
+Do you agree if I define it like this:
+
+config ARMV7M_SYSTICK
+    bool "Clocksource driver for ARMv7-M System timer"
+    depends on OF && (CPU_V7M || COMPILE_TEST)
+    select CLKSRC_OF
+    select CLKSRC_MMIO
+    help
+      This options enables clocksource support for the ARMv7-M system
+      timer unit.
+
+Thanks,
+Maxime
+>
+> Thanks,
+>
+>
+> Paul Bolle
+>
