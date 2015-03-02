@@ -1,46 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Add msm8916 pinctrl driver
-Date: Mon, 2 Mar 2015 15:40:05 +0100
-Message-ID: <CACRpkdYj_t15wxXzhHMGo-kb=o1HNaMEV07G1dr7XPYCZv=WNQ@mail.gmail.com>
-References: <1422612241-12944-1-git-send-email-svarbanov@mm-sol.com>
-	<1422612241-12944-4-git-send-email-svarbanov@mm-sol.com>
-	<20150203164748.GA29190@qualcomm.com>
-	<54D22F05.9050403@mm-sol.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/3] dtb: change binding name to match with newer
+ firmware DT
+Date: Mon, 2 Mar 2015 14:48:58 +0000
+Message-ID: <20150302144858.GG16779@leverpostej>
+References: <1425067710-14879-1-git-send-email-isubramanian@apm.com>
+ <1425067710-14879-3-git-send-email-isubramanian@apm.com>
+ <4061014.S4PDWltU3G@wuerfel>
+ <CAKh23Fm5HpNEfs40RTf_XtQ6ris5cCheAcY1WdLND04AwsvdSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <54D22F05.9050403@mm-sol.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Joonwoo Park <joonwoop@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKh23Fm5HpNEfs40RTf_XtQ6ris5cCheAcY1WdLND04AwsvdSQ@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Iyappan Subramanian <isubramanian@apm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mlangsdo@redhat.com" <mlangsdo@redhat.com>, patches <patches@apm.com>, Keyur Chudgar <kchudgar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 4, 2015 at 3:39 PM, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
-> On 02/03/2015 06:47 PM, Andy Gross wrote:
->> On Fri, Jan 30, 2015 at 12:04:01PM +0200, Stanimir Varbanov wrote:
->>> From: Joonwoo Park <joonwoop@codeaurora.org>
->>>
->>> Add initial pinctrl driver to support pin configuration with
->>> pinctrl framework for msm8916.
->>>
->>> Signed-off-by: Joonwoo Park <joonwoop@codeaurora.org>
->>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->>> Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->>
->> Looks good.
->>
->> Reviewed-by: Andy Gross <agross@codeaurora.org>
->>
->
-> Linus, do you want me to resend the patchset including this Reviewed-by tag?
+On Fri, Feb 27, 2015 at 11:52:54PM +0000, Iyappan Subramanian wrote:
+> On Fri, Feb 27, 2015 at 12:33 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Friday 27 February 2015 12:08:29 Iyappan Subramanian wrote:
+> >> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> >> index f1ad9c2..a857794 100644
+> >> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> >> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> >> @@ -622,7 +622,7 @@
+> >>                 };
+> >>
+> >>                 sgenet0: ethernet@1f210000 {
+> >> -                       compatible = "apm,xgene-enet";
+> >> +                       compatible = "apm,xgene1-sgenet";
+> >>                         status = "disabled";
+> >>                         reg = <0x0 0x1f210000 0x0 0xd100>,
+> >>                               <0x0 0x1f200000 0x0 0Xc300>,
+> >>
+> >
+> > This will break booting the new dtb on older kernels, right?
+> 
+> This will not break booting older kernels.  In fact, this will fix it,
+> by having the specific binding,
+> older kernel that does not have support for these interfaces, will not
+> call probe.
+> 
+> For example, 3.17 kernel that does not have support for SGMII based 1G
+> and XFI 10G interfaces
+> will not probe these interfaces when booted with newer dtb.
 
-1/3 is already merged upstream.
+I'm guessing that in the existing DTBs, these nodes are always disabled?
 
-2/3 has an unaddressed review comment. Please fix that and resent.
+If that's the case then we don't have a problem; we'll never probe these
+nodes for an existing DTB.
 
-So this 3/3 can be resent as well, with the Review tag.
-
-But it's down to just two patches now atleast.
-
-Yours,
-Linus Walleij
+Mark.
