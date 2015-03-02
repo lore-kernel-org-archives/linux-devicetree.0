@@ -1,39 +1,58 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/2] ASoC: simple-card: Remove trailing whitespace
-Date: Mon, 2 Mar 2015 16:14:32 +0200
-Message-ID: <c7817be105a96bcbf71202c5497982f59a45a8eb.1425303942.git.jsarha@ti.com>
-References: <cover.1425303942.git.jsarha@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/3] Documentation: dts: Update compatible field
+ description for APM X-Gene
+Date: Mon, 2 Mar 2015 14:17:34 +0000
+Message-ID: <20150302141734.GC16779@leverpostej>
+References: <1425067710-14879-1-git-send-email-isubramanian@apm.com>
+ <1425067710-14879-2-git-send-email-isubramanian@apm.com>
+ <20150227201516.GA30683@leverpostej>
+ <CAKh23FmLE-s_C5YUjLTQLT0_P9DT6LzmaBxJPRWY4AwXK9jQNA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1425303942.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: peter.ujfalusi-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKh23FmLE-s_C5YUjLTQLT0_P9DT6LzmaBxJPRWY4AwXK9jQNA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Iyappan Subramanian <isubramanian@apm.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mlangsdo@redhat.com" <mlangsdo@redhat.com>, "patches@apm.com" <patches@apm.com>, Keyur Chudgar <kchudgar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
----
- sound/soc/generic/simple-card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Feb 27, 2015 at 11:58:28PM +0000, Iyappan Subramanian wrote:
+> On Fri, Feb 27, 2015 at 12:15 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Fri, Feb 27, 2015 at 08:08:28PM +0000, Iyappan Subramanian wrote:
+> >> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+> >> Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
+> >> Tested-by: Mark Langsdorf <mlangsdo@redhat.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/net/apm-xgene-enet.txt | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+> >> index cfcc527..5355996 100644
+> >> --- a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+> >> +++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+> >> @@ -4,7 +4,8 @@ Ethernet nodes are defined to describe on-chip ethernet interfaces in
+> >>  APM X-Gene SoC.
+> >>
+> >>  Required properties for all the ethernet interfaces:
+> >> -- compatible: Should be "apm,xgene-enet"
+> >> +- compatible: Should be "apm,xgene-enet", "apm,xgene1-sgenet" or
+> >> +  "apm,xgene1-xgenet"
+> >
+> > Please format this as a list. It'll be easier to read, and you can add
+> > more later.
+> 
+> Thanks.  I will do that.
+> 
+> >
+> > What are the diffences between these variants?
+> 
+> apm,xgene-enet - binding for RGMII based 1G interface
+> apm,xgene1-sgenet - binding for SGMII based 1G interface
+> apm,xgene1-xgenet - binding for XFI based 10G interface
 
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index f7c6734..d15c919 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -50,7 +50,7 @@ static int asoc_simple_card_startup(struct snd_pcm_substream *substream)
- 	ret = clk_prepare_enable(dai_props->cpu_dai.clk);
- 	if (ret)
- 		return ret;
--	
-+
- 	ret = clk_prepare_enable(dai_props->codec_dai.clk);
- 	if (ret)
- 		clk_disable_unprepare(dai_props->cpu_dai.clk);
--- 
-1.9.1
+I see. If you could keep notes to this effect in the list, that would
+help to keep this obvious.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
