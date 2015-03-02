@@ -1,103 +1,45 @@
-From: Jonathan Richardson <jonathar@broadcom.com>
-Subject: [PATCH RESEND 1/1] ARM: dts: Enable Broadcom Cygnus BCM958305K
-Date: Mon, 2 Mar 2015 14:41:10 -0800
-Message-ID: <1425336070-3414-2-git-send-email-jonathar@broadcom.com>
-References: <Jonathan Richardson <jonathar@broadcom.com>
- <1425336070-3414-1-git-send-email-jonathar@broadcom.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] video: ARM CLCD: Added support for FBIOPAN_DISPLAY and
+ virtual y resolution
+Date: Mon, 2 Mar 2015 17:22:02 -0600
+Message-ID: <CAL_JsqKMP4JxQ-Q5V1skcaKPdhC4v-joOrNyn++tMfat8arMKA@mail.gmail.com>
+References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+ <1424898082-1522-2-git-send-email-arun.ramamurthy@broadcom.com>
+ <1425312509.3092.7.camel@arm.com> <20150302161122.GP8656@n2100.arm.linux.org.uk>
+ <54F4B57F.3030306@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425336070-3414-1-git-send-email-jonathar@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54F4B57F.3030306-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DT file to enable the Wireless Audio reference design based on the
-BCM58305.
+On Mon, Mar 2, 2015 at 1:09 PM, Arun Ramamurthy
+<arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>
+>
+> On 15-03-02 08:11 AM, Russell King - ARM Linux wrote:
+>>
+>> On Mon, Mar 02, 2015 at 04:08:29PM +0000, Pawel Moll wrote:
+>>>
+>>> I'm not sure about this... The word "virtual" never works well with
+>>> device tree nodes defined as "hardware description".
+>>>
+>>> I understand what you're doing, but adding this property to the display
+>>> controller's node doesn't sound right. How does this describe hardware?
+>>> If anywhere, it's more like a job for the panel node?
+>>
+>>
+> I see what you are saying Pawel, I can follow Russell's recommendation of
+> adding a RAM size node called max-memory-available or something similar
 
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
-Tested-by: Scott Branden <sbranden@broadcom.com>
-Signed-off-by: Jonathan Richardson <jonathar@broadcom.com>
----
- arch/arm/boot/dts/Makefile       |    3 ++-
- arch/arm/boot/dts/bcm958305k.dts |   53 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm958305k.dts
+We've already got a binding for reserved memory regions for this
+purpose. And there is also simplefb binding.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 91bd5bd..24b6084 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -64,7 +64,8 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
- dtb-$(CONFIG_ARCH_BCM_63XX) += bcm963138dvt.dtb
- dtb-$(CONFIG_ARCH_BCM_CYGNUS) += bcm911360_entphn.dtb \
- 	bcm911360k.dtb \
--	bcm958300k.dtb
-+	bcm958300k.dtb \
-+	bcm958305k.dtb
- dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm28155-ap.dtb \
- 	bcm21664-garnet.dtb
- dtb-$(CONFIG_ARCH_BERLIN) += \
-diff --git a/arch/arm/boot/dts/bcm958305k.dts b/arch/arm/boot/dts/bcm958305k.dts
-new file mode 100644
-index 0000000..56b429a
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm958305k.dts
-@@ -0,0 +1,53 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom Corporation nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm-cygnus.dtsi"
-+
-+/ {
-+	model = "Cygnus Wireless Audio (BCM958305K)";
-+	compatible = "brcm,bcm58305", "brcm,cygnus";
-+
-+	aliases {
-+		serial0 = &uart3;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart3;
-+		bootargs = "console=ttyS0,115200";
-+	};
-+
-+	uart3: serial@18023000 {
-+		status = "okay";
-+	};
-+};
--- 
-1.7.9.5
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
