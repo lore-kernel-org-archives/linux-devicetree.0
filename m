@@ -1,103 +1,33 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 2/4][resend] media: ov2640: add async probe function
-Date: Mon, 2 Mar 2015 09:52:38 +0800
-Message-ID: <1425261158-14603-1-git-send-email-josh.wu@atmel.com>
-References: <Pine.LNX.4.64.1503012202460.2412@axis700.grange>
+From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
+ Qualcomm hwmutex
+Date: Sun, 1 Mar 2015 23:05:14 -0600
+Message-ID: <20150302050514.GA13169@qualcomm.com>
+References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.64.1503012202460.2412-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425076217-10415-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: g.liakhovetski-Mmb7MZpHnFY@public.gmane.org
-Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In async probe, there is a case that ov2640 is probed before the
-host device which provided 'mclk'.
-To support this async probe, we will get 'mclk' at first in the probe(),
-if failed it will return -EPROBE_DEFER. That will let ov2640 wait for
-the host device probed.
+On Fri, Feb 27, 2015 at 02:30:16PM -0800, Bjorn Andersson wrote:
+> Add binding documentation for the Qualcomm Hardware Mutex.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> ---
 
-Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+Looks fine.
 
-Changes in v5 resend:
-- refine the error handling flow according to Guennadi's comment.
+Reviewed-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Changes in v5:
-- don't change the ov2640_s_power() code.
-- will get 'mclk' at the beginning of ov2640_probe().
-
- drivers/media/i2c/soc_camera/ov2640.c | 36 +++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/media/i2c/soc_camera/ov2640.c b/drivers/media/i2c/soc_camera/ov2640.c
-index 1fdce2f..16adbcc 100644
---- a/drivers/media/i2c/soc_camera/ov2640.c
-+++ b/drivers/media/i2c/soc_camera/ov2640.c
-@@ -1068,6 +1068,10 @@ static int ov2640_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	}
- 
-+	priv->clk = v4l2_clk_get(&client->dev, "mclk");
-+	if (IS_ERR(priv->clk))
-+		return -EPROBE_DEFER;
-+
- 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
- 	v4l2_ctrl_handler_init(&priv->hdl, 2);
- 	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
-@@ -1075,24 +1079,27 @@ static int ov2640_probe(struct i2c_client *client,
- 	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
- 			V4L2_CID_HFLIP, 0, 1, 1, 0);
- 	priv->subdev.ctrl_handler = &priv->hdl;
--	if (priv->hdl.error)
--		return priv->hdl.error;
--
--	priv->clk = v4l2_clk_get(&client->dev, "mclk");
--	if (IS_ERR(priv->clk)) {
--		ret = PTR_ERR(priv->clk);
--		goto eclkget;
-+	if (priv->hdl.error) {
-+		ret = priv->hdl.error;
-+		goto err_clk;
- 	}
- 
- 	ret = ov2640_video_probe(client);
--	if (ret) {
--		v4l2_clk_put(priv->clk);
--eclkget:
--		v4l2_ctrl_handler_free(&priv->hdl);
--	} else {
--		dev_info(&adapter->dev, "OV2640 Probed\n");
--	}
-+	if (ret < 0)
-+		goto err_videoprobe;
- 
-+	ret = v4l2_async_register_subdev(&priv->subdev);
-+	if (ret < 0)
-+		goto err_videoprobe;
-+
-+	dev_info(&adapter->dev, "OV2640 Probed\n");
-+
-+	return 0;
-+
-+err_videoprobe:
-+	v4l2_ctrl_handler_free(&priv->hdl);
-+err_clk:
-+	v4l2_clk_put(priv->clk);
- 	return ret;
- }
- 
-@@ -1100,6 +1107,7 @@ static int ov2640_remove(struct i2c_client *client)
- {
- 	struct ov2640_priv       *priv = to_ov2640(client);
- 
-+	v4l2_async_unregister_subdev(&priv->subdev);
- 	v4l2_clk_put(priv->clk);
- 	v4l2_device_unregister_subdev(&priv->subdev);
- 	v4l2_ctrl_handler_free(&priv->hdl);
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
