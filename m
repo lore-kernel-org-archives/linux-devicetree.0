@@ -1,54 +1,72 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/3] dtb: change binding name to match with newer
- firmware DT
-Date: Mon, 2 Mar 2015 14:48:58 +0000
-Message-ID: <20150302144858.GG16779@leverpostej>
-References: <1425067710-14879-1-git-send-email-isubramanian@apm.com>
- <1425067710-14879-3-git-send-email-isubramanian@apm.com>
- <4061014.S4PDWltU3G@wuerfel>
- <CAKh23Fm5HpNEfs40RTf_XtQ6ris5cCheAcY1WdLND04AwsvdSQ@mail.gmail.com>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 3/7] of: Document {little,big,native}-endian bindings
+Date: Mon, 2 Mar 2015 06:56:20 -0800
+Message-ID: <CAJiQ=7DQ6CRWddii_9HZqH0a_1ixos6FBQRzb+HM+YAh1jmkBA@mail.gmail.com>
+References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
+ <1416872182-6440-4-git-send-email-cernekee@gmail.com> <54F4624D.6000909@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKh23Fm5HpNEfs40RTf_XtQ6ris5cCheAcY1WdLND04AwsvdSQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Iyappan Subramanian <isubramanian@apm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mlangsdo@redhat.com" <mlangsdo@redhat.com>, patches <patches@apm.com>, Keyur Chudgar <kchudgar@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54F4624D.6000909-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 27, 2015 at 11:52:54PM +0000, Iyappan Subramanian wrote:
-> On Fri, Feb 27, 2015 at 12:33 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 27 February 2015 12:08:29 Iyappan Subramanian wrote:
-> >> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> >> index f1ad9c2..a857794 100644
-> >> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> >> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> >> @@ -622,7 +622,7 @@
-> >>                 };
-> >>
-> >>                 sgenet0: ethernet@1f210000 {
-> >> -                       compatible = "apm,xgene-enet";
-> >> +                       compatible = "apm,xgene1-sgenet";
-> >>                         status = "disabled";
-> >>                         reg = <0x0 0x1f210000 0x0 0xd100>,
-> >>                               <0x0 0x1f200000 0x0 0Xc300>,
-> >>
-> >
-> > This will break booting the new dtb on older kernels, right?
-> 
-> This will not break booting older kernels.  In fact, this will fix it,
-> by having the specific binding,
-> older kernel that does not have support for these interfaces, will not
-> call probe.
-> 
-> For example, 3.17 kernel that does not have support for SGMII based 1G
-> and XFI 10G interfaces
-> will not probe these interfaces when booted with newer dtb.
+On Mon, Mar 2, 2015 at 5:14 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
+> On 11/24/2014 06:36 PM, Kevin Cernekee wrote:
+>> These apply to newly converted drivers, like serial8250/libahci/...
+>> The examples were adapted from the regmap bindings document.
+>>
+>> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
+>>  1 file changed, 60 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/common-properties.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
+>> new file mode 100644
+>> index 0000000..21044a4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/common-properties.txt
+>> @@ -0,0 +1,60 @@
+>> +Common properties
+>> +
+>> +The ePAPR specification does not define any properties related to hardware
+>> +byteswapping, but endianness issues show up frequently in porting Linux to
+>> +different machine types.  This document attempts to provide a consistent
+>> +way of handling byteswapping across drivers.
+>> +
+>> +Optional properties:
+>> + - big-endian: Boolean; force big endian register accesses
+>> +   unconditionally (e.g. ioread32be/iowrite32be).  Use this if you
+>> +   know the peripheral always needs to be accessed in BE mode.
+>> + - little-endian: Boolean; force little endian register accesses
+>> +   unconditionally (e.g. readl/writel).  Use this if you know the
+>> +   peripheral always needs to be accessed in LE mode.  This is the
+>> +   default.
+>
+> There is a fundamental problem with specifying the default in DT bindings.
+> How can drivers which are currently native-endian support big-endian?
+>
+> If the driver is converted to support big-endian, every previous
+> devicetree will be invalid with the new kernel (because those devicetrees
+> don't specify 'native-endian').
+>
+> IOW, consider if the default were 'native-endian'. How would the 8250
+> driver support existing devicetrees?
 
-I'm guessing that in the existing DTBs, these nodes are always disabled?
+Correct.  This scheme is intended for drivers like 8250 and libahci
+which currently default to little-endian by virtue of using
+readl/writel for MMIO accesses.  Drivers that default to native-endian
+should specify that in their bindings documents, similar to
+Documentation/devicetree/bindings/regmap/regmap.txt.
 
-If that's the case then we don't have a problem; we'll never probe these
-nodes for an existing DTB.
-
-Mark.
+In practice we might not see too many cases of native-endian drivers
+that need to be converted to work in forced big-endian mode anyway,
+because most uses of the __raw_* accessors are found in SoC-specific
+code.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
