@@ -1,7 +1,8 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 01/10] dt/bindings: Add binding for BCM2835 mailbox driver
-Date: Mon,  2 Mar 2015 12:54:35 -0800
-Message-ID: <1425329684-23968-2-git-send-email-eric@anholt.net>
+Subject: [PATCH 10/10] ARM: bcm2835: Add the mailbox property channel to the
+ device tree.
+Date: Mon,  2 Mar 2015 12:54:44 -0800
+Message-ID: <1425329684-23968-11-git-send-email-eric@anholt.net>
 References: <1425329684-23968-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,45 +22,26 @@ To: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-
-v2: Split into a separate patch for submitting to the devicetree list.
-    Consistently start node docs with a capital letter. device's
-    address in the example shouldn't have "0x". Drop machine-specific
-    interrupt numbers from the docs.  (changes by anholt).
-
-Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
 Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 ---
- .../devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+ arch/arm/boot/dts/bcm2835.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
-new file mode 100644
-index 0000000..f5741a0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
-@@ -0,0 +1,19 @@
-+Broadcom BCM2835 VideoCore mailbox IPC
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 2eeeb20..82c6947 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -72,6 +72,11 @@
+ 			mboxes = <&mailbox 0>;
+ 		};
+ 
++		mailbox-property {
++			compatible = "brcm,bcm2835-mbox-property";
++			mboxes = <&mailbox 8>;
++		};
 +
-+Required properties:
-+
-+- compatible : Should be "brcm,bcm2835-mbox"
-+- reg : Specifies base physical address and size of the registers.
-+- interrupts : The interrupt number. See
-+  bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-+- #mbox-cells : Specifies the number of cells needed to encode a
-+  mailbox channel. The value shall be 1.
-+
-+Example:
-+
-+mailbox: mailbox@7e00b800 {
-+	compatible = "brcm,bcm2835-mbox";
-+	reg = <0x7e00b880 0x40>;
-+	interrupts = <0 1>;
-+	#mbox-cells = <1>;
-+};
+ 		gpio: gpio@7e200000 {
+ 			compatible = "brcm,bcm2835-gpio";
+ 			reg = <0x7e200000 0xb4>;
 -- 
 2.1.4
