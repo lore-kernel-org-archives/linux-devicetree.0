@@ -1,82 +1,97 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mtd: nand: dt binding documentation for
- digicolor NFC
-Date: Mon, 2 Mar 2015 13:24:46 +0100
-Message-ID: <20150302132446.5ee40c87@bbrezillon>
-References: <fb9907fecb8b57d1b44ce03b97eb62225555de9f.1425295703.git.baruch@tkos.co.il>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH RFC 6/6] ARM: dts: am335x-boneblack: Use new binding for
+ HDMI
+Date: Mon, 2 Mar 2015 14:28:40 +0200
+Message-ID: <54F45778.6050406@ti.com>
+References: <cover.1424961754.git.jsarha@ti.com> <6d6653416fd87c678a80df1d422420877261c4a5.1424961754.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fb9907fecb8b57d1b44ce03b97eb62225555de9f.1425295703.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="0qWfa5kxeXnk54xaclR0Nar0scnPTXHh0"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <6d6653416fd87c678a80df1d422420877261c4a5.1424961754.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, detheridge@ti.com, moinejf@free.fr, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
+--0qWfa5kxeXnk54xaclR0Nar0scnPTXHh0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On Mon,  2 Mar 2015 13:28:22 +0200
-Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-
-> The CX92755 SoC is one of Conexant Digicolor series of SoCs. This devicetree
-> binding document describes the NAND flash controller the is shared by some SoCs
-> in the Digicolor series.
-> 
-> Not all of the properties are currently actually used by the driver.
-> Specifically, the driver doesn't make use of interrupts. This may change in the
-> future.
-> 
-> Also worth noting that the only supported ECC mode is "hw_syndrome". In the
-> future the driver may add support for additional modes.
-> 
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+On 26/02/15 16:55, Jyri Sarha wrote:
+> Use new binding for the external tda19988 HDMI encoder.
+>=20
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
 > ---
->  .../devicetree/bindings/mtd/digicolor-nand.txt     | 71 ++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/digicolor-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/digicolor-nand.txt b/Documentation/devicetree/bindings/mtd/digicolor-nand.txt
-> new file mode 100644
-> index 000000000000..60e2d9085b7a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/digicolor-nand.txt
-> @@ -0,0 +1,71 @@
-> +Conexant Digicolor NAND Flash Controller (NFC)
+>  arch/arm/boot/dts/am335x-boneblack.dts | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts=
+/am335x-boneblack.dts
+> index 5c42d25..eadbba3 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack.dts
+> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+> @@ -68,16 +68,26 @@
+> =20
+>  &lcdc {
+>  	status =3D "okay";
+> +	port {
+> +		lcdc_0: endpoint@0 {
+> +			remote-endpoint =3D <&hdmi_0>;
+> +		};
+> +	};
+>  };
+> =20
+> -/ {
+> -	hdmi {
+> -		compatible =3D "ti,tilcdc,slave";
+> -		i2c =3D <&i2c0>;
+> +&i2c0 {
+> +	tda19988 {
+> +		compatible =3D "nxp,tda998x";
+> +		reg =3D <0x70>;
+>  		pinctrl-names =3D "default", "off";
+>  		pinctrl-0 =3D <&nxp_hdmi_bonelt_pins>;
+>  		pinctrl-1 =3D <&nxp_hdmi_bonelt_off_pins>;
+> -		status =3D "okay";
 > +
-> +Required properties:
-> +- compatible : "cnxt,cx92755-nfc".
-> +- reg : shall contain registers location and length for data and reg.
-> +- interrupts : shall define the nand controller interrupt.
-> +- #address-cells: shall be set to 1. Encode the nand CS.
-> +- #size-cells : shall be set to 0.
-> +- clocks : shall reference nand controller clocks.
-> +
-> +Optional children nodes:
-> +Children nodes represent the available nand chips.
-> +
-> +Required children properties:
-> +- nand-ecc-mode : must be "hw_syndrome".
+> +		port {
+> +			hdmi_0: endpoint@0 {
+> +				remote-endpoint =3D <&lcdc_0>;
+> +			};
+> +		};
+>  	};
+>  };
 
-You could fallback to hw_syndrome when this property is not provided.
-That would make it optional (and if you ever want to support other
-modes, you'll just have to explicitly specify nand-ecc-mode).
+This is missing the output of tda998x. It should have two ports, input
+and output, output going to hdmi-connector.
 
-> +- nand-ecc-strength : must be one of 6, 7, 8, 24, 28, 30.
-> +- nand-ecc-step-size : must be either 512 or 1024.
+ Tomi
 
-Those 2 properties are no longer mandatory (you fallback to values
-stored in _ds if they are missing).
 
-Best Regards,
 
-Boris
+--0qWfa5kxeXnk54xaclR0Nar0scnPTXHh0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU9Fd4AAoJEPo9qoy8lh71/HgQAJO/M5J/UOm47rX7CMTx6OkX
+AoFo/cJtMXCxi2Sx1VDTTrW5zSeIp54B8zmvgVuRdPY/hG/wIU/1MNtIBPqTVTHq
+t8NIR2mtS3ClXtl9lg4xtAMKpIYthr76mnuzXUldHAxXfapb6BbHaYj8eflO+y6K
+4BkPvdTTBt+sipulmZ8vpIko1IKgdmM7zOaWGUUGHZzdVdgczSX7OgrEPLAKkoCH
+2pkAaDWNXU1NVK8pVMR1HiB2EpzB0mK59L2q06DoalJf18213rOSDlqmBxMmhnF/
+DVVnPfxaapl91I05h9cJ/jloYXUff24H+kAA7Vf7YCOThd9BiIS2ZHRF25M5EW6c
++CkVryEh660ce3xS84ePHtqz9pUN6he8LQf8VEzHB6VKouw7L2T8kohCa1iXvmyn
+IJ/5aF/bfmAIoszv3iYPLCD6wLG/59mAVxQn2BX2Q8oWpT+pocj9NBOXYUoC8Rcy
+KfibYEmW/tb2JTBpucibyj8Aub3NAGOEy5vU021Oe7nZIo0lbkv1Q3cVSInMf4J8
+AmKLtbe4Bu6KK3Zby4xdW67DQBsOLcSZ1Zj+8fulj5qWHmxUBDK05zLnMk8G3rbL
+jSFTL71ishcTcbk7g2cGXYKAzOuQ5GUJLbasP3Z2JcGalOVpbv+9dTEdaGG0BXrp
+64AE6q6OFCZ2+SXJddpJ
+=UTR6
+-----END PGP SIGNATURE-----
+
+--0qWfa5kxeXnk54xaclR0Nar0scnPTXHh0--
