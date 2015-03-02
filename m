@@ -1,52 +1,35 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 1/5] mfd: max77843: Add max77843 MFD driver core driver
-Date: Mon, 2 Mar 2015 10:20:39 +0000
-Message-ID: <20150302102039.GC32347@x1>
-References: <1425291038-18269-1-git-send-email-jaewon02.kim@samsung.com>
- <1425291038-18269-2-git-send-email-jaewon02.kim@samsung.com>
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] Add support for Broadcom RNG200
+Date: Mon, 2 Mar 2015 23:23:49 +1300
+Message-ID: <20150302102348.GA24294@gondor.apana.org.au>
+References: <sbranden@broadcom.com>
+ <1424888184-22180-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425291038-18269-2-git-send-email-jaewon02.kim@samsung.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, SangBae Lee <sangbae90.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, Beomho Seo <beomho.seo@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+In-Reply-To: <1424888184-22180-1-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 02 Mar 2015, Jaewon Kim wrote:
+On Wed, Feb 25, 2015 at 10:16:22AM -0800, Scott Branden wrote:
+> This series of patchsets contains the Broadcom Random Number Generator
+> driver and device tree binding documentation.
+> 
+> Changes from v1:
+>  added \n to 2 dev_err messages
 
-> This patch adds MAX77843 core/irq driver to support PMIC,
-> MUIC(Micro USB Interface Controller), Charger, Fuel Gauge,
-> LED and Haptic device.
->=20
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
-> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-> ---
->  drivers/mfd/Kconfig                  |   14 ++
->  drivers/mfd/Makefile                 |    1 +
->  drivers/mfd/max77843.c               |  243 ++++++++++++++++++
->  include/linux/mfd/max77843-private.h |  454 ++++++++++++++++++++++++=
-++++++++++
->  4 files changed, 712 insertions(+)
->  create mode 100644 drivers/mfd/max77843.c
->  create mode 100644 include/linux/mfd/max77843-private.h
+If you want this to go through the crypto tree please add a cc
+to linux-crypto-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
 
-If you have dealt with my previous review comments:
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
-Which other Acks are you waiting for?=20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks,
+-- 
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
