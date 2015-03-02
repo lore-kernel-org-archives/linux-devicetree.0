@@ -1,69 +1,96 @@
-From: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
-Date: Mon, 2 Mar 2015 11:09:55 -0800
-Message-ID: <54F4B583.4000005@broadcom.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com> <1425312688.3092.10.camel@arm.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v5 1/6] mfd: fsl imx25 Touchscreen ADC driver
+Date: Mon, 2 Mar 2015 20:12:01 +0100
+Message-ID: <20150302191201.GA26884@pengutronix.de>
+References: <1422108103-15052-1-git-send-email-mpa@pengutronix.de>
+ <1422108103-15052-2-git-send-email-mpa@pengutronix.de>
+ <20150217191438.GF19388@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425312688.3092.10.camel@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150217191438.GF19388@pengutronix.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Fabio Estevam <festevam@gmail.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-iio@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Denis Carikli <denis@eukrea.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, linux-input@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 15-03-02 08:11 AM, Pawel Moll wrote:
-> On Wed, 2015-02-25 at 21:01 +0000, Arun Ramamurthy wrote:
->> Added code based on linaro tree:
->> http://git.linaro.org/kernel/linux-linaro-stable.git
->> with commit id:6846e7822c4cab5a84672baace3b768c2d0db142
->> at drivers/video/amba-clcd.c. This lets the driver set
->> certain tim2 register bits after reading them from
->> device tree.
->>
->> Reviewed-by: Ray Jui <rjui@broadcom.com>
->> Reviewed-by: Scott Branden <sbranden@broadcom.com>
->> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
->> ---
->>   .../devicetree/bindings/video/arm,pl11x.txt        | 17 ++++++++-
->>   drivers/video/fbdev/amba-clcd.c                    | 41 ++++++++++++++++++++++
->>   2 files changed, 57 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/video/arm,pl11x.txt b/Documentation/devicetree/bindings/video/arm,pl11x.txt
->> index 3e3039a..14d6f87 100644
->> --- a/Documentation/devicetree/bindings/video/arm,pl11x.txt
->> +++ b/Documentation/devicetree/bindings/video/arm,pl11x.txt
->> @@ -35,6 +35,21 @@ Optional properties:
->>   	cell's memory interface can handle; if not present, the memory
->>   	interface is fast enough to handle all possible video modes
->>
->> +- tim2: Used to set certain bits in LCDTiming2 register.
->> +	It can be TIM2_CLKSEL or TIM2_IOE or both
->> +
->> +	TIM2_CLKSEL: This bit drives the CLCDCLKSEL signal. It is the select
->> +	signal for the external LCD clock multiplexor.
->> +
->> +	TIM2_IOE: Invert output enable:
->> +	0 = CLAC output pin is active HIGH in TFT mode
->> +	1 = CLAC output pin is active LOW in TFT mode.
->> +	This bit selects the active polarity of the output enable signal in
->> +	TFT mode. In this mode, the CLAC pin is an enable that indicates to
->> +	the LCD panel when valid display data is available. In active
->> +	display mode, data is driven onto the LCD data lines at the
->> +	programmed edge of CLCP when CLAC is in its active state.
->> +
->
-> The existing bindings intentionally avoided quoting internal registers -
-> they are supposed to describe how the hardware is wired up...
->
-> So how about something like "arm,pl11x,tft-invert-clac"? Then the driver
-> sets the bit or not, depending on the property existance?
->
-Sure, I can change it to two properties called arm,pl11x,tft-invert-clac 
-and arm,pl11x,tft-clksel. Would that be acceptable?
+Hi,
 
-> Pawel
->
+On Tue, Feb 17, 2015 at 08:14:38PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Markus,
+>=20
+> On Sat, Jan 24, 2015 at 03:01:38PM +0100, Markus Pargmann wrote:
+> > +config MFD_MX25_TSADC
+> > +	tristate "Freescale i.MX25 integrated Touchscreen and ADC unit"
+> > +	select REGMAP_MMIO
+> > +	depends on SOC_IMX25
+> Can you make that:
+>=20
+> 	depends on SOC_IMX25 || COMPILE_TEST
+>=20
+> ?
+
+Yes, changed.
+
+>=20
+> > + * The code contained herein is licensed under the GNU General Public
+> > + * License. You may obtain a copy of the GNU General Public License
+> > + * Version 2 or later at the following locations:
+> Which version of the GPL is your code licensed under?
+
+GPLv2 as described by MODULE_LICENSE. Will change the header
+accordingly.
+
+>=20
+> > +static int mx25_tsadc_setup_irq(struct platform_device *pdev,
+> > +				struct mx25_tsadc *tsadc)
+> > [...]
+> > +	irq_set_chained_handler(irq, mx25_tsadc_irq_handler);
+> > +	irq_set_handler_data(irq, tsadc);
+> Do you need to reverse the order of these two calls to prevent the
+> handler being called while handler_data is still unset?
+
+Yes that's probably better although the subdevices which may cause
+interrupts here are not populated at this point.
+
+Thanks,
+
+Markus
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU9LYBAAoJEEpcgKtcEGQQTa8QAIvVq8nneBnZyXTeRaEaiQ9C
+ib3PxhTW3aXduGlXyBhULXJAW9hE97rVQeKUuYSZbW7SU3G55SuNq/J1DhIhLu3j
+ueC0j/kdALDAIUYr3YF5VDHCB7zJ3G5UmT+heD+sQzDv3qP6AAx93TU7eIDyM2GL
+ZN57p4NdjNSdI3x9301eGwgcnDMUI7KgfEtxJNV1+tU7/umQq7A5GDZ46+7/SE8j
+wRnvdKXjxqpEzygf9MF7vlYoeJuWie/2/9/pm7EZl8u4ibQvn4i5CLCCTM2GNNwn
+CrUhdTJpolARkFoJ/Ie4ieJd/PIYicinUayDsYWvTDnL7B8g6wJ0ZR1AcipIrBHw
+cYjcf8SHFWpnKmAmADw6Nxu6AvEoVf9Cc2vFl7fixirDJgrEkhvGVl/T3vuLQSBo
+EG38XTf5Kjgt5PJqosXigAGak0gYxZ12+qM2eS7MWKC5L+1NJs6UdF0TTKKyEHh6
+kfqBwfp1ZSRDgxaCzANMozxuFctLGETG3AoOgxsZ1ATu4l38rjCTjSIYzrs5CGyM
+3LPXQE6cWH1CvtZN5zR0plGYNTxh+L8+6I03tU4aCcPQ2ZdlX0qeaO28TT336C5g
+5uA5M+PZegvxfS/r2YzUWA+EyHBO6ouZalp23fUPYmNZEYd+9vxbXksbwf/O9alz
+9vx/g7EUWbO6jcqta2OE
+=IqLz
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
