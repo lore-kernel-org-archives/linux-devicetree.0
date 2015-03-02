@@ -1,67 +1,81 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
-Date: Mon, 02 Mar 2015 12:29:07 +0100
-Message-ID: <87vbij1vuk.fsf@free.fr>
-References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
-	<87385r3uk9.fsf@free.fr> <20150227214941.GB12821@x1>
-	<87sidq3ox8.fsf@free.fr> <20150302083019.GD31325@x1>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Subject: [PATCH v2 0/5] arm-cci400: PMU monitoring support on ARM64
+Date: Mon,  2 Mar 2015 11:29:09 +0000
+Message-ID: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150302083019.GD31325@x1> (Lee Jones's message of "Mon, 2 Mar
-	2015 08:30:19 +0000")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, kernel@stlinux.com, devicetree@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: nico@linaro.org, b.zolnierkie@samsung.com, kgene@kernel.org, a.kesavan@samsung.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liviu.Dudau@arm.com, Lorenzo.Pieralisi@arm.com, Pawel.Moll@arm.com, olof@lixom.net, Sudeep.Holla@arm.com, Punit.Agrawal@arm.com, Will.Deacon@arm.com, Catalin.Marinas@arm.com, "Suzuki K. Poulose" <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
 
-> On Sat, 28 Feb 2015, Robert Jarzmik wrote:
->
->> Lee Jones <lee.jones@linaro.org> writes:
->>     it doesn't specify which usecase is not covered by CLK_IGNORE_UNUSED, it
->>     says, up to my understanding, that is it another way to have to
->>     CLK_IGNORE_UNUSED flag applied.
->
-> Well that is exactly what we're doing.  Is there an issue with that?
->
-> This is a way to do it at a platform level.  It means we can support
-> multiple platforms where clocksources have been switched around
-> without writing new driver code in drivers/clk/st.
->
-> If you have something else in mind, let me know.
->
->>  2) I still fail to see why this is necessary
->>     IOW why declaring the mandatory always-on clocks with the proper flag should
->>     be augmented with a new clock list. Isn't the existing flag the generic way
->>     ?
->
-> I'm not sure what you mean by this, would you be able to expland a
-> little?
->
->> I might not understand the real motivation behind that of course, that's why I'm
->> asking.
->
-> Please bear in mind that we don't supply our clocks statically.  All
-> of the information is extracted from DT, so if the always-on
-> information does reside in there, where do you propose it comes from?
+This series enables the PMU monitoring support for CCI400 on ARM64.
+The existing CCI400 driver code is a mix of PMU driver and the MCPM
+driver code. The MCPM driver is only used on ARM(32) and contains
+arm32 assembly and hence can't be built on ARM64. This patch splits
+the code to
 
-I thought the standard clock binding provided a way to set this flag. Now I
-crosschecked the binding, it doesn't ...
+ - ARM_CCI400_PORT_CTRL driver - depends on ARM && V7
+ - ARM_CCI400_PMU driver
 
-My point was I didn't want the flag to be settable from 2 different places,
-where consistency was to be kept across different device-tree leafs.
+Accessing the Peripheral ID2 register(PID2) on CCI-400, to detect
+the revision of the chipset, is a secure operation. Hence, it prevents
+us from running this on non-secure platforms. The issue is overcome by
+explicitly mentioning the revision number of the CCI PMU in the device tree
+binding. The device-tree binding has been updated with the new bindings.
 
-> We could just write this code inside our own driver and apply the
-> CLK_IGNORE_UNUSED at a local level, but that's not the generic
-> solution I am searching for.
+i.e,=09arm-cci-400-pmu,r0 =3D> revision 0
+=09arm-cci-400-pmu,r1 =3D> revision 1
+=09arm-cci-400-pmu =3D> (old) DEPRECATED
 
-All right, I'm convinced now I undertand the flag was not settable from
-devicetree binding before this patchset.
+The old binding has been DEPRECATED and must be used only on ARM32
+system with secure access. We don't have a reliable dynamic way to detect
+if the system is running secure. This series tries to use the best safe
+method by relying on the availability of MCPM(as it was prior to the series=
+).
+It is upto the MCPM platform driver to decide, if the system is secure befo=
+re
+it goes ahead and registers its drivers and pokes the CCI. This series does=
+n't
+address/solve the problem of MCPM. I will be happy to use a better approach=
+,
+if there is any.
 
-You can add to patch 3/4 :
-Reviewed-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Tested on (non-secure)TC2 and Juno.
 
--- 
-Robert
+Change since V1 (Suggestions from Nicolas Pitre):
+
+ - Split Patch 2 to separate the 'PMU' abstraction(now Patch 2/5)
+   from the introduction of a new device-tree binding(now Patch 3/5)
+ - Rename
+=09ARM_CCI400_MCPM =3D> ARM_CCI400_PORT_CTRL
+=09CCI400_MCPM_PORTS_DATA =3D> CCI400_PORTS_DATA
+ - Select ARM_CCI400_COMMON for ARM_CCI400_PORT_CTRL
+ - Better documentation in the git commit log about the ARM_CCI config.
+ - Move the 'pr_info' to its apporpriate patch.
+
+Suzuki K. Poulose (5):
+  arm-cci: Rearrange code for splitting PMU vs driver code
+  arm-cci: Abstract the CCI400 PMU speicific definitions
+  arm-cci: Get rid of secure transactions for PMU driver
+  arm-cci: Split the code for PMU vs driver support
+  arm-cci: Fix CCI PMU event validation
+
+ Documentation/devicetree/bindings/arm/cci.txt |    7 +-
+ arch/arm/include/asm/arm-cci.h                |   42 +++
+ arch/arm/mach-exynos/Kconfig                  |    2 +-
+ arch/arm/mach-vexpress/Kconfig                |    4 +-
+ arch/arm64/include/asm/arm-cci.h              |   27 ++
+ drivers/bus/Kconfig                           |   27 +-
+ drivers/bus/arm-cci.c                         |  483 ++++++++++++++-------=
+----
+ include/linux/arm-cci.h                       |    9 +-
+ 8 files changed, 383 insertions(+), 218 deletions(-)
+ create mode 100644 arch/arm/include/asm/arm-cci.h
+ create mode 100644 arch/arm64/include/asm/arm-cci.h
+
+--=20
+1.7.9.5
