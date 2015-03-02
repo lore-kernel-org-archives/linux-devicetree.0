@@ -1,39 +1,35 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: simple-card: Add support for samplerate
- and samplewidth constraints
-Date: Mon, 02 Mar 2015 13:35:04 -0600
-Message-ID: <54F4BB68.4030501@linux.intel.com>
-References: <cover.1425303942.git.jsarha@ti.com> <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
+From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
+Date: Mon, 2 Mar 2015 11:35:04 -0800
+Message-ID: <20150302113504.59dff34c8261c9c002aebf5f@linux-foundation.org>
+References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
+	<1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
+	<20150223135044.108ea32a65063a50aa36a309@linux-foundation.org>
+	<1425284436.8684.11.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1425284436.8684.11.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tianping Fang <tianping.fang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jyri,
+On Mon, 2 Mar 2015 16:20:36 +0800 Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 
-On 3/2/15 8:14 AM, Jyri Sarha wrote:
->
->   Optional dai-link subnode properties:
->
-> +- samplewidth-constraints		: List of integers describing supported
-> +					  sample widths in number of bits.
+> > WARNING: DT compatible string "mediatek,mt6397-rtc" appears un-documented -- check ./Documentation/devicetree/bindings/
+> > #488: FILE: drivers/rtc/rtc-mt6397.c:334:
+> > +	{ .compatible = "mediatek,mt6397-rtc", },
+> > 
+> > 
+> Do you include patch "[PATCH 1/2] dt: bindings: Add Mediatek RTC driver
+> binding document" in this series ?
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/320425.html
+> 
+> I think this warning shouldn't happen if include this patch.
 
-There are quite a few platforms where the number of bits for valid audio 
-bits differs from the number of bits per slot, e.g. 24 bits with 25 bit 
-slots, or 24 bits in 32 bit slots. How would this be represented? This 
-concept is present for the TDM case but not the simple one.
--Pierre
-
-> +- rate-constraints			: List of integers describing supported
-> +					  sample samplerates in Hz.
->   - format				: CPU/CODEC common audio format.
->   					  "i2s", "right_j", "left_j" , "dsp_a"
-
+I can't find that patch on rtc-linux or linux-kernel.  Resend, please?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
