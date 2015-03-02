@@ -1,72 +1,44 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3 3/7] of: Document {little,big,native}-endian bindings
-Date: Mon, 2 Mar 2015 06:56:20 -0800
-Message-ID: <CAJiQ=7DQ6CRWddii_9HZqH0a_1ixos6FBQRzb+HM+YAh1jmkBA@mail.gmail.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com>
- <1416872182-6440-4-git-send-email-cernekee@gmail.com> <54F4624D.6000909@hurleysoftware.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: 0.led_name 2.other.led.name in /sysfs Re: [PATCH/RFC v11 01/20]
+ leds: flash: document sysfs interface
+Date: Mon, 2 Mar 2015 16:12:05 +0100
+Message-ID: <20150302151205.GA10376@amd>
+References: <1424276441-3969-2-git-send-email-j.anaszewski@samsung.com>
+ <20150218224747.GA3999@amd>
+ <20150219090204.GI3915@valkosipuli.retiisi.org.uk>
+ <20150219214043.GB29875@kroah.com>
+ <54E6E89B.4050404@samsung.com>
+ <20150220153616.GB18111@kroah.com>
+ <20150220205738.GA28995@amd>
+ <20150221105733.GO3915@valkosipuli.retiisi.org.uk>
+ <54F0806E.2040309@samsung.com>
+ <20150302125414.GS6539@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F4624D.6000909-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150302125414.GS6539@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Greg KH <greg@kroah.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 2, 2015 at 5:14 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
-> On 11/24/2014 06:36 PM, Kevin Cernekee wrote:
->> These apply to newly converted drivers, like serial8250/libahci/...
->> The examples were adapted from the regmap bindings document.
->>
->> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
->>  1 file changed, 60 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/common-properties.txt
->>
->> diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
->> new file mode 100644
->> index 0000000..21044a4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/common-properties.txt
->> @@ -0,0 +1,60 @@
->> +Common properties
->> +
->> +The ePAPR specification does not define any properties related to hardware
->> +byteswapping, but endianness issues show up frequently in porting Linux to
->> +different machine types.  This document attempts to provide a consistent
->> +way of handling byteswapping across drivers.
->> +
->> +Optional properties:
->> + - big-endian: Boolean; force big endian register accesses
->> +   unconditionally (e.g. ioread32be/iowrite32be).  Use this if you
->> +   know the peripheral always needs to be accessed in BE mode.
->> + - little-endian: Boolean; force little endian register accesses
->> +   unconditionally (e.g. readl/writel).  Use this if you know the
->> +   peripheral always needs to be accessed in LE mode.  This is the
->> +   default.
->
-> There is a fundamental problem with specifying the default in DT bindings.
-> How can drivers which are currently native-endian support big-endian?
->
-> If the driver is converted to support big-endian, every previous
-> devicetree will be invalid with the new kernel (because those devicetrees
-> don't specify 'native-endian').
->
-> IOW, consider if the default were 'native-endian'. How would the 8250
-> driver support existing devicetrees?
+Hi!
 
-Correct.  This scheme is intended for drivers like 8250 and libahci
-which currently default to little-endian by virtue of using
-readl/writel for MMIO accesses.  Drivers that default to native-endian
-should specify that in their bindings documents, similar to
-Documentation/devicetree/bindings/regmap/regmap.txt.
+> > Of course the relevant sysfs group could be initialized only with
+> > the needed number of sync leds attributes, but still this is less
+> > than optimal design.
+> > 
+> > It looks like this interface indeed doesn't fit for sysfs.
+> > 
+> > I am leaning towards removing the support for synchronized flash LEDs
+> > from the LED subsystem entirely and leave it only to V4L2.
+> 
+> Perfectly fine for me as well, I guess the synchronised strobe has mostly
+> use on V4L2. It could always be added later on if needed.
 
-In practice we might not see too many cases of native-endian drivers
-that need to be converted to work in forced big-endian mode anyway,
-because most uses of the __raw_* accessors are found in SoC-specific
-code.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Makes sense...
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
