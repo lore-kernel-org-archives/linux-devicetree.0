@@ -1,126 +1,85 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
- driver support
-Date: Mon, 2 Mar 2015 09:04:37 +0000
-Message-ID: <d7c0fad223754d6ebb3779312459915a@BL2FFO11FD010.protection.gbl>
-References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
- <3236720.MHeqOodrCV@wuerfel>
- <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
- <1967130.oYyZRWCcEF@wuerfel>
- <add9a23928b44aa48965e993bb17f53b@BL2FFO11FD027.protection.gbl>
- <20150212093445.GM21387@intel.com>
- <ed439c7a25d0465d9dbf4c06987d42a1@BY2FFO11FD018.protection.gbl>
- <20150220062934.GX21387@intel.com> <54E70F97.30908@xilinx.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 0/3] Add ktd2692 Flash LED driver
+Date: Mon, 2 Mar 2015 11:15:30 +0200
+Message-ID: <20150302091530.GQ6539@valkosipuli.retiisi.org.uk>
+References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
+ <54F02DF5.1000706@samsung.com>
+ <54F40DDF.8070708@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54E70F97.30908@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, Michal Simek <michals@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54F40DDF.8070708@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cooloney@gmail.com, rpurdie@rpsys.net, treding@nvidia.com, p.zabel@pengutronix.de, andrew@lunn.ch, gregkh@linuxfoundation.org, florian.vaussard@epfl.ch, arno@natisbad.org, kuninori.morimoto.gx@renesas.com, hytszk@gmail.com, antonynpavlov@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, sw0312.kim@samsung.com, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Ping !
+H Ingi,
 
-> -----Original Message-----
-> From: Michal Simek [mailto:michal.simek@xilinx.com]
-> Sent: Friday, February 20, 2015 4:13 PM
-> To: Vinod Koul; Appana Durga Kedareswara Rao
-> Cc: Arnd Bergmann; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; Srikanth Vemula; linux-
-> kernel@vger.kernel.org; Srikanth Thokala; dmaengine@vger.kernel.org;
-> robh+dt@kernel.org; Anirudha Sarangi; grant.likely@linaro.org;
-> dan.j.williams@intel.com
-> Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
-> driver support
->
-> Hi Vinod,
->
-> On 02/20/2015 07:29 AM, Vinod Koul wrote:
-> > On Sat, Feb 14, 2015 at 02:21:52PM +0000, Appana Durga Kedareswara Rao
-> wrote:
-> >> Hi Vinod,
+On Mon, Mar 02, 2015 at 04:14:39PM +0900, Ingi Kim wrote:
+> Hi Jacek
+>=20
+> On 2015=EB=85=84 02=EC=9B=94 27=EC=9D=BC 17:42, Jacek Anaszewski wrot=
+e:
+> > Hi Ingi,
+> >=20
+> > On 02/27/2015 02:01 AM, Ingi Kim wrote:
+> >> This patch supports KTD2692 flash LED driver
 > >>
+> >> Ingi Kim (3):
+> >>    of: Add vendor prefix for Kinetic technologies
+> >>    leds: ktd2692: add device tree bindings for ktd2692
+> >>    leds: Add ktd2692 flash LED driver
 > >>
-> >>> -----Original Message-----
-> >>> From: Vinod Koul [mailto:vinod.koul@intel.com]
-> >>> Sent: Thursday, February 12, 2015 3:05 PM
-> >>> To: Appana Durga Kedareswara Rao
-> >>> Cc: Arnd Bergmann; linux-arm-kernel@lists.infradead.org;
-> >>> devicetree@vger.kernel.org; Srikanth Vemula; linux-
-> >>> kernel@vger.kernel.org; Srikanth Thokala; dmaengine@vger.kernel.org;
-> >>> robh+dt@kernel.org; Michal Simek; Anirudha Sarangi;
-> >>> grant.likely@linaro.org; dan.j.williams@intel.com
-> >>> Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access
-> >>> Engine driver support
-> >>>
-> >>> On Thu, Jan 29, 2015 at 11:24:41AM +0000, Appana Durga Kedareswara
-> >>> Rao
-> >>> wrote:
-> >>>>>  Earlier in the driver we are embedding dma_slave_config into
-> >>>>> custom structs But Lars suggested to modify it. please refer to
-> >>>>> the below thread for more details.
-> >>>>>  http://www.spinics.net/lists/dmaengine/msg00010.html
-> >>>>>
-> >>>>>  And later we thought of creating a separate private member in
-> >>>>> dma_slave_config for sharing additional configuration between
-> >>>>> slave device and dma engine Or a new dma_ctrl_cmd like
-> >>>>>
-> >>>
-> FSLDMA_EXTERNAL_START(http://www.kernelhub.org/?msg=405535&p=2 )
-> >>>>>
-> >>>>>  Finally Vinod was ok with the existing suggestion so we dropped
-> >>>>> the above thought.
-> >>>>>
-> >>>>>  @Vinod : Could you please comment on this.
-> >>> FSLDMA_EXTERNAL_START has been removed, and you cna use the
-> removal
-> >>> as a guidance of how to solve your issue
-> >>>
+> >>   .../devicetree/bindings/leds/leds-ktd2692.txt      |   19 ++
+> >>   .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+> >>   drivers/leds/Kconfig                               |    8 +
+> >>   drivers/leds/Makefile                              |    1 +
+> >>   drivers/leds/leds-ktd2692.c                        |  245 ++++++=
+++++++++++++++
+> >>   5 files changed, 274 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/leds/leds-k=
+td2692.txt
+> >>   create mode 100644 drivers/leds/leds-ktd2692.c
 > >>
-> > Please limit you mailer to set wrap at 80 chars, otherwise it becomes
-> > unreadable
-> >
-> >> The current VDMA driver that got merged in the open source and the
-> >> current patch (dma: xilinx dma v4) Srikanth T submitted both contains
-> >> the Similar implementation that you pointed as above(I mean similar
-> >> to the free scale dma driver).
-> >>
-> >> The discussion starts here is why we need the header
-> >> file(Xilinx_dma.h) in the include/linux/amba/Xilinx_dma.h  folder.
-> >>
-> >> Like for FSL DMA it is got defined (fsl_dma_external_start) as a
-> >> function prototype in include/linux/fsldma.h And it is being getting
-> >> used in the drivers/misc/carma/carma-fpga-program.c
-> >>
-> >> Similarly in the Xilinx VDMA driver(xilinx_vdma_channel_set_config )
-> >> defined as a function prototype in the
-> >> include/linux/amba/xilinx_dma.h And is being used by Xilinx videos
-> >> drivers.  Those video driver need to use the
-> >> (xilinx_vdma_channel_set_config) which requires this global header file.
-> >>
-> >> Could you please suggest us whether that header file (Xilinx_dma.h)
-> >> should be there  in include/linux/amba or we should move it to
-> include/linux?
-> >> And any functional comments for this v4 patch?
-> > Let me ask you a question, what is the relation of xilinx_dma with amba?
-> >
-> > If none then only include/linux/ seems to be the right choice. If not
-> > then amba maybe okay but you need to provide justfication why it should
-> be in amba?
->
-> I see your point. I think there is real reason to have this header in amba.
-> The reason for that was that xilinx_dma.h was added there.
->
-> Anyway there is include/linux/dma/ folder. Is it ok to move xilinx_dma.h
-> there too? The same with this dma one.
->
-> Thanks,
-> Michal
->
+> >=20
+> > In your device tree binding documentation there is torch-gpio menti=
+oned,
+> > but you seem not to use it in the driver.
+> >=20
+> > We have already LED Flash class (/drivers/leds/led-class-flash.c) f=
+or
+> > this type of devices, which handles both torch and flash modes
+> > (flash_strobe sysfs attribute is provided for strobing the flash).
+> >=20
+> > The reference drivers using LED Flash class are still pending [1], =
+but I
+> > think that at least leds-aat1290 driver is almost ready for merging=
+=2E
+> > It controls very similar device to yours.
+> >=20
+> > Another advantage of using LED Flash class is that it has been desi=
+gned
+> > to be compatible with Video for Linux 2 subsystem, which will allow=
+ for registering LED Flash class devices as a V4L2 sub-devices.
+> >=20
+> > Adding Sakari.
+> >=20
+>=20
+> Ok, I'll check LED Flash class, and add torch-gpio
 
+Many LED flash chips include a hardware pin for torch control but few r=
+eally
+need it. If you don't, i.e. you can implement the torch using the contr=
+ol bus
+instead, I think I'd probably drop it from the chip's DT bindings.
 
+I wonder what others think.
 
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+--=20
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
