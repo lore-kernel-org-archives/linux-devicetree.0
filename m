@@ -1,100 +1,91 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH RFC 0/6] Use DRM component API in tilcdc to connect to
- tda998x
-Date: Mon, 2 Mar 2015 13:34:14 +0200
-Message-ID: <54F44AB6.1080607@ti.com>
-References: <cover.1424961754.git.jsarha@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
+Date: Mon, 2 Mar 2015 11:37:18 +0000
+Message-ID: <20150302113718.GG32347@x1>
+References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
+ <87385r3uk9.fsf@free.fr>
+ <20150227214941.GB12821@x1>
+ <87sidq3ox8.fsf@free.fr>
+ <20150302083019.GD31325@x1>
+ <87vbij1vuk.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="QoNAV6trRMMMvJe0mBfj00PhsVTAW9wOp"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1424961754.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>
-Cc: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, detheridge@ti.com, moinejf@free.fr, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87vbij1vuk.fsf@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, kernel@stlinux.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---QoNAV6trRMMMvJe0mBfj00PhsVTAW9wOp
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Mon, 02 Mar 2015, Robert Jarzmik wrote:
 
-Hi Rob,
-
-You weren't cc'd to this series. I don't know if you're still interested
-in tilcdc, but if you are, any comments appreciated =3D).
-
- Tomi
-
-On 26/02/15 16:55, Jyri Sarha wrote:
-> Remove tilcdc slave support and connect to tda998x trough its
-> component DRM API. For dtb backward compatibility the code creates at
-> boot time a DT overlay based on the earlier binding. The overlay
-> conforms to the new graph based binding.
+> Lee Jones <lee.jones@linaro.org> writes:
 >=20
-> The first patch is just a bugfix and can be applied or dropped
-> independenty.
+> > On Sat, 28 Feb 2015, Robert Jarzmik wrote:
+> >
+> >> Lee Jones <lee.jones@linaro.org> writes:
+> >>     it doesn't specify which usecase is not covered by CLK_IGNORE_=
+UNUSED, it
+> >>     says, up to my understanding, that is it another way to have t=
+o
+> >>     CLK_IGNORE_UNUSED flag applied.
+> >
+> > Well that is exactly what we're doing.  Is there an issue with that=
+?
+> >
+> > This is a way to do it at a platform level.  It means we can suppor=
+t
+> > multiple platforms where clocksources have been switched around
+> > without writing new driver code in drivers/clk/st.
+> >
+> > If you have something else in mind, let me know.
+> >
+> >>  2) I still fail to see why this is necessary
+> >>     IOW why declaring the mandatory always-on clocks with the prop=
+er flag should
+> >>     be augmented with a new clock list. Isn't the existing flag th=
+e generic way
+> >>     ?
+> >
+> > I'm not sure what you mean by this, would you be able to expland a
+> > little?
+> >
+> >> I might not understand the real motivation behind that of course, =
+that's why I'm
+> >> asking.
+> >
+> > Please bear in mind that we don't supply our clocks statically.  Al=
+l
+> > of the information is extracted from DT, so if the always-on
+> > information does reside in there, where do you propose it comes fro=
+m?
 >=20
-> Jyri Sarha (6):
->   drm/tilcdc: Fix module unloading
->   drm/tilcdc: Remove tilcdc slave support for tda998x driver
->   drm/tilcdc: Add support for external compontised DRM encoder
->   drm/tilcdc: Add DRM_TILCDC_INIT for "ti,tilcdc,slave" binding support=
-
->   drm/tilcdc: Force building of DRM_TILCDC_INIT
->   ARM: dts: am335x-boneblack: Use new binding for HDMI
+> I thought the standard clock binding provided a way to set this flag.=
+ Now I
+> crosschecked the binding, it doesn't ...
 >=20
->  .../devicetree/bindings/drm/tilcdc/slave.txt       |  18 -
->  .../devicetree/bindings/drm/tilcdc/tilcdc.txt      |  27 ++
->  arch/arm/boot/dts/am335x-boneblack.dts             |  20 +-
->  drivers/gpu/drm/Makefile                           |   1 +
->  drivers/gpu/drm/tilcdc/Kconfig                     |   6 +
->  drivers/gpu/drm/tilcdc/Makefile                    |   4 +-
->  drivers/gpu/drm/tilcdc/tilcdc_boot_init.c          | 270 +++++++++++++=
-+
->  drivers/gpu/drm/tilcdc/tilcdc_crtc.c               |  36 +-
->  drivers/gpu/drm/tilcdc/tilcdc_drv.c                |  69 ++--
->  drivers/gpu/drm/tilcdc/tilcdc_drv.h                |   3 +-
->  drivers/gpu/drm/tilcdc/tilcdc_external.c           | 105 ++++++
->  drivers/gpu/drm/tilcdc/tilcdc_external.h           |  24 ++
->  drivers/gpu/drm/tilcdc/tilcdc_slave.c              | 411 -------------=
---------
->  drivers/gpu/drm/tilcdc/tilcdc_slave.h              |  26 --
->  drivers/gpu/drm/tilcdc/tilcdc_slave_convert.dts    |  70 ++++
->  15 files changed, 601 insertions(+), 489 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/drm/tilcdc/slave.=
-txt
->  create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_boot_init.c
->  create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_external.c
->  create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_external.h
->  delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave.c
->  delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave.h
->  create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave_convert.dts
+> My point was I didn't want the flag to be settable from 2 different p=
+laces,
+> where consistency was to be kept across different device-tree leafs.
 >=20
+> > We could just write this code inside our own driver and apply the
+> > CLK_IGNORE_UNUSED at a local level, but that's not the generic
+> > solution I am searching for.
+>=20
+> All right, I'm convinced now I undertand the flag was not settable fr=
+om
+> devicetree binding before this patchset.
+>=20
+> You can add to patch 3/4 :
+> Reviewed-by: Robert Jarzmik <robert.jarzmik@free.fr>
 
+Until told otherwise, I'm going to apply this onto the other
+patchset.  This one has already been NACKed, due to DT push-back.
 
-
---QoNAV6trRMMMvJe0mBfj00PhsVTAW9wOp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU9Eq2AAoJEPo9qoy8lh71EsAP/3yFfFLvrDgzVHrhJ6EM2w6e
-IMqvwwxfUxEtxSUC/vv6sswdlJcoj+ioE3KZphHBoaXICsula9Y3vmzKtdvVZsdu
-+/JxoO8vV8Spnas9aliX7IATtJnj4tLexZOlGByUlFHGlHz11CTbFd+FAybBXlYf
-x68XsD3gLMuwW4xUSJ0idihu84AcWiCn12G+I7jjvY8/hYoysnBC5EoQI2FnWZ7n
-U+1lojpWzACwPJdxWOL5xtvJseajxYeR1rE7dspTeyTdsSuEEY+E2o6geFEGyxOn
-ChyS+VmkIMCjlxdvAUIyuGsTF/d8Lm9DSUNhSus59EAhQ5/4SDQhYrbcELqY66ZA
-tiSKTgiGXNndiMWp1C3ezp4JvPdJ5CMAUEWjR30e7RIzSODcaufiuZMlnGOqCeTr
-MoRtZqvACGcCMK54SBAlAIXBz1jxUGMV1TM+J6wp4FDeg3J8H7BnalIfwQk8G0d9
-vrpRuSWaFAvvvtjPRPahIiIoosUFh/YjIo3JI3Z4nLX0R4f79FTdhnCIKZ90Ifpv
-Ji5ifWcK/NlZ1AdSpXWCeXXXywbzqYXVF29ZR46KvDvcv+jjdj1IYJO5fxxTdmj+
-/+0kEhE/2OeSheCSoeHCQa4eTmi2q37JKLLrO9fqBg4wWpX7VF1GVKMxj9Blijgs
-5Jpf8M2z27OjsNwbl0dV
-=PqWs
------END PGP SIGNATURE-----
-
---QoNAV6trRMMMvJe0mBfj00PhsVTAW9wOp--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
