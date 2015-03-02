@@ -1,35 +1,70 @@
-From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH 2/2] rtc: mediatek: Add MT63xx RTC driver
-Date: Mon, 2 Mar 2015 11:35:04 -0800
-Message-ID: <20150302113504.59dff34c8261c9c002aebf5f@linux-foundation.org>
-References: <1422437276-41334-1-git-send-email-eddie.huang@mediatek.com>
-	<1422437276-41334-3-git-send-email-eddie.huang@mediatek.com>
-	<20150223135044.108ea32a65063a50aa36a309@linux-foundation.org>
-	<1425284436.8684.11.camel@mtksdaap41>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] Input: bcm-keypad: Add Broadcom keypad controller
+Date: Mon, 2 Mar 2015 11:37:57 -0800
+Message-ID: <54F4BC15.4020205@broadcom.com>
+References: <sbranden@broadcom.com> <1425141357-7807-1-git-send-email-sbranden@broadcom.com> <1425141357-7807-3-git-send-email-sbranden@broadcom.com> <20150228221022.GA36282@dtor-ws> <20150228221518.GB36282@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425284436.8684.11.camel@mtksdaap41>
+In-Reply-To: <20150228221518.GB36282@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tianping Fang <tianping.fang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2 Mar 2015 16:20:36 +0800 Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+Hi Dmitry,
 
-> > WARNING: DT compatible string "mediatek,mt6397-rtc" appears un-documented -- check ./Documentation/devicetree/bindings/
-> > #488: FILE: drivers/rtc/rtc-mt6397.c:334:
-> > +	{ .compatible = "mediatek,mt6397-rtc", },
-> > 
-> > 
-> Do you include patch "[PATCH 1/2] dt: bindings: Add Mediatek RTC driver
-> binding document" in this series ?
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/320425.html
-> 
-> I think this warning shouldn't happen if include this patch.
+I don't see the need for a check of the clock in bcm_kp_start or stop. 
+See comment below.
 
-I can't find that patch on rtc-linux or linux-kernel.  Resend, please?
+On 15-02-28 02:15 PM, Dmitry Torokhov wrote:
+> On Sat, Feb 28, 2015 at 02:10:22PM -0800, Dmitry Torokhov wrote:
+>> Hi Scott,
+>>
+>> On Sat, Feb 28, 2015 at 08:35:57AM -0800, Scott Branden wrote:
+>>> +	/* Enable clock */
+>>> +
+>>> +	kp->clk = devm_clk_get(&pdev->dev, "peri_clk");
+>>> +	if (IS_ERR(kp->clk)) {
+>>> +		dev_info(&pdev->dev,
+>>> +			"No clock specified. Assuming it's enabled\n");
+>>
+>> I was doing the final pass before applying and I think that this is not
+>> quite correct, as it does not handle -EPROBE_DEFER properly which is
+>> quite common. I think we should do something like this:
+>>
+>> 		error = PTR_ERR(kp->clk);
+>> 		if (error != -ENOENT) {
+>> 			if (error != -EPROBE_DEFER)
+>> 				dev_err(.. "Failed to get clock" ...);
+>> 			return error;
+>> 		}
+>> 		dev_dbg(... "No clock specified" ...);
+>>
+>> No need to resubmit if you are OK with this, I can make the change
+>> locally.
+>
+> Hmm, also bcm_kp_start() and bcm_kp_stop() should check if kp->clk is
+> valid before trying to enable/disable it.
+>
+I checked and other keyboard drivers do not check this.  I return an 
+error in bcm_kp_start if the clk enable fails.  On stop, if the clk is 
+not valid something is really, really wrong as well.
+>>
+>>> +	}
+>>> +	else {
+>>
+>> Checkpach should have warned you that it should have been "} else {";
+>> I'll fix it up locally along with few other cosmetic changes and
+>> dropping a few extra headers.
+>>
+>> Thanks.
+>>
+>> --
+>> Dmitry
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
