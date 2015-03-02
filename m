@@ -1,115 +1,131 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 2/4] i2c: sunxi: Add Reduced Serial Bus (RSB)
- DT bindings documentation
-Date: Mon,  2 Mar 2015 16:24:44 +0800
-Message-ID: <1425284686-5116-3-git-send-email-wens@csie.org>
-References: <1425284686-5116-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: "R, Vignesh" <vigneshr@ti.com>
+Subject: Re: [PATCH 1/2] ARM: OMAP2: hwmod: AM43XX: Add hwmod support for
+ HDQ-1W
+Date: Mon, 2 Mar 2015 13:57:31 +0530
+Message-ID: <54F41EF3.6080302@ti.com>
+References: <1425029057-5075-1-git-send-email-vigneshr@ti.com> <alpine.DEB.2.02.1503012305550.9987@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVN42CTQKGQEEIIBFFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1425284686-5116-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1503012305550.9987@utopia.booyaka.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Evgeniy Polyakov <zbr@ioremap.net>, Jonathan Corbet <corbet@lwn.net>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, NeilBrown <neilb@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reduced Serial Bus (RSB) is an SMBus like bus used to communicate
-with some PMICs (like the AXP223) or other peripherals.
+Hi,
 
-The RSB DT bindings are pretty much the same as the one defined for
-the marvell's mv64xxx controller, with the additional RSB specific
-"allwinner,rsb-hw-addr" property for slave device nodes.
+On 3/2/2015 4:39 AM, Paul Walmsley wrote:
+> Hi
+> 
+> On Fri, 27 Feb 2015, Vignesh R wrote:
+> 
+>> From: "Poddar, Sourav" <sourav.poddar@ti.com>
+>>
+>> This patch adds hwmod data for hdq/1w driver on AM43xx.
+>>
+>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+>> [vigneshr@ti.com: Ported patch to v4.0-rc1]
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>>  arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 36 ++++++++++++++++++++++++++++++
+>>  arch/arm/mach-omap2/prcm43xx.h             |  1 +
+>>  2 files changed, 37 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+>> index 8eb85925e444..d4f1df28475c 100644
+>> --- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+>> @@ -20,6 +20,7 @@
+>>  #include "omap_hwmod_33xx_43xx_common_data.h"
+>>  #include "prcm43xx.h"
+>>  #include "omap_hwmod_common_data.h"
+>> +#include "hdq1w.h"
+>>  
+>>  
+>>  /* IP blocks */
+>> @@ -516,6 +517,33 @@ static struct omap_hwmod am43xx_dss_rfbi_hwmod = {
+>>  	.parent_hwmod	= &am43xx_dss_core_hwmod,
+>>  };
+>>  
+>> +/* HDQ1W */
+>> +static struct omap_hwmod_class_sysconfig am43xx_hdq1w_sysc = {
+>> +	.rev_offs       = 0x0000,
+>> +	.sysc_offs      = 0x0014,
+>> +	.syss_offs      = 0x0018,
+>> +	.sysc_flags     = (SYSC_HAS_SOFTRESET),
+> 
+> This is missing the SYSC_HAS_AUTOIDLE bit.  Is this intentional?
 
-There are 2 types of addresses for RSB devices, a hardware address
-and a runtime (software) configurable address. The former is only
-used when configuring the latter. All read/write accesses use the
-runtime address.
+Sorry.. my bad.. I didn't observe this while porting the patch.
+I will fix this and repost.
 
-It would seem straightforward to use the hardware address in the
-DT bindings as the slave's address. However this will not work as
-the hardware address is 12 bits wide, and at least 1 device, the
-AC100 audio codec, has the highest bit set. This address would be
-incompatible with I2C (7 or 10 bit addresses) and likely rejected.
+Regards
+Vignesh
 
-Hence this binding uses statically allocated (by the author of the
-DT) runtime addresses for the slave's "reg" property. The hardware
-address is put in a separete named property. When writing a new DT,
-the author must take care to not have multiple slave devices use
-the same address. It is recommended to follow whatever conventions
-the hardware vendor uses.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- .../devicetree/bindings/i2c/i2c-sunxi-rsb.txt      | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sunxi-rsb.txt
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-sunxi-rsb.txt b/Documentation/devicetree/bindings/i2c/i2c-sunxi-rsb.txt
-new file mode 100644
-index 000000000000..9b1f2dd2e17a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-sunxi-rsb.txt
-@@ -0,0 +1,54 @@
-+
-+* Allwinner RSB (Reduced Serial Bus) controller
-+
-+Required properties :
-+
-+ - reg             : Offset and length of the register set for the device.
-+ - compatible      : Should be "allwinner,sun8i-a23-rsb".
-+ - interrupts      : The interrupt line connected to the RSB peripheral.
-+ - clocks          : The gate clk connected to the RSB peripheral.
-+ - resets          : The reset line connected to the RSB peripheral.
-+ - #address-cells  : always 1 (for RSB runtime addresses)
-+ - #size-cells     : always 0
-+
-+Optional properties :
-+
-+ - clock-frequency : Desired RSB bus clock frequency in Hz. If not set
-+		     the default frequency is 100kHz. Maximum is 20MHz.
-+
-+An RSB device node may contain up to 15 child nodes each encoding an RSB
-+slave device.
-+
-+Slave device properties:
-+  Required properties:
-+   - reg           : The runtime address used to access the device.
-+   - allwinner,rsb-hw-addr : The RSB hardware address for the device. This
-+			     is only used when configuring the runtime
-+			     address of the device.
-+
-+  Valid runtime addresses - There are only 15 valid runtime addresses:
-+
-+      0x17, 0x2d, 0x3a, 0x4e, 0x59, 0x63, 0x74, 0x8b,
-+      0x9c, 0xa6, 0xb1, 0xc5, 0xd2, 0xe8, 0xff
-+
-+
-+Example:
-+
-+	rsb@01f03400 {
-+		compatible = "allwinner,sun8i-a23-rsb";
-+		reg = <0x01f03400 0x400>;
-+		interrupts = <0 39 4>;
-+		clocks = <&apb0_gates 3>;
-+		clock-frequency = <3000000>;
-+		resets = <&apb0_rst 3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		axp223: pmic@2d {
-+			compatible = "x-powers,axp223", "x-powers,axp221";
-+			reg = <0x2d>;
-+			allwinner,rsb-hw-addr = <0x3e3>;
-+
-+			/* ... */
-+		};
-+	};
--- 
-2.1.4
+> 
+>> +	.sysc_fields    = &omap_hwmod_sysc_type1,
+>> +};
+>> +
+>> +static struct omap_hwmod_class am43xx_hdq1w_hwmod_class = {
+>> +	.name   = "hdq1w",
+>> +	.sysc   = &am43xx_hdq1w_sysc,
+>> +	.reset	= &omap_hdq1w_reset,
+>> +};
+>> +
+>> +static struct omap_hwmod am43xx_hdq1w_hwmod = {
+>> +	.name           = "hdq1w",
+>> +	.class          = &am43xx_hdq1w_hwmod_class,
+>> +	.clkdm_name     = "l4ls_clkdm",
+>> +	.prcm = {
+>> +		.omap4 = {
+>> +			.clkctrl_offs = AM43XX_CM_PER_HDQ1W_CLKCTRL_OFFSET,
+>> +			.modulemode   = MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +};
+>> +
+>>  /* Interfaces */
+>>  static struct omap_hwmod_ocp_if am43xx_l3_main__l4_hs = {
+>>  	.master		= &am33xx_l3_main_hwmod,
+>> @@ -790,6 +818,13 @@ static struct omap_hwmod_ocp_if am43xx_l4_ls__dss_rfbi = {
+>>  	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>>  };
+>>  
+>> +static struct omap_hwmod_ocp_if am43xx_l4_ls__hdq1w = {
+>> +	.master         = &am33xx_l4_ls_hwmod,
+>> +	.slave          = &am43xx_hdq1w_hwmod,
+>> +	.clk            = "l4ls_gclk",
+>> +	.user           = OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>>  static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+>>  	&am33xx_l4_wkup__synctimer,
+>>  	&am43xx_l4_ls__timer8,
+>> @@ -889,6 +924,7 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+>>  	&am43xx_l4_ls__dss,
+>>  	&am43xx_l4_ls__dss_dispc,
+>>  	&am43xx_l4_ls__dss_rfbi,
+>> +	&am43xx_l4_ls__hdq1w,
+>>  	NULL,
+>>  };
+>>  
+>> diff --git a/arch/arm/mach-omap2/prcm43xx.h b/arch/arm/mach-omap2/prcm43xx.h
+>> index ad7b3e9977f8..48df3b55057e 100644
+>> --- a/arch/arm/mach-omap2/prcm43xx.h
+>> +++ b/arch/arm/mach-omap2/prcm43xx.h
+>> @@ -143,5 +143,6 @@
+>>  #define AM43XX_CM_PER_USB_OTG_SS1_CLKCTRL_OFFSET        0x0268
+>>  #define AM43XX_CM_PER_USBPHYOCP2SCP1_CLKCTRL_OFFSET	0x05C0
+>>  #define AM43XX_CM_PER_DSS_CLKCTRL_OFFSET		0x0a20
+>> +#define AM43XX_CM_PER_HDQ1W_CLKCTRL_OFFSET		0x04a0
+>>  
+>>  #endif
+>> -- 
+>> 1.9.1
+>>
+> 
+> 
+> - Paul
+> 
