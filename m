@@ -1,34 +1,67 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/4] leds: Let the binding document example for
- leds-gpio follow the gpio bindings
-Date: Mon, 2 Mar 2015 12:24:43 +0100
-Message-ID: <CACRpkdZGXQ0ktwLu80ALaQuwB_RFQjpHitiEp+vcnnb0Hv1mKg@mail.gmail.com>
-References: <1421876028-22799-1-git-send-email-o.schinagl@ultimaker.com>
-	<1421876028-22799-4-git-send-email-o.schinagl@ultimaker.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
+Date: Mon, 02 Mar 2015 12:29:07 +0100
+Message-ID: <87vbij1vuk.fsf@free.fr>
+References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
+	<87385r3uk9.fsf@free.fr> <20150227214941.GB12821@x1>
+	<87sidq3ox8.fsf@free.fr> <20150302083019.GD31325@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1421876028-22799-4-git-send-email-o.schinagl@ultimaker.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Olliver Schinagl <o.schinagl@ultimaker.com>, Bryan Wu <cooloney@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Alexander Shiyan <shc_work@mail.ru>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.ke>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150302083019.GD31325@x1> (Lee Jones's message of "Mon, 2 Mar
+	2015 08:30:19 +0000")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, kernel@stlinux.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 21, 2015 at 10:33 PM, Olliver Schinagl
-<o.schinagl@ultimaker.com> wrote:
+Lee Jones <lee.jones@linaro.org> writes:
 
-> From: Olliver Schinagl <oliver@schinagl.nl>
+> On Sat, 28 Feb 2015, Robert Jarzmik wrote:
 >
-> In the gpio bindings documents it is requested to use the marco's in
-> include/dt-bindings/gpio/gpio.h whenever possible. The gpios in the led
-> drivers don't seem to form an exception, so update the example in the
-> document bindings.
+>> Lee Jones <lee.jones@linaro.org> writes:
+>>     it doesn't specify which usecase is not covered by CLK_IGNORE_UNUSED, it
+>>     says, up to my understanding, that is it another way to have to
+>>     CLK_IGNORE_UNUSED flag applied.
 >
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Well that is exactly what we're doing.  Is there an issue with that?
+>
+> This is a way to do it at a platform level.  It means we can support
+> multiple platforms where clocksources have been switched around
+> without writing new driver code in drivers/clk/st.
+>
+> If you have something else in mind, let me know.
+>
+>>  2) I still fail to see why this is necessary
+>>     IOW why declaring the mandatory always-on clocks with the proper flag should
+>>     be augmented with a new clock list. Isn't the existing flag the generic way
+>>     ?
+>
+> I'm not sure what you mean by this, would you be able to expland a
+> little?
+>
+>> I might not understand the real motivation behind that of course, that's why I'm
+>> asking.
+>
+> Please bear in mind that we don't supply our clocks statically.  All
+> of the information is extracted from DT, so if the always-on
+> information does reside in there, where do you propose it comes from?
 
-Bryan: please merge this patch to the LED git tree.
+I thought the standard clock binding provided a way to set this flag. Now I
+crosschecked the binding, it doesn't ...
 
-Yours,
-Linus Walleij
+My point was I didn't want the flag to be settable from 2 different places,
+where consistency was to be kept across different device-tree leafs.
+
+> We could just write this code inside our own driver and apply the
+> CLK_IGNORE_UNUSED at a local level, but that's not the generic
+> solution I am searching for.
+
+All right, I'm convinced now I undertand the flag was not settable from
+devicetree binding before this patchset.
+
+You can add to patch 3/4 :
+Reviewed-by: Robert Jarzmik <robert.jarzmik@free.fr>
+
+-- 
+Robert
