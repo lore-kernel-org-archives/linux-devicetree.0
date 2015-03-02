@@ -1,96 +1,52 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v5 1/6] mfd: fsl imx25 Touchscreen ADC driver
-Date: Mon, 2 Mar 2015 20:12:01 +0100
-Message-ID: <20150302191201.GA26884@pengutronix.de>
-References: <1422108103-15052-1-git-send-email-mpa@pengutronix.de>
- <1422108103-15052-2-git-send-email-mpa@pengutronix.de>
- <20150217191438.GF19388@pengutronix.de>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] video: ARM CLCD: Added support for FBIOPAN_DISPLAY and
+ virtual y resolution
+Date: Mon, 2 Mar 2015 19:12:13 +0000
+Message-ID: <20150302191212.GT8656@n2100.arm.linux.org.uk>
+References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+ <1424898082-1522-2-git-send-email-arun.ramamurthy@broadcom.com>
+ <1425312509.3092.7.camel@arm.com>
+ <20150302161122.GP8656@n2100.arm.linux.org.uk>
+ <54F4B57F.3030306@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150217191438.GF19388@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Fabio Estevam <festevam@gmail.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-iio@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Denis Carikli <denis@eukrea.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, linux-input@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <54F4B57F.3030306@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 02, 2015 at 11:09:51AM -0800, Arun Ramamurthy wrote:
+> 
+> 
+> On 15-03-02 08:11 AM, Russell King - ARM Linux wrote:
+> >On Mon, Mar 02, 2015 at 04:08:29PM +0000, Pawel Moll wrote:
+> >>I'm not sure about this... The word "virtual" never works well with
+> >>device tree nodes defined as "hardware description".
+> >>
+> >>I understand what you're doing, but adding this property to the display
+> >>controller's node doesn't sound right. How does this describe hardware?
+> >>If anywhere, it's more like a job for the panel node?
+> >
+> I see what you are saying Pawel, I can follow Russell's recommendation of
+> adding a RAM size node called max-memory-available or something similar
+> >A better description (and implementation) would be to describe the size
+> >of the RAM available for video purposes.  The driver can then use the
+> >requested virtual X resolution to limit (and/or compute) the virtual Y
+> >resolution to allow Y panning/wrapping of the display.
+> >
+> 
+> In this scenario, where would I specify the virtual X resolution? I am
+> assuming it would be in the panel-timing node as Pawel suggested?
 
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+virtual X should default to real X if it's not set, otherwise it
+should come from the selected mode.
 
-Hi,
+Drivers which get this right are things like acornfb, where we've
+used ywrap scolling since it was merged.
 
-On Tue, Feb 17, 2015 at 08:14:38PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Markus,
->=20
-> On Sat, Jan 24, 2015 at 03:01:38PM +0100, Markus Pargmann wrote:
-> > +config MFD_MX25_TSADC
-> > +	tristate "Freescale i.MX25 integrated Touchscreen and ADC unit"
-> > +	select REGMAP_MMIO
-> > +	depends on SOC_IMX25
-> Can you make that:
->=20
-> 	depends on SOC_IMX25 || COMPILE_TEST
->=20
-> ?
-
-Yes, changed.
-
->=20
-> > + * The code contained herein is licensed under the GNU General Public
-> > + * License. You may obtain a copy of the GNU General Public License
-> > + * Version 2 or later at the following locations:
-> Which version of the GPL is your code licensed under?
-
-GPLv2 as described by MODULE_LICENSE. Will change the header
-accordingly.
-
->=20
-> > +static int mx25_tsadc_setup_irq(struct platform_device *pdev,
-> > +				struct mx25_tsadc *tsadc)
-> > [...]
-> > +	irq_set_chained_handler(irq, mx25_tsadc_irq_handler);
-> > +	irq_set_handler_data(irq, tsadc);
-> Do you need to reverse the order of these two calls to prevent the
-> handler being called while handler_data is still unset?
-
-Yes that's probably better although the subdevices which may cause
-interrupts here are not populated at this point.
-
-Thanks,
-
-Markus
-
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU9LYBAAoJEEpcgKtcEGQQTa8QAIvVq8nneBnZyXTeRaEaiQ9C
-ib3PxhTW3aXduGlXyBhULXJAW9hE97rVQeKUuYSZbW7SU3G55SuNq/J1DhIhLu3j
-ueC0j/kdALDAIUYr3YF5VDHCB7zJ3G5UmT+heD+sQzDv3qP6AAx93TU7eIDyM2GL
-ZN57p4NdjNSdI3x9301eGwgcnDMUI7KgfEtxJNV1+tU7/umQq7A5GDZ46+7/SE8j
-wRnvdKXjxqpEzygf9MF7vlYoeJuWie/2/9/pm7EZl8u4ibQvn4i5CLCCTM2GNNwn
-CrUhdTJpolARkFoJ/Ie4ieJd/PIYicinUayDsYWvTDnL7B8g6wJ0ZR1AcipIrBHw
-cYjcf8SHFWpnKmAmADw6Nxu6AvEoVf9Cc2vFl7fixirDJgrEkhvGVl/T3vuLQSBo
-EG38XTf5Kjgt5PJqosXigAGak0gYxZ12+qM2eS7MWKC5L+1NJs6UdF0TTKKyEHh6
-kfqBwfp1ZSRDgxaCzANMozxuFctLGETG3AoOgxsZ1ATu4l38rjCTjSIYzrs5CGyM
-3LPXQE6cWH1CvtZN5zR0plGYNTxh+L8+6I03tU4aCcPQ2ZdlX0qeaO28TT336C5g
-5uA5M+PZegvxfS/r2YzUWA+EyHBO6ouZalp23fUPYmNZEYd+9vxbXksbwf/O9alz
-9vx/g7EUWbO6jcqta2OE
-=IqLz
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
