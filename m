@@ -1,8 +1,8 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 08/10] dt/bindings: Add binding for BCM2835 mailbox property
- channel driver
-Date: Mon,  2 Mar 2015 12:54:42 -0800
-Message-ID: <1425329684-23968-9-git-send-email-eric@anholt.net>
+Subject: [PATCH 06/10] ARM: bcm2835: Add the mailbox power channel to the
+ device tree.
+Date: Mon,  2 Mar 2015 12:54:40 -0800
+Message-ID: <1425329684-23968-7-git-send-email-eric@anholt.net>
 References: <1425329684-23968-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,36 +22,26 @@ To: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I was tempted to have the mailbox property channel support just be in
-the 2835 mailbox driver itself, but mbox_request_channel() wants its
-device to have the "mboxes" node, and that appears to be only intended
-for mailbox clients, not controllers.
-
 Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 ---
- .../bindings/mailbox/brcm,bcm2835-mbox-property.txt        | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox-property.txt
+ arch/arm/boot/dts/bcm2835.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox-property.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox-property.txt
-new file mode 100644
-index 0000000..daed1cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox-property.txt
-@@ -0,0 +1,14 @@
-+Broadcom BCM2835 VideoCore mailbox property channel IPC
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 6b5c3a1..2eeeb20 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -67,6 +67,11 @@
+ 			#mbox-cells = <1>;
+ 		};
+ 
++		mailbox-power {
++			compatible = "brcm,bcm2835-mbox-power";
++			mboxes = <&mailbox 0>;
++		};
 +
-+Required properties:
-+
-+- compatible : Should be "brcm,bcm2835-mbox-property"
-+- mboxes: Single-entry list which specifies which mailbox controller
-+  and channel is the property channel.
-+
-+Example:
-+
-+mailbox-property {
-+	compatible = "brcm,bcm2835-mbox-property";
-+	mboxes = <&mailbox 8>
-+};
+ 		gpio: gpio@7e200000 {
+ 			compatible = "brcm,bcm2835-gpio";
+ 			reg = <0x7e200000 0xb4>;
 -- 
 2.1.4
