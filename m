@@ -1,112 +1,301 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V3 3/7] of: Document {little,big,native}-endian bindings
-Date: Mon, 02 Mar 2015 08:14:53 -0500
-Message-ID: <54F4624D.6000909@hurleysoftware.com>
-References: <1416872182-6440-1-git-send-email-cernekee@gmail.com> <1416872182-6440-4-git-send-email-cernekee@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1416872182-6440-4-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+From: Beata Michalska <b.michalska@samsung.com>
+Subject: [PATCH 1/2] clk: samsung: exynos3250: Add driver for CMU_ISP clock
+ domain
+Date: Mon, 02 Mar 2015 14:17:29 +0100
+Message-ID: <1425302250-13446-2-git-send-email-b.michalska@samsung.com>
+References: <1425302250-13446-1-git-send-email-b.michalska@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1425302250-13446-1-git-send-email-b.michalska@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@linaro.org, kgene@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/2014 06:36 PM, Kevin Cernekee wrote:
-> These apply to newly converted drivers, like serial8250/libahci/...
-> The examples were adapted from the regmap bindings document.
-> 
-> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/common-properties.txt      | 60 ++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/common-properties.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
-> new file mode 100644
-> index 0000000..21044a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/common-properties.txt
-> @@ -0,0 +1,60 @@
-> +Common properties
-> +
-> +The ePAPR specification does not define any properties related to hardware
-> +byteswapping, but endianness issues show up frequently in porting Linux to
-> +different machine types.  This document attempts to provide a consistent
-> +way of handling byteswapping across drivers.
-> +
-> +Optional properties:
-> + - big-endian: Boolean; force big endian register accesses
-> +   unconditionally (e.g. ioread32be/iowrite32be).  Use this if you
-> +   know the peripheral always needs to be accessed in BE mode.
-> + - little-endian: Boolean; force little endian register accesses
-> +   unconditionally (e.g. readl/writel).  Use this if you know the
-> +   peripheral always needs to be accessed in LE mode.  This is the
-> +   default.
+From: Tomasz Figa <t.figa@samsung.com>
 
-There is a fundamental problem with specifying the default in DT bindings.
-How can drivers which are currently native-endian support big-endian?
+Add clock controller for CMU ISP clock domain on Exynos3250,
+providing clocks for FIMC-IS subsystem.
 
-If the driver is converted to support big-endian, every previous
-devicetree will be invalid with the new kernel (because those devicetrees
-don't specify 'native-endian').
+[b.michalska:use samsung_cmu_register_one to register
+ the provider; updated DT binding documentation]
 
-IOW, consider if the default were 'native-endian'. How would the 8250
-driver support existing devicetrees?
+Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Beata Michalska <b.michalska@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ .../devicetree/bindings/clock/exynos3250-clock.txt |    8 +
+ drivers/clk/samsung/clk-exynos3250.c               |  163 ++++++++++++++++++++
+ include/dt-bindings/clock/exynos3250.h             |   61 ++++++++
+ 3 files changed, 232 insertions(+)
 
-Regards,
-Peter Hurley
-
-
-> + - native-endian: Boolean; always use register accesses matched to the
-> +   endianness of the kernel binary (e.g. LE vmlinux -> readl/writel,
-> +   BE vmlinux -> ioread32be/iowrite32be).  In this case no byteswaps
-> +   will ever be performed.  Use this if the hardware "self-adjusts"
-> +   register endianness based on the CPU's configured endianness.
-> +
-> +Note that regmap, in contrast, defaults to native-endian.  But this
-> +document is targeted for existing drivers, most of which currently use
-> +readl/writel because they expect to be accessing PCI/PCIe devices rather
-> +than memory-mapped SoC peripherals.  Since the readl/writel accessors
-> +perform a byteswap on BE systems, this means that the drivers in question
-> +are implicitly "little-endian".
-> +
-> +Examples:
-> +Scenario 1 : CPU in LE mode & device in LE mode.
-> +dev: dev@40031000 {
-> +	      compatible = "name";
-> +	      reg = <0x40031000 0x1000>;
-> +	      ...
-> +	      native-endian;
-> +};
-> +
-> +Scenario 2 : CPU in LE mode & device in BE mode.
-> +dev: dev@40031000 {
-> +	      compatible = "name";
-> +	      reg = <0x40031000 0x1000>;
-> +	      ...
-> +	      big-endian;
-> +};
-> +
-> +Scenario 3 : CPU in BE mode & device in BE mode.
-> +dev: dev@40031000 {
-> +	      compatible = "name";
-> +	      reg = <0x40031000 0x1000>;
-> +	      ...
-> +	      native-endian;
-> +};
-> +
-> +Scenario 4 : CPU in BE mode & device in LE mode.
-> +dev: dev@40031000 {
-> +	      compatible = "name";
-> +	      reg = <0x40031000 0x1000>;
-> +	      ...
-> +	      little-endian;
-> +};
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/exynos3250-clock.txt b/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
+index f57d9dd..f1738b8 100644
+--- a/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
+@@ -9,6 +9,8 @@ Required Properties:
+   - "samsung,exynos3250-cmu" - controller compatible with Exynos3250 SoC.
+   - "samsung,exynos3250-cmu-dmc" - controller compatible with
+     Exynos3250 SoC for Dynamic Memory Controller domain.
++  - "samsung,exynos3250-cmu-isp" - ISP block clock controller compatible
++     with Exynos3250 SOC
+ 
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+@@ -36,6 +38,12 @@ Example 1: Examples of clock controller nodes are listed below.
+ 		#clock-cells = <1>;
+ 	};
+ 
++	cmu_isp: clock-controller@10048000 {
++		compatible = "samsung,exynos3250-cmu-isp";
++		reg = <0x10048000 0x1000>;
++		#clock-cells = <1>;
++	};
++
+ Example 2: UART controller node that consumes the clock generated by the clock
+ 	   controller. Refer to the standard clock bindings for information
+ 	   about 'clocks' and 'clock-names' property.
+diff --git a/drivers/clk/samsung/clk-exynos3250.c b/drivers/clk/samsung/clk-exynos3250.c
+index cc4c348..e5dc48c 100644
+--- a/drivers/clk/samsung/clk-exynos3250.c
++++ b/drivers/clk/samsung/clk-exynos3250.c
+@@ -894,3 +894,166 @@ static void __init exynos3250_cmu_dmc_init(struct device_node *np)
+ }
+ CLK_OF_DECLARE(exynos3250_cmu_dmc, "samsung,exynos3250-cmu-dmc",
+ 		exynos3250_cmu_dmc_init);
++
++
++/*
++ * CMU ISP
++ */
++
++#define DIV_ISP0		0x300
++#define DIV_ISP1		0x304
++#define GATE_IP_ISP0		0x800
++#define GATE_IP_ISP1		0x804
++#define GATE_SCLK_ISP		0x900
++
++static struct samsung_div_clock isp_div_clks[] __initdata = {
++	/*
++	 * NOTE: Following table is sorted by register address in ascending
++	 * order and then bitfield shift in descending order, as it is done
++	 * in the User's Manual. When adding new entries, please make sure
++	 * that the order is preserved, to avoid merge conflicts and make
++	 * further work with defined data easier.
++	 */
++	/* DIV_ISP0 */
++	DIV(CLK_DIV_ISP1, "div_isp1", "mout_aclk_266_sub", DIV_ISP0, 4, 3),
++	DIV(CLK_DIV_ISP0, "div_isp0", "mout_aclk_266_sub", DIV_ISP0, 0, 3),
++
++	/* DIV_ISP1 */
++	DIV(CLK_DIV_MCUISP1, "div_mcuisp1", "mout_aclk_400_mcuisp_sub",
++		DIV_ISP1, 8, 3),
++	DIV(CLK_DIV_MCUISP0, "div_mcuisp0", "mout_aclk_400_mcuisp_sub",
++		DIV_ISP1, 4, 3),
++	DIV(CLK_DIV_MPWM, "div_mpwm", "div_isp1", DIV_ISP1, 0, 3),
++};
++
++static struct samsung_gate_clock isp_gate_clks[] __initdata = {
++	/*
++	 * NOTE: Following table is sorted by register address in ascending
++	 * order and then bitfield shift in descending order, as it is done
++	 * in the User's Manual. When adding new entries, please make sure
++	 * that the order is preserved, to avoid merge conflicts and make
++	 * further work with defined data easier.
++	 */
++
++	/* GATE_IP_ISP0 */
++	GATE(CLK_UART_ISP, "uart_isp", "uart_isp_top",
++		GATE_IP_ISP0, 31, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_WDT_ISP, "wdt_isp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 30, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_PWM_ISP, "pwm_isp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 28, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_I2C1_ISP, "i2c1_isp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 26, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_I2C0_ISP, "i2c0_isp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 25, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_MPWM_ISP, "mpwm_isp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 24, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_MCUCTL_ISP, "mcuctl_isp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 23, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_PPMUISPX, "ppmuispx", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 21, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_PPMUISPMX, "ppmuispmx", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 20, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_QE_LITE1, "qe_lite1", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 18, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_QE_LITE0, "qe_lite0", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 17, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_QE_FD, "qe_fd", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 16, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_QE_DRC, "qe_drc", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 15, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_QE_ISP, "qe_isp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 14, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_CSIS1, "csis1", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 13, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_LITE1, "smmu_lite1", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 12, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_LITE0, "smmu_lite0", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 11, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_FD, "smmu_fd", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 10, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_DRC, "smmu_drc", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 9, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_ISP, "smmu_isp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 8, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_GICISP, "gicisp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 7, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_CSIS0, "csis0", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 6, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_MCUISP, "mcuisp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 5, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_LITE1, "lite1", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 4, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_LITE0, "lite0", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 3, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_FD, "fd", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 2, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_DRC, "drc", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 1, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_ISP, "isp", "mout_aclk_266_sub",
++		GATE_IP_ISP0, 0, CLK_IGNORE_UNUSED, 0),
++
++	/* GATE_IP_ISP1 */
++	GATE(CLK_QE_ISPCX, "qe_ispcx", "uart_isp_top",
++		GATE_IP_ISP0, 21, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_QE_SCALERP, "qe_scalerp", "uart_isp_top",
++		GATE_IP_ISP0, 20, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_QE_SCALERC, "qe_scalerc", "uart_isp_top",
++		GATE_IP_ISP0, 19, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_SCALERP, "smmu_scalerp", "uart_isp_top",
++		GATE_IP_ISP0, 18, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_SCALERC, "smmu_scalerc", "uart_isp_top",
++		GATE_IP_ISP0, 17, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SCALERP, "scalerp", "uart_isp_top",
++		GATE_IP_ISP0, 16, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SCALERC, "scalerc", "uart_isp_top",
++		GATE_IP_ISP0, 15, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SPI1_ISP, "spi1_isp", "uart_isp_top",
++		GATE_IP_ISP0, 13, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SPI0_ISP, "spi0_isp", "uart_isp_top",
++		GATE_IP_ISP0, 12, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_ISPCX, "smmu_ispcx", "uart_isp_top",
++		GATE_IP_ISP0, 4, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_ASYNCAXIM, "asyncaxim", "uart_isp_top",
++		GATE_IP_ISP0, 0, CLK_IGNORE_UNUSED, 0),
++
++	/* GATE_SCLK_ISP */
++	GATE(CLK_SCLK_MPWM_ISP, "sclk_mpwm_isp", "div_mpwm",
++		GATE_SCLK_ISP, 0, CLK_IGNORE_UNUSED, 0),
++};
++
++static struct samsung_cmu_info isp_cmu_info __initdata = {
++	.div_clks	= isp_div_clks,
++	.nr_div_clks	= ARRAY_SIZE(isp_div_clks),
++	.gate_clks	= isp_gate_clks,
++	.nr_gate_clks	= ARRAY_SIZE(isp_gate_clks),
++	.nr_clk_ids	= NR_CLKS_ISP,
++};
++
++static int __init exynos3250_cmu_isp_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++
++	samsung_cmu_register_one(np, &isp_cmu_info);
++	return 0;
++}
++
++static const struct of_device_id exynos3250_cmu_isp_of_match[] = {
++	{ .compatible = "samsung,exynos3250-cmu-isp", },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver exynos3250_cmu_isp_driver = {
++	.driver = {
++		.name = "exynos3250-cmu-isp",
++		.of_match_table = exynos3250_cmu_isp_of_match,
++	},
++};
++
++static int exynos3250_cmu_platform_init(void)
++{
++	return platform_driver_probe(&exynos3250_cmu_isp_driver,
++					exynos3250_cmu_isp_probe);
++}
++subsys_initcall(exynos3250_cmu_platform_init);
++
+diff --git a/include/dt-bindings/clock/exynos3250.h b/include/dt-bindings/clock/exynos3250.h
+index 961b9c1..aab088d 100644
+--- a/include/dt-bindings/clock/exynos3250.h
++++ b/include/dt-bindings/clock/exynos3250.h
+@@ -282,4 +282,65 @@
+  */
+ #define NR_CLKS_DMC			21
+ 
++/*
++ * CMU ISP
++ */
++
++/* Dividers */
++
++#define CLK_DIV_ISP1			1
++#define CLK_DIV_ISP0			2
++#define CLK_DIV_MCUISP1			3
++#define CLK_DIV_MCUISP0			4
++#define CLK_DIV_MPWM			5
++
++/* Gates */
++
++#define CLK_UART_ISP			8
++#define CLK_WDT_ISP			9
++#define CLK_PWM_ISP			10
++#define CLK_I2C1_ISP			11
++#define CLK_I2C0_ISP			12
++#define CLK_MPWM_ISP			13
++#define CLK_MCUCTL_ISP			14
++#define CLK_PPMUISPX			15
++#define CLK_PPMUISPMX			16
++#define CLK_QE_LITE1			17
++#define CLK_QE_LITE0			18
++#define CLK_QE_FD			19
++#define CLK_QE_DRC			20
++#define CLK_QE_ISP			21
++#define CLK_CSIS1			22
++#define CLK_SMMU_LITE1			23
++#define CLK_SMMU_LITE0			24
++#define CLK_SMMU_FD			25
++#define CLK_SMMU_DRC			26
++#define CLK_SMMU_ISP			27
++#define CLK_GICISP			28
++#define CLK_CSIS0			29
++#define CLK_MCUISP			30
++#define CLK_LITE1			31
++#define CLK_LITE0			32
++#define CLK_FD				33
++#define CLK_DRC				34
++#define CLK_ISP				35
++#define CLK_QE_ISPCX			36
++#define CLK_QE_SCALERP			37
++#define CLK_QE_SCALERC			38
++#define CLK_SMMU_SCALERP		39
++#define CLK_SMMU_SCALERC		40
++#define CLK_SCALERP			41
++#define CLK_SCALERC			42
++#define CLK_SPI1_ISP			43
++#define CLK_SPI0_ISP			44
++#define CLK_SMMU_ISPCX			45
++#define CLK_ASYNCAXIM			46
++#define CLK_SCLK_MPWM_ISP		47
++
++/*
++ * Total number of clocks of CMU_ISP.
++ * NOTE: Must be equal to last clock ID increased by one.
++ */
++#define NR_CLKS_ISP			48
++
+ #endif /* _DT_BINDINGS_CLOCK_SAMSUNG_EXYNOS3250_CLOCK_H */
+-- 
+1.7.9.5
