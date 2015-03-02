@@ -1,45 +1,40 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: Re: [PATCH] ARM: dts: hummingboard: enable pcf8523 rtc for i2eX
-Date: Mon, 2 Mar 2015 14:21:16 -0500
-Message-ID: <20150302192116.GA30263@beef>
-References: <1425322206-30115-1-git-send-email-mporter@konsulko.com>
- <20150302190204.GR8656@n2100.arm.linux.org.uk>
- <20150302190616.GS8656@n2100.arm.linux.org.uk>
+From: Pierre-Louis Bossart <pierre-louis.bossart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: simple-card: Add support for samplerate
+ and samplewidth constraints
+Date: Mon, 02 Mar 2015 13:35:04 -0600
+Message-ID: <54F4BB68.4030501@linux.intel.com>
+References: <cover.1425303942.git.jsarha@ti.com> <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150302190616.GS8656@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Rabeeh Khoury <rabeeh@solid-run.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[added Rabeeh]
+Hi Jyri,
 
-On Mon, Mar 02, 2015 at 07:06:16PM +0000, Russell King wrote:
-> On Mon, Mar 02, 2015 at 07:02:04PM +0000, Russell King - ARM Linux wrote:
-> > On Mon, Mar 02, 2015 at 01:50:06PM -0500, Matt Porter wrote:
-> > > The PCF8523 RTC is populated on the i2eX boards so
-> > > enable the i2c1 controller and enable the device on
-> > > that bus.
-> > 
-> > Hmm, I wonder where my update patches went... oh, they're still sitting
-> > in my excessive backlog of patches in my tree as part of my "sgtl5000
-> > hacks" patch...
-> 
-> Also note that before we accept patches to the SolidRun stuff, we should
-> first re-license the file as GPLv2/X11.
+On 3/2/15 8:14 AM, Jyri Sarha wrote:
+>
+>   Optional dai-link subnode properties:
+>
+> +- samplewidth-constraints		: List of integers describing supported
+> +					  sample widths in number of bits.
 
-Hi Russell,
+There are quite a few platforms where the number of bits for valid audio 
+bits differs from the number of bits per slot, e.g. 24 bits with 25 bit 
+slots, or 24 bits in 32 bit slots. How would this be represented? This 
+concept is present for the TDM case but not the simple one.
+-Pierre
 
-Given that there's no license information at all on any of these three
-dts files I think that's a good idea. I just realized I didn't copy
-Rabeeh on this and he's apparently the original submitter based on
-your work. Ideally Rabeeh should send a license update but I could do
-so if you'd like and gather some acks.
+> +- rate-constraints			: List of integers describing supported
+> +					  sample samplerates in Hz.
+>   - format				: CPU/CODEC common audio format.
+>   					  "i2s", "right_j", "left_j" , "dsp_a"
 
-OTOH, did you already have a license update somewhere in your backlog
-of patches?
-
--Matt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
