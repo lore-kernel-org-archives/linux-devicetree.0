@@ -1,35 +1,56 @@
-From: Beata Michalska <b.michalska@samsung.com>
-Subject: [PATCH 0/2] Support for CMU_ISP clock domain on Exynos3250
-Date: Mon, 02 Mar 2015 14:17:28 +0100
-Message-ID: <1425302250-13446-1-git-send-email-b.michalska@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@linaro.org, kgene@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, sw0312.kim@samsung.com
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH RFC v9 00/20] Add support for i.MX MIPI DSI DRM driver
+Date: Mon, 2 Mar 2015 21:24:13 +0800
+Message-ID: <20150302132411.GF3040@dragon>
+References: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1423720903-24806-1-git-send-email-Ying.Liu@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liu Ying <Ying.Liu@freescale.com>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kernel@pengutronix.de, andy.yan@rock-chips.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi All,
-
-This simple patchset adds support for CMU_ISP clock domain
-on Exynos3250.
-
-Best Regards
-Beata Michalska
-
----
-
-Beata Michalska (1):
-  ARM: dts: exynos3250: Add assigned clock parents to CMU node
-
-Tomasz Figa (1):
-  clk: samsung: exynos3250: Add driver for CMU_ISP clock domain
-
- .../devicetree/bindings/clock/exynos3250-clock.txt |    8 +
- arch/arm/boot/dts/exynos3250.dtsi                  |    4 +
- drivers/clk/samsung/clk-exynos3250.c               |  163 ++++++++++++++++++++
- include/dt-bindings/clock/exynos3250.h             |   61 ++++++++
- 4 files changed, 236 insertions(+)
-
--- 
-1.7.9.5
+T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMDI6MDE6MjNQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6
+Cj4gTGl1IFlpbmcgKDIwKToKPiAgIGNsazogZGl2aWRlcjogQ29ycmVjdCBwYXJlbnQgY2xrIHJv
+dW5kIHJhdGUgaWYgbm8gYmVzdGRpdiBpcyBub3JtYWxseQo+ICAgICBmb3VuZAoKPiAgIEFSTTog
+aW14NnE6IEFkZCBHUFIzIE1JUEkgbXV4aW5nIGNvbnRyb2wgcmVnaXN0ZXIgZmllbGQgc2hpZnQg
+Yml0cwo+ICAgICBkZWZpbml0aW9uCj4gICBBUk06IGlteDZxOiBjbGs6IEFkZCB0aGUgdmlkZW9f
+MjdtIGNsb2NrCj4gICBBUk06IGlteDZxOiBjbGs6IENoYW5nZSBoZG1pX2lzZnIgY2xvY2sncyBw
+YXJlbnQgdG8gYmUgdmlkZW9fMjdtIGNsb2NrCj4gICBBUk06IGlteDZxOiBjbGs6IENoYW5nZSBo
+c2lfdHggY2xvY2sgdG8gYmUgYSBzaGFyZWQgY2xvY2sgZ2F0ZQo+ICAgQVJNOiBpbXg2cTogY2xr
+OiBBZGQgc3VwcG9ydCBmb3IgbWlwaV9jb3JlX2NmZyBjbG9jayBhcyBhIHNoYXJlZCBjbG9jawo+
+ICAgICBnYXRlCj4gICBBUk06IGlteDZxOiBjbGs6IEFkZCBzdXBwb3J0IGZvciBtaXBpX2lwZyBj
+bG9jayBhcyBhIHNoYXJlZCBjbG9jayBnYXRlCj4gICBBUk06IGR0czogaW14NnFkbDogTW92ZSBl
+eGlzdGluZyBNSVBJIERTSSBwb3J0cyBpbnRvIGEgbmV3ICdwb3J0cycKPiAgICAgbm9kZQoKQXBw
+bGllZCBhYm92ZSA3IGkuTVggcGF0Y2hlcyAoIzIgfiAjOCkuCgpTaGF3bgoKPiAgIGRybS9kc2k6
+IEFkZCBhIGhlbHBlciB0byBnZXQgYml0cyBwZXIgcGl4ZWwgb2YgTUlQSSBEU0kgcGl4ZWwgZm9y
+bWF0Cj4gICBEb2N1bWVudGF0aW9uOiBkdC1iaW5kaW5nczogQWRkIGJpbmRpbmdzIGZvciBTeW5v
+cHN5cyBEVyBNSVBJIERTSSBEUk0KPiAgICAgYnJpZGdlIGRyaXZlcgo+ICAgZHJtL2JyaWRnZTog
+QWRkIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyIGRyaXZlcgo+
+ICAgRG9jdW1lbnRhdGlvbjogZHQtYmluZGluZ3M6IEFkZCBiaW5kaW5ncyBmb3IgaS5NWCBzcGVj
+aWZpYyBTeW5vcHN5cyBEVwo+ICAgICBNSVBJIERTSSBkcml2ZXIKPiAgIGRybTogaW14OiBTdXBw
+b3J0IFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyCj4gICBEb2N1
+bWVudGF0aW9uOiBkdC1iaW5kaW5nczogQWRkIGJpbmRpbmdzIGZvciBIaW1heCBIWDgzNjlBIERS
+TSBwYW5lbAo+ICAgICBkcml2ZXIKPiAgIGRybTogcGFuZWw6IEFkZCBzdXBwb3J0IGZvciBIaW1h
+eCBIWDgzNjlBIE1JUEkgRFNJIHBhbmVsCj4gICBBUk06IGR0c2k6IGlteDZxZGw6IEFkZCBzdXBw
+b3J0IGZvciBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIKPiAgIEFSTTogZHRzOiBpbXg2cWRsLXNh
+YnJlc2Q6IEFkZCBzdXBwb3J0IGZvciBUUlVMWSBURlQ0ODA4MDAtMTYtRSBNSVBJCj4gICAgIERT
+SSBwYW5lbAo+ICAgQVJNOiBpbXhfdjZfdjdfZGVmY29uZmlnOiBDbGVhbnVwIGZvciBpbXggZHJt
+IGJlaW5nIG1vdmVkIG91dCBvZgo+ICAgICBzdGFnaW5nCj4gICBBUk06IGlteF92Nl92N19kZWZj
+b25maWc6IEFkZCBzdXBwb3J0IGZvciBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIKPiAgIEFSTTog
+aW14X3Y2X3Y3X2RlZmNvbmZpZzogQWRkIHN1cHBvcnQgZm9yIEhpbWF4IEhYODM2OUEgcGFuZWwK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
