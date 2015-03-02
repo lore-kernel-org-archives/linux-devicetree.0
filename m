@@ -1,58 +1,46 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/3] Documentation: dts: Update compatible field
- description for APM X-Gene
-Date: Mon, 2 Mar 2015 14:17:34 +0000
-Message-ID: <20150302141734.GC16779@leverpostej>
-References: <1425067710-14879-1-git-send-email-isubramanian@apm.com>
- <1425067710-14879-2-git-send-email-isubramanian@apm.com>
- <20150227201516.GA30683@leverpostej>
- <CAKh23FmLE-s_C5YUjLTQLT0_P9DT6LzmaBxJPRWY4AwXK9jQNA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Add msm8916 pinctrl driver
+Date: Mon, 2 Mar 2015 15:40:05 +0100
+Message-ID: <CACRpkdYj_t15wxXzhHMGo-kb=o1HNaMEV07G1dr7XPYCZv=WNQ@mail.gmail.com>
+References: <1422612241-12944-1-git-send-email-svarbanov@mm-sol.com>
+	<1422612241-12944-4-git-send-email-svarbanov@mm-sol.com>
+	<20150203164748.GA29190@qualcomm.com>
+	<54D22F05.9050403@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKh23FmLE-s_C5YUjLTQLT0_P9DT6LzmaBxJPRWY4AwXK9jQNA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Iyappan Subramanian <isubramanian@apm.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mlangsdo@redhat.com" <mlangsdo@redhat.com>, "patches@apm.com" <patches@apm.com>, Keyur Chudgar <kchudgar@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <54D22F05.9050403@mm-sol.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Joonwoo Park <joonwoop@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 27, 2015 at 11:58:28PM +0000, Iyappan Subramanian wrote:
-> On Fri, Feb 27, 2015 at 12:15 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Fri, Feb 27, 2015 at 08:08:28PM +0000, Iyappan Subramanian wrote:
-> >> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-> >> Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
-> >> Tested-by: Mark Langsdorf <mlangsdo@redhat.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/net/apm-xgene-enet.txt | 3 ++-
-> >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> >> index cfcc527..5355996 100644
-> >> --- a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> >> +++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> >> @@ -4,7 +4,8 @@ Ethernet nodes are defined to describe on-chip ethernet interfaces in
-> >>  APM X-Gene SoC.
-> >>
-> >>  Required properties for all the ethernet interfaces:
-> >> -- compatible: Should be "apm,xgene-enet"
-> >> +- compatible: Should be "apm,xgene-enet", "apm,xgene1-sgenet" or
-> >> +  "apm,xgene1-xgenet"
-> >
-> > Please format this as a list. It'll be easier to read, and you can add
-> > more later.
-> 
-> Thanks.  I will do that.
-> 
-> >
-> > What are the diffences between these variants?
-> 
-> apm,xgene-enet - binding for RGMII based 1G interface
-> apm,xgene1-sgenet - binding for SGMII based 1G interface
-> apm,xgene1-xgenet - binding for XFI based 10G interface
+On Wed, Feb 4, 2015 at 3:39 PM, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
+> On 02/03/2015 06:47 PM, Andy Gross wrote:
+>> On Fri, Jan 30, 2015 at 12:04:01PM +0200, Stanimir Varbanov wrote:
+>>> From: Joonwoo Park <joonwoop@codeaurora.org>
+>>>
+>>> Add initial pinctrl driver to support pin configuration with
+>>> pinctrl framework for msm8916.
+>>>
+>>> Signed-off-by: Joonwoo Park <joonwoop@codeaurora.org>
+>>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>>
+>> Looks good.
+>>
+>> Reviewed-by: Andy Gross <agross@codeaurora.org>
+>>
+>
+> Linus, do you want me to resend the patchset including this Reviewed-by tag?
 
-I see. If you could keep notes to this effect in the list, that would
-help to keep this obvious.
+1/3 is already merged upstream.
 
-Thanks,
-Mark.
+2/3 has an unaddressed review comment. Please fix that and resent.
+
+So this 3/3 can be resent as well, with the Review tag.
+
+But it's down to just two patches now atleast.
+
+Yours,
+Linus Walleij
