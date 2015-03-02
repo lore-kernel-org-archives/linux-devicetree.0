@@ -1,35 +1,78 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] DT: hwspinlock: Add binding documentation for
- Qualcomm hwmutex
-Date: Sun, 1 Mar 2015 23:05:14 -0600
-Message-ID: <20150302050514.GA13169@qualcomm.com>
-References: <1425076217-10415-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH] ARM: dts: at919260/at91sam9g20: fix SRAM device tree node
+Date: Mon, 2 Mar 2015 14:03:29 +0800
+Message-ID: <1425276209-4899-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425076217-10415-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.ferre@atmel.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, wenyou.yang@atmel.com, robh+dt@kernel.org, galak@codeaurora.org, linux@maxim.org.za, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 27, 2015 at 02:30:16PM -0800, Bjorn Andersson wrote:
-> Add binding documentation for the Qualcomm Hardware Mutex.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
+Fix PM does not work on the at91sam9g20ek board
+--->8---
+at91_pm_sram_init: failed to find sram device!
+---<8---
 
-Looks fine.
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+---
+ arch/arm/boot/dts/at91sam9260.dtsi |    9 +++++++--
+ arch/arm/boot/dts/at91sam9g20.dtsi |    9 +++++----
+ 2 files changed, 12 insertions(+), 6 deletions(-)
 
-Reviewed-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index fff0ee6..d1eb27c 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -69,9 +69,14 @@
+ 		};
+ 	};
+ 
+-	sram0: sram@002ff000 {
++	sram0: sram@00200000 {
+ 		compatible = "mmio-sram";
+-		reg = <0x002ff000 0x2000>;
++		reg = <0x00200000 0x1000>;
++	};
++
++	sram1: sram@00300000 {
++		compatible = "mmio-sram";
++		reg = <0x00300000 0x1000>;
+ 	};
+ 
+ 	ahb {
+diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
+index f593016..eb9a62d 100644
+--- a/arch/arm/boot/dts/at91sam9g20.dtsi
++++ b/arch/arm/boot/dts/at91sam9g20.dtsi
+@@ -16,13 +16,14 @@
+ 		reg = <0x20000000 0x08000000>;
+ 	};
+ 
+-	sram0: sram@002ff000 {
+-		status = "disabled";
++	sram0: sram@00200000 {
++		compatible = "mmio-sram";
++		reg = <0x00200000 0x4000>;
+ 	};
+ 
+-	sram1: sram@002fc000 {
++	sram1: sram@00300000 {
+ 		compatible = "mmio-sram";
+-		reg = <0x002fc000 0x8000>;
++		reg = <0x00300000 0x4000>;
+ 	};
+ 
+ 	ahb {
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
