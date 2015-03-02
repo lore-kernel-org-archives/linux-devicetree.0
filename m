@@ -1,37 +1,84 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH v2 3/4] leds: Let the binding document example for
- leds-gpio follow the gpio bindings
-Date: Mon, 2 Mar 2015 12:03:48 -0800
-Message-ID: <CAK5ve-Lu6=guYAoU1BMWYWtrocxq+8Kc4W7GsuTZTDtNp8N3xg@mail.gmail.com>
-References: <1421876028-22799-1-git-send-email-o.schinagl@ultimaker.com>
- <1421876028-22799-4-git-send-email-o.schinagl@ultimaker.com> <CACRpkdZGXQ0ktwLu80ALaQuwB_RFQjpHitiEp+vcnnb0Hv1mKg@mail.gmail.com>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: hummingboard: Setup pwm lines
+Date: Mon, 02 Mar 2015 20:03:59 +0000
+Message-ID: <E1YSWZL-0002Aw-B5@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZGXQ0ktwLu80ALaQuwB_RFQjpHitiEp+vcnnb0Hv1mKg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Olliver Schinagl <o.schinagl@ultimaker.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Alexander Shiyan <shc_work@mail.ru>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 2, 2015 at 3:24 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Jan 21, 2015 at 10:33 PM, Olliver Schinagl
-> <o.schinagl@ultimaker.com> wrote:
->
->> From: Olliver Schinagl <oliver@schinagl.nl>
->>
->> In the gpio bindings documents it is requested to use the marco's in
->> include/dt-bindings/gpio/gpio.h whenever possible. The gpios in the led
->> drivers don't seem to form an exception, so update the example in the
->> document bindings.
->>
->> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Bryan: please merge this patch to the LED git tree.
->
+From: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
 
-Merged, thanks
+Setup pwm lines as follows -
+pwm1: In case HummingBoard base carrier; this pin drives through a serial
+      capacitor the mono out of the audio jack.
+      In case HummingBoard pro the this pad can be reached by wiring to
+      C8 capacitors on the board.
+pwm2: Setup pwm2 on gpio-1 but leave the default function of the iopad as
+      a gpio.
+      The user can change the io pad mux in user space and therefore use
+      this function on gpio-1 (pin number 7 on the 26 pin header).
+pwm3,pwm4: unused
 
--Bryan
+Signed-off-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+[tweaked alias for pwm pinctrl group --rmk]
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+For acks please.
+
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+index 93588c987d2c..c0dc5948fa3c 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+@@ -164,6 +164,10 @@
+ 			>;
+ 		};
+ 
++		pinctrl_hummingboard_pwm1: pwm1grp {
++			fsl,pins = <MX6QDL_PAD_DISP0_DAT8__PWM1_OUT 0x1b0b1>;
++		};
++
+ 		pinctrl_hummingboard_spdif: hummingboard-spdif {
+ 			fsl,pins = <MX6QDL_PAD_GPIO_17__SPDIF_OUT 0x13091>;
+ 		};
+@@ -203,6 +207,25 @@
+ 	};
+ };
+ 
++&pwm1 {
++	 pinctrl-names = "default";
++	 pinctrl-0 = <&pinctrl_hummingboard_pwm1>;
++	 status = "okay";
++};
++
++&pwm2 {
++	 pinctrl-names = "default";
++	 status = "okay";
++};
++
++&pwm3 {
++	status = "disabled";
++};
++
++&pwm4 {
++	status = "disabled";
++};
++
+ &spdif {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_hummingboard_spdif>;
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
