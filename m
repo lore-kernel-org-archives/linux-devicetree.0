@@ -1,110 +1,80 @@
-From: Matt Porter <mporter@konsulko.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Subject: Re: [PATCH] ARM: dts: hummingboard: enable pcf8523 rtc for i2eX
-Date: Mon, 2 Mar 2015 15:25:40 -0500
-Message-ID: <20150302202540.GB30263@beef>
+Date: Mon, 2 Mar 2015 20:43:26 +0000
+Message-ID: <20150302204326.GV8656@n2100.arm.linux.org.uk>
 References: <1425322206-30115-1-git-send-email-mporter@konsulko.com>
  <20150302190204.GR8656@n2100.arm.linux.org.uk>
  <20150302190616.GS8656@n2100.arm.linux.org.uk>
  <20150302192116.GA30263@beef>
  <20150302194908.GU8656@n2100.arm.linux.org.uk>
+ <20150302202540.GB30263@beef>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150302194908.GU8656@n2100.arm.linux.org.uk>
+In-Reply-To: <20150302202540.GB30263@beef>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+To: Matt Porter <mporter@konsulko.com>
 Cc: Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Rabeeh Khoury <rabeeh@solid-run.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 02, 2015 at 07:49:08PM +0000, Russell King wrote:
-> On Mon, Mar 02, 2015 at 02:21:16PM -0500, Matt Porter wrote:
-> > [added Rabeeh]
+On Mon, Mar 02, 2015 at 03:25:40PM -0500, Matt Porter wrote:
+> On Mon, Mar 02, 2015 at 07:49:08PM +0000, Russell King wrote:
+> > It's a bit like the MMC stuff, I'm still carrying Olof's solution for
+> > the SDIO wifi/bt power and reset control stuff, and I'm not at present
+> > intending to do anything with it other than continue forward-porting it.
+> > I'm not interested in wasting free time trying to re-work that to suit
+> > some other solution, especially as people couldn't settle on a solution
+> > when I /did/ have an interest in it (not that I have much interest in
+> > wifi or BT - I tend to prefer old fashioned wired connections.  It also
+> > doesn't help that the Broadcom driver seemed to be very flakey with
+> > brcm4329 hardware for quite some time.)
 > > 
-> > On Mon, Mar 02, 2015 at 07:06:16PM +0000, Russell King wrote:
-> > > On Mon, Mar 02, 2015 at 07:02:04PM +0000, Russell King - ARM Linux wrote:
-> > > > On Mon, Mar 02, 2015 at 01:50:06PM -0500, Matt Porter wrote:
-> > > > > The PCF8523 RTC is populated on the i2eX boards so
-> > > > > enable the i2c1 controller and enable the device on
-> > > > > that bus.
-> > > > 
-> > > > Hmm, I wonder where my update patches went... oh, they're still sitting
-> > > > in my excessive backlog of patches in my tree as part of my "sgtl5000
-> > > > hacks" patch...
-> > > 
-> > > Also note that before we accept patches to the SolidRun stuff, we should
-> > > first re-license the file as GPLv2/X11.
-> > 
-> > Hi Russell,
-> > 
-> > Given that there's no license information at all on any of these three
-> > dts files I think that's a good idea. I just realized I didn't copy
-> > Rabeeh on this and he's apparently the original submitter based on
-> > your work. Ideally Rabeeh should send a license update but I could do
-> > so if you'd like and gather some acks.
+> > Anyway, you can find all my kernel patches in a suitably trimmed version
+> > of the above URL, and on http://ftp.arm.linux.org.uk/cgit/ is a huge pile
+> > of effort I put into an accelerated X server with etnaviv and /my/ kernel
+> > version of etnaviv drm, complete with Xv support.
 > 
-> It's more up to me, as I ended up being the initial author of the
-> mainline files - and if you look at:
-> 
-> http://www.home.arm.linux.org.uk/~rmk/cubox/hummingboard-cubox-i-v3.16-rc2-20140624/0041-sgtl5000-hacks.patch
-> 
-> you'll see the patch I refer to above, which is my own work, and it's
-> hardly changed to the 3.18 patch:
-> 
-> http://www.home.arm.linux.org.uk/~rmk/cubox/hummingboard-cubox-i-v3.18-20141216/0113-sgtl5000-hacks.patch
+> Excellent, so I feel like you ultimately giving me mixed messages here.
 
-Ok
+Yes, I am - partly because I don't know what to do with many of the
+patches I seem to be endlessly carrying (which depresses me).  I look
+back to the days when I could be sure of completely emptying my tree
+at each merge window, something which /never/ happens anymore.
 
-> > OTOH, did you already have a license update somewhere in your backlog
-> > of patches?
-> 
-> Well, I do now. :)
+> You said you need to take care of this licensing issue and I think you
+> implied you'd take care of the audio and rtc stuff as you have that
+> patch in your backlog.
 
-Ok :)
+As you may have seen, I've mailed out the licensing patch, and I've
+also mailed out two patches - one for PWM stuff and the second one
+being the RTC change broken out from my sgtl5000 hacks patch.
 
-> I had dropped the ball on a load of kernel stuff as it seemed to be going
-> nowhere, no one seemed interested in it, and my massive backlog of patches
-> (especially things like the ethernet driver) just became far too difficult
-> both to merge into mainline and to keep forward-porting.
- 
-Understood, I recall that thread but didn't have the hardware back then.
-;)
+I've also cut a v4.0-rc1 patch set, in the usual diff.bz2, tar.bz2,
+and separate patch forms which include those three patches.
 
-> In any case, anyone who is serious about using the SolidRun hardware runs
-> Jon Nettleton's fully featured kernel (which is the basis for SR's kernel)
-> - sadly something which mainline likely is never going to be.
+> However, sounds like you've given up on pushing
+> the bigger things upstream given the problem with getting agreement
+> on those pieces. Are you just going to be submitting the
+> less controversial portions like the audio and dts updates? My goal for
+> HB initially is just to have all the low-hanging fruit (like rtc and audio)
+> working on mainline...besides the stuff that's already there.
 
-Right, I also make use of that kernel, of course. It's just too old
-to make me completely happy.
+RTC is the easiest bit of the problem, as you've discovered it's just
+a matter of uncommenting the bit in DT.  (It's even better if you have
+a battery to plug into the little connector!)
 
-> It's a bit like the MMC stuff, I'm still carrying Olof's solution for
-> the SDIO wifi/bt power and reset control stuff, and I'm not at present
-> intending to do anything with it other than continue forward-porting it.
-> I'm not interested in wasting free time trying to re-work that to suit
-> some other solution, especially as people couldn't settle on a solution
-> when I /did/ have an interest in it (not that I have much interest in
-> wifi or BT - I tend to prefer old fashioned wired connections.  It also
-> doesn't help that the Broadcom driver seemed to be very flakey with
-> brcm4329 hardware for quite some time.)
-> 
-> Anyway, you can find all my kernel patches in a suitably trimmed version
-> of the above URL, and on http://ftp.arm.linux.org.uk/cgit/ is a huge pile
-> of effort I put into an accelerated X server with etnaviv and /my/ kernel
-> version of etnaviv drm, complete with Xv support.
+Audio needs more than just DT changes, and there's recently been some
+SGTL5000 patches submitted which change the way power is controlled
+in the SGTL5000.  I don't yet know whether those patches solve the
+problems I was seeing with the kernel powering down the SGTL5000's
+internal regulator, thereby making the device totally inaccessible
+until the next power cycle or not.
 
-Excellent, so I feel like you ultimately giving me mixed messages here.
-You said you need to take care of this licensing issue and I think you
-implied you'd take care of the audio and rtc stuff as you have that
-patch in your backlog. However, sounds like you've given up on pushing
-the bigger things upstream given the problem with getting agreement
-on those pieces. Are you just going to be submitting the
-less controversial portions like the audio and dts updates? My goal for
-HB initially is just to have all the low-hanging fruit (like rtc and audio)
-working on mainline...besides the stuff that's already there.
+Whether I'll get a chance to look at that this week or not, I don't
+know... (see my privately shared G+ status from yesterday, which
+people in my G+ circles should be able to see.)
 
-Hrm, I also don't care about WiFi/BT on this board, I also prefer wired,
-but on a custom board I'll have to support a different WiFi/BT vendor so
-I'll take a look at that reset solution you are carrying.
-
-Thanks,
-Matt
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
