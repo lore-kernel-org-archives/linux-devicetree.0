@@ -1,88 +1,59 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] dtc: Document the dynamic plugin internals
-Date: Tue, 3 Mar 2015 17:07:34 +0200
-Message-ID: <9DAC79F7-593F-4CB4-9A4C-D8E4D7EDEEB3@konsulko.com>
-References: <1425063346-14554-1-git-send-email-pantelis.antoniou@konsulko.com> <1425063346-14554-4-git-send-email-pantelis.antoniou@konsulko.com> <1425390172.3668.196.camel@pengutronix.de>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425390172.3668.196.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?Q?Jan_L=C3=BCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Matt Porter <mporter@konsulko.com>
+Subject: Re: [PATCH] ARM: dts: imx: Add dr_mode host setting to all host-only
+ usb instances
+Date: Tue, 3 Mar 2015 10:08:09 -0500
+Message-ID: <20150303150809.GD30263@beef>
+References: <1425045960-14191-1-git-send-email-mporter@konsulko.com>
+ <20150303034133.GJ20455@dragon>
+ <20150303044334.GA16617@shlinux2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150303044334.GA16617@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jan,
+On Tue, Mar 03, 2015 at 12:43:36PM +0800, Peter Chen wrote:
+> On Tue, Mar 03, 2015 at 11:41:35AM +0800, Shawn Guo wrote:
+> > 
+> > On Fri, Feb 27, 2015 at 09:06:00AM -0500, Matt Porter wrote:
+> > > The chipidea driver adds an extra line of spam to the log when a
+> > > host-only chipidea instance is left set to the default of a dual role
+> > > controller.
+> > > 
+> > > [    2.010873] ci_hdrc ci_hdrc.1: doesn't support gadget
+> > > 
+> > > Set the dr_mode property to host on all the host-only nodes
+> > > to avoid this warning.
+> 
+> It is not an warning, it is dev_info.
 
-> On Mar 3, 2015, at 15:42 , Jan L=C3=BCbbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->=20
-> Hi Pantelis,
->=20
-> On Fr, 2015-02-27 at 20:55 +0200, Pantelis Antoniou wrote:
->> +3.b) The Device Tree fragments must be compiled with the same optio=
-n but they
->> +must also have a tag (/plugin/) that allows undefined references to=
- labels
->> +that are not present at compilation time to be recorded so that the=
- runtime
->> +loader can fix them.
->> +
->> +So the bar peripheral's DTS format would be of the form:
->> +
->> +/plugin/;	/* allow undefined label references and record them */
->> +/ {
->> +	....	/* various properties for loader use; i.e. part id etc. */
->> +	fragment@0 {
->> +		target =3D <&ocp>;
->> +		__overlay__ {
->> +			/* bar peripheral */
->> +			bar {
->> +				compatible =3D "corp,bar";
->> +				... /* various properties and child nodes */
->> +			}
->> +		};
->> +	};
->> +};
->> +
->> +Note that there's a target property that specifies the location whe=
-re the
->> +contents of the overlay node will be placed, and it references the =
-label
->> +in the foo.dts file.
->=20
-> The kernel overlay code also supports using 'target-path=3D"/path";'
-> instead of 'target=3D<phandle>;' to work with base DTBs which have no
-> __symbols__ node. Shouldn't this be mentioned here as well?
->=20
+True enough, it's info level but is essentially warning that, in the
+case of instances that are restricted to host only (at the SoC level),
+that the DT hardware description is incorrect. Yes, it's benign, but
+if the dtsi is corrected for those parts we don't have to see that
+message.
 
-The kernel documentation entries contain all relevant information. This=
- is just the DTC
-support patch, and as such they only need a rough outline of what the a=
-ctual in-kernel
-resolver and overlay handler code does.
+> In fact, imx28, imx6sl and imx6sx's second controller is dual-role
+> controller, we only set dr_mode at board's dts according to design
+> unless the controller's capability register is incorrect.
 
-tl;dr DTC has no notion of either target or target-path properties.
+The patch doesn't set dr_mode to host on the second controller for
+the imx6sl or imx6sx, only on the third host-only controller. If
+imx28's second controller is really dual-role capable then the
+reference manual is incorrect and I can drop that hunk in v2.
+I only have imx6q and imx6d parts in hand to verify so for the rest
+I went by the RM claim of which controllers were host-only.
 
-> Thanks,
-> Jan
-> --=20
-> Pengutronix e.K.                           |                         =
-    |
-> Industrial Linux Solutions                 | http://www.pengutronix.d=
-e/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0=
-    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5=
-555 |
->=20
+> So, sorry, I don't think this change is necessary.
 
-Regards
+I can correct the set of instances that should have dr_mode set to host
+in v2 of this. We clearly have some that should have this set in their
+SoC .dtsi to have the hardware description correct.  Will that work for
+you or do you want the SoC-specific cases of this property to be only
+reflected in the board level dts?
 
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-co=
-mpiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Matt
