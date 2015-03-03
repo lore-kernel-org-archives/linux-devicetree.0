@@ -1,44 +1,29 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] powerpc/pmac: Fix DT refcount imbalance in pmac_pic_probe_oldstyle
-Date: Tue,  3 Mar 2015 11:02:15 +0100
-Message-ID: <1425376935-6226-1-git-send-email-geert+renesas@glider.be>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
+Date: Tue, 03 Mar 2015 10:02:57 +0000
+Message-ID: <1425376977.3092.26.camel@arm.com>
+References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+	 <1425312688.3092.10.camel@arm.com> <54F4B583.4000005@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54F4B583.4000005@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Internally, of_find_node_by_name() calls of_node_put() on its "from"
-parameter, which must not be done on "master", as it's still in use, and
-will be released manually later.  This may cause a zero kref refcount.
+On Mon, 2015-03-02 at 19:09 +0000, Arun Ramamurthy wrote:
+> > The existing bindings intentionally avoided quoting internal registers -
+> > they are supposed to describe how the hardware is wired up...
+> >
+> > So how about something like "arm,pl11x,tft-invert-clac"? Then the driver
+> > sets the bit or not, depending on the property existance?
+> >
+> Sure, I can change it to two properties called arm,pl11x,tft-invert-clac 
+> and arm,pl11x,tft-clksel. Would that be acceptable?
 
-Call of_node_get() before to compensate for this.
+That would be fine by me :-)
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Compile-tested only
-
-v2:
-  - Avoid a logic change by adding a call to of_node_get() instead of
-    replacing of_find_node_by_name() by of_get_child_by_name().
-    No-one seems to remember which machines are affected by this.
----
- arch/powerpc/platforms/powermac/pic.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
-index 4c24bf60d39d2834..59cfc9d63c2d51a7 100644
---- a/arch/powerpc/platforms/powermac/pic.c
-+++ b/arch/powerpc/platforms/powermac/pic.c
-@@ -321,6 +321,9 @@ static void __init pmac_pic_probe_oldstyle(void)
- 		max_irqs = max_real_irqs = 64;
- 
- 		/* We might have a second cascaded heathrow */
-+
-+		/* Compensate for of_node_put() in of_find_node_by_name() */
-+		of_node_get(master);
- 		slave = of_find_node_by_name(master, "mac-io");
- 
- 		/* Check ordering of master & slave */
--- 
-1.9.1
+Pawel
