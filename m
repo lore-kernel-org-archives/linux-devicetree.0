@@ -1,176 +1,36 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
-Date: Tue, 3 Mar 2015 10:25:50 +0000
-Message-ID: <20150303102550.GA32624@x1>
-References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
- <1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v2 2/8] mmc: sdhci-st: Add support for de-asserting reset
+ signal and top regs resource
+Date: Tue, 3 Mar 2015 11:34:15 +0100
+Message-ID: <54F58E27.10401@st.com>
+References: <1424956227-18258-1-git-send-email-peter.griffin@linaro.org> <1424956227-18258-3-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425375148-4369-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424956227-18258-3-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, chris@printf.net, ulf.hansson@linaro.org
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, peppe.cavallaro@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Mar 2015, Linus Walleij wrote:
+Hi Peter,
 
-> This defines a new compatible option for MFD devices "simple-mfd" tha=
-t will
-> make the OF core spawn child devices for all subnodes of that MFD dev=
-ice.
-> It is optional but handy for things like syscon and possibly other
-> simpler MFD devices.
->=20
-> Since there was no file to put the documentation in, I took this oppo=
-rtunity
-> to make a small writeup on MFD devices and add the compatible definit=
-ion
-> there.
->=20
-> Suggested-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 02/26/2015 02:10 PM, Peter Griffin wrote:
+> STiH407 family SoC's can have a reset signal for the controller which needs to
+> be managed. Also the eMMC controller has some additional 'top' memory mapped
+> registers which are used to manage the dynamic and static delay required for
+> UHS modes. This patch adds support for creating the mapping, which will be used
+> by subsequent patches.
+>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 > ---
-> I make the patch to the OF core in this one, it makes much more sense=
- since
-> it's a oneliner
->=20
-> Lee: this is a (tested!) implementation of your suggestion for simple=
--mfd.
-> If you can eventually ACK this from the MFD side, I think it should b=
-e
-> funneled through the ARM SoC tree.
->=20
-> Grant/Rob: if either of you can ACK the change to the OF core likewis=
-e it can
-> be taken through ARM SoC.
->=20
-> DT binings maintainers: there is some background discussion on this h=
-ere:
-> http://marc.info/?l=3Dlinux-arm-kernel&m=3D142486676603889&w=3D2
-> http://marc.info/?l=3Ddevicetree&m=3D142166313621469&w=3D2
-> ---
->  Documentation/devicetree/bindings/mfd/mfd.txt | 40 +++++++++++++++++=
-++++++++++
->  drivers/of/platform.c                         |  1 +
->  2 files changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mfd.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Document=
-ation/devicetree/bindings/mfd/mfd.txt
-> new file mode 100644
-> index 000000000000..cc057438abe8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mfd.txt
-> @@ -0,0 +1,40 @@
-> +Multi-Function Devices (MFD)
-> +
-> +These devices comprise a nexus for heterogeneous hardware blocks=20
+>   drivers/mmc/host/sdhci-st.c | 52 ++++++++++++++++++++++++++++++++++++++++++---
+>   1 file changed, 49 insertions(+), 3 deletions(-)
+>
 
-I don't think you meant 'comprise' here.  Perhaps 'represent' might
-fit better?
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 
-> +spawning multiple child devices.
-
-Spawning devices is something software will do.  Think less about what
-the actions the OS will take order to handle these IPs and more about
-what they are physically.  I would prefer the description mentions
-that these chips are single pieces of silicon which contain >1 devices
-with non-unique/varying functionality.
-
-> +A typical MFD can be:
-> +
-> +- A mixed signal ASIC on an external bus, sometimes a PMIC (power ma=
-nagement
-> +  integrated circuit) that is manufactured in a lower technology nod=
-e (rough
-
-Please capitalise the expanded PMIC abbreviation.
-
-> +  silicon) that handles analog drivers for things like audio amplifi=
-ers, LED
-> +  drivers, level shifters, PHY (physical interfaces to things like U=
-SB or
-> +  ethernet), regulators etc.
-> +
-> +- A range of memory registers containing "miscellaneous system regis=
-ters" also
-> +  known as a system controller "syscon" or any other memory range co=
-ntaining a
-> +  mix of unrelated registers.
-
-s/registers/{hardware|devices}/
-
-> +Optional properties:
-> +
-> +- compatible : "simple-mfd" - this signifies that the operating syst=
-em should
-> +  spawn child devices for all the subnodes of the MFD device akin to=
- how
-
-This is pretty Linux specific IMHO.  Other OSes might not spawn
-seperate devices to handle MFD type h/w.  The idea is fine, but please
-generify a little.
-
-> +  "simple-bus" inidicates when to spawn children for a simple memory=
--mapped
-> +  bus. For more complex devices, when the nexus driver has to probe =
-registers
-> +  to figure out what children exist etc, this should not be used. In=
- the latter
-> +  case the child devices will be instantiated by the operating syste=
-m.
-> +
-> +Example:
-> +
-> +foo@1000 {
-
-Should be 10000.
-> +		compatible =3D "syscon", "simple-mfd";
-
-Please address your tabbing issues.
-
-> +		reg =3D <0x010000 0x1000>;
-> +
-> +		led@08.0 {
-> +			compatible =3D "register-bit-led";
-> +			offset =3D <0x08>;
-> +			mask =3D <0x01>;
-> +			label =3D "myled";
-> +			default-state =3D "on";
-> +		};
-> +};
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index b189733a1539..969ba4e1460c 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -26,6 +26,7 @@
-> =20
->  const struct of_device_id of_default_bus_match_table[] =3D {
->  	{ .compatible =3D "simple-bus", },
-> +	{ .compatible =3D "simple-mfd", },
->  #ifdef CONFIG_ARM_AMBA
->  	{ .compatible =3D "arm,amba-bus", },
->  #endif /* CONFIG_ARM_AMBA */
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Maxime
