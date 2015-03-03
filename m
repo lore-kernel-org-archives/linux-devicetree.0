@@ -1,60 +1,83 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] arm-cci400: PMU monitoring support on ARM64
-Date: Tue, 03 Mar 2015 16:00:12 +0000
-Message-ID: <54F5DA8C.7080609@arm.com>
-References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: devicetree: bindings: Add Qualcomm RPM
+ regulator subnodes
+Date: Tue, 3 Mar 2015 08:02:51 -0800
+Message-ID: <20150303160250.GD26334@sonymobile.com>
+References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1425356740-26285-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <20150303124700.GN21293@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425295754-13376-1-git-send-email-suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150303124700.GN21293-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Punit Agrawal <Punit.Agrawal-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue 03 Mar 04:47 PST 2015, Mark Brown wrote:
+
+> On Mon, Mar 02, 2015 at 08:25:37PM -0800, Bjorn Andersson wrote:
+> 
+> > +- compatible:
+> > +	Usage: required
+> > +	Value type: <string>
+> > +	Definition: must be one of:
+> > +		    "qcom,rpm-pm8058-regulators"
+> > +		    "qcom,rpm-pm8901-regulators"
+> > +		    "qcom,rpm-pm8921-regulators"
+> 
+> Why do these subnodes have a compatible - do they ever appear except as
+> a child of a parent of the same type of device?
+
+The relationship with the parent node is 1:M;
+
+in the case of 8960/8064 there is only one PMIC controlled by the RPM,
+hence the dt will look like:
+
+rpm {
+	compatible = "qcom,rpm-apq8960";
+
+	regulators {
+		compatible = "qcom,rpm-pm8921-regulators";
+		...
+	};
+};
+
+But for 8660, and later for e.g. 8974 we have something like:
+
+rpm {
+	compatible = "qcom,rpm-msm8660";
+
+	pm8058-regulators {
+		compatible = "qcom,rpm-pm8058-regulators";
+
+		vdd_xxx-supply = <&pm8058_s4>;
+		...
+	};
+
+	pm8901-regulators {
+		compatible = "qcom,rpm-pm8901-regulators";
+		...
+	};
+};
+
+I intended to match these by name, having one rpm-regulator device
+instance and using desc->regulators_node to match regulators in the
+right node - with of_node being the rpm node.
+
+But this doesn't really map to reality, as supplies are a property of
+pm8058 and pm8901 and not of the rpm. I ended up writing some custom
+device registering code to instantiate the right number of regulator
+children and give each of them the right of_node etc.
 
 
-On 02/03/15 11:29, Suzuki K. Poulose wrote:
-> From: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
->
-> This series enables the PMU monitoring support for CCI400 on ARM64.
-> The existing CCI400 driver code is a mix of PMU driver and the MCPM
-> driver code. The MCPM driver is only used on ARM(32) and contains
-> arm32 assembly and hence can't be built on ARM64. This patch splits
-> the code to
->
->   - ARM_CCI400_PORT_CTRL driver - depends on ARM && V7
->   - ARM_CCI400_PMU driver
->
-> Accessing the Peripheral ID2 register(PID2) on CCI-400, to detect
-> the revision of the chipset, is a secure operation. Hence, it prevents
-> us from running this on non-secure platforms. The issue is overcome by
-> explicitly mentioning the revision number of the CCI PMU in the device tree
-> binding. The device-tree binding has been updated with the new bindings.
->
-> i.e,	arm-cci-400-pmu,r0 => revision 0
-> 	arm-cci-400-pmu,r1 => revision 1
-> 	arm-cci-400-pmu => (old) DEPRECATED
->
-> The old binding has been DEPRECATED and must be used only on ARM32
-> system with secure access. We don't have a reliable dynamic way to detect
-> if the system is running secure. This series tries to use the best safe
-> method by relying on the availability of MCPM(as it was prior to the series).
-> It is upto the MCPM platform driver to decide, if the system is secure before
-> it goes ahead and registers its drivers and pokes the CCI. This series doesn't
-> address/solve the problem of MCPM. I will be happy to use a better approach,
-> if there is any.
->
-> Tested on (non-secure)TC2 and Juno.
->
-
-For the series:
-Tested-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> (on secure/MCPM TC2)
+But as several other of-based platforms have a compatible in their
+regulators node I consider that a viable and cleaner solution.
 
 Regards,
-Sudeep
-
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
