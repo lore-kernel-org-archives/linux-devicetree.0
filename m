@@ -1,117 +1,45 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
-Date: Tue,  3 Mar 2015 10:32:24 +0100
-Message-ID: <1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
-References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425375148-4369-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv2 05/15] ARM: mvebu: add stdout-path to all armada-*.dts
+Date: Tue, 3 Mar 2015 10:45:41 +0100
+Message-ID: <20150303104541.345608b4@free-electrons.com>
+References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
+	<54EB4E9B.6010001@free-electrons.com>
+	<CAL_JsqJZJMkH953hq0_sOvEEu9o4pXxs0sdP5=7c2EXXNSyA9A@mail.gmail.com>
+	<20150227174851.390d9f58@free-electrons.com>
+	<CAL_Jsq+tP6wBcDti7x-B6ar8esE=65Ymg_CKANeOKSe=yYhNnw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+tP6wBcDti7x-B6ar8esE=65Ymg_CKANeOKSe=yYhNnw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Lior Amsalem <alior@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth>
 List-Id: devicetree@vger.kernel.org
 
-This defines a new compatible option for MFD devices "simple-mfd" that will
-make the OF core spawn child devices for all subnodes of that MFD device.
-It is optional but handy for things like syscon and possibly other
-simpler MFD devices.
+Dear Rob Herring,
 
-Since there was no file to put the documentation in, I took this opportunity
-to make a small writeup on MFD devices and add the compatible definition
-there.
+On Fri, 27 Feb 2015 11:42:43 -0600, Rob Herring wrote:
 
-Suggested-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-I make the patch to the OF core in this one, it makes much more sense since
-it's a oneliner
+> > It is worth mentioning that this also happens with
+> >
+> >      stdout-path = "uart0:115200n8";
+> >
+> > which was explicitly suggested by Mark in his e-mail. uart0 is an alias
+> > to the proper DT node, since stdout-path = &uart0; works almost fine.
+> 
+> Mark forgot the '&'. So does 'stdout-path = "&uart0:115200n8";' work?
 
-Lee: this is a (tested!) implementation of your suggestion for simple-mfd.
-If you can eventually ACK this from the MFD side, I think it should be
-funneled through the ARM SoC tree.
+Nah, there is really no '&' needed, Mark was right. What was wrong in
+my setup was that uart0 was a *label* for the serial port DT node, and
+not an alias. Once I created an alias 'serial0' for '&uart0', things
+started working all right.
 
-Grant/Rob: if either of you can ACK the change to the OF core likewise it can
-be taken through ARM SoC.
+Thanks,
 
-DT binings maintainers: there is some background discussion on this here:
-http://marc.info/?l=linux-arm-kernel&m=142486676603889&w=2
-http://marc.info/?l=devicetree&m=142166313621469&w=2
----
- Documentation/devicetree/bindings/mfd/mfd.txt | 40 +++++++++++++++++++++++++++
- drivers/of/platform.c                         |  1 +
- 2 files changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/mfd.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
-new file mode 100644
-index 000000000000..cc057438abe8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mfd.txt
-@@ -0,0 +1,40 @@
-+Multi-Function Devices (MFD)
-+
-+These devices comprise a nexus for heterogeneous hardware blocks spawning
-+multiple child devices.
-+
-+A typical MFD can be:
-+
-+- A mixed signal ASIC on an external bus, sometimes a PMIC (power management
-+  integrated circuit) that is manufactured in a lower technology node (rough
-+  silicon) that handles analog drivers for things like audio amplifiers, LED
-+  drivers, level shifters, PHY (physical interfaces to things like USB or
-+  ethernet), regulators etc.
-+
-+- A range of memory registers containing "miscellaneous system registers" also
-+  known as a system controller "syscon" or any other memory range containing a
-+  mix of unrelated registers.
-+
-+Optional properties:
-+
-+- compatible : "simple-mfd" - this signifies that the operating system should
-+  spawn child devices for all the subnodes of the MFD device akin to how
-+  "simple-bus" inidicates when to spawn children for a simple memory-mapped
-+  bus. For more complex devices, when the nexus driver has to probe registers
-+  to figure out what children exist etc, this should not be used. In the latter
-+  case the child devices will be instantiated by the operating system.
-+
-+Example:
-+
-+foo@1000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0x010000 0x1000>;
-+
-+		led@08.0 {
-+			compatible = "register-bit-led";
-+			offset = <0x08>;
-+			mask = <0x01>;
-+			label = "myled";
-+			default-state = "on";
-+		};
-+};
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index b189733a1539..969ba4e1460c 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -26,6 +26,7 @@
- 
- const struct of_device_id of_default_bus_match_table[] = {
- 	{ .compatible = "simple-bus", },
-+	{ .compatible = "simple-mfd", },
- #ifdef CONFIG_ARM_AMBA
- 	{ .compatible = "arm,amba-bus", },
- #endif /* CONFIG_ARM_AMBA */
+Thomas
 -- 
-1.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
