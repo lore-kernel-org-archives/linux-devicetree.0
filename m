@@ -1,89 +1,63 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/10] dt/bindings: Add binding for BCM2835 mailbox driver
-Date: Tue, 3 Mar 2015 08:05:50 +0000
-Message-ID: <20150303080550.GF6976@x1>
-References: <1425329684-23968-1-git-send-email-eric@anholt.net>
- <1425329684-23968-2-git-send-email-eric@anholt.net>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [RFC PATCH v2 3/3] ARM: dts: exynos5420: add async-bridge clocks
+ to disp1 power domain
+Date: Tue, 03 Mar 2015 09:12:20 +0100
+Message-ID: <54F56CE4.8000704@collabora.co.uk>
+References: <54D48701.10105@collabora.co.uk> <1423220154-5333-1-git-send-email-a.hajda@samsung.com> <54D4A534.8060004@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425329684-23968-2-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <54D4A534.8060004@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Liquid.Acid@gmx.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 02 Mar 2015, Eric Anholt wrote:
+Hello Kukjin,
 
-> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+On 02/06/2015 12:27 PM, Javier Martinez Canillas wrote:
+> Hello Andrzej,
 > 
-> v2: Split into a separate patch for submitting to the devicetree list.
-
-When you say that you've split them, do you mean each DT doc, as I
-don't think this is the way to go.  I'm happy to listen to other
-people's opinions, but I think all of the .../mailbox/brcm,bcm2835-
-files should be amalgamated.
-
->     Consistently start node docs with a capital letter. device's
->     address in the example shouldn't have "0x". Drop machine-specific
->     interrupt numbers from the docs.  (changes by anholt).
+> On 02/06/2015 11:55 AM, Andrzej Hajda wrote:
+>> FIMD and MIXER IPs in disp1 power domain have async-bridges (to GSCALER),
+>> therefore their clocks should be enabled during power domain switch.
+>> 
+>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>> ---
+>> Hi,
+>> 
+>> This is 2nd version of the patch. After decrypting manual and discussion
+>> with Marek I guess this set of clocks is more apropriate - async-bridges
+>> are present in MIXER and FIMD, so their clocks should be enabled.
+>>
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> Signed-off-by: Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> ---
->  .../devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+> I just tested this version on my Exynos5420 Peach Pit and the power domain
+> failed error does not happen anymore even after enabling and disabling the
+> HDMI display several times.
 > 
-> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
-> new file mode 100644
-> index 0000000..f5741a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+> Thanks a lot for fixing this since the dependency was not clear to me from
+> reading the manual.
+> 
+>> The 1st version worked for me due to fact I have forgot to remove
+>> clk_ignore_unused kernel boot option during tests ;)
+>>
+> 
+> Yes, that has bitten me too many times as well :)
+> 
+>> Regards
+>> Andrzej
+>> ---
+> 
+> Best regards,
+> Javier
+> 
 
-Rename these files to conform to the current naming convention.  In
--next we currently have 'altera-mailbox.txt' and 'omap-mailbox.txt',
-so 'bcm2835-mbox.txt' seems appropriate.
+Could you please pick this patch and patches 1/2 and 2/3 from the series [0]?
 
-> @@ -0,0 +1,19 @@
-> +Broadcom BCM2835 VideoCore mailbox IPC
-> +
-> +Required properties:
-> +
-> +- compatible : Should be "brcm,bcm2835-mbox"
-> +- reg : Specifies base physical address and size of the registers.
-> +- interrupts : The interrupt number. See
-> +  bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-> +- #mbox-cells : Specifies the number of cells needed to encode a
-> +  mailbox channel. The value shall be 1.
+These are needed to fix DISP1 power domain issues and HDMI on Exynos542x.
 
-Binding documents are much easier to read if the property names and
-descriptions are seperated with tabs.
+Thanks a lot and best regards,
+Javier
 
-- compatible		: Should be "brcm,bcm2835-mbox"
-- reg			: Specifies base physical address and size of the registers
-- interrupts 		: The interrupt number
-			  [See ../interrupt-controller/brcm,bcm2835-armctrl-ic.txt]
-- #mbox-cells		: Specifies the number of cells needed to encode a
-			  mailbox channel. The value shall be 1
-
-... don't you think?  Also notice the consistency of no '.'s and the
-bracketing of the [See ...] statement.
-
-> +Example:
-> +
-> +mailbox: mailbox@7e00b800 {
-> +	compatible = "brcm,bcm2835-mbox";
-> +	reg = <0x7e00b880 0x40>;
-> +	interrupts = <0 1>;
-> +	#mbox-cells = <1>;
-> +};
-
-It would be good to see the client examples here as well.  Please consider
-pulling in brcm,bcm2835-mbox-power.txt and brcm,bcm2835-mbox-property.txt.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[0]: https://lkml.org/lkml/2015/2/5/265
