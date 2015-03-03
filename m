@@ -1,46 +1,35 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH 0/3] Enable ahci_st for stih407 and fix hang
-Date: Tue, 3 Mar 2015 13:23:09 +0100
-Message-ID: <54F5A7AD.9000906@st.com>
-References: <1425300519-13747-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 3/6] ARM64: cpuidle: Replace cpu_suspend by the common ARM/ARM64 function
+Date: Tue,  3 Mar 2015 13:29:34 +0100
+Message-ID: <1425385777-14766-4-git-send-email-daniel.lezcano@linaro.org>
+References: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425300519-13747-1-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, tj@kernel.org
-Cc: lee.jones@linaro.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org
+To: lorenzo.pieralisi@arm.com, rjw@rjwysocki.net
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Catalin.Marinas@arm.com, robherring2@gmail.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lina.iyer@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Call the common ARM/ARM64 'arm_cpuidle_suspend' instead of cpu_suspend function
+which is specific to ARM64.
 
-On 03/02/2015 01:48 PM, Peter Griffin wrote:
-> Hi,
->
-> Now that miphy28lp phy is present upstream we can add sata DT nodes for
-> stih407 family silicon. As part of testing this I found a hang
-> with the current driver implmentation which does some register writes
-> before enabling the IP clock. Presumably on stih416 devices the sata
-> clock must have already been enabled by the targetpack/bootloader.
->
-> This series also tidys up some inaccuracies in the DT documentation
-> where the doc hasn't kept aligned with the driver. In addtion to these
-> fixes I've also added an example for stih407 silicon.
->
-> Peter Griffin (3):
->    ahci: st: Update the ahci_st DT documentation
->    ARM: DT: STi: STiH407: Add sata DT nodes.
->    ahci: st: st_configure_oob must be called after IP is clocked.
->
->   Documentation/devicetree/bindings/ata/ahci-st.txt | 45 ++++++++++++++++-------
->   arch/arm/boot/dts/stih407-family.dtsi             | 44 ++++++++++++++++++++++
->   drivers/ata/ahci_st.c                             |  6 ++-
->   3 files changed, 80 insertions(+), 15 deletions(-)
->
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/cpuidle/cpuidle-arm64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-For the series, you can add my:
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
-
-Thanks,
-Maxime
+diff --git a/drivers/cpuidle/cpuidle-arm64.c b/drivers/cpuidle/cpuidle-arm64.c
+index 39a2c62..0cea244 100644
+--- a/drivers/cpuidle/cpuidle-arm64.c
++++ b/drivers/cpuidle/cpuidle-arm64.c
+@@ -49,7 +49,7 @@ static int arm64_enter_idle_state(struct cpuidle_device *dev,
+ 		 * call the CPU ops suspend protocol with idle index as a
+ 		 * parameter.
+ 		 */
+-		ret = cpu_suspend(idx);
++		arm_cpuidle_suspend(idx);
+ 
+ 		cpu_pm_exit();
+ 	}
+-- 
+1.9.1
