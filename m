@@ -1,47 +1,42 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v2 3/3] drivers: net: xgene: fix new firmware backward compatibility with older driver
-Date: Tue,  3 Mar 2015 11:39:41 -0800
-Message-ID: <1425411581-25463-4-git-send-email-isubramanian@apm.com>
+From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v2 1/3] Documentation: dts: Update compatible field description for APM X-Gene
+Date: Tue,  3 Mar 2015 11:39:39 -0800
+Message-ID: <1425411581-25463-2-git-send-email-isubramanian@apm.com>
 References: <1425411581-25463-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1425411581-25463-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>, Keyur Chudgar <kchudgar@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425411581-25463-1-git-send-email-isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the backward compatibile of the older driver with the
-newer firmware by making the binding unique so that the older driver won't
-recognize the non-supported interfaces.
-
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
-Tested-by: Mark Langsdorf <mlangsdo@redhat.com>
+Signed-off-by: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
+Tested-by: Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/net/ethernet/apm/xgene/xgene_enet_main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/net/apm-xgene-enet.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-index 4de62b2..635a83b 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-@@ -1025,6 +1025,8 @@ static int xgene_enet_remove(struct platform_device *pdev)
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id xgene_enet_acpi_match[] = {
- 	{ "APMC0D05", },
-+	{ "APMC0D30", },
-+	{ "APMC0D31", },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, xgene_enet_acpi_match);
-@@ -1033,6 +1035,8 @@ MODULE_DEVICE_TABLE(acpi, xgene_enet_acpi_match);
- #ifdef CONFIG_OF
- static struct of_device_id xgene_enet_of_match[] = {
- 	{.compatible = "apm,xgene-enet",},
-+	{.compatible = "apm,xgene1-sgenet",},
-+	{.compatible = "apm,xgene1-xgenet",},
- 	{},
- };
+diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+index cfcc527..6151999 100644
+--- a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
++++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+@@ -4,7 +4,10 @@ Ethernet nodes are defined to describe on-chip ethernet interfaces in
+ APM X-Gene SoC.
  
+ Required properties for all the ethernet interfaces:
+-- compatible: Should be "apm,xgene-enet"
++- compatible: Should state binding information from the following list,
++  - "apm,xgene-enet":    RGMII based 1G interface
++  - "apm,xgene1-sgenet": SGMII based 1G interface
++  - "apm,xgene1-xgenet": XFI based 10G interface
+ - reg: Address and length of the register set for the device. It contains the
+   information of registers in the same order as described by reg-names
+ - reg-names: Should contain the register set names
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
