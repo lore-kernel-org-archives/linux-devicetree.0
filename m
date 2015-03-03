@@ -1,55 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/4] regulator: core: Expose init_data to of_parse_cb
-Date: Tue, 3 Mar 2015 12:50:33 +0000
-Message-ID: <20150303125033.GO21293@sirena.org.uk>
-References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1425356740-26285-3-git-send-email-bjorn.andersson@sonymobile.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
+Date: Tue, 03 Mar 2015 14:20:31 +0100
+Message-ID: <54F5B51F.6030609@redhat.com>
+References: <1425131285-8640-1-git-send-email-codekipper@gmail.com> <20150303071635.GC4713@lukather> <54F568F8.1040104@redhat.com> <20150303082209.GE4713@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KJtrLAZG9Uo4yONd"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425356740-26285-3-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBKXK22TQKGQEZTI7LFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150303082209.GE4713@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---KJtrLAZG9Uo4yONd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 03-03-15 09:22, Maxime Ripard wrote:
+> On Tue, Mar 03, 2015 at 08:55:36AM +0100, Hans de Goede wrote:
+>>>> +/ {
+>>>> +	model = "Mele I7 Quad top set box";
+>>>> +	compatible = "mele,i7", "allwinner,sun6i-a31";
+>>>> +
+>>>> +	chosen {
+>>>> +		bootargs = "earlyprintk console=ttyS0,115200";
+>>>
+>>> Using earlyprintk by default is a bad idea if the kernel is configured
+>>> with DEBUG_LL support for another SoC.
+>>
+>> While on this subject, u-boot now sets the chosen/stdout-path property
+>> up by default, which means that the kernel will do the right thing by
+>> default. So we we really do not need any bootargs= in our dts files.
+>
+> I just tested that this weekend, and it turned out that the kernel
+> couldn't use it so far (ie, no output until init takes over and setup
+> a TTY on ttyS0).
+>
+> Was it working for you?
 
-On Mon, Mar 02, 2015 at 08:25:38PM -0800, Bjorn Andersson wrote:
+Yes, note that the kernel only honors the stdout-path property if
+there is no console= argument present if there is a console= argument
+present on the kernel cmdline then that will overrule the stdout-path
+property.
 
-> Expose the newly created init_data to the driver's parse callback so
-> that it can futher enhance it with e.g. constraints of the regulator.
+Which board did you test with, and what u-boot and kernel version ?
 
-Why would the driver need to do that?  I guess I'll see later on in the
-series but the changelog should make that clear.  Drivers aren't
-supposed to ever need to look at their init data, modifying the init
-data from what the machine provied is usually a red flag.
+>> Currently we've a random mix where we do have bootargs in some, but
+>> not in most sunxi dts files. I believe we should simply remove it
+>> everywhere...
+>
+> We used to set them in SoCs that are not supported by U-boot yet, and
+> where the bootloader won't come and patch the DT (A31, A23, A80).
 
-> This is needed because calling regulator_register() with a of_node and
-> of_match will overwrite the passed config->init_data. An alternative way
-> would be to merge the parsed init_data with the driver provided one.
+Ah, so that is (was) the logic, following that logic we should probably
+remove bootargs= from at least the a23 and a31 boards (basically
+from all boards but a80).
 
-Put any explanation as to why the feature is needed in the changelog.
+Regards,
 
---KJtrLAZG9Uo4yONd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU9a4YAAoJECTWi3JdVIfQZoEH/3lwClkjHbGDJ7wBqZOVxxm8
-2yWkgC5egQwPhr/L/NuAPGoVVEeKgz/m5Y6NOoOxhJNalxvfyUfConPJU1Se1JpA
-nSCoi+WNX+mXztApOai8ClxeikHRfxRac4xze22+wRmByTv/ht6HR22aIyTmDnQA
-2d2FyGzhEVxV7TNzojPIWN4GIMeMRkOXPbx7Cf8eWEguF1tcQXaua5wpxPDfYUW/
-WvKZxxmykBu9Rrz3QDRNeXmzJ1jhXp97LcXBufTS8IwVR3/Pv38QRUhAG/MWBa6z
-Tyc/ZIRG9cLNKemXNgsvNOxwTvW1ceHwVi/yJOb3w0SWWlXtO36RDgRJvRUizqk=
-=EUz0
------END PGP SIGNATURE-----
-
---KJtrLAZG9Uo4yONd--
+Hans
