@@ -1,130 +1,108 @@
-From: Gyungoh Yoo <gyungoh@gmail.com>
-Subject: Re: [PATCH v11 0/6] Add Skyworks SKY81452 device drivers
-Date: Tue, 3 Mar 2015 11:24:30 +0900
-Message-ID: <20150303022430.GA3667@jack-ThinkPad-T520>
-References: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
- <20150227203938.GA12821@x1>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 1/5] Documentation: Add device tree bindings for
+ Freescale i.MX GPC
+Date: Tue, 3 Mar 2015 10:35:33 +0800
+Message-ID: <20150303023531.GF20455@dragon>
+References: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
+ <1424713215-3357-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150227203938.GA12821@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: sameo@linux.intel.com, robh+dt@kernel.org, jg1.han@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, broonie@kernel.org, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, treding@nvidia.com, p.zabel@pengutronix.de, arno@natisbad.org, kuninori.morimoto.gx@renesas.com
+In-Reply-To: <1424713215-3357-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 27, 2015 at 08:39:38PM +0000, Lee Jones wrote:
-> On Fri, 27 Feb 2015, gyungoh@gmail.com wrote:
->=20
-> > From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-> >=20
-> > This patch set includes regulator and backlight driver for SKY81452=
-=2E
-> > Also it includes documents for device tree and module.
-> > sky81452-regulator was already applied. So this series doesn't
-> > include it.
-> >=20
-> > v11:
-> > Renamed 'skyworks,en-channels' property to led-sources.
-> > Removed unused property 'skyworks,ovp-level'.
-> >=20
-> > v10:
-> > Removed trivial get_brightness implementations for sky81452-backlig=
-ht
-> >=20
-> > v9:
-> > Removed the change to remove MODULE_VERSION() for sky81452-regulato=
-r
-> >=20
-> > v8:
-> > Renamed property names for backlight with vendor prefix
-> > Modified gpio-enable property to generic property for GPIO
-> > Made up the example for backlight DT
-> > Changed the DT parsing of regulator using regulator_node and of_mat=
-ch
-> >=20
-> > v7:
-> > Modified licensing text to GPLv2
-> > Split Kconfig renaming from DT patch
-> >=20
-> > v6:
-> > Added new line character at the end of line of dev_err()
-> >=20
-> > v5:
-> > Changed DT for regulator : 'lout' node should be defined under 'reg=
-ulator'
-> > Removed compatible string from sky81452-regulator driver
-> > Modified sky81452-regulator to return EINVAL when of_node is NULL
-> > Move sky81452-backlight.h to include/linux/platform_data
-> >=20
-> > v4:
-> > Removed MODULE_VERSION()
-> > Modified license to GPLv2
-> > Removed calling to backlight_device_unregister() in sky81452-backli=
-ght
-> >=20
-> > v3:
-> > Cleaned-up DBG messages
-> > Cleaned-up DT
-> > Fixed the backlight name from 'sky81452-bl' to 'sky81452-backlight'
-> > Assigned mfd_cell.of_compatible for binding device node
-> > Modified error messages
-> > Modified sky81452-regulator to return ENODATA when of_node is NULL
-> >=20
-> > v2:
-> > Split the patches for each sub-system
-> > Added 'reg' attribute for I2C address in device tree documents
-> > Added 'compatible' attribute in child drivers
-> > Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
-> > Changed the dependency from I2C=3Dy to I2C, for CONFIG_MFD_SKY81452
-> > Added message for exception or errors.
-> > Added vendor prefix for Skyworks Solutions, Inc.
-> > Add SKY81452 to the Trivial Devices list
-> >=20
-> > Gyungoh Yoo (6):
-> >   mfd: Add support for Skyworks SKY81452 driver
-> >   backlight: Add support Skyworks SKY81452 backlight driver
-> >   devicetree: Add new SKY81452 mfd binding
-> >   devicetree: Add new SKY81452 backlight binding
-> >   devicetree: Add vendor prefix for Skyworks Solutions, Inc.
-> >   devicetree: Add SKY81452 to the Trivial Devices list
-> >=20
-> >  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
-> >  Documentation/devicetree/bindings/mfd/sky81452.txt |  35 ++
-> >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-> >  .../video/backlight/sky81452-backlight.txt         |  29 ++
-> >  drivers/mfd/Kconfig                                |  12 +
-> >  drivers/mfd/Makefile                               |   1 +
-> >  drivers/mfd/sky81452.c                             | 108 +++++++
-> >  drivers/video/backlight/Kconfig                    |  10 +
-> >  drivers/video/backlight/Makefile                   |   1 +
-> >  drivers/video/backlight/sky81452-backlight.c       | 353 +++++++++=
-++++++++++++
-> >  include/linux/mfd/sky81452.h                       |  31 ++
-> >  include/linux/platform_data/sky81452-backlight.h   |  46 +++
-> >  12 files changed, 628 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.=
-txt
-> >  create mode 100644 Documentation/devicetree/bindings/video/backlig=
-ht/sky81452-backlight.txt
-> >  create mode 100644 drivers/mfd/sky81452.c
-> >  create mode 100644 drivers/video/backlight/sky81452-backlight.c
-> >  create mode 100644 include/linux/mfd/sky81452.h
-> >  create mode 100644 include/linux/platform_data/sky81452-backlight.=
-h
->=20
-> Correct me if I'm wrong, but I believe you have all of the relevant
-> Acks now.  If so, I plan to pick this up next week and take it
-> through the MFD tree.
+On Mon, Feb 23, 2015 at 06:40:11PM +0100, Philipp Zabel wrote:
+> The i.MX6 contains a power controller that controls power gating and
+> sequencing for the SoC's power domains.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-I had got all Acks except DT on v10.
-Rob from DT reviewed, and v11 includes what he asked.
+The patch (series) looks fine to me.  Can we get DT maintainer's ACK on
+this, so that I can apply the series for 4.1?
 
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Shawn
+
+> ---
+> Changes since v8:
+>  - Updated example with IRQ_TYPE_... and IMX6QDL_CLK_... defines
+> ---
+>  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> new file mode 100644
+> index 0000000..65cc034
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> @@ -0,0 +1,59 @@
+> +Freescale i.MX General Power Controller
+> +=======================================
+> +
+> +The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
+> +counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
+> +domains.
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
+> +- reg: should be register base and length as documented in the
+> +  datasheet
+> +- interrupts: Should contain GPC interrupt request 1
+> +- pu-supply: Link to the LDO regulator powering the PU power domain
+> +- clocks: Clock phandles to devices in the PU power domain that need
+> +	  to be enabled during domain power-up for reset propagation.
+> +- #power-domain-cells: Should be 1, see below:
+> +
+> +The gpc node is a power-controller as documented by the generic power domain
+> +bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> +
+> +Example:
+> +
+> +	gpc: gpc@020dc000 {
+> +		compatible = "fsl,imx6q-gpc";
+> +		reg = <0x020dc000 0x4000>;
+> +		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
+> +		pu-supply = <&reg_pu>;
+> +		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> +			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
+> +			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
+> +			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
+> +			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
+> +			 <&clks IMX6QDL_CLK_VPU_AXI>;
+> +		#power-domain-cells = <1>;
+> +	};
+> +
+> +
+> +Specifying power domain for IP modules
+> +======================================
+> +
+> +IP cores belonging to a power domain should contain a 'power-domains' property
+> +that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
+> +the power domain the device belongs to.
+> +
+> +Example of a device that is part of the PU power domain:
+> +
+> +	vpu: vpu@02040000 {
+> +		reg = <0x02040000 0x3c000>;
+> +		/* ... */
+> +		power-domains = <&gpc 1>;
+> +		/* ... */
+> +	};
+> +
+> +The following DOMAIN_INDEX values are valid for i.MX6Q:
+> +ARM_DOMAIN     0
+> +PU_DOMAIN      1
+> +The following additional DOMAIN_INDEX value is valid for i.MX6SL:
+> +DISPLAY_DOMAIN 2
+> -- 
+> 2.1.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
