@@ -1,142 +1,139 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: sun7i: dt: Add new MK808C device
-Date: Tue, 3 Mar 2015 21:22:32 +0100
-Message-ID: <CAEKpxB=-vtjMckh3ZHoy0mezE9U1EtKzmttdXRD5ZNztZvB_ag@mail.gmail.com>
-References: <1425131004-8551-1-git-send-email-codekipper@gmail.com>
-	<20150303071342.GB4713@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBCNQ3CTQKGQEZEL5VLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150303071342.GB4713@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 07/10 v2] usb: Make sure that DWC2 initializes after the power channel mailbox driver.
+Date: Tue,  3 Mar 2015 12:32:58 -0800
+Message-ID: <1425414778-30820-1-git-send-email-eric@anholt.net>
+References: <20150303083250.GG6976@x1>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150303083250.GG6976@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review Maxime,
+This gets USB working on the Raspberry Pi without relying on U-Boot to
+send the power message for us.  Without it, you would get warnings
+about fifo sizes and "dwc2_core_reset() HANG! Soft Reset
+GRSTCTL=80000001" leading to a failed probe.
 
-On 3 March 2015 at 08:13, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Sat, Feb 28, 2015 at 02:43:24PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> The MK808C is an A20 based android stick, with 1G RAM, 8G NAND flash,
->> a RTL8723au wifi + bt combo chip, a USB host ports using USB-A receptacles,
->> a mini USB-B receptacle for USB OTG, mini HDMI and a TRS connector for AV.
->>
->> This patch adds basic support for the device, more information can be found
->> here (http://linux-sunxi.org/MK808C).
->>
->> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile             |   1 +
->>  arch/arm/boot/dts/sun7i-a20-mk808c.dts | 146 +++++++++++++++++++++++++++++++++
->>  2 files changed, 147 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/sun7i-a20-mk808c.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 9544768..eae7706 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -542,6 +542,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
->>       sun7i-a20-hummingbird.dtb \
->>       sun7i-a20-i12-tvbox.dtb \
->>       sun7i-a20-m3.dtb \
->> +     sun7i-a20-mk808c.dtb \
->>       sun7i-a20-olinuxino-lime.dtb \
->>       sun7i-a20-olinuxino-lime2.dtb \
->>       sun7i-a20-olinuxino-micro.dtb \
->> diff --git a/arch/arm/boot/dts/sun7i-a20-mk808c.dts b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
->> new file mode 100644
->> index 0000000..5722a03
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
->> @@ -0,0 +1,146 @@
->> +/*
->> + * Copyright 2015 Marcus Cooper
->> + *
->> + * Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + *     You should have received a copy of the GNU General Public
->> + *     License along with this file; if not, write to the Free
->> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
->> + *     MA 02110-1301 USA
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +/dts-v1/;
->> +#include "sun7i-a20.dtsi"
->> +#include "sunxi-common-regulators.dtsi"
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/interrupt-controller/irq.h>
->> +#include <dt-bindings/pinctrl/sun4i-a10.h>
->
-> You don't seem to be using the pinctrl header.
->
-I'll remove this....
->> +
->> +/ {
->> +     model = "mk808c";
->> +     compatible = "mk808c", "allwinner,sun7i-a20";
->
-> the compatible must be of the format "vendor,device". Please add the
-> vendor name.
+v2: Make the export of the has-the-mailbox-driver-loaded bool be
+    through a function call defined in include/linux/platform/
 
-Ahhh....I've searched high and low for a vendors name. I listed it as
-unknown on the wiki page,
-would 'odm' be considered valid?
-CK
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+
+This would be the first include file in include/linux/platform/.  Is
+that the right place?  I see a few
+arch/arm/mach-*/include/mach/platform.h files -- would that or
+arch/arm/mach-bcm/include/mach/bcm2835-platform.h possibly be the right
+place instead?
+
+Also, Lee, since you mostly typed the contents of that header, should
+your SoB go on this?
+
+drivers/mailbox/bcm2835-mailbox-power.c | 11 +++++++++++
+ drivers/usb/dwc2/platform.c             |  8 ++++++++
+ include/linux/platform/bcm2835.h        | 18 ++++++++++++++++++
+ 3 files changed, 37 insertions(+)
+ create mode 100644 include/linux/platform/bcm2835.h
+
+diff --git a/drivers/mailbox/bcm2835-mailbox-power.c b/drivers/mailbox/bcm2835-mailbox-power.c
+index f09c855..a3ed773 100644
+--- a/drivers/mailbox/bcm2835-mailbox-power.c
++++ b/drivers/mailbox/bcm2835-mailbox-power.c
+@@ -19,6 +19,7 @@
+ #include <linux/mailbox_client.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/platform/bcm2835.h>
+ 
+ #define BCM_POWER_USB (1 << 3)
+ #define BCM_MBOX_DATA_SHIFT 4
+@@ -31,6 +32,14 @@ struct bcm_mbox_power {
+ 	uint32_t response;
+ };
+ 
++static bool bcm2835_mbox_power_initialized;
++
++bool bcm2835_mbox_is_usb_powered(void)
++{
++	return bcm2835_mbox_power_initialized;
++}
++EXPORT_SYMBOL_GPL(bcm2835_mbox_is_usb_powered);
++
+ struct bcm_mbox_power *mbox_power;
+ 
+ static void response_callback(struct mbox_client *cl, void *mssg)
+@@ -92,6 +101,7 @@ static int bcm2835_mbox_power_probe(struct platform_device *pdev)
+ 		bcm_mbox_set_power(BCM_POWER_USB);
+ 		bcm2835_mbox_power_initialized = true;
+ 	}
++	bcm2835_mbox_power_initialized = true;
+ 
+ 	return ret;
+ }
+@@ -99,6 +109,7 @@ static int bcm2835_mbox_power_probe(struct platform_device *pdev)
+ static int bcm2835_mbox_power_remove(struct platform_device *pdev)
+ {
+ 	bcm_mbox_set_power(0);
++	bcm2835_mbox_power_initialized = false;
+ 
+ 	mbox_free_channel(mbox_power->chan);
+ 
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index ae095f0..caca216 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -42,6 +42,7 @@
+ #include <linux/of_device.h>
+ #include <linux/mutex.h>
+ #include <linux/platform_device.h>
++#include <linux/platform/bcm2835.h>
+ 
+ #include <linux/usb/of.h>
+ 
+@@ -175,6 +176,13 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 		defparams.dma_desc_enable = 0;
+ 	}
+ 
++	/*
++	 * Make sure the platform driver for enabling the power has
++	 * initialized before we do.
++	 */
++	if (params == &params_bcm2835 && !bcm2835_is_usb_powered())
++		return -EPROBE_DEFER;
++
+ 	hsotg = devm_kzalloc(&dev->dev, sizeof(*hsotg), GFP_KERNEL);
+ 	if (!hsotg)
+ 		return -ENOMEM;
+diff --git a/include/linux/platform/bcm2835.h b/include/linux/platform/bcm2835.h
+new file mode 100644
+index 0000000..a97d938
+--- /dev/null
++++ b/include/linux/platform/bcm2835.h
+@@ -0,0 +1,18 @@
++#ifdef CONFIG_BCM2835_MBOX
++bool bcm2835_mbox_is_usb_powered(void);
++
++static inline bool bcm2835_is_usb_powered(void)
++{
++	return bcm2835_mbox_is_usb_powered();
++}
++#else
++static inline bool bcm2835_is_usb_powered(void)
++{
++	/*
++	 * If BCM2835 isn't using its Mailbox driver, the bootloader
++	 * is charged with powering up USB.
++	 */
++	return true;
++}
++#endif
++
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
