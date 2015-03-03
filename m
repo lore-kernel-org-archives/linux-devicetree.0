@@ -1,36 +1,42 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v2 2/8] mmc: sdhci-st: Add support for de-asserting reset
- signal and top regs resource
-Date: Tue, 3 Mar 2015 11:34:15 +0100
-Message-ID: <54F58E27.10401@st.com>
-References: <1424956227-18258-1-git-send-email-peter.griffin@linaro.org> <1424956227-18258-3-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424956227-18258-3-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, chris@printf.net, ulf.hansson@linaro.org
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, peppe.cavallaro@st.com
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/3] mailbox: New mailbox driver for ST
+Date: Tue,  3 Mar 2015 10:41:20 +0000
+Message-ID: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+This set provides support for ST's Mailbox IP.
 
-On 02/26/2015 02:10 PM, Peter Griffin wrote:
-> STiH407 family SoC's can have a reset signal for the controller which needs to
-> be managed. Also the eMMC controller has some additional 'top' memory mapped
-> registers which are used to manage the dynamic and static delay required for
-> UHS modes. This patch adds support for creating the mapping, which will be used
-> by subsequent patches.
->
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> ---
->   drivers/mmc/host/sdhci-st.c | 52 ++++++++++++++++++++++++++++++++++++++++++---
->   1 file changed, 49 insertions(+), 3 deletions(-)
->
+In order to save IRQ lines, current platforms have been only been
+given a single interrupt for receiving messages from co-processors.
+The best way to work around this limitation is to use Mailbox 1
+(A9) as the receiving MB.  This driver/binding then has the ability
+to map the remaining Mailboxes back to Mailbox 1 where threaded
+interrupts are used to extract data to send back to the user.
 
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+Lee Jones (3):
+  ARM: STi: stih407-family: Add nodes for Mailbox
+  mailbox: dt: Supply bindings for ST's Mailbox IP
+  mailbox: Add support for ST's Mailbox IP
 
-Thanks,
-Maxime
+ .../devicetree/bindings/mailbox/sti-mailbox.txt    |  66 ++
+ arch/arm/boot/dts/stih407-family.dtsi              |  67 +++
+ drivers/mailbox/Kconfig                            |   7 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/mailbox-sti.c                      | 664 +++++++++++++++++++++
+ include/linux/mailbox_sti.h                        | 128 ++++
+ 6 files changed, 934 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+ create mode 100644 drivers/mailbox/mailbox-sti.c
+ create mode 100644 include/linux/mailbox_sti.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
