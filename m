@@ -1,48 +1,79 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH 4/4] regulator: qcom: Rework to single platform device
-Date: Tue, 3 Mar 2015 14:32:35 -0800
-Message-ID: <20150303223235.GK26334@sonymobile.com>
-References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1425356740-26285-5-git-send-email-bjorn.andersson@sonymobile.com>
- <54F630FF.60109@codeaurora.org>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH - v7] of: Move of_dma_configure() to device.c to help
+ re-use
+Date: Tue, 3 Mar 2015 17:54:25 -0500
+Message-ID: <54F63BA1.8030708@ti.com>
+References: <1425333548-8802-1-git-send-email-m-karicheri2@ti.com> <CAErSpo7MsxgVZyhpijRzVN7mVNcbN7M4A4W-UKaNs4AnmGrB6g@mail.gmail.com> <54F5F59C.5000603@ti.com> <CAErSpo5gPVqRrzZ3LbWvLRchr6SjxN0eve62dTJamfz+=O882Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54F630FF.60109@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo5gPVqRrzZ3LbWvLRchr6SjxN0eve62dTJamfz+=O882Q@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 03 Mar 14:09 PST 2015, Stephen Boyd wrote:
+On 03/03/2015 03:53 PM, Bjorn Helgaas wrote:
+> [+cc linux-pci]
+>
+> On Tue, Mar 3, 2015 at 11:55 AM, Murali Karicheri<m-karicheri2@ti.com>  wrote:
+>> On 03/02/2015 10:43 PM, Bjorn Helgaas wrote:
+>>>
+>>> On Mon, Mar 2, 2015 at 3:59 PM, Murali Karicheri<m-karicheri2@ti.com>
+>>> wrote:
+>>>>
+>>>> Move of_dma_configure() to device.c so it can be re-used for PCI devices
+>>>> to
+>>>> obtain DMA configuration from DT.  Also add a second argument so that for
+>>>> PCI, the DT node of root bus host bridge can be used to obtain the DMA
+>>>> configuration for the slave PCI device.
+>>>>
+>>>> Tested-by: Suravee Suthikulpanit<Suravee.Suthikulpanit@amd.com>   (AMD
+>>>> Seattle)
+>>>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>>>> Signed-off-by: Bjorn Helgaas<bhelgaas@google.com>
+>>>> Reviewed-by: Catalin Marinas<catalin.marinas@arm.com>
+>>>> Acked-by: Will Deacon<will.deacon@arm.com>
+>>>> CC: Joerg Roedel<joro@8bytes.org>
+>>>> CC: Grant Likely<grant.likely@linaro.org>
+>>>> CC: Rob Herring<robh+dt@kernel.org>
+>>>> CC: Russell King<linux@arm.linux.org.uk>
+>>>> CC: Arnd Bergmann<arnd@arndb.de>
+>>>> ---
+>>>>    - Based on the existing patch applied to arm-pci/pci/iommu for pci next
+>>>> (Bjorn)
+>>>>    - Fixed the build issue reported on ARCH=x86_64
+>>>
+>>>
+>>> Hi Murali,
+>>>
+>>> Can you please repost the entire series with fixed patches?  It's
+>>> easier for me to reapply the whole thing at once than it is to keep
+>>> track of and fiddle with individual patches.
+>>>
+>>> Bjorn
+>>
+>> Bjorn,
+>>
+>> Ok. I have just posted v8 of the series including all patches.
+>
+> Thanks, I put them on a pci/murali-v8 branch for now.  I'm assuming
+> you want them to go through my tree.  In the cover letter, you
+> mentioned the "arm-pci iommu branch", so if that means you want them
+> via an ARM tree instead of mine, just let me know.  I assume the build
+> will be clean and I'll rename it back to pci/iommu.
 
-> On 03/02/15 20:25, Bjorn Andersson wrote:
-> > -	config.of_node = pdev->dev.of_node;
-> > +static int rpm_reg_probe(struct platform_device *pdev)
-> > +{
-> > +	const struct rpm_regulator_data *reg;
-> > +	const struct of_device_id *match;
-> > +	struct regulator_config config = { };
-> > +	struct regulator_dev *rdev;
-> > +	struct qcom_rpm_reg *vreg;
-> >  
-> > -	ret = rpm_reg_of_parse(pdev->dev.of_node, &vreg->desc,
-> > -			       &config, initdata);
-> > -	if (ret)
-> > -		return ret;
-> > +	match = of_match_device(rpm_of_match, &pdev->dev);
-> > +	for (reg = match->data; reg->name; reg++) {
-> 
-> How does this work for the case where we may not want to add all the
-> regulators that a PMIC supports. I'm mostly thinking about the case
-> where we want to use the pm8xxx-regulator driver for a few regulators
-> and so we omit them from the DT for the RPM regulators.
-> 
+My bad. It should have beem pci/iommu. My remote was named arm-pci and 
+hence the confusion. Please apply it to the pci/iommu branch.
 
-An empty or non-existing regulator of_node will still be registered, but
-without REGULATOR_CHANGE_STATUS nor REGULATOR_CHANGE_VOLTAGE; so any
-operation on this regulator will fail with an -EPERM.
+Thanks
 
-Regards,
-Bjorn
+Murali
+>
+> Bjorn
+
+
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
