@@ -1,42 +1,92 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/3] mailbox: New mailbox driver for ST
-Date: Tue,  3 Mar 2015 10:41:20 +0000
-Message-ID: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 2/3] mailbox: dt: Supply bindings for ST's Mailbox IP
+Date: Tue,  3 Mar 2015 10:41:22 +0000
+Message-ID: <1425379283-1567-3-git-send-email-lee.jones@linaro.org>
+References: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: lee.jones@linaro.org, kernel@stlinux.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This set provides support for ST's Mailbox IP.
-
-In order to save IRQ lines, current platforms have been only been
-given a single interrupt for receiving messages from co-processors.
-The best way to work around this limitation is to use Mailbox 1
-(A9) as the receiving MB.  This driver/binding then has the ability
-to map the remaining Mailboxes back to Mailbox 1 where threaded
-interrupts are used to extract data to send back to the user.
-
-Lee Jones (3):
-  ARM: STi: stih407-family: Add nodes for Mailbox
-  mailbox: dt: Supply bindings for ST's Mailbox IP
-  mailbox: Add support for ST's Mailbox IP
-
- .../devicetree/bindings/mailbox/sti-mailbox.txt    |  66 ++
- arch/arm/boot/dts/stih407-family.dtsi              |  67 +++
- drivers/mailbox/Kconfig                            |   7 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/mailbox-sti.c                      | 664 +++++++++++++++++++++
- include/linux/mailbox_sti.h                        | 128 ++++
- 6 files changed, 934 insertions(+)
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ .../devicetree/bindings/mailbox/sti-mailbox.txt    | 66 ++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
- create mode 100644 drivers/mailbox/mailbox-sti.c
- create mode 100644 include/linux/mailbox_sti.h
 
+diff --git a/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+new file mode 100644
+index 0000000..c965c13
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+@@ -0,0 +1,66 @@
++ST Microelectronics Mailbox Driver
++
++Required properties:
++- compatible		: Should be "st,stih407-mailbox"
++- reg			: Offset and length of the register set for the device
++- reg-names		: Should contain the reg name "mbox-reg".
++- st,name		: Name of the mailbox
++- st,mbox-chans		: Mbox/channels descriptor data private to each channel.
++			  The 4 cells represent the following data:
++				Cell #1 (rx_id) - rx mbox num in an instance.
++				Cell #2 (rx_inst) - rx mbox instance num.
++				Cell #3 (tx_id) - tx mbox num in an instance.
++				Cell #4 (tx_inst) - tx mbox instance num.
++
++			  Note that an IP Mailbox is composed by 4 instances and
++			  each instance is composed by 32 mailboxes.
++			  You define here the configuration of a channel (at
++			  framework level).
++
++Optional properties
++- st,mbox-rx		: Indicaties if the mailbox can be used as Rx mailbox.
++- st,mbox-rx-id		: If a Rx mailbox is affected to a Tx mailbox (to have
++			  full-duplex channel), this field indiactes the Id of
++			  the Rx mailbox to use.
++- interrupts		: Contains the IRQ line for a RX mailbox.
++- interrupt-names	: Should contain the interrupt name.
++
++Examples:
++
++mailbox0: mailbox@0 {
++	compatible = "st,stih407-mailbox";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	#mbox-cells = <1>;
++	reg = <0x8f00000 0x1000>;
++	reg-names = "mbox-reg";
++	interrupts = <GIC_SPI 1 IRQ_TYPE_NONE>;
++	interrupt-names = "mb0_irq";
++	st,name = "a9";
++	st,mbox-rx;
++	st,mbox-rx-id = <0>;
++	st,mbox-chans = <0 1 0 1>;
++};
++
++mailbox3: mailbox@3 {
++	compatible = "st,stih407-mailbox";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	#mbox-cells = <1>;
++	reg = <0x8f03000 0x100>;
++	reg-names = "mbox-reg";
++	st,name = "st231_video";
++	st,mbox-rx-id = <0>;
++	st,mbox-chans = <2 1 2 1>;
++};
++
++In this configuration, if you use channel 0 you will have the following
++configuration:
++- "chan0_video" will use mailbox0 as Rx mailbox.
++- "chan0_video" will use instance 1, bit 2 in mailbox0 for rx.
++- "chan0_video" will use instance 1, bit 2 in mailbox3 for tx.
++
++If you declare a channel only for Rx, you have to set magic number 0xff
++for tx_id and tx_instance.
++If you declare a channel only for Tx, you have to set magic number 0xff
++for rx_id and rx_instance.
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
