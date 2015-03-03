@@ -1,137 +1,138 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
-Date: Tue, 3 Mar 2015 08:16:35 +0100
-Message-ID: <20150303071635.GC4713@lukather>
-References: <1425131285-8640-1-git-send-email-codekipper@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v11 0/6] Add Skyworks SKY81452 device drivers
+Date: Tue, 3 Mar 2015 07:42:44 +0000
+Message-ID: <20150303074244.GE6976@x1>
+References: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
+ <20150227203938.GA12821@x1>
+ <20150303022430.GA3667@jack-ThinkPad-T520>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sHrvAb52M6C8blB9"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBI6B2WTQKGQENIJPRLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1425131285-8640-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20150303022430.GA3667@jack-ThinkPad-T520>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: sameo@linux.intel.com, robh+dt@kernel.org, jg1.han@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, broonie@kernel.org, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, treding@nvidia.com, p.zabel@pengutronix.de, arno@natisbad.org, kuninori.morimoto.gx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
---sHrvAb52M6C8blB9
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Tue, 03 Mar 2015, Gyungoh Yoo wrote:
 
-On Sat, Feb 28, 2015 at 02:48:05PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> The Mele I7 is a Allwinner A31 based Android TV box, with 1G RAM,
-> 8GB NAND flash, a RTL8188etv wifi chip, 3 USB Host ports using
-> USB-A receptacles, a micro USB-B receptacle for USB OTG, HDMI out,
-> a TRS connector for A/V, SPDIF and IrDA.
-> 
-> This patch adds basic support for the device, more information can
-> be found here (http://linux-sunxi.org/Mele_I7).
-> 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile         |   1 +
->  arch/arm/boot/dts/sun6i-a31-i7.dts | 150 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 151 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun6i-a31-i7.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index eae7706..8d9d5ea 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -532,6 +532,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
->  	sun6i-a31-app4-evb1.dtb \
->  	sun6i-a31-colombus.dtb \
->  	sun6i-a31-hummingbird.dtb \
-> +	sun6i-a31-i7.dtb \
->  	sun6i-a31-m9.dtb \
->  	sun6i-a31s-cs908.dtb
->  dtb-$(CONFIG_MACH_SUN7I) += \
-> diff --git a/arch/arm/boot/dts/sun6i-a31-i7.dts b/arch/arm/boot/dts/sun6i-a31-i7.dts
-> new file mode 100644
-> index 0000000..43fdcd5
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun6i-a31-i7.dts
-> @@ -0,0 +1,150 @@
-> +/*
-> + * Copyright 2015 Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + *     You should have received a copy of the GNU General Public
-> + *     License along with this file; if not, write to the Free
-> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-> + *     MA 02110-1301 USA
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun6i-a31.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
-> +
-> +/ {
-> +	model = "Mele I7 Quad top set box";
-> +	compatible = "mele,i7", "allwinner,sun6i-a31";
-> +
-> +	chosen {
-> +		bootargs = "earlyprintk console=ttyS0,115200";
+> On Fri, Feb 27, 2015 at 08:39:38PM +0000, Lee Jones wrote:
+> > On Fri, 27 Feb 2015, gyungoh@gmail.com wrote:
+> >=20
+> > > From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+> > >=20
+> > > This patch set includes regulator and backlight driver for SKY814=
+52.
+> > > Also it includes documents for device tree and module.
+> > > sky81452-regulator was already applied. So this series doesn't
+> > > include it.
+> > >=20
+> > > v11:
+> > > Renamed 'skyworks,en-channels' property to led-sources.
+> > > Removed unused property 'skyworks,ovp-level'.
+> > >=20
+> > > v10:
+> > > Removed trivial get_brightness implementations for sky81452-backl=
+ight
+> > >=20
+> > > v9:
+> > > Removed the change to remove MODULE_VERSION() for sky81452-regula=
+tor
+> > >=20
+> > > v8:
+> > > Renamed property names for backlight with vendor prefix
+> > > Modified gpio-enable property to generic property for GPIO
+> > > Made up the example for backlight DT
+> > > Changed the DT parsing of regulator using regulator_node and of_m=
+atch
+> > >=20
+> > > v7:
+> > > Modified licensing text to GPLv2
+> > > Split Kconfig renaming from DT patch
+> > >=20
+> > > v6:
+> > > Added new line character at the end of line of dev_err()
+> > >=20
+> > > v5:
+> > > Changed DT for regulator : 'lout' node should be defined under 'r=
+egulator'
+> > > Removed compatible string from sky81452-regulator driver
+> > > Modified sky81452-regulator to return EINVAL when of_node is NULL
+> > > Move sky81452-backlight.h to include/linux/platform_data
+> > >=20
+> > > v4:
+> > > Removed MODULE_VERSION()
+> > > Modified license to GPLv2
+> > > Removed calling to backlight_device_unregister() in sky81452-back=
+light
+> > >=20
+> > > v3:
+> > > Cleaned-up DBG messages
+> > > Cleaned-up DT
+> > > Fixed the backlight name from 'sky81452-bl' to 'sky81452-backligh=
+t'
+> > > Assigned mfd_cell.of_compatible for binding device node
+> > > Modified error messages
+> > > Modified sky81452-regulator to return ENODATA when of_node is NUL=
+L
+> > >=20
+> > > v2:
+> > > Split the patches for each sub-system
+> > > Added 'reg' attribute for I2C address in device tree documents
+> > > Added 'compatible' attribute in child drivers
+> > > Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
+> > > Changed the dependency from I2C=3Dy to I2C, for CONFIG_MFD_SKY814=
+52
+> > > Added message for exception or errors.
+> > > Added vendor prefix for Skyworks Solutions, Inc.
+> > > Add SKY81452 to the Trivial Devices list
+> > >=20
+> > > Gyungoh Yoo (6):
+> > >   mfd: Add support for Skyworks SKY81452 driver
+> > >   backlight: Add support Skyworks SKY81452 backlight driver
+> > >   devicetree: Add new SKY81452 mfd binding
+> > >   devicetree: Add new SKY81452 backlight binding
+> > >   devicetree: Add vendor prefix for Skyworks Solutions, Inc.
+> > >   devicetree: Add SKY81452 to the Trivial Devices list
+> > >=20
+> > >  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+> > >  Documentation/devicetree/bindings/mfd/sky81452.txt |  35 ++
+> > >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+> > >  .../video/backlight/sky81452-backlight.txt         |  29 ++
+> > >  drivers/mfd/Kconfig                                |  12 +
+> > >  drivers/mfd/Makefile                               |   1 +
+> > >  drivers/mfd/sky81452.c                             | 108 +++++++
+> > >  drivers/video/backlight/Kconfig                    |  10 +
+> > >  drivers/video/backlight/Makefile                   |   1 +
+> > >  drivers/video/backlight/sky81452-backlight.c       | 353 +++++++=
+++++++++++++++
+> > >  include/linux/mfd/sky81452.h                       |  31 ++
+> > >  include/linux/platform_data/sky81452-backlight.h   |  46 +++
+> > >  12 files changed, 628 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/sky8145=
+2.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/video/backl=
+ight/sky81452-backlight.txt
+> > >  create mode 100644 drivers/mfd/sky81452.c
+> > >  create mode 100644 drivers/video/backlight/sky81452-backlight.c
+> > >  create mode 100644 include/linux/mfd/sky81452.h
+> > >  create mode 100644 include/linux/platform_data/sky81452-backligh=
+t.h
+> >=20
+> > Correct me if I'm wrong, but I believe you have all of the relevant
+> > Acks now.  If so, I plan to pick this up next week and take it
+> > through the MFD tree.
+>=20
+> I had got all Acks except DT on v10.
+> Rob from DT reviewed, and v11 includes what he asked.
 
-Using earlyprintk by default is a bad idea if the kernel is configured
-with DEBUG_LL support for another SoC.
+Let's wait to see if he cares to re-review.  If after a few more days
+he has chosen not to, I'll pick up the set.
 
-I removed it and applied the patche.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---sHrvAb52M6C8blB9--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
