@@ -1,40 +1,142 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v2 04/18] clocksource: Add ARM System timer driver
-Date: Tue, 03 Mar 2015 20:43:06 +0100
-Message-ID: <1425411786.2606.24.camel@tiscali.nl>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
-	 <1424455277-29983-5-git-send-email-mcoquelin.stm32@gmail.com>
-	 <20150220195437.GT19388@pengutronix.de> <1424468908.24292.10.camel@x220>
-	 <CALszF6Bm_Y4ZLednjpmP-hMix3gA23FwLm5hViEjr1QojUY+Mg@mail.gmail.com>
+From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: sun7i: dt: Add new MK808C device
+Date: Tue, 3 Mar 2015 21:22:32 +0100
+Message-ID: <CAEKpxB=-vtjMckh3ZHoy0mezE9U1EtKzmttdXRD5ZNztZvB_ag@mail.gmail.com>
+References: <1425131004-8551-1-git-send-email-codekipper@gmail.com>
+	<20150303071342.GB4713@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CALszF6Bm_Y4ZLednjpmP-hMix3gA23FwLm5hViEjr1QojUY+Mg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBCNQ3CTQKGQEZEL5VLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150303071342.GB4713@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Maxime Coquelin schreef op ma 02-03-2015 om 17:53 [+0100]:
-> Do you agree if I define it like this:
-> 
-> config ARMV7M_SYSTICK
->     bool "Clocksource driver for ARMv7-M System timer"
->     depends on OF && (CPU_V7M || COMPILE_TEST)
->     select CLKSRC_OF
->     select CLKSRC_MMIO
->     help
->       This options enables clocksource support for the ARMv7-M system
->       timer unit.
+Thanks for the review Maxime,
 
-I don't really have strong feelings on whatever way you choose to fix
-the, well, minor problem I pointed out.
+On 3 March 2015 at 08:13, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Sat, Feb 28, 2015 at 02:43:24PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> The MK808C is an A20 based android stick, with 1G RAM, 8G NAND flash,
+>> a RTL8723au wifi + bt combo chip, a USB host ports using USB-A receptacles,
+>> a mini USB-B receptacle for USB OTG, mini HDMI and a TRS connector for AV.
+>>
+>> This patch adds basic support for the device, more information can be found
+>> here (http://linux-sunxi.org/MK808C).
+>>
+>> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile             |   1 +
+>>  arch/arm/boot/dts/sun7i-a20-mk808c.dts | 146 +++++++++++++++++++++++++++++++++
+>>  2 files changed, 147 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun7i-a20-mk808c.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 9544768..eae7706 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -542,6 +542,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>>       sun7i-a20-hummingbird.dtb \
+>>       sun7i-a20-i12-tvbox.dtb \
+>>       sun7i-a20-m3.dtb \
+>> +     sun7i-a20-mk808c.dtb \
+>>       sun7i-a20-olinuxino-lime.dtb \
+>>       sun7i-a20-olinuxino-lime2.dtb \
+>>       sun7i-a20-olinuxino-micro.dtb \
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-mk808c.dts b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
+>> new file mode 100644
+>> index 0000000..5722a03
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
+>> @@ -0,0 +1,146 @@
+>> +/*
+>> + * Copyright 2015 Marcus Cooper
+>> + *
+>> + * Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + *     You should have received a copy of the GNU General Public
+>> + *     License along with this file; if not, write to the Free
+>> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+>> + *     MA 02110-1301 USA
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun7i-a20.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>
+> You don't seem to be using the pinctrl header.
+>
+I'll remove this....
+>> +
+>> +/ {
+>> +     model = "mk808c";
+>> +     compatible = "mk808c", "allwinner,sun7i-a20";
+>
+> the compatible must be of the format "vendor,device". Please add the
+> vendor name.
 
-Having said that, if a Kconfig entry without a prompt (and therefor,
-without help) actually does what you want it to do, why bother adding a
-prompt and a one line help text?
-
-
-Paul Bolle
-
+Ahhh....I've searched high and low for a vendors name. I listed it as
+unknown on the wiki page,
+would 'odm' be considered valid?
+CK
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
