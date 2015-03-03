@@ -1,66 +1,44 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH 2/2] ASoC: simple-card: Add support for
- samplerate and samplewidth constraints
-Date: Tue, 3 Mar 2015 12:01:20 +0200
-Message-ID: <54F58670.4070500@ti.com>
-References: <cover.1425303942.git.jsarha@ti.com>
- <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
- <54F4BB68.4030501@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <54F4BB68.4030501@linux.intel.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: moinejf@free.fr, kuninori.morimoto.gx@renesas.com, Li.Xiubo@freescale.com, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, broonie@kernel.org, bcousson@baylibre.com
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] powerpc/pmac: Fix DT refcount imbalance in pmac_pic_probe_oldstyle
+Date: Tue,  3 Mar 2015 11:02:15 +0100
+Message-ID: <1425376935-6226-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/2015 09:35 PM, Pierre-Louis Bossart wrote:
-> Hi Jyri,
->
-> On 3/2/15 8:14 AM, Jyri Sarha wrote:
->>
->>   Optional dai-link subnode properties:
->>
->> +- samplewidth-constraints        : List of integers describing supported
->> +                      sample widths in number of bits.
->
-> There are quite a few platforms where the number of bits for valid audio
-> bits differs from the number of bits per slot, e.g. 24 bits with 25 bit
-> slots, or 24 bits in 32 bit slots. How would this be represented? This
-> concept is present for the TDM case but not the simple one.
-> -Pierre
+Internally, of_find_node_by_name() calls of_node_put() on its "from"
+parameter, which must not be done on "master", as it's still in use, and
+will be released manually later.  This may cause a zero kref refcount.
 
-As these are dai-link level properties the idea is to set constraints to 
-sample-width on the digital audio link, usually i2s. That is why the 
-constraint is set based on sample-width and not physical width.
+Call of_node_get() before to compensate for this.
 
-The number if significant bits in the sample-word should in a normal 
-case be a property of the codec, if such a property is needed. On the 
-other hand the limits for the physical layout in the system memory are 
-usually set by the platform driver (= DMA HW), so such a property should 
-- in a normal case - go to cpu-dai node. Since these cases can usually 
-be associated to either end of the link, there should be no need for 
-such properties in the machine driver.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Compile-tested only
 
-I am not sure what you have in mind with the TDM case. In some cases a 
-similar constraint property for number of channels could help.
+v2:
+  - Avoid a logic change by adding a call to of_node_get() instead of
+    replacing of_find_node_by_name() by of_get_child_by_name().
+    No-one seems to remember which machines are affected by this.
+---
+ arch/powerpc/platforms/powermac/pic.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Best regards,
-Jyri
-
->
->> +- rate-constraints            : List of integers describing supported
->> +                      sample samplerates in Hz.
->>   - format                : CPU/CODEC common audio format.
->>                         "i2s", "right_j", "left_j" , "dsp_a"
->
+diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
+index 4c24bf60d39d2834..59cfc9d63c2d51a7 100644
+--- a/arch/powerpc/platforms/powermac/pic.c
++++ b/arch/powerpc/platforms/powermac/pic.c
+@@ -321,6 +321,9 @@ static void __init pmac_pic_probe_oldstyle(void)
+ 		max_irqs = max_real_irqs = 64;
+ 
+ 		/* We might have a second cascaded heathrow */
++
++		/* Compensate for of_node_put() in of_find_node_by_name() */
++		of_node_get(master);
+ 		slave = of_find_node_by_name(master, "mac-io");
+ 
+ 		/* Check ordering of master & slave */
+-- 
+1.9.1
