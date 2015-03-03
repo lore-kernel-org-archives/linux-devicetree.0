@@ -1,35 +1,33 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [version 2]  amba uarts - arm type uarts fifo size provided by
- device tree
-Date: Tue, 3 Mar 2015 16:55:35 +0000
-Message-ID: <20150303165534.GB10239@leverpostej>
-References: <1424290069-8760-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424290069-8760-1-git-send-email-jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] i2c: imx: add required clocks property to binding
+Date: Tue,  3 Mar 2015 11:57:08 -0500
+Message-ID: <1425401828-31063-1-git-send-email-mporter@konsulko.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 18, 2015 at 08:07:47PM +0000, Jorge Ramirez-Ortiz wrote:
-> [PATCH 1/2] Documentation: bindings: add optional fifo size property
-> [PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present [updated]
-> 
-> These patches aim at resolving an issue present on some of the amba pl011 uarts.
-> 
-> They were developed for the Hisilicon Hi6220 SoC where the fifo size on the
-> uarts is 64 despite the amba revision having been set to 1. 
+A clock specifier is required for i.MX I2C and is
+provided in all DTS implementations. Add this to the
+list of required properties in the binding.
 
-Are we certain that the FIFO length is the only difference between the
-HI6220 PL011 and a regular PL011?
+Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/i2c/i2c-imx.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-It may be worth adding a compatible string in addition, just in case.
-
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.txt b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+index 52d37fd..ce4311d 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-imx.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+@@ -7,6 +7,7 @@ Required properties:
+   - "fsl,vf610-i2c" for I2C compatible with the one integrated on Vybrid vf610 SoC
+ - reg : Should contain I2C/HS-I2C registers location and length
+ - interrupts : Should contain I2C/HS-I2C interrupt
++- clocks : Should contain the I2C/HS-I2C clock specifier
+ 
+ Optional properties:
+ - clock-frequency : Constains desired I2C/HS-I2C bus clock frequency in Hz.
+-- 
+1.8.4
