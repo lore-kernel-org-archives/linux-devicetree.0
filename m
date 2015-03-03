@@ -1,253 +1,84 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 1/4] mfd: devicetree: bindings: Add Qualcomm RPM regulator subnodes
-Date: Mon, 2 Mar 2015 20:25:37 -0800
-Message-ID: <1425356740-26285-2-git-send-email-bjorn.andersson@sonymobile.com>
-References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: simple-card: Add support for
+ samplerate and samplewidth constraints
+Date: Tue, 3 Mar 2015 11:30:41 +0000
+Message-ID: <20150303113041.GM21293@sirena.org.uk>
+References: <cover.1425303942.git.jsarha@ti.com>
+ <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
+ <54F4C0F2.8000201@metafoo.de>
+ <54F5884A.1090702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pwpVSMFClTuBGjlc"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54F5884A.1090702-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the regulator subnodes to the Qualcomm RPM MFD device tree bindings.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
+--pwpVSMFClTuBGjlc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-As the previously accepted binding didn't cover any functionality but
-registering the mfd core there is no users, hence it's fine to drop the
-two required fields at this time.
+On Tue, Mar 03, 2015 at 12:09:14PM +0200, Jyri Sarha wrote:
+> On 03/02/2015 09:58 PM, Lars-Peter Clausen wrote:
 
- Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 201 +++++++++++++++++++--
- 1 file changed, 189 insertions(+), 12 deletions(-)
+> >Can you include a description why this is needed and how and when it is
+> >supposed to be used?
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-index 85e3198..92bcd19 100644
---- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-+++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-@@ -31,16 +31,6 @@ frequencies.
- 	Value type: <string-array>
- 	Definition: must be the three strings "ack", "err" and "wakeup", in order
- 
--- #address-cells:
--	Usage: required
--	Value type: <u32>
--	Definition: must be 1
--
--- #size-cells:
--	Usage: required
--	Value type: <u32>
--	Definition: must be 0
--
- - qcom,ipc:
- 	Usage: required
- 	Value type: <prop-encoded-array>
-@@ -52,6 +42,172 @@ frequencies.
- 		    - u32 representing the ipc bit within the register
- 
- 
-+= SUBNODES
-+
-+The RPM exposes resources to its subnodes. The below bindings specify the set
-+of valid subnodes that can operate on these resources.
-+
-+== Regulators
-+
-+Regulator notes are identified by their compatible:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,rpm-pm8058-regulators"
-+		    "qcom,rpm-pm8901-regulators"
-+		    "qcom,rpm-pm8921-regulators"
-+
-+- vdd_l0_l1_lvs-supply:
-+- vdd_l10-supply:
-+- vdd_l13_l16-supply:
-+- vdd_l14_l15-supply:
-+- vdd_l17_l18-supply:
-+- vdd_l19_l20-supply:
-+- vdd_l21-supply:
-+- vdd_l22-supply:
-+- vdd_l23_l24_l25-supply:
-+- vdd_l2_l11_l12-supply:
-+- vdd_l3_l4_l5-supply:
-+- vdd_l6_l7-supply:
-+- vdd_l8-supply:
-+- vdd_l9-supply:
-+- vdd_ncp-supply:
-+- vdd_s0-supply:
-+- vdd_s1-supply:
-+- vdd_s2-supply:
-+- vdd_s3-supply:
-+- vdd_s4-supply:
-+	Usage: optional (pm8058 only)
-+	Value type: <phandle>
-+	Definition: reference to regulator supplying the input pin, as
-+		    described in the data sheet
-+
-+- vdd_l0-supply:
-+- vdd_l1-supply:
-+- vdd_l2-supply:
-+- vdd_l3-supply:
-+- vdd_l4-supply:
-+- vdd_l5-supply:
-+- vdd_l6-supply:
-+- vdd_s0-supply:
-+- vdd_s1-supply:
-+- vdd_s2-supply:
-+- vdd_s3-supply:
-+- vdd_s4-supply:
-+- lvs0_in-supply:
-+- lvs1_in-supply:
-+- lvs2_in-supply:
-+- lvs3_in-supply:
-+- mvs_in-supply:
-+	Usage: optional (pm8901 only)
-+	Value type: <phandle>
-+	Definition: reference to regulator supplying the input pin, as
-+		    described in the data sheet
-+
-+- vin_l1_l2_l12_l18-supply:
-+- vin_l24-supply:
-+- vin_l25-supply:
-+- vin_l27-supply:
-+- vin_l28-supply:
-+- vin_lvs_1_3_6-supply:
-+- vin_lvs2-supply:
-+- vin_lvs_4_5_7-supply:
-+- vin_ncp-supply:
-+	Usage: optional (pm8921 only)
-+	Value type: <phandle>
-+	Definition: reference to regulator supplying the input pin, as
-+		    described in the data sheet
-+
-+The regulator node houses sub-nodes for each regulator within the device. Each
-+sub-node is identified using the node's name, with valid values listed for each
-+of the pmics below.
-+
-+pm8058:
-+	l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15,
-+	l16, l17, l18, l19, l20, l21, l22, l23, l24, l25, s0, s1, s2, s3, s4,
-+	lvs0, lvs1, ncp
-+
-+pm8901:
-+	l0, l1, l2, l3, l4, l5, l6, s0, s1, s2, s3, s4, lvs0, lvs1, lvs2, lvs3,
-+	mvs
-+
-+pm8921:
-+	s1, s2, s3, s4, s7, s8, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
-+	l12, l14, l15, l16, l17, l18, l21, l22, l23, l24, l25, l26, l27, l28,
-+	l29, lvs1, lvs2, lvs3, lvs4, lvs5, lvs6, lvs7, usb-switch, hdmi-switch,
-+	ncp
-+
-+The content of each sub-node is defined by the standard binding for regulators -
-+see regulator.txt - with additional custom properties described below:
-+
-+=== Switch-mode Power Supply regulator custom properties
-+
-+- bias-pull-down:
-+	Usage: optional
-+	Value type: <empty>
-+	Definition: enable pull down of the regulator when inactive
-+
-+- qcom,switch-mode-frequency:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Frequency (Hz) of the switch-mode power supply;
-+		    must be one of:
-+		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
-+		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
-+		    1480000, 1370000, 1280000, 1200000
-+
-+- qcom,force-mode:
-+	Usage: optional (default if no other qcom,force-mode is specified)
-+	Value type: <u32>
-+	Defintion: indicates that the regulator should be forced to a
-+		   particular mode, valid values are:
-+		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
-+		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
-+		   QCOM_RPM_FORCE_MODE_HPM - force into high power mode
-+		   QCOM_RPM_FORCE_MODE_AUTO - allow regulator to automatically
-+					      select its own mode based on
-+					      realtime current draw, only for:
-+					      pm8921 smps and ftsmps
-+
-+- qcom,power-mode-hysteretic:
-+	Usage: optional
-+	Value type: <empty>
-+	Definition: select that the power supply should operate in hysteretic
-+		    mode, instead of the default pwm mode
-+
-+=== Low-dropout regulator custom properties
-+
-+- bias-pull-down:
-+	Usage: optional
-+	Value type: <empty>
-+	Definition: enable pull down of the regulator when inactive
-+
-+- qcom,force-mode:
-+	Usage: optional
-+	Value type: <u32>
-+	Defintion: indicates that the regulator should not be forced to any
-+		   particular mode, valid values are:
-+		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
-+		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
-+		   QCOM_RPM_FORCE_MODE_HPM - force into high power mode
-+		   QCOM_RPM_FORCE_MODE_BYPASS - set regulator to use bypass
-+						mode, i.e.  to act as a switch
-+						and not regulate, only for:
-+						pm8921 pldo, nldo and nldo1200
-+
-+=== Negative Charge Pump custom properties
-+
-+- qcom,switch-mode-frequency:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Frequency (Hz) of the swith mode power supply;
-+		    must be one of:
-+		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
-+		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
-+		    1480000, 1370000, 1280000, 1200000
-+
- = EXAMPLE
- 
- 	#include <dt-bindings/mfd/qcom-rpm.h>
-@@ -64,7 +220,28 @@ frequencies.
- 		interrupts = <0 19 0>, <0 21 0>, <0 22 0>;
- 		interrupt-names = "ack", "err", "wakeup";
- 
--		#address-cells = <1>;
--		#size-cells = <0>;
-+		regulators {
-+			compatible = "qcom,rpm-pm8921-regulators";
-+			vin_l1_l2_l12_l18-supply = <&pm8921_s4>;
-+
-+			s1 {
-+				regulator-min-microvolt = <1225000>;
-+				regulator-max-microvolt = <1225000>;
-+
-+				bias-pull-down;
-+
-+				qcom,switch-mode-frequency = <3200000>;
-+			};
-+
-+			pm8921_s4: s4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				qcom,switch-mode-frequency = <1600000>;
-+				bias-pull-down;
-+
-+				qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
-+			};
-+		};
- 	};
- 
--- 
-1.8.2.2
+> Would this addition do:
+> ------------------------------------------------------------
+> These constraints help to disable the sample-format and sample-rate
+> combinations that do not properly work on a specific HW.
+> ------------------------------------------------------------
+
+Not entirely...
+
+> The reason why we need these is coming from limitations in McASP clock
+> generation. With a simple divider one can only produce certain bit-clocks.
+> With those bit-clocks we can only play/capture some sample-rate and
+> sample-width combinations accurately.
+
+> The McASP driver could try to set the constraints automatically. However,
+> since the constraint code can not select sample-width and sample-rate
+> combinations there is a compromise to be made between them. Making such
+> compromises automatically does not usually work that well.
+
+...this is more the point.  Perhaps the constraints language needs
+improvement here?
+
+> In our case these properties could of course be added to McASP driver, but
+> then again I would expect that there is a wider need for this kind of
+> functionality. And it may not always be clear if either end of the link
+> alone is responsible for less than perfect operation.
+
+The trouble with this sort of interface is that it's a quick and dirty
+way for people to bodge around things rather than actually fixing them
+properly.  Of course sometimes fixing things properly is really hard and
+that means we want a temporary bodge but having to put them in DT is
+really unfortunate.
+
+--pwpVSMFClTuBGjlc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU9ZtgAAoJECTWi3JdVIfQoEUH/2AVbPp8RCELJW15wbgacOmi
+/q2ouJN+pofTyb8x7W1Tp1HRdoEU5QalbCBCW/BAmM34E60iB4CPJjUHJ09oqKfe
+iphGjpcTvck9NQrzoa9WcF8u/gQByBx+enrxmOcxRjwdoLuuJdN6q2A41oYaOHAT
+hN8w+ZaPN7hQGo4acPoKJpjDGm6cdf0wrwxg3i062246GoZct38eut66gxIQalwa
+M4KuEBkoslwDWnucIdO2QU2gdZPO2NT2AHKpgu7/eAZeT0mHVKs3KBrmoBPq9LBm
+xBVarSRKHKq40HRLHDfif6f/mY0AqVoZ7JqJcBLPu/PvTTUU08Mkv3CZUKzPFfE=
+=38b5
+-----END PGP SIGNATURE-----
+
+--pwpVSMFClTuBGjlc--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
