@@ -1,138 +1,72 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 07/10 v2] usb: Make sure that DWC2 initializes after the power channel mailbox driver.
-Date: Tue,  3 Mar 2015 12:32:58 -0800
-Message-ID: <1425414778-30820-1-git-send-email-eric@anholt.net>
-References: <20150303083250.GG6976@x1>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v1] of: calculate masks of the device based on dma-range
+ size
+Date: Tue, 3 Mar 2015 14:49:12 -0600
+Message-ID: <20150303204912.GA22299@google.com>
+References: <1423677215-28968-1-git-send-email-m-karicheri2@ti.com>
+ <20150226002033.GR6220@google.com>
+ <54F5F698.6000604@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150303083250.GG6976@x1>
+Content-Disposition: inline
+In-Reply-To: <54F5F698.6000604-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This gets USB working on the Raspberry Pi without relying on U-Boot to
-send the power message for us.  Without it, you would get warnings
-about fifo sizes and "dwc2_core_reset() HANG! Soft Reset
-GRSTCTL=80000001" leading to a failed probe.
+On Tue, Mar 03, 2015 at 12:59:52PM -0500, Murali Karicheri wrote:
+> On 02/25/2015 07:20 PM, Bjorn Helgaas wrote:
+> >[+cc Catalin]
+> >
+> >On Wed, Feb 11, 2015 at 12:53:35PM -0500, Murali Karicheri wrote:
+> >>This patch update of_dma_configure() API to calculate the
+> >>masks (dma_mask and coherent_dma_mask) based on the dma-range
+> >>values set in DT for the device. Also limit the mask to lower
+> >>of the default mask and mask calculated.
+> >>
+> >>Cc: Joerg Roedel<joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+> >>Cc: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>Cc: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >>Cc: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> >>Cc: Will Deacon<will.deacon-5wv7dgnIgG8@public.gmane.org>
+> >>Cc: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> >>Cc: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
+> >>Cc: Suravee Suthikulpanit<Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+> >>
+> >>Signed-off-by: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
+> >
+> >Applied with Catalin's reviewed-by to pci/iommu for v4.1, thanks!
+> Bjorn,
+> 
+> Could you point me to this? I didn't see it on pci/iommu of your repo below.
+> 
+> arm-pci	git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
+> (fetch)
+> 
+> a0868495@ula0868495 ~/Project/linux-keystone $ gitlog arm-pci/pci/iommu
+> dd8a11b0f0d4ed0ad87c8d09e650f354021d7953 arm: dma-mapping: limit
+> IOMMU mapping size
+> 2a101e79dcd8733e3a353b0df2fa384980f94e1e PCI: Update DMA
+> configuration from DT
+> 3fd29d06e9aa92d9a4513e14b2dd3f0d69d4d2b7 of/pci: Add
+> of_pci_dma_configure() to update DMA configuration
+> 8243352097c468f982a9f386cb1f455672b473a2 PCI: Add helper functions
+> pci_get[put]_host_bridge_device()
+> 039f346ac880d4f894425ef6c540f3ff5c1b8dcf of: Fix size when dma-range
+> is not used
+> 2743a957f6a6317be06d02cc93d78bb2a847e427 of: Move of_dma_configure()
+> to device.c to help re-use
+> f454cd01b5bdffb1bf26a5cddac30439fa5f27a1 of: iommu: Add ptr to OF
+> node arg to of_iommu_configure()
+> c517d838eb7d07bbe9507871fab3931deccff539 Linux 4.0-rc1
 
-v2: Make the export of the has-the-mailbox-driver-loaded bool be
-    through a function call defined in include/linux/platform/
+I had applied it to my local branch, but not pushed it to kernel.org.
+I applied it along with the "get DMA configuration from parent device"
+series to pci/murali-v8 and pushed it for build testing.
 
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
-
-This would be the first include file in include/linux/platform/.  Is
-that the right place?  I see a few
-arch/arm/mach-*/include/mach/platform.h files -- would that or
-arch/arm/mach-bcm/include/mach/bcm2835-platform.h possibly be the right
-place instead?
-
-Also, Lee, since you mostly typed the contents of that header, should
-your SoB go on this?
-
-drivers/mailbox/bcm2835-mailbox-power.c | 11 +++++++++++
- drivers/usb/dwc2/platform.c             |  8 ++++++++
- include/linux/platform/bcm2835.h        | 18 ++++++++++++++++++
- 3 files changed, 37 insertions(+)
- create mode 100644 include/linux/platform/bcm2835.h
-
-diff --git a/drivers/mailbox/bcm2835-mailbox-power.c b/drivers/mailbox/bcm2835-mailbox-power.c
-index f09c855..a3ed773 100644
---- a/drivers/mailbox/bcm2835-mailbox-power.c
-+++ b/drivers/mailbox/bcm2835-mailbox-power.c
-@@ -19,6 +19,7 @@
- #include <linux/mailbox_client.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/platform/bcm2835.h>
- 
- #define BCM_POWER_USB (1 << 3)
- #define BCM_MBOX_DATA_SHIFT 4
-@@ -31,6 +32,14 @@ struct bcm_mbox_power {
- 	uint32_t response;
- };
- 
-+static bool bcm2835_mbox_power_initialized;
-+
-+bool bcm2835_mbox_is_usb_powered(void)
-+{
-+	return bcm2835_mbox_power_initialized;
-+}
-+EXPORT_SYMBOL_GPL(bcm2835_mbox_is_usb_powered);
-+
- struct bcm_mbox_power *mbox_power;
- 
- static void response_callback(struct mbox_client *cl, void *mssg)
-@@ -92,6 +101,7 @@ static int bcm2835_mbox_power_probe(struct platform_device *pdev)
- 		bcm_mbox_set_power(BCM_POWER_USB);
- 		bcm2835_mbox_power_initialized = true;
- 	}
-+	bcm2835_mbox_power_initialized = true;
- 
- 	return ret;
- }
-@@ -99,6 +109,7 @@ static int bcm2835_mbox_power_probe(struct platform_device *pdev)
- static int bcm2835_mbox_power_remove(struct platform_device *pdev)
- {
- 	bcm_mbox_set_power(0);
-+	bcm2835_mbox_power_initialized = false;
- 
- 	mbox_free_channel(mbox_power->chan);
- 
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index ae095f0..caca216 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -42,6 +42,7 @@
- #include <linux/of_device.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-+#include <linux/platform/bcm2835.h>
- 
- #include <linux/usb/of.h>
- 
-@@ -175,6 +176,13 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 		defparams.dma_desc_enable = 0;
- 	}
- 
-+	/*
-+	 * Make sure the platform driver for enabling the power has
-+	 * initialized before we do.
-+	 */
-+	if (params == &params_bcm2835 && !bcm2835_is_usb_powered())
-+		return -EPROBE_DEFER;
-+
- 	hsotg = devm_kzalloc(&dev->dev, sizeof(*hsotg), GFP_KERNEL);
- 	if (!hsotg)
- 		return -ENOMEM;
-diff --git a/include/linux/platform/bcm2835.h b/include/linux/platform/bcm2835.h
-new file mode 100644
-index 0000000..a97d938
---- /dev/null
-+++ b/include/linux/platform/bcm2835.h
-@@ -0,0 +1,18 @@
-+#ifdef CONFIG_BCM2835_MBOX
-+bool bcm2835_mbox_is_usb_powered(void);
-+
-+static inline bool bcm2835_is_usb_powered(void)
-+{
-+	return bcm2835_mbox_is_usb_powered();
-+}
-+#else
-+static inline bool bcm2835_is_usb_powered(void)
-+{
-+	/*
-+	 * If BCM2835 isn't using its Mailbox driver, the bootloader
-+	 * is charged with powering up USB.
-+	 */
-+	return true;
-+}
-+#endif
-+
--- 
-2.1.4
-
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
