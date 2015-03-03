@@ -1,65 +1,72 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH - v7] of: Move of_dma_configure() to device.c to help re-use
-Date: Tue, 3 Mar 2015 14:53:56 -0600
-Message-ID: <CAErSpo5gPVqRrzZ3LbWvLRchr6SjxN0eve62dTJamfz+=O882Q@mail.gmail.com>
-References: <1425333548-8802-1-git-send-email-m-karicheri2@ti.com>
- <CAErSpo7MsxgVZyhpijRzVN7mVNcbN7M4A4W-UKaNs4AnmGrB6g@mail.gmail.com> <54F5F59C.5000603@ti.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH 1/4] mfd: devicetree: bindings: Add Qualcomm RPM
+ regulator subnodes
+Date: Tue, 3 Mar 2015 13:54:25 -0800
+Message-ID: <20150303215424.GH26334@sonymobile.com>
+References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1425356740-26285-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <54F60339.6000803@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <54F5F59C.5000603@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54F60339.6000803@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-[+cc linux-pci]
+On Tue 03 Mar 10:53 PST 2015, Stephen Boyd wrote:
 
-On Tue, Mar 3, 2015 at 11:55 AM, Murali Karicheri <m-karicheri2@ti.com> wrote:
-> On 03/02/2015 10:43 PM, Bjorn Helgaas wrote:
->>
->> On Mon, Mar 2, 2015 at 3:59 PM, Murali Karicheri<m-karicheri2@ti.com>
->> wrote:
->>>
->>> Move of_dma_configure() to device.c so it can be re-used for PCI devices
->>> to
->>> obtain DMA configuration from DT.  Also add a second argument so that for
->>> PCI, the DT node of root bus host bridge can be used to obtain the DMA
->>> configuration for the slave PCI device.
->>>
->>> Tested-by: Suravee Suthikulpanit<Suravee.Suthikulpanit@amd.com>  (AMD
->>> Seattle)
->>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
->>> Signed-off-by: Bjorn Helgaas<bhelgaas@google.com>
->>> Reviewed-by: Catalin Marinas<catalin.marinas@arm.com>
->>> Acked-by: Will Deacon<will.deacon@arm.com>
->>> CC: Joerg Roedel<joro@8bytes.org>
->>> CC: Grant Likely<grant.likely@linaro.org>
->>> CC: Rob Herring<robh+dt@kernel.org>
->>> CC: Russell King<linux@arm.linux.org.uk>
->>> CC: Arnd Bergmann<arnd@arndb.de>
->>> ---
->>>   - Based on the existing patch applied to arm-pci/pci/iommu for pci next
->>> (Bjorn)
->>>   - Fixed the build issue reported on ARCH=x86_64
->>
->>
->> Hi Murali,
->>
->> Can you please repost the entire series with fixed patches?  It's
->> easier for me to reapply the whole thing at once than it is to keep
->> track of and fiddle with individual patches.
->>
->> Bjorn
->
-> Bjorn,
->
-> Ok. I have just posted v8 of the series including all patches.
+> On 03/02/15 20:25, Bjorn Andersson wrote:
+[..]
+> > +
+> > +- vin_l1_l2_l12_l18-supply:
+> > +- vin_l24-supply:
+> > +- vin_l25-supply:
+> > +- vin_l27-supply:
+> > +- vin_l28-supply:
+> > +- vin_lvs_1_3_6-supply:
+> > +- vin_lvs2-supply:
+> > +- vin_lvs_4_5_7-supply:
+> > +- vin_ncp-supply:
+> 
+> Can you also include vin_s1,vin_s2, etc. for the rest of the supplies I
+> left out? It looks like you've covered all the inputs for the other pmics.
+> 
 
-Thanks, I put them on a pci/murali-v8 branch for now.  I'm assuming
-you want them to go through my tree.  In the cover letter, you
-mentioned the "arm-pci iommu branch", so if that means you want them
-via an ARM tree instead of mine, just let me know.  I assume the build
-will be clean and I'll rename it back to pci/iommu.
+Sorry, I had problems finding the information in the rather sparse
+documentation I have for the 8921, so I just assumed that I could steal
+your list.
 
+I finally managed to find the pinout diagram, so the correct list for
+pm8921 seems to be:
+
+- vdd_l1_2_12_18-supply
+- vdd_l3_15_17-supply
+- vdd_l5_8_16-supply
+- vdd_l6_7-supply
+- vdd_l9_11-supply
+- vdd_l10_22-supply
+- vdd_l21_23_29-supply
+- vdd_l24-supply
+- vdd_l25-supply
+- vdd_l26-supply
+- vdd_l27-supply
+- vdd_l28-supply
+- vdd_ncp-supply
+- vdd_s1-supply
+- vdd_s2-supply
+- vdd_s4-supply
+- vdd_s5-supply
+- vdd_s6-supply
+- vdd_s7-supply
+- vdd_s8-supply
+- vin_lvs1_3_6-supply
+- vin_lvs2-supply
+- vin_lvs4_5_7-supply
+
+I will send out an updated patch with these.
+
+Regards,
 Bjorn
