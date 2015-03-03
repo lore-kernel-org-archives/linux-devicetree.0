@@ -1,57 +1,125 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: hummingboard: enable PCF8523 RTC support
-Date: Tue, 03 Mar 2015 11:42:22 +0100
-Message-ID: <1425379342.3146.39.camel@pengutronix.de>
-References: <E1YSWZG-0002As-7I@rmk-PC.arm.linux.org.uk>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v2 3/8] mmc: sdhci-st: Add delay management functions
+ for top registers (eMMC).
+Date: Tue, 3 Mar 2015 11:47:56 +0100
+Message-ID: <54F5915C.6090707@st.com>
+References: <1424956227-18258-1-git-send-email-peter.griffin@linaro.org> <1424956227-18258-4-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1YSWZG-0002As-7I-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1424956227-18258-4-git-send-email-peter.griffin@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, chris@printf.net, ulf.hansson@linaro.org
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, peppe.cavallaro@st.com
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 02.03.2015, 20:03 +0000 schrieb Russell King:
-> Enable the commented out PCF8523 RTC support for Hummingboard pro
-> base boards.
-> 
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+
+On 02/26/2015 02:10 PM, Peter Griffin wrote:
+> Due to the tight timing constriants in some UHS modes, it is required to have
+s/constriant/constraints/
+> some delay management in the design. Two types of delay management are supported
+> in the HW: -
+>
+> 1) Static delay management
+> 2) Dynamic delay management
+>
+> NB: The delay management is only there when eMMC interface is selected.
+>
+> 1: Static delay management: is used to provide PVT dependent static delay on the
+> clock/data lines to manage setup/hold requirements of the interface. The maximum
+> delay possible is 3.25ns. These delays are PVT dependent, and thus delay values
+> applied are not accurate and vary across provcess voltage and temperature range.
+> Due to this these delays must not be used on the very time critical paths.
+>
+> 2. Dynamic delay locked loop (DLL): is used to provide dynamic delay management.
+> The advantage of DLL is that it provides accurate & PVT indepedent delay.
+>
+> The DLL is used to provide delay on the loopback clock on "Read Path" to capture
+> read data reliably. On TX path the clock on which output data is transmitted is
+> delayed, resulting in delay of TX data.
+>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 > ---
-> For acks please.
+>   drivers/mmc/host/sdhci-st.c | 58 +++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 58 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-st.c b/drivers/mmc/host/sdhci-st.c
+> index 0101ae9..3443cc0 100644
+> --- a/drivers/mmc/host/sdhci-st.c
+> +++ b/drivers/mmc/host/sdhci-st.c
+> @@ -122,6 +122,64 @@ struct st_mmc_platform_data {
+>   		 ST_TOP_MMC_DLY_CTRL_ATUNE_NOT_CFG_DLY | \
+>   		 ST_TOP_MMC_START_DLL_LOCK)
+>   
+> +/*
+> + * For clock speeds greater than 90MHz, we need to check that the
+> + * DLL procedure has finished before switching to ultra-speed modes.
+> + */
+> +#define	CLK_TO_CHECK_DLL_LOCK	90000000
+> +
+> +static inline void st_mmcss_set_static_delay(void __iomem *ioaddr)
+> +{
+> +	if (ioaddr) {
+Maybe you could do:
+     if (!ioaddr)
+         return;
 
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-> 
->  arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> index 674cb237298f..93588c987d2c 100644
-> --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> @@ -113,16 +113,13 @@
->  &i2c1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_hummingboard_i2c1>;
-> -
-> -	/*
-> -	 * Not fitted on Carrier-1 board... yet
->  	status = "okay";
->  
-> +	/* Pro baseboard model */
->  	rtc: pcf8523@68 {
->  		compatible = "nxp,pcf8523";
->  		reg = <0x68>;
->  	};
-> -	 */
->  };
->  
->  &i2c2 {
+     writel_relaxed....
+> +		writel_relaxed(0x0, ioaddr + ST_TOP_MMC_DLY_CTRL);
+> +		writel_relaxed(ST_TOP_MMC_DLY_MAX,
+> +				ioaddr + ST_TOP_MMC_TX_CLK_DLY);
+> +	}
+> +}
+> +
+> +static inline void st_mmcss_set_dll(void __iomem *ioaddr)
+> +{
+> +	if (ioaddr) {
+Ditto
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		writel_relaxed(ST_TOP_MMC_DYN_DLY_CONF,
+> +			ioaddr + ST_TOP_MMC_DLY_CTRL);
+> +		writel_relaxed(ST_TOP_MMC_TX_DLL_STEP_DLY_VALID,
+> +			ioaddr + ST_TOP_MMC_TX_DLL_STEP_DLY);
+> +	}
+> +}
+> +
+> +static int st_mmcss_lock_dll(void __iomem *ioaddr)
+> +{
+> +	unsigned long curr, value;
+> +	unsigned long finish = jiffies + HZ;
+> +
+> +	/* Checks if the DLL procedure is finished */
+> +	do {
+> +		curr = jiffies;
+> +		value = readl(ioaddr + ST_MMC_STATUS_R);
+> +		if (value & 0x1)
+> +			return 0;
+> +
+> +		cpu_relax();
+> +	} while (!time_after_eq(curr, finish));
+> +
+> +	return -EBUSY;
+> +}
+> +
+> +static int sdhci_st_set_dll_for_clock(struct sdhci_host *host)
+> +{
+> +	int ret = 0;
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct st_mmc_platform_data *pdata = pltfm_host->priv;
+> +
+> +	if (host->clock > CLK_TO_CHECK_DLL_LOCK) {
+> +		st_mmcss_set_dll(pdata->top_ioaddr);
+> +		ret = st_mmcss_lock_dll(host->ioaddr);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +
+>   static u32 sdhci_st_readl(struct sdhci_host *host, int reg)
+>   {
+>   	u32 ret;
+
