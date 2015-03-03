@@ -1,82 +1,138 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/7] clk: Add clock driver for mb86s7x
-Date: Tue, 3 Mar 2015 12:10:36 +0530
-Message-ID: <CAJe_ZhcBvWuoKTRO6nRfyoeTXNUwykkvGtpbcRb3oxdoNqbcjQ@mail.gmail.com>
-References: <1423188007-17047-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<1423188649-17216-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<20150227012822.421.16727@quantum>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: sun7i: dt: Add new MK808C device
+Date: Tue, 3 Mar 2015 08:13:42 +0100
+Message-ID: <20150303071342.GB4713@lukather>
+References: <1425131004-8551-1-git-send-email-codekipper@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150227012822.421.16727@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UHN/qo2QbUvPLonB"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB5562WTQKGQEVOBBJTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425131004-8551-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 February 2015 at 06:58, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Quoting Vincent Yang (2015-02-05 18:10:49)
->> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->>  The CRG11 clock controller is managed by remote f/w.
->> This driver simply maps Linux CLK ops onto mailbox api.
->>
->> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
->> Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
->> ---
->>  .../bindings/clock/fujitsu,mb86s70-crg11.txt       |  26 ++
->>  drivers/clk/Makefile                               |   1 +
->>  drivers/clk/clk-mb86s7x.c                          | 386 +++++++++++++++++++++
->>  3 files changed, 413 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
->>  create mode 100644 drivers/clk/clk-mb86s7x.c
->>
->> diff --git a/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt b/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
->> new file mode 100644
->> index 0000000..3323962
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
->> @@ -0,0 +1,26 @@
->> +Fujitsu CRG11 clock driver bindings
->> +-----------------------------------
->> +
->> +Required properties :
->> +- compatible : Shall contain "fujitsu,mb86s70-crg11"
->> +- #clock-cells : Shall be 3 {cntrlr domain port}
->> +
->> +The consumer specifies the desired clock pointing to its phandle.
->> +
->> +Example:
->> +
->> +       clock: crg11 {
->> +               compatible = "fujitsu,mb86s70-crg11";
->> +               #clock-cells = <3>;
->> +       };
->> +
->> +       mhu: mhu0@2b1f0000 {
->> +               #mbox-cells = <1>;
->> +               compatible = "arm,mhu";
->> +               reg = <0 0x2B1F0000 0x1000>;
->> +               interrupts = <0 36 4>, /* LP Non-Sec */
->> +                            <0 35 4>, /* HP Non-Sec */
->> +                            <0 37 4>; /* Secure */
->> +               clocks = <&clock 0 2 1>; /* Cntrlr:0 Domain:2 Port:1 */
->
-> Some preprocessor definitions would be better than hardcoding the values
-> for Cntrlr, Domain and Port. The DT include chroot should help you
-> here. Doing so will help you maintain this stuff into the future :-)
->
-What macros do you have in mind? I was actually made to get rid of
-macros in earlier version, but the implementation was different then.
-I hope
-     #clock-cells : Shall be 3 {cntrlr domain port}
-in the binding should be telling enough.
+--UHN/qo2QbUvPLonB
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Thanks
-jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Sat, Feb 28, 2015 at 02:43:24PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> The MK808C is an A20 based android stick, with 1G RAM, 8G NAND flash,
+> a RTL8723au wifi + bt combo chip, a USB host ports using USB-A receptacles,
+> a mini USB-B receptacle for USB OTG, mini HDMI and a TRS connector for AV.
+> 
+> This patch adds basic support for the device, more information can be found
+> here (http://linux-sunxi.org/MK808C).
+> 
+> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile             |   1 +
+>  arch/arm/boot/dts/sun7i-a20-mk808c.dts | 146 +++++++++++++++++++++++++++++++++
+>  2 files changed, 147 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun7i-a20-mk808c.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9544768..eae7706 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -542,6 +542,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>  	sun7i-a20-hummingbird.dtb \
+>  	sun7i-a20-i12-tvbox.dtb \
+>  	sun7i-a20-m3.dtb \
+> +	sun7i-a20-mk808c.dtb \
+>  	sun7i-a20-olinuxino-lime.dtb \
+>  	sun7i-a20-olinuxino-lime2.dtb \
+>  	sun7i-a20-olinuxino-micro.dtb \
+> diff --git a/arch/arm/boot/dts/sun7i-a20-mk808c.dts b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
+> new file mode 100644
+> index 0000000..5722a03
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
+> @@ -0,0 +1,146 @@
+> +/*
+> + * Copyright 2015 Marcus Cooper
+> + *
+> + * Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *     You should have received a copy of the GNU General Public
+> + *     License along with this file; if not, write to the Free
+> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> + *     MA 02110-1301 USA
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun7i-a20.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+
+You don't seem to be using the pinctrl header.
+
+> +
+> +/ {
+> +	model = "mk808c";
+> +	compatible = "mk808c", "allwinner,sun7i-a20";
+
+the compatible must be of the format "vendor,device". Please add the
+vendor name.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--UHN/qo2QbUvPLonB--
