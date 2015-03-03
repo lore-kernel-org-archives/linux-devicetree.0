@@ -1,231 +1,162 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH - v7] of: Move of_dma_configure() to device.c to help re-use
-Date: Tue, 3 Mar 2015 10:16:08 -0600
-Message-ID: <CAL_JsqLt_vNUW9a7b65iKuM7sWGU2e9CHC_Wnkcbc0ibajGkOw@mail.gmail.com>
-References: <1425333548-8802-1-git-send-email-m-karicheri2@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [RESEND PATCH 1/6] mfd: arizona: Add support for WM8280/WM8281
+Date: Tue,  3 Mar 2015 16:19:31 +0000
+Message-ID: <1425399576-26428-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425333548-8802-1-git-send-email-m-karicheri2@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+To: lee.jones@linaro.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linus.walleij@linaro.org, gnurou@gmail.com, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, rf@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 2, 2015 at 3:59 PM, Murali Karicheri <m-karicheri2@ti.com> wrote:
-> Move of_dma_configure() to device.c so it can be re-used for PCI devices to
-> obtain DMA configuration from DT.  Also add a second argument so that for
-> PCI, the DT node of root bus host bridge can be used to obtain the DMA
-> configuration for the slave PCI device.
->
-> Tested-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com> (AMD Seattle)
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Acked-by: Will Deacon <will.deacon@arm.com>
-> CC: Joerg Roedel <joro@8bytes.org>
-> CC: Grant Likely <grant.likely@linaro.org>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Russell King <linux@arm.linux.org.uk>
-> CC: Arnd Bergmann <arnd@arndb.de>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+This adds support for the Wolfson Microelectronics WM8280 and WM8281
+codecs.
 
-> ---
->  - Based on the existing patch applied to arm-pci/pci/iommu for pci next (Bjorn)
->  - Fixed the build issue reported on ARCH=x86_64
->  drivers/of/device.c       |   59 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/platform.c     |   58 ++------------------------------------------
->  include/linux/of_device.h |    2 ++
->  3 files changed, 63 insertions(+), 56 deletions(-)
->
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 46d6c75c..31a7875 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -2,6 +2,9 @@
->  #include <linux/kernel.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_iommu.h>
-> +#include <linux/dma-mapping.h>
->  #include <linux/init.h>
->  #include <linux/module.h>
->  #include <linux/mod_devicetable.h>
-> @@ -66,6 +69,62 @@ int of_device_add(struct platform_device *ofdev)
->         return device_add(&ofdev->dev);
->  }
->
-> +/**
-> + * of_dma_configure - Setup DMA configuration
-> + * @dev:       Device to apply DMA configuration
-> + * @np:                Pointer to OF node having DMA configuration
-> + *
-> + * Try to get devices's DMA configuration from DT and update it
-> + * accordingly.
-> + *
-> + * If platform code needs to use its own special DMA configuration, it
-> + * can use a platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE events
-> + * to fix up DMA configuration.
-> + */
-> +void of_dma_configure(struct device *dev, struct device_node *np)
-> +{
-> +       u64 dma_addr, paddr, size;
-> +       int ret;
-> +       bool coherent;
-> +       unsigned long offset;
-> +       struct iommu_ops *iommu;
-> +
-> +       /*
-> +        * Set default dma-mask to 32 bit.  Drivers are expected to setup
-> +        * the correct supported dma_mask.
-> +        */
-> +       dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> +
-> +       /*
-> +        * Set it to coherent_dma_mask by default if the architecture
-> +        * code has not set it.
-> +        */
-> +       if (!dev->dma_mask)
-> +               dev->dma_mask = &dev->coherent_dma_mask;
-> +
-> +       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-> +       if (ret < 0) {
-> +               dma_addr = offset = 0;
-> +               size = dev->coherent_dma_mask;
-> +       } else {
-> +               offset = PFN_DOWN(paddr - dma_addr);
-> +               dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
-> +       }
-> +
-> +       dev->dma_pfn_offset = offset;
-> +
-> +       coherent = of_dma_is_coherent(np);
-> +       dev_dbg(dev, "device is%sdma coherent\n",
-> +               coherent ? " " : " not ");
-> +
-> +       iommu = of_iommu_configure(dev, np);
-> +       dev_dbg(dev, "device is%sbehind an iommu\n",
-> +               iommu ? " " : " not ");
-> +
-> +       arch_setup_dma_ops(dev, dma_addr, size, iommu, coherent);
-> +}
-> +EXPORT_SYMBOL_GPL(of_dma_configure);
-> +
->  int of_device_register(struct platform_device *pdev)
->  {
->         device_initialize(&pdev->dev);
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 667c6f1..a01f57c 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -19,7 +19,6 @@
->  #include <linux/slab.h>
->  #include <linux/of_address.h>
->  #include <linux/of_device.h>
-> -#include <linux/of_iommu.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> @@ -150,59 +149,6 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  }
->  EXPORT_SYMBOL(of_device_alloc);
->
-> -/**
-> - * of_dma_configure - Setup DMA configuration
-> - * @dev:       Device to apply DMA configuration
-> - *
-> - * Try to get devices's DMA configuration from DT and update it
-> - * accordingly.
-> - *
-> - * In case if platform code need to use own special DMA configuration,it
-> - * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
-> - * to fix up DMA configuration.
-> - */
-> -static void of_dma_configure(struct device *dev)
-> -{
-> -       u64 dma_addr, paddr, size;
-> -       int ret;
-> -       bool coherent;
-> -       unsigned long offset;
-> -       struct iommu_ops *iommu;
-> -
-> -       /*
-> -        * Set default dma-mask to 32 bit. Drivers are expected to setup
-> -        * the correct supported dma_mask.
-> -        */
-> -       dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> -
-> -       /*
-> -        * Set it to coherent_dma_mask by default if the architecture
-> -        * code has not set it.
-> -        */
-> -       if (!dev->dma_mask)
-> -               dev->dma_mask = &dev->coherent_dma_mask;
-> -
-> -       ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
-> -       if (ret < 0) {
-> -               dma_addr = offset = 0;
-> -               size = dev->coherent_dma_mask;
-> -       } else {
-> -               offset = PFN_DOWN(paddr - dma_addr);
-> -               dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
-> -       }
-> -       dev->dma_pfn_offset = offset;
-> -
-> -       coherent = of_dma_is_coherent(dev->of_node);
-> -       dev_dbg(dev, "device is%sdma coherent\n",
-> -               coherent ? " " : " not ");
-> -
-> -       iommu = of_iommu_configure(dev, dev->of_node);
-> -       dev_dbg(dev, "device is%sbehind an iommu\n",
-> -               iommu ? " " : " not ");
-> -
-> -       arch_setup_dma_ops(dev, dma_addr, size, iommu, coherent);
-> -}
-> -
->  static void of_dma_deconfigure(struct device *dev)
->  {
->         arch_teardown_dma_ops(dev);
-> @@ -236,7 +182,7 @@ static struct platform_device *of_platform_device_create_pdata(
->
->         dev->dev.bus = &platform_bus_type;
->         dev->dev.platform_data = platform_data;
-> -       of_dma_configure(&dev->dev);
-> +       of_dma_configure(&dev->dev, dev->dev.of_node);
->
->         if (of_device_add(dev) != 0) {
->                 of_dma_deconfigure(&dev->dev);
-> @@ -299,7 +245,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->                 dev_set_name(&dev->dev, "%s", bus_id);
->         else
->                 of_device_make_bus_id(&dev->dev);
-> -       of_dma_configure(&dev->dev);
-> +       of_dma_configure(&dev->dev, dev->dev.of_node);
->
->         /* Allow the HW Peripheral ID to be overridden */
->         prop = of_get_property(node, "arm,primecell-periphid", NULL);
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index ef37021..be70cb4 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -53,6 +53,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
->         return of_node_get(cpu_dev->of_node);
->  }
->
-> +void of_dma_configure(struct device *dev, struct device_node *np);
->  #else /* CONFIG_OF */
->
->  static inline int of_driver_match_device(struct device *dev,
-> @@ -90,6 +91,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
->  {
->         return NULL;
->  }
-> +static inline void of_dma_configure(struct device *dev, struct device_node *np) { }
->  #endif /* CONFIG_OF */
->
->  #endif /* _LINUX_OF_DEVICE_H */
-> --
-> 1.7.9.5
->
+Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+[ Minor fixup to remove potentially uninitialised variable. ]
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ drivers/mfd/Kconfig              |    5 +++--
+ drivers/mfd/arizona-core.c       |   15 +++++++++++++--
+ drivers/mfd/arizona-i2c.c        |    2 ++
+ drivers/mfd/arizona-irq.c        |    1 +
+ drivers/mfd/arizona-spi.c        |    2 ++
+ include/linux/mfd/arizona/core.h |    1 +
+ 6 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 0ad88c7..b5fb03c 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1290,10 +1290,11 @@ config MFD_WM5102
+ 	  Support for Wolfson Microelectronics WM5102 low power audio SoC
+ 
+ config MFD_WM5110
+-	bool "Wolfson Microelectronics WM5110"
++	bool "Wolfson Microelectronics WM5110 and WM8280/WM8281"
+ 	depends on MFD_ARIZONA
+ 	help
+-	  Support for Wolfson Microelectronics WM5110 low power audio SoC
++	  Support for Wolfson Microelectronics WM5110 and WM8280/WM8281
++	  low power audio SoC
+ 
+ config MFD_WM8997
+ 	bool "Wolfson Microelectronics WM8997"
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 09ba8f1..9f81998 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -567,6 +567,7 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+ const struct of_device_id arizona_of_match[] = {
+ 	{ .compatible = "wlf,wm5102", .data = (void *)WM5102 },
+ 	{ .compatible = "wlf,wm5110", .data = (void *)WM5110 },
++	{ .compatible = "wlf,wm8280", .data = (void *)WM8280 },
+ 	{ .compatible = "wlf,wm8997", .data = (void *)WM8997 },
+ 	{},
+ };
+@@ -671,6 +672,7 @@ int arizona_dev_init(struct arizona *arizona)
+ 	switch (arizona->type) {
+ 	case WM5102:
+ 	case WM5110:
++	case WM8280:
+ 	case WM8997:
+ 		for (i = 0; i < ARRAY_SIZE(wm5102_core_supplies); i++)
+ 			arizona->core_supplies[i].supply
+@@ -834,11 +836,19 @@ int arizona_dev_init(struct arizona *arizona)
+ #endif
+ #ifdef CONFIG_MFD_WM5110
+ 	case 0x5110:
+-		type_name = "WM5110";
+-		if (arizona->type != WM5110) {
++		switch (arizona->type) {
++		case WM5110:
++			type_name = "WM5110";
++			break;
++		case WM8280:
++			type_name = "WM8280";
++			break;
++		default:
++			type_name = "WM5110";
+ 			dev_err(arizona->dev, "WM5110 registered as %d\n",
+ 				arizona->type);
+ 			arizona->type = WM5110;
++			break;
+ 		}
+ 		apply_patch = wm5110_patch;
+ 		break;
+@@ -1010,6 +1020,7 @@ int arizona_dev_init(struct arizona *arizona)
+ 				      ARRAY_SIZE(wm5102_devs), NULL, 0, NULL);
+ 		break;
+ 	case WM5110:
++	case WM8280:
+ 		ret = mfd_add_devices(arizona->dev, -1, wm5110_devs,
+ 				      ARRAY_SIZE(wm5110_devs), NULL, 0, NULL);
+ 		break;
+diff --git a/drivers/mfd/arizona-i2c.c b/drivers/mfd/arizona-i2c.c
+index 9d4156f..ff782a5d 100644
+--- a/drivers/mfd/arizona-i2c.c
++++ b/drivers/mfd/arizona-i2c.c
+@@ -44,6 +44,7 @@ static int arizona_i2c_probe(struct i2c_client *i2c,
+ #endif
+ #ifdef CONFIG_MFD_WM5110
+ 	case WM5110:
++	case WM8280:
+ 		regmap_config = &wm5110_i2c_regmap;
+ 		break;
+ #endif
+@@ -87,6 +88,7 @@ static int arizona_i2c_remove(struct i2c_client *i2c)
+ static const struct i2c_device_id arizona_i2c_id[] = {
+ 	{ "wm5102", WM5102 },
+ 	{ "wm5110", WM5110 },
++	{ "wm8280", WM8280 },
+ 	{ "wm8997", WM8997 },
+ 	{ }
+ };
+diff --git a/drivers/mfd/arizona-irq.c b/drivers/mfd/arizona-irq.c
+index 3a3fe7c..d063b94 100644
+--- a/drivers/mfd/arizona-irq.c
++++ b/drivers/mfd/arizona-irq.c
+@@ -211,6 +211,7 @@ int arizona_irq_init(struct arizona *arizona)
+ #endif
+ #ifdef CONFIG_MFD_WM5110
+ 	case WM5110:
++	case WM8280:
+ 		aod = &wm5110_aod;
+ 
+ 		switch (arizona->rev) {
+diff --git a/drivers/mfd/arizona-spi.c b/drivers/mfd/arizona-spi.c
+index 8ef58bc..1e845f6 100644
+--- a/drivers/mfd/arizona-spi.c
++++ b/drivers/mfd/arizona-spi.c
+@@ -44,6 +44,7 @@ static int arizona_spi_probe(struct spi_device *spi)
+ #endif
+ #ifdef CONFIG_MFD_WM5110
+ 	case WM5110:
++	case WM8280:
+ 		regmap_config = &wm5110_spi_regmap;
+ 		break;
+ #endif
+@@ -84,6 +85,7 @@ static int arizona_spi_remove(struct spi_device *spi)
+ static const struct spi_device_id arizona_spi_ids[] = {
+ 	{ "wm5102", WM5102 },
+ 	{ "wm5110", WM5110 },
++	{ "wm8280", WM8280 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(spi, arizona_spi_ids);
+diff --git a/include/linux/mfd/arizona/core.h b/include/linux/mfd/arizona/core.h
+index 910e3aa..f970105 100644
+--- a/include/linux/mfd/arizona/core.h
++++ b/include/linux/mfd/arizona/core.h
+@@ -24,6 +24,7 @@ enum arizona_type {
+ 	WM5102 = 1,
+ 	WM5110 = 2,
+ 	WM8997 = 3,
++	WM8280 = 4,
+ };
+ 
+ #define ARIZONA_IRQ_GP1                    0
+-- 
+1.7.2.5
