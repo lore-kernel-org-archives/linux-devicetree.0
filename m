@@ -1,121 +1,60 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH RFC 6/6] ARM: dts: am335x-boneblack: Use new binding for
- HDMI
-Date: Tue, 3 Mar 2015 10:35:15 +0200
-Message-ID: <54F57243.9060202@ti.com>
-References: <cover.1424961754.git.jsarha@ti.com> <6d6653416fd87c678a80df1d422420877261c4a5.1424961754.git.jsarha@ti.com> <54F45778.6050406@ti.com> <20150302160629.GB29584@n2100.arm.linux.org.uk> <54F49917.6070608@ti.com> <20150302174227.GC29584@n2100.arm.linux.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 1/8] ARM: dt: Binding documentation for imx25 ADC/TSC
+Date: Tue, 03 Mar 2015 10:02:12 +0100
+Message-ID: <2620642.Qp1W4O8uh6@wuerfel>
+References: <1425369498-25541-1-git-send-email-mpa@pengutronix.de>
+ <1425369498-25541-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="8kM4mHirpQ99SOdiaIn9NgUAP7boFtkjB"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150302174227.GC29584@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, detheridge@ti.com, moinejf@free.fr, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1425369498-25541-2-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lars-Peter Clausen <lars@metafoo.de>, Samuel Ortiz <sameo@linux.intel.com>, Eric =?ISO-8859-1?Q?B=E9nard?= <eric@eukrea.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Denis Carikli <denis@eukrea.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-arm-kernel@lists.infradead.org, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---8kM4mHirpQ99SOdiaIn9NgUAP7boFtkjB
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Tuesday 03 March 2015 08:58:11 Markus Pargmann wrote:
+> +Example:
+> +       tscadc: tscadc@50030000 {
+> +               compatible = "fsl,imx25-tsadc";
+> +               reg = <0x50030000 0xc>;
+> +               interrupts = <46>;
+> +               clocks = <&clks 119>;
+> +               clock-names = "ipg";
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               tsc: tcq@50030400 {
+> +                       compatible = "fsl,imx25-tcq";
+> +                       reg = <0x50030400 0x60>;
+> +                       ...
+> +               };
+> +
+> +               adc: gcq@50030800 {
+> +                       compatible = "fsl,imx25-gcq";
+> +                       reg = <0x50030800 0x60>;
+> +                       ...
+> +               };
+> +       };
+> 
 
-On 02/03/15 19:42, Russell King - ARM Linux wrote:
-> On Mon, Mar 02, 2015 at 07:08:39PM +0200, Tomi Valkeinen wrote:
->> On 02/03/15 18:06, Russell King - ARM Linux wrote:
->>
->>>> This is missing the output of tda998x. It should have two ports, inp=
-ut
->>>> and output, output going to hdmi-connector.
->>>
->>> We don't have that kind of level of modelling in DRM right now - as f=
-ar
->>> as DRM is concerned, the tda998x is both the encoder _and_ the connec=
-tor
->>> since it supplies both functionalities.
->>
->> That's fine, but these are DT bindings which should reflect the
->> hardware, not the SW stack.
->=20
-> I still don't buy your argument.  The principle is right, but I think
-> you're taking it too far.
+I wonder if we should just treat this MFD as a single IIO device
+that also registers to the input layer.
 
-<snip>
+Are there any other registers in the 0x50030000-0x50031000
+range, or could the fsl,imx25-tcq and fsl,imx25-gcq devices
+be reused outside of a fsl,imx25-tsadc device?
 
-> When we say "DT should follow the hardware" we're not talking about
-> making DT be an alternative to the hardware's schematic.
-
-I agree, and that's not what I'm suggesting. We should only model HW in
-the DT when it makes sense, when it gives us something.
-
-A HDMI connector can have (at least) two functionalities that the driver
-for it may need to handle: HPD and +5V. On some SoCs/boards those are
-handled by the HDMI encoder, but I have boards where they are not. So we
-need to have the data somewhere, and a HDMI connector node at the end of
-the video path is a logical choice.
-
-The HDMI connector node is also a good place for a symbolic name which
-can be shown to the user.
-
-In this particular board, the HDMI encoder handles the HPD and the +5V
-is always enabled, so there's no strict need to have the HDMI connector
-node.
-
-However, I still feel it's better to have the HDMI connector in .dts:
-
-1) It's not said that a HDMI encoder always has a HDMI connector as the
-next component. The next component could be a integrated panel, needing
-a specific driver and there's no HDMI connector at all. Or there could
-be something else, as is the case on some OMAP boards which have an ESD
-protection chip (that requires controlling, i.e. a driver) between the
-encoder and the connector.
-
-2) I like that the beginning and the end of the video pipeline are
-clearly defined. A video pipeline starts at a display controller, and
-ends at a panel or a connector. This makes it easier to understand the
-=2Edts as you know what to expect.
-
-In the SW side these mean that every encoder (or whatever is doing this
-stuff) should be able to handle any component after the encoder, be it a
-connector, panel or something else.
-
-If we allow leaving out the connector node, the code also needs to
-handle the case when there's nothing after the encoder, which probably
-means fabricating some connector data (at least if and when DRM can
-handle arbitrary video pipelines).
-
-But as I said earlier, we can do just fine without the HDMI connector
-node on boards where the connector "just works". We can handle that in
-the drivers with some extra code.
-
-So if people think it's a big chore to add the connectors and don't see
-the benefit in them (and they don't want the symbolic labels that could
-be added there), I'm fine with having them optional.
-
- Tomi
-
-
-
---8kM4mHirpQ99SOdiaIn9NgUAP7boFtkjB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU9XJDAAoJEPo9qoy8lh714zcP/0r4y+sfKYDp3Ot6XG/JR7jF
-JrkWsblwMe25+g7ac5d4t1M7scFmqgLkvHn6sPdWZajXSwHycvzUBO2mQfhJjhhg
-CFXn5QCPJAugy+E6IIuaQUaU14qc0BIadMttYwjd/jFAeF6Ig5sAWbfw69Yt3eJp
-flaoQVgC0+EVmM+uovKZMQQnJYti/NvE/nnGWDPc/Cn/cJZUdSQeq/cOiSEUDMtF
-+fdrtWUtx69xs7xB7IEMImmFCcKn3yka6AZSIuQop5FJ4dEhkHNCay2jOZUw3iFj
-NnD8M87NswDg+EI+zjwKHRbhebI1kWAKMhQJEqRNy3RcPpMUcF2n+IVaiMjU7LCQ
-pHCJu6Mb9aiXJV2rtISCmzLssEjpXqwfue2cDElknO3Axdzu0Q8oJNml+MtKsBEx
-BgwXmJqOHiGHiWbyKflpO2hOl4CpbcWsTv4N7zpfX0TMHt7x9wDDq5slPipcQeq/
-FNALvQM0+DDmKSaZtNsX5rFpC1loQzGAagqhmSpGdhZlIrbU0RDzUJ9ZmM8VAbD0
-P0OgodTnA5ZJLpNkK8F1fHRDUBOxUR/SHzE7IboQgXmQoHvZqkapXlDspSDJ6AHG
-A6huGw/LQJhBOnAscownahBM1it+wp2dGUIRYEonH7+ycvbaH0RusgjaDmW57Uyf
-mEAptsierbKuf6ccaFhz
-=u2j4
------END PGP SIGNATURE-----
-
---8kM4mHirpQ99SOdiaIn9NgUAP7boFtkjB--
+	Arnd
