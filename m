@@ -1,57 +1,38 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH 2/2] ASoC: simple-card: Add support for
- samplerate and samplewidth constraints
-Date: Tue, 3 Mar 2015 12:09:14 +0200
-Message-ID: <54F5884A.1090702@ti.com>
-References: <cover.1425303942.git.jsarha@ti.com>
- <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
- <54F4C0F2.8000201@metafoo.de>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH 0/2] Enable DRM/KMS support for STiH407 and STiH410 boards
+Date: Tue, 3 Mar 2015 11:10:30 +0100
+Message-ID: <54F58896.5010407@st.com>
+References: <1421250432-25903-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <54F4C0F2.8000201@metafoo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lars-Peter Clausen <lars@metafoo.de>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: moinejf@free.fr, kuninori.morimoto.gx@renesas.com, Li.Xiubo@freescale.com, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, broonie@kernel.org, bcousson@baylibre.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421250432-25903-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, benjamin.gaignard@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/2015 09:58 PM, Lars-Peter Clausen wrote:
-> On 03/02/2015 03:14 PM, Jyri Sarha wrote:
->> Add DT properties to dailink for setting samplerate and samplewidth
->> constraints. The DT binding document has been updated.
+
+On 01/14/2015 04:47 PM, Gabriel FERNANDEZ wrote:
+> This patch-set Enable DRM/KMS support for STiH407-b2120 and STiH410-b2120 boards.
 >
-> Can you include a description why this is needed and how and when it is
-> supposed to be used?
+> This patch-set replace the previous one (PATCH 0/2] Enable DRM/KMS support for STiH407 Family boards)
+>
+> Gabriel Fernandez (2):
+>    ARM: DT: STiH407: Add DRM dt nodes
+>    ARM: DT: STiH410: Add DRM dt nodes
+>
+>   arch/arm/boot/dts/stih407-b2120.dts  |   3 +-
+>   arch/arm/boot/dts/stih407.dtsi       | 151 +++++++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stih410.dtsi       | 138 ++++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stihxxx-b2120.dtsi |   2 +-
+>   4 files changed, 291 insertions(+), 3 deletions(-)
+>   create mode 100644 arch/arm/boot/dts/stih407.dtsi
+>
+Forgot to reply to this series:
 
-Would this addition do:
-------------------------------------------------------------
-These constraints help to disable the sample-format and sample-rate
-combinations that do not properly work on a specific HW.
-------------------------------------------------------------
+Applied, and already in v4.0-rc1.
 
-The reason why we need these is coming from limitations in McASP clock 
-generation. With a simple divider one can only produce certain 
-bit-clocks. With those bit-clocks we can only play/capture some 
-sample-rate and sample-width combinations accurately.
-
-The McASP driver could try to set the constraints automatically. 
-However, since the constraint code can not select sample-width and 
-sample-rate combinations there is a compromise to be made between them. 
-Making such compromises automatically does not usually work that well.
-
-In our case these properties could of course be added to McASP driver, 
-but then again I would expect that there is a wider need for this kind 
-of functionality. And it may not always be clear if either end of the 
-link alone is responsible for less than perfect operation.
-
-Best regards,
-Jyri
+Thanks,
+Maxime
