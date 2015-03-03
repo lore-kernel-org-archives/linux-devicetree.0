@@ -1,108 +1,117 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 1/5] Documentation: Add device tree bindings for
- Freescale i.MX GPC
-Date: Tue, 3 Mar 2015 10:35:33 +0800
-Message-ID: <20150303023531.GF20455@dragon>
-References: <1424713215-3357-1-git-send-email-p.zabel@pengutronix.de>
- <1424713215-3357-2-git-send-email-p.zabel@pengutronix.de>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH 0/3] Add ktd2692 Flash LED driver
+Date: Tue, 03 Mar 2015 11:55:58 +0900
+Message-ID: <54F522BE.6080708@samsung.com>
+References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
+ <54F02DF5.1000706@samsung.com> <54F40DDF.8070708@samsung.com>
+ <20150302091530.GQ6539@valkosipuli.retiisi.org.uk>
+ <CAK5ve-JYixcO6F470wKZXDN-nkTfaRgmg7FBt1Y5O+tuznruwg@mail.gmail.com>
+ <20150302220315.GU6539@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424713215-3357-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150302220315.GU6539@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>, Bryan Wu <cooloney@gmail.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Thierry Reding <treding@nvidia.com>, p.zabel@pengutronix.de, Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, florian.vaussard@epfl.ch, arno@natisbad.org, kuninori.morimoto.gx@renesas.com, hytszk@gmail.com, antonynpavlov@gmail.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 23, 2015 at 06:40:11PM +0100, Philipp Zabel wrote:
-> The i.MX6 contains a power controller that controls power gating and
-> sequencing for the SoC's power domains.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Hi
 
-The patch (series) looks fine to me.  Can we get DT maintainer's ACK on
-this, so that I can apply the series for 4.1?
+On 2015=EB=85=84 03=EC=9B=94 03=EC=9D=BC 07:03, Sakari Ailus wrote:
+> Hi Bryan,
+>=20
+> On Mon, Mar 02, 2015 at 12:07:42PM -0800, Bryan Wu wrote:
+>> On Mon, Mar 2, 2015 at 1:15 AM, Sakari Ailus <sakari.ailus@iki.fi> w=
+rote:
+>>> H Ingi,
+>>>
+>>> On Mon, Mar 02, 2015 at 04:14:39PM +0900, Ingi Kim wrote:
+>>>> Hi Jacek
+>>>>
+>>>> On 2015=EB=85=84 02=EC=9B=94 27=EC=9D=BC 17:42, Jacek Anaszewski w=
+rote:
+>>>>> Hi Ingi,
+>>>>>
+>>>>> On 02/27/2015 02:01 AM, Ingi Kim wrote:
+>>>>>> This patch supports KTD2692 flash LED driver
+>>>>>>
+>>>>>> Ingi Kim (3):
+>>>>>>    of: Add vendor prefix for Kinetic technologies
+>>>>>>    leds: ktd2692: add device tree bindings for ktd2692
+>>>>>>    leds: Add ktd2692 flash LED driver
+>>>>>>
+>>>>>>   .../devicetree/bindings/leds/leds-ktd2692.txt      |   19 ++
+>>>>>>   .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>>>>>>   drivers/leds/Kconfig                               |    8 +
+>>>>>>   drivers/leds/Makefile                              |    1 +
+>>>>>>   drivers/leds/leds-ktd2692.c                        |  245 ++++=
+++++++++++++++++
+>>>>>>   5 files changed, 274 insertions(+)
+>>>>>>   create mode 100644 Documentation/devicetree/bindings/leds/leds=
+-ktd2692.txt
+>>>>>>   create mode 100644 drivers/leds/leds-ktd2692.c
+>>>>>>
+>>>>>
+>>>>> In your device tree binding documentation there is torch-gpio men=
+tioned,
+>>>>> but you seem not to use it in the driver.
+>>>>>
+>>>>> We have already LED Flash class (/drivers/leds/led-class-flash.c)=
+ for
+>>>>> this type of devices, which handles both torch and flash modes
+>>>>> (flash_strobe sysfs attribute is provided for strobing the flash)=
+=2E
+>>>>>
+>>>>> The reference drivers using LED Flash class are still pending [1]=
+, but I
+>>>>> think that at least leds-aat1290 driver is almost ready for mergi=
+ng.
+>>>>> It controls very similar device to yours.
+>>>>>
+>>>>> Another advantage of using LED Flash class is that it has been de=
+signed
+>>>>> to be compatible with Video for Linux 2 subsystem, which will all=
+ow for registering LED Flash class devices as a V4L2 sub-devices.
+>>>>>
+>>>>> Adding Sakari.
+>>>>>
+>>>>
+>>>> Ok, I'll check LED Flash class, and add torch-gpio
+>>>
+>>> Many LED flash chips include a hardware pin for torch control but f=
+ew really
+>>> need it. If you don't, i.e. you can implement the torch using the c=
+ontrol bus
+>>> instead, I think I'd probably drop it from the chip's DT bindings.
+>>>
+>>
+>> Ingi, please follow Jacek's advice to use LED Flash class interface.
+>> I'm reviewing those leds flash drivers and probably merge them soon.
+>>
+>> Jacek and Sakari thanks for the review.
+>>
+>> Sakari, so what's the control bus your mentioned here?
+>=20
+> I wasn't cc'd in the original patch so I didn't know whether it was I=
+2C or
+> not. Doesn't appear to be.
+>=20
 
-Shawn
+Thanks for the review and I'll work to use LED Flash class interface
+and try adding torch-gpio(flash mode enable) line (I'll rename those gp=
+io lines)
 
-> ---
-> Changes since v8:
->  - Updated example with IRQ_TYPE_... and IMX6QDL_CLK_... defines
-> ---
->  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> new file mode 100644
-> index 0000000..65cc034
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> @@ -0,0 +1,59 @@
-> +Freescale i.MX General Power Controller
-> +=======================================
-> +
-> +The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
-> +counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
-> +domains.
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- interrupts: Should contain GPC interrupt request 1
-> +- pu-supply: Link to the LDO regulator powering the PU power domain
-> +- clocks: Clock phandles to devices in the PU power domain that need
-> +	  to be enabled during domain power-up for reset propagation.
-> +- #power-domain-cells: Should be 1, see below:
-> +
-> +The gpc node is a power-controller as documented by the generic power domain
-> +bindings in Documentation/devicetree/bindings/power/power_domain.txt.
-> +
-> +Example:
-> +
-> +	gpc: gpc@020dc000 {
-> +		compatible = "fsl,imx6q-gpc";
-> +		reg = <0x020dc000 0x4000>;
-> +		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
-> +		pu-supply = <&reg_pu>;
-> +		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> +			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-> +			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
-> +			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
-> +			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
-> +			 <&clks IMX6QDL_CLK_VPU_AXI>;
-> +		#power-domain-cells = <1>;
-> +	};
-> +
-> +
-> +Specifying power domain for IP modules
-> +======================================
-> +
-> +IP cores belonging to a power domain should contain a 'power-domains' property
-> +that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
-> +the power domain the device belongs to.
-> +
-> +Example of a device that is part of the PU power domain:
-> +
-> +	vpu: vpu@02040000 {
-> +		reg = <0x02040000 0x3c000>;
-> +		/* ... */
-> +		power-domains = <&gpc 1>;
-> +		/* ... */
-> +	};
-> +
-> +The following DOMAIN_INDEX values are valid for i.MX6Q:
-> +ARM_DOMAIN     0
-> +PU_DOMAIN      1
-> +The following additional DOMAIN_INDEX value is valid for i.MX6SL:
-> +DISPLAY_DOMAIN 2
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari,
+ktd2692 flash led device is controlled through Expresswire single-wire =
+interface
+by using the strobe-gpio(control) pin.=20
+
+
+Adding pin information of the KTD2692.
+
+CTRL pin can control LED on/off and Movie/Flash mode current,
+=46lash timeout, LVP(low voltage protection).
+
+AUX pin(torch-gpio) allows highest priority ON/OFF flash mode control.
