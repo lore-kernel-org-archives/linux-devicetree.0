@@ -1,48 +1,74 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: simple-card: Remove trailing whitespace
-Date: Tue, 3 Mar 2015 15:34:58 +0000
-Message-ID: <20150303153458.GB21293@sirena.org.uk>
-References: <cover.1425303942.git.jsarha@ti.com>
- <c7817be105a96bcbf71202c5497982f59a45a8eb.1425303942.git.jsarha@ti.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/5] arm-cci: Rearrange code for splitting PMU vs driver
+ code
+Date: Tue, 03 Mar 2015 15:35:18 +0000
+Message-ID: <54F5D4B6.40409@arm.com>
+References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com> <1425295754-13376-2-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Wpb0FYlDpXbLlpco"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c7817be105a96bcbf71202c5497982f59a45a8eb.1425303942.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425295754-13376-2-git-send-email-suzuki.poulose@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Suzuki K. Poulose" <suzuki.poulose@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "nico@linaro.org" <nico@linaro.org>, "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "olof@lixom.net" <olof@lixom.net>, Punit Agrawal <Punit.Agrawal@arm.com>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---Wpb0FYlDpXbLlpco
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Mar 02, 2015 at 04:14:32PM +0200, Jyri Sarha wrote:
-> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+On 02/03/15 11:29, Suzuki K. Poulose wrote:
+> From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+>
+> No functional changes, only code re-arrangements for easier split of the
+> PMU code vs low level driver code. Extracts the port handling code
+> to cci_probe_ports().
+>
+> Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
+> ---
+>   drivers/bus/arm-cci.c |  330 +++++++++++++++++++++++++------------------------
+>   1 file changed, 168 insertions(+), 162 deletions(-)
+>
+> diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
+> index 84fd660..f27cf56 100644
+> --- a/drivers/bus/arm-cci.c
+> +++ b/drivers/bus/arm-cci.c
 
-Applied, thanks.
+[...]
 
---Wpb0FYlDpXbLlpco
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> @@ -1395,11 +1412,36 @@ static int cci_probe(void)
+>   	sync_cache_w(&cpu_port);
+>   	__sync_cache_range_w(ports, sizeof(*ports) * nb_cci_ports);
+>   	pr_info("ARM CCI driver probed\n");
+> +
+>   	return 0;
+> +}
+> +
+> +static int cci_probe(void)
+> +{
+> +	int ret;
+> +	struct device_node *np;
+> +	struct resource res;
+> +
+> +	np = of_find_matching_node(NULL, arm_cci_matches);
+> +	if (!np)
+> +		return -ENODEV;
+>
+> -memalloc_err:
+> +	if (!of_device_is_available(np))
+> +		return -ENODEV;
+> +
+> +	ret = of_address_to_resource(np, 0, &res);
+> +	if (!ret) {
+> +		cci_ctrl_base = ioremap(res.start, resource_size(&res));
+> +		cci_ctrl_phys =	res.start;
+> +	}
+> +	if (ret || !cci_ctrl_base) {
+> +		WARN(1, "unable to ioremap CCI ctrl\n");
+> +		ret = -ENXIO;
+> +		goto out;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+IMO you can return directly here and get rid of this goto as nothing is
+done there.
 
-iQEcBAEBCAAGBQJU9dShAAoJECTWi3JdVIfQH64IAIVOwstGezwpJjW8MXKMrWM9
-ZxNOlJi5bmnZaNpIuGmQ6zVesthtDllrQCXiSQea/cBkgsa3b9oAqu+VsLOHL4Mj
-mc7IoFWZBTzLBdP6h+3SrnU6Fkv9PcZrivTNFy8Nlq5o8XNzhtGpZ4E0qtvQkyXm
-dharLkTXG6ipOtgJRqXIm7VG7VbuHQVheqfU2VByRxYs3Jomv456iPwyU0yk8dn+
-6j537hpVI/LmMdXw5RSiqLzF5oQJGDN11ipxFavB6Ti1oByZni7JOABvApSMXYLY
-yXJ06M2uZxY2BhjKyoNSougLqJnUIn/pxZ/SROrG+3UHzLU1yqSRzCcSyKekYRM=
-=eBDa
------END PGP SIGNATURE-----
-
---Wpb0FYlDpXbLlpco--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sudeep
