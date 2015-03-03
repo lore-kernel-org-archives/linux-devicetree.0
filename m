@@ -1,54 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/4] regulator: qcom: Refactor of-parsing code
-Date: Tue, 3 Mar 2015 14:13:21 +0000
-Message-ID: <20150303141321.GQ21293@sirena.org.uk>
-References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1425356740-26285-4-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5tnu7VSDgXc9ikuK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425356740-26285-4-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v3 02/20] ARM: mvebu: fix usb@ unit address on Armada 38x to match register address
+Date: Tue,  3 Mar 2015 15:40:57 +0100
+Message-ID: <1425393675-17820-3-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1425393675-17820-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1425393675-17820-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+On Marvell Armada 38x, the USB2 controller registers are at 0x58000,
+so the corresponding Device Tree node should have a unit address of
+58000, and not 50000. We were using 50000 due to an incorrect
+copy/pastebin of Armada 370/XP code.
 
---5tnu7VSDgXc9ikuK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ arch/arm/boot/dts/armada-388-db.dts | 2 +-
+ arch/arm/boot/dts/armada-388-gp.dts | 2 +-
+ arch/arm/boot/dts/armada-38x.dtsi   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-On Mon, Mar 02, 2015 at 08:25:39PM -0800, Bjorn Andersson wrote:
+diff --git a/arch/arm/boot/dts/armada-388-db.dts b/arch/arm/boot/dts/armada-388-db.dts
+index 16512ef..af6c74e 100644
+--- a/arch/arm/boot/dts/armada-388-db.dts
++++ b/arch/arm/boot/dts/armada-388-db.dts
+@@ -99,7 +99,7 @@
+ 				phy-mode = "rgmii-id";
+ 			};
+ 
+-			usb@50000 {
++			usb@58000 {
+ 				status = "ok";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/armada-388-gp.dts b/arch/arm/boot/dts/armada-388-gp.dts
+index 590b383..3ff0573 100644
+--- a/arch/arm/boot/dts/armada-388-gp.dts
++++ b/arch/arm/boot/dts/armada-388-gp.dts
+@@ -135,7 +135,7 @@
+ 			};
+ 
+ 			/* CON4 */
+-			usb@50000 {
++			usb@58000 {
+ 				vcc-supply = <&reg_usb2_0_vbus>;
+ 				status = "okay";
+ 			};
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 1dff30a..c40d717 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -435,7 +435,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			usb@50000 {
++			usb@58000 {
+ 				compatible = "marvell,orion-ehci";
+ 				reg = <0x58000 0x500>;
+ 				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.1.0
 
-> +	if ((vreg->parts->uV.mask || vreg->parts->mV.mask) &&
-> +	    (!initdata->constraints.min_uV || !initdata->constraints.max_uV)) {
-> +		dev_err(&pdev->dev, "no voltage specified for regulator\n");
-> +		return -EINVAL;
-> +	}
-
-OK, so it looks like we're using it because we can't read the initial
-hardware state - can we introduce a specific interface for that perhaps?
-A call to query the current constraints might do it.  Or possibly just
-change your earlier patch to make sure the constraints are marked const
-would do it, reading them isn't the problem that modifying them is.  I
-might've missed some other usage somewhere though.
-
---5tnu7VSDgXc9ikuK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU9cGAAAoJECTWi3JdVIfQqPMH/1MW//txR1gZQ2urDGVno1/Y
-c56+nkBe99AyV7efubfMvDh0irWWdDH47vA/KaOZuIU8NVZnOPGz+PGtKBR7/lxj
-ZuwhX/zGC27RSQvFZmO0p9BcjdZUzGgSSmiEqWeqw/eZFbyiCfJsVKvPuGbQg1va
-ue0iYRWcQR6WGwjM9jbDHvDCEMbcyVe0605FOW/+9cEwYCehZOy7i4LnpjreovFp
-K57zMo9ytc6mfFxPV5InyQFM5w8OVTVbD0DoHKx6jkra1e3iRbO/bN7CcSQ0wMQx
-D3b9R38drxGtcHnzEiRmhhE9uOq8JDrI2CAK6sfGv4PrIctkZu8XLozpCE4SQHs=
-=Gq5G
------END PGP SIGNATURE-----
-
---5tnu7VSDgXc9ikuK--
