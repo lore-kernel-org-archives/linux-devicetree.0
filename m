@@ -1,63 +1,71 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [RFC PATCH v2 3/3] ARM: dts: exynos5420: add async-bridge clocks
- to disp1 power domain
-Date: Tue, 03 Mar 2015 09:12:20 +0100
-Message-ID: <54F56CE4.8000704@collabora.co.uk>
-References: <54D48701.10105@collabora.co.uk> <1423220154-5333-1-git-send-email-a.hajda@samsung.com> <54D4A534.8060004@collabora.co.uk>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 0/3] Add initial DT support for Qualcomm SPMI PMIC devices
+Date: Tue, 3 Mar 2015 00:19:58 -0800
+Message-ID: <20150303081958.GA6293@codeaurora.org>
+References: <1422965880-11047-1-git-send-email-iivanov@mm-sol.com>
+ <54E6848C.1090405@codeaurora.org>
+ <1424967957.2340.30.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <54D4A534.8060004@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Liquid.Acid@gmx.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1424967957.2340.30.camel@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Kukjin,
+On 02/26, Ivan T. Ivanov wrote:
+> 
+> Hi Stephan, 
+> 
+> Sorry for delayed answer.
+> 
+> On Thu, 2015-02-19 at 16:49 -0800, Stephen Boyd wrote:
+> > On 02/03/15 04:17, Ivan T. Ivanov wrote:
+> > > Following set of patches add initial DT support for PMIC devices
+> > > found on recent Quqalcomm chipsets. Details for SPMI bus and PMIC arbiter
+> > > could be found here [1].
+> > 
+> > Can you please put the specific compatible strings for the pmic model
+> > into the nodes in addition to the generic "qcom,spmi-pmic"? We may want
+> > to have regmap config tables in the future that describe the
+> > cache/read/write abilities of the regsiters. If all we have is the
+> > generic binding then we don't have a way to populate these tables.
+> > Unless the plan there is to use the revid registers?
+> > 
+> 
+> I would really like that we can use "revid" registers, but I don't know... 
+> 
+> From what I can see usually in one physical PMIC chip they
+> are 2 USID devices.
+> 
+> I can successfully discover following USID's on APQ8074 boards:
+> 
+> pmic-spmi 0-00: qcom,pm8941-v1.0 detected
+> pmic-spmi 0-01: qcom,pm8941-v1.0 detected
+> pmic-spmi 0-04: qcom,pm8841-v0.0 detected
+> pmic-spmi 0-05: qcom,pm8841-v0.0 detected
+> 
+> Unfortunately on PM8916 only one device is detected, with USID 0.
+> But they should be two, judging by downstream DTS files, right?
+> 
+> pmic-spmi 0-00: qcom,pm8916-v0.0 detected 
+> pmic-spmi 0-01: unknown device
+> 
+> For communication with PM8916 I am using recent patches from Gilad [1].
+> Maybe there are still some issues with these patches, which can cause
+> this behavior or PM8916 just didn't have these registers for USID 1?
+> 
+> Regards,
+> Ivan 
 
-On 02/06/2015 12:27 PM, Javier Martinez Canillas wrote:
-> Hello Andrzej,
-> 
-> On 02/06/2015 11:55 AM, Andrzej Hajda wrote:
->> FIMD and MIXER IPs in disp1 power domain have async-bridges (to GSCALER),
->> therefore their clocks should be enabled during power domain switch.
->> 
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> ---
->> Hi,
->> 
->> This is 2nd version of the patch. After decrypting manual and discussion
->> with Marek I guess this set of clocks is more apropriate - async-bridges
->> are present in MIXER and FIMD, so their clocks should be enabled.
->>
-> 
-> I just tested this version on my Exynos5420 Peach Pit and the power domain
-> failed error does not happen anymore even after enabling and disabling the
-> HDMI display several times.
-> 
-> Thanks a lot for fixing this since the dependency was not clear to me from
-> reading the manual.
-> 
->> The 1st version worked for me due to fact I have forgot to remove
->> clk_ignore_unused kernel boot option during tests ;)
->>
-> 
-> Yes, that has bitten me too many times as well :)
-> 
->> Regards
->> Andrzej
->> ---
-> 
-> Best regards,
-> Javier
-> 
+Hmm... do you have 4 total rev-id nodes on apq8074? I only see
+one rev-id node per pmic (2 total), so I'm a little lost how the
+correct pmic version is detected on the 0-01 and 0-05 devices in
+your example above. Maybe I've missed something though, I'll have
+to check in a few hours when I'm in the office.
 
-Could you please pick this patch and patches 1/2 and 2/3 from the series [0]?
-
-These are needed to fix DISP1 power domain issues and HDMI on Exynos542x.
-
-Thanks a lot and best regards,
-Javier
-
-[0]: https://lkml.org/lkml/2015/2/5/265
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
