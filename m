@@ -1,45 +1,96 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv2 05/15] ARM: mvebu: add stdout-path to all armada-*.dts
-Date: Tue, 3 Mar 2015 10:45:41 +0100
-Message-ID: <20150303104541.345608b4@free-electrons.com>
-References: <1424451874-25375-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1424451874-25375-6-git-send-email-thomas.petazzoni@free-electrons.com>
-	<54EB4E9B.6010001@free-electrons.com>
-	<CAL_JsqJZJMkH953hq0_sOvEEu9o4pXxs0sdP5=7c2EXXNSyA9A@mail.gmail.com>
-	<20150227174851.390d9f58@free-electrons.com>
-	<CAL_Jsq+tP6wBcDti7x-B6ar8esE=65Ymg_CKANeOKSe=yYhNnw@mail.gmail.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH] video: ARM CLCD: Added support for FBIO_WAITFORVSYNC
+Date: Tue, 03 Mar 2015 10:01:26 +0000
+Message-ID: <1425376886.3092.25.camel@arm.com>
+References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+	 <1424898082-1522-3-git-send-email-arun.ramamurthy@broadcom.com>
+	 <1425312029.3092.1.camel@arm.com> <54F4B576.5030702@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+tP6wBcDti7x-B6ar8esE=65Ymg_CKANeOKSe=yYhNnw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Lior Amsalem <alior@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54F4B576.5030702@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob Herring,
-
-On Fri, 27 Feb 2015 11:42:43 -0600, Rob Herring wrote:
-
-> > It is worth mentioning that this also happens with
+On Mon, 2015-03-02 at 19:09 +0000, Arun Ramamurthy wrote:
+> On 15-03-02 08:00 AM, Pawel Moll wrote:
+> > On Wed, 2015-02-25 at 21:01 +0000, Arun Ramamurthy wrote:
+> >> Added ioctl and interrupt handler functions to support FBIO_WAITFORVSYNC
+> >> Also corrected documentation to make interrupts and interrupt-names
+> >> optional as they are not required properties.
 > >
-> >      stdout-path = "uart0:115200n8";
+> > You may not be aware of this fact, but its the "documentation" what
+> > defines what properties are required...
 > >
-> > which was explicitly suggested by Mark in his e-mail. uart0 is an alias
-> > to the proper DT node, since stdout-path = &uart0; works almost fine.
-> 
-> Mark forgot the '&'. So does 'stdout-path = "&uart0:115200n8";' work?
+> Pawel, I was not aware of that. Since the driver code did not require 
+> the interrupts or interrupt-names bindings to load properly, I moved it 
+> out of the required properties. I can remove that change.
 
-Nah, there is really no '&' needed, Mark was right. What was wrong in
-my setup was that uart0 was a *label* for the serial port DT node, and
-not an alias. Once I created an alias 'serial0' for '&uart0', things
-started working all right.
+Cool. Drivers don't have to use all available properties :-) The
+interrupt names are required because CLCD can be wired up with a single,
+combined interrupt or with 4 separate interrupt lines (see "A.4. On-chip
+signals", in the TRM) and the binding has to provide ways of describing
+this. Yes, one could say "1 number == combined, 4 numbers == split", but
+I personally prefer to be explicit than implicit.
 
-Thanks,
+Just request the interrupt by name and you'll be fine.
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> Any other comments on this change? Thanks
+
+I have no experience with the vsync ioctl, so can't really comment on
+it. One minor thing I did spot is your use of curly brackets in one of
+the switch cases:
+
+On Wed, 2015-02-25 at 21:01 +0000, Arun Ramamurthy wrote:
+@@ -466,6 +468,73 @@ static int clcdfb_pan_display(struct fb_var_screeninfo *var,
+>  	return 0;
+>  }
+>  
+> +static int clcdfb_ioctl(struct fb_info *info,
+> +			unsigned int cmd, unsigned long args)
+> +{
+> +	struct clcd_fb *fb = to_clcd(info);
+> +	int retval = 0;
+> +	u32 val, ienb_val;
+> +
+> +	switch (cmd) {
+> +	case FBIO_WAITFORVSYNC:{
+
+In the line above...
+
+> +		if (fb->lcd_irq <= 0) {
+> +			retval = -EINVAL;
+> +			break;
+> +		}
+> +		/* disable Vcomp interrupts */
+> +		ienb_val = readl(fb->regs + fb->off_ienb);
+> +		ienb_val &= ~CLCD_PL111_IENB_VCOMP;
+> +		writel(ienb_val, fb->regs + fb->off_ienb);
+> +
+> +		/* clear Vcomp interrupt */
+> +		writel(CLCD_PL111_IENB_VCOMP, fb->regs + CLCD_PL111_ICR);
+> +
+> +		/* Generate Interrupt at the start of Vsync */
+> +		reinit_completion(&fb->wait);
+> +		val = readl(fb->regs +  fb->off_cntl);
+> +		val &= ~(CNTL_LCDVCOMP(3));
+> +		writel(val, fb->regs + fb->off_cntl);
+> +
+> +		/* enable Vcomp interrupt */
+> +		ienb_val = readl(fb->regs + fb->off_ienb);
+> +		ienb_val |= CLCD_PL111_IENB_VCOMP;
+> +		writel(ienb_val, fb->regs + fb->off_ienb);
+> +		if (!wait_for_completion_interruptible_timeout
+> +			(&fb->wait, HZ/10))
+> +			retval = -ETIMEDOUT;
+> +		break;
+> +	}
+
+... and here.
+
+Not sure it's needed?
+
+Pawel
