@@ -1,41 +1,71 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH 4/6] ARM: DT: STi: STiH407: Add dwc3 usb3 DT node.
-Date: Tue, 3 Mar 2015 11:16:33 +0100
-Message-ID: <54F58A01.7090806@st.com>
-References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org> <1424871377-1795-5-git-send-email-peter.griffin@linaro.org> <20150225151229.GE5132@x1> <20150225152201.GA14329@griffinp-ThinkPad-X1-Carbon-2nd> <20150225155005.GE6688@x1> <20150227104353.GB9094@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
+Date: Tue, 03 Mar 2015 10:22:07 +0000
+Message-ID: <1425378127.3092.38.camel@arm.com>
+References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+	 <1425312688.3092.10.camel@arm.com> <54F4B583.4000005@broadcom.com>
+	 <1425376977.3092.26.camel@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150227104353.GB9094@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, kishon@ti.com, balbi@ti.com, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425376977.3092.26.camel-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On Tue, 2015-03-03 at 10:02 +0000, Pawel Moll wrote:
+> On Mon, 2015-03-02 at 19:09 +0000, Arun Ramamurthy wrote:
+> > > The existing bindings intentionally avoided quoting internal registers -
+> > > they are supposed to describe how the hardware is wired up...
+> > >
+> > > So how about something like "arm,pl11x,tft-invert-clac"? Then the driver
+> > > sets the bit or not, depending on the property existance?
+> > >
+> > Sure, I can change it to two properties called arm,pl11x,tft-invert-clac 
+> > and arm,pl11x,tft-clksel. Would that be acceptable?
+> 
+> That would be fine by me :-)
 
-On 02/27/2015 11:43 AM, Peter Griffin wrote:
-> Hi Lee,
->
-> On Wed, 25 Feb 2015, Lee Jones wrote:
->
->>>>> +			reset-names	= "powerdown",
->>>>> +					  "softreset";
->>>> Nit: What's the purpose of having these on separate lines?
->>> The only reason was to stay aligned with the example in
->>> Documentation/devicetree/bindings/usb/dwc3-st.txt.
->> But didn't you author that too? :)
-> Yep
->
->> I would change them both.  No need to force a line wrap if it's not required.
-> Ok, I'll remove it from both in v2, whilst adding the acks.
-Thanks. Once fixed, you can add my:
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+Or (after having a look at the TRM) I should rather say: the invert-clac
+is fine by me :-) but the tft-clksel doesn't work, I afraid.
 
-BR,
-Maxime
->
-> regards,
->
-> Peter.
+If I'm not mistaken, there are two problems with it.
+
+Number one: it's not TFT-specific, is it? So it certainly should not
+have the "tft-" bit.
+
+Number two: setting this bit says "do not use CLCDCLK for the logic; use
+HCLK instead", correct? If so, have a look at the clock properties. They
+say:
+
+- clock-names: should contain "clcdclk" and "apb_pclk"
+
+- clocks: contains phandle and clock specifier pairs for the entries
+        in the clock-names property. See
+
+So if your hardware has the reference clock wired to HCLK, and you
+defining the clocks as "clcdclk", you are (no offence meant ;-)
+lying :-)
+
+So how about solving the problem by extending the clock-names definition
+like this (feel free to use own wording):
+
+- clock-names: should contain two clocks, either "clcdclk" or "hclk"
+               (depending on which input is to be used as a reference
+               clock by the controller logic) and "apb_pclk"
+
+That way you're precisely describing the way the hardware is wired up.
+And the driver simply tries to get clcdclk first, if it's defined -
+cool, set clksel to 1, if not - try hclk and set clksel to 0. If neither
+of them is present - bail out.
+
+Does this make any sense?
+
+Pawel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
