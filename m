@@ -1,29 +1,57 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
-Date: Tue, 03 Mar 2015 10:02:57 +0000
-Message-ID: <1425376977.3092.26.camel@arm.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
-	 <1425312688.3092.10.camel@arm.com> <54F4B583.4000005@broadcom.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH 2/2] ASoC: simple-card: Add support for
+ samplerate and samplewidth constraints
+Date: Tue, 3 Mar 2015 12:09:14 +0200
+Message-ID: <54F5884A.1090702@ti.com>
+References: <cover.1425303942.git.jsarha@ti.com>
+ <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
+ <54F4C0F2.8000201@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54F4B583.4000005@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <54F4C0F2.8000201@metafoo.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lars-Peter Clausen <lars@metafoo.de>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: moinejf@free.fr, kuninori.morimoto.gx@renesas.com, Li.Xiubo@freescale.com, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, broonie@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-03-02 at 19:09 +0000, Arun Ramamurthy wrote:
-> > The existing bindings intentionally avoided quoting internal registers -
-> > they are supposed to describe how the hardware is wired up...
-> >
-> > So how about something like "arm,pl11x,tft-invert-clac"? Then the driver
-> > sets the bit or not, depending on the property existance?
-> >
-> Sure, I can change it to two properties called arm,pl11x,tft-invert-clac 
-> and arm,pl11x,tft-clksel. Would that be acceptable?
+On 03/02/2015 09:58 PM, Lars-Peter Clausen wrote:
+> On 03/02/2015 03:14 PM, Jyri Sarha wrote:
+>> Add DT properties to dailink for setting samplerate and samplewidth
+>> constraints. The DT binding document has been updated.
+>
+> Can you include a description why this is needed and how and when it is
+> supposed to be used?
 
-That would be fine by me :-)
+Would this addition do:
+------------------------------------------------------------
+These constraints help to disable the sample-format and sample-rate
+combinations that do not properly work on a specific HW.
+------------------------------------------------------------
 
-Pawel
+The reason why we need these is coming from limitations in McASP clock 
+generation. With a simple divider one can only produce certain 
+bit-clocks. With those bit-clocks we can only play/capture some 
+sample-rate and sample-width combinations accurately.
+
+The McASP driver could try to set the constraints automatically. 
+However, since the constraint code can not select sample-width and 
+sample-rate combinations there is a compromise to be made between them. 
+Making such compromises automatically does not usually work that well.
+
+In our case these properties could of course be added to McASP driver, 
+but then again I would expect that there is a wider need for this kind 
+of functionality. And it may not always be clear if either end of the 
+link alone is responsible for less than perfect operation.
+
+Best regards,
+Jyri
