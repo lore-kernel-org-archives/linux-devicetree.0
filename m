@@ -1,228 +1,45 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH] ARM: dts: imx: Add dr_mode host setting to all host-only
- usb instances
-Date: Tue, 3 Mar 2015 11:41:35 +0800
-Message-ID: <20150303034133.GJ20455@dragon>
-References: <1425045960-14191-1-git-send-email-mporter@konsulko.com>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH - v7] of: Move of_dma_configure() to device.c to help re-use
+Date: Mon, 2 Mar 2015 21:43:48 -0600
+Message-ID: <CAErSpo7MsxgVZyhpijRzVN7mVNcbN7M4A4W-UKaNs4AnmGrB6g@mail.gmail.com>
+References: <1425333548-8802-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425045960-14191-1-git-send-email-mporter@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>, Peter Chen <peter.chen@freescale.com>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425333548-8802-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:INTEL IOMMU (VT-d)" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Peter,
-
-Can you take a look at Matt's patch below?
-
-Shawn
-
-On Fri, Feb 27, 2015 at 09:06:00AM -0500, Matt Porter wrote:
-> The chipidea driver adds an extra line of spam to the log when a
-> host-only chipidea instance is left set to the default of a dual role
-> controller.
-> 
-> [    2.010873] ci_hdrc ci_hdrc.1: doesn't support gadget
-> 
-> Set the dr_mode property to host on all the host-only nodes
-> to avoid this warning.
-> 
-> Signed-off-by: Matt Porter <mporter@konsulko.com>
+On Mon, Mar 2, 2015 at 3:59 PM, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org> wrote:
+> Move of_dma_configure() to device.c so it can be re-used for PCI devices to
+> obtain DMA configuration from DT.  Also add a second argument so that for
+> PCI, the DT node of root bus host bridge can be used to obtain the DMA
+> configuration for the slave PCI device.
+>
+> Tested-by: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org> (AMD Seattle)
+> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> CC: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+> CC: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 > ---
->  arch/arm/boot/dts/imx27.dtsi   | 2 ++
->  arch/arm/boot/dts/imx28.dtsi   | 1 +
->  arch/arm/boot/dts/imx35.dtsi   | 1 +
->  arch/arm/boot/dts/imx50.dtsi   | 3 +++
->  arch/arm/boot/dts/imx51.dtsi   | 3 +++
->  arch/arm/boot/dts/imx53.dtsi   | 3 +++
->  arch/arm/boot/dts/imx6qdl.dtsi | 3 +++
->  arch/arm/boot/dts/imx6sl.dtsi  | 1 +
->  arch/arm/boot/dts/imx6sx.dtsi  | 1 +
->  9 files changed, 18 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-> index 4b063b6..6951b66 100644
-> --- a/arch/arm/boot/dts/imx27.dtsi
-> +++ b/arch/arm/boot/dts/imx27.dtsi
-> @@ -488,6 +488,7 @@
->  				interrupts = <54>;
->  				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
->  				fsl,usbmisc = <&usbmisc 1>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> @@ -497,6 +498,7 @@
->  				interrupts = <55>;
->  				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
->  				fsl,usbmisc = <&usbmisc 2>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index 47f68ac..02330f4 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -1197,6 +1197,7 @@
->  			interrupts = <92>;
->  			clocks = <&clks 61>;
->  			fsl,usbphy = <&usbphy1>;
-> +			dr_mode = "host";
->  			status = "disabled";
->  		};
->  
-> diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
-> index 6932928..b6478e9 100644
-> --- a/arch/arm/boot/dts/imx35.dtsi
-> +++ b/arch/arm/boot/dts/imx35.dtsi
-> @@ -318,6 +318,7 @@
->  				clocks = <&clks 73>;
->  				fsl,usbmisc = <&usbmisc 1>;
->  				fsl,usbphy = <&usbphy1>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-> index 620b0f0..e245713 100644
-> --- a/arch/arm/boot/dts/imx50.dtsi
-> +++ b/arch/arm/boot/dts/imx50.dtsi
-> @@ -197,6 +197,7 @@
->  				reg = <0x53f80200 0x0200>;
->  				interrupts = <14>;
->  				clocks = <&clks IMX5_CLK_USB_PHY2_GATE>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> @@ -205,6 +206,7 @@
->  				reg = <0x53f80400 0x0200>;
->  				interrupts = <16>;
->  				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> @@ -213,6 +215,7 @@
->  				reg = <0x53f80600 0x0200>;
->  				interrupts = <17>;
->  				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-> index c0116cf..f46fe9b 100644
-> --- a/arch/arm/boot/dts/imx51.dtsi
-> +++ b/arch/arm/boot/dts/imx51.dtsi
-> @@ -265,6 +265,7 @@
->  				interrupts = <14>;
->  				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
->  				fsl,usbmisc = <&usbmisc 1>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> @@ -274,6 +275,7 @@
->  				interrupts = <16>;
->  				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
->  				fsl,usbmisc = <&usbmisc 2>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> @@ -283,6 +285,7 @@
->  				interrupts = <17>;
->  				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
->  				fsl,usbmisc = <&usbmisc 3>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-> index ff4fa7e..c3e3ca9 100644
-> --- a/arch/arm/boot/dts/imx53.dtsi
-> +++ b/arch/arm/boot/dts/imx53.dtsi
-> @@ -309,6 +309,7 @@
->  				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
->  				fsl,usbmisc = <&usbmisc 1>;
->  				fsl,usbphy = <&usbphy1>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> @@ -318,6 +319,7 @@
->  				interrupts = <16>;
->  				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
->  				fsl,usbmisc = <&usbmisc 2>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> @@ -327,6 +329,7 @@
->  				interrupts = <17>;
->  				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
->  				fsl,usbmisc = <&usbmisc 3>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index d6c69ec..9347c93 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -845,6 +845,7 @@
->  				clocks = <&clks IMX6QDL_CLK_USBOH3>;
->  				fsl,usbphy = <&usbphy2>;
->  				fsl,usbmisc = <&usbmisc 1>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> @@ -854,6 +855,7 @@
->  				interrupts = <0 41 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&clks IMX6QDL_CLK_USBOH3>;
->  				fsl,usbmisc = <&usbmisc 2>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> @@ -863,6 +865,7 @@
->  				interrupts = <0 42 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&clks IMX6QDL_CLK_USBOH3>;
->  				fsl,usbmisc = <&usbmisc 3>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-> index 36ab8e0..9bf1db3 100644
-> --- a/arch/arm/boot/dts/imx6sl.dtsi
-> +++ b/arch/arm/boot/dts/imx6sl.dtsi
-> @@ -699,6 +699,7 @@
->  				interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&clks IMX6SL_CLK_USBOH3>;
->  				fsl,usbmisc = <&usbmisc 2>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-> index 7a24fee..fdadd060 100644
-> --- a/arch/arm/boot/dts/imx6sx.dtsi
-> +++ b/arch/arm/boot/dts/imx6sx.dtsi
-> @@ -763,6 +763,7 @@
->  				fsl,usbmisc = <&usbmisc 2>;
->  				phy_type = "hsic";
->  				fsl,anatop = <&anatop>;
-> +				dr_mode = "host";
->  				status = "disabled";
->  			};
->  
-> -- 
-> 1.8.4
-> 
+>  - Based on the existing patch applied to arm-pci/pci/iommu for pci next (Bjorn)
+>  - Fixed the build issue reported on ARCH=x86_64
+
+Hi Murali,
+
+Can you please repost the entire series with fixed patches?  It's
+easier for me to reapply the whole thing at once than it is to keep
+track of and fiddle with individual patches.
+
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
