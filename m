@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 18/20] Documentation: arm: update supported Marvell EBU processors
-Date: Tue,  3 Mar 2015 15:41:13 +0100
-Message-ID: <1425393675-17820-19-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v3 04/20] ARM: mvebu: add UART labels to Armada 375
+Date: Tue,  3 Mar 2015 15:40:59 +0100
+Message-ID: <1425393675-17820-5-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1425393675-17820-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1425393675-17820-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,32 +10,36 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we support Armada 39x, let's add this family of SoC to the
-Marvell documentation, and a reference to a link with more details
-about those processors. Unfortunately, no datasheet is publicly
-available at this time.
+This commit adds the standard uart0 and uart1 DT labels to the Device
+Tree description of the Marvell Armada 375 SoC.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/arm/Marvell/README | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/armada-375.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/arm/Marvell/README b/Documentation/arm/Marvell/README
-index 1745379..18a775d 100644
---- a/Documentation/arm/Marvell/README
-+++ b/Documentation/arm/Marvell/README
-@@ -96,6 +96,11 @@ EBU Armada family
- 	88F6820
- 	88F6828
+diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+index ba3c57e..6307e80 100644
+--- a/arch/arm/boot/dts/armada-375.dtsi
++++ b/arch/arm/boot/dts/armada-375.dtsi
+@@ -276,7 +276,7 @@
+ 				status = "disabled";
+ 			};
  
-+  Armada 390/398 Flavors:
-+	88F6920
-+	88F6928
-+    Product infos: http://www.marvell.com/embedded-processors/armada-39x/
-+
-   Armada XP Flavors:
-         MV78230
-         MV78260
+-			serial@12000 {
++			uart0: serial@12000 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12000 0x100>;
+ 				reg-shift = <2>;
+@@ -286,7 +286,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			serial@12100 {
++			uart1: serial@12100 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0x12100 0x100>;
+ 				reg-shift = <2>;
 -- 
 2.1.0
 
