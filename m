@@ -1,218 +1,97 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 6/8] v4l: xilinx: Add Xilinx Video IP core
-Date: Wed, 04 Mar 2015 00:15:55 +0200
-Message-ID: <6955407.oAVS26tV3L@avalon>
-References: <1425260925-12064-1-git-send-email-laurent.pinchart@ideasonboard.com> <1425260925-12064-7-git-send-email-laurent.pinchart@ideasonboard.com> <54F59AD8.6080903@xs4all.nl>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH 1/4] mfd: devicetree: bindings: Add Qualcomm RPM
+ regulator subnodes
+Date: Tue, 3 Mar 2015 14:17:43 -0800
+Message-ID: <20150303221743.GJ26334@sonymobile.com>
+References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1425356740-26285-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <54F60339.6000803@codeaurora.org>
+ <20150303215424.GH26334@sonymobile.com>
+ <54F62F79.6070204@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <54F59AD8.6080903@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, devicetree@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54F62F79.6070204@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Tue 03 Mar 14:02 PST 2015, Stephen Boyd wrote:
 
-Thank you for the review.
-
-On Tuesday 03 March 2015 12:28:24 Hans Verkuil wrote:
-> Hi Laurent,
+> On 03/03/15 13:54, Bjorn Andersson wrote:
+> > On Tue 03 Mar 10:53 PST 2015, Stephen Boyd wrote:
+> >
+> >> On 03/02/15 20:25, Bjorn Andersson wrote:
+> > [..]
+> >>> +
+> >>> +- vin_l1_l2_l12_l18-supply:
+> >>> +- vin_l24-supply:
+> >>> +- vin_l25-supply:
+> >>> +- vin_l27-supply:
+> >>> +- vin_l28-supply:
+> >>> +- vin_lvs_1_3_6-supply:
+> >>> +- vin_lvs2-supply:
+> >>> +- vin_lvs_4_5_7-supply:
+> >>> +- vin_ncp-supply:
+> >> Can you also include vin_s1,vin_s2, etc. for the rest of the supplies I
+> >> left out? It looks like you've covered all the inputs for the other pmics.
+> >>
+> > Sorry, I had problems finding the information in the rather sparse
+> > documentation I have for the 8921, so I just assumed that I could steal
+> > your list.
+> >
+> > I finally managed to find the pinout diagram, so the correct list for
+> > pm8921 seems to be:
+> >
+> > - vdd_l1_2_12_18-supply
+> > - vdd_l3_15_17-supply
+> > - vdd_l5_8_16-supply
 > 
-> Thanks for this patch. I do have a few comments, see below. Note that I am
-> OK with the new DT format description.
+> vin_l4-supply?
 > 
-> On 03/02/2015 02:48 AM, Laurent Pinchart wrote:
-> > Xilinx platforms have no hardwired video capture or video processing
-> > interface. Users create capture and memory to memory processing
-> > pipelines in the FPGA fabric to suit their particular needs, by
-> > instantiating video IP cores from a large library.
-> > 
-> > The Xilinx Video IP core is a framework that models a video pipeline
-> > described in the device tree and expose the pipeline to userspace
-> > through the media controller and V4L2 APIs.
-> > 
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> > Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
-> > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> > 
-> > ---
+
+Ahh, right, I missed the vdd_l4_l14 pad.
+
+> > - vdd_l6_7-supply
+> > - vdd_l9_11-supply
+> > - vdd_l10_22-supply
+> > - vdd_l21_23_29-supply
 > 
-> <snip>
+> Also these seem to be vin_l21_l23_l29 where "l" precedes all numbers
+> (for all the LDOs).
 > 
-> > diff --git a/drivers/media/platform/xilinx/xilinx-dma.c
-> > b/drivers/media/platform/xilinx/xilinx-dma.c new file mode 100644
-> > index 0000000..afed6c3
-> > --- /dev/null
-> > +++ b/drivers/media/platform/xilinx/xilinx-dma.c
-> > @@ -0,0 +1,753 @@
 
-[snip]
+The other pmics name their inputs like that; should we just pick that
+naming scheme for all these supplies and be happy?
 
-> > +static void xvip_dma_complete(void *param)
-> > +{
-> > +	struct xvip_dma_buffer *buf = param;
-> > +	struct xvip_dma *dma = buf->dma;
-> > +
-> > +	spin_lock(&dma->queued_lock);
-> > +	list_del(&buf->queue);
-> > +	spin_unlock(&dma->queued_lock);
-> > +
-> > +	buf->buf.v4l2_buf.sequence = dma->sequence++;
+> > - vdd_l24-supply
+> > - vdd_l25-supply
+> > - vdd_l26-supply
+> > - vdd_l27-supply
+> > - vdd_l28-supply
+> > - vdd_ncp-supply
+> > - vdd_s1-supply
+> > - vdd_s2-supply
+> > - vdd_s4-supply
+> > - vdd_s5-supply
+> > - vdd_s6-supply
+> > - vdd_s7-supply
+> > - vdd_s8-supply
+> > - vin_lvs1_3_6-supply
+> > - vin_lvs2-supply
+> > - vin_lvs4_5_7-supply
+> >
+> > I will send out an updated patch with these.
 > 
-> buf->buf.v4l2_buf.field isn't set. I think you only support progressive
-> formats at the moment, so this should be set to V4L2_FIELD_NONE.
-
-Agreed, that was an oversight. I'll fix it.
-
-> > +	v4l2_get_timestamp(&buf->buf.v4l2_buf.timestamp);
-> > +	vb2_set_plane_payload(&buf->buf, 0, dma->format.sizeimage);
-> > +	vb2_buffer_done(&buf->buf, VB2_BUF_STATE_DONE);
-> > +}
-> > +
-> > +static int
-> > +xvip_dma_queue_setup(struct vb2_queue *vq, const struct v4l2_format *fmt,
-> > +		     unsigned int *nbuffers, unsigned int *nplanes,
-> > +		     unsigned int sizes[], void *alloc_ctxs[])
-> > +{
-> > +	struct xvip_dma *dma = vb2_get_drv_priv(vq);
-> > +
-> > +	*nplanes = 1;
-> > +
-> > +	sizes[0] = dma->format.sizeimage;
+> s/vdd/vin/ seems to match my datasheet.
 > 
-> I would suggest that you add support for vb2_ioctl_create_bufs by changing
-> this code to:
-> 
-> 	if (fmt && fmt->fmt.pix.sizeimage < dma->format.sizeimage)
->                 return -EINVAL;
-> 	sizes[0] = fmt ? fmt->fmt.pix.sizeimage : dma->format.sizeimage;
 
-Looks good, I'll fix that.
+For all of these? Same with the other pmics?
 
-> > +	alloc_ctxs[0] = dma->alloc_ctx;
-> > +
-> > +	return 0;
-> > +}
+These are the documented pad names that I have, nice to see that they
+are named differently in different documents.
 
-[snip]
-
-> > +static int xvip_dma_start_streaming(struct vb2_queue *vq, unsigned int
-> > count) +{
-> > +	struct xvip_dma *dma = vb2_get_drv_priv(vq);
-> > +	struct xvip_dma_buffer *buf, *nbuf;
-> > +	struct xvip_pipeline *pipe;
-> > +	int ret;
-> > +
-> > +	dma->sequence = 0;
-> > +
-> > +	/*
-> > +	 * Start streaming on the pipeline. No link touching an entity in the
-> > +	 * pipeline can be activated or deactivated once streaming is 
-started.
-> > +	 *
-> > +	 * Use the pipeline object embedded in the first DMA object that 
-starts
-> > +	 * streaming.
-> > +	 */
-> > +	pipe = dma->video.entity.pipe
-> > +	     ? to_xvip_pipeline(&dma->video.entity) : &dma->pipe;
-> > +
-> > +	ret = media_entity_pipeline_start(&dma->video.entity, &pipe->pipe);
-> > +	if (ret < 0)
-> > +		goto error;
-> > +
-> > +	/* Verify that the configured format matches the output of the
-> > +	 * connected subdev.
-> > +	 */
-> > +	ret = xvip_dma_verify_format(dma);
-> > +	if (ret < 0)
-> > +		goto error_stop;
-> > +
-> > +	ret = xvip_pipeline_prepare(pipe, dma);
-> > +	if (ret < 0)
-> > +		goto error_stop;
-> > +
-> > +	/* Start the DMA engine. This must be done before starting the blocks
-> > +	 * in the pipeline to avoid DMA synchronization issues.
-> > +	 */
-> > +	dma_async_issue_pending(dma->dma);
-> 
-> Question: can the DMA engine be started without any buffers queued?
-
-Yes. In that case the dma_async_issue_pending() call will be a no-op, as there 
-will be no pending DMA transfer queued.
-
-> The vb2_queue struct has a min_buffers_needed field that can be set to a
-> non-zero value. In that case start_streaming won't be called until at least
-> that many buffers have been queued. Many DMA engines need that so this was
-> added to the vb2 core to avoid having to hack around this in the driver.
-
-I don't see a need for that here. I actually think the min_buffers_needed 
-field shouldn't be set, even if it could be set to 1, to avoid reporting 
-VIDIOC_STREAMON errors at VIDIOC_QBUF time. The alternative would be to move 
-the validation code to a custom .video_streamon handler, but that seems 
-pointless to me.
-
-> > +
-> > +	/* Start the pipeline. */
-> > +	xvip_pipeline_set_stream(pipe, true);
-> > +
-> > +	return 0;
-> > +
-> > +error_stop:
-> > +	media_entity_pipeline_stop(&dma->video.entity);
-> > +
-> > +error:
-> > +	/* Give back all queued buffers to videobuf2. */
-> > +	spin_lock_irq(&dma->queued_lock);
-> > +	list_for_each_entry_safe(buf, nbuf, &dma->queued_bufs, queue) {
-> > +		vb2_buffer_done(&buf->buf, VB2_BUF_STATE_QUEUED);
-> > +		list_del(&buf->queue);
-> > +	}
-> > +	spin_unlock_irq(&dma->queued_lock);
-> > +
-> > +	return ret;
-> > +}
-
-[snip]
-
-> > +/* ----------------------------------------------------------------------
-> > + * V4L2 file operations
-> > + */
-> > +
-> > +static const struct v4l2_file_operations xvip_dma_fops = {
-> > +	.owner		= THIS_MODULE,
-> > +	.unlocked_ioctl	= video_ioctl2,
-> > +	.open		= v4l2_fh_open,
-> > +	.release	= vb2_fop_release,
-> > +	.poll		= vb2_fop_poll,
-> > +	.mmap		= vb2_fop_mmap,
-> 
-> I would also add:
-> 
-> 	.read = vb2_fop_read,
-> 	.write = vb2_fop_write,
-> 
-> and add VB2_READ or VB2_WRITE to dma->queue.io_modes.
-> 
-> You get it for free, it doesn't take any additional resources, so why not?
-
-My usual comment : because I'd rather not have users using the read() API with 
-this driver :-) The usual argument of "but then it would be easy to just cat 
-/dev/video? to check whether the device works" doesn't apply here as the 
-pipeline needs to be configured from userspace through V4L2 subdev pad ops 
-anyway, so users can as well use a proper V4L2 command line test tool.
-
-> However, to make that work correctly you need this patch:
-> 
-> https://patchwork.linuxtv.org/patch/28478/
-> 
-> It would make sense if you just add that patch to your xilinx tree.
-
--- 
 Regards,
-
-Laurent Pinchart
+Bjorn
