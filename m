@@ -1,103 +1,92 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 3/5] arm-cci: Get rid of secure transactions for PMU driver
-Date: Tue, 03 Mar 2015 15:44:18 +0000
-Message-ID: <54F5D6D2.7000801@arm.com>
-References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com> <1425295754-13376-4-git-send-email-suzuki.poulose@arm.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/5] arm-cci: Split the code for PMU vs driver support
+Date: Tue, 03 Mar 2015 15:53:56 +0000
+Message-ID: <54F5D914.7030705@arm.com>
+References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com> <1425295754-13376-5-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425295754-13376-4-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Suzuki K. Poulose" <suzuki.poulose@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "nico@linaro.org" <nico@linaro.org>, "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "olof@lixom.net" <olof@lixom.net>, Punit Agrawal <Punit.Agrawal@arm.com>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425295754-13376-5-git-send-email-suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Punit Agrawal <Punit.Agrawal-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
 On 02/03/15 11:29, Suzuki K. Poulose wrote:
-> From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+> From: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 >
-> Avoid secure transactions while probing the CCI PMU. The
-> existing code makes use of the Peripheral ID2 (PID2) register
-> to determine the revision of the CCI400, which requires a
-> secure transaction. This puts a limitation on the usage of the
-> driver on systems running non-secure Linux(e.g, ARM64).
+> This patch separates the PMU driver code from the low level
+> CCI driver code.
 >
-> Updated the device-tree binding for cci pmu node to add the explicit
-> revision number for the compatible field.
+> Introduces config options for both.
 >
-> The supported strings are :
-> 	arm,cci-400-pmu,r0
-> 	arm,cci-400-pmu,r1
-> 	arm,cci-400-pmu - DEPRECATED. See NOTE below
+>   ARM_CCI400_PORT_CTRL	- controls the low level driver code for
+> 			  CCI400 ports.
+>   ARM_CCI400_PMU 	- controls the PMU driver code
+>   ARM_CCI400_COMMON 	- Common defintions for CCI400
 >
-> NOTE: If the revision is not mentioned, we need to probe the cci revision,
-> which could be fatal on a platform running non-secure. We need a reliable way
-> to know if we can poke the CCI registers at runtime on ARM32. We depend on
-> 'mcpm_is_available()' when it is available. mcpm_is_available() returns true
-> only when there is a registered driver for mcpm. Otherwise, we assume that we
-> don't have secure access, and skips probing the revision number(ARM64 case).
+> Also the ARM_CCI400_PORT_CTRL cannot be enabled by user. This
+> should be selected by platforms which need it.
 >
-> The MCPM should figure out if it is safe to access the CCI. Unfortunately
-> there isn't a reliable way to indicate the same via dtb. This patch doesn't
-> address/change the current situation. It only deals with the CCI-PMU, leaving
-> the assumptions about the secure access as it has been, prior to this patch.
+> This patch also changes:
+>   ARM_CCI - common code for probing the CCI devices. This can be
+>     used for adding support for newer CCI versions(e.g, CCI-500).
 >
-> Cc: devicetree@vger.kernel.org
-> Cc: Punit Agrawal <punit.agrawal@arm.com>
-> Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Suzuki K. Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 > ---
->   Documentation/devicetree/bindings/arm/cci.txt |    7 +++--
->   arch/arm/include/asm/arm-cci.h                |   42 +++++++++++++++++++++++++
->   arch/arm64/include/asm/arm-cci.h              |   27 ++++++++++++++++
->   drivers/bus/arm-cci.c                         |   17 +++++++++-
->   include/linux/arm-cci.h                       |    2 ++
->   5 files changed, 92 insertions(+), 3 deletions(-)
->   create mode 100644 arch/arm/include/asm/arm-cci.h
->   create mode 100644 arch/arm64/include/asm/arm-cci.h
+>   arch/arm/mach-exynos/Kconfig   |    2 +-
+>   arch/arm/mach-vexpress/Kconfig |    4 ++--
+>   drivers/bus/Kconfig            |   27 +++++++++++++++++++++++----
+>   drivers/bus/arm-cci.c          |   24 ++++++++++++++++++++----
+>   include/linux/arm-cci.h        |    7 ++++++-
+>   5 files changed, 52 insertions(+), 12 deletions(-)
 >
 
 [...]
 
-> diff --git a/arch/arm/include/asm/arm-cci.h b/arch/arm/include/asm/arm-cci.h
-> new file mode 100644
-> index 0000000..936e74a
-> --- /dev/null
-> +++ b/arch/arm/include/asm/arm-cci.h
-> @@ -0,0 +1,42 @@
-> +/*
-> + * arch/arm/include/asm/arm-cci.h
-> + *
-> + * Copyright (C) 2015 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
+> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> index b99729e..bdc189f 100644
+> --- a/drivers/bus/Kconfig
+> +++ b/drivers/bus/Kconfig
+> @@ -43,12 +43,31 @@ config OMAP_INTERCONNECT
+>   	help
+>   	  Driver to enable OMAP interconnect error handling driver.
+>
+> -config ARM_CCI
+> -	bool "ARM CCI driver support"
+> +config ARM_CCI400_PORT_CTRL
+> +	bool
+>   	depends on ARM && OF && CPU_V7
+> +	select ARM_CCI400_COMMON
+> +	help
+> +	  Low level power management driver for CCI400 cache coherent
+> +	  interconnect for ARM platforms.
 > +
-> +#ifndef __ASM_ARM_CCI_H
-> +#define __ASM_ARM_CCI_H
+> +config ARM_CCI400_PMU
+> +	bool "ARM CCI400 PMU support"
+> +	depends on ARM || ARM64
+> +	depends on HW_PERF_EVENTS
+> +	select ARM_CCI400_COMMON
+>   	help
+> -	  Driver supporting the CCI cache coherent interconnect for ARM
+> -	  platforms.
+> +	  Support for PMU events monitoring on the ARM CCI cache coherent
+> +	  interconnect.
 > +
-> +#ifdef CONFIG_MCPM
-> +#include <asm/mcpm.h>
-> +
-> +/*
-> + * We don't have a reliable way of detecting whether,
-> + * if we have access to secure-only registers, unless
-> + * mcpm is registered.
-> + */
-> +static inline int platform_has_secure_cci_access(void)
+> +	  If unsure, say N
 
-bool instead of int might be more apt here ?
+Just a query rather than comment. Before this change all platforms
+having ARM_CCI and HW_PERF_EVENTS had CCI PMU enabled by default.
+With this change, one has to select this option explicitly. I assume
+that's fine, else this needs to be default 'y'
 
 Regards,
 Sudeep
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
