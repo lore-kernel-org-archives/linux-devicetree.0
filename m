@@ -1,65 +1,35 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH 6/6] ASoC: arizona: Add support for WM8280/WM8281
-Date: Tue, 3 Mar 2015 16:47:31 +0000
-Message-ID: <20150303164731.GI32624@x1>
-References: <1425399576-26428-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1425399576-26428-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [version 2]  amba uarts - arm type uarts fifo size provided by
+ device tree
+Date: Tue, 3 Mar 2015 16:55:35 +0000
+Message-ID: <20150303165534.GB10239@leverpostej>
+References: <1424290069-8760-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425399576-26428-6-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <1424290069-8760-1-git-send-email-jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Mar 2015, Charles Keepax wrote:
+On Wed, Feb 18, 2015 at 08:07:47PM +0000, Jorge Ramirez-Ortiz wrote:
+> [PATCH 1/2] Documentation: bindings: add optional fifo size property
+> [PATCH 2/2] drivers/tty: pl011: read fifo size from OF if present [updated]
+> 
+> These patches aim at resolving an issue present on some of the amba pl011 uarts.
+> 
+> They were developed for the Hisilicon Hi6220 SoC where the fifo size on the
+> uarts is 64 despite the amba revision having been set to 1. 
 
-> From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
->=20
-> Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> ---
->  sound/soc/codecs/arizona.c |    2 ++
->  1 files changed, 2 insertions(+), 0 deletions(-)
+Are we certain that the FIFO length is the only difference between the
+HI6220 PL011 and a regular PL011?
 
-Applied, thanks.
+It may be worth adding a compatible string in addition, just in case.
 
-Will send out pull-request once this has had time to soak in -next.=20
-
-> diff --git a/sound/soc/codecs/arizona.c b/sound/soc/codecs/arizona.c
-> index 4c90602..95d31d6 100644
-> --- a/sound/soc/codecs/arizona.c
-> +++ b/sound/soc/codecs/arizona.c
-> @@ -280,6 +280,7 @@ int arizona_init_gpio(struct snd_soc_codec *codec=
-)
-> =20
->  	switch (arizona->type) {
->  	case WM5110:
-> +	case WM8280:
->  		snd_soc_dapm_disable_pin(&codec->dapm, "DRC2 Signal Activity");
->  		break;
->  	default:
-> @@ -1728,6 +1729,7 @@ static int arizona_calc_fratio(struct arizona_f=
-ll *fll,
-> =20
->  	switch (fll->arizona->type) {
->  	case WM5110:
-> +	case WM8280:
->  		if (fll->arizona->rev < 3 || sync)
->  			return init_ratio;
->  		break;
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
