@@ -1,94 +1,134 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 0/3] Add ktd2692 Flash LED driver
-Date: Tue, 03 Mar 2015 08:48:01 +0100
-Message-ID: <54F56731.3050900@samsung.com>
-References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
- <54F02DF5.1000706@samsung.com> <54F40DDF.8070708@samsung.com>
- <20150302091530.GQ6539@valkosipuli.retiisi.org.uk>
- <CAK5ve-JYixcO6F470wKZXDN-nkTfaRgmg7FBt1Y5O+tuznruwg@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
+Date: Tue, 03 Mar 2015 08:55:36 +0100
+Message-ID: <54F568F8.1040104@redhat.com>
+References: <1425131285-8640-1-git-send-email-codekipper@gmail.com> <20150303071635.GC4713@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <CAK5ve-JYixcO6F470wKZXDN-nkTfaRgmg7FBt1Y5O+tuznruwg@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, Ingi Kim <ingi2.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Thierry Reding <treding@nvidia.com>, p.zabel@pengutronix.de, Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, florian.vaussard@epfl.ch, arno@natisbad.org, kuninori.morimoto.gx@renesas.com, hytszk@gmail.com, antonynpavlov@gmail.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, ideal.song@samsung.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB7WR2WTQKGQEEGBPJMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150303071635.GC4713@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/2015 09:07 PM, Bryan Wu wrote:
-> On Mon, Mar 2, 2015 at 1:15 AM, Sakari Ailus <sakari.ailus@iki.fi> wr=
-ote:
->> H Ingi,
+Hi,
+
+On 03-03-15 08:16, Maxime Ripard wrote:
+> On Sat, Feb 28, 2015 at 02:48:05PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >>
->> On Mon, Mar 02, 2015 at 04:14:39PM +0900, Ingi Kim wrote:
->>> Hi Jacek
->>>
->>> On 2015=EB=85=84 02=EC=9B=94 27=EC=9D=BC 17:42, Jacek Anaszewski wr=
-ote:
->>>> Hi Ingi,
->>>>
->>>> On 02/27/2015 02:01 AM, Ingi Kim wrote:
->>>>> This patch supports KTD2692 flash LED driver
->>>>>
->>>>> Ingi Kim (3):
->>>>>     of: Add vendor prefix for Kinetic technologies
->>>>>     leds: ktd2692: add device tree bindings for ktd2692
->>>>>     leds: Add ktd2692 flash LED driver
->>>>>
->>>>>    .../devicetree/bindings/leds/leds-ktd2692.txt      |   19 ++
->>>>>    .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->>>>>    drivers/leds/Kconfig                               |    8 +
->>>>>    drivers/leds/Makefile                              |    1 +
->>>>>    drivers/leds/leds-ktd2692.c                        |  245 ++++=
-++++++++++++++++
->>>>>    5 files changed, 274 insertions(+)
->>>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds=
--ktd2692.txt
->>>>>    create mode 100644 drivers/leds/leds-ktd2692.c
->>>>>
->>>>
->>>> In your device tree binding documentation there is torch-gpio ment=
-ioned,
->>>> but you seem not to use it in the driver.
->>>>
->>>> We have already LED Flash class (/drivers/leds/led-class-flash.c) =
-for
->>>> this type of devices, which handles both torch and flash modes
->>>> (flash_strobe sysfs attribute is provided for strobing the flash).
->>>>
->>>> The reference drivers using LED Flash class are still pending [1],=
- but I
->>>> think that at least leds-aat1290 driver is almost ready for mergin=
-g.
->>>> It controls very similar device to yours.
->>>>
->>>> Another advantage of using LED Flash class is that it has been des=
-igned
->>>> to be compatible with Video for Linux 2 subsystem, which will allo=
-w for registering LED Flash class devices as a V4L2 sub-devices.
->>>>
->>>> Adding Sakari.
->>>>
->>>
->>> Ok, I'll check LED Flash class, and add torch-gpio
+>> The Mele I7 is a Allwinner A31 based Android TV box, with 1G RAM,
+>> 8GB NAND flash, a RTL8188etv wifi chip, 3 USB Host ports using
+>> USB-A receptacles, a micro USB-B receptacle for USB OTG, HDMI out,
+>> a TRS connector for A/V, SPDIF and IrDA.
 >>
->> Many LED flash chips include a hardware pin for torch control but fe=
-w really
->> need it. If you don't, i.e. you can implement the torch using the co=
-ntrol bus
->> instead, I think I'd probably drop it from the chip's DT bindings.
+>> This patch adds basic support for the device, more information can
+>> be found here (http://linux-sunxi.org/Mele_I7).
 >>
+>> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/Makefile         |   1 +
+>>   arch/arm/boot/dts/sun6i-a31-i7.dts | 150 +++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 151 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/sun6i-a31-i7.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index eae7706..8d9d5ea 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -532,6 +532,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+>>   	sun6i-a31-app4-evb1.dtb \
+>>   	sun6i-a31-colombus.dtb \
+>>   	sun6i-a31-hummingbird.dtb \
+>> +	sun6i-a31-i7.dtb \
+>>   	sun6i-a31-m9.dtb \
+>>   	sun6i-a31s-cs908.dtb
+>>   dtb-$(CONFIG_MACH_SUN7I) += \
+>> diff --git a/arch/arm/boot/dts/sun6i-a31-i7.dts b/arch/arm/boot/dts/sun6i-a31-i7.dts
+>> new file mode 100644
+>> index 0000000..43fdcd5
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun6i-a31-i7.dts
+>> @@ -0,0 +1,150 @@
+>> +/*
+>> + * Copyright 2015 Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + *     You should have received a copy of the GNU General Public
+>> + *     License along with this file; if not, write to the Free
+>> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+>> + *     MA 02110-1301 USA
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun6i-a31.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>> +
+>> +/ {
+>> +	model = "Mele I7 Quad top set box";
+>> +	compatible = "mele,i7", "allwinner,sun6i-a31";
+>> +
+>> +	chosen {
+>> +		bootargs = "earlyprintk console=ttyS0,115200";
 >
-> Ingi, please follow Jacek's advice to use LED Flash class interface.
-> I'm reviewing those leds flash drivers and probably merge them soon.
+> Using earlyprintk by default is a bad idea if the kernel is configured
+> with DEBUG_LL support for another SoC.
 
-Bryan please hold on with merging them as I am about to send new patch
-set, as we've agreed that synchronized strobe feature should be removed
-from the LED Flash class. There will be also some tweaking around
-aat1290 DT bindings.
+While on this subject, u-boot now sets the chosen/stdout-path property
+up by default, which means that the kernel will do the right thing by
+default. So we we really do not need any bootargs= in our dts files.
 
---=20
-Best Regards,
-Jacek Anaszewski
+Currently we've a random mix where we do have bootargs in some, but not
+in most sunxi dts files. I believe we should simply remove it everywhere...
+
+Regards,
+
+Hans
