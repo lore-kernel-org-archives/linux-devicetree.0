@@ -1,71 +1,157 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 4/4] mmc: sdhci-iproc: add device tree bindings
-Date: Mon, 02 Mar 2015 15:50:34 -0800
-Message-ID: <54F4F74A.7050909@gmail.com>
-References: <Scott Branden <sbranden@broadcom.com> <1423526791-29453-1-git-send-email-sbranden@broadcom.com> <1423526791-29453-5-git-send-email-sbranden@broadcom.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] Input: bcm-keypad: add device tree bindings
+Date: Mon, 2 Mar 2015 16:04:18 -0800
+Message-ID: <20150303000418.GA30787@dtor-ws>
+References: <sbranden@broadcom.com>
+ <1425141357-7807-1-git-send-email-sbranden@broadcom.com>
+ <1425141357-7807-2-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423526791-29453-5-git-send-email-sbranden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Ulf Hansson <ulf.hansson@linaro.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, Corneliu Doban <cdoban@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, Anatol Pomazao <anatol@google.com>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dtor@google.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425141357-7807-2-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/15 16:06, Scott Branden wrote:
-> Add device tree binding documentation for IPROC SDHCI driver.
+On Sat, Feb 28, 2015 at 08:35:56AM -0800, Scott Branden wrote:
+> Documents the Broadcom keypad controller device tree bindings.
 > 
-> Acked-by: Ray Jui <rjui@broadcom.com>
-> Signed-off-by: Corneliu Doban <cdoban@broadcom.com>
-> Signed-off-by: Scott Branden <sbranden@broadcom.com>
+> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+
+I folded this into the patch adding the driver itself and queued for
+4.1.
+
+Thank you.
+
 > ---
->  .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
+>  .../devicetree/bindings/input/brcm,bcm-keypad.txt  | 108 +++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt b/Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
+> diff --git a/Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt b/Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
 > new file mode 100644
-> index 0000000..72cc9cc
+> index 0000000..b77f50b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
-> @@ -0,0 +1,23 @@
-> +Broadcom IPROC SDHCI controller
+> +++ b/Documentation/devicetree/bindings/input/brcm,bcm-keypad.txt
+> @@ -0,0 +1,108 @@
+> +* Broadcom Keypad Controller device tree bindings
 > +
-> +This file documents differences between the core properties described
-> +by mmc.txt and the properties that represent the IPROC SDHCI controller.
+> +Broadcom Keypad controller is used to interface a SoC with a matrix-type
+> +keypad device. The keypad controller supports multiple row and column lines.
+> +A key can be placed at each intersection of a unique row and a unique column.
+> +The keypad controller can sense a key-press and key-release and report the
+> +event using a interrupt to the cpu.
 > +
-> +Required properties:
-> +- compatible : Should be "brcm,sdhci-iproc-cygnus".
-> +- clocks : The clock feeding the SDHCI controller.
+> +This binding is based on the matrix-keymap binding with the following
+> +changes:
 > +
-> +Optional properties:
-> +  - sdhci,auto-cmd12: specifies that controller should use auto CMD12.
-
-Formatting is a little different here, there is one too many space to
-begin the line.
-
+> +keypad,num-rows and keypad,num-columns are required.
+> +
+> +Required SoC Specific Properties:
+> +- compatible: should be "brcm,bcm-keypad"
+> +
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +
+> +- interrupts: The interrupt number to the cpu.
+> +
+> +Board Specific Properties:
+> +- keypad,num-rows: Number of row lines connected to the keypad
+> +  controller.
+> +
+> +- keypad,num-columns: Number of column lines connected to the
+> +  keypad controller.
+> +
+> +- col-debounce-filter-period: The debounce period for the Column filter.
+> +
+> +	KEYPAD_DEBOUNCE_1_ms	=	0
+> +	KEYPAD_DEBOUNCE_2_ms	=	1
+> +	KEYPAD_DEBOUNCE_4_ms	=	2
+> +	KEYPAD_DEBOUNCE_8_ms	=	3
+> +	KEYPAD_DEBOUNCE_16_ms	=	4
+> +	KEYPAD_DEBOUNCE_32_ms	=	5
+> +	KEYPAD_DEBOUNCE_64_ms	=	6
+> +	KEYPAD_DEBOUNCE_128_ms	=	7
+> +
+> +- status-debounce-filter-period: The debounce period for the Status filter.
+> +
+> +	KEYPAD_DEBOUNCE_1_ms	=	0
+> +	KEYPAD_DEBOUNCE_2_ms	=	1
+> +	KEYPAD_DEBOUNCE_4_ms	=	2
+> +	KEYPAD_DEBOUNCE_8_ms	=	3
+> +	KEYPAD_DEBOUNCE_16_ms	=	4
+> +	KEYPAD_DEBOUNCE_32_ms	=	5
+> +	KEYPAD_DEBOUNCE_64_ms	=	6
+> +	KEYPAD_DEBOUNCE_128_ms	=	7
+> +
+> +- row-output-enabled: An optional property indicating whether the row or
+> +  column is being used as output. If specified the row is being used
+> +  as the output. Else defaults to column.
+> +
+> +- pull-up-enabled: An optional property indicating the Keypad scan mode.
+> +  If specified implies the keypad scan pull-up has been enabled.
+> +
+> +- autorepeat: Boolean, Enable auto repeat feature of Linux input
+> +	  subsystem (optional).
+> +
+> +- linux,keymap: The keymap for keys as described in the binding document
+> +  devicetree/bindings/input/matrix-keymap.txt.
 > +
 > +Example:
+> +#include "dt-bindings/input/input.h"
 > +
-> +sdhci0: sdhci@0x18041000 {
-
-0x is typically dropped from this part, to only appear in the "reg"
-property.
-
-> +	compatible = "brcm,sdhci-iproc-cygnus";
-> +	reg = <0x18041000 0x100>;
-> +	interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&lcpll0_clks BCM_CYGNUS_LCPLL0_SDIO_CLK>;
-> +	bus-width = <4>;
-> +	sdhci,auto-cmd12;
-> +	no-1-8-v;
+> +/ {
+> +	keypad: keypad@180ac000 {
+> +		/* Required SoC specific properties */
+> +		compatible = "brcm,bcm-keypad";
+> +
+> +		/* Required Board specific properties */
+> +		keypad,num-rows = <5>;
+> +		keypad,num-columns = <5>;
+> +		status = "okay";
+> +
+> +		linux,keymap = <MATRIX_KEY(0x00, 0x02, KEY_F) /* key_forward */
+> +		MATRIX_KEY(0x00, 0x03, KEY_HOME) /* key_home */
+> +		MATRIX_KEY(0x00, 0x04, KEY_M) /* key_message */
+> +		MATRIX_KEY(0x01, 0x00, KEY_A) /* key_contacts */
+> +		MATRIX_KEY(0x01, 0x01, KEY_1) /* key_1 */
+> +		MATRIX_KEY(0x01, 0x02, KEY_2) /* key_2 */
+> +		MATRIX_KEY(0x01, 0x03, KEY_3) /* key_3 */
+> +		MATRIX_KEY(0x01, 0x04, KEY_S) /* key_speaker */
+> +		MATRIX_KEY(0x02, 0x00, KEY_P) /* key_phone */
+> +		MATRIX_KEY(0x02, 0x01, KEY_4) /* key_4 */
+> +		MATRIX_KEY(0x02, 0x02, KEY_5) /* key_5 */
+> +		MATRIX_KEY(0x02, 0x03, KEY_6) /* key_6 */
+> +		MATRIX_KEY(0x02, 0x04, KEY_VOLUMEUP) /* key_vol_up */
+> +		MATRIX_KEY(0x03, 0x00, KEY_C) /* key_call_log */
+> +		MATRIX_KEY(0x03, 0x01, KEY_7) /* key_7 */
+> +		MATRIX_KEY(0x03, 0x02, KEY_8) /* key_8 */
+> +		MATRIX_KEY(0x03, 0x03, KEY_9) /* key_9 */
+> +		MATRIX_KEY(0x03, 0x04, KEY_VOLUMEDOWN) /* key_vol_down */
+> +		MATRIX_KEY(0x04, 0x00, KEY_H) /* key_headset */
+> +		MATRIX_KEY(0x04, 0x01, KEY_KPASTERISK) /* key_* */
+> +		MATRIX_KEY(0x04, 0x02, KEY_0) /* key_0 */
+> +		MATRIX_KEY(0x04, 0x03, KEY_GRAVE) /* key_# */
+> +		MATRIX_KEY(0x04, 0x04, KEY_MUTE) /* key_mute */
+> +		>;
+> +
+> +		/* Optional board specific properties */
+> +		col-debounce-filter-period = <5>;
+> +		row-output-enabled;
+> +		pull-up-enabled;
+> +
+> +	};
 > +};
+> -- 
+> 2.3.0
 > 
 
-Unless there is a re-spin, I will fix this myself while applying this
-patch to devicetree/next.
-
-Thanks
 -- 
-Florian
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
