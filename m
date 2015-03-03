@@ -1,42 +1,116 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Re-license SolidRun iMX6 platform DT GPL v2/X11
-Date: Tue, 3 Mar 2015 09:20:01 +0000
-Message-ID: <20150303092000.GZ8656@n2100.arm.linux.org.uk>
-References: <E1YSWWI-00026i-QE@rmk-PC.arm.linux.org.uk>
- <20150303091713.GS11010@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/5] MFD/OF: document MFD devices and handle simple-mfd
+Date: Tue,  3 Mar 2015 10:32:24 +0100
+Message-ID: <1425375148-4369-2-git-send-email-linus.walleij@linaro.org>
+References: <1425375148-4369-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150303091713.GS11010-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1425375148-4369-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2015 at 10:17:13AM +0100, Sascha Hauer wrote:
-> On Mon, Mar 02, 2015 at 08:00:50PM +0000, Russell King wrote:
-> > Update SolidRun iMX6 platforms DT descriptions to be dual-licensed.
-> > 
-> > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Cc: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-> > Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> > ---
-> > Sascha, Rabeeh, I need an ack from you for this change we have changes
-> > from both of you in the mainline kernel.  Thanks.
-> 
-> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Does relicensing this file help you when all the imx6*.dtsi files are
-> still GPL licensed?
+This defines a new compatible option for MFD devices "simple-mfd" that will
+make the OF core spawn child devices for all subnodes of that MFD device.
+It is optional but handy for things like syscon and possibly other
+simpler MFD devices.
 
-It's a start, and these are the ones which sparked the whole relicensing
-effort.  It would be good if this could happen to the other iMX6 dtsi
-files.
+Since there was no file to put the documentation in, I took this opportunity
+to make a small writeup on MFD devices and add the compatible definition
+there.
 
+Suggested-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+I make the patch to the OF core in this one, it makes much more sense since
+it's a oneliner
+
+Lee: this is a (tested!) implementation of your suggestion for simple-mfd.
+If you can eventually ACK this from the MFD side, I think it should be
+funneled through the ARM SoC tree.
+
+Grant/Rob: if either of you can ACK the change to the OF core likewise it can
+be taken through ARM SoC.
+
+DT binings maintainers: there is some background discussion on this here:
+http://marc.info/?l=linux-arm-kernel&m=142486676603889&w=2
+http://marc.info/?l=devicetree&m=142166313621469&w=2
+---
+ Documentation/devicetree/bindings/mfd/mfd.txt | 40 +++++++++++++++++++++++++++
+ drivers/of/platform.c                         |  1 +
+ 2 files changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mfd.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
+new file mode 100644
+index 000000000000..cc057438abe8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/mfd.txt
+@@ -0,0 +1,40 @@
++Multi-Function Devices (MFD)
++
++These devices comprise a nexus for heterogeneous hardware blocks spawning
++multiple child devices.
++
++A typical MFD can be:
++
++- A mixed signal ASIC on an external bus, sometimes a PMIC (power management
++  integrated circuit) that is manufactured in a lower technology node (rough
++  silicon) that handles analog drivers for things like audio amplifiers, LED
++  drivers, level shifters, PHY (physical interfaces to things like USB or
++  ethernet), regulators etc.
++
++- A range of memory registers containing "miscellaneous system registers" also
++  known as a system controller "syscon" or any other memory range containing a
++  mix of unrelated registers.
++
++Optional properties:
++
++- compatible : "simple-mfd" - this signifies that the operating system should
++  spawn child devices for all the subnodes of the MFD device akin to how
++  "simple-bus" inidicates when to spawn children for a simple memory-mapped
++  bus. For more complex devices, when the nexus driver has to probe registers
++  to figure out what children exist etc, this should not be used. In the latter
++  case the child devices will be instantiated by the operating system.
++
++Example:
++
++foo@1000 {
++		compatible = "syscon", "simple-mfd";
++		reg = <0x010000 0x1000>;
++
++		led@08.0 {
++			compatible = "register-bit-led";
++			offset = <0x08>;
++			mask = <0x01>;
++			label = "myled";
++			default-state = "on";
++		};
++};
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index b189733a1539..969ba4e1460c 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -26,6 +26,7 @@
+ 
+ const struct of_device_id of_default_bus_match_table[] = {
+ 	{ .compatible = "simple-bus", },
++	{ .compatible = "simple-mfd", },
+ #ifdef CONFIG_ARM_AMBA
+ 	{ .compatible = "arm,amba-bus", },
+ #endif /* CONFIG_ARM_AMBA */
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+1.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
