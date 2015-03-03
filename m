@@ -1,117 +1,43 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
-Subject: Re: [PATCH 0/3] Add ktd2692 Flash LED driver
-Date: Tue, 03 Mar 2015 11:55:58 +0900
-Message-ID: <54F522BE.6080708@samsung.com>
-References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
- <54F02DF5.1000706@samsung.com> <54F40DDF.8070708@samsung.com>
- <20150302091530.GQ6539@valkosipuli.retiisi.org.uk>
- <CAK5ve-JYixcO6F470wKZXDN-nkTfaRgmg7FBt1Y5O+tuznruwg@mail.gmail.com>
- <20150302220315.GU6539@valkosipuli.retiisi.org.uk>
+From: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] of/unittest: Fix the wrong expected value in of_selftest_property_string
+Date: Tue, 3 Mar 2015 03:50:38 +0000
+Message-ID: <1425354638-55819-1-git-send-email-long.wanglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150302220315.GU6539@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Bryan Wu <cooloney@gmail.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Thierry Reding <treding@nvidia.com>, p.zabel@pengutronix.de, Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, florian.vaussard@epfl.ch, arno@natisbad.org, kuninori.morimoto.gx@renesas.com, hytszk@gmail.com, antonynpavlov@gmail.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, ideal.song@samsung.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+This patch fix the wrong expected value of of_property_match_string
+in of_selftest_property_string.
 
-On 2015=EB=85=84 03=EC=9B=94 03=EC=9D=BC 07:03, Sakari Ailus wrote:
-> Hi Bryan,
->=20
-> On Mon, Mar 02, 2015 at 12:07:42PM -0800, Bryan Wu wrote:
->> On Mon, Mar 2, 2015 at 1:15 AM, Sakari Ailus <sakari.ailus@iki.fi> w=
-rote:
->>> H Ingi,
->>>
->>> On Mon, Mar 02, 2015 at 04:14:39PM +0900, Ingi Kim wrote:
->>>> Hi Jacek
->>>>
->>>> On 2015=EB=85=84 02=EC=9B=94 27=EC=9D=BC 17:42, Jacek Anaszewski w=
-rote:
->>>>> Hi Ingi,
->>>>>
->>>>> On 02/27/2015 02:01 AM, Ingi Kim wrote:
->>>>>> This patch supports KTD2692 flash LED driver
->>>>>>
->>>>>> Ingi Kim (3):
->>>>>>    of: Add vendor prefix for Kinetic technologies
->>>>>>    leds: ktd2692: add device tree bindings for ktd2692
->>>>>>    leds: Add ktd2692 flash LED driver
->>>>>>
->>>>>>   .../devicetree/bindings/leds/leds-ktd2692.txt      |   19 ++
->>>>>>   .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->>>>>>   drivers/leds/Kconfig                               |    8 +
->>>>>>   drivers/leds/Makefile                              |    1 +
->>>>>>   drivers/leds/leds-ktd2692.c                        |  245 ++++=
-++++++++++++++++
->>>>>>   5 files changed, 274 insertions(+)
->>>>>>   create mode 100644 Documentation/devicetree/bindings/leds/leds=
--ktd2692.txt
->>>>>>   create mode 100644 drivers/leds/leds-ktd2692.c
->>>>>>
->>>>>
->>>>> In your device tree binding documentation there is torch-gpio men=
-tioned,
->>>>> but you seem not to use it in the driver.
->>>>>
->>>>> We have already LED Flash class (/drivers/leds/led-class-flash.c)=
- for
->>>>> this type of devices, which handles both torch and flash modes
->>>>> (flash_strobe sysfs attribute is provided for strobing the flash)=
-=2E
->>>>>
->>>>> The reference drivers using LED Flash class are still pending [1]=
-, but I
->>>>> think that at least leds-aat1290 driver is almost ready for mergi=
-ng.
->>>>> It controls very similar device to yours.
->>>>>
->>>>> Another advantage of using LED Flash class is that it has been de=
-signed
->>>>> to be compatible with Video for Linux 2 subsystem, which will all=
-ow for registering LED Flash class devices as a V4L2 sub-devices.
->>>>>
->>>>> Adding Sakari.
->>>>>
->>>>
->>>> Ok, I'll check LED Flash class, and add torch-gpio
->>>
->>> Many LED flash chips include a hardware pin for torch control but f=
-ew really
->>> need it. If you don't, i.e. you can implement the torch using the c=
-ontrol bus
->>> instead, I think I'd probably drop it from the chip's DT bindings.
->>>
->>
->> Ingi, please follow Jacek's advice to use LED Flash class interface.
->> I'm reviewing those leds flash drivers and probably merge them soon.
->>
->> Jacek and Sakari thanks for the review.
->>
->> Sakari, so what's the control bus your mentioned here?
->=20
-> I wasn't cc'd in the original patch so I didn't know whether it was I=
-2C or
-> not. Doesn't appear to be.
->=20
+Signed-off-by: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ drivers/of/unittest.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks for the review and I'll work to use LED Flash class interface
-and try adding torch-gpio(flash mode enable) line (I'll rename those gp=
-io lines)
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 199fb23..00ddce7 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -378,9 +378,9 @@ static void __init of_selftest_property_string(void)
+ 	rc = of_property_match_string(np, "phandle-list-names", "first");
+ 	selftest(rc == 0, "first expected:0 got:%i\n", rc);
+ 	rc = of_property_match_string(np, "phandle-list-names", "second");
+-	selftest(rc == 1, "second expected:0 got:%i\n", rc);
++	selftest(rc == 1, "second expected:1 got:%i\n", rc);
+ 	rc = of_property_match_string(np, "phandle-list-names", "third");
+-	selftest(rc == 2, "third expected:0 got:%i\n", rc);
++	selftest(rc == 2, "third expected:2 got:%i\n", rc);
+ 	rc = of_property_match_string(np, "phandle-list-names", "fourth");
+ 	selftest(rc == -ENODATA, "unmatched string; rc=%i\n", rc);
+ 	rc = of_property_match_string(np, "missing-property", "blah");
+-- 
+1.8.3.4
 
-Sakari,
-ktd2692 flash led device is controlled through Expresswire single-wire =
-interface
-by using the strobe-gpio(control) pin.=20
-
-
-Adding pin information of the KTD2692.
-
-CTRL pin can control LED on/off and Movie/Flash mode current,
-=46lash timeout, LVP(low voltage protection).
-
-AUX pin(torch-gpio) allows highest priority ON/OFF flash mode control.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
