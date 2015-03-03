@@ -1,64 +1,139 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: sun6i: dt: Add new Mele I7 device
-Date: Tue, 3 Mar 2015 09:22:09 +0100
-Message-ID: <20150303082209.GE4713@lukather>
-References: <1425131285-8640-1-git-send-email-codekipper@gmail.com>
- <20150303071635.GC4713@lukather>
- <54F568F8.1040104@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 07/10] usb: Make sure that DWC2 initializes after the
+ power channel mailbox driver.
+Date: Tue, 3 Mar 2015 08:32:50 +0000
+Message-ID: <20150303083250.GG6976@x1>
+References: <1425329684-23968-1-git-send-email-eric@anholt.net>
+ <1425329684-23968-8-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6Vw0j8UKbyX0bfpA"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2W72WTQKGQE2PJUUAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54F568F8.1040104-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1425329684-23968-8-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---6Vw0j8UKbyX0bfpA
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Mon, 02 Mar 2015, Eric Anholt wrote:
 
-On Tue, Mar 03, 2015 at 08:55:36AM +0100, Hans de Goede wrote:
-> >>+/ {
-> >>+	model = "Mele I7 Quad top set box";
-> >>+	compatible = "mele,i7", "allwinner,sun6i-a31";
-> >>+
-> >>+	chosen {
-> >>+		bootargs = "earlyprintk console=ttyS0,115200";
-> >
-> >Using earlyprintk by default is a bad idea if the kernel is configured
-> >with DEBUG_LL support for another SoC.
+> This gets USB working on the Raspberry Pi without relying on U-Boot to
+> send the power message for us.  Without it, you would get warnings
+> about fifo sizes and "dwc2_core_reset() HANG! Soft Reset
+> GRSTCTL=80000001" leading to a failed probe.
 > 
-> While on this subject, u-boot now sets the chosen/stdout-path property
-> up by default, which means that the kernel will do the right thing by
-> default. So we we really do not need any bootargs= in our dts files.
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/mailbox/bcm2835-mailbox-power.c |  5 +++++
+>  drivers/usb/dwc2/platform.c             | 20 ++++++++++++++++++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/drivers/mailbox/bcm2835-mailbox-power.c b/drivers/mailbox/bcm2835-mailbox-power.c
+> index f09c855..d0faca2 100644
+> --- a/drivers/mailbox/bcm2835-mailbox-power.c
+> +++ b/drivers/mailbox/bcm2835-mailbox-power.c
+> @@ -31,6 +31,9 @@ struct bcm_mbox_power {
+>  	uint32_t response;
+>  };
+>  
+> +bool bcm2835_mbox_power_initialized;
+> +EXPORT_SYMBOL_GPL(bcm2835_mbox_power_initialized);
 
-I just tested that this weekend, and it turned out that the kernel
-couldn't use it so far (ie, no output until init takes over and setup
-a TTY on ttyS0).
+This is pretty ugly.  What is it used for?  Is there any way you can
+use an API for it instead?
 
-Was it working for you?
+>  struct bcm_mbox_power *mbox_power;
+>  
+>  static void response_callback(struct mbox_client *cl, void *mssg)
+> @@ -92,6 +95,7 @@ static int bcm2835_mbox_power_probe(struct platform_device *pdev)
+>  		bcm_mbox_set_power(BCM_POWER_USB);
+>  		bcm2835_mbox_power_initialized = true;
+>  	}
+> +	bcm2835_mbox_power_initialized = true;
+>  
+>  	return ret;
+>  }
+> @@ -99,6 +103,7 @@ static int bcm2835_mbox_power_probe(struct platform_device *pdev)
+>  static int bcm2835_mbox_power_remove(struct platform_device *pdev)
+>  {
+>  	bcm_mbox_set_power(0);
+> +	bcm2835_mbox_power_initialized = false;
+>  
+>  	mbox_free_channel(mbox_power->chan);
+>  
+> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+> index ae095f0..2a4a3a6 100644
+> --- a/drivers/usb/dwc2/platform.c
+> +++ b/drivers/usb/dwc2/platform.c
+> @@ -136,6 +136,20 @@ static const struct of_device_id dwc2_of_match_table[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+>  
+> +extern bool bcm2835_mbox_power_initialized;
 
-> Currently we've a random mix where we do have bootargs in some, but
-> not in most sunxi dts files. I believe we should simply remove it
-> everywhere...
+Ughhh, *shudder*.
 
-We used to set them in SoCs that are not supported by U-boot yet, and
-where the bootloader won't come and patch the DT (A31, A23, A80).
+> +bool bcm2835_usb_power_enabled(void)
+> +{
+> +#ifdef CONFIG_BCM2835_MBOX
 
-Maxime
+Please don't put #ifdeffery in *.c files.  If you have to match on
+CONFIG_* options, please do so using inlines in a header file
+somewhere.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---6Vw0j8UKbyX0bfpA--
+> +	return bcm2835_mbox_power_initialized;
+> +#else
+> +	/* Assume that somebody else has enabled the power for us
+> +	 * (like U-Boot).
+> +	 */
+> +	return true;
+> +#endif
+> +}
+> +
+>  /**
+>   * dwc2_driver_probe() - Called when the DWC_otg core is bound to the DWC_otg
+>   * driver
+> @@ -175,6 +189,12 @@ static int dwc2_driver_probe(struct platform_device *dev)
+>  		defparams.dma_desc_enable = 0;
+>  	}
+>  
+> +	/* Make sure the platform driver for enabling the power has
+> +	 * initialized before we do.
+> +	 */
+
+This multi-line comment is unconventional.
+
+See: Documentation/CodingStyle
+
+> +	if (params == &params_bcm2835 && !bcm2835_usb_power_enabled())
+> +		return -EPROBE_DEFER;
+
+Why don't you cut out the middle man and get rid of all of these awful
+exports?
+
+include/linux/platform/bcm2835.h
+
+#ifdef CONFIG_BCM2835_MBOX
+static inline bool bcm2835_is_usb_powered()
+{
+	return bcm2835_mbox_is_usb_powered();
+}
+#else
+static inline bool bcm2835_is_usb_powered()
+{
+	/* 
+	 * If BCM2835 isn't using its Mailbox(es), the
+	 * bootloader is charged with powering up USB.
+	 */
+	return true;
+}
+#endif 
+
+>  	hsotg = devm_kzalloc(&dev->dev, sizeof(*hsotg), GFP_KERNEL);
+>  	if (!hsotg)
+>  		return -ENOMEM;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
