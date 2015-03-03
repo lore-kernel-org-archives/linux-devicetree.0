@@ -1,52 +1,65 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH 5/6] extcon: arizona: Add support for WM8280/WM8281
-Date: Tue, 3 Mar 2015 16:47:19 +0000
-Message-ID: <20150303164719.GH32624@x1>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH 6/6] ASoC: arizona: Add support for WM8280/WM8281
+Date: Tue, 3 Mar 2015 16:47:31 +0000
+Message-ID: <20150303164731.GI32624@x1>
 References: <1425399576-26428-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1425399576-26428-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1425399576-26428-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425399576-26428-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linus.walleij@linaro.org, gnurou@gmail.com, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, rf@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1425399576-26428-6-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On Tue, 03 Mar 2015, Charles Keepax wrote:
 
-> From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 >=20
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 > ---
->  drivers/extcon/extcon-arizona.c |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+>  sound/soc/codecs/arizona.c |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
 
 Applied, thanks.
 
 Will send out pull-request once this has had time to soak in -next.=20
 
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-=
-arizona.c
-> index 63f01c4..6b5e795 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -1149,6 +1149,7 @@ static int arizona_extcon_probe(struct platform=
-_device *pdev)
->  		}
->  		break;
+> diff --git a/sound/soc/codecs/arizona.c b/sound/soc/codecs/arizona.c
+> index 4c90602..95d31d6 100644
+> --- a/sound/soc/codecs/arizona.c
+> +++ b/sound/soc/codecs/arizona.c
+> @@ -280,6 +280,7 @@ int arizona_init_gpio(struct snd_soc_codec *codec=
+)
+> =20
+>  	switch (arizona->type) {
 >  	case WM5110:
 > +	case WM8280:
->  		switch (arizona->rev) {
->  		case 0 ... 2:
->  			break;
+>  		snd_soc_dapm_disable_pin(&codec->dapm, "DRC2 Signal Activity");
+>  		break;
+>  	default:
+> @@ -1728,6 +1729,7 @@ static int arizona_calc_fratio(struct arizona_f=
+ll *fll,
+> =20
+>  	switch (fll->arizona->type) {
+>  	case WM5110:
+> +	case WM8280:
+>  		if (fll->arizona->rev < 3 || sync)
+>  			return init_ratio;
+>  		break;
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
