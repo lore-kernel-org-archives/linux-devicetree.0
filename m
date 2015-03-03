@@ -1,138 +1,94 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v11 0/6] Add Skyworks SKY81452 device drivers
-Date: Tue, 3 Mar 2015 07:42:44 +0000
-Message-ID: <20150303074244.GE6976@x1>
-References: <1425019346-4559-1-git-send-email-jack.yoo@skyworksinc.com>
- <20150227203938.GA12821@x1>
- <20150303022430.GA3667@jack-ThinkPad-T520>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH 0/3] Add ktd2692 Flash LED driver
+Date: Tue, 03 Mar 2015 08:48:01 +0100
+Message-ID: <54F56731.3050900@samsung.com>
+References: <1424998891-25591-1-git-send-email-ingi2.kim@samsung.com>
+ <54F02DF5.1000706@samsung.com> <54F40DDF.8070708@samsung.com>
+ <20150302091530.GQ6539@valkosipuli.retiisi.org.uk>
+ <CAK5ve-JYixcO6F470wKZXDN-nkTfaRgmg7FBt1Y5O+tuznruwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150303022430.GA3667@jack-ThinkPad-T520>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gyungoh Yoo <gyungoh@gmail.com>
-Cc: sameo@linux.intel.com, robh+dt@kernel.org, jg1.han@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, broonie@kernel.org, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, treding@nvidia.com, p.zabel@pengutronix.de, arno@natisbad.org, kuninori.morimoto.gx@renesas.com
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <CAK5ve-JYixcO6F470wKZXDN-nkTfaRgmg7FBt1Y5O+tuznruwg@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bryan Wu <cooloney@gmail.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Ingi Kim <ingi2.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Thierry Reding <treding@nvidia.com>, p.zabel@pengutronix.de, Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, florian.vaussard@epfl.ch, arno@natisbad.org, kuninori.morimoto.gx@renesas.com, hytszk@gmail.com, antonynpavlov@gmail.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Mar 2015, Gyungoh Yoo wrote:
+On 03/02/2015 09:07 PM, Bryan Wu wrote:
+> On Mon, Mar 2, 2015 at 1:15 AM, Sakari Ailus <sakari.ailus@iki.fi> wr=
+ote:
+>> H Ingi,
+>>
+>> On Mon, Mar 02, 2015 at 04:14:39PM +0900, Ingi Kim wrote:
+>>> Hi Jacek
+>>>
+>>> On 2015=EB=85=84 02=EC=9B=94 27=EC=9D=BC 17:42, Jacek Anaszewski wr=
+ote:
+>>>> Hi Ingi,
+>>>>
+>>>> On 02/27/2015 02:01 AM, Ingi Kim wrote:
+>>>>> This patch supports KTD2692 flash LED driver
+>>>>>
+>>>>> Ingi Kim (3):
+>>>>>     of: Add vendor prefix for Kinetic technologies
+>>>>>     leds: ktd2692: add device tree bindings for ktd2692
+>>>>>     leds: Add ktd2692 flash LED driver
+>>>>>
+>>>>>    .../devicetree/bindings/leds/leds-ktd2692.txt      |   19 ++
+>>>>>    .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>>>>>    drivers/leds/Kconfig                               |    8 +
+>>>>>    drivers/leds/Makefile                              |    1 +
+>>>>>    drivers/leds/leds-ktd2692.c                        |  245 ++++=
+++++++++++++++++
+>>>>>    5 files changed, 274 insertions(+)
+>>>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds=
+-ktd2692.txt
+>>>>>    create mode 100644 drivers/leds/leds-ktd2692.c
+>>>>>
+>>>>
+>>>> In your device tree binding documentation there is torch-gpio ment=
+ioned,
+>>>> but you seem not to use it in the driver.
+>>>>
+>>>> We have already LED Flash class (/drivers/leds/led-class-flash.c) =
+for
+>>>> this type of devices, which handles both torch and flash modes
+>>>> (flash_strobe sysfs attribute is provided for strobing the flash).
+>>>>
+>>>> The reference drivers using LED Flash class are still pending [1],=
+ but I
+>>>> think that at least leds-aat1290 driver is almost ready for mergin=
+g.
+>>>> It controls very similar device to yours.
+>>>>
+>>>> Another advantage of using LED Flash class is that it has been des=
+igned
+>>>> to be compatible with Video for Linux 2 subsystem, which will allo=
+w for registering LED Flash class devices as a V4L2 sub-devices.
+>>>>
+>>>> Adding Sakari.
+>>>>
+>>>
+>>> Ok, I'll check LED Flash class, and add torch-gpio
+>>
+>> Many LED flash chips include a hardware pin for torch control but fe=
+w really
+>> need it. If you don't, i.e. you can implement the torch using the co=
+ntrol bus
+>> instead, I think I'd probably drop it from the chip's DT bindings.
+>>
+>
+> Ingi, please follow Jacek's advice to use LED Flash class interface.
+> I'm reviewing those leds flash drivers and probably merge them soon.
 
-> On Fri, Feb 27, 2015 at 08:39:38PM +0000, Lee Jones wrote:
-> > On Fri, 27 Feb 2015, gyungoh@gmail.com wrote:
-> >=20
-> > > From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-> > >=20
-> > > This patch set includes regulator and backlight driver for SKY814=
-52.
-> > > Also it includes documents for device tree and module.
-> > > sky81452-regulator was already applied. So this series doesn't
-> > > include it.
-> > >=20
-> > > v11:
-> > > Renamed 'skyworks,en-channels' property to led-sources.
-> > > Removed unused property 'skyworks,ovp-level'.
-> > >=20
-> > > v10:
-> > > Removed trivial get_brightness implementations for sky81452-backl=
-ight
-> > >=20
-> > > v9:
-> > > Removed the change to remove MODULE_VERSION() for sky81452-regula=
-tor
-> > >=20
-> > > v8:
-> > > Renamed property names for backlight with vendor prefix
-> > > Modified gpio-enable property to generic property for GPIO
-> > > Made up the example for backlight DT
-> > > Changed the DT parsing of regulator using regulator_node and of_m=
-atch
-> > >=20
-> > > v7:
-> > > Modified licensing text to GPLv2
-> > > Split Kconfig renaming from DT patch
-> > >=20
-> > > v6:
-> > > Added new line character at the end of line of dev_err()
-> > >=20
-> > > v5:
-> > > Changed DT for regulator : 'lout' node should be defined under 'r=
-egulator'
-> > > Removed compatible string from sky81452-regulator driver
-> > > Modified sky81452-regulator to return EINVAL when of_node is NULL
-> > > Move sky81452-backlight.h to include/linux/platform_data
-> > >=20
-> > > v4:
-> > > Removed MODULE_VERSION()
-> > > Modified license to GPLv2
-> > > Removed calling to backlight_device_unregister() in sky81452-back=
-light
-> > >=20
-> > > v3:
-> > > Cleaned-up DBG messages
-> > > Cleaned-up DT
-> > > Fixed the backlight name from 'sky81452-bl' to 'sky81452-backligh=
-t'
-> > > Assigned mfd_cell.of_compatible for binding device node
-> > > Modified error messages
-> > > Modified sky81452-regulator to return ENODATA when of_node is NUL=
-L
-> > >=20
-> > > v2:
-> > > Split the patches for each sub-system
-> > > Added 'reg' attribute for I2C address in device tree documents
-> > > Added 'compatible' attribute in child drivers
-> > > Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
-> > > Changed the dependency from I2C=3Dy to I2C, for CONFIG_MFD_SKY814=
-52
-> > > Added message for exception or errors.
-> > > Added vendor prefix for Skyworks Solutions, Inc.
-> > > Add SKY81452 to the Trivial Devices list
-> > >=20
-> > > Gyungoh Yoo (6):
-> > >   mfd: Add support for Skyworks SKY81452 driver
-> > >   backlight: Add support Skyworks SKY81452 backlight driver
-> > >   devicetree: Add new SKY81452 mfd binding
-> > >   devicetree: Add new SKY81452 backlight binding
-> > >   devicetree: Add vendor prefix for Skyworks Solutions, Inc.
-> > >   devicetree: Add SKY81452 to the Trivial Devices list
-> > >=20
-> > >  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
-> > >  Documentation/devicetree/bindings/mfd/sky81452.txt |  35 ++
-> > >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-> > >  .../video/backlight/sky81452-backlight.txt         |  29 ++
-> > >  drivers/mfd/Kconfig                                |  12 +
-> > >  drivers/mfd/Makefile                               |   1 +
-> > >  drivers/mfd/sky81452.c                             | 108 +++++++
-> > >  drivers/video/backlight/Kconfig                    |  10 +
-> > >  drivers/video/backlight/Makefile                   |   1 +
-> > >  drivers/video/backlight/sky81452-backlight.c       | 353 +++++++=
-++++++++++++++
-> > >  include/linux/mfd/sky81452.h                       |  31 ++
-> > >  include/linux/platform_data/sky81452-backlight.h   |  46 +++
-> > >  12 files changed, 628 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/sky8145=
-2.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/video/backl=
-ight/sky81452-backlight.txt
-> > >  create mode 100644 drivers/mfd/sky81452.c
-> > >  create mode 100644 drivers/video/backlight/sky81452-backlight.c
-> > >  create mode 100644 include/linux/mfd/sky81452.h
-> > >  create mode 100644 include/linux/platform_data/sky81452-backligh=
-t.h
-> >=20
-> > Correct me if I'm wrong, but I believe you have all of the relevant
-> > Acks now.  If so, I plan to pick this up next week and take it
-> > through the MFD tree.
->=20
-> I had got all Acks except DT on v10.
-> Rob from DT reviewed, and v11 includes what he asked.
-
-Let's wait to see if he cares to re-review.  If after a few more days
-he has chosen not to, I'll pick up the set.
+Bryan please hold on with merging them as I am about to send new patch
+set, as we've agreed that synchronized strobe feature should be removed
+from the LED Flash class. There will be also some tweaking around
+aat1290 DT bindings.
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Best Regards,
+Jacek Anaszewski
