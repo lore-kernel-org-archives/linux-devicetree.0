@@ -1,96 +1,66 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH] video: ARM CLCD: Added support for FBIO_WAITFORVSYNC
-Date: Tue, 03 Mar 2015 10:01:26 +0000
-Message-ID: <1425376886.3092.25.camel@arm.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
-	 <1424898082-1522-3-git-send-email-arun.ramamurthy@broadcom.com>
-	 <1425312029.3092.1.camel@arm.com> <54F4B576.5030702@broadcom.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH 2/2] ASoC: simple-card: Add support for
+ samplerate and samplewidth constraints
+Date: Tue, 3 Mar 2015 12:01:20 +0200
+Message-ID: <54F58670.4070500@ti.com>
+References: <cover.1425303942.git.jsarha@ti.com>
+ <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
+ <54F4BB68.4030501@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54F4B576.5030702@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <54F4BB68.4030501@linux.intel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: moinejf@free.fr, kuninori.morimoto.gx@renesas.com, Li.Xiubo@freescale.com, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, broonie@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-03-02 at 19:09 +0000, Arun Ramamurthy wrote:
-> On 15-03-02 08:00 AM, Pawel Moll wrote:
-> > On Wed, 2015-02-25 at 21:01 +0000, Arun Ramamurthy wrote:
-> >> Added ioctl and interrupt handler functions to support FBIO_WAITFORVSYNC
-> >> Also corrected documentation to make interrupts and interrupt-names
-> >> optional as they are not required properties.
-> >
-> > You may not be aware of this fact, but its the "documentation" what
-> > defines what properties are required...
-> >
-> Pawel, I was not aware of that. Since the driver code did not require 
-> the interrupts or interrupt-names bindings to load properly, I moved it 
-> out of the required properties. I can remove that change.
+On 03/02/2015 09:35 PM, Pierre-Louis Bossart wrote:
+> Hi Jyri,
+>
+> On 3/2/15 8:14 AM, Jyri Sarha wrote:
+>>
+>>   Optional dai-link subnode properties:
+>>
+>> +- samplewidth-constraints        : List of integers describing supported
+>> +                      sample widths in number of bits.
+>
+> There are quite a few platforms where the number of bits for valid audio
+> bits differs from the number of bits per slot, e.g. 24 bits with 25 bit
+> slots, or 24 bits in 32 bit slots. How would this be represented? This
+> concept is present for the TDM case but not the simple one.
+> -Pierre
 
-Cool. Drivers don't have to use all available properties :-) The
-interrupt names are required because CLCD can be wired up with a single,
-combined interrupt or with 4 separate interrupt lines (see "A.4. On-chip
-signals", in the TRM) and the binding has to provide ways of describing
-this. Yes, one could say "1 number == combined, 4 numbers == split", but
-I personally prefer to be explicit than implicit.
+As these are dai-link level properties the idea is to set constraints to 
+sample-width on the digital audio link, usually i2s. That is why the 
+constraint is set based on sample-width and not physical width.
 
-Just request the interrupt by name and you'll be fine.
+The number if significant bits in the sample-word should in a normal 
+case be a property of the codec, if such a property is needed. On the 
+other hand the limits for the physical layout in the system memory are 
+usually set by the platform driver (= DMA HW), so such a property should 
+- in a normal case - go to cpu-dai node. Since these cases can usually 
+be associated to either end of the link, there should be no need for 
+such properties in the machine driver.
 
-> Any other comments on this change? Thanks
+I am not sure what you have in mind with the TDM case. In some cases a 
+similar constraint property for number of channels could help.
 
-I have no experience with the vsync ioctl, so can't really comment on
-it. One minor thing I did spot is your use of curly brackets in one of
-the switch cases:
+Best regards,
+Jyri
 
-On Wed, 2015-02-25 at 21:01 +0000, Arun Ramamurthy wrote:
-@@ -466,6 +468,73 @@ static int clcdfb_pan_display(struct fb_var_screeninfo *var,
->  	return 0;
->  }
->  
-> +static int clcdfb_ioctl(struct fb_info *info,
-> +			unsigned int cmd, unsigned long args)
-> +{
-> +	struct clcd_fb *fb = to_clcd(info);
-> +	int retval = 0;
-> +	u32 val, ienb_val;
-> +
-> +	switch (cmd) {
-> +	case FBIO_WAITFORVSYNC:{
-
-In the line above...
-
-> +		if (fb->lcd_irq <= 0) {
-> +			retval = -EINVAL;
-> +			break;
-> +		}
-> +		/* disable Vcomp interrupts */
-> +		ienb_val = readl(fb->regs + fb->off_ienb);
-> +		ienb_val &= ~CLCD_PL111_IENB_VCOMP;
-> +		writel(ienb_val, fb->regs + fb->off_ienb);
-> +
-> +		/* clear Vcomp interrupt */
-> +		writel(CLCD_PL111_IENB_VCOMP, fb->regs + CLCD_PL111_ICR);
-> +
-> +		/* Generate Interrupt at the start of Vsync */
-> +		reinit_completion(&fb->wait);
-> +		val = readl(fb->regs +  fb->off_cntl);
-> +		val &= ~(CNTL_LCDVCOMP(3));
-> +		writel(val, fb->regs + fb->off_cntl);
-> +
-> +		/* enable Vcomp interrupt */
-> +		ienb_val = readl(fb->regs + fb->off_ienb);
-> +		ienb_val |= CLCD_PL111_IENB_VCOMP;
-> +		writel(ienb_val, fb->regs + fb->off_ienb);
-> +		if (!wait_for_completion_interruptible_timeout
-> +			(&fb->wait, HZ/10))
-> +			retval = -ETIMEDOUT;
-> +		break;
-> +	}
-
-... and here.
-
-Not sure it's needed?
-
-Pawel
+>
+>> +- rate-constraints            : List of integers describing supported
+>> +                      sample samplerates in Hz.
+>>   - format                : CPU/CODEC common audio format.
+>>                         "i2s", "right_j", "left_j" , "dsp_a"
+>
