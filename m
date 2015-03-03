@@ -1,207 +1,57 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 2/6] ARM: cpuidle: Add a cpuidle ops structure to be used for DT
-Date: Tue,  3 Mar 2015 13:29:33 +0100
-Message-ID: <1425385777-14766-3-git-send-email-daniel.lezcano@linaro.org>
-References: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425385777-14766-1-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, rjw@rjwysocki.net
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Catalin.Marinas@arm.com, robherring2@gmail.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lina.iyer@linaro.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: devicetree: bindings: Add Qualcomm RPM
+ regulator subnodes
+Date: Tue, 3 Mar 2015 12:47:00 +0000
+Message-ID: <20150303124700.GN21293@sirena.org.uk>
+References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1425356740-26285-2-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nKOLaEIB3htjmFnT"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425356740-26285-2-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The current state of the different cpuidle drivers is the different PM
-operations are passed via the platform_data using the platform driver
-paradigm.
 
-This approach allowed to split the low level PM code from the arch specific
-and the generic cpuidle code.
+--nKOLaEIB3htjmFnT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Unfortunately there are complains about this approach as, in the context of the
-single kernel image, we have multiple drivers loaded in memory for nothing and
-the platform driver is not adequate for cpuidle.
+On Mon, Mar 02, 2015 at 08:25:37PM -0800, Bjorn Andersson wrote:
 
-This patch provides a common interface via cpuidle ops for all new cpuidle
-driver and a definition for the device tree.
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8058-regulators"
+> +		    "qcom,rpm-pm8901-regulators"
+> +		    "qcom,rpm-pm8921-regulators"
 
-It will allow with the next patches to a have a common definition with ARM64
-and share the same cpuidle driver.
+Why do these subnodes have a compatible - do they ever appear except as
+a child of a parent of the same type of device?
 
-The code is optimized to use the __init section intensively in order to reduce
-the memory footprint after the driver is initialized and unify the function
-names with ARM64.
+--nKOLaEIB3htjmFnT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-In order to prevent multiple declarations and the specific cpuidle ops to be
-spread across the different headers, a mechanism, similar to the cgroup subsys,
-has been introduced.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-A new platform willing to add its cpuidle ops must add an entry in the file
-cpuidle_ops.h in the current form:
+iQEcBAEBCAAGBQJU9a1DAAoJECTWi3JdVIfQrXIH/3BPg2Kx0iQfq6PbrxxyIqEN
+rPT9G2XL9nKb6HPOYoCx7Dg5hvu1//KOfWIADEO0hqFurr2MviZin4NWq7QXEE+L
+FWqj98t8K8/+v0rTySZ2gYhDTytbrBoTWFVVVX18kfOo+gAwe1BpZQTlTAEMFfWr
+mwYRDhKHyxMhS9skgcji/lVxE7dj4+LdZxBNxc4nDMiRut4p76N+6wrb4FHv4PNG
+5pMMaHg/uY4kYZgoepAokNF3l79qdJs+sfeHPZfgBhsyck4LaM9lbLML6/n7sfel
+g8LcrNjf9SRk0dKvHfEM/CTV9PlC8T1Xmx4zj8wvH3FscVJPQHPN3wnaQxl9MR8=
+=FRZ2
+-----END PGP SIGNATURE-----
 
- #if IS_ENABLED(CONFIG_ARM_FOO_CPUIDLE)
- CPUIDLE_OPS(foo)
- #endif
-
-... and use the variable name in the specific low level code:
-
-struct cpuidle_ops foo_cpuidle_ops;
-
-The CPUIDLE_OPS macro will be processed in different way in the cpuidle.c file,
-thus allowing to keep untouched the arm cpuidle core code in the future when
-a new platform is added.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- arch/arm/include/asm/cpuidle.h     | 10 +++++
- arch/arm/include/asm/cpuidle_ops.h |  3 ++
- arch/arm/kernel/cpuidle.c          | 85 ++++++++++++++++++++++++++++++++++++++
- arch/arm64/include/asm/cpuidle.h   |  5 ++-
- 4 files changed, 102 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/include/asm/cpuidle_ops.h
-
-diff --git a/arch/arm/include/asm/cpuidle.h b/arch/arm/include/asm/cpuidle.h
-index 348dc81..3d31459 100644
---- a/arch/arm/include/asm/cpuidle.h
-+++ b/arch/arm/include/asm/cpuidle.h
-@@ -27,4 +27,14 @@ static inline int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
-  */
- #define ARM_CPUIDLE_WFI_STATE ARM_CPUIDLE_WFI_STATE_PWR(UINT_MAX)
- 
-+struct cpuidle_ops {
-+	const char *name;
-+	int (*suspend)(int cpu, unsigned long arg);
-+	int (*init)(struct device_node *, int cpu);
-+};
-+
-+extern int arm_cpuidle_suspend(int index);
-+
-+extern int arm_cpuidle_init(int cpu);
-+
- #endif
-diff --git a/arch/arm/include/asm/cpuidle_ops.h b/arch/arm/include/asm/cpuidle_ops.h
-new file mode 100644
-index 0000000..be0a612
---- /dev/null
-+++ b/arch/arm/include/asm/cpuidle_ops.h
-@@ -0,0 +1,3 @@
-+/*
-+ * List of cpuidle operations
-+ */
-diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
-index 45969f8..25e9789c 100644
---- a/arch/arm/kernel/cpuidle.c
-+++ b/arch/arm/kernel/cpuidle.c
-@@ -10,8 +10,29 @@
-  */
- 
- #include <linux/cpuidle.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <asm/cpuidle.h>
- 
-+#define CPUIDLE_OPS(__x) extern struct cpuidle_ops __x ## _cpuidle_ops;
-+#include <asm/cpuidle_ops.h>
-+#undef CPUIDLE_OPS
-+
-+#define CPUIDLE_OPS(__x) __x ## _cpuidle_ops_id,
-+enum cpuidle_ops_id {
-+#include <asm/cpuidle_ops.h>
-+        CPUIDLE_OPS_COUNT,
-+};
-+#undef CPUIDLE_OPS
-+
-+#define CPUIDLE_OPS(__x) [__x ## _cpuidle_ops_id ] = &__x ## _cpuidle_ops,
-+static struct cpuidle_ops *supported_cpuidle_ops[] __initconst = {
-+#include <asm/cpuidle_ops.h>
-+};
-+#undef CPUIDLE_OPS
-+
-+static struct cpuidle_ops cpuidle_ops[NR_CPUS];
-+
- int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
- 		struct cpuidle_driver *drv, int index)
- {
-@@ -19,3 +40,67 @@ int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
- 
- 	return index;
- }
-+
-+int arm_cpuidle_suspend(int index)
-+{
-+	int ret = -EOPNOTSUPP;
-+	int cpu = smp_processor_id();
-+
-+	if (cpuidle_ops[cpu].suspend)
-+		ret = cpuidle_ops[cpu].suspend(cpu, index);
-+
-+	return ret;
-+}
-+
-+static struct cpuidle_ops *__init arm_cpuidle_get_ops(const char *name)
-+{
-+	int i;
-+
-+	for (i = 0; i < CPUIDLE_OPS_COUNT; i++) {
-+		if (!strcmp(name, supported_cpuidle_ops[i]->name))
-+			return supported_cpuidle_ops[i];
-+	}
-+
-+	return NULL;
-+}
-+
-+static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
-+{
-+	const char *enable_method;
-+	struct cpuidle_ops *ops;
-+
-+	enable_method = of_get_property(dn, "enable-method", NULL);
-+	if (!enable_method)
-+		return -ENOENT;
-+
-+	ops = arm_cpuidle_get_ops(enable_method);
-+	if (!ops) {
-+		pr_warn("%s: unsupported enable-method property: %s\n",
-+			dn->full_name, enable_method);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	cpuidle_ops[cpu] = *ops; /* structure copy */
-+
-+	pr_notice("cpuidle: enable-method property '%s'"
-+		  " found operations\n", ops->name);
-+
-+	return 0;
-+}
-+
-+int __init arm_cpuidle_init(int cpu)
-+{
-+	int ret = -EOPNOTSUPP;
-+	struct device_node *cpu_node = of_cpu_device_node_get(cpu);
-+
-+	if (!cpu_node)
-+		return -ENODEV;
-+
-+	ret = arm_cpuidle_read_ops(cpu_node, cpu);
-+	if (!ret && cpuidle_ops[cpu].init)
-+		ret = cpuidle_ops[cpu].init(cpu_node, cpu);
-+
-+	of_node_put(cpu_node);
-+
-+	return ret;
-+}
-diff --git a/arch/arm64/include/asm/cpuidle.h b/arch/arm64/include/asm/cpuidle.h
-index 0710654..1bee287 100644
---- a/arch/arm64/include/asm/cpuidle.h
-+++ b/arch/arm64/include/asm/cpuidle.h
-@@ -15,5 +15,8 @@ static inline int cpu_suspend(unsigned long arg)
- 	return -EOPNOTSUPP;
- }
- #endif
--
-+static inline int arm_cpuidle_suspend(int index)
-+{
-+	return cpu_suspend(index);
-+}
- #endif
--- 
-1.9.1
+--nKOLaEIB3htjmFnT--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
