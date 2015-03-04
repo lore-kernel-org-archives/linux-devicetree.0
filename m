@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH v6 7/8] v4l: xilinx: Add Video Timing Controller driver
-Date: Wed,  4 Mar 2015 16:51:48 +0200
-Message-ID: <1425480709-7545-8-git-send-email-laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v6 8/8] v4l: xilinx: Add Test Pattern Generator driver
+Date: Wed,  4 Mar 2015 16:51:49 +0200
+Message-ID: <1425480709-7545-9-git-send-email-laurent.pinchart@ideasonboard.com>
 References: <1425480709-7545-1-git-send-email-laurent.pinchart@ideasonboard.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1425480709-7545-1-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
@@ -10,9 +10,11 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Chris Kohn <christian.kohn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Video Timing Controller (VTC) includes a timing detector and/or a
-timing generator. Only the generator is currently supported.
+The TPG generates multiple static or dynamic test patterns. The driver
+currently hardcodes the pattern to the moving box pattern.
 
+Signed-off-by: Christian Kohn <christian.kohn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
@@ -21,96 +23,199 @@ Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
+Changes since v5:
+
+- Update to the mainline pad-level subdev API changes
+
+Changes since v4:
+
+- Use the v5 DT format description
+- Fix a crash in the probe error path
+
 Changes since v3:
 
+- Rename V4L2_MBUS_FMT_* to MEDIA_BUS_FMT_*
 - Use xvip_init_resources()
+
+Changes since v1:
+
+v4l: xilinx: tpg: Fix typo
 
 v1 was made of the following individual patches.
 
+media: xilinx: tpg: Add the version number in DT compatible string
+media: xilinx: tpg: Use <linux/device.h> instead of <linux/slab.h>
+media: xilinx: tpg: Reset in probe()
+media: xilinx: tpg: Add controls for TPG
+media: xilinx: tpg: Add the default format
+media: xilinx: tpg: Fix alignments around __xtpg_get_pad_format()
+media: xilinx: tpg: Change 'format' to 'fmt'
+media: xilinx: tpg: Fix alignments
+media: xilinx: tpg: Fix the structure comment
+media: xilinx: tpg: Use xvip_enum_mbus_code()
+media: xilinx: tpg: Use xvip_enum_frame_size()
+media: xilinx: tpg: Use xvip_set_format_size()
+media: xilinx: tpg: Use xvip_start()
+media: xilinx: tpg: Use xvip_stop()
+media: xilinx: tpg: Use xvip_set_frame_size()
+media: xilinx: tpg: Use xvip_print_version()
+media: xilinx: tpg: Add power management functions
+media: xilinx: tpg: Remove of_match_ptr()
+media: xilinx: tpg: Fix devm_ioremap_resource() return value check
+media: xilinx: tpg: Make number of pads dynamic
+media: xilinx: tpg: Configure the bayer phase
+media: xilinx: tpg: Allocate active formats for each pad
+media: xilinx: tpg: Include the format infomation in 'port' node
+media: xilinx: tpg: Add VTC support
+media: xilinx: tpg: Add video timing mux support
+media: xilinx: tpg: Default to the color bars test pattern
+media: xilinx: tpg: Disallow switching passthrough mode during streaming
+media: xilinx: tpg: Move control IDs to xilinx-controls.h
+media: xilinx: tpg: Make horizontal and vertical blanking configurable
+media: xilinx: tpg: Ignore unconnected input ports
 xilinx: Remove .owner field for drivers
-v4l: xilinx: vtc: Rename compatible string to xlnx,v-tc
+v4l: xilinx: tpg: Rename compatible string to xlnx,v-tpg
+v4l: xilinx: tpg: Lock the control handler when modifying control range
+v4l: xilinx: tpg: Use devm_gpiod_get_optional
+v4l: xilinx: tpg: Remove axi- prefix from DT properties
 ---
- .../devicetree/bindings/media/xilinx/xlnx,v-tc.txt |  33 ++
- drivers/media/platform/xilinx/Kconfig              |   6 +
+ .../bindings/media/xilinx/xlnx,v-tpg.txt           |  71 ++
+ MAINTAINERS                                        |   1 +
+ drivers/media/platform/xilinx/Kconfig              |   7 +
  drivers/media/platform/xilinx/Makefile             |   1 +
- drivers/media/platform/xilinx/xilinx-vtc.c         | 380 +++++++++++++++++++++
- drivers/media/platform/xilinx/xilinx-vtc.h         |  42 +++
- 5 files changed, 462 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tc.txt
- create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.c
- create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.h
+ drivers/media/platform/xilinx/xilinx-tpg.c         | 931 +++++++++++++++++++++
+ include/uapi/linux/Kbuild                          |   1 +
+ include/uapi/linux/xilinx-v4l2-controls.h          |  73 ++
+ 7 files changed, 1085 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
+ create mode 100644 drivers/media/platform/xilinx/xilinx-tpg.c
+ create mode 100644 include/uapi/linux/xilinx-v4l2-controls.h
 
-diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tc.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tc.txt
+diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
 new file mode 100644
-index 0000000..2aed3b4
+index 0000000..9dd86b3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tc.txt
-@@ -0,0 +1,33 @@
-+Xilinx Video Timing Controller (VTC)
-+------------------------------------
-+
-+The Video Timing Controller is a general purpose video timing generator and
-+detector.
++++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
+@@ -0,0 +1,71 @@
++Xilinx Video Test Pattern Generator (TPG)
++-----------------------------------------
 +
 +Required properties:
 +
-+  - compatible: Must be "xlnx,v-tc-6.1".
++- compatible: Must contain at least one of
 +
-+  - reg: Physical base address and length of the registers set for the device.
++    "xlnx,v-tpg-5.0" (TPG version 5.0)
++    "xlnx,v-tpg-6.0" (TPG version 6.0)
 +
-+  - clocks: Must contain a clock specifier for the VTC core and timing
-+    interfaces clock.
++  TPG versions backward-compatible with previous versions should list all
++  compatible versions in the newer to older order.
++
++- reg: Physical base address and length of the registers set for the device.
++
++- clocks: Reference to the video core clock.
++
++- xlnx,video-format, xlnx,video-width: Video format and width, as defined in
++  video.txt.
++
++- port: Video port, using the DT bindings defined in ../video-interfaces.txt.
++  The TPG has a single output port numbered 0.
 +
 +Optional properties:
 +
-+  - xlnx,detector: The VTC has a timing detector
-+  - xlnx,generator: The VTC has a timing generator
++- xlnx,vtc: A phandle referencing the Video Timing Controller that generates
++  video timings for the TPG test patterns.
 +
-+  At least one of the xlnx,detector and xlnx,generator properties must be
-+  specified.
++- timing-gpios: Specifier for a GPIO that controls the timing mux at the TPG
++  input. The GPIO active level corresponds to the selection of VTC-generated
++  video timings.
 +
++The xlnx,vtc and timing-gpios properties are mandatory when the TPG is
++synthesized with two ports and forbidden when synthesized with one port.
 +
 +Example:
 +
-+	vtc: vtc@43c40000 {
-+		compatible = "xlnx,v-tc-6.1";
-+		reg = <0x43c40000 0x10000>;
-+
++	tpg_0: tpg@40050000 {
++		compatible = "xlnx,v-tpg-6.0", "xlnx,v-tpg-5.0";
++		reg = <0x40050000 0x10000>;
 +		clocks = <&clkc 15>;
-+		xlnx,generator;
++
++		xlnx,vtc = <&vtc_3>;
++		timing-gpios = <&ps7_gpio_0 55 GPIO_ACTIVE_LOW>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				xlnx,video-format = <XVIP_VF_YUV_422>;
++				xlnx,video-width = <8>;
++
++				tpg_in: endpoint {
++					remote-endpoint = <&adv7611_out>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++
++				xlnx,video-format = <XVIP_VF_YUV_422>;
++				xlnx,video-width = <8>;
++
++				tpg1_out: endpoint {
++					remote-endpoint = <&switch_in0>;
++				};
++			}:
++		};
 +	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e534475..e777a59 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10825,6 +10825,7 @@ T:	git git://linuxtv.org/media_tree.git
+ S:	Supported
+ F:	Documentation/devicetree/bindings/media/xilinx/
+ F:	drivers/media/platform/xilinx/
++F:	include/uapi/linux/xilinx-v4l2-controls.h
+ 
+ XILLYBUS DRIVER
+ M:	Eli Billauer <eli.billauer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 diff --git a/drivers/media/platform/xilinx/Kconfig b/drivers/media/platform/xilinx/Kconfig
-index f4347e9..19db823 100644
+index 19db823..d7324c7 100644
 --- a/drivers/media/platform/xilinx/Kconfig
 +++ b/drivers/media/platform/xilinx/Kconfig
-@@ -7,4 +7,10 @@ config VIDEO_XILINX
+@@ -7,6 +7,13 @@ config VIDEO_XILINX
  
  if VIDEO_XILINX
  
-+config VIDEO_XILINX_VTC
-+	tristate "Xilinx Video Timing Controller"
++config VIDEO_XILINX_TPG
++	tristate "Xilinx Video Test Pattern Generator"
 +	depends on VIDEO_XILINX
++	select VIDEO_XILINX_VTC
 +	---help---
-+	   Driver for the Xilinx Video Timing Controller
++	   Driver for the Xilinx Video Test Pattern Generator
 +
- endif #VIDEO_XILINX
+ config VIDEO_XILINX_VTC
+ 	tristate "Xilinx Video Timing Controller"
+ 	depends on VIDEO_XILINX
 diff --git a/drivers/media/platform/xilinx/Makefile b/drivers/media/platform/xilinx/Makefile
-index 3ef9c8e..6611e32 100644
+index 6611e32..e8a0f2a 100644
 --- a/drivers/media/platform/xilinx/Makefile
 +++ b/drivers/media/platform/xilinx/Makefile
-@@ -1,3 +1,4 @@
+@@ -1,4 +1,5 @@
  xilinx-video-objs += xilinx-dma.o xilinx-vip.o xilinx-vipp.o
  
  obj-$(CONFIG_VIDEO_XILINX) += xilinx-video.o
-+obj-$(CONFIG_VIDEO_XILINX_VTC) += xilinx-vtc.o
-diff --git a/drivers/media/platform/xilinx/xilinx-vtc.c b/drivers/media/platform/xilinx/xilinx-vtc.c
++obj-$(CONFIG_VIDEO_XILINX_TPG) += xilinx-tpg.o
+ obj-$(CONFIG_VIDEO_XILINX_VTC) += xilinx-vtc.o
+diff --git a/drivers/media/platform/xilinx/xilinx-tpg.c b/drivers/media/platform/xilinx/xilinx-tpg.c
 new file mode 100644
-index 0000000..01c750e
+index 0000000..b5f7d5e
 --- /dev/null
-+++ b/drivers/media/platform/xilinx/xilinx-vtc.c
-@@ -0,0 +1,380 @@
++++ b/drivers/media/platform/xilinx/xilinx-tpg.c
+@@ -0,0 +1,931 @@
 +/*
-+ * Xilinx Video Timing Controller
++ * Xilinx Test Pattern Generator
 + *
 + * Copyright (C) 2013-2015 Ideas on Board
 + * Copyright (C) 2013-2015 Xilinx, Inc.
@@ -123,380 +228,942 @@ index 0000000..01c750e
 + * published by the Free Software Foundation.
 + */
 +
-+#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/gpio/consumer.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
 +#include <linux/platform_device.h>
-+#include <linux/slab.h>
++#include <linux/xilinx-v4l2-controls.h>
++
++#include <media/v4l2-async.h>
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-subdev.h>
 +
 +#include "xilinx-vip.h"
 +#include "xilinx-vtc.h"
 +
-+#define XVTC_CONTROL_FIELD_ID_POL_SRC		(1 << 26)
-+#define XVTC_CONTROL_ACTIVE_CHROMA_POL_SRC	(1 << 25)
-+#define XVTC_CONTROL_ACTIVE_VIDEO_POL_SRC	(1 << 24)
-+#define XVTC_CONTROL_HSYNC_POL_SRC		(1 << 23)
-+#define XVTC_CONTROL_VSYNC_POL_SRC		(1 << 22)
-+#define XVTC_CONTROL_HBLANK_POL_SRC		(1 << 21)
-+#define XVTC_CONTROL_VBLANK_POL_SRC		(1 << 20)
-+#define XVTC_CONTROL_CHROMA_SRC			(1 << 18)
-+#define XVTC_CONTROL_VBLANK_HOFF_SRC		(1 << 17)
-+#define XVTC_CONTROL_VSYNC_END_SRC		(1 << 16)
-+#define XVTC_CONTROL_VSYNC_START_SRC		(1 << 15)
-+#define XVTC_CONTROL_ACTIVE_VSIZE_SRC		(1 << 14)
-+#define XVTC_CONTROL_FRAME_VSIZE_SRC		(1 << 13)
-+#define XVTC_CONTROL_HSYNC_END_SRC		(1 << 11)
-+#define XVTC_CONTROL_HSYNC_START_SRC		(1 << 10)
-+#define XVTC_CONTROL_ACTIVE_HSIZE_SRC		(1 << 9)
-+#define XVTC_CONTROL_FRAME_HSIZE_SRC		(1 << 8)
-+#define XVTC_CONTROL_SYNC_ENABLE		(1 << 5)
-+#define XVTC_CONTROL_DET_ENABLE			(1 << 3)
-+#define XVTC_CONTROL_GEN_ENABLE			(1 << 2)
++#define XTPG_CTRL_STATUS_SLAVE_ERROR		(1 << 16)
++#define XTPG_CTRL_IRQ_SLAVE_ERROR		(1 << 16)
 +
-+#define XVTC_STATUS_FSYNC(n)			((n) << 16)
-+#define XVTC_STATUS_GEN_ACTIVE_VIDEO		(1 << 13)
-+#define XVTC_STATUS_GEN_VBLANK			(1 << 12)
-+#define XVTC_STATUS_DET_ACTIVE_VIDEO		(1 << 11)
-+#define XVTC_STATUS_DET_VBLANK			(1 << 10)
-+#define XVTC_STATUS_LOCK_LOSS			(1 << 9)
-+#define XVTC_STATUS_LOCK			(1 << 8)
-+
-+#define XVTC_ERROR_ACTIVE_CHROMA_LOCK		(1 << 21)
-+#define XVTC_ERROR_ACTIVE_VIDEO_LOCK		(1 << 20)
-+#define XVTC_ERROR_HSYNC_LOCK			(1 << 19)
-+#define XVTC_ERROR_VSYNC_LOCK			(1 << 18)
-+#define XVTC_ERROR_HBLANK_LOCK			(1 << 17)
-+#define XVTC_ERROR_VBLANK_LOCK			(1 << 16)
-+
-+#define XVTC_IRQ_ENABLE_FSYNC(n)		((n) << 16)
-+#define XVTC_IRQ_ENABLE_GEN_ACTIVE_VIDEO	(1 << 13)
-+#define XVTC_IRQ_ENABLE_GEN_VBLANK		(1 << 12)
-+#define XVTC_IRQ_ENABLE_DET_ACTIVE_VIDEO	(1 << 11)
-+#define XVTC_IRQ_ENABLE_DET_VBLANK		(1 << 10)
-+#define XVTC_IRQ_ENABLE_LOCK_LOSS		(1 << 9)
-+#define XVTC_IRQ_ENABLE_LOCK			(1 << 8)
++#define XTPG_PATTERN_CONTROL			0x0100
++#define XTPG_PATTERN_MASK			(0xf << 0)
++#define XTPG_PATTERN_CONTROL_CROSS_HAIRS	(1 << 4)
++#define XTPG_PATTERN_CONTROL_MOVING_BOX		(1 << 5)
++#define XTPG_PATTERN_CONTROL_COLOR_MASK_SHIFT	6
++#define XTPG_PATTERN_CONTROL_COLOR_MASK_MASK	(0xf << 6)
++#define XTPG_PATTERN_CONTROL_STUCK_PIXEL	(1 << 9)
++#define XTPG_PATTERN_CONTROL_NOISE		(1 << 10)
++#define XTPG_PATTERN_CONTROL_MOTION		(1 << 12)
++#define XTPG_MOTION_SPEED			0x0104
++#define XTPG_CROSS_HAIRS			0x0108
++#define XTPG_CROSS_HAIRS_ROW_SHIFT		0
++#define XTPG_CROSS_HAIRS_ROW_MASK		(0xfff << 0)
++#define XTPG_CROSS_HAIRS_COLUMN_SHIFT		16
++#define XTPG_CROSS_HAIRS_COLUMN_MASK		(0xfff << 16)
++#define XTPG_ZPLATE_HOR_CONTROL			0x010c
++#define XTPG_ZPLATE_VER_CONTROL			0x0110
++#define XTPG_ZPLATE_START_SHIFT			0
++#define XTPG_ZPLATE_START_MASK			(0xffff << 0)
++#define XTPG_ZPLATE_SPEED_SHIFT			16
++#define XTPG_ZPLATE_SPEED_MASK			(0xffff << 16)
++#define XTPG_BOX_SIZE				0x0114
++#define XTPG_BOX_COLOR				0x0118
++#define XTPG_STUCK_PIXEL_THRESH			0x011c
++#define XTPG_NOISE_GAIN				0x0120
++#define XTPG_BAYER_PHASE			0x0124
++#define XTPG_BAYER_PHASE_RGGB			0
++#define XTPG_BAYER_PHASE_GRBG			1
++#define XTPG_BAYER_PHASE_GBRG			2
++#define XTPG_BAYER_PHASE_BGGR			3
++#define XTPG_BAYER_PHASE_OFF			4
 +
 +/*
-+ * The following registers exist in two blocks, one at 0x0020 for the detector
-+ * and one at 0x0060 for the generator.
++ * The minimum blanking value is one clock cycle for the front porch, one clock
++ * cycle for the sync pulse and one clock cycle for the back porch.
 + */
-+
-+#define XVTC_DETECTOR_OFFSET			0x0020
-+#define XVTC_GENERATOR_OFFSET			0x0060
-+
-+#define XVTC_ACTIVE_SIZE			0x0000
-+#define XVTC_ACTIVE_VSIZE_SHIFT			16
-+#define XVTC_ACTIVE_VSIZE_MASK			(0x1fff << 16)
-+#define XVTC_ACTIVE_HSIZE_SHIFT			0
-+#define XVTC_ACTIVE_HSIZE_MASK			(0x1fff << 0)
-+
-+#define XVTC_TIMING_STATUS			0x0004
-+#define XVTC_TIMING_STATUS_ACTIVE_VIDEO		(1 << 2)
-+#define XVTC_TIMING_STATUS_VBLANK		(1 << 1)
-+#define XVTC_TIMING_STATUS_LOCKED		(1 << 0)
-+
-+#define XVTC_ENCODING				0x0008
-+#define XVTC_ENCODING_CHROMA_PARITY_SHIFT	8
-+#define XVTC_ENCODING_CHROMA_PARITY_MASK	(3 << 8)
-+#define XVTC_ENCODING_CHROMA_PARITY_EVEN_ALL	(0 << 8)
-+#define XVTC_ENCODING_CHROMA_PARITY_ODD_ALL	(1 << 8)
-+#define XVTC_ENCODING_CHROMA_PARITY_EVEN_EVEN	(2 << 8)
-+#define XVTC_ENCODING_CHROMA_PARITY_ODD_EVEN	(3 << 8)
-+#define XVTC_ENCODING_VIDEO_FORMAT_SHIFT	0
-+#define XVTC_ENCODING_VIDEO_FORMAT_MASK		(0xf << 0)
-+#define XVTC_ENCODING_VIDEO_FORMAT_YUV422	(0 << 0)
-+#define XVTC_ENCODING_VIDEO_FORMAT_YUV444	(1 << 0)
-+#define XVTC_ENCODING_VIDEO_FORMAT_RGB		(2 << 0)
-+#define XVTC_ENCODING_VIDEO_FORMAT_YUV420	(3 << 0)
-+
-+#define XVTC_POLARITY				0x000c
-+#define XVTC_POLARITY_ACTIVE_CHROMA_POL		(1 << 5)
-+#define XVTC_POLARITY_ACTIVE_VIDEO_POL		(1 << 4)
-+#define XVTC_POLARITY_HSYNC_POL			(1 << 3)
-+#define XVTC_POLARITY_VSYNC_POL			(1 << 2)
-+#define XVTC_POLARITY_HBLANK_POL		(1 << 1)
-+#define XVTC_POLARITY_VBLANK_POL		(1 << 0)
-+
-+#define XVTC_HSIZE				0x0010
-+#define XVTC_HSIZE_MASK				(0x1fff << 0)
-+
-+#define XVTC_VSIZE				0x0014
-+#define XVTC_VSIZE_MASK				(0x1fff << 0)
-+
-+#define XVTC_HSYNC				0x0018
-+#define XVTC_HSYNC_END_SHIFT			16
-+#define XVTC_HSYNC_END_MASK			(0x1fff << 16)
-+#define XVTC_HSYNC_START_SHIFT			0
-+#define XVTC_HSYNC_START_MASK			(0x1fff << 0)
-+
-+#define XVTC_F0_VBLANK_H			0x001c
-+#define XVTC_F0_VBLANK_HEND_SHIFT		16
-+#define XVTC_F0_VBLANK_HEND_MASK		(0x1fff << 16)
-+#define XVTC_F0_VBLANK_HSTART_SHIFT		0
-+#define XVTC_F0_VBLANK_HSTART_MASK		(0x1fff << 0)
-+
-+#define XVTC_F0_VSYNC_V				0x0020
-+#define XVTC_F0_VSYNC_VEND_SHIFT		16
-+#define XVTC_F0_VSYNC_VEND_MASK			(0x1fff << 16)
-+#define XVTC_F0_VSYNC_VSTART_SHIFT		0
-+#define XVTC_F0_VSYNC_VSTART_MASK		(0x1fff << 0)
-+
-+#define XVTC_F0_VSYNC_H				0x0024
-+#define XVTC_F0_VSYNC_HEND_SHIFT		16
-+#define XVTC_F0_VSYNC_HEND_MASK			(0x1fff << 16)
-+#define XVTC_F0_VSYNC_HSTART_SHIFT		0
-+#define XVTC_F0_VSYNC_HSTART_MASK		(0x1fff << 0)
-+
-+#define XVTC_FRAME_SYNC_CONFIG(n)		(0x0100 + 4 * (n))
-+#define XVTC_FRAME_SYNC_V_START_SHIFT		16
-+#define XVTC_FRAME_SYNC_V_START_MASK		(0x1fff << 16)
-+#define XVTC_FRAME_SYNC_H_START_SHIFT		0
-+#define XVTC_FRAME_SYNC_H_START_MASK		(0x1fff << 0)
-+
-+#define XVTC_GENERATOR_GLOBAL_DELAY		0x0104
++#define XTPG_MIN_HBLANK			3
++#define XTPG_MAX_HBLANK			(XVTC_MAX_HSIZE - XVIP_MIN_WIDTH)
++#define XTPG_MIN_VBLANK			3
++#define XTPG_MAX_VBLANK			(XVTC_MAX_VSIZE - XVIP_MIN_HEIGHT)
 +
 +/**
-+ * struct xvtc_device - Xilinx Video Timing Controller device structure
++ * struct xtpg_device - Xilinx Test Pattern Generator device structure
 + * @xvip: Xilinx Video IP device
-+ * @list: entry in the global VTC list
-+ * @has_detector: the VTC has a timing detector
-+ * @has_generator: the VTC has a timing generator
-+ * @config: generator timings configuration
++ * @pads: media pads
++ * @npads: number of pads (1 or 2)
++ * @has_input: whether an input is connected to the sink pad
++ * @formats: active V4L2 media bus format for each pad
++ * @default_format: default V4L2 media bus format
++ * @vip_format: format information corresponding to the active format
++ * @bayer: boolean flag if TPG is set to any bayer format
++ * @ctrl_handler: control handler
++ * @hblank: horizontal blanking control
++ * @vblank: vertical blanking control
++ * @pattern: test pattern control
++ * @streaming: is the video stream active
++ * @vtc: video timing controller
++ * @vtmux_gpio: video timing mux GPIO
 + */
-+struct xvtc_device {
++struct xtpg_device {
 +	struct xvip_device xvip;
-+	struct list_head list;
 +
-+	bool has_detector;
-+	bool has_generator;
++	struct media_pad pads[2];
++	unsigned int npads;
++	bool has_input;
 +
-+	struct xvtc_config config;
++	struct v4l2_mbus_framefmt formats[2];
++	struct v4l2_mbus_framefmt default_format;
++	const struct xvip_video_format *vip_format;
++	bool bayer;
++
++	struct v4l2_ctrl_handler ctrl_handler;
++	struct v4l2_ctrl *hblank;
++	struct v4l2_ctrl *vblank;
++	struct v4l2_ctrl *pattern;
++	bool streaming;
++
++	struct xvtc_device *vtc;
++	struct gpio_desc *vtmux_gpio;
 +};
 +
-+static LIST_HEAD(xvtc_list);
-+static DEFINE_MUTEX(xvtc_lock);
-+
-+static inline void xvtc_gen_write(struct xvtc_device *xvtc, u32 addr, u32 value)
++static inline struct xtpg_device *to_tpg(struct v4l2_subdev *subdev)
 +{
-+	xvip_write(&xvtc->xvip, XVTC_GENERATOR_OFFSET + addr, value);
++	return container_of(subdev, struct xtpg_device, xvip.subdev);
 +}
 +
-+/* -----------------------------------------------------------------------------
-+ * Generator Operations
-+ */
-+
-+int xvtc_generator_start(struct xvtc_device *xvtc,
-+			 const struct xvtc_config *config)
++static u32 xtpg_get_bayer_phase(unsigned int code)
 +{
-+	int ret;
-+
-+	if (!xvtc->has_generator)
-+		return -ENXIO;
-+
-+	ret = clk_prepare_enable(xvtc->xvip.clk);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* We don't care about the chroma active signal, encoding parameters are
-+	 * not important for now.
-+	 */
-+	xvtc_gen_write(xvtc, XVTC_POLARITY,
-+		       XVTC_POLARITY_ACTIVE_CHROMA_POL |
-+		       XVTC_POLARITY_ACTIVE_VIDEO_POL |
-+		       XVTC_POLARITY_HSYNC_POL | XVTC_POLARITY_VSYNC_POL |
-+		       XVTC_POLARITY_HBLANK_POL | XVTC_POLARITY_VBLANK_POL);
-+
-+	/* Hardcode the polarity to active high, as required by the video in to
-+	 * AXI4-stream core.
-+	 */
-+	xvtc_gen_write(xvtc, XVTC_ENCODING, 0);
-+
-+	/* Configure the timings. The VBLANK and VSYNC signals assertion and
-+	 * deassertion are hardcoded to the first pixel of the line.
-+	 */
-+	xvtc_gen_write(xvtc, XVTC_ACTIVE_SIZE,
-+		       (config->vblank_start << XVTC_ACTIVE_VSIZE_SHIFT) |
-+		       (config->hblank_start << XVTC_ACTIVE_HSIZE_SHIFT));
-+	xvtc_gen_write(xvtc, XVTC_HSIZE, config->hsize);
-+	xvtc_gen_write(xvtc, XVTC_VSIZE, config->vsize);
-+	xvtc_gen_write(xvtc, XVTC_HSYNC,
-+		       (config->hsync_end << XVTC_HSYNC_END_SHIFT) |
-+		       (config->hsync_start << XVTC_HSYNC_START_SHIFT));
-+	xvtc_gen_write(xvtc, XVTC_F0_VBLANK_H, 0);
-+	xvtc_gen_write(xvtc, XVTC_F0_VSYNC_V,
-+		       (config->vsync_end << XVTC_F0_VSYNC_VEND_SHIFT) |
-+		       (config->vsync_start << XVTC_F0_VSYNC_VSTART_SHIFT));
-+	xvtc_gen_write(xvtc, XVTC_F0_VSYNC_H, 0);
-+
-+	/* Enable the generator. Set the source of all generator parameters to
-+	 * generator registers.
-+	 */
-+	xvip_write(&xvtc->xvip, XVIP_CTRL_CONTROL,
-+		   XVTC_CONTROL_ACTIVE_CHROMA_POL_SRC |
-+		   XVTC_CONTROL_ACTIVE_VIDEO_POL_SRC |
-+		   XVTC_CONTROL_HSYNC_POL_SRC | XVTC_CONTROL_VSYNC_POL_SRC |
-+		   XVTC_CONTROL_HBLANK_POL_SRC | XVTC_CONTROL_VBLANK_POL_SRC |
-+		   XVTC_CONTROL_CHROMA_SRC | XVTC_CONTROL_VBLANK_HOFF_SRC |
-+		   XVTC_CONTROL_VSYNC_END_SRC | XVTC_CONTROL_VSYNC_START_SRC |
-+		   XVTC_CONTROL_ACTIVE_VSIZE_SRC |
-+		   XVTC_CONTROL_FRAME_VSIZE_SRC | XVTC_CONTROL_HSYNC_END_SRC |
-+		   XVTC_CONTROL_HSYNC_START_SRC |
-+		   XVTC_CONTROL_ACTIVE_HSIZE_SRC |
-+		   XVTC_CONTROL_FRAME_HSIZE_SRC | XVTC_CONTROL_GEN_ENABLE |
-+		   XVIP_CTRL_CONTROL_REG_UPDATE);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(xvtc_generator_start);
-+
-+int xvtc_generator_stop(struct xvtc_device *xvtc)
-+{
-+	if (!xvtc->has_generator)
-+		return -ENXIO;
-+
-+	xvip_write(&xvtc->xvip, XVIP_CTRL_CONTROL, 0);
-+
-+	clk_disable_unprepare(xvtc->xvip.clk);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(xvtc_generator_stop);
-+
-+struct xvtc_device *xvtc_of_get(struct device_node *np)
-+{
-+	struct device_node *xvtc_node;
-+	struct xvtc_device *found = NULL;
-+	struct xvtc_device *xvtc;
-+
-+	if (!of_find_property(np, "xlnx,vtc", NULL))
-+		return NULL;
-+
-+	xvtc_node = of_parse_phandle(np, "xlnx,vtc", 0);
-+	if (xvtc_node == NULL)
-+		return ERR_PTR(-EINVAL);
-+
-+	mutex_lock(&xvtc_lock);
-+	list_for_each_entry(xvtc, &xvtc_list, list) {
-+		if (xvtc->xvip.dev->of_node == xvtc_node) {
-+			found = xvtc;
-+			break;
-+		}
++	switch (code) {
++	case MEDIA_BUS_FMT_SRGGB8_1X8:
++		return XTPG_BAYER_PHASE_RGGB;
++	case MEDIA_BUS_FMT_SGRBG8_1X8:
++		return XTPG_BAYER_PHASE_GRBG;
++	case MEDIA_BUS_FMT_SGBRG8_1X8:
++		return XTPG_BAYER_PHASE_GBRG;
++	case MEDIA_BUS_FMT_SBGGR8_1X8:
++		return XTPG_BAYER_PHASE_BGGR;
++	default:
++		return XTPG_BAYER_PHASE_OFF;
 +	}
-+	mutex_unlock(&xvtc_lock);
-+
-+	of_node_put(xvtc_node);
-+
-+	if (!found)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	return found;
 +}
-+EXPORT_SYMBOL_GPL(xvtc_of_get);
 +
-+void xvtc_put(struct xvtc_device *xvtc)
++static void __xtpg_update_pattern_control(struct xtpg_device *xtpg,
++					  bool passthrough, bool pattern)
 +{
++	u32 pattern_mask = (1 << (xtpg->pattern->maximum + 1)) - 1;
++
++	/*
++	 * If the TPG has no sink pad or no input connected to its sink pad
++	 * passthrough mode can't be enabled.
++	 */
++	if (xtpg->npads == 1 || !xtpg->has_input)
++		passthrough = false;
++
++	/* If passthrough mode is allowed unmask bit 0. */
++	if (passthrough)
++		pattern_mask &= ~1;
++
++	/* If test pattern mode is allowed unmask all other bits. */
++	if (pattern)
++		pattern_mask &= 1;
++
++	__v4l2_ctrl_modify_range(xtpg->pattern, 0, xtpg->pattern->maximum,
++				 pattern_mask, pattern ? 9 : 0);
 +}
-+EXPORT_SYMBOL_GPL(xvtc_put);
++
++static void xtpg_update_pattern_control(struct xtpg_device *xtpg,
++					bool passthrough, bool pattern)
++{
++	mutex_lock(xtpg->ctrl_handler.lock);
++	__xtpg_update_pattern_control(xtpg, passthrough, pattern);
++	mutex_unlock(xtpg->ctrl_handler.lock);
++}
 +
 +/* -----------------------------------------------------------------------------
-+ * Registration and Unregistration
++ * V4L2 Subdevice Video Operations
 + */
 +
-+static void xvtc_register_device(struct xvtc_device *xvtc)
++static int xtpg_s_stream(struct v4l2_subdev *subdev, int enable)
 +{
-+	mutex_lock(&xvtc_lock);
-+	list_add_tail(&xvtc->list, &xvtc_list);
-+	mutex_unlock(&xvtc_lock);
++	struct xtpg_device *xtpg = to_tpg(subdev);
++	unsigned int width = xtpg->formats[0].width;
++	unsigned int height = xtpg->formats[0].height;
++	bool passthrough;
++	u32 bayer_phase;
++
++	if (!enable) {
++		xvip_stop(&xtpg->xvip);
++		if (xtpg->vtc)
++			xvtc_generator_stop(xtpg->vtc);
++
++		xtpg_update_pattern_control(xtpg, true, true);
++		xtpg->streaming = false;
++		return 0;
++	}
++
++	xvip_set_frame_size(&xtpg->xvip, &xtpg->formats[0]);
++
++	if (xtpg->vtc) {
++		struct xvtc_config config = {
++			.hblank_start = width,
++			.hsync_start = width + 1,
++			.vblank_start = height,
++			.vsync_start = height + 1,
++		};
++		unsigned int htotal;
++		unsigned int vtotal;
++
++		htotal = min_t(unsigned int, XVTC_MAX_HSIZE,
++			       v4l2_ctrl_g_ctrl(xtpg->hblank) + width);
++		vtotal = min_t(unsigned int, XVTC_MAX_VSIZE,
++			       v4l2_ctrl_g_ctrl(xtpg->vblank) + height);
++
++		config.hsync_end = htotal - 1;
++		config.hsize = htotal;
++		config.vsync_end = vtotal - 1;
++		config.vsize = vtotal;
++
++		xvtc_generator_start(xtpg->vtc, &config);
++	}
++
++	/*
++	 * Configure the bayer phase and video timing mux based on the
++	 * operation mode (passthrough or test pattern generation). The test
++	 * pattern can be modified by the control set handler, we thus need to
++	 * take the control lock here to avoid races.
++	 */
++	mutex_lock(xtpg->ctrl_handler.lock);
++
++	xvip_clr_and_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++			 XTPG_PATTERN_MASK, xtpg->pattern->cur.val);
++
++	/*
++	 * Switching between passthrough and test pattern generation modes isn't
++	 * allowed during streaming, update the control range accordingly.
++	 */
++	passthrough = xtpg->pattern->cur.val == 0;
++	__xtpg_update_pattern_control(xtpg, passthrough, !passthrough);
++
++	xtpg->streaming = true;
++
++	mutex_unlock(xtpg->ctrl_handler.lock);
++
++	/*
++	 * For TPG v5.0, the bayer phase needs to be off for the pass through
++	 * mode, otherwise the external input would be subsampled.
++	 */
++	bayer_phase = passthrough ? XTPG_BAYER_PHASE_OFF
++		    : xtpg_get_bayer_phase(xtpg->formats[0].code);
++	xvip_write(&xtpg->xvip, XTPG_BAYER_PHASE, bayer_phase);
++
++	if (xtpg->vtmux_gpio)
++		gpiod_set_value_cansleep(xtpg->vtmux_gpio, !passthrough);
++
++	xvip_start(&xtpg->xvip);
++
++	return 0;
 +}
 +
-+static void xvtc_unregister_device(struct xvtc_device *xvtc)
++/* -----------------------------------------------------------------------------
++ * V4L2 Subdevice Pad Operations
++ */
++
++static struct v4l2_mbus_framefmt *
++__xtpg_get_pad_format(struct xtpg_device *xtpg,
++		      struct v4l2_subdev_pad_config *cfg,
++		      unsigned int pad, u32 which)
 +{
-+	mutex_lock(&xvtc_lock);
-+	list_del(&xvtc->list);
-+	mutex_unlock(&xvtc_lock);
++	switch (which) {
++	case V4L2_SUBDEV_FORMAT_TRY:
++		return v4l2_subdev_get_try_format(&xtpg->xvip.subdev, cfg, pad);
++	case V4L2_SUBDEV_FORMAT_ACTIVE:
++		return &xtpg->formats[pad];
++	default:
++		return NULL;
++	}
++}
++
++static int xtpg_get_format(struct v4l2_subdev *subdev,
++			   struct v4l2_subdev_pad_config *cfg,
++			   struct v4l2_subdev_format *fmt)
++{
++	struct xtpg_device *xtpg = to_tpg(subdev);
++
++	fmt->format = *__xtpg_get_pad_format(xtpg, cfg, fmt->pad, fmt->which);
++
++	return 0;
++}
++
++static int xtpg_set_format(struct v4l2_subdev *subdev,
++			   struct v4l2_subdev_pad_config *cfg,
++			   struct v4l2_subdev_format *fmt)
++{
++	struct xtpg_device *xtpg = to_tpg(subdev);
++	struct v4l2_mbus_framefmt *__format;
++	u32 bayer_phase;
++
++	__format = __xtpg_get_pad_format(xtpg, cfg, fmt->pad, fmt->which);
++
++	/* In two pads mode the source pad format is always identical to the
++	 * sink pad format.
++	 */
++	if (xtpg->npads == 2 && fmt->pad == 1) {
++		fmt->format = *__format;
++		return 0;
++	}
++
++	/* Bayer phase is configurable at runtime */
++	if (xtpg->bayer) {
++		bayer_phase = xtpg_get_bayer_phase(fmt->format.code);
++		if (bayer_phase != XTPG_BAYER_PHASE_OFF)
++			__format->code = fmt->format.code;
++	}
++
++	xvip_set_format_size(__format, fmt);
++
++	fmt->format = *__format;
++
++	/* Propagate the format to the source pad. */
++	if (xtpg->npads == 2) {
++		__format = __xtpg_get_pad_format(xtpg, cfg, 1, fmt->which);
++		*__format = fmt->format;
++	}
++
++	return 0;
++}
++
++/* -----------------------------------------------------------------------------
++ * V4L2 Subdevice Operations
++ */
++
++static int xtpg_enum_frame_size(struct v4l2_subdev *subdev,
++				struct v4l2_subdev_pad_config *cfg,
++				struct v4l2_subdev_frame_size_enum *fse)
++{
++	struct v4l2_mbus_framefmt *format;
++
++	format = v4l2_subdev_get_try_format(subdev, cfg, fse->pad);
++
++	if (fse->index || fse->code != format->code)
++		return -EINVAL;
++
++	/* Min / max values for pad 0 is always fixed in both one and two pads
++	 * modes. In two pads mode, the source pad(= 1) size is identical to
++	 * the sink pad size */
++	if (fse->pad == 0) {
++		fse->min_width = XVIP_MIN_WIDTH;
++		fse->max_width = XVIP_MAX_WIDTH;
++		fse->min_height = XVIP_MIN_HEIGHT;
++		fse->max_height = XVIP_MAX_HEIGHT;
++	} else {
++		fse->min_width = format->width;
++		fse->max_width = format->width;
++		fse->min_height = format->height;
++		fse->max_height = format->height;
++	}
++
++	return 0;
++}
++
++static int xtpg_open(struct v4l2_subdev *subdev, struct v4l2_subdev_fh *fh)
++{
++	struct xtpg_device *xtpg = to_tpg(subdev);
++	struct v4l2_mbus_framefmt *format;
++
++	format = v4l2_subdev_get_try_format(subdev, fh->pad, 0);
++	*format = xtpg->default_format;
++
++	if (xtpg->npads == 2) {
++		format = v4l2_subdev_get_try_format(subdev, fh->pad, 1);
++		*format = xtpg->default_format;
++	}
++
++	return 0;
++}
++
++static int xtpg_close(struct v4l2_subdev *subdev, struct v4l2_subdev_fh *fh)
++{
++	return 0;
++}
++
++static int xtpg_s_ctrl(struct v4l2_ctrl *ctrl)
++{
++	struct xtpg_device *xtpg = container_of(ctrl->handler,
++						struct xtpg_device,
++						ctrl_handler);
++	switch (ctrl->id) {
++	case V4L2_CID_TEST_PATTERN:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				 XTPG_PATTERN_MASK, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_CROSS_HAIRS:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_CROSS_HAIRS, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_MOVING_BOX:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_MOVING_BOX, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_COLOR_MASK:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				 XTPG_PATTERN_CONTROL_COLOR_MASK_MASK,
++				 ctrl->val <<
++				 XTPG_PATTERN_CONTROL_COLOR_MASK_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_STUCK_PIXEL:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_STUCK_PIXEL, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_NOISE:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_NOISE, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_MOTION:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_MOTION, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_MOTION_SPEED:
++		xvip_write(&xtpg->xvip, XTPG_MOTION_SPEED, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_CROSS_HAIR_ROW:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_CROSS_HAIRS,
++				 XTPG_CROSS_HAIRS_ROW_MASK,
++				 ctrl->val << XTPG_CROSS_HAIRS_ROW_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_CROSS_HAIR_COLUMN:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_CROSS_HAIRS,
++				 XTPG_CROSS_HAIRS_COLUMN_MASK,
++				 ctrl->val << XTPG_CROSS_HAIRS_COLUMN_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_ZPLATE_HOR_START:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_ZPLATE_HOR_CONTROL,
++				 XTPG_ZPLATE_START_MASK,
++				 ctrl->val << XTPG_ZPLATE_START_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_ZPLATE_HOR_SPEED:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_ZPLATE_HOR_CONTROL,
++				 XTPG_ZPLATE_SPEED_MASK,
++				 ctrl->val << XTPG_ZPLATE_SPEED_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_ZPLATE_VER_START:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_ZPLATE_VER_CONTROL,
++				 XTPG_ZPLATE_START_MASK,
++				 ctrl->val << XTPG_ZPLATE_START_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_ZPLATE_VER_SPEED:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_ZPLATE_VER_CONTROL,
++				 XTPG_ZPLATE_SPEED_MASK,
++				 ctrl->val << XTPG_ZPLATE_SPEED_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_BOX_SIZE:
++		xvip_write(&xtpg->xvip, XTPG_BOX_SIZE, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_BOX_COLOR:
++		xvip_write(&xtpg->xvip, XTPG_BOX_COLOR, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_STUCK_PIXEL_THRESH:
++		xvip_write(&xtpg->xvip, XTPG_STUCK_PIXEL_THRESH, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_NOISE_GAIN:
++		xvip_write(&xtpg->xvip, XTPG_NOISE_GAIN, ctrl->val);
++		return 0;
++	}
++
++	return 0;
++}
++
++static const struct v4l2_ctrl_ops xtpg_ctrl_ops = {
++	.s_ctrl	= xtpg_s_ctrl,
++};
++
++static struct v4l2_subdev_core_ops xtpg_core_ops = {
++};
++
++static struct v4l2_subdev_video_ops xtpg_video_ops = {
++	.s_stream = xtpg_s_stream,
++};
++
++static struct v4l2_subdev_pad_ops xtpg_pad_ops = {
++	.enum_mbus_code		= xvip_enum_mbus_code,
++	.enum_frame_size	= xtpg_enum_frame_size,
++	.get_fmt		= xtpg_get_format,
++	.set_fmt		= xtpg_set_format,
++};
++
++static struct v4l2_subdev_ops xtpg_ops = {
++	.core   = &xtpg_core_ops,
++	.video  = &xtpg_video_ops,
++	.pad    = &xtpg_pad_ops,
++};
++
++static const struct v4l2_subdev_internal_ops xtpg_internal_ops = {
++	.open	= xtpg_open,
++	.close	= xtpg_close,
++};
++
++/*
++ * Control Config
++ */
++
++static const char *const xtpg_pattern_strings[] = {
++	"Passthrough",
++	"Horizontal Ramp",
++	"Vertical Ramp",
++	"Temporal Ramp",
++	"Solid Red",
++	"Solid Green",
++	"Solid Blue",
++	"Solid Black",
++	"Solid White",
++	"Color Bars",
++	"Zone Plate",
++	"Tartan Color Bars",
++	"Cross Hatch",
++	"None",
++	"Vertical/Horizontal Ramps",
++	"Black/White Checker Board",
++};
++
++static struct v4l2_ctrl_config xtpg_ctrls[] = {
++	{
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_CROSS_HAIRS,
++		.name	= "Test Pattern: Cross Hairs",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_MOVING_BOX,
++		.name	= "Test Pattern: Moving Box",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_COLOR_MASK,
++		.name	= "Test Pattern: Color Mask",
++		.type	= V4L2_CTRL_TYPE_BITMASK,
++		.min	= 0,
++		.max	= 0xf,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_STUCK_PIXEL,
++		.name	= "Test Pattern: Stuck Pixel",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_NOISE,
++		.name	= "Test Pattern: Noise",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_MOTION,
++		.name	= "Test Pattern: Motion",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_MOTION_SPEED,
++		.name	= "Test Pattern: Motion Speed",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 8) - 1,
++		.step	= 1,
++		.def	= 4,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_CROSS_HAIR_ROW,
++		.name	= "Test Pattern: Cross Hairs Row",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 12) - 1,
++		.step	= 1,
++		.def	= 0x64,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_CROSS_HAIR_COLUMN,
++		.name	= "Test Pattern: Cross Hairs Column",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 12) - 1,
++		.step	= 1,
++		.def	= 0x64,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_ZPLATE_HOR_START,
++		.name	= "Test Pattern: Zplate Horizontal Start Pos",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 0x1e,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_ZPLATE_HOR_SPEED,
++		.name	= "Test Pattern: Zplate Horizontal Speed",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 0,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_ZPLATE_VER_START,
++		.name	= "Test Pattern: Zplate Vertical Start Pos",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 1,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_ZPLATE_VER_SPEED,
++		.name	= "Test Pattern: Zplate Vertical Speed",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 0,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_BOX_SIZE,
++		.name	= "Test Pattern: Box Size",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 12) - 1,
++		.step	= 1,
++		.def	= 0x32,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_BOX_COLOR,
++		.name	= "Test Pattern: Box Color(RGB)",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 24) - 1,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_STUCK_PIXEL_THRESH,
++		.name	= "Test Pattern: Stuck Pixel threshold",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 0,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_NOISE_GAIN,
++		.name	= "Test Pattern: Noise Gain",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 8) - 1,
++		.step	= 1,
++		.def	= 0,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	},
++};
++
++/* -----------------------------------------------------------------------------
++ * Media Operations
++ */
++
++static const struct media_entity_operations xtpg_media_ops = {
++	.link_validate = v4l2_subdev_link_validate,
++};
++
++/* -----------------------------------------------------------------------------
++ * Power Management
++ */
++
++static int __maybe_unused xtpg_pm_suspend(struct device *dev)
++{
++	struct xtpg_device *xtpg = dev_get_drvdata(dev);
++
++	xvip_suspend(&xtpg->xvip);
++
++	return 0;
++}
++
++static int __maybe_unused xtpg_pm_resume(struct device *dev)
++{
++	struct xtpg_device *xtpg = dev_get_drvdata(dev);
++
++	xvip_resume(&xtpg->xvip);
++
++	return 0;
 +}
 +
 +/* -----------------------------------------------------------------------------
 + * Platform Device Driver
 + */
 +
-+static int xvtc_parse_of(struct xvtc_device *xvtc)
++static int xtpg_parse_of(struct xtpg_device *xtpg)
 +{
-+	struct device_node *node = xvtc->xvip.dev->of_node;
++	struct device *dev = xtpg->xvip.dev;
++	struct device_node *node = xtpg->xvip.dev->of_node;
++	struct device_node *ports;
++	struct device_node *port;
++	unsigned int nports = 0;
++	bool has_endpoint = false;
 +
-+	xvtc->has_detector = of_property_read_bool(node, "xlnx,detector");
-+	xvtc->has_generator = of_property_read_bool(node, "xlnx,generator");
++	ports = of_get_child_by_name(node, "ports");
++	if (ports == NULL)
++		ports = node;
++
++	for_each_child_of_node(ports, port) {
++		const struct xvip_video_format *format;
++		struct device_node *endpoint;
++
++		if (!port->name || of_node_cmp(port->name, "port"))
++			continue;
++
++		format = xvip_of_get_format(port);
++		if (IS_ERR(format)) {
++			dev_err(dev, "invalid format in DT");
++			return PTR_ERR(format);
++		}
++
++		/* Get and check the format description */
++		if (!xtpg->vip_format) {
++			xtpg->vip_format = format;
++		} else if (xtpg->vip_format != format) {
++			dev_err(dev, "in/out format mismatch in DT");
++			return -EINVAL;
++		}
++
++		if (nports == 0) {
++			endpoint = of_get_next_child(port, NULL);
++			if (endpoint)
++				has_endpoint = true;
++			of_node_put(endpoint);
++		}
++
++		/* Count the number of ports. */
++		nports++;
++	}
++
++	if (nports != 1 && nports != 2) {
++		dev_err(dev, "invalid number of ports %u\n", nports);
++		return -EINVAL;
++	}
++
++	xtpg->npads = nports;
++	if (nports == 2 && has_endpoint)
++		xtpg->has_input = true;
 +
 +	return 0;
 +}
 +
-+static int xvtc_probe(struct platform_device *pdev)
++static int xtpg_probe(struct platform_device *pdev)
 +{
-+	struct xvtc_device *xvtc;
++	struct v4l2_subdev *subdev;
++	struct xtpg_device *xtpg;
++	u32 i, bayer_phase;
 +	int ret;
 +
-+	xvtc = devm_kzalloc(&pdev->dev, sizeof(*xvtc), GFP_KERNEL);
-+	if (!xvtc)
++	xtpg = devm_kzalloc(&pdev->dev, sizeof(*xtpg), GFP_KERNEL);
++	if (!xtpg)
 +		return -ENOMEM;
 +
-+	xvtc->xvip.dev = &pdev->dev;
++	xtpg->xvip.dev = &pdev->dev;
 +
-+	ret = xvtc_parse_of(xvtc);
++	ret = xtpg_parse_of(xtpg);
 +	if (ret < 0)
 +		return ret;
 +
-+	ret = xvip_init_resources(&xvtc->xvip);
++	ret = xvip_init_resources(&xtpg->xvip);
 +	if (ret < 0)
 +		return ret;
 +
-+	platform_set_drvdata(pdev, xvtc);
++	xtpg->vtmux_gpio = devm_gpiod_get_optional(&pdev->dev, "timing",
++						   GPIOD_OUT_HIGH);
++	if (IS_ERR(xtpg->vtmux_gpio)) {
++		ret = PTR_ERR(xtpg->vtmux_gpio);
++		goto error_resource;
++	}
 +
-+	xvip_print_version(&xvtc->xvip);
++	xtpg->vtc = xvtc_of_get(pdev->dev.of_node);
++	if (IS_ERR(xtpg->vtc)) {
++		ret = PTR_ERR(xtpg->vtc);
++		goto error_resource;
++	}
 +
-+	xvtc_register_device(xvtc);
++	/* Reset and initialize the core */
++	xvip_reset(&xtpg->xvip);
++
++	/* Initialize V4L2 subdevice and media entity. Pad numbers depend on the
++	 * number of pads.
++	 */
++	if (xtpg->npads == 2) {
++		xtpg->pads[0].flags = MEDIA_PAD_FL_SINK;
++		xtpg->pads[1].flags = MEDIA_PAD_FL_SOURCE;
++	} else {
++		xtpg->pads[0].flags = MEDIA_PAD_FL_SOURCE;
++	}
++
++	/* Initialize the default format */
++	xtpg->default_format.code = xtpg->vip_format->code;
++	xtpg->default_format.field = V4L2_FIELD_NONE;
++	xtpg->default_format.colorspace = V4L2_COLORSPACE_SRGB;
++	xvip_get_frame_size(&xtpg->xvip, &xtpg->default_format);
++
++	bayer_phase = xtpg_get_bayer_phase(xtpg->vip_format->code);
++	if (bayer_phase != XTPG_BAYER_PHASE_OFF)
++		xtpg->bayer = true;
++
++	xtpg->formats[0] = xtpg->default_format;
++	if (xtpg->npads == 2)
++		xtpg->formats[1] = xtpg->default_format;
++
++	/* Initialize V4L2 subdevice and media entity */
++	subdev = &xtpg->xvip.subdev;
++	v4l2_subdev_init(subdev, &xtpg_ops);
++	subdev->dev = &pdev->dev;
++	subdev->internal_ops = &xtpg_internal_ops;
++	strlcpy(subdev->name, dev_name(&pdev->dev), sizeof(subdev->name));
++	v4l2_set_subdevdata(subdev, xtpg);
++	subdev->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
++	subdev->entity.ops = &xtpg_media_ops;
++
++	ret = media_entity_init(&subdev->entity, xtpg->npads, xtpg->pads, 0);
++	if (ret < 0)
++		goto error;
++
++	v4l2_ctrl_handler_init(&xtpg->ctrl_handler, 3 + ARRAY_SIZE(xtpg_ctrls));
++
++	xtpg->vblank = v4l2_ctrl_new_std(&xtpg->ctrl_handler, &xtpg_ctrl_ops,
++					 V4L2_CID_VBLANK, XTPG_MIN_VBLANK,
++					 XTPG_MAX_VBLANK, 1, 100);
++	xtpg->hblank = v4l2_ctrl_new_std(&xtpg->ctrl_handler, &xtpg_ctrl_ops,
++					 V4L2_CID_HBLANK, XTPG_MIN_HBLANK,
++					 XTPG_MAX_HBLANK, 1, 100);
++	xtpg->pattern = v4l2_ctrl_new_std_menu_items(&xtpg->ctrl_handler,
++					&xtpg_ctrl_ops, V4L2_CID_TEST_PATTERN,
++					ARRAY_SIZE(xtpg_pattern_strings) - 1,
++					1, 9, xtpg_pattern_strings);
++
++	for (i = 0; i < ARRAY_SIZE(xtpg_ctrls); i++)
++		v4l2_ctrl_new_custom(&xtpg->ctrl_handler, &xtpg_ctrls[i], NULL);
++
++	if (xtpg->ctrl_handler.error) {
++		dev_err(&pdev->dev, "failed to add controls\n");
++		ret = xtpg->ctrl_handler.error;
++		goto error;
++	}
++	subdev->ctrl_handler = &xtpg->ctrl_handler;
++
++	xtpg_update_pattern_control(xtpg, true, true);
++
++	ret = v4l2_ctrl_handler_setup(&xtpg->ctrl_handler);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to set controls\n");
++		goto error;
++	}
++
++	platform_set_drvdata(pdev, xtpg);
++
++	xvip_print_version(&xtpg->xvip);
++
++	ret = v4l2_async_register_subdev(subdev);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to register subdev\n");
++		goto error;
++	}
 +
 +	return 0;
++
++error:
++	v4l2_ctrl_handler_free(&xtpg->ctrl_handler);
++	media_entity_cleanup(&subdev->entity);
++	xvtc_put(xtpg->vtc);
++error_resource:
++	xvip_cleanup_resources(&xtpg->xvip);
++	return ret;
 +}
 +
-+static int xvtc_remove(struct platform_device *pdev)
++static int xtpg_remove(struct platform_device *pdev)
 +{
-+	struct xvtc_device *xvtc = platform_get_drvdata(pdev);
++	struct xtpg_device *xtpg = platform_get_drvdata(pdev);
++	struct v4l2_subdev *subdev = &xtpg->xvip.subdev;
 +
-+	xvtc_unregister_device(xvtc);
++	v4l2_async_unregister_subdev(subdev);
++	v4l2_ctrl_handler_free(&xtpg->ctrl_handler);
++	media_entity_cleanup(&subdev->entity);
 +
-+	xvip_cleanup_resources(&xvtc->xvip);
++	xvip_cleanup_resources(&xtpg->xvip);
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id xvtc_of_id_table[] = {
-+	{ .compatible = "xlnx,v-tc-6.1" },
++static SIMPLE_DEV_PM_OPS(xtpg_pm_ops, xtpg_pm_suspend, xtpg_pm_resume);
++
++static const struct of_device_id xtpg_of_id_table[] = {
++	{ .compatible = "xlnx,v-tpg-5.0" },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, xvtc_of_id_table);
++MODULE_DEVICE_TABLE(of, xtpg_of_id_table);
 +
-+static struct platform_driver xvtc_driver = {
++static struct platform_driver xtpg_driver = {
 +	.driver = {
-+		.name = "xilinx-vtc",
-+		.of_match_table = xvtc_of_id_table,
++		.name		= "xilinx-tpg",
++		.pm		= &xtpg_pm_ops,
++		.of_match_table	= xtpg_of_id_table,
 +	},
-+	.probe = xvtc_probe,
-+	.remove = xvtc_remove,
++	.probe			= xtpg_probe,
++	.remove			= xtpg_remove,
 +};
 +
-+module_platform_driver(xvtc_driver);
++module_platform_driver(xtpg_driver);
 +
 +MODULE_AUTHOR("Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>");
-+MODULE_DESCRIPTION("Xilinx Video Timing Controller Driver");
++MODULE_DESCRIPTION("Xilinx Test Pattern Generator Driver");
 +MODULE_LICENSE("GPL v2");
-diff --git a/drivers/media/platform/xilinx/xilinx-vtc.h b/drivers/media/platform/xilinx/xilinx-vtc.h
+diff --git a/include/uapi/linux/Kbuild b/include/uapi/linux/Kbuild
+index 68ceb97..d4cfc17 100644
+--- a/include/uapi/linux/Kbuild
++++ b/include/uapi/linux/Kbuild
+@@ -446,5 +446,6 @@ header-y += wireless.h
+ header-y += x25.h
+ header-y += xattr.h
+ header-y += xfrm.h
++header-y += xilinx-v4l2-controls.h
+ header-y += zorro.h
+ header-y += zorro_ids.h
+diff --git a/include/uapi/linux/xilinx-v4l2-controls.h b/include/uapi/linux/xilinx-v4l2-controls.h
 new file mode 100644
-index 0000000..e1bb2cf
+index 0000000..fb495b9
 --- /dev/null
-+++ b/drivers/media/platform/xilinx/xilinx-vtc.h
-@@ -0,0 +1,42 @@
++++ b/include/uapi/linux/xilinx-v4l2-controls.h
+@@ -0,0 +1,73 @@
 +/*
-+ * Xilinx Video Timing Controller
++ * Xilinx Controls Header
 + *
 + * Copyright (C) 2013-2015 Ideas on Board
 + * Copyright (C) 2013-2015 Xilinx, Inc.
@@ -504,39 +1171,70 @@ index 0000000..e1bb2cf
 + * Contacts: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 + *           Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
-+#ifndef __XILINX_VTC_H__
-+#define __XILINX_VTC_H__
++#ifndef __UAPI_XILINX_V4L2_CONTROLS_H__
++#define __UAPI_XILINX_V4L2_CONTROLS_H__
 +
-+struct device_node;
-+struct xvtc_device;
++#include <linux/v4l2-controls.h>
 +
-+#define XVTC_MAX_HSIZE			8191
-+#define XVTC_MAX_VSIZE			8191
++#define V4L2_CID_XILINX_OFFSET	0xc000
++#define V4L2_CID_XILINX_BASE	(V4L2_CID_USER_BASE + V4L2_CID_XILINX_OFFSET)
 +
-+struct xvtc_config {
-+	unsigned int hblank_start;
-+	unsigned int hsync_start;
-+	unsigned int hsync_end;
-+	unsigned int hsize;
-+	unsigned int vblank_start;
-+	unsigned int vsync_start;
-+	unsigned int vsync_end;
-+	unsigned int vsize;
-+};
++/*
++ * Private Controls for Xilinx Video IPs
++ */
 +
-+struct xvtc_device *xvtc_of_get(struct device_node *np);
-+void xvtc_put(struct xvtc_device *xvtc);
++/*
++ * Xilinx TPG Video IP
++ */
 +
-+int xvtc_generator_start(struct xvtc_device *xvtc,
-+			 const struct xvtc_config *config);
-+int xvtc_generator_stop(struct xvtc_device *xvtc);
++#define V4L2_CID_XILINX_TPG			(V4L2_CID_USER_BASE + 0xc000)
 +
-+#endif /* __XILINX_VTC_H__ */
++/* Draw cross hairs */
++#define V4L2_CID_XILINX_TPG_CROSS_HAIRS		(V4L2_CID_XILINX_TPG + 1)
++/* Enable a moving box */
++#define V4L2_CID_XILINX_TPG_MOVING_BOX		(V4L2_CID_XILINX_TPG + 2)
++/* Mask out a color component */
++#define V4L2_CID_XILINX_TPG_COLOR_MASK		(V4L2_CID_XILINX_TPG + 3)
++/* Enable a stuck pixel feature */
++#define V4L2_CID_XILINX_TPG_STUCK_PIXEL		(V4L2_CID_XILINX_TPG + 4)
++/* Enable a noisy output */
++#define V4L2_CID_XILINX_TPG_NOISE		(V4L2_CID_XILINX_TPG + 5)
++/* Enable the motion feature */
++#define V4L2_CID_XILINX_TPG_MOTION		(V4L2_CID_XILINX_TPG + 6)
++/* Configure the motion speed of moving patterns */
++#define V4L2_CID_XILINX_TPG_MOTION_SPEED	(V4L2_CID_XILINX_TPG + 7)
++/* The row of horizontal cross hair location */
++#define V4L2_CID_XILINX_TPG_CROSS_HAIR_ROW	(V4L2_CID_XILINX_TPG + 8)
++/* The colum of vertical cross hair location */
++#define V4L2_CID_XILINX_TPG_CROSS_HAIR_COLUMN	(V4L2_CID_XILINX_TPG + 9)
++/* Set starting point of sine wave for horizontal component */
++#define V4L2_CID_XILINX_TPG_ZPLATE_HOR_START	(V4L2_CID_XILINX_TPG + 10)
++/* Set speed of the horizontal component */
++#define V4L2_CID_XILINX_TPG_ZPLATE_HOR_SPEED	(V4L2_CID_XILINX_TPG + 11)
++/* Set starting point of sine wave for vertical component */
++#define V4L2_CID_XILINX_TPG_ZPLATE_VER_START	(V4L2_CID_XILINX_TPG + 12)
++/* Set speed of the vertical component */
++#define V4L2_CID_XILINX_TPG_ZPLATE_VER_SPEED	(V4L2_CID_XILINX_TPG + 13)
++/* Moving box size */
++#define V4L2_CID_XILINX_TPG_BOX_SIZE		(V4L2_CID_XILINX_TPG + 14)
++/* Moving box color */
++#define V4L2_CID_XILINX_TPG_BOX_COLOR		(V4L2_CID_XILINX_TPG + 15)
++/* Upper limit count of generated stuck pixels */
++#define V4L2_CID_XILINX_TPG_STUCK_PIXEL_THRESH	(V4L2_CID_XILINX_TPG + 16)
++/* Noise level */
++#define V4L2_CID_XILINX_TPG_NOISE_GAIN		(V4L2_CID_XILINX_TPG + 17)
++
++#endif /* __UAPI_XILINX_V4L2_CONTROLS_H__ */
 -- 
 2.0.5
 
