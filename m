@@ -1,87 +1,252 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH 2/2] ASoC: simple-card: Add support for
- samplerate and samplewidth constraints
-Date: Wed, 4 Mar 2015 09:56:24 +0200
-Message-ID: <54F6BAA8.2010803@ti.com>
-References: <cover.1425303942.git.jsarha@ti.com>
- <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
- <54F4C0F2.8000201@metafoo.de> <54F5884A.1090702@ti.com>
- <20150303113041.GM21293@sirena.org.uk> <54F5A25F.6090904@ti.com>
- <20150303153431.GA21293@sirena.org.uk>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun7i: Add dts file for Wexler TAB7200
+Date: Wed,  4 Mar 2015 11:15:47 +0300
+Message-ID: <1425456947-4152-1-git-send-email-mamlinav@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20150303153431.GA21293@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, kuninori.morimoto.gx@renesas.com, moinejf@free.fr, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCENVD7YAEIOZ7W2U4CRUBEFZ7LT2-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/2015 05:34 PM, Mark Brown wrote:
-> On Tue, Mar 03, 2015 at 02:00:31PM +0200, Jyri Sarha wrote:
->> On 03/03/2015 01:30 PM, Mark Brown wrote:
->
->>> ...this is more the point.  Perhaps the constraints language needs
->>> improvement here?
->
->> Improving constraint functionality would certainly help, however the way
->> that code works is beyond my understanding and I do not believe such an
->> improvement would be coming from anybody else any time soon either.
->
-> It's probably worth putting together a description of the constraint and
-> asking people like Takashi who understand the code - ideally it'd be
-> easy to implement but I suspect you're right about timescales.
->
+This patch add support for Wexler TAB7200 tablet.
 
-Now that Lars-Peter pointed me to the right direction, it seems there is 
-a proper way to deal with issue after all.
+The Wexler TAB7200 is a A20 based tablet with 7 inch display(800x480),
+capacitive touchscreen(5 fingers), 1G RAM, 4G NAND, micro SD card slot,
+mini HDMI port, 3.5mm audio plug, 1 USB OTG port and 1 USB 2.0 port.
 
->>> The trouble with this sort of interface is that it's a quick and dirty
->>> way for people to bodge around things rather than actually fixing them
->>> properly.  Of course sometimes fixing things properly is really hard and
->>> that means we want a temporary bodge but having to put them in DT is
->>> really unfortunate.
->
->> I agree with that. However, the simple-card binding goes already now quite a
->> bit beyond just describing the hardware. The binding for instance decides
->> the configuration that is going to be used over the dai-link. These
->> constraints could be seen as an extension to that configuration.
->
->> I am wondering if there would be some better way to select the dai-link
->> configuration than writing it to DT or creating a custom machine driver for
->> each setup.
->
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts     | 185 +++++++++++++++++++++
+ 3 files changed, 188 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
 
-Continuing this tought. I wonder if it would be better to introduce a 
-new compatible match for each new card, with some clever way to manage 
-the accumulating matches in the code, and hard code DAI-link 
-configurations for each match. This way the old configurations would not 
-be carved to stone in the old dtbs.
-
->> But about this patch. Should I just give it up, or would you be willing to
->> apply it if I improve the description more and add a warning against using
->> these properties to work around driver bugs to the binding document?
->
-> I'm not totally against the idea so it's worth continuing.  Just not
-> happy either but computer.
->
-> It just occurred to me that we may be able to sidestep the issue by
-> calling them "suggested rates/widths" so the implementation can ignore
-> them later.  That's a *tiny* bit gross but does sidestep the ABI issues.
->
-
-As there is a proper way to deal with this, I'll look into that first. 
-However, if there still is a need for these properties I am happy to 
-finish the patch.
-
-Best regards,
-Jyri
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 389ca13..eb67da4 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -189,6 +189,7 @@ variscite	Variscite Ltd.
+ via	VIA Technologies, Inc.
+ virtio	Virtual I/O Device Specification, developed by the OASIS consortium
+ voipac	Voipac Technologies s.r.o.
++wexler	AVIRSA Electronics
+ winbond Winbond Electronics corp.
+ wlf	Wolfson Microelectronics
+ wm	Wondermedia Technologies, Inc.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index beac15f..f6dc2ac 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -550,7 +550,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-olinuxino-lime2.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb \
+ 	sun7i-a20-pcduino3.dtb \
+-	sun7i-a20-pcduino3-nano.dtb
++	sun7i-a20-pcduino3-nano.dtb \
++	sun7i-a20-wexler-tab7200.dtb
+ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a23-ippo-q8h-v5.dtb \
+ 	sun8i-a23-ippo-q8h-v1.2.dtb
+diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+new file mode 100644
+index 0000000..d50f40b
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+@@ -0,0 +1,185 @@
++/*
++ * Copyright 2015 Aleksei Mamlin
++ * Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Wexler TAB7200";
++	compatible = "wexler,tab7200", "allwinner,sun7i-a20";
++};
++
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		compatible = "x-powers,axp209";
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
++&lradc {
++	vref-supply = <&reg_vcc3v0>;
++	status = "okay";
++
++	button@571 {
++		label = "Volume Up";
++		linux,code = <KEY_VOLUMEUP>;
++		channel = <0>;
++		voltage = <571428>;
++	};
++
++	button@761 {
++		label = "Volume Down";
++		linux,code = <KEY_VOLUMEDOWN>;
++		channel = <0>;
++		voltage = <761904>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1450000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
+-- 
+2.0.5
