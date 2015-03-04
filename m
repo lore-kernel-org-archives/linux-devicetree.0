@@ -1,59 +1,52 @@
-From: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] spi: qup: Add DMA capabilities
-Date: Wed, 04 Mar 2015 11:37:17 +0200
-Message-ID: <54F6D24D.2050509@linaro.org>
-References: <1425056312-13746-1-git-send-email-stanimir.varbanov@linaro.org> <1425458290.5705.2.camel@mm-sol.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit Exynos5433 SoC
+Date: Wed, 04 Mar 2015 10:38:06 +0100
+Message-ID: <2449954.zWisnqDpUA@wuerfel>
+References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com> <13467157.nyRCsNWIp6@wuerfel> <54F6AD6B.70007@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425458290.5705.2.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Sneddon <dsneddon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54F6AD6B.70007@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Chanwoo Choi <cwchoi00@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, "will.deacon@arm.com" <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2015 10:38 AM, Ivan T. Ivanov wrote:
+On Wednesday 04 March 2015 15:59:55 Chanwoo Choi wrote:
+> On 03/02/2015 06:22 AM, Arnd Bergmann wrote:
+> > On Saturday 28 February 2015 09:47:01 Chanwoo Choi wrote:
+> >> "earlycon=exynos4210,0x14C20000" is correct bootparam. You can check
+> >> it on Documentation/kernel-parameters.txt as following.
+> >>
+> >>      exynos4210,<addr>
+> >>                 Use early console provided by serial driver available
+> >>                 on Samsung SoCs, requires selecting proper type and
+> >>                 a correct base address of the selected UART port. The
+> >>                 serial port must already be setup and configured.
+> >>                 Options are not yet supported.
+> >>
+> >>
+> > 
+> > But it's crazy to do this when you have a DT. Please fix the existing
+> > devicetree files that use this to just list 'earlycon'.
+> > 
+> > The syntax above only makes sense for classic board files that we
+> > do not support for exynos any more.
 > 
-> Hi Stan,
+> Following earlycon patch for exynos soc was merged in Linux 4.0-rc1.
+> - commit-id: b94ba0328d3b36ff95f5074c0e9b44f90dc56bb5 (serial: samsung: Add support for early console)
+> Almost Exynos SoC use the same UART IP of Exynos4210.
 > 
-> It looks good now, except it doesn't apply and two small issues below:
-> 
+> If you mean that "earlycon=exynos4210" naming will be changed to "earlycon=exynos",
+> we have to modify the drivers/tty/serial/samsung.c.
 
-<snip>
+No, what I mean is that you should use just "earlycon" instead of "earlycon=..."
+when you have a DTB. You have the OF_EARLYCON_DECLARE() in the driver as
+well, so that should just work.
 
-> 
->> +
->> +       /* set DMA parameters */
->> +       rx_conf->direction = DMA_DEV_TO_MEM;
->> +       rx_conf->device_fc = 1;
-> 
-> Strictly speeching this is a bool not int.
+EARLYCON_DECLARE() is really just a hack that allows users to override the
+early console from the command line without modifying the stdout-path
+property. Don't put that into a dts file.
 
-sure will correct.
-
->>
->> +       ret = spi_qup_init_dma(master, res->start);
->> +       if (ret == -EPROBE_DEFER)
->> +               goto error;
->> +       else if (!ret)
->> +               master->can_dma = spi_qup_can_dma;
->> +
->>         /* set v1 flag if device is version 1 */
->>         if (of_device_is_compatible(dev->of_node, "qcom,spi-qup-v1.1.1"))
->>                 controller->qup_v1 = 1;
-> 
-> It is not visible from this patch, but in case of error reseting
-> SPI controller (QUP_STATE_RESET), exit error path should be 
-> 'error_dma' and not 'error' label.
-
-my fault, will correct.
-
-regards,
-Stan
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
