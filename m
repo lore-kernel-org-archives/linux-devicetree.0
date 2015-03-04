@@ -1,40 +1,49 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [Patch v6 0/2] gpio: add GPIO hogging mechanism
-Date: Wed, 4 Mar 2015 10:53:06 +0100
-Message-ID: <CACRpkdb+vo9BvFaG1ZBLLm9HqpQ89ckTwkXKmR5vwXNKWWrtrQ@mail.gmail.com>
-References: <AAE35E953C746D4784A1A0C604EFEA714DFBD819@DLEE10.ent.ti.com>
-	<20150218172341.GA3851@ti.com>
-	<20150219214639.GB8656@deathray>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/3] arm64: mediatek: Add config option for mt8173.
+Date: Wed, 04 Mar 2015 10:53:39 +0100
+Message-ID: <2108883.zjHYNOn4mC@wuerfel>
+References: <1422342836-27689-1-git-send-email-hongzhou.yang@mediatek.com> <20150225111107.GA29206@localhost> <1425436267.21342.39.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150219214639.GB8656@deathray>
+In-Reply-To: <1425436267.21342.39.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Welling <mwelling@ieee.org>
-Cc: Benoit Parrot <bparrot@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, eddie.huang@mediatek.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, maoguang.meng@mediatek.com, alan.cheng@mediatek.com, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 19, 2015 at 10:46 PM, Michael Welling <mwelling@ieee.org> wrote:
-> On Wed, Feb 18, 2015 at 11:23:42AM -0600, Benoit Parrot wrote:
->> Gentle ping.
->>
->> Is there any chance this will make it in 3.21?
->>
->> Benoit
->>
->
-> Is there a reason that the pin has to be "hogged"?
->
-> Couldn't the pin be released after configuration for eventual use in the userspace?
+On Wednesday 04 March 2015 10:31:07 Yingjoe Chen wrote:
+> Hi,
+> 
+> Since we support devicetree, we don't need MACH_* to build a working
+> kernel. This is true even for our v7 soc. We intend to use it to reduce
+> numbers of drivers in product kernel binary.
+> Most drivers are shared among the same SoCs family, but some are not.
+> Currently for pinctrl driver, we are doing this so user don't need to
+> select them one by one:
+> 
+> config PINCTRL_MT8173
+>         def_bool MACH_MT8173
+>         select PINCTRL_MTK_COMMON
+> 
+> Alternatively, we could add these MACH_* to some other places, eg,
+> drivers/soc/mediatek. Or we don't add MACH_* at all, and have all
+> drivers export their own Kconfig option. User will need to select each
+> of them one-by-one.
+> 
+> What do you think?
 
-That can be added on later when/if we add support for
-mapping pins to userspace.
+I would rather see these as user-selectable options, which has the
+other benefit of giving compile-time coverage. For your example,
+I'd suggest doing
 
-If you know you want to give it to userspace and how to set
-it up properly you certainly know what to name it too, so for
-pins explicitly exported to userspace we need a mechanism
-to name them and export them explicitly (without having userspace
-exporting them to itself with that brain-damaged sysfs interface).
+config PINCTRL_MT8173
+        bool "Mediatek MT8173 pin control"
+	depends on ARCH_MEDIATEK || COMPILE_TEST
+        select PINCTRL_MTK_COMMON
+	help
+	   ... a useful description ...
 
-Yours,
-Linus Walleij
+
+	Arnd
