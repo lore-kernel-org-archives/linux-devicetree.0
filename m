@@ -1,137 +1,233 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
-Date: Wed,  4 Mar 2015 15:13:20 -0600
-Message-ID: <1425503602-24916-1-git-send-email-galak@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: sun7i: Add dts file for Wexler TAB7200
+Date: Thu,  5 Mar 2015 00:16:48 +0300
+Message-ID: <1425503808-28567-1-git-send-email-mamlinav@gmail.com>
+References: <1425456947-4152-1-git-send-email-mamlinav@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425456947-4152-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
-on Qualcomm MSM platforms to determine which device tree should be
-utilized and passed to the kernel.
+This patch add support for Wexler TAB7200 tablet.
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
+The Wexler TAB7200 is a A20 based tablet with 7 inch display(800x480),
+capacitive touchscreen(5 fingers), 1G RAM, 4G NAND, micro SD card slot,
+mini HDMI port, 3.5mm audio plug, 1 USB OTG port and 1 USB 2.0 port.
+
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/msm/ids.txt | 65 +++++++++++++++++++++++
- include/dt-bindings/arm/qcom-ids.h                | 33 ++++++++++++
- 2 files changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/ids.txt
- create mode 100644 include/dt-bindings/arm/qcom-ids.h
+ arch/arm/boot/dts/Makefile                     |   3 +-
+ arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 181 +++++++++++++++++++++++++
+ 2 files changed, 183 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/ids.txt b/Documentation/devicetree/bindings/arm/msm/ids.txt
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index beac15f..f6dc2ac 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -550,7 +550,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-olinuxino-lime2.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb \
+ 	sun7i-a20-pcduino3.dtb \
+-	sun7i-a20-pcduino3-nano.dtb
++	sun7i-a20-pcduino3-nano.dtb \
++	sun7i-a20-wexler-tab7200.dtb
+ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a23-ippo-q8h-v5.dtb \
+ 	sun8i-a23-ippo-q8h-v1.2.dtb
+diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
 new file mode 100644
-index 0000000..9ee8428
+index 0000000..b197d57
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/ids.txt
-@@ -0,0 +1,65 @@
-+* MSM-ID
-+
-+The qcom,msm-id entry specifies the MSM chipset and hardware revision.  It can
-+optionally be an array of these to indicate multiple hardware that use the same
-+device tree.  It is expected that the bootloader will use this information at
-+boot-up to decide which device tree to use when given multiple device trees,
-+some of which may not be compatible with the actual hardware.  It is the
-+bootloader's responsibility to pass the correct device tree to the kernel.
-+
-+PROPERTIES
-+
-+- qcom,msm-id:
-+	Usage: required
-+	Value type: <prop-encoded-array> (<chipset_id, rev_id> [, <c2, r2> ..])
-+	Definition:
-+		The "chipset_id" consists of three fields as below:
-+
-+		bits 0-15  = The unique MSM chipset id.
-+		bits 16-31 = Reserved.  Should be 0
-+
-+		chipset_id is an exact match value
-+
-+		The "rev_id" is a chipset specific 32-bit id that represents
-+		the version of the chipset.
-+
-+		The rev_id is a best match id.  The bootloader will look for
-+		the closest possible patch.
-+
-+* BOARD-ID
-+
-+The qcom,board-id entry specifies the board type and revision information.  It
-+can optionally be an array of these to indicate multiple boards that use the
-+same device tree.  It is expected that the bootloader will use this information
-+at boot-up to decide which device tree to use when given multiple device trees,
-+some of which may not be compatible with the actual hardware.  It is the
-+bootloader's responsibility to pass the correct device tree to the kernel.
-+
-+PROPERTIES
-+
-+- qcom,board-id:
-+	Usage: required
-+	Value type: <prop-encoded-array> (<board_id, subtype_id> [, <b2, s2> ..])
-+	Definition:
-+		The "board_id" consists of three fields as below:
-+
-+		bits 31-24 = Unusued.
-+		bits 23-16 = Platform Version Major
-+		bits 15-8  = Platfrom Version Minor
-+		bits 7-0   = Platform Type
-+
-+		Platform Type field is an exact match value.  The Platform
-+		Major/Minor field is a best match.  The bootloader will look
-+		for the closest possible match.
-+
-+		The "subtype_id" is unique to a Platform Type/Chipset ID.  For
-+		a given Platform Type, there will typically only be a single
-+		board and the subtype_id will be 0.  However in some cases board
-+		variants may need to be distinquished by different subtype_id
-+		values.
-+
-+		subtype_id is an exact match value.
-+
-+EXAMPLE:
-+	qcom,board-id = <15 2>;
-+	qcom,msm-id = <0x1007e 0>;
-diff --git a/include/dt-bindings/arm/qcom-ids.h b/include/dt-bindings/arm/qcom-ids.h
-new file mode 100644
-index 0000000..a18f34e
---- /dev/null
-+++ b/include/dt-bindings/arm/qcom-ids.h
-@@ -0,0 +1,33 @@
-+/* Copyright (c) 2015, The Linux Foundation. All rights reserved.
++++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+@@ -0,0 +1,181 @@
++/*
++ * Copyright 2015 Aleksei Mamlin
++ * Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
 + */
-+#ifndef __DT_BINDINGS_QCOM_IDS_H
-+#define __DT_BINDINGS_QCOM_IDS_H
 +
-+/* qcom,msm-id */
-+#define QCOM_ID_MSM8916		206
-+#define QCOM_ID_APQ8016		247
-+#define QCOM_ID_MSM8216		248
-+#define QCOM_ID_MSM8116		249
-+#define QCOM_ID_MSM8616		250
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
 +
-+/* qcom,board-id */
-+#define QCOM_BRD_ID(a, major, minor) \
-+	(((major & 0xff) << 16) | ((minor & 0xff) << 8) | QCOM_BRD_ID_##a)
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
 +
-+#define QCOM_BRD_ID_MTP		8
-+#define QCOM_BRD_ID_DRAGONBRD	10
-+#define QCOM_BRD_ID_SBC		24
++/ {
++	model = "Wexler TAB7200";
++	compatible = "wexler,tab7200", "allwinner,sun7i-a20";
++};
 +
-+#define QCOM_BRD_SUBTYPE_DEFAULT		0
-+#define QCOM_BRD_SUBTYPE_MTP8916_SMB1360	1
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
++};
 +
-+#endif
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
++&lradc {
++	vref-supply = <&reg_vcc3v0>;
++	status = "okay";
++
++	button@571 {
++		label = "Volume Up";
++		linux,code = <KEY_VOLUMEUP>;
++		channel = <0>;
++		voltage = <571428>;
++	};
++
++	button@761 {
++		label = "Volume Down";
++		linux,code = <KEY_VOLUMEDOWN>;
++		channel = <0>;
++		voltage = <761904>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1450000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.0.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
