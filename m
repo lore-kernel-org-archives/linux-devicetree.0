@@ -1,286 +1,96 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 3/4] cpufreq: mediatek: add Mediatek cpufreq driver
-Date: Wed, 4 Mar 2015 16:39:21 +0530
-Message-ID: <CAKohpo=c2t4_2hdPP-vQM7xewK5SXaHBGNA9PhvTwDv3++pSTg@mail.gmail.com>
-References: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
-	<1425458956-20665-4-git-send-email-pi-cheng.chen@linaro.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency
+ control
+Date: Wed, 4 Mar 2015 12:21:09 +0100
+Message-ID: <20150304112109.GB11010@pengutronix.de>
+References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1425458956-20665-4-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Mike Turquette <mturquette@linaro.org>, fan.chen@mediatek.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, fan.chen@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Haven't reviewed it completely yet, but this is all I have done.
-
-On 4 March 2015 at 14:19, pi-cheng.chen <pi-cheng.chen@linaro.org> wrote:
-
-> +static int mtk_cpufreq_notify(struct notifier_block *nb,
-> +                             unsigned long action, void *data)
+On Wed, Mar 04, 2015 at 06:49:11PM +0800, pi-cheng.chen wrote:
+> This patch adds CPU mux clocks which are used by Mediatek cpufreq driver
+> for intermediate clock source switching. This patch is based on Mediatek
+> clock driver patches[1].
+> 
+> [1] http://thread.gmane.org/gmane.linux.kernel/1892436
+> 
+> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
+> ---
+> +static long clk_cpumux_determine_rate(struct clk_hw *hw, unsigned long rate,
+> +				      unsigned long min_rate,
+> +				      unsigned long max_rate,
+> +				      unsigned long *best_parent_rate,
+> +				      struct clk_hw **best_parent_p)
 > +{
-> +       struct cpufreq_freqs *freqs = data;
-> +       struct cpu_opp_table *opp_tbl = dvfs_info->opp_tbl;
-
-There is only one dvfs info ? but there are two clusters, sorry got confused
-a bit..
-
-> +       int old_vproc, new_vproc, old_index, new_index;
+> +	struct clk *clk = hw->clk, *parent;
+> +	unsigned long parent_rate;
+> +	int i;
 > +
-> +       if (!cpumask_test_cpu(freqs->cpu, &dvfs_info->cpus))
-> +               return NOTIFY_DONE;
+> +	for (i = MAINPLL_INDEX; i >= ARMPLL_INDEX; i--) {
+> +		parent = clk_get_parent_by_index(clk, i);
+> +		if (!parent)
+> +			return 0;
 > +
-> +       old_vproc = regulator_get_voltage(dvfs_info->proc_reg);
-> +       old_index = cpu_opp_table_get_volt_index(old_vproc);
-> +       new_index = cpu_opp_table_get_freq_index(freqs->new * 1000);
-> +       new_vproc = opp_tbl[new_index].vproc;
+> +		if (i == MAINPLL_INDEX) {
+> +			parent_rate = __clk_get_rate(parent);
+> +			if (parent_rate == rate)
+> +				break;
+> +		}
 > +
-> +       if (old_vproc == new_vproc)
-> +               return 0;
+> +		parent_rate = __clk_round_rate(parent, rate);
+> +	}
 > +
-> +       if ((action == CPUFREQ_PRECHANGE && old_vproc < new_vproc) ||
-> +           (action == CPUFREQ_POSTCHANGE && old_vproc > new_vproc))
-> +               mtk_cpufreq_voltage_trace(old_index, new_index);
-> +
-> +       return NOTIFY_OK;
+> +	*best_parent_rate = parent_rate;
+> +	*best_parent_p = __clk_get_hw(parent);
+> +	return parent_rate;
 > +}
-> +
-> +static struct notifier_block mtk_cpufreq_nb = {
-> +       .notifier_call = mtk_cpufreq_notify,
-> +};
-> +
-> +static int cpu_opp_table_init(struct device *dev)
+
+Why this determine_rate hook? If you want to switch the clock to some
+intermediate parent I would assume you do this explicitly by setting the
+parent and not implicitly by setting a rate.
+
+> +int mtk_clk_register_cpumuxes(struct device_node *node,
+> +			      struct mtk_composite *clks, int num,
+> +			      struct clk_onecell_data *clk_data)
 > +{
-> +       struct device *cpu_dev = dvfs_info->cpu_dev;
-> +       struct cpu_opp_table *opp_tbl;
-> +       struct dev_pm_opp *opp;
-> +       int ret, cnt, i;
-> +       unsigned long rate, vproc, vsram;
+> +	int i;
+> +	struct clk *clk;
+> +	struct regmap *regmap;
 > +
-> +       ret = of_init_opp_table(cpu_dev);
-> +       if (ret) {
-> +               dev_err(dev, "Failed to init mtk_opp_table: %d\n", ret);
-> +               return ret;
-> +       }
+> +	if (!clk_data)
+> +		return -ENOMEM;
 > +
-> +       rcu_read_lock();
+> +	regmap = syscon_node_to_regmap(node);
+> +	if (IS_ERR(regmap)) {
+> +		pr_err("Cannot find regmap for %s: %ld\n", node->full_name,
+> +		       PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
 > +
-> +       cnt = dev_pm_opp_get_opp_count(cpu_dev);
-> +       if (cnt < 0) {
-> +               dev_err(cpu_dev, "No OPP table is found: %d", cnt);
-> +               ret = cnt;
-> +               goto out_free_opp_tbl;
-> +       }
+> +	for (i = 0; i < num; i++) {
+> +		struct mtk_composite *mux = &clks[i];
 > +
-> +       opp_tbl = devm_kcalloc(dev, (cnt + 1), sizeof(struct cpu_opp_table),
-> +                              GFP_ATOMIC);
-> +       if (!opp_tbl) {
-> +               ret = -ENOMEM;
-> +               goto out_free_opp_tbl;
-> +       }
-> +
-> +       for (i = 0, rate = 0; i < cnt; i++, rate++) {
-> +               opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
-> +               if (IS_ERR(opp)) {
-> +                       ret = PTR_ERR(opp);
-> +                       goto out_free_opp_tbl;
-> +               }
-> +
-> +               vproc = dev_pm_opp_get_voltage(opp);
-> +               vproc = get_regulator_voltage_ceil(dvfs_info->proc_reg, vproc);
-> +               vsram = vproc + VOLT_SHIFT_LOWER_LIMIT;
-> +               vsram = get_regulator_voltage_ceil(dvfs_info->sram_reg, vsram);
-> +
-> +               if (vproc < 0 || vsram < 0) {
-> +                       ret = -EINVAL;
-> +                       goto out_free_opp_tbl;
-> +               }
-> +
-> +               opp_tbl[i].freq = rate;
-> +               opp_tbl[i].vproc = vproc;
-> +               opp_tbl[i].vsram = vsram;
-> +       }
-> +
-> +       opp_tbl[i].freq = 0;
-> +       opp_tbl[i].vproc = -1;
-> +       opp_tbl[i].vsram = -1;
-> +       dvfs_info->opp_tbl = opp_tbl;
-> +
-> +out_free_opp_tbl:
-> +       rcu_read_unlock();
-> +       of_free_opp_table(cpu_dev);
-> +
-> +       return ret;
-> +}
-> +
-> +static struct cpufreq_cpu_domain *get_cpu_domain(struct list_head *domain_list,
-> +                                                int cpu)
-> +{
-> +       struct list_head *node;
-> +
-> +       list_for_each(node, domain_list) {
-> +               struct cpufreq_cpu_domain *domain;
-> +
-> +               domain = container_of(node, struct cpufreq_cpu_domain, node);
-> +               if (cpumask_test_cpu(cpu, &domain->cpus))
-> +                       return domain;
-> +       }
-> +
-> +       return NULL;
-> +}
-> +
-> +static int mtk_cpufreq_probe(struct platform_device *pdev)
+> +		clk = mtk_clk_register_cpumux(mux->name, mux->parent_names,
+> +					      mux->num_parents, regmap,
+> +					      mux->mux_reg, mux->mux_shift,
+> +					      mux->mux_width);
 
-On a dual cluster big LITTLE (your system), how many times is probe
-getting called ? Once or twice, i.e. for each cluster ??
+Pass 'mux' directly instead of dispatching this struct into the
+individual fields.
+Also, probably better to move this function to
+drivers/clk/mediatek/clk-cpumux.c
 
-> +{
-> +       struct clk *inter_clk;
-> +       struct cpufreq_dt_platform_data *pd;
-> +       struct platform_device *dev;
-> +       unsigned long inter_freq;
-> +       int cpu, ret;
-> +
-> +       inter_clk = clk_get(&pdev->dev, NULL);
+Sascha
 
-How is this supposed to work ? How will pdev->dev give intermediate
-clock ?
-
-> +       if (IS_ERR(inter_clk)) {
-> +               if (PTR_ERR(inter_clk) == -EPROBE_DEFER) {
-> +                       dev_warn(&pdev->dev, "clock not ready. defer probeing.\n");
-> +                       return -EPROBE_DEFER;
-> +               }
-> +
-> +               dev_err(&pdev->dev, "Failed to get intermediate clock\n");
-> +               return -ENODEV;
-> +       }
-> +       inter_freq = clk_get_rate(inter_clk);
-> +
-> +       pd = devm_kzalloc(&pdev->dev, sizeof(*pd), GFP_KERNEL);
-> +       if (!pd)
-> +               return -ENOMEM;
-> +
-> +       dvfs_info = devm_kzalloc(&pdev->dev, sizeof(*dvfs_info), GFP_KERNEL);
-> +       if (!dvfs_info)
-> +               return -ENOMEM;
-
-Instead of two allocations, you could have made pd part of dvfs_info
-and allocated only
-once.
-
-> +
-> +       pd->independent_clocks = 1,
-
-s/,/; ??
-
-> +       INIT_LIST_HEAD(&pd->domain_list);
-> +
-> +       for_each_possible_cpu(cpu) {
-> +               struct device *cpu_dev;
-> +               struct cpufreq_cpu_domain *new_domain;
-> +               struct regulator *proc_reg, *sram_reg;
-> +
-> +               cpu_dev = get_cpu_device(cpu);
-
-This should be done in the below if block only.
-
-> +               if (!dvfs_info->cpu_dev) {
-> +                       proc_reg = regulator_get_exclusive(cpu_dev, "proc");
-> +                       sram_reg = regulator_get_exclusive(cpu_dev, "sram");
-> +
-> +                       if (PTR_ERR(proc_reg) == -EPROBE_DEFER ||
-> +                           PTR_ERR(sram_reg) == -EPROBE_DEFER)
-> +                               return -EPROBE_DEFER;
-> +
-> +                       if (!IS_ERR_OR_NULL(proc_reg) &&
-> +                           !IS_ERR_OR_NULL(sram_reg)) {
-> +                               dvfs_info->cpu_dev = cpu_dev;
-> +                               dvfs_info->proc_reg = proc_reg;
-> +                               dvfs_info->sram_reg = sram_reg;
-> +                               cpumask_copy(&dvfs_info->cpus,
-> +                                            &cpu_topology[cpu].core_sibling);
-> +                       }
-> +               }
-> +
-> +               if (get_cpu_domain(&pd->domain_list, cpu))
-> +                       continue;
-
-This isn't required if you do below..
-
-> +
-> +               new_domain = devm_kzalloc(&pdev->dev, sizeof(*new_domain),
-> +                                         GFP_KERNEL);
-> +               if (!new_domain)
-> +                       return -ENOMEM;
-> +
-> +               cpumask_copy(&new_domain->cpus,
-> +                            &cpu_topology[cpu].core_sibling);
-> +               new_domain->intermediate_freq = inter_freq;
-> +               list_add(&new_domain->node, &pd->domain_list);
-
-Just issue a 'break' from here as you don't want to let this loop run again.
-
-> +       }
-> +
-> +       if (IS_ERR_OR_NULL(dvfs_info->proc_reg) ||
-> +           IS_ERR_OR_NULL(dvfs_info->sram_reg)) {
-> +               dev_err(&pdev->dev, "Failed to get regulators\n");
-> +               return -ENODEV;
-> +       }
-
-If you really need these, then don't allocate new_domain unless you find a CPU
-with these regulators..
-
-> +       ret = cpu_opp_table_init(&pdev->dev);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Failed to setup cpu_opp_table: %d\n",
-> +                       ret);
-> +               return ret;
-> +       }
-> +
-> +       ret = cpufreq_register_notifier(&mtk_cpufreq_nb,
-> +                                       CPUFREQ_TRANSITION_NOTIFIER);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Failed to register cpufreq notifier\n");
-> +               return ret;
-> +       }
-
-Don't want to free OPP table here on error ?
-
-> +       dev = platform_device_register_data(NULL, "cpufreq-dt", -1, pd,
-> +                                           sizeof(*pd));
-
-So this routine is going to be called only once. Then how are you
-initializing stuff
-for both the clusters in the upper for loop ? It looked very very confusing.
-
-> +       if (IS_ERR(dev)) {
-> +               dev_err(&pdev->dev,
-> +                       "Failed to register cpufreq-dt platform device\n");
-> +               return PTR_ERR(dev);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id mtk_cpufreq_match[] = {
-> +       {
-> +               .compatible = "mediatek,mtk-cpufreq",
-
-Can't you use "mediatek,mt8173" here ?
-
-> +       },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(of, mtk_cpufreq_match);
-> +
-> +static struct platform_driver mtk_cpufreq_platdrv = {
-> +       .driver = {
-> +               .name   = "mtk-cpufreq",
-> +               .of_match_table = mtk_cpufreq_match,
-> +       },
-> +       .probe  = mtk_cpufreq_probe,
-> +};
-> +module_platform_driver(mtk_cpufreq_platdrv);
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
