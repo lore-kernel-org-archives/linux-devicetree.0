@@ -1,26 +1,59 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [Patch v6 2/2] gpio: Document GPIO hogging mechanism
-Date: Wed, 4 Mar 2015 11:11:51 +0100
-Message-ID: <CACRpkdbPa=G0keCXrxSXN1_BiqAbx7S7F_tsrCOB3+bmq+ZwVg@mail.gmail.com>
-References: <1422899085-678-1-git-send-email-bparrot@ti.com>
-	<1422899085-678-3-git-send-email-bparrot@ti.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Wed, 04 Mar 2015 19:11:17 +0900
+Message-ID: <54F6DA45.2080508@samsung.com>
+References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com>
+ <13467157.nyRCsNWIp6@wuerfel> <54F6AD6B.70007@samsung.com>
+ <2449954.zWisnqDpUA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422899085-678-3-git-send-email-bparrot@ti.com>
+In-reply-to: <2449954.zWisnqDpUA@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Chanwoo Choi <cwchoi00@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, "will.deacon@arm.com" <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 2, 2015 at 6:44 PM, Benoit Parrot <bparrot@ti.com> wrote:
+On 03/04/2015 06:38 PM, Arnd Bergmann wrote:
+> On Wednesday 04 March 2015 15:59:55 Chanwoo Choi wrote:
+>> On 03/02/2015 06:22 AM, Arnd Bergmann wrote:
+>>> On Saturday 28 February 2015 09:47:01 Chanwoo Choi wrote:
+>>>> "earlycon=exynos4210,0x14C20000" is correct bootparam. You can check
+>>>> it on Documentation/kernel-parameters.txt as following.
+>>>>
+>>>>      exynos4210,<addr>
+>>>>                 Use early console provided by serial driver available
+>>>>                 on Samsung SoCs, requires selecting proper type and
+>>>>                 a correct base address of the selected UART port. The
+>>>>                 serial port must already be setup and configured.
+>>>>                 Options are not yet supported.
+>>>>
+>>>>
+>>>
+>>> But it's crazy to do this when you have a DT. Please fix the existing
+>>> devicetree files that use this to just list 'earlycon'.
+>>>
+>>> The syntax above only makes sense for classic board files that we
+>>> do not support for exynos any more.
+>>
+>> Following earlycon patch for exynos soc was merged in Linux 4.0-rc1.
+>> - commit-id: b94ba0328d3b36ff95f5074c0e9b44f90dc56bb5 (serial: samsung: Add support for early console)
+>> Almost Exynos SoC use the same UART IP of Exynos4210.
+>>
+>> If you mean that "earlycon=exynos4210" naming will be changed to "earlycon=exynos",
+>> we have to modify the drivers/tty/serial/samsung.c.
+> 
+> No, what I mean is that you should use just "earlycon" instead of "earlycon=..."
+> when you have a DTB. You have the OF_EARLYCON_DECLARE() in the driver as
+> well, so that should just work.
+> 
+> EARLYCON_DECLARE() is really just a hack that allows users to override the
+> early console from the command line without modifying the stdout-path
+> property. Don't put that into a dts file.
 
-> Add GPIO hogging documentation to gpio.txt
->
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+OK, I understand. Thanks for your comment.
 
-Patch applied.
-
-Yours,
-Linus Walleij
+Regards,
+Chanwoo Choi
