@@ -1,96 +1,183 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency
- control
-Date: Wed, 4 Mar 2015 12:21:09 +0100
-Message-ID: <20150304112109.GB11010@pengutronix.de>
-References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v5 6/8] v4l: xilinx: Add Xilinx Video IP core
+Date: Wed, 04 Mar 2015 13:25:02 +0200
+Message-ID: <1490150.jLrV3BijOF@avalon>
+References: <1425260925-12064-1-git-send-email-laurent.pinchart@ideasonboard.com> <6955407.oAVS26tV3L@avalon> <54F6D0C0.3030309@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, fan.chen@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <54F6D0C0.3030309@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 04, 2015 at 06:49:11PM +0800, pi-cheng.chen wrote:
-> This patch adds CPU mux clocks which are used by Mediatek cpufreq driver
-> for intermediate clock source switching. This patch is based on Mediatek
-> clock driver patches[1].
+Hi Hans,
+
+On Wednesday 04 March 2015 10:30:40 Hans Verkuil wrote:
+> On 03/03/15 23:15, Laurent Pinchart wrote:
+> > On Tuesday 03 March 2015 12:28:24 Hans Verkuil wrote:
+> >> On 03/02/2015 02:48 AM, Laurent Pinchart wrote:
+> >>> Xilinx platforms have no hardwired video capture or video processing
+> >>> interface. Users create capture and memory to memory processing
+> >>> pipelines in the FPGA fabric to suit their particular needs, by
+> >>> instantiating video IP cores from a large library.
+> >>> 
+> >>> The Xilinx Video IP core is a framework that models a video pipeline
+> >>> described in the device tree and expose the pipeline to userspace
+> >>> through the media controller and V4L2 APIs.
+> >>> 
+> >>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> >>> Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
+> >>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> >>> 
+> >>> ---
+> >> 
+> >> <snip>
+> >> 
+> >>> diff --git a/drivers/media/platform/xilinx/xilinx-dma.c
+> >>> b/drivers/media/platform/xilinx/xilinx-dma.c new file mode 100644
+> >>> index 0000000..afed6c3
+> >>> --- /dev/null
+> >>> +++ b/drivers/media/platform/xilinx/xilinx-dma.c
+> >>> @@ -0,0 +1,753 @@
+
+[snip]
+
+> >>> +static int xvip_dma_start_streaming(struct vb2_queue *vq, unsigned int
+> >>> count)
+> >>> +{
+> >>> +	struct xvip_dma *dma = vb2_get_drv_priv(vq);
+> >>> +	struct xvip_dma_buffer *buf, *nbuf;
+> >>> +	struct xvip_pipeline *pipe;
+> >>> +	int ret;
+> >>> +
+> >>> +	dma->sequence = 0;
+> >>> +
+> >>> +	/*
+> >>> +	 * Start streaming on the pipeline. No link touching an entity in the
+> >>> +	 * pipeline can be activated or deactivated once streaming is
+> >>> started.
+> >>> +	 *
+> >>> +	 * Use the pipeline object embedded in the first DMA object that
+> >>> starts
+> >>> +	 * streaming.
+> >>> +	 */
+> >>> +	pipe = dma->video.entity.pipe
+> >>> +	     ? to_xvip_pipeline(&dma->video.entity) : &dma->pipe;
+> >>> +
+> >>> +	ret = media_entity_pipeline_start(&dma->video.entity, &pipe->pipe);
+> >>> +	if (ret < 0)
+> >>> +		goto error;
+> >>> +
+> >>> +	/* Verify that the configured format matches the output of the
+> >>> +	 * connected subdev.
+> >>> +	 */
+> >>> +	ret = xvip_dma_verify_format(dma);
+> >>> +	if (ret < 0)
+> >>> +		goto error_stop;
+> >>> +
+> >>> +	ret = xvip_pipeline_prepare(pipe, dma);
+> >>> +	if (ret < 0)
+> >>> +		goto error_stop;
+> >>> +
+> >>> +	/* Start the DMA engine. This must be done before starting the blocks
+> >>> +	 * in the pipeline to avoid DMA synchronization issues.
+> >>> +	 */
+> >>> +	dma_async_issue_pending(dma->dma);
+> >> 
+> >> Question: can the DMA engine be started without any buffers queued?
+> > 
+> > Yes. In that case the dma_async_issue_pending() call will be a no-op, as
+> > there will be no pending DMA transfer queued.
+> > 
+> >> The vb2_queue struct has a min_buffers_needed field that can be set to a
+> >> non-zero value. In that case start_streaming won't be called until at
+> >> least that many buffers have been queued. Many DMA engines need that so
+> >> this was added to the vb2 core to avoid having to hack around this in the
+> >> driver.
+> > 
+> > I don't see a need for that here. I actually think the min_buffers_needed
+> > field shouldn't be set, even if it could be set to 1, to avoid reporting
+> > VIDIOC_STREAMON errors at VIDIOC_QBUF time. The alternative would be to
+> > move the validation code to a custom .video_streamon handler, but that
+> > seems pointless to me.
 > 
-> [1] http://thread.gmane.org/gmane.linux.kernel/1892436
+> Would it make sense to add a validate_streamon op to vb2? For devices like
+> this that need to validate the pipeline it makes sense that the validation
+> happens on VIDIOC_STREAMON. The actual DMA engine start stays with the
+> start_streaming op.
+
+It might be useful, but maybe we should wait until we get a couple more 
+drivers with similar requirements before implementing it.
+
+For this particular driver I don't see what it would bring though, I don't 
+think there's any particular hack to work around the problem on the driver 
+side.
+
+> It would be easy to add to vb2.
 > 
-> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
-> ---
-> +static long clk_cpumux_determine_rate(struct clk_hw *hw, unsigned long rate,
-> +				      unsigned long min_rate,
-> +				      unsigned long max_rate,
-> +				      unsigned long *best_parent_rate,
-> +				      struct clk_hw **best_parent_p)
-> +{
-> +	struct clk *clk = hw->clk, *parent;
-> +	unsigned long parent_rate;
-> +	int i;
-> +
-> +	for (i = MAINPLL_INDEX; i >= ARMPLL_INDEX; i--) {
-> +		parent = clk_get_parent_by_index(clk, i);
-> +		if (!parent)
-> +			return 0;
-> +
-> +		if (i == MAINPLL_INDEX) {
-> +			parent_rate = __clk_get_rate(parent);
-> +			if (parent_rate == rate)
-> +				break;
-> +		}
-> +
-> +		parent_rate = __clk_round_rate(parent, rate);
-> +	}
-> +
-> +	*best_parent_rate = parent_rate;
-> +	*best_parent_p = __clk_get_hw(parent);
-> +	return parent_rate;
-> +}
+> >>> +
+> >>> +	/* Start the pipeline. */
+> >>> +	xvip_pipeline_set_stream(pipe, true);
+> >>> +
+> >>> +	return 0;
+> >>> +
+> >>> +error_stop:
+> >>> +	media_entity_pipeline_stop(&dma->video.entity);
+> >>> +
+> >>> +error:
+> >>> +	/* Give back all queued buffers to videobuf2. */
+> >>> +	spin_lock_irq(&dma->queued_lock);
+> >>> +	list_for_each_entry_safe(buf, nbuf, &dma->queued_bufs, queue) {
+> >>> +		vb2_buffer_done(&buf->buf, VB2_BUF_STATE_QUEUED);
+> >>> +		list_del(&buf->queue);
+> >>> +	}
+> >>> +	spin_unlock_irq(&dma->queued_lock);
+> >>> +
+> >>> +	return ret;
+> >>> +}
+> > 
+> > [snip]
+> > 
+> >>> +/*
+> >>> ----------------------------------------------------------------------
+> >>> + * V4L2 file operations
+> >>> + */
+> >>> +
+> >>> +static const struct v4l2_file_operations xvip_dma_fops = {
+> >>> +	.owner		= THIS_MODULE,
+> >>> +	.unlocked_ioctl	= video_ioctl2,
+> >>> +	.open		= v4l2_fh_open,
+> >>> +	.release	= vb2_fop_release,
+> >>> +	.poll		= vb2_fop_poll,
+> >>> +	.mmap		= vb2_fop_mmap,
+> >> 
+> >> I would also add:
+> >> 	.read = vb2_fop_read,
+> >> 	.write = vb2_fop_write,
+> >> 
+> >> and add VB2_READ or VB2_WRITE to dma->queue.io_modes.
+> >> 
+> >> You get it for free, it doesn't take any additional resources, so why
+> >> not?
+> > 
+> > My usual comment : because I'd rather not have users using the read() API
+> > with this driver :-) The usual argument of "but then it would be easy to
+> > just cat /dev/video? to check whether the device works" doesn't apply
+> > here as the pipeline needs to be configured from userspace through V4L2
+> > subdev pad ops anyway, so users can as well use a proper V4L2 command
+> > line test tool.
+>
+> Good point. But perhaps it is a good idea to add a comment why
+> VB2_READ/WRITE isn't supported, if only to prevent me from asking this
+> again in the future :-)
 
-Why this determine_rate hook? If you want to switch the clock to some
-intermediate parent I would assume you do this explicitly by setting the
-parent and not implicitly by setting a rate.
-
-> +int mtk_clk_register_cpumuxes(struct device_node *node,
-> +			      struct mtk_composite *clks, int num,
-> +			      struct clk_onecell_data *clk_data)
-> +{
-> +	int i;
-> +	struct clk *clk;
-> +	struct regmap *regmap;
-> +
-> +	if (!clk_data)
-> +		return -ENOMEM;
-> +
-> +	regmap = syscon_node_to_regmap(node);
-> +	if (IS_ERR(regmap)) {
-> +		pr_err("Cannot find regmap for %s: %ld\n", node->full_name,
-> +		       PTR_ERR(regmap));
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	for (i = 0; i < num; i++) {
-> +		struct mtk_composite *mux = &clks[i];
-> +
-> +		clk = mtk_clk_register_cpumux(mux->name, mux->parent_names,
-> +					      mux->num_parents, regmap,
-> +					      mux->mux_reg, mux->mux_shift,
-> +					      mux->mux_width);
-
-Pass 'mux' directly instead of dispatching this struct into the
-individual fields.
-Also, probably better to move this function to
-drivers/clk/mediatek/clk-cpumux.c
-
-Sascha
+Will do.
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards,
+
+Laurent Pinchart
