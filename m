@@ -1,59 +1,44 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v3 00/20] ARM: mvebu: Armada 39x basic support, and
- preparatory cleanups
-Date: Wed, 4 Mar 2015 16:20:08 +0100
-Message-ID: <20150304162008.1d337e6e@free-electrons.com>
-References: <1425393675-17820-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<54F71F45.3060503@free-electrons.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH/RFC 0/4] Probe deferral for IOMMU DT integration
+Date: Wed, 4 Mar 2015 15:25:05 +0000
+Message-ID: <20150304152505.GE17250@arm.com>
+References: <1423182722-16646-1-git-send-email-lauraa@codeaurora.org>
+	<1519819.qZaXvuQI61@avalon> <1946782.v9knT4VCx7@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <54F71F45.3060503@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1946782.v9knT4VCx7@avalon>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Gregory,
+On Tue, Mar 03, 2015 at 11:54:46PM +0000, Laurent Pinchart wrote:
+> Hello,
 
-On Wed, 04 Mar 2015 16:05:41 +0100, Gregory CLEMENT wrote:
+Hi Laurent,
 
-> Patches 1 applied to mvebu/cleanup
-> Patches 2 to 8 and patch 17 applied to mvebu/dt
-> Patches 9,12,16 and 18 applied to mvebu/soc
-> Patch 19 applied to mvebu/defconfig
-> 
-> and
-> 
-> Patches 10,13 and 14 applied to mvebu/clk as requested by Mike.
-> 
-> I had to amend the patch "ARM: mvebu: fix unit address of MPIC nodes"
-> by removing the armada-38x related part which was already applied by the
-> patch "ARM: mvebu: Fix MPIC unit address".
-> 
-> Patch 20 should be directly taken by the arm-soc maintainer.
+> I haven't seen any reply to this e-mail. I know that the combination of IOMMU, 
+> DMA mapping and DT doesn't exactly sound like fun, but I think we still need 
+> to move on :-)
 
-Thanks!
+Yup, and thanks for taking the time to write this up!
 
-So this leaves only:
+> Will and Arnd, could you please confirm that my summary below matches your 
+> memories of our discussion ?
 
-  [PATCH v3 11/20] devicetree: bindings: add Device Tree bindings for Armada 39x pin-muxing controller
-  [PATCH v3 15/20] pinctrl: mvebu: add pinctrl driver for Marvell Armada 39x
+It certainly matches my recollection, but I suspect the devil is in the
+details and we'll have to have some discussions once somebody has a crack at
+implementing this.
 
-to be applied, right? Patch 15/20 has been applied by Linus Walleij
-already, but from the v1 of the series. I also asked him to merge PATCH
-v3 11/20.
-
-With this done, and PATCH v2 20/20 merged by the arm-soc maintainers, I
-guess we should be all set with this patch series.
-
-Thanks again!
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Will
