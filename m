@@ -1,51 +1,60 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH] powerpc/mpc85xx: Add MDIO bus muxing support to the
- board device tree(s)
-Date: Wed, 04 Mar 2015 16:54:43 +1100
-Message-ID: <1425448483.9084.14.camel@ellerman.id.au>
-References: <1425310332-21744-1-git-send-email-Emilian.Medve@Freescale.com>
-	 <54F484DE.30204@Freescale.com>
+From: Chen Gang <xili_gchen_5257@hotmail.com>
+Subject: [PATCH] of: Kconfig: Let OF_UNITTEST depend on "I2C=y" and "I2C_MUX=y"
+Date: Wed, 4 Mar 2015 14:37:51 +0800
+Message-ID: <BLU437-SMTP82811F6F904D6C74EE62E3B91E0@phx.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F484DE.30204-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shruti Kanetkar <Kanetkar.Shruti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Igal Liberman <Igal.Liberman-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, afleming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@linaro.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-03-02 at 09:42 -0600, Emil Medve wrote:
-> On 03/02/2015 09:32 AM, Emil Medve wrote:
-> > From: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > 
-> > Describe the PHY topology for all configurations supported by each board
-> > 
-> > Based on prior work by Andy Fleming <afleming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > Change-Id: I4fbcc5df9ee7c4f784afae9dab5d1e78cdc24f0f
-> 
-> Bah, I'll remove this...
+They need several symbols which are in I2C and I2C_MUX, the related
+error:
 
-Something like:
+  drivers/built-in.o: In function `selftest_i2c_mux_remove':
+  unittest.c:(.text+0xb0ce4): undefined reference to `i2c_del_mux_adapter'
+  unittest.c:(.text+0xb0ce8): undefined reference to `i2c_del_mux_adapter'
+  drivers/built-in.o: In function `selftest_i2c_mux_probe':
+  unittest.c:(.text+0xb0f20): undefined reference to `i2c_add_mux_adapter'
+  unittest.c:(.text+0xb0f24): undefined reference to `i2c_add_mux_adapter'
+  unittest.c:(.text+0xb0f94): undefined reference to `i2c_del_mux_adapter'
+  unittest.c:(.text+0xb0f9c): undefined reference to `i2c_del_mux_adapter'
+  drivers/built-in.o: In function `selftest_i2c_bus_remove':
+  unittest.c:(.text+0xb10cc): undefined reference to `i2c_del_adapter'
+  unittest.c:(.text+0xb10d4): undefined reference to `i2c_del_adapter'
+  drivers/built-in.o: In function `selftest_i2c_bus_probe':
+  unittest.c:(.text+0xb1298): undefined reference to `i2c_add_numbered_adapter'
+  unittest.c:(.text+0xb12a0): undefined reference to `i2c_add_numbered_adapter'
+  drivers/built-in.o: In function `of_selftest_overlay':
+  unittest.c:(.init.text+0xc9d0): undefined reference to `i2c_register_driver'
+  unittest.c:(.init.text+0xc9dc): undefined reference to `i2c_register_driver'
+  unittest.c:(.init.text+0xcdb4): undefined reference to `i2c_del_driver'
+  unittest.c:(.init.text+0xcdb8): undefined reference to `i2c_del_driver'
+  drivers/built-in.o: In function `of_selftest_device_exists':
+  unittest.c:(.text.unlikely+0xd70): undefined reference to `of_find_i2c_device_by_node'
+  unittest.c:(.text.unlikely+0xd7c): undefined reference to `of_find_i2c_device_by_node'
+  make: *** [vmlinux] Error 1
 
-$ cat .git/hooks/commit-msg
-#!/bin/sh
+Signed-off-by: Chen Gang <gang.chen.5i5j@gmail.com>
+---
+ drivers/of/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-grep "Change-Id:" $1 > /dev/null
-
-if [ $? -eq 0 ]; then
-	echo "***: Error commit message includes Change-Id" >&2
-	exit 1
-fi
-	
-
-Ought to do it.
-
-cheers
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 7bcaeec..b60fc66 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -9,7 +9,7 @@ menu "Device Tree and Open Firmware support"
+ 
+ config OF_UNITTEST
+ 	bool "Device Tree runtime unit tests"
+-	depends on OF_IRQ && OF_EARLY_FLATTREE
++	depends on OF_IRQ && OF_EARLY_FLATTREE && I2C=y && I2C_MUX=y
+ 	select OF_RESOLVE
+ 	help
+ 	  This option builds in test cases for the device tree infrastructure
+-- 
+1.9.3
