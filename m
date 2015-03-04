@@ -1,50 +1,60 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 07/10] pinctrl: mvebu: add pinctrl driver for Marvell
- Armada 39x
-Date: Wed, 4 Mar 2015 14:05:25 +0100
-Message-ID: <20150304140525.711d1515@free-electrons.com>
-References: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1423238276-9206-8-git-send-email-thomas.petazzoni@free-electrons.com>
-	<CACRpkdZH9vUPR65Yw65LKHns8_b3vM+1ARoks2j73WV2WmAExQ@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] ARM: at91: dt: at91sam9n12ek: enable udp device
+Date: Wed, 4 Mar 2015 14:07:15 +0100
+Message-ID: <54F70383.1030707@atmel.com>
+References: <1423533335-25135-1-git-send-email-voice.shen@atmel.com> <54F42E12.4010808@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZH9vUPR65Yw65LKHns8_b3vM+1ARoks2j73WV2WmAExQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54F42E12.4010808-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Linus Walleij,
+Le 02/03/2015 10:32, Bo Shen a =E9crit :
+> Hi Nicolas,
+>=20
+> On 02/10/2015 09:55 AM, Bo Shen wrote:
+>> This patch series enable usb device support on at91sam9n12ek board.
+>>
+>> Changes in v2:
+>>    - Base on next-20150209 (so, remove the modification of udc drive=
+r).
+>>    - Add pinctrl for usb1 vbus sense.
+>>
+>> Bo Shen (2):
+>>    ARM: at91: dt: at91sam9n12: add udp device node
+>>    ARM: at91: dt: at91sam9n12ek: enable udp
+>=20
+> Any comments for this patch series? (aka ping?)
 
-On Wed, 4 Mar 2015 13:54:42 +0100, Linus Walleij wrote:
-> On Fri, Feb 6, 2015 at 4:57 PM, Thomas Petazzoni
-> <thomas.petazzoni@free-electrons.com> wrote:
-> 
-> > This commit adds a new pinctrl driver for the Marvell Armada 39x
-> > family of processors, which hooks into the existing infrastructure to
-> > support pin-muxing on Marvell EBU processors. Two variants of the
-> > Armada 39x are supported: 88F6920 (Armada 390) and 88F6928 (Armada
-> > 398), which have a few differences in the available functions for
-> > certain pins.
-> >
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> 
-> Patch applied.
+Hi,
 
-I'm surprised you applied the driver of the first iteration of the
-patches, and not the v3 I sent just yesterday. Even though if I
-remember correctly there were no changes on the pinctrl driver itself.
+=46or the 2 patches:
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Also, can you apply:
+And I've just taken these 2 patches on top of the at91-4.1-dt branch.
 
-  devicetree: bindings: add Device Tree bindings for Armada 39x pin-muxing controller
+Thanks for the "heads up" !
 
-Thanks!
+Bye,
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+>>   arch/arm/boot/dts/at91sam9n12.dtsi  |  9 +++++++++
+>>   arch/arm/boot/dts/at91sam9n12ek.dts | 14 ++++++++++++++
+>>   2 files changed, 23 insertions(+)
+>>
+>=20
+> Best Regards,
+> Bo Shen
+>=20
+
+
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
