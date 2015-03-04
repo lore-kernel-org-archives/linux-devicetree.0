@@ -1,76 +1,93 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH] ARM: dts: imx: Add dr_mode host setting to all host-only
- usb instances
-Date: Wed, 4 Mar 2015 08:51:53 +0800
-Message-ID: <20150304005152.GA23399@shlinux2>
-References: <1425045960-14191-1-git-send-email-mporter@konsulko.com>
- <20150303034133.GJ20455@dragon> <20150303044334.GA16617@shlinux2>
- <20150303150809.GD30263@beef>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH 1/3] arm64: mediatek: Add config option for mt8173.
+Date: Wed, 4 Mar 2015 10:31:07 +0800
+Message-ID: <1425436267.21342.39.camel@mtksdaap41>
+References: <1422342836-27689-1-git-send-email-hongzhou.yang@mediatek.com>
+	 <1422342836-27689-2-git-send-email-hongzhou.yang@mediatek.com>
+	 <1424855242.7845.9.camel@mtksdaap41> <5948977.qlhSVy9R5i@wuerfel>
+	 <20150225111107.GA29206@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150303150809.GD30263@beef>
+In-Reply-To: <20150225111107.GA29206@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, eddie.huang@mediatek.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, maoguang.meng@mediatek.com, alan.cheng@mediatek.com, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2015 at 10:08:09AM -0500, Matt Porter wrote:
-> On Tue, Mar 03, 2015 at 12:43:36PM +0800, Peter Chen wrote:
-> > On Tue, Mar 03, 2015 at 11:41:35AM +0800, Shawn Guo wrote:
+On Wed, 2015-02-25 at 11:11 +0000, Catalin Marinas wrote:
+> On Wed, Feb 25, 2015 at 11:51:57AM +0100, Arnd Bergmann wrote:
+> > On Wednesday 25 February 2015 17:07:22 Yingjoe Chen wrote:
+> > > On Tue, 2015-01-27 at 15:13 +0800, Hongzhou Yang wrote:
+> > > > From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> > > > 
+> > > > The upcoming MTK pinctrl driver have a big pin table for each SoC,
+> > > > and we don't want to bloat the kernel binary if we don't need it.
+> > > > Add config options so we can build for one SoC only.
+> > > > 
+> > > > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> > > > ---
+> > > >  arch/arm64/Kconfig | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > > > index e627ead..6213dac 100644
+> > > > --- a/arch/arm64/Kconfig
+> > > > +++ b/arch/arm64/Kconfig
+> > > > @@ -151,9 +151,15 @@ menu "Platform selection"
+> > > >  config ARCH_MEDIATEK
+> > > >       bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
+> > > >       select ARM_GIC
+> > > > +     select PINCTRL
+> > > >       help
+> > > >         Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
+> > > >  
+> > > > +config MACH_MT8173
+> > > > +     bool "Mediatek 8173 Soc Supprt"
+> > > > +     depends on ARCH_MEDIATEK
+> > > > +     default y
+> > > > +
+> > > >  config ARCH_SEATTLE
+> > > >       bool "AMD Seattle SoC Family"
+> > > >       help
 > > > 
-> > > On Fri, Feb 27, 2015 at 09:06:00AM -0500, Matt Porter wrote:
-> > > > The chipidea driver adds an extra line of spam to the log when a
-> > > > host-only chipidea instance is left set to the default of a dual role
-> > > > controller.
-> > > > 
-> > > > [    2.010873] ci_hdrc ci_hdrc.1: doesn't support gadget
-> > > > 
-> > > > Set the dr_mode property to host on all the host-only nodes
-> > > > to avoid this warning.
+> > > Hi Arnd/Matthias,
+> > > 
+> > > Any comments on this patch?
 > > 
-> > It is not an warning, it is dev_info.
+> > Hi Joe,
+> > 
+> > Actually I just commented on a similar patch from Samsung the other
+> > day, and I think we should make a more general decision about these:
+> > 
+> > I would rather see only one Kconfig option per SoC family and use
+> > ARCH_MEDIATEK without any MACH_* options. We can have other options
+> > for e.g. networking chips from Mediatek that are not closely related
+> > but I would group all the phone and tablet chips under one option
+> > here. Same for the other vendors of course.
 > 
-> True enough, it's info level but is essentially warning that, in the
-> case of instances that are restricted to host only (at the SoC level),
-> that the DT hardware description is incorrect. Yes, it's benign, but
-> if the dtsi is corrected for those parts we don't have to see that
-> message.
-
-You are right.
-
-> 
-> > In fact, imx28, imx6sl and imx6sx's second controller is dual-role
-> > controller, we only set dr_mode at board's dts according to design
-> > unless the controller's capability register is incorrect.
-> 
-> The patch doesn't set dr_mode to host on the second controller for
-> the imx6sl or imx6sx, only on the third host-only controller. If
-> imx28's second controller is really dual-role capable then the
-> reference manual is incorrect and I can drop that hunk in v2.
-> I only have imx6q and imx6d parts in hand to verify so for the rest
-> I went by the RM claim of which controllers were host-only.
-
-Maybe IC guys don't want to export that imx28's that capabilities,
-so don't need to change.
-
-> 
-> > So, sorry, I don't think this change is necessary.
-> 
-> I can correct the set of instances that should have dr_mode set to host
-> in v2 of this. We clearly have some that should have this set in their
-> SoC .dtsi to have the hardware description correct.  Will that work for
-> you or do you want the SoC-specific cases of this property to be only
-> reflected in the board level dts?
+> I agree.
 > 
 
-After thinking more, it is a benefit fix, and doesn't need to do any
-changes, thanks.
+Hi,
 
-Acked-by: Peter Chen <peter.chen@freescale.com>
+Since we support devicetree, we don't need MACH_* to build a working
+kernel. This is true even for our v7 soc. We intend to use it to reduce
+numbers of drivers in product kernel binary.
+Most drivers are shared among the same SoCs family, but some are not.
+Currently for pinctrl driver, we are doing this so user don't need to
+select them one by one:
 
--- 
+config PINCTRL_MT8173
+        def_bool MACH_MT8173
+        select PINCTRL_MTK_COMMON
 
-Best Regards,
-Peter Chen
+Alternatively, we could add these MACH_* to some other places, eg,
+drivers/soc/mediatek. Or we don't add MACH_* at all, and have all
+drivers export their own Kconfig option. User will need to select each
+of them one-by-one.
+
+What do you think?
+
+Joe.C
