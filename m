@@ -1,51 +1,83 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 04/18] clocksource: Add ARM System timer driver
-Date: Wed, 4 Mar 2015 13:08:02 +0100
-Message-ID: <CALszF6AEThPrRe7c7nJ6q7yb2fhLMFuHJUV10sf=w0TMcqVVaw@mail.gmail.com>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1424455277-29983-5-git-send-email-mcoquelin.stm32@gmail.com>
-	<20150220195437.GT19388@pengutronix.de>
-	<1424468908.24292.10.camel@x220>
-	<CALszF6Bm_Y4ZLednjpmP-hMix3gA23FwLm5hViEjr1QojUY+Mg@mail.gmail.com>
-	<1425411786.2606.24.camel@tiscali.nl>
+From: "Suzuki K. Poulose" <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/5] arm-cci: Rearrange code for splitting PMU vs driver
+ code
+Date: Wed, 04 Mar 2015 12:16:49 +0000
+Message-ID: <54F6F7B1.1020300@arm.com>
+References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com> <1425295754-13376-2-git-send-email-suzuki.poulose@arm.com> <54F5D4B6.40409@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1425411786.2606.24.camel@tiscali.nl>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54F5D4B6.40409-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Punit Agrawal <Punit.Agrawal-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-03-03 20:43 GMT+01:00 Paul Bolle <pebolle@tiscali.nl>:
-> Maxime Coquelin schreef op ma 02-03-2015 om 17:53 [+0100]:
->> Do you agree if I define it like this:
+On 03/03/15 15:35, Sudeep Holla wrote:
+>
+>
+> On 02/03/15 11:29, Suzuki K. Poulose wrote:
+>> From: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 >>
->> config ARMV7M_SYSTICK
->>     bool "Clocksource driver for ARMv7-M System timer"
->>     depends on OF && (CPU_V7M || COMPILE_TEST)
->>     select CLKSRC_OF
->>     select CLKSRC_MMIO
->>     help
->>       This options enables clocksource support for the ARMv7-M system
->>       timer unit.
+>> No functional changes, only code re-arrangements for easier split of the
+>> PMU code vs low level driver code. Extracts the port handling code
+>> to cci_probe_ports().
+>>
+>> Signed-off-by: Suzuki K. Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>    drivers/bus/arm-cci.c |  330 +++++++++++++++++++++++++------------------------
+>>    1 file changed, 168 insertions(+), 162 deletions(-)
+>>
+>> diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
+>> index 84fd660..f27cf56 100644
+>> --- a/drivers/bus/arm-cci.c
+>> +++ b/drivers/bus/arm-cci.c
 >
-> I don't really have strong feelings on whatever way you choose to fix
-> the, well, minor problem I pointed out.
+> [...]
 >
-> Having said that, if a Kconfig entry without a prompt (and therefor,
-> without help) actually does what you want it to do, why bother adding a
-> prompt and a one line help text?
+>> @@ -1395,11 +1412,36 @@ static int cci_probe(void)
+>>    	sync_cache_w(&cpu_port);
+>>    	__sync_cache_range_w(ports, sizeof(*ports) * nb_cci_ports);
+>>    	pr_info("ARM CCI driver probed\n");
+>> +
+>>    	return 0;
+>> +}
+>> +
+>> +static int cci_probe(void)
+>> +{
+>> +	int ret;
+>> +	struct device_node *np;
+>> +	struct resource res;
+>> +
+>> +	np = of_find_matching_node(NULL, arm_cci_matches);
+>> +	if (!np)
+>> +		return -ENODEV;
+>>
+>> -memalloc_err:
+>> +	if (!of_device_is_available(np))
+>> +		return -ENODEV;
+>> +
+>> +	ret = of_address_to_resource(np, 0, &res);
+>> +	if (!ret) {
+>> +		cci_ctrl_base = ioremap(res.start, resource_size(&res));
+>> +		cci_ctrl_phys =	res.start;
+>> +	}
+>> +	if (ret || !cci_ctrl_base) {
+>> +		WARN(1, "unable to ioremap CCI ctrl\n");
+>> +		ret = -ENXIO;
+>> +		goto out;
+>
+> IMO you can return directly here and get rid of this goto as nothing is
+> done there.
+>
+Yes, you are right. I will fix that in the next revision.
 
-This is because I added also support for COMPILE_TEST coverage as per
-Uwe advice,
-and thought it was necessary to have an entry for this.
-Maybe I'm just wrong?
+Regards
+Suzuki
 
-Thanks,
-Maxime
 
->
->
-> Paul Bolle
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
