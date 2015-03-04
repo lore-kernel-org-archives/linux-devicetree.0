@@ -1,75 +1,264 @@
-From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
-Date: Tue, 3 Mar 2015 16:37:13 -0800
-Message-ID: <54F653B9.4010507@broadcom.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>	 <1425312688.3092.10.camel@arm.com> <54F4B583.4000005@broadcom.com>	 <1425376977.3092.26.camel@arm.com> <1425378127.3092.38.camel@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425378127.3092.38.camel-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Kenneth Westfield <kwestfie@codeaurora.org>
+Subject: [RESEND][Patch V7 04/10] ASoC: qcom: add LPASS header files
+Date: Tue,  3 Mar 2015 16:41:08 -0800
+Message-ID: <1425429668-13860-1-git-send-email-kwestfie@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>
+Cc: Kenneth Westfield <kwestfie@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Kenneth Westfield <kwestfie@codeaurora.org>
 
+Add the LPASS header files for ipq806x SOC.  This
+includes the register definitions for the ipq806x
+LPAIF, and the structure definition for the driver
+data.
 
-On 15-03-03 02:22 AM, Pawel Moll wrote:
-> On Tue, 2015-03-03 at 10:02 +0000, Pawel Moll wrote:
->> On Mon, 2015-03-02 at 19:09 +0000, Arun Ramamurthy wrote:
->>>> The existing bindings intentionally avoided quoting internal registers -
->>>> they are supposed to describe how the hardware is wired up...
->>>>
->>>> So how about something like "arm,pl11x,tft-invert-clac"? Then the driver
->>>> sets the bit or not, depending on the property existance?
->>>>
->>> Sure, I can change it to two properties called arm,pl11x,tft-invert-clac
->>> and arm,pl11x,tft-clksel. Would that be acceptable?
->>
->> That would be fine by me :-)
->
-> Or (after having a look at the TRM) I should rather say: the invert-clac
-> is fine by me :-) but the tft-clksel doesn't work, I afraid.
->
-> If I'm not mistaken, there are two problems with it.
->
-> Number one: it's not TFT-specific, is it? So it certainly should not
-> have the "tft-" bit.
->
-> Number two: setting this bit says "do not use CLCDCLK for the logic; use
-> HCLK instead", correct? If so, have a look at the clock properties. They
-> say:
->
-> - clock-names: should contain "clcdclk" and "apb_pclk"
->
-> - clocks: contains phandle and clock specifier pairs for the entries
->          in the clock-names property. See
->
-> So if your hardware has the reference clock wired to HCLK, and you
-> defining the clocks as "clcdclk", you are (no offence meant ;-)
-> lying :-)
->
-No offense taken :)
-> So how about solving the problem by extending the clock-names definition
-> like this (feel free to use own wording):
->
-> - clock-names: should contain two clocks, either "clcdclk" or "hclk"
->                 (depending on which input is to be used as a reference
->                 clock by the controller logic) and "apb_pclk"
->
-> That way you're precisely describing the way the hardware is wired up.
-> And the driver simply tries to get clcdclk first, if it's defined -
-> cool, set clksel to 1, if not - try hclk and set clksel to 0. If neither
-> of them is present - bail out.
->
-> Does this make any sense?
->
-This makes sense to me, thank you for the suggestions. I will fix it all 
-up in V2
-> Pawel
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
+Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
+---
+ sound/soc/qcom/lpass-lpaif-ipq806x.h | 172 +++++++++++++++++++++++++++++++++++
+ sound/soc/qcom/lpass.h               |  51 +++++++++++
+ 2 files changed, 223 insertions(+)
+ create mode 100644 sound/soc/qcom/lpass-lpaif-ipq806x.h
+ create mode 100644 sound/soc/qcom/lpass.h
+
+diff --git a/sound/soc/qcom/lpass-lpaif-ipq806x.h b/sound/soc/qcom/lpass-lpaif-ipq806x.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..dc423b8888425e60ebb11cd0ce78da2574ed27c2
+--- /dev/null
++++ b/sound/soc/qcom/lpass-lpaif-ipq806x.h
+@@ -0,0 +1,172 @@
++/*
++ * Copyright (c) 2010-2011,2013-2015 The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * lpass-lpaif-ipq806x.h -- Definitions for the QTi LPAIF in the ipq806x LPASS
++ */
++
++#ifndef __LPASS_LPAIF_H__
++#define __LPASS_LPAIF_H__
++
++#define LPAIF_BANK_OFFSET		0x1000
++
++/* LPAIF I2S */
++
++#define LPAIF_I2SCTL_REG_BASE		0x0010
++#define LPAIF_I2SCTL_REG_STRIDE		0x4
++#define LPAIF_I2SCTL_REG_ADDR(addr, port) \
++	(LPAIF_I2SCTL_REG_BASE + (addr) + (LPAIF_I2SCTL_REG_STRIDE * (port)))
++
++enum lpaif_i2s_ports {
++	LPAIF_I2S_PORT_MIN		= 0,
++
++	LPAIF_I2S_PORT_CODEC_SPK	= 0,
++	LPAIF_I2S_PORT_CODEC_MIC	= 1,
++	LPAIF_I2S_PORT_SEC_SPK		= 2,
++	LPAIF_I2S_PORT_SEC_MIC		= 3,
++	LPAIF_I2S_PORT_MI2S		= 4,
++
++	LPAIF_I2S_PORT_MAX		= 4,
++	LPAIF_I2S_PORT_NUM		= 5,
++};
++
++#define LPAIF_I2SCTL_REG(port)		LPAIF_I2SCTL_REG_ADDR(0x0, (port))
++
++#define LPAIF_I2SCTL_LOOPBACK_MASK	0x8000
++#define LPAIF_I2SCTL_LOOPBACK_SHIFT	15
++#define LPAIF_I2SCTL_LOOPBACK_DISABLE	(0 << LPAIF_I2SCTL_LOOPBACK_SHIFT)
++#define LPAIF_I2SCTL_LOOPBACK_ENABLE	(1 << LPAIF_I2SCTL_LOOPBACK_SHIFT)
++
++#define LPAIF_I2SCTL_SPKEN_MASK		0x4000
++#define LPAIF_I2SCTL_SPKEN_SHIFT	14
++#define LPAIF_I2SCTL_SPKEN_DISABLE	(0 << LPAIF_I2SCTL_SPKEN_SHIFT)
++#define LPAIF_I2SCTL_SPKEN_ENABLE	(1 << LPAIF_I2SCTL_SPKEN_SHIFT)
++
++#define LPAIF_I2SCTL_SPKMODE_MASK	0x3C00
++#define LPAIF_I2SCTL_SPKMODE_SHIFT	10
++#define LPAIF_I2SCTL_SPKMODE_NONE	(0 << LPAIF_I2SCTL_SPKMODE_SHIFT)
++#define LPAIF_I2SCTL_SPKMODE_SD0	(1 << LPAIF_I2SCTL_SPKMODE_SHIFT)
++#define LPAIF_I2SCTL_SPKMODE_SD1	(2 << LPAIF_I2SCTL_SPKMODE_SHIFT)
++#define LPAIF_I2SCTL_SPKMODE_SD2	(3 << LPAIF_I2SCTL_SPKMODE_SHIFT)
++#define LPAIF_I2SCTL_SPKMODE_SD3	(4 << LPAIF_I2SCTL_SPKMODE_SHIFT)
++#define LPAIF_I2SCTL_SPKMODE_QUAD01	(5 << LPAIF_I2SCTL_SPKMODE_SHIFT)
++#define LPAIF_I2SCTL_SPKMODE_QUAD23	(6 << LPAIF_I2SCTL_SPKMODE_SHIFT)
++#define LPAIF_I2SCTL_SPKMODE_6CH	(7 << LPAIF_I2SCTL_SPKMODE_SHIFT)
++#define LPAIF_I2SCTL_SPKMODE_8CH	(8 << LPAIF_I2SCTL_SPKMODE_SHIFT)
++
++#define LPAIF_I2SCTL_SPKMONO_MASK	0x0200
++#define LPAIF_I2SCTL_SPKMONO_SHIFT	9
++#define LPAIF_I2SCTL_SPKMONO_STEREO	(0 << LPAIF_I2SCTL_SPKMONO_SHIFT)
++#define LPAIF_I2SCTL_SPKMONO_MONO	(1 << LPAIF_I2SCTL_SPKMONO_SHIFT)
++
++#define LPAIF_I2SCTL_WSSRC_MASK		0x0004
++#define LPAIF_I2SCTL_WSSRC_SHIFT	2
++#define LPAIF_I2SCTL_WSSRC_INTERNAL	(0 << LPAIF_I2SCTL_WSSRC_SHIFT)
++#define LPAIF_I2SCTL_WSSRC_EXTERNAL	(1 << LPAIF_I2SCTL_WSSRC_SHIFT)
++
++#define LPAIF_I2SCTL_BITWIDTH_MASK	0x0003
++#define LPAIF_I2SCTL_BITWIDTH_SHIFT	0
++#define LPAIF_I2SCTL_BITWIDTH_16	(0 << LPAIF_I2SCTL_BITWIDTH_SHIFT)
++#define LPAIF_I2SCTL_BITWIDTH_24	(1 << LPAIF_I2SCTL_BITWIDTH_SHIFT)
++#define LPAIF_I2SCTL_BITWIDTH_32	(2 << LPAIF_I2SCTL_BITWIDTH_SHIFT)
++
++/* LPAIF IRQ */
++
++#define LPAIF_IRQ_REG_BASE		0x3000
++#define LPAIF_IRQ_REG_STRIDE		0x1000
++#define LPAIF_IRQ_REG_ADDR(addr, port) \
++	(LPAIF_IRQ_REG_BASE + (addr) + (LPAIF_IRQ_REG_STRIDE * (port)))
++
++enum lpaif_irq_ports {
++	LPAIF_IRQ_PORT_MIN		= 0,
++
++	LPAIF_IRQ_PORT_HOST		= 0,
++	LPAIF_IRQ_PORT_ADSP		= 1,
++
++	LPAIF_IRQ_PORT_MAX		= 2,
++	LPAIF_IRQ_PORT_NUM		= 3,
++};
++
++#define LPAIF_IRQEN_REG(port)		LPAIF_IRQ_REG_ADDR(0x0, (port))
++#define LPAIF_IRQSTAT_REG(port)		LPAIF_IRQ_REG_ADDR(0x4, (port))
++#define LPAIF_IRQCLEAR_REG(port)	LPAIF_IRQ_REG_ADDR(0xC, (port))
++
++#define LPAIF_IRQ_BITSTRIDE		3
++#define LPAIF_IRQ_PER(chan)		(1 << (LPAIF_IRQ_BITSTRIDE * (chan)))
++#define LPAIF_IRQ_XRUN(chan)		(2 << (LPAIF_IRQ_BITSTRIDE * (chan)))
++#define LPAIF_IRQ_ERR(chan)		(4 << (LPAIF_IRQ_BITSTRIDE * (chan)))
++#define LPAIF_IRQ_ALL(chan)		(7 << (LPAIF_IRQ_BITSTRIDE * (chan)))
++
++/* LPAIF DMA */
++
++#define LPAIF_RDMA_REG_BASE		0x6000
++#define LPAIF_RDMA_REG_STRIDE		0x1000
++#define LPAIF_RDMA_REG_ADDR(addr, chan) \
++	(LPAIF_RDMA_REG_BASE + (addr) + (LPAIF_RDMA_REG_STRIDE * (chan)))
++
++enum lpaif_dma_channels {
++	LPAIF_RDMA_CHAN_MIN		= 0,
++
++	LPAIF_RDMA_CHAN_MI2S		= 0,
++	LPAIF_RDMA_CHAN_PCM0		= 1,
++	LPAIF_RDMA_CHAN_PCM1		= 2,
++
++	LPAIF_RDMA_CHAN_MAX		= 4,
++	LPAIF_RDMA_CHAN_NUM		= 5,
++};
++
++#define LPAIF_RDMACTL_REG(chan)		LPAIF_RDMA_REG_ADDR(0x00, (chan))
++#define LPAIF_RDMABASE_REG(chan)	LPAIF_RDMA_REG_ADDR(0x04, (chan))
++#define	LPAIF_RDMABUFF_REG(chan)	LPAIF_RDMA_REG_ADDR(0x08, (chan))
++#define LPAIF_RDMACURR_REG(chan)	LPAIF_RDMA_REG_ADDR(0x0C, (chan))
++#define	LPAIF_RDMAPER_REG(chan)		LPAIF_RDMA_REG_ADDR(0x10, (chan))
++
++#define LPAIF_RDMACTL_BURSTEN_MASK	0x800
++#define LPAIF_RDMACTL_BURSTEN_SHIFT	11
++#define LPAIF_RDMACTL_BURSTEN_SINGLE	(0 << LPAIF_RDMACTL_BURSTEN_SHIFT)
++#define LPAIF_RDMACTL_BURSTEN_INCR4	(1 << LPAIF_RDMACTL_BURSTEN_SHIFT)
++
++#define LPAIF_RDMACTL_WPSCNT_MASK	0x700
++#define LPAIF_RDMACTL_WPSCNT_SHIFT	8
++#define LPAIF_RDMACTL_WPSCNT_ONE	(0 << LPAIF_RDMACTL_WPSCNT_SHIFT)
++#define LPAIF_RDMACTL_WPSCNT_TWO	(1 << LPAIF_RDMACTL_WPSCNT_SHIFT)
++#define LPAIF_RDMACTL_WPSCNT_THREE	(2 << LPAIF_RDMACTL_WPSCNT_SHIFT)
++#define LPAIF_RDMACTL_WPSCNT_FOUR	(3 << LPAIF_RDMACTL_WPSCNT_SHIFT)
++#define LPAIF_RDMACTL_WPSCNT_SIX	(5 << LPAIF_RDMACTL_WPSCNT_SHIFT)
++#define LPAIF_RDMACTL_WPSCNT_EIGHT	(7 << LPAIF_RDMACTL_WPSCNT_SHIFT)
++
++#define LPAIF_RDMACTL_AUDINTF_MASK	0x0F0
++#define LPAIF_RDMACTL_AUDINTF_SHIFT	4
++#define LPAIF_RDMACTL_AUDINTF_NONE	(0 << LPAIF_RDMACTL_AUDINTF_SHIFT)
++#define LPAIF_RDMACTL_AUDINTF_CODEC	(1 << LPAIF_RDMACTL_AUDINTF_SHIFT)
++#define LPAIF_RDMACTL_AUDINTF_PCM	(2 << LPAIF_RDMACTL_AUDINTF_SHIFT)
++#define LPAIF_RDMACTL_AUDINTF_SEC_I2S	(3 << LPAIF_RDMACTL_AUDINTF_SHIFT)
++#define LPAIF_RDMACTL_AUDINTF_MI2S	(4 << LPAIF_RDMACTL_AUDINTF_SHIFT)
++#define LPAIF_RDMACTL_AUDINTF_HDMI	(5 << LPAIF_RDMACTL_AUDINTF_SHIFT)
++#define LPAIF_RDMACTL_AUDINTF_SEC_PCM	(7 << LPAIF_RDMACTL_AUDINTF_SHIFT)
++
++#define LPAIF_RDMACTL_FIFOWM_MASK	0x00E
++#define LPAIF_RDMACTL_FIFOWM_SHIFT	1
++#define LPAIF_RDMACTL_FIFOWM_1		(0 << LPAIF_RDMACTL_FIFOWM_SHIFT)
++#define LPAIF_RDMACTL_FIFOWM_2		(1 << LPAIF_RDMACTL_FIFOWM_SHIFT)
++#define LPAIF_RDMACTL_FIFOWM_3		(2 << LPAIF_RDMACTL_FIFOWM_SHIFT)
++#define LPAIF_RDMACTL_FIFOWM_4		(3 << LPAIF_RDMACTL_FIFOWM_SHIFT)
++#define LPAIF_RDMACTL_FIFOWM_5		(4 << LPAIF_RDMACTL_FIFOWM_SHIFT)
++#define LPAIF_RDMACTL_FIFOWM_6		(5 << LPAIF_RDMACTL_FIFOWM_SHIFT)
++#define LPAIF_RDMACTL_FIFOWM_7		(6 << LPAIF_RDMACTL_FIFOWM_SHIFT)
++#define LPAIF_RDMACTL_FIFOWM_8		(7 << LPAIF_RDMACTL_FIFOWM_SHIFT)
++
++#define LPAIF_RDMACTL_ENABLE_MASK	0x1
++#define LPAIF_RDMACTL_ENABLE_SHIFT	0
++#define LPAIF_RDMACTL_ENABLE_OFF	(0 << LPAIF_RDMACTL_ENABLE_SHIFT)
++#define LPAIF_RDMACTL_ENABLE_ON		(1 << LPAIF_RDMACTL_ENABLE_SHIFT)
++
++#endif /* __LPASS_LPAIF_H__ */
+diff --git a/sound/soc/qcom/lpass.h b/sound/soc/qcom/lpass.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..5c99b3dace86d3634b0dbc8c070ac7711d070890
+--- /dev/null
++++ b/sound/soc/qcom/lpass.h
+@@ -0,0 +1,51 @@
++/*
++ * Copyright (c) 2010-2011,2013-2015 The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * lpass.h - Definitions for the QTi LPASS
++ */
++
++#ifndef __LPASS_H__
++#define __LPASS_H__
++
++#include <linux/clk.h>
++#include <linux/compiler.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#define LPASS_AHBIX_CLOCK_FREQUENCY		131072000
++
++/* Both the CPU DAI and platform drivers will access this data */
++struct lpass_data {
++
++	/* AHB-I/X bus clocks inside the low-power audio subsystem (LPASS) */
++	struct clk *ahbix_clk;
++
++	/* MI2S system clock */
++	struct clk *mi2s_osr_clk;
++
++	/* MI2S bit clock (derived from system clock by a divider */
++	struct clk *mi2s_bit_clk;
++
++	/* low-power audio interface (LPAIF) registers */
++	void __iomem *lpaif;
++
++	/* regmap backed by the low-power audio interface (LPAIF) registers */
++	struct regmap *lpaif_map;
++
++	/* interrupts from the low-power audio interface (LPAIF) */
++	int lpaif_irq;
++};
++
++/* register the platform driver from the CPU DAI driver */
++int asoc_qcom_lpass_platform_register(struct platform_device *);
++
++#endif /* __LPASS_H__ */
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
