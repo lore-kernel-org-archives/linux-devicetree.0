@@ -1,59 +1,91 @@
 From: "Suzuki K. Poulose" <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH v2 0/5] arm-cci400: PMU monitoring support on ARM64
-Date: Wed, 04 Mar 2015 12:17:39 +0000
-Message-ID: <54F6F7E3.40302@arm.com>
-References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com> <54F5DA8C.7080609@arm.com>
+Subject: Re: [PATCH 4/5] arm-cci: Split the code for PMU vs driver support
+Date: Wed, 04 Mar 2015 12:18:59 +0000
+Message-ID: <54F6F833.1030906@arm.com>
+References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com> <1425295754-13376-5-git-send-email-suzuki.poulose@arm.com> <54F5D914.7030705@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54F5DA8C.7080609@arm.com>
+In-Reply-To: <54F5D914.7030705@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sudeep Holla <Sudeep.Holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 Cc: "nico@linaro.org" <nico@linaro.org>, "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "olof@lixom.net" <olof@lixom.net>, Punit Agrawal <Punit.Agrawal@arm.com>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/15 16:00, Sudeep Holla wrote:
+On 03/03/15 15:53, Sudeep Holla wrote:
 >
 >
 > On 02/03/15 11:29, Suzuki K. Poulose wrote:
 >> From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
 >>
->> This series enables the PMU monitoring support for CCI400 on ARM64.
->> The existing CCI400 driver code is a mix of PMU driver and the MCPM
->> driver code. The MCPM driver is only used on ARM(32) and contains
->> arm32 assembly and hence can't be built on ARM64. This patch splits
->> the code to
+>> This patch separates the PMU driver code from the low level
+>> CCI driver code.
 >>
->>    - ARM_CCI400_PORT_CTRL driver - depends on ARM && V7
->>    - ARM_CCI400_PMU driver
+>> Introduces config options for both.
 >>
->> Accessing the Peripheral ID2 register(PID2) on CCI-400, to detect
->> the revision of the chipset, is a secure operation. Hence, it prevents
->> us from running this on non-secure platforms. The issue is overcome by
->> explicitly mentioning the revision number of the CCI PMU in the device tree
->> binding. The device-tree binding has been updated with the new bindings.
+>>    ARM_CCI400_PORT_CTRL	- controls the low level driver code for
+>> 			  CCI400 ports.
+>>    ARM_CCI400_PMU 	- controls the PMU driver code
+>>    ARM_CCI400_COMMON 	- Common defintions for CCI400
 >>
->> i.e,	arm-cci-400-pmu,r0 => revision 0
->> 	arm-cci-400-pmu,r1 => revision 1
->> 	arm-cci-400-pmu => (old) DEPRECATED
+>> Also the ARM_CCI400_PORT_CTRL cannot be enabled by user. This
+>> should be selected by platforms which need it.
 >>
->> The old binding has been DEPRECATED and must be used only on ARM32
->> system with secure access. We don't have a reliable dynamic way to detect
->> if the system is running secure. This series tries to use the best safe
->> method by relying on the availability of MCPM(as it was prior to the series).
->> It is upto the MCPM platform driver to decide, if the system is secure before
->> it goes ahead and registers its drivers and pokes the CCI. This series doesn't
->> address/solve the problem of MCPM. I will be happy to use a better approach,
->> if there is any.
+>> This patch also changes:
+>>    ARM_CCI - common code for probing the CCI devices. This can be
+>>      used for adding support for newer CCI versions(e.g, CCI-500).
 >>
->> Tested on (non-secure)TC2 and Juno.
+>> Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
+>> ---
+>>    arch/arm/mach-exynos/Kconfig   |    2 +-
+>>    arch/arm/mach-vexpress/Kconfig |    4 ++--
+>>    drivers/bus/Kconfig            |   27 +++++++++++++++++++++++----
+>>    drivers/bus/arm-cci.c          |   24 ++++++++++++++++++++----
+>>    include/linux/arm-cci.h        |    7 ++++++-
+>>    5 files changed, 52 insertions(+), 12 deletions(-)
 >>
 >
-> For the series:
-> Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on secure/MCPM TC2)
+> [...]
 >
+>> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+>> index b99729e..bdc189f 100644
+>> --- a/drivers/bus/Kconfig
+>> +++ b/drivers/bus/Kconfig
+>> @@ -43,12 +43,31 @@ config OMAP_INTERCONNECT
+>>    	help
+>>    	  Driver to enable OMAP interconnect error handling driver.
+>>
+>> -config ARM_CCI
+>> -	bool "ARM CCI driver support"
+>> +config ARM_CCI400_PORT_CTRL
+>> +	bool
+>>    	depends on ARM && OF && CPU_V7
+>> +	select ARM_CCI400_COMMON
+>> +	help
+>> +	  Low level power management driver for CCI400 cache coherent
+>> +	  interconnect for ARM platforms.
+>> +
+>> +config ARM_CCI400_PMU
+>> +	bool "ARM CCI400 PMU support"
+>> +	depends on ARM || ARM64
+>> +	depends on HW_PERF_EVENTS
+>> +	select ARM_CCI400_COMMON
+>>    	help
+>> -	  Driver supporting the CCI cache coherent interconnect for ARM
+>> -	  platforms.
+>> +	  Support for PMU events monitoring on the ARM CCI cache coherent
+>> +	  interconnect.
+>> +
+>> +	  If unsure, say N
+>
+> Just a query rather than comment. Before this change all platforms
+> having ARM_CCI and HW_PERF_EVENTS had CCI PMU enabled by default.
+> With this change, one has to select this option explicitly. I assume
+> that's fine, else this needs to be default 'y'
 
-Thanks a lot for the testing
+Yes, that makes sense. Now that we decide if we can access the CCI 
+safely at runtime, it is safe to make this default.
 
+Regards
 Suzuki
