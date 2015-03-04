@@ -1,91 +1,39 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 05/10] ARM: bcm2835: Add the mailbox power channel driver.
-Date: Tue, 03 Mar 2015 20:15:17 -0700
-Message-ID: <54F678C5.6090203@wwwdotorg.org>
-References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-6-git-send-email-eric@anholt.net>
+Subject: Re: [PATCH 07/10] usb: Make sure that DWC2 initializes after the
+ power channel mailbox driver.
+Date: Tue, 03 Mar 2015 20:17:24 -0700
+Message-ID: <54F67944.1030501@wwwdotorg.org>
+References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-8-git-send-email-eric@anholt.net> <20150303083250.GG6976@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425329684-23968-6-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <20150303083250.GG6976@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+To: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/2015 01:54 PM, Eric Anholt wrote:
-> This just enables the power to the USB controller, so that DWC2 can
-> initialize.
+On 03/03/2015 01:32 AM, Lee Jones wrote:
+> On Mon, 02 Mar 2015, Eric Anholt wrote:
+>> This gets USB working on the Raspberry Pi without relying on U-Boot to
+>> send the power message for us.  Without it, you would get warnings
+>> about fifo sizes and "dwc2_core_reset() HANG! Soft Reset
+>> GRSTCTL=80000001" leading to a failed probe.
+
+>> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+
+>> +bool bcm2835_usb_power_enabled(void)
+>> +{
+>> +#ifdef CONFIG_BCM2835_MBOX
 > 
-> The downstream tree has an interface to this channel for tracking
-> enables from multiple clients, except it doesn't have any clients as
-> far as I can see.  For now, just make the simplest thing that gets USB
-> working.
+> Please don't put #ifdeffery in *.c files.  If you have to match on
+> CONFIG_* options, please do so using inlines in a header file
+> somewhere.
 
->  drivers/mailbox/Makefile                |   1 +
->  drivers/mailbox/bcm2835-mailbox-power.c | 127 ++++++++++++++++++++++++++++++++
-
-Along the lines of my comments on the previous patch, I would expect
-this driver to show up within the directory for the subsystem/API that
-it implements (power domains, regulators?)
-
-> diff --git a/drivers/mailbox/bcm2835-mailbox-power.c b/drivers/mailbox/bcm2835-mailbox-power.c
-
-> +#define BCM_POWER_USB (1 << 3)
-
-I'd expect that to be encoded in DT, in the manner I mentioned in reply
-to patch 4, so that this driver can work for arbitrary clients.
-
-> +#define BCM_MBOX_DATA_SHIFT 4
-
-I'd expect that to be defined in some public header that's part of patch
-2, so that clients don't have to duplicate the definition.
-
-> +/*
-> + * Submits a set of concatenated tags to the VPU firmware through the
-> + * mailbox power interface.
-> + *
-> + * The buffer header and the ending tag are added by this function and
-> + * don't need to be supplied, just the actual tags for your operation.
-> + * See struct bcm_mbox_power_tag_header for the per-tag structure.
-> + */
-> +static int bcm_mbox_set_power(uint32_t power_enables)
-> +{
-> +	int ret;
-> +
-> +	reinit_completion(&mbox_power->c);
-> +	ret = mbox_send_message(mbox_power->chan,
-> +				(void *)(power_enables << BCM_MBOX_DATA_SHIFT));
-> +	if (ret >= 0)
-> +		wait_for_completion(&mbox_power->c);
-> +
-> +	return ret;
-> +}
-
-The comment sounds more like the property mailbox interface/channel,
-whereas the code appears to be using the non-property channel. In
-particular, the code only appears to be sending one "tag"/message,
-without the header or ending tag mentioned in the comment.
-
-> +static int bcm2835_mbox_power_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	int ret = 0;
-> +
-> +	mbox_power = devm_kzalloc(dev, sizeof(*mbox_power),
-> +				       GFP_KERNEL);
-> +	if (!mbox_power) {
-> +		dev_err(dev, "Failed to allocate device memory\n");
-
-Duplicate error message.
-
-> +	/* Enable power to the USB phy. */
-> +	if (IS_ENABLED(CONFIG_USB_DWC2)) {
-> +		bcm_mbox_set_power(BCM_POWER_USB);
-> +		bcm2835_mbox_power_initialized = true;
-> +	}
-
-Hmm. Shouldn't the DWC2 driver make a call to do that?
+I haven't heard of that restriction before. I'm sure there are many
+ifdefs in C files in the kernel. What benefit does moving the ifdefs
+into headers have?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
