@@ -1,63 +1,76 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] dtc: Dynamic DT support
-Date: Wed, 4 Mar 2015 21:18:56 +1100
-Message-ID: <20150304101856.GD18072@voom.fritz.box>
-References: <1425063346-14554-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
+Date: Wed, 4 Mar 2015 12:00:03 +0000
+Message-ID: <20150304120003.GL32624@x1>
+References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gE7i1rD7pdK0Ng3j"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425063346-14554-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1424799222-9301-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Mike,
 
---gE7i1rD7pdK0Ng3j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do you want me to resend this set with Robert's Reviewed-by applied,
+or are you happy to apply it yourself?
 
-On Fri, Feb 27, 2015 at 08:55:43PM +0200, Pantelis Antoniou wrote:
-> Enable the generation of symbol & fixup information for
-> use with dynamic DT loading.
-
-This still needs a lot of work before it's close to ready.  I'm mildly
-dubious about the basic premise, but more importantly there are
-serious flaws in the current implementation.  More details coming once
-I have a chance.
+> v2 =3D> v3:
+>   - Ensure DT actually reflects h/w
+>     - i.e. Nodes should not contain a mishmash of different IP
+>       blocks, but should identify related h/w.  In the current
+>       example we use interconnects
+>   - Change naming from clkdomain to clk-always-on
+>   - Place "do not abuse" warning in documentation
+>=20
+> v1 =3D> v2:
+>   - Turned the ST specific driver into a generic one
+>  =20
+> Hardware can have a bunch of clocks which must not be turned off.
+> If drivers a) fail to obtain a reference to any of these or b) give
+> up a previously obtained reference during suspend, the common clk
+> framework will attempt to turn them off and the hardware will
+> subsequently die.  The only way to recover from this failure is to
+> restart.
+>  =20
+> To avoid either of these two scenarios from catastrophically
+> disabling the running system we have implemented a clock domain
+> where clocks are consumed and references are taken, thus preventing
+> them from being shut down by the framework.
+>=20
+> *** BLURB HERE ***
+>=20
+> Lee Jones (4):
+>   ARM: sti: stih407-family: Supply defines for CLOCKGEN A0
+>   ARM: sti: stih407-family: Add platform interconnects to always-on c=
+lk
+>     domain
+>   clk: Provide an always-on clock domain framework
+>   clk: dt: Introduce always-on clock domain documentation
+>=20
+>  .../devicetree/bindings/clock/clk-always-on.txt    | 35 ++++++++++++
+>  arch/arm/boot/dts/stih407-family.dtsi              | 15 ++++++
+>  drivers/clk/Makefile                               |  1 +
+>  drivers/clk/clk-always-on.c                        | 62 ++++++++++++=
+++++++++++
+>  include/dt-bindings/clock/stih407-clks.h           |  4 ++
+>  5 files changed, 117 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/clk-alway=
+s-on.txt
+>  create mode 100644 drivers/clk/clk-always-on.c
+>=20
 
 --=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---gE7i1rD7pdK0Ng3j
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU9twQAAoJEGw4ysog2bOSo0QQAIiClHuk7OH9hj2Q3hsNALNT
-aMdGofAgW9iR/H8KiiQBe3xU2kk+eLpdESnghL5owSB6LsSP4BPm1Qfqns9/MNzu
-63HrlT4xEY8+L7eZKHSUkgzIxzsPBJmqrqGO+FJcoIUxLtasY8fS113stzIqsv4d
-LMytNXSGXsSE6LQ69Y3CRULUzXXIR/mhDhoMyisJSaCgYelcCQ97Fx1uF4J4CA1Q
-6NuFxI3M5XBrUp8tZA+0l9kZbP1CoK1NK9rIOAqNeLUAAHXf27PvLwWZpFZAODyu
-CPnfI0Yg6ZGoph/pbdRTc1EjKxPlgNhyz5cpQqSRziAfOqrrTOL+hHS8dBdIgpeN
-uh5OP3sM5fOHWtFJNkLanM/1uHVAcLbRqgipZz5GlgvAELgzi7HY2ClehEARejr2
-EAo3vNL9yI4i+X6CaoXZwJGhw1lgXQBniMWGk7VUqmcyd7q150RuhUkMsGvHDAOZ
-7cPifONeEd62uNd5Pxxuw2dI2Ur8uMltLcATDovPnG9o92YNZ3SK1mEgpBadpYM/
-U0UbTdrgVVnG2ODCZvhnC+heSNHpSdLBu/ZLiCAdprk3+W5sMrUYCmBTin5SeuUO
-2Oihal4GCHQbNMzj40neE5RMcQ7yMvdcj4I5B5KZwMSlQWH2LfQS7ueoQnDd+TGj
-jTmzE3kfPQJpr5EgUXa0
-=+szL
------END PGP SIGNATURE-----
-
---gE7i1rD7pdK0Ng3j--
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
