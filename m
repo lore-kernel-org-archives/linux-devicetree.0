@@ -1,103 +1,63 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 2/3] mailbox: dt: Supply bindings for ST's Mailbox IP
-Date: Wed, 4 Mar 2015 19:01:47 +0530
-Message-ID: <CAJe_ZhceYSk5WCcQ2Gj-AOTdbmKPpq=zTd1AJVYh+WaB3yY_Og@mail.gmail.com>
-References: <1425379283-1567-1-git-send-email-lee.jones@linaro.org>
-	<1425379283-1567-3-git-send-email-lee.jones@linaro.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: at91: at91sam9x5: enable ISI and ov2640 support
+Date: Wed, 4 Mar 2015 14:43:05 +0100
+Message-ID: <54F70BE9.2030009@atmel.com>
+References: <1423728386-24544-1-git-send-email-josh.wu@atmel.com> <20150212100837.2ab78742@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425379283-1567-3-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, kernel@stlinux.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150212100837.2ab78742@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3 March 2015 at 16:11, Lee Jones <lee.jones@linaro.org> wrote:
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  .../devicetree/bindings/mailbox/sti-mailbox.txt    | 66 ++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
->
-> diff --git a/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
-> new file mode 100644
-> index 0000000..c965c13
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
-> @@ -0,0 +1,66 @@
-> +ST Microelectronics Mailbox Driver
-> +
-> +Required properties:
-> +- compatible           : Should be "st,stih407-mailbox"
-> +- reg                  : Offset and length of the register set for the device
-> +- reg-names            : Should contain the reg name "mbox-reg".
-> +- st,name              : Name of the mailbox
-> +- st,mbox-chans                : Mbox/channels descriptor data private to each channel.
-> +                         The 4 cells represent the following data:
-> +                               Cell #1 (rx_id) - rx mbox num in an instance.
-> +                               Cell #2 (rx_inst) - rx mbox instance num.
-> +                               Cell #3 (tx_id) - tx mbox num in an instance.
-> +                               Cell #4 (tx_inst) - tx mbox instance num.
-> +
-> +                         Note that an IP Mailbox is composed by 4 instances and
-> +                         each instance is composed by 32 mailboxes.
-> +                         You define here the configuration of a channel (at
-> +                         framework level).
->
-mbox-cells ?
+Le 12/02/2015 10:08, Boris Brezillon a =E9crit :
+> On Thu, 12 Feb 2015 16:06:22 +0800
+> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+>=20
+>> This patch series will enable ISI and ov2640 sensor support for
+>> at91sam9g25ek board.
+>=20
+> This series looks good to me.
+>=20
+> Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> +
-> +Optional properties
-> +- st,mbox-rx           : Indicaties if the mailbox can be used as Rx mailbox.
->
-isn't this property implied by the presence of interrupts property,
-and hence redundant?
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-> +- st,mbox-rx-id                : If a Rx mailbox is affected to a Tx mailbox (to have
-> +                         full-duplex channel), this field indiactes the Id of
-> +                         the Rx mailbox to use.
-> +- interrupts           : Contains the IRQ line for a RX mailbox.
-> +- interrupt-names      : Should contain the interrupt name.
-> +
-> +Examples:
-> +
-> +mailbox0: mailbox@0 {
-> +       compatible = "st,stih407-mailbox";
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +       #mbox-cells = <1>;
-> +       reg = <0x8f00000 0x1000>;
-> +       reg-names = "mbox-reg";
-> +       interrupts = <GIC_SPI 1 IRQ_TYPE_NONE>;
-> +       interrupt-names = "mb0_irq";
-> +       st,name = "a9";
-> +       st,mbox-rx;
-> +       st,mbox-rx-id = <0>;
-> +       st,mbox-chans = <0 1 0 1>;
-> +};
-> +
-> +mailbox3: mailbox@3 {
-> +       compatible = "st,stih407-mailbox";
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +       #mbox-cells = <1>;
-> +       reg = <0x8f03000 0x100>;
-> +       reg-names = "mbox-reg";
-> +       st,name = "st231_video";
-> +       st,mbox-rx-id = <0>;
-> +       st,mbox-chans = <2 1 2 1>;
-> +};
-> +
-> +In this configuration, if you use channel 0 you will have the following
-> +configuration:
-> +- "chan0_video" will use mailbox0 as Rx mailbox.
-> +- "chan0_video" will use instance 1, bit 2 in mailbox0 for rx.
-> +- "chan0_video" will use instance 1, bit 2 in mailbox3 for tx.
-> +
-> +If you declare a channel only for Rx, you have to set magic number 0xff
-> +for tx_id and tx_instance.
-> +If you declare a channel only for Tx, you have to set magic number 0xff
-> +for rx_id and rx_instance.
->
-some client node example would look great here
+
+3 first patches stacked on top of at91-4.1-dt. Last one on
+at91-4.1-defconfig.
+
+Thank, bye.
+
+
+>> Josh Wu (4):
+>>   ARM: at91: at91sam9x5/dts: add ISI dt support, include isi node,
+>>     pinctrls
+>>   ARM: at91: at91sam9x5ek/dts: add ov2640 support
+>>   ARM: at91: at91sam9g25ek/dts: enable ISI and ov2640
+>>   ARM: at91: at91_dt_defconfig: enable ISI and ov2640 support
+>>
+>>  arch/arm/boot/dts/at91sam9g25.dtsi    |  1 +
+>>  arch/arm/boot/dts/at91sam9g25ek.dts   | 18 +++++++++++++
+>>  arch/arm/boot/dts/at91sam9x5_isi.dtsi | 46 ++++++++++++++++++++++++=
++++++++++
+>>  arch/arm/boot/dts/at91sam9x5ek.dtsi   | 48 ++++++++++++++++++++++++=
++++++++++++
+>>  arch/arm/configs/at91_dt_defconfig    |  6 +++++
+>>  5 files changed, 119 insertions(+)
+>>
+>=20
+>=20
+>=20
+
+
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
