@@ -1,70 +1,100 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 4/4] regulator: qcom: Rework to single platform device
-Date: Wed, 04 Mar 2015 11:35:43 -0800
-Message-ID: <54F75E8F.2070900@codeaurora.org>
-References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com> <1425356740-26285-5-git-send-email-bjorn.andersson@sonymobile.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] of: Kconfig: Let OF_UNITTEST depend on "I2C=y" and "I2C_MUX=y"
+Date: Wed, 04 Mar 2015 20:49:47 +0100
+Message-ID: <2530315.qdy5ZZGCEr@wuerfel>
+References: <BLU437-SMTP82811F6F904D6C74EE62E3B91E0@phx.gbl> <CAMuHMdXPONxoNm+stn5sx579kzWo6auVP7hrRv26VSGySr7K2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425356740-26285-5-git-send-email-bjorn.andersson@sonymobile.com>
+In-Reply-To: <CAMuHMdXPONxoNm+stn5sx579kzWo6auVP7hrRv26VSGySr7K2A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Chen Gang <xili_gchen_5257@hotmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/15 20:25, Bjorn Andersson wrote:
-> +	match = of_match_device(rpm_of_match, &pdev->dev);
-> +	for (reg = match->data; reg->name; reg++) {
-> +		vreg = devm_kmalloc(&pdev->dev, sizeof(*vreg), GFP_KERNEL);
-> +		if (!vreg) {
-> +			dev_err(&pdev->dev, "failed to allocate vreg\n");
-> +			return -ENOMEM;
-> +		}
-> +		memcpy(vreg, reg->template, sizeof(*vreg));
-> +		mutex_init(&vreg->lock);
-> +
-> +		vreg->dev = &pdev->dev;
-> +		vreg->resource = reg->resource;
-> +
-> +		vreg->desc.id = -1;
-> +		vreg->desc.owner = THIS_MODULE;
-> +		vreg->desc.type = REGULATOR_VOLTAGE;
-> +		vreg->desc.name = reg->name;
-> +		vreg->desc.supply_name = reg->supply;
-> +		vreg->desc.of_match = reg->name;
-> +		vreg->desc.of_parse_cb = rpm_reg_of_parse;
-> +
-> +		vreg->rpm = dev_get_drvdata(pdev->dev.parent);
-> +		if (!vreg->rpm) {
-> +			dev_err(&pdev->dev, "unable to retrieve handle to rpm\n");
-> +			return -ENODEV;
-> +		}
->  
-> -	rdev = devm_regulator_register(&pdev->dev, &vreg->desc, &config);
-> -	if (IS_ERR(rdev)) {
-> -		dev_err(&pdev->dev, "can't register regulator\n");
-> -		return PTR_ERR(rdev);
-> +		config.dev = &pdev->dev;
-> +		config.driver_data = vreg;
-> +		rdev = devm_regulator_register(&pdev->dev, &vreg->desc, &config);
-> +		if (IS_ERR(rdev)) {
-> +			dev_err(&pdev->dev, "can't register regulator\n");
-> +			return PTR_ERR(rdev);
-> +		}
->  	}
->  
->  	return 0;
+On Wednesday 04 March 2015 16:04:23 Geert Uytterhoeven wrote:
+> > -       depends on OF_IRQ && OF_EARLY_FLATTREE
+> > +       depends on OF_IRQ && OF_EARLY_FLATTREE && I2C=y && I2C_MUX=y
+> 
+> ... I think it would be better to replace "#if IS_ENABLED(CONFIG_XXX)" by
+> "#ifdef CONFIG_XXX" in drivers/of/unittest.c instead.
+> 
 
-There's another problem with this of_parse_cb design. The regulator
-framework requires supplies to be registered before consumers of the
-supplies are registered. So when we register L23 we need to make sure
-it's supply is already registered (S8 for example). If we used
-of_regulator_match() we could sort the array by hand so that we always
-register the supplies first. Or we could modify the regulator framework
-to have a concept of "orphaned" supplies like the clock framework has so
-that when a regulator is registered it waits until its supply is registered.
+Agreed. I came across the same bug and came to the same conclusion as you.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+How about this:
+
+8<----
+Subject: of: unittest: fix I2C dependency
+
+The unittest fails to link if I2C or I2C_MUX is a loadable module:
+
+  drivers/built-in.o: In function `selftest_i2c_mux_remove':
+  unittest.c:(.text+0xb0ce4): undefined reference to `i2c_del_mux_adapter'
+
+This changes the newly added IS_ENABLED() checks to use IS_BUILTIN()
+instead, which evaluates to false if the other driver is a module.
+
+Reported-by: Chen Gang <gang.chen.5i5j@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: d5e75500ca401 ("of: unitest: Add I2C overlay unit tests.")
+
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 0cf9a236d438..8daa49206c36 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -979,7 +979,7 @@ static int of_path_platform_device_exists(const char *path)
+ 	return pdev != NULL;
+ }
+ 
+-#if IS_ENABLED(CONFIG_I2C)
++#if IS_BUILTIN(CONFIG_I2C)
+ 
+ /* get the i2c client device instantiated at the path */
+ static struct i2c_client *of_path_to_i2c_client(const char *path)
+@@ -1445,7 +1445,7 @@ static void of_selftest_overlay_11(void)
+ 		return;
+ }
+ 
+-#if IS_ENABLED(CONFIG_I2C) && IS_ENABLED(CONFIG_OF_OVERLAY)
++#if IS_BUILTIN(CONFIG_I2C) && IS_ENABLED(CONFIG_OF_OVERLAY)
+ 
+ struct selftest_i2c_bus_data {
+ 	struct platform_device	*pdev;
+@@ -1584,7 +1584,7 @@ static struct i2c_driver selftest_i2c_dev_driver = {
+ 	.id_table = selftest_i2c_dev_id,
+ };
+ 
+-#if IS_ENABLED(CONFIG_I2C_MUX)
++#if IS_BUILTIN(CONFIG_I2C_MUX)
+ 
+ struct selftest_i2c_mux_data {
+ 	int nchans;
+@@ -1695,7 +1695,7 @@ static int of_selftest_overlay_i2c_init(void)
+ 			"could not register selftest i2c bus driver\n"))
+ 		return ret;
+ 
+-#if IS_ENABLED(CONFIG_I2C_MUX)
++#if IS_BUILTIN(CONFIG_I2C_MUX)
+ 	ret = i2c_add_driver(&selftest_i2c_mux_driver);
+ 	if (selftest(ret == 0,
+ 			"could not register selftest i2c mux driver\n"))
+@@ -1707,7 +1707,7 @@ static int of_selftest_overlay_i2c_init(void)
+ 
+ static void of_selftest_overlay_i2c_cleanup(void)
+ {
+-#if IS_ENABLED(CONFIG_I2C_MUX)
++#if IS_BUILTIN(CONFIG_I2C_MUX)
+ 	i2c_del_driver(&selftest_i2c_mux_driver);
+ #endif
+ 	platform_driver_unregister(&selftest_i2c_bus_driver);
+@@ -1814,7 +1814,7 @@ static void __init of_selftest_overlay(void)
+ 	of_selftest_overlay_10();
+ 	of_selftest_overlay_11();
+ 
+-#if IS_ENABLED(CONFIG_I2C)
++#if IS_BUILTIN(CONFIG_I2C)
+ 	if (selftest(of_selftest_overlay_i2c_init() == 0, "i2c init failed\n"))
+ 		goto out;
+ 
