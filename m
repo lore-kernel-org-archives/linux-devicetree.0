@@ -1,47 +1,79 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: at91: sama5d4ek: enable audio support
-Date: Wed, 4 Mar 2015 15:15:08 +0100
-Message-ID: <54F7136C.5040307@atmel.com>
-References: <1422859907-14881-1-git-send-email-voice.shen@atmel.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH 4/6] ARM: DT: STi: STiH407: Add dwc3 usb3 DT node.
+Date: Wed, 4 Mar 2015 15:29:59 +0100
+Message-ID: <54F716E7.9090406@st.com>
+References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org> <1424871377-1795-5-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1422859907-14881-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424871377-1795-5-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, kishon@ti.com, balbi@ti.com
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 02/02/2015 07:51, Bo Shen a =E9crit :
-> This patch set enable audio support on sama5d4ek.
-> It depends the patch [1] (ASoC: atmel-pcm-dma: won't check direction
-> when configure dma)
-> [1] https://patchwork.kernel.org/patch/5759441/
->=20
->=20
-> Bo Shen (4):
->   ARM: at91: dt: sama5d4: add ssc nodes
->   ARM: at91: dt: sama5d4ek: enable ssc0
->   ARM: at91: dt: sama5d4ek: add and enable wm8904
->   ARM: at91: dt: sama5d4ek: enable audio
+Hi Peter,
 
-Whole series stacked on top of at91-4.1-dt.
+On 02/25/2015 02:36 PM, Peter Griffin wrote:
+> Now that both usb2 and usb3 phy drivers, and also the ST dwc3 glue code
+> are all present upstream, we can add the dwc3 DT node and have a working
+> usb3 controller on stih407-b2120 and stih410-b2020.
+>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>   arch/arm/boot/dts/stih407-family.dtsi | 26 ++++++++++++++++++++++++++
+>   1 file changed, 26 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> index 186412d..18ff5a5 100644
+> --- a/arch/arm/boot/dts/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> @@ -7,6 +7,7 @@
+>    * publishhed by the Free Software Foundation.
+>    */
+>   #include "stih407-pinctrl.dtsi"
+> +#include <dt-bindings/phy/phy.h>
+>   #include <dt-bindings/reset-controller/stih407-resets.h>
+>   / {
+>   	#address-cells = <1>;
+> @@ -336,5 +337,30 @@
+>   				resets = <&softreset STIH407_MIPHY2_SOFTRESET>;
+>   			};
+>   		};
+> +
+> +		st_dwc3: dwc3@8f94000 {
+> +			compatible	= "st,stih407-dwc3";
+> +			reg		= <0x08f94000 0x1000>, <0x110 0x4>;
+> +			reg-names	= "reg-glue", "syscfg-reg";
+> +			st,syscfg	= <&syscfg_core>;
+> +			resets		= <&powerdown STIH407_USB3_POWERDOWN>,
+> +					  <&softreset STIH407_MIPHY2_SOFTRESET>;
+> +			reset-names	= "powerdown",
+> +					  "softreset";
+> +			#address-cells	= <1>;
+> +			#size-cells	= <1>;
+> +			pinctrl-names	= "default";
+> +			pinctrl-0	= <&pinctrl_usb3>;
+> +			ranges;
+> +
+> +			dwc3: dwc3@9900000 {
+> +				compatible	= "snps,dwc3";
+> +				reg		= <0x09900000 0x100000>;
+> +				interrupts	= <GIC_SPI 155 IRQ_TYPE_NONE>;
+> +				dr_mode		= "host";
+> +				phy-names	= "usb2-phy", "usb3-phy";
+> +				phys		= <&usb2_picophy0>, <&phy_port2 PHY_TYPE_USB3>;
+> +			};
+> +		};
+>   	};
+>   };
 
-Thanks, bye.
+The USB3 port should only be enabled in the board files, not the soc one.
+We can have a board without USB3 port, so it should be disbaled by default.
 
+Other than that, you can enable it also on stih418-b2199, just tested 
+and it is working.
 
->  arch/arm/boot/dts/at91-sama5d4ek.dts | 31 ++++++++++++++++
->  arch/arm/boot/dts/sama5d4.dtsi       | 70 ++++++++++++++++++++++++++=
-++++++++++
->  2 files changed, 101 insertions(+)
->=20
-
-
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Maxime
