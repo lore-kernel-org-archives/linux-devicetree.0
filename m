@@ -1,86 +1,86 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 02/10] mailbox: Enable BCM2835 mailbox support
-Date: Wed, 04 Mar 2015 10:28:00 -0800
-Message-ID: <871tl48vnz.fsf@eliezer.anholt.net>
-References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-3-git-send-email-eric@anholt.net> <54F675F1.60205@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: simple-card: Add support for
+ samplerate and samplewidth constraints
+Date: Wed, 4 Mar 2015 18:42:14 +0000
+Message-ID: <20150304184214.GV21293@sirena.org.uk>
+References: <cover.1425303942.git.jsarha@ti.com>
+ <9d01aa0d0bf48d8b41d5086a7e6c9ec08c2b9c48.1425303942.git.jsarha@ti.com>
+ <54F4C0F2.8000201@metafoo.de> <54F5884A.1090702@ti.com>
+ <20150303113041.GM21293@sirena.org.uk> <54F5A25F.6090904@ti.com>
+ <20150303153431.GA21293@sirena.org.uk> <54F6BAA8.2010803@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F675F1.60205-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2892341547360470708=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <54F6BAA8.2010803@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, kuninori.morimoto.gx@renesas.com, moinejf@free.fr, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+--===============2892341547360470708==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iaFP3WRQOnUHNoA6"
+Content-Disposition: inline
 
-> On 03/02/2015 01:54 PM, Eric Anholt wrote:
->> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
->>=20
->> Implement BCM2835 mailbox support as a device registered with the
->> general purpose mailbox framework. Implementation based on commits by
->> Lubomir Rintel [1], Suman Anna and Jassi Brar [2] on which to base the
->> implementation.
->
->> diff --git a/drivers/mailbox/bcm2835-mailbox.c b/drivers/mailbox/bcm2835=
--mailbox.c
->
->> +/* Mailboxes */
->> +#define ARM_0_MAIL0	0x00
->> +#define ARM_0_MAIL1	0x20
->> +
->> +/*
->> + * Mailbox registers. We basically only support mailbox 0 & 1. We
->> + * deliver to the VC in mailbox 1, it delivers to us in mailbox 0. See
->> + * BCM2835-ARM-Peripherals.pdf section 1.3 for an explanation about
->> + * the placement of memory barriers.
->> + */
->> +#define MAIL0_RD	(ARM_0_MAIL0 + 0x00)
->> +#define MAIL0_POL	(ARM_0_MAIL0 + 0x10)
->> +#define MAIL0_STA	(ARM_0_MAIL0 + 0x18)
->> +#define MAIL0_CNF	(ARM_0_MAIL0 + 0x1C)
->> +#define MAIL1_WRT	(ARM_0_MAIL1 + 0x00)
->
-> That implies there are more mailboxes. I wonder if we should
-> parameterize which to use via some DT properties? I guess we can defer
-> that though; we can default to the current values and add properties
-> later if we want to use something else.
 
-BCM2835-ARM-Peripherals.pdf:
+--iaFP3WRQOnUHNoA6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-"Default the interrupts from doorbell 0,1 and mailbox 0 go to the ARM
-this means that these resources should be written by the GPU and read by
-the ARM. The opposite holds for doorbells 2, 3 and mailbox 1."
+On Wed, Mar 04, 2015 at 09:56:24AM +0200, Jyri Sarha wrote:
+> On 03/03/2015 05:34 PM, Mark Brown wrote:
 
-I don't see any references to more mailboxes than 0 and 1.
+> >>I am wondering if there would be some better way to select the dai-link
+> >>configuration than writing it to DT or creating a custom machine driver for
+> >>each setup.
 
---=-=-=
+> Continuing this tought. I wonder if it would be better to introduce a new
+> compatible match for each new card, with some clever way to manage the
+> accumulating matches in the code, and hard code DAI-link configurations for
+> each match. This way the old configurations would not be carved to stone in
+> the old dtbs.
+
+I would prefer that, yes - if only for override capability.
+
+> As there is a proper way to deal with this, I'll look into that first.
+> However, if there still is a need for these properties I am happy to finish
+> the patch.
+
+OK, a proper fix is of course better.  Might be worth looking at tooling
+to make it easier to find/use but IIRC there's not a lot doing there.
+
+--iaFP3WRQOnUHNoA6
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBCgAGBQJU906xAAoJELXWKTbR/J7oqK8QALjEgTv8+juoVHSINBCcMs9e
-9M/pgaRNtYpsPafkcsluHiN0LdaU3LnPOJUVn3X85sW0ebN/VrK756gLKOEfTfMK
-jPznpQ8QRioAVwCJEl/aKsGOe8XJU3CA96mAHpAIT79WITaq+bzpaf8Mf707bUXQ
-OMjAqw5peYAF5V5zcl1GAO1x0MrG6yVINAvMh66BoT7Xj4gSyHNRxmtmHu7zQilV
-ngSGGnXkWbE1th5EE6uzfQCYPd+J77Nztd0s8MZnhHeH1iqWLnVDeTqb0FgpJ9NS
-36dUCAluTGpERzcMFwBo3zg26A1iolHwD61hiTfL6dtQGdh2sYHNW0MpTMXWRB3Q
-bz8zlmn3dLLQBDgShJEzGpilN7f8jchteH2gsxCM8zK0yzR66/oxl05YhHFH57kV
-heaW6TBiJQYLAMdZu2zuHX12STOfDSir3isBoCVTkHtc6p2BLocpT8pcdGc+g0A7
-gIy0dryqVyi7BtK/dQDAjYOLtmml+VyUl9if85X/OTcYfblRuYbEoZv1lXOu5LGQ
-Tjt0548hIO8PD9SIM97WuHXABl6NZ4ydqVykXLbvAVfVZ8eQX3YJdQWDcZTTtb33
-jk+vuMnsdl9DVHs1dHfnWx1lYWBA8E02t/fC/8jJGOGUclrDLmIm8oB/DYfDK34V
-zPI9nS3T5KeOohHOCgjQ
-=RQrI
+iQEcBAEBCAAGBQJU91IFAAoJECTWi3JdVIfQBaYH/iv3SMSG65E7H+81CcPtZWzl
+4ct3ArkJctZM5jCQVGOrqrAtvyAcBmEiazpKAHbPDawD1fqHSd0h4IFspWTcjQ8z
++PZ6cc4wv+qcRKwuYcOU+E0htG77LpuzfsZdAmA6Ql7JQ12RmOuR1zd2D8F6S1xN
+L5yMB9s4M0U6MzM9PR+An5OctGrejX037gtMDtLdVHXIhMKPIzGqetutca3iYY+A
+Mcos2Bk1lv4lK82BHz6rBQs68DrsWIdmhG8j8MmiPHJZ83Qi88KGcznVmNi1q9NG
+evPB8H6J5NdgKz7s81erryafn6A71lBSD4M58ChuKLNlFGPwR5QE8al+HeAp9Os=
+=zpgN
 -----END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--iaFP3WRQOnUHNoA6--
+
+--===============2892341547360470708==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2892341547360470708==--
