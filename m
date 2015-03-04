@@ -1,40 +1,85 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] arm64: qcom: Add support for Qualcomm MSM8916
- SoC
-Date: Wed, 04 Mar 2015 14:33:31 -0800
-Message-ID: <54F7883B.90704@codeaurora.org>
-References: <1425503602-24916-1-git-send-email-galak@codeaurora.org> <1425503602-24916-2-git-send-email-galak@codeaurora.org>
+From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCHv1] rtc: bcm-iproc: Add support for Broadcom iproc rtc
+Date: Wed, 4 Mar 2015 14:40:13 -0800
+Message-ID: <54F789CD.5030504@broadcom.com>
+References: <1418757750-3628-1-git-send-email-arun.ramamurthy@broadcom.com> <1603624.EMYvBCWhuM@wuerfel> <54DD2685.6020207@broadcom.com> <3699327.0G6ZNxn8QA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1425503602-24916-2-git-send-email-galak@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org
-Cc: Abhimanyu Kapur <abhimany@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3699327.0G6ZNxn8QA@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Arun Ramamurthy <arunrama-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/15 13:13, Kumar Gala wrote:
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 1b8e973..4c8b119 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -177,6 +177,15 @@ config ARCH_MEDIATEK
->  	help
->  	  Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
->  
-> +config ARCH_QCOM
-> +	bool "Qualcomm Platforms"
-> +	select ARCH_REQUIRE_GPIOLIB
-> +	select COMMON_CLK_QCOM
-> +	select PINCTRL
-> +	select SOC_BUS
 
-I imagine all we need is select PINCTRL here. SOC_BUS is not used, also
-we shouldn't force COMMON_CLK_QCOM to be Y instead of M so please drop
-that select. Also we dropped ARCH_REQUIRE_GPIOLIB in arm32 so it would
-match if we just relied on ARCH_WANT_GPIOLIB that arm64 has by default
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 15-03-04 02:21 PM, Arnd Bergmann wrote:
+> On Thursday 12 February 2015 14:17:41 Arun Ramamurthy wrote:
+>> Hi Arnd
+>>
+>> My apologies for the late reply, I was moved to other work items. I
+>> wanted to get more clarification on the syscon issue so that I can
+>> submit the next patch set. If I understand correctly, you would like
+>> me to move the CRMU logic to a new driver under mfd/ and use the syscon
+>> api calls in my rtc driver? Thanks
+>
+> It depends a lot on what's in there, I can best advise you if you
+> have some form of register list.
+>
+> A common approach would be to not have a driver for the crmu at all,
+> but just mark it as syscon, and have the other drivers either reference
+> the syscon node through a phandle, or create them as childrem of
+> the syscon node. The latter case makes most sense if all uses of
+> the crmu have no other MMIO registers.
+>
+
+Thank you Arnd, I am going to follow the approach of adding a child node 
+to the syscon node. Several other driver use other registers in the CRMU 
+so I think the child node approach makes the most sense.
+>
+>> On 14-12-17 06:31 AM, Arnd Bergmann wrote:
+>>> On Tuesday 16 December 2014 13:54:04 Arun Ramamurthy wrote:
+>>>> On 14-12-16 12:27 PM, Ray Jui wrote:
+>>>>> On 12/16/2014 12:19 PM, Arnd Bergmann wrote:
+>>>>>>
+>>>>>> It sounds like CRMU is some other unit aside from the RTC. Could this
+>>>>>> be something like a generic system controller? I think it should
+>>>>>> either have its own driver or use the syscon logic if that is what
+>>>>>> this is.
+>>>>>>
+>>>>> Giving that CRMU has scattered, miscellaneous control logic for multiple
+>>>>> different peripherals, it probably makes more sense to use the syscon
+>>>>> logic here.
+>>>>>
+>>>> Arnd, thanks for the feedback. If I was to write a separate driver for
+>>>> the CRMU, I would have to export certain functions and create an api
+>>>> that only this RTC driver would use. I am not sure that is efficient or
+>>>> required. What is your opinion?
+>>>> Would it be better if I use the syson api in my current driver and move
+>>>> the CRMU registers to separate syscon device tree entry?
+>>>>
+>>>
+>>> This is something that's normally up to the platform maintainers, depending
+>>> on what works best for a given SoC. If you have a control block that
+>>> wants to export the same high-level API for multiple drivers, that's
+>>> fine, but if literally every register does something different, a syscon
+>>> driver works best.
+>>>
+>>> It's also possible that some of the functions of the CRMU already have
+>>> abstractions, like system-reset, device-reset, regulator or clock support.
+>>> In that case, you can still use syscon but have the more other drivers
+>>> use that for accessing the registers.
+>>>
+>>> 	Arnd
+>>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
