@@ -1,7 +1,7 @@
 From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH 4/5] dt-bindings: video: Add jz4780-hdmi binding
-Date: Wed, 4 Mar 2015 15:37:50 +0000
-Message-ID: <1425483471-59808-5-git-send-email-Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH 2/5] dt-bindings: video: Add jz4780-lcd binding
+Date: Wed, 4 Mar 2015 15:37:48 +0000
+Message-ID: <1425483471-59808-3-git-send-email-Zubair.Kakakhel@imgtec.com>
 References: <1425483471-59808-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,60 +12,58 @@ To: airlied@linux.ie
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the hdmi driver for the Ingenic JZ4780 SoC.
+Add DT bindings for the LCD controller on the jz4780 SoC
 
 Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 ---
- .../bindings/video/ingenic-jz4780-hdmi.txt         | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
+ .../bindings/video/ingenic-jz4780-lcd.txt          | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt
 
-diff --git a/Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt b/Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
+diff --git a/Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt b/Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt
 new file mode 100644
-index 0000000..f02e59f
+index 0000000..8512ce3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
-@@ -0,0 +1,41 @@
-+Device-Tree bindings for Ingenic JZ4780 HDMI Transmitter
++++ b/Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt
+@@ -0,0 +1,39 @@
++Bindings for Ingenic JZ4780 LCD Controller
 +
-+The HDMI Transmitter in the Ingenic JZ4780 is a Synopsys DesignWare HDMI 1.4
-+TX controller IP with accompanying PHY IP.
++LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
 +
 +Required properties:
-+ - #address-cells : should be <1>
-+ - #size-cells : should be <0>
-+ - compatible : should be "ingenic,jz4780-hdmi"
-+ - reg-io-width: must be <4>
-+ - clocks: phandle to isrf and iahb clocks
-+ - clock-names : must be "isrf" and "iahb"
-+ - ports: Port nodes with endpoint definitions as defined in
-+   Documentation/devicetree/bindings/media/video-interfaces.txt,
++- compatible: should be "ingenic,jz4780-lcd"
++- reg: Should contain the address & size of the LCD controller registers.
++- interrupts: Should specify the interrupt provided by parent.
++- clocks: Should contain two clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK.
++- clock-names : Must be "lcd_clk", "lcd_pixclk";
++- port: A port node with endpoint definitions as defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
 +
 +Optional properties:
-+ - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
++- interrupt-parent: phandle to parent interrupt controller
 +
-+example:
++Example:
 +
-+hdmi: hdmi@10180000 {
-+	compatible = "ingenic,jz4780-hdmi";
-+	reg = <0x10180000 0x8000>;
-+	reg-io-width = <4>;
-+	ddc-i2c-bus = <&i2c4>;
++lcd: jz4780-lcdk@0x13050000 {
++	compatible = "ingenic,jz4780-lcd";
++	reg = <0x13050000 0x1800>;
++
++	clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
++	clock-names = "lcd_clk", "lcd_pixclk";
++
 +	interrupt-parent = <&intc>;
-+	interrupts = <3>;
-+	clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
-+	clock-names = "isfr", "iahb";
++	interrupts = <31>;
 +
-+	ports {
-+		hdmi_in: port {
++	jz4780_lcd_out: port {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
-+			hdmi_in_lcd: endpoint@0 {
++
++			jz4780_out_hdmi: endpoint@0 {
 +				reg = <0>;
-+				remote-endpoint = <&jz4780_out_hdmi>;
++				remote-endpoint = <&hdmi_in_lcd>;
 +			};
 +		};
-+	};
++
 +};
 -- 
 1.9.1
