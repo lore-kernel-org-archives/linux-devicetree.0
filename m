@@ -1,44 +1,57 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] mfd: Add specific compatible strings for Qualcomm's
- SPMI PMIC's
-Date: Wed, 04 Mar 2015 11:05:16 -0800
-Message-ID: <54F7576C.9060808@codeaurora.org>
-References: <1425464365-3291-1-git-send-email-iivanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1425464365-3291-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] dt: spi: fsl-imx-cspi: add explicit compatible strings and required clock properties
+Date: Wed,  4 Mar 2015 14:12:58 -0500
+Message-ID: <1425496378-16561-1-git-send-email-mporter@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/15 02:19, Ivan T. Ivanov wrote:
-> +
-> +static const struct of_device_id pmic_spmi_id_table[] = {
-> +	[COMMON_SUBTYPE]  = { .compatible = "qcom,spmi-pmic" },
-> +	[PM8941_SUBTYPE]  = { .compatible = "qcom,pm8941" },
-> +	[PM8841_SUBTYPE]  = { .compatible = "qcom,pm8841" },
-> +	[PM8019_SUBTYPE]  = { .compatible = "qcom,pm8019" },
-> +	[PM8226_SUBTYPE]  = { .compatible = "qcom,pm8226" },
-> +	[PM8110_SUBTYPE]  = { .compatible = "qcom,pm8110" },
-> +	[PMA8084_SUBTYPE] = { .compatible = "qcom,pma8084" },
-> +	[PMI8962_SUBTYPE] = { .compatible = "qcom,pmi8962" },
-> +	[PMD9635_SUBTYPE] = { .compatible = "qcom,pmd9635" },
-> +	[PM8994_SUBTYPE]  = { .compatible = "qcom,pm8994" },
-> +	[PMI8994_SUBTYPE] = { .compatible = "qcom,pmi8994" },
-> +	[PM8916_SUBTYPE]  = { .compatible = "qcom,pm8916" },
-> +	[PM8004_SUBTYPE]  = { .compatible = "qcom,pm8004" },
-> +	[PM8909_SUBTYPE]  = { .compatible = "qcom,pm8909" },
-> +	{ }
-> +};
+The fsl-imx-cspi binding contains language indicating compatible
+strings to be used that is not valid for all supported parts
+e.g. Should be "fsl,<soc>-cspi" or "fsl,<soc>-ecspi". Fix this
+by enumerating the set of valid compatible strings.
 
-Also this seems error prone in the case where we may have skips between
-pmic model numbers and then the of_device_id table is going to have a
-sentinel in the middle of the table. It's probably better to store the
-subtype number in the data field and iterate over the array.
+The binding is also missing the clocks/clock-names properties
+so document these and the two required ipg and per clocks.
 
+Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+index aad527b..523341a 100644
+--- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
++++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+@@ -2,11 +2,21 @@
+   (CSPI/eCSPI) for i.MX
+ 
+ Required properties:
+-- compatible : Should be "fsl,<soc>-cspi" or "fsl,<soc>-ecspi"
++- compatible :
++  - "fsl,imx1-cspi" for SPI compatible with the one integrated on i.MX1
++  - "fsl,imx21-cspi" for SPI compatible with the one integrated on i.MX21
++  - "fsl,imx27-cspi" for SPI compatible with the one integrated on i.MX27
++  - "fsl,imx31-cspi" for SPI compatible with the one integrated on i.MX31
++  - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
++  - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
+ - reg : Offset and length of the register set for the device
+ - interrupts : Should contain CSPI/eCSPI interrupt
+ - fsl,spi-num-chipselects : Contains the number of the chipselect
+ - cs-gpios : Specifies the gpio pins to be used for chipselects.
++- clocks : Clock specifiers for both ipg and per clocks.
++- clock-names : Clock names should include both "ipg" and "per"
++See the clock consumer binding,
++	Documentation/devicetree/bindings/clock/clock-bindings.txt
+ - dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+ 		Documentation/devicetree/bindings/dma/dma.txt
+ - dma-names: DMA request names should include "tx" and "rx" if present.
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
