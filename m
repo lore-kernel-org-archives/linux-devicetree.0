@@ -1,93 +1,85 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH 1/3] arm64: mediatek: Add config option for mt8173.
-Date: Wed, 4 Mar 2015 10:31:07 +0800
-Message-ID: <1425436267.21342.39.camel@mtksdaap41>
-References: <1422342836-27689-1-git-send-email-hongzhou.yang@mediatek.com>
-	 <1422342836-27689-2-git-send-email-hongzhou.yang@mediatek.com>
-	 <1424855242.7845.9.camel@mtksdaap41> <5948977.qlhSVy9R5i@wuerfel>
-	 <20150225111107.GA29206@localhost>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 01/10] dt/bindings: Add binding for BCM2835 mailbox driver
+Date: Tue, 03 Mar 2015 19:37:17 -0700
+Message-ID: <54F66FDD.2040409@wwwdotorg.org>
+References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-2-git-send-email-eric@anholt.net> <20150303080550.GF6976@x1> <87vbih98za.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150225111107.GA29206@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, eddie.huang@mediatek.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, maoguang.meng@mediatek.com, alan.cheng@mediatek.com, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87vbih98za.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-02-25 at 11:11 +0000, Catalin Marinas wrote:
-> On Wed, Feb 25, 2015 at 11:51:57AM +0100, Arnd Bergmann wrote:
-> > On Wednesday 25 February 2015 17:07:22 Yingjoe Chen wrote:
-> > > On Tue, 2015-01-27 at 15:13 +0800, Hongzhou Yang wrote:
-> > > > From: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> > > > 
-> > > > The upcoming MTK pinctrl driver have a big pin table for each SoC,
-> > > > and we don't want to bloat the kernel binary if we don't need it.
-> > > > Add config options so we can build for one SoC only.
-> > > > 
-> > > > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> > > > ---
-> > > >  arch/arm64/Kconfig | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > > > index e627ead..6213dac 100644
-> > > > --- a/arch/arm64/Kconfig
-> > > > +++ b/arch/arm64/Kconfig
-> > > > @@ -151,9 +151,15 @@ menu "Platform selection"
-> > > >  config ARCH_MEDIATEK
-> > > >       bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
-> > > >       select ARM_GIC
-> > > > +     select PINCTRL
-> > > >       help
-> > > >         Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
-> > > >  
-> > > > +config MACH_MT8173
-> > > > +     bool "Mediatek 8173 Soc Supprt"
-> > > > +     depends on ARCH_MEDIATEK
-> > > > +     default y
-> > > > +
-> > > >  config ARCH_SEATTLE
-> > > >       bool "AMD Seattle SoC Family"
-> > > >       help
-> > > 
-> > > Hi Arnd/Matthias,
-> > > 
-> > > Any comments on this patch?
-> > 
-> > Hi Joe,
-> > 
-> > Actually I just commented on a similar patch from Samsung the other
-> > day, and I think we should make a more general decision about these:
-> > 
-> > I would rather see only one Kconfig option per SoC family and use
-> > ARCH_MEDIATEK without any MACH_* options. We can have other options
-> > for e.g. networking chips from Mediatek that are not closely related
-> > but I would group all the phone and tablet chips under one option
-> > here. Same for the other vendors of course.
+On 03/03/2015 12:28 PM, Eric Anholt wrote:
+> Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 > 
-> I agree.
+>> On Mon, 02 Mar 2015, Eric Anholt wrote:
+>> 
+>>> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>>> 
+>>> v2: Split into a separate patch for submitting to the 
+>>> devicetree list.
+...
+>>> ---
+
+Generally, the changelog should go below the --- since most people
+don't want to see the changelog committed into the source.
+
+>>> .../devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt | 19 
+>>> +++++++++++++++++++ 1 file changed, 19 insertions(+) create 
+>>> mode 100644 
+>>> Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+>>>
+>>>
+>>>
+>>> 
+diff --git
+a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+>>> new file mode 100644 index 0000000..f5741a0 --- /dev/null +++ 
+>>> b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+>>
+>>
+>>>
+>>> 
+Rename these files to conform to the current naming convention.  In
+>> -next we currently have 'altera-mailbox.txt' and 
+>> 'omap-mailbox.txt', so 'bcm2835-mbox.txt' seems appropriate.
 > 
+> Will do.
 
-Hi,
+I believe all the current bcm2835 bindings use the compatible value as
+the filename. I personally prefer this to picking a different "random"
+name for the filenames. It means you only have to name the thing once,
+and then use the same value for the compatible property and binding
+document.
 
-Since we support devicetree, we don't need MACH_* to build a working
-kernel. This is true even for our v7 soc. We intend to use it to reduce
-numbers of drivers in product kernel binary.
-Most drivers are shared among the same SoCs family, but some are not.
-Currently for pinctrl driver, we are doing this so user don't need to
-select them one by one:
+>>> +Example: + +mailbox: mailbox@7e00b800 { +	compatible = 
+>>> "brcm,bcm2835-mbox"; +	reg = <0x7e00b880 0x40>; +	interrupts = 
+>>> <0 1>; +	#mbox-cells = <1>; +};
+>> 
+>> It would be good to see the client examples here as well.
+>> Please consider pulling in brcm,bcm2835-mbox-power.txt and 
+>> brcm,bcm2835-mbox-property.txt.
+> 
+> Oh, so have those two just smashed into this file as one set of 
+> documentation for everything to do with mailbox on bcm2835?  That 
+> seems good to me.  When I was adding the client drivers, the fact 
+> that the other brcm file was named after the compatible string
+> made me generate new files under then new compatible strings, but
+> the other drivers already in the tree obviously aren't formatted
+> that way.
 
-config PINCTRL_MT8173
-        def_bool MACH_MT8173
-        select PINCTRL_MTK_COMMON
-
-Alternatively, we could add these MACH_* to some other places, eg,
-drivers/soc/mediatek. Or we don't add MACH_* at all, and have all
-drivers export their own Kconfig option. User will need to select each
-of them one-by-one.
-
-What do you think?
-
-Joe.C
+The HW mailbox seems like a different process to the upper-layer
+protocols/message formats running over the top of it. Sure right now
+the Pi has a single firmware, but do all bcm2835-based devices share
+the same firmware? Is so, we'd be warranted in lumping the HW and
+firmware protocol together, but I rather wonder whether e.g. the
+bcm2835-based Roku uses the same firmware protocol?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
