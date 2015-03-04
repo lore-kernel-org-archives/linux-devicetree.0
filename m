@@ -1,7 +1,7 @@
 From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 3/3 RESEND] MAINTAINERS: add info for e3x0-poweroff driver.
-Date: Wed,  4 Mar 2015 14:25:49 -0800
-Message-ID: <1425507949-30499-4-git-send-email-moritz.fischer@ettus.com>
+Subject: [PATCH v1 2/3 RESEND] dt: power: Add documentation for NI USRP E3x0 soft-poweroff.
+Date: Wed,  4 Mar 2015 14:25:48 -0800
+Message-ID: <1425507949-30499-3-git-send-email-moritz.fischer@ettus.com>
 References: <1425507949-30499-1-git-send-email-moritz.fischer@ettus.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1425507949-30499-1-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
@@ -12,28 +12,31 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 ---
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../devicetree/bindings/power/reset/e3x0-poweroff.txt    | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 85024e2..19c0ae1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3522,6 +3522,14 @@ S:	Supported
- F:	drivers/input/misc/e3x0-button.c
- F:	Documentation/devicetree/bindings/input/e3x0-button.txt
- 
-+E3X0 POWEROFF DRIVER
-+M:	Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-+L:	usrp-users-p6fHTpcPDZaz3Dx2OeFgIA@public.gmane.org
-+W:	http://www.ettus.com
-+S:	Supported
-+F:	drivers/power/reset/e3x0-poweroff.c
-+F:	Documentation/devicetree/bindings/power/reset/e3x0-poweroff.txt
+diff --git a/Documentation/devicetree/bindings/power/reset/e3x0-poweroff.txt b/Documentation/devicetree/bindings/power/reset/e3x0-poweroff.txt
+new file mode 100644
+index 0000000..47896e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/e3x0-poweroff.txt
+@@ -0,0 +1,16 @@
++National Instruments Ettus Research USRP E3x0 poweroff driver
 +
- E4000 MEDIA DRIVER
- M:	Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
- L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++This module is part of the NI Ettus Research USRP E3x0 SDR.
++
++Required properties:
++- compatible: should be one of the following
++  - "ettus,e3x0-poweroff": For devices such as the NI Ettus Research USRP E3x0
++- syscon: this is the phandle to the register map node
++
++Note: Addresses may vary depending on the FPGA configuration
++
++Example:
++	poweroff0: poweroff@40300000 {
++		compatible = "ettus,e3x0-poweroff";
++		syscon = <&regmapnode>;
++	};
 -- 
 1.9.3
 
