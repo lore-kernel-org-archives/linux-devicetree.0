@@ -1,337 +1,286 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] ARM: at91: dts: sama5d4: add dts for sama5d4 xplained
- board
-Date: Wed, 4 Mar 2015 12:07:53 +0100
-Message-ID: <54F6E789.5080508@atmel.com>
-References: <1425437508-30976-1-git-send-email-josh.wu@atmel.com> <1425437508-30976-2-git-send-email-josh.wu@atmel.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 3/4] cpufreq: mediatek: add Mediatek cpufreq driver
+Date: Wed, 4 Mar 2015 16:39:21 +0530
+Message-ID: <CAKohpo=c2t4_2hdPP-vQM7xewK5SXaHBGNA9PhvTwDv3++pSTg@mail.gmail.com>
+References: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
+	<1425458956-20665-4-git-send-email-pi-cheng.chen@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425437508-30976-2-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1425458956-20665-4-git-send-email-pi-cheng.chen@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Mike Turquette <mturquette@linaro.org>, fan.chen@mediatek.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 04/03/2015 03:51, Josh Wu a =E9crit :
-> Add at91 sama5d4 xplained board support.
->=20
-> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->=20
-> Changes in v4:
-> - Thanks to Bo Shen to find following leds issues:
->     1. the leds' label is changed in new xplained board.
->     2. as piod bank is disabled in sama5d4, that will whole led drive=
-r
-> not work. So just disable the led which used piod.
->=20
-> Changes in v3:
-> - add phy0 child node under macb0
-> - rebase on top of linux next, re-formated the arch/arm/boot/dts/Make=
-file
->=20
-> Changes in v2:
-> - to be sorted by memory address, put the adc dt node after usart4.
->=20
->  arch/arm/boot/dts/Makefile                  |   3 +-
->  arch/arm/boot/dts/at91-sama5d4_xplained.dts | 239 ++++++++++++++++++=
-++++++++++
->  2 files changed, 241 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/at91-sama5d4_xplained.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index a1c776b..5c189a5 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -42,7 +42,8 @@ dtb-$(CONFIG_SOC_SAM_V7) +=3D \
->  	sama5d34ek.dtb \
->  	sama5d35ek.dtb \
->  	sama5d36ek.dtb \
-> -	at91-sama5d4ek.dtb
-> +	at91-sama5d4ek.dtb \
-> +	at91-sama5d4_xplained.dtb
->  dtb-$(CONFIG_ARCH_ATLAS6) +=3D \
->  	atlas6-evb.dtb
->  dtb-$(CONFIG_ARCH_ATLAS7) +=3D \
-> diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/b=
-oot/dts/at91-sama5d4_xplained.dts
-> new file mode 100644
-> index 0000000..af8f4f5
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-> @@ -0,0 +1,239 @@
-> +/*
-> + * at91-sama5d4_xplained.dts - Device Tree file for SAMA5D4 Xplained=
- board
-> + *
-> + *  Copyright (C) 2015 Atmel,
-> + *                2015 Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dua=
-l
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License a=
-s
-> + *     published by the Free Software Foundation; either version 2 o=
-f the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty o=
-f
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentatio=
-n
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom th=
-e
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall b=
-e
-> + *     included in all copies or substantial portions of the Softwar=
-e.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIN=
-D,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTI=
-ES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +/dts-v1/;
-> +#include "sama5d4.dtsi"
-> +
-> +/ {
-> +	model =3D "Atmel SAMA5D4 Xplained";
-> +	compatible =3D "atmel,sama5d4-xplained", "atmel,sama5d4", "atmel,sa=
-ma5";
-> +
-> +	chosen {
-> +		bootargs =3D "console=3DttyS0,115200 ignore_loglevel earlyprintk";
-> +	};
-> +
-> +	memory {
-> +		reg =3D <0x20000000 0x20000000>;
-> +	};
-> +
-> +	clocks {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges;
-> +
-> +		main_clock: clock@0 {
-> +			compatible =3D "atmel,osc", "fixed-clock";
-> +			clock-frequency =3D <12000000>;
-> +		};
-> +
-> +		slow_xtal {
-> +			clock-frequency =3D <32768>;
-> +		};
-> +
-> +		main_xtal {
-> +			clock-frequency =3D <12000000>;
-> +		};
-> +	};
-> +
-> +	ahb {
-> +		apb {
-> +			spi0: spi@f8010000 {
-> +				cs-gpios =3D <&pioC 3 0>, <0>, <0>, <0>;
-> +				status =3D "okay";
-> +				m25p80@0 {
-> +					compatible =3D "atmel,at25df321a";
-> +					spi-max-frequency =3D <50000000>;
-> +					reg =3D <0>;
-> +				};
-> +			};
-> +
-> +			macb0: ethernet@f8020000 {
-> +				phy-mode =3D "rmii";
-> +				status =3D "okay";
-> +
-> +				phy0: ethernet-phy@1 {
-> +					interrupt-parent =3D <&pioE>;
-> +					interrupts =3D <1 IRQ_TYPE_EDGE_FALLING>;
-> +					reg =3D <1>;
-> +				};
-> +			};
-> +
-> +			mmc1: mmc@fc000000 {
-> +				pinctrl-names =3D "default";
-> +				pinctrl-0 =3D <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3 &=
-pinctrl_mmc1_cd>;
-> +				status =3D "okay";
-> +				slot@0 {
-> +					reg =3D <0>;
-> +					bus-width =3D <4>;
-> +					cd-gpios =3D <&pioE 3 0>;
-> +				};
-> +			};
-> +
-> +			usart3: serial@fc00c000 {
-> +				status =3D "okay";
-> +			};
-> +
-> +			usart4: serial@fc010000 {
-> +				status =3D "okay";
-> +			};
-> +
-> +			adc0: adc@fc034000 {
-> +				atmel,adc-vref =3D <3300>;
-> +				status =3D "okay";
-> +			};
-> +
-> +			watchdog@fc068640 {
-> +				status =3D "okay";
-> +			};
-> +
-> +			pinctrl@fc06a000 {
-> +				board {
-> +					pinctrl_mmc1_cd: mmc1_cd {
-> +						atmel,pins =3D
-> +							<AT91_PIOE 3 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
-> +					};
-> +					pinctrl_usba_vbus: usba_vbus {
-> +						atmel,pins =3D
-> +							<AT91_PIOE 31 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;
-> +					};
-> +					pinctrl_key_gpio: key_gpio_0 {
-> +						atmel,pins =3D
-> +							<AT91_PIOE 8 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;=
- /* PE13 gpio */
+Haven't reviewed it completely yet, but this is all I have done.
 
-Nit: useless comment which is wrong. I remove it.
+On 4 March 2015 at 14:19, pi-cheng.chen <pi-cheng.chen@linaro.org> wrote:
 
+> +static int mtk_cpufreq_notify(struct notifier_block *nb,
+> +                             unsigned long action, void *data)
+> +{
+> +       struct cpufreq_freqs *freqs = data;
+> +       struct cpu_opp_table *opp_tbl = dvfs_info->opp_tbl;
 
+There is only one dvfs info ? but there are two clusters, sorry got confused
+a bit..
 
-> +					};
-> +				};
-> +			};
-> +		};
+> +       int old_vproc, new_vproc, old_index, new_index;
 > +
-> +		usb0: gadget@00400000 {
-> +			atmel,vbus-gpio =3D <&pioE 31 GPIO_ACTIVE_HIGH>;
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_usba_vbus>;
-> +			status =3D "okay";
-> +		};
+> +       if (!cpumask_test_cpu(freqs->cpu, &dvfs_info->cpus))
+> +               return NOTIFY_DONE;
 > +
-> +		usb1: ohci@00500000 {
-> +			num-ports =3D <3>;
-> +			atmel,vbus-gpio =3D <0
-> +					   &pioE 11 GPIO_ACTIVE_HIGH
-> +					   &pioE 14 GPIO_ACTIVE_HIGH
-> +					  >;
-> +			status =3D "okay";
-> +		};
+> +       old_vproc = regulator_get_voltage(dvfs_info->proc_reg);
+> +       old_index = cpu_opp_table_get_volt_index(old_vproc);
+> +       new_index = cpu_opp_table_get_freq_index(freqs->new * 1000);
+> +       new_vproc = opp_tbl[new_index].vproc;
 > +
-> +		usb2: ehci@00600000 {
-> +			status =3D "okay";
-> +		};
+> +       if (old_vproc == new_vproc)
+> +               return 0;
 > +
-> +		nand0: nand@80000000 {
-> +			nand-bus-width =3D <8>;
-> +			nand-ecc-mode =3D "hw";
-> +			nand-on-flash-bbt;
-> +			atmel,has-pmecc;
-> +			status =3D "okay";
+> +       if ((action == CPUFREQ_PRECHANGE && old_vproc < new_vproc) ||
+> +           (action == CPUFREQ_POSTCHANGE && old_vproc > new_vproc))
+> +               mtk_cpufreq_voltage_trace(old_index, new_index);
 > +
-> +			at91bootstrap@0 {
-> +				label =3D "at91bootstrap";
-> +				reg =3D <0x0 0x40000>;
-> +			};
+> +       return NOTIFY_OK;
+> +}
 > +
-> +			bootloader@40000 {
-> +				label =3D "bootloader";
-> +				reg =3D <0x40000 0x80000>;
-> +			};
-> +
-> +			bootloaderenv@c0000 {
-> +				label =3D "bootloader env";
-> +				reg =3D <0xc0000 0xc0000>;
-> +			};
-> +
-> +			dtb@180000 {
-> +				label =3D "device tree";
-> +				reg =3D <0x180000 0x80000>;
-> +			};
-> +
-> +			kernel@200000 {
-> +				label =3D "kernel";
-> +				reg =3D <0x200000 0x600000>;
-> +			};
-> +
-> +			rootfs@800000 {
-> +				label =3D "rootfs";
-> +				reg =3D <0x800000 0x0f800000>;
-> +			};
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible =3D "gpio-keys";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_key_gpio>;
-> +
-> +		pb_user1 {
-> +			label =3D "pb_user1";
-> +			gpios =3D <&pioE 8 GPIO_ACTIVE_HIGH>;
-> +			linux,code =3D <0x100>;
-> +			gpio-key,wakeup;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		status =3D "okay";
-> +
-> +		d8 {
-> +			label =3D "d8";
-> +			gpios =3D <&pioD 30 GPIO_ACTIVE_HIGH>;
-> +			status =3D "disabled";
-> +		};
-> +
-> +		d10 {
-> +			label =3D "d10";
-> +			gpios =3D <&pioE 15 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger =3D "heartbeat";
-> +		};
-> +	};
+> +static struct notifier_block mtk_cpufreq_nb = {
+> +       .notifier_call = mtk_cpufreq_notify,
 > +};
->=20
+> +
+> +static int cpu_opp_table_init(struct device *dev)
+> +{
+> +       struct device *cpu_dev = dvfs_info->cpu_dev;
+> +       struct cpu_opp_table *opp_tbl;
+> +       struct dev_pm_opp *opp;
+> +       int ret, cnt, i;
+> +       unsigned long rate, vproc, vsram;
+> +
+> +       ret = of_init_opp_table(cpu_dev);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to init mtk_opp_table: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       rcu_read_lock();
+> +
+> +       cnt = dev_pm_opp_get_opp_count(cpu_dev);
+> +       if (cnt < 0) {
+> +               dev_err(cpu_dev, "No OPP table is found: %d", cnt);
+> +               ret = cnt;
+> +               goto out_free_opp_tbl;
+> +       }
+> +
+> +       opp_tbl = devm_kcalloc(dev, (cnt + 1), sizeof(struct cpu_opp_table),
+> +                              GFP_ATOMIC);
+> +       if (!opp_tbl) {
+> +               ret = -ENOMEM;
+> +               goto out_free_opp_tbl;
+> +       }
+> +
+> +       for (i = 0, rate = 0; i < cnt; i++, rate++) {
+> +               opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
+> +               if (IS_ERR(opp)) {
+> +                       ret = PTR_ERR(opp);
+> +                       goto out_free_opp_tbl;
+> +               }
+> +
+> +               vproc = dev_pm_opp_get_voltage(opp);
+> +               vproc = get_regulator_voltage_ceil(dvfs_info->proc_reg, vproc);
+> +               vsram = vproc + VOLT_SHIFT_LOWER_LIMIT;
+> +               vsram = get_regulator_voltage_ceil(dvfs_info->sram_reg, vsram);
+> +
+> +               if (vproc < 0 || vsram < 0) {
+> +                       ret = -EINVAL;
+> +                       goto out_free_opp_tbl;
+> +               }
+> +
+> +               opp_tbl[i].freq = rate;
+> +               opp_tbl[i].vproc = vproc;
+> +               opp_tbl[i].vsram = vsram;
+> +       }
+> +
+> +       opp_tbl[i].freq = 0;
+> +       opp_tbl[i].vproc = -1;
+> +       opp_tbl[i].vsram = -1;
+> +       dvfs_info->opp_tbl = opp_tbl;
+> +
+> +out_free_opp_tbl:
+> +       rcu_read_unlock();
+> +       of_free_opp_table(cpu_dev);
+> +
+> +       return ret;
+> +}
+> +
+> +static struct cpufreq_cpu_domain *get_cpu_domain(struct list_head *domain_list,
+> +                                                int cpu)
+> +{
+> +       struct list_head *node;
+> +
+> +       list_for_each(node, domain_list) {
+> +               struct cpufreq_cpu_domain *domain;
+> +
+> +               domain = container_of(node, struct cpufreq_cpu_domain, node);
+> +               if (cpumask_test_cpu(cpu, &domain->cpus))
+> +                       return domain;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +static int mtk_cpufreq_probe(struct platform_device *pdev)
 
-Otherwise, it's okay:
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On a dual cluster big LITTLE (your system), how many times is probe
+getting called ? Once or twice, i.e. for each cluster ??
 
-I take it for at91-4.1-dt (no need to respin it).
+> +{
+> +       struct clk *inter_clk;
+> +       struct cpufreq_dt_platform_data *pd;
+> +       struct platform_device *dev;
+> +       unsigned long inter_freq;
+> +       int cpu, ret;
+> +
+> +       inter_clk = clk_get(&pdev->dev, NULL);
 
-Bye,
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How is this supposed to work ? How will pdev->dev give intermediate
+clock ?
+
+> +       if (IS_ERR(inter_clk)) {
+> +               if (PTR_ERR(inter_clk) == -EPROBE_DEFER) {
+> +                       dev_warn(&pdev->dev, "clock not ready. defer probeing.\n");
+> +                       return -EPROBE_DEFER;
+> +               }
+> +
+> +               dev_err(&pdev->dev, "Failed to get intermediate clock\n");
+> +               return -ENODEV;
+> +       }
+> +       inter_freq = clk_get_rate(inter_clk);
+> +
+> +       pd = devm_kzalloc(&pdev->dev, sizeof(*pd), GFP_KERNEL);
+> +       if (!pd)
+> +               return -ENOMEM;
+> +
+> +       dvfs_info = devm_kzalloc(&pdev->dev, sizeof(*dvfs_info), GFP_KERNEL);
+> +       if (!dvfs_info)
+> +               return -ENOMEM;
+
+Instead of two allocations, you could have made pd part of dvfs_info
+and allocated only
+once.
+
+> +
+> +       pd->independent_clocks = 1,
+
+s/,/; ??
+
+> +       INIT_LIST_HEAD(&pd->domain_list);
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               struct device *cpu_dev;
+> +               struct cpufreq_cpu_domain *new_domain;
+> +               struct regulator *proc_reg, *sram_reg;
+> +
+> +               cpu_dev = get_cpu_device(cpu);
+
+This should be done in the below if block only.
+
+> +               if (!dvfs_info->cpu_dev) {
+> +                       proc_reg = regulator_get_exclusive(cpu_dev, "proc");
+> +                       sram_reg = regulator_get_exclusive(cpu_dev, "sram");
+> +
+> +                       if (PTR_ERR(proc_reg) == -EPROBE_DEFER ||
+> +                           PTR_ERR(sram_reg) == -EPROBE_DEFER)
+> +                               return -EPROBE_DEFER;
+> +
+> +                       if (!IS_ERR_OR_NULL(proc_reg) &&
+> +                           !IS_ERR_OR_NULL(sram_reg)) {
+> +                               dvfs_info->cpu_dev = cpu_dev;
+> +                               dvfs_info->proc_reg = proc_reg;
+> +                               dvfs_info->sram_reg = sram_reg;
+> +                               cpumask_copy(&dvfs_info->cpus,
+> +                                            &cpu_topology[cpu].core_sibling);
+> +                       }
+> +               }
+> +
+> +               if (get_cpu_domain(&pd->domain_list, cpu))
+> +                       continue;
+
+This isn't required if you do below..
+
+> +
+> +               new_domain = devm_kzalloc(&pdev->dev, sizeof(*new_domain),
+> +                                         GFP_KERNEL);
+> +               if (!new_domain)
+> +                       return -ENOMEM;
+> +
+> +               cpumask_copy(&new_domain->cpus,
+> +                            &cpu_topology[cpu].core_sibling);
+> +               new_domain->intermediate_freq = inter_freq;
+> +               list_add(&new_domain->node, &pd->domain_list);
+
+Just issue a 'break' from here as you don't want to let this loop run again.
+
+> +       }
+> +
+> +       if (IS_ERR_OR_NULL(dvfs_info->proc_reg) ||
+> +           IS_ERR_OR_NULL(dvfs_info->sram_reg)) {
+> +               dev_err(&pdev->dev, "Failed to get regulators\n");
+> +               return -ENODEV;
+> +       }
+
+If you really need these, then don't allocate new_domain unless you find a CPU
+with these regulators..
+
+> +       ret = cpu_opp_table_init(&pdev->dev);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to setup cpu_opp_table: %d\n",
+> +                       ret);
+> +               return ret;
+> +       }
+> +
+> +       ret = cpufreq_register_notifier(&mtk_cpufreq_nb,
+> +                                       CPUFREQ_TRANSITION_NOTIFIER);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to register cpufreq notifier\n");
+> +               return ret;
+> +       }
+
+Don't want to free OPP table here on error ?
+
+> +       dev = platform_device_register_data(NULL, "cpufreq-dt", -1, pd,
+> +                                           sizeof(*pd));
+
+So this routine is going to be called only once. Then how are you
+initializing stuff
+for both the clusters in the upper for loop ? It looked very very confusing.
+
+> +       if (IS_ERR(dev)) {
+> +               dev_err(&pdev->dev,
+> +                       "Failed to register cpufreq-dt platform device\n");
+> +               return PTR_ERR(dev);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id mtk_cpufreq_match[] = {
+> +       {
+> +               .compatible = "mediatek,mtk-cpufreq",
+
+Can't you use "mediatek,mt8173" here ?
+
+> +       },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, mtk_cpufreq_match);
+> +
+> +static struct platform_driver mtk_cpufreq_platdrv = {
+> +       .driver = {
+> +               .name   = "mtk-cpufreq",
+> +               .of_match_table = mtk_cpufreq_match,
+> +       },
+> +       .probe  = mtk_cpufreq_probe,
+> +};
+> +module_platform_driver(mtk_cpufreq_platdrv);
