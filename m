@@ -1,83 +1,59 @@
-From: "Suzuki K. Poulose" <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm-cci: Rearrange code for splitting PMU vs driver
- code
-Date: Wed, 04 Mar 2015 12:16:49 +0000
-Message-ID: <54F6F7B1.1020300@arm.com>
-References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com> <1425295754-13376-2-git-send-email-suzuki.poulose@arm.com> <54F5D4B6.40409@arm.com>
+From: "Suzuki K. Poulose" <Suzuki.Poulose@arm.com>
+Subject: Re: [PATCH v2 0/5] arm-cci400: PMU monitoring support on ARM64
+Date: Wed, 04 Mar 2015 12:17:39 +0000
+Message-ID: <54F6F7E3.40302@arm.com>
+References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com> <54F5DA8C.7080609@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
 Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F5D4B6.40409-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Punit Agrawal <Punit.Agrawal-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54F5DA8C.7080609@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <Sudeep.Holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "nico@linaro.org" <nico@linaro.org>, "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "olof@lixom.net" <olof@lixom.net>, Punit Agrawal <Punit.Agrawal@arm.com>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/15 15:35, Sudeep Holla wrote:
+On 03/03/15 16:00, Sudeep Holla wrote:
 >
 >
 > On 02/03/15 11:29, Suzuki K. Poulose wrote:
->> From: "Suzuki K. Poulose" <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+>> From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
 >>
->> No functional changes, only code re-arrangements for easier split of the
->> PMU code vs low level driver code. Extracts the port handling code
->> to cci_probe_ports().
+>> This series enables the PMU monitoring support for CCI400 on ARM64.
+>> The existing CCI400 driver code is a mix of PMU driver and the MCPM
+>> driver code. The MCPM driver is only used on ARM(32) and contains
+>> arm32 assembly and hence can't be built on ARM64. This patch splits
+>> the code to
 >>
->> Signed-off-by: Suzuki K. Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
->> ---
->>    drivers/bus/arm-cci.c |  330 +++++++++++++++++++++++++------------------------
->>    1 file changed, 168 insertions(+), 162 deletions(-)
+>>    - ARM_CCI400_PORT_CTRL driver - depends on ARM && V7
+>>    - ARM_CCI400_PMU driver
 >>
->> diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
->> index 84fd660..f27cf56 100644
->> --- a/drivers/bus/arm-cci.c
->> +++ b/drivers/bus/arm-cci.c
->
-> [...]
->
->> @@ -1395,11 +1412,36 @@ static int cci_probe(void)
->>    	sync_cache_w(&cpu_port);
->>    	__sync_cache_range_w(ports, sizeof(*ports) * nb_cci_ports);
->>    	pr_info("ARM CCI driver probed\n");
->> +
->>    	return 0;
->> +}
->> +
->> +static int cci_probe(void)
->> +{
->> +	int ret;
->> +	struct device_node *np;
->> +	struct resource res;
->> +
->> +	np = of_find_matching_node(NULL, arm_cci_matches);
->> +	if (!np)
->> +		return -ENODEV;
+>> Accessing the Peripheral ID2 register(PID2) on CCI-400, to detect
+>> the revision of the chipset, is a secure operation. Hence, it prevents
+>> us from running this on non-secure platforms. The issue is overcome by
+>> explicitly mentioning the revision number of the CCI PMU in the device tree
+>> binding. The device-tree binding has been updated with the new bindings.
 >>
->> -memalloc_err:
->> +	if (!of_device_is_available(np))
->> +		return -ENODEV;
->> +
->> +	ret = of_address_to_resource(np, 0, &res);
->> +	if (!ret) {
->> +		cci_ctrl_base = ioremap(res.start, resource_size(&res));
->> +		cci_ctrl_phys =	res.start;
->> +	}
->> +	if (ret || !cci_ctrl_base) {
->> +		WARN(1, "unable to ioremap CCI ctrl\n");
->> +		ret = -ENXIO;
->> +		goto out;
+>> i.e,	arm-cci-400-pmu,r0 => revision 0
+>> 	arm-cci-400-pmu,r1 => revision 1
+>> 	arm-cci-400-pmu => (old) DEPRECATED
+>>
+>> The old binding has been DEPRECATED and must be used only on ARM32
+>> system with secure access. We don't have a reliable dynamic way to detect
+>> if the system is running secure. This series tries to use the best safe
+>> method by relying on the availability of MCPM(as it was prior to the series).
+>> It is upto the MCPM platform driver to decide, if the system is secure before
+>> it goes ahead and registers its drivers and pokes the CCI. This series doesn't
+>> address/solve the problem of MCPM. I will be happy to use a better approach,
+>> if there is any.
+>>
+>> Tested on (non-secure)TC2 and Juno.
+>>
 >
-> IMO you can return directly here and get rid of this goto as nothing is
-> done there.
+> For the series:
+> Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on secure/MCPM TC2)
 >
-Yes, you are right. I will fix that in the next revision.
 
-Regards
+Thanks a lot for the testing
+
 Suzuki
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
