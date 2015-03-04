@@ -1,91 +1,32 @@
-From: "Suzuki K. Poulose" <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH 4/5] arm-cci: Split the code for PMU vs driver support
-Date: Wed, 04 Mar 2015 12:18:59 +0000
-Message-ID: <54F6F833.1030906@arm.com>
-References: <1425295754-13376-1-git-send-email-suzuki.poulose@arm.com> <1425295754-13376-5-git-send-email-suzuki.poulose@arm.com> <54F5D914.7030705@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 07/10] pinctrl: mvebu: add pinctrl driver for Marvell
+ Armada 39x
+Date: Wed, 4 Mar 2015 13:54:42 +0100
+Message-ID: <CACRpkdZH9vUPR65Yw65LKHns8_b3vM+1ARoks2j73WV2WmAExQ@mail.gmail.com>
+References: <1423238276-9206-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1423238276-9206-8-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54F5D914.7030705@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <Sudeep.Holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "nico@linaro.org" <nico@linaro.org>, "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "olof@lixom.net" <olof@lixom.net>, Punit Agrawal <Punit.Agrawal@arm.com>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1423238276-9206-8-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/15 15:53, Sudeep Holla wrote:
->
->
-> On 02/03/15 11:29, Suzuki K. Poulose wrote:
->> From: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
->>
->> This patch separates the PMU driver code from the low level
->> CCI driver code.
->>
->> Introduces config options for both.
->>
->>    ARM_CCI400_PORT_CTRL	- controls the low level driver code for
->> 			  CCI400 ports.
->>    ARM_CCI400_PMU 	- controls the PMU driver code
->>    ARM_CCI400_COMMON 	- Common defintions for CCI400
->>
->> Also the ARM_CCI400_PORT_CTRL cannot be enabled by user. This
->> should be selected by platforms which need it.
->>
->> This patch also changes:
->>    ARM_CCI - common code for probing the CCI devices. This can be
->>      used for adding support for newer CCI versions(e.g, CCI-500).
->>
->> Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
->> ---
->>    arch/arm/mach-exynos/Kconfig   |    2 +-
->>    arch/arm/mach-vexpress/Kconfig |    4 ++--
->>    drivers/bus/Kconfig            |   27 +++++++++++++++++++++++----
->>    drivers/bus/arm-cci.c          |   24 ++++++++++++++++++++----
->>    include/linux/arm-cci.h        |    7 ++++++-
->>    5 files changed, 52 insertions(+), 12 deletions(-)
->>
->
-> [...]
->
->> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
->> index b99729e..bdc189f 100644
->> --- a/drivers/bus/Kconfig
->> +++ b/drivers/bus/Kconfig
->> @@ -43,12 +43,31 @@ config OMAP_INTERCONNECT
->>    	help
->>    	  Driver to enable OMAP interconnect error handling driver.
->>
->> -config ARM_CCI
->> -	bool "ARM CCI driver support"
->> +config ARM_CCI400_PORT_CTRL
->> +	bool
->>    	depends on ARM && OF && CPU_V7
->> +	select ARM_CCI400_COMMON
->> +	help
->> +	  Low level power management driver for CCI400 cache coherent
->> +	  interconnect for ARM platforms.
->> +
->> +config ARM_CCI400_PMU
->> +	bool "ARM CCI400 PMU support"
->> +	depends on ARM || ARM64
->> +	depends on HW_PERF_EVENTS
->> +	select ARM_CCI400_COMMON
->>    	help
->> -	  Driver supporting the CCI cache coherent interconnect for ARM
->> -	  platforms.
->> +	  Support for PMU events monitoring on the ARM CCI cache coherent
->> +	  interconnect.
->> +
->> +	  If unsure, say N
->
-> Just a query rather than comment. Before this change all platforms
-> having ARM_CCI and HW_PERF_EVENTS had CCI PMU enabled by default.
-> With this change, one has to select this option explicitly. I assume
-> that's fine, else this needs to be default 'y'
+On Fri, Feb 6, 2015 at 4:57 PM, Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com> wrote:
 
-Yes, that makes sense. Now that we decide if we can access the CCI 
-safely at runtime, it is safe to make this default.
+> This commit adds a new pinctrl driver for the Marvell Armada 39x
+> family of processors, which hooks into the existing infrastructure to
+> support pin-muxing on Marvell EBU processors. Two variants of the
+> Armada 39x are supported: 88F6920 (Armada 390) and 88F6928 (Armada
+> 398), which have a few differences in the available functions for
+> certain pins.
+>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
-Regards
-Suzuki
+Patch applied.
+
+Yours,
+Linus Walleij
