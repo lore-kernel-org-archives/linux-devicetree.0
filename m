@@ -1,36 +1,54 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [RFC/PATCH 0/2] spi: spi-dw: Select 16b or 32b register access
-Date: Wed, 4 Mar 2015 14:31:13 -0600
-Message-ID: <1425501075-17081-1-git-send-email-tthayer@opensource.altera.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: sun7i: dt: Add new MK808C device
+Date: Wed, 4 Mar 2015 21:34:00 +0100
+Message-ID: <20150304203400.GR4911@lukather>
+References: <1425131004-8551-1-git-send-email-codekipper@gmail.com>
+ <20150303071342.GB4713@lukather>
+ <CAEKpxB=-vtjMckh3ZHoy0mezE9U1EtKzmttdXRD5ZNztZvB_ag@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CPn8Wy5ME997YUMW"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB56Y3WTQKGQET6FAIPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAEKpxB=-vtjMckh3ZHoy0mezE9U1EtKzmttdXRD5ZNztZvB_ag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+--CPn8Wy5ME997YUMW
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-The Altera Arria10 SoC requires 32 bit accesses to peripherals. The
-DesignWare SPI peripheral registers are on 32bit boundaries so this
-patch is minimal. Function pointers are used to select 32bit access
-or 16bit accesses.
+On Tue, Mar 03, 2015 at 09:22:32PM +0100, Code Kipper wrote:
+> >> +
+> >> +/ {
+> >> +     model = "mk808c";
+> >> +     compatible = "mk808c", "allwinner,sun7i-a20";
+> >
+> > the compatible must be of the format "vendor,device". Please add the
+> > vendor name.
+> 
+> Ahhh....I've searched high and low for a vendors name. I listed it as
+> unknown on the wiki page,
+> would 'odm' be considered valid?
 
-Thor Thayer (2):
-  dt-binding: spi: spi-dw: Select 16b or 32b access for Designware SPI
-  spi: dw-spi: Pointers select 16b vs. 32b DesignWare access
+Not really. Another mk808c device might very well be made by some
+other odm.
 
- Documentation/devicetree/bindings/spi/spi-dw.txt |    1 +
- drivers/spi/spi-dw-mmio.c                        |    7 +++-
- drivers/spi/spi-dw.c                             |   38 +++++++++++++---------
- drivers/spi/spi-dw.h                             |   10 +++---
- 4 files changed, 35 insertions(+), 21 deletions(-)
+Don't your device has any brand on the case or the PCB?
+
+Maxime
 
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--CPn8Wy5ME997YUMW--
