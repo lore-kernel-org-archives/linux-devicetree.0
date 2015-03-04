@@ -1,73 +1,59 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: dts: sama5d3/sama5d4: reduce NFC command registers
- memory region
-Date: Wed, 4 Mar 2015 16:19:18 +0100
-Message-ID: <54F72276.8060605@atmel.com>
-References: <1421305683-8739-1-git-send-email-josh.wu@atmel.com>	<20150115094527.3fde882a@bbrezillon>	<54B78F73.9000504@atmel.com> <20150115110501.53b4584c@bbrezillon>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v3 00/20] ARM: mvebu: Armada 39x basic support, and
+ preparatory cleanups
+Date: Wed, 4 Mar 2015 16:20:08 +0100
+Message-ID: <20150304162008.1d337e6e@free-electrons.com>
+References: <1425393675-17820-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<54F71F45.3060503@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150115110501.53b4584c@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <54F71F45.3060503@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 15/01/2015 11:05, Boris Brezillon a =C3=A9crit :
-> Hi Josh,
->=20
-> On Thu, 15 Jan 2015 17:59:15 +0800
-> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
->=20
->> Hi=EF=BC=8C Boris
->>
->> Thanks for the review.
->>
->> On 1/15/2015 4:45 PM, Boris Brezillon wrote:
->>> Hi Josh,
->>>
->>> On Thu, 15 Jan 2015 15:08:03 +0800
->>> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>>> To get NFC status, we need to read the NFC command registers, whic=
-h is a
->>>> 256M memory mapping address. To check the status, you just read su=
-ch
->>>> address from NFC command registers.
->>>> For example, to check NFCBUSY (bit 27), you need to read 0x0800000=
-0
->>>> (bit 27 is set to 1) of the NFC command register.
->>>> If you want to check NFCBUSY (bit 27) and NFCWR (bit 26) in same t=
-ime,
->>>> you need to read 0x0c000000 (bit 27 and bit 26 are set to 1).
->>> Are NFCBUSY and NFCWR found in NFCDATA_STATUS and those found in HS=
-MC_SR
->>> representing the same thing.
->> yes. it is. I just check with IP team. The NFCBUSY of NFCDATA_STATUS=
- is=20
->> also refer to NFC_BUSY of HSMC_SR.
->>
->>> If they are, I think you can just use HSMC_SR instead of NFCDATA_ST=
-ATUS
->>> to check the status [1] and drop the last bit in the NFC Command
->>> Resgiters range.
->> Thank you. your code works (just need some typo change).
->> I want to send [1] code with your signed-off and my acked to mtd lis=
-t.
->> Is it okay for you?
->=20
-> Sure, no problem.
+Gregory,
 
-Hi Josh,
+On Wed, 04 Mar 2015 16:05:41 +0100, Gregory CLEMENT wrote:
 
-What is the status of this patch set?
+> Patches 1 applied to mvebu/cleanup
+> Patches 2 to 8 and patch 17 applied to mvebu/dt
+> Patches 9,12,16 and 18 applied to mvebu/soc
+> Patch 19 applied to mvebu/defconfig
+> 
+> and
+> 
+> Patches 10,13 and 14 applied to mvebu/clk as requested by Mike.
+> 
+> I had to amend the patch "ARM: mvebu: fix unit address of MPIC nodes"
+> by removing the armada-38x related part which was already applied by the
+> patch "ARM: mvebu: Fix MPIC unit address".
+> 
+> Patch 20 should be directly taken by the arm-soc maintainer.
 
-Bye,
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+
+So this leaves only:
+
+  [PATCH v3 11/20] devicetree: bindings: add Device Tree bindings for Armada 39x pin-muxing controller
+  [PATCH v3 15/20] pinctrl: mvebu: add pinctrl driver for Marvell Armada 39x
+
+to be applied, right? Patch 15/20 has been applied by Linus Walleij
+already, but from the v1 of the series. I also asked him to merge PATCH
+v3 11/20.
+
+With this done, and PATCH v2 20/20 merged by the arm-soc maintainers, I
+guess we should be all set with this patch series.
+
+Thanks again!
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
