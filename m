@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 2/9] ARM: multi_v7_defconfig: Enable support for ST's LPC Watchdog
-Date: Wed,  4 Mar 2015 18:06:31 +0000
-Message-ID: <1425492398-27340-3-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v5 9/9] MAINTAINERS: Add Watchdog and RTC files to STI's maintainer entry
+Date: Wed,  4 Mar 2015 18:06:38 +0000
+Message-ID: <1425492398-27340-10-git-send-email-lee.jones@linaro.org>
 References: <1425492398-27340-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1425492398-27340-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -12,21 +12,26 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index e8a4c95..0f172f8 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -288,6 +288,7 @@ CONFIG_WATCHDOG=y
- CONFIG_XILINX_WATCHDOG=y
- CONFIG_ARM_SP805_WATCHDOG=y
- CONFIG_ORION_WATCHDOG=y
-+CONFIG_ST_LPC_WATCHDOG=y
- CONFIG_SUNXI_WATCHDOG=y
- CONFIG_MESON_WATCHDOG=y
- CONFIG_MFD_AS3722=y
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ddc5a8c..19af007 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1461,10 +1461,12 @@ F:	drivers/phy/phy-stih407-usb.c
+ F:	drivers/phy/phy-stih41x-usb.c
+ F:	drivers/pinctrl/pinctrl-st.c
+ F:	drivers/reset/sti/
++F:	drivers/rtc/rtc-st-lpc.c
+ F:	drivers/tty/serial/st-asc.c
+ F:	drivers/usb/dwc3/dwc3-st.c
+ F:	drivers/usb/host/ehci-st.c
+ F:	drivers/usb/host/ohci-st.c
++F:	drivers/watchdog/st_lpc_wdt.c
+ F:	drivers/ata/ahci_st.c
+ 
+ ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
 -- 
 1.9.1
 
