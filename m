@@ -1,39 +1,40 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: pxa: documentation: trivial: fix typo
-Date: Wed, 4 Mar 2015 11:50:29 +0800
-Message-ID: <1425441029-32579-1-git-send-email-josh.wu@atmel.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 08/10] dt/bindings: Add binding for BCM2835 mailbox property
+ channel driver
+Date: Tue, 03 Mar 2015 20:53:50 -0700
+Message-ID: <54F681CE.2070801@wwwdotorg.org>
+References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-9-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425329684-23968-9-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-fix typo in the document.
+On 03/02/2015 01:54 PM, Eric Anholt wrote:
+> I was tempted to have the mailbox property channel support just be in
+> the 2835 mailbox driver itself, but mbox_request_channel() wants its
+> device to have the "mboxes" node, and that appears to be only intended
+> for mailbox clients, not controllers.
 
-Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+This is more of a particular format/protocol of messages you can send
+over the mailbox HW than a device. I wonder if it actually makes sense
+to represent it in DT as a device at all?
 
- Documentation/devicetree/bindings/gpio/mrvl-gpio.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If we do represent this as a device in DT, shouldn't it also look like a
+mailbox device so that other drivers (clock, display, ...) can bind to
+it and send messages using the mailbox API?
 
-diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-index b2afdb2..77d0dd0 100644
---- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-@@ -12,7 +12,7 @@ Required properties:
-   gpio_mux.
- - interrupt-names : Should be the names of irq resources. Each interrupt
-   uses its own interrupt name, so there should be as many interrupt names
--  as referenced interrups.
-+  as referenced interrupts.
- - interrupt-controller : Identifies the node as an interrupt controller.
- - #interrupt-cells: Specifies the number of cells needed to encode an
-   interrupt source.
--- 
-1.9.1
-
+I might have expected to just add property support directly into the
+basic bcm2835 mailbox driver itself. Perhaps some attempt might be made
+to isolate the HW register level access in one file/driver, and expose
+both the regular and property mailbox protocols as a higher level that
+uses the low-level mailbox functionality? The concept of the lower 4
+bits of mailbox data being a channel ID might belong in the higher
+protocol level rather than the lower HW layer?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
