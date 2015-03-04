@@ -1,57 +1,50 @@
-From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] dt: spi: fsl-imx-cspi: add explicit compatible strings and required clock properties
-Date: Wed,  4 Mar 2015 14:12:58 -0500
-Message-ID: <1425496378-16561-1-git-send-email-mporter@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH v5 8/9] rtc: st: add new driver for ST's LPC RTC
+Date: Wed, 04 Mar 2015 20:24:32 +0100
+Message-ID: <1425497072.2090.4.camel@tiscali.nl>
+References: <1425492398-27340-1-git-send-email-lee.jones@linaro.org>
+	 <1425492398-27340-9-git-send-email-lee.jones@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425492398-27340-9-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com, a.zummo@towertech.it
 List-Id: devicetree@vger.kernel.org
 
-The fsl-imx-cspi binding contains language indicating compatible
-strings to be used that is not valid for all supported parts
-e.g. Should be "fsl,<soc>-cspi" or "fsl,<soc>-ecspi". Fix this
-by enumerating the set of valid compatible strings.
+Lee Jones schreef op wo 04-03-2015 om 18:06 [+0000]:
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-st-lpc.c
+> @@ -0,0 +1,354 @@
+> +/*
+> + * rtc-st-lpc.c - ST's LPC RTC, powered by the Low Power Timer
+> + *
+> + * Copyright (C) 2014 STMicroelectronics Limited
+> + *
+> + * Author: David Paris <david.paris@st.com> for STMicroelectronics
+> + *         Lee Jones <lee.jones@linaro.org> for STMicroelectronics
+> + *
+> + * Based on the original driver written by Stuart Menefy.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public Licence
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the Licence, or (at your option) any later version.
+> + */
 
-The binding is also missing the clocks/clock-names properties
-so document these and the two required ipg and per clocks.
+This states the license is GPL v2 or later.
 
-Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+> +MODULE_LICENSE("GPLv2");
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index aad527b..523341a 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -2,11 +2,21 @@
-   (CSPI/eCSPI) for i.MX
- 
- Required properties:
--- compatible : Should be "fsl,<soc>-cspi" or "fsl,<soc>-ecspi"
-+- compatible :
-+  - "fsl,imx1-cspi" for SPI compatible with the one integrated on i.MX1
-+  - "fsl,imx21-cspi" for SPI compatible with the one integrated on i.MX21
-+  - "fsl,imx27-cspi" for SPI compatible with the one integrated on i.MX27
-+  - "fsl,imx31-cspi" for SPI compatible with the one integrated on i.MX31
-+  - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
-+  - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
- - reg : Offset and length of the register set for the device
- - interrupts : Should contain CSPI/eCSPI interrupt
- - fsl,spi-num-chipselects : Contains the number of the chipselect
- - cs-gpios : Specifies the gpio pins to be used for chipselects.
-+- clocks : Clock specifiers for both ipg and per clocks.
-+- clock-names : Clock names should include both "ipg" and "per"
-+See the clock consumer binding,
-+	Documentation/devicetree/bindings/clock/clock-bindings.txt
- - dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
- 		Documentation/devicetree/bindings/dma/dma.txt
- - dma-names: DMA request names should include "tx" and "rx" if present.
--- 
-1.8.4
+This will taint the kernel at module load, won't it? You probably meant
+"GPL v2", but only
+    MODULE_LICENSE("GPL");
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+correctly matches the license in the comment at the top of this file. 
+
+(I assume I missed all this when looking at the v4 series.)
+
+
+Paul Bolle
