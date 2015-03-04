@@ -1,213 +1,160 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [PATCH v3 2/3] of: add optional options parameter to of_find_node_by_path()
-Date: Wed, 04 Mar 2015 10:45:02 -0500
-Message-ID: <54F7287E.6060302@hurleysoftware.com>
-References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org> <1417110967-16284-3-git-send-email-leif.lindholm@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417110967-16284-3-git-send-email-leif.lindholm@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, grant.likely@linaro.org, robh+dt@kernel.org, plagnioj@jcrosoft.com, ijc@debian.org, andrew@lunn.ch, s.hauer@pengutronix.de
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC v12 00/19] LED / flash API integration
+Date: Wed, 04 Mar 2015 17:14:21 +0100
+Message-ID: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leif,
+This patch set is a follow-up of the LED / flash API integration
+series [1]. It is based on linux-next_20150304
 
-On 11/27/2014 12:56 PM, Leif Lindholm wrote:
-> Update of_find_node_by_path():
-> 1) Rename function to of_find_node_opts_by_path(), adding an optional
->    pointer argument. Provide a static inline wrapper version of
->    of_find_node_by_path() which calls the new function with NULL as
->    the optional argument.
-> 2) Ignore any part of the path beyond and including the ':' separator.
-> 3) Set the new provided pointer argument to the beginning of the string
->    following the ':' separator.
-> 4: Add tests.
-> 
-> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-> ---
->  drivers/of/base.c     |   21 +++++++++++++++++----
->  drivers/of/selftest.c |   12 ++++++++++++
->  include/linux/of.h    |   14 +++++++++++++-
->  3 files changed, 42 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 3823edf..7f0e5f7 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -699,10 +699,15 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
->  {
->  	struct device_node *child;
->  	int len = strchrnul(path, '/') - path;
-> +	int term;
->  
->  	if (!len)
->  		return NULL;
->  
-> +	term = strchrnul(path, ':') - path;
-> +	if (term < len)
-> +		len = term;
-> +
->  	__for_each_child_of_node(parent, child) {
->  		const char *name = strrchr(child->full_name, '/');
->  		if (WARN(!name, "malformed device_node %s\n", child->full_name))
-> @@ -715,11 +720,14 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
->  }
->  
->  /**
-> - *	of_find_node_by_path - Find a node matching a full OF path
-> + *	of_find_node_opts_by_path - Find a node matching a full OF path
->   *	@path: Either the full path to match, or if the path does not
->   *	       start with '/', the name of a property of the /aliases
->   *	       node (an alias).  In the case of an alias, the node
->   *	       matching the alias' value will be returned.
-> + *	@opts: Address of a pointer into which to store the start of
-> + *	       an options string appended to the end of the path with
-> + *	       a ':' separator.
->   *
->   *	Valid paths:
->   *		/foo/bar	Full path
-> @@ -729,19 +737,24 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
->   *	Returns a node pointer with refcount incremented, use
->   *	of_node_put() on it when done.
->   */
-> -struct device_node *of_find_node_by_path(const char *path)
-> +struct device_node *of_find_node_opts_by_path(const char *path, const char **opts)
->  {
->  	struct device_node *np = NULL;
->  	struct property *pp;
->  	unsigned long flags;
-> +	char *separator;
->  
->  	if (strcmp(path, "/") == 0)
->  		return of_node_get(of_allnodes);
->  
-> +	separator = strchr(path, ':');
-> +	if (separator && opts)
-> +		*opts = separator + 1;
-> +
->  	/* The path could begin with an alias */
->  	if (*path != '/') {
->  		char *p = strchrnul(path, '/');
-> -		int len = p - path;
-> +		int len = separator ? separator - path : p - path;
->  
->  		/* of_aliases must not be NULL */
->  		if (!of_aliases)
-> @@ -770,7 +783,7 @@ struct device_node *of_find_node_by_path(const char *path)
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->  	return np;
->  }
-> -EXPORT_SYMBOL(of_find_node_by_path);
-> +EXPORT_SYMBOL(of_find_node_opts_by_path);
->  
->  /**
->   *	of_find_node_by_name - Find a node by its "name" property
-> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-> index e2d79af..c298065 100644
-> --- a/drivers/of/selftest.c
-> +++ b/drivers/of/selftest.c
-> @@ -43,6 +43,7 @@ static bool selftest_live_tree;
->  static void __init of_selftest_find_node_by_name(void)
->  {
->  	struct device_node *np;
-> +	const char *options;
->  
->  	np = of_find_node_by_path("/testcase-data");
->  	selftest(np && !strcmp("/testcase-data", np->full_name),
-> @@ -83,6 +84,17 @@ static void __init of_selftest_find_node_by_name(void)
->  	np = of_find_node_by_path("testcase-alias/missing-path");
->  	selftest(!np, "non-existent alias with relative path returned node %s\n", np->full_name);
->  	of_node_put(np);
-> +
-> +	np = of_find_node_opts_by_path("/testcase-data:testoption", &options);
-> +	selftest(np && !strcmp("testoption", options),
-> +		 "option path test failed\n");
-> +	of_node_put(np);
-> +
-> +	np = of_find_node_opts_by_path("testcase-alias:testaliasoption",
-> +				       &options);
-> +	selftest(np && !strcmp("testaliasoption", options),
-> +		 "option alias path test failed\n");
-> +	of_node_put(np);
->  }
+========================
+Changes since version 11 :
+========================
 
-The path parsing gets lost if the string after ':' contains '/'.
+- removed synchronized strobe feature from LED Flash class, as it
+  turned out to be not fitting for sysfs interface. The V4L2 part
+  can cover this in the future.
+- Improved external strobe handling for AAT1290
+- added removing led-triggers on v4l2-flash sub-device open
+- applied minor improvements and cleanups
 
-The selftests below fail with:
-[    1.365528] ### dt-test ### FAIL of_selftest_find_node_by_name():99 option path test failed
-[    1.365610] ### dt-test ### FAIL of_selftest_find_node_by_name():115 option alias path test failed
+========================
+Changes since version 10 :
+========================
 
-Regards,
-Peter Hurley
+- added to the v4l2-flash sub-device driver the support for flash
+  LED devices with non-linear brightness setting
+- improved current setting in the max77693-led driver 
+- added ABI documentation for flash LED sysfs attributes
+- improved synchronized LEDs related sysfs attributes in the
+  LED Flash class
+- applied various fixes and cleanups
 
+========================
+Changes since version 9 :
+========================
 
---- >% ---
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 41a4a13..07ba5aa 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -94,6 +94,11 @@ static void __init of_selftest_find_node_by_name(void)
- 		 "option path test failed\n");
- 	of_node_put(np);
- 
-+	np = of_find_node_opts_by_path("/testcase-data:test/option", &options);
-+	selftest(np && !strcmp("test/option", options),
-+		 "option path test failed\n");
-+	of_node_put(np);
-+
- 	np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
- 	selftest(np, "NULL option path test failed\n");
- 	of_node_put(np);
-@@ -104,6 +109,12 @@ static void __init of_selftest_find_node_by_name(void)
- 		 "option alias path test failed\n");
- 	of_node_put(np);
- 
-+	np = of_find_node_opts_by_path("testcase-alias:test/alias/option",
-+				       &options);
-+	selftest(np && !strcmp("test/alias/option", options),
-+		 "option alias path test failed\n");
-+	of_node_put(np);
-+
- 	np = of_find_node_opts_by_path("testcase-alias:testaliasoption", NULL);
- 	selftest(np, "NULL option alias path test failed\n");
- 	of_node_put(np);
+- switched to assigning sub-led related of_node to led_cdev->dev->of_node
+  member which allowed for avoiding modifications around v4l-async
+- reimplemented max77693 flash cell driver to avoid extensive use
+  of macros
+- added led-sources DT property and switched to using it
+- switched to reporting flash faults in the LED subsystem in the form
+  of human readable strings
+- added available_sync_leds sysfs attribute to the LED Flash class
+  and changed the semantics of flash_sync_strobe attribute
+- made LED subsystem flash faults not depending on the V4L2 Flash ones
+- applied various fixes and cleanups
 
+========================
+Changes since version 8:
+========================
 
+- added a new way of registering async sub-device
+- switched to matching flash leds by DT phandles
+- improved Device Tree bindings documentation
+- split the drivers patches to LED Flash class
+  and V4L2 Flash part
+- fixed indicator leds handling in v4l2-flash
+- applied various fixes an cleanups
 
->  static void __init of_selftest_dynamic(void)
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 29f0adc..a36be70 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -228,7 +228,13 @@ extern struct device_node *of_find_matching_node_and_match(
->  	const struct of_device_id *matches,
->  	const struct of_device_id **match);
->  
-> -extern struct device_node *of_find_node_by_path(const char *path);
-> +extern struct device_node *of_find_node_opts_by_path(const char *path,
-> +	const char **opts);
-> +static inline struct device_node *of_find_node_by_path(const char *path)
-> +{
-> +	return of_find_node_opts_by_path(path, NULL);
-> +}
-> +
->  extern struct device_node *of_find_node_by_phandle(phandle handle);
->  extern struct device_node *of_get_parent(const struct device_node *node);
->  extern struct device_node *of_get_next_parent(struct device_node *node);
-> @@ -385,6 +391,12 @@ static inline struct device_node *of_find_node_by_path(const char *path)
->  	return NULL;
->  }
->  
-> +static inline struct device_node *of_find_node_opts_by_path(const char *path,
-> +	const char **opts)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline struct device_node *of_get_parent(const struct device_node *node)
->  {
->  	return NULL;
-> 
+========================
+Changes since version 7:
+========================
+
+- removed explicit support for indicator leds from
+  LED Flash class - indicator leds will be registered
+  as a separate LED Flash class devices
+- added flash_sync_strobe sysfs attribute and related
+  V4L2_CID_FLASH_SYNC_STROBE control
+- changed the way of matching V4L2 Flash sub-devices
+  in a media device, which entailed modification in
+  v4l2-async driver
+- modified max77693 DT bindings documentation
+- applied various fixes an cleanups
+
+========================
+Changes since version 6:
+========================
+
+- removed addition of public LED subsystem API for setting
+  torch brightness in favour of internal API for
+  synchronous and asynchronous led brightness level setting
+- fixed possible race condition upon creating LED Flash class
+  related sysfs attributes
+
+========================
+Changes since version 5:
+========================
+
+- removed flash manager framework - its implementation needs
+  further thorough discussion.
+- removed external strobe facilities from the LED Flash Class
+  and provided external_strobe_set op in v4l2-flash. LED subsystem
+  should be strobe provider agnostic.
+
+Thanks,
+Jacek Anaszewski
+
+[1] https://lkml.org/lkml/2014/7/11/914
+
+Jacek Anaszewski (19):
+  leds: flash: Remove synchronized flash strobe feature
+  leds: flash: document sysfs interface
+  Documentation: leds: Add description of LED Flash class extension
+  dt-binding: leds: Add common LED DT bindings macros
+  mfd: max77693: Modify flash cell name identifiers
+  mfd: max77693: Remove struct max77693_led_platform_data
+  mfd: max77693: add TORCH_IOUT_MASK macro
+  mfd: max77693: Adjust FLASH_EN_SHIFT and TORCH_EN_SHIFT macros
+  leds: Add support for max77693 mfd flash cell
+  DT: Add documentation for the mfd Maxim max77693
+  leds: Add driver for AAT1290 current regulator
+  of: Add Skyworks Solutions, Inc. vendor prefix
+  DT: Add documentation for the Skyworks AAT1290
+  exynos4-is: Add support for v4l2-flash subdevs
+  media: Add registration helpers for V4L2 flash sub-devices
+  Documentation: leds: Add description of v4l2-flash sub-device
+  DT: Add documentation for exynos4-is 'flashes' property
+  leds: max77693: add support for V4L2 Flash sub-device
+  leds: aat1290: add support for V4L2 Flash sub-device
+
+ Documentation/ABI/testing/sysfs-class-led-flash    |   80 ++
+ .../devicetree/bindings/leds/leds-aat1290.txt      |   64 ++
+ .../devicetree/bindings/media/samsung-fimc.txt     |    8 +
+ Documentation/devicetree/bindings/mfd/max77693.txt |   61 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ Documentation/leds/leds-class-flash.txt            |   35 +
+ drivers/leds/Kconfig                               |   18 +
+ drivers/leds/Makefile                              |    2 +
+ drivers/leds/led-class-flash.c                     |   82 --
+ drivers/leds/leds-aat1290.c                        |  571 ++++++++++
+ drivers/leds/leds-max77693.c                       | 1122 ++++++++++++++++++++
+ drivers/media/platform/exynos4-is/media-dev.c      |   36 +-
+ drivers/media/platform/exynos4-is/media-dev.h      |   13 +-
+ drivers/media/v4l2-core/Kconfig                    |   11 +
+ drivers/media/v4l2-core/Makefile                   |    2 +
+ drivers/media/v4l2-core/v4l2-flash.c               |  598 +++++++++++
+ drivers/mfd/max77693.c                             |    4 +-
+ include/dt-bindings/leds/max77693.h                |   21 +
+ include/linux/led-class-flash.h                    |   14 -
+ include/linux/leds.h                               |    1 -
+ include/linux/mfd/max77693-private.h               |    5 +-
+ include/linux/mfd/max77693.h                       |   13 -
+ include/media/v4l2-flash.h                         |  143 +++
+ 23 files changed, 2788 insertions(+), 117 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-flash
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-aat1290.txt
+ create mode 100644 Documentation/leds/leds-class-flash.txt
+ create mode 100644 drivers/leds/leds-aat1290.c
+ create mode 100644 drivers/leds/leds-max77693.c
+ create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
+ create mode 100644 include/dt-bindings/leds/max77693.h
+ create mode 100644 include/media/v4l2-flash.h
+
+-- 
+1.7.9.5
