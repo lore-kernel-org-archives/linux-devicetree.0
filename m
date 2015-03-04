@@ -1,76 +1,52 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
-Date: Wed, 4 Mar 2015 12:00:03 +0000
-Message-ID: <20150304120003.GL32624@x1>
-References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1424799222-9301-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: [PATCH RESEND RESEND v6 0/6] hwmon: thermal: Odroid U3: Provide
+ support for Odroid U3 fan
+Date: Wed, 04 Mar 2015 13:03:38 +0100
+Message-ID: <1425470624-25793-1-git-send-email-l.majewski@samsung.com>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>
+Cc: lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Mike,
+Presented patches add support for Odroid's U3 optional CPU FAN, which uses PWM
+subsystem for low level control.
 
-Do you want me to resend this set with Robert's Reviewed-by applied,
-or are you happy to apply it yourself?
+After successful probe it registers itself as a cooling device for thermal
+subsystem.
 
-> v2 =3D> v3:
->   - Ensure DT actually reflects h/w
->     - i.e. Nodes should not contain a mishmash of different IP
->       blocks, but should identify related h/w.  In the current
->       example we use interconnects
->   - Change naming from clkdomain to clk-always-on
->   - Place "do not abuse" warning in documentation
->=20
-> v1 =3D> v2:
->   - Turned the ST specific driver into a generic one
->  =20
-> Hardware can have a bunch of clocks which must not be turned off.
-> If drivers a) fail to obtain a reference to any of these or b) give
-> up a previously obtained reference during suspend, the common clk
-> framework will attempt to turn them off and the hardware will
-> subsequently die.  The only way to recover from this failure is to
-> restart.
->  =20
-> To avoid either of these two scenarios from catastrophically
-> disabling the running system we have implemented a clock domain
-> where clocks are consumed and references are taken, thus preventing
-> them from being shut down by the framework.
->=20
-> *** BLURB HERE ***
->=20
-> Lee Jones (4):
->   ARM: sti: stih407-family: Supply defines for CLOCKGEN A0
->   ARM: sti: stih407-family: Add platform interconnects to always-on c=
-lk
->     domain
->   clk: Provide an always-on clock domain framework
->   clk: dt: Introduce always-on clock domain documentation
->=20
->  .../devicetree/bindings/clock/clk-always-on.txt    | 35 ++++++++++++
->  arch/arm/boot/dts/stih407-family.dtsi              | 15 ++++++
->  drivers/clk/Makefile                               |  1 +
->  drivers/clk/clk-always-on.c                        | 62 ++++++++++++=
-++++++++++
->  include/dt-bindings/clock/stih407-clks.h           |  4 ++
->  5 files changed, 117 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/clk-alway=
-s-on.txt
->  create mode 100644 drivers/clk/clk-always-on.c
->=20
+This driver also supports devices without DTS specified.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To provide correct functionality, new properties to device tree description for
+Exynos4412 and in particular Odroid U3 have been added.
+
+Those patches were tested at Exynos4412 - Odroid U3 board.
+
+Patches were applied on:
+linux-soc-thermal/fixes branch (Linux v4.0-rc2)
+SHA1: ad83a2d87bff355750a17dd00aec563eb9f9d388
+
+
+Kamil Debski (1):
+  ARM: dts: Add pwm-fan node to the Odroid-U3 board
+
+Lukasz Majewski (5):
+  Documentation: dts: Documentation entry to explain how to use PWM FAN
+    as a cooling device
+  ARM: dts: Add properties to use pwm-fan device as a cooling device in
+    Odroid U3
+  hwmon: pwm-fan: Extract __set_pwm() function to only modify PWM duty
+    cycle
+  hwmon: pwm-fan: Read PWM FAN configuration from device tree
+  hwmon: pwm-fan: Code for using PWM FAN as a cooling device
+
+ .../devicetree/bindings/hwmon/pwm-fan.txt          |  29 +++-
+ arch/arm/boot/dts/exynos4.dtsi                     |   2 +-
+ arch/arm/boot/dts/exynos4412-odroidu3.dts          |  43 ++++++
+ drivers/hwmon/pwm-fan.c                            | 172 +++++++++++++++++++--
+ 4 files changed, 229 insertions(+), 17 deletions(-)
+
+-- 
+2.0.0.rc2
