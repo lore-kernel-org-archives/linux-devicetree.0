@@ -1,135 +1,39 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 1/2] pinctrl: bindings: pinctrl: Add support for TI's IODelay configuration
-Date: Tue, 3 Mar 2015 18:00:36 -0600
-Message-ID: <1425427237-11511-2-git-send-email-nm@ti.com>
-References: <1425427237-11511-1-git-send-email-nm@ti.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] regulator: qcom: Rework to single platform device
+Date: Tue, 03 Mar 2015 16:01:43 -0800
+Message-ID: <54F64B67.9060608@codeaurora.org>
+References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com> <1425356740-26285-5-git-send-email-bjorn.andersson@sonymobile.com> <54F630FF.60109@codeaurora.org> <20150303223235.GK26334@sonymobile.com> <20150303235209.GG21293@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425427237-11511-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150303235209.GG21293-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SoCs such as DRA7 family from Texas Instruments also include a highly
-configurable hardware block called the IOdelay block. This block
-allows very specific custom fine tuning for electrical characteristics
-of IO pins.
+On 03/03/15 15:52, Mark Brown wrote:
+> On Tue, Mar 03, 2015 at 02:32:35PM -0800, Bjorn Andersson wrote:
+>> On Tue 03 Mar 14:09 PST 2015, Stephen Boyd wrote:
+>>> How does this work for the case where we may not want to add all the
+>>> regulators that a PMIC supports. I'm mostly thinking about the case
+>>> where we want to use the pm8xxx-regulator driver for a few regulators
+>>> and so we omit them from the DT for the RPM regulators.
+>> An empty or non-existing regulator of_node will still be registered, but
+>> without REGULATOR_CHANGE_STATUS nor REGULATOR_CHANGE_VOLTAGE; so any
+>> operation on this regulator will fail with an -EPERM.
+> ...but of course we'd never try any operations on it anyway as there
+> would be no consumers.
 
-In addition to the regular pin muxing modes supported by the
-pinctrl-single, additional configuration for this block for specific
-pins may also be mandatory in certain cases.
+Yes sounds fine. The only concern is that we're probably wasting memory
+with things that won't ever "match" something in DT.
 
-It is advocated strongly in TI's official documentation considering
-the existing design of the DRA7 family of processors, which during mux
-or IODelay reconfiguration, has a potential for a significant glitch
-which may cause functional impairment to certain hardware. It is hence
-recommended to do as little of muxing as absolutely necessary without
-IO isolation (which can only be done in initial stages of bootloader).
-
-Even with the above limitation, certain functionality such as MMC may
-mandate the need of IODelay reconfiguration depending on speed of
-transfer. Hence, introduce a new binding to facilitate programming the
-same.
-
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- .../bindings/pinctrl/ti,iodelay-pinctrl.txt        |   86 ++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/ti,iodelay-pinctrl.txt
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/ti,iodelay-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ti,iodelay-pinctrl.txt
-new file mode 100644
-index 000000000000..e12f4e5a3f25
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/ti,iodelay-pinctrl.txt
-@@ -0,0 +1,86 @@
-+Texas Instruments I/O Delay module configuration pinctrl definition
-+
-+Used in conjunction with Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt
-+
-+Required Properties:
-+- compatible: Should be:
-+  "ti,dra7-iodelay" - I/O delay configuration for DRA7
-+- reg	- must be the register address range of IODelay module
-+- #address-cells = <1>;
-+- #size-cells = <0>;
-+
-+Important note: Use of "ti,dra7-iodelay" compatible definition need to be
-+carefully evaluated due to the expectation of glitch during configuration.
-+
-+Example:
-+
-+dra7_iodelay_core: padconf@4844a000 {
-+	compatible = "ti,dra7-iodelay";
-+	reg = <0x4844a000 0x0d1c>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+};
-+
-+Configuration definition follows similar model as the pinctrl-single:
-+The groups of pin configuration are defined under "pinctrl-single,pins"
-+
-+&dra7_iodelay_core {
-+	mmc2_iodelay_3v3_conf: mmc2_iodelay_3v3_conf {
-+		pinctrl-single,pins = <
-+			0x18c (A_DELAY(0) | G_DELAY(120))	/* CFG_GPMC_A19_IN */
-+			0x1a4 (A_DELAY(265) | G_DELAY(360))	/* CFG_GPMC_A20_IN */
-+			0x1b0 (A_DELAY(0) | G_DELAY(120))	/* CFG_GPMC_A21_IN */
-+			0x1bc (A_DELAY(0) | G_DELAY(120))	/* CFG_GPMC_A22_IN */
-+			0x1c8 (A_DELAY(287) | G_DELAY(420))	/* CFG_GPMC_A23_IN */
-+			0x1d4 (A_DELAY(144) | G_DELAY(240))	/* CFG_GPMC_A24_IN */
-+			0x1e0 (A_DELAY(0) | G_DELAY(0))		/* CFG_GPMC_A25_IN */
-+			0x1ec (A_DELAY(120) | G_DELAY(0))	/* CFG_GPMC_A26_IN */
-+			0x1f8 (A_DELAY(120) | G_DELAY(180))	/* CFG_GPMC_A27_IN */
-+			0x360 (A_DELAY(0) | G_DELAY(0))		/* CFG_GPMC_CS1_IN */
-+		>;
-+	};
-+};
-+
-+Usage in conjunction with pinctrl single:
-+
-+For a complete description of the pins both the regular muxing as well as the
-+iodelay configuration is necessary. For example:
-+
-+&dra7_pmx_core {
-+	mmc2_pins_default: mmc2_pins_default {
-+		pinctrl-single,pins = <
-+			0x9c (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_a23.mmc2_clk */
-+			0xb0 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_cs1.mmc2_cmd */
-+			0xa0 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_a24.mmc2_dat0 */
-+			0xa4 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_a25.mmc2_dat1 */
-+			0xa8 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_a26.mmc2_dat2 */
-+			0xac (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_a27.mmc2_dat3 */
-+			0x8c (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_a19.mmc2_dat4 */
-+			0x90 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_a20.mmc2_dat5 */
-+			0x94 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_a21.mmc2_dat6 */
-+			0x98 (PIN_INPUT_PULLUP | MANUAL_MODE | MUX_MODE1) /* gpmc_a22.mmc2_dat7 */
-+		>;
-+	};
-+};
-+
-+&dra7_iodelay_core {
-+	mmc2_iodelay_3v3_conf: mmc2_iodelay_3v3_conf {
-+		pinctrl-single,pins = <
-+			0x18c (A_DELAY(0) | G_DELAY(120))	/* CFG_GPMC_A19_IN */
-+			0x1a4 (A_DELAY(265) | G_DELAY(360))	/* CFG_GPMC_A20_IN */
-+			0x1b0 (A_DELAY(0) | G_DELAY(120))	/* CFG_GPMC_A21_IN */
-+			0x1bc (A_DELAY(0) | G_DELAY(120))	/* CFG_GPMC_A22_IN */
-+			0x1c8 (A_DELAY(287) | G_DELAY(420))	/* CFG_GPMC_A23_IN */
-+			0x1d4 (A_DELAY(144) | G_DELAY(240))	/* CFG_GPMC_A24_IN */
-+			0x1e0 (A_DELAY(0) | G_DELAY(0))		/* CFG_GPMC_A25_IN */
-+			0x1ec (A_DELAY(120) | G_DELAY(0))	/* CFG_GPMC_A26_IN */
-+			0x1f8 (A_DELAY(120) | G_DELAY(180))	/* CFG_GPMC_A27_IN */
-+			0x360 (A_DELAY(0) | G_DELAY(0))		/* CFG_GPMC_CS1_IN */
-+		>;
-+	};
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins_default &mmc2_iodelay_3v3_conf>;
-+};
 -- 
-1.7.9.5
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
