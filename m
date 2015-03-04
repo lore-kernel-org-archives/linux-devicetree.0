@@ -1,50 +1,44 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 2/4] cpufreq: dt-bindings: add bindings for mtk-cpufreq driver
-Date: Wed, 4 Mar 2015 15:59:39 +0530
-Message-ID: <CAKohpomxTVBkj=EzucUE7BvV6LVCs6r+S4FE_UvUofgogZWtdw@mail.gmail.com>
-References: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
-	<1425458956-20665-3-git-send-email-pi-cheng.chen@linaro.org>
+From: Antonio Ospite <ao2@ao2.it>
+Subject: Re: [PATCH 2/2] input: goodix: Add device tree support for 5-finger
+ chips
+Date: Wed, 4 Mar 2015 11:30:40 +0100
+Message-ID: <20150304113040.014ca7f2c14c65b5f7e9672c@ao2.it>
+References: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
+	<1425458053-4559-1-git-send-email-mamlinav@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1425458956-20665-3-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Mike Turquette <mturquette@linaro.org>, fan.chen@mediatek.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1425458053-4559-1-git-send-email-mamlinav@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Aleksei Mamlin <mamlinav@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4 March 2015 at 14:19, pi-cheng.chen <pi-cheng.chen@linaro.org> wrote:
-> Add dt-binding for mtk-cpufreq driver so that the driver could get SoC specific
-> information (intermediate_clk for now) from device tree.
->
-> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
-> ---
->  .../devicetree/bindings/cpufreq/cpufreq-mtk.txt         | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-mtk.txt
->
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mtk.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mtk.txt
-> new file mode 100644
-> index 0000000..53bf108
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mtk.txt
-> @@ -0,0 +1,17 @@
-> +
-> +Mediatek cpufreq driver
-> +-------------------
-> +
-> +Mediatek SoC cpufreq driver for CPU frequency scaling.
-> +
-> +Required properties:
-> +- compatible: "mediatek,mtk-cpufreq"
-> +- intermediate_clk: The intermediate clock source which CPUs will switch to
-> +during CPU frequency transition.
-> +
-> +Examples:
-> +--------
-> +       mtk-cpufreq {
-> +               compatible = "mediatek,mtk-cpufreq";
-> +               intermediate_clk = <&apmixedsys APMIXED_MAINPLL>;
-> +       };
+On Wed,  4 Mar 2015 11:34:13 +0300
+Aleksei Mamlin <mamlinav@gmail.com> wrote:
 
-Such nodes aren't allowed. NACK.
+> This patch adds device tree support for 5-finger chips, like GT911 and GT912.
+>
+
+Hi Aleksei,
+
+from a datasheet I found[1](Pag. 11) I see that some devices provide
+the information about the max number of touch points in register 0x804C.
+
+Have you tried if this is true on your 5-finger devices too?
+If so, please use this mechanism to populate ts->max_touch_num to avoid
+passing hardcoded data.
+
+Thanks,
+   Antonio
+
+[1] http://www.wpgholdings.com/uploads/bu/bu_3/MID_20141112/GT9271_Datasheet_20130904.pdf
+
+-- 
+Antonio Ospite
+http://ao2.it
+
+A: Because it messes up the order in which people normally read text.
+   See http://en.wikipedia.org/wiki/Posting_style
+Q: Why is top-posting such a bad thing?
