@@ -1,238 +1,256 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 00/20] ARM: mvebu: Armada 39x basic support, and preparatory
- cleanups
-Date: Wed, 04 Mar 2015 16:05:41 +0100
-Message-ID: <54F71F45.3060503@free-electrons.com>
-References: <1425393675-17820-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v6 6/8] v4l: xilinx: Add Xilinx Video IP core
+Date: Wed, 04 Mar 2015 16:11:43 +0100
+Message-ID: <54F720AF.6010501@xs4all.nl>
+References: <1425480709-7545-1-git-send-email-laurent.pinchart@ideasonboard.com> <1425480709-7545-7-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1425393675-17820-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425480709-7545-7-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Chris Kohn <christian.kohn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+Hi Laurent,
 
-On 03/03/2015 15:40, Thomas Petazzoni wrote:
-> Hello,
-> 
-> This is the third version of the patch series adding Armada 39x basic
-> support.
-> 
-> This set of patches add basic support for a new family of Marvell EBU
-> processors: the Armada 39x. They are based on Cortex-A9 (like Armada
-> 375 and 38x) and the most important new feature is probably the
-> addition of 10 GbE support.
-> 
-> See http://www.marvell.com/embedded-processors/armada-39x/ for a basic
-> introduction.
-> 
-> Note that this web page talks about an Armada 395 and Armada 398, but
-> so far the technical documentation we have been given access to only
-> describes Armada 390 and Armada 398, so this series supports only
-> Armada 390 and Armada 398 so far. Support for Armada 395 might be
-> added in the future, once we get access to the appropriate technical
-> details.
-> 
-> Changes v2 -> v3:
-> 
->  - Rebased on top of v4.0-rc1
-> 
->  - Add support for the L2 cache
-> 
->  - Added Acked-by from Gregory Clement on
-> 
->    ARM: mvebu: add __initconst specifiers on DT_MACHINE_START dt_compat tables
->    ARM: mvebu: fix usb@ unit address on Armada 38x to match register address
->    ARM: mvebu: add missing UART alias on Armada 38x
->    devicetree: bindings: add DT binding for the Marvell Armada 39x SoC family
-> 
->  - Renamed 'ARM: mvebu: add missing UART alias on Armada 38x' to 'ARM:
->    mvebu: add missing UART labels on Armada 38x'.
-> 
->  - Added a patch 'ARM: mvebu: add UART labels to Armada 375'.
-> 
->  - Change 'ARM: mvebu: add stdout-path to all armada-*.dts' to go
->    further and eliminate completely /chosen/bootargs. This removes the
->    non-desired 'earlyprintk' argument, and since console= was the only
->    remaining kernel parameter, using stdout-path makes more
->    sense. Requested by Rob Herring and Mark Rutland.
-> 
->  - Dropped the patch "ARM: mvebu: use IRQ macros to define the SDHCI
->    interrupt on Armada 38x" from the series, since Gregory Clement
->    already submitted it as part of a different series.
-> 
->  - Added patches 'ARM: mvebu: enable Armada 39x in mvebu_v7_defconfig'
->    and 'ARM: configs: enable Marvell Armada 39x in multi_v7_defconfig'
->    to update mvebu_v7_defconfig and multi_v7_defconfig so that they
->    enable Marvell Armada 39x by default. Suggested by Gregory Clement.
-> 
->  - Fix the unit address of the MPIC interrupt controller, in both the
->    newly added Armada 39x support, as well as in the existing Armada
->    370, 375, 38x and XP support. Suggested by Gregory Clement.
-> 
-> Changes v1 -> v2:
-> 
->  - At the SoC level, add the description of SPI controller 0 and 1,
->    NAND flash controller, SDHCI controller, Core Divider Clock (needed
->    by the NAND flash controller), the main PLL clock (needed by the
->    Core Divider Clock) and the XOR engines.
-> 
->  - At the board level, add the description of the SPI flash connected
->    to SPI bus 1, which contains the bootloader, and the description of
->    the NAND flash.
-> 
->  - Fix space vs. tab.
-> 
->  - Use __initconst when defining the dt_compat table for Armada
->    39x. Suggested by Stephen Boyd.
-> 
->  - Fix typo in commit log of "ARM: mvebu: add core support for Armada
->    39x", noticed by Maxime Ripard.
-> 
->  - Remove earlyprintk from /chosen/bootargs. Suggested by Andrew Lunn.
-> 
->  - Add aliases for uart[0-3]. Suggested by Andrew Lunn.
-> 
->  - Add /chosen/stdout-path to Armada 398 DB DT. Suggested by Andrew
->    Lunn.
-> 
->  - Move pinctrl configurations at the SoC level. Suggested by Andrew
->    Lunn.
-> 
->  - Add several preparation/cleanup patches not related to Armada 39x
->    directly, but whose topics were found while working on Armada 39x
->    support:
-> 
->      - Add __initconst to all dt_compat table in mach-mvebu.
->      - Fixup usb@ unit address on Armada 38x
->      - Add stdout-path to all armada-*.dts
->      - Use GIC and IRQ macros in SDHCI definition of Armada 38x
->      - Add missing UART alias on Armada 38x
-> 
-> Thanks!
-> 
-> Thomas
-> 
-> Thomas Petazzoni (20):
->   ARM: mvebu: add __initconst specifiers on DT_MACHINE_START dt_compat
->     tables
->   ARM: mvebu: fix usb@ unit address on Armada 38x to match register
->     address
->   ARM: mvebu: add missing UART labels on Armada 38x
->   ARM: mvebu: add UART labels to Armada 375
->   ARM: mvebu: remove aliases for Ethernet devices on Armada
->     370/375/38x/XP
->   ARM: mvebu: add serial port aliases on Armada 370/375/38x/XP
->   ARM: mvebu: use stdout-path in all armada-*.dts
->   ARM: mvebu: fix unit address of MPIC nodes
->   devicetree: bindings: add DT binding for the Marvell Armada 39x SoC
->     family
->   devicetree: bindings: update DT bindings for Marvell EBU clock support
->   devicetree: bindings: add Device Tree bindings for Armada 39x
->     pin-muxing controller
->   devicetree: bindings: add new SMP enable method for Marvell Armada 39x
->   clk: mvebu: extend common code to allow an optional refclk
->   clk: mvebu: add Marvell Armada 39x driver
->   pinctrl: mvebu: add pinctrl driver for Marvell Armada 39x
->   ARM: mvebu: add core support for Armada 39x
->   ARM: mvebu: add Device Tree files for Armada 39x SoC and board
->   Documentation: arm: update supported Marvell EBU processors
->   ARM: mvebu: enable Armada 39x in mvebu_v7_defconfig
->   ARM: configs: enable Marvell Armada 39x in multi_v7_defconfig
+Almost OK :-)
 
-Patches 1 applied to mvebu/cleanup
-Patches 2 to 8 and patch 17 applied to mvebu/dt
-Patches 9,12,16 and 18 applied to mvebu/soc
-Patch 19 applied to mvebu/defconfig
+Two small issues remain, see below.
 
-and
-
-Patches 10,13 and 14 applied to mvebu/clk as requested by Mike.
-
-I had to amend the patch "ARM: mvebu: fix unit address of MPIC nodes"
-by removing the armada-38x related part which was already applied by the
-patch "ARM: mvebu: Fix MPIC unit address".
-
-Patch 20 should be directly taken by the arm-soc maintainer.
-
-
-Thanks,
-
-Gregory
-
-
-
+On 03/04/15 15:51, Laurent Pinchart wrote:
+> Xilinx platforms have no hardwired video capture or video processing
+> interface. Users create capture and memory to memory processing
+> pipelines in the FPGA fabric to suit their particular needs, by
+> instantiating video IP cores from a large library.
 > 
->  Documentation/arm/Marvell/README                   |   5 +
->  .../devicetree/bindings/arm/armada-39x.txt         |  20 +
->  Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
->  .../devicetree/bindings/clock/mvebu-core-clock.txt |   9 +
->  .../bindings/clock/mvebu-gated-clock.txt           |  15 +-
->  .../pinctrl/marvell,armada-39x-pinctrl.txt         |  78 ++++
->  arch/arm/boot/dts/Makefile                         |   2 +
->  arch/arm/boot/dts/armada-370-db.dts                |   2 +-
->  arch/arm/boot/dts/armada-370-mirabox.dts           |   2 +-
->  arch/arm/boot/dts/armada-370-netgear-rn102.dts     |   2 +-
->  arch/arm/boot/dts/armada-370-netgear-rn104.dts     |   2 +-
->  arch/arm/boot/dts/armada-370-rd.dts                |   2 +-
->  arch/arm/boot/dts/armada-370-synology-ds213j.dts   |   3 +-
->  arch/arm/boot/dts/armada-370-xp.dtsi               |   6 +-
->  arch/arm/boot/dts/armada-370.dtsi                  |   2 +-
->  arch/arm/boot/dts/armada-375-db.dts                |   2 +-
->  arch/arm/boot/dts/armada-375.dtsi                  |  10 +-
->  arch/arm/boot/dts/armada-385-db-ap.dts             |   3 +-
->  arch/arm/boot/dts/armada-388-db.dts                |   4 +-
->  arch/arm/boot/dts/armada-388-gp.dts                |   5 +-
->  arch/arm/boot/dts/armada-388-rd.dts                |   2 +-
->  arch/arm/boot/dts/armada-38x.dtsi                  |  11 +-
->  .../dts/{armada-xp-matrix.dts => armada-390.dtsi}  |  71 +---
->  .../dts/{armada-388-db.dts => armada-398-db.dts}   | 111 ++---
->  .../dts/{armada-xp-matrix.dts => armada-398.dtsi}  |  70 +---
->  .../boot/dts/{armada-375.dtsi => armada-39x.dtsi}  | 446 ++++++++-------------
->  arch/arm/boot/dts/armada-xp-axpwifiap.dts          |   2 +-
->  arch/arm/boot/dts/armada-xp-db.dts                 |   2 +-
->  arch/arm/boot/dts/armada-xp-gp.dts                 |   2 +-
->  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts    |   3 +-
->  arch/arm/boot/dts/armada-xp-matrix.dts             |   2 +-
->  arch/arm/boot/dts/armada-xp-mv78260.dtsi           |   1 -
->  arch/arm/boot/dts/armada-xp-mv78460.dtsi           |   1 -
->  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts     |   2 +-
->  arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts   |   2 +-
->  arch/arm/boot/dts/armada-xp-synology-ds414.dts     |   3 +-
->  arch/arm/boot/dts/armada-xp.dtsi                   |   5 +-
->  arch/arm/configs/multi_v7_defconfig                |   1 +
->  arch/arm/configs/mvebu_v7_defconfig                |   1 +
->  arch/arm/mach-mvebu/Kconfig                        |  14 +
->  arch/arm/mach-mvebu/board-v7.c                     |  20 +-
->  arch/arm/mach-mvebu/dove.c                         |   2 +-
->  arch/arm/mach-mvebu/kirkwood.c                     |   2 +-
->  arch/arm/mach-mvebu/platsmp-a9.c                   |   2 +
->  drivers/clk/mvebu/Kconfig                          |   4 +
->  drivers/clk/mvebu/Makefile                         |   1 +
->  drivers/clk/mvebu/armada-39x.c                     | 156 +++++++
->  drivers/clk/mvebu/common.c                         |  17 +
->  drivers/clk/mvebu/common.h                         |   1 +
->  drivers/pinctrl/mvebu/Kconfig                      |   4 +
->  drivers/pinctrl/mvebu/Makefile                     |   1 +
->  drivers/pinctrl/mvebu/pinctrl-armada-39x.c         | 432 ++++++++++++++++++++
->  52 files changed, 1045 insertions(+), 524 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/armada-39x.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-39x-pinctrl.txt
->  copy arch/arm/boot/dts/{armada-xp-matrix.dts => armada-390.dtsi} (61%)
->  copy arch/arm/boot/dts/{armada-388-db.dts => armada-398-db.dts} (70%)
->  copy arch/arm/boot/dts/{armada-xp-matrix.dts => armada-398.dtsi} (61%)
->  copy arch/arm/boot/dts/{armada-375.dtsi => armada-39x.dtsi} (55%)
->  create mode 100644 drivers/clk/mvebu/armada-39x.c
->  create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-39x.c
+> The Xilinx Video IP core is a framework that models a video pipeline
+> described in the device tree and expose the pipeline to userspace
+> through the media controller and V4L2 APIs.
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Radhey Shyam Pandey <radheys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> 
+> ---
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> 
+> Changes since v5:
+> 
+> - Report frame field as V4L2_FIELD_NONE
+> - Update to the mainline pad-level subdev API changes
+> - Add VIDIOC_CREATE_BUFS support
+> - Add a comment to explain the lack of VB2_READ and VB2_WRITE
+> 
+> Changes since v4:
+> 
+> - Use a DT format description closer to the hardware
+> - Document the xvip_device clk field
+> 
+> Changes since v3:
+> 
+> - Rename V4L2_MBUS_FMT_* to MEDIA_BUS_FMT_*
+> - Cleanup unused vdma configuration.
+> - Add resource init and cleanup helpers
+> - Return buffers to vb2 when media pipeline start fails
+> 
+> Changes since v2:
+> 
+> - Remove explicit trailing \0 after snprintf
+> - Don't hardcode colorspace
+> 
+> Changes since v1:
+> 
+> - Remove unnecessary fields from struct xvip_dma_buffer
+> - Fix querycap capabilities and bus_info reporting
+> - Refuse to set format when the queue is busy
+> - Return buffers to vb2 when start_streaming fails
+> - Use vb2 fops and ioctl ops
+> 
+> v1 was made of the following individual patches.
+> 
+> media: xilinx: vip: Add yuv444 and bayer formats
+> media: xilinx: vip: Remove _TIMING_ from register definition
+> media: xilinx: dma: Add vidioc_enum_fmt_vid_cap callback
+> media: xilinx: dma: Fix alignments of xvip_dma_fops definition
+> media: xilinx: dma: Workaround for bytesperline
+> media: xilinx: vip: Add default min/max height/width definitions
+> media: xilinx: vip: Add common sink/source pad IDs
+> media: xilinx: vip: Add xvip_set_format_size()
+> media: xilinx: vip: Add xvip_enum_mbus_code()
+> media: xilinx: vip: Add xvip_enum_frame_size()
+> media: xilinx: vip: Add register clear and set functions
+> media: xilinx: vip: Add xvip_start()
+> media: xilinx: vip: Add xvip_stop()
+> media: xilinx: vip: Add xvip_set_frame_size()
+> media: xilinx: vip: Add enable/disable reg update functions
+> media: xilinx: vip: Add xvip_print_version()
+> media: xilinx: vip: Add xvip_reset()
+> media: xilinx: vip: Add xvip_get_frame_size()
+> media: xilinx: vip: Add suspend/resume helper functions
+> media: xilinx: vip: Change the return value of xvip_get_format_by_code()
+> media: xilinx: vip: Change the return value of xvip_of_get_format()
+> media: xilinx: vip: Change the return value of xvip_get_format_by_fourcc()
+> media: xilinx: vipp: Remove of_match_ptr()
+> media: xilinx: vipp: Add control to inherit subdevice controls
+> media: xilinx: Make disconnected video nodes return -EPIPE at stream on
+> media: xilinx: Make links configurable
+> media: xilinx: Rename xvip_pipeline_entity to xvip_graph_entity
+> media: xilinx: Rename xvip_pipeline to xvip_composite_device
+> media: xilinx: Rename xvipp_pipeline_* functions to xvip_graph_*
+> media: xilinx: Rename xvipp_v4l2_* functions to xvip_composite_v4l2_*
+> media: xilinx: Rename xvipp_* functions to xvip_composite_*
+> media: xilinx: Move pipeline management code to xilinx-dma.c
+> media: xilinx: Add missing mutex_destroy call
+> media: xilinx: Create xvip_pipeline structure
+> media: xilinx: Support more than two VDMAs in DT
+> media: xilinx: dma: Change vdma configuration to cyclic-mode
+> Revert "media: xilinx: dma: Workaround for bytesperline"
+> media: xilinx: Added DMA error handling
+> media: xilinx: Fix error handling
+> media: xilinx: Reordered mutexes initialization
+> media: xilinx: vipp: Add devicetree bindings documentation
+> media: xilinx: Reordered mutexes initialization
+> media: xilinx: Set format description in enum_fmt
+> media: xilinx: Remove global control handler
+> media: xilinx: dma: Use the interleaved dmaengine API
+> xilinx: Remove .owner field for drivers
+> v4l: xilinx: video: Rename compatible string to xlnx,video
+> v4l: xilinx: Remove axi- prefix from DT properties
+> v4l: xilinx: dma: Give back queued buffers at streamoff time
+> ---
+>  .../devicetree/bindings/media/xilinx/video.txt     |  35 +
+>  .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
+>  MAINTAINERS                                        |   9 +
+>  drivers/media/platform/Kconfig                     |   1 +
+>  drivers/media/platform/Makefile                    |   2 +
+>  drivers/media/platform/xilinx/Kconfig              |  10 +
+>  drivers/media/platform/xilinx/Makefile             |   3 +
+>  drivers/media/platform/xilinx/xilinx-dma.c         | 766 +++++++++++++++++++++
+>  drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
+>  drivers/media/platform/xilinx/xilinx-vip.c         | 311 +++++++++
+>  drivers/media/platform/xilinx/xilinx-vip.h         | 238 +++++++
+>  drivers/media/platform/xilinx/xilinx-vipp.c        | 669 ++++++++++++++++++
+>  drivers/media/platform/xilinx/xilinx-vipp.h        |  49 ++
+>  include/dt-bindings/media/xilinx-vip.h             |  39 ++
+>  14 files changed, 2296 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/video.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
+>  create mode 100644 drivers/media/platform/xilinx/Kconfig
+>  create mode 100644 drivers/media/platform/xilinx/Makefile
+>  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
+>  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
+>  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
+>  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
+>  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
+>  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
+>  create mode 100644 include/dt-bindings/media/xilinx-vip.h
 > 
 
+<snip>
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+> diff --git a/drivers/media/platform/xilinx/xilinx-dma.c b/drivers/media/platform/xilinx/xilinx-dma.c
+> new file mode 100644
+> index 0000000..10209c2
+> --- /dev/null
+> +++ b/drivers/media/platform/xilinx/xilinx-dma.c
+
+<snip>
+
+> +/* -----------------------------------------------------------------------------
+> + * Subdev operations handlers
+> + */
+> +
+> +/**
+> + * xvip_enum_mbus_code - Enumerate the media format code
+> + * @subdev: V4L2 subdevice
+> + * @cfg: V4L2 subdev pad configuration
+> + * @code: returning media bus code
+> + *
+> + * Enumerate the media bus code of the subdevice. Return the corresponding
+> + * pad format code. This function only works for subdevices with fixed format
+> + * on all pads. Subdevices with multiple format should have their own
+> + * function to enumerate mbus codes.
+> + *
+> + * Return: 0 if the media bus code is found, or -EINVAL if the format index
+> + * is not valid.
+> + */
+> +int xvip_enum_mbus_code(struct v4l2_subdev *subdev,
+> +			struct v4l2_subdev_pad_config *cfg,
+> +			struct v4l2_subdev_mbus_code_enum *code)
+> +{
+> +	struct v4l2_mbus_framefmt *format;
+> +
+> +	if (code->index)
+> +		return -EINVAL;
+> +
+
+You need to handle the case where code->which == ACTIVE (in which case
+cfg can be NULL).
+
+> +	format = v4l2_subdev_get_try_format(subdev, cfg, code->pad);
+> +
+> +	code->code = format->code;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(xvip_enum_mbus_code);
+> +
+> +/**
+> + * xvip_enum_frame_size - Enumerate the media bus frame size
+> + * @subdev: V4L2 subdevice
+> + * @cfg: V4L2 subdev pad configuration
+> + * @fse: returning media bus frame size
+> + *
+> + * This function is a drop-in implementation of the subdev enum_frame_size pad
+> + * operation. It assumes that the subdevice has one sink pad and one source
+> + * pad, and that the format on the source pad is always identical to the
+> + * format on the sink pad. Entities with different requirements need to
+> + * implement their own enum_frame_size handlers.
+> + *
+> + * Return: 0 if the media bus frame size is found, or -EINVAL
+> + * if the index or the code is not valid.
+> + */
+> +int xvip_enum_frame_size(struct v4l2_subdev *subdev,
+> +			 struct v4l2_subdev_pad_config *cfg,
+> +			 struct v4l2_subdev_frame_size_enum *fse)
+> +{
+> +	struct v4l2_mbus_framefmt *format;
+> +
+
+Ditto.
+
+> +	format = v4l2_subdev_get_try_format(subdev, cfg, fse->pad);
+> +
+> +	if (fse->index || fse->code != format->code)
+> +		return -EINVAL;
+> +
+> +	if (fse->pad == XVIP_PAD_SINK) {
+> +		fse->min_width = XVIP_MIN_WIDTH;
+> +		fse->max_width = XVIP_MAX_WIDTH;
+> +		fse->min_height = XVIP_MIN_HEIGHT;
+> +		fse->max_height = XVIP_MAX_HEIGHT;
+> +	} else {
+> +		/* The size on the source pad is fixed and always identical to
+> +		 * the size on the sink pad.
+> +		 */
+> +		fse->min_width = format->width;
+> +		fse->max_width = format->width;
+> +		fse->min_height = format->height;
+> +		fse->max_height = format->height;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(xvip_enum_frame_size);
+
+Regards,
+
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
