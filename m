@@ -1,51 +1,40 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 07/10] usb: Make sure that DWC2 initializes after the power channel mailbox driver.
-Date: Wed, 04 Mar 2015 10:50:35 +0100
-Message-ID: <2889752.U8cUum3Crf@wuerfel>
-References: <1425329684-23968-1-git-send-email-eric@anholt.net> <20150303083250.GG6976@x1> <54F67944.1030501@wwwdotorg.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [Patch v6 0/2] gpio: add GPIO hogging mechanism
+Date: Wed, 4 Mar 2015 10:53:06 +0100
+Message-ID: <CACRpkdb+vo9BvFaG1ZBLLm9HqpQ89ckTwkXKmR5vwXNKWWrtrQ@mail.gmail.com>
+References: <AAE35E953C746D4784A1A0C604EFEA714DFBD819@DLEE10.ent.ti.com>
+	<20150218172341.GA3851@ti.com>
+	<20150219214639.GB8656@deathray>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F67944.1030501-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150219214639.GB8656@deathray>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Welling <mwelling@ieee.org>
+Cc: Benoit Parrot <bparrot@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 March 2015 20:17:24 Stephen Warren wrote:
-> On 03/03/2015 01:32 AM, Lee Jones wrote:
-> > On Mon, 02 Mar 2015, Eric Anholt wrote:
-> >> This gets USB working on the Raspberry Pi without relying on U-Boot to
-> >> send the power message for us.  Without it, you would get warnings
-> >> about fifo sizes and "dwc2_core_reset() HANG! Soft Reset
-> >> GRSTCTL=80000001" leading to a failed probe.
-> 
-> >> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> 
-> >> +bool bcm2835_usb_power_enabled(void)
-> >> +{
-> >> +#ifdef CONFIG_BCM2835_MBOX
-> > 
-> > Please don't put #ifdeffery in *.c files.  If you have to match on
-> > CONFIG_* options, please do so using inlines in a header file
-> > somewhere.
-> 
-> I haven't heard of that restriction before. I'm sure there are many
-> ifdefs in C files in the kernel. What benefit does moving the ifdefs
-> into headers have?
-> 
+On Thu, Feb 19, 2015 at 10:46 PM, Michael Welling <mwelling@ieee.org> wrote:
+> On Wed, Feb 18, 2015 at 11:23:42AM -0600, Benoit Parrot wrote:
+>> Gentle ping.
+>>
+>> Is there any chance this will make it in 3.21?
+>>
+>> Benoit
+>>
+>
+> Is there a reason that the pin has to be "hogged"?
+>
+> Couldn't the pin be released after configuration for eventual use in the userspace?
 
-It's the common convention.
+That can be added on later when/if we add support for
+mapping pins to userspace.
 
-However, I don't think this should depend on the specific mailbox
-implementation at all. The whole point of the mailbox abstraction is
-to shield the drivers from the details, and you can rely on the
-right mailbox driver being used based on the phandle that is used
-in the dt.
+If you know you want to give it to userspace and how to set
+it up properly you certainly know what to name it too, so for
+pins explicitly exported to userspace we need a mechanism
+to name them and export them explicitly (without having userspace
+exporting them to itself with that brain-damaged sysfs interface).
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
