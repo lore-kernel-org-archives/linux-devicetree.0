@@ -1,50 +1,53 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 3/5] drm: jz4780: Add DRM driver for Ingenic JZ4780
-Date: Wed, 04 Mar 2015 22:38:48 +0100
-Message-ID: <1425505128.2090.41.camel@tiscali.nl>
-References: <1425483471-59808-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1425483471-59808-4-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [RFC/PATCH 0/2] spi: spi-dw: Select 16b or 32b register access
+Date: Wed, 4 Mar 2015 16:01:02 -0600
+Message-ID: <54F7809E.2010307@opensource.altera.com>
+References: <1425501075-17081-1-git-send-email-tthayer@opensource.altera.com> <1425501868.14897.178.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1425483471-59808-4-git-send-email-Zubair.Kakakhel@imgtec.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1425501868.14897.178.camel@linux.intel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: broonie@kernel.org, grant.likely@linaro.org, jkosina@suse.cz, pawel.moll@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, axel.lin@ingics.com, baruch@tkos.co.il, jg1.han@samsung.com, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-WnViYWlyIEx1dGZ1bGxhaCBLYWtha2hlbCBzY2hyZWVmIG9wIHdvIDA0LTAzLTIwMTUgb20gMTU6
-MzcgWyswMDAwXToKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2p6NDc4
-MC9NYWtlZmlsZQo+IEBAIC0wLDAgKzEsMTAgQEAKPiArY2NmbGFncy15IDo9IC1JaW5jbHVkZS9k
-cm0KPiAraWZlcSAoLCAkKGZpbmRzdHJpbmcgLVcsJChFWFRSQV9DRkxBR1MpKSkKPiArCj4gK2Vu
-ZGlmCgpXaGF0IGRvZXMgdGhhdCBkbz8gCgo+ICtqejQ3ODAteSA6PSBcCj4gKwlqejQ3ODBfY3J0
-Yy5vIFwKPiArCWp6NDc4MF9kcnYubwoKUGxlYXNlIG1ha2UgdGhpcyBvbmUgbGluZS4gCgo+ICtv
-YmotJChDT05GSUdfRFJNX0paNDc4MCkJKz0gano0NzgwLm8KCj4gLS0tIC9kZXYvbnVsbAo+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9qejQ3ODAvano0NzgwX2Rydi5jCj4gQEAgLTAsMCArMSwzODgg
-QEAKPiArLyoKPiArICogQ29weXJpZ2h0IChDKSAyMDE1IEltYWdpbmF0aW9uIFRlY2hub2xvZ2ll
-cwo+ICsgKiBBdXRob3I6IFp1YmFpciBMdXRmdWxsYWggS2FrYWtoZWwgPFp1YmFpci5LYWtha2hl
-bEBpbWd0ZWMuY29tPgo+ICsgKgo+ICsgKiBEUk0gZHJpdmVyIGZvciBJbmdlbmljIEpaNDc4MAo+
-ICsgKgo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3Ry
-aWJ1dGUgaXQgYW5kL29yIG1vZGlmeSBpdAo+ICsgKiB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdO
-VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcyBwdWJsaXNoZWQgYnkKPiArICog
-dGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPiArICoKPiArICogVGhpcyBwcm9ncmFtIGlz
-IGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsIGJ1dCBXSVRI
-T1VUCj4gKyAqIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5
-IG9mIE1FUkNIQU5UQUJJTElUWSBvcgo+ICsgKiBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVS
-UE9TRS4gIFNlZSB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yCj4gKyAqIG1vcmUg
-ZGV0YWlscy4KPiArICoKPiArICovCgpUaGlzIHN0YXRlcyB0aGUgbGljZW5zZSBpcyBHUEwgdjIu
-IChJIHRoaW5rIHRoZSBvdGhlciBmaWxlcyBvZiB0aGlzCmRyaXZlciBjYXJyeSBzaW1pbGFyIGNv
-bW1lbnRzLikKCj4gK01PRFVMRV9MSUNFTlNFKCJHUEwiKTsKClNvIHlvdSBwcm9iYWJseSB3YW50
-CiAgICBNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7CgpoZXJlLgoKUGF1bCBCb2xsZQoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Andy,
+
+On 03/04/2015 02:44 PM, Andy Shevchenko wrote:
+> On Wed, 2015-03-04 at 14:31 -0600, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> The Altera Arria10 SoC requires 32 bit accesses to peripherals. The
+>> DesignWare SPI peripheral registers are on 32bit boundaries so this
+>> patch is minimal. Function pointers are used to select 32bit access
+>> or 16bit accesses.
+>
+>
+> So, what is exactly the issue when we read only half of the register?
+> Bus lock, or what?
+>
+
+The read actually works on our chip but I changed both read and write to 
+be consistent. For Arria10, on a 16 bit write the data isn't written 
+into the DesignWare register.
+
+In reply to your other email, yes it does support the DW_apb_ssi but the 
+Arria10 architecture requires 32 bit access (actually as you point out, 
+32 bit writes). We're using the original driver on our older chips but 
+Arria10 requires upstream changes.
+
+>>
+>> Thor Thayer (2):
+>>    dt-binding: spi: spi-dw: Select 16b or 32b access for Designware SPI
+>>    spi: dw-spi: Pointers select 16b vs. 32b DesignWare access
+>>
+>>   Documentation/devicetree/bindings/spi/spi-dw.txt |    1 +
+>>   drivers/spi/spi-dw-mmio.c                        |    7 +++-
+>>   drivers/spi/spi-dw.c                             |   38 +++++++++++++---------
+>>   drivers/spi/spi-dw.h                             |   10 +++---
+>>   4 files changed, 35 insertions(+), 21 deletions(-)
+>>
+>
+>
