@@ -1,60 +1,68 @@
-From: Chen Gang <xili_gchen_5257@hotmail.com>
-Subject: [PATCH] of: Kconfig: Let OF_UNITTEST depend on "I2C=y" and "I2C_MUX=y"
-Date: Wed, 4 Mar 2015 14:37:51 +0800
-Message-ID: <BLU437-SMTP82811F6F904D6C74EE62E3B91E0@phx.gbl>
+From: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/2] i2c: Support for Netlogic XLP9XX/5XX I2C controller.
+Date: Wed, 4 Mar 2015 12:25:31 +0530
+Message-ID: <1425452133-7489-1-git-send-email-jchandra@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Subhendu Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-They need several symbols which are in I2C and I2C_MUX, the related
-error:
+Here is an updated version of the i2c controller driver on Broadcom
+XLP9xx MIPS SoC.
 
-  drivers/built-in.o: In function `selftest_i2c_mux_remove':
-  unittest.c:(.text+0xb0ce4): undefined reference to `i2c_del_mux_adapter'
-  unittest.c:(.text+0xb0ce8): undefined reference to `i2c_del_mux_adapter'
-  drivers/built-in.o: In function `selftest_i2c_mux_probe':
-  unittest.c:(.text+0xb0f20): undefined reference to `i2c_add_mux_adapter'
-  unittest.c:(.text+0xb0f24): undefined reference to `i2c_add_mux_adapter'
-  unittest.c:(.text+0xb0f94): undefined reference to `i2c_del_mux_adapter'
-  unittest.c:(.text+0xb0f9c): undefined reference to `i2c_del_mux_adapter'
-  drivers/built-in.o: In function `selftest_i2c_bus_remove':
-  unittest.c:(.text+0xb10cc): undefined reference to `i2c_del_adapter'
-  unittest.c:(.text+0xb10d4): undefined reference to `i2c_del_adapter'
-  drivers/built-in.o: In function `selftest_i2c_bus_probe':
-  unittest.c:(.text+0xb1298): undefined reference to `i2c_add_numbered_adapter'
-  unittest.c:(.text+0xb12a0): undefined reference to `i2c_add_numbered_adapter'
-  drivers/built-in.o: In function `of_selftest_overlay':
-  unittest.c:(.init.text+0xc9d0): undefined reference to `i2c_register_driver'
-  unittest.c:(.init.text+0xc9dc): undefined reference to `i2c_register_driver'
-  unittest.c:(.init.text+0xcdb4): undefined reference to `i2c_del_driver'
-  unittest.c:(.init.text+0xcdb8): undefined reference to `i2c_del_driver'
-  drivers/built-in.o: In function `of_selftest_device_exists':
-  unittest.c:(.text.unlikely+0xd70): undefined reference to `of_find_i2c_device_by_node'
-  unittest.c:(.text.unlikely+0xd7c): undefined reference to `of_find_i2c_device_by_node'
-  make: *** [vmlinux] Error 1
+We have taken care of the review comments for v1, and have made some
+additional fixes while going thru the process. The Changelog is below.
 
-Signed-off-by: Chen Gang <gang.chen.5i5j@gmail.com>
----
- drivers/of/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please let me know if there are any comments or suggestions.
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 7bcaeec..b60fc66 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -9,7 +9,7 @@ menu "Device Tree and Open Firmware support"
- 
- config OF_UNITTEST
- 	bool "Device Tree runtime unit tests"
--	depends on OF_IRQ && OF_EARLY_FLATTREE
-+	depends on OF_IRQ && OF_EARLY_FLATTREE && I2C=y && I2C_MUX=y
- 	select OF_RESOLVE
- 	help
- 	  This option builds in test cases for the device tree infrastructure
+Thanks,
+JC.
+
+Changes v1->v2:
+* Implement changes from Ray Jui's review
+  - Support for 0 length transfers
+  - remove .owner assignment in platform_driver and .data assignment in
+    of_device_id table
+  - add synchronize_irq and disable interrupt in .remove
+  - Move most prints to dev_dbg
+  - add COMPILE_TEST
+  - align wrapped line in function definitions
+  - IRQ_NONE return if interrupt is not ours.
+  - error check frequency setting in DTB
+  - fix check of return of devm_ioremap_resource() and remove
+    unnecessary prints
+  - fix incorrect irq check
+  - include file ordering fixed
+  - few unneeded variables taken out
+  - use u32 consistently for unsigned 32 bit int
+  - add comment for prescale value calculation
+
+* Change clock-frequency parameter to take the bus frequency
+  as expected in i2c subsystem
+
+* Rearrage register definitions to group them better
+
+* Add I2C_FUNC_10BIT_ADDR to xlp9xx_i2c_functionality()
+
+* use reinit_completion before each transfer
+
+* use i2c_add_adapter instead of doing i2c_add_numbered_adapter
+
+Subhendu Sekhar Behera (2):
+  of: Add vendor prefix 'netlogic'
+  i2c: Support for Netlogic XLP9XX/5XX I2C controller.
+
+ .../devicetree/bindings/i2c/i2c-xlp9xx.txt         |  19 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-xlp9xx.c                    | 446 +++++++++++++++++++++
+ 5 files changed, 477 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-xlp9xx.txt
+ create mode 100644 drivers/i2c/busses/i2c-xlp9xx.c
+
 -- 
-1.9.3
+1.9.1
