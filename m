@@ -1,154 +1,37 @@
-From: Alban Bedel <albeu@free.fr>
-Subject: [PATCH 11/14] MIPS: ath79: Add OF support to the GPIO driver
-Date: Fri, 17 Apr 2015 16:24:26 +0200
-Message-ID: <1429280669-2986-12-git-send-email-albeu@free.fr>
-References: <1429280669-2986-1-git-send-email-albeu@free.fr>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3 17/17] crypto: talitos - Update DT bindings with SEC1
+Date: Wed, 4 Mar 2015 03:17:22 +0100
+Message-ID: <20150417142411.6BCD31A242C@localhost.localdomain>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1429280669-2986-1-git-send-email-albeu@free.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Alban Bedel <albeu@free.fr>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kim Phillips <kim.phillips@freescale.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Replace the simple GPIO chip registration by a platform driver
-and make ath79_gpio_init() just register the device.
+This patch updates the documentation by including SEC1 into SEC2/3 doc
 
-Signed-off-by: Alban Bedel <albeu@free.fr>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/mips/ath79/dev-common.c | 13 ++++++++
- arch/mips/ath79/gpio.c       | 73 +++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 81 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/crypto/fsl-sec2.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/ath79/dev-common.c b/arch/mips/ath79/dev-common.c
-index 516225d..4f397cb 100644
---- a/arch/mips/ath79/dev-common.c
-+++ b/arch/mips/ath79/dev-common.c
-@@ -106,3 +106,16 @@ void __init ath79_register_wdt(void)
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+index 38988ef..f0d926b 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+@@ -1,9 +1,11 @@
+-Freescale SoC SEC Security Engines versions 2.x-3.x
++Freescale SoC SEC Security Engines versions 1.x-2.x-3.x
  
- 	platform_device_register_simple("ath79-wdt", -1, &res, 1);
- }
-+
-+void __init ath79_gpio_init(void)
-+{
-+	struct resource res;
-+
-+	memset(&res, 0, sizeof(res));
-+
-+	res.flags = IORESOURCE_MEM;
-+	res.start = AR71XX_GPIO_BASE;
-+	res.end = res.start + AR71XX_GPIO_SIZE - 1;
-+
-+	platform_device_register_simple("ath79-gpio", -1, &res, 1);
-+}
-diff --git a/arch/mips/ath79/gpio.c b/arch/mips/ath79/gpio.c
-index 8d025b0..ce1a61d 100644
---- a/arch/mips/ath79/gpio.c
-+++ b/arch/mips/ath79/gpio.c
-@@ -20,6 +20,7 @@
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/gpio.h>
-+#include <linux/of_device.h>
+ Required properties:
  
- #include <asm/mach-ath79/ar71xx_regs.h>
- #include <asm/mach-ath79/ath79.h>
-@@ -178,11 +179,52 @@ void ath79_gpio_function_disable(u32 mask)
- 	ath79_gpio_function_setup(0, mask);
- }
- 
--void __init ath79_gpio_init(void)
-+static const struct of_device_id ath79_gpio_of_match[] = {
-+	{
-+		.compatible = "qca,ar7100-gpio",
-+		.data = (void *)AR71XX_GPIO_COUNT,
-+	},
-+	{
-+		.compatible = "qca,ar7240-gpio",
-+		.data = (void *)AR7240_GPIO_COUNT,
-+	},
-+	{
-+		.compatible = "qca,ar7241-gpio",
-+		.data = (void *)AR7241_GPIO_COUNT,
-+	},
-+	{
-+		.compatible = "qca,ar9130-gpio",
-+		.data = (void *)AR913X_GPIO_COUNT,
-+	},
-+	{
-+		.compatible = "qca,ar9330-gpio",
-+		.data = (void *)AR933X_GPIO_COUNT,
-+	},
-+	{
-+		.compatible = "qca,ar9340-gpio",
-+		.data = (void *)AR934X_GPIO_COUNT,
-+	},
-+	{
-+		.compatible = "qca,qca9550-gpio",
-+		.data = (void *)QCA955X_GPIO_COUNT,
-+	},
-+	{},
-+};
-+
-+static int ath79_gpio_probe(struct platform_device *pdev)
- {
-+	struct resource *res;
- 	int err;
- 
--	if (soc_is_ar71xx())
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *of_id =
-+			of_match_device(ath79_gpio_of_match, &pdev->dev);
-+		if (!of_id) {
-+			dev_err(&pdev->dev, "Error: No device match found\n");
-+			return -ENODEV;
-+		}
-+		ath79_gpio_count = (unsigned long)of_id->data;
-+	} else if (soc_is_ar71xx())
- 		ath79_gpio_count = AR71XX_GPIO_COUNT;
- 	else if (soc_is_ar7240())
- 		ath79_gpio_count = AR7240_GPIO_COUNT;
-@@ -199,7 +241,13 @@ void __init ath79_gpio_init(void)
- 	else
- 		BUG();
- 
--	ath79_gpio_base = ioremap_nocache(AR71XX_GPIO_BASE, AR71XX_GPIO_SIZE);
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	ath79_gpio_base = devm_ioremap_nocache(
-+		&pdev->dev, res->start, resource_size(res));
-+	if (!ath79_gpio_base)
-+		return -ENOMEM;
-+
-+	ath79_gpio_chip.dev = &pdev->dev;
- 	ath79_gpio_chip.ngpio = ath79_gpio_count;
- 	if (soc_is_ar934x() || soc_is_qca955x()) {
- 		ath79_gpio_chip.direction_input = ar934x_gpio_direction_input;
-@@ -207,10 +255,25 @@ void __init ath79_gpio_init(void)
- 	}
- 
- 	err = gpiochip_add(&ath79_gpio_chip);
--	if (err)
--		panic("cannot add AR71xx GPIO chip, error=%d", err);
-+	if (err) {
-+		dev_err(&pdev->dev,
-+			"cannot add AR71xx GPIO chip, error=%d", err);
-+		return err;
-+	}
-+
-+	return 0;
- }
- 
-+static struct platform_driver ath79_gpio_driver = {
-+	.driver = {
-+		.name = "ath79-gpio",
-+		.of_match_table	= ath79_gpio_of_match,
-+	},
-+	.probe = ath79_gpio_probe,
-+};
-+
-+module_platform_driver(ath79_gpio_driver);
-+
- int gpio_get_value(unsigned gpio)
- {
- 	if (gpio < ath79_gpio_count)
+ - compatible : Should contain entries for this and backward compatible
+-  SEC versions, high to low, e.g., "fsl,sec2.1", "fsl,sec2.0"
++  SEC versions, high to low, e.g., "fsl,sec2.1", "fsl,sec2.0" (SEC2/3)
++                             e.g., "fsl,sec1.2", "fsl,sec1.0" (SEC1)
++    warning: SEC1 and SEC2 are mutually exclusive
+ - reg : Offset and length of the register set for the device
+ - interrupts : the SEC's interrupt number
+ - fsl,num-channels : An integer representing the number of channels
 -- 
-2.0.0
+2.1.0
