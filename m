@@ -1,55 +1,115 @@
-From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCHv1] rtc: bcm-iproc: Add support for Broadcom iproc rtc
-Date: Wed, 4 Mar 2015 14:53:40 -0800
-Message-ID: <54F78CF4.9040108@broadcom.com>
-References: <1418757750-3628-1-git-send-email-arun.ramamurthy@broadcom.com> <3699327.0G6ZNxn8QA@wuerfel> <54F789CD.5030504@broadcom.com> <2569223.1gDQjv8f8j@wuerfel>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 2/2] pinctrl: Introduce TI IOdelay configuration driver
+Date: Wed, 04 Mar 2015 23:58:46 +0100
+Message-ID: <1425509926.2090.56.camel@tiscali.nl>
+References: <1425427237-11511-1-git-send-email-nm@ti.com>
+	 <1425427237-11511-3-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2569223.1gDQjv8f8j@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Arun Ramamurthy <arunrama-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1425427237-11511-3-git-send-email-nm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Nishanth Menon schreef op di 03-03-2015 om 18:00 [-0600]:
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index ee9f44ad7f02..8e463d75fbb2 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -160,6 +160,17 @@ config PINCTRL_TEGRA_XUSB
+>  	select PINCONF
+>  	select PINMUX
+>  
+> +config PINCTRL_TI_IODELAY
+> +	bool "TI IODelay Module pinconf driver"
+
+This adds a boolean Kconfig symbol.
+
+> +	depends on OF
+> +	select PINCONF
+> +	select GENERIC_PINCONF
+> +	select REGMAP_MMIO
+> +	help
+> +	  Say Y here to support Texas Instruments' IODelay pinconf driver.
+> +	  IODelay module is used for the DRA7 SoC family. This driver is in
+> +	  addition to PINCTRL_SINGLE which controls the mux.
+> +
+>  config PINCTRL_TZ1090
+>  	bool "Toumaz Xenif TZ1090 pin control driver"
+>  	depends on SOC_TZ1090
+> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+> index 0475206dd600..e441cd71aedf 100644
+> --- a/drivers/pinctrl/Makefile
+> +++ b/drivers/pinctrl/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_PINCTRL_TEGRA30)	+= pinctrl-tegra30.o
+>  obj-$(CONFIG_PINCTRL_TEGRA114)	+= pinctrl-tegra114.o
+>  obj-$(CONFIG_PINCTRL_TEGRA124)	+= pinctrl-tegra124.o
+>  obj-$(CONFIG_PINCTRL_TEGRA_XUSB)	+= pinctrl-tegra-xusb.o
+> +obj-$(CONFIG_PINCTRL_TI_IODELAY)	+= pinctrl-ti-iodelay.o
+
+So this objectfile will either be built-in or not be built at all.
+
+>  obj-$(CONFIG_PINCTRL_TZ1090)	+= pinctrl-tz1090.o
+>  obj-$(CONFIG_PINCTRL_TZ1090_PDC)	+= pinctrl-tz1090-pdc.o
+>  obj-$(CONFIG_PINCTRL_U300)	+= pinctrl-u300.o
+> diff --git a/drivers/pinctrl/pinctrl-ti-iodelay.c b/drivers/pinctrl/pinctrl-ti-iodelay.c
+> new file mode 100644
+> index 000000000000..e4c6e25a781c
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-ti-iodelay.c
+> @@ -0,0 +1,963 @@
+>[...]
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+
+This is, I think, a bit of a red flag.
+
+> +#include <linux/of_device.h>
+> +#include <linux/of.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinconf.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+
+[...]
+
+> +static const struct of_device_id ti_iodelay_of_match[] = {
+> +	{.compatible = "ti,dra7-iodelay", .data = &dra7_iodelay_data},
+> +	{ /* Hopefully no more.. */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, ti_iodelay_of_match);
+> +
+> +static struct platform_driver ti_iodelay_driver = {
+> +	.probe = ti_iodelay_probe,
+> +	.remove = ti_iodelay_remove,
+> +	.driver = {
+> +		   .owner = THIS_MODULE,
+
+So THIS_MODULE will, basically, be NULL.
+
+> +		   .name = DRIVER_NAME,
+> +		   .of_match_table = ti_iodelay_of_match,
+> +		   },
+> +};
+> +module_platform_driver(ti_iodelay_driver);
+> +
+> +MODULE_AUTHOR("Texas Instruments, Inc.");
+> +MODULE_DESCRIPTION("Pinconf driver for TI's IO Delay module");
+> +MODULE_LICENSE("GPL v2");
+
+And these three macros will be preprocessed away.
+
+(Perhaps there are non-modular alternatives to MODULE_DEVICE_TABLE and
+module_platform_driver, but I'm not sure how those two macros actually
+work.)
 
 
-On 15-03-04 02:50 PM, Arnd Bergmann wrote:
-> On Wednesday 04 March 2015 14:40:13 Arun Ramamurthy wrote:
->> On 15-03-04 02:21 PM, Arnd Bergmann wrote:
->>> On Thursday 12 February 2015 14:17:41 Arun Ramamurthy wrote:
->>>> Hi Arnd
->>>>
->>>> My apologies for the late reply, I was moved to other work items. I
->>>> wanted to get more clarification on the syscon issue so that I can
->>>> submit the next patch set. If I understand correctly, you would like
->>>> me to move the CRMU logic to a new driver under mfd/ and use the syscon
->>>> api calls in my rtc driver? Thanks
->>>
->>> It depends a lot on what's in there, I can best advise you if you
->>> have some form of register list.
->>>
->>> A common approach would be to not have a driver for the crmu at all,
->>> but just mark it as syscon, and have the other drivers either reference
->>> the syscon node through a phandle, or create them as childrem of
->>> the syscon node. The latter case makes most sense if all uses of
->>> the crmu have no other MMIO registers.
->>>
->>
->> Thank you Arnd, I am going to follow the approach of adding a child node
->> to the syscon node. Several other driver use other registers in the CRMU
->> so I think the child node approach makes the most sense.
->
-> Just to be sure we have the same understanding: of those other drivers,
-> do you think that they would use only CRMU registers, or could there
-> be drivers that have both CRMU as well as other MMIO registers?
->
-The other drivers have both CRMU and other MMIO registers. So I thought 
-they could also switch to using the syscon child nodes.
-> 	Arnd
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Paul Bolle
+
