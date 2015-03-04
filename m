@@ -1,69 +1,54 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH 2/5] dt-bindings: video: Add jz4780-lcd binding
-Date: Wed, 4 Mar 2015 15:37:48 +0000
-Message-ID: <1425483471-59808-3-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1425483471-59808-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH/RFC 0/4] Probe deferral for IOMMU DT integration
+Date: Wed, 04 Mar 2015 17:41:50 +0200
+Message-ID: <2044417.cBqDBgtKhe@avalon>
+References: <1423182722-16646-1-git-send-email-lauraa@codeaurora.org>
+	<1946782.v9knT4VCx7@avalon> <20150304152505.GE17250@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425483471-59808-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: airlied@linux.ie
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Zubair.Kakakhel@imgtec.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20150304152505.GE17250-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the LCD controller on the jz4780 SoC
+Hi Will,
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
----
- .../bindings/video/ingenic-jz4780-lcd.txt          | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt
+(CC'ing Thierry Reding who was missing. Thierry, you'll have to look at the 
+archive for the discussion, but here's at least a start pointer)
 
-diff --git a/Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt b/Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt
-new file mode 100644
-index 0000000..8512ce3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt
-@@ -0,0 +1,39 @@
-+Bindings for Ingenic JZ4780 LCD Controller
-+
-+LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
-+
-+Required properties:
-+- compatible: should be "ingenic,jz4780-lcd"
-+- reg: Should contain the address & size of the LCD controller registers.
-+- interrupts: Should specify the interrupt provided by parent.
-+- clocks: Should contain two clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK.
-+- clock-names : Must be "lcd_clk", "lcd_pixclk";
-+- port: A port node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Optional properties:
-+- interrupt-parent: phandle to parent interrupt controller
-+
-+Example:
-+
-+lcd: jz4780-lcdk@0x13050000 {
-+	compatible = "ingenic,jz4780-lcd";
-+	reg = <0x13050000 0x1800>;
-+
-+	clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
-+	clock-names = "lcd_clk", "lcd_pixclk";
-+
-+	interrupt-parent = <&intc>;
-+	interrupts = <31>;
-+
-+	jz4780_lcd_out: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			jz4780_out_hdmi: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&hdmi_in_lcd>;
-+			};
-+		};
-+
-+};
+On Wednesday 04 March 2015 15:25:05 Will Deacon wrote:
+> On Tue, Mar 03, 2015 at 11:54:46PM +0000, Laurent Pinchart wrote:
+> > Hello,
+> 
+> Hi Laurent,
+> 
+> > I haven't seen any reply to this e-mail. I know that the combination of
+> > IOMMU, DMA mapping and DT doesn't exactly sound like fun, but I think we
+> > still need to move on :-)
+> 
+> Yup, and thanks for taking the time to write this up!
+> 
+> > Will and Arnd, could you please confirm that my summary below matches your
+> > memories of our discussion ?
+> 
+> It certainly matches my recollection, but I suspect the devil is in the
+> details and we'll have to have some discussions once somebody has a crack at
+> implementing this.
+
+You're not volunteering, are you ? ;-)
+
 -- 
-1.9.1
+Regards,
+
+Laurent Pinchart
