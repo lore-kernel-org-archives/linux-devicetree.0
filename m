@@ -1,69 +1,59 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] ARM: at91: dts: sama5d4ek: add leds in DT node
-Date: Wed, 4 Mar 2015 11:54:33 +0100
-Message-ID: <54F6E469.8020405@atmel.com>
-References: <1423474820-19118-1-git-send-email-josh.wu@atmel.com>
+From: Aleksei Mamlin <mamlinav@gmail.com>
+Subject: Re: [PATCH 2/2] input: goodix: Add device tree support for 5-finger
+ chips
+Date: Wed, 4 Mar 2015 13:55:08 +0300
+Message-ID: <20150304135508.d54656131ed7f6e22c3cb7df@gmail.com>
+References: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
+	<1425458053-4559-1-git-send-email-mamlinav@gmail.com>
+	<20150304113040.014ca7f2c14c65b5f7e9672c@ao2.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423474820-19118-1-git-send-email-josh.wu@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Wu <josh.wu@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150304113040.014ca7f2c14c65b5f7e9672c@ao2.it>
+Sender: linux-input-owner@vger.kernel.org
+To: Antonio Ospite <ao2@ao2.it>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 09/02/2015 10:40, Josh Wu a =E9crit :
-> Add the leds DT node in the dts file.
-> In the leds, d10 is set as heartbeat led.
->=20
-> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+On Wed, 4 Mar 2015 11:30:40 +0100
+Antonio Ospite <ao2@ao2.it> wrote:
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> On Wed,  4 Mar 2015 11:34:13 +0300
+> Aleksei Mamlin <mamlinav@gmail.com> wrote:
+> 
+> > This patch adds device tree support for 5-finger chips, like GT911 and GT912.
+> >
+> 
+> Hi Aleksei,
+> 
+> from a datasheet I found[1](Pag. 11) I see that some devices provide
+> the information about the max number of touch points in register 0x804C.
+> 
+> Have you tried if this is true on your 5-finger devices too?
+> If so, please use this mechanism to populate ts->max_touch_num to avoid
+> passing hardcoded data.
+> 
+Hi Antonio,
 
-added to at91-4.1-dt branch.
-
-Thanks.
-
-> ---
->=20
->  arch/arm/boot/dts/at91-sama5d4ek.dts | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/at91-sama5d4ek.dts b/arch/arm/boot/dts=
-/at91-sama5d4ek.dts
-> index 9198b71..0c418be 100644
-> --- a/arch/arm/boot/dts/at91-sama5d4ek.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d4ek.dts
-> @@ -257,4 +257,26 @@
->  			gpio-key,wakeup;
->  		};
->  	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		status =3D "okay";
-> +
-> +		d8 {
-> +			label =3D "d8";
-> +			/* PE28, conflicts with usart4 rts pin */
-> +			gpios =3D <&pioE 28 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		d9 {
-> +			label =3D "d9";
-> +			gpios =3D <&pioE 9 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		d10 {
-> +			label =3D "d10";
-> +			gpios =3D <&pioE 8 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger =3D "heartbeat";
-> +		};
-> +	};
->  };
->=20
+I checked datasheets and you are right, seems that all Goodix GT9xx series provides max number of touch points in register 0x804C.
+I'll rewrite driver to use data from 0x804C register.
 
 
---=20
-Nicolas Ferre
+> Thanks,
+>    Antonio
+> 
+> [1] http://www.wpgholdings.com/uploads/bu/bu_3/MID_20141112/GT9271_Datasheet_20130904.pdf
+> 
+> -- 
+> Antonio Ospite
+> http://ao2.it
+> 
+> A: Because it messes up the order in which people normally read text.
+>    See http://en.wikipedia.org/wiki/Posting_style
+> Q: Why is top-posting such a bad thing?
+
+
+-- 
+Thanks and regards,
+Aleksei Mamlin
