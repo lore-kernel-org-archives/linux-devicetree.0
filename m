@@ -1,35 +1,33 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: [PATCH] arm: qcom: dts: gic: add compatible string for Qualcomm MSM GICs
-Date: Wed,  4 Mar 2015 13:57:25 -0600
-Message-ID: <1425499045-31450-1-git-send-email-galak@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 0/2] add dts for PopMetal board
+Date: Wed, 04 Mar 2015 20:57:40 +0100
+Message-ID: <2239622.yIer0hBRK8@phil>
+References: <1425201914-4695-1-git-send-email-andy.yan@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425201914-4695-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: devicetree@vger.kernel.org, naobsd@gmail.com, romain.perier@gmail.com, b.galvani@gmail.com, galak@codeaurora.org, linux-kernel@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, mark.yao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Document the Qualcomm MSM GICs implementation as compatible with the
-ARM GIC standard.
+Hi Andy,
 
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/gic.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Am Sonntag, 1. M=E4rz 2015, 17:25:14 schrieb Andy Yan:
+> PopMetal is a rockchip rk3288 based board made by ChipSpark,
+> which has many interface such as VGA,HDMI,usb,ir,sdcad and lots of
+> sensors such as gyroscope(L3G4200D),accelerometer(mma8452),compass(AK=
+8963C).
+>=20
+> http://wiki.chipspark.com/en/index.php?title=3DPopMetal
+>=20
+> This patch add basic support for it, which can boot the board
+> into a shell with linux boot logo on hdmi, sdcard and many
+> sensors enabled. More feather will be enabled later.
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-index c97484b..6204630 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -18,6 +18,8 @@ Main node required properties:
- 	"arm,arm11mp-gic"
- 	"brcm,brahma-b15-gic"
- 	"arm,arm1176jzf-devchip-gic"
-+	"qcom,msm-8660-qgic"
-+	"qcom,msm-qgic2"
- - interrupt-controller : Identifies the node as an interrupt controller
- - #interrupt-cells : Specifies the number of cells needed to encode an
-   interrupt source.  The type shall be a <u32> and the value shall be 3.
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I've added both patches to my dts branch
+
+
+Heiko
