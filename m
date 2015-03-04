@@ -1,44 +1,66 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH/RFC 0/4] Probe deferral for IOMMU DT integration
-Date: Wed, 4 Mar 2015 15:25:05 +0000
-Message-ID: <20150304152505.GE17250@arm.com>
-References: <1423182722-16646-1-git-send-email-lauraa@codeaurora.org>
-	<1519819.qZaXvuQI61@avalon> <1946782.v9knT4VCx7@avalon>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/5] drm: dt: jz4780: Add Ingenic JZ4780 driver
+Date: Wed, 4 Mar 2015 15:37:46 +0000
+Message-ID: <1425483471-59808-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1946782.v9knT4VCx7@avalon>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2015 at 11:54:46PM +0000, Laurent Pinchart wrote:
-> Hello,
+Hi,
 
-Hi Laurent,
+Here we have 5 patches that add a DRM driver for the LCD
+controller in the Ingenic JZ4780 SoC.
 
-> I haven't seen any reply to this e-mail. I know that the combination of IOMMU, 
-> DMA mapping and DT doesn't exactly sound like fun, but I think we still need 
-> to move on :-)
+The HDMI Controller in the JZ4780 is by Synopsys
+and the dw_hdmi driver is used.
 
-Yup, and thanks for taking the time to write this up!
+These patches are based on 4.0-rc2
 
-> Will and Arnd, could you please confirm that my summary below matches your 
-> memories of our discussion ?
+Feedback welcome
 
-It certainly matches my recollection, but I suspect the devil is in the
-details and we'll have to have some discussions once somebody has a crack at
-implementing this.
+Thank-you
+ZubairLK
 
-Will
+Zubair Lutfullah Kakakhel (5):
+  dt-bindings: video: Add Ingenic jz4780-drm binding
+  dt-bindings: video: Add jz4780-lcd binding
+  drm: jz4780: Add DRM driver for Ingenic JZ4780
+  dt-bindings: video: Add jz4780-hdmi binding
+  drm: bridge/dw_hdmi: add jz4780 support
+
+ .../bindings/video/ingenic-jz4780-drm.txt          |  17 +
+ .../bindings/video/ingenic-jz4780-hdmi.txt         |  41 ++
+ .../bindings/video/ingenic-jz4780-lcd.txt          |  39 ++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/jz4780/Kconfig                     |  22 +
+ drivers/gpu/drm/jz4780/Makefile                    |  11 +
+ drivers/gpu/drm/jz4780/dw_hdmi-jz4780.c            | 234 +++++++
+ drivers/gpu/drm/jz4780/jz4780_crtc.c               | 721 +++++++++++++++++++++
+ drivers/gpu/drm/jz4780/jz4780_drv.c                | 388 +++++++++++
+ drivers/gpu/drm/jz4780/jz4780_drv.h                |  84 +++
+ drivers/gpu/drm/jz4780/jz4780_regs.h               | 696 ++++++++++++++++++++
+ include/drm/bridge/dw_hdmi.h                       |   1 +
+ 13 files changed, 2257 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-drm.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ingenic-jz4780-lcd.txt
+ create mode 100644 drivers/gpu/drm/jz4780/Kconfig
+ create mode 100644 drivers/gpu/drm/jz4780/Makefile
+ create mode 100644 drivers/gpu/drm/jz4780/dw_hdmi-jz4780.c
+ create mode 100644 drivers/gpu/drm/jz4780/jz4780_crtc.c
+ create mode 100644 drivers/gpu/drm/jz4780/jz4780_drv.c
+ create mode 100644 drivers/gpu/drm/jz4780/jz4780_drv.h
+ create mode 100644 drivers/gpu/drm/jz4780/jz4780_regs.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
