@@ -1,124 +1,41 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v3] spi: qup: Add DMA capabilities
-Date: Wed, 04 Mar 2015 10:38:10 +0200
-Message-ID: <1425458290.5705.2.camel@mm-sol.com>
-References: <1425056312-13746-1-git-send-email-stanimir.varbanov@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425056312-13746-1-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
+From: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
+Subject: [PATCH v2 0/4] cpufreq: add cpufreq driver for Mediatek MT8173 SoC
+Date: Wed,  4 Mar 2015 16:49:12 +0800
+Message-ID: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "pi-cheng.chen" <pi-cheng.chen@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Mike Turquette <mturquette@linaro.org>, fan.chen@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+MT8173 is a ARMv8 based SoC with 2 clusters. All CPUs in a single cluster
+share the same power and clock domain. This series tries to add cpufreq support
+for MT8173 SoC by using DT based cpufreq driver. 
 
-Hi Stan,
+>From v1 to v2:
+1. Add intermediate frequency support in cpufreq-dt driver
+2. Use voltage scaling code of cpufreq-dt for little cluster instead of
+   implementaion in notifier of mtk-cpufreq driver
+3. Code refinement for mtk-cpufreq driver
 
-It looks good now, except it doesn't apply and two small issues below:
+pi-cheng.chen (4):
+  cpufreq-dt: add clock domain and intermediate frequency support
+  cpufreq: dt-bindings: add bindings for mtk-cpufreq driver
+  cpufreq: mediatek: add Mediatek cpufreq driver
+  ARM64: dts: mediatek: add cpufreq dts for MT8173 SoC
 
-On Fri, 2015-02-27 at 18:58 +0200, Stanimir Varbanov wrote:
-> From: Andy Gross <agross@codeaurora.org>
-> 
-> This patch adds DMA capabilities to the spi-qup driver.  If DMA channels are
-> present, the QUP will use DMA instead of block mode for transfers to/from SPI
-> peripherals for transactions larger than the length of a block.
-> 
-> Signed-off-by: Andy Gross <agross@codeaurora.org>
-> Signed-off-by: Stanimir Varbanov varbanov@linaro.org>
-> ---
-> 
-> v2 -> v3
->  - now using one dma done callback on rx channel if bidirectional transfer
->    and on tx channel if only transmit transfer
->  - rearranged the spi_qup_transfer_one() in order to reuse wait for
->    completion and completion init code
->  - move dma init function early in .probe to avoid controller reset if
->    probe deffer
->  - add function to get controller mode
+ .../devicetree/bindings/cpufreq/cpufreq-mtk.txt    |  17 +
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  10 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  25 ++
+ drivers/cpufreq/Kconfig.arm                        |   6 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/cpufreq-dt.c                       |  68 +++-
+ drivers/cpufreq/mtk-cpufreq.c                      | 346 +++++++++++++++++++++
+ include/linux/cpufreq-dt.h                         |   7 +
+ 8 files changed, 473 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-mtk.txt
+ create mode 100644 drivers/cpufreq/mtk-cpufreq.c
 
-<snip>
+-- 
+1.9.1
 
-> 
-> +
-> +static int spi_qup_init_dma(struct spi_master *master, resource_size_t base)
-> +{
-> 
-
-<snip>
-
-> +
-> +       /* set DMA parameters */
-> +       rx_conf->direction = DMA_DEV_TO_MEM;
-> +       rx_conf->device_fc = 1;
-
-Strictly speeching this is a bool not int.
-
-> +       rx_conf->src_addr = base + QUP_INPUT_FIFO;
-> +       rx_conf->src_maxburst = spi->in_blk_sz;
-> +
-> +       tx_conf->direction = DMA_MEM_TO_DEV;
-> +       tx_conf->device_fc = 1;
-
-Same here.
-
-
-> @@ -553,6 +813,8 @@ static int spi_qup_probe(struct platform_device *pdev)
->         master->transfer_one = spi_qup_transfer_one;
->         master->dev.of_node = pdev->dev.of_node;
->         master->auto_runtime_pm = true;
-> +       master->dma_alignment = dma_get_cache_alignment();
-> +       master->max_dma_len = SPI_MAX_DMA_XFER;
-> 
->         platform_set_drvdata(pdev, master);
-> 
-> @@ -564,6 +826,12 @@ static int spi_qup_probe(struct platform_device *pdev)
->         controller->cclk = cclk;
->         controller->irq = irq;
-> 
-> +       ret = spi_qup_init_dma(master, res->start);
-> +       if (ret == -EPROBE_DEFER)
-> +               goto error;
-> +       else if (!ret)
-> +               master->can_dma = spi_qup_can_dma;
-> +
->         /* set v1 flag if device is version 1 */
->         if (of_device_is_compatible(dev->of_node, "qcom,spi-qup-v1.1.1"))
->                 controller->qup_v1 = 1;
-
-It is not visible from this patch, but in case of error reseting
-SPI controller (QUP_STATE_RESET), exit error path should be 
-'error_dma' and not 'error' label.
-
-> @@ -624,7 +892,7 @@ static int spi_qup_probe(struct platform_device *pdev)
->         ret = devm_request_irq(dev, irq, spi_qup_qup_irq,
->                                                                                 
-> IRQF_TRIGGER_HIGH, pdev->name, controller);
->         if (ret)
-> -               goto error;
-> +               goto error_dma;
-> 
->         pm_runtime_set_autosuspend_delay(dev, MSEC_PER_SEC);
->         pm_runtime_use_autosuspend(dev);
-> @@ -639,6 +907,8 @@ static int spi_qup_probe(struct platform_device *pdev)
-> 
->  disable_pm:
->         pm_runtime_disable(&pdev->dev);
-> +error_dma:
-> +       spi_qup_release_dma(master);
->  error:
->         clk_disable_unprepare(cclk);
->         clk_disable_unprepare(iclk);
-> @@ -730,6 +1000,8 @@ static int spi_qup_remove(struct platform_device *pdev)
->         if (ret)
->                 return ret;
-> 
-> +       spi_qup_release_dma(master);
-> +
->         clk_disable_unprepare(controller->cclk);
->         clk_disable_unprepare(controller->iclk);
-> 
-
-Regards,
-Ivan
