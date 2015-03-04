@@ -1,100 +1,35 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] of: Kconfig: Let OF_UNITTEST depend on "I2C=y" and "I2C_MUX=y"
-Date: Wed, 04 Mar 2015 20:49:47 +0100
-Message-ID: <2530315.qdy5ZZGCEr@wuerfel>
-References: <BLU437-SMTP82811F6F904D6C74EE62E3B91E0@phx.gbl> <CAMuHMdXPONxoNm+stn5sx579kzWo6auVP7hrRv26VSGySr7K2A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXPONxoNm+stn5sx579kzWo6auVP7hrRv26VSGySr7K2A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Chen Gang <xili_gchen_5257@hotmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: [PATCH] arm: qcom: dts: gic: add compatible string for Qualcomm MSM GICs
+Date: Wed,  4 Mar 2015 13:57:25 -0600
+Message-ID: <1425499045-31450-1-git-send-email-galak@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 March 2015 16:04:23 Geert Uytterhoeven wrote:
-> > -       depends on OF_IRQ && OF_EARLY_FLATTREE
-> > +       depends on OF_IRQ && OF_EARLY_FLATTREE && I2C=y && I2C_MUX=y
-> 
-> ... I think it would be better to replace "#if IS_ENABLED(CONFIG_XXX)" by
-> "#ifdef CONFIG_XXX" in drivers/of/unittest.c instead.
-> 
+Document the Qualcomm MSM GICs implementation as compatible with the
+ARM GIC standard.
 
-Agreed. I came across the same bug and came to the same conclusion as you.
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+---
+ Documentation/devicetree/bindings/arm/gic.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-How about this:
-
-8<----
-Subject: of: unittest: fix I2C dependency
-
-The unittest fails to link if I2C or I2C_MUX is a loadable module:
-
-  drivers/built-in.o: In function `selftest_i2c_mux_remove':
-  unittest.c:(.text+0xb0ce4): undefined reference to `i2c_del_mux_adapter'
-
-This changes the newly added IS_ENABLED() checks to use IS_BUILTIN()
-instead, which evaluates to false if the other driver is a module.
-
-Reported-by: Chen Gang <gang.chen.5i5j@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Fixes: d5e75500ca401 ("of: unitest: Add I2C overlay unit tests.")
-
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 0cf9a236d438..8daa49206c36 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -979,7 +979,7 @@ static int of_path_platform_device_exists(const char *path)
- 	return pdev != NULL;
- }
- 
--#if IS_ENABLED(CONFIG_I2C)
-+#if IS_BUILTIN(CONFIG_I2C)
- 
- /* get the i2c client device instantiated at the path */
- static struct i2c_client *of_path_to_i2c_client(const char *path)
-@@ -1445,7 +1445,7 @@ static void of_selftest_overlay_11(void)
- 		return;
- }
- 
--#if IS_ENABLED(CONFIG_I2C) && IS_ENABLED(CONFIG_OF_OVERLAY)
-+#if IS_BUILTIN(CONFIG_I2C) && IS_ENABLED(CONFIG_OF_OVERLAY)
- 
- struct selftest_i2c_bus_data {
- 	struct platform_device	*pdev;
-@@ -1584,7 +1584,7 @@ static struct i2c_driver selftest_i2c_dev_driver = {
- 	.id_table = selftest_i2c_dev_id,
- };
- 
--#if IS_ENABLED(CONFIG_I2C_MUX)
-+#if IS_BUILTIN(CONFIG_I2C_MUX)
- 
- struct selftest_i2c_mux_data {
- 	int nchans;
-@@ -1695,7 +1695,7 @@ static int of_selftest_overlay_i2c_init(void)
- 			"could not register selftest i2c bus driver\n"))
- 		return ret;
- 
--#if IS_ENABLED(CONFIG_I2C_MUX)
-+#if IS_BUILTIN(CONFIG_I2C_MUX)
- 	ret = i2c_add_driver(&selftest_i2c_mux_driver);
- 	if (selftest(ret == 0,
- 			"could not register selftest i2c mux driver\n"))
-@@ -1707,7 +1707,7 @@ static int of_selftest_overlay_i2c_init(void)
- 
- static void of_selftest_overlay_i2c_cleanup(void)
- {
--#if IS_ENABLED(CONFIG_I2C_MUX)
-+#if IS_BUILTIN(CONFIG_I2C_MUX)
- 	i2c_del_driver(&selftest_i2c_mux_driver);
- #endif
- 	platform_driver_unregister(&selftest_i2c_bus_driver);
-@@ -1814,7 +1814,7 @@ static void __init of_selftest_overlay(void)
- 	of_selftest_overlay_10();
- 	of_selftest_overlay_11();
- 
--#if IS_ENABLED(CONFIG_I2C)
-+#if IS_BUILTIN(CONFIG_I2C)
- 	if (selftest(of_selftest_overlay_i2c_init() == 0, "i2c init failed\n"))
- 		goto out;
- 
+diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+index c97484b..6204630 100644
+--- a/Documentation/devicetree/bindings/arm/gic.txt
++++ b/Documentation/devicetree/bindings/arm/gic.txt
+@@ -18,6 +18,8 @@ Main node required properties:
+ 	"arm,arm11mp-gic"
+ 	"brcm,brahma-b15-gic"
+ 	"arm,arm1176jzf-devchip-gic"
++	"qcom,msm-8660-qgic"
++	"qcom,msm-qgic2"
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+   interrupt source.  The type shall be a <u32> and the value shall be 3.
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
