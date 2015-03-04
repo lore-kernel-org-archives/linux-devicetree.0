@@ -1,52 +1,50 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit Exynos5433 SoC
-Date: Wed, 04 Mar 2015 10:38:06 +0100
-Message-ID: <2449954.zWisnqDpUA@wuerfel>
-References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com> <13467157.nyRCsNWIp6@wuerfel> <54F6AD6B.70007@samsung.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Add msm8916 pinctrl driver
+Date: Wed, 04 Mar 2015 11:44:35 +0200
+Message-ID: <54F6D403.3040709@mm-sol.com>
+References: <1422612241-12944-1-git-send-email-svarbanov@mm-sol.com> <1422612241-12944-4-git-send-email-svarbanov@mm-sol.com> <20150203164748.GA29190@qualcomm.com> <54D22F05.9050403@mm-sol.com> <CACRpkdYj_t15wxXzhHMGo-kb=o1HNaMEV07G1dr7XPYCZv=WNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54F6AD6B.70007@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Chanwoo Choi <cwchoi00@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, "will.deacon@arm.com" <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, ideal.song@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYj_t15wxXzhHMGo-kb=o1HNaMEV07G1dr7XPYCZv=WNQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Joonwoo Park <joonwoop@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 March 2015 15:59:55 Chanwoo Choi wrote:
-> On 03/02/2015 06:22 AM, Arnd Bergmann wrote:
-> > On Saturday 28 February 2015 09:47:01 Chanwoo Choi wrote:
-> >> "earlycon=exynos4210,0x14C20000" is correct bootparam. You can check
-> >> it on Documentation/kernel-parameters.txt as following.
-> >>
-> >>      exynos4210,<addr>
-> >>                 Use early console provided by serial driver available
-> >>                 on Samsung SoCs, requires selecting proper type and
-> >>                 a correct base address of the selected UART port. The
-> >>                 serial port must already be setup and configured.
-> >>                 Options are not yet supported.
-> >>
-> >>
-> > 
-> > But it's crazy to do this when you have a DT. Please fix the existing
-> > devicetree files that use this to just list 'earlycon'.
-> > 
-> > The syntax above only makes sense for classic board files that we
-> > do not support for exynos any more.
+On 03/02/2015 04:40 PM, Linus Walleij wrote:
+> On Wed, Feb 4, 2015 at 3:39 PM, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
+>> On 02/03/2015 06:47 PM, Andy Gross wrote:
+>>> On Fri, Jan 30, 2015 at 12:04:01PM +0200, Stanimir Varbanov wrote:
+>>>> From: Joonwoo Park <joonwoop@codeaurora.org>
+>>>>
+>>>> Add initial pinctrl driver to support pin configuration with
+>>>> pinctrl framework for msm8916.
+>>>>
+>>>> Signed-off-by: Joonwoo Park <joonwoop@codeaurora.org>
+>>>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>>>
+>>> Looks good.
+>>>
+>>> Reviewed-by: Andy Gross <agross@codeaurora.org>
+>>>
+>>
+>> Linus, do you want me to resend the patchset including this Reviewed-by tag?
 > 
-> Following earlycon patch for exynos soc was merged in Linux 4.0-rc1.
-> - commit-id: b94ba0328d3b36ff95f5074c0e9b44f90dc56bb5 (serial: samsung: Add support for early console)
-> Almost Exynos SoC use the same UART IP of Exynos4210.
+> 1/3 is already merged upstream.
 > 
-> If you mean that "earlycon=exynos4210" naming will be changed to "earlycon=exynos",
-> we have to modify the drivers/tty/serial/samsung.c.
+> 2/3 has an unaddressed review comment. Please fix that and resent.
+> 
+> So this 3/3 can be resent as well, with the Review tag.
+> 
+> But it's down to just two patches now atleast.
 
-No, what I mean is that you should use just "earlycon" instead of "earlycon=..."
-when you have a DTB. You have the OF_EARLYCON_DECLARE() in the driver as
-well, so that should just work.
+Sure, will resend it as a new patch set, thanks. And of course you are
+talking for "[PATCH 0/3] pinctrl: qcom: enable generic pinconf and
+input-enable" patch set.
 
-EARLYCON_DECLARE() is really just a hack that allows users to override the
-early console from the command line without modifying the stdout-path
-property. Don't put that into a dts file.
-
-	Arnd
+-- 
+regards,
+Stan
