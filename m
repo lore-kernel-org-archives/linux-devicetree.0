@@ -1,7 +1,7 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 3/5] mtd: nand: vf610_nfc: add device tree bindings
-Date: Thu,  5 Mar 2015 00:10:22 +0100
-Message-ID: <1425510624-22250-4-git-send-email-stefan@agner.ch>
+Subject: [PATCH 5/5] ARM: dts: vf-colibri: enable NAND flash controller
+Date: Thu,  5 Mar 2015 00:10:24 +0100
+Message-ID: <1425510624-22250-6-git-send-email-stefan@agner.ch>
 References: <1425510624-22250-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1425510624-22250-1-git-send-email-stefan@agner.ch>
@@ -10,56 +10,64 @@ To: dwmw2@infradead.org, computersforpeace@gmail.com
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@nbsps.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Bill Pringlemeir <bpringlemeir@nbsps.com>
+Enable NAND access by adding pinmux and NAND flash controller  node
+to device tree. The NAND chips currently used on the Colibri VF61
+requires 8-bit ECC per 512 byte page, hence specify 32-bit ECC
+strength per 2k page size.
+
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- .../devicetree/bindings/mtd/vf610-nfc.txt          | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+ arch/arm/boot/dts/vf-colibri.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/vf610-nfc.txt b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
-new file mode 100644
-index 0000000..54207f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
-@@ -0,0 +1,38 @@
-+Freescale's NAND flash controller (NFC)
+diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+index 5c2b732..651d13f 100644
+--- a/arch/arm/boot/dts/vf-colibri.dtsi
++++ b/arch/arm/boot/dts/vf-colibri.dtsi
+@@ -46,6 +46,18 @@
+ 	pinctrl-0 = <&pinctrl_i2c0>;
+ };
+ 
++&nfc {
++	clock-frequency = <33000000>;
++	nand-bus-width = <8>;
++	nand-ecc-mode = "hw";
++	nand-on-flash-bbt;
++	nand-ecc-strength = <32>;
++	nand-ecc-step-size = <2048>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_nfc_1>;
++	status = "okay";
++};
 +
-+This variant of the Freescale NAND flash controller (NFC) is on Vybrid (vf610),
-+MPC5125, MCF54418 and Kinetis K70.
+ &pwm0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm0>;
+@@ -141,6 +153,25 @@
+ 			>;
+ 		};
+ 
++		pinctrl_nfc_1: nfcgrp_1 {
++			fsl,pins = <
++				VF610_PAD_PTD23__NF_IO7		0x28df
++				VF610_PAD_PTD22__NF_IO6		0x28df
++				VF610_PAD_PTD21__NF_IO5		0x28df
++				VF610_PAD_PTD20__NF_IO4		0x28df
++				VF610_PAD_PTD19__NF_IO3		0x28df
++				VF610_PAD_PTD18__NF_IO2		0x28df
++				VF610_PAD_PTD17__NF_IO1		0x28df
++				VF610_PAD_PTD16__NF_IO0		0x28df
++				VF610_PAD_PTB24__NF_WE_B	0x28c2
++				VF610_PAD_PTB25__NF_CE0_B	0x28c2
++				VF610_PAD_PTB27__NF_RE_B	0x28c2
++				VF610_PAD_PTC26__NF_RB_B	0x283d
++				VF610_PAD_PTC27__NF_ALE		0x28c2
++				VF610_PAD_PTC28__NF_CLE		0x28c2
++			>;
++		};
 +
-+Required properties:
-+- compatible: "fsl,vf610-nfc"
-+- reg: Address range of the mtd chip
-+- interrupts: Should contain the STMMAC interrupts
-+- nand-bus-width: see nand.txt
-+- nand-ecc-mode: see nand.txt
-+- nand-on-flash-bbt: see nand.txt
-+- clock-frequency : Optional clock rate to NFC in Hz
-+- #address-cells, #size-cells : Must be present if the device has sub-nodes
-+  representing partitions.
-+
-+Required properties for hardware ECC:
-+- nand-ecc-strength: supported strengths are 24 and 32 (see nand.txt)
-+- nand-ecc-step-size: step size equals page size, currently only 2k pages are
-+  supported
-+
-+Example:
-+
-+	nfc: nand@400e0000 {
-+		compatible = "fsl,vf610-nfc";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x400e0000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clks VF610_CLK_NFC>;
-+		clock-names = "nfc";
-+		clock-frequency = <33000000>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-on-flash-bbt;
-+		nand-ecc-strength = <32>;
-+		nand-ecc-step-size = <2048>;
-+	};
+ 		pinctrl_pwm0: pwm0grp {
+ 			fsl,pins = <
+ 				VF610_PAD_PTB0__FTM0_CH0		0x1182
 -- 
 2.3.0
