@@ -1,48 +1,78 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v4 2/8] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Wed, 04 Mar 2015 15:59:55 +0900
-Message-ID: <54F6AD6B.70007@samsung.com>
-References: <1424755011-15999-1-git-send-email-cw00.choi@samsung.com>
- <2707354.mhmQEHxoKV@wuerfel>
- <CAGTfZH0VVT0hMn4ooRNZxnqjUQ_hF8nHg-4NtNriayick50qgw@mail.gmail.com>
- <13467157.nyRCsNWIp6@wuerfel>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC] ARM: shmobile: r8a7790: Fix HSUSB clock to hp_clk
+ from mp_clk
+Date: Wed, 4 Mar 2015 16:02:59 +0900
+Message-ID: <20150304070258.GA16597@verge.net.au>
+References: <1424011746-3787-2-git-send-email-ykaneko0929@gmail.com>
+ <CAMuHMdX=cdHaiHCnYsJvZFc2RNv=Pk8cLXuvkezg4Ht4U4mXsg@mail.gmail.com>
+ <20150216135754.GA5479@verge.net.au>
+ <CAMuHMdUHMA+cJTGWS-0Prt6-BT5=UkGQ4OWZ+bz-g2G7DSwLzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <13467157.nyRCsNWIp6@wuerfel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Chanwoo Choi <cwchoi00@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, "will.deacon@arm.com" <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, ideal.song@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUHMA+cJTGWS-0Prt6-BT5=UkGQ4OWZ+bz-g2G7DSwLzw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yoshihiro Kaneko <ykaneko0929@gmail.com>, Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/2015 06:22 AM, Arnd Bergmann wrote:
-> On Saturday 28 February 2015 09:47:01 Chanwoo Choi wrote:
->> "earlycon=exynos4210,0x14C20000" is correct bootparam. You can check
->> it on Documentation/kernel-parameters.txt as following.
->>
->>      exynos4210,<addr>
->>                 Use early console provided by serial driver available
->>                 on Samsung SoCs, requires selecting proper type and
->>                 a correct base address of the selected UART port. The
->>                 serial port must already be setup and configured.
->>                 Options are not yet supported.
->>
->>
-> 
-> But it's crazy to do this when you have a DT. Please fix the existing
-> devicetree files that use this to just list 'earlycon'.
-> 
-> The syntax above only makes sense for classic board files that we
-> do not support for exynos any more.
+Hi Geert,
 
-Following earlycon patch for exynos soc was merged in Linux 4.0-rc1.
-- commit-id: b94ba0328d3b36ff95f5074c0e9b44f90dc56bb5 (serial: samsung: Add support for early console)
-Almost Exynos SoC use the same UART IP of Exynos4210.
+On Mon, Feb 16, 2015 at 03:04:16PM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+>=20
+> On Mon, Feb 16, 2015 at 2:57 PM, Simon Horman <horms@verge.net.au> wr=
+ote:
+> > On Mon, Feb 16, 2015 at 10:20:10AM +0100, Geert Uytterhoeven wrote:
+> >> Hi Kaneko-san, Mizuguchi-san,
+> >>
+> >> On Sun, Feb 15, 2015 at 3:49 PM, Yoshihiro Kaneko <ykaneko0929@gma=
+il.com> wrote:
+> >> > From: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+> >> >
+> >> > HSUSB uses hp_clk for H/W register access.
+> >>
+> >> That indeed seems to be true, and that's what this patch is changi=
+ng.
+> >>
+> >> > HSUSB uses mp_clk for USB-DMAC access.
+> >>
+> >> However, page 64-2 doesn't mention the MP clock for USB-DMAC:
+> >>    "AXI bus clock (ZS=CF=86: 260 MHz), HPB bus clock (HP=CF=86: 13=
+0 MHz).
+> >>     USB local bus clock (48 MHz)"
+> >> So your statement doesn't seem to be true?
+> >
+> > Thanks, I see that too.
+> >
+> >> Note that mstp3_clks in dtsi has hp_clk as the parent for both usb=
+dmac0 and
+> >> usbdmac1, so if your statement would be true, that has to changed,=
+ too?
+> >>
+> >> The same is true for other members of the R-Car Gen2 family, e.g. =
+your patch
+> >> for r8a7791.
+> >
+> > It seems to me that we could:
+> >
+> > 1. Apply this patch with the changelog updated and;
+> > 2. Follow up on the DMAC clocks
+> >
+> > Does that sound reasonable to you?
+>=20
+> Yes, that sounds fine to me.
 
-If you mean that "earlycon=exynos4210" naming will be changed to "earlycon=exynos",
-we have to modify the drivers/tty/serial/samsung.c.
+The purpose of this email is to offer a quick status update which
+I hope will bring this matter to a close.
 
-Thanks,
-Chanwoo Choi
+I have submitted and queued up a patch as per 1. above.
+
+With regards to item 2. above: I have also followed up on the "HSUSB us=
+es
+mp_clk for USB-DMAC access" comment in the original changelog (above).
+Mizuguchi-san has confirmed that statement is not correct and its prese=
+nce
+in the changelog was an error.
