@@ -1,79 +1,120 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH 4/6] ARM: DT: STi: STiH407: Add dwc3 usb3 DT node.
-Date: Wed, 4 Mar 2015 15:29:59 +0100
-Message-ID: <54F716E7.9090406@st.com>
-References: <1424871377-1795-1-git-send-email-peter.griffin@linaro.org> <1424871377-1795-5-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424871377-1795-5-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, kishon@ti.com, balbi@ti.com
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: [PATCH v6 0/8] Xilinx Video IP Core support
+Date: Wed,  4 Mar 2015 16:51:41 +0200
+Message-ID: <1425480709-7545-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Chris Kohn <christian.kohn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Hello,
 
-On 02/25/2015 02:36 PM, Peter Griffin wrote:
-> Now that both usb2 and usb3 phy drivers, and also the ST dwc3 glue code
-> are all present upstream, we can add the dwc3 DT node and have a working
-> usb3 controller on stih407-b2120 and stih410-b2020.
->
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->   arch/arm/boot/dts/stih407-family.dtsi | 26 ++++++++++++++++++++++++++
->   1 file changed, 26 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> index 186412d..18ff5a5 100644
-> --- a/arch/arm/boot/dts/stih407-family.dtsi
-> +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> @@ -7,6 +7,7 @@
->    * publishhed by the Free Software Foundation.
->    */
->   #include "stih407-pinctrl.dtsi"
-> +#include <dt-bindings/phy/phy.h>
->   #include <dt-bindings/reset-controller/stih407-resets.h>
->   / {
->   	#address-cells = <1>;
-> @@ -336,5 +337,30 @@
->   				resets = <&softreset STIH407_MIPHY2_SOFTRESET>;
->   			};
->   		};
-> +
-> +		st_dwc3: dwc3@8f94000 {
-> +			compatible	= "st,stih407-dwc3";
-> +			reg		= <0x08f94000 0x1000>, <0x110 0x4>;
-> +			reg-names	= "reg-glue", "syscfg-reg";
-> +			st,syscfg	= <&syscfg_core>;
-> +			resets		= <&powerdown STIH407_USB3_POWERDOWN>,
-> +					  <&softreset STIH407_MIPHY2_SOFTRESET>;
-> +			reset-names	= "powerdown",
-> +					  "softreset";
-> +			#address-cells	= <1>;
-> +			#size-cells	= <1>;
-> +			pinctrl-names	= "default";
-> +			pinctrl-0	= <&pinctrl_usb3>;
-> +			ranges;
-> +
-> +			dwc3: dwc3@9900000 {
-> +				compatible	= "snps,dwc3";
-> +				reg		= <0x09900000 0x100000>;
-> +				interrupts	= <GIC_SPI 155 IRQ_TYPE_NONE>;
-> +				dr_mode		= "host";
-> +				phy-names	= "usb2-phy", "usb3-phy";
-> +				phys		= <&usb2_picophy0>, <&phy_port2 PHY_TYPE_USB3>;
-> +			};
-> +		};
->   	};
->   };
+lo and behold, here's the sixth, latest, greatest and most amazing ever (so
+far) version of the Xilinx FPGA Video IP Cores kernel drivers.
 
-The USB3 port should only be enabled in the board files, not the soc one.
-We can have a board without USB3 port, so it should be disbaled by default.
+I won't detail in great lengths the Xilinx Video IP architecture here, as that
+would result in dozens of pages of documentation. The interested reader can
+refer to the Zynq ZC702 Base TRD (Targeted Reference Design) User Guide
+(http://www.xilinx.com/support/documentation/boards_and_kits/zc702_zvik/2014_2/ug925-zynq-zc702-base-trd.pdf).
 
-Other than that, you can enable it also on stih418-b2199, just tested 
-and it is working.
+In a nutshell, the Xilinx Video IP Cores architecture specifies how
+video-related IP cores need to be designed to interoperate and how to assemble
+them in pipelines of various complexities. The concepts map neatly to the
+media controller architecture, which this patch set uses extensively.
 
-Thanks,
-Maxime
+The series starts with various new V4L2 core features, bug fixes or cleanups,
+with a small documentation enhancement (1/8), the addition of new media bus
+formats needed by the new drivers (2/8 to 4/8) and a new V4L2 OF link
+parsing function (5/8).
+
+The last three patches are the core of this series.
+
+Patch 6/8 adds support for the Xilinx Video IP architecture core in the form
+of a base object to model video IP cores (xilinx-vip.c - Video IP), a
+framework that parses a DT representation of a video pipeline and connects the
+corresponding V4L2 subdevices together (xilinx-vipp.c - Video IP Pipeline) and
+a glue between the Video DMA engine driver and the V4L2 API (xilinx-dma.c).
+
+Patch 7/8 adds a driver for the Video Timing Controller (VTC) IP core. While
+not strictly a video processing IP core, the VTC is required by other video IP
+core drivers.
+
+Finally, patch 8/8 adds a first video IP core driver for the Test Pattern
+Generator (TPG). Drivers for other IP cores will be added in the future.
+
+Changes since v5:
+
+- Report frame field as V4L2_FIELD_NONE
+- Update to the mainline pad-level subdev API changes
+- Add VIDIOC_CREATE_BUFS support
+- Add a comment to explain the lack of VB2_READ and VB2_WRITE
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+Hyun Kwon (2):
+  v4l: Sort YUV formats of v4l2_mbus_pixelcode
+  v4l: Add VUY8 24 bits bus format
+
+Laurent Pinchart (6):
+  media: entity: Document the media_entity_ops structure
+  v4l: Add RBG and RGB 8:8:8 media bus formats on 24 and 32 bit busses
+  v4l: of: Add v4l2_of_parse_link() function
+  v4l: xilinx: Add Xilinx Video IP core
+  v4l: xilinx: Add Video Timing Controller driver
+  v4l: xilinx: Add Test Pattern Generator driver
+
+ Documentation/DocBook/media/v4l/subdev-formats.xml | 719 +++++++++-------
+ .../devicetree/bindings/media/xilinx/video.txt     |  35 +
+ .../devicetree/bindings/media/xilinx/xlnx,v-tc.txt |  33 +
+ .../bindings/media/xilinx/xlnx,v-tpg.txt           |  71 ++
+ .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
+ MAINTAINERS                                        |  10 +
+ drivers/media/platform/Kconfig                     |   1 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/xilinx/Kconfig              |  23 +
+ drivers/media/platform/xilinx/Makefile             |   5 +
+ drivers/media/platform/xilinx/xilinx-dma.c         | 766 +++++++++++++++++
+ drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
+ drivers/media/platform/xilinx/xilinx-tpg.c         | 931 +++++++++++++++++++++
+ drivers/media/platform/xilinx/xilinx-vip.c         | 311 +++++++
+ drivers/media/platform/xilinx/xilinx-vip.h         | 238 ++++++
+ drivers/media/platform/xilinx/xilinx-vipp.c        | 669 +++++++++++++++
+ drivers/media/platform/xilinx/xilinx-vipp.h        |  49 ++
+ drivers/media/platform/xilinx/xilinx-vtc.c         | 380 +++++++++
+ drivers/media/platform/xilinx/xilinx-vtc.h         |  42 +
+ drivers/media/v4l2-core/v4l2-of.c                  |  61 ++
+ include/dt-bindings/media/xilinx-vip.h             |  39 +
+ include/media/media-entity.h                       |   9 +
+ include/media/v4l2-of.h                            |  27 +
+ include/uapi/linux/Kbuild                          |   1 +
+ include/uapi/linux/media-bus-format.h              |  19 +-
+ include/uapi/linux/xilinx-v4l2-controls.h          |  73 ++
+ 26 files changed, 4359 insertions(+), 319 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/video.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tc.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
+ create mode 100644 drivers/media/platform/xilinx/Kconfig
+ create mode 100644 drivers/media/platform/xilinx/Makefile
+ create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-tpg.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.h
+ create mode 100644 include/dt-bindings/media/xilinx-vip.h
+ create mode 100644 include/uapi/linux/xilinx-v4l2-controls.h
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
