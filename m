@@ -1,56 +1,188 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/4] regulator: qcom: Rework to single platform device
-Date: Wed, 4 Mar 2015 00:09:55 +0000
-Message-ID: <20150304000955.GH21293@sirena.org.uk>
-References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1425356740-26285-5-git-send-email-bjorn.andersson@sonymobile.com>
- <54F630FF.60109@codeaurora.org>
- <20150303223235.GK26334@sonymobile.com>
- <20150303235209.GG21293@sirena.org.uk>
- <54F64B67.9060608@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="b8eDURjBVdu3Id7y"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54F64B67.9060608@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+From: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [Patch V7 00/10] ASoC: QCOM: Add support for ipq806x SOC
+Date: Tue,  3 Mar 2015 16:21:49 -0800
+Message-ID: <1425428519-12224-1-git-send-email-kwestfie@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ALSA Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, MSM Mailing List <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Kenneth Westfield <kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
---b8eDURjBVdu3Id7y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch series adds support for I2S audio playback on the Storm board, which
+contains a Qualcomm Technologies ipq806x SOC and a Maxim max98357a DAC/amp.
 
-On Tue, Mar 03, 2015 at 04:01:43PM -0800, Stephen Boyd wrote:
-> On 03/03/15 15:52, Mark Brown wrote:
+The ipq806x SOC has audio-related hardware blocks in its low-power audio
+subsystem (or LPASS).  One of the relevant blocks in the LPASS is its low-power
+audio interface (or LPAIF).  This contains an MI2S port, which is what these
+drivers are configured to use.  The LPAIF also contains a DMA engine that is
+dedicated to moving audio samples into the transmit FIFO of the MI2S port.
 
-> > ...but of course we'd never try any operations on it anyway as there
-> > would be no consumers.
+One bus from the MI2S port of the SOC is connected to the DAC/amp for stereo
+playback.  This bus is configured so that the SOC is bus master and consists of
+DATA, LRCLK, and BCLK.  The DAC/amp does not need MCLK to operate.  In addition,
+a single GPIO pin from the SOC is connected to the same DAC/amp, which gives
+enable/disable control over the DAC/amp.
 
-> Yes sounds fine. The only concern is that we're probably wasting memory
-> with things that won't ever "match" something in DT.
+The specific drivers added are:
+  * a CPU DAI driver for controlling the MI2S port
+  * a platform driver for controlling the LPAIF DMA engine
+  * a machine driver that instantiates a dai-link for playback
 
-You still get diagnostic output about what the regulator state is which
-is useful in itself and the amount of memory involved is really not
-enough to worry about in the grand scheme of things.
+The LPASS also contains clocks that need to be controlled.  Those drivers have
+been submitted as several separate patch series:  
+  * [PATCH v3 0/8] qcom audio clock control drivers
+    http://lkml.org/lkml/2015/1/19/656
+  * [PATCH] clk: qcom: Properly change rates for ahbix clock
+    https://lkml.org/lkml/2015/2/25/706
+  * [PATCH] clk: qcom: Fix ipq806x LCC frequency tables
+    https://lkml.org/lkml/2015/2/26/774
 
---b8eDURjBVdu3Id7y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Even though the ipq806x LPASS does not contain an audio DSP, other SOCs do have
+one.  For those SOCs, the audio DSP typically controls the hardware blocks in
+the LPASS.  Hence, different CPU DAI driver(s) would need to be used in order to
+facilitate audio with the DSP.  As such, the LPASS DT contains an adsp subnode,
+which is disabled for this SOC.  The same subnode should be enabled and
+populated for other SOCs that do contain an audio DSP.  Not using the audio DSP
+would require different CPU DAI driver(s), in addition to possible bootloader
+and/or firmware changes.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Corresponding additions to the device tree for the ipq806x SOC and its
+documentation has also been added.  Also, as this is a new directory, the
+MAINTAINERS file has been updated as well.
 
-iQEcBAEBCAAGBQJU9k1SAAoJECTWi3JdVIfQpwYH/RHyQO6r3YNNFE+RFyKuDadu
-SUPdJTfu0EzCy9gp8pJ+NbX6aXh9UROwVMBpWOzKK6qc6w49S0cVEEBip4/9O2pD
-AKR7jeEaWqKhkoDEMWCwVvoAc9ZpAT+qmhQKrZLS2e7wYBOWrxHJX6px2TApL5wo
-Fd33WeS8EtYzq5zluUj5mHMva7VLSH0XvH5TsIrGlEf4LfvL0FNuGPTKI/JSzobg
-oNSTSdKCizZ3/zk26BnYCN/TZfA4qCTB01CPXVcQs0DF11WfTun/gVh0KiBrVx9d
-te6XOLof+pA5X1Udgqjoma8IYJcaCC0/VmgSEz4zsFqnzvMLo0SdVCnN5X/B+lQ=
-=kMEW
------END PGP SIGNATURE-----
+= Changes since V6
+  [Patch V6 00/10] ASoC: QCOM: Add support for ipq806x SOC
+  http://mailman.alsa-project.org/pipermail/alsa-devel/2015-February/088218.html
 
---b8eDURjBVdu3Id7y--
+  * Added REGMAP_MMIO selection for the CPU and platform drivers
+  * Modified the AHBIX frequency to match the corresponding LCC fix
+  * Tweaked the logging in the CPU driver probe.
+
+= Changes since V5
+  [Patch V5 00/12] ASoC: QCOM: Add support for ipq806x SOC
+  http://mailman.alsa-project.org/pipermail/alsa-devel/2015-February/087832.html
+
+  * Correctly use Storm as the build target label and DT binding label.
+  * Added audio DSP sub-node to the LPASS device tree, disabled for this SOC.
+  * Added logic to CPU DAI driver to fail the probe() if a DSP is present.
+  * Use the standard naming convention for the DAI link properties.
+  * General code cleanup.
+
+= Changes since V4
+  [Patch V4 00/10] ASoC: QCOM: Add support for ipq806x SOC
+  http://mailman.alsa-project.org/pipermail/alsa-devel/2015-February/087499.html
+
+  * Replaced simple-card with a machine driver to resolve the system clock
+    configuration, rather than having the CPU DAI driver do it.
+  * Added header files to avoid indirect header dependencies and implicit
+    forward declarations.
+  * Tweaked the ISR to match the conventions of the surrounding code.
+  * Removed the usage of the low-power memory as it is not needed.
+  * Removed the use of the DRV_NAME constant.
+  * Added explicit dependency on gpiolib for the codec driver.
+  * Moved the MODULE_DEVICE_TABLE macro inside the CONFIG_OF conditional.
+  * Modified the documentation to reflect the changes.
+  * General code cleanup.
+
+= Changes since V3
+  [Patch V3 00/10] ASoC: QCOM: Add support for ipq806x SOC
+  http://mailman.alsa-project.org/pipermail/alsa-devel/2014-December/085694.html
+
+  * Placed the content of the inline functions into the callbacks.
+  * Replaced use of readl/writel register access functions with regmap access
+    functions.  Notable exception is the ISR, which uses ioread32/iowrite32.
+  * Rearranged the sequencing of the hardware block enables to fit within the
+    ASoC framework callbacks, while remaining functional.
+    REQ 1: The hardware requires the enable sequence to be:
+           LPAIF-DMA[enable],then LPAIF-MI2S[enable], then DAC-GPIO[enable]
+    REQ 2: The hardware requires the disable sequence to be:
+           DAC-GPIO[disable], then LPAIF-MI2S[disable]
+  * Corrected the implementation of the pointer callback.
+  * Utilize the LPM to buffer audio samples, rather than memory external to
+    LPASS.
+  * Corrected the interrupt clearing in the ISR.
+  * Implemented a default system clock (defined by the simple-card DT node), and
+    optional LPASS DT node modifiers that can alter the system clock in order to
+    expand the range of available bit clock frequencies.
+  * Addressed all of the remaining issues raised by Mark Brown.
+  * General code cleanup.
+
+= Changes since V2
+  [Patch v2 00/11] ASoC: QCOM: Add support for ipq806x SOC
+  http://mailman.alsa-project.org/pipermail/alsa-devel/2014-December/085186.html
+
+  * Removed the PCM platform driver from the DTS platform and tied it to the CPU
+    DAI driver.
+  * Changed I2S pinctrl to use generic naming convention and moved control to
+    CPU DAI driver.  It should be controlled now by soc-core's pinctrl_pm_*
+    functionality.
+  * Added stub DAPM support in codec driver.  As the DAC GPIO needs to be
+    enabled last when starting playback, and disabled first when stopping
+    playback, it seems as though the trigger function may be the place for this.
+    Suggestions are welcome for a better place to put this.
+  * Removed machine driver and tied DAI drivers to simple-audio-card.
+  * Packaged the build files and Maxim codec files together in one change.
+  * Removed QCOM as vendor from Maxim code and documentation.
+  * Separated the SOC and board definitions into the correct DTS files.
+  * Update device tree documentation to reflect changes.
+  * General code cleanup.
+
+= Changes since V1
+  [PATCH 0/9] ASoC: QCOM: Add support for ipq806x SOC
+  http://mailman.alsa-project.org/pipermail/alsa-devel/2014-November/084322.html
+
+  * Remove the native LPAIF driver, and move its functionality to the CPU DAI
+    driver.
+  * Add a codec driver to manage the pins going to the external DAC (previously
+    managed by the machine driver).
+  * Use devm_* and dev_* where possible.
+  * ISR only handles relevant DMA channel now.
+  * Update device tree documentation to reflect changes.
+  * General code cleanup.
+
+Kenneth Westfield (10):
+  MAINTAINERS: Add QCOM audio ASoC maintainer
+  ASoC: qcom: Document LPASS CPU bindings
+  ASoC: qcom: Document Storm bindings
+  ASoC: qcom: add LPASS header files
+  ASoC: qcom: Add LPASS CPU DAI driver
+  ASoC: qcom: Add LPASS platform driver
+  ASoC: qcom: Add Storm machine driver
+  ASoC: qcom: Add ability to build QCOM drivers
+  ASoC: Allow for building QCOM drivers
+  ARM: dts: Model IPQ LPASS audio hardware
+
+ .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  49 ++
+ Documentation/devicetree/bindings/sound/storm.txt  |  23 +
+ MAINTAINERS                                        |   7 +
+ arch/arm/boot/dts/qcom-ipq8064.dtsi                |  26 +
+ sound/soc/Kconfig                                  |   1 +
+ sound/soc/Makefile                                 |   1 +
+ sound/soc/qcom/Kconfig                             |  25 +
+ sound/soc/qcom/Makefile                            |  11 +
+ sound/soc/qcom/lpass-cpu.c                         | 510 ++++++++++++++++++++
+ sound/soc/qcom/lpass-lpaif-ipq806x.h               | 172 +++++++
+ sound/soc/qcom/lpass-platform.c                    | 526 +++++++++++++++++++++
+ sound/soc/qcom/lpass.h                             |  51 ++
+ sound/soc/qcom/storm.c                             | 162 +++++++
+ 13 files changed, 1564 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/storm.txt
+ create mode 100644 sound/soc/qcom/Kconfig
+ create mode 100644 sound/soc/qcom/Makefile
+ create mode 100644 sound/soc/qcom/lpass-cpu.c
+ create mode 100644 sound/soc/qcom/lpass-lpaif-ipq806x.h
+ create mode 100644 sound/soc/qcom/lpass-platform.c
+ create mode 100644 sound/soc/qcom/lpass.h
+ create mode 100644 sound/soc/qcom/storm.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
