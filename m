@@ -1,39 +1,66 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH/RFC v12 05/19] mfd: max77693: Modify flash cell name identifiers
-Date: Wed, 04 Mar 2015 17:14:26 +0100
-Message-ID: <1425485680-8417-6-git-send-email-j.anaszewski@samsung.com>
-References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] i2c: sunxi: Add Reduced Serial Bus
+ (RSB) DT bindings documentation
+Date: Wed, 4 Mar 2015 17:39:35 +0100
+Message-ID: <20150304163935.GO4911@lukather>
+References: <1425284686-5116-1-git-send-email-wens@csie.org>
+ <1425284686-5116-3-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KM+e2hnYAO+MCJ5e"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBY7K3STQKGQEFJ7F6PA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425284686-5116-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Change flash cell identifiers from max77693-flash to max77693-led
-to avoid confusion with NOR/NAND Flash.
+--KM+e2hnYAO+MCJ5e
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/max77693.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Mon, Mar 02, 2015 at 04:24:44PM +0800, Chen-Yu Tsai wrote:
+> Reduced Serial Bus (RSB) is an SMBus like bus used to communicate
+> with some PMICs (like the AXP223) or other peripherals.
+> 
+> The RSB DT bindings are pretty much the same as the one defined for
+> the marvell's mv64xxx controller, with the additional RSB specific
+> "allwinner,rsb-hw-addr" property for slave device nodes.
+> 
+> There are 2 types of addresses for RSB devices, a hardware address
+> and a runtime (software) configurable address. The former is only
+> used when configuring the latter. All read/write accesses use the
+> runtime address.
+> 
+> It would seem straightforward to use the hardware address in the
+> DT bindings as the slave's address. However this will not work as
+> the hardware address is 12 bits wide, and at least 1 device, the
+> AC100 audio codec, has the highest bit set. This address would be
+> incompatible with I2C (7 or 10 bit addresses) and likely rejected.
+> 
+> Hence this binding uses statically allocated (by the author of the
+> DT) runtime addresses for the slave's "reg" property. The hardware
+> address is put in a separete named property. When writing a new DT,
+                      ^ separate
+> the author must take care to not have multiple slave devices use
+> the same address. It is recommended to follow whatever conventions
+> the hardware vendor uses.
 
-diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
-index a159593..cb14afa 100644
---- a/drivers/mfd/max77693.c
-+++ b/drivers/mfd/max77693.c
-@@ -53,8 +53,8 @@ static const struct mfd_cell max77693_devs[] = {
- 		.of_compatible = "maxim,max77693-haptic",
- 	},
- 	{
--		.name = "max77693-flash",
--		.of_compatible = "maxim,max77693-flash",
-+		.name = "max77693-led",
-+		.of_compatible = "maxim,max77693-led",
- 	},
- };
- 
+While very complete, the three last paragraphs should rather be, or at
+least duplicated, in the file itself.
+
+Maxime
+
 -- 
-1.7.9.5
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--KM+e2hnYAO+MCJ5e--
