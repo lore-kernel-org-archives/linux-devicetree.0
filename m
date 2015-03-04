@@ -1,135 +1,124 @@
-From: Aleksei Mamlin <mamlinav@gmail.com>
-Subject: [PATCH 2/2] input: goodix: Add device tree support for 5-finger chips
-Date: Wed,  4 Mar 2015 11:34:13 +0300
-Message-ID: <1425458053-4559-1-git-send-email-mamlinav@gmail.com>
-References: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>, Hans de Goede <hdegoede@redhat.com>, Aleksei Mamlin <mamlinav@gmail.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v3] spi: qup: Add DMA capabilities
+Date: Wed, 04 Mar 2015 10:38:10 +0200
+Message-ID: <1425458290.5705.2.camel@mm-sol.com>
+References: <1425056312-13746-1-git-send-email-stanimir.varbanov@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425056312-13746-1-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support for 5-finger chips, like GT911 and GT912.
 
-Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
----
- .../bindings/input/touchscreen/goodix.txt          |  4 ++-
- drivers/input/touchscreen/goodix.c                 | 40 +++++++++++++++++-----
- 2 files changed, 35 insertions(+), 9 deletions(-)
+Hi Stan,
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-index cbaf085..368e57f 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-@@ -2,7 +2,9 @@ Device tree bindings for Goodix GT9xx series touchscreen controller
- 
- Required properties:
- 
-- - compatible		: Should be "goodix,gt9110"
-+ - compatible		: Should be "goodix,gt911"
-+				 or "goodix,gt9110"
-+				 or "goodix,gt912"
- 				 or "goodix,gt927"
- 				 or "goodix,gt9271"
- 				 or "goodix,gt928"
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index 16f016a..3da31d1 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -25,6 +25,7 @@
- #include <linux/slab.h>
- #include <linux/acpi.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <asm/unaligned.h>
- 
- struct goodix_ts_data {
-@@ -101,7 +102,7 @@ static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
- 	}
- 
- 	touch_num = data[0] & 0x0f;
--	if (touch_num > GOODIX_MAX_CONTACTS)
-+	if (touch_num > ts->max_touch_num)
- 		return -EPROTO;
- 
- 	if (touch_num > 1) {
-@@ -143,7 +144,7 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
-  */
- static void goodix_process_events(struct goodix_ts_data *ts)
- {
--	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CONTACTS];
-+	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
- 	int touch_num;
- 	int i;
- 
-@@ -297,7 +298,7 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
- 	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
- 	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
- 
--	input_mt_init_slots(ts->input_dev, GOODIX_MAX_CONTACTS,
-+	input_mt_init_slots(ts->input_dev, ts->max_touch_num,
- 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
- 
- 	ts->input_dev->name = "Goodix Capacitive TouchScreen";
-@@ -317,9 +318,16 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id goodix_of_match[];
-+#endif
-+
- static int goodix_ts_probe(struct i2c_client *client,
- 			   const struct i2c_device_id *id)
- {
-+#ifdef CONFIG_OF
-+	const struct of_device_id *match;
-+#endif
- 	struct goodix_ts_data *ts;
- 	unsigned long irq_flags;
- 	int error;
-@@ -336,6 +344,20 @@ static int goodix_ts_probe(struct i2c_client *client,
- 	if (!ts)
- 		return -ENOMEM;
- 
-+	ts->max_touch_num = GOODIX_MAX_CONTACTS;
-+
-+#ifdef CONFIG_OF
-+	if (client->dev.of_node) {
-+		match = of_match_device(of_match_ptr(goodix_of_match),
-+							&client->dev);
-+		if (!match) {
-+			dev_err(&client->dev, "Unknown device model\n");
-+			return -EINVAL;
-+		}
-+		ts->max_touch_num = (unsigned int)match->data;
-+	}
-+#endif
-+
- 	ts->client = client;
- 	i2c_set_clientdata(client, ts);
- 
-@@ -384,11 +406,13 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
- 
- #ifdef CONFIG_OF
- static struct of_device_id goodix_of_match[] = {
--	{ .compatible = "goodix,gt9110" },
--	{ .compatible = "goodix,gt927" },
--	{ .compatible = "goodix,gt9271" },
--	{ .compatible = "goodix,gt928" },
--	{ .compatible = "goodix,gt967" },
-+	{ .compatible = "goodix,gt911",  .data = (void *) 5 },
-+	{ .compatible = "goodix,gt9110", .data = (void *) 10 },
-+	{ .compatible = "goodix,gt912",  .data = (void *) 5 },
-+	{ .compatible = "goodix,gt927",  .data = (void *) 10 },
-+	{ .compatible = "goodix,gt9271", .data = (void *) 10 },
-+	{ .compatible = "goodix,gt928",  .data = (void *) 10 },
-+	{ .compatible = "goodix,gt967",  .data = (void *) 10 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, goodix_of_match);
--- 
-2.0.5
+It looks good now, except it doesn't apply and two small issues below:
 
+On Fri, 2015-02-27 at 18:58 +0200, Stanimir Varbanov wrote:
+> From: Andy Gross <agross@codeaurora.org>
+> 
+> This patch adds DMA capabilities to the spi-qup driver.  If DMA channels are
+> present, the QUP will use DMA instead of block mode for transfers to/from SPI
+> peripherals for transactions larger than the length of a block.
+> 
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
+> Signed-off-by: Stanimir Varbanov varbanov@linaro.org>
+> ---
+> 
+> v2 -> v3
+>  - now using one dma done callback on rx channel if bidirectional transfer
+>    and on tx channel if only transmit transfer
+>  - rearranged the spi_qup_transfer_one() in order to reuse wait for
+>    completion and completion init code
+>  - move dma init function early in .probe to avoid controller reset if
+>    probe deffer
+>  - add function to get controller mode
+
+<snip>
+
+> 
+> +
+> +static int spi_qup_init_dma(struct spi_master *master, resource_size_t base)
+> +{
+> 
+
+<snip>
+
+> +
+> +       /* set DMA parameters */
+> +       rx_conf->direction = DMA_DEV_TO_MEM;
+> +       rx_conf->device_fc = 1;
+
+Strictly speeching this is a bool not int.
+
+> +       rx_conf->src_addr = base + QUP_INPUT_FIFO;
+> +       rx_conf->src_maxburst = spi->in_blk_sz;
+> +
+> +       tx_conf->direction = DMA_MEM_TO_DEV;
+> +       tx_conf->device_fc = 1;
+
+Same here.
+
+
+> @@ -553,6 +813,8 @@ static int spi_qup_probe(struct platform_device *pdev)
+>         master->transfer_one = spi_qup_transfer_one;
+>         master->dev.of_node = pdev->dev.of_node;
+>         master->auto_runtime_pm = true;
+> +       master->dma_alignment = dma_get_cache_alignment();
+> +       master->max_dma_len = SPI_MAX_DMA_XFER;
+> 
+>         platform_set_drvdata(pdev, master);
+> 
+> @@ -564,6 +826,12 @@ static int spi_qup_probe(struct platform_device *pdev)
+>         controller->cclk = cclk;
+>         controller->irq = irq;
+> 
+> +       ret = spi_qup_init_dma(master, res->start);
+> +       if (ret == -EPROBE_DEFER)
+> +               goto error;
+> +       else if (!ret)
+> +               master->can_dma = spi_qup_can_dma;
+> +
+>         /* set v1 flag if device is version 1 */
+>         if (of_device_is_compatible(dev->of_node, "qcom,spi-qup-v1.1.1"))
+>                 controller->qup_v1 = 1;
+
+It is not visible from this patch, but in case of error reseting
+SPI controller (QUP_STATE_RESET), exit error path should be 
+'error_dma' and not 'error' label.
+
+> @@ -624,7 +892,7 @@ static int spi_qup_probe(struct platform_device *pdev)
+>         ret = devm_request_irq(dev, irq, spi_qup_qup_irq,
+>                                                                                 
+> IRQF_TRIGGER_HIGH, pdev->name, controller);
+>         if (ret)
+> -               goto error;
+> +               goto error_dma;
+> 
+>         pm_runtime_set_autosuspend_delay(dev, MSEC_PER_SEC);
+>         pm_runtime_use_autosuspend(dev);
+> @@ -639,6 +907,8 @@ static int spi_qup_probe(struct platform_device *pdev)
+> 
+>  disable_pm:
+>         pm_runtime_disable(&pdev->dev);
+> +error_dma:
+> +       spi_qup_release_dma(master);
+>  error:
+>         clk_disable_unprepare(cclk);
+>         clk_disable_unprepare(iclk);
+> @@ -730,6 +1000,8 @@ static int spi_qup_remove(struct platform_device *pdev)
+>         if (ret)
+>                 return ret;
+> 
+> +       spi_qup_release_dma(master);
+> +
+>         clk_disable_unprepare(controller->cclk);
+>         clk_disable_unprepare(controller->iclk);
+> 
+
+Regards,
+Ivan
