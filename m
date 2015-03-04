@@ -1,92 +1,44 @@
-From: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
-Subject: [PATCH v2 4/4] ARM64: dts: mediatek: add cpufreq dts for MT8173 SoC
-Date: Wed,  4 Mar 2015 16:49:16 +0800
-Message-ID: <1425458956-20665-5-git-send-email-pi-cheng.chen@linaro.org>
-References: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "pi-cheng.chen" <pi-cheng.chen@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Mike Turquette <mturquette@linaro.org>, fan.chen@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-mediatek@lists.infradead.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] pinctrl: bcm: consolidate Broadcom pinctrl drivers
+Date: Wed, 4 Mar 2015 10:07:26 +0100
+Message-ID: <CACRpkdaiM+mqGg43BT1Kr-CNi8+_U4KgZM4iZocv9+ovHL5hLQ@mail.gmail.com>
+References: <rjui@broadcom.com>
+	<1423015801-26967-1-git-send-email-rjui@broadcom.com>
+	<1423015801-26967-2-git-send-email-rjui@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1423015801-26967-2-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch illustrates how to enable mtk-cpufreq driver for a Mediatek SoC in
-device tree using MT8173 as an example. This patch was tested on MT8173 EVB
-with several patches which are not yet posted on public mailing list.
+On Wed, Feb 4, 2015 at 3:09 AM, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
 
-Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
----
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 10 ++++++++++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 25 +++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+> Consolidate Broadcom pinctrl drivers into drivers/pinctrl/bcm/*
+>
+> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index b57f095..cc3b954 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -417,3 +417,13 @@
- 	status = "okay";
- 	clock-frequency = <100000>;
- };
-+
-+&cpu0 {
-+	cpu-supply = <&mt6397_vpca15_reg>;
-+	voltage-tolerance = <1>;
-+};
-+
-+&cpu2 {
-+	proc-supply = <&da9211_vcpu_reg>;
-+	sram-supply = <&mt6397_vsramca7_reg>;
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index dd0a445..4ad75a6 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -51,6 +51,16 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
- 			reg = <0x000>;
-+			clocks = <&infracfg INFRA_CA53SEL>;
-+			operating-points = <
-+				1508000 1109000
-+				1404000	1083000
-+				1183000	1028000
-+				1105000	1009000
-+				1001000	 983000
-+				 702000	 908000
-+				 507000	 859000
-+			>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -65,6 +75,16 @@
- 			compatible = "arm,cortex-a57";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			clocks = <&infracfg INFRA_CA57SEL>;
-+			operating-points = <
-+				1807000	1089000
-+				1612000	1049000
-+				1404000	1007000
-+				1209000	 968000
-+				1001000	 927000
-+				 702000	 867000
-+				 507000	 828000
-+			>;
- 		};
- 
- 		cpu3: cpu@101 {
-@@ -75,6 +95,11 @@
- 		};
- 	};
- 
-+	cpufreq {
-+		compatible = "mediatek,mtk-cpufreq";
-+		clocks = <&apmixedsys APMIXED_MAINPLL>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci";
- 		method = "smc";
--- 
-1.9.1
+This patch doesn't apply so it needs to be rebased on v4.0-rc1 and resent.
+
+And also when just moving files, always do this:
+
+git format-patch -M ...
+
+So that file movement is detected, and the patch will apply nicely even
+if the contents of the file(s) have changed.
+
+Can you also combine this series with the v9 GPIO etc series and
+send out ONE big patch set that I can look at because right now I'm
+getting really confused ...
+
+I'll look over the rest and see if there is some remaining technical
+comments (hopefully mainly patch mechanics remains).
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
