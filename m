@@ -1,50 +1,43 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v2] devicetree: cadence_ttc: Document binding for timer width
-Date: Thu,  5 Mar 2015 14:12:56 +0100
-Message-ID: <b4cac8e34b5f6613d479bd2b2e2b8853b302f045.1425561172.git.michal.simek@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Zach Pfeffer <zachp@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Michal Simek <monstr@monstr.eu>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH 0/4] Add AM437x RTC
+Date: Thu, 5 Mar 2015 07:13:27 -0600
+Message-ID: <1425561211-31003-1-git-send-email-d-gerlach@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, KEERTHY <j-keerthy@ti.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+Hi,
+This series adds support for the rtc on am437x, as previously the hwmod
+and dt entries were missing. The am43x-epos-evm requires special treatment
+because the RTC gets disabled in hardware with no way to tell through
+software so we add a ti,no-init dt flag for the hwmod layer so we can
+avoid writing to the SYSCONFIG register and triggering an external abort.
+If we use this flag for the am43x-epos-evm we can add the rtc as normal
+to am437x-gp-evm. am437x-sk-evm already has the required dt entry in place. 
 
-Modern TTC implementations can extend the timer width to 32 bit. This
-feature is not self identifying so the driver needs to be made aware
-via device tree.
+Regards,
+Dave
 
-Signed-off-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+Dave Gerlach (3):
+  ARM: OMAP2+: omap_hwmod: Introduce ti,no-init dt property
+  ARM: OMAP2+: AM43xx hwmod: Add RTC hwmod for AM43xx
+  ARM: dts: am43x-epos-evm: Add rtc node with ti,no-init property
 
-Changes in v2:
-- Change timer-width description based on my discussion with
-  Mark Rutland. https://lkml.org/lkml/2014/9/17/277
-- Code change is already applied to the mainline kernel tree
+Keerthy (1):
+  ARM: dts: am437x-gp-evm: Enable RTC
 
- Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/arm/omap/omap.txt | 2 ++
+ arch/arm/boot/dts/am437x-gp-evm.dts                 | 4 ++++
+ arch/arm/boot/dts/am43x-epos-evm.dts                | 4 ++++
+ arch/arm/mach-omap2/omap_hwmod.c                    | 7 ++++++-
+ arch/arm/mach-omap2/omap_hwmod.h                    | 4 ++++
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c          | 1 +
+ 6 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt b/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
-index 993695c659e1..eeee6cd51e5c 100644
---- a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
-@@ -6,6 +6,9 @@ Required properties:
- - interrupts : A list of 3 interrupts; one per timer channel.
- - clocks: phandle to the source clock
- 
-+Optional properties:
-+- timer-width: Bit width of the timer, necessary if not 16.
-+
- Example:
- 
- ttc0: ttc0@f8001000 {
-@@ -14,4 +17,5 @@ ttc0: ttc0@f8001000 {
- 	compatible = "cdns,ttc";
- 	reg = <0xF8001000 0x1000>;
- 	clocks = <&cpu_clk 3>;
-+	timer-width = <32>;
- };
 -- 
-1.8.2.3
+2.3.0
+
