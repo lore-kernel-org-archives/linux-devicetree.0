@@ -1,74 +1,43 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v5 3/8] pinctrl: cygnus: add initial IOMUX driver support
-Date: Thu, 05 Mar 2015 09:03:32 +0100
-Message-ID: <1425542612.24292.180.camel@x220>
-References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
-	 <1425515756-321-4-git-send-email-rjui@broadcom.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] of: Kconfig: Let OF_UNITTEST depend on "I2C=y" and "I2C_MUX=y"
+Date: Thu, 5 Mar 2015 09:06:54 +0100
+Message-ID: <CAMuHMdUg=X9siUKLzqAwPUn-WeKeirGy+XN4aSRFV7eX7WV1=A@mail.gmail.com>
+References: <BLU437-SMTP82811F6F904D6C74EE62E3B91E0@phx.gbl>
+	<CAMuHMdXPONxoNm+stn5sx579kzWo6auVP7hrRv26VSGySr7K2A@mail.gmail.com>
+	<2530315.qdy5ZZGCEr@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1425515756-321-4-git-send-email-rjui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2530315.qdy5ZZGCEr@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Chen Gang <xili_gchen_5257-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-03-04 at 16:35 -0800, Ray Jui wrote:
-> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-> index bc6d048..eb13201 100644
-> --- a/drivers/pinctrl/bcm/Kconfig
-> +++ b/drivers/pinctrl/bcm/Kconfig
-> @@ -19,3 +19,16 @@ config PINCTRL_BCM2835
->  	bool
->  	select PINMUX
->  	select PINCONF
-> +
-> +config PINCTRL_CYGNUS_MUX
-> +	bool "Broadcom Cygnus IOMUX driver"
+On Wed, Mar 4, 2015 at 8:49 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -979,7 +979,7 @@ static int of_path_platform_device_exists(const char *path)
+>         return pdev != NULL;
+>  }
+>
+> -#if IS_ENABLED(CONFIG_I2C)
+> +#if IS_BUILTIN(CONFIG_I2C)
 
-bool type.
+Wondering: is there any advantage in using "#if IS_BUILTIN(CONFIG_XXX)"
+instead of "#ifdef CONFIG_XXX"?
 
-> +	depends on (ARCH_BCM_CYGNUS || COMPILE_TEST)
-> +	select PINMUX
-> +	select GENERIC_PINCONF
-> +	default ARCH_BCM_CYGNUS
-> +	help
-> +	  Say yes here to enable the Broadcom Cygnus IOMUX driver.
-> +
-> +	  The Broadcom Cygnus IOMUX driver supports group based IOMUX
-> +	  configuration, with the exception that certain individual pins
-> +	  can be overrided to GPIO function
-> diff --git a/drivers/pinctrl/bcm/Makefile b/drivers/pinctrl/bcm/Makefile
-> index 7ba80a3..bb6beb6 100644
-> --- a/drivers/pinctrl/bcm/Makefile
-> +++ b/drivers/pinctrl/bcm/Makefile
-> @@ -1,4 +1,5 @@
->  # Broadcom pinctrl support
->  
-> -obj-$(CONFIG_PINCTRL_BCM281XX)	+= pinctrl-bcm281xx.o
-> -obj-$(CONFIG_PINCTRL_BCM2835)	+= pinctrl-bcm2835.o
-> +obj-$(CONFIG_PINCTRL_BCM281XX)		+= pinctrl-bcm281xx.o
-> +obj-$(CONFIG_PINCTRL_BCM2835)		+= pinctrl-bcm2835.o
-> +obj-$(CONFIG_PINCTRL_CYGNUS_MUX)	+= pinctrl-cygnus-mux.o
+Gr{oetje,eeting}s,
 
-So pinctrl-cygnus-mux.o will be built-in (or not built, of course).
+                        Geert
 
-> diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-> new file mode 100644
-> index 0000000..f9a9283
-> --- /dev/null
-> +++ b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-> @@ -0,0 +1,1022 @@
->[...]
-> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
-> +MODULE_DESCRIPTION("Broadcom Cygnus IOMUX driver");
-> +MODULE_LICENSE("GPL v2");
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-These three macros will be preprocessed away. (And I guess you could
-also drop the linux/module.h include, but I haven't actually tested that
-guess.)
-
-
-Paul Bolle
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
