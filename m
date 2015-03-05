@@ -1,102 +1,54 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH v1 4/6] eeprom: sunxi: Move the SID driver to the eeprom
- framework
-Date: Thu, 05 Mar 2015 11:15:15 +0100
-Message-ID: <1425550515.24292.212.camel@x220>
-References: <1425548685-12887-1-git-send-email-srinivas.kandagatla@linaro.org>
-	 <1425548775-13067-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency control
+Date: Thu, 5 Mar 2015 15:53:35 +0530
+Message-ID: <CAKohpokVxxxTY9DpQVxNPnq92pyK=2J2dDeLmis_+WD16aatOg@mail.gmail.com>
+References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
+	<20150304112109.GB11010@pengutronix.de>
+	<CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
+	<20150305074207.GC11010@pengutronix.de>
+	<CAKohponSqLPcULA9-T8y9b_b44Torti0p6W3sJfRZ1oKUWqtTw@mail.gmail.com>
+	<20150305091948.GH11010@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425548775-13067-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, andrew-g2DYL2Zd6BY@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150305091948.GH11010@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pi-Cheng Chen <pi-cheng.chen@linaro.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-03-05 at 09:46 +0000, Srinivas Kandagatla wrote:
-> --- a/drivers/eeprom/Kconfig
-> +++ b/drivers/eeprom/Kconfig
-> @@ -17,4 +17,15 @@ config EEPROM_DEBUG
->  	help
->  	  Say yes here to enable debugging support.
->  
-> +config EEPROM_SUNXI_SID
-> +	depends on ARCH_SUNXI
-> +	tristate "Allwinner SoCs SID support"
+On 5 March 2015 at 14:49, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> The sequence to change the CPU frequency on the Mediatek SoCs is like this:
+>
+> - Change CPU from CPU PLL to another clock source (intermediate source)
+> - Change CPU PLL frequency
+> - wait until PLL has settled
+> - switch back to CPU PLL
 
-Nit: make this the first option, please.
+This should be the case for most of the intermediate-freq users..
 
-> +	select REGMAP_MMIO
-> +	help
-> +	  This is a driver for the 'security ID' available on various Allwinner
-> +	  devices.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called sunxi_sid.
+> The frequency of the intermediate source is irrelevant, the important
+> thing is that the CPU is switched to this source while the CPU PLL is
+> reconfigured.
 
-I think it will be called "eeprom-sunxi-sid". Am I right?
+Right.
 
-(There must be thousands of lines like this in the various Kconfig
-files. Has anyone ever tried to autogenerate this info for the make
-*config tools? Probably rather complicated...)
+> In Pi-Chengs patches the switch to th eintermediate clock is done like:
+>
+>         rate = clk_get_rate(intermediate_clk);
+>         clk_set_rate(cpu_clk, rate);
+>
+> Now the clk framework does the switch not because it's told to switch
+> to another parent, but only because the other parent happens to be the
+> only provider for that rate. That's rubbish, when the parent must be
+> changed, then it should be done explicitly.
+> What if the CPU PLL and the intermediate clk happen to have the same
+> rate? Then the clk_set_rate above simply does nothing, no parent is
+> changed and the following rate change of the CPU PLL just crashes the
+> system.
 
-> +
->  endif
-> diff --git a/drivers/eeprom/Makefile b/drivers/eeprom/Makefile
-> index e130079..661422c 100644
-> --- a/drivers/eeprom/Makefile
-> +++ b/drivers/eeprom/Makefile
-> @@ -7,3 +7,4 @@ ccflags-$(CONFIG_EEPROM_DEBUG) += -DDEBUG
->  obj-$(CONFIG_EEPROM)		+= core.o
->  
->  # Devices
-> +obj-$(CONFIG_EEPROM_SUNXI_SID)	+= eeprom-sunxi-sid.o
-> diff --git a/drivers/eeprom/eeprom-sunxi-sid.c b/drivers/eeprom/eeprom-sunxi-sid.c
-> new file mode 100644
-> index 0000000..eb32afb
-> --- /dev/null
-> +++ b/drivers/eeprom/eeprom-sunxi-sid.c
-> @@ -0,0 +1,129 @@
-> +/*
-> + * Allwinner sunXi SoCs Security ID support.
-> + *
-> + * Copyright (c) 2013 Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> + * Copyright (C) 2014 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-
-So the license is GPL v2.
-
-> +MODULE_LICENSE("GPL");
-
-Which means you probably want
-    MODULE_LICENSE("GPL v2");
-
-> --- a/drivers/misc/eeprom/sunxi_sid.c
-> +++ /dev/null
-> @@ -1,156 +0,0 @@
-> -/*
-> - * Copyright (c) 2013 Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> - * http://www.linux-sunxi.org
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
-
-But the previous driver was GPL v2 or later.
-
-> -MODULE_LICENSE("GPL");
-
-And this matches that.
-
-Was it intended to re-license this, or is the code basically new? (I
-haven't compared the before and after code, to be honest.)
-
-
-Paul Bolle
+The problem is that the code is common across platforms that need to
+reparent or just change rate for intermediate clocks. And the best we
+can do is clk_set_rate() and so probably the clk driver need to take care
+of this somehow and make sure we don't result in a crash like you just
+demonstrated.
