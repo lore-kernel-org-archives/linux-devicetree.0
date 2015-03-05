@@ -1,7 +1,7 @@
 From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH 3/4] ARM: dts: am43x-epos-evm: Add rtc node with ti,no-init property
-Date: Thu, 5 Mar 2015 07:13:30 -0600
-Message-ID: <1425561211-31003-4-git-send-email-d-gerlach@ti.com>
+Subject: [PATCH 2/4] ARM: OMAP2+: AM43xx hwmod: Add RTC hwmod for AM43xx
+Date: Thu, 5 Mar 2015 07:13:29 -0600
+Message-ID: <1425561211-31003-3-git-send-email-d-gerlach@ti.com>
 References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,26 @@ To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree
 Cc: Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, KEERTHY <j-keerthy@ti.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add rtc node with ti,no-init property so that rtc hwmod does not get
-initialized as the RTC IP is disabled in hardware by the board layout
-on am43x-epos-evm so the SoC cannot access the IP at all. Without this,
-hwmod writes to the RTC SYSCONFIG register and causes a kernel panic
-during boot.
+RTC hwmod is needed for proper operation of PM features like
+rtcwake and rtc-only mode so reuse the am33xx rtc hwmod.
 
 Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
 ---
- arch/arm/boot/dts/am43x-epos-evm.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 257c099..ba7dbc0 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -687,3 +687,7 @@
- 		};
- 	};
+diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+index 8eb8592..9070535 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+@@ -889,6 +889,7 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am43xx_l4_ls__dss,
+ 	&am43xx_l4_ls__dss_dispc,
+ 	&am43xx_l4_ls__dss_rfbi,
++	&am33xx_l4_wkup__rtc,
+ 	NULL,
  };
-+
-+&rtc {
-+	ti,no-init;
-+};
+ 
 -- 
 2.3.0
 
