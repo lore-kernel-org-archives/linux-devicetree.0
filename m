@@ -1,159 +1,64 @@
-From: Aleksei Mamlin <mamlinav@gmail.com>
-Subject: [PATCH v3] input: goodix: Add device tree support
-Date: Thu,  5 Mar 2015 20:32:41 +0300
-Message-ID: <1425576761-25208-1-git-send-email-mamlinav@gmail.com>
-References: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>, Hans de Goede <hdegoede@redhat.com>, Aleksei Mamlin <mamlinav@gmail.com>
+From: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Fri, 6 Mar 2015 02:36:18 +0900
+Message-ID: <CAGTfZH3nkCvnuu+fC1Gv5DrRQXEg6Y19tQnh+phj6c_jAFpbvg@mail.gmail.com>
+References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
+	<1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
+	<20150305122459.GC14093@leverpostej>
+	<CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
+	<20150305170450.GG14093@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150305170450.GG14093@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support and binding information for Goodix
-GT9xx series touchscreen controller.
-It also adds support for 5-finger chips, like GT911 and GT912, which
-can be found on ARM tablets, like Wexler TAB7200 and MSI Primo73.
+Hi,
 
-Changes since v2:
-* Split to two patches:
-  The first one for use max number of touches from device config.
-  The second one adds device tree support.
+On Fri, Mar 6, 2015 at 2:04 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi,
+>
+> [...]
+>
+>> >> +       psci {
+>> >> +               compatible = "arm,psci";
+>> >> +               method = "smc";
+>> >> +               cpu_off = <0x84000002>;
+>> >> +               cpu_on = <0xC4000003>;
+>> >> +       };
+>> >
+>> > Back at v2 you mentioned that CPU_OFF wasn't working [1].
+>> >
+>> > Do both CPU_ON and CPU_OFF work for all CPUs, including the boot CPU?
+>>
+>> The CPU1 ~ CPU7 are well woking about CPU_ON/OFF.
+>> CPU0 (boot CPU) is only well working for CPU_OFF.
+>> But when I try to turn on the CPU0 after CPU_OFF, I failed it.
+>
+> That's rather worrying. Can you look into what's going on here? I'd
+> rather not have dts describing things which are known to be broken.
 
-Changes since v1:
-* Merge patches into single patch.
-* Use max touch number from config instead of hardcoding.
-* Update description in Kconfig.
+The board dts don't include any node for CPU_ON/OFF.
+When I try to turn on the CPU0 (boot CPU), fail to turn on and lockup happen.
+After lockup happen, I cannot use the console.
 
-Datasheets can be found here:
-https://drive.google.com/folderview?id=0BxCVOQS3ZymGfmJyY2RKbE5XbVlKNlktVTlwV0lxNEdxd2dzeWZER094cmJPVnMxN1F0Yzg&usp=sharing
+>
+>> > I take it CPUs boot at EL2?
+>
+> Do the CPUs boot at EL1 or EL2?
 
-Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
----
- .../bindings/input/touchscreen/goodix.txt          | 29 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- drivers/input/touchscreen/Kconfig                  |  5 ++--
- drivers/input/touchscreen/goodix.c                 | 21 +++++++++++++++-
- 4 files changed, 53 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+Unfortunately, I cannot check the secure firmware for Exynos5433 SoC.
+I think that a few SoC provider probably would know it.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-new file mode 100644
-index 0000000..8ba98ee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-@@ -0,0 +1,29 @@
-+Device tree bindings for Goodix GT9xx series touchscreen controller
-+
-+Required properties:
-+
-+ - compatible		: Should be "goodix,gt911"
-+				 or "goodix,gt9110"
-+				 or "goodix,gt912"
-+				 or "goodix,gt927"
-+				 or "goodix,gt9271"
-+				 or "goodix,gt928"
-+				 or "goodix,gt967"
-+ - reg			: I2C address of the chip. Should be 0x5d or 0x14
-+ - interrupt-parent	: Interrupt controller to which the chip is connected
-+ - interrupts		: Interrupt to which the chip is connected
-+
-+Example:
-+
-+	i2c@00000000 {
-+		/* ... */
-+
-+		gt928@5d {
-+			compatible = "goodix,gt928";
-+			reg = <0x5d>;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <0 0>;
-+		};
-+
-+		/* ... */
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389ca13..ab6852d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -76,6 +76,7 @@ geniatech	Geniatech, Inc.
- giantplus	Giantplus Technology Co., Ltd.
- globalscale	Globalscale Technologies, Inc.
- gmt	Global Mixed-mode Technology, Inc.
-+goodix	Shenzhen Huiding Technology Co., Ltd.
- google	Google, Inc.
- gumstix	Gumstix, Inc.
- gw	Gateworks Corporation
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index 5891752..2adf724 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -297,11 +297,12 @@ config TOUCHSCREEN_FUJITSU
- 
- config TOUCHSCREEN_GOODIX
- 	tristate "Goodix I2C touchscreen"
--	depends on I2C && ACPI
-+	depends on I2C
- 	help
- 	  Say Y here if you have the Goodix touchscreen (such as one
- 	  installed in Onda v975w tablets) connected to your
--	  system.
-+	  system. It also supports 5-finger chip models, which can be
-+	  found on ARM tablets, like Wexler TAB7200 and MSI Primo73.
- 
- 	  If unsure, say N.
- 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index a3e2057..efba6a3 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -23,6 +23,8 @@
- #include <linux/irq.h>
- #include <linux/interrupt.h>
- #include <linux/slab.h>
-+#include <linux/acpi.h>
-+#include <linux/of.h>
- #include <asm/unaligned.h>
- 
- struct goodix_ts_data {
-@@ -375,11 +377,27 @@ static const struct i2c_device_id goodix_ts_id[] = {
- 	{ }
- };
- 
-+#ifdef CONFIG_ACPI
- static const struct acpi_device_id goodix_acpi_match[] = {
- 	{ "GDIX1001", 0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
-+#endif
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id goodix_of_match[] = {
-+	{ .compatible = "goodix,gt911" },
-+	{ .compatible = "goodix,gt9110" },
-+	{ .compatible = "goodix,gt912" },
-+	{ .compatible = "goodix,gt927" },
-+	{ .compatible = "goodix,gt9271" },
-+	{ .compatible = "goodix,gt928" },
-+	{ .compatible = "goodix,gt967" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, goodix_of_match);
-+#endif
- 
- static struct i2c_driver goodix_ts_driver = {
- 	.probe = goodix_ts_probe,
-@@ -387,7 +405,8 @@ static struct i2c_driver goodix_ts_driver = {
- 	.driver = {
- 		.name = "Goodix-TS",
- 		.owner = THIS_MODULE,
--		.acpi_match_table = goodix_acpi_match,
-+		.acpi_match_table = ACPI_PTR(goodix_acpi_match),
-+		.of_match_table = of_match_ptr(goodix_of_match),
- 	},
- };
- module_i2c_driver(goodix_ts_driver);
--- 
-2.0.5
+[snip]
 
+Thanks,
+Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
