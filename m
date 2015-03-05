@@ -1,64 +1,48 @@
-From: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Fri, 6 Mar 2015 02:36:18 +0900
-Message-ID: <CAGTfZH3nkCvnuu+fC1Gv5DrRQXEg6Y19tQnh+phj6c_jAFpbvg@mail.gmail.com>
-References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
-	<1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
-	<20150305122459.GC14093@leverpostej>
-	<CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
-	<20150305170450.GG14093@leverpostej>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [Patch V7 05/10] ASoC: qcom: Add LPASS CPU DAI driver
+Date: Thu, 5 Mar 2015 17:38:00 +0000
+Message-ID: <20150305173800.GW21293@sirena.org.uk>
+References: <1425428519-12224-1-git-send-email-kwestfie@codeaurora.org>
+ <1425428519-12224-6-git-send-email-kwestfie@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150305170450.GG14093@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="apqIsnVdvKV+9u/c"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425428519-12224-6-git-send-email-kwestfie@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>
+Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Fri, Mar 6, 2015 at 2:04 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi,
->
-> [...]
->
->> >> +       psci {
->> >> +               compatible = "arm,psci";
->> >> +               method = "smc";
->> >> +               cpu_off = <0x84000002>;
->> >> +               cpu_on = <0xC4000003>;
->> >> +       };
->> >
->> > Back at v2 you mentioned that CPU_OFF wasn't working [1].
->> >
->> > Do both CPU_ON and CPU_OFF work for all CPUs, including the boot CPU?
->>
->> The CPU1 ~ CPU7 are well woking about CPU_ON/OFF.
->> CPU0 (boot CPU) is only well working for CPU_OFF.
->> But when I try to turn on the CPU0 after CPU_OFF, I failed it.
->
-> That's rather worrying. Can you look into what's going on here? I'd
-> rather not have dts describing things which are known to be broken.
+--apqIsnVdvKV+9u/c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The board dts don't include any node for CPU_ON/OFF.
-When I try to turn on the CPU0 (boot CPU), fail to turn on and lockup happen.
-After lockup happen, I cannot use the console.
+On Tue, Mar 03, 2015 at 04:21:54PM -0800, Kenneth Westfield wrote:
+> From: Kenneth Westfield <kwestfie@codeaurora.org>
+>=20
+> Add the CPU DAI driver for the Qualcomm
+> Technologies low-power audio subsystem (LPASS).
 
->
->> > I take it CPUs boot at EL2?
->
-> Do the CPUs boot at EL1 or EL2?
+Applied, thanks.
 
-Unfortunately, I cannot check the secure firmware for Exynos5433 SoC.
-I think that a few SoC provider probably would know it.
+--apqIsnVdvKV+9u/c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-[snip]
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Thanks,
-Chanwoo Choi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQEcBAEBCAAGBQJU+JR4AAoJECTWi3JdVIfQkbIH/jeayureR+ByXhB+XVsvx4WW
+OExzwaW39pfmLXjCtGda/sqTsSpK50Lm2BzovGMsZCeDZqppnJuMnWJTHSA9EZE9
+AwIhLPcxmUBDmdj9PyuETy3JDaDv8YiD256TjBPyDt6/O4N94Yy5DW354j8QSy02
+5v0EhoL4crt0hmaGKeeAp1P943ZksOkaAMQX3OFPfajlwAT61w/WW8kvYfQrS88i
+leN1ioF1N587XxAiyOdRGBEuJ2uRI2PvsDcShFpvs7c+4xOPFyGGsnnUiMIkqPHh
+stDi1yXnA6sWS0aIx21GA/S/tCp/yaFOb2hLmwjKtwpwfRLaycT8OOwXr3MJUQo=
+=ccCh
+-----END PGP SIGNATURE-----
+
+--apqIsnVdvKV+9u/c--
