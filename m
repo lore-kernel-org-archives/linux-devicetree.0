@@ -1,94 +1,55 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [PATCH] libfdt: Teach fdt_path_offset() about ':' path separator
-Date: Thu, 05 Mar 2015 12:04:19 -0500
-Message-ID: <54F88C93.9000405@hurleysoftware.com>
-References: <1425487459-20955-1-git-send-email-peter@hurleysoftware.com> <CAL_JsqLXP8LccUXA+NNmGyCgbJSArVHCN5XvF17dkbahuook-Q@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Thu, 5 Mar 2015 17:04:50 +0000
+Message-ID: <20150305170450.GG14093@leverpostej>
+References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
+ <1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
+ <20150305122459.GC14093@leverpostej>
+ <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLXP8LccUXA+NNmGyCgbJSArVHCN5XvF17dkbahuook-Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Leif Lindholm <leif.lindholm@linaro.org>, Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cwchoi00@gmail.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ideal.song@samsung.com" <ideal.song@samsung.com>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-[ +cc Greg KH ]
+Hi,
 
-On 03/05/2015 10:23 AM, Rob Herring wrote:
-> On Wed, Mar 4, 2015 at 10:44 AM, Peter Hurley <peter@hurleysoftware.com> wrote:
->> stdout-path defines ':' as a path separator and commit 75c28c09af99a
->> ("of: add optional options parameter to of_find_node_by_path()") added
->> the necessary support to parse paths terminated with ':' path separator.
->> commit 7914a7c5651a5 ("of: support passing console options with
->> stdout-path") added options string support to the stdout-path property,
->> which broke earlycon.
->>
->> Add the same support to fdt_path_offset() so earlycon can parse and
->> process stdout-path properties containing an options string.
->>
->> Cc: Leif Lindholm <leif.lindholm@linaro.org>
->> Cc: <stable@vger.kernel.org> # 3.19+
->> Signed-off-by: Peter Hurley <peter@hurleysoftware.com>
+[...]
+
+> >> +       psci {
+> >> +               compatible = "arm,psci";
+> >> +               method = "smc";
+> >> +               cpu_off = <0x84000002>;
+> >> +               cpu_on = <0xC4000003>;
+> >> +       };
+> >
+> > Back at v2 you mentioned that CPU_OFF wasn't working [1].
+> >
+> > Do both CPU_ON and CPU_OFF work for all CPUs, including the boot CPU?
 > 
-> This needs to be first applied to upstream dtc[1]. Please do a patch
-> against dtc and send to devicetree-compiler list.
+> The CPU1 ~ CPU7 are well woking about CPU_ON/OFF.
+> CPU0 (boot CPU) is only well working for CPU_OFF.
+> But when I try to turn on the CPU0 after CPU_OFF, I failed it.
 
-Sure, I can do that, but then how is this patch going to end up in
-3.19-stable?
+That's rather worrying. Can you look into what's going on here? I'd
+rather not have dts describing things which are known to be broken.
 
-Regards,
-Peter Hurley
+> > I take it CPUs boot at EL2?
 
-> Rob
+Do the CPUs boot at EL1 or EL2?
+
+[...]
+
+> > The timer node should be moved under the root node. It doesn't live on
+> > the bus; it's a component of the CPU.
 > 
-> [1] https://git.kernel.org/cgit/linux/kernel/git/jdl/dtc.git/
-> 
->> ---
->>  scripts/dtc/libfdt/fdt_ro.c | 9 +++++----
->>  1 file changed, 5 insertions(+), 4 deletions(-)
->>
->> diff --git a/scripts/dtc/libfdt/fdt_ro.c b/scripts/dtc/libfdt/fdt_ro.c
->> index 02b6d68..a96e452 100644
->> --- a/scripts/dtc/libfdt/fdt_ro.c
->> +++ b/scripts/dtc/libfdt/fdt_ro.c
->> @@ -156,7 +156,8 @@ int fdt_subnode_offset(const void *fdt, int parentoffset,
->>
->>  int fdt_path_offset(const void *fdt, const char *path)
->>  {
->> -       const char *end = path + strlen(path);
->> +       const char *separator = strchr(path, ':');
->> +       const char *end = separator ? separator : path + strlen(path);
->>         const char *p = path;
->>         int offset = 0;
->>
->> @@ -166,7 +167,7 @@ int fdt_path_offset(const void *fdt, const char *path)
->>         if (*path != '/') {
->>                 const char *q = strchr(path, '/');
->>
->> -               if (!q)
->> +               if (!q || q > end)
->>                         q = end;
->>
->>                 p = fdt_get_alias_namelen(fdt, p, q - p);
->> @@ -177,7 +178,7 @@ int fdt_path_offset(const void *fdt, const char *path)
->>                 p = q;
->>         }
->>
->> -       while (*p) {
->> +       while (p < end) {
->>                 const char *q;
->>
->>                 while (*p == '/')
->> @@ -185,7 +186,7 @@ int fdt_path_offset(const void *fdt, const char *path)
->>                 if (! *p)
->>                         return offset;
->>                 q = strchr(p, '/');
->> -               if (! q)
->> +               if (!q || q > end)
->>                         q = end;
->>
->>                 offset = fdt_subnode_offset_namelen(fdt, offset, p, q-p);
->> --
->> 2.3.1
->>
+> OK. I'll move it according to your comment.
+
+Thanks.
+
+Mark.
