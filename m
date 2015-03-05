@@ -1,65 +1,48 @@
 From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 Subject: Re: [PATCH v2] mfd: Add specific compatible strings for Qualcomm's
  SPMI PMIC's
-Date: Thu, 05 Mar 2015 10:14:38 +0200
-Message-ID: <1425543278.5705.11.camel@mm-sol.com>
+Date: Thu, 05 Mar 2015 10:16:03 +0200
+Message-ID: <1425543363.5705.13.camel@mm-sol.com>
 References: <1425464365-3291-1-git-send-email-iivanov@mm-sol.com>
-	 <54F75690.3010406@codeaurora.org>
+	 <54F7576C.9060808@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <54F75690.3010406@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54F7576C.9060808@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Wed, 2015-03-04 at 11:01 -0800, Stephen Boyd wrote:
+On Wed, 2015-03-04 at 11:05 -0800, Stephen Boyd wrote:
 > On 03/04/15 02:19, Ivan T. Ivanov wrote:
-> > diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
-> > index 4b8beb2..a1af4e5 100644
-> > --- a/drivers/mfd/qcom-spmi-pmic.c
-> > +++ b/drivers/mfd/qcom-spmi-pmic.c
-> > 
 > > +
-> > +static void pmic_spmi_show_revid(struct regmap *map, struct device *dev)
-> > +{
-> > +       unsigned int rev2, minor, major, type, subtype;
-> > +       int ret;
-> > +
-> > +       ret = regmap_read(map, PMIC_TYPE, &type);
-> > +       if (ret < 0)
-> > +               return;
-> > +
-> > +       if (type != PMIC_TYPE_VALUE)
-> > +               return;
-> > +
-> > +       ret = regmap_read(map, PMIC_SUBTYPE, &subtype);
-> > +       if (ret < 0)
-> > +               return;
-> > +
-> > +       if (subtype > ARRAY_SIZE(pmic_spmi_id_table))
-> > +               return;
-> > +
-> > +       rev2 = regmap_read(map, PMIC_REV2, &rev2);
+> > +static const struct of_device_id pmic_spmi_id_table[] = {
+> > +       [COMMON_SUBTYPE]  = { .compatible = "qcom,spmi-pmic" },
+> > +       [PM8941_SUBTYPE]  = { .compatible = "qcom,pm8941" },
+> > +       [PM8841_SUBTYPE]  = { .compatible = "qcom,pm8841" },
+> > +       [PM8019_SUBTYPE]  = { .compatible = "qcom,pm8019" },
+> > +       [PM8226_SUBTYPE]  = { .compatible = "qcom,pm8226" },
+> > +       [PM8110_SUBTYPE]  = { .compatible = "qcom,pm8110" },
+> > +       [PMA8084_SUBTYPE] = { .compatible = "qcom,pma8084" },
+> > +       [PMI8962_SUBTYPE] = { .compatible = "qcom,pmi8962" },
+> > +       [PMD9635_SUBTYPE] = { .compatible = "qcom,pmd9635" },
+> > +       [PM8994_SUBTYPE]  = { .compatible = "qcom,pm8994" },
+> > +       [PMI8994_SUBTYPE] = { .compatible = "qcom,pmi8994" },
+> > +       [PM8916_SUBTYPE]  = { .compatible = "qcom,pm8916" },
+> > +       [PM8004_SUBTYPE]  = { .compatible = "qcom,pm8004" },
+> > +       [PM8909_SUBTYPE]  = { .compatible = "qcom,pm8909" },
+> > +       { }
+> > +};
 > 
-> ret = ?
+> Also this seems error prone in the case where we may have skips between
+> pmic model numbers and then the of_device_id table is going to have a
+> sentinel in the middle of the table. It's probably better to store the
+> subtype number in the data field and iterate over the array.
 
-Ouch. will fix.
+True. Will reorganize.
 
-> 
-> > 
-> > +
-> > +       dev_info(dev, "%s-v%d.%d detected\n",
-> > +                       pmic_spmi_id_table[subtype].compatible, major, minor);
-> > +}
-> > 
-> 
-> I wonder if this should be dev_dbg.
-
-It is not so much verbose, right? I could cut "detected". I will like to keep it.
-
-Thanks, 
+Thanks,
 Ivan
