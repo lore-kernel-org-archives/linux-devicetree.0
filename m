@@ -1,83 +1,51 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 09/10] ARM: bcm2835: Add the mailbox property channel driver.
-Date: Thu, 05 Mar 2015 11:54:41 -0800
-Message-ID: <87vbif6wzi.fsf@eliezer.anholt.net>
-References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-10-git-send-email-eric@anholt.net> <54F68352.5080108@wwwdotorg.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH RESEND 0/4] Add support for IPROC SDHCI controller
+Date: Thu, 05 Mar 2015 11:57:52 -0800
+Message-ID: <54F8B540.6000301@gmail.com>
+References: <sbranden@broadcom.com>	<1425571148-5876-1-git-send-email-sbranden@broadcom.com> <CAPDyKFpH=dYzku9KNVFPtqc73+TptLFGZHNkFZ3Q4=suLOwFfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F68352.5080108-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFpH=dYzku9KNVFPtqc73+TptLFGZHNkFZ3Q4=suLOwFfQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On 05/03/15 08:16, Ulf Hansson wrote:
+> On 5 March 2015 at 16:59, Scott Branden <sbranden@broadcom.com> wrote:
+>> This series of patchsets contains the IPROC SDHCI driver used
+>> in a series of Broadcom SoCs
+>> Quirks are also added to support this controller.
+>>
+>> Corneliu Doban (1):
+>>   mmc: sdhci: do not set AUTO_CMD12 for multi-block CMD53
+>>
+>> Scott Branden (3):
+>>   mmc: sdhci: add quirk for ACMD23 broken
+>>   mmc: sdhci-iproc: add IPROC SDHCI driver
+>>   mmc: sdhci-iproc: add device tree bindings
+>>
+>>  .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  23 ++
+>>  drivers/mmc/host/Kconfig                           |  14 ++
+>>  drivers/mmc/host/Makefile                          |   1 +
+>>  drivers/mmc/host/sdhci-iproc.c                     | 241 +++++++++++++++++++++
+>>  drivers/mmc/host/sdhci.c                           |   7 +-
+>>  include/linux/mmc/sdhci.h                          |   2 +
+>>  6 files changed, 286 insertions(+), 2 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
+>>  create mode 100644 drivers/mmc/host/sdhci-iproc.c
+>>
+>> --
+>> 2.2.2
+>>
+> 
+> Applied, thanks!
+> 
+> Actually, I needed to re-solve some conflicts and I switched to order
+> of patch3 and patch4, to avoid checkpatch warnings. Just so you know.
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
-
-> On 03/02/2015 01:54 PM, Eric Anholt wrote:
->> Many of the operations with the firmware are done through this mailbox
->> channel pair with a specific packet format.  Notably, it's used for
->> clock control, which is apparently not actually totally possible to do
->> from the ARM side (some regs aren't addressable).  I need clock
->> control for the VC4 DRM driver, to turn on the 3D engine.
->
->> diff --git a/drivers/mailbox/bcm2835-mailbox-property.c b/drivers/mailbox/bcm2835-mailbox-property.c
->> +int bcm_mbox_property(void *data, size_t tag_size)
->
->> +	buf = dma_alloc_coherent(NULL, PAGE_ALIGN(size), &bus_addr, GFP_ATOMIC);
->> +	if (!buf)
->> +		return -ENOMEM;
->
-> Can't the driver (this one or the client) maintain some persistent
-> buffer rather than allocating/freeing a new one each time. It seems like
-> the alloc/free might introduce quite some overhead?
-
-The size of the buffer is arbitrary (up to 1MB), the frequency of
-requessts is low, and the hardware's pretty starved for RAM.  However,
-we're probably only ever going to see single page allocations, so the
-RAM cost is probably low and the allocation time is probably also
-correspondingly low (not like when I was trying to do 256k allocations
-in the vc4 driver.  ouch).
-
->> +	writel(size, buf);
->> +	writel(bcm_mbox_status_request, buf + 4);
->> +	memcpy_toio(buf + 8, data, tag_size);
->> +	writel(bcm_mbox_property_end, buf + size - 4);
->
-> Since this is just a regular chunk of RAM, can't the code just use
-> regular memory writes and memcpy()?
-
-will wmb() guarantee that the compiler won't optimize out my write to
-buf[0] and corresponding read from buf[0]?  I was originally treating it
-as RAM and using volatile, but then reread the old "don't use volatile"
-doc.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJU+LSBAAoJELXWKTbR/J7oQ2QQAJ9ttiNLvO+WY2OLx0rXXDwM
-FA6F60tMRgL5T009jnACQOc4/vSGk2eK3TiNArJetqSzCQCUWjjejSlxg6ZOWPNK
-rUibXSJxLziJE3KS8iIg6H+Sxbmc1a6FtW/gnrfwyxL/rsFoNSW5MSvzg12ZAnas
-QJaUKZi8+Kp7Mgh4AJ7yCIpxMnbzek5PuKQiIGmvzkq2+5HoxmkV742BcFNPtmiq
-x3UnFMS857DsRHLFU/aifqBpPjDFYiYkVSsioexRIHR4EKMF8dfrnOQKftPZtliB
-J6XxHTAJYb1KfnVkpwYzcg6HHTIq0pDN/R2lmkyHcFoaZmJrdcoma4O7mlUwhHUE
-EurwsZri9tslUqaHysvEep75QpwCpgVeafIgyPhjJ0Z8Eyg+9nja/a0VMs9V9ite
-8Yx9pauONH9RK9CwLJ2LQwAn+s6i77AgoATckx9Z1gpEHmIyO7SIIKFczxnaxhjM
-QPbmZg66DFQzC9v6C+sn+ZlmxwVCLeaeE+Lpnqwo6qQgehPps/nTfoqB1WZrDF8k
-IKzRc9H1aLFkLQvRP7HQRr8cpLNl9tLbZ/UqeKoCXUcrK+OnIOkPL+29Jneijn3S
-P9bKnHbGD4H4bNvQ3qvMBYHq3vBjmoOgUe3BlX+9KHduF1UZ6gBfmzY9epoR9o/i
-qPXkRDvpwMtRinHeaUK9
-=QAg2
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, patch 4 dropped from devicetree/next.
+-- 
+Florian
