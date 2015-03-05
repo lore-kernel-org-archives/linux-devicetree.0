@@ -1,34 +1,65 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 1/4] cpufreq-dt: add clock domain and intermediate
- frequency support
-Date: Thu, 5 Mar 2015 09:28:38 +0530
-Message-ID: <CAKohpo=zPsezGs8rqVzx3ChQkavs5z7eFMMETe12pc2mjm-8OA@mail.gmail.com>
-References: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
-	<1425458956-20665-2-git-send-email-pi-cheng.chen@linaro.org>
-	<CAKohpomw6iDRRMxgmOORzZVeW4h2-LzKOsUcdpUnANcxiAYm+A@mail.gmail.com>
-	<CALx668XCh46yMLajThuVzba9RRSxf+tEkNuMP9J7w-=vsZN8-Q@mail.gmail.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH v2 1/2] ARM: OMAP2+: Use pdata-quirks for wkup_m3 deassert_hardreset
+Date: Wed, 4 Mar 2015 22:12:21 -0600
+Message-ID: <1425528742-3087-2-git-send-email-d-gerlach@ti.com>
+References: <1425528742-3087-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CALx668XCh46yMLajThuVzba9RRSxf+tEkNuMP9J7w-=vsZN8-Q@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Mike Turquette <mturquette@linaro.org>, Chen Fan <fan.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.k>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425528742-3087-1-git-send-email-d-gerlach@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>, Kevin Hilman <khilman@linaro.org>, Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5 March 2015 at 09:02, Pi-Cheng Chen <pi-cheng.chen@linaro.org> wrote:
-> In the case of Mediatek SoC, the intermediate frequency might not be one entry
-> of OPP table. To elaborate, the source clock node of the CPUs/Cluster on
-> Mediatek SoC is a mux. The mux has several PLLs as parents. When we are
-> doing CPU frequency scaling, the mux should re-parent to another stable PLL,
-> wait until the original parent PLL become stable, and then switch back to the
-> original parent. In this case, we could but we might not want the intermediate
-> frequency as part of OPP table. Therefore I save intermediate_freq instead of
-> intermediate frequency index in the cpufreq_dt_platform_datat struct.
+Use pdata-quirks to provide platform data required for reset
+of the wkup_m3 during boot.
 
-Hmm, I remember that discussion. Okay leave it as is.
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+---
+This patch requires the pdata introduced in this patch:
+https://www.mail-archive.com/linux-omap@vger.kernel.org/msg114622.html
 
-> BTW, is this case that intermediate frequency is not necessarily be one entry
-> of OPP table supported in the OPPv2 bindings?
+ arch/arm/mach-omap2/pdata-quirks.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Not yet, but will add a property for that.
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 190fa43..7a09513 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -18,6 +18,7 @@
+ 
+ #include <linux/platform_data/pinctrl-single.h>
+ #include <linux/platform_data/iommu-omap.h>
++#include <linux/platform_data/wkup_m3.h>
+ 
+ #include "common.h"
+ #include "common-board-devices.h"
+@@ -287,6 +288,14 @@ static void __init omap3_tao3530_legacy_init(void)
+ }
+ #endif /* CONFIG_ARCH_OMAP3 */
+ 
++#ifdef CONFIG_SOC_AM33XX
++static struct wkup_m3_platform_data wkup_m3_data = {
++	.reset_name = "wkup_m3",
++	.assert_reset = omap_device_assert_hardreset,
++	.deassert_reset = omap_device_deassert_hardreset,
++};
++#endif
++
+ #ifdef CONFIG_ARCH_OMAP4
+ static void __init omap4_sdp_legacy_init(void)
+ {
+@@ -382,6 +391,10 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
+ 	OF_DEV_AUXDATA("ti,am3517-emac", 0x5c000000, "davinci_emac.0",
+ 		       &am35xx_emac_pdata),
+ #endif
++#ifdef CONFIG_SOC_AM33XX
++	OF_DEV_AUXDATA("ti,am3353-wkup-m3", 0x44d00000, "44d00000.wkup_m3",
++		       &wkup_m3_data),
++#endif
+ #ifdef CONFIG_ARCH_OMAP4
+ 	OF_DEV_AUXDATA("ti,omap4-padconf", 0x4a100040, "4a100040.pinmux", &pcs_pdata),
+ 	OF_DEV_AUXDATA("ti,omap4-padconf", 0x4a31e040, "4a31e040.pinmux", &pcs_pdata),
+-- 
+2.3.0
