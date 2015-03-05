@@ -1,48 +1,30 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch V7 10/10] ARM: dts: Model IPQ LPASS audio hardware
-Date: Thu, 5 Mar 2015 17:40:01 +0000
-Message-ID: <20150305174001.GA21293@sirena.org.uk>
-References: <1425428519-12224-1-git-send-email-kwestfie@codeaurora.org>
- <1425428519-12224-11-git-send-email-kwestfie@codeaurora.org>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 1/4] ARM: OMAP2+: omap_hwmod: Introduce ti,no-init dt
+ property
+Date: Thu, 5 Mar 2015 18:16:32 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1503051815590.5613@utopia.booyaka.com>
+References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com> <1425561211-31003-2-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UHBXFp932X3uc+uS"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425428519-12224-11-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1425561211-31003-2-git-send-email-d-gerlach@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Dave Gerlach <d-gerlach@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, KEERTHY <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 5 Mar 2015, Dave Gerlach wrote:
 
---UHBXFp932X3uc+uS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Introduce a dt property, ti,no-init, that prevents hwmod initialization.
+> Even if a dt node is marked as disabled, hwmod still at least enables
+> the hwmod and programs the sysconfig before attempting to idle it at
+> boot. If an IP has been disabled by the hardware configuration on a
+> platform, this will cause a hang due to writing to inactive registers.
+> This property prevents that from happening by marking the hwmod as
+> _HWMOD_STATE_DISABLED during init.
 
-On Tue, Mar 03, 2015 at 04:21:59PM -0800, Kenneth Westfield wrote:
-> From: Kenneth Westfield <kwestfie@codeaurora.org>
->=20
-> Model the Qualcomm Technologies LPASS hardware for
-> the ipq806x SOC.
+I'm kind of wondering if hwmod should even touch a device if it's marked 
+as disabled in the DT.  Tony, what do you think?
 
-Reviwed-by: Mark Brown <broonie@kernel.org>
 
---UHBXFp932X3uc+uS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU+JTxAAoJECTWi3JdVIfQdyYH/Rd7VkZGEp4aAWCaF3e33yEb
-W5Weuczp3peW8msq4UUKFY3xMKkWtigjg42eMbt/8/T/2eQ07NYAIk2+gZjA1MPk
-q9yXfAWRKOXbWDyLJMoXxJ5H9OHs08R13Cp8kGU0Kn4xQAc0ny8MLi1VomSP6wq9
-O5ucny1wnNpjG22t//j158d+OG1bLS9i2oQGM/GRQBfr+nyoiBGO0Du7aJy9E+xX
-0TQsv+SRxZ0BRgKY1UAB4DpZgTIOtCqRBn9tP+zN5DYC3pjRH9uPWjn8mBfkdP4N
-eQMLbfoj4zKjolvj6X70wRDt2HAvbdy4uDSsK4zWSTxII+NIJR3DF9DzrZLWcZg=
-=vPPM
------END PGP SIGNATURE-----
-
---UHBXFp932X3uc+uS--
+- Paul
