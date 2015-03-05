@@ -1,47 +1,88 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] arm64: qcom: Add support for Qualcomm MSM8916 SoC
-Date: Thu, 5 Mar 2015 09:06:22 -0600
-Message-ID: <63B0478A-6282-4826-8991-46B0E4BA7BA5@codeaurora.org>
-References: <1425503602-24916-1-git-send-email-galak@codeaurora.org> <1425503602-24916-2-git-send-email-galak@codeaurora.org> <54F7883B.90704@codeaurora.org>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54F7883B.90704@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, Abhimanyu Kapur <abhimany@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] libfdt: Teach fdt_path_offset() about ':' path separator
+Date: Thu, 5 Mar 2015 09:23:48 -0600
+Message-ID: <CAL_JsqLXP8LccUXA+NNmGyCgbJSArVHCN5XvF17dkbahuook-Q@mail.gmail.com>
+References: <1425487459-20955-1-git-send-email-peter@hurleysoftware.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425487459-20955-1-git-send-email-peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 4, 2015 at 10:44 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
+> stdout-path defines ':' as a path separator and commit 75c28c09af99a
+> ("of: add optional options parameter to of_find_node_by_path()") added
+> the necessary support to parse paths terminated with ':' path separator.
+> commit 7914a7c5651a5 ("of: support passing console options with
+> stdout-path") added options string support to the stdout-path property,
+> which broke earlycon.
+>
+> Add the same support to fdt_path_offset() so earlycon can parse and
+> process stdout-path properties containing an options string.
+>
+> Cc: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 3.19+
+> Signed-off-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
 
-On Mar 4, 2015, at 4:33 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+This needs to be first applied to upstream dtc[1]. Please do a patch
+against dtc and send to devicetree-compiler list.
 
-> On 03/04/15 13:13, Kumar Gala wrote:
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 1b8e973..4c8b119 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -177,6 +177,15 @@ config ARCH_MEDIATEK
->> 	help
->> 	  Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
->> 
->> +config ARCH_QCOM
->> +	bool "Qualcomm Platforms"
->> +	select ARCH_REQUIRE_GPIOLIB
->> +	select COMMON_CLK_QCOM
->> +	select PINCTRL
->> +	select SOC_BUS
-> 
-> I imagine all we need is select PINCTRL here. SOC_BUS is not used, also
-> we shouldn't force COMMON_CLK_QCOM to be Y instead of M so please drop
-> that select. Also we dropped ARCH_REQUIRE_GPIOLIB in arm32 so it would
-> match if we just relied on ARCH_WANT_GPIOLIB that arm64 has by default
+Rob
 
-Will drop SOC_BUS.  We seem to have other arm64 platforms that set ARCH_REQUIRE_GPIOLIB.  Why should we not select COMMON_CLK_QCOM?  Can we do much useful without COMMON_CLK_QCOM set?
+[1] https://git.kernel.org/cgit/linux/kernel/git/jdl/dtc.git/
 
-- k
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> ---
+>  scripts/dtc/libfdt/fdt_ro.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/scripts/dtc/libfdt/fdt_ro.c b/scripts/dtc/libfdt/fdt_ro.c
+> index 02b6d68..a96e452 100644
+> --- a/scripts/dtc/libfdt/fdt_ro.c
+> +++ b/scripts/dtc/libfdt/fdt_ro.c
+> @@ -156,7 +156,8 @@ int fdt_subnode_offset(const void *fdt, int parentoffset,
+>
+>  int fdt_path_offset(const void *fdt, const char *path)
+>  {
+> -       const char *end = path + strlen(path);
+> +       const char *separator = strchr(path, ':');
+> +       const char *end = separator ? separator : path + strlen(path);
+>         const char *p = path;
+>         int offset = 0;
+>
+> @@ -166,7 +167,7 @@ int fdt_path_offset(const void *fdt, const char *path)
+>         if (*path != '/') {
+>                 const char *q = strchr(path, '/');
+>
+> -               if (!q)
+> +               if (!q || q > end)
+>                         q = end;
+>
+>                 p = fdt_get_alias_namelen(fdt, p, q - p);
+> @@ -177,7 +178,7 @@ int fdt_path_offset(const void *fdt, const char *path)
+>                 p = q;
+>         }
+>
+> -       while (*p) {
+> +       while (p < end) {
+>                 const char *q;
+>
+>                 while (*p == '/')
+> @@ -185,7 +186,7 @@ int fdt_path_offset(const void *fdt, const char *path)
+>                 if (! *p)
+>                         return offset;
+>                 q = strchr(p, '/');
+> -               if (! q)
+> +               if (!q || q > end)
+>                         q = end;
+>
+>                 offset = fdt_subnode_offset_namelen(fdt, offset, p, q-p);
+> --
+> 2.3.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
