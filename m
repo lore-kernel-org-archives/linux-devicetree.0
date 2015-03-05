@@ -1,55 +1,48 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Thu, 5 Mar 2015 17:04:50 +0000
-Message-ID: <20150305170450.GG14093@leverpostej>
-References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
- <1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
- <20150305122459.GC14093@leverpostej>
- <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] dt: spi: fsl-imx-cspi: add explicit compatible strings
+ and required clock properties
+Date: Thu, 5 Mar 2015 17:07:42 +0000
+Message-ID: <20150305170742.GT21293@sirena.org.uk>
+References: <1425496378-16561-1-git-send-email-mporter@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mrSJCujIr/bkIKwq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cwchoi00@gmail.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ideal.song@samsung.com" <ideal.song@samsung.com>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1425496378-16561-1-git-send-email-mporter@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@konsulko.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Robin Gong <b38343@freescale.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-[...]
+--mrSJCujIr/bkIKwq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> >> +       psci {
-> >> +               compatible = "arm,psci";
-> >> +               method = "smc";
-> >> +               cpu_off = <0x84000002>;
-> >> +               cpu_on = <0xC4000003>;
-> >> +       };
-> >
-> > Back at v2 you mentioned that CPU_OFF wasn't working [1].
-> >
-> > Do both CPU_ON and CPU_OFF work for all CPUs, including the boot CPU?
-> 
-> The CPU1 ~ CPU7 are well woking about CPU_ON/OFF.
-> CPU0 (boot CPU) is only well working for CPU_OFF.
-> But when I try to turn on the CPU0 after CPU_OFF, I failed it.
+On Wed, Mar 04, 2015 at 02:12:58PM -0500, Matt Porter wrote:
+> The fsl-imx-cspi binding contains language indicating compatible
+> strings to be used that is not valid for all supported parts
+> e.g. Should be "fsl,<soc>-cspi" or "fsl,<soc>-ecspi". Fix this
+> by enumerating the set of valid compatible strings.
 
-That's rather worrying. Can you look into what's going on here? I'd
-rather not have dts describing things which are known to be broken.
+Applied, thanks.  Please use subject lines matching the style for the
+subsystem.
 
-> > I take it CPUs boot at EL2?
+--mrSJCujIr/bkIKwq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Do the CPUs boot at EL1 or EL2?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-[...]
+iQEcBAEBCAAGBQJU+I1dAAoJECTWi3JdVIfQK1AH/RSjEmstR2azMLiZTv3YDX9/
+XAZm0IvY5cjGzq2FBAhRiSOqblHaHoOHiGUeH7ggo6a9FuMRXLLCpjQREB6LPl59
+CTAxwttQzwjADkFdzbPSrIJrD5an0G1U2PFLeXCgBXL4LEchCwvHz0Uhz0tS45wa
+GOGdX02GYf1fNZnREQjQYd2ddoZ69b8TTf0apUkzVWLi/ZVFtnh9JLPqlUcbIU6K
+ZJ7MRBTEt/aBTjqOT/LsxKrD27beeyyrJQMdmD92D3k5Fx/WHWhoAlB/rkTlKy3+
+QESYczYVFlYCzaWMSxR0s4lpwmFUv1so6gWtA98nvv5zs8JElZFgxMwwgIOKOdk=
+=XsN8
+-----END PGP SIGNATURE-----
 
-> > The timer node should be moved under the root node. It doesn't live on
-> > the bus; it's a component of the CPU.
-> 
-> OK. I'll move it according to your comment.
-
-Thanks.
-
-Mark.
+--mrSJCujIr/bkIKwq--
