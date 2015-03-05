@@ -1,54 +1,101 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
-Subject: [PATCH v2 1/1] DT: video: atmel_lcdc: Add example of fixed framebuffer memory
-Date: Thu,  5 Mar 2015 08:35:38 +0100
-Message-ID: <1425540938-20538-1-git-send-email-alexander.stein@systec-electronic.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency
+ control
+Date: Thu, 5 Mar 2015 08:42:07 +0100
+Message-ID: <20150305074207.GC11010@pengutronix.de>
+References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
+ <20150304112109.GB11010@pengutronix.de>
+ <CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Alexander Stein <alexander.stein@systec-electronic.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>
+To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This drivers allows a fixed framebuffer memory to be set by an additional
-IORESOURCE_MEM resource. Thus add an example to the DT documentation.
 
-Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
-Changes in v2:
-* Fix typo noticed by checkpatch.pl
++Cc Viresh Kumar
 
- Documentation/devicetree/bindings/video/atmel,lcdc.txt | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Viresh, this is the patch for the underlying clocks for the Mediatek
+cpufreq driver.
 
-diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-index f059dd0..ecb8da0 100644
---- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-+++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-@@ -10,7 +10,9 @@ Required properties:
- 	"atmel,at91sam9g45es-lcdc" ,
- 	"atmel,at91sam9rl-lcdc" ,
- 	"atmel,at32ap-lcdc"
--- reg : Should contain 1 register ranges(address and length)
-+- reg : Should contain 1 register ranges(address and length).
-+	Can contain an additional register range(address and length)
-+	for fixed framebuffer memory. Useful for dedicated memories.
- - interrupts : framebuffer controller interrupt
- - display: a phandle pointing to the display node
- 
-@@ -38,6 +40,14 @@ Example:
- 
- 	};
- 
-+Example for fixed framebuffer memory:
-+
-+	fb0: fb@0x00500000 {
-+		compatible = "atmel,at91sam9263-lcdc";
-+		reg = <0x00700000 0x1000 0x70000000 0x200000>;
-+		[...]
-+	};
-+
- Atmel LCDC Display
- -----------------------------------------------------
- Required properties (as per of_videomode_helper):
+On Thu, Mar 05, 2015 at 10:43:21AM +0800, Pi-Cheng Chen wrote:
+> Hi Sascha,
+> 
+> On 4 March 2015 at 19:21, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > On Wed, Mar 04, 2015 at 06:49:11PM +0800, pi-cheng.chen wrote:
+> >> This patch adds CPU mux clocks which are used by Mediatek cpufreq driver
+> >> for intermediate clock source switching. This patch is based on Mediatek
+> >> clock driver patches[1].
+> >>
+> >> [1] http://thread.gmane.org/gmane.linux.kernel/1892436
+> >>
+> >> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
+> >> ---
+> >> +static long clk_cpumux_determine_rate(struct clk_hw *hw, unsigned long rate,
+> >> +                                   unsigned long min_rate,
+> >> +                                   unsigned long max_rate,
+> >> +                                   unsigned long *best_parent_rate,
+> >> +                                   struct clk_hw **best_parent_p)
+> >> +{
+> >> +     struct clk *clk = hw->clk, *parent;
+> >> +     unsigned long parent_rate;
+> >> +     int i;
+> >> +
+> >> +     for (i = MAINPLL_INDEX; i >= ARMPLL_INDEX; i--) {
+> >> +             parent = clk_get_parent_by_index(clk, i);
+> >> +             if (!parent)
+> >> +                     return 0;
+> >> +
+> >> +             if (i == MAINPLL_INDEX) {
+> >> +                     parent_rate = __clk_get_rate(parent);
+> >> +                     if (parent_rate == rate)
+> >> +                             break;
+> >> +             }
+> >> +
+> >> +             parent_rate = __clk_round_rate(parent, rate);
+> >> +     }
+> >> +
+> >> +     *best_parent_rate = parent_rate;
+> >> +     *best_parent_p = __clk_get_hw(parent);
+> >> +     return parent_rate;
+> >> +}
+> >
+> > Why this determine_rate hook? If you want to switch the clock to some
+> > intermediate parent I would assume you do this explicitly by setting the
+> > parent and not implicitly by setting a rate.
+> >
+> 
+> I use determine_rate hook here because I am using generic cpufreq-dt
+> driver and I want to make clock switching transparent to cpufreq-dt.
+> I.e. when I am trying to switch the clock from ARMPLL to MAINPLL, I
+> call clk_set_rate() with the rate of MAINPLL, and determine_rate will
+> select MAINPLL as the new parent.
+
+We have clk_set_parent for changing the parent and clk_set_rate to
+change the rate. Use the former for changing the parent and the latter
+for changing the rate. What you are interested in is changing the
+parent, so use clk_set_parent for this and not abuse a side effect
+of clk_set_rate.
+
+My suggestion is to take another approach. Implement clk_set_rate for
+these muxes and in the set_rate hook:
+
+- switch mux to intermediate PLL parent
+- call clk_set_rate() for the real parent PLL
+- switch mux back to real parent PLL
+
+This way the things happening behind the scenes are completely transparent
+to the cpufreq driver and you can use cpufreq-dt as is without changes.
+
+Sascha
+
+
 -- 
-2.0.5
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
