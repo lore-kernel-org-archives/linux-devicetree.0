@@ -1,69 +1,36 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: am33xx: Move wkup_m3 node to soc node
- and add ranges
-Date: Thu, 5 Mar 2015 07:40:39 -0800
-Message-ID: <20150305154039.GD13520@atomide.com>
-References: <1425528742-3087-1-git-send-email-d-gerlach@ti.com>
- <1425528742-3087-3-git-send-email-d-gerlach@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425528742-3087-3-git-send-email-d-gerlach@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>, Kevin Hilman <khilman@linaro.org>, Felipe Balbi <balbi@ti.com>
+From: Matt Porter <mporter@konsulko.com>
+Subject: [PATCH] dt: submitting-patches: clarify that DT maintainers are to be cced on bindings
+Date: Thu,  5 Mar 2015 10:53:11 -0500
+Message-ID: <1425570791-1006-1-git-send-email-mporter@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Devicetree List <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Dave Gerlach <d-gerlach@ti.com> [150304 20:14]:
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> ---
->  arch/arm/boot/dts/am33xx.dtsi | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index acd3705..086415c 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -77,10 +77,23 @@
->  	 */
->  	soc {
->  		compatible = "ti,omap-infra";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0     0x44d00000 0x4000>,
-> +			 <0x80000 0x44d80000 0x2000>;
-> +
+The exact steps provided for submitting binding patches can be read
+as requiring the bindings to be sent only to the devicetree@vger.kernel.org
+list. Since the DT maintainers would like to be Cced on any binding
+submissions, make this requirement explicit in step 2.
 
-I think putting the ranges here will cause issues for adding
-ranges for anything else.
+Signed-off-by: Matt Porter <mporter@konsulko.com>
+---
+ Documentation/devicetree/bindings/submitting-patches.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-How about do something like this instead (untested):
-
-ocp {
-	l4_wkup: l4_wkup@44c00000 {
-		compatible = "am335-l4-wkup", "simple-bus";
-		ranges = <0 0x44c00000 0x3fffff>;
-
-		wkup_m3: wkup_m3@44d00000 {
-			compatible = "ti,am3353-wkup-m3";
-			reg = <0x1000000     0x4000>,	/* M3 UMEM */
-			      <0x180000	     0x2000>;	/* M3 DMEM */
-			ti,hwmods = "wkup_m3";
-			ti,pm-firmware = "am335x-pm-firmware.elf";
-		};
-
-		...
-	};
-};
-
-That way we can start moving also the other l4_wkup components there
-eventuallly without having to redo the ranges again for wkup_m3.
-
-You can also look at how the scm_conf was done for dm816x.dtsi for an
-example, and the recent large set of patches posted by Tero.
-
-Regards,
-
-Tony
+diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+index 56742bc..7d44eae 100644
+--- a/Documentation/devicetree/bindings/submitting-patches.txt
++++ b/Documentation/devicetree/bindings/submitting-patches.txt
+@@ -12,6 +12,9 @@ I. For patch submitters
+ 
+        devicetree@vger.kernel.org
+ 
++     and Cc: the DT maintainers. Use scripts/get_maintainer.pl to identify
++     all of the DT maintainers.
++
+   3) The Documentation/ portion of the patch should come in the series before
+      the code implementing the binding.
+ 
+-- 
+1.8.4
