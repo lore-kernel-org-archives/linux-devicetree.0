@@ -1,49 +1,68 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/2] ARM: shmobile: ape6evm: Fix GPIO keys and wake-up
-Date: Thu, 05 Mar 2015 12:42:07 +0200
-Message-ID: <5844551.UVahD0ukvm@avalon>
-References: <1425059319-13403-1-git-send-email-geert+renesas@glider.be> <20150305003432.GA3011@verge.net.au>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [RFC/PATCH 0/2] spi: spi-dw: Select 16b or 32b register access
+Date: Thu, 05 Mar 2015 12:43:53 +0200
+Message-ID: <1425552233.14897.189.camel@linux.intel.com>
+References: <1425501075-17081-1-git-send-email-tthayer@opensource.altera.com>
+	 <1425501868.14897.178.camel@linux.intel.com>
+	 <54F7809E.2010307@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150305003432.GA3011@verge.net.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, linux-sh@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54F7809E.2010307-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Wed, 2015-03-04 at 16:01 -0600, Thor Thayer wrote:
+> Hi Andy,
+> 
+> On 03/04/2015 02:44 PM, Andy Shevchenko wrote:
+> > On Wed, 2015-03-04 at 14:31 -0600, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> >> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> >>
+> >> The Altera Arria10 SoC requires 32 bit accesses to peripherals. The
+> >> DesignWare SPI peripheral registers are on 32bit boundaries so this
+> >> patch is minimal. Function pointers are used to select 32bit access
+> >> or 16bit accesses.
+> >
+> >
+> > So, what is exactly the issue when we read only half of the register?
+> > Bus lock, or what?
+> >
+> 
+> The read actually works on our chip but I changed both read and write to 
+> be consistent. For Arria10, on a 16 bit write the data isn't written 
+> into the DesignWare register.
 
-On Thursday 05 March 2015 09:34:33 Simon Horman wrote:
-> On Fri, Feb 27, 2015 at 06:48:37PM +0100, Geert Uytterhoeven wrote:
-> > 	Hi Simon, Magnus,
-> > 
-> > This patch series adds the missing pull-up bias configuration for the
-> > switches on the r8a73a4/ape6evm development board, and configures the
-> > custom switch as a wake-up source.
-> > 
-> > After this, the keys actually work, and the system can be resumed from
-> > s2ram by pressing the custom switch.
-> > 
-> > This depends functionally on "[PATCH 1/4] pinctrl: sh-pfc: Do not
-> > overwrite bias configuration" in the series "[PATCH 0/4] pinctrl:
-> > sh-pfc: Fix pin bias and cleanups" which I've just sent. But as this is
-> > DTS, it can be applied independently.
-> > 
-> > Thanks for your comments!
-> 
-> Hi Geert,
-> 
-> this seems fine to me. But I am reluctant to queue it up before the PFC
-> changes are accepted, lest there be some change in direction.
-> 
-> Please repost once the PFC changes have been accepted.
+How did you exactly check this?
 
-I've acked the dependency, but we should probably wait for Linus to apply it.
+> 
+> In reply to your other email, yes it does support the DW_apb_ssi but the 
+> Arria10 architecture requires 32 bit access (actually as you point out, 
+> 32 bit writes). We're using the original driver on our older chips but 
+> Arria10 requires upstream changes.
+
+Can you check if the following helps in your case:
+
+--- a/drivers/spi/spi-dw.h
++++ b/drivers/spi/spi-dw.h
+@@ -170,6 +170,8 @@ static inline u16 dw_readw(struct dw_spi *dws, u32 offset)
+ static inline void dw_writew(struct dw_spi *dws, u32 offset, u16 val)
+ {
+        __raw_writew(val, dws->regs + offset);
++       mmiowb():
++       __raw_readw(dws->regs + offset);
+ }
+ 
+ static inline void spi_enable_chip(struct dw_spi *dws, int enable)
 
 -- 
-Regards,
+Andy Shevchenko <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Intel Finland Oy
 
-Laurent Pinchart
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
