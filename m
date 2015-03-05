@@ -1,92 +1,106 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] dmaengine: usb-dmac: Add Renesas USB DMA Controller
- (USB-DMAC) driver
-Date: Thu, 5 Mar 2015 21:51:20 +0530
-Message-ID: <20150305162120.GK2613@intel.com>
-References: <1423469645-2976-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1423469645-2976-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20150305100917.GD2613@intel.com>
- <HKNPR06MB32227E774659BA1179C9C5AD81F0@HKNPR06MB322.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <HKNPR06MB32227E774659BA1179C9C5AD81F0-xIjp3w5QIjwsJtb0Mgt7d79PrO6axcR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yoshihiro shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, kuninori morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH 2/3] ARM: at91/dt: fix macb compatible strings
+Date: Thu,  5 Mar 2015 17:27:21 +0100
+Message-ID: <1425572842-6084-3-git-send-email-boris.brezillon@free-electrons.com>
+References: <1425572842-6084-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425572842-6084-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 05, 2015 at 12:35:49PM +0000, yoshihiro shimoda wrote:
-> Hi Vinod,
-> 
-> Thank you for your review!
-> 
-> > On Mon, Feb 09, 2015 at 05:14:05PM +0900, Yoshihiro Shimoda wrote:
-> > > +struct usb_dmac_chan {
-> > > +	struct dma_chan chan;
-> > > +	void __iomem *iomem;
-> > > +	unsigned int index;
-> > > +
-> > > +	spinlock_t lock;
-> > > +
-> > > +	struct {
-> > > +		struct list_head free;
-> > > +		struct list_head pending;
-> > > +		struct list_head active;
-> > > +		struct list_head done;
-> > > +		struct list_head wait;
-> > > +		struct usb_dmac_desc *running;
-> > > +		struct usb_dmac_desc *last_done;
-> > > +
-> > > +		struct list_head chunks_free;
-> > > +
-> > > +		struct list_head pages;
-> > Thats too many lists, do we need so many? Shouldn't free and done be same
-> > thing. Similarly whats meant by wait here?
-> > Do you submit multiple descriptors to HW?
-> 
-> No, I don't submit multiple descriptors to HW.
-> So, as you say in the end of this email, I am thinking that I should use virt-dma infrastructure.
-That will be good and greatly simplify..
+Some at91 SoCs embed a 10/100 Mbit Ethernet IP, that is based on the
+at91sam9260 SoC.
+Fix at91 DTs accordingly.
 
-> > > +static enum dma_status usb_dmac_tx_status(struct dma_chan *chan,
-> > > +					  dma_cookie_t cookie,
-> > > +					  struct dma_tx_state *txstate)
-> > > +{
-> > > +	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
-> > > +	enum dma_status status;
-> > > +	unsigned long flags;
-> > > +	unsigned int residue;
-> > > +
-> > > +	status = dma_cookie_status(chan, cookie, txstate);
-> > > +	/* a client driver will get residue after DMA_COMPLETE */
-> > > +	if (!txstate)
-> > > +		return status;
-> > > +
-> > > +	spin_lock_irqsave(&uchan->lock, flags);
-> > > +	if (status == DMA_COMPLETE)
-> > > +		residue = usb_dmac_chan_get_residue_if_complete(uchan);
-> > if it is completed then residue should be zero, so why are we computing this
-> 
-> This USB-DMAC has a function to detect a USB specific packet (called short-length-packet).
-> If the USB-DMAC detects it, the USB-DMAC assumes the USB-DMAC completes the transfer.
-> 
-> For example:
->  - A client driver submits 2048 bytes as RX.
->  - When a USB controller received 512 + 488 bytes totally,
->    the USB-DMAC detected it and completed the transfer.
->   - However, a USB controller just knows the bytes of last packet (In this case, 488byte.)
->         So, the USB controller driver cannot know that it got how many bytes.
->     Therefore, this USB-DMAC driver is computing this bytes.
-> 
-> I'm not sure about the detail, but cppi41.c seems to compute the residue even if it is completed.
-I suspected this to be case, so you are confirming my hunch, thanks :)
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+---
+ arch/arm/boot/dts/at91sam9260.dtsi      | 2 +-
+ arch/arm/boot/dts/at91sam9263.dtsi      | 2 +-
+ arch/arm/boot/dts/at91sam9g45.dtsi      | 2 +-
+ arch/arm/boot/dts/at91sam9x5_macb0.dtsi | 2 +-
+ arch/arm/boot/dts/at91sam9x5_macb1.dtsi | 2 +-
+ arch/arm/boot/dts/sama5d3_emac.dtsi     | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index fff0ee6..9f7c737 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -842,7 +842,7 @@
+ 			};
+ 
+ 			macb0: ethernet@fffc4000 {
+-				compatible = "cdns,at32ap7000-macb", "cdns,macb";
++				compatible = "cdns,at91sam9260-macb", "cdns,macb";
+ 				reg = <0xfffc4000 0x100>;
+ 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH 3>;
+ 				pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index 1f67bb4..340179e 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -845,7 +845,7 @@
+ 			};
+ 
+ 			macb0: ethernet@fffbc000 {
+-				compatible = "cdns,at32ap7000-macb", "cdns,macb";
++				compatible = "cdns,at91sam9260-macb", "cdns,macb";
+ 				reg = <0xfffbc000 0x100>;
+ 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH 3>;
+ 				pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index ee80aa9..586eab7 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -956,7 +956,7 @@
+ 			};
+ 
+ 			macb0: ethernet@fffbc000 {
+-				compatible = "cdns,at32ap7000-macb", "cdns,macb";
++				compatible = "cdns,at91sam9260-macb", "cdns,macb";
+ 				reg = <0xfffbc000 0x100>;
+ 				interrupts = <25 IRQ_TYPE_LEVEL_HIGH 3>;
+ 				pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/at91sam9x5_macb0.dtsi b/arch/arm/boot/dts/at91sam9x5_macb0.dtsi
+index 57e89d1..73d7e30 100644
+--- a/arch/arm/boot/dts/at91sam9x5_macb0.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5_macb0.dtsi
+@@ -53,7 +53,7 @@
+ 			};
+ 
+ 			macb0: ethernet@f802c000 {
+-				compatible = "cdns,at32ap7000-macb", "cdns,macb";
++				compatible = "cdns,at91sam9260-macb", "cdns,macb";
+ 				reg = <0xf802c000 0x100>;
+ 				interrupts = <24 IRQ_TYPE_LEVEL_HIGH 3>;
+ 				pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/at91sam9x5_macb1.dtsi b/arch/arm/boot/dts/at91sam9x5_macb1.dtsi
+index 663676c..d81980c 100644
+--- a/arch/arm/boot/dts/at91sam9x5_macb1.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5_macb1.dtsi
+@@ -41,7 +41,7 @@
+ 			};
+ 
+ 			macb1: ethernet@f8030000 {
+-				compatible = "cdns,at32ap7000-macb", "cdns,macb";
++				compatible = "cdns,at91sam9260-macb", "cdns,macb";
+ 				reg = <0xf8030000 0x100>;
+ 				interrupts = <27 IRQ_TYPE_LEVEL_HIGH 3>;
+ 				pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/sama5d3_emac.dtsi b/arch/arm/boot/dts/sama5d3_emac.dtsi
+index fe2af92..b4544cf 100644
+--- a/arch/arm/boot/dts/sama5d3_emac.dtsi
++++ b/arch/arm/boot/dts/sama5d3_emac.dtsi
+@@ -41,7 +41,7 @@
+ 			};
+ 
+ 			macb1: ethernet@f802c000 {
+-				compatible = "cdns,at32ap7000-macb", "cdns,macb";
++				compatible = "cdns,at91sam9260-macb", "cdns,macb";
+ 				reg = <0xf802c000 0x100>;
+ 				interrupts = <35 IRQ_TYPE_LEVEL_HIGH 3>;
+ 				pinctrl-names = "default";
 -- 
-~Vinod
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
