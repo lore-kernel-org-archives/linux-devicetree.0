@@ -1,215 +1,92 @@
-From: Aleksei Mamlin <mamlinav@gmail.com>
-Subject: [PATCH v2] input: goodix: Add device tree support
-Date: Thu,  5 Mar 2015 19:18:41 +0300
-Message-ID: <1425572321-6564-1-git-send-email-mamlinav@gmail.com>
-References: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>, Hans de Goede <hdegoede@redhat.com>, Aleksei Mamlin <mamlinav@gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] dmaengine: usb-dmac: Add Renesas USB DMA Controller
+ (USB-DMAC) driver
+Date: Thu, 5 Mar 2015 21:51:20 +0530
+Message-ID: <20150305162120.GK2613@intel.com>
+References: <1423469645-2976-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1423469645-2976-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20150305100917.GD2613@intel.com>
+ <HKNPR06MB32227E774659BA1179C9C5AD81F0@HKNPR06MB322.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <HKNPR06MB32227E774659BA1179C9C5AD81F0-xIjp3w5QIjwsJtb0Mgt7d79PrO6axcR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: yoshihiro shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, kuninori morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support and binding information for Goodix
-GT9xx series touchscreen controller.
-It also adds support for 5-finger chips, like GT911 and GT912, which
-can be found on ARM tablets, like Wexler TAB7200 and MSI Primo73.
+On Thu, Mar 05, 2015 at 12:35:49PM +0000, yoshihiro shimoda wrote:
+> Hi Vinod,
+> 
+> Thank you for your review!
+> 
+> > On Mon, Feb 09, 2015 at 05:14:05PM +0900, Yoshihiro Shimoda wrote:
+> > > +struct usb_dmac_chan {
+> > > +	struct dma_chan chan;
+> > > +	void __iomem *iomem;
+> > > +	unsigned int index;
+> > > +
+> > > +	spinlock_t lock;
+> > > +
+> > > +	struct {
+> > > +		struct list_head free;
+> > > +		struct list_head pending;
+> > > +		struct list_head active;
+> > > +		struct list_head done;
+> > > +		struct list_head wait;
+> > > +		struct usb_dmac_desc *running;
+> > > +		struct usb_dmac_desc *last_done;
+> > > +
+> > > +		struct list_head chunks_free;
+> > > +
+> > > +		struct list_head pages;
+> > Thats too many lists, do we need so many? Shouldn't free and done be same
+> > thing. Similarly whats meant by wait here?
+> > Do you submit multiple descriptors to HW?
+> 
+> No, I don't submit multiple descriptors to HW.
+> So, as you say in the end of this email, I am thinking that I should use virt-dma infrastructure.
+That will be good and greatly simplify..
 
-Changes since v1:
-* Merge patches into single patch.
-* Use max touch number from config instead of hardcoding.
-* Update description in Kconfig.
+> > > +static enum dma_status usb_dmac_tx_status(struct dma_chan *chan,
+> > > +					  dma_cookie_t cookie,
+> > > +					  struct dma_tx_state *txstate)
+> > > +{
+> > > +	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
+> > > +	enum dma_status status;
+> > > +	unsigned long flags;
+> > > +	unsigned int residue;
+> > > +
+> > > +	status = dma_cookie_status(chan, cookie, txstate);
+> > > +	/* a client driver will get residue after DMA_COMPLETE */
+> > > +	if (!txstate)
+> > > +		return status;
+> > > +
+> > > +	spin_lock_irqsave(&uchan->lock, flags);
+> > > +	if (status == DMA_COMPLETE)
+> > > +		residue = usb_dmac_chan_get_residue_if_complete(uchan);
+> > if it is completed then residue should be zero, so why are we computing this
+> 
+> This USB-DMAC has a function to detect a USB specific packet (called short-length-packet).
+> If the USB-DMAC detects it, the USB-DMAC assumes the USB-DMAC completes the transfer.
+> 
+> For example:
+>  - A client driver submits 2048 bytes as RX.
+>  - When a USB controller received 512 + 488 bytes totally,
+>    the USB-DMAC detected it and completed the transfer.
+>   - However, a USB controller just knows the bytes of last packet (In this case, 488byte.)
+>         So, the USB controller driver cannot know that it got how many bytes.
+>     Therefore, this USB-DMAC driver is computing this bytes.
+> 
+> I'm not sure about the detail, but cppi41.c seems to compute the residue even if it is completed.
+I suspected this to be case, so you are confirming my hunch, thanks :)
 
-Datasheets can be found here:
-https://drive.google.com/folderview?id=0BxCVOQS3ZymGfmJyY2RKbE5XbVlKNlktVTlwV0lxNEdxd2dzeWZER094cmJPVnMxN1F0Yzg&usp=sharing
-
-Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
----
- .../bindings/input/touchscreen/goodix.txt          | 29 ++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- drivers/input/touchscreen/Kconfig                  |  5 ++--
- drivers/input/touchscreen/goodix.c                 | 34 ++++++++++++++++++----
- 4 files changed, 61 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-new file mode 100644
-index 0000000..8ba98ee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-@@ -0,0 +1,29 @@
-+Device tree bindings for Goodix GT9xx series touchscreen controller
-+
-+Required properties:
-+
-+ - compatible		: Should be "goodix,gt911"
-+				 or "goodix,gt9110"
-+				 or "goodix,gt912"
-+				 or "goodix,gt927"
-+				 or "goodix,gt9271"
-+				 or "goodix,gt928"
-+				 or "goodix,gt967"
-+ - reg			: I2C address of the chip. Should be 0x5d or 0x14
-+ - interrupt-parent	: Interrupt controller to which the chip is connected
-+ - interrupts		: Interrupt to which the chip is connected
-+
-+Example:
-+
-+	i2c@00000000 {
-+		/* ... */
-+
-+		gt928@5d {
-+			compatible = "goodix,gt928";
-+			reg = <0x5d>;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <0 0>;
-+		};
-+
-+		/* ... */
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389ca13..ab6852d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -76,6 +76,7 @@ geniatech	Geniatech, Inc.
- giantplus	Giantplus Technology Co., Ltd.
- globalscale	Globalscale Technologies, Inc.
- gmt	Global Mixed-mode Technology, Inc.
-+goodix	Shenzhen Huiding Technology Co., Ltd.
- google	Google, Inc.
- gumstix	Gumstix, Inc.
- gw	Gateworks Corporation
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index 5891752..2adf724 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -297,11 +297,12 @@ config TOUCHSCREEN_FUJITSU
- 
- config TOUCHSCREEN_GOODIX
- 	tristate "Goodix I2C touchscreen"
--	depends on I2C && ACPI
-+	depends on I2C
- 	help
- 	  Say Y here if you have the Goodix touchscreen (such as one
- 	  installed in Onda v975w tablets) connected to your
--	  system.
-+	  system. It also supports 5-finger chip models, which can be
-+	  found on ARM tablets, like Wexler TAB7200 and MSI Primo73.
- 
- 	  If unsure, say N.
- 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index ca19668..efba6a3 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -23,6 +23,8 @@
- #include <linux/irq.h>
- #include <linux/interrupt.h>
- #include <linux/slab.h>
-+#include <linux/acpi.h>
-+#include <linux/of.h>
- #include <asm/unaligned.h>
- 
- struct goodix_ts_data {
-@@ -48,6 +50,7 @@ struct goodix_ts_data {
- #define GOODIX_REG_VERSION		0x8140
- 
- #define RESOLUTION_LOC		1
-+#define MAX_CONTACTS_LOC	5
- #define TRIGGER_LOC		6
- 
- static const unsigned long goodix_irq_flags[] = {
-@@ -99,7 +102,7 @@ static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
- 	}
- 
- 	touch_num = data[0] & 0x0f;
--	if (touch_num > GOODIX_MAX_CONTACTS)
-+	if (touch_num > ts->max_touch_num)
- 		return -EPROTO;
- 
- 	if (touch_num > 1) {
-@@ -141,7 +144,7 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
-  */
- static void goodix_process_events(struct goodix_ts_data *ts)
- {
--	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CONTACTS];
-+	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
- 	int touch_num;
- 	int i;
- 
-@@ -202,21 +205,23 @@ static void goodix_read_config(struct goodix_ts_data *ts)
- 		ts->abs_x_max = GOODIX_MAX_WIDTH;
- 		ts->abs_y_max = GOODIX_MAX_HEIGHT;
- 		ts->int_trigger_type = GOODIX_INT_TRIGGER;
-+		ts->max_touch_num = GOODIX_MAX_CONTACTS;
- 		return;
- 	}
- 
- 	ts->abs_x_max = get_unaligned_le16(&config[RESOLUTION_LOC]);
- 	ts->abs_y_max = get_unaligned_le16(&config[RESOLUTION_LOC + 2]);
- 	ts->int_trigger_type = (config[TRIGGER_LOC]) & 0x03;
--	if (!ts->abs_x_max || !ts->abs_y_max) {
-+	ts->max_touch_num = (config[MAX_CONTACTS_LOC]) & 0x0f;
-+	if (!ts->abs_x_max || !ts->abs_y_max || !ts->max_touch_num) {
- 		dev_err(&ts->client->dev,
- 			"Invalid config, using defaults\n");
- 		ts->abs_x_max = GOODIX_MAX_WIDTH;
- 		ts->abs_y_max = GOODIX_MAX_HEIGHT;
-+		ts->max_touch_num = GOODIX_MAX_CONTACTS;
- 	}
- }
- 
--
- /**
-  * goodix_read_version - Read goodix touchscreen version
-  *
-@@ -295,7 +300,7 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
- 	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
- 	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
- 
--	input_mt_init_slots(ts->input_dev, GOODIX_MAX_CONTACTS,
-+	input_mt_init_slots(ts->input_dev, ts->max_touch_num,
- 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
- 
- 	ts->input_dev->name = "Goodix Capacitive TouchScreen";
-@@ -372,11 +377,27 @@ static const struct i2c_device_id goodix_ts_id[] = {
- 	{ }
- };
- 
-+#ifdef CONFIG_ACPI
- static const struct acpi_device_id goodix_acpi_match[] = {
- 	{ "GDIX1001", 0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
-+#endif
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id goodix_of_match[] = {
-+	{ .compatible = "goodix,gt911" },
-+	{ .compatible = "goodix,gt9110" },
-+	{ .compatible = "goodix,gt912" },
-+	{ .compatible = "goodix,gt927" },
-+	{ .compatible = "goodix,gt9271" },
-+	{ .compatible = "goodix,gt928" },
-+	{ .compatible = "goodix,gt967" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, goodix_of_match);
-+#endif
- 
- static struct i2c_driver goodix_ts_driver = {
- 	.probe = goodix_ts_probe,
-@@ -384,7 +405,8 @@ static struct i2c_driver goodix_ts_driver = {
- 	.driver = {
- 		.name = "Goodix-TS",
- 		.owner = THIS_MODULE,
--		.acpi_match_table = goodix_acpi_match,
-+		.acpi_match_table = ACPI_PTR(goodix_acpi_match),
-+		.of_match_table = of_match_ptr(goodix_of_match),
- 	},
- };
- module_i2c_driver(goodix_ts_driver);
 -- 
-2.0.5
+~Vinod
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
