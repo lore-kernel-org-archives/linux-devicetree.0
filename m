@@ -1,92 +1,87 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH 1/2] dt-bindings: binding for jz4780-{nand,bch}
-Date: Thu, 5 Mar 2015 17:27:40 +0000
-Message-ID: <1425576461-52412-2-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1425576461-52412-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425576461-52412-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dwmw2@infradead.org, computersforpeace@gmail.com
-Cc: Zubair.Kakakhel@imgtec.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+From: Aleksei Mamlin <mamlinav@gmail.com>
+Subject: [PATCH] input: goodix: Use max touch number from device config
+Date: Thu,  5 Mar 2015 20:32:24 +0300
+Message-ID: <1425576744-25170-1-git-send-email-mamlinav@gmail.com>
+References: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>, Hans de Goede <hdegoede@redhat.com>, Aleksei Mamlin <mamlinav@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+Use max number of touches from device config instead of hardcoding.
 
-Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
-as well as the hardware BCH controller, used by the jz4780_{nand,bch}
-drivers.
-
-Signed-off-by: Alex Smith <alex@alex-smith.me.uk>
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
 ---
- .../bindings/mtd/ingenic,jz4780-nand.txt           | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+ drivers/input/touchscreen/goodix.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-new file mode 100644
-index 0000000..6f2e128
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-@@ -0,0 +1,57 @@
-+* Ingenic JZ4780 NAND/BCH
-+
-+This file documents the device tree bindings for NAND flash devices on the
-+JZ4780. NAND devices are connected to the NEMC controller (described in
-+memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
-+be children of the NEMC node.
-+
-+Required NAND device properties:
-+- compatible: Should be set to "ingenic,jz4780-nand".
-+- reg: For each bank with a NAND chip attached, should specify a bank number,
-+  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
-+
-+Optional NAND device properties:
-+- ingenic,bch-device: To make use of the hardware BCH controller, this property
-+  must contain a phandle for the BCH controller node. The required properties
-+  for this node are described below. If this is not specified, software BCH
-+  will be used instead.
-+- ingenic,ecc-size: ECC block size in bytes.
-+- ingenic,ecc-strength: ECC strength (max number of correctable bits).
-+- ingenic,busy-gpio: GPIO specifier for the busy pin.
-+- ingenic,wp-gpio: GPIO specifier for the write protect pin.
-+
-+Example:
-+
-+nemc: nemc@13410000 {
-+	...
-+
-+	nand: nand@1 {
-+		compatible = "ingenic,jz4780-nand";
-+		reg = <1 0 0x1000000>;	/* Bank 1 */
-+
-+		ingenic,bch-device = <&bch>;
-+		ingenic,ecc-size = <1024>;
-+		ingenic,ecc-strength = <24>;
-+
-+		ingenic,busy-gpio = <&gpa 20 GPIO_ACTIVE_LOW>;
-+		ingenic,wp-gpio = <&gpf 22 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+The BCH controller is a separate SoC component used for error correction on
-+NAND devices. The following is a description of the device properties for a
-+BCH controller.
-+
-+Required BCH properties:
-+- compatible: Should be set to "ingenic,jz4780-bch".
-+- reg: Should specify the BCH controller registers location and length.
-+- clocks: Clock for the BCH controller.
-+
-+Example:
-+
-+bch: bch@134d0000 {
-+	compatible = "ingenic,jz4780-bch";
-+	reg = <0x134d0000 0x10000>;
-+
-+	clocks = <&cgu JZ4780_CLK_BCH>;
-+};
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index ca19668..a3e2057 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -48,6 +48,7 @@ struct goodix_ts_data {
+ #define GOODIX_REG_VERSION		0x8140
+ 
+ #define RESOLUTION_LOC		1
++#define MAX_CONTACTS_LOC	5
+ #define TRIGGER_LOC		6
+ 
+ static const unsigned long goodix_irq_flags[] = {
+@@ -99,7 +100,7 @@ static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
+ 	}
+ 
+ 	touch_num = data[0] & 0x0f;
+-	if (touch_num > GOODIX_MAX_CONTACTS)
++	if (touch_num > ts->max_touch_num)
+ 		return -EPROTO;
+ 
+ 	if (touch_num > 1) {
+@@ -141,7 +142,7 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
+  */
+ static void goodix_process_events(struct goodix_ts_data *ts)
+ {
+-	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CONTACTS];
++	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
+ 	int touch_num;
+ 	int i;
+ 
+@@ -202,21 +203,23 @@ static void goodix_read_config(struct goodix_ts_data *ts)
+ 		ts->abs_x_max = GOODIX_MAX_WIDTH;
+ 		ts->abs_y_max = GOODIX_MAX_HEIGHT;
+ 		ts->int_trigger_type = GOODIX_INT_TRIGGER;
++		ts->max_touch_num = GOODIX_MAX_CONTACTS;
+ 		return;
+ 	}
+ 
+ 	ts->abs_x_max = get_unaligned_le16(&config[RESOLUTION_LOC]);
+ 	ts->abs_y_max = get_unaligned_le16(&config[RESOLUTION_LOC + 2]);
+ 	ts->int_trigger_type = (config[TRIGGER_LOC]) & 0x03;
+-	if (!ts->abs_x_max || !ts->abs_y_max) {
++	ts->max_touch_num = (config[MAX_CONTACTS_LOC]) & 0x0f;
++	if (!ts->abs_x_max || !ts->abs_y_max || !ts->max_touch_num) {
+ 		dev_err(&ts->client->dev,
+ 			"Invalid config, using defaults\n");
+ 		ts->abs_x_max = GOODIX_MAX_WIDTH;
+ 		ts->abs_y_max = GOODIX_MAX_HEIGHT;
++		ts->max_touch_num = GOODIX_MAX_CONTACTS;
+ 	}
+ }
+ 
+-
+ /**
+  * goodix_read_version - Read goodix touchscreen version
+  *
+@@ -295,7 +298,7 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
+ 	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
+ 	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
+ 
+-	input_mt_init_slots(ts->input_dev, GOODIX_MAX_CONTACTS,
++	input_mt_init_slots(ts->input_dev, ts->max_touch_num,
+ 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+ 
+ 	ts->input_dev->name = "Goodix Capacitive TouchScreen";
 -- 
-1.9.1
+2.0.5
+
