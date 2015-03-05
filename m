@@ -1,70 +1,102 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] i2c: sunxi: Add Reduced Serial Bus (RSB) support
-Date: Thu, 5 Mar 2015 19:40:44 +0100
-Message-ID: <20150305184044.GA881@katana>
-References: <1425284686-5116-1-git-send-email-wens@csie.org>
- <1425284686-5116-2-git-send-email-wens@csie.org>
- <20150304172710.GA884@katana>
- <20150305182817.GB4911@lukather>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150305182817.GB4911@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [Patch V7 02/10] ASoC: qcom: Document LPASS CPU bindings
+Date: Thu, 5 Mar 2015 12:52:30 -0600
+Message-ID: <7E5AFC65-1705-4BDC-B57F-0444E83A8987@codeaurora.org>
+References: <1425428519-12224-1-git-send-email-kwestfie@codeaurora.org> <1425428519-12224-3-git-send-email-kwestfie@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1425428519-12224-3-git-send-email-kwestfie@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>
+Cc: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---0F1p//8PRICkK4MW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mar 3, 2015, at 6:21 PM, Kenneth Westfield <kwestfie@codeaurora.org> wrote:
 
+> From: Kenneth Westfield <kwestfie@codeaurora.org>
+> 
+> Add documentation to the sound directory of the
+> device-tree bindings for the QTi LPASS CPU DAI
+> device.
+> 
+> Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
+> Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
+> ---
+> .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 49 ++++++++++++++++++++++
+> 1 file changed, 49 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e7c6e9321863f022ebf0d51b75d7bb83c10b9062
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+> @@ -0,0 +1,49 @@
+> +* Qualcomm Technologies LPASS CPU DAI
+> +
+> +This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
+> +
+> +Required properties:
+> +
+> +- compatible		: "qcom,lpass-cpu"
+> +- clocks		: Must contain an entry for each entry in clock-names.
+> +- clock-names		: A list which must include the following entries:
+> +				* "ahbix-clk"
+> +				* "mi2s-osr-clk"
+> +				* "mi2s-bit-clk"
+> +- interrupts		: Must contain an entry for each entry in
+> +			  interrupt-names.
+> +- interrupt-names	: A list which must include the following entries:
+> +				* "lpass-irq-lpaif"
+> +- pinctrl-N		: One property must exist for each entry in
+> +			  pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
+> +			  for details of the property values.
+> +- pinctrl-names		: Must contain a "default" entry.
+> +- reg			: Must contain an address for each entry in reg-names.
+> +- reg-names		: A list which must include the following entries:
+> +				* "lpass-lpaif"
+> +
+> +Required subnodes:
+> +
+> +- qcom,adsp		: Audio DSP sub-node
+> +
 
-> > I don't have the bandwidth for a full review right now. However, I
-> > already wanted to tell you guys that my gut feeling is that this
-> > protocol is quite far away from I2C. P2WI was already at the edge.
-> > Maybe there is a better place for such custom stuff? I dunno yet.
->=20
-> That's unfortunate, especially since it looks closer to SPI than what
-> P2WI even was.
+What is the intent of this subnode?
 
-SPI? I assume you mean I2C. Can you elaborate your reasoning?
+> +Optional Audio DSP subnode properties:
+> +
+> +- status		: "disabled" indicates the adsp is not available.
+> +
+> +Example:
+> +
+> +lpass@28100000 {
+> +	compatible = "qcom,lpass-cpu";
+> +	clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
+> +	clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
+> +	interrupts = <0 85 1>;
+> +	interrupt-names = "lpass-irq-lpaif";
+> +	pinctrl-names = "default", "idle";
+> +	pinctrl-0 = <&mi2s_default>;
+> +	pinctrl-1 = <&mi2s_idle>;
+> +	reg = <0x28100000 0x10000>;
+> +	reg-names = "lpass-lpaif";
+> +	qcom,adsp {
+> +		status = "disabled";
+> +	};
+> +};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-> What would be your suggestion?
-
-Let me quote:
-
-"I don't have the bandwidth for a full review right now... I dunno
-yet."
-
---0F1p//8PRICkK4MW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU+KMsAAoJEBQN5MwUoCm26jgQAIabpakq+AG/tzyRMXIHXiDX
-7R26ECTi1xjyY0h8qAmSPAuKDsp2Se7JeWUN8OYQ/LOKZ8TPJoFO3JgbzQTPnDcu
-5STaTgfwxPnPka81YyNKys+ktadyYAIpu3f5BX8Uc5CwOJkc2a8l0vsfO0GcjBVJ
-jqXNzkuA0IJJmm60H/Jf8IjINeMzCnMnwc3qiHPn2KMAwqJO/n2tWM04/Ue5JzxV
-q7wdomRWHkohl8lO0Hx9wrFUJI/UeIDV2+sfp4DyWbytCHl5Xo+dXVdEej7R8t3U
-Gx7UfUmanS6jfyh9WuCYIqB37fGvvqdmbKb+RQxokPxIB8aGvlmrrDQcbP8MCvfG
-c711Z8BryqKkOQKsJS1em+MKZft3fGphCHRhPsbRpA5VwyTbq5cDnnmexEEULsG9
-T92TOUEflMBziHa5/eiX4nyUzFmWVSlgw9hnNNBGtRwNkvePikJLnw4fn+aq03ei
-F4DzD16WNYJX/n9XieXsI9JxxDubLDeIY47GvFay4wbpHy7AhTCLJcMp/xiqg6dX
-XlbA+3wi5h12T/pDFpWlr+IG7luVxmzCMc08rbzQ9TYpFVPgWTBPSSwzhLkWXPD1
-Wal9Qm2G+R/rAJhvBvkfcxOw4Q9gVZbftidyRzPY54RRqTDce/c5/PEAMcz4+x3B
-wKS1jacg+J+pTr6bPcdL
-=YMg0
------END PGP SIGNATURE-----
-
---0F1p//8PRICkK4MW--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
