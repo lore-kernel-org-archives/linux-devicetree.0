@@ -1,38 +1,57 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
-Date: Thu, 05 Mar 2015 10:59:14 +0000
-Message-ID: <1425553154.3092.76.camel@arm.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
-	 <1425312688.3092.10.camel@arm.com> <54F4B583.4000005@broadcom.com>
-	 <1425376977.3092.26.camel@arm.com> <1425378127.3092.38.camel@arm.com>
-	 <54F653B9.4010507@broadcom.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency
+ control
+Date: Thu, 5 Mar 2015 11:59:05 +0100
+Message-ID: <20150305105905.GK11010@pengutronix.de>
+References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
+ <20150304112109.GB11010@pengutronix.de>
+ <CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
+ <20150305074207.GC11010@pengutronix.de>
+ <CAKohponSqLPcULA9-T8y9b_b44Torti0p6W3sJfRZ1oKUWqtTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54F653B9.4010507@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <CAKohponSqLPcULA9-T8y9b_b44Torti0p6W3sJfRZ1oKUWqtTw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Pi-Cheng Chen <pi-cheng.chen@linaro.org>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-03-04 at 00:37 +0000, Arun Ramamurthy wrote:
-> > That way you're precisely describing the way the hardware is wired up.
-> > And the driver simply tries to get clcdclk first, if it's defined -
-> > cool, set clksel to 1, if not - try hclk and set clksel to 0. If neither
-> > of them is present - bail out.
+On Thu, Mar 05, 2015 at 02:29:50PM +0530, Viresh Kumar wrote:
+> On 5 March 2015 at 13:12, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > We have clk_set_parent for changing the parent and clk_set_rate to
+> > change the rate. Use the former for changing the parent and the latter
+> > for changing the rate. What you are interested in is changing the
+> > parent, so use clk_set_parent for this and not abuse a side effect
+> > of clk_set_rate.
+> 
+> clk_set_rate() for CPUs clock is responsible to change clock rate
+> of the CPU. Whether it plays with PLLs or muxes, its not that relevant.
+> 
+> > My suggestion is to take another approach. Implement clk_set_rate for
+> > these muxes and in the set_rate hook:
 > >
-> > Does this make any sense?
+> > - switch mux to intermediate PLL parent
+> > - call clk_set_rate() for the real parent PLL
+> > - switch mux back to real parent PLL
 > >
-> This makes sense to me, thank you for the suggestions. I will fix it all 
-> up in V2
+> > This way the things happening behind the scenes are completely transparent
+> > to the cpufreq driver and you can use cpufreq-dt as is without changes.
+> 
+> CPUFreq wants to change to intermediate frequency by itself against
+> some magic change behind the scene. The major requirement for that
+> comes from the fact that we want to send PRE/POST freq notifiers on
+> which loops-per-jiffie depends.
 
-Cool. Just a word of comment to my own words ;-) The "bail out" case was
-a bad idea - the non-DT use cases more likely than not will have no
-clock name defined. So, to maintain backward compatibility, the driver
-will still have to work when no named clock is available. I think the
-simplest way to do that is to check if "hclk" is available, and use it
-if it is (setting the clksel accordingly). Otherwise - proceed as it was
-the case previously.
+You could register a clk notifier using clk_notifier_register(). The
+notifer callback can then call the cpufreq notifiers. The clk notifiers
+can also be used to change the CPU voltage.
 
-Pawel
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
