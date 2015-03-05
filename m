@@ -1,61 +1,71 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v5 6/8] pinctrl: cygnus: add gpio/pinconf driver
-Date: Thu, 5 Mar 2015 09:13:28 -0800
-Message-ID: <54F88EB8.3020208@broadcom.com>
-References: <1425515756-321-1-git-send-email-rjui@broadcom.com>	 <1425515756-321-7-git-send-email-rjui@broadcom.com>	 <1425543104.24292.185.camel@x220> <1425544581.24292.194.camel@x220>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [Patch V7 04/10] ASoC: qcom: add LPASS header files
+Date: Thu, 5 Mar 2015 17:13:29 +0000
+Message-ID: <20150305171329.GV21293@sirena.org.uk>
+References: <1425428519-12224-1-git-send-email-kwestfie@codeaurora.org>
+ <1425428519-12224-5-git-send-email-kwestfie@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425544581.24292.194.camel@x220>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============6969863620446999709=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1425428519-12224-5-git-send-email-kwestfie@codeaurora.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kenneth Westfield <kwestfie@codeaurora.org>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, Greg KH <gregkh@linuxfoundation.org>, Patrick Lai <plai@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Kernel Mailing List <linux-kernel@vger.kernel.org>, Bryan Huntsman <bryanh@codeaurora.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
 
-On 3/5/2015 12:36 AM, Paul Bolle wrote:
-> On Thu, 2015-03-05 at 09:11 +0100, Paul Bolle wrote:
->> On Wed, 2015-03-04 at 16:35 -0800, Ray Jui wrote:
->>> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
->>> +MODULE_DESCRIPTION("Broadcom Cygnus GPIO Driver");
->>> +MODULE_LICENSE("GPL v2");
->>
->> These three macros will be preprocessed away. (There's also
->> MODULE_DEVICE_TABLE. I don't yet know how that is handled in a
->> non-modular build, sorry.)
-> 
-> It turns out MODULE_DEVICE_TABLE is _really_ preprocessed away. See
-> include/linux/module.h:
->     #ifdef MODULE
->     /* Creates an alias so file2alias.c can find device table. */
->     #define MODULE_DEVICE_TABLE(type, name)                                 \
->     extern const typeof(name) __mod_##type##__##name##_device_table         \
->       __attribute__ ((unused, alias(__stringify(name))))
->     #else  /* !MODULE */
->     #define MODULE_DEVICE_TABLE(type, name)
->     #endif
-> 
-> 
-> Did I get that right?
-> 
-> (I knew the other three MODULE_* macros are handled in slightly more
-> complicated way, but the effect is basically that they are preprocessed
-> away.)
-> 
-> 
-> Paul Bolle
-> 
+--===============6969863620446999709==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vdV6dapcPHpUc7/7"
+Content-Disposition: inline
 
-Even these module macros will be pre-processed away when the driver is
-statically linked (and yes, I'm not planning to ever make these driver
-built as module), I'm not too sure about the convention here. I thought
-that they are still good to be in the driver for information purpose.
-I'm seeing other pinctrl drivers doing this as well.
 
-Maybe Linus can help to clarify this?
+--vdV6dapcPHpUc7/7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Tue, Mar 03, 2015 at 04:21:53PM -0800, Kenneth Westfield wrote:
+> From: Kenneth Westfield <kwestfie@codeaurora.org>
+>=20
+> Add the LPASS header files for ipq806x SOC.  This
+> includes the register definitions for the ipq806x
+> LPAIF, and the structure definition for the driver
+> data.
 
-Ray
+Applied, thanks.
+
+--vdV6dapcPHpUc7/7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU+I64AAoJECTWi3JdVIfQ1/8H/0Fc/ab2iLsra1WP0X9GPCaY
+yVuJcGnRWYL6B2241NUafAuF2+Y83igPWAywHg7xUiruU/x38+4D+4v0bj6xBafT
+JJbFa/g9x9T8oNdT91Rm5rTzs++U3Lu5mRsK5sMH7+M890PWsykc4wQbRSkEUNMT
+N74dZjAwy1W/114NPU1nFpRBpzy1tsyEEcS7920JX51oMimGi8M5qVk0CjgWw5CF
+GJxYVZ4M5MQFWfHndHALXpK4s6O48WvLEBZpjU2pUQ8UL+9eWHHy0kBGygaBz8aM
+juIevVaW5w8zSsOm1WH9Pgu1ooteeYrvYQEqur7PHSyVa5UCe0vx5RbBzfRp1O8=
+=wev4
+-----END PGP SIGNATURE-----
+
+--vdV6dapcPHpUc7/7--
+
+--===============6969863620446999709==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6969863620446999709==--
