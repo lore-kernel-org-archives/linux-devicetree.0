@@ -1,92 +1,94 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: am33xx: Move wkup_m3 node to soc node
- and add ranges
-Date: Thu, 5 Mar 2015 08:57:27 -0800
-Message-ID: <20150305165727.GE13520@atomide.com>
-References: <1425528742-3087-1-git-send-email-d-gerlach@ti.com>
- <1425528742-3087-3-git-send-email-d-gerlach@ti.com>
- <20150305154039.GD13520@atomide.com>
- <54F88849.1090708@ti.com>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH] libfdt: Teach fdt_path_offset() about ':' path separator
+Date: Thu, 05 Mar 2015 12:04:19 -0500
+Message-ID: <54F88C93.9000405@hurleysoftware.com>
+References: <1425487459-20955-1-git-send-email-peter@hurleysoftware.com> <CAL_JsqLXP8LccUXA+NNmGyCgbJSArVHCN5XvF17dkbahuook-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54F88849.1090708@ti.com>
+In-Reply-To: <CAL_JsqLXP8LccUXA+NNmGyCgbJSArVHCN5XvF17dkbahuook-Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Dave Gerlach <d-gerlach@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>, Kevin Hilman <khilman@linaro.org>, Felipe Balbi <balbi@ti.com>
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Leif Lindholm <leif.lindholm@linaro.org>, Greg KH <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [150305 08:47]:
-> On 03/05/2015 09:40 AM, Tony Lindgren wrote:
-> > * Dave Gerlach <d-gerlach@ti.com> [150304 20:14]:
-> Dave,
-> 
-> Looks like the commit message disappeared during your patch preparation.
-> 
-> >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> >> ---
-> >>  arch/arm/boot/dts/am33xx.dtsi | 21 +++++++++++++--------
-> >>  1 file changed, 13 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> >> index acd3705..086415c 100644
-> >> --- a/arch/arm/boot/dts/am33xx.dtsi
-> >> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> >> @@ -77,10 +77,23 @@
-> >>  	 */
-> >>  	soc {
-> >>  		compatible = "ti,omap-infra";
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <1>;
-> >> +		ranges = <0x0     0x44d00000 0x4000>,
-> >> +			 <0x80000 0x44d80000 0x2000>;
-> >> +
-> > 
-> > I think putting the ranges here will cause issues for adding
-> > ranges for anything else.
-> > 
-> > How about do something like this instead (untested):
-> > 
-> > ocp {
-> > 	l4_wkup: l4_wkup@44c00000 {
-> > 		compatible = "am335-l4-wkup", "simple-bus";
-> > 		ranges = <0 0x44c00000 0x3fffff>;
-> > 
-> > 		wkup_m3: wkup_m3@44d00000 {
-> > 			compatible = "ti,am3353-wkup-m3";
-> > 			reg = <0x1000000     0x4000>,	/* M3 UMEM */
-> > 			      <0x180000	     0x2000>;	/* M3 DMEM */
-> > 			ti,hwmods = "wkup_m3";
-> > 			ti,pm-firmware = "am335x-pm-firmware.elf";
-> > 		};
-> > 
-> > 		...
-> > 	};
-> > };
-> > 
-> > That way we can start moving also the other l4_wkup components there
-> > eventuallly without having to redo the ranges again for wkup_m3.
-> > 
-> > You can also look at how the scm_conf was done for dm816x.dtsi for an
-> > example, and the recent large set of patches posted by Tero.
-> > 
-> Tony,
-> 
-> Thanks, I will take a look at this. I initially tried adding to ocp node
-> directly, but obviously it had issues.
-> 
-> But in general, you are ok with the ranges approach right, rather than
-> having to define another property with virtual addresses. These devices
-> are not on a separate bus like PCI, so I placed them in the soc node,
-> and expect only special devices like processors to kinda go under that node.
+[ +cc Greg KH ]
 
-Yes ranges + simple-bus will allow using standard Linux modules no
-matter where the components move. And then getting the IO resources
-will behave properly for the drivers without any extra code to
-deal with the children.
+On 03/05/2015 10:23 AM, Rob Herring wrote:
+> On Wed, Mar 4, 2015 at 10:44 AM, Peter Hurley <peter@hurleysoftware.com> wrote:
+>> stdout-path defines ':' as a path separator and commit 75c28c09af99a
+>> ("of: add optional options parameter to of_find_node_by_path()") added
+>> the necessary support to parse paths terminated with ':' path separator.
+>> commit 7914a7c5651a5 ("of: support passing console options with
+>> stdout-path") added options string support to the stdout-path property,
+>> which broke earlycon.
+>>
+>> Add the same support to fdt_path_offset() so earlycon can parse and
+>> process stdout-path properties containing an options string.
+>>
+>> Cc: Leif Lindholm <leif.lindholm@linaro.org>
+>> Cc: <stable@vger.kernel.org> # 3.19+
+>> Signed-off-by: Peter Hurley <peter@hurleysoftware.com>
+> 
+> This needs to be first applied to upstream dtc[1]. Please do a patch
+> against dtc and send to devicetree-compiler list.
+
+Sure, I can do that, but then how is this patch going to end up in
+3.19-stable?
 
 Regards,
+Peter Hurley
 
-Tony
+> Rob
+> 
+> [1] https://git.kernel.org/cgit/linux/kernel/git/jdl/dtc.git/
+> 
+>> ---
+>>  scripts/dtc/libfdt/fdt_ro.c | 9 +++++----
+>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/scripts/dtc/libfdt/fdt_ro.c b/scripts/dtc/libfdt/fdt_ro.c
+>> index 02b6d68..a96e452 100644
+>> --- a/scripts/dtc/libfdt/fdt_ro.c
+>> +++ b/scripts/dtc/libfdt/fdt_ro.c
+>> @@ -156,7 +156,8 @@ int fdt_subnode_offset(const void *fdt, int parentoffset,
+>>
+>>  int fdt_path_offset(const void *fdt, const char *path)
+>>  {
+>> -       const char *end = path + strlen(path);
+>> +       const char *separator = strchr(path, ':');
+>> +       const char *end = separator ? separator : path + strlen(path);
+>>         const char *p = path;
+>>         int offset = 0;
+>>
+>> @@ -166,7 +167,7 @@ int fdt_path_offset(const void *fdt, const char *path)
+>>         if (*path != '/') {
+>>                 const char *q = strchr(path, '/');
+>>
+>> -               if (!q)
+>> +               if (!q || q > end)
+>>                         q = end;
+>>
+>>                 p = fdt_get_alias_namelen(fdt, p, q - p);
+>> @@ -177,7 +178,7 @@ int fdt_path_offset(const void *fdt, const char *path)
+>>                 p = q;
+>>         }
+>>
+>> -       while (*p) {
+>> +       while (p < end) {
+>>                 const char *q;
+>>
+>>                 while (*p == '/')
+>> @@ -185,7 +186,7 @@ int fdt_path_offset(const void *fdt, const char *path)
+>>                 if (! *p)
+>>                         return offset;
+>>                 q = strchr(p, '/');
+>> -               if (! q)
+>> +               if (!q || q > end)
+>>                         q = end;
+>>
+>>                 offset = fdt_subnode_offset_namelen(fdt, offset, p, q-p);
+>> --
+>> 2.3.1
+>>
