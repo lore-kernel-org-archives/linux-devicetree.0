@@ -1,124 +1,38 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency
- control
-Date: Thu, 5 Mar 2015 11:51:04 +0100
-Message-ID: <20150305105104.GJ11010@pengutronix.de>
-References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
- <20150304112109.GB11010@pengutronix.de>
- <CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
- <20150305074207.GC11010@pengutronix.de>
- <CAKohponSqLPcULA9-T8y9b_b44Torti0p6W3sJfRZ1oKUWqtTw@mail.gmail.com>
- <20150305091948.GH11010@pengutronix.de>
- <CALx668X2m0hMVQumGQmhhrKnv4h1hiYp20Q4FcKuECK3mhoJiA@mail.gmail.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
+Date: Thu, 05 Mar 2015 10:59:14 +0000
+Message-ID: <1425553154.3092.76.camel@arm.com>
+References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+	 <1425312688.3092.10.camel@arm.com> <54F4B583.4000005@broadcom.com>
+	 <1425376977.3092.26.camel@arm.com> <1425378127.3092.38.camel@arm.com>
+	 <54F653B9.4010507@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALx668X2m0hMVQumGQmhhrKnv4h1hiYp20Q4FcKuECK3mhoJiA@mail.gmail.com>
+In-Reply-To: <54F653B9.4010507@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Henry Chen <henryc.chen@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 05, 2015 at 05:39:12PM +0800, Pi-Cheng Chen wrote:
-> On 5 March 2015 at 17:19, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> > On Thu, Mar 05, 2015 at 02:29:50PM +0530, Viresh Kumar wrote:
-> >> On 5 March 2015 at 13:12, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> >> > We have clk_set_parent for changing the parent and clk_set_rate to
-> >> > change the rate. Use the former for changing the parent and the latter
-> >> > for changing the rate. What you are interested in is changing the
-> >> > parent, so use clk_set_parent for this and not abuse a side effect
-> >> > of clk_set_rate.
-> >>
-> >> clk_set_rate() for CPUs clock is responsible to change clock rate
-> >> of the CPU. Whether it plays with PLLs or muxes, its not that relevant.
+On Wed, 2015-03-04 at 00:37 +0000, Arun Ramamurthy wrote:
+> > That way you're precisely describing the way the hardware is wired up.
+> > And the driver simply tries to get clcdclk first, if it's defined -
+> > cool, set clksel to 1, if not - try hclk and set clksel to 0. If neither
+> > of them is present - bail out.
 > >
-> > The sequence to change the CPU frequency on the Mediatek SoCs is like this:
+> > Does this make any sense?
 > >
-> > - Change CPU from CPU PLL to another clock source (intermediate source)
-> > - Change CPU PLL frequency
-> > - wait until PLL has settled
-> > - switch back to CPU PLL
-> >
-> > The frequency of the intermediate source is irrelevant, the important
-> > thing is that the CPU is switched to this source while the CPU PLL is
-> > reconfigured.
-> >
-> > In Pi-Chengs patches the switch to th eintermediate clock is done like:
-> >
-> >         rate = clk_get_rate(intermediate_clk);
-> >         clk_set_rate(cpu_clk, rate);
-> >
-> > Now the clk framework does the switch not because it's told to switch
-> > to another parent, but only because the other parent happens to be the
-> > only provider for that rate. That's rubbish, when the parent must be
-> > changed, then it should be done explicitly.
-> 
-> Hi,
-> 
-> Please correct me if I was wrong. But I think that's the reason why we have
-> a determine_rate hook here, isn't it?
-> 
-> > What if the CPU PLL and the intermediate clk happen to have the same
-> > rate? Then the clk_set_rate above simply does nothing, no parent is
-> > changed and the following rate change of the CPU PLL just crashes the
-> > system.
-> 
-> I think what I am trying to do in the determine_rate hook of cpumux is:
-> 
-> * if the target rate of clk_set_rate is equal to the rate of MAINPLL,
-> then switch
->   the mux to MAINPLL
-> * otherwise, set the rate directly on ARMPLL and switch the mux back to
->   ARMPLL if the current parent of mux is not ARMPLL
-> 
-> And if the CPU PLL and the intermediate clk happen to have the same rate,
-> I think the cpufreq-dt driver will change nothing on the clk framework. Or do
-> I misunderstand your point?
+> This makes sense to me, thank you for the suggestions. I will fix it all 
+> up in V2
 
-Imagine the board starts with both the CPU PLL and Intermediate PLL
-running with the same frequency with the CPU driven from the CPU PLL.
-Now the cpufreq driver does it's very first frequency transition. Now
-when clk_set_rate is used with the intention to switch to the
-intermediate PLL nothing will happen because the CPU PLL already runs
-at the desired frequency. Reconfiguring the CPU PLL then crashes your
-system.
+Cool. Just a word of comment to my own words ;-) The "bail out" case was
+a bad idea - the non-DT use cases more likely than not will have no
+clock name defined. So, to maintain backward compatibility, the driver
+will still have to work when no named clock is available. I think the
+simplest way to do that is to check if "hclk" is available, and use it
+if it is (setting the clksel accordingly). Otherwise - proceed as it was
+the case previously.
 
-Another reason why abusing clk_set_rate to change the parent is this:
-You have this in your SoC:
-
-            ---
-CPU_PLL ---|   |
-           |   |
-           |   |----- CPU
-           |   |
-IM_PLL ----|   |
-            ---
-
-Now you do a clk_set_rate(CPU, clk_get_rate(IM_PLL)) which (often) works
-in your case. Many SoCs have an additional divider though, like this:
-
-            ---
-CPU_PLL ---|   |
-           |   |   ----
-           |   |--| :x | --- CPU
-           |   |   ----
-IM_PLL ----|   |
-            ---
-
-Now clk_set_rate(CPU, clk_get_rate(IM_PLL)) doesn't give anything
-sensible anymore.
-
-Given the variance of different SoCs I don't think it makes sense
-to try to handle all these cases. Instead the cpufreq-dt driver
-should just call clk_set_rate() on the CPU clock with the desired
-target frequency. Everything else should be handled in the clock
-driver which has intimate knowledge about the SoC anyway.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Pawel
