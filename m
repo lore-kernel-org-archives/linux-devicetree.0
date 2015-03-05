@@ -1,54 +1,70 @@
 From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v5 8/8] ARM: dts: cygnus: enable GPIO based hook detection
-Date: Wed, 4 Mar 2015 16:35:56 -0800
-Message-ID: <1425515756-321-9-git-send-email-rjui@broadcom.com>
+Subject: [PATCH v5 7/8] ARM: dts: enable GPIO for Broadcom Cygnus
+Date: Wed, 4 Mar 2015 16:35:55 -0800
+Message-ID: <1425515756-321-8-git-send-email-rjui@broadcom.com>
 References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1425515756-321-1-git-send-email-rjui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
 Cc: Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This enables GPIO based phone hook detection for Broadcom BCM911360
-phone factor board (bcm911360_entphn)
+This enables all 3 GPIO controllers including the ASIU GPIO, the
+chipcommonG GPIO, and the ALWAYS-ON GPIO, for Broadcom Cygnus SoC
 
 Signed-off-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Scott Branden <sbranden@broadcom.com>
+Tested-by: Dmitry Torokhov <dtor@chromium.org>
 ---
- arch/arm/boot/dts/bcm911360_entphn.dts |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/bcm-cygnus.dtsi |   33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm911360_entphn.dts b/arch/arm/boot/dts/bcm911360_entphn.dts
-index d2ee952..7db4843 100644
---- a/arch/arm/boot/dts/bcm911360_entphn.dts
-+++ b/arch/arm/boot/dts/bcm911360_entphn.dts
-@@ -33,6 +33,7 @@
- /dts-v1/;
- 
- #include "bcm-cygnus.dtsi"
-+#include "dt-bindings/input/input.h"
- 
- / {
- 	model = "Cygnus Enterprise Phone (BCM911360_ENTPHN)";
-@@ -50,4 +51,16 @@
- 	uart3: serial@18023000 {
- 		status = "okay";
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index 1cbae6a..8d247d2 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -60,6 +60,39 @@
+ 		      <0x0301d24c 0x2c>;
  	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		hook {
-+			label = "HOOK";
-+			linux,code = <KEY_O>;
-+			gpios = <&gpio_asiu 48 0>;
-+		};
+ 
++	gpio_crmu: gpio@03024800 {
++		compatible = "brcm,cygnus-gpio";
++		reg = <0x03024800 0x50>,
++		      <0x03024008 0x18>;
++		ngpios = <6>;
++		#gpio-cells = <2>;
++		gpio-controller;
 +	};
- };
++
++	gpio_ccm: gpio@1800a000 {
++		compatible = "brcm,cygnus-gpio";
++		reg = <0x1800a000 0x50>,
++		      <0x0301d164 0x20>;
++		ngpios = <24>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++	};
++
++	gpio_asiu: gpio@180a5000 {
++		compatible = "brcm,cygnus-gpio";
++		reg = <0x180a5000 0x668>;
++		ngpios = <146>;
++		#gpio-cells = <2>;
++		gpio-controller;
++
++		pinmux = <&pinctrl>;
++
++		interrupt-controller;
++		interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+ 	amba {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 1.7.9.5
-
