@@ -1,36 +1,40 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: STi: Add STiH410 SoC support
-Date: Thu, 5 Mar 2015 13:41:57 +0000
-Message-ID: <20150305134157.GD31098@x1>
-References: <1425559623-12379-1-git-send-email-fabrice.gasnier@st.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2] ARM: STi: Add STiH410 SoC support
+Date: Thu, 5 Mar 2015 13:43:38 +0000
+Message-ID: <20150305134338.GE31098@x1>
+References: <1425560706-22907-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1425559623-12379-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <1425560706-22907-1-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice GASNIER <fabrice.gasnier@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Maxime,
-
-Can you send this directly to Arnd for inclusion into the -rcs please?
-
-Also, please also CC -stable and add the necessary tag in the commit
-message.
-
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Thu, 05 Mar 2015, Fabrice GASNIER wrote:
 
 > This patch adds support to STiH410 SoC.
 >=20
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> Please note "st,stih410" is already present in device tree.
+> The problem is that it is missing the entry in the match table,
+> and so the L2 cache and other cpus than 0 don't get initialized.
+>=20
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 > ---
 >  Documentation/devicetree/bindings/arm/sti.txt | 4 ++++
 >  arch/arm/mach-sti/board-dt.c                  | 1 +
 >  2 files changed, 5 insertions(+)
->=20
+
+Sorry, this is the one I was looking at oneline.
+
+Same comments apply though.
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
 > diff --git a/Documentation/devicetree/bindings/arm/sti.txt b/Document=
 ation/devicetree/bindings/arm/sti.txt
 > index d70ec35..8d27f6b 100644
@@ -68,8 +72,3 @@ Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
