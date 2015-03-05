@@ -1,50 +1,58 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH 2/4] mmc: sdhci: do not set AUTO_CMD12 for multi-block CMD53
-Date: Thu, 5 Mar 2015 07:59:06 -0800
-Message-ID: <1425571148-5876-3-git-send-email-sbranden@broadcom.com>
-References: <Scott Branden <sbranden@broadcom.com>
- <1425571148-5876-1-git-send-email-sbranden@broadcom.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] arm64: qcom: Add support for Qualcomm MSM8916 SoC
+Date: Thu, 5 Mar 2015 08:03:01 -0800
+Message-ID: <20150305160301.GA29444@codeaurora.org>
+References: <1425503602-24916-1-git-send-email-galak@codeaurora.org>
+ <1425503602-24916-2-git-send-email-galak@codeaurora.org>
+ <54F7883B.90704@codeaurora.org>
+ <63B0478A-6282-4826-8991-46B0E4BA7BA5@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425571148-5876-1-git-send-email-sbranden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcm-kernel-feedback-list@broadcom.com, Ulf Hansson <ulf.hansson@linaro.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
-Cc: Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Scott Branden <sbranden@broadcom.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <63B0478A-6282-4826-8991-46B0E4BA7BA5@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, Abhimanyu Kapur <abhimany@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-From: Corneliu Doban <cdoban@broadcom.com>
+On 03/05, Kumar Gala wrote:
+> 
+> On Mar 4, 2015, at 4:33 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> 
+> > On 03/04/15 13:13, Kumar Gala wrote:
+> >> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> >> index 1b8e973..4c8b119 100644
+> >> --- a/arch/arm64/Kconfig
+> >> +++ b/arch/arm64/Kconfig
+> >> @@ -177,6 +177,15 @@ config ARCH_MEDIATEK
+> >> 	help
+> >> 	  Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
+> >> 
+> >> +config ARCH_QCOM
+> >> +	bool "Qualcomm Platforms"
+> >> +	select ARCH_REQUIRE_GPIOLIB
+> >> +	select COMMON_CLK_QCOM
+> >> +	select PINCTRL
+> >> +	select SOC_BUS
+> > 
+> > I imagine all we need is select PINCTRL here. SOC_BUS is not used, also
+> > we shouldn't force COMMON_CLK_QCOM to be Y instead of M so please drop
+> > that select. Also we dropped ARCH_REQUIRE_GPIOLIB in arm32 so it would
+> > match if we just relied on ARCH_WANT_GPIOLIB that arm64 has by default
+> 
+> Will drop SOC_BUS.  We seem to have other arm64 platforms that set ARCH_REQUIRE_GPIOLIB.  Why should we not select COMMON_CLK_QCOM?  Can we do much useful without COMMON_CLK_QCOM set?
+> 
 
-For CMD53 in block mode, the host does not need to stop the transfer,
-as it stops when the block count (present in CMD53) is reached.
+For gpiolib I was trying to say that it would match what we did
+for ARCH_QCOM on arm32. The same is true for COMMON_CLK_QCOM.
 
-Signed-off-by: Corneliu Doban <cdoban@broadcom.com>
-Signed-off-by: Scott Branden <sbranden@broadcom.com>
----
- drivers/mmc/host/sdhci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+We don't select these configs because they aren't required to
+boot into a ramdisk that contains the clock driver and gpiolib
+framework plus whatever disk driver and filesystem we may need to
+access the (presumably) much larger disk that contains the rest
+of the modules.
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index fcf78ab..f35d413 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -28,6 +28,7 @@
- #include <linux/mmc/mmc.h>
- #include <linux/mmc/host.h>
- #include <linux/mmc/card.h>
-+#include <linux/mmc/sdio.h>
- #include <linux/mmc/slot-gpio.h>
- 
- #include "sdhci.h"
-@@ -934,7 +935,8 @@ static void sdhci_set_transfer_mode(struct sdhci_host *host,
- 		 * If we are sending CMD23, CMD12 never gets sent
- 		 * on successful completion (so no Auto-CMD12).
- 		 */
--		if (!host->mrq->sbc && (host->flags & SDHCI_AUTO_CMD12))
-+		if (!host->mrq->sbc && (host->flags & SDHCI_AUTO_CMD12) &&
-+		    (cmd->opcode != SD_IO_RW_EXTENDED))
- 			mode |= SDHCI_TRNS_AUTO_CMD12;
- 		else if (host->mrq->sbc && (host->flags & SDHCI_AUTO_CMD23)) {
- 			mode |= SDHCI_TRNS_AUTO_CMD23;
 -- 
-2.2.2
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
