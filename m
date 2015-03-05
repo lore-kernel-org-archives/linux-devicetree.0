@@ -1,119 +1,78 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/6] eeprom: Add a simple EEPROM framework for eeprom
- providers
-Date: Thu, 05 Mar 2015 10:35:13 +0000
-Message-ID: <54F83161.3070007@linaro.org>
-References: <1425548685-12887-1-git-send-email-srinivas.kandagatla@linaro.org>	 <1425548741-12930-1-git-send-email-srinivas.kandagatla@linaro.org> <1425551024.24292.218.camel@x220>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/4] regulator: qcom: Rework to single platform device
+Date: Thu, 5 Mar 2015 10:38:10 +0000
+Message-ID: <20150305103810.GF21293@sirena.org.uk>
+References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1425356740-26285-5-git-send-email-bjorn.andersson@sonymobile.com>
+ <54F75E8F.2070900@codeaurora.org>
+ <20150305003004.GZ21293@sirena.org.uk>
+ <54F7B571.7090705@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425551024.24292.218.camel@x220>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, andrew-g2DYL2Zd6BY@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="syq6tW4XVuu5QJRy"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54F7B571.7090705@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--syq6tW4XVuu5QJRy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 05/03/15 10:23, Paul Bolle wrote:
-> On Thu, 2015-03-05 at 09:45 +0000, Srinivas Kandagatla wrote:
->> --- /dev/null
->> +++ b/drivers/eeprom/Kconfig
->> @@ -0,0 +1,20 @@
->> +menuconfig EEPROM
->> +	bool "EEPROM Support"
->
-> EEPROM is a bool symbol.
->
->> +	depends on OF
->> +	select REGMAP
->> +	help
->> +	  Support for EEPROM alike devices.
->> +
->> +	  This framework is designed to provide a generic interface to EEPROM
->> +	  from both the Linux Kernel and the userspace.
->> +
->> +	  If unsure, say no.
->> +
->> +if EEPROM
->> +
->> +config EEPROM_DEBUG
->> +	bool "EEPROM debug support"
->> +	help
->> +	  Say yes here to enable debugging support.
->> +
->> +endif
->> diff --git a/drivers/eeprom/Makefile b/drivers/eeprom/Makefile
->> new file mode 100644
->> index 0000000..e130079
->> --- /dev/null
->> +++ b/drivers/eeprom/Makefile
->> @@ -0,0 +1,9 @@
->> +#
->> +# Makefile for eeprom drivers.
->> +#
->> +
->> +ccflags-$(CONFIG_EEPROM_DEBUG) += -DDEBUG
->> +
->> +obj-$(CONFIG_EEPROM)		+= core.o
->
-> So core.o will be built-in (or not built at all, of course).
->
->> +# Devices
->> diff --git a/drivers/eeprom/core.c b/drivers/eeprom/core.c
->> new file mode 100644
->> index 0000000..243e466
->> --- /dev/null
->> +++ b/drivers/eeprom/core.c
->> @@ -0,0 +1,208 @@
->> +/*
->> + * EEPROM framework core.
->> + *
->> + * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> + * Copyright (C) 2013 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> + *
->> + * This file is licensed under the terms of the GNU General Public
->> + * License version 2.  This program is licensed "as is" without any
->> + * warranty of any kind, whether express or implied.
->> + */
->> +
->> +#include <linux/device.h>
->> +#include <linux/eeprom-provider.h>
->> +#include <linux/export.h>
->> +#include <linux/fs.h>
->> +#include <linux/idr.h>
->> +#include <linux/init.h>
->> +#include <linux/module.h>
->
-> So I guess this header is not needed.
->
->> +#include <linux/of.h>
->> +#include <linux/slab.h>
->> +#include <linux/uaccess.h>
->
->> +module_exit(eeprom_exit);
->
-> And this will never be called.
->
->> +MODULE_AUTHOR("Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org");
->> +MODULE_AUTHOR("Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org");
->> +MODULE_DESCRIPTION("EEPROM Driver Core");
->> +MODULE_LICENSE("GPL");
->
-> And those four macros will basically be preprocessed away. But if you
-> actually want this code to be built modular too, and change EEPROM to
-> tristate, you probably want to use
->      MODULE_LICENSE("GPL v2");
->
-> here.
+On Wed, Mar 04, 2015 at 05:46:25PM -0800, Stephen Boyd wrote:
+> On 03/04/15 16:30, Mark Brown wrote:
+> > On Wed, Mar 04, 2015 at 11:35:43AM -0800, Stephen Boyd wrote:
 
-Thanks, Thats a good catch,
-There is no reason why this driver can't be a module, I will change the 
-Kconfig and License in next version.
+> > Dependency resolution isn't anything new, I'm not sure why you think
+> > this is related to of_parse_cb()?  Open coding does exactly the same
 
+> I was just using of_parse_cb to indicate the difference from
+> of_regulator_match(). I could have said "between your design and my design".
 
->
->
-> Paul Bolle
->
+Please do things like that - it makes things harder to follow if people
+throw in random unrelated terms for things.
+
+> > of.  There was a proposal quite recently from someone at Samsung Poland
+> > to do something more coreish and basically split registrations in two,
+> > one half registering the things needed for each resource and then a
+> > second half which runs once the required resources are registered.
+> > Pushing that along might be best, it's a more general approach.  The
+> > component stuff Russell did has some similarities here.
+
+> Ah you're talking about the res track stuff[1]? That patchset seemed to
+> be doing a *lot* of different stuff where probe defer was just a part of
+> it. Frmo what I recall that still operates on the device level, where
+> here we want to be able to say that a particular regulator needs another
+> resource, but it's ok to register it's sibling regulator within this
+> device because that regulator doesn't need anything. Are you saying you
+> want the restrack stuff to work at the regulator level? If we went that
+> way we could do the same thing in the clock framework and get rid of the
+> orphan list and rely on the notifications from restrack to figure out
+> when a clock resource becomes fully available.
+
+Yes, that's it.  It's not quite the same thing as registering individual
+resources and there are definite issues to be addressed but I think it's
+a promising approach for addressing the deferred probe problem in a more
+elegant way.
+
+--syq6tW4XVuu5QJRy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU+DIRAAoJECTWi3JdVIfQs+4H/2MM5nXmE8VST/7J/TrSjZ0X
+RNb/h8y+e9SuJ335TfXR9JyGDG4SZzj+DzJQf3h9Zumuw60j8Qd67VYWTmg2P+Ix
+hkGorNYDFcWGz6YW589KVPk/FwZzX0b6YXFzNWbGL73FddXbEy/R3JUQ8nE3xdik
+rP4wiQSf0FX8EnjaUQ43+ZjnVt2mKb39HeHHBf9iF/ONpd0KGyRIc1TBXMYgTkpZ
+SPfoutIlOu5OkHw9bKQASWFxfNjvXIS5aric7M6MuaDBy5QPpO4LCopqW7L5CBkw
+N4OfwCR6ixwNNXMsbyDCtjew92tmPgQmd38LJTPgnXr1i874xg7HjS5UJIuhKtE=
+=xuKY
+-----END PGP SIGNATURE-----
+
+--syq6tW4XVuu5QJRy--
