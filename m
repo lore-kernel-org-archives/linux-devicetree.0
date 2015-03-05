@@ -1,75 +1,81 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 4/4] regulator: qcom: Rework to single platform device
-Date: Wed, 04 Mar 2015 17:46:25 -0800
-Message-ID: <54F7B571.7090705@codeaurora.org>
-References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com> <1425356740-26285-5-git-send-email-bjorn.andersson@sonymobile.com> <54F75E8F.2070900@codeaurora.org> <20150305003004.GZ21293@sirena.org.uk>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: dts: sama5d3/sama5d4: reduce NFC command registers
+ memory region
+Date: Thu, 5 Mar 2015 09:52:14 +0800
+Message-ID: <54F7B6CE.8060403@atmel.com>
+References: <1421305683-8739-1-git-send-email-josh.wu@atmel.com>	<20150115094527.3fde882a@bbrezillon>	<54B78F73.9000504@atmel.com> <20150115110501.53b4584c@bbrezillon> <54F72276.8060605@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150305003004.GZ21293@sirena.org.uk>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54F72276.8060605-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/15 16:30, Mark Brown wrote:
-> On Wed, Mar 04, 2015 at 11:35:43AM -0800, Stephen Boyd wrote:
+Hi, Nicolas
+
+On 3/4/2015 11:19 PM, Nicolas Ferre wrote:
+> Le 15/01/2015 11:05, Boris Brezillon a =C3=A9crit :
+>> Hi Josh,
+>>
+>> On Thu, 15 Jan 2015 17:59:15 +0800
+>> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>>> Hi=EF=BC=8C Boris
+>>>
+>>> Thanks for the review.
+>>>
+>>> On 1/15/2015 4:45 PM, Boris Brezillon wrote:
+>>>> Hi Josh,
+>>>>
+>>>> On Thu, 15 Jan 2015 15:08:03 +0800
+>>>> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+>>>>
+>>>>> To get NFC status, we need to read the NFC command registers, whi=
+ch is a
+>>>>> 256M memory mapping address. To check the status, you just read s=
+uch
+>>>>> address from NFC command registers.
+>>>>> For example, to check NFCBUSY (bit 27), you need to read 0x080000=
+00
+>>>>> (bit 27 is set to 1) of the NFC command register.
+>>>>> If you want to check NFCBUSY (bit 27) and NFCWR (bit 26) in same =
+time,
+>>>>> you need to read 0x0c000000 (bit 27 and bit 26 are set to 1).
+>>>> Are NFCBUSY and NFCWR found in NFCDATA_STATUS and those found in H=
+SMC_SR
+>>>> representing the same thing.
+>>> yes. it is. I just check with IP team. The NFCBUSY of NFCDATA_STATU=
+S is
+>>> also refer to NFC_BUSY of HSMC_SR.
+>>>
+>>>> If they are, I think you can just use HSMC_SR instead of NFCDATA_S=
+TATUS
+>>>> to check the status [1] and drop the last bit in the NFC Command
+>>>> Resgiters range.
+>>> Thank you. your code works (just need some typo change).
+>>> I want to send [1] code with your signed-off and my acked to mtd li=
+st.
+>>> Is it okay for you?
+>> Sure, no problem.
+> Hi Josh,
 >
->> There's another problem with this of_parse_cb design. The regulator
->> framework requires supplies to be registered before consumers of the
->> supplies are registered. So when we register L23 we need to make sure
->> it's supply is already registered (S8 for example). If we used
->> of_regulator_match() we could sort the array by hand so that we always
->> register the supplies first. Or we could modify the regulator framework
->> to have a concept of "orphaned" supplies like the clock framework has so
->> that when a regulator is registered it waits until its supply is registered.
-> Dependency resolution isn't anything new, I'm not sure why you think
-> this is related to of_parse_cb()?  Open coding does exactly the same
-> thing and the ability to have device specific properties on is not
-> obviously related to dependency resolution so perhaps I'm
-> misunderstanding what you're talking about...
+> What is the status of this patch set?
 
-I was just using of_parse_cb to indicate the difference from
-of_regulator_match(). I could have said "between your design and my design".
+The v2 of this patch is sent. But it's not taken by Brain.
+I just ping Brain yesterday. Check the v2 patch here:
+http://patchwork.ozlabs.org/patch/431752/
 
+Best Regards,
+Josh Wu
 >
-> If you *are* talking about dependency resolution then just bulk
-> registering the regulators (which we should be doing anyway) and then
-> iterating the array until we stop making progress should do the trick
-> for most cases, normally there's only one PMIC in play, or have people
-> who care do a single struct device per regulator and then let the probe
-> deferral stuff sort it out.
+> Bye,
 
-Yeah I think the brute force, keep trying approach will work for now if
-we can't add orphan support to regulator core. I'm not aware of any
-circular dependencies for these platforms.
-
->
-> I'm a bit nervous of the idea of having orphaning without core support,
-> it's not just inter regulator dependencies we need to worry about (they
-> use GPIOs and so on) and there's concerns about debuggability but it is
-> the kind of thing probe deferral was meant to be a cheap implementation
-> of.  There was a proposal quite recently from someone at Samsung Poland
-> to do something more coreish and basically split registrations in two,
-> one half registering the things needed for each resource and then a
-> second half which runs once the required resources are registered.
-> Pushing that along might be best, it's a more general approach.  The
-> component stuff Russell did has some similarities here.
-
-Ah you're talking about the res track stuff[1]? That patchset seemed to
-be doing a *lot* of different stuff where probe defer was just a part of
-it. Frmo what I recall that still operates on the device level, where
-here we want to be able to say that a particular regulator needs another
-resource, but it's ok to register it's sibling regulator within this
-device because that regulator doesn't need anything. Are you saying you
-want the restrack stuff to work at the regulator level? If we went that
-way we could do the same thing in the clock framework and get rid of the
-orphan list and rely on the notifications from restrack to figure out
-when a clock resource becomes fully available.
-
-[1] https://lkml.org/lkml/2014/12/10/342
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
