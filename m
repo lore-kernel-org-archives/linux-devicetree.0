@@ -1,273 +1,132 @@
-From: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Subject: Re: [PATCH v2 1/4] cpufreq-dt: add clock domain and intermediate
- frequency support
-Date: Thu, 5 Mar 2015 11:32:33 +0800
-Message-ID: <CALx668XCh46yMLajThuVzba9RRSxf+tEkNuMP9J7w-=vsZN8-Q@mail.gmail.com>
-References: <1425458956-20665-1-git-send-email-pi-cheng.chen@linaro.org>
-	<1425458956-20665-2-git-send-email-pi-cheng.chen@linaro.org>
-	<CAKohpomw6iDRRMxgmOORzZVeW4h2-LzKOsUcdpUnANcxiAYm+A@mail.gmail.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH v2 1/3] remoteproc: add a rproc ops for performing address translation
+Date: Wed, 4 Mar 2015 21:53:58 -0600
+Message-ID: <1425527640-2690-2-git-send-email-d-gerlach@ti.com>
+References: <1425527640-2690-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpomw6iDRRMxgmOORzZVeW4h2-LzKOsUcdpUnANcxiAYm+A@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Mike Turquette <mturquette@linaro.org>, Chen Fan <fan.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.k>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425527640-2690-1-git-send-email-d-gerlach@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>, Kevin Hilman <khilman@linaro.org>, Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
+From: Suman Anna <s-anna@ti.com>
 
-Thanks for reviewing. Please see my reply below:
+The rproc_da_to_va API is currently used to perform any device to
+kernel address translations to meet the different needs of the remoteproc
+core/drivers (eg: loading). The functionality is achieved within the
+remoteproc core, and is limited only for carveouts allocated within the
+core.
 
-On 4 March 2015 at 18:15, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 4 March 2015 at 14:19, pi-cheng.chen <pi-cheng.chen@linaro.org> wrote:
->> In this patch, CPU clock/power domain information is added into the
->> platform_data of cpufreq-dt so that cpufreq-dt driver could check with CPUs
->> share clock/power. Also, intermediate frequency support is added in this
->
-> You should have separate patches for logically separate changes.
+A new rproc ops, da_to_va, is added to provide flexibility to platform
+implementations to perform the address translation themselves when the
+above conditions cannot be met by the implementations. The rproc_da_to_va()
+API is extended to invoke this ops if present, and fallback to regular
+processing if the platform implementation cannot provide the translation.
+This will allow any remoteproc implementations to translate addresses for
+dedicated memories like internal memories, and facilitate the remoteproc
+core to also load certain firmware sections into internal memories (eg:
+RAM at L1 or L2 levels) for performance or other reasons.
 
-Sure. Will do it.
+While at this, also update the rproc_da_to_va() documentation since it
+is an exported function.
 
->
->> version. Since the program flows of .target_index and .target_intermediate
->> are quite similar, consolidate the flow as a new function to keep readibility.
->>
->> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
->> ---
->>  drivers/cpufreq/cpufreq-dt.c | 68 +++++++++++++++++++++++++++++++++++++++-----
->>  include/linux/cpufreq-dt.h   |  7 +++++
->>  2 files changed, 68 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
->> index bab67db..5948bdf 100644
->> --- a/drivers/cpufreq/cpufreq-dt.c
->> +++ b/drivers/cpufreq/cpufreq-dt.c
->> @@ -34,25 +34,37 @@ struct private_data {
->>         struct regulator *cpu_reg;
->>         struct thermal_cooling_device *cdev;
->>         unsigned int voltage_tolerance; /* in percentage */
->> +       unsigned long intermediate_freq;
->>  };
->>
->> -static int set_target(struct cpufreq_policy *policy, unsigned int index)
->> +static unsigned int get_intermediate(struct cpufreq_policy *policy,
->> +                                    unsigned int index)
->> +{
->> +       struct private_data *priv = policy->driver_data;
->> +       struct cpufreq_frequency_table *freq_table;
->> +       unsigned long freq = clk_get_rate(policy->clk);
->
-> This will return current freq, which can also be fetched with
-> policy->cur.
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+---
+This patch is a replacement for the patch ("remoteproc: add support to
+handle internal memories") @ https://patchwork.kernel.org/patch/5602981/
+The representation of internal memory regions is left to the individual
+platform implementations, as this might vary from one to another.
 
-Will fix it.
+ drivers/remoteproc/remoteproc_core.c | 31 +++++++++++++++++++++++++------
+ include/linux/remoteproc.h           |  2 ++
+ 2 files changed, 27 insertions(+), 6 deletions(-)
 
->
->> +
->> +       freq_table = cpufreq_frequency_get_table(policy->cpu);
->
-> instead, freq_table = policy->freq_table.
-
-Will fix it.
-
->
->> +
->
-> Always add a comment over such decision making expressions, on
-> why you chose to return 0.
-
-Will fix it.
-
->
->> +       if (freq == priv->intermediate_freq ||
->
-> Looks fine, current freq == intermediate freq..
->
->> +           freq_table[index].frequency * 1000 == freq)
->
-> Absolutely wrong, current-freq == requested-freq.
-> Instead it should be:
->
-> freq_table[index].frequency * 1000 == priv->intermediate_freq.
->
-
-Thanks for correcting. Will fix it.
-
->> +               return 0;
->> +
->> +       return priv->intermediate_freq;
->> +}
->> +
->> +static int set_frequency(struct cpufreq_policy *policy, long freq_Hz)
->>  {
->>         struct dev_pm_opp *opp;
->> -       struct cpufreq_frequency_table *freq_table = policy->freq_table;
->>         struct clk *cpu_clk = policy->clk;
->>         struct private_data *priv = policy->driver_data;
->>         struct device *cpu_dev = priv->cpu_dev;
->>         struct regulator *cpu_reg = priv->cpu_reg;
->>         unsigned long volt = 0, volt_old = 0, tol = 0;
->>         unsigned int old_freq, new_freq;
->> -       long freq_Hz, freq_exact;
->> +       long freq_exact;
->>         int ret;
->>
->> -       freq_Hz = clk_round_rate(cpu_clk, freq_table[index].frequency * 1000);
->> -       if (freq_Hz <= 0)
->> -               freq_Hz = freq_table[index].frequency * 1000;
->> -
->>         freq_exact = freq_Hz;
->>         new_freq = freq_Hz / 1000;
->>         old_freq = clk_get_rate(cpu_clk) / 1000;
->> @@ -112,6 +124,29 @@ static int set_target(struct cpufreq_policy *policy, unsigned int index)
->>         return ret;
->>  }
->>
->> +static int target_intermediate(struct cpufreq_policy *policy,
->> +                              unsigned int index)
->> +{
->> +       struct private_data *priv = policy->driver_data;
->> +       long freq_Hz;
->> +
->> +       freq_Hz = priv->intermediate_freq;
->> +       return set_frequency(policy, freq_Hz);
->
-> Instead, return set_frequency(policy, priv->intermediate_freq);
-
-Will fix it.
-
->
->> +}
->> +
->> +static int set_target(struct cpufreq_policy *policy, unsigned int index)
->> +{
->> +       struct cpufreq_frequency_table *freq_table = policy->freq_table;
->> +       struct clk *cpu_clk = policy->clk;
->> +       long freq_Hz;
->> +
->> +       freq_Hz = clk_round_rate(cpu_clk, freq_table[index].frequency * 1000);
->
-> Use policy->clk here directly instead of another local variable.
-
-Will fix it.
-
->
->> +       if (freq_Hz <= 0)
->> +               freq_Hz = freq_table[index].frequency * 1000;
->
-> Why shouldn't we call clk_round_rate() for intermediate freq as well ?
-
-Yes. Will do it.
-
-> I think, it
-> should be called for it as well.. And so you can save intermediate_freq_index
-> instead of the freq..
->
-
-Here is the case I wanted to talk to you at HKG15:
-In the case of Mediatek SoC, the intermediate frequency might not be one entry
-of OPP table. To elaborate, the source clock node of the CPUs/Cluster on
-Mediatek SoC is a mux. The mux has several PLLs as parents. When we are
-doing CPU frequency scaling, the mux should re-parent to another stable PLL,
-wait until the original parent PLL become stable, and then switch back to the
-original parent. In this case, we could but we might not want the intermediate
-frequency as part of OPP table. Therefore I save intermediate_freq instead of
-intermediate frequency index in the cpufreq_dt_platform_datat struct.
-
-BTW, is this case that intermediate frequency is not necessarily be one entry
-of OPP table supported in the OPPv2 bindings?
-
->> +       return set_frequency(policy, freq_Hz);
->> +}
->> +
->>  static int allocate_resources(int cpu, struct device **cdev,
->>                               struct regulator **creg, struct clk **cclk)
->>  {
->> @@ -296,6 +331,23 @@ static int cpufreq_init(struct cpufreq_policy *policy)
->>         pd = cpufreq_get_driver_data();
->>         if (!pd || !pd->independent_clocks)
->>                 cpumask_setall(policy->cpus);
->> +       else if (pd && !list_empty(&pd->domain_list)) {
->> +               struct list_head *domain_node;
->> +               struct cpufreq_cpu_domain *domain;
->> +
->> +               list_for_each(domain_node, &pd->domain_list) {
->> +                       domain = container_of(domain_node,
->> +                                             struct cpufreq_cpu_domain, node);
->> +                       if (!cpumask_test_cpu(policy->cpu, &domain->cpus))
->> +                               continue;
->> +
->> +                       if (domain->intermediate_freq)
->> +                               priv->intermediate_freq =
->> +                                               domain->intermediate_freq;
->> +                       cpumask_copy(policy->cpus, &domain->cpus);
->> +                       break;
->> +               }
->> +       }
->>
->
-> Do this in a separate patch.
-
-Will do it.
-
->
->>         of_node_put(np);
->>
->> @@ -363,6 +415,8 @@ static struct cpufreq_driver dt_cpufreq_driver = {
->>         .verify = cpufreq_generic_frequency_table_verify,
->>         .target_index = set_target,
->>         .get = cpufreq_generic_get,
->> +       .get_intermediate = get_intermediate,
->> +       .target_intermediate = target_intermediate,
->>         .init = cpufreq_init,
->>         .exit = cpufreq_exit,
->>         .ready = cpufreq_ready,
->> diff --git a/include/linux/cpufreq-dt.h b/include/linux/cpufreq-dt.h
->> index 0414009..d6e2097 100644
->> --- a/include/linux/cpufreq-dt.h
->> +++ b/include/linux/cpufreq-dt.h
->> @@ -10,6 +10,12 @@
->>  #ifndef __CPUFREQ_DT_H__
->>  #define __CPUFREQ_DT_H__
->>
->> +struct cpufreq_cpu_domain {
->> +       struct list_head node;
->> +       cpumask_t cpus;
->> +       unsigned long intermediate_freq;
->
-> This should come from DT instead of platform data.
->
->> +};
->
-> This struct will die along with the below one as soon as my patches
-> on OPP bindings V2 get merged.
-
-Sure. Will adapt the new way once it's merged.
-
->
->>  struct cpufreq_dt_platform_data {
->>         /*
->>          * True when each CPU has its own clock to control its
->> @@ -17,6 +23,7 @@ struct cpufreq_dt_platform_data {
->>          * clock.
->>          */
->>         bool independent_clocks;
->> +       struct list_head domain_list;
->
-> Also update the comment on how what these fields mean..
-
-Will do it.
-
-Thanks.
-
-Best Regards,
-Pi-Cheng
-
->
->>  };
->>
->>  #endif /* __CPUFREQ_DT_H__ */
->> --
->> 1.9.1
->>
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 3cd85a63..e9825bd 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -147,28 +147,46 @@ static void rproc_disable_iommu(struct rproc *rproc)
+ 	return;
+ }
+ 
+-/*
++/**
++ * rproc_da_to_va() - lookup the kernel virtual address for a remoteproc address
++ * @rproc: handle of a remote processor
++ * @da: remoteproc device address to translate
++ * @len: length of the memory region @da is pointing to
++ *
+  * Some remote processors will ask us to allocate them physically contiguous
+  * memory regions (which we call "carveouts"), and map them to specific
+- * device addresses (which are hardcoded in the firmware).
++ * device addresses (which are hardcoded in the firmware). They may also have
++ * dedicated memory regions internal to the processors, and use them either
++ * exclusively or alongside carveouts.
+  *
+  * They may then ask us to copy objects into specific device addresses (e.g.
+  * code/data sections) or expose us certain symbols in other device address
+  * (e.g. their trace buffer).
+  *
+- * This function is an internal helper with which we can go over the allocated
+- * carveouts and translate specific device address to kernel virtual addresses
+- * so we can access the referenced memory.
++ * This function is a helper function with which we can go over the allocated
++ * carveouts and translate specific device addresses to kernel virtual addresses
++ * so we can access the referenced memory. This function also allows to perform
++ * translations on the internal remoteproc memory regions through a platform
++ * implementation specific da_to_va ops, if present.
++ *
++ * The function returns a valid kernel address on success or NULL on failure.
+  *
+  * Note: phys_to_virt(iommu_iova_to_phys(rproc->domain, da)) will work too,
+  * but only on kernel direct mapped RAM memory. Instead, we're just using
+- * here the output of the DMA API, which should be more correct.
++ * here the output of the DMA API for the carveouts, which should be more
++ * correct.
+  */
+ void *rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+ {
+ 	struct rproc_mem_entry *carveout;
+ 	void *ptr = NULL;
+ 
++	if (rproc->ops->da_to_va) {
++		ptr = rproc->ops->da_to_va(rproc, da, len);
++		if (ptr)
++			goto out;
++	}
++
+ 	list_for_each_entry(carveout, &rproc->carveouts, node) {
+ 		int offset = da - carveout->da;
+ 
+@@ -185,6 +203,7 @@ void *rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+ 		break;
+ 	}
+ 
++out:
+ 	return ptr;
+ }
+ EXPORT_SYMBOL(rproc_da_to_va);
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index 9e7e745..e0c0715 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -330,11 +330,13 @@ struct rproc;
+  * @start:	power on the device and boot it
+  * @stop:	power off the device
+  * @kick:	kick a virtqueue (virtqueue id given as a parameter)
++ * @da_to_va:	optional platform hook to perform address translations
+  */
+ struct rproc_ops {
+ 	int (*start)(struct rproc *rproc);
+ 	int (*stop)(struct rproc *rproc);
+ 	void (*kick)(struct rproc *rproc, int vqid);
++	void * (*da_to_va)(struct rproc *rproc, u64 da, int len);
+ };
+ 
+ /**
+-- 
+2.3.0
