@@ -1,110 +1,146 @@
-From: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency control
-Date: Thu, 5 Mar 2015 17:39:12 +0800
-Message-ID: <CALx668X2m0hMVQumGQmhhrKnv4h1hiYp20Q4FcKuECK3mhoJiA@mail.gmail.com>
-References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
-	<20150304112109.GB11010@pengutronix.de>
-	<CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
-	<20150305074207.GC11010@pengutronix.de>
-	<CAKohponSqLPcULA9-T8y9b_b44Torti0p6W3sJfRZ1oKUWqtTw@mail.gmail.com>
-	<20150305091948.GH11010@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150305091948.GH11010-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chen Fan <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v1 0/6] Add simple EEPROM Framework via regmap.
+Date: Thu,  5 Mar 2015 09:44:45 +0000
+Message-ID: <1425548685-12887-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424365639-26634-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, broonie@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, andrew@lunn.ch, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5 March 2015 at 17:19, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Thu, Mar 05, 2015 at 02:29:50PM +0530, Viresh Kumar wrote:
->> On 5 March 2015 at 13:12, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->> > We have clk_set_parent for changing the parent and clk_set_rate to
->> > change the rate. Use the former for changing the parent and the latter
->> > for changing the rate. What you are interested in is changing the
->> > parent, so use clk_set_parent for this and not abuse a side effect
->> > of clk_set_rate.
->>
->> clk_set_rate() for CPUs clock is responsible to change clock rate
->> of the CPU. Whether it plays with PLLs or muxes, its not that relevant.
->
-> The sequence to change the CPU frequency on the Mediatek SoCs is like this:
->
-> - Change CPU from CPU PLL to another clock source (intermediate source)
-> - Change CPU PLL frequency
-> - wait until PLL has settled
-> - switch back to CPU PLL
->
-> The frequency of the intermediate source is irrelevant, the important
-> thing is that the CPU is switched to this source while the CPU PLL is
-> reconfigured.
->
-> In Pi-Chengs patches the switch to th eintermediate clock is done like:
->
->         rate = clk_get_rate(intermediate_clk);
->         clk_set_rate(cpu_clk, rate);
->
-> Now the clk framework does the switch not because it's told to switch
-> to another parent, but only because the other parent happens to be the
-> only provider for that rate. That's rubbish, when the parent must be
-> changed, then it should be done explicitly.
+Thankyou all for providing inputs and comments on RFC patchset.
+Here is the v1 of the patchset addressing all the issues raised as
+part of RFC review.
 
-Hi,
+This patchset adds a new simple EEPROM framework to kernel.
 
-Please correct me if I was wrong. But I think that's the reason why we have
-a determine_rate hook here, isn't it?
+Up until now, EEPROM drivers were stored in drivers/misc, where they all had to
+duplicate pretty much the same code to register a sysfs file, allow in-kernel
+users to access the content of the devices they were driving, etc.
+    
+This was also a problem as far as other in-kernel users were involved, since
+the solutions used were pretty much different from on driver to another, there
+was a rather big abstraction leak.
+    
+This introduction of this framework aims at solving this. It also introduces DT
+representation for consumer devices to go get the data they require (MAC
+Addresses, SoC/Revision ID, part numbers, and so on) from the EEPROMs.
+    
+Having regmap interface to this framework would give much better
+abstraction for eeproms on different buses.
 
-> What if the CPU PLL and the intermediate clk happen to have the same
-> rate? Then the clk_set_rate above simply does nothing, no parent is
-> changed and the following rate change of the CPU PLL just crashes the
-> system.
+patch 1-4 Introduces the EEPROM framework.
+Patch 5 migrates an existing driver to eeprom framework.
+Patch 6 Adds Qualcomm specific qfprom driver.
 
-I think what I am trying to do in the determine_rate hook of cpumux is:
+Its also possible to migrate other eeprom drivers to this framework.
+Patch 6 can also be made a generic mmio-eeprom driver.
 
-* if the target rate of clk_set_rate is equal to the rate of MAINPLL,
-then switch
-  the mux to MAINPLL
-* otherwise, set the rate directly on ARMPLL and switch the mux back to
-  ARMPLL if the current parent of mux is not ARMPLL
+Providers APIs:
+	eeprom_register/unregister();
 
-And if the CPU PLL and the intermediate clk happen to have the same rate,
-I think the cpufreq-dt driver will change nothing on the clk framework. Or do
-I misunderstand your point?
+Consumers APIs:
+	eeprom_cell_get()/of_eeprom_cell_get()/of_eeprom_cell_get_byname();
+	eeprom_cell_read()/eeprom_cell_write();
 
-Thanks.
+Device Tree:
 
-Best Regards,
-Pi-Cheng
+	/* Provider */
+	qfprom: qfprom@00700000 {
+		compatible 	= "qcom,qfprom";
+		reg		= <0x00700000 0x1000>;
+		...
 
->
->>
->> > My suggestion is to take another approach. Implement clk_set_rate for
->> > these muxes and in the set_rate hook:
->> >
->> > - switch mux to intermediate PLL parent
->> > - call clk_set_rate() for the real parent PLL
->> > - switch mux back to real parent PLL
->> >
->> > This way the things happening behind the scenes are completely transparent
->> > to the cpufreq driver and you can use cpufreq-dt as is without changes.
->>
->> CPUFreq wants to change to intermediate frequency by itself against
->> some magic change behind the scene. The major requirement for that
->> comes from the fact that we want to send PRE/POST freq notifiers on
->> which loops-per-jiffie depends.
->
-> Maybe, I don't know the internals of CPUFreq. But here the important
-> thing is the rate change, not the parent change.
->
-> Sascha
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+		/* Data cells */
+		tsens_calibration: calib@404 {
+			reg = <0x404 0x10>;
+		};
+
+		serial_number: sn {
+			reg = <0x104 0x4>, <0x204 0x4>, <0x30c 0x4>;
+
+		};
+		...
+	};
+	
+	/* Consumer node */
+	tsens: tsens {
+		...
+		eeproms = <&tsens_calibration>;
+		eeprom-names = "calib";
+		...
+	};
+
+userspace interface:
+
+hexdump /sys/class/eeprom/qfprom0/eeprom
+                                                                                                                                                                                                                  
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+*
+00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+...
+*
+0001000
+
+
+Changes since RFC(https://lkml.org/lkml/2015/2/19/307)
+ * Fix documentation and error checks in read/write spotted by Andrew Lunn
+ * Kconfig fix suggested by Stephen Boyd.
+ * Add module owner suggested by Stephen Boyd and others.
+ * Fix unsafe handling of eeprom in unregister spotted by Russell and Mark Brown.
+ * seperate bindings patch as suggested by Rob.
+ * Add MAINTAINERS as suggested by Rob.
+ * Added support to allow reading eeprom for things like serial number which
+ * canbe scatters across.
+ * Added eeprom data using reg property suggested by Sascha and Stephen.
+ * Added non-DT support.
+ * Move kerneldoc to the src files spotted by Mark Brown.
+ * Remove local list and do eeprom lookup by using class_find_device()
+
+
+Thanks,
+srini
+
+
+Maxime Ripard (1):
+  eeprom: sunxi: Move the SID driver to the eeprom framework
+
+Srinivas Kandagatla (5):
+  eeprom: Add a simple EEPROM framework for eeprom providers
+  eeprom: Add a simple EEPROM framework for eeprom consumers
+  eeprom: Add bindings for simple eeprom framework
+  eeprom: qfprom: Add Qualcomm QFPROM support.
+  eeprom: Add to MAINTAINERS for eeprom framework
+
+ Documentation/ABI/testing/sysfs-driver-sunxi-sid   |  22 -
+ .../devicetree/bindings/eeprom/eeprom.txt          |  70 +++
+ MAINTAINERS                                        |   9 +
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/eeprom/Kconfig                             |  38 ++
+ drivers/eeprom/Makefile                            |  11 +
+ drivers/eeprom/core.c                              | 506 +++++++++++++++++++++
+ drivers/eeprom/eeprom-sunxi-sid.c                  | 129 ++++++
+ drivers/eeprom/qfprom.c                            |  74 +++
+ drivers/misc/eeprom/Kconfig                        |  13 -
+ drivers/misc/eeprom/Makefile                       |   1 -
+ drivers/misc/eeprom/sunxi_sid.c                    | 156 -------
+ include/linux/eeprom-consumer.h                    |  67 +++
+ include/linux/eeprom-provider.h                    |  47 ++
+ 15 files changed, 954 insertions(+), 192 deletions(-)
+ delete mode 100644 Documentation/ABI/testing/sysfs-driver-sunxi-sid
+ create mode 100644 Documentation/devicetree/bindings/eeprom/eeprom.txt
+ create mode 100644 drivers/eeprom/Kconfig
+ create mode 100644 drivers/eeprom/Makefile
+ create mode 100644 drivers/eeprom/core.c
+ create mode 100644 drivers/eeprom/eeprom-sunxi-sid.c
+ create mode 100644 drivers/eeprom/qfprom.c
+ delete mode 100644 drivers/misc/eeprom/sunxi_sid.c
+ create mode 100644 include/linux/eeprom-consumer.h
+ create mode 100644 include/linux/eeprom-provider.h
+
+-- 
+1.9.1
