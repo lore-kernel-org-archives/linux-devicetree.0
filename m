@@ -1,48 +1,43 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v2] mfd: Add specific compatible strings for Qualcomm's
- SPMI PMIC's
-Date: Thu, 05 Mar 2015 10:16:03 +0200
-Message-ID: <1425543363.5705.13.camel@mm-sol.com>
-References: <1425464365-3291-1-git-send-email-iivanov@mm-sol.com>
-	 <54F7576C.9060808@codeaurora.org>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
+ MPC5125 and others
+Date: Thu, 05 Mar 2015 09:19:54 +0100
+Message-ID: <1425543594.24292.189.camel@x220>
+References: <1425510624-22250-1-git-send-email-stefan@agner.ch>
+	 <1425510624-22250-2-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54F7576C.9060808@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425510624-22250-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2015-03-05 at 00:10 +0100, Stefan Agner wrote:
+> --- /dev/null
+> +++ b/drivers/mtd/nand/vf610_nfc.c
+> @@ -0,0 +1,730 @@
 
-On Wed, 2015-03-04 at 11:05 -0800, Stephen Boyd wrote:
-> On 03/04/15 02:19, Ivan T. Ivanov wrote:
-> > +
-> > +static const struct of_device_id pmic_spmi_id_table[] = {
-> > +       [COMMON_SUBTYPE]  = { .compatible = "qcom,spmi-pmic" },
-> > +       [PM8941_SUBTYPE]  = { .compatible = "qcom,pm8941" },
-> > +       [PM8841_SUBTYPE]  = { .compatible = "qcom,pm8841" },
-> > +       [PM8019_SUBTYPE]  = { .compatible = "qcom,pm8019" },
-> > +       [PM8226_SUBTYPE]  = { .compatible = "qcom,pm8226" },
-> > +       [PM8110_SUBTYPE]  = { .compatible = "qcom,pm8110" },
-> > +       [PMA8084_SUBTYPE] = { .compatible = "qcom,pma8084" },
-> > +       [PMI8962_SUBTYPE] = { .compatible = "qcom,pmi8962" },
-> > +       [PMD9635_SUBTYPE] = { .compatible = "qcom,pmd9635" },
-> > +       [PM8994_SUBTYPE]  = { .compatible = "qcom,pm8994" },
-> > +       [PMI8994_SUBTYPE] = { .compatible = "qcom,pmi8994" },
-> > +       [PM8916_SUBTYPE]  = { .compatible = "qcom,pm8916" },
-> > +       [PM8004_SUBTYPE]  = { .compatible = "qcom,pm8004" },
-> > +       [PM8909_SUBTYPE]  = { .compatible = "qcom,pm8909" },
-> > +       { }
-> > +};
-> 
-> Also this seems error prone in the case where we may have skips between
-> pmic model numbers and then the of_device_id table is going to have a
-> sentinel in the middle of the table. It's probably better to store the
-> subtype number in the data field and iterate over the array.
+> + * This is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
 
-True. Will reorganize.
+This states the license is GPL v2 or later.
 
-Thanks,
-Ivan
+> +MODULE_LICENSE("GPL v2");
+
+So you probably want
+    MODULE_LICENSE("GPL");
+
+here.
+
+
+Paul Bolle
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
