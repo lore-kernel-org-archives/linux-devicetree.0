@@ -1,101 +1,53 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency
- control
-Date: Thu, 5 Mar 2015 08:42:07 +0100
-Message-ID: <20150305074207.GC11010@pengutronix.de>
-References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
- <20150304112109.GB11010@pengutronix.de>
- <CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/2] phy: miphy365x: Convert to devm_kcalloc and fix
+ wrong sizof
+Date: Thu, 5 Mar 2015 07:53:19 +0000
+Message-ID: <20150305075319.GA29183@x1>
+References: <1425520379.1637.7.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
+In-Reply-To: <1425520379.1637.7.camel@phoenix>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Henry Chen <henryc.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>
+To: Axel Lin <axel.lin@ingics.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 05 Mar 2015, Axel Lin wrote:
 
-+Cc Viresh Kumar
+> Prefer devm_kcalloc over devm_kzalloc with multiply.
+> In additional, use sizeof(phy) is incorrect, fix it.
+>=20
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> ---
+>  drivers/phy/phy-miphy365x.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
-Viresh, this is the patch for the underlying clocks for the Mediatek
-cpufreq driver.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-On Thu, Mar 05, 2015 at 10:43:21AM +0800, Pi-Cheng Chen wrote:
-> Hi Sascha,
-> 
-> On 4 March 2015 at 19:21, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> > On Wed, Mar 04, 2015 at 06:49:11PM +0800, pi-cheng.chen wrote:
-> >> This patch adds CPU mux clocks which are used by Mediatek cpufreq driver
-> >> for intermediate clock source switching. This patch is based on Mediatek
-> >> clock driver patches[1].
-> >>
-> >> [1] http://thread.gmane.org/gmane.linux.kernel/1892436
-> >>
-> >> Signed-off-by: pi-cheng.chen <pi-cheng.chen@linaro.org>
-> >> ---
-> >> +static long clk_cpumux_determine_rate(struct clk_hw *hw, unsigned long rate,
-> >> +                                   unsigned long min_rate,
-> >> +                                   unsigned long max_rate,
-> >> +                                   unsigned long *best_parent_rate,
-> >> +                                   struct clk_hw **best_parent_p)
-> >> +{
-> >> +     struct clk *clk = hw->clk, *parent;
-> >> +     unsigned long parent_rate;
-> >> +     int i;
-> >> +
-> >> +     for (i = MAINPLL_INDEX; i >= ARMPLL_INDEX; i--) {
-> >> +             parent = clk_get_parent_by_index(clk, i);
-> >> +             if (!parent)
-> >> +                     return 0;
-> >> +
-> >> +             if (i == MAINPLL_INDEX) {
-> >> +                     parent_rate = __clk_get_rate(parent);
-> >> +                     if (parent_rate == rate)
-> >> +                             break;
-> >> +             }
-> >> +
-> >> +             parent_rate = __clk_round_rate(parent, rate);
-> >> +     }
-> >> +
-> >> +     *best_parent_rate = parent_rate;
-> >> +     *best_parent_p = __clk_get_hw(parent);
-> >> +     return parent_rate;
-> >> +}
-> >
-> > Why this determine_rate hook? If you want to switch the clock to some
-> > intermediate parent I would assume you do this explicitly by setting the
-> > parent and not implicitly by setting a rate.
-> >
-> 
-> I use determine_rate hook here because I am using generic cpufreq-dt
-> driver and I want to make clock switching transparent to cpufreq-dt.
-> I.e. when I am trying to switch the clock from ARMPLL to MAINPLL, I
-> call clk_set_rate() with the rate of MAINPLL, and determine_rate will
-> select MAINPLL as the new parent.
+> diff --git a/drivers/phy/phy-miphy365x.c b/drivers/phy/phy-miphy365x.=
+c
+> index 61177a6..51b459d 100644
+> --- a/drivers/phy/phy-miphy365x.c
+> +++ b/drivers/phy/phy-miphy365x.c
+> @@ -549,9 +549,8 @@ static int miphy365x_probe(struct platform_device=
+ *pdev)
+>  		return -ENOMEM;
+> =20
+>  	miphy_dev->nphys =3D of_get_child_count(np);
+> -	miphy_dev->phys =3D devm_kzalloc(&pdev->dev,
+> -				       sizeof(phy) * miphy_dev->nphys,
+> -				       GFP_KERNEL);
+> +	miphy_dev->phys =3D devm_kcalloc(&pdev->dev, miphy_dev->nphys,
+> +				       sizeof(*miphy_dev->phys), GFP_KERNEL);
+>  	if (!miphy_dev->phys)
+>  		return -ENOMEM;
+> =20
 
-We have clk_set_parent for changing the parent and clk_set_rate to
-change the rate. Use the former for changing the parent and the latter
-for changing the rate. What you are interested in is changing the
-parent, so use clk_set_parent for this and not abuse a side effect
-of clk_set_rate.
-
-My suggestion is to take another approach. Implement clk_set_rate for
-these muxes and in the set_rate hook:
-
-- switch mux to intermediate PLL parent
-- call clk_set_rate() for the real parent PLL
-- switch mux back to real parent PLL
-
-This way the things happening behind the scenes are completely transparent
-to the cpufreq driver and you can use cpufreq-dt as is without changes.
-
-Sascha
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
