@@ -1,41 +1,48 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH v2 0/2] ARM: OMAP2+: wkup_m3_rproc support patches
-Date: Wed, 4 Mar 2015 22:12:20 -0600
-Message-ID: <1425528742-3087-1-git-send-email-d-gerlach@ti.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v9 2/4] pinctrl: cygnus: add gpio/pinconf driver
+Date: Wed, 4 Mar 2015 21:01:45 -0800
+Message-ID: <54F7E339.50902@broadcom.com>
+References: <1423606584-21795-1-git-send-email-rjui@broadcom.com>	<1423606584-21795-3-git-send-email-rjui@broadcom.com> <CACRpkda-C1upKfa4FKLcVF9sxL4T=B+eG9ndun4fS6DZ9TfCSw@mail.gmail.com> <54F742CA.7080500@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54F742CA.7080500@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>, Kevin Hilman <khilman@linaro.org>, Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-This series adds the mach-omap2 code for the wkup_m3_rproc driver
-submitted here [1]. pdata-quirks patch requires the pdata added with
-patch 3 of the aforementioned series. The dt patch was previously
-included as part of the rproc series here [2]. Changes are:
+Hi Linus,
 
-v1->v2: 
--Because the firmware loading has changed, the wkup_m3 node
- has moved into the soc node and ranges have been added so the
- device address to virtual address translation can work.
--Removed the ti,no-reset-on-init flag as asserting the hard-reset
- line on init is what the wkup_m3 has by default already.
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/slab.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/gpio.h>
+>>
+>> This should be:
+>> #include <linux/gpio/driver.h>
 
-Regards,
-Dave
+In fact, just by trying it out I found I need linux/gpio.h for APIs like
+gpiochip_add_pin_range, and etc.
 
-[1] https://www.mail-archive.com/linux-omap@vger.kernel.org/msg114621.html
-[2] http://www.spinics.net/lists/arm-kernel/msg387984.html
+>>
+>>
+> 
+> Great! I will address all comments and re-send a BIG patch series with
+> the other pinctrl patch series consolidated.
+> 
+> Thanks!
+> 
+> Ray
+> 
 
-Dave Gerlach (2):
-  ARM: OMAP2+: Use pdata-quirks for wkup_m3 deassert_hardreset
-  ARM: dts: am33xx: Move wkup_m3 node to soc node and add ranges
+I've consolidated this patch series with the IOMUX and sent out a
+combined patch series earlier. I believe all other comments have been
+addressed except the above include header one.
 
- arch/arm/boot/dts/am33xx.dtsi      | 21 +++++++++++++--------
- arch/arm/mach-omap2/pdata-quirks.c | 13 +++++++++++++
- 2 files changed, 26 insertions(+), 8 deletions(-)
+Thanks,
 
--- 
-2.3.0
+Ray
