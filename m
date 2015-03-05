@@ -1,118 +1,79 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 4/4] regulator: qcom: Rework to single platform device
-Date: Wed, 4 Mar 2015 15:51:46 -0800
-Message-ID: <20150304235146.GP26334@sonymobile.com>
+Date: Thu, 5 Mar 2015 00:30:04 +0000
+Message-ID: <20150305003004.GZ21293@sirena.org.uk>
 References: <1425356740-26285-1-git-send-email-bjorn.andersson@sonymobile.com>
  <1425356740-26285-5-git-send-email-bjorn.andersson@sonymobile.com>
  <54F75E8F.2070900@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ext4kBY5hxW07XMK"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54F75E8F.2070900@codeaurora.org>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+In-Reply-To: <54F75E8F.2070900-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 04 Mar 11:35 PST 2015, Stephen Boyd wrote:
 
-> On 03/02/15 20:25, Bjorn Andersson wrote:
-> > +	match = of_match_device(rpm_of_match, &pdev->dev);
-> > +	for (reg = match->data; reg->name; reg++) {
-> > +		vreg = devm_kmalloc(&pdev->dev, sizeof(*vreg), GFP_KERNEL);
-> > +		if (!vreg) {
-> > +			dev_err(&pdev->dev, "failed to allocate vreg\n");
-> > +			return -ENOMEM;
-> > +		}
-> > +		memcpy(vreg, reg->template, sizeof(*vreg));
-> > +		mutex_init(&vreg->lock);
-> > +
-> > +		vreg->dev = &pdev->dev;
-> > +		vreg->resource = reg->resource;
-> > +
-> > +		vreg->desc.id = -1;
-> > +		vreg->desc.owner = THIS_MODULE;
-> > +		vreg->desc.type = REGULATOR_VOLTAGE;
-> > +		vreg->desc.name = reg->name;
-> > +		vreg->desc.supply_name = reg->supply;
-> > +		vreg->desc.of_match = reg->name;
-> > +		vreg->desc.of_parse_cb = rpm_reg_of_parse;
-> > +
-> > +		vreg->rpm = dev_get_drvdata(pdev->dev.parent);
-> > +		if (!vreg->rpm) {
-> > +			dev_err(&pdev->dev, "unable to retrieve handle to rpm\n");
-> > +			return -ENODEV;
-> > +		}
-> >  
-> > -	rdev = devm_regulator_register(&pdev->dev, &vreg->desc, &config);
-> > -	if (IS_ERR(rdev)) {
-> > -		dev_err(&pdev->dev, "can't register regulator\n");
-> > -		return PTR_ERR(rdev);
-> > +		config.dev = &pdev->dev;
-> > +		config.driver_data = vreg;
-> > +		rdev = devm_regulator_register(&pdev->dev, &vreg->desc, &config);
-> > +		if (IS_ERR(rdev)) {
-> > +			dev_err(&pdev->dev, "can't register regulator\n");
-> > +			return PTR_ERR(rdev);
-> > +		}
-> >  	}
-> >  
-> >  	return 0;
-> 
+--ext4kBY5hxW07XMK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Mar 04, 2015 at 11:35:43AM -0800, Stephen Boyd wrote:
+
 > There's another problem with this of_parse_cb design. The regulator
 > framework requires supplies to be registered before consumers of the
-> supplies are registered.
-
-You're right, didn't think of that.
-
-The way I've ordered pm8921 it happens to work, but neither 8058 nor
-8901 will pass probe by filling in the dependencies according to what we
-have in the caf branch.
-
-> So when we register L23 we need to make sure
+> supplies are registered. So when we register L23 we need to make sure
 > it's supply is already registered (S8 for example). If we used
 > of_regulator_match() we could sort the array by hand so that we always
-> register the supplies first.
-
-Right, but that would mean that any block of regulators with internal
-dependencies would miss out on the "standard" code paths through
-regulator_register() and have to implement this on their own.
-
-Just looking at the Qualcomm case, we would have to implement this
-sorting mechanism in the rpm-regulator, pm8xxx-regulator, smd-regulator
-and qpnp-regulator drivers.
-
-
-I took a stab at implementing EPROBE_DEFER within qcom_rpm-regulator,
-but as it's a mixture of internal and external dependencies (e.g.
-<&pm8921_s4> vs <&pm8921_mpp 7>) this became quite messy. I started
-looking at using the dt dependencies sort and iterate over the entries
-in a way that adheres to their dependencies, but that's also a lot of
-code.
-
-But...
-
-> Or we could modify the regulator framework
+> register the supplies first. Or we could modify the regulator framework
 > to have a concept of "orphaned" supplies like the clock framework has so
 > that when a regulator is registered it waits until its supply is registered.
-> 
 
-...as we're grouping all regulators into one device per PMIC we create
-artificial dependencies that the hardware guys does not have. Further
-more the fact that we can have some parts of the pmic exposed through
-the rpm driver and others through the direct driver we have yet another
-level of possible just adds to this.
+Dependency resolution isn't anything new, I'm not sure why you think
+this is related to of_parse_cb()?  Open coding does exactly the same
+thing and the ability to have device specific properties on is not
+obviously related to dependency resolution so perhaps I'm
+misunderstanding what you're talking about...
 
-It's perfectly fine to route the dependencies between two of our PMICs
-in a way that on a device level we have a circular dependency.
+If you *are* talking about dependency resolution then just bulk
+registering the regulators (which we should be doing anyway) and then
+iterating the array until we stop making progress should do the trick
+for most cases, normally there's only one PMIC in play, or have people
+who care do a single struct device per regulator and then let the probe
+deferral stuff sort it out.
 
-So I think you're right, we should be able to alter the supply lookup
-code to defer the EPROBE_DEFER until we actually need the supply to be
-there; e.g. attempt to map supplies when an external consumer request
-the regulator.
-Some care needs to be taken with regards to e.g. always-on regulators.
+I'm a bit nervous of the idea of having orphaning without core support,
+it's not just inter regulator dependencies we need to worry about (they
+use GPIOs and so on) and there's concerns about debuggability but it is
+the kind of thing probe deferral was meant to be a cheap implementation
+of.  There was a proposal quite recently from someone at Samsung Poland
+to do something more coreish and basically split registrations in two,
+one half registering the things needed for each resource and then a
+second half which runs once the required resources are registered.
+Pushing that along might be best, it's a more general approach.  The
+component stuff Russell did has some similarities here.
 
-Regards,
-Bjorn
+--ext4kBY5hxW07XMK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU96OLAAoJECTWi3JdVIfQ8NkH/ius5JSSrp2xXI2AeA+MLIVF
+Wfnt4PYCXBfBZJ4i87f0cWzuAHIEYldd2PplNohJBG8j37LwLPrirKsxJbVWDY+b
+RgV09ASKVU/xPj+VCSJjPitCMscshxsPq/I6cGa6RGCaWYxDeZCdcaAt/vicFmEo
+tYh+qKr8tKJG/dD7yBBmB+Uw0UhjIHwetTTHYVATs2ygtw9jgA/HzOLOsUiAjan6
+Q/yTl36RO+/6xJHcTdWMUBLq75/ypj/jz6/eHbAgf7fTdJApd7FxHSdt+Dg7jMaS
+o24XUh9gfQsRAuLma5uDM2J3ZPCTXBZC+vlX3QqvsfytzWMVXBw/OkOs76bVUYQ=
+=7QEw
+-----END PGP SIGNATURE-----
+
+--ext4kBY5hxW07XMK--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
