@@ -1,36 +1,38 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: [PATCH] dt: submitting-patches: clarify that DT maintainers are to be cced on bindings
-Date: Thu,  5 Mar 2015 10:53:11 -0500
-Message-ID: <1425570791-1006-1-git-send-email-mporter@konsulko.com>
+From: Scott Branden <sbranden@broadcom.com>
+Subject: [PATCH RESEND 0/4] Add support for IPROC SDHCI controller
+Date: Thu, 5 Mar 2015 07:59:04 -0800
+Message-ID: <1425571148-5876-1-git-send-email-sbranden@broadcom.com>
+References: <Scott Branden <sbranden@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <Scott Branden <sbranden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Devicetree List <devicetree@vger.kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: bcm-kernel-feedback-list@broadcom.com, Ulf Hansson <ulf.hansson@linaro.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Scott Branden <sbranden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The exact steps provided for submitting binding patches can be read
-as requiring the bindings to be sent only to the devicetree@vger.kernel.org
-list. Since the DT maintainers would like to be Cced on any binding
-submissions, make this requirement explicit in step 2.
+This series of patchsets contains the IPROC SDHCI driver used
+in a series of Broadcom SoCs
+Quirks are also added to support this controller.
 
-Signed-off-by: Matt Porter <mporter@konsulko.com>
----
- Documentation/devicetree/bindings/submitting-patches.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Corneliu Doban (1):
+  mmc: sdhci: do not set AUTO_CMD12 for multi-block CMD53
 
-diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
-index 56742bc..7d44eae 100644
---- a/Documentation/devicetree/bindings/submitting-patches.txt
-+++ b/Documentation/devicetree/bindings/submitting-patches.txt
-@@ -12,6 +12,9 @@ I. For patch submitters
- 
-        devicetree@vger.kernel.org
- 
-+     and Cc: the DT maintainers. Use scripts/get_maintainer.pl to identify
-+     all of the DT maintainers.
-+
-   3) The Documentation/ portion of the patch should come in the series before
-      the code implementing the binding.
- 
+Scott Branden (3):
+  mmc: sdhci: add quirk for ACMD23 broken
+  mmc: sdhci-iproc: add IPROC SDHCI driver
+  mmc: sdhci-iproc: add device tree bindings
+
+ .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  23 ++
+ drivers/mmc/host/Kconfig                           |  14 ++
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/sdhci-iproc.c                     | 241 +++++++++++++++++++++
+ drivers/mmc/host/sdhci.c                           |   7 +-
+ include/linux/mmc/sdhci.h                          |   2 +
+ 6 files changed, 286 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
+ create mode 100644 drivers/mmc/host/sdhci-iproc.c
+
 -- 
-1.8.4
+2.2.2
