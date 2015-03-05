@@ -1,63 +1,101 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH 1/4] ARM: OMAP2+: omap_hwmod: Introduce ti,no-init dt
- property
-Date: Thu, 5 Mar 2015 13:47:19 -0600
-Message-ID: <54F8B2C7.7060202@ti.com>
-References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com> <1425561211-31003-2-git-send-email-d-gerlach@ti.com> <alpine.DEB.2.02.1503051815590.5613@utopia.booyaka.com> <20150305184952.GF13520@atomide.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 08/10] dt/bindings: Add binding for BCM2835 mailbox property channel driver
+Date: Thu, 05 Mar 2015 11:50:38 -0800
+Message-ID: <87wq2v6x69.fsf@eliezer.anholt.net>
+References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-9-git-send-email-eric@anholt.net> <54F681CE.2070801@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150305184952.GF13520@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, KEERTHY <j-keerthy@ti.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54F681CE.2070801-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2015 12:49 PM, Tony Lindgren wrote:
-> * Paul Walmsley <paul@pwsan.com> [150305 10:16]:
->> On Thu, 5 Mar 2015, Dave Gerlach wrote:
->>
->>> Introduce a dt property, ti,no-init, that prevents hwmod initialization.
->>> Even if a dt node is marked as disabled, hwmod still at least enables
->>> the hwmod and programs the sysconfig before attempting to idle it at
->>> boot. If an IP has been disabled by the hardware configuration on a
->>> platform, this will cause a hang due to writing to inactive registers.
->>> This property prevents that from happening by marking the hwmod as
->>> _HWMOD_STATE_DISABLED during init.
->>
->> I'm kind of wondering if hwmod should even touch a device if it's marked 
->> as disabled in the DT.  Tony, what do you think?
-> 
-> Well nothing happens if a device is status = "disabled". No dev entry
-> gets created for it at all and hwmod won't have any data for the device
-> populated. The only way hwmod code could see that device if the device
-> gets it's data from the legacy omap_hwmod_*_data.c instead of DT.
-> 
+--=-=-=
+Content-Type: text/plain
 
-We still need this for the sysconfig programming, correct? hwmod programs that
-regardless of dt status and then idles the IP, which is why I needed the
-ti,no-init for the epos evm. It isn't just a matter of we shouldnt write to it
-because we don't want to use it; we can't write to it because the module is held
-off so it causes an external abort if we do.
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
 
-Regards,
-Dave
+> On 03/02/2015 01:54 PM, Eric Anholt wrote:
+>> I was tempted to have the mailbox property channel support just be in
+>> the 2835 mailbox driver itself, but mbox_request_channel() wants its
+>> device to have the "mboxes" node, and that appears to be only intended
+>> for mailbox clients, not controllers.
+>
+> This is more of a particular format/protocol of messages you can send
+> over the mailbox HW than a device. I wonder if it actually makes sense
+> to represent it in DT as a device at all?
+>
+> If we do represent this as a device in DT, shouldn't it also look like a
+> mailbox device so that other drivers (clock, display, ...) can bind to
+> it and send messages using the mailbox API?
 
-> So maybe the comments in the $subject patch are incorrect for that?
-> 
-> What we really should have is also status = "incomplete" where the
-> dev entry gets created, but the driver never probes. This would be for
-> devices that are still there within the SoC, but not pinned out for
-> the board in question.
-> 
-> We still may need also ti,no-init too for devices that we don't want
-> hwmod to do anything with, for example in secure mode if some blocks
-> are not available to Linux at all. I believe that's what's going on with
-> n900 crypto accelerators for example.
-> 
-> Regards,
-> 
-> Tony
-> 
+I don't think it makes sense as a mailbox device.  mailbox devices can
+only have one client per channel, while there's no reason to have that
+limitation on the property channel.  You could imagine having the
+individual tags be channels, except that again there's no reason to have
+the one-client limitation, but more importantly the indivudual messages
+to the firmware are composed of N tags.
 
+> I might have expected to just add property support directly into the
+> basic bcm2835 mailbox driver itself. Perhaps some attempt might be made
+> to isolate the HW register level access in one file/driver, and expose
+> both the regular and property mailbox protocols as a higher level that
+> uses the low-level mailbox functionality? The concept of the lower 4
+> bits of mailbox data being a channel ID might belong in the higher
+> protocol level rather than the lower HW layer?
+
+Yes, the lower 4 bits being the channel is firmware protocol.
+
+The reason I didn't have it in the same device as the mailbox is that
+you need the channel reference in order to set up a mailbox client, and
+I didn't think it made sense to have the mailbox device dt reference
+itself.
+
+The higher-level interface I think might make sense would be a send_data
+replacement that took your device and mbox channel index, and a u32 of
+data (low 4 bits unused), and synchronously returned a u32 of response.
+It would do the client setup/send/wait_for_completion/teardown for you.
+
+I'm skeptical of putting much more work into mailboxes on this platform,
+though.  All we've got for channels are:
+
+0: power (present in this series)
+1: fb (Won't be used in Linux)
+2: unused
+3: VCHIQ (I've heard skepticism that the kernel community would accept this
+          interface)
+4: unused
+5: unused
+6: unused
+7: settings (not sure if there's anything here not exposed in properties)
+8: property (present in this series)
+9-15: unused
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJU+LOOAAoJELXWKTbR/J7oGs0QAJViS2lQGj3dQkT35DmoeOsr
+9lf0Mtpzo9Zkm05w1jSgGu8qDyzdj7gkRAP81VmZnBzqfzPK86aHOZ4U9pDOqE9U
+C1Cc/1eZZ4J5ogKVI/vwWqQcz48WrcNGosykh9MzD5/n6mS8uf1foYO9VOOzq+Px
+QuV52Me1nu0bQPZ75I5mUE32Vv7oQDZ0fGZOzurvuokdViXyW0iy0DrJPzDRR4vQ
+7ZUBAR1xC4uoBYLYGkJ4Xmk3fJqrjxNM8EF8yChV1RoeStt9VGnok3pSrViJp58K
+6iIVpR7nZaZ8NOh9IylWlPgJYw1osLQXH11XCENiBDqZcj+96osRNto92ZiPfVfS
+n/5BBIKJdRBrk5tnAcF/mjZrk8he1nkFJQSOxiet17XKooZ9nVyiZWWwRf3cDYro
+h4cO+FE2e4tOfh70jgpBC8mVGVS1exUy9jYYzaLkXSlhjtRLz1QJ7u/JRF41mzC6
+WIiwzzrBkWXHnnlZQnhYVjBY8s1xqsTtYYTrusfRAh/BjBVHmHlzLKaDxV5sOzOl
+ISd1/doBS9gl6BEqXoX5TpbJ7oeoh9aL83u+dLAnTLKkhAAJOUPhR0718C8gUAL3
+ICOZ6rt/FA0s+FbBoY92lyo6kDK5YXDd6aoiANHmUUylm0WV8IdSUhIVNZtWpG7R
+R6mxVOQNeFrmbRrvdpR+
+=0wvi
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
