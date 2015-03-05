@@ -1,62 +1,51 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH] ARM: STi: Add STiH410 SoC support
-Date: Thu, 5 Mar 2015 13:55:53 +0100
-Message-ID: <54F85259.8080807@st.com>
-References: <1425559623-12379-1-git-send-email-fabrice.gasnier@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: [PATCH v2] ARM: STi: Add STiH410 SoC support
+Date: Thu,  5 Mar 2015 14:05:06 +0100
+Message-ID: <1425560706-22907-1-git-send-email-fabrice.gasnier@st.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425559623-12379-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice GASNIER <fabrice.gasnier@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrice,
+This patch adds support to STiH410 SoC.
 
-On 03/05/2015 01:47 PM, Fabrice GASNIER wrote:
-> This patch adds support to STiH410 SoC.
-
-Actually, the STiH410 support is already here in v4.0-rc1.
+Please note "st,stih410" is already present in device tree.
 The problem is that it is missing the entry in the match table,
 and so the L2 cache and other cpus than 0 don't get initialized.
 
-Once fixed, you can add my:
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+---
+ Documentation/devicetree/bindings/arm/sti.txt | 4 ++++
+ arch/arm/mach-sti/board-dt.c                  | 1 +
+ 2 files changed, 5 insertions(+)
 
-Thanks,
-Maxime
->
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->   Documentation/devicetree/bindings/arm/sti.txt | 4 ++++
->   arch/arm/mach-sti/board-dt.c                  | 1 +
->   2 files changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/sti.txt b/Documentation/devicetree/bindings/arm/sti.txt
-> index d70ec35..8d27f6b 100644
-> --- a/Documentation/devicetree/bindings/arm/sti.txt
-> +++ b/Documentation/devicetree/bindings/arm/sti.txt
-> @@ -13,6 +13,10 @@ Boards with the ST STiH407 SoC shall have the following properties:
->   Required root node property:
->   compatible = "st,stih407";
->   
-> +Boards with the ST STiH410 SoC shall have the following properties:
-> +Required root node property:
-> +compatible = "st,stih410";
-> +
->   Boards with the ST STiH418 SoC shall have the following properties:
->   Required root node property:
->   compatible = "st,stih418";
-> diff --git a/arch/arm/mach-sti/board-dt.c b/arch/arm/mach-sti/board-dt.c
-> index b067390..b373aca 100644
-> --- a/arch/arm/mach-sti/board-dt.c
-> +++ b/arch/arm/mach-sti/board-dt.c
-> @@ -18,6 +18,7 @@ static const char *stih41x_dt_match[] __initdata = {
->   	"st,stih415",
->   	"st,stih416",
->   	"st,stih407",
-> +	"st,stih410",
->   	"st,stih418",
->   	NULL
->   };
+diff --git a/Documentation/devicetree/bindings/arm/sti.txt b/Documentation/devicetree/bindings/arm/sti.txt
+index d70ec35..8d27f6b 100644
+--- a/Documentation/devicetree/bindings/arm/sti.txt
++++ b/Documentation/devicetree/bindings/arm/sti.txt
+@@ -13,6 +13,10 @@ Boards with the ST STiH407 SoC shall have the following properties:
+ Required root node property:
+ compatible = "st,stih407";
+ 
++Boards with the ST STiH410 SoC shall have the following properties:
++Required root node property:
++compatible = "st,stih410";
++
+ Boards with the ST STiH418 SoC shall have the following properties:
+ Required root node property:
+ compatible = "st,stih418";
+diff --git a/arch/arm/mach-sti/board-dt.c b/arch/arm/mach-sti/board-dt.c
+index b067390..b373aca 100644
+--- a/arch/arm/mach-sti/board-dt.c
++++ b/arch/arm/mach-sti/board-dt.c
+@@ -18,6 +18,7 @@ static const char *stih41x_dt_match[] __initdata = {
+ 	"st,stih415",
+ 	"st,stih416",
+ 	"st,stih407",
++	"st,stih410",
+ 	"st,stih418",
+ 	NULL
+ };
+-- 
+1.9.1
