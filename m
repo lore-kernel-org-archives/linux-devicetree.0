@@ -1,131 +1,64 @@
-From: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency control
-Date: Thu, 5 Mar 2015 19:33:58 +0800
-Message-ID: <CALx668VvUKTijtoAMoDg2oTmMnad_aq-DSvkaneHnWt+Yo1Dfg@mail.gmail.com>
-References: <1425466152-7867-1-git-send-email-pi-cheng.chen@linaro.org>
-	<20150304112109.GB11010@pengutronix.de>
-	<CALx668WKKmifhuODsV+Uaoq4ggcmB1=wbpLzXBnjEtxbuB4qig@mail.gmail.com>
-	<20150305074207.GC11010@pengutronix.de>
-	<CAKohponSqLPcULA9-T8y9b_b44Torti0p6W3sJfRZ1oKUWqtTw@mail.gmail.com>
-	<20150305091948.GH11010@pengutronix.de>
-	<CALx668X2m0hMVQumGQmhhrKnv4h1hiYp20Q4FcKuECK3mhoJiA@mail.gmail.com>
-	<20150305105104.GJ11010@pengutronix.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Thu, 5 Mar 2015 12:24:59 +0000
+Message-ID: <20150305122459.GC14093@leverpostej>
+References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
+ <1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150305105104.GJ11010@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Henry Chen <henryc.chen@mediatek.com>, Chen Fan <fan.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425533911-14800-2-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5 March 2015 at 18:51, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> On Thu, Mar 05, 2015 at 05:39:12PM +0800, Pi-Cheng Chen wrote:
->> On 5 March 2015 at 17:19, Sascha Hauer <s.hauer@pengutronix.de> wrote:
->> > On Thu, Mar 05, 2015 at 02:29:50PM +0530, Viresh Kumar wrote:
->> >> On 5 March 2015 at 13:12, Sascha Hauer <s.hauer@pengutronix.de> wrote:
->> >> > We have clk_set_parent for changing the parent and clk_set_rate to
->> >> > change the rate. Use the former for changing the parent and the latter
->> >> > for changing the rate. What you are interested in is changing the
->> >> > parent, so use clk_set_parent for this and not abuse a side effect
->> >> > of clk_set_rate.
->> >>
->> >> clk_set_rate() for CPUs clock is responsible to change clock rate
->> >> of the CPU. Whether it plays with PLLs or muxes, its not that relevant.
->> >
->> > The sequence to change the CPU frequency on the Mediatek SoCs is like this:
->> >
->> > - Change CPU from CPU PLL to another clock source (intermediate source)
->> > - Change CPU PLL frequency
->> > - wait until PLL has settled
->> > - switch back to CPU PLL
->> >
->> > The frequency of the intermediate source is irrelevant, the important
->> > thing is that the CPU is switched to this source while the CPU PLL is
->> > reconfigured.
->> >
->> > In Pi-Chengs patches the switch to th eintermediate clock is done like:
->> >
->> >         rate = clk_get_rate(intermediate_clk);
->> >         clk_set_rate(cpu_clk, rate);
->> >
->> > Now the clk framework does the switch not because it's told to switch
->> > to another parent, but only because the other parent happens to be the
->> > only provider for that rate. That's rubbish, when the parent must be
->> > changed, then it should be done explicitly.
->>
->> Hi,
->>
->> Please correct me if I was wrong. But I think that's the reason why we have
->> a determine_rate hook here, isn't it?
->>
->> > What if the CPU PLL and the intermediate clk happen to have the same
->> > rate? Then the clk_set_rate above simply does nothing, no parent is
->> > changed and the following rate change of the CPU PLL just crashes the
->> > system.
->>
->> I think what I am trying to do in the determine_rate hook of cpumux is:
->>
->> * if the target rate of clk_set_rate is equal to the rate of MAINPLL,
->> then switch
->>   the mux to MAINPLL
->> * otherwise, set the rate directly on ARMPLL and switch the mux back to
->>   ARMPLL if the current parent of mux is not ARMPLL
->>
->> And if the CPU PLL and the intermediate clk happen to have the same rate,
->> I think the cpufreq-dt driver will change nothing on the clk framework. Or do
->> I misunderstand your point?
->
-> Imagine the board starts with both the CPU PLL and Intermediate PLL
-> running with the same frequency with the CPU driven from the CPU PLL.
-> Now the cpufreq driver does it's very first frequency transition. Now
-> when clk_set_rate is used with the intention to switch to the
-> intermediate PLL nothing will happen because the CPU PLL already runs
-> at the desired frequency. Reconfiguring the CPU PLL then crashes your
-> system.
->
-> Another reason why abusing clk_set_rate to change the parent is this:
-> You have this in your SoC:
->
->             ---
-> CPU_PLL ---|   |
->            |   |
->            |   |----- CPU
->            |   |
-> IM_PLL ----|   |
->             ---
->
-> Now you do a clk_set_rate(CPU, clk_get_rate(IM_PLL)) which (often) works
-> in your case. Many SoCs have an additional divider though, like this:
->
->             ---
-> CPU_PLL ---|   |
->            |   |   ----
->            |   |--| :x | --- CPU
->            |   |   ----
-> IM_PLL ----|   |
->             ---
->
-> Now clk_set_rate(CPU, clk_get_rate(IM_PLL)) doesn't give anything
-> sensible anymore.
->
-> Given the variance of different SoCs I don't think it makes sense
-> to try to handle all these cases. Instead the cpufreq-dt driver
-> should just call clk_set_rate() on the CPU clock with the desired
-> target frequency. Everything else should be handled in the clock
-> driver which has intimate knowledge about the SoC anyway.
+On Thu, Mar 05, 2015 at 05:38:23AM +0000, Chanwoo Choi wrote:
+> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
+> Octal core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
+> PSCI (Power State Coordination Interface) v0.1.
+> 
+> This patch includes following dt node to support Exynos5433 SoC:
+> 1. Octa core for big.LITTLE architecture
+> - Cortex-A53 LITTLE Quad-core
+> - Cortex-A57 big Quad-core
+> - Support PSCI v0.1
 
-Now I got it. Thanks for your elaboration. I will investigate the way
-you suggested to implement intermediate clock switching.
+[...]
 
-Best Regards,
-Pi-Cheng
+> +       psci {
+> +               compatible = "arm,psci";
+> +               method = "smc";
+> +               cpu_off = <0x84000002>;
+> +               cpu_on = <0xC4000003>;
+> +       };
 
->
-> Sascha
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Back at v2 you mentioned that CPU_OFF wasn't working [1].
+
+Do both CPU_ON and CPU_OFF work for all CPUs, including the boot CPU?
+
+I take it CPUs boot at EL2?
+
+[...]
+
+> +               timer {
+> +                       compatible = "arm,armv8-timer";
+> +                       interrupts = <1 13 0xff04>,
+> +                                    <1 14 0xff04>,
+> +                                    <1 11 0xff04>,
+> +                                    <1 10 0xff04>;
+> +               };
+
+The timer node should be moved under the root node. It doesn't live on
+the bus; it's a component of the CPU.
+
+Thanks,
+Mark.
+
+[1] https://lkml.org/lkml/2014/12/2/413
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
