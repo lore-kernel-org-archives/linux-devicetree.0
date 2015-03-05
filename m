@@ -1,102 +1,69 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [Patch V7 02/10] ASoC: qcom: Document LPASS CPU bindings
-Date: Thu, 5 Mar 2015 12:52:30 -0600
-Message-ID: <7E5AFC65-1705-4BDC-B57F-0444E83A8987@codeaurora.org>
-References: <1425428519-12224-1-git-send-email-kwestfie@codeaurora.org> <1425428519-12224-3-git-send-email-kwestfie@codeaurora.org>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Thu, 5 Mar 2015 18:54:07 +0000
+Message-ID: <20150305185407.GK14093@leverpostej>
+References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
+ <1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
+ <20150305122459.GC14093@leverpostej>
+ <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
+ <20150305170450.GG14093@leverpostej>
+ <CAGTfZH3nkCvnuu+fC1Gv5DrRQXEg6Y19tQnh+phj6c_jAFpbvg@mail.gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1425428519-12224-3-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGTfZH3nkCvnuu+fC1Gv5DrRQXEg6Y19tQnh+phj6c_jAFpbvg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cwchoi00@gmail.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ideal.song@samsung.com" <ideal.song@samsung.com>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On Mar 3, 2015, at 6:21 PM, Kenneth Westfield <kwestfie@codeaurora.org> wrote:
-
-> From: Kenneth Westfield <kwestfie@codeaurora.org>
+> >> >> +       psci {
+> >> >> +               compatible = "arm,psci";
+> >> >> +               method = "smc";
+> >> >> +               cpu_off = <0x84000002>;
+> >> >> +               cpu_on = <0xC4000003>;
+> >> >> +       };
+> >> >
+> >> > Back at v2 you mentioned that CPU_OFF wasn't working [1].
+> >> >
+> >> > Do both CPU_ON and CPU_OFF work for all CPUs, including the boot CPU?
+> >>
+> >> The CPU1 ~ CPU7 are well woking about CPU_ON/OFF.
+> >> CPU0 (boot CPU) is only well working for CPU_OFF.
+> >> But when I try to turn on the CPU0 after CPU_OFF, I failed it.
+> >
+> > That's rather worrying. Can you look into what's going on here? I'd
+> > rather not have dts describing things which are known to be broken.
 > 
-> Add documentation to the sound directory of the
-> device-tree bindings for the QTi LPASS CPU DAI
-> device.
-> 
-> Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
-> Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
-> ---
-> .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 49 ++++++++++++++++++++++
-> 1 file changed, 49 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e7c6e9321863f022ebf0d51b75d7bb83c10b9062
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-> @@ -0,0 +1,49 @@
-> +* Qualcomm Technologies LPASS CPU DAI
-> +
-> +This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
-> +
-> +Required properties:
-> +
-> +- compatible		: "qcom,lpass-cpu"
-> +- clocks		: Must contain an entry for each entry in clock-names.
-> +- clock-names		: A list which must include the following entries:
-> +				* "ahbix-clk"
-> +				* "mi2s-osr-clk"
-> +				* "mi2s-bit-clk"
-> +- interrupts		: Must contain an entry for each entry in
-> +			  interrupt-names.
-> +- interrupt-names	: A list which must include the following entries:
-> +				* "lpass-irq-lpaif"
-> +- pinctrl-N		: One property must exist for each entry in
-> +			  pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
-> +			  for details of the property values.
-> +- pinctrl-names		: Must contain a "default" entry.
-> +- reg			: Must contain an address for each entry in reg-names.
-> +- reg-names		: A list which must include the following entries:
-> +				* "lpass-lpaif"
-> +
-> +Required subnodes:
-> +
-> +- qcom,adsp		: Audio DSP sub-node
-> +
+> The board dts don't include any node for CPU_ON/OFF.
 
-What is the intent of this subnode?
+I don't understand. The CPU_ON and CPU_OFF IDs are in the psci node
+quoted above, and all the CPUs had enable-method = "psci".
 
-> +Optional Audio DSP subnode properties:
-> +
-> +- status		: "disabled" indicates the adsp is not available.
-> +
-> +Example:
-> +
-> +lpass@28100000 {
-> +	compatible = "qcom,lpass-cpu";
-> +	clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
-> +	clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
-> +	interrupts = <0 85 1>;
-> +	interrupt-names = "lpass-irq-lpaif";
-> +	pinctrl-names = "default", "idle";
-> +	pinctrl-0 = <&mi2s_default>;
-> +	pinctrl-1 = <&mi2s_idle>;
-> +	reg = <0x28100000 0x10000>;
-> +	reg-names = "lpass-lpaif";
-> +	qcom,adsp {
-> +		status = "disabled";
-> +	};
-> +};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> When I try to turn on the CPU0 (boot CPU), fail to turn on and lockup happen.
+> After lockup happen, I cannot use the console.
+
+That sounds like a pretty major bug.
+
+Are you able to investigate with a hardware debugger?
+
+Do other CPUs eventually log errors regarding the lockup? Or is the
+machine completely dead from this point on?
+
+> >> > I take it CPUs boot at EL2?
+> >
+> > Do the CPUs boot at EL1 or EL2?
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Unfortunately, I cannot check the secure firmware for Exynos5433 SoC.
+> I think that a few SoC provider probably would know it.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I guess I asked the wrong question.
+
+Do CPUs enter the kernel at EL2 or at EL1?
+
+Thanks,
+Mark.
