@@ -1,76 +1,79 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+From: Michal Simek <monstr@monstr.eu>
 Subject: Re: [PATCH v2] ARM64: Add new Xilinx ZynqMP SoC
-Date: Thu, 05 Mar 2015 14:05:50 +0000
-Message-ID: <54F862BE.7000901@arm.com>
-References: <cd616fa25dafee38f98e3b207e74450c5403f440.1425563597.git.michal.simek@xilinx.com>
+Date: Thu, 05 Mar 2015 15:08:26 +0100
+Message-ID: <54F8635A.9020808@monstr.eu>
+References: <cd616fa25dafee38f98e3b207e74450c5403f440.1425563597.git.michal.simek@xilinx.com> <20150305150322.19e378d9@free-electrons.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cd616fa25dafee38f98e3b207e74450c5403f440.1425563597.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zach Pfeffer <zachp-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="g8V9BRgcVQRviciGk8SUqnO4p7gwJmtuL"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150305150322.19e378d9@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>, devicetree@vger.kernel.org, Zach Pfeffer <zachp@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Eddie Huang <eddie.huang@mediatek.com>, =?windows-1252?Q?S=F6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--g8V9BRgcVQRviciGk8SUqnO4p7gwJmtuL
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On 05/03/15 13:53, Michal Simek wrote:
-> Initial version of device tree for Xilinx ZynqMP SoC.
+Hi Thomas,
+
+On 03/05/2015 03:03 PM, Thomas Petazzoni wrote:
+> Dear Michal Simek,
 >=20
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
+> On Thu,  5 Mar 2015 14:53:34 +0100, Michal Simek wrote:
 >=20
-> Changes in v2:
-> -  move timer out of amba_apu bus because it is not on bus
->    Reported by Mark
-> - FIC GICC and GICV addresses - Reported by Rob
-> - Fix copyright
-> - Enable cadence IP in defconfig
-> - Add support for macb multiqueue
+>> +	pmu {
+>> +		compatible =3D "arm,armv8-pmuv3";
+>> +		interrupts =3D <0 143 4>,
+>> +			     <0 144 4>,
+>> +			     <0 145 4>,
+>> +			     <0 146 4>;
 >=20
->  arch/arm64/Kconfig                          |   5 +
->  arch/arm64/boot/dts/Makefile                |   1 +
->  arch/arm64/boot/dts/xilinx/Makefile         |   5 +
->  arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts |  47 +++++
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi      | 303 ++++++++++++++++++=
-++++++++++
->  arch/arm64/configs/defconfig                |   3 +
->  6 files changed, 364 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/xilinx/Makefile
->  create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
->  create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> Any reason not to use
+>=20
+> #include <dt-bindings/interrupt-controller/arm-gic.h>
+> #include <dt-bindings/interrupt-controller/irq.h>
+>=20
+> in order to write the more descriptive:
+>=20
+> 		interrupts =3D <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+>=20
+> And ditto for all other interrupts properties?
 
-[...]
-
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64=
-/boot/dts/xilinx/zynqmp-ep108.dts
-> new file mode 100644
-> index 000000000000..0a3f40ecd06d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-
-[...]
-
-> +		gic: interrupt-controller@f9010000 {
-> +			compatible =3D "arm,cortex-a15-gic", "arm,cortex-a9-gic";
-> +			#interrupt-cells =3D <3>;
-> +			reg =3D <0x0 0xf9010000 0x10000>,
-> +			      <0x0 0xf902f000 0x2000>,
-> +			      <0x0 0xf9040000 0x20000>,
-> +			      <0x0 0xf906f000 0x2000>;
-> +			interrupt-controller;
-
-Please add the missing GIC maintenance interrupt.
+I tend to not to use them because it is just hassle when I want
+to move DTSes to different project.
 
 Thanks,
+Michal
 
-	M.
 --=20
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--g8V9BRgcVQRviciGk8SUqnO4p7gwJmtuL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlT4Y1oACgkQykllyylKDCF75wCfSn4D/YsUwyAznwC06/ENybsm
+Ad0An3vhQViKGutcQbksEUBzb/3X98aj
+=D22G
+-----END PGP SIGNATURE-----
+
+--g8V9BRgcVQRviciGk8SUqnO4p7gwJmtuL--
