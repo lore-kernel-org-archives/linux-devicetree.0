@@ -1,52 +1,73 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/4] ARM: OMAP2+: omap_hwmod: Introduce ti,no-init dt
- property
-Date: Thu, 5 Mar 2015 10:49:53 -0800
-Message-ID: <20150305184952.GF13520@atomide.com>
-References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com>
- <1425561211-31003-2-git-send-email-d-gerlach@ti.com>
- <alpine.DEB.2.02.1503051815590.5613@utopia.booyaka.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 2/2] mtd: nand: jz4780: driver for NAND devices on
+ JZ4780 SoCs
+Date: Thu, 05 Mar 2015 20:13:43 +0100
+Message-ID: <1425582823.24292.225.camel@x220>
+References: <1425576461-52412-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+	 <1425576461-52412-3-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1503051815590.5613@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Dave Gerlach <d-gerlach@ti.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, KEERTHY <j-keerthy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425576461-52412-3-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Paul Walmsley <paul@pwsan.com> [150305 10:16]:
-> On Thu, 5 Mar 2015, Dave Gerlach wrote:
-> 
-> > Introduce a dt property, ti,no-init, that prevents hwmod initialization.
-> > Even if a dt node is marked as disabled, hwmod still at least enables
-> > the hwmod and programs the sysconfig before attempting to idle it at
-> > boot. If an IP has been disabled by the hardware configuration on a
-> > platform, this will cause a hang due to writing to inactive registers.
-> > This property prevents that from happening by marking the hwmod as
-> > _HWMOD_STATE_DISABLED during init.
-> 
-> I'm kind of wondering if hwmod should even touch a device if it's marked 
-> as disabled in the DT.  Tony, what do you think?
+On Thu, 2015-03-05 at 17:27 +0000, Zubair Lutfullah Kakakhel wrote:
+> --- /dev/null
+> +++ b/drivers/mtd/nand/jz4780_bch.c
+> @@ -0,0 +1,359 @@
+> +/*
+> + * JZ4780 BCH controller
+> + *
+> + * Copyright (c) 2015 Imagination Technologies
+> + * Author: Alex Smith <alex@alex-smith.me.uk>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
 
-Well nothing happens if a device is status = "disabled". No dev entry
-gets created for it at all and hwmod won't have any data for the device
-populated. The only way hwmod code could see that device if the device
-gets it's data from the legacy omap_hwmod_*_data.c instead of DT.
+This states the license is GPL v2 or later.
 
-So maybe the comments in the $subject patch are incorrect for that?
+> +MODULE_LICENSE("GPL v2");
 
-What we really should have is also status = "incomplete" where the
-dev entry gets created, but the driver never probes. This would be for
-devices that are still there within the SoC, but not pinned out for
-the board in question.
+So you probably want
+    MODULE_LICENSE("GPL");
 
-We still may need also ti,no-init too for devices that we don't want
-hwmod to do anything with, for example in secure mode if some blocks
-are not available to Linux at all. I believe that's what's going on with
-n900 crypto accelerators for example.
+here.
 
-Regards,
+> --- /dev/null
+> +++ b/drivers/mtd/nand/jz4780_nand.c
+> @@ -0,0 +1,373 @@
+> +/*
+> + * JZ4780 NAND driver
+> + *
+> + * Copyright (c) 2015 Imagination Technologies
+> + * Author: Alex Smith <alex@alex-smith.me.uk>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
 
-Tony
+This states the license is GPL v2 or later.
+
+> +MODULE_LICENSE("GPL V2");
+
+So, again, you probably want
+    MODULE_LICENSE("GPL");
+
+here.
+
+Actually "GPL V2" would taint the kernel on module load.
+
+(This all assumes we're talking about two separate modules here. I don't
+speak "Makefile" enough to be sure.)
+
+
+Paul Bolle
