@@ -1,69 +1,62 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v12 04/19] dt-binding: leds: Add common LED DT bindings
- macros
-Date: Thu, 05 Mar 2015 08:56:27 +0100
-Message-ID: <54F80C2B.20705@samsung.com>
-References: <1425485680-8417-1-git-send-email-j.anaszewski@samsung.com>
- <1425485680-8417-5-git-send-email-j.anaszewski@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 8/9] rtc: st: add new driver for ST's LPC RTC
+Date: Thu, 5 Mar 2015 08:02:45 +0000
+Message-ID: <20150305080245.GA31098@x1>
+References: <1425492398-27340-1-git-send-email-lee.jones@linaro.org>
+ <1425492398-27340-9-git-send-email-lee.jones@linaro.org>
+ <1425497072.2090.4.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1425485680-8417-5-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425497072.2090.4.camel@tiscali.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com, a.zummo@towertech.it
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2015 05:14 PM, Jacek Anaszewski wrote:
-> Add macros for defining boost mode and trigger type properties
-> of flash LED devices.
->
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> ---
->   include/dt-bindings/leds/max77693.h |   21 +++++++++++++++++++++
->   1 file changed, 21 insertions(+)
->   create mode 100644 include/dt-bindings/leds/max77693.h
+On Wed, 04 Mar 2015, Paul Bolle wrote:
 
-This should be obviously include/dt-bindings/leds/common.h.
-It will affect also max77693-led bindings documentation patch.
-I'll send the update after receiving review remarks related to the
-remaining part of the mentioned patches.
+> Lee Jones schreef op wo 04-03-2015 om 18:06 [+0000]:
+> > --- /dev/null
+> > +++ b/drivers/rtc/rtc-st-lpc.c
+> > @@ -0,0 +1,354 @@
+> > +/*
+> > + * rtc-st-lpc.c - ST's LPC RTC, powered by the Low Power Timer
+> > + *
+> > + * Copyright (C) 2014 STMicroelectronics Limited
+> > + *
+> > + * Author: David Paris <david.paris@st.com> for STMicroelectronics
+> > + *         Lee Jones <lee.jones@linaro.org> for STMicroelectronics
+> > + *
+> > + * Based on the original driver written by Stuart Menefy.
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public Licence
+> > + * as published by the Free Software Foundation; either version
+> > + * 2 of the Licence, or (at your option) any later version.
+> > + */
+>=20
+> This states the license is GPL v2 or later.
+>=20
+> > +MODULE_LICENSE("GPLv2");
+>=20
+> This will taint the kernel at module load, won't it? You probably mea=
+nt
+> "GPL v2", but only
+>     MODULE_LICENSE("GPL");
+>=20
+> correctly matches the license in the comment at the top of this file.=
+=20
+>=20
+> (I assume I missed all this when looking at the v4 series.)
 
->
-> diff --git a/include/dt-bindings/leds/max77693.h b/include/dt-bindings/leds/max77693.h
-> new file mode 100644
-> index 0000000..79fcef7
-> --- /dev/null
-> +++ b/include/dt-bindings/leds/max77693.h
-> @@ -0,0 +1,21 @@
-> +/*
-> + * This header provides macros for the common LEDs device tree bindings.
-> + *
-> + * Copyright (C) 2015, Samsung Electronics Co., Ltd.
-> + *
-> + * Author: Jacek Anaszewski <j.anaszewski@samsung.com>
-> + */
-> +
-> +#ifndef __DT_BINDINGS_LEDS_H__
-> +#define __DT_BINDINGS_LEDS_H
-> +
-> +/* External trigger type */
-> +#define LEDS_TRIG_TYPE_EDGE	0
-> +#define LEDS_TRIG_TYPE_LEVEL	1
-> +
-> +/* Boost modes */
-> +#define LEDS_BOOST_OFF		0
-> +#define LEDS_BOOST_ADAPTIVE	1
-> +#define LEDS_BOOST_FIXED	2
-> +
-> +#endif /* __DT_BINDINGS_LEDS_H */
->
+Actually, I've already fixed this along with another typo I found
+after resubmitting.  Always the way sadly.
 
-
--- 
-Best Regards,
-Jacek Anaszewski
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
