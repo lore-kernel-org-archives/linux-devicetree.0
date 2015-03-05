@@ -1,82 +1,37 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: am33xx: Move wkup_m3 node to soc node
- and add ranges
-Date: Thu, 5 Mar 2015 10:46:01 -0600
-Message-ID: <54F88849.1090708@ti.com>
-References: <1425528742-3087-1-git-send-email-d-gerlach@ti.com> <1425528742-3087-3-git-send-email-d-gerlach@ti.com> <20150305154039.GD13520@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 17/17] crypto: talitos - Update DT bindings with SEC1
+Date: Thu,  5 Mar 2015 17:46:07 +0100 (CET)
+Message-ID: <20150305164607.65D3E1A2422@localhost.localdomain>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150305154039.GD13520@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Dave Gerlach <d-gerlach@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>, Kevin Hilman <khilman@linaro.org>, Felipe Balbi <balbi@ti.com>
+To: Kim Phillips <kim.phillips@freescale.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2015 09:40 AM, Tony Lindgren wrote:
-> * Dave Gerlach <d-gerlach@ti.com> [150304 20:14]:
-Dave,
+This patch updates the documentation by including SEC1 into SEC2/3 doc
 
-Looks like the commit message disappeared during your patch preparation.
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->> ---
->>  arch/arm/boot/dts/am33xx.dtsi | 21 +++++++++++++--------
->>  1 file changed, 13 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
->> index acd3705..086415c 100644
->> --- a/arch/arm/boot/dts/am33xx.dtsi
->> +++ b/arch/arm/boot/dts/am33xx.dtsi
->> @@ -77,10 +77,23 @@
->>  	 */
->>  	soc {
->>  		compatible = "ti,omap-infra";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges = <0x0     0x44d00000 0x4000>,
->> +			 <0x80000 0x44d80000 0x2000>;
->> +
-> 
-> I think putting the ranges here will cause issues for adding
-> ranges for anything else.
-> 
-> How about do something like this instead (untested):
-> 
-> ocp {
-> 	l4_wkup: l4_wkup@44c00000 {
-> 		compatible = "am335-l4-wkup", "simple-bus";
-> 		ranges = <0 0x44c00000 0x3fffff>;
-> 
-> 		wkup_m3: wkup_m3@44d00000 {
-> 			compatible = "ti,am3353-wkup-m3";
-> 			reg = <0x1000000     0x4000>,	/* M3 UMEM */
-> 			      <0x180000	     0x2000>;	/* M3 DMEM */
-> 			ti,hwmods = "wkup_m3";
-> 			ti,pm-firmware = "am335x-pm-firmware.elf";
-> 		};
-> 
-> 		...
-> 	};
-> };
-> 
-> That way we can start moving also the other l4_wkup components there
-> eventuallly without having to redo the ranges again for wkup_m3.
-> 
-> You can also look at how the scm_conf was done for dm816x.dtsi for an
-> example, and the recent large set of patches posted by Tero.
-> 
-Tony,
+---
+ Documentation/devicetree/bindings/crypto/fsl-sec2.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Thanks, I will take a look at this. I initially tried adding to ocp node
-directly, but obviously it had issues.
-
-But in general, you are ok with the ranges approach right, rather than
-having to define another property with virtual addresses. These devices
-are not on a separate bus like PCI, so I placed them in the soc node,
-and expect only special devices like processors to kinda go under that node.
-
-regards
-Suman
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+index 38988ef..570d6a2 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+@@ -1,9 +1,10 @@
+-Freescale SoC SEC Security Engines versions 2.x-3.x
++Freescale SoC SEC Security Engines versions 1.x-2.x-3.x
+ 
+ Required properties:
+ 
+ - compatible : Should contain entries for this and backward compatible
+-  SEC versions, high to low, e.g., "fsl,sec2.1", "fsl,sec2.0"
++  SEC versions, high to low, e.g., "fsl,sec2.1", "fsl,sec2.0" (SEC2/3)
++                             e.g., "fsl,sec1.2", "fsl,sec1.0" (SEC1)
+ - reg : Offset and length of the register set for the device
+ - interrupts : the SEC's interrupt number
+ - fsl,num-channels : An integer representing the number of channels
+-- 
+2.1.0
