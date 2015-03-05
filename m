@@ -1,36 +1,69 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH] ASoC: wm8804: Update DT binding document to cover regulator supplies
-Date: Thu,  5 Mar 2015 15:42:51 +0000
-Message-ID: <1425570171-14389-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: am33xx: Move wkup_m3 node to soc node
+ and add ranges
+Date: Thu, 5 Mar 2015 07:40:39 -0800
+Message-ID: <20150305154039.GD13520@atomide.com>
+References: <1425528742-3087-1-git-send-email-d-gerlach@ti.com>
+ <1425528742-3087-3-git-send-email-d-gerlach@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425528742-3087-3-git-send-email-d-gerlach@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>, Kevin Hilman <khilman@linaro.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/wm8804.txt |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+* Dave Gerlach <d-gerlach@ti.com> [150304 20:14]:
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> ---
+>  arch/arm/boot/dts/am33xx.dtsi | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index acd3705..086415c 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -77,10 +77,23 @@
+>  	 */
+>  	soc {
+>  		compatible = "ti,omap-infra";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0     0x44d00000 0x4000>,
+> +			 <0x80000 0x44d80000 0x2000>;
+> +
 
-diff --git a/Documentation/devicetree/bindings/sound/wm8804.txt b/Documentation/devicetree/bindings/sound/wm8804.txt
-index 4d3a56f..10ef076 100644
---- a/Documentation/devicetree/bindings/sound/wm8804.txt
-+++ b/Documentation/devicetree/bindings/sound/wm8804.txt
-@@ -10,6 +10,9 @@ Required properties:
-   - reg : the I2C address of the device for I2C, the chip select
-           number for SPI.
- 
-+  - PVDD-supply, DVDD-supply : Power supplies for the device, as covered
-+    in Documentation/devicetree/bindings/regulator/regulator.txt
-+
- Example:
- 
- codec: wm8804@1a {
--- 
-1.7.2.5
+I think putting the ranges here will cause issues for adding
+ranges for anything else.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How about do something like this instead (untested):
+
+ocp {
+	l4_wkup: l4_wkup@44c00000 {
+		compatible = "am335-l4-wkup", "simple-bus";
+		ranges = <0 0x44c00000 0x3fffff>;
+
+		wkup_m3: wkup_m3@44d00000 {
+			compatible = "ti,am3353-wkup-m3";
+			reg = <0x1000000     0x4000>,	/* M3 UMEM */
+			      <0x180000	     0x2000>;	/* M3 DMEM */
+			ti,hwmods = "wkup_m3";
+			ti,pm-firmware = "am335x-pm-firmware.elf";
+		};
+
+		...
+	};
+};
+
+That way we can start moving also the other l4_wkup components there
+eventuallly without having to redo the ranges again for wkup_m3.
+
+You can also look at how the scm_conf was done for dm816x.dtsi for an
+example, and the recent large set of patches posted by Tero.
+
+Regards,
+
+Tony
