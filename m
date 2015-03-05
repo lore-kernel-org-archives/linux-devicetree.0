@@ -1,168 +1,93 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 2/8] pinctrl: Broadcom Cygnus pinctrl device tree binding
-Date: Wed, 4 Mar 2015 16:35:50 -0800
-Message-ID: <1425515756-321-3-git-send-email-rjui@broadcom.com>
-References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: [PATCH v5 0/8] Add pinctrl support to Broadcom Cygnus SoC
+Date: Wed, 4 Mar 2015 16:35:48 -0800
+Message-ID: <1425515756-321-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425515756-321-1-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Device tree binding documentation for Broadcom Cygnus IOMUX driver
+This patchset contains the pinmux (IOMUX) and GPIO/PINCONF support for
+Broadcom Cygnus SoC.
 
-Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- .../bindings/pinctrl/brcm,cygnus-pinmux.txt        |  132 ++++++++++++++++++++
- 1 file changed, 132 insertions(+)
+The Cygnus IOMUX controller supports group based mux
+configuration and allows certain pins to be muxed to GPIO function
+individually. The IOMUX controller is supported by the pinctrl-cygnus-mux.c
+driver.
+
+Cygnus has 3 GPIO controllers: 1) the ASIU GPIO; 2) the chipCommonG GPIO;
+and 3) the ALWAYS-ON GPIO. All 3 Cygnus GPIO controllers support basic PINCONF
+functions such as bias pull up, pull down, and drive strength configuration,
+when pins are muxed to GPIO. GPIO/PINCONF support is in the
+pinctrl-cygnus-gpio.c driver.
+
+Note pins from the ASIU GPIO can be individually muxed to GPIO function,
+through interaction with the Cygnus IOMUX controller.
+
+Changes from v4:
+ - Rebased to Linux 4.0-rc2
+ - Switched to use the newly available pinconf_generic_dt_node_to_map_group
+   function for mapping DT mux properties in the IOMUX driver. This helps
+   to get rid of customized device tree parsing code in the driver
+ - Consolidated the other Cygnus GPIO/PINCONF patchset into one single patchset
+ - Tuned up the GPIO/PINCONF driver a bit more, based on code review comments
+   from Linus Walleij
+
+Changes from v3:
+ - Fix the driver to have more proper use of "const" in various places
+ - Other minor improvements
+
+Changes from v2:
+ - Consolidate all Broadcom pinctrl drivers into drivers/pinctrl/bcm/*
+ - Change the Cygnus IOMUX driver to use standard Linux pinctrl subnode
+properties such as "function" and "groups" for pinmux configuration, instead
+of non-standard properties such as "brcm,function" and "brcm,group"
+ - Use real function names like "spi0", "lcd", "key", and etc. instead of HW
+specific mux names like "alt1", "alt2", "alt3", and etc.
+ - Add suffix "grp" to all group names
+ - Add support to allow individual pins to be muxed to GPIO function through
+subsystem callbacks "gpio_request_enable" and "gpio_disable_free", and get rid
+of all GPIO groups
+ - Other minor improvements in the driver
+
+Changes from v1:
+ - Fix a typo in device tree binding document
+
+Ray Jui (8):
+  pinctrl: bcm: consolidate Broadcom pinctrl drivers
+  pinctrl: Broadcom Cygnus pinctrl device tree binding
+  pinctrl: cygnus: add initial IOMUX driver support
+  ARM: dts: enable IOMUX for Broadcom Cygnus
+  pinctrl: Cygnus: define Broadcom Cygnus GPIO/PINCONF binding
+  pinctrl: cygnus: add gpio/pinconf driver
+  ARM: dts: enable GPIO for Broadcom Cygnus
+  ARM: dts: cygnus: enable GPIO based hook detection
+
+ .../bindings/pinctrl/brcm,cygnus-gpio.txt          |  102 ++
+ .../bindings/pinctrl/brcm,cygnus-pinmux.txt        |  132 +++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   39 +
+ arch/arm/boot/dts/bcm911360_entphn.dts             |   13 +
+ drivers/pinctrl/Kconfig                            |   19 +-
+ drivers/pinctrl/Makefile                           |    3 +-
+ drivers/pinctrl/bcm/Kconfig                        |   56 ++
+ drivers/pinctrl/bcm/Makefile                       |    6 +
+ drivers/pinctrl/{ => bcm}/pinctrl-bcm281xx.c       |    4 +-
+ drivers/pinctrl/{ => bcm}/pinctrl-bcm2835.c        |    0
+ drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c          |  884 +++++++++++++++++
+ drivers/pinctrl/bcm/pinctrl-cygnus-mux.c           | 1022 ++++++++++++++++++++
+ 12 files changed, 2258 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt
+ create mode 100644 drivers/pinctrl/bcm/Kconfig
+ create mode 100644 drivers/pinctrl/bcm/Makefile
+ rename drivers/pinctrl/{ => bcm}/pinctrl-bcm281xx.c (99%)
+ rename drivers/pinctrl/{ => bcm}/pinctrl-bcm2835.c (100%)
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt
-new file mode 100644
-index 0000000..3600d5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt
-@@ -0,0 +1,132 @@
-+Broadcom Cygnus IOMUX Controller
-+
-+The Cygnus IOMUX controller supports group based mux configuration. In
-+addition, certain pins can be muxed to GPIO function individually.
-+
-+Required properties:
-+
-+- compatible:
-+    Must be "brcm,cygnus-pinmux"
-+
-+- reg:
-+    Define the base and range of the I/O address space that contains the Cygnus
-+IOMUX registers
-+
-+Properties in subnodes:
-+
-+- function:
-+    The mux function to select
-+
-+- groups:
-+    The list of groups to select with a given function
-+
-+For more details, refer to
-+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+For example:
-+
-+	pinmux: pinmux@0x0301d0c8 {
-+		compatible = "brcm,cygnus-pinmux";
-+		reg = <0x0301d0c8 0x1b0>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2s0_default>;
-+
-+		i2s0_default: i2s0_default {
-+			mux {
-+				function = "i2s0";
-+				groups = "i2s0_0_grp", "i2s0_1_grp";
-+			};
-+		};
-+	};
-+
-+List of supported functions and groups in Cygnus:
-+
-+"i2s0": "i2s0_0_grp", "i2s0_1_grp"
-+
-+"i2s1": "i2s1_0_grp", "i2s1_1_grp"
-+
-+"i2s2": "i2s2_0_grp", "i2s2_1_grp", "i2s2_2_grp", "i2s2_3_grp", "i2s2_4_grp"
-+
-+"spdif": "spdif_grp"
-+
-+"pwm0": "pwm0_grp"
-+
-+"pwm1": "pwm1_grp"
-+
-+"pwm2": "pwm2_grp"
-+
-+"pwm3": "pwm3_grp"
-+
-+"pwm4": "pwm4_grp"
-+
-+"pwm5": "pwm5_grp"
-+
-+"key": "key0_grp", "key1_grp", "key2_grp", "key3_grp", "key4_grp", "key5_grp",
-+"key6_grp", "key7_grp", "key8_grp", "key9_grp", "key10_grp", "key11_grp",
-+"key12_grp", "key13_grp", "key14_grp", "key15_grp"
-+
-+"audio_dte": "audio_dte0_grp", "audio_dte1_grp", "audio_dte2_grp", "audio_dte3_grp"
-+
-+"smart_card0": "smart_card0_grp", "smart_card0_fcb_grp"
-+
-+"smart_card1": "smart_card1_grp", "smart_card1_fcb_grp"
-+
-+"spi0": "spi0_grp"
-+
-+"spi1": "spi1_grp"
-+
-+"spi2": "spi2_grp"
-+
-+"spi3": "spi3_grp"
-+
-+"spi4": "spi4_0_grp", "spi4_1_grp"
-+
-+"spi5": "spi5_grp"
-+
-+"sw_led0": "sw_led0_0_grp", "sw_led0_1_grp"
-+
-+"sw_led1": "sw_led1_grp"
-+
-+"sw_led2": "sw_led2_0_grp", "sw_led2_1_grp"
-+
-+"d1w": "d1w_grp"
-+
-+"lcd": "lcd_grp"
-+
-+"sram": "sram_0_grp", "sram_1_grp"
-+
-+"uart0": "uart0_grp"
-+
-+"uart1": "uart1_grp", "uart1_dte_grp"
-+
-+"uart2": "uart2_grp"
-+
-+"uart3": "uart3_grp"
-+
-+"uart4": "uart4_grp"
-+
-+"qspi": "qspi_0_grp", "qspi_1_grp"
-+
-+"nand": "nand_grp"
-+
-+"sdio0": "sdio0_grp", "sdio0_cd_grp", "sdio0_mmc_grp"
-+
-+"sdio1": "sdio1_data_0_grp", "sdio1_data_1_grp", "sdio1_cd_grp",
-+"sdio1_led_grp", "sdio1_mmc_grp"
-+
-+"can0": "can0_grp"
-+
-+"can1": "can1_grp"
-+
-+"cam": "cam_led_grp", "cam_0_grp", "cam_1_grp"
-+
-+"bsc1": "bsc1_grp"
-+
-+"pcie_clkreq": "pcie_clkreq_grp"
-+
-+"usb0_oc": "usb0_oc_grp"
-+
-+"usb1_oc": "usb1_oc_grp"
-+
-+"usb2_oc": "usb2_oc_grp"
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
