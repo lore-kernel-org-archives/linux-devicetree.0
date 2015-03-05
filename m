@@ -1,48 +1,62 @@
-From: Chen Gang <xili_gchen_5257@hotmail.com>
-Subject: Re: [PATCH] of: Kconfig: Let OF_UNITTEST depend on "I2C=y" and "I2C_MUX=y"
-Date: Fri, 6 Mar 2015 03:51:02 +0800
-Message-ID: <BLU436-SMTP181EA7D6B551632E6D2199DB91F0@phx.gbl>
-References: <BLU437-SMTP82811F6F904D6C74EE62E3B91E0@phx.gbl>	<CAMuHMdXPONxoNm+stn5sx579kzWo6auVP7hrRv26VSGySr7K2A@mail.gmail.com>	<2530315.qdy5ZZGCEr@wuerfel> <CAMuHMdUg=X9siUKLzqAwPUn-WeKeirGy+XN4aSRFV7eX7WV1=A@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 3/3] net: macb: remove #if defined(CONFIG_ARCH_AT91)
+ sections
+Date: Thu, 5 Mar 2015 20:44:18 +0100
+Message-ID: <20150305194418.GY3989@piout.net>
+References: <1425572842-6084-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1425572842-6084-4-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUg=X9siUKLzqAwPUn-WeKeirGy+XN4aSRFV7eX7WV1=A@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1425572842-6084-4-git-send-email-boris.brezillon@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/5/15 16:06, Geert Uytterhoeven wrote:
-> On Wed, Mar 4, 2015 at 8:49 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> --- a/drivers/of/unittest.c
->> +++ b/drivers/of/unittest.c
->> @@ -979,7 +979,7 @@ static int of_path_platform_device_exists(const char *path)
->>         return pdev != NULL;
->>  }
->>
->> -#if IS_ENABLED(CONFIG_I2C)
->> +#if IS_BUILTIN(CONFIG_I2C)
-> 
-> Wondering: is there any advantage in using "#if IS_BUILTIN(CONFIG_XXX)"
-> instead of "#ifdef CONFIG_XXX"?
-> 
+On 05/03/2015 at 17:27:22 +0100, Boris Brezillon wrote :
+> @@ -2388,21 +2392,20 @@ static int macb_probe(struct platform_device *pdev)
+>  		bp->phy_interface = err;
+>  	}
+>  
+> +	config = 0;
+>  	if (bp->phy_interface == PHY_INTERFACE_MODE_RGMII)
+> -		macb_or_gem_writel(bp, USRIO, GEM_BIT(RGMII));
+> -	else if (bp->phy_interface == PHY_INTERFACE_MODE_RMII)
+> -#if defined(CONFIG_ARCH_AT91)
+> -		macb_or_gem_writel(bp, USRIO, (MACB_BIT(RMII) |
+> -					       MACB_BIT(CLKEN)));
+> -#else
+> -		macb_or_gem_writel(bp, USRIO, 0);
+> -#endif
+> -	else
+> -#if defined(CONFIG_ARCH_AT91)
+> -		macb_or_gem_writel(bp, USRIO, MACB_BIT(CLKEN));
+> -#else
+> -		macb_or_gem_writel(bp, USRIO, MACB_BIT(MII));
+> -#endif
+> +		config = GEM_BIT(RGMII);
+> +	else if (bp->phy_interface == PHY_INTERFACE_MODE_RMII &&
+> +		 (bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII))
+> +		config = MACB_BIT(RMII);
+> +	else if (bp->phy_interface == PHY_INTERFACE_MODE_MII &&
 
-For me, "#if IS_BUILTIN(CONFIG_XXX)" is better than "#ifdef CONFIG_XXX":
+I'm not sure you should check for PHY_INTERFACE_MODE_MII here as this
+may change the previous behaviour.
 
- - "#if IS_BUILTIN(CONFIG_XXX)" is only for CONFIG_XXX=y, and its name
-   is also obvious.
+> +		 !(bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII))
+> +		config = MACB_BIT(MII);
+> +
+> +	if (bp->caps & MACB_CAPS_USRIO_HAS_CLKEN)
+> +		config |= MACB_BIT(CLKEN);
+> +
+> +	macb_or_gem_writel(bp, USRIO, config);
+>  
+>  	err = register_netdev(dev);
+>  	if (err) {
 
- - "#ifdef CONFIG_XXX" may be for others, e.g. CONFIG_DEFCONFIG_LIST:
-
-   .config:13:CONFIG_DEFCONFIG_LIST="/lib/modules/$UNAME_RELEASE/.config"
-   include/generated/autoconf.h:1174:#define CONFIG_DEFCONFIG_LIST "/lib/modules/$UNAME_RELEASE/.config"
-
-
-And this time, arnd's patch is OK to me.
-
-Thanks.
 -- 
-Chen Gang
-
-Open, share, and attitude like air, water, and life which God blessed
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
