@@ -1,39 +1,33 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH 4/4] ARM: dts: am437x-gp-evm: Enable RTC
-Date: Thu, 5 Mar 2015 07:13:31 -0600
-Message-ID: <1425561211-31003-5-git-send-email-d-gerlach@ti.com>
-References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH] ARM: STi: Add STiH410 SoC support
+Date: Thu, 5 Mar 2015 13:29:45 +0000
+Message-ID: <20150305132945.GA2810@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1425559623-12379-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1425561211-31003-1-git-send-email-d-gerlach@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, KEERTHY <j-keerthy@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425559623-12379-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Keerthy <j-keerthy@ti.com>
+Hi Fabrice,
 
-Enable RTC on am437x-gp-evm.
+On Thu, 05 Mar 2015, Fabrice GASNIER wrote:
+> This patch adds support to STiH410 SoC.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- arch/arm/boot/dts/am437x-gp-evm.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Once Maximes comments have been addressed: -
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index f84d971..b2a16c2 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -651,3 +651,7 @@
- 		};
- 	};
- };
-+
-+&rtc {
-+	status = "okay";
-+};
--- 
-2.3.0
+ Acked-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
+This also needs to make its way into the next -rc.
+
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
