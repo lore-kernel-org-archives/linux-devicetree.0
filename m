@@ -1,29 +1,81 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V4 4/4] mmc: pwrseq_simple: Add support for a reset GPIO pin
-Date: Thu, 5 Mar 2015 10:05:36 +0100
-Message-ID: <CACRpkdabrcQu3xtzGrWhBfkPuMdFutFh790eGpxjbKtw8ObVRA@mail.gmail.com>
-References: <1421658784-11980-1-git-send-email-ulf.hansson@linaro.org>
-	<1421658784-11980-5-git-send-email-ulf.hansson@linaro.org>
-	<CAAVeFuJjU-fsknYdMZ1c+aOEmc2rFy=z35S584DfHBLvUm=OAQ@mail.gmail.com>
-	<CAPDyKFonXw2NDbEw9CoRj7Sncgm_FUki+cc7j3q=xVZRrJHBkg@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: dts: sama5d3/sama5d4: reduce NFC command registers
+ memory region
+Date: Thu, 5 Mar 2015 10:13:13 +0100
+Message-ID: <54F81E29.7010605@atmel.com>
+References: <1421305683-8739-1-git-send-email-josh.wu@atmel.com>	<20150115094527.3fde882a@bbrezillon>	<54B78F73.9000504@atmel.com> <20150115110501.53b4584c@bbrezillon> <54F72276.8060605@atmel.com> <54F7B6CE.8060403@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFonXw2NDbEw9CoRj7Sncgm_FUki+cc7j3q=xVZRrJHBkg@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rojhalat Ibrahim <imr@rtschenk.de>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, NeilBrown <neilb@suse.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54F7B6CE.8060403-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 11, 2015 at 5:34 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 10 February 2015 at 10:12, Alexandre Courbot <gnurou@gmail.com> wrote:
+Le 05/03/2015 02:52, Josh Wu a =C3=A9crit :
+> Hi, Nicolas
+>=20
+> On 3/4/2015 11:19 PM, Nicolas Ferre wrote:
+>> Le 15/01/2015 11:05, Boris Brezillon a =C3=A9crit :
+>>> Hi Josh,
+>>>
+>>> On Thu, 15 Jan 2015 17:59:15 +0800
+>>> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+>>>
+>>>> Hi=EF=BC=8C Boris
+>>>>
+>>>> Thanks for the review.
+>>>>
+>>>> On 1/15/2015 4:45 PM, Boris Brezillon wrote:
+>>>>> Hi Josh,
+>>>>>
+>>>>> On Thu, 15 Jan 2015 15:08:03 +0800
+>>>>> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>
+>>>>>> To get NFC status, we need to read the NFC command registers, wh=
+ich is a
+>>>>>> 256M memory mapping address. To check the status, you just read =
+such
+>>>>>> address from NFC command registers.
+>>>>>> For example, to check NFCBUSY (bit 27), you need to read 0x08000=
+000
+>>>>>> (bit 27 is set to 1) of the NFC command register.
+>>>>>> If you want to check NFCBUSY (bit 27) and NFCWR (bit 26) in same=
+ time,
+>>>>>> you need to read 0x0c000000 (bit 27 and bit 26 are set to 1).
+>>>>> Are NFCBUSY and NFCWR found in NFCDATA_STATUS and those found in =
+HSMC_SR
+>>>>> representing the same thing.
+>>>> yes. it is. I just check with IP team. The NFCBUSY of NFCDATA_STAT=
+US is
+>>>> also refer to NFC_BUSY of HSMC_SR.
+>>>>
+>>>>> If they are, I think you can just use HSMC_SR instead of NFCDATA_=
+STATUS
+>>>>> to check the status [1] and drop the last bit in the NFC Command
+>>>>> Resgiters range.
+>>>> Thank you. your code works (just need some typo change).
+>>>> I want to send [1] code with your signed-off and my acked to mtd l=
+ist.
+>>>> Is it okay for you?
+>>> Sure, no problem.
+>> Hi Josh,
+>>
+>> What is the status of this patch set?
+>=20
+> The v2 of this patch is sent. But it's not taken by Brain.
+> I just ping Brain yesterday. Check the v2 patch here:
+> http://patchwork.ozlabs.org/patch/431752/
 
->> This code would be a great candidate to use this GPIO array API, but
->> since it is not in -next yet (should happen soon though) you might
->> want to consider doing it later.
+Ok, thanks for the information Josh.
 
-This is now in my git and -next, I can take patches to pwrseq if Ulf
-ACKs them to go through my GPIO tree.
-
-Yours,
-Linus Walleij
+Bye,
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
