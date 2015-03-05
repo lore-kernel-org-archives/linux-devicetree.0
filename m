@@ -1,48 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] dt: spi: fsl-imx-cspi: add explicit compatible strings
- and required clock properties
-Date: Thu, 5 Mar 2015 17:07:42 +0000
-Message-ID: <20150305170742.GT21293@sirena.org.uk>
-References: <1425496378-16561-1-git-send-email-mporter@konsulko.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v5 6/8] pinctrl: cygnus: add gpio/pinconf driver
+Date: Thu, 5 Mar 2015 09:13:28 -0800
+Message-ID: <54F88EB8.3020208@broadcom.com>
+References: <1425515756-321-1-git-send-email-rjui@broadcom.com>	 <1425515756-321-7-git-send-email-rjui@broadcom.com>	 <1425543104.24292.185.camel@x220> <1425544581.24292.194.camel@x220>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mrSJCujIr/bkIKwq"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425496378-16561-1-git-send-email-mporter@konsulko.com>
+In-Reply-To: <1425544581.24292.194.camel@x220>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Robin Gong <b38343@freescale.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Paul,
 
---mrSJCujIr/bkIKwq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 3/5/2015 12:36 AM, Paul Bolle wrote:
+> On Thu, 2015-03-05 at 09:11 +0100, Paul Bolle wrote:
+>> On Wed, 2015-03-04 at 16:35 -0800, Ray Jui wrote:
+>>> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
+>>> +MODULE_DESCRIPTION("Broadcom Cygnus GPIO Driver");
+>>> +MODULE_LICENSE("GPL v2");
+>>
+>> These three macros will be preprocessed away. (There's also
+>> MODULE_DEVICE_TABLE. I don't yet know how that is handled in a
+>> non-modular build, sorry.)
+> 
+> It turns out MODULE_DEVICE_TABLE is _really_ preprocessed away. See
+> include/linux/module.h:
+>     #ifdef MODULE
+>     /* Creates an alias so file2alias.c can find device table. */
+>     #define MODULE_DEVICE_TABLE(type, name)                                 \
+>     extern const typeof(name) __mod_##type##__##name##_device_table         \
+>       __attribute__ ((unused, alias(__stringify(name))))
+>     #else  /* !MODULE */
+>     #define MODULE_DEVICE_TABLE(type, name)
+>     #endif
+> 
+> 
+> Did I get that right?
+> 
+> (I knew the other three MODULE_* macros are handled in slightly more
+> complicated way, but the effect is basically that they are preprocessed
+> away.)
+> 
+> 
+> Paul Bolle
+> 
 
-On Wed, Mar 04, 2015 at 02:12:58PM -0500, Matt Porter wrote:
-> The fsl-imx-cspi binding contains language indicating compatible
-> strings to be used that is not valid for all supported parts
-> e.g. Should be "fsl,<soc>-cspi" or "fsl,<soc>-ecspi". Fix this
-> by enumerating the set of valid compatible strings.
+Even these module macros will be pre-processed away when the driver is
+statically linked (and yes, I'm not planning to ever make these driver
+built as module), I'm not too sure about the convention here. I thought
+that they are still good to be in the driver for information purpose.
+I'm seeing other pinctrl drivers doing this as well.
 
-Applied, thanks.  Please use subject lines matching the style for the
-subsystem.
+Maybe Linus can help to clarify this?
 
---mrSJCujIr/bkIKwq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJU+I1dAAoJECTWi3JdVIfQK1AH/RSjEmstR2azMLiZTv3YDX9/
-XAZm0IvY5cjGzq2FBAhRiSOqblHaHoOHiGUeH7ggo6a9FuMRXLLCpjQREB6LPl59
-CTAxwttQzwjADkFdzbPSrIJrD5an0G1U2PFLeXCgBXL4LEchCwvHz0Uhz0tS45wa
-GOGdX02GYf1fNZnREQjQYd2ddoZ69b8TTf0apUkzVWLi/ZVFtnh9JLPqlUcbIU6K
-ZJ7MRBTEt/aBTjqOT/LsxKrD27beeyyrJQMdmD92D3k5Fx/WHWhoAlB/rkTlKy3+
-QESYczYVFlYCzaWMSxR0s4lpwmFUv1so6gWtA98nvv5zs8JElZFgxMwwgIOKOdk=
-=XsN8
------END PGP SIGNATURE-----
-
---mrSJCujIr/bkIKwq--
+Ray
