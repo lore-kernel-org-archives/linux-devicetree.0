@@ -1,51 +1,50 @@
-From: Fabrice GASNIER <fabrice.gasnier@st.com>
-Subject: [PATCH v2] ARM: STi: Add STiH410 SoC support
-Date: Thu,  5 Mar 2015 14:05:06 +0100
-Message-ID: <1425560706-22907-1-git-send-email-fabrice.gasnier@st.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v2] devicetree: cadence_ttc: Document binding for timer width
+Date: Thu,  5 Mar 2015 14:12:56 +0100
+Message-ID: <b4cac8e34b5f6613d479bd2b2e2b8853b302f045.1425561172.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+To: devicetree@vger.kernel.org
+Cc: Zach Pfeffer <zachp@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Michal Simek <monstr@monstr.eu>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to STiH410 SoC.
+From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
 
-Please note "st,stih410" is already present in device tree.
-The problem is that it is missing the entry in the match table,
-and so the L2 cache and other cpus than 0 don't get initialized.
+Modern TTC implementations can extend the timer width to 32 bit. This
+feature is not self identifying so the driver needs to be made aware
+via device tree.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+Signed-off-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- Documentation/devicetree/bindings/arm/sti.txt | 4 ++++
- arch/arm/mach-sti/board-dt.c                  | 1 +
- 2 files changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/sti.txt b/Documentation/devicetree/bindings/arm/sti.txt
-index d70ec35..8d27f6b 100644
---- a/Documentation/devicetree/bindings/arm/sti.txt
-+++ b/Documentation/devicetree/bindings/arm/sti.txt
-@@ -13,6 +13,10 @@ Boards with the ST STiH407 SoC shall have the following properties:
- Required root node property:
- compatible = "st,stih407";
+Changes in v2:
+- Change timer-width description based on my discussion with
+  Mark Rutland. https://lkml.org/lkml/2014/9/17/277
+- Code change is already applied to the mainline kernel tree
+
+ Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt b/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
+index 993695c659e1..eeee6cd51e5c 100644
+--- a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
++++ b/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
+@@ -6,6 +6,9 @@ Required properties:
+ - interrupts : A list of 3 interrupts; one per timer channel.
+ - clocks: phandle to the source clock
  
-+Boards with the ST STiH410 SoC shall have the following properties:
-+Required root node property:
-+compatible = "st,stih410";
++Optional properties:
++- timer-width: Bit width of the timer, necessary if not 16.
 +
- Boards with the ST STiH418 SoC shall have the following properties:
- Required root node property:
- compatible = "st,stih418";
-diff --git a/arch/arm/mach-sti/board-dt.c b/arch/arm/mach-sti/board-dt.c
-index b067390..b373aca 100644
---- a/arch/arm/mach-sti/board-dt.c
-+++ b/arch/arm/mach-sti/board-dt.c
-@@ -18,6 +18,7 @@ static const char *stih41x_dt_match[] __initdata = {
- 	"st,stih415",
- 	"st,stih416",
- 	"st,stih407",
-+	"st,stih410",
- 	"st,stih418",
- 	NULL
+ Example:
+ 
+ ttc0: ttc0@f8001000 {
+@@ -14,4 +17,5 @@ ttc0: ttc0@f8001000 {
+ 	compatible = "cdns,ttc";
+ 	reg = <0xF8001000 0x1000>;
+ 	clocks = <&cpu_clk 3>;
++	timer-width = <32>;
  };
 -- 
-1.9.1
+1.8.2.3
