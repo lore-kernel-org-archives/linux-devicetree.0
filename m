@@ -1,38 +1,47 @@
 From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Thu, 05 Mar 2015 09:19:54 +0100
-Message-ID: <1425543594.24292.189.camel@x220>
-References: <1425510624-22250-1-git-send-email-stefan@agner.ch>
-	 <1425510624-22250-2-git-send-email-stefan@agner.ch>
+Subject: Re: [PATCH v5 6/8] pinctrl: cygnus: add gpio/pinconf driver
+Date: Thu, 05 Mar 2015 09:36:21 +0100
+Message-ID: <1425544581.24292.194.camel@x220>
+References: <1425515756-321-1-git-send-email-rjui@broadcom.com>
+	 <1425515756-321-7-git-send-email-rjui@broadcom.com>
+	 <1425543104.24292.185.camel@x220>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425510624-22250-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+In-Reply-To: <1425543104.24292.185.camel@x220>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-03-05 at 00:10 +0100, Stefan Agner wrote:
-> --- /dev/null
-> +++ b/drivers/mtd/nand/vf610_nfc.c
-> @@ -0,0 +1,730 @@
+On Thu, 2015-03-05 at 09:11 +0100, Paul Bolle wrote:
+> On Wed, 2015-03-04 at 16:35 -0800, Ray Jui wrote:
+> > +MODULE_AUTHOR("Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>");
+> > +MODULE_DESCRIPTION("Broadcom Cygnus GPIO Driver");
+> > +MODULE_LICENSE("GPL v2");
+> 
+> These three macros will be preprocessed away. (There's also
+> MODULE_DEVICE_TABLE. I don't yet know how that is handled in a
+> non-modular build, sorry.)
 
-> + * This is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
+It turns out MODULE_DEVICE_TABLE is _really_ preprocessed away. See
+include/linux/module.h:
+    #ifdef MODULE
+    /* Creates an alias so file2alias.c can find device table. */
+    #define MODULE_DEVICE_TABLE(type, name)                                 \
+    extern const typeof(name) __mod_##type##__##name##_device_table         \
+      __attribute__ ((unused, alias(__stringify(name))))
+    #else  /* !MODULE */
+    #define MODULE_DEVICE_TABLE(type, name)
+    #endif
 
-This states the license is GPL v2 or later.
 
-> +MODULE_LICENSE("GPL v2");
+Did I get that right?
 
-So you probably want
-    MODULE_LICENSE("GPL");
-
-here.
+(I knew the other three MODULE_* macros are handled in slightly more
+complicated way, but the effect is basically that they are preprocessed
+away.)
 
 
 Paul Bolle
