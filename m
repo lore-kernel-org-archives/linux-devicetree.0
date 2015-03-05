@@ -1,172 +1,187 @@
-From: Axel Lin <axel.lin@ingics.com>
-Subject: [RFC][PATCH 2/2] phy: miphy365x: Convert to use phy.h instead of
- phy-miphy365x.h
-Date: Thu, 05 Mar 2015 09:57:45 +0800
-Message-ID: <1425520665.1637.10.camel@phoenix>
-References: <1425520379.1637.7.camel@phoenix>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH v8 2/4] hwspinlock/core: add device tree support
+Date: Wed, 4 Mar 2015 20:01:14 -0600
+Message-ID: <1425520876-37826-3-git-send-email-s-anna@ti.com>
+References: <1425520876-37826-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425520379.1637.7.camel@phoenix>
+In-Reply-To: <1425520876-37826-1-git-send-email-s-anna@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Lee Jones <lee.jones@linaro.org>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+To: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The defines in phy-miphy365x.h are all covered in phy.h:
+This patch adds a new OF-friendly API of_hwspin_lock_get_id()
+for hwspinlock clients to use/request locks from a hwspinlock
+device instantiated through a device-tree blob. This new API
+can be used by hwspinlock clients to get the id for a specific
+lock using the phandle + args specifier, so that it can be
+requested using the available hwspin_lock_request_specific()
+API.
 
-MIPHY_TYPE_SATA == PHY_TYPE_STA
-MIPHY_TYPE_PCIE == PHY_TYPE_PCIE
-MIPPHY_TYPE_USB == PHY_TYPE_USB2
-
-So covert to use phy.h and then delete phy-miphy365x.h.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- Documentation/devicetree/bindings/ata/ahci-st.txt       |  2 +-
- Documentation/devicetree/bindings/phy/phy-miphy365x.txt |  8 ++++----
- arch/arm/boot/dts/stih416.dtsi                          |  4 ++--
- drivers/phy/phy-miphy365x.c                             | 14 +++++++-------
- include/dt-bindings/phy/phy-miphy365x.h                 | 14 --------------
- 5 files changed, 14 insertions(+), 28 deletions(-)
- delete mode 100644 include/dt-bindings/phy/phy-miphy365x.h
+v8: Removed the previous OF helpers of_hwspin_lock_get_num_locks()
+    & of_hwspin_lock_get_base_id() due to the revised generic
+    bindings. Added back the support for deferred probing and
+    pargs specifier validation like in v6, but without using an
+    added list for storing registered hwspinlock devices.
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt b/Documentation/devicetree/bindings/ata/ahci-st.txt
-index 0574a77..070748b 100644
---- a/Documentation/devicetree/bindings/ata/ahci-st.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
-@@ -21,7 +21,7 @@ Example:
- 		reg             = <0xfe380000 0x1000>;
- 		interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
- 		interrupt-names = "hostc";
--		phys	        = <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-+		phys	        = <&miphy365x_phy MIPHY_PORT_0 PHY_TYPE_SATA>;
- 		phy-names       = "ahci_phy";
- 		resets	        = <&powerdown STIH416_SATA0_POWERDOWN>,
- 				  <&softreset STIH416_SATA0_SOFTRESET>;
-diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-index 9802d5d..087294d 100644
---- a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-@@ -20,8 +20,8 @@ Required nodes	:  A sub-node is required for each channel the controller
- Required properties (port (child) node):
- - #phy-cells 	: Should be 1 (See second example)
- 		  Cell after port phandle is device type from:
--			- MIPHY_TYPE_SATA
--			- MIPHY_TYPE_PCI
-+			- PHY_TYPE_SATA
-+			- PHY_TYPE_PCIE
- - reg        	: Address and length of register sets for each device in
- 		  "reg-names"
- - reg-names     : The names of the register addresses corresponding to the
-@@ -68,10 +68,10 @@ property, containing a phandle to the phy port node and a device type.
+ Documentation/hwspinlock.txt         | 10 +++++
+ drivers/hwspinlock/hwspinlock_core.c | 79 ++++++++++++++++++++++++++++++++++++
+ include/linux/hwspinlock.h           |  7 ++++
+ 3 files changed, 96 insertions(+)
+
+diff --git a/Documentation/hwspinlock.txt b/Documentation/hwspinlock.txt
+index 62f7d4ea6e26..61c1ee98e59f 100644
+--- a/Documentation/hwspinlock.txt
++++ b/Documentation/hwspinlock.txt
+@@ -48,6 +48,16 @@ independent, drivers.
+      ids for predefined purposes.
+      Should be called from a process context (might sleep).
  
- Example:
++  int of_hwspin_lock_get_id(struct device_node *np, int index);
++   - retrieve the global lock id for an OF phandle-based specific lock.
++     This function provides a means for DT users of a hwspinlock module
++     to get the global lock id of a specific hwspinlock, so that it can
++     be requested using the normal hwspin_lock_request_specific() API.
++     The function returns a lock id number on success, -EPROBE_DEFER if
++     the hwspinlock device is not yet registered with the core, or other
++     error values.
++     Should be called from a process context (might sleep).
++
+   int hwspin_lock_free(struct hwspinlock *hwlock);
+    - free a previously-assigned hwspinlock; returns 0 on success, or an
+      appropriate error code on failure (e.g. -EINVAL if the hwspinlock
+diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
+index 461a0d739d75..f8539f624e3d 100644
+--- a/drivers/hwspinlock/hwspinlock_core.c
++++ b/drivers/hwspinlock/hwspinlock_core.c
+@@ -27,6 +27,7 @@
+ #include <linux/hwspinlock.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/mutex.h>
++#include <linux/of.h>
  
--#include <dt-bindings/phy/phy-miphy365x.h>
-+#include <dt-bindings/phy/phy.h>
+ #include "hwspinlock_internal.h"
  
- 	sata0: sata@fe380000 {
- 		...
--		phys	  = <&phy_port0 MIPHY_TYPE_SATA>;
-+		phys	  = <&phy_port0 PHY_TYPE_SATA>;
- 		...
- 	};
-diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-index ea28eba..eeb7afe 100644
---- a/arch/arm/boot/dts/stih416.dtsi
-+++ b/arch/arm/boot/dts/stih416.dtsi
-@@ -10,7 +10,7 @@
- #include "stih416-clock.dtsi"
- #include "stih416-pinctrl.dtsi"
+@@ -257,6 +258,84 @@ void __hwspin_unlock(struct hwspinlock *hwlock, int mode, unsigned long *flags)
+ }
+ EXPORT_SYMBOL_GPL(__hwspin_unlock);
  
--#include <dt-bindings/phy/phy-miphy365x.h>
-+#include <dt-bindings/phy/phy.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset-controller/stih416-resets.h>
- / {
-@@ -306,7 +306,7 @@
- 			reg             = <0xfe380000 0x1000>;
- 			interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
- 			interrupt-names = "hostc";
--			phys	        = <&phy_port0 MIPHY_TYPE_SATA>;
-+			phys	        = <&phy_port0 PHY_TYPE_SATA>;
- 			phy-names       = "sata-phy";
- 			resets	        = <&powerdown STIH416_SATA0_POWERDOWN>,
- 					  <&softreset STIH416_SATA0_SOFTRESET>;
-diff --git a/drivers/phy/phy-miphy365x.c b/drivers/phy/phy-miphy365x.c
-index 51b459d..019c2d7 100644
---- a/drivers/phy/phy-miphy365x.c
-+++ b/drivers/phy/phy-miphy365x.c
-@@ -25,7 +25,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
- 
--#include <dt-bindings/phy/phy-miphy365x.h>
-+#include <dt-bindings/phy/phy.h>
- 
- #define HFC_TIMEOUT		100
- 
-@@ -177,7 +177,7 @@ static u8 rx_tx_spd[] = {
- static int miphy365x_set_path(struct miphy365x_phy *miphy_phy,
- 			      struct miphy365x_dev *miphy_dev)
++/**
++ * of_hwspin_lock_simple_xlate - translate hwlock_spec to return a lock id
++ * @bank: the hwspinlock device bank
++ * @hwlock_spec: hwlock specifier as found in the device tree
++ *
++ * This is a simple translation function, suitable for hwspinlock platform
++ * drivers that only has a lock specifier length of 1.
++ *
++ * Returns a relative index of the lock within a specified bank on success,
++ * or -EINVAL on invalid specifier cell count.
++ */
++static inline int
++of_hwspin_lock_simple_xlate(const struct of_phandle_args *hwlock_spec)
++{
++	if (WARN_ON(hwlock_spec->args_count != 1))
++		return -EINVAL;
++
++	return hwlock_spec->args[0];
++}
++
++/**
++ * of_hwspin_lock_get_id() - get lock id for an OF phandle-based specific lock
++ * @np: device node from which to request the specific hwlock
++ * @index: index of the hwlock in the list of values
++ *
++ * This function provides a means for DT users of the hwspinlock module to
++ * get the global lock id of a specific hwspinlock using the phandle of the
++ * hwspinlock device, so that it can be requested using the normal
++ * hwspin_lock_request_specific() API.
++ *
++ * Returns the global lock id number on success, -EPROBE_DEFER if the hwspinlock
++ * device is not yet registered, -EINVAL on invalid args specifier value or an
++ * appropriate error as returned from the OF parsing of the DT client node.
++ */
++int of_hwspin_lock_get_id(struct device_node *np, int index)
++{
++	struct of_phandle_args args;
++	struct hwspinlock *hwlock;
++	struct radix_tree_iter iter;
++	void **slot;
++	int id;
++	int ret;
++
++	ret = of_parse_phandle_with_args(np, "hwlocks", "#hwlock-cells", index,
++					 &args);
++	if (ret)
++		return ret;
++
++	/* perform a sanity check of the hwspinlock device */
++	ret = -EPROBE_DEFER;
++	rcu_read_lock();
++	radix_tree_for_each_slot(slot, &hwspinlock_tree, &iter, 0) {
++		hwlock = radix_tree_deref_slot(slot);
++		if (unlikely(!hwlock))
++			continue;
++
++		if (hwlock->bank->dev->of_node == args.np) {
++			ret = 0;
++			break;
++		}
++	}
++	rcu_read_unlock();
++	if (ret < 0)
++		goto out;
++
++	id = of_hwspin_lock_simple_xlate(&args);
++	if (id < 0 || id >= hwlock->bank->num_locks) {
++		ret = -EINVAL;
++		goto out;
++	}
++	id += hwlock->bank->base_id;
++
++out:
++	of_node_put(args.np);
++	return ret ? ret : id;
++}
++EXPORT_SYMBOL_GPL(of_hwspin_lock_get_id);
++
+ static int hwspin_lock_register_single(struct hwspinlock *hwlock, int id)
  {
--	bool sata = (miphy_phy->type == MIPHY_TYPE_SATA);
-+	bool sata = (miphy_phy->type == PHY_TYPE_SATA);
+ 	struct hwspinlock *tmp;
+diff --git a/include/linux/hwspinlock.h b/include/linux/hwspinlock.h
+index 3343298e40e8..859d673d98c8 100644
+--- a/include/linux/hwspinlock.h
++++ b/include/linux/hwspinlock.h
+@@ -26,6 +26,7 @@
+ #define HWLOCK_IRQ	0x02	/* Disable interrupts, don't save state */
  
- 	return regmap_update_bits(miphy_dev->regmap,
- 				  miphy_phy->ctrlreg,
-@@ -431,7 +431,7 @@ static int miphy365x_init(struct phy *phy)
- 	}
+ struct device;
++struct device_node;
+ struct hwspinlock;
+ struct hwspinlock_device;
+ struct hwspinlock_ops;
+@@ -66,6 +67,7 @@ int hwspin_lock_unregister(struct hwspinlock_device *bank);
+ struct hwspinlock *hwspin_lock_request(void);
+ struct hwspinlock *hwspin_lock_request_specific(unsigned int id);
+ int hwspin_lock_free(struct hwspinlock *hwlock);
++int of_hwspin_lock_get_id(struct device_node *np, int index);
+ int hwspin_lock_get_id(struct hwspinlock *hwlock);
+ int __hwspin_lock_timeout(struct hwspinlock *, unsigned int, int,
+ 							unsigned long *);
+@@ -120,6 +122,11 @@ void __hwspin_unlock(struct hwspinlock *hwlock, int mode, unsigned long *flags)
+ {
+ }
  
- 	/* Initialise Miphy for PCIe or SATA */
--	if (miphy_phy->type == MIPHY_TYPE_PCIE)
-+	if (miphy_phy->type == PHY_TYPE_PCIE)
- 		ret = miphy365x_init_pcie_port(miphy_phy, miphy_dev);
- 	else
- 		ret = miphy365x_init_sata_port(miphy_phy, miphy_dev);
-@@ -455,8 +455,8 @@ int miphy365x_get_addr(struct device *dev, struct miphy365x_phy *miphy_phy,
- 		return ret;
- 	}
- 
--	if (!((!strncmp(name, "sata", 4) && type == MIPHY_TYPE_SATA) ||
--	      (!strncmp(name, "pcie", 4) && type == MIPHY_TYPE_PCIE)))
-+	if (!((!strncmp(name, "sata", 4) && type == PHY_TYPE_SATA) ||
-+	      (!strncmp(name, "pcie", 4) && type == PHY_TYPE_PCIE)))
- 		return 0;
- 
- 	miphy_phy->base = of_iomap(phynode, index);
-@@ -499,8 +499,8 @@ static struct phy *miphy365x_xlate(struct device *dev,
- 
- 	miphy_phy->type = args->args[0];
- 
--	if (!(miphy_phy->type == MIPHY_TYPE_SATA ||
--	      miphy_phy->type == MIPHY_TYPE_PCIE)) {
-+	if (!(miphy_phy->type == PHY_TYPE_SATA ||
-+	      miphy_phy->type == PHY_TYPE_PCIE)) {
- 		dev_err(dev, "Unsupported device type: %d\n", miphy_phy->type);
- 		return ERR_PTR(-EINVAL);
- 	}
-diff --git a/include/dt-bindings/phy/phy-miphy365x.h b/include/dt-bindings/phy/phy-miphy365x.h
-deleted file mode 100644
-index 8ef8aba..0000000
---- a/include/dt-bindings/phy/phy-miphy365x.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--/*
-- * This header provides constants for the phy framework
-- * based on the STMicroelectronics MiPHY365x.
-- *
-- * Author: Lee Jones <lee.jones@linaro.org>
-- */
--#ifndef _DT_BINDINGS_PHY_MIPHY
--#define _DT_BINDINGS_PHY_MIPHY
--
--#define MIPHY_TYPE_SATA		1
--#define MIPHY_TYPE_PCIE		2
--#define MIPPHY_TYPE_USB		3
--
--#endif /* _DT_BINDINGS_PHY_MIPHY */
++static inline int of_hwspin_lock_get_id(struct device_node *np, int index)
++{
++	return 0;
++}
++
+ static inline int hwspin_lock_get_id(struct hwspinlock *hwlock)
+ {
+ 	return 0;
 -- 
-1.9.1
+2.3.0
