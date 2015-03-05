@@ -1,37 +1,52 @@
 From: Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 17/17] crypto: talitos - Update DT bindings with SEC1
-Date: Thu,  5 Mar 2015 17:46:07 +0100 (CET)
-Message-ID: <20150305164607.65D3E1A2422@localhost.localdomain>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 0/17] crypto: talitos - Add support for SEC1
+Date: Thu,  5 Mar 2015 17:46:05 +0100 (CET)
+Message-ID: <20150305164605.E65D81A241C@localhost.localdomain>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
 To: Kim Phillips <kim.phillips@freescale.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the documentation by including SEC1 into SEC2/3 doc
+The purpose of this set of patchs is to add to talitos crypto driver the
+support for the SEC1 version of the security engine, which is found in
+mpc885 and mpc8272 processors.
+
+The approach has been to split the driver in two main parts:
+* talitos.c and talitos.h contains parts that are common
+* talitos2.c and talitos2.h contains specificities of SEC2
+
+Then
+* talitos1.c and talitos1.h has been created with SEC1 specificities
+
+Patchset:
+[01/17] crypto: talitos - base address for Execution Units and macro for ISR masks
+[02/17] crypto: talitos - Externalise specific SEC2 reset actions
+[03/17] crypto: talitos - Use zero entry to init descriptors ptrs to zero
+[04/17] crypto: talitos - Refactor the sg in/out chain allocation
+[05/17] crypto: talitos - isolate scatter/gather handling for ahash
+[06/17] crypto: talitos - Add talitos2.c to isolate SEC2 specific functions
+[07/17] crypto: talitos - Split talitos.h into 2 parts
+[08/17] crypto: talitos - Deport SEC2 error handling
+[09/17] crypto: talitos - Move reset/init helpers into talitos2.h
+[10/17] crypto: talitos - Move interrupt related macros in talitos2.h
+[11/17] crypto: talitos - Move hash chain handling into talitos2.h
+[12/17] crypto: talitos - Define compatible in talitos2.h instead of talitos.c
+[13/17] crypto: talitos - move sg_count() helper into talitos.h
+[14/17] crypto: talitos - Add a helper function to clear j_extent field
+[15/17] crypto: talitos - Implementation of SEC1
+[16/17] crypto: talitos - SEC1 bugs on 0 data hash
+[17/17] crypto: talitos - Update DT bindings with SEC1
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
----
- Documentation/devicetree/bindings/crypto/fsl-sec2.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
-index 38988ef..570d6a2 100644
---- a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
-+++ b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
-@@ -1,9 +1,10 @@
--Freescale SoC SEC Security Engines versions 2.x-3.x
-+Freescale SoC SEC Security Engines versions 1.x-2.x-3.x
- 
- Required properties:
- 
- - compatible : Should contain entries for this and backward compatible
--  SEC versions, high to low, e.g., "fsl,sec2.1", "fsl,sec2.0"
-+  SEC versions, high to low, e.g., "fsl,sec2.1", "fsl,sec2.0" (SEC2/3)
-+                             e.g., "fsl,sec1.2", "fsl,sec1.0" (SEC1)
- - reg : Offset and length of the register set for the device
- - interrupts : the SEC's interrupt number
- - fsl,num-channels : An integer representing the number of channels
--- 
-2.1.0
+ .../devicetree/bindings/crypto/fsl-sec2.txt        |   5 +-
+ drivers/crypto/Kconfig                             |   8 +
+ drivers/crypto/Makefile                            |   2 +
+ drivers/crypto/talitos.c                           | 927 +--------------------
+ drivers/crypto/talitos.h                           | 185 ++--
+ drivers/crypto/talitos1.c                          | 197 +++++
+ drivers/crypto/talitos1.h                          | 343 ++++++++
+ drivers/crypto/talitos2.c                          | 696 ++++++++++++++++
+ drivers/crypto/talitos2.h                          | 335 ++++++++
+ 9 files changed, 1736 insertions(+), 962 deletions(-)
