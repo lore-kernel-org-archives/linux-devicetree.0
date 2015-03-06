@@ -1,85 +1,95 @@
-From: <yong.wu@mediatek.com>
-Subject: [RFC PATCH 0/5] MT8173 IOMMU support
-Date: Fri, 6 Mar 2015 18:37:45 +0800
-Message-ID: <1425638270-24903-1-git-send-email-yong.wu@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC/PATCH] pinctrl: sh-pfc: Accept standard function, pins and
+ groups properties
+Date: Fri, 6 Mar 2015 11:39:30 +0100
+Message-ID: <CACRpkdbepTKxMFVpTo7ZmjYE1beF5XOMOQarszaDGojerNQqMg@mail.gmail.com>
+References: <CACRpkda4SBof0EaZVWtEYaeb6j_BGAVj39kje+mBz90eB3qAwQ@mail.gmail.com>
+	<1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<CACRpkda6H7hbgXhmSbgtwOC_8PbHnES5syp-YEp1+V6s5Ym6Cw@mail.gmail.com>
+	<12938873.nmb8Ng8mNb@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Tomasz Figa <tfiga@google.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <12938873.nmb8Ng8mNb@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sascha Hauer <kernel@pengutronix.de>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niso@kth.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-  This is based on Robin Murphy's arm64: IOMMU-backed DMA mapping[1]. 
-This patch adds support for m4u(Multimedia Memory Management Unit),
-Currently it only support the m4u with 2 levels of page table on mt8173.
+On Wed, Feb 4, 2015 at 10:53 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Wednesday 04 February 2015 09:40:48 Linus Walleij wrote:
+>> On Tue, Jan 27, 2015 at 9:31 PM, Laurent Pinchart wrote:
+>> > The "function", "pins" and "groups" pinmux and pinctrl properties have
+>> > been standardized. Support them in addition to the custom "renesas,*"
+>> > properties. New-style and old-style properties can't be mixed in DT.
+>> >
+>> > Signed-off-by: Laurent Pinchart
+>> > <laurent.pinchart+renesas@ideasonboard.com>
+>>
+>> (...)
+>>
+>> >> Would be nice if the PFC driver could be augmented to also accept the
+>> >> now standard bindings "groups" and "function" simply :) we're adding
+>> >> parse functions for those to the core.
+>> >
+>> > Something like this ?
+>>
+>> Yes :)
+>>
+>> > Please note two differences between the Renesas PFC bindings and the
+>> > standard bindings:
+>> >
+>> > - The standard bindings state that a pinctrl node must contain either a
+>> >   "pins" property or a "groups" property, while the Renesas bindings
+>> >   allows for both to coexist in the same node.
+>>
+>> Sascha also says this makes sense for him so I guess I'm getting a bit
+>> soft on the issue.
+>>
+>> > - The standard bindings don't allow a pinmux node to contain a "pins"
+>> >   property, while the Renesas bindings do.
+>>
+>> Does that mean "pins" affect the muxing or that "pins" is about some per-pin
+>> config shoveled into the same node?
+>>
+>> The former is not OK, the latter is.
+>
+> It means "pins" affect the muxing. The sh-pfc driver supports both muxing
+> groups and muxing individual pins.
 
-  Please check the hardware block diagram of Mediatek IOMMU.
+OK.
 
-              EMI (External Memory Interface)
-               |
-              m4u (Multimedia Memory Management Unit)
-               |
-              smi (Smart Multimedia Interface)
-               |
-        +---------------+-------
-        |               |
-        |               |
-    vdec larb       disp larb      ... SoCs have different local arbiter(larb).
-        |               |
-        |               |
-   +----+----+    +-----+-----+
-   |    |    |    |     |     |    ...
-   |    |    |    |     |     |    ...
-   |    |    |    |     |     |    ...
-  MC   PP   VLD  OVL0 RDMA0 WDMA0  ... 
-  
-  Normally we specify a local arbiter(larb) for each multimedia hardware like
-display, video decode, video encode and camera. And there are different ports in
-each larb. Take a example, there are some ports like MC, PP, UFO, VLD, AVC_MV,
-PRED_RD, PRED_WR in video larb, all the ports are according to the video hardware.
+>> >                 mmcif_pins: mmcif {
+>> >
+>> >                         mux {
+>> > -                               renesas,groups = "mmc0_data8_0",
+>> > "mmc0_ctrl_0";
+>> > -                               renesas,function = "mmc0";
+>> > +                               groups = "mmc0_data8_0", "mmc0_ctrl_0";
+>> > +                               function = "mmc0";
+>> >                         };
+>>
+>> So that looks just very nice.
+>>
+>> >                         cfg {
+>> > -                               renesas,groups = "mmc0_data8_0";
+>> > -                               renesas,pins = "PORT279";
+>> > +                               groups = "mmc0_data8_0";
+>> > +                               pins = "PORT279";
+>> >                                 bias-pull-up;
+>>
+>> And here I can't see the use of "groups" in this node since it
+>> doesn't match a function. It's a bit ambiguous what "groups"
+>> mean when you run into it like this.
+>
+> It means that the bias-pull-up configuration is applied to all pins of the
+> "mmc0_data8_0" group, as well as to pin 279.
 
-	From the diagram, all the multimedia module connect with m4u via smi.
-SMI is responsible to enable/disable iommu and control the clocks of each local
-arbiter. If we should enable the iommu of video decode, it should config the 
-video's ports. And if the video hardware work wether enable/disable iommu, 
-it should enable the clock of its larb's clock. So we add a special driver for smi.
+OK.
 
-[1] http://lists.linuxfoundation.org/pipermail/iommu/2015-February/012236.html
+This looks good to me, is the patch applicable as it is, or will you rebase
+it and send out a non-RFC version?
 
-Yong Wu (5):
-  soc: mediatek: Add SMI driver
-  iommu/mediatek: Add mt8173 IOMMU driver
-  dt-bindings: mediatek: Add smi dts binding
-  dt-bindings: iommu: Add binding for mediatek IOMMU
-  dts: mt8173: Add iommu/smi nodes for mt8173
-
- .../devicetree/bindings/iommu/mediatek,iommu.txt   |  41 ++
- .../bindings/soc/mediatek/mediatek,smi.txt         |  17 +
- arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  60 ++
- drivers/iommu/Kconfig                              |  11 +
- drivers/iommu/Makefile                             |   1 +
- drivers/iommu/mtk_iommu.c                          | 754 +++++++++++++++++++++
- drivers/iommu/mtk_iommu.h                          |  73 ++
- drivers/iommu/mtk_iommu_pagetable.c                | 439 ++++++++++++
- drivers/iommu/mtk_iommu_pagetable.h                |  49 ++
- drivers/soc/mediatek/Kconfig                       |   7 +
- drivers/soc/mediatek/Makefile                      |   1 +
- drivers/soc/mediatek/mt8173-smi.c                  | 143 ++++
- include/dt-bindings/iommu/mt8173-iommu-port.h      | 127 ++++
- include/linux/mtk-smi.h                            |  40 ++
- 14 files changed, 1763 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
- create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,smi.txt
- create mode 100644 drivers/iommu/mtk_iommu.c
- create mode 100644 drivers/iommu/mtk_iommu.h
- create mode 100644 drivers/iommu/mtk_iommu_pagetable.c
- create mode 100644 drivers/iommu/mtk_iommu_pagetable.h
- create mode 100644 drivers/soc/mediatek/mt8173-smi.c
- create mode 100644 include/dt-bindings/iommu/mt8173-iommu-port.h
- create mode 100644 include/linux/mtk-smi.h
-
--- 
-1.8.1.1.dirty
-
-G:IT: [PATCH 5/5] dts: mt8173: Add iommu/smi nodes for mt8173
+Yours,
+Linus Walleij
