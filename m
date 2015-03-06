@@ -1,131 +1,72 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 02/10] mailbox: Enable BCM2835 mailbox support
-Date: Fri, 06 Mar 2015 14:40:46 -0700
-Message-ID: <54FA1EDE.1060900@wwwdotorg.org>
-References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-3-git-send-email-eric@anholt.net> <54F675F1.60205@wwwdotorg.org> <87a8zs8vzo.fsf@eliezer.anholt.net> <54F932FD.5040207@wwwdotorg.org> <87bnk5lwvt.fsf@eliezer.anholt.net> <54FA0E2B.30300@wwwdotorg.org>
+From: Kenneth Westfield <kwestfie@codeaurora.org>
+Subject: Re: [Patch V7 02/10] ASoC: qcom: Document LPASS CPU bindings
+Date: Fri, 6 Mar 2015 14:03:53 -0800
+Message-ID: <20150306220342.GA25363@kwestfie-linux.qualcomm.com>
+References: <1425428519-12224-1-git-send-email-kwestfie@codeaurora.org>
+ <1425428519-12224-3-git-send-email-kwestfie@codeaurora.org>
+ <7E5AFC65-1705-4BDC-B57F-0444E83A8987@codeaurora.org>
+ <20150306015131.GA15850@kwestfie-linux.qualcomm.com>
+ <D5A5C916-4D40-4C51-8307-9CA90FC68347@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54FA0E2B.30300-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <D5A5C916-4D40-4C51-8307-9CA90FC68347@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Kenneth Westfield <kwestfie@codeaurora.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/2015 01:29 PM, Stephen Warren wrote:
-> On 03/06/2015 01:00 PM, Eric Anholt wrote:
->> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->>
->>> On 03/04/2015 11:20 AM, Eric Anholt wrote:
->>>> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->>>>
->>>>> On 03/02/2015 01:54 PM, Eric Anholt wrote:
->>>>>> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
->>>>>>
->>>>>> Implement BCM2835 mailbox support as a device registered with
->>>>>> the general purpose mailbox framework. Implementation based on
->>>>>> commits by Lubomir Rintel [1], Suman Anna and Jassi Brar [2] on
->>>>>> which to base the implementation.
->>>>>
->>>>>> diff --git a/drivers/mailbox/bcm2835-mailbox.c
->>>>>> b/drivers/mailbox/bcm2835-mailbox.c
->>>
->>>>>> +static irqreturn_t bcm2835_mbox_irq(int irq, void *dev_id) +{
->>>>>> +    struct bcm2835_mbox *mbox = (struct bcm2835_mbox *) dev_id; +
->>>>>> struct device *dev = mbox->dev; + +    while (!(readl(mbox->regs +
->>>>>> MAIL0_STA) & ARM_MS_EMPTY)) { +        u32 msg = readl(mbox->regs +
->>>>>> MAIL0_RD); +        unsigned int chan = MBOX_CHAN(msg); + +        if
->>>>>> (!mbox->channel[chan].started) { +            dev_err(dev, "Reply on
->>>>>> stopped channel %d\n", chan); +            continue; +        } +
->>>>>> dev_dbg(dev, "Reply 0x%08X\n", msg); +
->>>>>> mbox_chan_received_data(mbox->channel[chan].link, +
->>>>>> (void *)
->>>>>> MBOX_DATA28(msg)); +    } +    rmb(); /* Finished last mailbox read.
->>>>>> */
->>>>>
->>>>> I know the PDF mentioned in the comment earlier in the patch says
->>>>> to put in barriers between accesses to different peripherals,
->>>>> which this seems compliant with, but I don't see quite what this
->>>>> barrier achieves. I think the PDF is talking generalities, not
->>>>> imposing a rule that must be blindly followed. Besides, if
->>>>> there's a context-switch you can't actually implement the rules
->>>>> the PDF suggests. What read operation is this barrier attempting
->>>>> to ensure happens after reading all mailbox messages and any
->>>>> associated DRAM buffer?
->>>>
->>>> Looking at this bit of code in particular:
->>>>
->>>> "As interrupts can appear anywhere in the code so you should
->>>> safeguard those. If an interrupt routine reads from a peripheral
->>>> the routine should start with a memory read barrier. If an
->>>> interrupt routine writes to a peripheral the routine should end
->>>> with a memory write barrier."
->>>
->>> I can see that doing that would be safe, but I don't think following
->>> those rules is actually necessary in the general case. Following those
->>> rules would cause lots of unnecessary barriers in code.
->>>
->>> Barriers shouldn't be used arbitrarily at the start/end of ISRs, but
->>> rather at specific chosen locations in the code that actually need to
->>> enforce some kind of memory ordering.
->>
->> According to the architecture docs, if you don't RMB at the start of
->> your ISR, then the following timeline could get the wrong values:
->
-> Which architecture doc and section/... specifically?
+On Fri, Mar 06, 2015 at 10:07:01AM -0600, Kumar Gala wrote:
+> On Mar 5, 2015, at 7:51 PM, Kenneth Westfield <kwestfie@codeaurora.org> wrote:
+> > On Thu, Mar 05, 2015 at 12:52:30PM -0600, Kumar Gala wrote:
+> >> On Mar 3, 2015, at 6:21 PM, Kenneth Westfield <kwestfie@codeaurora.org> wrote:
+> >> 
+> >>> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+> >>> @@ -0,0 +1,49 @@
+> >>> +* Qualcomm Technologies LPASS CPU DAI
+> >>> +
+> >>> +Required subnodes:
+> >>> +
+> >>> +- qcom,adsp		: Audio DSP sub-node
+> >>> +
+> >>> +Optional Audio DSP subnode properties:
+> >>> +
+> >>> +- status		: "disabled" indicates the adsp is not available.
+> >>> +
+> >> 
+> >> What is the intent of this subnode?
+> >> 
+> > 
+> > From the cover letter:
+> > Even though the ipq806x LPASS does not contain an audio DSP, other SOCs
+> > do have one.  For those SOCs, the audio DSP typically controls the
+> > hardware blocks in the LPASS.  Hence, different CPU DAI driver(s) would
+> > need to be used in order to facilitate audio with the DSP.  As such, the
+> > LPASS DT contains an adsp subnode, which is disabled for this SOC.  The
+> > same subnode should be enabled and populated for other SOCs that do
+> > contain an audio DSP.  Not using the audio DSP would require different
+> > CPU DAI driver(s), in addition to possible bootloader and/or firmware
+> > changes.
+> > 
+> > This was the result of a request from Mark.  See here:
+> > http://thread.gmane.org/gmane.linux.drivers.devicetree/109331/focus=11633
+> 
+> Two quick comments before I read Mark?s comments.
+> 
+> 1. Its not normal practice to put something into a DT that does not exist.  Having a node, but marking it disabled implies existence.
 
-Ah, this is BCM2835-ARM-Peripherals.pdf still. I found the footnote you 
-mentioned.
+Will change the DT definition to optional.
 
->> some other device driver               our isr
->> ------------------------               -------
->> rmb()
->> read from device
->>                                         read from device
->>                                         examine value read
->>                                         exit isr
->> examine value raed.
->>
->> The ISR could get the device driver's value.  This is made explicit in
->> footnote 2 on page 7.
->
-> Are you saying that the "read from device" in the right -hand "our isr"
-> column could end up returning the value actually read during "read from
-> device" in the left-hand "some other device driver" column, or vice-versa?
->
-> That doesn't make any sense.
->
-> Barriers are about ensuring that accesses happen (are visible or
-> complete) in the desired order, not about ensuring that the results of
-> two unrelated reads don't get swapped.
+> 2. How would one normally address the audio DSP if it did exist.  I?m just wondering if having a subnode is the proper solution vs maybe a phandle
 
-Ah. I've been thinking about the typical uses of barriers to ensure 
-ordering of transactions on a standards-compliant ARM CPU.
+The audio DSP is, in fact, contained within the audio subsystem.  The
+representation of that relationship in the DT, I believe, would be a subnode.
+OTOH, if there is a strong sentiment towards using a phandle, that would be
+fine with me.
 
-It was pointed out on IRC that perhaps the barriers are to work around a 
-CPU/SoC bug. In which case, if the CPU/bus really can swap results, then 
-I can see how barriers might be required and how they might solve the 
-problem. If this is the real reason, it sounds truly massively scary.
-
-I think this deserves a complete description in each driver file and in 
-the commit description for any commit that introduces these barriers. 
-Otherwise someone else will just want to rip them out.
-
-I'm also concerned that we need to add barriers in many more places than 
-just that start/end of ISRs. For example, what if the ISR for the 
-mailbox ends up calling back into some other driver that goes and 
-touches a different HW module. Now we need to put barriers either at the 
-start/end of that callback function, or immediately before/after we call 
-that callback function. This has potential to need barriers in a whole 
-bunch of places one wouldn't expect.
-
-I sure hope this was fixed on bcm2836, or that the ordering issue 
-appears separately within each CPU core and there's no interaction 
-between multiple CPU cores. Otherwise, two separate pieces of code 
-running on two separate CPU cores are going to have trouble when they 
-start touching different peripherals.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Kenneth Westfield
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
+a Linux Foundation Collaborative Project
