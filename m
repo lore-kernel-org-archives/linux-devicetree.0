@@ -1,32 +1,147 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v10 1/2] mfd: AXP20x: Add bindings documentation
-Date: Sat, 7 Mar 2015 00:48:43 +0800
-Message-ID: <CAGb2v65-kq=usC8Xip56p9wbs7RMUd0=sXcjcgY3Ec33bxEUaw@mail.gmail.com>
-References: <1424431168-25157-1-git-send-email-wens@csie.org> <1424431168-25157-2-git-send-email-wens@csie.org>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] of: add optional options parameter to
+ of_find_node_by_path()
+Date: Fri, 6 Mar 2015 16:52:53 +0000
+Message-ID: <20150306165253.GJ4278@bivouac.eciton.net>
+References: <1417110967-16284-1-git-send-email-leif.lindholm@linaro.org>
+ <1417110967-16284-3-git-send-email-leif.lindholm@linaro.org>
+ <54F7287E.6060302@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424431168-25157-2-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Brown <broonie@kernel.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Carlo Caione <carlo@caione.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54F7287E.6060302-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 20, 2015 at 7:19 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> From: Carlo Caione <carlo@caione.org>
->
-> Bindings documentation for the AXP20x driver. In this file also
-> sub-nodes are documented.
->
-> Signed-off-by: Carlo Caione <carlo@caione.org>
-> [wens@csie.org: clarify interrupt source for the axp PMIC]
-> [wens@csie.org: explain dcdc-workmode in detail and trim lines to 80 chars]
-> [wens@csie.org: make regulator supplies optional if using unregulated input]
-> [wens@csie.org: use cubieboard2 regulator nodes as example]
-> [wens@csie.org: x-powers,dcdc-workmode default changed to 'current hardware
->                 setting']
-> [wens@csie.org: reorganized regulator related properties into separate
->                 section.]
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Hi Peter,
 
-Ping?
+On Wed, Mar 04, 2015 at 10:45:02AM -0500, Peter Hurley wrote:
+> The path parsing gets lost if the string after ':' contains '/'.
+
+Doh!
+Thanks for reporting (and sorry for slow response).
+
+> The selftests below fail with:
+> [    1.365528] ### dt-test ### FAIL of_selftest_find_node_by_name():99 option path test failed
+> [    1.365610] ### dt-test ### FAIL of_selftest_find_node_by_name():115 option alias path test failed
+> 
+> Regards,
+> Peter Hurley
+> 
+> 
+> --- >% ---
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 41a4a13..07ba5aa 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -94,6 +94,11 @@ static void __init of_selftest_find_node_by_name(void)
+>  		 "option path test failed\n");
+>  	of_node_put(np);
+>  
+> +	np = of_find_node_opts_by_path("/testcase-data:test/option", &options);
+> +	selftest(np && !strcmp("test/option", options),
+> +		 "option path test failed\n");
+> +	of_node_put(np);
+> +
+>  	np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
+>  	selftest(np, "NULL option path test failed\n");
+>  	of_node_put(np);
+> @@ -104,6 +109,12 @@ static void __init of_selftest_find_node_by_name(void)
+>  		 "option alias path test failed\n");
+>  	of_node_put(np);
+>  
+> +	np = of_find_node_opts_by_path("testcase-alias:test/alias/option",
+> +				       &options);
+> +	selftest(np && !strcmp("test/alias/option", options),
+> +		 "option alias path test failed\n");
+> +	of_node_put(np);
+> +
+>  	np = of_find_node_opts_by_path("testcase-alias:testaliasoption", NULL);
+>  	selftest(np, "NULL option alias path test failed\n");
+>  	of_node_put(np);
+
+Could you give the below a spin, and if it works for you, send me the
+above tests as a full patch so that I can post both as a series?
+
+Regards,
+
+Leif
+
+>From bf4ab0b2e33902ba88809a3c4a2cdf07efd02dde Mon Sep 17 00:00:00 2001
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Fri, 6 Mar 2015 16:38:54 +0000
+Subject: [PATCH] of: fix handling of '/' in options for of_find_node_by_path()
+
+Ensure proper handling of paths with appended options (after ':'),
+where those options may contain a '/'.
+
+Fixes: 7914a7c5651a ("of: support passing console options with stdout-path")
+Reported-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/base.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 0a8aeb8..8b904e5 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -714,16 +714,17 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
+ 						const char *path)
+ {
+ 	struct device_node *child;
+-	int len = strchrnul(path, '/') - path;
+-	int term;
++	int len;
++	const char *end;
+ 
++	end = strchr(path, ':');
++	if (!end)
++		end = strchrnul(path, '/');
++
++	len = end - path;
+ 	if (!len)
+ 		return NULL;
+ 
+-	term = strchrnul(path, ':') - path;
+-	if (term < len)
+-		len = term;
+-
+ 	__for_each_child_of_node(parent, child) {
+ 		const char *name = strrchr(child->full_name, '/');
+ 		if (WARN(!name, "malformed device_node %s\n", child->full_name))
+@@ -768,8 +769,12 @@ struct device_node *of_find_node_opts_by_path(const char *path, const char **opt
+ 
+ 	/* The path could begin with an alias */
+ 	if (*path != '/') {
+-		char *p = strchrnul(path, '/');
+-		int len = separator ? separator - path : p - path;
++		int len;
++		const char *p = separator;
++
++		if (!p)
++			p = strchrnul(path, '/');
++		len = p - path;
+ 
+ 		/* of_aliases must not be NULL */
+ 		if (!of_aliases)
+@@ -794,6 +799,8 @@ struct device_node *of_find_node_opts_by_path(const char *path, const char **opt
+ 		path++; /* Increment past '/' delimiter */
+ 		np = __of_find_node_by_path(np, path);
+ 		path = strchrnul(path, '/');
++		if (separator && separator < path)
++			break;
+ 	}
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+-- 
+2.1.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
