@@ -1,56 +1,68 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/2] ARM: shmobile: ape6evm: Fix GPIO keys and wake-up
-Date: Fri, 06 Mar 2015 13:33:05 +0200
-Message-ID: <1533426.PtrGHiBojg@avalon>
-References: <1425059319-13403-1-git-send-email-geert+renesas@glider.be> <5844551.UVahD0ukvm@avalon> <20150306113028.GB27105@verge.net.au>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] pinctrl: Add Pistachio SoC pin control binding document
+Date: Fri, 6 Mar 2015 12:37:09 +0100
+Message-ID: <CACRpkdbCavYLk-Uo8hjTrGcGLJe6NEB9dVPVNm_fyd3eGccnEw@mail.gmail.com>
+References: <1424744104-14151-1-git-send-email-abrestic@chromium.org>
+	<1424744104-14151-2-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150306113028.GB27105@verge.net.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, linux-sh@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424744104-14151-2-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Tue, Feb 24, 2015 at 3:15 AM, Andrew Bresticker
+<abrestic@chromium.org> wrote:
 
-On Friday 06 March 2015 20:30:29 Simon Horman wrote:
-> On Thu, Mar 05, 2015 at 12:42:07PM +0200, Laurent Pinchart wrote:
-> > On Thursday 05 March 2015 09:34:33 Simon Horman wrote:
-> >> On Fri, Feb 27, 2015 at 06:48:37PM +0100, Geert Uytterhoeven wrote:
-> >>> 	Hi Simon, Magnus,
-> >>> 
-> >>> This patch series adds the missing pull-up bias configuration for the
-> >>> switches on the r8a73a4/ape6evm development board, and configures the
-> >>> custom switch as a wake-up source.
-> >>> 
-> >>> After this, the keys actually work, and the system can be resumed from
-> >>> s2ram by pressing the custom switch.
-> >>> 
-> >>> This depends functionally on "[PATCH 1/4] pinctrl: sh-pfc: Do not
-> >>> overwrite bias configuration" in the series "[PATCH 0/4] pinctrl:
-> >>> sh-pfc: Fix pin bias and cleanups" which I've just sent. But as this
-> >>> is DTS, it can be applied independently.
-> >>> 
-> >>> Thanks for your comments!
-> >> 
-> >> Hi Geert,
-> >> 
-> >> this seems fine to me. But I am reluctant to queue it up before the PFC
-> >> changes are accepted, lest there be some change in direction.
-> >> 
-> >> Please repost once the PFC changes have been accepted.
-> > 
-> > I've acked the dependency, but we should probably wait for Linus to apply
-> > it.
+> Add a device-tree binding document for the pin controller present
+> on the IMG Pistachio SoC.
 >
-> Thanks Laurent, of course that plan is fine by me.
+> Signed-off-by: Damien Horsley <Damien.Horsley@imgtec.com>
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+(...)
+> +Note that the GPIO bank sub-nodes *must* be listed in order.
 
-Linus has just applied it, so I think you can go forward with this series.
+Usually we use aliases to mark the order of things. e.g.:
 
--- 
-Regards,
+        aliases {
+                gpio0 = &gpio0;
+                gpio1 = &gpio1;
+                gpio2 = &gpio2;
+                ethernet0 = &eth0;
+                ethernet1 = &eth1;
+        };
 
-Laurent Pinchart
+(arch/arm/boot/dts/armada-375.dtsi)
 
+> +Required properties for pin configuration sub-nodes:
+> +----------------------------------------------------
+> + - pins: List of pins to which the configuration applies. See below for a
+> +   list of possible pins.
+> +
+> +Optional properties for pin configuration sub-nodes:
+> +----------------------------------------------------
+> + - function: Mux function for the specified pins. This is not applicable for
+> +   non-MFIO pins. See below for a list of valid functions for each pin.
+> + - bias-high-impedance: Enable high-impedance mode.
+> + - bias-pull-up: Enable weak pull-up.
+> + - bias-pull-down: Enable weak pull-down.
+> + - bias-bus-hold: Enable bus-keeper mode.
+> + - drive-strength: Drive strength in mA. Supported values: 2, 4, 8, 12.
+> + - input-schmitt-enable: Enable Schmitt trigger.
+> + - input-schmitt-disable: Disable Schmitt trigger.
+> + - slew-rate: Slew rate control. 0 for slow, 1 for fast.
+
+We actually haven't specified that function+pins is a valid pattern,
+a lot of drivers just started doing that :(
+
+function+groups is documented for muxing.
+
+group + config opts is documented for config.
+
+Please consider patching the generic bindings to reflect this
+mux use of pins... We need to discuss it.
+
+Yours,
+Linus Walleij
