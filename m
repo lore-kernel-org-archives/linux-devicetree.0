@@ -1,42 +1,76 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH 0/17] crypto: talitos - Add support for SEC1
-Date: Fri, 6 Mar 2015 11:28:31 +1100
-Message-ID: <20150306002831.GA30947@gondor.apana.org.au>
-References: <20150305164605.E65D81A241C@localhost.localdomain>
- <20150305182101.6db66e228f519476f0751c13@freescale.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/4] ARM: OMAP2+: omap_hwmod: Introduce ti,no-init dt
+ property
+Date: Thu, 5 Mar 2015 16:41:57 -0800
+Message-ID: <20150306004157.GI13520@atomide.com>
+References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com>
+ <1425561211-31003-2-git-send-email-d-gerlach@ti.com>
+ <alpine.DEB.2.02.1503051815590.5613@utopia.booyaka.com>
+ <20150305184952.GF13520@atomide.com> <54F8B2C7.7060202@ti.com>
+ <20150305201713.GH13520@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20150305182101.6db66e228f519476f0751c13@freescale.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@freescale.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20150305201713.GH13520@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, KEERTHY <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 05, 2015 at 06:21:01PM -0600, Kim Phillips wrote:
-> On Thu, 5 Mar 2015 17:46:05 +0100
-> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+* Tony Lindgren <tony@atomide.com> [150305 12:24]:
+> * Dave Gerlach <d-gerlach@ti.com> [150305 11:53]:
+> > On 03/05/2015 12:49 PM, Tony Lindgren wrote:
+> > > * Paul Walmsley <paul@pwsan.com> [150305 10:16]:
+> > >> On Thu, 5 Mar 2015, Dave Gerlach wrote:
+> > >>
+> > >>> Introduce a dt property, ti,no-init, that prevents hwmod initialization.
+> > >>> Even if a dt node is marked as disabled, hwmod still at least enables
+> > >>> the hwmod and programs the sysconfig before attempting to idle it at
+> > >>> boot. If an IP has been disabled by the hardware configuration on a
+> > >>> platform, this will cause a hang due to writing to inactive registers.
+> > >>> This property prevents that from happening by marking the hwmod as
+> > >>> _HWMOD_STATE_DISABLED during init.
+> > >>
+> > >> I'm kind of wondering if hwmod should even touch a device if it's marked 
+> > >> as disabled in the DT.  Tony, what do you think?
+> > > 
+> > > Well nothing happens if a device is status = "disabled". No dev entry
+> > > gets created for it at all and hwmod won't have any data for the device
+> > > populated. The only way hwmod code could see that device if the device
+> > > gets it's data from the legacy omap_hwmod_*_data.c instead of DT.
+> > > 
+> > 
+> > We still need this for the sysconfig programming, correct? hwmod programs that
+> > regardless of dt status and then idles the IP,
 > 
-> > [15/17] crypto: talitos - Implementation of SEC1
+> Well hwmod does not even know about the IP IO addresses if it's marked
+> with status = "disabled".. Which IP are you having problems with?
 > 
-> ...
+> > which is why I needed the ti,no-init for the epos evm. It isn't just a
+> > matter of we shouldnt write to it because we don't want to use it; we
+> > can't write to it because the module is held off so it causes an
+> > external abort if we do.
 > 
-> > [16/17] crypto: talitos - SEC1 bugs on 0 data hash
-> > [17/17] crypto: talitos - Update DT bindings with SEC1
-> 
-> This patchseries doesn't apply, at least on top of Herbert's
-> cryptodev-2.6 tree, as of today:
-> 
-> Applying: crypto: talitos - Implementation of SEC1
-> error: patch failed: drivers/crypto/talitos.c:655
-> error: drivers/crypto/talitos.c: patch does not apply
+> Well hard to say not knowing which module this is.. Pretty much all
+> the modules have drivers and the driver just does pm_runtime_get()
+> on it?
 
-Also the patches are coming in a random order.  Please send them
-one at a time to ensure proper ordering.
+Heh OK this thread is about the RTC driver, so I assume that's the
+problem :) So if you set the rtc to status = "disabled" how can the
+hwmod code do anything as AFAIK it won't even get the rtc IO address?
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Or am I missing something here?
+
+Regards,
+
+Tony
