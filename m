@@ -1,68 +1,56 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/2] ARM: DRA7x/OMAP5: Clock: DPLL Clock fixes
-Date: Fri, 6 Mar 2015 08:37:16 -0800
-Message-ID: <20150306163715.GO13520@atomide.com>
-References: <1422724005-9415-1-git-send-email-rk@ti.com>
- <54E5FC6D.7040701@ti.com> <20150224162719.GA28244@atomide.com>
- <54ED79B0.4020101@ti.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2 0/3] net: macb: rework at91 specific handling
+Date: Fri, 6 Mar 2015 17:44:44 +0100
+Message-ID: <54F9D97C.3050100@atmel.com>
+References: <1425637442-8724-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <54ED79B0.4020101@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, Ravikumar Kattekola <rk@ti.com>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, galak@codeaurora.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425637442-8724-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [150225 00:05]:
-> On 02/24/2015 06:27 PM, Tony Lindgren wrote:
-> >* Ravikumar Kattekola <rk@ti.com> [150219 08:13]:
-> >>On 1/31/2015 10:36 PM, Ravikumar Kattekola wrote:
-> >>>Fix bypass clock source for a few DPLLs.
-> >>>
-> >>>On DRA7x/OMAP5, for a few DPLLs, both CLKINP and CLKINPULOW are connected
-> >>>to a mux and the output from mux is routed to the bypass clkout.
-> >>>Add a mux-clock as bypass clock with CLKINP and CLKINPULOW as parents.
-> >>>
-> >>>Tested against:
-> >>>	tree: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
-> >>>	branch: master
-> >>>On:
-> >>>CPU  : OMAP5432 ES2.0
-> >>>Board: OMAP5432 uEVM
-> >>>and
-> >>>CPU  : DRA752 ES1.0
-> >>>Board: DRA7xx
-> >>>
-> >>>
-> >>>Ravikumar Kattekola (2):
-> >>>   ARM: DRA7x: dts: Fix the bypass clock source for dpll_iva and others
-> >>>   ARM: OMAP5: dts: Fix the bypass clock source for dpll_iva and others
-> >>>
-> >>>  arch/arm/boot/dts/dra7xx-clocks.dtsi   |   90 ++++++++++++++++++++++++++++----
-> >>>  arch/arm/boot/dts/omap54xx-clocks.dtsi |   41 +++++++++++++--
-> >>>  2 files changed, 118 insertions(+), 13 deletions(-)
-> >>>
-> >>Hi Benoit,
-> >>     Can these fixes be looked into for 3.20-rc?
-> >
-> >Seem like valid fixes to me. Tero, care to take a look at these and ack
-> >if OK?
-> 
-> Yes, both are good to go.
-> 
-> Acked-by: Tero Kristo <t-kristo@ti.com>
+Le 06/03/2015 11:23, Boris Brezillon a =E9crit :
+> Hello,
+>=20
+> This removes the #if defined(ARCH_AT91) sections to prevent any probl=
+em
+> when enabling ARM multi-platform support.
+> The at91 specific logic is now activated when the "at91sam9260-macb"
+> compatible string is found.=20
+>=20
+> Best Regards,
+>=20
+> Boris
 
-Applying both into omap-for-v4.0/fixes thanks.
+I'm okay with the whole series:
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-Tony 
+>=20
+> Changes since v1:
+> - avoid changing existing behavior as Alexandre suggested
+>=20
+> Boris Brezillon (3):
+>   net/macb: Update DT bindings documentation
+>   ARM: at91/dt: fix macb compatible strings
+>   net: macb: remove #if defined(CONFIG_ARCH_AT91) sections
+>=20
+>  Documentation/devicetree/bindings/net/macb.txt |  5 +++-
+>  arch/arm/boot/dts/at91sam9260.dtsi             |  2 +-
+>  arch/arm/boot/dts/at91sam9263.dtsi             |  2 +-
+>  arch/arm/boot/dts/at91sam9g45.dtsi             |  2 +-
+>  arch/arm/boot/dts/at91sam9x5_macb0.dtsi        |  2 +-
+>  arch/arm/boot/dts/at91sam9x5_macb1.dtsi        |  2 +-
+>  arch/arm/boot/dts/sama5d3_emac.dtsi            |  2 +-
+>  drivers/net/ethernet/cadence/macb.c            | 32 ++++++++++++++--=
+----------
+>  drivers/net/ethernet/cadence/macb.h            |  2 ++
+>  9 files changed, 29 insertions(+), 22 deletions(-)
+>=20
+
+
+--=20
+Nicolas Ferre
