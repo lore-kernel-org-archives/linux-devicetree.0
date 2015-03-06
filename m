@@ -1,112 +1,153 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: OMAP2+: omap_hwmod: Introduce ti,no-init dt
- property
-Date: Fri, 6 Mar 2015 09:45:48 -0800
-Message-ID: <20150306174548.GW13520@atomide.com>
-References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com>
- <1425561211-31003-2-git-send-email-d-gerlach@ti.com>
- <alpine.DEB.2.02.1503051815590.5613@utopia.booyaka.com>
- <20150305184952.GF13520@atomide.com>
- <54F8B2C7.7060202@ti.com>
- <20150305201713.GH13520@atomide.com>
- <20150306004157.GI13520@atomide.com>
- <54F9E3BF.5010407@ti.com>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] dtc: Plugin (object) device tree support.
+Date: Fri, 06 Mar 2015 18:55:14 +0100
+Message-ID: <1425664514.11054.150.camel@pengutronix.de>
+References: <1425063346-14554-1-git-send-email-pantelis.antoniou@konsulko.com>
+	 <1425063346-14554-3-git-send-email-pantelis.antoniou@konsulko.com>
+	 <20150304233411.GJ18072@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54F9E3BF.5010407-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, KEERTHY <j-keerthy-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150304233411.GJ18072-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150306 09:28]:
-> On 03/05/2015 06:41 PM, Tony Lindgren wrote:
-> > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [150305 12:24]:
-> >> * Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150305 11:53]:
-> >>> On 03/05/2015 12:49 PM, Tony Lindgren wrote:
-> >>>> * Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org> [150305 10:16]:
-> >>>>> On Thu, 5 Mar 2015, Dave Gerlach wrote:
-> >>>>>
-> >>>>>> Introduce a dt property, ti,no-init, that prevents hwmod initialization.
-> >>>>>> Even if a dt node is marked as disabled, hwmod still at least enables
-> >>>>>> the hwmod and programs the sysconfig before attempting to idle it at
-> >>>>>> boot. If an IP has been disabled by the hardware configuration on a
-> >>>>>> platform, this will cause a hang due to writing to inactive registers.
-> >>>>>> This property prevents that from happening by marking the hwmod as
-> >>>>>> _HWMOD_STATE_DISABLED during init.
-> >>>>>
-> >>>>> I'm kind of wondering if hwmod should even touch a device if it's marked 
-> >>>>> as disabled in the DT.  Tony, what do you think?
-> >>>>
-> >>>> Well nothing happens if a device is status = "disabled". No dev entry
-> >>>> gets created for it at all and hwmod won't have any data for the device
-> >>>> populated. The only way hwmod code could see that device if the device
-> >>>> gets it's data from the legacy omap_hwmod_*_data.c instead of DT.
-> >>>>
-> >>>
-> >>> We still need this for the sysconfig programming, correct? hwmod programs that
-> >>> regardless of dt status and then idles the IP,
-> >>
-> >> Well hwmod does not even know about the IP IO addresses if it's marked
-> >> with status = "disabled".. Which IP are you having problems with?
-> >>
-> >>> which is why I needed the ti,no-init for the epos evm. It isn't just a
-> >>> matter of we shouldnt write to it because we don't want to use it; we
-> >>> can't write to it because the module is held off so it causes an
-> >>> external abort if we do.
-> >>
-> >> Well hard to say not knowing which module this is.. Pretty much all
-> >> the modules have drivers and the driver just does pm_runtime_get()
-> >> on it?
+On Do, 2015-03-05 at 10:34 +1100, David Gibson wrote:
+> On Fri, Feb 27, 2015 at 08:55:45PM +0200, Pantelis Antoniou wrote:
+> > Enables the generation of a __fixups__ node for trees compiled
+> > using the -@ option that are using the /plugin/ tag.
 > > 
-> > Heh OK this thread is about the RTC driver, so I assume that's the
-> > problem :) So if you set the rtc to status = "disabled" how can the
-> > hwmod code do anything as AFAIK it won't even get the rtc IO address?
-> > 
-> > Or am I missing something here?
+> > The __fixups__ node make possible the dynamic resolution of phandle
+> > references which are present in the plugin tree but lie in the
+> > tree that are applying the overlay against.
 > 
-> Perhaps I am mistaken, but from what I understand, all hwmods have _init and
-> _setup called on them, and all hwmods read the IO address regardless of DT
-> status at this point with _init_mpu_rt_base. In _setup, _setup_reset gets called
-> which calls _enable for the hwmod, and this calls both _enable_sysc and
-> _update_sysc_cache which touch the sysconfig register of the IP.
+> It seems to me you've really missed an opportunity in designing the
+> plugin syntax.  You have dtc generating the fixups nodes, but you
+> still have to manually lay out your fragments in the right format,
+> and 
+> manually construct the target properties.  Instead you could re-use
+> the existing dts overlay syntax.  For a plugin tree, you wouldn't need
+> the base tree piece. So, allow something like:
+> 
+> /dts-v1/ /plugin/;
+> 
+> &res {
+>         baz_res: baz_res { ... };
+> };
+> 
+> &ocp {
+>         baz { ... };
+> };
 
-Oh OK, I think you're right. I was thinking of omap_device_build_from_dt(),
-sorry. Looks like the hwmod IO address data does get populated even
-for status = "disabled" although the dev entry won't get created and
-omap_device_build_from_dt() never gets called.
+During our initial experiments with overlays in Barebox, Sascha Hauer
+did a simple patch to DTC to implement this. I've recently rebased it on
+Pantelis' series. It makes writing overlays much more natural:
 
-> Normally this is fine regardless of whether or not we are using an IP because
-> the module will wake up for a moment, have it's sysc programmed, and then be put
-> back to sleep later, potentially never to be woken again if we bind no driver
-> for it, which is fine for 99% of cases. In the case of am43x epos evm, you can
-> take the same piece of silicon that will boot happily on the gp evm with the rtc
-> hwmod in place and it will hang during boot on the epos evm because the board
-> uses a pin to hold the RTC IP in reset. There is no way to detect this in
-> software, the module can be turned on as normal using the clk_ctrl, but if you
-> touch any of the IP registers you get an abort.
+>From e7082dd7160082c64d242b4ed2ebb9eb0b8aad42 Mon Sep 17 00:00:00 2001
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Date: Thu, 8 Aug 2013 23:08:31 +0200
+Subject: [PATCH] dtc: convert unresolved labels into overlay nodes
 
-OK sounds like some dts property is needed to signal this.
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ dtc-parser.y | 10 +++++++---
+ dtc.h        |  3 ++-
+ livetree.c   | 23 +++++++++++++++++++++++
+ 3 files changed, 32 insertions(+), 4 deletions(-)
+
+diff --git a/dtc-parser.y b/dtc-parser.y
+index d23927d99215..f431bdd6e57c 100644
+--- a/dtc-parser.y
++++ b/dtc-parser.y
+@@ -172,10 +172,14 @@ devicetree:
+ 		{
+ 			struct node *target = get_node_by_ref($1, $2);
  
-> So we need to prevent this from happening but of course we can't selectively
-> choose when the rtc hwmod gets added based on which board we are using so it
-> seemed a DT flag was appropriate to indicate that we do not want to init the rtc
-> IP at all only on this board.
-> 
-> Without this flag in place but with the rtc hwmod added, the am43x-epos-evm
-> fails booting with an imprecise abort.
+-			if (target)
++			if (target) {
+ 				merge_nodes(target, $3);
+-			else
+-				ERROR(&@2, "Label or path %s not found", $2);
++			} else {
++				if (symbol_fixup_support)
++					add_orphan_node($1, $3, $2);
++				else
++					ERROR(&@2, "Label or path %s not found", $2);
++			}
+ 			$$ = $1;
+ 		}
+ 	| devicetree DT_DEL_NODE DT_REF ';'
+diff --git a/dtc.h b/dtc.h
+index f163b22b14b8..fc7330e9013e 100644
+--- a/dtc.h
++++ b/dtc.h
+@@ -20,7 +20,7 @@
+  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+  *                                                                   USA
+  */
+-
++#define _GNU_SOURCE
+ #include <stdio.h>
+ #include <string.h>
+ #include <stdlib.h>
+@@ -234,6 +234,7 @@ struct node *build_node_delete(void);
+ struct node *name_node(struct node *node, char *name);
+ struct node *chain_node(struct node *first, struct node *list);
+ struct node *merge_nodes(struct node *old_node, struct node *new_node);
++void add_orphan_node(struct node *old_node, struct node *new_node, char *ref);
+ 
+ void add_property(struct node *node, struct property *prop);
+ void delete_property_by_name(struct node *node, char *name);
+diff --git a/livetree.c b/livetree.c
+index e229b84432f9..ed16b8c216f4 100644
+--- a/livetree.c
++++ b/livetree.c
+@@ -216,6 +216,29 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
+ 	return old_node;
+ }
+ 
++void add_orphan_node(struct node *dt, struct node *new_node, char *ref)
++{
++	struct node *ovl = xmalloc(sizeof(*ovl));
++	struct property *p;
++	struct data d = empty_data;
++	char *name;
++
++	memset(ovl, 0, sizeof(*ovl));
++
++	d = data_add_marker(d, REF_PHANDLE, ref);
++	d = data_append_integer(d, 0xdeadbeef, 32);
++
++	p = build_property("target", d);
++	add_property(ovl, p);
++
++	asprintf(&name, "fragment@%s", ref);
++	name_node(ovl, name);
++	name_node(new_node, "__overlay__");
++
++	add_child(dt, ovl);
++	add_child(ovl, new_node);
++}
++
+ struct node *chain_node(struct node *first, struct node *list)
+ {
+ 	assert(first->next_sibling == NULL);
+-- 
+2.1.4
 
-OK thanks for explaining it. I'm fine with this patch, Paul may have
-other issues. The other option would be to use status = "disabled" to
-not touch the device at all like Paul suggested. I wonder if that's
-going to break PM on some devices though..
 
-Regards,
 
-Tony
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
