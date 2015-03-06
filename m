@@ -1,100 +1,60 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 02/10] mailbox: Enable BCM2835 mailbox support
-Date: Fri, 06 Mar 2015 13:29:31 -0700
-Message-ID: <54FA0E2B.30300@wwwdotorg.org>
-References: <1425329684-23968-1-git-send-email-eric@anholt.net> <1425329684-23968-3-git-send-email-eric@anholt.net> <54F675F1.60205@wwwdotorg.org> <87a8zs8vzo.fsf@eliezer.anholt.net> <54F932FD.5040207@wwwdotorg.org> <87bnk5lwvt.fsf@eliezer.anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87bnk5lwvt.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
+Date: Fri, 6 Mar 2015 14:37:52 -0600
+Message-ID: <F9B276F7-61EF-4406-AB46-97D7F1ECEEFE@codeaurora.org>
+References: <1425503602-24916-1-git-send-email-galak@codeaurora.org> <7h8ufbjkod.fsf@deeprootsystems.com> <07D4E4D1-BF8C-4583-9505-9F321DB10406@codeaurora.org> <CAOesGMgy3VY=4-t+N0BYqCuSLQkh-rYe8nd9iJh1mMeBFz_sWQ@mail.gmail.com> <B8019148-3B26-453E-A3F0-9D67874083E0@codeaurora.org> <CAOesGMjpOx4SxY7j8jnoEwLG+mhPKB2st8qCb-hduHLOVw=RcQ@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMjpOx4SxY7j8jnoEwLG+mhPKB2st8qCb-hduHLOVw=RcQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?iso-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/2015 01:00 PM, Eric Anholt wrote:
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->
->> On 03/04/2015 11:20 AM, Eric Anholt wrote:
->>> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->>>
->>>> On 03/02/2015 01:54 PM, Eric Anholt wrote:
->>>>> From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
->>>>>
->>>>> Implement BCM2835 mailbox support as a device registered with
->>>>> the general purpose mailbox framework. Implementation based on
->>>>> commits by Lubomir Rintel [1], Suman Anna and Jassi Brar [2] on
->>>>> which to base the implementation.
->>>>
->>>>> diff --git a/drivers/mailbox/bcm2835-mailbox.c
->>>>> b/drivers/mailbox/bcm2835-mailbox.c
->>
->>>>> +static irqreturn_t bcm2835_mbox_irq(int irq, void *dev_id) +{
->>>>> +	struct bcm2835_mbox *mbox = (struct bcm2835_mbox *) dev_id; +
->>>>> struct device *dev = mbox->dev; + +	while (!(readl(mbox->regs +
->>>>> MAIL0_STA) & ARM_MS_EMPTY)) { +		u32 msg = readl(mbox->regs +
->>>>> MAIL0_RD); +		unsigned int chan = MBOX_CHAN(msg); + +		if
->>>>> (!mbox->channel[chan].started) { +			dev_err(dev, "Reply on
->>>>> stopped channel %d\n", chan); +			continue; +		} +
->>>>> dev_dbg(dev, "Reply 0x%08X\n", msg); +
->>>>> mbox_chan_received_data(mbox->channel[chan].link, +			(void *)
->>>>> MBOX_DATA28(msg)); +	} +	rmb(); /* Finished last mailbox read.
->>>>> */
->>>>
->>>> I know the PDF mentioned in the comment earlier in the patch says
->>>> to put in barriers between accesses to different peripherals,
->>>> which this seems compliant with, but I don't see quite what this
->>>> barrier achieves. I think the PDF is talking generalities, not
->>>> imposing a rule that must be blindly followed. Besides, if
->>>> there's a context-switch you can't actually implement the rules
->>>> the PDF suggests. What read operation is this barrier attempting
->>>> to ensure happens after reading all mailbox messages and any
->>>> associated DRAM buffer?
->>>
->>> Looking at this bit of code in particular:
->>>
->>> "As interrupts can appear anywhere in the code so you should
->>> safeguard those. If an interrupt routine reads from a peripheral
->>> the routine should start with a memory read barrier. If an
->>> interrupt routine writes to a peripheral the routine should end
->>> with a memory write barrier."
->>
->> I can see that doing that would be safe, but I don't think following
->> those rules is actually necessary in the general case. Following those
->> rules would cause lots of unnecessary barriers in code.
->>
->> Barriers shouldn't be used arbitrarily at the start/end of ISRs, but
->> rather at specific chosen locations in the code that actually need to
->> enforce some kind of memory ordering.
->
-> According to the architecture docs, if you don't RMB at the start of
-> your ISR, then the following timeline could get the wrong values:
 
-Which architecture doc and section/... specifically?
+On Mar 6, 2015, at 1:15 PM, Olof Johansson <olof@lixom.net> wrote:
 
-> some other device driver               our isr
-> ------------------------               -------
-> rmb()
-> read from device
->                                         read from device
->                                         examine value read
->                                         exit isr
-> examine value raed.
->
-> The ISR could get the device driver's value.  This is made explicit in
-> footnote 2 on page 7.
+> On Fri, Mar 6, 2015 at 8:08 AM, Kumar Gala <galak@codeaurora.org> wrote:
+>> 
+>> On Mar 5, 2015, at 7:59 PM, Olof Johansson <olof@lixom.net> wrote:
+>> 
+>>> On Thu, Mar 5, 2015 at 12:23 PM, Kumar Gala <galak@codeaurora.org> wrote:
+>>>> 
+>>>> On Mar 5, 2015, at 1:42 PM, Kevin Hilman <khilman@kernel.org> wrote:
+>>>> 
+>>>>> Kumar Gala <galak@codeaurora.org> writes:
+>>>>> 
+>>>>>> The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
+>>>>>> on Qualcomm MSM platforms to determine which device tree should be
+>>>>>> utilized and passed to the kernel.
+>>>>>> 
+>>>>>> Cc: <devicetree@vger.kernel.org>
+>>>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+>>>>> 
+>>>>> Is this the special magic that allows qcom bootloaders to take a kernel
+>>>>> plus multiple DTBs and figure out which DTB to pass?
+>>>>> 
+>>>>> Kevin
+>>>> 
+>>>> yes
+>>> 
+>>> That's a bummer.
+>>> 
+>>> Luckily, the solution for upstream is still quite simple: Provide only
+>>> one devicetree, and it'll be used, right?
+>> 
+>> We can provide only one, we still need the IDs in the DT.
+> 
+> How are the DTS provided? Concatenated with the kernel, or in a
+> wrapped data format? Or in a separate partition from the kernel?
 
-Are you saying that the "read from device" in the right -hand "our isr" 
-column could end up returning the value actually read during "read from 
-device" in the left-hand "some other device driver" column, or vice-versa?
+Its a wrapped data format that is than concatenated with the kernel if I remember correctly.
 
-That doesn't make any sense.
+- k
 
-Barriers are about ensuring that accesses happen (are visible or 
-complete) in the desired order, not about ensuring that the results of 
-two unrelated reads don't get swapped.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
