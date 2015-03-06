@@ -1,98 +1,78 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Fri, 6 Mar 2015 07:15:02 +0100
-Message-ID: <20150306061502.GB10997@pengutronix.de>
-References: <1425510624-22250-1-git-send-email-stefan@agner.ch>
- <1425510624-22250-2-git-send-email-stefan@agner.ch>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] i2c: sunxi: Add Reduced Serial Bus (RSB) support
+Date: Fri, 6 Mar 2015 07:36:29 +0100
+Message-ID: <20150306063628.GA883@katana>
+References: <1425284686-5116-1-git-send-email-wens@csie.org>
+ <1425284686-5116-2-git-send-email-wens@csie.org>
+ <20150304172710.GA884@katana>
+ <20150305182817.GB4911@lukather>
+ <20150305184044.GA881@katana>
+ <20150305220801.GE4522@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425510624-22250-2-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, bpringlemeir@nbsps.com
+In-Reply-To: <20150305220801.GE4522@lukather>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
 
-On Thu, Mar 05, 2015 at 12:10:20AM +0100, Stefan Agner wrote:
-> +
-> +static int vf610_nfc_probe_dt(struct device *dev, struct vf610_nfc_config *cfg)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	int buswidth;
-> +	u32 clkrate;
-> +
-> +	if (!np)
-> +		return 1;
-> +
-> +	cfg->flash_bbt = of_get_nand_on_flash_bbt(np);
-> +
-> +	if (!of_property_read_u32(np, "clock-frequency", &clkrate))
-> +		cfg->clkrate = clkrate;
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Normally the clock-frequency property tells the driver at which
-frequency the device actually is running, not to tell the driver at
-which frequency the device *should* run. It's strange to use the value
-of the clock-frequency property as input to clk_set_rate(). Maybe the
-assigned clock binding is more appropriate here, see
-Documentation/devicetree/bindings/clock/clock-bindings.txt.
 
-BTW the above can easier be written as:
+> From that regard, RSB is a multiple device bus, using addresses, just
+> like I2C. The way it communicates is basically the one used by P2WI.
 
-	of_property_read_u32(np, "clock-frequency", &cfg->clkrate);
+I am not keen to allow everything which "is a bus and has addresses"
+into the I2C realm. The addresses are 12 bit, whilst I2C has at maximum
+10 bit which is rarely used, so mostly 7 bit are used. It has a runtime
+readdressing mechanism which is not present in standard I2C. And if you
+look at the protocol with no acks but parities, IMO it doesn't look
+closer to I2C than to other two wire protocols. So, being in I2C needs
+more arguments.
 
-No return value checking necessary.
+And while the outcome could be that it really makes sense to add RSB to
+I2C with I2C_FUNCS_RSB added, it could also be that there is a more
+suitable place for custom busses in the kernel.
 
-> +static int vf610_nfc_probe(struct platform_device *pdev)
-> +{
-> +	struct vf610_nfc *nfc;
-> +	struct resource *res;
-> +	struct mtd_info *mtd;
-> +	struct nand_chip *chip;
-> +	struct vf610_nfc_config *cfg;
-> +	int err = 0;
-> +	int page_sz;
-> +	int irq;
-> +
-> +	nfc = devm_kzalloc(&pdev->dev, sizeof(*nfc), GFP_KERNEL);
-> +	if (!nfc)
-> +		return -ENOMEM;
-> +
-> +	nfc->cfg = devm_kzalloc(&pdev->dev, sizeof(*nfc), GFP_KERNEL);
-> +	if (!nfc->cfg)
-> +		return -ENOMEM;
-> +	cfg = nfc->cfg;
+Also, the fact that P2WI is in I2C is not an argument IMO. It could have
+been a mistake to pick it up.
 
-Why is nfc->cfg allocated separately instead of embedding it into struct
-vf610_nfc? Is this some platform_data leftover you can remove now?
+> So really, it just is more I2C-alike than P2WI has ever been.
 
-> +
-> +	nfc->dev = &pdev->dev;
-> +	nfc->page = -1;
-> +	mtd = &nfc->mtd;
-> +	chip = &nfc->chip;
-> +
-> +	mtd->priv = chip;
-> +	mtd->owner = THIS_MODULE;
-> +	mtd->dev.parent = nfc->dev;
-> +	mtd->name = DRV_NAME;
-> +
-> +	err = vf610_nfc_probe_dt(nfc->dev, cfg);
-> +	if (err)
-> +		return -ENODEV;
+Because it has addresses? I disagree.
 
-Does this driver work without device tree or not? Currently the driver
-bails out when device tree support is enabled but no device node is
-given. When device tree support is disabled in the kernel though the
-driver happily continues here.
+> Good thing that we are not talking about a full review then, but more
+> a philosophical discussion.
 
-Sascha
+Exactly. This is why I wanted to bring this in early.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--FL5UXtIhxfXey3p5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU+UrrAAoJEBQN5MwUoCm2CgsP/1VPiw+MOixlHld3Zzso5KbC
+fBRxamSAfvYlCDnazXByLZy6CN6hEbQVpvrLzhcoqfJCML0jtD/7Vi9qEewvW23H
+mye/uRloe9MQ8+kTpQpGrGv0nWzeybet15AIdSXgP1V9JQSUCTsF1+zPwF+YX+aY
+aBITIhMFA1AYLzwdrnlrpOLRp2x6l9BF6132MLAF0FnPxjg7zD0limG5fKnOvlVl
+56gYY7EP8na42gXi9e7WsCnFsCXGWz+fdISzHvrD57JgFH1TKArs6KAeZ6BOORaa
+bXFg07JH0pivfL6D6YjC+Dx+PVgKoe3ZpRyUy4x7qXa506mzgfJrSZMcJ1IbP2Q9
+ekXHAVTJf9vSXorvcJfjlYWtxEOmjEZSzQ553ysLlR7j8tJ4DywWCUMDNuAUDxeb
++maoA17mO55/ycY7Y/RSqw6L+IlVMutzmp8YAl57Eu3YfWrCCbdqSTlaQgmHG7ze
+11pSTo3yquA7gd1a2CBLoxsEylU28f8sZdAAcsigOpmJ4nS66a1RF1S5LRWaMHf3
+lFP6NVN3fWZRXysUahBe0FPAAiElV+Ur2Ai9ZHemU/r8ZOcxfjuyRr/iFARlAncE
+AgkciZu5EgOl4uADJTlUE7S7cGKlsb/Q3ZpMj5nBBopsor0Fy73OLTI6e6Bouj0N
+uykOVxL624KL5769OCBx
+=wAZ+
+-----END PGP SIGNATURE-----
+
+--FL5UXtIhxfXey3p5--
