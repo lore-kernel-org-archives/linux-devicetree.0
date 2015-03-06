@@ -1,65 +1,83 @@
-From: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id
- and qcom,board-id
-Date: Fri, 06 Mar 2015 10:09:36 -0500
-Message-ID: <54F9C330.5090208@codeaurora.org>
-References: <1425503602-24916-1-git-send-email-galak@codeaurora.org>	<7h8ufbjkod.fsf@deeprootsystems.com>	<07D4E4D1-BF8C-4583-9505-9F321DB10406@codeaurora.org>	<CAOesGMgy3VY=4-t+N0BYqCuSLQkh-rYe8nd9iJh1mMeBFz_sWQ@mail.gmail.com> <CAF6AEGssMoo6c3nf_7fcATwocuETGZ8nbpGQpUO=KcKWC+rvHw@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] ARM: dts: omap3-beagle: Add NAND device
+Date: Fri, 6 Mar 2015 17:10:05 +0200
+Message-ID: <1425654605-5752-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAF6AEGssMoo6c3nf_7fcATwocuETGZ8nbpGQpUO=KcKWC+rvHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2015 09:28 PM, Rob Clark wrote:
-> On Thu, Mar 5, 2015 at 8:59 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->> On Thu, Mar 5, 2015 at 12:23 PM, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>
->>> On Mar 5, 2015, at 1:42 PM, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>
->>>> Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>>>
->>>>> The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
->>>>> on Qualcomm MSM platforms to determine which device tree should be
->>>>> utilized and passed to the kernel.
->>>>>
->>>>> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
->>>>> Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>>
->>>> Is this the special magic that allows qcom bootloaders to take a kernel
->>>> plus multiple DTBs and figure out which DTB to pass?
->>>>
->>>> Kevin
->>>
->>> yes
->>
->> That's a bummer.
->>
->> Luckily, the solution for upstream is still quite simple: Provide only
->> one devicetree, and it'll be used, right?
->>
-> 
-> I never managed to figure out how to get that to work (at least on my
-> apq8074 dragonboard.. fortunately ifc6540 seems to work w/ appended
-> dtb).. kind of a pita because it is a bit of a non-standard boot.img
-> format too..
+The beagle board contains a 16-bit NAND device connected to
+chip select 0 of the GPMC controller.
 
-I think you're talking about the boot flow from plain poweron which I wish I
-knew more about, but in case it's any help, here are some fastboot boot steps
-what worked for me a while back.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/boot/dts/omap3-beagle.dts | 52 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-http://elinux.org/Dragonboard/APQ8074
-
-Chris
-
+diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+index c792391..bf28502 100644
+--- a/arch/arm/boot/dts/omap3-beagle.dts
++++ b/arch/arm/boot/dts/omap3-beagle.dts
+@@ -379,3 +379,55 @@
+ 		};
+ 	};
+ };
++
++&gpmc {
++	status = "ok";
++	ranges = <0 0 0x30000000 0x1000000>;	/* CS0 space, 16MB */
++
++	/* Chip select 0 */
++	nand@0,0 {
++		reg = <0 0 4>;		/* NAND I/O window, 4 bytes */
++		interrupts = <20>;
++		ti,nand-ecc-opt = "ham1";
++		nand-bus-width = <16>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		gpmc,device-width = <2>;
++		gpmc,cs-on-ns = <0>;
++		gpmc,cs-rd-off-ns = <36>;
++		gpmc,cs-wr-off-ns = <36>;
++		gpmc,adv-on-ns = <6>;
++		gpmc,adv-rd-off-ns = <24>;
++		gpmc,adv-wr-off-ns = <36>;
++		gpmc,oe-on-ns = <6>;
++		gpmc,oe-off-ns = <48>;
++		gpmc,we-on-ns = <6>;
++		gpmc,we-off-ns = <30>;
++		gpmc,rd-cycle-ns = <72>;
++		gpmc,wr-cycle-ns = <72>;
++		gpmc,access-ns = <54>;
++		gpmc,wr-access-ns = <30>;
++
++		partition@0 {
++			label = "X-Loader";
++			reg = <0 0x80000>;
++		};
++		partition@80000 {
++			label = "U-Boot";
++			reg = <0x80000 0x1e0000>;
++		};
++		partition@1c0000 {
++			label = "U-Boot Env";
++			reg = <0x260000 0x20000>;
++		};
++		partition@280000 {
++			label = "Kernel";
++			reg = <0x280000 0x400000>;
++		};
++		partition@780000 {
++			label = "Filesystem";
++			reg = <0x680000 0xf980000>;
++		};
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0
+
