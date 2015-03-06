@@ -1,87 +1,108 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/5] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Fri, 6 Mar 2015 10:58:21 +0000
-Message-ID: <20150306105821.GE22377@arm.com>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	<1425638900-24989-3-git-send-email-yong.wu@mediatek.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] pci: iproc: Add Broadcom iProc PCIe support
+Date: Fri, 06 Mar 2015 12:00:40 +0100
+Message-ID: <1425639640.24292.271.camel@x220>
+References: <1425603699-13416-1-git-send-email-rjui@broadcom.com>
+	 <1425603699-13416-3-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425638900-24989-3-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425603699-13416-3-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2015 at 10:48:17AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> This patch adds support for mediatek m4u (MultiMedia Memory Management Unit).
-> Currently this only supports m4u gen 2 with 2 levels of page table on mt8173.
+On Thu, 2015-03-05 at 17:01 -0800, Ray Jui wrote:
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -106,4 +106,21 @@ config PCI_VERSATILE
+>  	bool "ARM Versatile PB PCI controller"
+>  	depends on ARCH_VERSATILE
+>  
+> +config PCIE_IPROC
+> +	bool "Broadcom iProc PCIe controller"
 
-[...]
+bool symbol.
 
-> diff --git a/drivers/iommu/mtk_iommu_pagetable.c b/drivers/iommu/mtk_iommu_pagetable.c
-> new file mode 100644
-> index 0000000..5fe9640
+> +	help
+> +	  This enables the iProc PCIe core controller support for Broadcom's
+> +	  iProc family of SoCs. An appropriate bus interface driver also needs
+> +	  to be enabled
+> +
+> +config PCIE_IPROC_PLTFM
+> +	bool "Broadcom iProc PCIe platform bus driver"
+
+Another bool symbol.
+
+> +	depends on ARCH_BCM_IPROC || COMPILE_TEST
+> +	depends on OF
+> +	select PCIE_IPROC
+> +	default ARCH_BCM_IPROC
+> +	help
+> +	  Say Y here if you want to use the Broadcom iProc PCIe controller
+> +	  through the generic platform bus interface
+> +
+>  endmenu
+
+> --- a/drivers/pci/host/Makefile
+> +++ b/drivers/pci/host/Makefile
+
+> +obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
+> +obj-$(CONFIG_PCIE_IPROC_PLTFM) += pcie-iproc-pltfm.o
+
+Both objectfiles will never be part of a module.
+
 > --- /dev/null
-> +++ b/drivers/iommu/mtk_iommu_pagetable.c
-> @@ -0,0 +1,439 @@
-> +/*
-> + * Copyright (c) 2014-2015 MediaTek Inc.
-> + * Author: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/err.h>
-> +#include <linux/mm.h>
-> +#include <linux/iommu.h>
-> +#include <linux/errno.h>
-> +#include "asm/cacheflush.h"
-> +
-> +#include "mtk_iommu.h"
-> +#include "mtk_iommu_pagetable.h"
-> +
-> +/* 2 level pagetable: pgd -> pte */
-> +#define F_PTE_TYPE_GET(regval)  (regval & 0x3)
-> +#define F_PTE_TYPE_LARGE         BIT(0)
-> +#define F_PTE_TYPE_SMALL         BIT(1)
-> +#define F_PTE_B_BIT              BIT(2)
-> +#define F_PTE_C_BIT              BIT(3)
-> +#define F_PTE_BIT32_BIT          BIT(9)
-> +#define F_PTE_S_BIT              BIT(10)
-> +#define F_PTE_NG_BIT             BIT(11)
-> +#define F_PTE_PA_LARGE_MSK            (~0UL << 16)
-> +#define F_PTE_PA_LARGE_GET(regval)    ((regval >> 16) & 0xffff)
-> +#define F_PTE_PA_SMALL_MSK            (~0UL << 12)
-> +#define F_PTE_PA_SMALL_GET(regval)    ((regval >> 12) & (~0))
-> +#define F_PTE_TYPE_IS_LARGE_PAGE(pte) ((imu_pte_val(pte) & 0x3) == \
-> +                                       F_PTE_TYPE_LARGE)
-> +#define F_PTE_TYPE_IS_SMALL_PAGE(pte) ((imu_pte_val(pte) & 0x3) == \
-> +                                       F_PTE_TYPE_SMALL)
+> +++ b/drivers/pci/host/pcie-iproc-pltfm.c
 
-This looks like the ARM short-descriptor format to me. Could you please
-add a new page table format to the io-pgtable code, so that other IOMMU
-drivers can make use of this? I know there was some interest in using
-short descriptor for the ARM SMMU, for example.
+> +#include <linux/module.h>
 
-Cheers,
+Is this needed?
 
-Will
+> +MODULE_DEVICE_TABLE(of, iproc_pcie_of_match_table);
+
+This macro will be preprocessed away, won't it?
+
+> +static struct platform_driver iproc_pcie_pltfm_driver = {
+> +	.driver = {
+> +		.name = "iproc-pcie",
+> +		.of_match_table = of_match_ptr(iproc_pcie_of_match_table),
+> +		.suppress_bind_attrs = true,
+> +	},
+> +	.probe = iproc_pcie_pltfm_probe,
+> +};
+> +module_platform_driver(iproc_pcie_pltfm_driver);
+
+Perhaps it's clearer to have make this a call to
+platform_driver_register(), put that in a wrapper function, and invoke
+that wrapper function through device_initcall() or similar. I haven't
+actually tested that, so the details could be off.
+
+> +MODULE_AUTHOR("Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Broadcom iPROC PCIe platform driver");
+> +MODULE_LICENSE("GPL v2");
+
+And these three macros will, effectively, be preprocessed away.
+
+> --- /dev/null
+> +++ b/drivers/pci/host/pcie-iproc.c
+
+> +#include <linux/module.h>
+
+See above.
+
+> +MODULE_AUTHOR("Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Broadcom iPROC PCIe common driver");
+> +MODULE_LICENSE("GPL v2");
+
+Ditto.
+
+
+Paul Bolle
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
