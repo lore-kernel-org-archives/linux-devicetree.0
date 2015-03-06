@@ -1,134 +1,97 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] pinctrl: Add Pistachio SoC pin control driver
-Date: Fri, 6 Mar 2015 12:55:12 +0100
-Message-ID: <CACRpkdbqioAreyDwM2JN87=gH20n1OkUXPjdkW885iDWUV1NnA@mail.gmail.com>
-References: <1424744104-14151-1-git-send-email-abrestic@chromium.org>
-	<1424744104-14151-3-git-send-email-abrestic@chromium.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Fri, 06 Mar 2015 21:18:34 +0900
+Message-ID: <54F99B1A.3080600@samsung.com>
+References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
+ <1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
+ <20150305122459.GC14093@leverpostej>
+ <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
+ <20150305170450.GG14093@leverpostej>
+ <CAGTfZH3nkCvnuu+fC1Gv5DrRQXEg6Y19tQnh+phj6c_jAFpbvg@mail.gmail.com>
+ <20150305185407.GK14093@leverpostej> <54F9140B.3060109@samsung.com>
+ <20150306114021.GF8700@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424744104-14151-3-git-send-email-abrestic@chromium.org>
+In-reply-to: <20150306114021.GF8700@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Govindraj Raja <govindraj.raja@imgtec.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Chanwoo Choi <cwchoi00@gmail.com>, "kgene@kernel.org" <kgene@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ideal.song@samsung.com" <ideal.song@samsung.com>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 24, 2015 at 3:15 AM, Andrew Bresticker
-<abrestic@chromium.org> wrote:
+Hi,
 
-> Add a driver for the pin controller present on the IMG Pistachio SoC.
-> This driver provides pinmux and pinconfig operations as well as GPIO
-> and IRQ chips for the GPIO banks.
->
-> Signed-off-by: Damien Horsley <Damien.Horsley@imgtec.com>
-> Signed-off-by: Govindraj Raja <govindraj.raja@imgtec.com>
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+On 03/06/2015 08:40 PM, Mark Rutland wrote:
+>>>>>> CPU0 (boot CPU) is only well working for CPU_OFF.
+>>>>>> But when I try to turn on the CPU0 after CPU_OFF, I failed it.
+>>>>>
+>>>>> That's rather worrying. Can you look into what's going on here? I'd
+>>>>> rather not have dts describing things which are known to be broken.
+>>>>
+>>>> The board dts don't include any node for CPU_ON/OFF.
+>>>
+>>> I don't understand. The CPU_ON and CPU_OFF IDs are in the psci node
+>>> quoted above, and all the CPUs had enable-method = "psci".
+>>
+>> I mean that there are not additional dt node except for 'cpu' and 'psci' node.
+> 
+> The psci node and cpu enable-method are sufficient. No other nodes
+> should be relevant.
 
-(...)
-> +static inline u32 pctl_readl(struct pistachio_pinctrl *pctl, u32 reg)
-> +{
-> +       return readl(pctl->base + reg);
-> +}
-> +
-> +static inline void pctl_writel(struct pistachio_pinctrl *pctl, u32 val, u32 reg)
-> +{
-> +       writel(val, pctl->base + reg);
-> +}
-> +
-> +static inline u32 gpio_readl(struct pistachio_gpio_bank *bank, u32 reg)
-> +{
-> +       return readl(bank->base + reg);
-> +}
-> +
-> +static inline void gpio_writel(struct pistachio_gpio_bank *bank, u32 val,
-> +                              u32 reg)
-> +{
-> +       writel(val, bank->base + reg);
-> +}
+You're right.
 
-I don't see the point of these special readl/writel accessors. Just
-use readl/writel
-directly. Or consider readl/writel_relaxed() if MIPS has this.
+> 
+>>>
+>>>> When I try to turn on the CPU0 (boot CPU), fail to turn on and lockup happen.
+>>>> After lockup happen, I cannot use the console.
+>>>
+>>> That sounds like a pretty major bug.
+>>>
+>>> Are you able to investigate with a hardware debugger?
+>>
+>> I can't do because there are not any jtag connector.
+> 
+> That is very unfortunate. Which PSCI implementation are you using?
+> Surely whoever developed it has access to debug. Surely they should have
+> tested this?
 
-> +static inline void gpio_mask_writel(struct pistachio_gpio_bank *bank,
-> +                                   u32 reg, unsigned int bit, u32 val)
-> +{
-> +       gpio_writel(bank, (0x10000 | val) << bit, reg);
-> +}
+I just used the lateset Linux 4.0-rc2 for PSCI (arch/arm64/kernel/psci.c)
+without any modification. Unfortunately, I don't know who is the h/w developer of Exynos5433 SoC.
 
-Magic mask? Some comment on what is happening here when OR:in
-on 0x10000?
+> 
+>>> Do other CPUs eventually log errors regarding the lockup? Or is the
+>>> machine completely dead from this point on?
+>>
+>> I tested CPU0 on/off. When I turn on the CPU0, I fail it. But, kernel just show the error log without lockup.
+>> I gave you wrong infromation about CPU0 off.
+> 
+> Ok. However that's still a major bug.
+> 
+> [...]
+> 
+>>>>>>> I take it CPUs boot at EL2?
+>>>>>
+>>>>> Do the CPUs boot at EL1 or EL2?
+>>>>
+>>>> Unfortunately, I cannot check the secure firmware for Exynos5433 SoC.
+>>>> I think that a few SoC provider probably would know it.
+>>>
+>>> I guess I asked the wrong question.
+>>>
+>>> Do CPUs enter the kernel at EL2 or at EL1?
+>>
+>> Could you give me a tip how to check the kernel at EL2 or EL1?
+> 
+> Hmm... I thought we logged this but it looks like we don't.
+> 
+> You could hack in a check of is_hyp_mode_available() and
+> is_hyp_mode_mismatched(). That will tell you if EL2/hyp is available,
+> and whether all CPUs enter at the same mode (mandatory per the boot
+> protocol).
 
-(...)
-> +static int pistachio_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
-> +{
-> +       struct pistachio_gpio_bank *bank = gc_to_bank(chip);
-> +
-> +       if (gpio_readl(bank, GPIO_OUTPUT_EN) & BIT(offset))
-> +               return GPIOF_DIR_OUT;
-> +       return GPIOF_DIR_IN;
-> +}
+OK, I'll try it.
 
-These flags are not for the driver API.
-
-Do this:
-
-return !gpio_readl(bank, GPIO_OUTPUT_EN) & BIT(offset));
-
-> +static void pistachio_gpio_set(struct gpio_chip *chip, unsigned offset,
-> +                              int value)
-> +{
-> +       struct pistachio_gpio_bank *bank = gc_to_bank(chip);
-> +
-> +       gpio_mask_writel(bank, GPIO_OUTPUT, offset, !!value);
-> +}
-
-Hm we should clamp value in the core and make the parameter "value"
-a bool.... sigh for another day when things are calm.
-
-(...)
-> +static void pistachio_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
-> +{
-> +       struct gpio_chip *gc = irq_get_handler_data(irq);
-> +       struct pistachio_gpio_bank *bank = gc_to_bank(gc);
-> +       struct irq_chip *chip = irq_get_chip(irq);
-> +       unsigned long pending;
-> +       unsigned int pin, virq;
-
-Don't call it virq, just call it irq. All Linux irq numbers are virtual
-so just go with irq.
-
-> +
-> +       chained_irq_enter(chip, desc);
-> +       pending = gpio_readl(bank, GPIO_INTERRUPT_STATUS) &
-> +               gpio_readl(bank, GPIO_INTERRUPT_EN);
-> +       for_each_set_bit(pin, &pending, 16) {
-> +               virq = irq_linear_revmap(gc->irqdomain, pin);
-> +               generic_handle_irq(virq);
-> +       }
-> +       chained_irq_exit(chip, desc);
-> +}
-
-(...)
-> +static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
-> +{
-> +       struct device_node *child, *node = pctl->dev->of_node;
-> +       struct pistachio_gpio_bank *bank;
-> +       unsigned int i = 0;
-> +       int irq, ret = 0;
-> +
-> +       for_each_child_of_node(node, child) {
-> +               if (!of_find_property(child, "gpio-controller", NULL))
-> +                       continue;
-
-So why not instead specify "simple-bus" as compatible on the parent node
-and have each subnode be its own device (simple-bus will spawn platform
-devices for all subnodes).
-
-Overall this composite-device pattern is discouraged if we can instead have
-unique devices for each bank.
-
-Apart from these things the driver looks very nice!
-
-Yours,
-Linus Walleij
+Thanks,
+Chanwoo Choi
