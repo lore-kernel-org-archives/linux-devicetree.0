@@ -1,26 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/2] pinctrl: Support for IMG Pistachio
-Date: Fri, 6 Mar 2015 12:29:55 +0100
-Message-ID: <CACRpkdbCOHNPs5Y58h--X6pOVvYyxTrgcFhFyk5dWE+JLo=rhg@mail.gmail.com>
-References: <1424744104-14151-1-git-send-email-abrestic@chromium.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] ARM: shmobile: ape6evm: Fix GPIO keys and wake-up
+Date: Fri, 6 Mar 2015 20:30:29 +0900
+Message-ID: <20150306113028.GB27105@verge.net.au>
+References: <1425059319-13403-1-git-send-email-geert+renesas@glider.be>
+ <20150305003432.GA3011@verge.net.au>
+ <5844551.UVahD0ukvm@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1424744104-14151-1-git-send-email-abrestic@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <5844551.UVahD0ukvm@avalon>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, linux-sh@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 24, 2015 at 3:15 AM, Andrew Bresticker
-<abrestic@chromium.org> wrote:
+On Thu, Mar 05, 2015 at 12:42:07PM +0200, Laurent Pinchart wrote:
+> Hi Simon,
+> 
+> On Thursday 05 March 2015 09:34:33 Simon Horman wrote:
+> > On Fri, Feb 27, 2015 at 06:48:37PM +0100, Geert Uytterhoeven wrote:
+> > > 	Hi Simon, Magnus,
+> > > 
+> > > This patch series adds the missing pull-up bias configuration for the
+> > > switches on the r8a73a4/ape6evm development board, and configures the
+> > > custom switch as a wake-up source.
+> > > 
+> > > After this, the keys actually work, and the system can be resumed from
+> > > s2ram by pressing the custom switch.
+> > > 
+> > > This depends functionally on "[PATCH 1/4] pinctrl: sh-pfc: Do not
+> > > overwrite bias configuration" in the series "[PATCH 0/4] pinctrl:
+> > > sh-pfc: Fix pin bias and cleanups" which I've just sent. But as this is
+> > > DTS, it can be applied independently.
+> > > 
+> > > Thanks for your comments!
+> > 
+> > Hi Geert,
+> > 
+> > this seems fine to me. But I am reluctant to queue it up before the PFC
+> > changes are accepted, lest there be some change in direction.
+> > 
+> > Please repost once the PFC changes have been accepted.
+> 
+> I've acked the dependency, but we should probably wait for Linus to apply it.
 
->  I'd like this to go through the MIPS tree with
-> Linus'/Alex's ACKs if possible.
-
-Why? It will only help creating merge conflicts.
-There seem to be no compile-related dependencies, just Kconfig
-symbols, so patches using this can go in orthogonally.
-
-Yours,
-Linus Walleij
+Thanks Laurent, of course that plan is fine by me.
