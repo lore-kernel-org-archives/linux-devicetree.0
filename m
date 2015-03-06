@@ -1,68 +1,89 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] pinctrl: Add Pistachio SoC pin control binding document
-Date: Fri, 6 Mar 2015 12:37:09 +0100
-Message-ID: <CACRpkdbCavYLk-Uo8hjTrGcGLJe6NEB9dVPVNm_fyd3eGccnEw@mail.gmail.com>
-References: <1424744104-14151-1-git-send-email-abrestic@chromium.org>
-	<1424744104-14151-2-git-send-email-abrestic@chromium.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
+ Exynos5433 SoC
+Date: Fri, 6 Mar 2015 11:40:21 +0000
+Message-ID: <20150306114021.GF8700@leverpostej>
+References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
+ <1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
+ <20150305122459.GC14093@leverpostej>
+ <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
+ <20150305170450.GG14093@leverpostej>
+ <CAGTfZH3nkCvnuu+fC1Gv5DrRQXEg6Y19tQnh+phj6c_jAFpbvg@mail.gmail.com>
+ <20150305185407.GK14093@leverpostej>
+ <54F9140B.3060109@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424744104-14151-2-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54F9140B.3060109-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 24, 2015 at 3:15 AM, Andrew Bresticker
-<abrestic@chromium.org> wrote:
+> >>>> CPU0 (boot CPU) is only well working for CPU_OFF.
+> >>>> But when I try to turn on the CPU0 after CPU_OFF, I failed it.
+> >>>
+> >>> That's rather worrying. Can you look into what's going on here? I'd
+> >>> rather not have dts describing things which are known to be broken.
+> >>
+> >> The board dts don't include any node for CPU_ON/OFF.
+> > 
+> > I don't understand. The CPU_ON and CPU_OFF IDs are in the psci node
+> > quoted above, and all the CPUs had enable-method = "psci".
+> 
+> I mean that there are not additional dt node except for 'cpu' and 'psci' node.
 
-> Add a device-tree binding document for the pin controller present
-> on the IMG Pistachio SoC.
->
-> Signed-off-by: Damien Horsley <Damien.Horsley@imgtec.com>
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-(...)
-> +Note that the GPIO bank sub-nodes *must* be listed in order.
+The psci node and cpu enable-method are sufficient. No other nodes
+should be relevant.
 
-Usually we use aliases to mark the order of things. e.g.:
+> > 
+> >> When I try to turn on the CPU0 (boot CPU), fail to turn on and lockup happen.
+> >> After lockup happen, I cannot use the console.
+> > 
+> > That sounds like a pretty major bug.
+> > 
+> > Are you able to investigate with a hardware debugger?
+> 
+> I can't do because there are not any jtag connector.
 
-        aliases {
-                gpio0 = &gpio0;
-                gpio1 = &gpio1;
-                gpio2 = &gpio2;
-                ethernet0 = &eth0;
-                ethernet1 = &eth1;
-        };
+That is very unfortunate. Which PSCI implementation are you using?
+Surely whoever developed it has access to debug. Surely they should have
+tested this?
 
-(arch/arm/boot/dts/armada-375.dtsi)
+> > Do other CPUs eventually log errors regarding the lockup? Or is the
+> > machine completely dead from this point on?
+> 
+> I tested CPU0 on/off. When I turn on the CPU0, I fail it. But, kernel just show the error log without lockup.
+> I gave you wrong infromation about CPU0 off.
 
-> +Required properties for pin configuration sub-nodes:
-> +----------------------------------------------------
-> + - pins: List of pins to which the configuration applies. See below for a
-> +   list of possible pins.
-> +
-> +Optional properties for pin configuration sub-nodes:
-> +----------------------------------------------------
-> + - function: Mux function for the specified pins. This is not applicable for
-> +   non-MFIO pins. See below for a list of valid functions for each pin.
-> + - bias-high-impedance: Enable high-impedance mode.
-> + - bias-pull-up: Enable weak pull-up.
-> + - bias-pull-down: Enable weak pull-down.
-> + - bias-bus-hold: Enable bus-keeper mode.
-> + - drive-strength: Drive strength in mA. Supported values: 2, 4, 8, 12.
-> + - input-schmitt-enable: Enable Schmitt trigger.
-> + - input-schmitt-disable: Disable Schmitt trigger.
-> + - slew-rate: Slew rate control. 0 for slow, 1 for fast.
+Ok. However that's still a major bug.
 
-We actually haven't specified that function+pins is a valid pattern,
-a lot of drivers just started doing that :(
+[...]
 
-function+groups is documented for muxing.
+> >>>>> I take it CPUs boot at EL2?
+> >>>
+> >>> Do the CPUs boot at EL1 or EL2?
+> >>
+> >> Unfortunately, I cannot check the secure firmware for Exynos5433 SoC.
+> >> I think that a few SoC provider probably would know it.
+> > 
+> > I guess I asked the wrong question.
+> > 
+> > Do CPUs enter the kernel at EL2 or at EL1?
+> 
+> Could you give me a tip how to check the kernel at EL2 or EL1?
 
-group + config opts is documented for config.
+Hmm... I thought we logged this but it looks like we don't.
 
-Please consider patching the generic bindings to reflect this
-mux use of pins... We need to discuss it.
+You could hack in a check of is_hyp_mode_available() and
+is_hyp_mode_mismatched(). That will tell you if EL2/hyp is available,
+and whether all CPUs enter at the same mode (mandatory per the boot
+protocol).
 
-Yours,
-Linus Walleij
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
