@@ -1,132 +1,63 @@
-From: Inha Song <ideal.song@samsung.com>
-Subject: [alsa-devel] [PATCH] ARM: dts: Support audio on Exynos5422-odroidxu3
- using simple-audio-card
-Date: Fri, 06 Mar 2015 17:18:01 +0900
-Message-ID: <1425629881-12944-1-git-send-email-ideal.song@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kgene@kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, cw00.choi@samsung.com, Inha Song <ideal.song@samsung.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH RFC 3/6] drm/tilcdc: Add support for external compontised
+ DRM encoder
+Date: Fri, 6 Mar 2015 10:33:27 +0200
+Message-ID: <54F96657.10200@ti.com>
+References: <cover.1424961754.git.jsarha@ti.com> <92792bb4f64fb1b7f26e687ec159d870d0e7a81a.1424961754.git.jsarha@ti.com> <20150302160135.GA29584@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150302160135.GA29584@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, tomi.valkeinen@ti.com, detheridge@ti.com, moinejf@free.fr, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Add MAX98090 audio codec, I2S interface and the sound nodes to support
-audio on Exynos5422 SoC Based Odroid-XU3 board. Now we can support audio
-in Odroid-XU3 board using simple-audio-card DT binding.
+On 03/02/15 18:01, Russell King - ARM Linux wrote:
+> On Thu, Feb 26, 2015 at 04:55:32PM +0200, Jyri Sarha wrote:
+>> +	ret = component_bind_all(dev->dev, dev);
+>> +	if (ret < 0) {
+>> +		dev_err(dev->dev, "Binding subcomponents failed: %d\n", ret);
+>
+> Do you need to print this?  The component helper is already fairly
+> verbose about what succeeds and fails.
+>
 
-Signed-off-by: Inha Song <ideal.song@samsung.com>
----
- arch/arm/boot/dts/exynos5420.dtsi          |  9 +++++
- arch/arm/boot/dts/exynos5422-odroidxu3.dts | 57 ++++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
+Will remove.
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index c0e98cf..a70005e 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -411,6 +411,9 @@
- 			<&clock_audss EXYNOS_I2S_BUS>,
- 			<&clock_audss EXYNOS_SCLK_I2S>;
- 		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-+		#clock-cells = <1>;
-+		clock-output-names = "i2s_cdclk0";
-+		#sound-dai-cells = <1>;
- 		samsung,idma-addr = <0x03000000>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2s0_bus>;
-@@ -425,6 +428,9 @@
- 		dma-names = "tx", "rx";
- 		clocks = <&clock CLK_I2S1>, <&clock CLK_SCLK_I2S1>;
- 		clock-names = "iis", "i2s_opclk0";
-+		#clock-cells = <1>;
-+		clock-output-names = "i2s_cdclk1";
-+		#sound-dai-cells = <1>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2s1_bus>;
- 		status = "disabled";
-@@ -438,6 +444,9 @@
- 		dma-names = "tx", "rx";
- 		clocks = <&clock CLK_I2S2>, <&clock CLK_SCLK_I2S2>;
- 		clock-names = "iis", "i2s_opclk0";
-+		#clock-cells = <1>;
-+		clock-output-names = "i2s_cdclk2";
-+		#sound-dai-cells = <1>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2s2_bus>;
- 		status = "disabled";
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-index edc25cf..9275ad6 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-@@ -11,6 +11,7 @@
- */
- 
- /dts-v1/;
-+#include <dt-bindings/sound/samsung-i2s.h>
- #include "exynos5800.dtsi"
- 
- / {
-@@ -285,6 +286,62 @@
- 	rtc@101E0000 {
- 		status = "okay";
- 	};
-+
-+	sound: sound {
-+		compatible = "simple-audio-card";
-+		assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
-+				<&clock_audss EXYNOS_MOUT_I2S>,
-+				<&clock_audss EXYNOS_DOUT_AUD_BUS>;
-+		assigned-clock-parents = <&clock CLK_FIN_PLL>,
-+				<&clock_audss EXYNOS_MOUT_AUDSS>;
-+		assigned-clock-rates = <0>,
-+				<0>,
-+				<19200000>;
-+
-+		simple-audio-card,name = "Odroid-XU3";
-+
-+		simple-audio-card,widgets =
-+			"Headphone", "Headphone Jack",
-+			"Speakers", "Speakers";
-+		simple-audio-card,routing =
-+			"Headphone Jack", "HPL",
-+			"Headphone Jack", "HPR",
-+			"Headphone Jack", "MICBIAS",
-+			"IN1", "Headphone Jack",
-+			"Speakers", "SPKL",
-+			"Speakers", "SPKR";
-+
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&link0_codec>;
-+		simple-audio-card,frame-master = <&link0_codec>;
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s0 0>;
-+			system-clock-frequency = <19200000>;
-+		};
-+
-+		link0_codec: simple-audio-card,codec {
-+			sound-dai = <&max98090>;
-+			clocks = <&i2s0 CLK_I2S_CDCLK>;
-+		};
-+	};
-+};
-+
-+&hsi2c_5 {
-+	status = "okay";
-+	max98090: max98090@10 {
-+		compatible = "maxim,max98090";
-+		reg = <0x10>;
-+		interrupt-parent = <&gpx3>;
-+		interrupts = <2 0>;
-+		clocks = <&i2s0 CLK_I2S_CDCLK>;
-+		clock-names = "mclk";
-+		#sound-dai-cells = <0>;
-+	};
-+};
-+
-+&i2s0 {
-+	status = "okay";
- };
- 
- &hdmi {
--- 
-2.0.0.390.gcb682f8
+>> +static const struct component_master_ops tilcdc_comp_ops = {
+>> +	.add_components = tilcdc_add_external_components,
+>
+> I'd much rather you used the new matching support rather than using the
+> old .add_components.  The new matching support is more efficient as you
+> only have to scan DT once, rather than each time we try to probe.  That
+> will mean...
+>
+
+That is otherwise fine, but with the match code it not possible to 
+implement a master that may not have any components.
+
+Would it be Ok to add a check that master->ops->add_components is 
+defined, before calling it in find_componets() 
+(drivers/base/component.c:120) and return 0 if it is not?
+
+Best regards,
+Jyri
+
+>> @@ -613,12 +643,12 @@ static int tilcdc_pdev_probe(struct platform_device *pdev)
+>>   		return -ENXIO;
+>>   	}
+>
+> You need to build a struct component_match array here using
+> component_match_add()...
+>
+>>
+>> -	return drm_platform_init(&tilcdc_driver, pdev);
+>> +	return component_master_add(&pdev->dev, &tilcdc_comp_ops);
+>
+> and then finally register the ops with component_master_add_with_match().
+>
+> Thanks.
+>
+
