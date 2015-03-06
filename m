@@ -1,43 +1,44 @@
-From: leroy christophe <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
-Subject: Re: [PATCH 0/17] crypto: talitos - Add support for SEC1
-Date: Fri, 06 Mar 2015 07:44:29 +0100
-Message-ID: <54F94CCD.8030807@c-s.fr>
-References: <20150305164605.E65D81A241C@localhost.localdomain> <20150305182101.6db66e228f519476f0751c13@freescale.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [PATCH 1/2] ARM: imx6qdl-sabresd: set swbst_reg as vbus's parent reg
+Date: Fri, 6 Mar 2015 16:04:20 +0800
+Message-ID: <1425629061-8995-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150305182101.6db66e228f519476f0751c13-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: shawn.guo@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, Peter Chen <peter.chen@freescale.com>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+USB vbus 5V is from PMIC SWBST, so set swbst_reg as vbus's
+parent reg, it fixed a bug that the voltage of vbus is incorrect
+due to swbst_reg is disabled after boots up.
 
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Le 06/03/2015 01:21, Kim Phillips a =E9crit :
-> On Thu, 5 Mar 2015 17:46:05 +0100
-> Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org> wrote:
->
->> [15/17] crypto: talitos - Implementation of SEC1
-> ...
->
->> [16/17] crypto: talitos - SEC1 bugs on 0 data hash
->> [17/17] crypto: talitos - Update DT bindings with SEC1
-> This patchseries doesn't apply, at least on top of Herbert's
-> cryptodev-2.6 tree, as of today:
->
-> Applying: crypto: talitos - Implementation of SEC1
-> error: patch failed: drivers/crypto/talitos.c:655
-> error: drivers/crypto/talitos.c: patch does not apply
-It was applying ok on linux-next as of yesterday.
-I will rebase the serie on cryptodev-2.6
-
-Christophe
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+index f1cd214..a626e6d 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -35,6 +35,7 @@
+ 			regulator-max-microvolt = <5000000>;
+ 			gpio = <&gpio3 22 0>;
+ 			enable-active-high;
++			vin-supply = <&swbst_reg>;
+ 		};
+ 
+ 		reg_usb_h1_vbus: regulator@1 {
+@@ -45,6 +46,7 @@
+ 			regulator-max-microvolt = <5000000>;
+ 			gpio = <&gpio1 29 0>;
+ 			enable-active-high;
++			vin-supply = <&swbst_reg>;
+ 		};
+ 
+ 		reg_audio: regulator@2 {
+-- 
+1.9.1
