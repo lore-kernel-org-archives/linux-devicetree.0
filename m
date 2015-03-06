@@ -1,86 +1,60 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] pinctrl: dt: at91: new binding
-Date: Sat, 7 Mar 2015 02:33:55 +0800
-Message-ID: <1A37A90E-FD1F-4DA1-976E-5F1DD1C10F07@jcrosoft.com>
-References: <1424943294-8805-1-git-send-email-plagnioj@jcrosoft.com>
- <54F9C2FE.8060804@atmel.com>
- <AB034DC5-9E4C-4883-BBF0-B93B438C7A54@jcrosoft.com>
- <20150306192345.1262cc94@bbrezillon>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150306192345.1262cc94@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Nicolas FERRE <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 00/10] omap3 crypto fixes
+Date: Fri, 6 Mar 2015 10:36:32 -0800
+Message-ID: <20150306183631.GA13520@atomide.com>
+References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gTWFyIDcsIDIwMTUsIGF0IDI6MjMgQU0sIEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJl
-emlsbG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4gCj4gSGkgSmVhbi1DaHJpc3RvcGhl
-LAo+IAo+IE9uIFNhdCwgNyBNYXIgMjAxNSAwMDo0OTo1NSArMDgwMAo+IEplYW4tQ2hyaXN0b3Bo
-ZSBQTEFHTklPTC1WSUxMQVJEIDxwbGFnbmlvakBqY3Jvc29mdC5jb20+IHdyb3RlOgo+IAo+PiAK
-Pj4+IE9uIE1hciA2LCAyMDE1LCBhdCAxMTowOCBQTSwgTmljb2xhcyBGZXJyZSA8bmljb2xhcy5m
-ZXJyZUBhdG1lbC5jb20+IHdyb3RlOgo+Pj4gCj4+PiBMZSAyNi8wMi8yMDE1IDEwOjM0LCBKZWFu
-LUNocmlzdG9waGUgUExBR05JT0wtVklMTEFSRCBhIMOpY3JpdCA6Cj4+Pj4gVG9kYXkgaWYgd2Ug
-d2FudCB0byBkaXNhYmxlIGEgcGlvIGJhbmsgd2UgbWF5IHdpbGwgc2lsaWVudGx5IGJyZWFrIHBp
-bmN0cmwKPj4+PiBjb25maWd1cmF0aW9uIGluIHRoZSBEVC4gVGhpcyB3aWxsIGJlIGRldGVjdGVk
-IG9ubHkgYXQgcnVudGltZS4KPj4+PiAKPj4+PiBTbyBtb3ZlIHRoZSBwaW5jdHJsIGNvbmZpZ3Vy
-YXRpb24gdG8gdGhlIGJhbmsgaW5zdGVhZCBvZiB0aGUgYnVzLgo+Pj4+IFRoaXMgYWxsb3cgdG8g
-ZGV0ZWN0IHBpbmN0cmwgaXNzdWUgYXQgRFQgY29tcGlsaW5nIHRpbWUgd2hlbiBkaXNhYmxlIGEg
-YmFuay4KPj4+PiAKPj4+PiBTaWduZWQtb2ZmLWJ5OiBKZWFuLUNocmlzdG9waGUgUExBR05JT0wt
-VklMTEFSRCA8cGxhZ25pb2pAamNyb3NvZnQuY29tPgo+Pj4+IENjOiBMaW51cyBXYWxsZWlqIDxs
-aW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4+Pj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnCj4+Pj4gLS0tCj4+Pj4gLi4uL2JpbmRpbmdzL3BpbmN0cmwvYXRtZWwsYXQ5MS1waW5jdHJs
-LnR4dCAgICAgICAgfCA2NiArKysrKysrKysrKysrKysrKysrKysrCj4+Pj4gMSBmaWxlIGNoYW5n
-ZWQsIDY2IGluc2VydGlvbnMoKykKPj4+PiAKPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYXRtZWwsYXQ5MS1waW5jdHJsLnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2F0bWVsLGF0OTEtcGluY3Ry
-bC50eHQKPj4+PiBpbmRleCBiN2E5M2U4Li43ODM1NWVlIDEwMDY0NAo+Pj4+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2F0bWVsLGF0OTEtcGluY3RybC50
-eHQKPj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9h
-dG1lbCxhdDkxLXBpbmN0cmwudHh0Cj4+Pj4gQEAgLTE0OCwzICsxNDgsNjkgQEAgZGJndTogc2Vy
-aWFsQGZmZmZmMjAwIHsKPj4+PiAJcGluY3RybC0wID0gPCZwaW5jdHJsX2RiZ3U+Owo+Pj4+IAlz
-dGF0dXMgPSAiZGlzYWJsZWQiOwo+Pj4+IH07Cj4+Pj4gKwo+Pj4+ICtJSSkgTmV3IEJpbmRpbmdz
-IHBlciBQSU8gQmxvY2sKPj4+IAo+Pj4gU29ycnkgYnV0IE5BQ0suCj4+PiAKPj4+IEkgZG9uJ3Qg
-d2FudCB0byBtYW5hZ2UgYW5vdGhlciBmbGF2b3Igb2YgdGhlIHBpbm11eCBiaWRpbmcgd2l0aCBu
-byByZWFsCj4+PiBiZW5lZml0LiBJIHdvdWxkIGhhdmUgYmVlbiBnb29kIGlmIHdlIGhhZCBpdCBm
-cm9tIGRheS0xLiBOb3cgaXQncyB0b28gbGF0ZS4KPj4gCj4+IHllcyB3ZSBkbywgd2UgY2F0Y2gg
-YnV0IGEgY29tcGlsaW5nIHRpbWUgaW5zdGVhZCBvZiBSVU5USU1FIHdoaWNoIGlzIGNyaXRpY2Fs
-Cj4+IAo+PiBzbyBJ4oCZbGwgcGFzcyBvbiB0aGUgTkFDSwo+IAo+IFRlbGwgbWUsIGhvdyBjYW4g
-eW91IHBhc3Mgb24gYSBOQUNLIGNvbWluZyBmcm9tIHRoZSBhdDkxIG1haW50YWluZXIKPiAod2hp
-Y2ggaXMgYWxzbyB5b3VyIGNvLW1haW50YWluZXIpIHdoZW4geW91IG1vZGlmeSBiaW5kaW5ncyBv
-ZiBhbiBhdDkxCj4gZHJpdmVyID8KPiBQbGVhc2UgbGV0J3MgdHJ5IHRvIGJlIGNvbnN0cnVjdGl2
-ZSBoZXJlLCBzbyB0aGF0IHdlIGNhbiBmaW5kIGFuCj4gYWNjZXB0YWJsZSBzb2x1dGlvbi4KCkkg
-ZG8gcGFzcyBvbiBpdCB3aGljaCBtZWFucywgSSBkbyBub3QgYWNjZXB0IHRvIHN0b3AgaGVyZSB0
-aGUgZGlzY3Vzc2lvbiBiZWNhdXNlIG9mIHRoaXMKYXMgTmljb2xhcyBkaWQgZm9yIGRyb3BwaW5n
-IHRoZSBzb2MgZGV0ZWN0aW9uIHdoZW4gSSBOQUNLCj4gCj4+IAo+Pj4gCj4+PiBNb3Jlb3Zlciwg
-c3BsaXR0aW5nIGEgYmluZGluZyBkZWZpbml0aW9uIGlmIHlvdSBoYXZlIGEgZnVuY3Rpb24gZ2l2
-ZW4gYnkKPj4+IG11bHRpcGxlIGJhbmtzIGNhbiBiZSB3ZWlyZCBhbmQgbm90IHdlbGwgdW5kZXJz
-dG9vZCBpbiByZWdhcmQgdG8gb3VyCj4+PiBjdXJyZW50IGdyb3VwK2Z1bmN0aW9uIGRlZmluaXRp
-b24gc2NoZW1lIChDZi4geW91ciBsYXN0IGV4YW1wbGUpLgo+Pj4gCj4gCj4gSSBkb24ndCB0aGlu
-ayBpdCdzIGEgZ29vZCBpZGVhIGVpdGhlcjogeW91J2xsIGhhdmUgdG8gc3BsaXQgcGluY29uZgo+
-IGRlZmluaXRpb25zIGFuZCB0aGF0IGRlZmluaXRlbHkgZG9lc24ndCBpbXByb3ZlIHJlYWRhYmls
-aXR5LgoKaW4gSFcgaXTigJlzIGFscmVhZHkgdGhlIENBU0UuIEFuZCB0b2RheSBkaXNhYmxlIGEg
-YmFuayB5b3UgQlJPS0UgYSBib2FyZCB3aXRob3V0CmV2ZW4ga25vd24gaXQuIFRoaXMgaXMgTk9U
-IGFjY2VwdGFibGUgd2hlbiB3ZSBjYW4gZGV0ZWN0IGl0IGF0IGNvbXBpbGluZyBUSU1FLgo+IAo+
-PiAKPj4gT3RoZXJzIGFscmVhZHkgZG8gc28gYW5kIHRoaXMgaXMgbm90IGNvbXBsZXggYXQgYWxs
-Cj4gCj4gQ291bGQgeW91IHBvaW50IG91dCB0aGVzZSBiaW5kaW5ncyAoYW5kIHJlYWwgZXhhbXBs
-ZXMgcGxlYXNlKS4KCmxvb2sgYXQgU1QtRSA5NTAwIHBpbmN0cmwgdGhleSBETyB1c2UgaXQKCgo+
-IAo+IEJlc3QgUmVnYXJkcywKPiAKPiBCb3Jpcwo+IAo+IAo+IC0tIAo+IEJvcmlzIEJyZXppbGxv
-biwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5n
-Cj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+* Pali Roh=C3=A1r <pali.rohar@gmail.com> [150226 05:54]:
+> This patch series fix crypto support for omap3 devices which use DT.
+>=20
+> It enables AES and SHAM on N9/N950 and SHAM on N900. AES is still dis=
+abled for N900.
+>=20
+> Pali Roh=C3=A1r (10):
+>   ARM: OMAP2+: Return correct error values from device and hwmod
+>   ARM: OMAP3: Fix crypto support for HS devices
+>   crypto: omap-sham: Add support for omap3 devices
+>   crypto: omap-sham: Check for return value from pm_runtime_get_sync
+>   ARM: dts: omap3 hs: Remove timer12
+>   ARM: dts: omap3: Add missing dmas for crypto
+>   ARM: dts: n9/n950: Enable omap crypto support
+>   ARM: dts: n900: Enable omap sham and include directly omap34xx.dtsi
+>   ARM: dts: omap3-tao3530: Include directly omap34xx.dtsi
+>   ARM: dts: Remove files omap34xx-hs.dtsi and omap36xx-hs.dtsi
+>=20
+>  arch/arm/boot/dts/omap3-n900.dts           |   16 +++++-
+>  arch/arm/boot/dts/omap3-n950-n9.dtsi       |    2 +-
+>  arch/arm/boot/dts/omap3-tao3530.dtsi       |   11 +++-
+>  arch/arm/boot/dts/omap3.dtsi               |    4 ++
+>  arch/arm/boot/dts/omap34xx-hs.dtsi         |   16 ------
+>  arch/arm/boot/dts/omap36xx-hs.dtsi         |   16 ------
+>  arch/arm/mach-omap2/omap_device.c          |   30 ++++++-----
+>  arch/arm/mach-omap2/omap_hwmod.c           |   10 ++--
+>  arch/arm/mach-omap2/omap_hwmod_3xxx_data.c |   79 ++++++++++++++++++=
++++++-----
+>  drivers/crypto/omap-sham.c                 |   13 ++++-
+>  10 files changed, 131 insertions(+), 66 deletions(-)
+>  delete mode 100644 arch/arm/boot/dts/omap34xx-hs.dtsi
+>  delete mode 100644 arch/arm/boot/dts/omap36xx-hs.dtsi
+
+Are there any fixes in this series that should go into
+v4.0-rc series, or can it all wait for v4.1?
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
