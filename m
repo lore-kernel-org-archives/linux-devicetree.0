@@ -1,54 +1,126 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch V7 03/10] ASoC: qcom: Document Storm bindings
-Date: Fri, 6 Mar 2015 11:18:45 +0000
-Message-ID: <20150306111845.GF21293@sirena.org.uk>
-References: <1425428519-12224-1-git-send-email-kwestfie@codeaurora.org>
- <1425428519-12224-4-git-send-email-kwestfie@codeaurora.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/5] dt-bindings: iommu: Add binding for mediatek IOMMU
+Date: Fri, 6 Mar 2015 11:21:37 +0000
+Message-ID: <20150306112137.GE8700@leverpostej>
+References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
+	<1425638900-24989-5-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WJ5rdQZ/YyRv8SXp"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1425428519-12224-4-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <1425638900-24989-5-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---WJ5rdQZ/YyRv8SXp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Mar 03, 2015 at 04:21:52PM -0800, Kenneth Westfield wrote:
-
-> +Required properties:
+On Fri, Mar 06, 2015 at 10:48:19AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> This patch add mediatek iommu dts binding document.
+> 
+> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iommu/mediatek,iommu.txt   | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> new file mode 100644
+> index 0000000..db01c92
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> @@ -0,0 +1,41 @@
+> +/******************************************************/
+> +/*    Mediatek IOMMU Hardware block diagram           */
+> +/******************************************************/
+> +              EMI (External Memory Interface)
+> +               |
+> +              m4u (Multimedia Memory Management Unit)
+> +               |
+> +              smi (Smart Multimedia Interface)
+> +               |
+> +        +---------------+-------
+> +        |               |
+> +        |               |
+> +    vdec larb       disp larb      ... SoCs have different local arbiter(larb).
+> +        |               |
+> +        |               |
+> +   +----+----+    +-----+-----+
+> +   |    |    |    |     |     |    ...
+> +   |    |    |    |     |     |    ...
+> +   |    |    |    |     |     |    ...
+> +  MC   PP   VLD  OVL0 RDMA0 WDMA0  ... There are different ports in each larb.
 > +
-> +- compatible	: "google,storm"
+> +Required properties:
+> +- compatible : must be "mediatek,mt8173-iommu"
 
-I'm not convinced about this compatible - it's the name of the entire
-machine from the looks of it which means it'll collide with any other
-similar machine driver type things needed on the board.  Adding an
--audio or something on the end of the name should cover it unless anyone
-has any other bright ideas.
+s/iommu/m4u/ -- the name should match what the hardware is called.
 
-Ideally we'd be able to load drivers off the machine identifier that we
-already have but nobody seems to want to do that so...
+> +- reg : m4u register base
 
---WJ5rdQZ/YyRv8SXp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+... and size
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> +- interrupts : must contain the interrupts from each internal translation unit
 
-iQEcBAEBCAAGBQJU+Y0VAAoJECTWi3JdVIfQUxQH/2eJc6OwgDRp5wTlRBNRKo9S
-JKMztK2h8tGDr7Jdo3pxk/dUYi8FjCxHZLwOqDivW3tka5mo17iv7UjyfELuFSY6
-OznudCjHjHsU6+8OH6/aphw0acwKOcYsnF3q67UD3vj+PvmUCcq8ZXwUhqJHCXoi
-5KUQYWSuGjGBd7s1rVP2Ya7Kdvq0txpeRpNvV44yrRy18++8B2NuffgnNzc/a1cr
-2ZnAolzTzAj4H/+G63v6bUZ7KDrVGDOA1KMOPa2qa/dTt0y1fut/xuymBmqgii+S
-idSLw9GUxxbyAoeAtvefmkIsCQ8PRQ8NEUxz9zzD256kcm43L6ltANpL7iglAng=
-=wOqt
------END PGP SIGNATURE-----
+How many "internal translation units" are there?
 
---WJ5rdQZ/YyRv8SXp--
+How should the interrupts be ordered?
+
+How do these relate to the larbs?
+
+> +- clocks : must contain one entry for each clock-name
+> +- clock-name: m4u clock
+
+This does not match the example.
+
+s/clock-name/clock-names/
+
+Please format this like a list, with names quoted, e.g.
+
+- clock-names: must contain:
+  * "m4u" - The functional clock for the m4u
+
+> +- larb : must contain the larbes of current platform
+
+s/larbes/local arbiters/
+
+How should these be ordered? Surely there's a relationship with
+registers/interrupts/etc in this unit?
+
+> +- iommu-cells : must be 1. Specifies the client PortID as defined in
+> +dt-binding/iommu/mt**-iommu-port.h
+
+Give the absolute filename.
+
+The include file should be added in this patch (it's part of the
+binding). The whole patch should be moved earlier in the series.
+
+Thanks,
+Mark.
+
+> +
+> +Example:
+> +		iommu: mmsys_iommu@10205000 {
+> +			compatible = "mediatek,mt8173-iommu";
+> +			reg = <0 0x10205000 0 0x1000>;
+> +			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&infrasys INFRA_M4U>;
+> +			clock-names = "infra_m4u";
+> +			larb = <&larb0 &larb1 &larb2 &larb3 &larb4 &larb5>;
+> +			#iommu-cells = <1>;
+> +		};
+> \ No newline at end of file
+> -- 
+> 1.8.1.1.dirty
+> 
+> 
