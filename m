@@ -1,33 +1,42 @@
-From: Kim Phillips <kim.phillips@freescale.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 Subject: Re: [PATCH 0/17] crypto: talitos - Add support for SEC1
-Date: Thu, 5 Mar 2015 18:21:01 -0600
-Message-ID: <20150305182101.6db66e228f519476f0751c13@freescale.com>
+Date: Fri, 6 Mar 2015 11:28:31 +1100
+Message-ID: <20150306002831.GA30947@gondor.apana.org.au>
 References: <20150305164605.E65D81A241C@localhost.localdomain>
+ <20150305182101.6db66e228f519476f0751c13@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150305164605.E65D81A241C@localhost.localdomain>
+Content-Disposition: inline
+In-Reply-To: <20150305182101.6db66e228f519476f0751c13@freescale.com>
 Sender: linux-crypto-owner@vger.kernel.org
-To: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
+To: Kim Phillips <kim.phillips@freescale.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 5 Mar 2015 17:46:05 +0100
-Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+On Thu, Mar 05, 2015 at 06:21:01PM -0600, Kim Phillips wrote:
+> On Thu, 5 Mar 2015 17:46:05 +0100
+> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> 
+> > [15/17] crypto: talitos - Implementation of SEC1
+> 
+> ...
+> 
+> > [16/17] crypto: talitos - SEC1 bugs on 0 data hash
+> > [17/17] crypto: talitos - Update DT bindings with SEC1
+> 
+> This patchseries doesn't apply, at least on top of Herbert's
+> cryptodev-2.6 tree, as of today:
+> 
+> Applying: crypto: talitos - Implementation of SEC1
+> error: patch failed: drivers/crypto/talitos.c:655
+> error: drivers/crypto/talitos.c: patch does not apply
 
-> [15/17] crypto: talitos - Implementation of SEC1
+Also the patches are coming in a random order.  Please send them
+one at a time to ensure proper ordering.
 
-...
-
-> [16/17] crypto: talitos - SEC1 bugs on 0 data hash
-> [17/17] crypto: talitos - Update DT bindings with SEC1
-
-This patchseries doesn't apply, at least on top of Herbert's
-cryptodev-2.6 tree, as of today:
-
-Applying: crypto: talitos - Implementation of SEC1
-error: patch failed: drivers/crypto/talitos.c:655
-error: drivers/crypto/talitos.c: patch does not apply
-
-Kim
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
