@@ -1,99 +1,80 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] SATA: OCTEON: support SATA on OCTEON platform
-Date: Fri, 06 Mar 2015 08:25:06 -0800
-Message-ID: <54F9D4E2.20107@gmail.com>
-References: <1425567540-31572-1-git-send-email-aleksey.makarov@auriga.com> <54F97C27.508@redhat.com>
+From: Matt Porter <mporter@konsulko.com>
+Subject: Re: [PATCH] pwm: imx-pwm: add explicit compatible strings and
+ required clock properties
+Date: Fri, 6 Mar 2015 11:37:21 -0500
+Message-ID: <20150306163721.GL19577@beef>
+References: <1425654554-7849-1-git-send-email-mporter@konsulko.com>
+ <CAL_JsqJ+NL+0Hfu-La=NwzvOEHf0xE-D6EakJv6gnYYOS1oYrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54F97C27.508-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Aleksey Makarov <aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Vinita Gupta <vgupta-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ+NL+0Hfu-La=NwzvOEHf0xE-D6EakJv6gnYYOS1oYrA@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/2015 02:06 AM, Hans de Goede wrote:
-> Hi,
->
-> On 05-03-15 15:58, Aleksey Makarov wrote:
->> The OCTEON SATA controller is currently found on cn71XX devices.
->>
->> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Vinita Gupta <vgupta-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->> Signed-off-by: Aleksey Makarov <aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org>
->> ---
-[...]
->> diff --git
->> a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
->> b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
->> new file mode 100644
->> index 0000000..59e86a7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
->> @@ -0,0 +1,28 @@
->> +* UCTL SATA controller glue
->> +
->> +Properties:
->> +- compatible: "cavium,octeon-7130-sata-uctl"
->> +
->> +  Compatibility with the cn7130 SOC.
->> +
->> +- reg: The base address of the UCTL register bank.
->> +
->> +- #address-cells, #size-cells, and ranges must be present and hold
->> +    suitable values to map all child nodes.
->> +
->> +Example:
->> +
->> +    uctl@118006c000000 {
->> +        compatible = "cavium,octeon-7130-sata-uctl";
->> +        reg = <0x11800 0x6c000000 0x0 0x100>;
->> +        ranges; /* Direct mapping */
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +
->> +        sata: sata@16c0000000000 {
->> +            compatible = "cavium,octeon-7130-ahci";
->> +            reg = <0x16c00 0x00000000 0x0 0x200>;
->> +            interrupt-parent = <&cibsata>;
->> +            interrupts = <2 4>; /* Bit: 2, level */
->> +        };
->> +    };
->
-> Sorry for jumping into this discussion a bit late, but this nonsense
-> nesting of what clearly are 2 related but different hw blocks,
-> both living at completely different register addresses is unacceptable,
-> this is not a proper operating system dependent hw description as
-> devicetree is supposed to be. This is an ugly hack to ensure a
-> certain init ordering, and requiring manual instantiation of
-> the platform device for the nested dt-node.
->
-> NACK.
+On Fri, Mar 06, 2015 at 09:16:44AM -0600, Rob Herring wrote:
+> On Fri, Mar 6, 2015 at 9:09 AM, Matt Porter <mporter@konsulko.com> wrote:
+> > The imx-pwm binding contains language indicating compatible
+> > strings to be used that is not valid for all supported parts
+> > e.g. Should be "fsl,<soc>-pwm". Fix this by enumerating the
+> > valid compatible strings that represent the two versions of
+> > this peripheral in use.
+> >
+> > The binding is also missing the clocks/clock-names properties
+> > so document these,the two required ipg and per clocks, and add
+> > add these properties to the example.
+> >
+> > Signed-off-by: Matt Porter <mporter@konsulko.com>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 11 ++++++++++-
+> >  1 file changed, 10 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> > index b50d7a6d..30d2b82 100644
+> > --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> > @@ -1,10 +1,16 @@
+> >  Freescale i.MX PWM controller
+> >
+> >  Required properties:
+> > -- compatible: should be "fsl,<soc>-pwm"
+> > +- compatible :
+> > +  - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
+> > +  - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
+> 
+> This should be one of these and a more specific value as the example
+> below shows.
 
-Can you point to the portion of the device tree specification that 
-states that if a node has both "reg" *and* "ranges" properties, the 
-parent-bus-address ranges must be a proper subset of the "reg" property 
-ranges of the parent?   Because that seems like what you are saying 
-here.  I would really like to read the documentation myself so that we 
-can get a better understanding of the requirements.
+Ok, yes, I wasn't sure if that was expected to be explicit in the bindings
+or not as others don't seem to represent that properly. What about this?
 
-For what it's worth, there are existing bindings that take the same 
-form, and they don't seem to break anything.  See for example 
-Documentation/devicetree/bindings/mips/cavium/uctl.txt
+- compatible: should be "fsl,<soc>-pwm" and one of the following
+              compatible strings:
+	      	"fsl,imx1-pwm" for an iMX1 compatible PWM
+	      	"fsl,imx27-pwm" for an iMX27 compatible PWM
 
-In any event, it is somewhat moot at this point.  The device tree being 
-effectively being a frozen ABI, cannot really be changed.  We are merely 
-documenting what is supplied by the preexisting system boot ROMs, not 
-starting from scratch and discussing what the proper device tree binding 
-for the device should be.
-
-Thanks,
-David Daney
-
-
-[...]
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >  - reg: physical base address and length of the controller's registers
+> >  - #pwm-cells: should be 2. See pwm.txt in this directory for a description of
+> >    the cells format.
+> > +- clocks : Clock specifiers for both ipg and per clocks.
+> > +- clock-names : Clock names should include both "ipg" and "per"
+> > +See the clock consumer binding,
+> > +       Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >  - interrupts: The interrupt for the pwm controller
+> >
+> >  Example:
+> > @@ -13,5 +19,8 @@ pwm1: pwm@53fb4000 {
+> >         #pwm-cells = <2>;
+> >         compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
+> >         reg = <0x53fb4000 0x4000>;
+> > +       clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
+> > +                <&clks IMX5_CLK_PWM1_HF_GATE>;
+> > +       clock-names = "ipg", "per";
+> >         interrupts = <61>;
+> >  };
+> > --
+> > 1.8.4
+> >
