@@ -1,429 +1,154 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v2 5/7] drm/tilcdc: Add DRM_TILCDC_SLAVE_COMPAT for ti,tilcdc,slave binding support
-Date: Fri, 6 Mar 2015 17:36:33 +0200
-Message-ID: <3eb5e1bb6ce2debbc8c4853664f02b7e8b7eb461.1425656120.git.jsarha@ti.com>
-References: <cover.1425656120.git.jsarha@ti.com>
+From: Bill Pringlemeir <bpringlemeir@nbsps.com>
+Subject: Re: [PATCH 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
+ MPC5125 and others
+Date: Fri, 06 Mar 2015 10:32:26 -0500
+Message-ID: <87sidi3zw5.fsf@nbsps.com>
+References: <1425510624-22250-1-git-send-email-stefan@agner.ch>
+ <1425510624-22250-2-git-send-email-stefan@agner.ch>
+ <20150306061502.GB10997@pengutronix.de>
+ <fdfc84d92bbcb8abc98f2c29e1aa368b@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1425656120.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com
-Cc: tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk, robdclark@gmail.com, moinejf@free.fr, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <fdfc84d92bbcb8abc98f2c29e1aa368b@agner.ch> (Stefan Agner's
+ message of "Fri, 06 Mar 2015 14:31:51 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, pawel.moll@arm.com, marb@ixxat.de, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, devicetree@vger.kernel.org, robh+dt@kernel.org, geert@linux-m68k.org, kernel@pengutronix.de, galak@codeaurora.org, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adds a CONFIG_DRM_TILCDC_SLAVE_COMPAT module for "ti,tilcdc,slave"
-node conversion. The implementation is in tilcdc_slave_compat.c and it
-uses tilcdc_slave_compat.dts as a basis for creating a DTS
-overlay. The DTS overlay adds an external tda998x encoder to tilcdc
-that corresponds to the old tda998x based slave encoder.
+On  6 Mar 2015, stefan@agner.ch wrote:
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- drivers/gpu/drm/tilcdc/Kconfig                 |  13 ++
- drivers/gpu/drm/tilcdc/Makefile                |   3 +
- drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c   | 270 +++++++++++++++++++++++++
- drivers/gpu/drm/tilcdc/tilcdc_slave_compat.dts |  72 +++++++
- 4 files changed, 358 insertions(+)
- create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
- create mode 100644 drivers/gpu/drm/tilcdc/tilcdc_slave_compat.dts
+> On 2015-03-06 07:15, Sascha Hauer wrote:
+>> Hi Stefan,
 
-diff --git a/drivers/gpu/drm/tilcdc/Kconfig b/drivers/gpu/drm/tilcdc/Kconfig
-index 8394a0b..7e1e72b 100644
---- a/drivers/gpu/drm/tilcdc/Kconfig
-+++ b/drivers/gpu/drm/tilcdc/Kconfig
-@@ -1,3 +1,15 @@
-+config DRM_TILCDC_SLAVE_COMPAT
-+	bool "Support device tree blobs using TI LCDC Slave binding"
-+	depends on DRM_TILCDC
-+	default y
-+	select OF_RESOLVE
-+	select OF_OVERLAY
-+	help
-+	  Choose this option if you need a kernel that is compatible
-+	  with device tree blobs using the obsolete "ti,tilcdc,slave"
-+	  binding. If you find "ti,tilcdc,slave"-string from your DTB,
-+	  you probably need this. Otherwise you do not.
-+
- config DRM_TILCDC
- 	tristate "DRM Support for TI LCDC Display Controller"
- 	depends on DRM && OF && ARM && HAVE_DMA_ATTRS
-@@ -8,6 +20,7 @@ config DRM_TILCDC
- 	select VIDEOMODE_HELPERS
- 	select BACKLIGHT_CLASS_DEVICE
- 	select BACKLIGHT_LCD_SUPPORT
-+	select DRM_TILCDC_INIT
- 	help
- 	  Choose this option if you have an TI SoC with LCDC display
- 	  controller, for example AM33xx in beagle-bone, DA8xx, or
-diff --git a/drivers/gpu/drm/tilcdc/Makefile b/drivers/gpu/drm/tilcdc/Makefile
-index e1f738b..deeca48 100644
---- a/drivers/gpu/drm/tilcdc/Makefile
-+++ b/drivers/gpu/drm/tilcdc/Makefile
-@@ -3,6 +3,9 @@ ifeq (, $(findstring -W,$(EXTRA_CFLAGS)))
- 	ccflags-y += -Werror
- endif
- 
-+obj-$(CONFIG_DRM_TILCDC_SLAVE_COMPAT) += tilcdc_slave_compat.o \
-+					 tilcdc_slave_compat.dtb.o
-+
- tilcdc-y := \
- 	tilcdc_crtc.o \
- 	tilcdc_tfp410.o \
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-new file mode 100644
-index 0000000..cc9572d
---- /dev/null
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-@@ -0,0 +1,270 @@
-+/*
-+ * Copyright (C) 2015 Texas Instruments
-+ * Author: Jyri Sarha <jsarha@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
-+ *
-+ */
-+
-+/*
-+ * To support the old "ti,tilcdc,slave" binding the binding has to be
-+ * transformed to the new external encoder binding.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_graph.h>
-+#include <linux/of_fdt.h>
-+#include <linux/slab.h>
-+#include <linux/list.h>
-+
-+struct kfree_table {
-+	int total;
-+	int num;
-+	void **table;
-+};
-+
-+static int __init kfree_table_init(struct kfree_table *kft)
-+{
-+	kft->total = 32;
-+	kft->num = 0;
-+	kft->table = kmalloc(kft->total * sizeof(*kft->table),
-+			     GFP_KERNEL);
-+	if (!kft->table)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+static int __init kfree_table_add(struct kfree_table *kft, void *p)
-+{
-+	if (kft->num == kft->total) {
-+		void **old = kft->table;
-+
-+		kft->total *= 2;
-+		kft->table = krealloc(old, kft->total * sizeof(*kft->table),
-+				      GFP_KERNEL);
-+		if (!kft->table) {
-+			kft->table = old;
-+			kfree(p);
-+			return -ENOMEM;
-+		}
-+	}
-+	kft->table[kft->num++] = p;
-+	return 0;
-+}
-+
-+static void __init kfree_table_free(struct kfree_table *kft)
-+{
-+	int i;
-+
-+	for (i = 0; i < kft->num; i++)
-+		kfree(kft->table[i]);
-+
-+	kfree(kft->table);
-+}
-+
-+static
-+struct property * __init tilcdc_prop_dup(const struct property *prop,
-+					 struct kfree_table *kft)
-+{
-+	struct property *nprop;
-+
-+	nprop = kzalloc(sizeof(*nprop), GFP_KERNEL);
-+	if (!nprop || kfree_table_add(kft, nprop))
-+		return NULL;
-+
-+	nprop->name = kstrdup(prop->name, GFP_KERNEL);
-+	if (!nprop->name || kfree_table_add(kft, nprop->name))
-+		return NULL;
-+
-+	nprop->value = kmemdup(prop->value, prop->length, GFP_KERNEL);
-+	if (!nprop->value || kfree_table_add(kft, nprop->value))
-+		return NULL;
-+
-+	nprop->length = prop->length;
-+
-+	return nprop;
-+}
-+
-+static void __init tilcdc_copy_props(struct device_node *from,
-+				     struct device_node *to,
-+				     const char * const props[],
-+				     struct kfree_table *kft)
-+{
-+	struct property *prop;
-+	int i;
-+
-+	for (i = 0; props[i]; i++) {
-+		prop = of_find_property(from, props[i], NULL);
-+		if (!prop)
-+			continue;
-+
-+		prop = tilcdc_prop_dup(prop, kft);
-+		if (!prop)
-+			continue;
-+
-+		prop->next = to->properties;
-+		to->properties = prop;
-+	}
-+}
-+
-+static int __init tilcdc_prop_str_update(struct property *prop,
-+					  const char *str,
-+					  struct kfree_table *kft)
-+{
-+	prop->value = kstrdup(str, GFP_KERNEL);
-+	if (kfree_table_add(kft, prop->value) || !prop->value)
-+		return -ENOMEM;
-+	prop->length = strlen(str)+1;
-+	return 0;
-+}
-+
-+static void __init tilcdc_node_disable(struct device_node *node)
-+{
-+	struct property *prop;
-+
-+	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-+	if (!prop)
-+		return;
-+
-+	prop->name = "status";
-+	prop->value = "disabled";
-+	prop->length = strlen((char *)prop->value)+1;
-+
-+	of_update_property(node, prop);
-+}
-+
-+struct device_node * __init tilcdc_get_overlay(struct kfree_table *kft)
-+{
-+	extern uint8_t __dtb_tilcdc_slave_compat_begin[];
-+	extern uint8_t __dtb_tilcdc_slave_compat_end[];
-+	const int size = __dtb_tilcdc_slave_compat_end -
-+		__dtb_tilcdc_slave_compat_begin;
-+	static void *overlay_data;
-+	struct device_node *overlay;
-+	int ret;
-+
-+	if (!size) {
-+		pr_warn("%s: No overlay data\n", __func__);
-+		return NULL;
-+	}
-+
-+	overlay_data = kmemdup(__dtb_tilcdc_slave_compat_begin,
-+			       size, GFP_KERNEL);
-+	if (!overlay_data || kfree_table_add(kft, overlay_data))
-+		return NULL;
-+
-+	of_fdt_unflatten_tree(overlay_data, &overlay);
-+	if (!overlay) {
-+		pr_warn("%s: Unfattening overlay tree failed\n", __func__);
-+		return NULL;
-+	}
-+
-+	of_node_set_flag(overlay, OF_DETACHED);
-+	ret = of_resolve_phandles(overlay);
-+	if (ret) {
-+		pr_err("%s: Failed to resolve phandles: %d\n", __func__, ret);
-+		return NULL;
-+	}
-+
-+	return overlay;
-+}
-+
-+static const struct of_device_id tilcdc_slave_of_match[] __initconst = {
-+	{ .compatible = "ti,tilcdc,slave", },
-+	{},
-+};
-+
-+static const struct of_device_id tilcdc_of_match[] __initconst = {
-+	{ .compatible = "ti,am33xx-tilcdc", },
-+	{},
-+};
-+
-+static const struct of_device_id tilcdc_tda998x_of_match[] __initconst = {
-+	{ .compatible = "nxp,tda998x", },
-+	{},
-+};
-+
-+static const char * const tilcdc_slave_props[] __initconst = {
-+	"pinctrl-names",
-+	"pinctrl-0",
-+	"pinctrl-1",
-+	NULL
-+};
-+
-+void __init tilcdc_convert_slave_node(void)
-+{
-+	struct device_node *slave = NULL, *lcdc = NULL;
-+	struct device_node *i2c = NULL, *fragment = NULL;
-+	struct device_node *overlay, *encoder;
-+	struct property *prop;
-+	/* For all memory needed for the overlay tree. This memory can
-+	   be freed after the overlay has been applied. */
-+	struct kfree_table kft;
-+	int ret;
-+
-+	if (kfree_table_init(&kft))
-+		goto out;
-+
-+	lcdc = of_find_matching_node(NULL, tilcdc_of_match);
-+	slave = of_find_matching_node(NULL, tilcdc_slave_of_match);
-+
-+	if (!slave || !of_device_is_available(lcdc))
-+		goto out;
-+
-+	i2c = of_parse_phandle(slave, "i2c", 0);
-+	if (!i2c) {
-+		pr_err("%s: Can't find i2c node trough phandle\n", __func__);
-+		goto out;
-+	}
-+
-+	overlay = tilcdc_get_overlay(&kft);
-+	if (!overlay)
-+		goto out;
-+
-+	encoder = of_find_matching_node(overlay, tilcdc_tda998x_of_match);
-+	if (!encoder) {
-+		pr_err("%s: Failed to find tda998x node\n", __func__);
-+		goto out;
-+	}
-+
-+	tilcdc_copy_props(slave, encoder, tilcdc_slave_props, &kft);
-+
-+	for_each_child_of_node(overlay, fragment) {
-+		prop = of_find_property(fragment, "target-path", NULL);
-+		if (!prop)
-+			continue;
-+		if (!strncmp("i2c", (char *)prop->value, prop->length))
-+			if (tilcdc_prop_str_update(prop, i2c->full_name, &kft))
-+				goto out;
-+		if (!strncmp("lcdc", (char *)prop->value, prop->length))
-+			if (tilcdc_prop_str_update(prop, lcdc->full_name, &kft))
-+				goto out;
-+	}
-+
-+	tilcdc_node_disable(slave);
-+
-+	ret = of_overlay_create(overlay);
-+	if (ret)
-+		pr_err("%s: Creating overlay failed: %d\n", __func__, ret);
-+	else
-+		pr_info("%s: ti,tilcdc,slave node successfully converted\n",
-+			__func__);
-+out:
-+	kfree_table_free(&kft);
-+	of_node_put(i2c);
-+	of_node_put(slave);
-+	of_node_put(lcdc);
-+	of_node_put(fragment);
-+}
-+
-+int __init tilcdc_slave_compat_init(void)
-+{
-+	tilcdc_convert_slave_node();
-+	return 0;
-+}
-+
-+subsys_initcall(tilcdc_slave_compat_init);
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.dts b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.dts
-new file mode 100644
-index 0000000..693f8b0
---- /dev/null
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.dts
-@@ -0,0 +1,72 @@
-+/*
-+ * DTS overlay for converting ti,tilcdc,slave binding to new binding.
-+ *
-+ * Copyright (C) 2015 Texas Instruments Inc.
-+ * Author: Jyri Sarha <jsarha@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * target-path property values are simple tags that are replaced with
-+ * correct values in tildcdc_slave_compat.c. Some properties are also
-+ * copied over from the ti,tilcdc,slave node.
-+ */
-+
-+/dts-v1/;
-+/ {
-+	fragment@0 {
-+		target-path = "i2c";
-+		__overlay__ {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			tda19988 {
-+				compatible = "nxp,tda998x";
-+				reg = <0x70>;
-+				status = "okay";
-+
-+				port {
-+					hdmi_0: endpoint@0 {
-+						remote-endpoint = <&lcd_0>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
-+	fragment@1 {
-+		target-path = "lcdc";
-+		__overlay__ {
-+			port {
-+				lcd_0: endpoint@0 {
-+					remote-endpoint = <&hdmi_0>;
-+				};
-+			};
-+		};
-+	};
-+
-+	__local_fixups__ {
-+		fragment@0 {
-+			__overlay__ {
-+				tda19988 {
-+					port {
-+						endpoint@0 {
-+							remote-endpoint	= <0>;
-+						};
-+					};
-+				};
-+			};
-+		};
-+		fragment@1 {
-+			__overlay__ {
-+				port {
-+					endpoint@0 {
-+						remote-endpoint	= <0>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
--- 
-1.9.1
+>> On Thu, Mar 05, 2015 at 12:10:20AM +0100, Stefan Agner wrote:
+>>> +
+>>> +static int vf610_nfc_probe_dt(struct device *dev, struct
+>>> vf610_nfc_config *cfg)
+>>> +{
+>>> +	struct device_node *np = dev->of_node;
+>>> +	int buswidth;
+>>> +	u32 clkrate;
+>>> +
+>>> +	if (!np)
+>>> +		return 1;
+>>> +
+>>> +	cfg->flash_bbt = of_get_nand_on_flash_bbt(np);
+>>> +
+>>> +	if (!of_property_read_u32(np, "clock-frequency", &clkrate))
+>>> +		cfg->clkrate = clkrate;
 
+>> Normally the clock-frequency property tells the driver at which
+>> frequency the device actually is running, not to tell the driver at
+>> which frequency the device *should* run. It's strange to use the
+>> value of the clock-frequency property as input to
+>> clk_set_rate(). Maybe the assigned clock binding is more appropriate
+>> here, see Documentation/devicetree/bindings/clock/clock-bindings.txt.
+
+> What we try to do here is to specify the hardware limitations. There
+> seem to be some hardware restrictions when it comes to clock
+> frequencies. There has been a rather long discussion over at
+> Freescales community about it:
+> https://community.freescale.com/thread/317074
+
+> Not sure if this is the right way to specify the supported
+> frequencies, or should we create a custom property for this, something
+> like fsl,max-nfc-frequency = <33000000>?
+
+On most SOC's with this controller, the input clock to the controller
+affects the NAND flash timing and other factors; so you will want to set
+it based on the board/NAND stuffed.  The clock is for synchronous logic
+in the controller and affects many properties.  
+
+I guess Sascha's point is, the board's DT should just have some
+'&nfc_clk' node and not have this part of the driver?  Either way works.
+However, this clock is very important to get the driver to function.  It
+seem better for a user/porter to have this info in the node.  I guess
+you need to be trained to look at every node in the sub-tree for a
+device.  I think the other way might be better or a sub-system
+maintainer.  I looked at 'i2c' and other node which have a
+'clock-frequency' parameter. 
+
+In the Documentation/devicetree/bindings/clock/clock-bindings.txt,
+
+    uart@a000 {
+        compatible = "fsl,imx-uart";
+        reg = <0xa000 0x1000>;
+        interrupts = <33>;
+        clocks = <&osc 0>, <&pll 1>;
+        clock-names = "baud", "register";
+    };
+
+Here, this uart clock may affect the maximum baud rate supported by the
+device.  For this controller (vf610_nfc), the clock is like setting the
+'baud rate'; it affect the NAND memory cycles.  There is not really any
+'wait state' type logic in the controller register set that would allow
+the driver to work with a 'given clock' rate.  For certain a board
+should set this clock for the NAND chips they wish to support.
+
+What would the board file look like to use clock node?
+
+[generic]
+        nfc: nand@400e0000 {
+                compatible = "fsl,vf610-nfc";
+                reg = <0x400e0000 0x4000>;
+                clocks = <&clks VF610_CLK_NFC>;
+                clock-names = "nfc_clk";
+                status = "disabled";
+        };
+
+[board]
+
+&nfc {
+        nand-bus-width = <16>;
+        nand-ecc-mode = "hw";
+        nand-on-flash-bbt;
+        nand-ecc-strength = <24>;
+        nand-ecc-step-size = <2048>;
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_nfc_1>;
+        status = "okay";
+        &nfc_clk { frequency = <33000000>}  /* Like this? */
+};
+
+I don't know how to do the 'Like this?' part.  I don't think the
+'clock-bindings.txt' explains it.  I see this is better as the the
+driver needs no 'clock handling' code.  It is definitely a little more
+obtuse for the users.
+
+[snip]
+
+>> Does this driver work without device tree or not? Currently the
+>> driver bails out when device tree support is enabled but no device
+>> node is given. When device tree support is disabled in the kernel
+>> though the driver happily continues here.
+
+> Hm, I never tried using this Driver without DT. 
+
+[snip]
+
+I also didn't test this.  The driver was ported from Linux versions
+where DT did not exist.  It is used in some OpenWRT/68k/coldfire
+(patched) kernels and I wanted it to be useful for them.  However, we
+could probably remove the 'platform support'.  Other people are using
+this on PPC platforms and they will also have dt/of.
+
+Currently the platform control has no way to 'pass data', so the driver
+only works with whatever defaults it has (or that is my belief).  For
+instance, those OpenWRT kernels have a 'machine file' which will set the
+'clock-frequency' and other parameters.  We could remove the platform
+support completely if it is misleading.  I guess the KConfig would need
+a 'depends on CONFIG_OF'.
+
+Thanks for the review,
+Bill Pringlemeir.
