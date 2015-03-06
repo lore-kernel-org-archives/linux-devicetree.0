@@ -1,97 +1,103 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Fri, 06 Mar 2015 21:18:34 +0900
-Message-ID: <54F99B1A.3080600@samsung.com>
-References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
- <1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
- <20150305122459.GC14093@leverpostej>
- <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
- <20150305170450.GG14093@leverpostej>
- <CAGTfZH3nkCvnuu+fC1Gv5DrRQXEg6Y19tQnh+phj6c_jAFpbvg@mail.gmail.com>
- <20150305185407.GK14093@leverpostej> <54F9140B.3060109@samsung.com>
- <20150306114021.GF8700@leverpostej>
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH] input: goodix: Use max touch number from device config
+Date: Fri, 06 Mar 2015 13:19:14 +0100
+Message-ID: <1425644354.11984.6.camel@hadess.net>
+References: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
+	 <1425576744-25170-1-git-send-email-mamlinav@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150306114021.GF8700@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Chanwoo Choi <cwchoi00@gmail.com>, "kgene@kernel.org" <kgene@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "chanho61.park@samsung.com" <chanho61.park@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ideal.song@samsung.com" <ideal.song@samsung.com>, "a.kesavan@samsung.com" <a.kesavan@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1425576744-25170-1-git-send-email-mamlinav@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Aleksei Mamlin <mamlinav@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 2015-03-05 at 20:32 +0300, Aleksei Mamlin wrote:
+> Use max number of touches from device config instead of hardcoding.
+> 
+> Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
 
-On 03/06/2015 08:40 PM, Mark Rutland wrote:
->>>>>> CPU0 (boot CPU) is only well working for CPU_OFF.
->>>>>> But when I try to turn on the CPU0 after CPU_OFF, I failed it.
->>>>>
->>>>> That's rather worrying. Can you look into what's going on here? I'd
->>>>> rather not have dts describing things which are known to be broken.
->>>>
->>>> The board dts don't include any node for CPU_ON/OFF.
->>>
->>> I don't understand. The CPU_ON and CPU_OFF IDs are in the psci node
->>> quoted above, and all the CPUs had enable-method = "psci".
->>
->> I mean that there are not additional dt node except for 'cpu' and 'psci' node.
-> 
-> The psci node and cpu enable-method are sufficient. No other nodes
-> should be relevant.
+Tested-by: Bastien Nocera <hadess@hadess.net>
+Acked-by: Bastien Nocera <hadess@hadess.net>
 
-You're right.
-
+> ---
+>  drivers/input/touchscreen/goodix.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
 > 
->>>
->>>> When I try to turn on the CPU0 (boot CPU), fail to turn on and lockup happen.
->>>> After lockup happen, I cannot use the console.
->>>
->>> That sounds like a pretty major bug.
->>>
->>> Are you able to investigate with a hardware debugger?
->>
->> I can't do because there are not any jtag connector.
-> 
-> That is very unfortunate. Which PSCI implementation are you using?
-> Surely whoever developed it has access to debug. Surely they should have
-> tested this?
-
-I just used the lateset Linux 4.0-rc2 for PSCI (arch/arm64/kernel/psci.c)
-without any modification. Unfortunately, I don't know who is the h/w developer of Exynos5433 SoC.
-
-> 
->>> Do other CPUs eventually log errors regarding the lockup? Or is the
->>> machine completely dead from this point on?
->>
->> I tested CPU0 on/off. When I turn on the CPU0, I fail it. But, kernel just show the error log without lockup.
->> I gave you wrong infromation about CPU0 off.
-> 
-> Ok. However that's still a major bug.
-> 
-> [...]
-> 
->>>>>>> I take it CPUs boot at EL2?
->>>>>
->>>>> Do the CPUs boot at EL1 or EL2?
->>>>
->>>> Unfortunately, I cannot check the secure firmware for Exynos5433 SoC.
->>>> I think that a few SoC provider probably would know it.
->>>
->>> I guess I asked the wrong question.
->>>
->>> Do CPUs enter the kernel at EL2 or at EL1?
->>
->> Could you give me a tip how to check the kernel at EL2 or EL1?
-> 
-> Hmm... I thought we logged this but it looks like we don't.
-> 
-> You could hack in a check of is_hyp_mode_available() and
-> is_hyp_mode_mismatched(). That will tell you if EL2/hyp is available,
-> and whether all CPUs enter at the same mode (mandatory per the boot
-> protocol).
-
-OK, I'll try it.
-
-Thanks,
-Chanwoo Choi
+> diff --git a/drivers/input/touchscreen/goodix.c 
+> b/drivers/input/touchscreen/goodix.c
+> index ca19668..a3e2057 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -48,6 +48,7 @@ struct goodix_ts_data {
+>  #define GOODIX_REG_VERSION             0x8140
+>  
+>  #define RESOLUTION_LOC         1
+> +#define MAX_CONTACTS_LOC       5
+>  #define TRIGGER_LOC            6
+>  
+>  static const unsigned long goodix_irq_flags[] = {
+> @@ -99,7 +100,7 @@ static int goodix_ts_read_input_report(struct 
+> goodix_ts_data *ts, u8 *data)
+>         }
+>  
+>         touch_num = data[0] & 0x0f;
+> -       if (touch_num > GOODIX_MAX_CONTACTS)
+> +       if (touch_num > ts->max_touch_num)
+>                 return -EPROTO;
+>  
+>         if (touch_num > 1) {
+> @@ -141,7 +142,7 @@ static void goodix_ts_report_touch(struct 
+> goodix_ts_data *ts, u8 *coor_data)
+>   */
+>  static void goodix_process_events(struct goodix_ts_data *ts)
+>  {
+> -       u8  point_data[1 + GOODIX_CONTACT_SIZE * 
+> GOODIX_MAX_CONTACTS];
+> +       u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
+>         int touch_num;
+>         int i;
+>  
+> @@ -202,21 +203,23 @@ static void goodix_read_config(struct 
+> goodix_ts_data *ts)
+>                 ts->abs_x_max = GOODIX_MAX_WIDTH;
+>                 ts->abs_y_max = GOODIX_MAX_HEIGHT;
+>                 ts->int_trigger_type = GOODIX_INT_TRIGGER;
+> +               ts->max_touch_num = GOODIX_MAX_CONTACTS;
+>                 return;
+>         }
+>  
+>         ts->abs_x_max = get_unaligned_le16(&config[RESOLUTION_LOC]);
+>         ts->abs_y_max = get_unaligned_le16(&config[RESOLUTION_LOC + 
+> 2]);
+>         ts->int_trigger_type = (config[TRIGGER_LOC]) & 0x03;
+> -       if (!ts->abs_x_max || !ts->abs_y_max) {
+> +       ts->max_touch_num = (config[MAX_CONTACTS_LOC]) & 0x0f;
+> +       if (!ts->abs_x_max || !ts->abs_y_max || !ts->max_touch_num) {
+>                 dev_err(&ts->client->dev,
+>                         "Invalid config, using defaults\n");
+>                 ts->abs_x_max = GOODIX_MAX_WIDTH;
+>                 ts->abs_y_max = GOODIX_MAX_HEIGHT;
+> +               ts->max_touch_num = GOODIX_MAX_CONTACTS;
+>         }
+>  }
+>  
+> -
+>  /**
+>   * goodix_read_version - Read goodix touchscreen version
+>   *
+> @@ -295,7 +298,7 @@ static int goodix_request_input_dev(struct 
+> goodix_ts_data *ts)
+>         input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0, 
+> 255, 0, 0);
+>         input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 
+> 255, 0, 0);
+>  
+> -       input_mt_init_slots(ts->input_dev, GOODIX_MAX_CONTACTS,
+> +       input_mt_init_slots(ts->input_dev, ts->max_touch_num,
+>                                                         
+> INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+>  
+>         ts->input_dev->name = "Goodix Capacitive TouchScreen";
