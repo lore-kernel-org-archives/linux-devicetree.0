@@ -1,126 +1,54 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] libfdt: Add fdt_path_offset_namelen()
-Date: Fri,  6 Mar 2015 10:12:38 -0500
-Message-ID: <1425654758-2575-1-git-send-email-peter@hurleysoftware.com>
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+From: Matt Porter <mporter@konsulko.com>
+Subject: [PATCH RESEND] serial: omap_serial: document missing properties and add an example
+Date: Fri,  6 Mar 2015 10:16:12 -0500
+Message-ID: <1425654972-8044-1-git-send-email-mporter@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Devicetree List <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Properties may contain path names which are not NUL-terminated.
-For example, the 'stdout-path' property allows the form 'path:options',
-where the ':' character terminates the path specifier.
+The omap_serial.txt binding documentation lacks a number of properties
+that are used in DTS files for platforms incorporating this peripheral.
+Fix this by documenting the missing required and optional fields and
+add an example.
 
-Allow these path names to be used in-place for path descending;
-add fdt_path_offset_namelen(), which limits the path name to 'namelen'
-characters.
-
-Reimplement fdt_path_offset() as a trivial wrapper.
-
-Signed-off-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Matt Porter <mporter@konsulko.com>
 ---
- libfdt/fdt_ro.c    | 22 ++++++++++++++--------
- libfdt/libfdt.h    | 11 +++++++++++
- libfdt/version.lds |  1 +
- 3 files changed, 26 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/serial/omap_serial.txt       | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
-index 50007f6..a65e4b5 100644
---- a/libfdt/fdt_ro.c
-+++ b/libfdt/fdt_ro.c
-@@ -154,9 +154,9 @@ int fdt_subnode_offset(const void *fdt, int parentoffset,
- 	return fdt_subnode_offset_namelen(fdt, parentoffset, name, strlen(name));
- }
+diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
+index 342eedd..54c2a15 100644
+--- a/Documentation/devicetree/bindings/serial/omap_serial.txt
++++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
+@@ -4,7 +4,27 @@ Required properties:
+ - compatible : should be "ti,omap2-uart" for OMAP2 controllers
+ - compatible : should be "ti,omap3-uart" for OMAP3 controllers
+ - compatible : should be "ti,omap4-uart" for OMAP4 controllers
++- reg : address and length of the register space
++- interrupts or interrupts-extended : Should contain the uart interrupt
++                                      specifier or both the interrupt
++                                      controller phandle and interrupt
++                                      specifier.
+ - ti,hwmods : Must be "uart<n>", n being the instance number (1-based)
  
--int fdt_path_offset(const void *fdt, const char *path)
-+int fdt_path_offset_namelen(const void *fdt, const char *path, int namelen)
- {
--	const char *end = path + strlen(path);
-+	const char *end = path + namelen;
- 	const char *p = path;
- 	int offset = 0;
- 
-@@ -164,7 +164,7 @@ int fdt_path_offset(const void *fdt, const char *path)
- 
- 	/* see if we have an alias */
- 	if (*path != '/') {
--		const char *q = strchr(path, '/');
-+		const char *q = memchr(path, '/', end - p);
- 
- 		if (!q)
- 			q = end;
-@@ -177,14 +177,15 @@ int fdt_path_offset(const void *fdt, const char *path)
- 		p = q;
- 	}
- 
--	while (*p) {
-+	while (p < end) {
- 		const char *q;
- 
--		while (*p == '/')
-+		while (*p == '/') {
- 			p++;
--		if (! *p)
--			return offset;
--		q = strchr(p, '/');
-+			if (p == end)
-+				return offset;
-+		}
-+		q = memchr(p, '/', end - p);
- 		if (! q)
- 			q = end;
- 
-@@ -198,6 +199,11 @@ int fdt_path_offset(const void *fdt, const char *path)
- 	return offset;
- }
- 
-+int fdt_path_offset(const void *fdt, const char *path)
-+{
-+	return fdt_path_offset_namelen(fdt, path, strlen(path));
-+}
+ Optional properties:
+ - clock-frequency : frequency of the clock input to the UART
++- dmas : DMA specifier, consisting of a phandle to the DMA controller
++         node and a DMA channel number.
++- dma-names : "rx" for receive channel, "tx" for transmit channel.
 +
- const char *fdt_get_name(const void *fdt, int nodeoffset, int *len)
- {
- 	const struct fdt_node_header *nh = _fdt_offset_ptr(fdt, nodeoffset);
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 02baa84..50b13b4 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -318,6 +318,17 @@ int fdt_subnode_offset_namelen(const void *fdt, int parentoffset,
- int fdt_subnode_offset(const void *fdt, int parentoffset, const char *name);
- 
- /**
-+ * fdt_path_offset_namelen - find a tree node by its full path
-+ * @fdt: pointer to the device tree blob
-+ * @path: full path of the node to locate
-+ * @namelen: number of characters of path to consider
-+ *
-+ * Identical to fdt_path_offset(), but only consider the first namelen
-+ * characters of path as the path name.
-+ */
-+int fdt_path_offset_namelen(const void *fdt, const char *path, int namelen);
++Example:
 +
-+/**
-  * fdt_path_offset - find a tree node by its full path
-  * @fdt: pointer to the device tree blob
-  * @path: full path of the node to locate
-diff --git a/libfdt/version.lds b/libfdt/version.lds
-index 80b322b..80e945e 100644
---- a/libfdt/version.lds
-+++ b/libfdt/version.lds
-@@ -8,6 +8,7 @@ LIBFDT_1.2 {
- 		fdt_get_mem_rsv;
- 		fdt_subnode_offset_namelen;
- 		fdt_subnode_offset;
-+		fdt_path_offset_namelen;
- 		fdt_path_offset;
- 		fdt_get_name;
- 		fdt_get_property_namelen;
++                uart4: serial@49042000 {
++                        compatible = "ti,omap3-uart";
++                        reg = <0x49042000 0x400>;
++                        interrupts = <80>;
++                        dmas = <&sdma 81 &sdma 82>;
++                        dma-names = "tx", "rx";
++                        ti,hwmods = "uart4";
++                        clock-frequency = <48000000>;
++                };
 -- 
-2.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.4
