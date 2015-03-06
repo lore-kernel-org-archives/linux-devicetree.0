@@ -1,89 +1,29 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 1/9] arm64: dts: exynos: Add dts files for 64-bit
- Exynos5433 SoC
-Date: Fri, 6 Mar 2015 11:40:21 +0000
-Message-ID: <20150306114021.GF8700@leverpostej>
-References: <1425533911-14800-1-git-send-email-cw00.choi@samsung.com>
- <1425533911-14800-2-git-send-email-cw00.choi@samsung.com>
- <20150305122459.GC14093@leverpostej>
- <CAGTfZH3Bf1ueFO25NXFbN+Mvb9TcGbErbSp=a+vQ0=A+E07mQA@mail.gmail.com>
- <20150305170450.GG14093@leverpostej>
- <CAGTfZH3nkCvnuu+fC1Gv5DrRQXEg6Y19tQnh+phj6c_jAFpbvg@mail.gmail.com>
- <20150305185407.GK14093@leverpostej>
- <54F9140B.3060109@samsung.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v3 0/2] Add support for Broadcom RNG200
+Date: Fri, 6 Mar 2015 22:53:48 +1100
+Message-ID: <20150306115348.GA5363@gondor.apana.org.au>
+References: <sbranden@broadcom.com>
+ <1425501734-14025-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54F9140B.3060109-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425501734-14025-1-git-send-email-sbranden@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matt Mackall <mpm@selenic.com>, Grant Likely <grant.likely@linaro.org>, Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> >>>> CPU0 (boot CPU) is only well working for CPU_OFF.
-> >>>> But when I try to turn on the CPU0 after CPU_OFF, I failed it.
-> >>>
-> >>> That's rather worrying. Can you look into what's going on here? I'd
-> >>> rather not have dts describing things which are known to be broken.
-> >>
-> >> The board dts don't include any node for CPU_ON/OFF.
-> > 
-> > I don't understand. The CPU_ON and CPU_OFF IDs are in the psci node
-> > quoted above, and all the CPUs had enable-method = "psci".
+On Wed, Mar 04, 2015 at 12:42:12PM -0800, Scott Branden wrote:
+> This series of patchsets contains the Broadcom Random Number Generator
+> driver and device tree binding documentation.
 > 
-> I mean that there are not additional dt node except for 'cpu' and 'psci' node.
+> Changes from v2:
+>  added usleep_range instead of cpu_relax
+>  add init and cleanup functions following new hwrng model
 
-The psci node and cpu enable-method are sufficient. No other nodes
-should be relevant.
-
-> > 
-> >> When I try to turn on the CPU0 (boot CPU), fail to turn on and lockup happen.
-> >> After lockup happen, I cannot use the console.
-> > 
-> > That sounds like a pretty major bug.
-> > 
-> > Are you able to investigate with a hardware debugger?
-> 
-> I can't do because there are not any jtag connector.
-
-That is very unfortunate. Which PSCI implementation are you using?
-Surely whoever developed it has access to debug. Surely they should have
-tested this?
-
-> > Do other CPUs eventually log errors regarding the lockup? Or is the
-> > machine completely dead from this point on?
-> 
-> I tested CPU0 on/off. When I turn on the CPU0, I fail it. But, kernel just show the error log without lockup.
-> I gave you wrong infromation about CPU0 off.
-
-Ok. However that's still a major bug.
-
-[...]
-
-> >>>>> I take it CPUs boot at EL2?
-> >>>
-> >>> Do the CPUs boot at EL1 or EL2?
-> >>
-> >> Unfortunately, I cannot check the secure firmware for Exynos5433 SoC.
-> >> I think that a few SoC provider probably would know it.
-> > 
-> > I guess I asked the wrong question.
-> > 
-> > Do CPUs enter the kernel at EL2 or at EL1?
-> 
-> Could you give me a tip how to check the kernel at EL2 or EL1?
-
-Hmm... I thought we logged this but it looks like we don't.
-
-You could hack in a check of is_hyp_mode_available() and
-is_hyp_mode_mismatched(). That will tell you if EL2/hyp is available,
-and whether all CPUs enter at the same mode (mandatory per the boot
-protocol).
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All applied.  Thanks!
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
