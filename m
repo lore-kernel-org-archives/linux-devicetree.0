@@ -1,124 +1,94 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v3 2/3] pci: iproc: Add Broadcom iProc PCIe support
-Date: Fri, 6 Mar 2015 09:26:05 -0800
-Message-ID: <54F9E32D.4090005@broadcom.com>
-References: <1425603699-13416-1-git-send-email-rjui@broadcom.com>	 <1425603699-13416-3-git-send-email-rjui@broadcom.com> <1425639640.24292.271.camel@x220>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH 1/4] ARM: OMAP2+: omap_hwmod: Introduce ti,no-init dt
+ property
+Date: Fri, 6 Mar 2015 11:28:31 -0600
+Message-ID: <54F9E3BF.5010407@ti.com>
+References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com> <1425561211-31003-2-git-send-email-d-gerlach@ti.com> <alpine.DEB.2.02.1503051815590.5613@utopia.booyaka.com> <20150305184952.GF13520@atomide.com> <54F8B2C7.7060202@ti.com> <20150305201713.GH13520@atomide.com> <20150306004157.GI13520@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1425639640.24292.271.camel@x220>
-Sender: linux-pci-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150306004157.GI13520@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, KEERTHY <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+On 03/05/2015 06:41 PM, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [150305 12:24]:
+>> * Dave Gerlach <d-gerlach@ti.com> [150305 11:53]:
+>>> On 03/05/2015 12:49 PM, Tony Lindgren wrote:
+>>>> * Paul Walmsley <paul@pwsan.com> [150305 10:16]:
+>>>>> On Thu, 5 Mar 2015, Dave Gerlach wrote:
+>>>>>
+>>>>>> Introduce a dt property, ti,no-init, that prevents hwmod initialization.
+>>>>>> Even if a dt node is marked as disabled, hwmod still at least enables
+>>>>>> the hwmod and programs the sysconfig before attempting to idle it at
+>>>>>> boot. If an IP has been disabled by the hardware configuration on a
+>>>>>> platform, this will cause a hang due to writing to inactive registers.
+>>>>>> This property prevents that from happening by marking the hwmod as
+>>>>>> _HWMOD_STATE_DISABLED during init.
+>>>>>
+>>>>> I'm kind of wondering if hwmod should even touch a device if it's marked 
+>>>>> as disabled in the DT.  Tony, what do you think?
+>>>>
+>>>> Well nothing happens if a device is status = "disabled". No dev entry
+>>>> gets created for it at all and hwmod won't have any data for the device
+>>>> populated. The only way hwmod code could see that device if the device
+>>>> gets it's data from the legacy omap_hwmod_*_data.c instead of DT.
+>>>>
+>>>
+>>> We still need this for the sysconfig programming, correct? hwmod programs that
+>>> regardless of dt status and then idles the IP,
+>>
+>> Well hwmod does not even know about the IP IO addresses if it's marked
+>> with status = "disabled".. Which IP are you having problems with?
+>>
+>>> which is why I needed the ti,no-init for the epos evm. It isn't just a
+>>> matter of we shouldnt write to it because we don't want to use it; we
+>>> can't write to it because the module is held off so it causes an
+>>> external abort if we do.
+>>
+>> Well hard to say not knowing which module this is.. Pretty much all
+>> the modules have drivers and the driver just does pm_runtime_get()
+>> on it?
+> 
+> Heh OK this thread is about the RTC driver, so I assume that's the
+> problem :) So if you set the rtc to status = "disabled" how can the
+> hwmod code do anything as AFAIK it won't even get the rtc IO address?
+> 
+> Or am I missing something here?
 
-On 3/6/2015 3:00 AM, Paul Bolle wrote:
-> On Thu, 2015-03-05 at 17:01 -0800, Ray Jui wrote:
->> --- a/drivers/pci/host/Kconfig
->> +++ b/drivers/pci/host/Kconfig
->> @@ -106,4 +106,21 @@ config PCI_VERSATILE
->>  	bool "ARM Versatile PB PCI controller"
->>  	depends on ARCH_VERSATILE
->>  
->> +config PCIE_IPROC
->> +	bool "Broadcom iProc PCIe controller"
+Perhaps I am mistaken, but from what I understand, all hwmods have _init and
+_setup called on them, and all hwmods read the IO address regardless of DT
+status at this point with _init_mpu_rt_base. In _setup, _setup_reset gets called
+which calls _enable for the hwmod, and this calls both _enable_sysc and
+_update_sysc_cache which touch the sysconfig register of the IP.
+
+Normally this is fine regardless of whether or not we are using an IP because
+the module will wake up for a moment, have it's sysc programmed, and then be put
+back to sleep later, potentially never to be woken again if we bind no driver
+for it, which is fine for 99% of cases. In the case of am43x epos evm, you can
+take the same piece of silicon that will boot happily on the gp evm with the rtc
+hwmod in place and it will hang during boot on the epos evm because the board
+uses a pin to hold the RTC IP in reset. There is no way to detect this in
+software, the module can be turned on as normal using the clk_ctrl, but if you
+touch any of the IP registers you get an abort.
+
+So we need to prevent this from happening but of course we can't selectively
+choose when the rtc hwmod gets added based on which board we are using so it
+seemed a DT flag was appropriate to indicate that we do not want to init the rtc
+IP at all only on this board.
+
+Without this flag in place but with the rtc hwmod added, the am43x-epos-evm
+fails booting with an imprecise abort.
+
+Regards,
+Dave
+
 > 
-> bool symbol.
+> Regards,
 > 
->> +	help
->> +	  This enables the iProc PCIe core controller support for Broadcom's
->> +	  iProc family of SoCs. An appropriate bus interface driver also needs
->> +	  to be enabled
->> +
->> +config PCIE_IPROC_PLTFM
->> +	bool "Broadcom iProc PCIe platform bus driver"
-> 
-> Another bool symbol.
-> 
->> +	depends on ARCH_BCM_IPROC || COMPILE_TEST
->> +	depends on OF
->> +	select PCIE_IPROC
->> +	default ARCH_BCM_IPROC
->> +	help
->> +	  Say Y here if you want to use the Broadcom iProc PCIe controller
->> +	  through the generic platform bus interface
->> +
->>  endmenu
-> 
->> --- a/drivers/pci/host/Makefile
->> +++ b/drivers/pci/host/Makefile
-> 
->> +obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
->> +obj-$(CONFIG_PCIE_IPROC_PLTFM) += pcie-iproc-pltfm.o
-> 
-> Both objectfiles will never be part of a module.
-> 
->> --- /dev/null
->> +++ b/drivers/pci/host/pcie-iproc-pltfm.c
-> 
->> +#include <linux/module.h>
-> 
-> Is this needed?
-> 
->> +MODULE_DEVICE_TABLE(of, iproc_pcie_of_match_table);
-> 
-> This macro will be preprocessed away, won't it?
-> 
->> +static struct platform_driver iproc_pcie_pltfm_driver = {
->> +	.driver = {
->> +		.name = "iproc-pcie",
->> +		.of_match_table = of_match_ptr(iproc_pcie_of_match_table),
->> +		.suppress_bind_attrs = true,
->> +	},
->> +	.probe = iproc_pcie_pltfm_probe,
->> +};
->> +module_platform_driver(iproc_pcie_pltfm_driver);
-> 
-> Perhaps it's clearer to have make this a call to
-> platform_driver_register(), put that in a wrapper function, and invoke
-> that wrapper function through device_initcall() or similar. I haven't
-> actually tested that, so the details could be off.
-> 
->> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
->> +MODULE_DESCRIPTION("Broadcom iPROC PCIe platform driver");
->> +MODULE_LICENSE("GPL v2");
-> 
-> And these three macros will, effectively, be preprocessed away.
-> 
->> --- /dev/null
->> +++ b/drivers/pci/host/pcie-iproc.c
-> 
->> +#include <linux/module.h>
-> 
-> See above.
-> 
->> +MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
->> +MODULE_DESCRIPTION("Broadcom iPROC PCIe common driver");
->> +MODULE_LICENSE("GPL v2");
-> 
-> Ditto.
-> 
-> 
-> Paul Bolle
+> Tony
 > 
 
-So every single PCIe host driver under drivers/pci/host/* has their
-config flag of "bool" type, and all of them except pci-keystone-dw.c
-have these MODULE based macros in their driver. While I agree with you
-that these macros will preprocessed away while compiled as statically
-linked in, I thought it's a convention to have these macros in the
-driver. At least it provides information on the author, driver
-description, and license (although one can also argue you can find all
-of those info from the maintainer list, Kconfig, and license header).
-
-Would you be able to sort this out with a developer or subsystem
-maintainer who is familiar with this matter and let us know what is the
-convention for MODULE macros usage in a driver when its config flag is
-set to "bool" instead of "tristate"?
-
-Thanks,
-
-Ray
