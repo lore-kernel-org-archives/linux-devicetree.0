@@ -1,41 +1,42 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH RFC 3/6] drm/tilcdc: Add support for external compontised
- DRM encoder
-Date: Fri, 6 Mar 2015 12:21:42 +0200
-Message-ID: <54F97FB6.3060103@ti.com>
-References: <cover.1424961754.git.jsarha@ti.com> <92792bb4f64fb1b7f26e687ec159d870d0e7a81a.1424961754.git.jsarha@ti.com> <20150302160135.GA29584@n2100.arm.linux.org.uk> <54F96657.10200@ti.com> <20150306095848.GH29584@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150306095848.GH29584@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, tomi.valkeinen@ti.com, detheridge@ti.com, moinejf@free.fr, laurent.pinchart@ideasonboard.com
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 0/3] net: macb: rework at91 specific handling
+Date: Fri,  6 Mar 2015 11:23:59 +0100
+Message-ID: <1425637442-8724-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/15 11:58, Russell King - ARM Linux wrote:
-> On Fri, Mar 06, 2015 at 10:33:27AM +0200, Jyri Sarha wrote:
->> Would it be Ok to add a check that master->ops->add_components is defined,
->> before calling it in find_componets() (drivers/base/component.c:120) and
->> return 0 if it is not?
->
-> No:
->
-> http://ftp.arm.linux.org.uk/cgit/linux-arm.git/commit/?h=8c4e8764a7e3
->
-> also:
->
-> http://ftp.arm.linux.org.uk/cgit/linux-arm.git/log/?h=11eda5aaf41e
->
-> is what's planned to be merged when I can get a round tuit, and people
-> stop using the old methods.
->
+Hello,
 
-Ok, but could it still be allowed to add a master without any components 
-(match == NULL)?
+This removes the #if defined(ARCH_AT91) sections to prevent any problem
+when enabling ARM multi-platform support.
+The at91 specific logic is now activated when the "at91sam9260-macb"
+compatible string is found. 
 
-Or do I have to handle the configurations without any components separately?
+Best Regards,
 
-Best regards,
-Jyri
+Boris
+
+Changes since v1:
+- avoid changing existing behavior as Alexandre suggested
+
+Boris Brezillon (3):
+  net/macb: Update DT bindings documentation
+  ARM: at91/dt: fix macb compatible strings
+  net: macb: remove #if defined(CONFIG_ARCH_AT91) sections
+
+ Documentation/devicetree/bindings/net/macb.txt |  5 +++-
+ arch/arm/boot/dts/at91sam9260.dtsi             |  2 +-
+ arch/arm/boot/dts/at91sam9263.dtsi             |  2 +-
+ arch/arm/boot/dts/at91sam9g45.dtsi             |  2 +-
+ arch/arm/boot/dts/at91sam9x5_macb0.dtsi        |  2 +-
+ arch/arm/boot/dts/at91sam9x5_macb1.dtsi        |  2 +-
+ arch/arm/boot/dts/sama5d3_emac.dtsi            |  2 +-
+ drivers/net/ethernet/cadence/macb.c            | 32 ++++++++++++++------------
+ drivers/net/ethernet/cadence/macb.h            |  2 ++
+ 9 files changed, 29 insertions(+), 22 deletions(-)
+
+-- 
+1.9.1
