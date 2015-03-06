@@ -1,95 +1,255 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC/PATCH] pinctrl: sh-pfc: Accept standard function, pins and
- groups properties
-Date: Fri, 6 Mar 2015 11:39:30 +0100
-Message-ID: <CACRpkdbepTKxMFVpTo7ZmjYE1beF5XOMOQarszaDGojerNQqMg@mail.gmail.com>
-References: <CACRpkda4SBof0EaZVWtEYaeb6j_BGAVj39kje+mBz90eB3qAwQ@mail.gmail.com>
-	<1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<CACRpkda6H7hbgXhmSbgtwOC_8PbHnES5syp-YEp1+V6s5Ym6Cw@mail.gmail.com>
-	<12938873.nmb8Ng8mNb@avalon>
+From: <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/5] soc: mediatek: Add SMI driver
+Date: Fri, 6 Mar 2015 18:37:46 +0800
+Message-ID: <1425638270-24903-2-git-send-email-yong.wu@mediatek.com>
+References: <1425638270-24903-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <12938873.nmb8Ng8mNb@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sascha Hauer <kernel@pengutronix.de>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niso@kth.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425638270-24903-1-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 4, 2015 at 10:53 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Wednesday 04 February 2015 09:40:48 Linus Walleij wrote:
->> On Tue, Jan 27, 2015 at 9:31 PM, Laurent Pinchart wrote:
->> > The "function", "pins" and "groups" pinmux and pinctrl properties have
->> > been standardized. Support them in addition to the custom "renesas,*"
->> > properties. New-style and old-style properties can't be mixed in DT.
->> >
->> > Signed-off-by: Laurent Pinchart
->> > <laurent.pinchart+renesas@ideasonboard.com>
->>
->> (...)
->>
->> >> Would be nice if the PFC driver could be augmented to also accept the
->> >> now standard bindings "groups" and "function" simply :) we're adding
->> >> parse functions for those to the core.
->> >
->> > Something like this ?
->>
->> Yes :)
->>
->> > Please note two differences between the Renesas PFC bindings and the
->> > standard bindings:
->> >
->> > - The standard bindings state that a pinctrl node must contain either a
->> >   "pins" property or a "groups" property, while the Renesas bindings
->> >   allows for both to coexist in the same node.
->>
->> Sascha also says this makes sense for him so I guess I'm getting a bit
->> soft on the issue.
->>
->> > - The standard bindings don't allow a pinmux node to contain a "pins"
->> >   property, while the Renesas bindings do.
->>
->> Does that mean "pins" affect the muxing or that "pins" is about some per-pin
->> config shoveled into the same node?
->>
->> The former is not OK, the latter is.
->
-> It means "pins" affect the muxing. The sh-pfc driver supports both muxing
-> groups and muxing individual pins.
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-OK.
+    This patch add SMI(Smart Multimedia Interface) driver. This driver 
+is responsible to enable/disable iommu and control the clocks of each 
+local arbiter.
 
->> >                 mmcif_pins: mmcif {
->> >
->> >                         mux {
->> > -                               renesas,groups = "mmc0_data8_0",
->> > "mmc0_ctrl_0";
->> > -                               renesas,function = "mmc0";
->> > +                               groups = "mmc0_data8_0", "mmc0_ctrl_0";
->> > +                               function = "mmc0";
->> >                         };
->>
->> So that looks just very nice.
->>
->> >                         cfg {
->> > -                               renesas,groups = "mmc0_data8_0";
->> > -                               renesas,pins = "PORT279";
->> > +                               groups = "mmc0_data8_0";
->> > +                               pins = "PORT279";
->> >                                 bias-pull-up;
->>
->> And here I can't see the use of "groups" in this node since it
->> doesn't match a function. It's a bit ambiguous what "groups"
->> mean when you run into it like this.
->
-> It means that the bias-pull-up configuration is applied to all pins of the
-> "mmc0_data8_0" group, as well as to pin 279.
+Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/soc/mediatek/Kconfig      |   7 ++
+ drivers/soc/mediatek/Makefile     |   1 +
+ drivers/soc/mediatek/mt8173-smi.c | 143 ++++++++++++++++++++++++++++++++++++++
+ include/linux/mtk-smi.h           |  40 +++++++++++
+ 4 files changed, 191 insertions(+)
+ create mode 100644 drivers/soc/mediatek/mt8173-smi.c
+ create mode 100644 include/linux/mtk-smi.h
 
-OK.
+diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+index 729f93e..27fb26c 100644
+--- a/drivers/soc/mediatek/Kconfig
++++ b/drivers/soc/mediatek/Kconfig
+@@ -20,3 +20,10 @@ config MT8173_PMIC_WRAP
+ 	  PMIC wrapper is a proprietary hardware in MT8173 to make
+ 	  communication protocols to access PMIC device.
+ 	  This driver implement access protocols for MT8173.
++
++config MTK_SMI
++        bool
++	help
++	  Smi help enable/disable iommu in mt8173 and control the
++	  clock of each local arbiter.
++	  It should be true while MTK_IOMMU enable.
+diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
+index 9b5709b..cdfe95c 100644
+--- a/drivers/soc/mediatek/Makefile
++++ b/drivers/soc/mediatek/Makefile
+@@ -1,2 +1,3 @@
+ obj-$(CONFIG_MT8135_PMIC_WRAP)		+= mt8135-pmic-wrap.o
+ obj-$(CONFIG_MT8173_PMIC_WRAP)		+= mt8173-pmic-wrap.o
++obj-$(CONFIG_MTK_SMI)                   += mt8173-smi.o
+diff --git a/drivers/soc/mediatek/mt8173-smi.c b/drivers/soc/mediatek/mt8173-smi.c
+new file mode 100644
+index 0000000..4e3fab9
+--- /dev/null
++++ b/drivers/soc/mediatek/mt8173-smi.c
+@@ -0,0 +1,143 @@
++/*
++ * Copyright (c) 2014-2015 MediaTek Inc.
++ * Author: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#include <linux/io.h>
++#include <linux/interrupt.h>
++#include <linux/platform_device.h>
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/mm.h>
++
++#define SMI_LARB_MMU_EN                 (0xf00)
++#define F_SMI_MMU_EN(port)              (1 << (port))
++
++struct mtk_smi_larb {
++	void __iomem *larb_base;
++	struct clk *larb_clk[3];/* each larb has 3 clk at most */
++};
++
++static const char * const mtk_smi_clk_name[] = {
++	"larb_sub0", "larb_sub1", "larb_sub2"
++};
++
++static const struct of_device_id mtk_smi_of_ids[] = {
++	{ .compatible = "mediatek,mt8173-smi-larb",
++	},
++	{}
++};
++
++int mtk_smi_larb_get(struct platform_device *plarbdev)
++{
++	struct mtk_smi_larb *larbpriv = dev_get_drvdata(&plarbdev->dev);
++	int i, ret = 0;
++
++	for (i = 0; i < 3; i++)
++		if (larbpriv->larb_clk[i]) {
++			ret = clk_prepare_enable(larbpriv->larb_clk[i]);
++			if (ret) {
++				dev_err(&plarbdev->dev,
++					"failed to enable larbclk%d:%d\n",
++					i, ret);
++				break;
++			}
++		}
++	return ret;
++}
++
++void mtk_smi_larb_put(struct platform_device *plarbdev)
++{
++	struct mtk_smi_larb *larbpriv = dev_get_drvdata(&plarbdev->dev);
++	int i;
++
++	for (i = 2; i >= 0; i--)
++		if (larbpriv->larb_clk[i])
++			clk_disable_unprepare(larbpriv->larb_clk[i]);
++}
++
++int mtk_smi_config_port(struct platform_device *plarbdev,
++			unsigned int larbportid)
++{
++	struct mtk_smi_larb *larbpriv = dev_get_drvdata(&plarbdev->dev);
++	int ret;
++	u32 reg;
++
++	ret = mtk_smi_larb_get(plarbdev);
++	if (ret)
++		return ret;
++
++	reg = readl(larbpriv->larb_base + SMI_LARB_MMU_EN);
++	reg &= ~F_SMI_MMU_EN(larbportid);
++	reg |= F_SMI_MMU_EN(larbportid);
++	writel(reg, larbpriv->larb_base + SMI_LARB_MMU_EN);
++
++	mtk_smi_larb_put(plarbdev);
++
++	return 0;
++}
++
++static int mtk_smi_probe(struct platform_device *pdev)
++{
++	struct mtk_smi_larb *larbpriv;
++	struct resource *res;
++	struct device *dev = &pdev->dev;
++	unsigned int i;
++
++	larbpriv = devm_kzalloc(dev, sizeof(struct mtk_smi_larb), GFP_KERNEL);
++	if (!larbpriv)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	larbpriv->larb_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(larbpriv->larb_base)) {
++		dev_err(dev, "larbbase %p err\n", larbpriv->larb_base);
++		return PTR_ERR(larbpriv->larb_base);
++	}
++
++	for (i = 0; i < 3; i++) {
++		larbpriv->larb_clk[i] = devm_clk_get(dev, mtk_smi_clk_name[i]);
++
++		if (IS_ERR(larbpriv->larb_clk[i])) {
++			if (i == 2) {/* some larb may have only 2 clock */
++				larbpriv->larb_clk[i] = NULL;
++			} else {
++				dev_err(dev, "clock-%d err: %p\n", i,
++					larbpriv->larb_clk[i]);
++				return PTR_ERR(larbpriv->larb_clk[i]);
++			}
++		}
++	}
++	dev_set_drvdata(dev, larbpriv);
++	return 0;
++}
++
++static int mtk_smi_remove(struct platform_device *pdev)
++{
++	return 0;
++}
++
++static struct platform_driver mtk_smi_driver = {
++	.probe	= mtk_smi_probe,
++	.remove	= mtk_smi_remove,
++	.driver	= {
++		.name = "mtksmi",
++		.of_match_table = mtk_smi_of_ids,
++	}
++};
++
++static int __init mtk_smi_init(void)
++{
++	return platform_driver_register(&mtk_smi_driver);
++}
++
++subsys_initcall(mtk_smi_init);
++
+diff --git a/include/linux/mtk-smi.h b/include/linux/mtk-smi.h
+new file mode 100644
+index 0000000..1411f7b
+--- /dev/null
++++ b/include/linux/mtk-smi.h
+@@ -0,0 +1,40 @@
++/*
++ * Copyright (c) 2014-2015 MediaTek Inc.
++ * Author: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#ifndef MTK_IOMMU_SMI_H
++#define MTK_IOMMU_SMI_H
++#include <linux/platform_device.h>
++
++/*
++ * Enable iommu for each port, it is only for iommu.
++ *
++ * Returns 0 if successfully, others if failed.
++ */
++int mtk_smi_config_port(struct platform_device *pdev,
++			unsigned int larbportid);
++
++/*
++ * The multimedia module should call the two function below
++ * which help open/close the clock of the larb.
++ * so the client dtsi should add the larb like "larb = <&larb0>"
++ * to get platform_device.
++ *
++ * mtk_smi_larb_get should be called before the multimedia h/w work.
++ * mtk_smi_larb_put should be called after h/w done.
++ *
++ * Returns 0 if successfully, others if failed.
++ */
++int mtk_smi_larb_get(struct platform_device *plarbdev);
++void mtk_smi_larb_put(struct platform_device *plarbdev);
++
++#endif
+-- 
+1.8.1.1.dirty
 
-This looks good to me, is the patch applicable as it is, or will you rebase
-it and send out a non-RFC version?
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
