@@ -1,41 +1,37 @@
-From: tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH 2/2] ARM: dts: add vendor prefix for cubietech
-Date: Fri,  6 Mar 2015 15:35:05 -0800
-Message-ID: <1425684905-23652-3-git-send-email-tyler.baker@linaro.org>
-References: <1425684905-23652-1-git-send-email-tyler.baker@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425684905-23652-1-git-send-email-tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [RFC/PATCHv2 0/3] spi: spi-dw: Select 16b or 32b register access
+Date: Fri, 6 Mar 2015 17:46:31 -0600
+Message-ID: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Add a cubietech vendor prefix, as it is missing. The cubietruck, cubieboard2,
-and cubieboard all already reference this prefix.
+The Altera Arria10 SoC interconnect requires 32 bit write accesses to 
+APB peripherals. The DesignWare SPI peripheral registers are on 32bit 
+boundaries so this patch is minimal. Function pointers are used to select
+32bit access or 16bit accesses
 
-Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Thor Thayer (3):
+  spi: dw-spi: Single Register read to clear IRQs
+  dt-binding: spi: spi-dw: Select 16b or 32b access for Designware SPI
+  spi: dw-spi: Pointers select 16b vs. 32b DesignWare access
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index aeb5bb5..58364cf 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -45,6 +45,7 @@ cnxt	Conexant Systems, Inc.
- cortina	Cortina Systems, Inc.
- cosmic	Cosmic Circuits
- crystalfontz	Crystalfontz America, Inc.
-+cubietech	Cubietech, Ltd.
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- davicom	DAVICOM Semiconductor, Inc.
- denx	Denx Software Engineering
+ Documentation/devicetree/bindings/spi/spi-dw.txt |    1 +
+ drivers/spi/spi-dw-mmio.c                        |    7 ++++-
+ drivers/spi/spi-dw.c                             |   31 ++++++++++++----------
+ drivers/spi/spi-dw.h                             |   12 +++++++++
+ 4 files changed, 36 insertions(+), 15 deletions(-)
+
 -- 
-2.1.0
+1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
