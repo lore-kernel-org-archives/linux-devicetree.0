@@ -1,83 +1,54 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3 0/4] clk: st: New always-on clock domain
-Date: Fri, 06 Mar 2015 11:08:12 -0800
-Message-ID: <20150306190812.11109.82130@quantum>
-References: <1424799222-9301-1-git-send-email-lee.jones@linaro.org>
- <20150304120003.GL32624@x1>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id and qcom,board-id
+Date: Fri, 6 Mar 2015 11:15:11 -0800
+Message-ID: <CAOesGMjpOx4SxY7j8jnoEwLG+mhPKB2st8qCb-hduHLOVw=RcQ@mail.gmail.com>
+References: <1425503602-24916-1-git-send-email-galak@codeaurora.org>
+	<7h8ufbjkod.fsf@deeprootsystems.com>
+	<07D4E4D1-BF8C-4583-9505-9F321DB10406@codeaurora.org>
+	<CAOesGMgy3VY=4-t+N0BYqCuSLQkh-rYe8nd9iJh1mMeBFz_sWQ@mail.gmail.com>
+	<B8019148-3B26-453E-A3F0-9D67874083E0@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150304120003.GL32624@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, sboyd@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <B8019148-3B26-453E-A3F0-9D67874083E0@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lee Jones (2015-03-04 04:00:03)
-> Mike,
->=20
-> Do you want me to resend this set with Robert's Reviewed-by applied,
-> or are you happy to apply it yourself?
+On Fri, Mar 6, 2015 at 8:08 AM, Kumar Gala <galak@codeaurora.org> wrote:
+>
+> On Mar 5, 2015, at 7:59 PM, Olof Johansson <olof@lixom.net> wrote:
+>
+>> On Thu, Mar 5, 2015 at 12:23 PM, Kumar Gala <galak@codeaurora.org> wrote:
+>>>
+>>> On Mar 5, 2015, at 1:42 PM, Kevin Hilman <khilman@kernel.org> wrote:
+>>>
+>>>> Kumar Gala <galak@codeaurora.org> writes:
+>>>>
+>>>>> The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
+>>>>> on Qualcomm MSM platforms to determine which device tree should be
+>>>>> utilized and passed to the kernel.
+>>>>>
+>>>>> Cc: <devicetree@vger.kernel.org>
+>>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+>>>>
+>>>> Is this the special magic that allows qcom bootloaders to take a kernel
+>>>> plus multiple DTBs and figure out which DTB to pass?
+>>>>
+>>>> Kevin
+>>>
+>>> yes
+>>
+>> That's a bummer.
+>>
+>> Luckily, the solution for upstream is still quite simple: Provide only
+>> one devicetree, and it'll be used, right?
+>
+> We can provide only one, we still need the IDs in the DT.
 
-No need for the resend. I am hoping for a final review from a DT human.
+How are the DTS provided? Concatenated with the kernel, or in a
+wrapped data format? Or in a separate partition from the kernel?
 
-This approach looks fine to me. In practice I think it is restricted to
-hardware blocks that don't exist in DT yet (e.g. no driver, in the case
-of your interconnect) and that restriction is probably for the best.
 
-Regards,
-Mike
-
->=20
-> > v2 =3D> v3:
-> >   - Ensure DT actually reflects h/w
-> >     - i.e. Nodes should not contain a mishmash of different IP
-> >       blocks, but should identify related h/w.  In the current
-> >       example we use interconnects
-> >   - Change naming from clkdomain to clk-always-on
-> >   - Place "do not abuse" warning in documentation
-> >=20
-> > v1 =3D> v2:
-> >   - Turned the ST specific driver into a generic one
-> >  =20
-> > Hardware can have a bunch of clocks which must not be turned off.
-> > If drivers a) fail to obtain a reference to any of these or b) give
-> > up a previously obtained reference during suspend, the common clk
-> > framework will attempt to turn them off and the hardware will
-> > subsequently die.  The only way to recover from this failure is to
-> > restart.
-> >  =20
-> > To avoid either of these two scenarios from catastrophically
-> > disabling the running system we have implemented a clock domain
-> > where clocks are consumed and references are taken, thus preventing
-> > them from being shut down by the framework.
-> >=20
-> > *** BLURB HERE ***
-> >=20
-> > Lee Jones (4):
-> >   ARM: sti: stih407-family: Supply defines for CLOCKGEN A0
-> >   ARM: sti: stih407-family: Add platform interconnects to always-on=
- clk
-> >     domain
-> >   clk: Provide an always-on clock domain framework
-> >   clk: dt: Introduce always-on clock domain documentation
-> >=20
-> >  .../devicetree/bindings/clock/clk-always-on.txt    | 35 ++++++++++=
-++
-> >  arch/arm/boot/dts/stih407-family.dtsi              | 15 ++++++
-> >  drivers/clk/Makefile                               |  1 +
-> >  drivers/clk/clk-always-on.c                        | 62 ++++++++++=
-++++++++++++
-> >  include/dt-bindings/clock/stih407-clks.h           |  4 ++
-> >  5 files changed, 117 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/clk-alw=
-ays-on.txt
-> >  create mode 100644 drivers/clk/clk-always-on.c
-> >=20
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+-Olof
