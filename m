@@ -1,71 +1,56 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] pwm: imx-pwm: add explicit compatible strings and
- required clock properties
-Date: Fri, 6 Mar 2015 09:16:44 -0600
-Message-ID: <CAL_JsqJ+NL+0Hfu-La=NwzvOEHf0xE-D6EakJv6gnYYOS1oYrA@mail.gmail.com>
-References: <1425654554-7849-1-git-send-email-mporter@konsulko.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next v4 0/3] Linn Ethernet Packet Sniffer driver
+Date: Fri, 6 Mar 2015 16:22:40 +0100
+Message-ID: <20150306152239.GC26349@localhost.localdomain>
+References: <cover.1424796018.git.stathis.voukelatos@linn.co.uk>
+ <20150225151945.GB7703@localhost.localdomain>
+ <20150225170127.GD7703@localhost.localdomain>
+ <54EE0268.2040201@linn.co.uk>
+ <20150225173053.GE7703@localhost.localdomain>
+ <54F0A4C4.3020407@linn.co.uk>
+ <20150227181447.GA11594@localhost.localdomain>
+ <54F98660.5070805@linn.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425654554-7849-1-git-send-email-mporter@konsulko.com>
+Content-Disposition: inline
+In-Reply-To: <54F98660.5070805@linn.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Stathis Voukelatos <stathis.voukelatos@linn.co.uk>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 6, 2015 at 9:09 AM, Matt Porter <mporter@konsulko.com> wrote:
-> The imx-pwm binding contains language indicating compatible
-> strings to be used that is not valid for all supported parts
-> e.g. Should be "fsl,<soc>-pwm". Fix this by enumerating the
-> valid compatible strings that represent the two versions of
-> this peripheral in use.
->
-> The binding is also missing the clocks/clock-names properties
-> so document these,the two required ipg and per clocks, and add
-> add these properties to the example.
->
-> Signed-off-by: Matt Porter <mporter@konsulko.com>
-> ---
->  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> index b50d7a6d..30d2b82 100644
-> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> @@ -1,10 +1,16 @@
->  Freescale i.MX PWM controller
->
->  Required properties:
-> -- compatible: should be "fsl,<soc>-pwm"
-> +- compatible :
-> +  - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
-> +  - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
+On Fri, Mar 06, 2015 at 10:50:08AM +0000, Stathis Voukelatos wrote:
+> Although the PTP way appears to be the best from an architectural point
+> of view, we have some questions as whether it is suitable for the audio
+> use cases that this module is mainly intended for.
+> To use the PTP terminology in a large installation we would have a
+> potentially large number of clock domains.
+> It is not clear how to easily manage the creation and allocation of
+> domains. In addition the clock will be pulled according to the audio
+> stream and it would be undesirable for other unrelated PTPv2 devices
+> on the network to join the clock domain and have their clocks
+> synchronized to it.
 
-This should be one of these and a more specific value as the example
-below shows.
+I don't really know what the problem here is.  Yes, there is some
+networking configuration that you need to do when administering a
+network using PTP protocols.  But these protocols (1588 aka PTP, and
+802.1AS aka gPTP) do offer means for dealing with this.  In
+particular, there is no danger mixing 1588 devices with audio devices,
+because the gPTP protocol uses a different transport flag.
 
-Rob
+In any case, this has nothing at all to do with the kernel interface.
+ 
+> The patch in its current form would allow a move to Linux using our
+> existing synchronization protocols (which are open-source). A move
+> to PTP is something to consider but will involve a fair amount of
+> redesign including upgrade of legacy products.
 
->  - reg: physical base address and length of the controller's registers
->  - #pwm-cells: should be 2. See pwm.txt in this directory for a description of
->    the cells format.
-> +- clocks : Clock specifiers for both ipg and per clocks.
-> +- clock-names : Clock names should include both "ipg" and "per"
-> +See the clock consumer binding,
-> +       Documentation/devicetree/bindings/clock/clock-bindings.txt
->  - interrupts: The interrupt for the pwm controller
->
->  Example:
-> @@ -13,5 +19,8 @@ pwm1: pwm@53fb4000 {
->         #pwm-cells = <2>;
->         compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
->         reg = <0x53fb4000 0x4000>;
-> +       clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
-> +                <&clks IMX5_CLK_PWM1_HF_GATE>;
-> +       clock-names = "ipg", "per";
->         interrupts = <61>;
->  };
-> --
-> 1.8.4
->
+If you want to try and integrate your custom protocols into the
+networking stack, by all means please post them.  I would certainly
+support expanding the time stamping interface to include your
+protocol's packet types (like adding them to hwtstamp_rx_filters).
+Maybe that would be enough for you?
+
+Thanks,
+Richard
