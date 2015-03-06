@@ -1,54 +1,71 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: [PATCH RESEND] serial: omap_serial: document missing properties and add an example
-Date: Fri,  6 Mar 2015 10:16:12 -0500
-Message-ID: <1425654972-8044-1-git-send-email-mporter@konsulko.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] pwm: imx-pwm: add explicit compatible strings and
+ required clock properties
+Date: Fri, 6 Mar 2015 09:16:44 -0600
+Message-ID: <CAL_JsqJ+NL+0Hfu-La=NwzvOEHf0xE-D6EakJv6gnYYOS1oYrA@mail.gmail.com>
+References: <1425654554-7849-1-git-send-email-mporter@konsulko.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425654554-7849-1-git-send-email-mporter@konsulko.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Devicetree List <devicetree@vger.kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Matt Porter <mporter@konsulko.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The omap_serial.txt binding documentation lacks a number of properties
-that are used in DTS files for platforms incorporating this peripheral.
-Fix this by documenting the missing required and optional fields and
-add an example.
+On Fri, Mar 6, 2015 at 9:09 AM, Matt Porter <mporter@konsulko.com> wrote:
+> The imx-pwm binding contains language indicating compatible
+> strings to be used that is not valid for all supported parts
+> e.g. Should be "fsl,<soc>-pwm". Fix this by enumerating the
+> valid compatible strings that represent the two versions of
+> this peripheral in use.
+>
+> The binding is also missing the clocks/clock-names properties
+> so document these,the two required ipg and per clocks, and add
+> add these properties to the example.
+>
+> Signed-off-by: Matt Porter <mporter@konsulko.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> index b50d7a6d..30d2b82 100644
+> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> @@ -1,10 +1,16 @@
+>  Freescale i.MX PWM controller
+>
+>  Required properties:
+> -- compatible: should be "fsl,<soc>-pwm"
+> +- compatible :
+> +  - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
+> +  - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
 
-Signed-off-by: Matt Porter <mporter@konsulko.com>
----
- .../devicetree/bindings/serial/omap_serial.txt       | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+This should be one of these and a more specific value as the example
+below shows.
 
-diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
-index 342eedd..54c2a15 100644
---- a/Documentation/devicetree/bindings/serial/omap_serial.txt
-+++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
-@@ -4,7 +4,27 @@ Required properties:
- - compatible : should be "ti,omap2-uart" for OMAP2 controllers
- - compatible : should be "ti,omap3-uart" for OMAP3 controllers
- - compatible : should be "ti,omap4-uart" for OMAP4 controllers
-+- reg : address and length of the register space
-+- interrupts or interrupts-extended : Should contain the uart interrupt
-+                                      specifier or both the interrupt
-+                                      controller phandle and interrupt
-+                                      specifier.
- - ti,hwmods : Must be "uart<n>", n being the instance number (1-based)
- 
- Optional properties:
- - clock-frequency : frequency of the clock input to the UART
-+- dmas : DMA specifier, consisting of a phandle to the DMA controller
-+         node and a DMA channel number.
-+- dma-names : "rx" for receive channel, "tx" for transmit channel.
-+
-+Example:
-+
-+                uart4: serial@49042000 {
-+                        compatible = "ti,omap3-uart";
-+                        reg = <0x49042000 0x400>;
-+                        interrupts = <80>;
-+                        dmas = <&sdma 81 &sdma 82>;
-+                        dma-names = "tx", "rx";
-+                        ti,hwmods = "uart4";
-+                        clock-frequency = <48000000>;
-+                };
--- 
-1.8.4
+Rob
+
+>  - reg: physical base address and length of the controller's registers
+>  - #pwm-cells: should be 2. See pwm.txt in this directory for a description of
+>    the cells format.
+> +- clocks : Clock specifiers for both ipg and per clocks.
+> +- clock-names : Clock names should include both "ipg" and "per"
+> +See the clock consumer binding,
+> +       Documentation/devicetree/bindings/clock/clock-bindings.txt
+>  - interrupts: The interrupt for the pwm controller
+>
+>  Example:
+> @@ -13,5 +19,8 @@ pwm1: pwm@53fb4000 {
+>         #pwm-cells = <2>;
+>         compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
+>         reg = <0x53fb4000 0x4000>;
+> +       clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
+> +                <&clks IMX5_CLK_PWM1_HF_GATE>;
+> +       clock-names = "ipg", "per";
+>         interrupts = <61>;
+>  };
+> --
+> 1.8.4
+>
