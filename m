@@ -1,567 +1,556 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v3 2/3] pci: iproc: Add Broadcom iProc PCIe support
-Date: Thu, 5 Mar 2015 17:01:37 -0800
-Message-ID: <1425603699-13416-3-git-send-email-rjui@broadcom.com>
-References: <1425603699-13416-1-git-send-email-rjui@broadcom.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] i2c: Support for Netlogic XLP9XX/5XX I2C controller.
+Date: Thu, 5 Mar 2015 17:33:20 -0800
+Message-ID: <54F903E0.1020408@broadcom.com>
+References: <1425452133-7489-1-git-send-email-jchandra@broadcom.com> <1425452133-7489-3-git-send-email-jchandra@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425603699-13416-1-git-send-email-rjui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425452133-7489-3-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Subhendu Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the support for Broadcom iProc PCIe controller
+Hi Jayachandran,
 
-pcie-iproc.c servers as the common core driver, and front-end bus
-interface needs to be added to support different bus interfaces
+On 3/3/2015 10:55 PM, Jayachandran C wrote:
+> From: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> 
+> Add an I2C bus driver i2c-xlp9xx.c to support the I2C block in the
+> XLP9xx/XLP5xx MIPS SoC. Update Kconfig and Makefile to add the
+> CONFIG_I2C_XLP9XX option.
+> 
+> Also add document Documentation/devicetree/bindings/i2c/i2c-xlp9xx.txt
+> for DT compatible string "netlogic,xlp9xx-i2c".
+> 
+> Signed-off-by: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/i2c/i2c-xlp9xx.txt         |  22 +
+>  drivers/i2c/busses/Kconfig                         |  10 +
+>  drivers/i2c/busses/Makefile                        |   1 +
+>  drivers/i2c/busses/i2c-xlp9xx.c                    | 446 +++++++++++++++++++++
+>  4 files changed, 479 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-xlp9xx.txt
+>  create mode 100644 drivers/i2c/busses/i2c-xlp9xx.c
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-xlp9xx.txt b/Documentation/devicetree/bindings/i2c/i2c-xlp9xx.txt
+> new file mode 100644
+> index 00000000..f23ae87
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-xlp9xx.txt
+> @@ -0,0 +1,22 @@
+> +Device tree configuration for the I2C controller on the XLP9xx/5xx SoC
+> +
+> +Required properties:
+> +- compatible      : should be "netlogic,xlp9xx-i2c"
+> +- reg             : bus address start and address range size of device
+> +- interrupts      : interrupt number
+> +
+> +Optional properties:
+> +- clock-frequency : frequency of bus clock in Hz
+> +                    Defaults to 100 KHz when the property is not specified
+> +
+> +Example:
+> +
+> +i2c0: i2c@113100 {
+> +	compatible = "netlogic,xlp9xx-i2c";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0 0x113100 0x100>;
+> +	clock-frequency = <400000>;
+> +	interrupts = <30>;
+> +	interrupt-parent = <&pic>;
+> +};
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 22da9c2..dde4648 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -898,6 +898,16 @@ config I2C_XLR
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called i2c-xlr.
+>  
+> +config I2C_XLP9XX
+> +	tristate "XLP9XX I2C support"
+> +	depends on CPU_XLP || COMPILE_TEST
+> +	help
+> +	  This driver enables support for the on-chip I2C interface of
+> +	  the Broadcom XLP9xx/XLP5xx MIPS processors.
+> +
+> +	  This driver can also be built as a module.  If so, the module will
+> +	  be called i2c-xlp9xx.
+> +
+>  config I2C_RCAR
+>  	tristate "Renesas R-Car I2C Controller"
+>  	depends on ARCH_SHMOBILE || COMPILE_TEST
+> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+> index 3638feb..f8e0f0e 100644
+> --- a/drivers/i2c/busses/Makefile
+> +++ b/drivers/i2c/busses/Makefile
+> @@ -87,6 +87,7 @@ obj-$(CONFIG_I2C_WMT)		+= i2c-wmt.o
+>  obj-$(CONFIG_I2C_OCTEON)	+= i2c-octeon.o
+>  obj-$(CONFIG_I2C_XILINX)	+= i2c-xiic.o
+>  obj-$(CONFIG_I2C_XLR)		+= i2c-xlr.o
+> +obj-$(CONFIG_I2C_XLP9XX)	+= i2c-xlp9xx.o
+>  obj-$(CONFIG_I2C_RCAR)		+= i2c-rcar.o
+>  
+>  # External I2C/SMBus adapter drivers
+> diff --git a/drivers/i2c/busses/i2c-xlp9xx.c b/drivers/i2c/busses/i2c-xlp9xx.c
+> new file mode 100644
+> index 00000000..6886add
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-xlp9xx.c
+> @@ -0,0 +1,446 @@
+> +/*
+> + * Copyright (c) 2003-2015 Broadcom Corporation
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/completion.h>
+> +#include <linux/errno.h>
+> +#include <linux/hardirq.h>
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#define XLP9XX_I2C_DIV			0x0
+> +#define XLP9XX_I2C_CTRL			0x1
+> +#define XLP9XX_I2C_CMD			0x2
+> +#define XLP9XX_I2C_STATUS		0x3
+> +#define XLP9XX_I2C_MTXFIFO		0x4
+> +#define XLP9XX_I2C_MRXFIFO		0x5
+> +#define XLP9XX_I2C_MFIFOCTRL		0x6
+> +#define XLP9XX_I2C_STXFIFO		0x7
+> +#define XLP9XX_I2C_SRXFIFO		0x8
+> +#define XLP9XX_I2C_SFIFOCTRL		0x9
+> +#define XLP9XX_I2C_SLAVEADDR		0xA
+> +#define XLP9XX_I2C_OWNADDR		0xB
+> +#define XLP9XX_I2C_FIFOWCNT		0xC
+> +#define XLP9XX_I2C_INTEN		0xD
+> +#define XLP9XX_I2C_INTST		0xE
+> +#define XLP9XX_I2C_WAITCNT		0xF
+> +#define XLP9XX_I2C_TIMEOUT		0X10
+> +#define XLP9XX_I2C_GENCALLADDR		0x11
+> +
+> +#define XLP9XX_I2C_CTRL_MCTLEN_SHIFT		16
+> +#define XLP9XX_I2C_MFIFOCTRL_HITH_SHIFT		8
+> +#define XLP9XX_I2C_MFIFOCTRL_LOTH_SHIFT		0
+> +#define XLP9XX_I2C_SLAVEADDR_ADDR_SHIFT		1
+> +
+> +#define XLP9XX_I2C_CMD_START		BIT(7)
+> +#define XLP9XX_I2C_CMD_STOP		BIT(6)
+> +#define XLP9XX_I2C_CMD_READ		BIT(5)
+> +#define XLP9XX_I2C_CMD_WRITE		BIT(4)
+> +#define XLP9XX_I2C_CMD_ACK		BIT(3)
+> +
+> +#define XLP9XX_I2C_CTRL_RST		BIT(8)
+> +#define XLP9XX_I2C_CTRL_EN		BIT(6)
+> +#define XLP9XX_I2C_CTRL_MASTER		BIT(4)
+> +#define XLP9XX_I2C_CTRL_FIFORD		BIT(1)
+> +#define XLP9XX_I2C_CTRL_ADDMODE		BIT(0)
+> +
+> +#define XLP9XX_I2C_INTEN_NACKADDR	BIT(25)
+> +#define XLP9XX_I2C_INTEN_SADDR		BIT(13)
+> +#define XLP9XX_I2C_INTEN_DATADONE	BIT(12)
+> +#define XLP9XX_I2C_INTEN_ARLOST		BIT(11)
+> +#define XLP9XX_I2C_INTEN_MDATARDY	BIT(5)
+> +#define XLP9XX_I2C_INTEN_MFIFOFULL	BIT(4)
+> +#define XLP9XX_I2C_INTEN_MFIFOEMTY	BIT(3)
+> +#define XLP9XX_I2C_INTEN_MFIFOHI	BIT(2)
+> +#define XLP9XX_I2C_INTEN_BUSERR		BIT(0)
+> +
+> +#define XLP9XX_I2C_MFIFOCTRL_RST	BIT(16)
+> +
+> +#define XLP9XX_I2C_SLAVEADDR_RW		BIT(0)
+> +
+> +#define XLP9XX_I2C_IP_CLK_FREQ		133000000UL
+> +#define XLP9XX_I2C_DEFAULT_FREQ		100000
+> +#define XLP9XX_I2C_HIGH_FREQ		400000
+> +#define XLP9XX_I2C_FIFO_SIZE		0x80U
+> +#define XLP9XX_I2C_TIMEOUT_MS		1000
+> +
+> +#define XLP9XX_I2C_FIFO_WCNT_MASK	0xff
+> +#define XLP9XX_I2C_FIFO_CTRL_MASK	0xffff
+> +#define XLP9XX_I2C_STATUS_ERRMASK	(XLP9XX_I2C_INTEN_ARLOST | \
+> +			XLP9XX_I2C_INTEN_NACKADDR | XLP9XX_I2C_INTEN_BUSERR)
+> +
+> +struct xlp9xx_i2c_dev {
+> +	struct device *dev;
+> +	struct i2c_adapter adapter;
+> +	struct completion msg_complete;
+> +	int irq;
+> +	bool msg_read;
+> +	u32 __iomem *base;
+> +	u32 msg_buf_remaining;
+> +	u32 msg_len;
+> +	u32 clk_hz;
+> +	u32 msg_err;
+> +	u8 *msg_buf;
+> +};
+> +
+> +static inline void xlp9xx_write_i2c_reg(struct xlp9xx_i2c_dev *priv,
+> +					unsigned long reg, u32 val)
+> +{
+> +	writel(val, priv->base + reg);
+> +}
+> +
+> +static inline u32 xlp9xx_read_i2c_reg(struct xlp9xx_i2c_dev *priv,
+> +				      unsigned long reg)
+> +{
+> +	return readl(priv->base + reg);
+> +}
+> +
+> +static void xlp9xx_i2c_mask_irq(struct xlp9xx_i2c_dev *priv, u32 mask)
+> +{
+> +	mask  = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_INTEN) & ~mask;
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, mask);
+> +}
+> +
+> +static void xlp9xx_i2c_unmask_irq(struct xlp9xx_i2c_dev *priv, u32 mask)
+> +{
+> +	mask = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_INTEN) | mask;
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, mask);
+> +}
+> +
+> +static void xlp9xx_i2c_set_rx_fifo_thres(struct xlp9xx_i2c_dev *priv,
+> +					 u32 th)
+> +{
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_MFIFOCTRL,
+> +		(th << XLP9XX_I2C_MFIFOCTRL_HITH_SHIFT));
+> +}
+> +
+> +static void xlp9xx_i2c_fill_tx_fifo(struct xlp9xx_i2c_dev *priv)
+> +{
+> +	u32 len, i;
+> +	u8 *buf = priv->msg_buf;
+> +
+> +	len = min(priv->msg_buf_remaining, XLP9XX_I2C_FIFO_SIZE);
+> +	for (i = 0; i < len; i++)
+> +		xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_MTXFIFO, buf[i]);
+> +	priv->msg_buf_remaining -= len;
+> +	priv->msg_buf += len;
+> +}
+> +
+> +static void xlp9xx_i2c_drain_rx_fifo(struct xlp9xx_i2c_dev *priv)
+> +{
+> +	u32 len, i;
+> +	u8 *buf = priv->msg_buf;
+> +
+> +	len = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_FIFOWCNT) &
+> +		XLP9XX_I2C_FIFO_WCNT_MASK;
+> +	len = min(priv->msg_buf_remaining, len);
+> +	for (i = 0; i < len; i++, buf++)
+> +		*buf = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_MRXFIFO);
+> +
+> +	priv->msg_buf_remaining -= len;
+> +	priv->msg_buf = buf;
+> +
+> +	if (priv->msg_buf_remaining)
+> +		xlp9xx_i2c_set_rx_fifo_thres(priv,
+> +			min(priv->msg_buf_remaining, XLP9XX_I2C_FIFO_SIZE));
+> +}
+> +
+> +static irqreturn_t xlp9xx_i2c_isr(int irq, void *dev_id)
+> +{
+> +	struct xlp9xx_i2c_dev *priv = dev_id;
+> +	u32 status;
+> +
+> +	status = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_INTST);
+> +	if (status == 0)
+> +		return IRQ_NONE;
+> +
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTST, status);
+> +	if (status & XLP9XX_I2C_STATUS_ERRMASK) {
+> +		priv->msg_err = status;
+> +		goto xfer_done;
+> +	}
+> +
+> +	/* SADDR ACK for SMBUS_QUICK */
+> +	if ((status & XLP9XX_I2C_INTEN_SADDR) && (priv->msg_len == 0))
+> +		goto xfer_done;
+> +
+> +	if (!priv->msg_read) {
+> +		/* TX FIFO got empty, fill it up again */
+> +		if (status & XLP9XX_I2C_INTEN_MFIFOEMTY) {
+> +			if (priv->msg_buf_remaining)
+> +				xlp9xx_i2c_fill_tx_fifo(priv);
+> +			else
+> +				xlp9xx_i2c_mask_irq(priv,
+> +					XLP9XX_I2C_INTEN_MFIFOEMTY);
+> +		}
+> +	} else {
+> +		/* data is in FIFO, read it */
+> +		if (status & (XLP9XX_I2C_INTEN_MDATARDY |
+> +				XLP9XX_I2C_INTEN_DATADONE |
+> +				XLP9XX_I2C_INTEN_MFIFOHI)) {
+> +			if (status & XLP9XX_I2C_INTEN_MDATARDY)
+> +				xlp9xx_i2c_mask_irq(priv,
+> +					XLP9XX_I2C_INTEN_MDATARDY);
+> +			if (priv->msg_buf_remaining)
+> +				xlp9xx_i2c_drain_rx_fifo(priv);
+> +		}
+> +	}
+> +
+> +	/* Transfer complete */
+> +	if (status & XLP9XX_I2C_INTEN_DATADONE)
+> +		goto xfer_done;
+> +
+> +	return IRQ_HANDLED;
+> +
+> +xfer_done:
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, 0);
+> +	complete(&priv->msg_complete);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int xlp9xx_i2c_init(struct xlp9xx_i2c_dev *priv)
+> +{
+> +	u32 prescale;
+> +
+> +	/*
+> +	 * The controller uses 5 * SCL clock internally.
+> +	 * So prescale value should be divided by 5.
+> +	 */
+> +	prescale = (((XLP9XX_I2C_IP_CLK_FREQ / priv->clk_hz) - 8) / 5) - 1;
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CTRL, XLP9XX_I2C_CTRL_RST);
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CTRL, XLP9XX_I2C_CTRL_EN |
+> +		XLP9XX_I2C_CTRL_MASTER);
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_DIV, prescale);
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int xlp9xx_i2c_xfer_msg(struct xlp9xx_i2c_dev *priv, struct i2c_msg *msg)
+> +{
+> +	int ret;
+> +	u32 intr_mask, cmd, val;
+> +
+> +	priv->msg_buf = msg->buf;
+> +	priv->msg_buf_remaining = priv->msg_len = msg->len;
+> +	priv->msg_err = 0;
+> +	priv->msg_read = (msg->flags & I2C_M_RD);
+> +	reinit_completion(&priv->msg_complete);
+> +
+> +	/* Reset FIFO */
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_MFIFOCTRL,
+> +		XLP9XX_I2C_MFIFOCTRL_RST);
+> +
+> +	/* set FIFO threshold if reading */
+> +	if (priv->msg_read) {
+> +		val = min(priv->msg_buf_remaining, XLP9XX_I2C_FIFO_SIZE);
+> +		xlp9xx_i2c_set_rx_fifo_thres(priv, val);
+> +	}
+> +
+> +	/* set slave addr */
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_SLAVEADDR,
+> +		(msg->addr << XLP9XX_I2C_SLAVEADDR_ADDR_SHIFT) |
+> +		(priv->msg_read ? XLP9XX_I2C_SLAVEADDR_RW : 0));
+> +
+> +	/* Build control word for transfer */
+> +	val = xlp9xx_read_i2c_reg(priv, XLP9XX_I2C_CTRL);
+> +	if (!priv->msg_read)
+> +		val &= ~XLP9XX_I2C_CTRL_FIFORD;
+> +	else
+> +		val |= XLP9XX_I2C_CTRL_FIFORD;	/* read */
+> +	if (msg->flags & I2C_M_TEN)
+> +		val |= XLP9XX_I2C_CTRL_ADDMODE;	/* 10-bit address mode*/
+> +
+> +	/* set data length to be transferred */
+> +	val = (val & XLP9XX_I2C_FIFO_CTRL_MASK) |
+> +		(msg->len << XLP9XX_I2C_CTRL_MCTLEN_SHIFT);
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CTRL, val);
+> +
+> +	/* fill fifo during tx */
+> +	if (!priv->msg_read)
+> +		xlp9xx_i2c_fill_tx_fifo(priv);
+> +
+> +	/* set interrupt mask */
+> +	intr_mask = (XLP9XX_I2C_INTEN_ARLOST | XLP9XX_I2C_INTEN_BUSERR |
+> +		XLP9XX_I2C_INTEN_NACKADDR | XLP9XX_I2C_INTEN_DATADONE);
+> +
+> +	if (priv->msg_read) {
+> +		intr_mask |= (XLP9XX_I2C_INTEN_MDATARDY |
+> +			XLP9XX_I2C_INTEN_MFIFOHI);
+> +		if (msg->len == 0)
+> +			intr_mask |= XLP9XX_I2C_INTEN_SADDR;
+> +	} else {
+> +		if (msg->len == 0)
+> +			intr_mask |= XLP9XX_I2C_INTEN_SADDR;
+> +		else
+> +			intr_mask |= XLP9XX_I2C_INTEN_MFIFOEMTY;
+> +	}
+> +	xlp9xx_i2c_unmask_irq(priv, intr_mask);
+> +
+> +	/* set cmd reg */
+> +	cmd = XLP9XX_I2C_CMD_START | XLP9XX_I2C_CMD_STOP;
+> +	cmd |= (priv->msg_read ? XLP9XX_I2C_CMD_READ : XLP9XX_I2C_CMD_WRITE);
+> +
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CMD, cmd);
+> +
+> +	ret = wait_for_completion_timeout(&priv->msg_complete,
+> +		msecs_to_jiffies(XLP9XX_I2C_TIMEOUT_MS));
+> +
+> +	if (priv->msg_err) {
+> +		dev_dbg(priv->dev, "transfer error %x!\n", priv->msg_err);
+> +		if (priv->msg_err & XLP9XX_I2C_INTEN_BUSERR)
+> +			xlp9xx_i2c_init(priv);
+> +		return -EAGAIN;
+> +	}
+> +
+> +	if (ret == 0) {
+> +		dev_dbg(priv->dev, "i2c transfer timed out!\n");
+> +		xlp9xx_i2c_init(priv);
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int xlp9xx_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> +			   int num)
+> +{
+> +	int i, ret;
+> +	struct xlp9xx_i2c_dev *priv = i2c_get_adapdata(adap);
+> +
+> +	for (i = 0; i < num; i++) {
+> +		ret = xlp9xx_i2c_xfer_msg(priv, &msgs[i]);
+> +		if (ret != 0)
+> +			return ret;
+> +	}
+> +
+> +	return num;
+> +}
+> +
+> +static u32 xlp9xx_i2c_functionality(struct i2c_adapter *adapter)
+> +{
+> +	return I2C_FUNC_SMBUS_EMUL | I2C_FUNC_I2C |
+> +		I2C_FUNC_10BIT_ADDR;
+> +}
+> +
+> +static struct i2c_algorithm xlp9xx_i2c_algo = {
+> +	.master_xfer = xlp9xx_i2c_xfer,
+> +	.functionality = xlp9xx_i2c_functionality,
+> +};
+> +
+> +static int xlp9xx_i2c_get_frequency(struct platform_device *pdev,
+> +				    struct xlp9xx_i2c_dev *priv)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	u32 freq;
+> +	int err;
+> +
+> +	err = of_property_read_u32(np, "clock-frequency", &freq);
+> +	if (err) {
+> +		dev_dbg(&pdev->dev, "using default frequency %u\n", freq);
+> +		freq = XLP9XX_I2C_DEFAULT_FREQ;
+> +	} else if (freq == 0 || freq > XLP9XX_I2C_HIGH_FREQ) {
+> +		dev_warn(&pdev->dev, "invalid frequency %u, using default\n",
+> +			freq);
+> +		freq = XLP9XX_I2C_DEFAULT_FREQ;
+> +	}
+> +	priv->clk_hz = freq;
+> +
+> +	return 0;
+> +}
+> +
+> +static int xlp9xx_i2c_probe(struct platform_device *pdev)
+> +{
+> +	struct xlp9xx_i2c_dev *priv;
+> +	struct resource *res;
+> +	int err = 0;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	priv->irq = platform_get_irq(pdev, 0);
+> +	if (priv->irq <= 0) {
+> +		dev_err(&pdev->dev, "invalid irq!\n");
+> +		return  priv->irq;
+> +	}
+> +
+> +	xlp9xx_i2c_get_frequency(pdev, priv);
+> +	xlp9xx_i2c_init(priv);
+> +
+> +	err = devm_request_irq(&pdev->dev, priv->irq, xlp9xx_i2c_isr, 0,
+> +		pdev->name, priv);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "IRQ request failed!\n");
+> +		return err;
+> +	}
+> +
+> +	init_completion(&priv->msg_complete);
+> +	priv->adapter.dev.parent = &pdev->dev;
+> +	priv->adapter.algo = &xlp9xx_i2c_algo;
+> +	priv->adapter.dev.of_node = pdev->dev.of_node;
+> +	priv->dev = &pdev->dev;
+> +
+> +	snprintf(priv->adapter.name, sizeof(priv->adapter.name), "xlp9xx-i2c");
+> +	i2c_set_adapdata(&priv->adapter, priv);
+> +
+> +	err = i2c_add_adapter(&priv->adapter);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "failed to add I2C:%d adapter!\n",
+> +			pdev->id);
+> +		return err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +	dev_dbg(&pdev->dev, "I2C bus:%d added\n", priv->adapter.nr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int xlp9xx_i2c_remove(struct platform_device *pdev)
+> +{
+> +	struct xlp9xx_i2c_dev *priv;
+> +
+> +	priv = platform_get_drvdata(pdev);
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_INTEN, 0);
+> +	synchronize_irq(priv->irq);
+> +	i2c_del_adapter(&priv->adapter);
+> +	xlp9xx_write_i2c_reg(priv, XLP9XX_I2C_CTRL, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id xlp9xx_i2c_of_match[] = {
+> +	{ .compatible = "netlogic,xlp9xx-i2c", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver xlp9xx_i2c_driver = {
+> +	.probe = xlp9xx_i2c_probe,
+> +	.remove = xlp9xx_i2c_remove,
+> +	.driver = {
+> +		.name = "xlp9xx-i2c",
+> +		.of_match_table = xlp9xx_i2c_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(xlp9xx_i2c_driver);
+> +
+> +MODULE_AUTHOR("Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>");
+> +MODULE_DESCRIPTION("XLP9XX/5XX I2C Bus Controller Driver");
+> +MODULE_LICENSE("GPL v2");
+> 
 
-pcie-iproc-pltfm.c contains the support for the platform bus interface
+This now looks fine to me. Thanks!
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbraden@broadcom.com>
----
- drivers/pci/host/Kconfig            |   17 ++
- drivers/pci/host/Makefile           |    2 +
- drivers/pci/host/pcie-iproc-pltfm.c |  101 +++++++++++
- drivers/pci/host/pcie-iproc.c       |  337 +++++++++++++++++++++++++++++++++++
- drivers/pci/host/pcie-iproc.h       |   39 ++++
- 5 files changed, 496 insertions(+)
- create mode 100644 drivers/pci/host/pcie-iproc-pltfm.c
- create mode 100644 drivers/pci/host/pcie-iproc.c
- create mode 100644 drivers/pci/host/pcie-iproc.h
-
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index 7b892a9..e10c3e3 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -106,4 +106,21 @@ config PCI_VERSATILE
- 	bool "ARM Versatile PB PCI controller"
- 	depends on ARCH_VERSATILE
- 
-+config PCIE_IPROC
-+	bool "Broadcom iProc PCIe controller"
-+	help
-+	  This enables the iProc PCIe core controller support for Broadcom's
-+	  iProc family of SoCs. An appropriate bus interface driver also needs
-+	  to be enabled
-+
-+config PCIE_IPROC_PLTFM
-+	bool "Broadcom iProc PCIe platform bus driver"
-+	depends on ARCH_BCM_IPROC || COMPILE_TEST
-+	depends on OF
-+	select PCIE_IPROC
-+	default ARCH_BCM_IPROC
-+	help
-+	  Say Y here if you want to use the Broadcom iProc PCIe controller
-+	  through the generic platform bus interface
-+
- endmenu
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index e61d91c..2e02d20 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -13,3 +13,5 @@ obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
- obj-$(CONFIG_PCI_XGENE) += pci-xgene.o
- obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
- obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
-+obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
-+obj-$(CONFIG_PCIE_IPROC_PLTFM) += pcie-iproc-pltfm.o
-diff --git a/drivers/pci/host/pcie-iproc-pltfm.c b/drivers/pci/host/pcie-iproc-pltfm.c
-new file mode 100644
-index 0000000..20d5287
---- /dev/null
-+++ b/drivers/pci/host/pcie-iproc-pltfm.c
-@@ -0,0 +1,101 @@
-+/*
-+ * Copyright (C) 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/pci.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_address.h>
-+#include <linux/of_pci.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+
-+#include "pcie-iproc.h"
-+
-+static int __init iproc_pcie_pltfm_probe(struct platform_device *pdev)
-+{
-+	struct iproc_pcie *pcie;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct resource reg;
-+	resource_size_t iobase = 0;
-+	LIST_HEAD(res);
-+	int ret;
-+
-+	pcie = devm_kzalloc(&pdev->dev, sizeof(struct iproc_pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	pcie->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, pcie);
-+
-+	ret = of_address_to_resource(np, 0, &reg);
-+	if (ret < 0) {
-+		dev_err(pcie->dev, "unable to obtain controller resources\n");
-+		return ret;
-+	}
-+
-+	pcie->base = devm_ioremap(pcie->dev, reg.start, resource_size(&reg));
-+	if (!pcie->base) {
-+		dev_err(pcie->dev, "unable to map controller registers\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* PHY use is optional */
-+	pcie->phy = devm_phy_get(&pdev->dev, "pcie-phy");
-+	if (IS_ERR(pcie->phy)) {
-+		if (PTR_ERR(pcie->phy) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		pcie->phy = NULL;
-+	}
-+
-+	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &iobase);
-+	if (ret) {
-+		dev_err(pcie->dev,
-+			"unable to get PCI host bridge resources\n");
-+		return ret;
-+	}
-+
-+	pcie->resources = &res;
-+
-+	ret = iproc_pcie_setup(pcie);
-+	if (ret) {
-+		dev_err(pcie->dev, "PCIe controller setup failed\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id iproc_pcie_of_match_table[] = {
-+	{ .compatible = "brcm,iproc-pcie", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, iproc_pcie_of_match_table);
-+
-+static struct platform_driver iproc_pcie_pltfm_driver = {
-+	.driver = {
-+		.name = "iproc-pcie",
-+		.of_match_table = of_match_ptr(iproc_pcie_of_match_table),
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = iproc_pcie_pltfm_probe,
-+};
-+module_platform_driver(iproc_pcie_pltfm_driver);
-+
-+MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
-+MODULE_DESCRIPTION("Broadcom iPROC PCIe platform driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
-new file mode 100644
-index 0000000..36c3357
---- /dev/null
-+++ b/drivers/pci/host/pcie-iproc.c
-@@ -0,0 +1,337 @@
-+/*
-+ * Copyright (C) 2014 Hauke Mehrtens <hauke@hauke-m.de>
-+ * Copyright (C) 2015 Broadcom Corporatcommon ion
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/pci.h>
-+#include <linux/msi.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/mbus.h>
-+#include <linux/slab.h>
-+#include <linux/delay.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_address.h>
-+#include <linux/of_pci.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+
-+#include "pcie-iproc.h"
-+
-+#define CLK_CONTROL_OFFSET           0x000
-+#define EP_MODE_SURVIVE_PERST_SHIFT  1
-+#define EP_MODE_SURVIVE_PERST        BIT(EP_MODE_SURVIVE_PERST_SHIFT)
-+#define RC_PCIE_RST_OUTPUT_SHIFT     0
-+#define RC_PCIE_RST_OUTPUT           BIT(RC_PCIE_RST_OUTPUT_SHIFT)
-+
-+#define CFG_IND_ADDR_OFFSET          0x120
-+#define CFG_IND_ADDR_MASK            0x00001ffc
-+
-+#define CFG_IND_DATA_OFFSET          0x124
-+
-+#define CFG_ADDR_OFFSET              0x1f8
-+#define CFG_ADDR_BUS_NUM_SHIFT       20
-+#define CFG_ADDR_BUS_NUM_MASK        0x0ff00000
-+#define CFG_ADDR_DEV_NUM_SHIFT       15
-+#define CFG_ADDR_DEV_NUM_MASK        0x000f8000
-+#define CFG_ADDR_FUNC_NUM_SHIFT      12
-+#define CFG_ADDR_FUNC_NUM_MASK       0x00007000
-+#define CFG_ADDR_REG_NUM_SHIFT       2
-+#define CFG_ADDR_REG_NUM_MASK        0x00000ffc
-+#define CFG_ADDR_CFG_TYPE_SHIFT      0
-+#define CFG_ADDR_CFG_TYPE_MASK       0x00000003
-+
-+#define CFG_DATA_OFFSET              0x1fc
-+
-+#define SYS_RC_INTX_EN               0x330
-+#define SYS_RC_INTX_MASK             0xf
-+
-+static inline struct iproc_pcie *sys_to_pcie(struct pci_sys_data *sys)
-+{
-+	return sys->private_data;
-+}
-+
-+#define INVALID_ACCESS_OFFSET 0xffffffff
-+static u32 iproc_pcie_cfg_base(struct iproc_pcie *pcie, int busno,
-+			       unsigned int devfn, int where)
-+{
-+	int slot = PCI_SLOT(devfn);
-+	int fn = PCI_FUNC(devfn);
-+	u32 val;
-+
-+	/* root complex access */
-+	if (busno == 0) {
-+		if (slot >= 1)
-+			return INVALID_ACCESS_OFFSET;
-+		writel(where & CFG_IND_ADDR_MASK,
-+		       pcie->base + CFG_IND_ADDR_OFFSET);
-+		return CFG_IND_DATA_OFFSET;
-+	}
-+
-+	if (fn > 1)
-+		return INVALID_ACCESS_OFFSET;
-+
-+	/* EP device access */
-+	val = (busno << CFG_ADDR_BUS_NUM_SHIFT) |
-+		(slot << CFG_ADDR_DEV_NUM_SHIFT) |
-+		(fn << CFG_ADDR_FUNC_NUM_SHIFT) |
-+		(where & CFG_ADDR_REG_NUM_MASK) |
-+		(1 & CFG_ADDR_CFG_TYPE_MASK);
-+	writel(val, pcie->base + CFG_ADDR_OFFSET);
-+
-+	return CFG_DATA_OFFSET;
-+}
-+
-+#define INVALID_CFG_RD 0xffffffff
-+static int iproc_pcie_read_conf(struct iproc_pcie *pcie, int busno,
-+				unsigned int devfn, int where, int size,
-+				u32 *val)
-+{
-+	u32 offset, mask, shift;
-+
-+	*val = INVALID_CFG_RD;
-+
-+	if (size != 1 && size != 2 && size != 4)
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+	else if ((size == 2) && (where & 1))
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+	else if ((size == 4) && (where & 3))
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	offset = iproc_pcie_cfg_base(pcie, busno, devfn, where);
-+	if (offset == INVALID_ACCESS_OFFSET)
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	*val = readl(pcie->base + offset);
-+
-+	if (size != 4) {
-+		mask = (1 << (size * BITS_PER_BYTE)) - 1;
-+		shift = (where % 4) * BITS_PER_BYTE;
-+		*val = (*val >> shift) & mask;
-+	}
-+
-+	dev_dbg(pcie->dev,
-+		"conf rd: busn=%d devfn=%u where=%d size=%d val=0x%08x\n",
-+		busno, devfn, where, size, *val);
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int iproc_pcie_write_conf(struct iproc_pcie *pcie, int busno,
-+				 unsigned int devfn, int where, int size,
-+				 u32 val)
-+{
-+	u32 offset, mask, shift, data;
-+
-+	if (size != 1 && size != 2 && size != 4)
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+	else if ((size == 2) && (where & 1))
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+	else if ((size == 4) && (where & 3))
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	offset = iproc_pcie_cfg_base(pcie, busno, devfn, where);
-+	if (offset == INVALID_ACCESS_OFFSET)
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	data = readl(pcie->base + offset);
-+
-+	if (size != 4) {
-+		mask = (1 << (size * BITS_PER_BYTE)) - 1;
-+		shift = (where % 4) * BITS_PER_BYTE;
-+		data &= ~(mask << shift);
-+		data |= (val & mask) << shift;
-+	} else {
-+		data = val;
-+	}
-+
-+	writel(data, pcie->base + offset);
-+
-+	dev_dbg(pcie->dev,
-+		"conf wr: busn=%d devfn=%u where=%d size=%d data=0x%08x\n",
-+		busno, devfn, where, size, data);
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int iproc_pcie_read(struct pci_bus *bus, unsigned int devfn,
-+			   int where, int size, u32 *val)
-+{
-+	struct iproc_pcie *pcie = sys_to_pcie(bus->sysdata);
-+
-+	return iproc_pcie_read_conf(pcie, bus->number, devfn, where, size,
-+				    val);
-+}
-+
-+static int iproc_pcie_write(struct pci_bus *bus, unsigned int devfn,
-+			    int where, int size, u32 val)
-+{
-+	struct iproc_pcie *pcie = sys_to_pcie(bus->sysdata);
-+
-+	return iproc_pcie_write_conf(pcie, bus->number, devfn, where, size,
-+				     val);
-+}
-+
-+static struct pci_ops iproc_pcie_ops = {
-+	.read = iproc_pcie_read,
-+	.write = iproc_pcie_write,
-+};
-+
-+static void iproc_pcie_reset(struct iproc_pcie *pcie)
-+{
-+	u32 val;
-+
-+	/*
-+	 * Configure the PCIe controller as root complex and send a downstream
-+	 * reset
-+	 */
-+	val = EP_MODE_SURVIVE_PERST | RC_PCIE_RST_OUTPUT;
-+	writel(val, pcie->base + CLK_CONTROL_OFFSET);
-+	udelay(250);
-+	val &= ~EP_MODE_SURVIVE_PERST;
-+	writel(val, pcie->base + CLK_CONTROL_OFFSET);
-+	msleep(250);
-+}
-+
-+static int iproc_pcie_check_link(struct iproc_pcie *pcie, struct pci_bus *bus)
-+{
-+	u8 hdr_type;
-+	u32 link_ctrl;
-+	u16 pos, link_status;
-+	int link_is_active = 0;
-+
-+	/* make sure we are not in EP mode */
-+	pci_bus_read_config_byte(bus, 0, PCI_HEADER_TYPE, &hdr_type);
-+	if ((hdr_type & 0x7f) != PCI_HEADER_TYPE_BRIDGE) {
-+		dev_err(pcie->dev, "in EP mode, hdr=0x08%x\n", hdr_type);
-+		return -EFAULT;
-+	}
-+
-+	/* force class to PCI_CLASS_BRIDGE_PCI (0x0604) */
-+	pci_bus_write_config_word(bus, 0, PCI_CLASS_DEVICE,
-+				  PCI_CLASS_BRIDGE_PCI);
-+
-+	/* check link status to see if link is active */
-+	pos = pci_bus_find_capability(bus, 0, PCI_CAP_ID_EXP);
-+	pci_bus_read_config_word(bus, 0, pos + PCI_EXP_LNKSTA, &link_status);
-+	if (link_status & PCI_EXP_LNKSTA_NLW)
-+		link_is_active = 1;
-+
-+	if (!link_is_active) {
-+		/* try GEN 1 link speed */
-+#define PCI_LINK_STATUS_CTRL_2_OFFSET 0x0dc
-+#define PCI_TARGET_LINK_SPEED_MASK    0xf
-+#define PCI_TARGET_LINK_SPEED_GEN2    0x2
-+#define PCI_TARGET_LINK_SPEED_GEN1    0x1
-+		pci_bus_read_config_dword(bus, 0,
-+					  PCI_LINK_STATUS_CTRL_2_OFFSET,
-+					  &link_ctrl);
-+		if ((link_ctrl & PCI_TARGET_LINK_SPEED_MASK) ==
-+		    PCI_TARGET_LINK_SPEED_GEN2) {
-+			link_ctrl &= ~PCI_TARGET_LINK_SPEED_MASK;
-+			link_ctrl |= PCI_TARGET_LINK_SPEED_GEN1;
-+			pci_bus_write_config_dword(bus, 0,
-+					   PCI_LINK_STATUS_CTRL_2_OFFSET,
-+					   link_ctrl);
-+			msleep(100);
-+
-+			pos = pci_bus_find_capability(bus, 0, PCI_CAP_ID_EXP);
-+			pci_bus_read_config_word(bus, 0, pos + PCI_EXP_LNKSTA,
-+						 &link_status);
-+			if (link_status & PCI_EXP_LNKSTA_NLW)
-+				link_is_active = 1;
-+		}
-+	}
-+
-+	dev_info(pcie->dev, "link: %s\n", link_is_active ? "UP" : "DOWN");
-+
-+	return link_is_active ? 0 : -ENODEV;
-+}
-+
-+static void iproc_pcie_enable(struct iproc_pcie *pcie)
-+{
-+	writel(SYS_RC_INTX_MASK, pcie->base + SYS_RC_INTX_EN);
-+}
-+
-+int iproc_pcie_setup(struct iproc_pcie *pcie)
-+{
-+	int ret;
-+	struct pci_bus *bus;
-+
-+	if (!pcie || !pcie->dev || !pcie->base)
-+		return -EINVAL;
-+
-+	if (pcie->phy) {
-+		ret = phy_init(pcie->phy);
-+		if (ret) {
-+			dev_err(pcie->dev, "unable to initialize PCIe PHY\n");
-+			return ret;
-+		}
-+
-+		ret = phy_power_on(pcie->phy);
-+		if (ret) {
-+			dev_err(pcie->dev, "unable to power on PCIe PHY\n");
-+			goto err_exit_phy;
-+		}
-+
-+	}
-+
-+	iproc_pcie_reset(pcie);
-+
-+	pcie->sysdata.private_data = pcie;
-+
-+	bus = pci_create_root_bus(pcie->dev, 0, &iproc_pcie_ops,
-+				  &pcie->sysdata, pcie->resources);
-+	if (!bus) {
-+		dev_err(pcie->dev, "unable to create PCI root bus\n");
-+		ret = -ENOMEM;
-+		goto err_power_off_phy;
-+	}
-+
-+	ret = iproc_pcie_check_link(pcie, bus);
-+	if (ret) {
-+		dev_err(pcie->dev, "no PCIe EP device detected\n");
-+		goto err_rm_root_bus;
-+	}
-+
-+	iproc_pcie_enable(pcie);
-+
-+	pci_scan_child_bus(bus);
-+	pci_assign_unassigned_bus_resources(bus);
-+	pci_bus_add_devices(bus);
-+
-+	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-+
-+	return 0;
-+
-+err_rm_root_bus:
-+	pci_lock_rescan_remove();
-+	pci_stop_root_bus(bus);
-+	pci_remove_root_bus(bus);
-+	pci_unlock_rescan_remove();
-+
-+err_power_off_phy:
-+	if (pcie->phy)
-+		phy_power_off(pcie->phy);
-+err_exit_phy:
-+	if (pcie->phy)
-+		phy_exit(pcie->phy);
-+
-+	return ret;
-+}
-+
-+MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
-+MODULE_DESCRIPTION("Broadcom iPROC PCIe common driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/pci/host/pcie-iproc.h b/drivers/pci/host/pcie-iproc.h
-new file mode 100644
-index 0000000..4e2437e
---- /dev/null
-+++ b/drivers/pci/host/pcie-iproc.h
-@@ -0,0 +1,39 @@
-+/*
-+ * Copyright (C) 2014-2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _PCIE_IPROC_H
-+#define _PCIE_IPROC_H
-+
-+#define IPROC_PCIE_MAX_NUM_IRQS 6
-+
-+/**
-+ * iProc PCIe device
-+ * @dev: pointer to device data structure
-+ * @base: PCIe host controller I/O register base
-+ * @resources: linked list of all PCI resources
-+ * @sysdata: Per PCI controller data
-+ * @phy: optional PHY device that controls the Serdes
-+ * @irqs: interrupt IDs
-+ */
-+struct iproc_pcie {
-+	struct device *dev;
-+	void __iomem *base;
-+	struct list_head *resources;
-+	struct pci_sys_data sysdata;
-+	struct phy *phy;
-+	int irqs[IPROC_PCIE_MAX_NUM_IRQS];
-+};
-+
-+extern int iproc_pcie_setup(struct iproc_pcie *pcie);
-+
-+#endif /* _PCIE_IPROC_H */
--- 
-1.7.9.5
+Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
