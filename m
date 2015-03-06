@@ -1,59 +1,42 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 11/18] pinctrl: Add pinctrl driver for STM32 MCUs
-Date: Fri, 6 Mar 2015 10:57:08 +0100
-Message-ID: <CALszF6C2qESwxmZ=q+QKdAooQnttpv49yheAiWVUEaGWeGSubA@mail.gmail.com>
-References: <1424455277-29983-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1424455277-29983-12-git-send-email-mcoquelin.stm32@gmail.com>
-	<CACRpkdbuJ5B_GwvRXax2Y4V37ihh5e6H7=2no0fYTMZPXwDdCw@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH RFC 3/6] drm/tilcdc: Add support for external compontised
+ DRM encoder
+Date: Fri, 6 Mar 2015 09:58:49 +0000
+Message-ID: <20150306095848.GH29584@n2100.arm.linux.org.uk>
+References: <cover.1424961754.git.jsarha@ti.com>
+ <92792bb4f64fb1b7f26e687ec159d870d0e7a81a.1424961754.git.jsarha@ti.com>
+ <20150302160135.GA29584@n2100.arm.linux.org.uk>
+ <54F96657.10200@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbuJ5B_GwvRXax2Y4V37ihh5e6H7=2no0fYTMZPXwDdCw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Antti Palosaari <crope@iki.fi>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <54F96657.10200@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, detheridge@ti.com, tony@atomide.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2015-03-06 10:24 GMT+01:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Fri, Feb 20, 2015 at 7:01 PM, Maxime Coquelin
-> <mcoquelin.stm32@gmail.com> wrote:
->
->> This driver adds pinctrl and GPIO support to STMicrolectronic's
->> STM32 family of MCUs.
->>
->> Pin muxing and GPIO handling have been tested on STM32F429
->> based Discovery board.
->>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->
-> (...)
->> +config PINCTRL_STM32
->> +       bool "STMicroelectronics STM32 pinctrl driver"
->> +       depends on OF
->> +       depends on ARCH_STM32 || COMPILE_TEST
->> +       select PINMUX
->> +       select PINCONF
->> +       select GPIOLIB_IRQCHIP
->> +       help
->> +         This selects the device tree based generic pinctrl driver for STM32.
->
-> Good start! Especially that you use GPIOLIB_IRQCHIP.
->
-> But this (as discussed earlier) should select GENERIC_PINCONF
->
-> Stopping review here so you can reengineer it a bit using GENERIC_PINCONF
-> for next submission.
->
-> Also think about pinmux in single registers, whether you want to do this
-> with a single value for a register or using strings to identify groups
-> and functions.
-
-Thanks for the review.
-I will digest all this, and come back with another solution :)
-
-Best regards,
-Maxime
-
->
-> Yours,
-> Linus Walleij
+T24gRnJpLCBNYXIgMDYsIDIwMTUgYXQgMTA6MzM6MjdBTSArMDIwMCwgSnlyaSBTYXJoYSB3cm90
+ZToKPiBXb3VsZCBpdCBiZSBPayB0byBhZGQgYSBjaGVjayB0aGF0IG1hc3Rlci0+b3BzLT5hZGRf
+Y29tcG9uZW50cyBpcyBkZWZpbmVkLAo+IGJlZm9yZSBjYWxsaW5nIGl0IGluIGZpbmRfY29tcG9u
+ZXRzKCkgKGRyaXZlcnMvYmFzZS9jb21wb25lbnQuYzoxMjApIGFuZAo+IHJldHVybiAwIGlmIGl0
+IGlzIG5vdD8KCk5vOgoKaHR0cDovL2Z0cC5hcm0ubGludXgub3JnLnVrL2NnaXQvbGludXgtYXJt
+LmdpdC9jb21taXQvP2g9OGM0ZTg3NjRhN2UzCgphbHNvOgoKaHR0cDovL2Z0cC5hcm0ubGludXgu
+b3JnLnVrL2NnaXQvbGludXgtYXJtLmdpdC9sb2cvP2g9MTFlZGE1YWFmNDFlCgppcyB3aGF0J3Mg
+cGxhbm5lZCB0byBiZSBtZXJnZWQgd2hlbiBJIGNhbiBnZXQgYSByb3VuZCB0dWl0LCBhbmQgcGVv
+cGxlCnN0b3AgdXNpbmcgdGhlIG9sZCBtZXRob2RzLgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAw
+LjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCAxMC41TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3Jk
+aW5nIHRvIHNwZWVkdGVzdC5uZXQuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
