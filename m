@@ -1,41 +1,29 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 2/4] ARM: OMAP2+: AM43xx hwmod: Add RTC hwmod for
- AM43xx
-Date: Fri, 6 Mar 2015 04:26:09 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1503060425590.5613@utopia.booyaka.com>
-References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com> <1425561211-31003-3-git-send-email-d-gerlach@ti.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH] ARM: dts: imx: Add dr_mode host setting to all host-only
+ usb instances
+Date: Fri, 6 Mar 2015 12:40:16 +0800
+Message-ID: <20150306044014.GQ20455@dragon>
+References: <1425045960-14191-1-git-send-email-mporter@konsulko.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1425561211-31003-3-git-send-email-d-gerlach@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, KEERTHY <j-keerthy@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425045960-14191-1-git-send-email-mporter@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@konsulko.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 5 Mar 2015, Dave Gerlach wrote:
-
-> RTC hwmod is needed for proper operation of PM features like
-> rtcwake and rtc-only mode so reuse the am33xx rtc hwmod.
+On Fri, Feb 27, 2015 at 09:06:00AM -0500, Matt Porter wrote:
+> The chipidea driver adds an extra line of spam to the log when a
+> host-only chipidea instance is left set to the default of a dual role
+> controller.
 > 
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> ---
->  arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 1 +
->  1 file changed, 1 insertion(+)
+> [    2.010873] ci_hdrc ci_hdrc.1: doesn't support gadget
 > 
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-> index 8eb8592..9070535 100644
-> --- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-> @@ -889,6 +889,7 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
->  	&am43xx_l4_ls__dss,
->  	&am43xx_l4_ls__dss_dispc,
->  	&am43xx_l4_ls__dss_rfbi,
-> +	&am33xx_l4_wkup__rtc,
->  	NULL,
->  };
+> Set the dr_mode property to host on all the host-only nodes
+> to avoid this warning.
+> 
+> Signed-off-by: Matt Porter <mporter@konsulko.com>
 
-Thanks, queued for v4.1.
-
-
-- Paul
+Applied, thanks.
