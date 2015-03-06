@@ -1,126 +1,61 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/5] dt-bindings: iommu: Add binding for mediatek IOMMU
-Date: Fri, 6 Mar 2015 11:21:37 +0000
-Message-ID: <20150306112137.GE8700@leverpostej>
-References: <1425638900-24989-1-git-send-email-yong.wu@mediatek.com>
-	<1425638900-24989-5-git-send-email-yong.wu@mediatek.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 3/3] net: macb: remove #if defined(CONFIG_ARCH_AT91)
+ sections
+Date: Fri, 6 Mar 2015 12:25:49 +0100
+Message-ID: <20150306122549.314c6439@bbrezillon>
+References: <1425572842-6084-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1425572842-6084-4-git-send-email-boris.brezillon@free-electrons.com>
+	<20150305194418.GY3989@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425638900-24989-5-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150305194418.GY3989@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2015 at 10:48:19AM +0000, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Thu, 5 Mar 2015 20:44:18 +0100
+Alexandre Belloni <alexandre.belloni@free-electrons.com> wrote:
+
+> On 05/03/2015 at 17:27:22 +0100, Boris Brezillon wrote :
+> > @@ -2388,21 +2392,20 @@ static int macb_probe(struct platform_device *pdev)
+> >  		bp->phy_interface = err;
+> >  	}
+> >  
+> > +	config = 0;
+> >  	if (bp->phy_interface == PHY_INTERFACE_MODE_RGMII)
+> > -		macb_or_gem_writel(bp, USRIO, GEM_BIT(RGMII));
+> > -	else if (bp->phy_interface == PHY_INTERFACE_MODE_RMII)
+> > -#if defined(CONFIG_ARCH_AT91)
+> > -		macb_or_gem_writel(bp, USRIO, (MACB_BIT(RMII) |
+> > -					       MACB_BIT(CLKEN)));
+> > -#else
+> > -		macb_or_gem_writel(bp, USRIO, 0);
+> > -#endif
+> > -	else
+> > -#if defined(CONFIG_ARCH_AT91)
+> > -		macb_or_gem_writel(bp, USRIO, MACB_BIT(CLKEN));
+> > -#else
+> > -		macb_or_gem_writel(bp, USRIO, MACB_BIT(MII));
+> > -#endif
+> > +		config = GEM_BIT(RGMII);
+> > +	else if (bp->phy_interface == PHY_INTERFACE_MODE_RMII &&
+> > +		 (bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII))
+> > +		config = MACB_BIT(RMII);
+> > +	else if (bp->phy_interface == PHY_INTERFACE_MODE_MII &&
 > 
-> This patch add mediatek iommu dts binding document.
-> 
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/iommu/mediatek,iommu.txt   | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> new file mode 100644
-> index 0000000..db01c92
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> @@ -0,0 +1,41 @@
-> +/******************************************************/
-> +/*    Mediatek IOMMU Hardware block diagram           */
-> +/******************************************************/
-> +              EMI (External Memory Interface)
-> +               |
-> +              m4u (Multimedia Memory Management Unit)
-> +               |
-> +              smi (Smart Multimedia Interface)
-> +               |
-> +        +---------------+-------
-> +        |               |
-> +        |               |
-> +    vdec larb       disp larb      ... SoCs have different local arbiter(larb).
-> +        |               |
-> +        |               |
-> +   +----+----+    +-----+-----+
-> +   |    |    |    |     |     |    ...
-> +   |    |    |    |     |     |    ...
-> +   |    |    |    |     |     |    ...
-> +  MC   PP   VLD  OVL0 RDMA0 WDMA0  ... There are different ports in each larb.
-> +
-> +Required properties:
-> +- compatible : must be "mediatek,mt8173-iommu"
+> I'm not sure you should check for PHY_INTERFACE_MODE_MII here as this
+> may change the previous behaviour.
 
-s/iommu/m4u/ -- the name should match what the hardware is called.
-
-> +- reg : m4u register base
-
-... and size
-
-> +- interrupts : must contain the interrupts from each internal translation unit
-
-How many "internal translation units" are there?
-
-How should the interrupts be ordered?
-
-How do these relate to the larbs?
-
-> +- clocks : must contain one entry for each clock-name
-> +- clock-name: m4u clock
-
-This does not match the example.
-
-s/clock-name/clock-names/
-
-Please format this like a list, with names quoted, e.g.
-
-- clock-names: must contain:
-  * "m4u" - The functional clock for the m4u
-
-> +- larb : must contain the larbes of current platform
-
-s/larbes/local arbiters/
-
-How should these be ordered? Surely there's a relationship with
-registers/interrupts/etc in this unit?
-
-> +- iommu-cells : must be 1. Specifies the client PortID as defined in
-> +dt-binding/iommu/mt**-iommu-port.h
-
-Give the absolute filename.
-
-The include file should be added in this patch (it's part of the
-binding). The whole patch should be moved earlier in the series.
+Absolutely (I fixed it in v2).
 
 Thanks,
-Mark.
 
-> +
-> +Example:
-> +		iommu: mmsys_iommu@10205000 {
-> +			compatible = "mediatek,mt8173-iommu";
-> +			reg = <0 0x10205000 0 0x1000>;
-> +			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infrasys INFRA_M4U>;
-> +			clock-names = "infra_m4u";
-> +			larb = <&larb0 &larb1 &larb2 &larb3 &larb4 &larb5>;
-> +			#iommu-cells = <1>;
-> +		};
-> \ No newline at end of file
-> -- 
-> 1.8.1.1.dirty
-> 
-> 
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
