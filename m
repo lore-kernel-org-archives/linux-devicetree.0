@@ -1,59 +1,65 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: [PATCH] pwm: imx-pwm: add explicit compatible strings and required clock properties
-Date: Fri,  6 Mar 2015 10:09:14 -0500
-Message-ID: <1425654554-7849-1-git-send-email-mporter@konsulko.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Devicetree List <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] devicetree: bindings: Document qcom,msm-id
+ and qcom,board-id
+Date: Fri, 06 Mar 2015 10:09:36 -0500
+Message-ID: <54F9C330.5090208@codeaurora.org>
+References: <1425503602-24916-1-git-send-email-galak@codeaurora.org>	<7h8ufbjkod.fsf@deeprootsystems.com>	<07D4E4D1-BF8C-4583-9505-9F321DB10406@codeaurora.org>	<CAOesGMgy3VY=4-t+N0BYqCuSLQkh-rYe8nd9iJh1mMeBFz_sWQ@mail.gmail.com> <CAF6AEGssMoo6c3nf_7fcATwocuETGZ8nbpGQpUO=KcKWC+rvHw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAF6AEGssMoo6c3nf_7fcATwocuETGZ8nbpGQpUO=KcKWC+rvHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The imx-pwm binding contains language indicating compatible
-strings to be used that is not valid for all supported parts
-e.g. Should be "fsl,<soc>-pwm". Fix this by enumerating the
-valid compatible strings that represent the two versions of
-this peripheral in use.
+On 03/05/2015 09:28 PM, Rob Clark wrote:
+> On Thu, Mar 5, 2015 at 8:59 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>> On Thu, Mar 5, 2015 at 12:23 PM, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>>
+>>> On Mar 5, 2015, at 1:42 PM, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>
+>>>> Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>>>>
+>>>>> The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
+>>>>> on Qualcomm MSM platforms to determine which device tree should be
+>>>>> utilized and passed to the kernel.
+>>>>>
+>>>>> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+>>>>> Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>
+>>>> Is this the special magic that allows qcom bootloaders to take a kernel
+>>>> plus multiple DTBs and figure out which DTB to pass?
+>>>>
+>>>> Kevin
+>>>
+>>> yes
+>>
+>> That's a bummer.
+>>
+>> Luckily, the solution for upstream is still quite simple: Provide only
+>> one devicetree, and it'll be used, right?
+>>
+> 
+> I never managed to figure out how to get that to work (at least on my
+> apq8074 dragonboard.. fortunately ifc6540 seems to work w/ appended
+> dtb).. kind of a pita because it is a bit of a non-standard boot.img
+> format too..
 
-The binding is also missing the clocks/clock-names properties
-so document these,the two required ipg and per clocks, and add
-add these properties to the example.
+I think you're talking about the boot flow from plain poweron which I wish I
+knew more about, but in case it's any help, here are some fastboot boot steps
+what worked for me a while back.
 
-Signed-off-by: Matt Porter <mporter@konsulko.com>
----
- Documentation/devicetree/bindings/pwm/imx-pwm.txt | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+http://elinux.org/Dragonboard/APQ8074
 
-diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-index b50d7a6d..30d2b82 100644
---- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-@@ -1,10 +1,16 @@
- Freescale i.MX PWM controller
- 
- Required properties:
--- compatible: should be "fsl,<soc>-pwm"
-+- compatible :
-+  - "fsl,imx1-pwm" for PWM compatible with the one integrated on i.MX1
-+  - "fsl,imx27-pwm" for PWM compatible with the one integrated on i.MX27
- - reg: physical base address and length of the controller's registers
- - #pwm-cells: should be 2. See pwm.txt in this directory for a description of
-   the cells format.
-+- clocks : Clock specifiers for both ipg and per clocks.
-+- clock-names : Clock names should include both "ipg" and "per"
-+See the clock consumer binding,
-+	Documentation/devicetree/bindings/clock/clock-bindings.txt
- - interrupts: The interrupt for the pwm controller
- 
- Example:
-@@ -13,5 +19,8 @@ pwm1: pwm@53fb4000 {
- 	#pwm-cells = <2>;
- 	compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
- 	reg = <0x53fb4000 0x4000>;
-+	clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
-+		 <&clks IMX5_CLK_PWM1_HF_GATE>;
-+	clock-names = "ipg", "per";
- 	interrupts = <61>;
- };
+Chris
+
 -- 
-1.8.4
-
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
