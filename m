@@ -1,63 +1,205 @@
-From: Stathis Voukelatos <stathis.voukelatos-zgcZaY4qg+21Qrn1Bg8BZw@public.gmane.org>
-Subject: Re: [PATCH net-next v4 0/3] Linn Ethernet Packet Sniffer driver
-Date: Fri, 6 Mar 2015 13:45:55 +0000
-Message-ID: <54F9AF93.40908@linn.co.uk>
-References: <cover.1424796018.git.stathis.voukelatos@linn.co.uk> <20150225151945.GB7703@localhost.localdomain> <20150225170127.GD7703@localhost.localdomain> <54EE0268.2040201@linn.co.uk> <20150225173053.GE7703@localhost.localdomain> <54F0A4C4.3020407@linn.co.uk> <20150227181447.GA11594@localhost.localdomain>
+From: Antonio Ospite <ao2@ao2.it>
+Subject: Re: [PATCH v3] input: goodix: Add device tree support
+Date: Fri, 6 Mar 2015 14:53:59 +0100
+Message-ID: <20150306145359.8d14c4e244acdf645c0c159b@ao2.it>
+References: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
+	<1425576761-25208-1-git-send-email-mamlinav@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150227181447.GA11594-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1425576761-25208-1-git-send-email-mamlinav@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Aleksei Mamlin <mamlinav@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu,  5 Mar 2015 20:32:41 +0300
+Aleksei Mamlin <mamlinav@gmail.com> wrote:
 
-Hi Richard,
+> This patch adds device tree support and binding information for Goodix
+> GT9xx series touchscreen controller.
+> It also adds support for 5-finger chips, like GT911 and GT912, which
+> can be found on ARM tablets, like Wexler TAB7200 and MSI Primo73.
+> 
+> Changes since v2:
+> * Split to two patches:
+>   The first one for use max number of touches from device config.
+>   The second one adds device tree support.
+> 
+> Changes since v1:
+> * Merge patches into single patch.
+> * Use max touch number from config instead of hardcoding.
+> * Update description in Kconfig.
+> 
 
-On 27/02/15 18:14, Richard Cochran wrote:
- >> The H/W does have the capability to do that. However, in order to
- >> implement it there will be some architectural changes needed
- >> in the kernel. This module cannot really pretend to be a PHY.
- >> In the real world it sits between the MAC and the PHY.
- >
- > Right.
- >
- > Here is one idea.  Put a link to the TS device in the PHY's DT node.
- > Then, in phy_probe, check if the PHY's four methods, ts_info,
- > hwtstamp, rxtstamp, and txtstamp, are all null.  If so, check for a DT
- > link from the PHY's node to a TS device driver.  If found, then set
- > the four methods to call into the TS driver's callbacks.
- >
- > Just off of the top of my head.
- >
+Hi Aleksei,
 
-Thank you for your help and suggestions.
+patch history usually goes after the '---' marker, as an annotation, not
+in the the commit message itself.
 
-Although the PTP way appears to be the best from an architectural point
-of view, we have some questions as whether it is suitable for the audio
-use cases that this module is mainly intended for.
-To use the PTP terminology in a large installation we would have a
-potentially large number of clock domains.
-It is not clear how to easily manage the creation and allocation of 
-domains. In addition the clock will be pulled according to the audio
-stream and it would be undesirable for other unrelated PTPv2 devices
-on the network to join the clock domain and have their clocks 
-synchronized to it.
+> Datasheets can be found here:
+> https://drive.google.com/folderview?id=0BxCVOQS3ZymGfmJyY2RKbE5XbVlKNlktVTlwV0lxNEdxd2dzeWZER094cmJPVnMxN1F0Yzg&usp=sharing
+> 
+> Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
+> ---
+>  .../bindings/input/touchscreen/goodix.txt          | 29 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  drivers/input/touchscreen/Kconfig                  |  5 ++--
+>  drivers/input/touchscreen/goodix.c                 | 21 +++++++++++++++-
+>  4 files changed, 53 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> new file mode 100644
+> index 0000000..8ba98ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> @@ -0,0 +1,29 @@
+> +Device tree bindings for Goodix GT9xx series touchscreen controller
+> +
+> +Required properties:
+> +
+> + - compatible		: Should be "goodix,gt911"
+> +				 or "goodix,gt9110"
+> +				 or "goodix,gt912"
+> +				 or "goodix,gt927"
+> +				 or "goodix,gt9271"
+> +				 or "goodix,gt928"
+> +				 or "goodix,gt967"
+> + - reg			: I2C address of the chip. Should be 0x5d or 0x14
+> + - interrupt-parent	: Interrupt controller to which the chip is connected
+> + - interrupts		: Interrupt to which the chip is connected
 
-The patch in its current form would allow a move to Linux using our
-existing synchronization protocols (which are open-source). A move
-to PTP is something to consider but will involve a fair amount of
-redesign including upgrade of legacy products.
+These touch-screens supports two lines, an interrupt line and a reset
+line; and they may be both bound to gpio pins, not necessarily to
+system interrupts. The fields you specified above should be enough to
+cover at least the case of a gpio driven interrupt line, I just wanted
+to highlight the situation.
+
+A gpio-reset property can be added in future when the driver will
+actually make use of it.
+
+JFTR, in the Android drivers the reset operation is sometimes called a
+"guitar reset", the two lines are set and unset following the sequence
+shown in the datasheet in order to change the device status
+(interrupted, operational), on x86 this function can be transparently
+performed by ACPI, on my device it is in fact done when calling the
+PS0 method.
+
+What is the situation on your ARM devices? Are you going to make use of
+the reset line explicitly at some point? I am just curious.
+
+> +
+> +Example:
+> +
+> +	i2c@00000000 {
+> +		/* ... */
+> +
+> +		gt928@5d {
+> +			compatible = "goodix,gt928";
+> +			reg = <0x5d>;
+> +			interrupt-parent = <&gpio>;
+> +			interrupts = <0 0>;
+> +		};
+> +
+> +		/* ... */
+> +	};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 389ca13..ab6852d 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -76,6 +76,7 @@ geniatech	Geniatech, Inc.
+>  giantplus	Giantplus Technology Co., Ltd.
+>  globalscale	Globalscale Technologies, Inc.
+>  gmt	Global Mixed-mode Technology, Inc.
+> +goodix	Shenzhen Huiding Technology Co., Ltd.
+>  google	Google, Inc.
+>  gumstix	Gumstix, Inc.
+>  gw	Gateworks Corporation
+> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+> index 5891752..2adf724 100644
+> --- a/drivers/input/touchscreen/Kconfig
+> +++ b/drivers/input/touchscreen/Kconfig
+> @@ -297,11 +297,12 @@ config TOUCHSCREEN_FUJITSU
+>  
+>  config TOUCHSCREEN_GOODIX
+>  	tristate "Goodix I2C touchscreen"
+> -	depends on I2C && ACPI
+> +	depends on I2C
+>  	help
+>  	  Say Y here if you have the Goodix touchscreen (such as one
+>  	  installed in Onda v975w tablets) connected to your
+> -	  system.
+> +	  system. It also supports 5-finger chip models, which can be
+> +	  found on ARM tablets, like Wexler TAB7200 and MSI Primo73.
+>  
+>  	  If unsure, say N.
+>  
+> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> index a3e2057..efba6a3 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -23,6 +23,8 @@
+>  #include <linux/irq.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/slab.h>
+> +#include <linux/acpi.h>
+> +#include <linux/of.h>
+>  #include <asm/unaligned.h>
+>  
+>  struct goodix_ts_data {
+> @@ -375,11 +377,27 @@ static const struct i2c_device_id goodix_ts_id[] = {
+>  	{ }
+>  };
+>  
+> +#ifdef CONFIG_ACPI
+>  static const struct acpi_device_id goodix_acpi_match[] = {
+>  	{ "GDIX1001", 0 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
+> +#endif
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id goodix_of_match[] = {
+> +	{ .compatible = "goodix,gt911" },
+> +	{ .compatible = "goodix,gt9110" },
+> +	{ .compatible = "goodix,gt912" },
+> +	{ .compatible = "goodix,gt927" },
+> +	{ .compatible = "goodix,gt9271" },
+> +	{ .compatible = "goodix,gt928" },
+> +	{ .compatible = "goodix,gt967" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, goodix_of_match);
+> +#endif
+>  
+>  static struct i2c_driver goodix_ts_driver = {
+>  	.probe = goodix_ts_probe,
+> @@ -387,7 +405,8 @@ static struct i2c_driver goodix_ts_driver = {
+>  	.driver = {
+>  		.name = "Goodix-TS",
+>  		.owner = THIS_MODULE,
+> -		.acpi_match_table = goodix_acpi_match,
+> +		.acpi_match_table = ACPI_PTR(goodix_acpi_match),
+> +		.of_match_table = of_match_ptr(goodix_of_match),
+>  	},
+>  };
+>  module_i2c_driver(goodix_ts_driver);
+> -- 
+> 2.0.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-input" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
- > Thanks,
- > Richard
- >
+-- 
+Antonio Ospite
+http://ao2.it
 
-Thank you,
-Stathis
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+A: Because it messes up the order in which people normally read text.
+   See http://en.wikipedia.org/wiki/Posting_style
+Q: Why is top-posting such a bad thing?
