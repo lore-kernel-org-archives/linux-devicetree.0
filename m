@@ -1,38 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] sh-pfc: add R8A7794 PFC support
-Date: Fri, 6 Mar 2015 11:34:23 +0100
-Message-ID: <CACRpkdbjhyhci_O8ecCTM3du+k8NRTyw026mie5OTorXJO1P+Q@mail.gmail.com>
-References: <2084538.pWCX8EzoLe@wasted.cogentembedded.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH RFC 3/6] drm/tilcdc: Add support for external compontised
+ DRM encoder
+Date: Fri, 6 Mar 2015 10:35:16 +0000
+Message-ID: <20150306103516.GJ29584@n2100.arm.linux.org.uk>
+References: <cover.1424961754.git.jsarha@ti.com>
+ <92792bb4f64fb1b7f26e687ec159d870d0e7a81a.1424961754.git.jsarha@ti.com>
+ <20150302160135.GA29584@n2100.arm.linux.org.uk>
+ <54F96657.10200@ti.com>
+ <20150306095848.GH29584@n2100.arm.linux.org.uk>
+ <54F97FB6.3060103@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2084538.pWCX8EzoLe@wasted.cogentembedded.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54F97FB6.3060103@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, tomi.valkeinen@ti.com, detheridge@ti.com, moinejf@free.fr, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 22, 2015 at 10:33 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
+On Fri, Mar 06, 2015 at 12:21:42PM +0200, Jyri Sarha wrote:
+> On 03/06/15 11:58, Russell King - ARM Linux wrote:
+> >On Fri, Mar 06, 2015 at 10:33:27AM +0200, Jyri Sarha wrote:
+> >>Would it be Ok to add a check that master->ops->add_components is defined,
+> >>before calling it in find_componets() (drivers/base/component.c:120) and
+> >>return 0 if it is not?
+> >
+> >No:
+> >
+> >http://ftp.arm.linux.org.uk/cgit/linux-arm.git/commit/?h=8c4e8764a7e3
+> >
+> >also:
+> >
+> >http://ftp.arm.linux.org.uk/cgit/linux-arm.git/log/?h=11eda5aaf41e
+> >
+> >is what's planned to be merged when I can get a round tuit, and people
+> >stop using the old methods.
+> >
+> 
+> Ok, but could it still be allowed to add a master without any components
+> (match == NULL)?
+> 
+> Or do I have to handle the configurations without any components separately?
 
-> From: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
->
-> Add PFC support for  the  R8A7794 SoC  including pin groups for some on-chip
-> devices such as ETH, I2C, INTC, MSIOF, QSPI, [H]SCIF...
->
-> Signed-off-by: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
-> [Sergei: squashed together several patches, fixed the MLB_CLK typo, added IRQ4..
-> IRQ9 pin groups,  fixed IRQn comments, added ETH B pin group names, removed
-> stray new line and fixed typos in the  comments in the pinmux_config_regs[]
-> initializer, removed the platform device ID, took into account limited number of
-> signals in the GPIO1/5/6 controllers, added reasonable and removed unreasonable
-> copyrights, modified the bindings document, renamed, added changelog.]
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
-> Changes in version 3:
+That's not a decision I want to make in my current state.  Give me a
+couple of week or two and re-ping me.
 
-This v3 applied with Laurent's ACK.
+http://archive.arm.linux.org.uk/lurker/message/20150306.102749.fcabd2bf.en.html
 
-Yours,
-Linus Walleij
+(and the reason becomes self-evident when you realise that message did
+not go to the right list on Tuesday evening when it was meant to.)
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
