@@ -1,56 +1,52 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] ARM: shmobile: ape6evm: Fix GPIO keys and wake-up
-Date: Sat, 7 Mar 2015 10:08:12 +0900
-Message-ID: <20150307010811.GL19866@verge.net.au>
-References: <1425059319-13403-1-git-send-email-geert+renesas@glider.be>
- <5844551.UVahD0ukvm@avalon>
- <20150306113028.GB27105@verge.net.au>
- <1533426.PtrGHiBojg@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1533426.PtrGHiBojg@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, linux-sh@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] mtd: nand: add Broadcom NAND controller support
+Date: Fri,  6 Mar 2015 17:18:46 -0800
+Message-ID: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2015 at 01:33:05PM +0200, Laurent Pinchart wrote:
-> Hi Simon,
-> 
-> On Friday 06 March 2015 20:30:29 Simon Horman wrote:
-> > On Thu, Mar 05, 2015 at 12:42:07PM +0200, Laurent Pinchart wrote:
-> > > On Thursday 05 March 2015 09:34:33 Simon Horman wrote:
-> > >> On Fri, Feb 27, 2015 at 06:48:37PM +0100, Geert Uytterhoeven wrote:
-> > >>> 	Hi Simon, Magnus,
-> > >>> 
-> > >>> This patch series adds the missing pull-up bias configuration for the
-> > >>> switches on the r8a73a4/ape6evm development board, and configures the
-> > >>> custom switch as a wake-up source.
-> > >>> 
-> > >>> After this, the keys actually work, and the system can be resumed from
-> > >>> s2ram by pressing the custom switch.
-> > >>> 
-> > >>> This depends functionally on "[PATCH 1/4] pinctrl: sh-pfc: Do not
-> > >>> overwrite bias configuration" in the series "[PATCH 0/4] pinctrl:
-> > >>> sh-pfc: Fix pin bias and cleanups" which I've just sent. But as this
-> > >>> is DTS, it can be applied independently.
-> > >>> 
-> > >>> Thanks for your comments!
-> > >> 
-> > >> Hi Geert,
-> > >> 
-> > >> this seems fine to me. But I am reluctant to queue it up before the PFC
-> > >> changes are accepted, lest there be some change in direction.
-> > >> 
-> > >> Please repost once the PFC changes have been accepted.
-> > > 
-> > > I've acked the dependency, but we should probably wait for Linus to apply
-> > > it.
-> >
-> > Thanks Laurent, of course that plan is fine by me.
-> 
-> Linus has just applied it, so I think you can go forward with this series.
+Hi,
 
-Thanks, done.
+This adds (long in coming) support for the Broadcom BCM7xxx Set-Top Box NAND
+controller. This controller has been used in a variety of Broadcom SoCs.
+
+There are a few more features I'd like add in the near future, mostly to
+support more SoCs, but this is the base set, which should only need relatively
+minor additions to support chips like BCM63138, BCM3384, and Cygnus/iProc.
+Particularly, we may need to straighten out some endianness issues for the data
+path on iProc, and interrupt enabling/acking on iProc, BCM63xxx, BCM3xxx, and
+others.
+
+TODO: add this to the DTS(I) files for BCM7445.
+
+Happy reviewing! (Speaking of which, I need to catch up on reviewing everybody
+else's MTD submissions...)
+
+Brian
+
+Brian Norris (3):
+  mtd: nand: add common DT init code
+  Documentation: devicetree: add binding doc for Broadcom NAND
+    controller
+  mtd: nand: add NAND driver for Broadcom STB NAND controller
+
+ .../devicetree/bindings/mtd/brcmstb_nand.txt       |  109 +
+ drivers/mtd/nand/Kconfig                           |    8 +
+ drivers/mtd/nand/Makefile                          |    1 +
+ drivers/mtd/nand/brcmstb_nand.c                    | 2182 ++++++++++++++++++++
+ drivers/mtd/nand/nand_base.c                       |   41 +
+ include/linux/mtd/nand.h                           |    5 +
+ 6 files changed, 2346 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/brcmstb_nand.txt
+ create mode 100644 drivers/mtd/nand/brcmstb_nand.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
