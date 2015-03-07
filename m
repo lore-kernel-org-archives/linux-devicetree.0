@@ -1,44 +1,58 @@
 From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 1/2] Input: add support for Semtech SX8654 I2C
- touchscreen controller
-Date: Sat, 07 Mar 2015 23:38:55 +0100
-Message-ID: <1425767935.2300.48.camel@x220>
-References: <1425666099-8365-1-git-send-email-sebastien.szymanski@armadeus.com>
-	 <20150306182155.GB4540@dtor-ws> <20150307005717.GD26151@dtor-ws>
-	 <1425731545.2281.3.camel@tiscali.nl> <20150307212543.GA38770@dtor-ws>
-	 <1425765281.2300.17.camel@x220>
-	 <64C774DE-93CD-41FB-AF78-301503025592@gmail.com>
-	 <1425766340.2300.29.camel@x220>
-	 <FACD03DB-5CFC-4C18-A185-1031903E3AAE@gmail.com>
+Subject: Re: [PATCH v3] media: i2c: add support for omnivision's ov2659
+ sensor
+Date: Sun, 08 Mar 2015 00:07:37 +0100
+Message-ID: <1425769657.2300.55.camel@x220>
+References: <1425741700-23506-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <FACD03DB-5CFC-4C18-A185-1031903E3AAE@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: =?ISO-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1425741700-23506-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2015-03-07 at 14:26 -0800, Dmitry Torokhov wrote:
-> On March 7, 2015 2:12:20 PM PST, Paul Bolle <pebolle@tiscali.nl> wrote:
-> I was talking about them being treated differently from technological
-> standpoint (i.e. the code), not from legal one.
+On Sat, 2015-03-07 at 15:21 +0000, Lad Prabhakar wrote:
+> --- /dev/null
+> +++ b/drivers/media/i2c/ov2659.c
+> @@ -0,0 +1,1495 @@
+> +/*
+> + * Omnivision OV2659 CMOS Image Sensor driver
+> + *
+> + * Copyright (C) 2015 Texas Instruments, Inc.
+> + *
+> + * Benoit Parrot <bparrot@ti.com>
+> + * Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> + *
+> + * This program is free software; you may redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; version 2 of the License.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+> + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+> + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+> + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+> + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> + * SOFTWARE.
+> + */
 
->From a technological standpoint it would be easy to declare "GPL" (or
-any other string) to mean "GPL v2 compatible", which is, I think, all
-that matters. But license_is_gpl_compatible() doesn't do that. And I
-fear that's for a reason. Is my fear unfounded?
+This states the license of this modules is GPL v2.
 
-> If you want to fix up input drivers I'll take such patch, but I am
-> sure more such cases will sneak in unless you also make sure that
-> there are tools (such as checkpatch.pl) that can alert developers to
->the inconsistency.
+> +MODULE_LICENSE("GPL");
 
-checkpatch.pl crossed my mind too. But in just over a week of checking
-the license comments of (a subset of) the submitted patches I've come to
-think that just won't work.
+So you probably want
+    MODULE_LICENSE("GPL v2");
+
+here.
+
+(If you think this is a bit silly, and somewhere I think so too, you're
+invited to jump into the discussion starting at
+https://lkml.org/lkml/2015/3/7/119 .)
+
 
 
 Paul Bolle
-
