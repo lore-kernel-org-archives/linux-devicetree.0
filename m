@@ -1,61 +1,55 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 0/3 RESEND] NI Ettus Research USRP E3x0 soft-poweroff.
-Date: Sat, 7 Mar 2015 20:53:56 +0100
-Message-ID: <20150307195356.GE5233@earth>
-References: <1425507949-30499-1-git-send-email-moritz.fischer@ettus.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [RFC/PATCHv2 2/3] dt-binding: spi: spi-dw: Select 16b or 32b
+ access for Designware SPI
+Date: Sat, 7 Mar 2015 21:58:22 +0200
+Message-ID: <CAHp75Vddg3T4oymsixbJWPWnELF3fE5Z4HRe4CxAFd+Eb=VVmA@mail.gmail.com>
+References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
+	<1425685594-26595-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5oH/S/bF6lOfqCQb"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425507949-30499-1-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1425685594-26595-3-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, Linux Documentation List <linux-doc@vger.kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, Axel Lin <axel.lin@ingics.com>, baruch@tkos.co.il, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Mar 7, 2015 at 1:46 AM,  <tthayer@opensource.altera.com> wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+>
+> Altera's Arria10 architecture requires a 32bit write accesses for
+> APB peripherals. The current spi-dw driver uses 16bit accesses in
+> some locations. This patch updated the bindings with an optional
+> field in the devicetree to select 32bit accesses.
+>
 
---5oH/S/bF6lOfqCQb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+One comment below.
 
-Hi,
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+>  Documentation/devicetree/bindings/spi/spi-dw.txt |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-dw.txt b/Docum=
+entation/devicetree/bindings/spi/spi-dw.txt
+> index 7b63ed6..034dbdd 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-dw.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-dw.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>
+>  Optional properties:
+>  - cs-gpios: see spi-bus.txt
+> +- 32bit_access : use 32 bit register accesses
+>
 
-Please CC linux-pm.
+The most big issue for my opinion with DT is an absence of the
+standard for naming properties.
 
-On Wed, Mar 04, 2015 at 02:25:46PM -0800, Moritz Fischer wrote:
-> This patchset adds support for the NI Ettus Research USRP E3x0 SDR's poweroff
-> functionality.
+So, why underscore? May be it's a time to append a generic description
+of this field to Documentation/devicetree/=E2=80=A6
 
-I would prefer to have a generic driver like syscon-reboot does for
-system reset.
 
--- Sebastian
-
---5oH/S/bF6lOfqCQb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJU+1dTAAoJENju1/PIO/qaaEIP/iVvqPUkfkRm6Q82+1SDOw46
-rcEAeFA+qRGxsksVzrjCxCwXBYsvrgpmQjTazIoJV7PdRW1TYLqY1nisIHM0hWiB
-FxsJIiMUpPfsWIrziFUeVT0/GS+xhSbztaKcw/oim/LVYtsGZxHbirF0YBKGG/Y5
-63UeupkSn6NFjqJjBlCWMkTdrP8ZpZsuShiVmKxuHKXWnZElxVFPzx/t5u/yC7EH
-x1zZlbJAbL0GuY1/pXsJ7s8870CVrtHOC0rxYXhnohsFlGnQefCbrMKLr5EiJ2Ww
-TvBuN7t/fMHPeb3usigQWWkuDinMMRzKF2urm5AweEMba1/kf29EmAxYCgL3IuFR
-upYQxAGOgbEVrNXJyr2ndVRmgqdexURdfrtBu2lxlf8OkStoxqdZoYRYzHwfjCka
-2tdSLC5WwoPZnZLIExirG0IrRCUKJ5Py+wfMiuhOqBxfIhhDNvbbHfnKP6zNK50G
-Hxds0QQCcLZ4Obes8w6S4Qq0wrTCSXXn9THGPBcr69Ca8tlD0QuEQzZrSbnGGYC0
-u+1sOQr1wDR4Jv70IKEz0MZDrfIZO6cNztB7/LvfHd/jP3QXwtJ4ElHhtSX+g8kv
-6tmH0UaKnQZxauyybqVammWUWiUVuvGzB1LLqTVFI+gH86vhb0e9LJ5Vc2bgIxZ/
-uQzhmoLQ27OROVVuqxa6
-=QVnN
------END PGP SIGNATURE-----
-
---5oH/S/bF6lOfqCQb--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+With Best Regards,
+Andy Shevchenko
