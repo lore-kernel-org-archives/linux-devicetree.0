@@ -1,13 +1,13 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 08/18] omap3isp: Calculate vpclk_div for CSI-2
-Date: Sun, 08 Mar 2015 01:27:43 +0200
-Message-ID: <4543525.KBGiJ1Clgv@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-9-git-send-email-sakari.ailus@iki.fi>
+Subject: Re: [RFC 09/18] omap3isp: Replace mmio_base_phys array with the histogram block base
+Date: Sun, 08 Mar 2015 01:28:18 +0200
+Message-ID: <2415325.xPjzqFQXie@avalon>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-10-git-send-email-sakari.ailus@iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1425764475-27691-9-git-send-email-sakari.ailus@iki.fi>
+In-Reply-To: <1425764475-27691-10-git-send-email-sakari.ailus@iki.fi>
 Sender: linux-media-owner@vger.kernel.org
 To: Sakari Ailus <sakari.ailus@iki.fi>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
@@ -17,61 +17,71 @@ Hi Sakari,
 
 Thank you for the patch.
 
-On Saturday 07 March 2015 23:41:05 Sakari Ailus wrote:
-> The video port clock is l3_ick divided by vpclk_div. This clock must be high
-> enough for the external pixel rate. The video port requires two clock
-> cycles to process a pixel.
+On Saturday 07 March 2015 23:41:06 Sakari Ailus wrote:
+> Only the histogram sub-block driver uses the physical address. Do not store
+> it for other sub-blocks.
 > 
 > Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
 
 Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 > ---
->  drivers/media/platform/omap3isp/ispcsi2.c |    8 +++++++-
->  include/media/omap3isp.h                  |    2 --
->  2 files changed, 7 insertions(+), 3 deletions(-)
+>  drivers/media/platform/omap3isp/isp.c     |    3 ++-
+>  drivers/media/platform/omap3isp/isp.h     |    6 +++---
+>  drivers/media/platform/omap3isp/isphist.c |    2 +-
+>  3 files changed, 6 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/media/platform/omap3isp/ispcsi2.c
-> b/drivers/media/platform/omap3isp/ispcsi2.c index 14d279d..97cdfeb 100644
-> --- a/drivers/media/platform/omap3isp/ispcsi2.c
-> +++ b/drivers/media/platform/omap3isp/ispcsi2.c
-> @@ -548,6 +548,7 @@ int omap3isp_csi2_reset(struct isp_csi2_device *csi2)
+> diff --git a/drivers/media/platform/omap3isp/isp.c
+> b/drivers/media/platform/omap3isp/isp.c index c045318..68d7edfc 100644
+> --- a/drivers/media/platform/omap3isp/isp.c
+> +++ b/drivers/media/platform/omap3isp/isp.c
+> @@ -2247,7 +2247,8 @@ static int isp_map_mem_resource(struct platform_device
+> *pdev, if (IS_ERR(isp->mmio_base[res]))
+>  		return PTR_ERR(isp->mmio_base[res]);
 > 
->  static int csi2_configure(struct isp_csi2_device *csi2)
->  {
-> +	struct isp_pipeline *pipe = to_isp_pipeline(&csi2->subdev.entity);
->  	const struct isp_bus_cfg *buscfg;
->  	struct isp_device *isp = csi2->isp;
->  	struct isp_csi2_timing_cfg *timing = &csi2->timing[0];
-> @@ -570,7 +571,12 @@ static int csi2_configure(struct isp_csi2_device *csi2)
-> csi2->frame_skip = 0;
->  	v4l2_subdev_call(sensor, sensor, g_skip_frames, &csi2->frame_skip);
+> -	isp->mmio_base_phys[res] = mem->start;
+> +	if (res == OMAP3_ISP_IOMEM_HIST)
+> +		isp->mmio_hist_base_phys = mem->start;
 > 
-> -	csi2->ctrl.vp_out_ctrl = buscfg->bus.csi2.vpclk_div;
-> +	csi2->ctrl.vp_out_ctrl =
-> +		clamp_t(unsigned int, pipe->l3_ick / pipe->external_rate - 1,
-> +			1, 3);
-> +	dev_dbg(isp->dev, "%s: l3_ick %lu, external_rate %u, vp_out_ctrl %u\n",
-> +		__func__, pipe->l3_ick,  pipe->external_rate,
-> +		csi2->ctrl.vp_out_ctrl);
->  	csi2->ctrl.frame_mode = ISP_CSI2_FRAME_IMMEDIATE;
->  	csi2->ctrl.ecc_enable = buscfg->bus.csi2.crc;
+>  	return 0;
+>  }
+> diff --git a/drivers/media/platform/omap3isp/isp.h
+> b/drivers/media/platform/omap3isp/isp.h index b932a6f..9535524 100644
+> --- a/drivers/media/platform/omap3isp/isp.h
+> +++ b/drivers/media/platform/omap3isp/isp.h
+> @@ -138,8 +138,8 @@ struct isp_xclk {
+>   * @irq_num: Currently used IRQ number.
+>   * @mmio_base: Array with kernel base addresses for ioremapped ISP register
+> *             regions.
+> - * @mmio_base_phys: Array with physical L4 bus addresses for ISP register
+> - *                  regions.
+> + * @mmio_hist_base_phys: Physical L4 bus address for ISP hist block
+> register + *			 region.
+>   * @mapping: IOMMU mapping
+>   * @stat_lock: Spinlock for handling statistics
+>   * @isp_mutex: Mutex for serializing requests to ISP.
+> @@ -175,7 +175,7 @@ struct isp_device {
+>  	unsigned int irq_num;
 > 
-> diff --git a/include/media/omap3isp.h b/include/media/omap3isp.h
-> index 39e0748..0f0c08b 100644
-> --- a/include/media/omap3isp.h
-> +++ b/include/media/omap3isp.h
-> @@ -129,11 +129,9 @@ struct isp_ccp2_cfg {
->  /**
->   * struct isp_csi2_cfg - CSI2 interface configuration
->   * @crc: Enable the cyclic redundancy check
-> - * @vpclk_div: Video port output clock control
->   */
->  struct isp_csi2_cfg {
->  	unsigned crc:1;
-> -	unsigned vpclk_div:2;
->  	struct isp_csiphy_lanes_cfg lanecfg;
->  };
+>  	void __iomem *mmio_base[OMAP3_ISP_IOMEM_LAST];
+> -	unsigned long mmio_base_phys[OMAP3_ISP_IOMEM_LAST];
+> +	unsigned long mmio_hist_base_phys;
+> 
+>  	struct dma_iommu_mapping *mapping;
+> 
+> diff --git a/drivers/media/platform/omap3isp/isphist.c
+> b/drivers/media/platform/omap3isp/isphist.c index ce822c3..3bb9c4f 100644
+> --- a/drivers/media/platform/omap3isp/isphist.c
+> +++ b/drivers/media/platform/omap3isp/isphist.c
+> @@ -70,7 +70,7 @@ static void hist_dma_config(struct ispstat *hist)
+>  	hist->dma_config.sync_mode = OMAP_DMA_SYNC_ELEMENT;
+>  	hist->dma_config.frame_count = 1;
+>  	hist->dma_config.src_amode = OMAP_DMA_AMODE_CONSTANT;
+> -	hist->dma_config.src_start = isp->mmio_base_phys[OMAP3_ISP_IOMEM_HIST]
+> +	hist->dma_config.src_start = isp->mmio_hist_base_phys
+>  				   + ISPHIST_DATA;
+>  	hist->dma_config.dst_amode = OMAP_DMA_AMODE_POST_INC;
+>  	hist->dma_config.src_or_dst_synch = OMAP_DMA_SRC_SYNC;
 
 -- 
 Regards,
