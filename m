@@ -1,59 +1,47 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: imx: add required clocks property to binding
-Date: Sat, 7 Mar 2015 01:13:33 +0100
-Message-ID: <20150307001332.GC993@katana>
-References: <1425401828-31063-1-git-send-email-mporter@konsulko.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 2/4] ARM: OMAP2+: AM43xx hwmod: Add RTC hwmod for
+ AM43xx
+Date: Sat, 7 Mar 2015 00:37:57 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1503070037240.20994@utopia.booyaka.com>
+References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com> <1425561211-31003-3-git-send-email-d-gerlach@ti.com> <alpine.DEB.2.02.1503060425590.5613@utopia.booyaka.com> <54F9E41B.5010805@ti.com> <alpine.DEB.2.02.1503061743170.20994@utopia.booyaka.com>
+ <54F9E8DF.4000009@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jousvV0MzM2p6OtC"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425401828-31063-1-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <54F9E8DF.4000009@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, KEERTHY <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 6 Mar 2015, Dave Gerlach wrote:
 
---jousvV0MzM2p6OtC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 03/06/2015 11:44 AM, Paul Walmsley wrote:
+> > On Fri, 6 Mar 2015, Dave Gerlach wrote:
+> >> On 03/05/2015 10:26 PM, Paul Walmsley wrote:
+> >>> On Thu, 5 Mar 2015, Dave Gerlach wrote:
+> >>>
+> >>>> RTC hwmod is needed for proper operation of PM features like
+> >>>> rtcwake and rtc-only mode so reuse the am33xx rtc hwmod.
+> >>>>
+> >>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> >>>
+> >>> Thanks, queued for v4.1.
+> >>
+> >> Thanks, but please note as I just commented in Patch 1 of this series, without
+> >> the ti,no-init flag in place that is introduced there this patch will cause the
+> >> am43x-epos-evm to fail to boot.
+> > 
+> > If that's so, shouldn't it appear in the series after patch 3, then?  
+> > If only patches 1 and 2 are applied, then won't the boot be broken on 
+> > am43x-epos-evm ?
+> 
+> Hmm yes you are correct that would be the case, seems I should have swapped the
+> order. I've gotten into the habit of putting dt patches last to enable what gets
+> introduced previously, guess it's not always the best thing to do. Thanks for
+> pointing this out.
 
-On Tue, Mar 03, 2015 at 11:57:08AM -0500, Matt Porter wrote:
-> A clock specifier is required for i.MX I2C and is
-> provided in all DTS implementations. Add this to the
-> list of required properties in the binding.
->=20
-> Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-
-Applied to for-current, thanks!
+OK dropped until this thing is sorted out.
 
 
---jousvV0MzM2p6OtC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJU+kKsAAoJEBQN5MwUoCm2uZkP/jYOpgOl77bxmzyjlw6M2m31
-LC+bUeSrV11bUVGdLb6rlW8OIwCF4O6MmgcgOvOvD30Zwku8kYVYJq0wgFp76yUF
-1k5B49TwESp3X6m2z0GiUL5iZOCFFQKVLwZxYbzBAbnj4uRhGnvT7SmiKCtEdfkj
-gmdUFoX0wVQEwkplxPwMcVas/xnJSfr0f/ya+pDGHSNUoP7HhkrBgGc5lco5/GJg
-0HsLfkvdSUlMovso4roT5KwBXDpS08a4MBOIxKWY4jPCNPEN5bpowHGFKCszoPZF
-YnkeoW7Z2+EakBFZAlsIMCQWDzNdDWxRzm8eo7VVCRLNsb4zd2MEM98EZqEHd8q2
-2+V+j0vjLHEytsrfzxTbNfOBR3g4cq/8p5PvqUDFIn1SVFxkgwEpciWLhdGOtD8z
-EqxbHtYaLf3lEAGtPFpdPjurrGfhx9vC0HtGGI7whPL+f0vwT8kFcy+RkzuF9SWB
-SGKI6E4/sg+QKtjzn3laPdmKwLsykmOS6bgrQ0gEz7m6R0dGNztSseZTFpysf9U4
-qHz+aRRFno/HSmLjWT46rhesCAG1uhQMoFlRzQB/zMUEInWgQiljgeq0/h92SLt0
-MIaM5lGGbCJ/90FmW36WxfZq33nkXaCYpgbvEG09S+VdEeNPfdbEYHDJpbQlvQA9
-NbzHe/wsi2JcmKL0L4iY
-=Ds04
------END PGP SIGNATURE-----
-
---jousvV0MzM2p6OtC--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Paul
