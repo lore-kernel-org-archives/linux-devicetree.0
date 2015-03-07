@@ -1,13 +1,13 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 01/18] omap3isp: Fix error handling in probe
-Date: Sun, 08 Mar 2015 01:17:40 +0200
-Message-ID: <2008156.hkDykbnpAV@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-2-git-send-email-sakari.ailus@iki.fi>
+Subject: Re: [RFC 02/18] omap3isp: Avoid a BUG_ON() in media_entity_create_link()
+Date: Sun, 08 Mar 2015 01:19:24 +0200
+Message-ID: <1542562.jWgujH4fk7@avalon>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-3-git-send-email-sakari.ailus@iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1425764475-27691-2-git-send-email-sakari.ailus@iki.fi>
+In-Reply-To: <1425764475-27691-3-git-send-email-sakari.ailus@iki.fi>
 Sender: linux-media-owner@vger.kernel.org
 To: Sakari Ailus <sakari.ailus@iki.fi>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
@@ -17,30 +17,44 @@ Hi Sakari,
 
 Thank you for the patch.
 
-On Saturday 07 March 2015 23:40:58 Sakari Ailus wrote:
-> The mutex was not destroyed correctly if dma_coerce_mask_and_coherent()
-> failed for some reason.
+On Saturday 07 March 2015 23:40:59 Sakari Ailus wrote:
+> If an uninitialised v4l2_subdev struct was passed to
+> media_entity_create_link(), one of the BUG_ON()'s in the function will be
+> hit since media_entity.num_pads will be zero. Avoid this by checking whether
+> the num_pads field is non-zero for the interface.
 > 
 > Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
 
 Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 > ---
->  drivers/media/platform/omap3isp/isp.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/media/platform/omap3isp/isp.c |   13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
 > diff --git a/drivers/media/platform/omap3isp/isp.c
-> b/drivers/media/platform/omap3isp/isp.c index deca809..fb193b6 100644
+> b/drivers/media/platform/omap3isp/isp.c index fb193b6..4ab674d 100644
 > --- a/drivers/media/platform/omap3isp/isp.c
 > +++ b/drivers/media/platform/omap3isp/isp.c
-> @@ -2252,7 +2252,7 @@ static int isp_probe(struct platform_device *pdev)
+> @@ -1946,6 +1946,19 @@ static int isp_register_entities(struct isp_device
+> *isp) goto done;
+>  		}
 > 
->  	ret = dma_coerce_mask_and_coherent(isp->dev, DMA_BIT_MASK(32));
->  	if (ret)
-> -		return ret;
-> +		goto error;
-> 
->  	platform_set_drvdata(pdev, isp);
+> +		/*
+> +		 * Not all interfaces are available on all revisions
+> +		 * of the ISP. The sub-devices of those interfaces
+> +		 * aren't initialised in such a case. Check this by
+> +		 * ensuring the num_pads is non-zero.
+> +		 */
+> +		if (!input->num_pads) {
+> +			dev_err(isp->dev, "%s: invalid input %u\n",
+> +				entity->name, subdevs->interface);
+> +			ret = -EINVAL;
+> +			goto done;
+> +		}
+> +
+>  		for (i = 0; i < sensor->entity.num_pads; i++) {
+>  			if (sensor->entity.pads[i].flags & MEDIA_PAD_FL_SOURCE)
+>  				break;
 
 -- 
 Regards,
