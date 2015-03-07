@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [RFC 02/18] omap3isp: Avoid a BUG_ON() in media_entity_create_link()
-Date: Sat,  7 Mar 2015 23:40:59 +0200
-Message-ID: <1425764475-27691-3-git-send-email-sakari.ailus@iki.fi>
+Subject: [RFC 07/18] omap3isp: Rename regulators to better suit the Device Tree
+Date: Sat,  7 Mar 2015 23:41:04 +0200
+Message-ID: <1425764475-27691-8-git-send-email-sakari.ailus@iki.fi>
 References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
@@ -10,39 +10,27 @@ To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, pali.rohar@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-If an uninitialised v4l2_subdev struct was passed to
-media_entity_create_link(), one of the BUG_ON()'s in the function will be
-hit since media_entity.num_pads will be zero. Avoid this by checking whether
-the num_pads field is non-zero for the interface.
+Rename VDD_CSIPHY1 as vdd-csiphy1 and VDD_CSIPHY2 as vdd-csiphy2.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
 ---
- drivers/media/platform/omap3isp/isp.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/media/platform/omap3isp/isp.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-index fb193b6..4ab674d 100644
+index 1b5c6df..c045318 100644
 --- a/drivers/media/platform/omap3isp/isp.c
 +++ b/drivers/media/platform/omap3isp/isp.c
-@@ -1946,6 +1946,19 @@ static int isp_register_entities(struct isp_device *isp)
- 			goto done;
- 		}
+@@ -2292,8 +2292,8 @@ static int isp_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, isp);
  
-+		/*
-+		 * Not all interfaces are available on all revisions
-+		 * of the ISP. The sub-devices of those interfaces
-+		 * aren't initialised in such a case. Check this by
-+		 * ensuring the num_pads is non-zero.
-+		 */
-+		if (!input->num_pads) {
-+			dev_err(isp->dev, "%s: invalid input %u\n",
-+				entity->name, subdevs->interface);
-+			ret = -EINVAL;
-+			goto done;
-+		}
-+
- 		for (i = 0; i < sensor->entity.num_pads; i++) {
- 			if (sensor->entity.pads[i].flags & MEDIA_PAD_FL_SOURCE)
- 				break;
+ 	/* Regulators */
+-	isp->isp_csiphy1.vdd = devm_regulator_get(&pdev->dev, "VDD_CSIPHY1");
+-	isp->isp_csiphy2.vdd = devm_regulator_get(&pdev->dev, "VDD_CSIPHY2");
++	isp->isp_csiphy1.vdd = devm_regulator_get(&pdev->dev, "vdd-csiphy1");
++	isp->isp_csiphy2.vdd = devm_regulator_get(&pdev->dev, "vdd-csiphy2");
+ 
+ 	/* Clocks
+ 	 *
 -- 
 1.7.10.4
