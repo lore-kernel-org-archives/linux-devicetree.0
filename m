@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [RFC 16/18] arm: dts: omap3: Add DT entries for OMAP 3
-Date: Sat,  7 Mar 2015 23:41:13 +0200
-Message-ID: <1425764475-27691-17-git-send-email-sakari.ailus@iki.fi>
+Subject: [RFC 14/18] dt: bindings: Add bindings for omap3isp
+Date: Sat,  7 Mar 2015 23:41:11 +0200
+Message-ID: <1425764475-27691-15-git-send-email-sakari.ailus@iki.fi>
 References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
@@ -10,49 +10,68 @@ To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, pali.rohar@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The resources the ISP needs are slightly different on 3[45]xx and 3[67]xx.
-Especially the phy-type property is different.
-
 Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
 ---
- arch/arm/boot/dts/omap34xx.dtsi |   15 +++++++++++++++
- arch/arm/boot/dts/omap36xx.dtsi |   15 +++++++++++++++
- 2 files changed, 30 insertions(+)
+ .../devicetree/bindings/media/ti,omap3isp.txt      |   64 ++++++++++++++++++++
+ MAINTAINERS                                        |    1 +
+ 2 files changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/ti,omap3isp.txt
 
-diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-index 3819c1e..4c034d0 100644
---- a/arch/arm/boot/dts/omap34xx.dtsi
-+++ b/arch/arm/boot/dts/omap34xx.dtsi
-@@ -37,6 +37,21 @@
- 			pinctrl-single,register-width = <16>;
- 			pinctrl-single,function-mask = <0xff1f>;
- 		};
+diff --git a/Documentation/devicetree/bindings/media/ti,omap3isp.txt b/Documentation/devicetree/bindings/media/ti,omap3isp.txt
+new file mode 100644
+index 0000000..2059524
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/ti,omap3isp.txt
+@@ -0,0 +1,64 @@
++OMAP 3 ISP Device Tree bindings
++===============================
 +
-+		omap3_isp: omap3_isp@480bc000 {
-+			compatible = "ti,omap3-isp";
-+			reg = <0x480bc000 0x12fc
-+			       0x480bd800 0x017c>;
-+			interrupts = <24>;
-+			iommus = <&mmu_isp>;
-+			syscon = <&omap3_scm_general 0xdc>;
-+			ti,phy-type = <0>;
-+			#clock-cells = <1>;
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-index 541704a..31ac41c 100644
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -69,6 +69,21 @@
- 			pinctrl-single,register-width = <16>;
- 			pinctrl-single,function-mask = <0xff1f>;
- 		};
++More documentation on these bindings is available in
++video-interfaces.txt in the same directory.
++
++Required properties
++===================
++
++compatible	: "ti,omap3-isp"
++reg		: a set of two register block physical addresses and
++		  lengths
++interrupts	: the interrupt number
++iommus		: phandle of the IOMMU
++syscon		: syscon phandle and register offset
++ti,phy-type	: 0 -- 3430; 1 -- 3630
++#clock-cells	: Must be 1 --- the ISP provides two external clocks,
++		  cam_xclka and cam_xclkb, at indices 0 and 1,
++		  respectively. Please find more information on common
++		  clock bindings in ../clock/clock-bindings.txt.
++
++Port nodes (optional)
++---------------------
++
++reg		: The interface:
++		  0 - parallel (CCDC)
++		  1 - CSIPHY1 -- CSI2C / CCP2B on 3630;
++		      CSI1 -- CSIb on 3430
++		  2 - CSIPHY2 -- CSI2A / CCP2B on 3630;
++		      CSI2 -- CSIa on 3430
++
++Optional properties
++===================
++
++vdd-csiphy1-supply : voltage supply of the CSI-2 PHY 1
++vdd-csiphy2-supply : voltage supply of the CSI-2 PHY 2
++
++Endpoint nodes
++--------------
++
++lane-polarity	: lane polarity (required on CSI-2)
++		  0 -- not inverted; 1 -- inverted
++data-lanes	: an array of data lanes from 1 to 3. The length can
++		  be either 1 or 2. (required CSI-2)
++clock-lanes	: the clock lane (from 1 to 3). (required on CSI-2)
++
++
++Example
++=======
 +
 +		omap3_isp: omap3_isp@480bc000 {
 +			compatible = "ti,omap3-isp";
@@ -68,8 +87,17 @@ index 541704a..31ac41c 100644
 +				#size-cells = <0>;
 +			};
 +		};
- 	};
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ddc5a8c..cdeef39 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7079,6 +7079,7 @@ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	drivers/media/platform/omap3isp/
+ F:	drivers/staging/media/omap4iss/
++F:	Documentation/devicetree/bindings/media/ti,omap3isp.txt
  
+ OMAP USB SUPPORT
+ M:	Felipe Balbi <balbi@ti.com>
 -- 
 1.7.10.4
