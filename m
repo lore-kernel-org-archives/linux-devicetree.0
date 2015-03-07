@@ -1,38 +1,33 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v10 0/2] drivers/gpio: Altera soft IP GPIO driver
-Date: Sat, 7 Mar 2015 20:35:59 +0100
-Message-ID: <CACRpkdZvbKMdqY_b3ZUCEA3mq4M1s3kZ9VHnXWZGPMETWYg5kw@mail.gmail.com>
-References: <1424771583-4404-1-git-send-email-thloh@altera.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4] spi: qup: Add DMA capabilities
+Date: Sat, 7 Mar 2015 21:43:35 +0200
+Message-ID: <CAHp75VeYanNJrEyTtcxb5g5DB8=609nebgZm8zVAeJdmSgHjkQ@mail.gmail.com>
+References: <1425463325-25805-1-git-send-email-stanimir.varbanov@linaro.org>
+	<20150307112109.GJ28806@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1424771583-4404-1-git-send-email-thloh@altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tien Hock Loh <thloh@altera.com>
-Cc: Dinh Nguyen <dinguyen@altera.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Antti Palosaari <crope@iki.fi>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Tien Hock Loh <thloh.linux@gmail.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150307112109.GJ28806@sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 24, 2015 at 10:53 AM,  <thloh@altera.com> wrote:
-
-> From: Tien Hock Loh <thloh@altera.com>
+On Sat, Mar 7, 2015 at 1:21 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Mar 04, 2015 at 12:02:05PM +0200, Stanimir Varbanov wrote:
+>> From: Andy Gross <agross@codeaurora.org>
+>>
+>> This patch adds DMA capabilities to the spi-qup driver.  If DMA channels are
+>> present, the QUP will use DMA instead of block mode for transfers to/from SPI
+>> peripherals for transactions larger than the length of a block.
 >
-> Adds a new device tree binding and driver for Altera soft GPIO IP.
-> The driver is able to do read/write and allows GPIO to be a interrupt controller.
->
-> Tested on Altera GHRD on interrupt handling and IO.
->
-> v10:
-> Updated conflicting device tree parameters
-> Removed unused headers
-> Used macro instead of magic numbers for ngpio
-> Code readability cleanup using ?: and temporal variables
-> Removed leftover garbage and unnecessary function calls
-> Checked bgpio_init but unusable because Altera GPIO may not be a multiple of 8 bits
+> Applied, but why is there no devm_dma_request_slave_channel_reason()?
 
-This v10 patch applied. Any remaining issues can certainly be resolved
-by additional patches in-tree.
+I suppose the answer would be "we have a lot of slightly different
+cases and we have to get rid of current mess with legacy API calls".
+The most problematic stuff now inside DMA slave subsystem is so called
+"filter function". It's a main impediment right now as I understand.
 
-Good patience and good work, the driver looks really really neat now.
-
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
