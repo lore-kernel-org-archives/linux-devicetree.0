@@ -1,191 +1,58 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [RFC/PATCHv2 3/3] spi: dw-spi: Pointers select 16b vs. 32b DesignWare access
-Date: Fri, 6 Mar 2015 17:46:34 -0600
-Message-ID: <1425685594-26595-4-git-send-email-tthayer@opensource.altera.com>
-References: <1425685594-26595-1-git-send-email-tthayer@opensource.altera.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c: imx: add required clocks property to binding
+Date: Sat, 7 Mar 2015 01:13:33 +0100
+Message-ID: <20150307001332.GC993@katana>
+References: <1425401828-31063-1-git-send-email-mporter@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jousvV0MzM2p6OtC"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425685594-26595-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1425401828-31063-1-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Altera's Arria10 SoC interconnect requires a 32 bit write for APB
-peripherals. The current spi-dw driver uses 16bit accesses in
-some locations. Use function pointers to support 32 bit accesses
-but retain legacy 16 bit access.
+--jousvV0MzM2p6OtC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- drivers/spi/spi-dw-mmio.c |    7 ++++++-
- drivers/spi/spi-dw.c      |   29 +++++++++++++++++------------
- drivers/spi/spi-dw.h      |   12 ++++++++++++
- 3 files changed, 35 insertions(+), 13 deletions(-)
+On Tue, Mar 03, 2015 at 11:57:08AM -0500, Matt Porter wrote:
+> A clock specifier is required for i.MX I2C and is
+> provided in all DTS implementations. Add this to the
+> list of required properties in the binding.
+>=20
+> Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index eb03e12..c4fe9e9 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -76,8 +76,13 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
- 
- 	num_cs = 4;
- 
--	if (pdev->dev.of_node)
-+	if (pdev->dev.of_node) {
- 		of_property_read_u32(pdev->dev.of_node, "num-cs", &num_cs);
-+		if (of_property_read_bool(pdev->dev.of_node, "32bit_access")) {
-+			dws->read_w = dw_readw32;
-+			dws->write_w = dw_writew32;
-+		}
-+	}
- 
- 	dws->num_cs = num_cs;
- 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index c5fa2be..d008791 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -157,7 +157,7 @@ static inline u32 tx_max(struct dw_spi *dws)
- 	u32 tx_left, tx_room, rxtx_gap;
- 
- 	tx_left = (dws->tx_end - dws->tx) / dws->n_bytes;
--	tx_room = dws->fifo_len - dw_readw(dws, DW_SPI_TXFLR);
-+	tx_room = dws->fifo_len - dws->read_w(dws, DW_SPI_TXFLR);
- 
- 	/*
- 	 * Another concern is about the tx/rx mismatch, we
-@@ -178,7 +178,7 @@ static inline u32 rx_max(struct dw_spi *dws)
- {
- 	u32 rx_left = (dws->rx_end - dws->rx) / dws->n_bytes;
- 
--	return min_t(u32, rx_left, dw_readw(dws, DW_SPI_RXFLR));
-+	return min_t(u32, rx_left, dws->read_w(dws, DW_SPI_RXFLR));
- }
- 
- static void dw_writer(struct dw_spi *dws)
-@@ -194,7 +194,7 @@ static void dw_writer(struct dw_spi *dws)
- 			else
- 				txw = *(u16 *)(dws->tx);
- 		}
--		dw_writew(dws, DW_SPI_DR, txw);
-+		dws->write_w(dws, DW_SPI_DR, txw);
- 		dws->tx += dws->n_bytes;
- 	}
- }
-@@ -205,7 +205,7 @@ static void dw_reader(struct dw_spi *dws)
- 	u16 rxw;
- 
- 	while (max--) {
--		rxw = dw_readw(dws, DW_SPI_DR);
-+		rxw = dws->read_w(dws, DW_SPI_DR);
- 		/* Care rx only if the transfer's original "rx" is not null */
- 		if (dws->rx_end - dws->len) {
- 			if (dws->n_bytes == 1)
-@@ -254,11 +254,11 @@ static void int_error_stop(struct dw_spi *dws, const char *msg)
- 
- static irqreturn_t interrupt_transfer(struct dw_spi *dws)
- {
--	u16 irq_status = dw_readw(dws, DW_SPI_ISR);
-+	u16 irq_status = dws->read_w(dws, DW_SPI_ISR);
- 
- 	/* Error handling */
- 	if (irq_status & (SPI_INT_TXOI | SPI_INT_RXOI | SPI_INT_RXUI)) {
--		dw_readw(dws, DW_SPI_ICR);
-+		dws->read_w(dws, DW_SPI_ICR);
- 		int_error_stop(dws, "interrupt_transfer: fifo overrun/underrun");
- 		return IRQ_HANDLED;
- 	}
-@@ -283,7 +283,7 @@ static irqreturn_t dw_spi_irq(int irq, void *dev_id)
- {
- 	struct spi_master *master = dev_id;
- 	struct dw_spi *dws = spi_master_get_devdata(master);
--	u16 irq_status = dw_readw(dws, DW_SPI_ISR) & 0x3f;
-+	u16 irq_status = dws->read_w(dws, DW_SPI_ISR) & 0x3f;
- 
- 	if (!irq_status)
- 		return IRQ_NONE;
-@@ -379,7 +379,7 @@ static int dw_spi_transfer_one(struct spi_master *master,
- 		cr0 |= (chip->tmode << SPI_TMOD_OFFSET);
- 	}
- 
--	dw_writew(dws, DW_SPI_CTRL0, cr0);
-+	dws->write_w(dws, DW_SPI_CTRL0, cr0);
- 
- 	/* Check if current transfer is a DMA transaction */
- 	dws->dma_mapped = map_dma_buffers(master, spi, transfer);
-@@ -393,7 +393,7 @@ static int dw_spi_transfer_one(struct spi_master *master,
- 	 */
- 	if (!dws->dma_mapped && !chip->poll_mode) {
- 		txlevel = min_t(u16, dws->fifo_len / 2, dws->len / dws->n_bytes);
--		dw_writew(dws, DW_SPI_TXFLTR, txlevel);
-+		dws->write_w(dws, DW_SPI_TXFLTR, txlevel);
- 
- 		/* Set the interrupt mask */
- 		imask |= SPI_INT_TXEI | SPI_INT_TXOI |
-@@ -516,11 +516,11 @@ static void spi_hw_init(struct device *dev, struct dw_spi *dws)
- 		u32 fifo;
- 
- 		for (fifo = 1; fifo < 256; fifo++) {
--			dw_writew(dws, DW_SPI_TXFLTR, fifo);
--			if (fifo != dw_readw(dws, DW_SPI_TXFLTR))
-+			dws->write_w(dws, DW_SPI_TXFLTR, fifo);
-+			if (fifo != dws->read_w(dws, DW_SPI_TXFLTR))
- 				break;
- 		}
--		dw_writew(dws, DW_SPI_TXFLTR, 0);
-+		dws->write_w(dws, DW_SPI_TXFLTR, 0);
- 
- 		dws->fifo_len = (fifo == 1) ? 0 : fifo;
- 		dev_dbg(dev, "Detected FIFO size: %u bytes\n", dws->fifo_len);
-@@ -545,6 +545,11 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
- 	dws->dma_addr = (dma_addr_t)(dws->paddr + 0x60);
- 	snprintf(dws->name, sizeof(dws->name), "dw_spi%d", dws->bus_num);
- 
-+	if (!dws->read_w)
-+		dws->read_w = dw_readw;
-+	if (!dws->write_w)
-+		dws->write_w = dw_writew;
-+
- 	ret = devm_request_irq(dev, dws->irq, dw_spi_irq, IRQF_SHARED,
- 			dws->name, master);
- 	if (ret < 0) {
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 855bfdd..1df09e2 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -141,6 +141,8 @@ struct dw_spi {
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry *debugfs;
- #endif
-+	u16 (*read_w)(struct dw_spi *dws, u32 offset);
-+	void (*write_w)(struct dw_spi *dws, u32 offset, u16 val);
- };
- 
- static inline u32 dw_readl(struct dw_spi *dws, u32 offset)
-@@ -163,6 +165,16 @@ static inline void dw_writew(struct dw_spi *dws, u32 offset, u16 val)
- 	__raw_writew(val, dws->regs + offset);
- }
- 
-+static inline u16 dw_readw32(struct dw_spi *dws, u32 offset)
-+{
-+	return (u16)__raw_readl(dws->regs + offset);
-+}
-+
-+static inline void dw_writew32(struct dw_spi *dws, u32 offset, u16 val)
-+{
-+	__raw_writel((u32)val, dws->regs + offset);
-+}
-+
- static inline void spi_enable_chip(struct dw_spi *dws, int enable)
- {
- 	dw_writel(dws, DW_SPI_SSIENR, (enable ? 1 : 0));
--- 
-1.7.9.5
+Applied to for-current, thanks!
 
+
+--jousvV0MzM2p6OtC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJU+kKsAAoJEBQN5MwUoCm2uZkP/jYOpgOl77bxmzyjlw6M2m31
+LC+bUeSrV11bUVGdLb6rlW8OIwCF4O6MmgcgOvOvD30Zwku8kYVYJq0wgFp76yUF
+1k5B49TwESp3X6m2z0GiUL5iZOCFFQKVLwZxYbzBAbnj4uRhGnvT7SmiKCtEdfkj
+gmdUFoX0wVQEwkplxPwMcVas/xnJSfr0f/ya+pDGHSNUoP7HhkrBgGc5lco5/GJg
+0HsLfkvdSUlMovso4roT5KwBXDpS08a4MBOIxKWY4jPCNPEN5bpowHGFKCszoPZF
+YnkeoW7Z2+EakBFZAlsIMCQWDzNdDWxRzm8eo7VVCRLNsb4zd2MEM98EZqEHd8q2
+2+V+j0vjLHEytsrfzxTbNfOBR3g4cq/8p5PvqUDFIn1SVFxkgwEpciWLhdGOtD8z
+EqxbHtYaLf3lEAGtPFpdPjurrGfhx9vC0HtGGI7whPL+f0vwT8kFcy+RkzuF9SWB
+SGKI6E4/sg+QKtjzn3laPdmKwLsykmOS6bgrQ0gEz7m6R0dGNztSseZTFpysf9U4
+qHz+aRRFno/HSmLjWT46rhesCAG1uhQMoFlRzQB/zMUEInWgQiljgeq0/h92SLt0
+MIaM5lGGbCJ/90FmW36WxfZq33nkXaCYpgbvEG09S+VdEeNPfdbEYHDJpbQlvQA9
+NbzHe/wsi2JcmKL0L4iY
+=Ds04
+-----END PGP SIGNATURE-----
+
+--jousvV0MzM2p6OtC--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
