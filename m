@@ -1,53 +1,119 @@
-From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
-Subject: Re: [PATCH][ASoC]Add DT bindings for generic ASoC AC97 CODEC driver
-Date: Sat, 07 Mar 2015 14:58:53 +0100
-Message-ID: <54FB041D.8010102@maciej.szmigiero.name>
-References: <54F9F81E.8080105@maciej.szmigiero.name> <20150307105201.GB28806@sirena.org.uk>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 1/2] regulator: act8865: add input supply handling
+Date: Sat, 07 Mar 2015 15:28:54 +0100
+Message-ID: <1709506.shJhJsMxOa@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150307105201.GB28806-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for looking into the patch.
+The act8846/act8865 regulators have a number of input supplies supplying the
+individual regulators. This may even be recursively like on most Rockchip boards
+using the act8846 where REG4 is most of the time connected to the inl1-supply.
 
-W dniu 07.03.2015 11:52, Mark Brown pisze:
-> On Fri, Mar 06, 2015 at 07:55:26PM +0100, Maciej S. Szmigiero wrote:
-> 
->> Add and document DT bindings for generic ASoC AC97 CODEC driver,
->> make it selectable in config.
-> 
-> AC'97 shouldn't need DT bindings for the CODEC, it's an enumerable bus.
+Therefore add the ability to specify the input supplies for the individual inputs.
+The input-names are taken from the datasheets of both act8846 and act8865.
 
-What this driver did / does is essentially to allow attaching AC'97 bus
-to ASoC AC'97 controllers which don't do it on its own (from what I can
-see only board files do it).
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ .../bindings/regulator/act8865-regulator.txt       | 16 +++++++++
+ drivers/regulator/act8865-regulator.c              | 41 +++++++++++-----------
+ 2 files changed, 37 insertions(+), 20 deletions(-)
 
-> 
->> +  - playback-rates : A list of supported playback rates.
->> +
->> +  - capture-rates : A list of supported capture rates.
-> 
-> Why would we need these properties - the sample rate support is defined
-> by the standard, and any extensions can be enumerated from the device.
-
-This driver originally constrained rates to 8000, 11025, 22050, 44100,
-48000.
-
-An alternative would be to remove this constraint at all from this
-driver and leave such constraining for controller and AC'97 bus code.
-
-But since this driver was originally limited to these rates I think it
-would be safer to do it only when instantiated via OF.
-
-Best regards,
-Maciej Szmigiero
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+index dad6358..45028bb 100644
+--- a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+@@ -9,6 +9,22 @@ Optional properties:
+ - system-power-controller: Telling whether or not this pmic is controlling
+   the system power. See Documentation/devicetree/bindings/power/power-controller.txt .
+ 
++Optional input supply properties:
++- for act8846:
++  - vp1-supply:  The input supply for REG1
++  - vp2-supply:  The input supply for REG2
++  - vp3-supply:  The input supply for REG3
++  - vp4-supply:  The input supply for REG4
++  - inl1-supply:  The input supply for REG5, REG6 and REG7
++  - inl2-supply:  The input supply for REG8 and LDO_REG9
++  - inl3-supply:  The input supply for REG10, REG11 and REG12
++- for act8865:
++  - vp1-supply:  The input supply for DCDC_REG1
++  - vp2-supply:  The input supply for DCDC_REG2
++  - vp3-supply:  The input supply for DCDC_REG3
++  - inl45-supply:  The input supply for LDO_REG1 and LDO_REG2
++  - inl67-supply:  The input supply for LDO_REG3 and LDO_REG4
++
+ Any standard regulator properties can be used to configure the single regulator.
+ 
+ The valid names for regulators are:
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 9eec453..a4a85cd 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -126,9 +126,10 @@ static struct regulator_ops act8865_ops = {
+ 	.is_enabled		= regulator_is_enabled_regmap,
+ };
+ 
+-#define ACT88xx_REG(_name, _family, _id, _vsel_reg)			\
++#define ACT88xx_REG(_name, _family, _id, _vsel_reg, _supply)		\
+ 	[_family##_ID_##_id] = {					\
+ 		.name			= _name,			\
++		.supply_name		= _supply,			\
+ 		.id			= _family##_ID_##_id,		\
+ 		.type			= REGULATOR_VOLTAGE,		\
+ 		.ops			= &act8865_ops,			\
+@@ -143,28 +144,28 @@ static struct regulator_ops act8865_ops = {
+ 	}
+ 
+ static const struct regulator_desc act8846_regulators[] = {
+-	ACT88xx_REG("REG1", ACT8846, REG1, VSET),
+-	ACT88xx_REG("REG2", ACT8846, REG2, VSET0),
+-	ACT88xx_REG("REG3", ACT8846, REG3, VSET0),
+-	ACT88xx_REG("REG4", ACT8846, REG4, VSET0),
+-	ACT88xx_REG("REG5", ACT8846, REG5, VSET),
+-	ACT88xx_REG("REG6", ACT8846, REG6, VSET),
+-	ACT88xx_REG("REG7", ACT8846, REG7, VSET),
+-	ACT88xx_REG("REG8", ACT8846, REG8, VSET),
+-	ACT88xx_REG("REG9", ACT8846, REG9, VSET),
+-	ACT88xx_REG("REG10", ACT8846, REG10, VSET),
+-	ACT88xx_REG("REG11", ACT8846, REG11, VSET),
+-	ACT88xx_REG("REG12", ACT8846, REG12, VSET),
++	ACT88xx_REG("REG1", ACT8846, REG1, VSET, "vp1"),
++	ACT88xx_REG("REG2", ACT8846, REG2, VSET0, "vp2"),
++	ACT88xx_REG("REG3", ACT8846, REG3, VSET0, "vp3"),
++	ACT88xx_REG("REG4", ACT8846, REG4, VSET0, "vp4"),
++	ACT88xx_REG("REG5", ACT8846, REG5, VSET, "inl1"),
++	ACT88xx_REG("REG6", ACT8846, REG6, VSET, "inl1"),
++	ACT88xx_REG("REG7", ACT8846, REG7, VSET, "inl1"),
++	ACT88xx_REG("REG8", ACT8846, REG8, VSET, "inl2"),
++	ACT88xx_REG("REG9", ACT8846, REG9, VSET, "inl2"),
++	ACT88xx_REG("REG10", ACT8846, REG10, VSET, "inl3"),
++	ACT88xx_REG("REG11", ACT8846, REG11, VSET, "inl3"),
++	ACT88xx_REG("REG12", ACT8846, REG12, VSET, "inl3"),
+ };
+ 
+ static const struct regulator_desc act8865_regulators[] = {
+-	ACT88xx_REG("DCDC_REG1", ACT8865, DCDC1, VSET1),
+-	ACT88xx_REG("DCDC_REG2", ACT8865, DCDC2, VSET1),
+-	ACT88xx_REG("DCDC_REG3", ACT8865, DCDC3, VSET1),
+-	ACT88xx_REG("LDO_REG1", ACT8865, LDO1, VSET),
+-	ACT88xx_REG("LDO_REG2", ACT8865, LDO2, VSET),
+-	ACT88xx_REG("LDO_REG3", ACT8865, LDO3, VSET),
+-	ACT88xx_REG("LDO_REG4", ACT8865, LDO4, VSET),
++	ACT88xx_REG("DCDC_REG1", ACT8865, DCDC1, VSET1, "vp1"),
++	ACT88xx_REG("DCDC_REG2", ACT8865, DCDC2, VSET1, "vp2"),
++	ACT88xx_REG("DCDC_REG3", ACT8865, DCDC3, VSET1, "vp3"),
++	ACT88xx_REG("LDO_REG1", ACT8865, LDO1, VSET, "inl45"),
++	ACT88xx_REG("LDO_REG2", ACT8865, LDO2, VSET, "inl45"),
++	ACT88xx_REG("LDO_REG3", ACT8865, LDO3, VSET, "inl67"),
++	ACT88xx_REG("LDO_REG4", ACT8865, LDO4, VSET, "inl67"),
+ };
+ 
+ #ifdef CONFIG_OF
+-- 
+2.1.4
