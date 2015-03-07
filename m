@@ -1,13 +1,13 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 13/18] v4l: of: Read lane-polarity endpoint property
-Date: Sun, 08 Mar 2015 01:49:26 +0200
-Message-ID: <5943571.XgR4Bv1QGx@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-14-git-send-email-sakari.ailus@iki.fi>
+Subject: Re: [RFC 05/18] omap3isp: Platform data could be NULL
+Date: Sun, 08 Mar 2015 01:50:42 +0200
+Message-ID: <1658803.mqyJoDmehb@avalon>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-6-git-send-email-sakari.ailus@iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1425764475-27691-14-git-send-email-sakari.ailus@iki.fi>
+In-Reply-To: <1425764475-27691-6-git-send-email-sakari.ailus@iki.fi>
 Sender: linux-media-owner@vger.kernel.org
 To: Sakari Ailus <sakari.ailus@iki.fi>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
@@ -17,88 +17,91 @@ Hi Sakari,
 
 Thank you for the patch.
 
-On Saturday 07 March 2015 23:41:10 Sakari Ailus wrote:
-> Add lane_polarity field to struct v4l2_of_bus_mipi_csi2 and write the
-> contents of the lane polarity property to it. The field tells the polarity
-> of the physical lanes starting from the first one. Any unused lanes are
-> ignored, i.e. only the polarity of the used lanes is specified.
+On Saturday 07 March 2015 23:41:02 Sakari Ailus wrote:
+> Only check for call platform data callback functions if there's platform
+> data. Also take care of a few other cases where the NULL pdata pointer could
+> have been accessed, and remove the check for NULL dev->platform_data
+> pointer.
+> 
+> Removing the check for NULL dev->platform_data isn't strictly needed by the
+> DT support but there's no harm from that either: the device now can be used
+> without sensors, for instance.
 > 
 > Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->  drivers/media/v4l2-core/v4l2-of.c |   21 ++++++++++++++++-----
->  include/media/v4l2-of.h           |    3 +++
->  2 files changed, 19 insertions(+), 5 deletions(-)
+>  drivers/media/platform/omap3isp/isp.c      |   10 ++++------
+>  drivers/media/platform/omap3isp/ispvideo.c |    6 +++---
+>  2 files changed, 7 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-of.c
-> b/drivers/media/v4l2-core/v4l2-of.c index b4ed9a9..a7a855e 100644
-> --- a/drivers/media/v4l2-core/v4l2-of.c
-> +++ b/drivers/media/v4l2-core/v4l2-of.c
-> @@ -23,7 +23,6 @@ static void v4l2_of_parse_csi_bus(const struct device_node
-> *node, struct v4l2_of_endpoint *endpoint)
->  {
->  	struct v4l2_of_bus_mipi_csi2 *bus = &endpoint->bus.mipi_csi2;
-> -	u32 data_lanes[ARRAY_SIZE(bus->data_lanes)];
->  	struct property *prop;
->  	bool have_clk_lane = false;
->  	unsigned int flags = 0;
-> @@ -34,14 +33,26 @@ static void v4l2_of_parse_csi_bus(const struct
-> device_node *node, const __be32 *lane = NULL;
->  		int i;
+> diff --git a/drivers/media/platform/omap3isp/isp.c
+> b/drivers/media/platform/omap3isp/isp.c index 01356dd..b836bc8 100644
+> --- a/drivers/media/platform/omap3isp/isp.c
+> +++ b/drivers/media/platform/omap3isp/isp.c
+> @@ -330,8 +330,8 @@ static int isp_xclk_init(struct isp_device *isp)
+>  		if (np)
+>  			continue;
 > 
-> -		for (i = 0; i < ARRAY_SIZE(data_lanes); i++) {
-> -			lane = of_prop_next_u32(prop, lane, &data_lanes[i]);
-> +		for (i = 0; i < ARRAY_SIZE(bus->data_lanes); i++) {
-> +			lane = of_prop_next_u32(prop, lane, &v);
->  			if (!lane)
->  				break;
-> +			bus->data_lanes[i] = v;
->  		}
->  		bus->num_data_lanes = i;
-> -		while (i--)
-> -			bus->data_lanes[i] = data_lanes[i];
-> +	}
-> +
-> +	prop = of_find_property(node, "lane-polarity", NULL);
-> +	if (prop) {
-> +		const __be32 *polarity = NULL;
-> +		int i;
-
-Could you please use unsigned int instead of int as the loop index can't have 
-negative value ? Feel free to fix the index in the previous loop too :-)
-
-> +
-> +		for (i = 0; i < ARRAY_SIZE(bus->lane_polarity); i++) {
-> +			polarity = of_prop_next_u32(prop, polarity, &v);
-> +			if (!polarity)
-> +				break;
-> +			bus->lane_polarity[i] = v;
-> +		}
-
-Should we check that i == num_data_lines + 1 ?
-
->  	}
+> -		if (pdata->xclks[i].con_id == NULL &&
+> -		    pdata->xclks[i].dev_id == NULL)
+> +		if (!pdata || (pdata->xclks[i].con_id == NULL &&
+> +			       pdata->xclks[i].dev_id == NULL))
+>  			continue;
 > 
->  	if (!of_property_read_u32(node, "clock-lanes", &v)) {
-> diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
-> index 70fa7b7..a70eb52 100644
-> --- a/include/media/v4l2-of.h
-> +++ b/include/media/v4l2-of.h
-> @@ -29,12 +29,15 @@ struct device_node;
->   * @data_lanes: an array of physical data lane indexes
->   * @clock_lane: physical lane index of the clock lane
->   * @num_data_lanes: number of data lanes
-> + * @lane_polarity: polarity of the lanes. The order is the same of
-> + *		   the physical lanes.
->   */
->  struct v4l2_of_bus_mipi_csi2 {
->  	unsigned int flags;
->  	unsigned char data_lanes[4];
->  	unsigned char clock_lane;
->  	unsigned short num_data_lanes;
-> +	bool lane_polarity[5];
->  };
+>  		xclk->lookup = kzalloc(sizeof(*xclk->lookup), GFP_KERNEL);
+> @@ -1989,7 +1989,8 @@ static int isp_register_entities(struct isp_device
+> *isp) goto done;
 > 
->  /**
+>  	/* Register external entities */
+> -	for (subdevs = pdata->subdevs; subdevs && subdevs->subdevs; ++subdevs) {
+> +	for (subdevs = pdata ? pdata->subdevs : NULL;
+> +	     subdevs && subdevs->subdevs; ++subdevs) {
+>  		struct v4l2_subdev *sensor =
+>  			isp_register_subdev_group(isp, subdevs->subdevs);
+> 
+> @@ -2271,9 +2272,6 @@ static int isp_probe(struct platform_device *pdev)
+>  	int ret;
+>  	int i, m;
+> 
+> -	if (pdata == NULL)
+> -		return -EINVAL;
+> -
+>  	isp = devm_kzalloc(&pdev->dev, sizeof(*isp), GFP_KERNEL);
+>  	if (!isp) {
+>  		dev_err(&pdev->dev, "could not allocate memory\n");
+> diff --git a/drivers/media/platform/omap3isp/ispvideo.c
+> b/drivers/media/platform/omap3isp/ispvideo.c index 3fe9047..d644164 100644
+> --- a/drivers/media/platform/omap3isp/ispvideo.c
+> +++ b/drivers/media/platform/omap3isp/ispvideo.c
+> @@ -1022,7 +1022,7 @@ isp_video_streamon(struct file *file, void *fh, enum
+> v4l2_buf_type type)
+> 
+>  	pipe->entities = 0;
+> 
+> -	if (video->isp->pdata->set_constraints)
+> +	if (video->isp->pdata && video->isp->pdata->set_constraints)
+>  		video->isp->pdata->set_constraints(video->isp, true);
+>  	pipe->l3_ick = clk_get_rate(video->isp->clock[ISP_CLK_L3_ICK]);
+>  	pipe->max_rate = pipe->l3_ick;
+> @@ -1104,7 +1104,7 @@ err_set_stream:
+>  err_check_format:
+>  	media_entity_pipeline_stop(&video->video.entity);
+>  err_pipeline_start:
+> -	if (video->isp->pdata->set_constraints)
+> +	if (video->isp->pdata && video->isp->pdata->set_constraints)
+>  		video->isp->pdata->set_constraints(video->isp, false);
+>  	/* The DMA queue must be emptied here, otherwise CCDC interrupts that
+>  	 * will get triggered the next time the CCDC is powered up will try to
+> @@ -1165,7 +1165,7 @@ isp_video_streamoff(struct file *file, void *fh, enum
+> v4l2_buf_type type) video->queue = NULL;
+>  	video->error = false;
+> 
+> -	if (video->isp->pdata->set_constraints)
+> +	if (video->isp->pdata && video->isp->pdata->set_constraints)
+>  		video->isp->pdata->set_constraints(video->isp, false);
+>  	media_entity_pipeline_stop(&video->video.entity);
 
 -- 
 Regards,
