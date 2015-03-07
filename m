@@ -1,155 +1,69 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [RFC 17/18] arm: dts: n950, n9: Add primary camera support
-Date: Sun, 08 Mar 2015 01:56:13 +0200
-Message-ID: <5342826.KbVLN7n8xZ@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-18-git-send-email-sakari.ailus@iki.fi>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [RFC 12/18] dt: bindings: Add lane-polarity property to endpoint
+ nodes
+Date: Sun, 8 Mar 2015 01:57:14 +0200
+Message-ID: <20150307235714.GI6539@valkosipuli.retiisi.org.uk>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
+ <1425764475-27691-13-git-send-email-sakari.ailus@iki.fi>
+ <2025225.4flgD7jFWe@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425764475-27691-18-git-send-email-sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2025225.4flgD7jFWe@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi Laurent,
 
-Thank you for the patch.
-
-On Saturday 07 March 2015 23:41:14 Sakari Ailus wrote:
-> Add support for the primary camera of the Nokia N950 and N9.
+On Sun, Mar 08, 2015 at 01:46:02AM +0200, Laurent Pinchart wrote:
+> Hi Sakari,
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-> ---
->  arch/arm/boot/dts/omap3-n9.dts       |   39 +++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap3-n950-n9.dtsi |    4 ----
->  arch/arm/boot/dts/omap3-n950.dts     |   39 +++++++++++++++++++++++++++++++
->  3 files changed, 78 insertions(+), 4 deletions(-)
+> Thank you for the patch.
 > 
-> diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
-> index 9938b5d..05f32ae 100644
-> --- a/arch/arm/boot/dts/omap3-n9.dts
-> +++ b/arch/arm/boot/dts/omap3-n9.dts
-> @@ -16,3 +16,42 @@
->  	model = "Nokia N9";
->  	compatible = "nokia,omap3-n9", "ti,omap36xx", "ti,omap3";
->  };
-> +
-> +&i2c2 {
-> +	clock-frequency = <400000>;
-> +
-> +	smia_1: camera@10 {
-> +		compatible = "nokia,smia";
-> +		reg = <0x10>;
-> +		/* No reset gpio */
-> +		vana-supply = <&vaux3>;
-> +		clocks = <&omap3_isp 0>;
-> +		clock-frequency = <9600000>;
-> +		nokia,nvm-size = <1024>; /* 16 * 64 */
-
-You could actually specify that as "<(16 * 64)>".
-
-> +		link-frequencies = /bits/ 64 <199200000 210000000 499200000>;
-> +		port {
-> +			smia_1_1: endpoint {
-> +				clock-lanes = <0>;
-> +				data-lanes = <1 2>;
-> +				remote-endpoint = <&csi2a_ep>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&omap3_isp {
-> +	vdd-csiphy1-supply = <&vaux2>;
-> +	vdd-csiphy2-supply = <&vaux2>;
-> +	ports {
-> +		port@2 {
-> +			reg = <2>;
-> +			csi2a_ep: endpoint {
-> +				remote-endpoint = <&smia_1_1>;
-> +				clock-lanes = <2>;
-> +				data-lanes = <1 3>;
-> +				crc = <1>;
-> +				lane-polarity = <1 1 1>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> b/arch/arm/boot/dts/omap3-n950-n9.dtsi index c41db94..51e5043 100644
-> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> @@ -86,10 +86,6 @@
->  	regulator-max-microvolt = <2800000>;
->  };
+> (CC'ing Sylwester)
 > 
-> -&i2c2 {
-> -	clock-frequency = <400000>;
-> -};
-> -
+> On Saturday 07 March 2015 23:41:09 Sakari Ailus wrote:
+> > Add lane-polarity property to endpoint nodes. This essentially tells that
+> > the order of the differential signal wires is inverted.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+> > ---
+> >  Documentation/devicetree/bindings/media/video-interfaces.txt |    5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > b/Documentation/devicetree/bindings/media/video-interfaces.txt index
+> > 571b4c6..058d1e6 100644
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -106,6 +106,11 @@ Optional endpoint properties
+> >  - link-frequencies: Allowed data bus frequencies. For MIPI CSI-2, for
+> >    instance, this is the actual frequency of the bus, not bits per clock per
+> > lane value. An array of 64-bit unsigned integers.
+> > +- lane-polarity: an array of polarities of the lanes starting from the
+> > clock
+> > +  lane and followed by the data lanes in the same order as in data-lanes.
+> > +  Valid values are 0 (normal) and 1 (inverted).
+> 
+> Would it make sense to add #define's for this ?
 
-What's the reason for moving this to the N9 and N950 DT files as you keep the 
-same value in both ?
+Good question. I don't really have too much of an opinion. I think I'd just
+use a number until someone else needs this. :-)
 
->  &i2c3 {
->  	clock-frequency = <400000>;
->  };
-> diff --git a/arch/arm/boot/dts/omap3-n950.dts
-> b/arch/arm/boot/dts/omap3-n950.dts index 261c558..2b2ed9c 100644
-> --- a/arch/arm/boot/dts/omap3-n950.dts
-> +++ b/arch/arm/boot/dts/omap3-n950.dts
-> @@ -16,3 +16,42 @@
->  	model = "Nokia N950";
->  	compatible = "nokia,omap3-n950", "ti,omap36xx", "ti,omap3";
->  };
-> +
-> +&i2c2 {
-> +	clock-frequency = <400000>;
-> +
-> +	smia_1: camera@10 {
-> +		compatible = "nokia,smia";
-> +		reg = <0x10>;
-> +		/* No reset gpio */
-> +		vana-supply = <&vaux3>;
-> +		clocks = <&omap3_isp 0>;
-> +		clock-frequency = <9600000>;
-> +		nokia,nvm-size = <1024>; /* 16 * 64 */
-> +		link-frequencies = /bits/ 64 <210000000 333600000 398400000>;
-> +		port {
-> +			smia_1_1: endpoint {
-> +				clock-lanes = <0>;
-> +				data-lanes = <1 2>;
-> +				remote-endpoint = <&csi2a_ep>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&omap3_isp {
-> +	vdd-csiphy1-supply = <&vaux2>;
-> +	vdd-csiphy2-supply = <&vaux2>;
-> +	ports {
-> +		port@2 {
-> +			reg = <2>;
-> +			csi2a_ep: endpoint {
-> +				remote-endpoint = <&smia_1_1>;
-> +				clock-lanes = <2>;
-> +				data-lanes = <3 1>;
-> +				crc = <1>;
-> +				lane-polarity = <1 1 1>;
-> +			};
-> +		};
-> +	};
-> +};
+> > The length of the array
+> > +  should be the combined length of data-lanes and clock-lanes
+> > properties.
+> > +  This property is valid for serial busses only.
+> 
+> You should also document what happens when the property is omitted.
+
+Will add.
 
 -- 
 Regards,
 
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
