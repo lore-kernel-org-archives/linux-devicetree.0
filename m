@@ -1,113 +1,53 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] mtd: nand: add NAND driver for Broadcom STB NAND controller
-Date: Sat, 7 Mar 2015 22:48:28 +0100
-Message-ID: <CACna6rwMv0HcyfThhsQucHviG_-vamtbig_PxGUY-t+WGESqsA@mail.gmail.com>
-References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
-	<1425691129-1150-4-git-send-email-computersforpeace@gmail.com>
-	<CACna6rzkEQu+LYchckFpLLxkvyMYK7N84nrGu8p0rjRsRbFzfg@mail.gmail.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 1/2] Input: add support for Semtech SX8654 I2C
+ touchscreen controller
+Date: Sat, 07 Mar 2015 22:54:41 +0100
+Message-ID: <1425765281.2300.17.camel@x220>
+References: <1425666099-8365-1-git-send-email-sebastien.szymanski@armadeus.com>
+	 <20150306182155.GB4540@dtor-ws> <20150307005717.GD26151@dtor-ws>
+	 <1425731545.2281.3.camel@tiscali.nl> <20150307212543.GA38770@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6rzkEQu+LYchckFpLLxkvyMYK7N84nrGu8p0rjRsRbFzfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150307212543.GA38770@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: =?ISO-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7 March 2015 at 18:39, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> On 7 March 2015 at 02:18, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
->> This core originated in Set-Top Box chips (BCM7xxx) but is used in a
->> variety of other Broadcom chips, including some BCM63xxx, BCM33xx, a=
-nd
->> iProc/Cygnus. It's been used only on ARM and MIPS SoCs, so restrict =
-it
->> to those architectures.
->>
->> There are multiple revisions of this core throughout the years, and
->> almost every version broke register compatibility in some small way,=
- but
->> with some effort, this driver is able to support v4.0, v5.0, v6.x, v=
-7.0,
->> and v7.1. It's been tested on v5.0, v6.0, v7.0, and v7.1 recently, s=
-o
->> there hopefully are no more lurking inconsistencies.
->
-> Unfortunately, it seems I can't make this driver work with my BCM4708
-> based router. This is a SoC with 6.01 controller.
->
-> Sometimes I get this:
-> [    0.478443] brcmstb_nand 18028000.nand: timeout waiting for comman=
-d 255 (9)
-> [    0.485385] brcmstb_nand 18028000.nand: intfc status f0000000
-> [    0.588393] brcmstb_nand 18028000.nand: timeout waiting for comman=
-d 144 (7)
-> [    0.595326] brcmstb_nand 18028000.nand: intfc status f0000000
-> [    0.698392] brcmstb_nand 18028000.nand: timeout waiting for comman=
-d 144 (7)
-> [    0.705322] brcmstb_nand 18028000.nand: intfc status f0000000
-> [    0.711051] nand: second ID read did not match 20,20 against 20,00
-> [    0.717197] nand: No NAND device found
->
-> Other time:
-> [    0.478441] brcmstb_nand 18028000.nand: timeout waiting for comman=
-d 255 (9)
-> [    0.485385] brcmstb_nand 18028000.nand: intfc status f0000000
-> [    0.588396] brcmstb_nand 18028000.nand: timeout waiting for comman=
-d 144 (7)
-> [    0.595327] brcmstb_nand 18028000.nand: intfc status f0000000
-> [    0.698393] brcmstb_nand 18028000.nand: timeout waiting for comman=
-d 144 (7)
-> [    0.705321] brcmstb_nand 18028000.nand: intfc status f0000000
-> [    0.808394] brcmstb_nand 18028000.nand: timeout waiting for comman=
-d 144 (7)
-> [    0.815326] brcmstb_nand 18028000.nand: intfc status f0000000
-> [    0.918392] brcmstb_nand 18028000.nand: timeout waiting for comman=
-d 144 (7)
-> [    0.925322] brcmstb_nand 18028000.nand: intfc status f0000000
-> [    0.931047] nand: No NAND device found
->
-> (Btw. I guess you could use 0x%x instead of %d for printing commands)=
-=2E
->
-> It seems that brcmnand_ctlrdy_irq never fires on my device. Just like
-> controller was never generating any IRQ.
+On Sat, 2015-03-07 at 13:25 -0800, Dmitry Torokhov wrote:
+> I am not sure if anyone cares about exact version of GPL in module
+> information (2 only vs 2+) since it only used to figure out if the
+> module taints kernel or not. In fact there are more modules that are v2
+> only that claim GPL than the ones claiming GPL v2.
+> 
+> dtor@dtor-ws:~/kernel/master$ for file in `grep -r -l 'MODULE_LICENSE("GPL")'`; do grep -H '2 as published' $file; done | wc -l
+> 259
+> dtor@dtor-ws:~/kernel/master$ for file in `grep -r -l 'MODULE_LICENSE("GPL v2")'`; do grep -H '2 as published' $file; do ne | wc -l
+> 150
+> 
+> Also:
+> 
+> dtor@dtor-ws:~/kernel/master$ for file in `grep -r -l 'MODULE_LICENSE("GPL v2")'`; do grep -H '2 or ' $file; done | wc -l
+> 68
+> dtor@dtor-ws:~/kernel/master$ for file in `grep -r -l 'MODULE_LICENSE("GPL")'`; do grep -H '2 or ' $file; done | wc -l
+> 237
 
-Oh, damn, I was doing sth stupid. I copied example from Documentation
-which has "brcm,nandcs" with reg =3D <1>;. That was wrong of course.
-after changing chip from 1 to 0 I got:
+By that logic we might as well simplify the logic of
+license_is_gpl_compatible() and MODULE_LICENSE() quite a bit. Why check
+for six variants instead of just one and be done with it?
 
-[    1.688413] brcmstb_nand 18028000.nand: timeout waiting for command =
-255 (9)
-[    1.695355] brcmstb_nand 18028000.nand: intfc status f0000000
-[    1.808384] brcmstb_nand 18028000.nand: timeout waiting for command =
-144 (7)
-[    1.815320] brcmstb_nand 18028000.nand: intfc status f0000000
-[    1.928385] brcmstb_nand 18028000.nand: timeout waiting for command =
-144 (7)
-[    1.935312] brcmstb_nand 18028000.nand: intfc status f0000000
-[    2.048460] brcmstb_nand 18028000.nand: timeout waiting for command =
-144 (7)
-[    2.055392] brcmstb_nand 18028000.nand: intfc status f0000000
-[    2.168386] brcmstb_nand 18028000.nand: timeout waiting for command =
-144 (7)
-[    2.175315] brcmstb_nand 18028000.nand: intfc status f0000000
-[    2.185640] nand: device found, Manufacturer ID: 0x92, Chip ID: 0xf1
-[    2.191967] nand: Eon NAND 128MiB 3,3V 8-bit
-[    2.196221] nand: 128 MiB, SLC, erase size: 128 KiB, page size:
-2048, OOB size: 64
-[    2.203784] brcmstb_nand 18028000.nand: detected 128MiB total,
-128KiB blocks, 2KiB pages, 16B OOB, 8-bit, BCH-8
+Anyhow, "GPL" and "GPL v2" are both allowed but not identical. So,
+unless a patch is applied to treat them interchangeably, somehow, in the
+module license checking code, we ought to make each instance of
+MODULE_LICENSE() match the actual license of the module it's used for.
 
-So there is still problem with lacking IRQ (and timeouts), but at
-least communication with chip looks OK in general.
+Yes, that's annoying. You're free to submit a patch to end all the
+busywork this brings along. But I fear there's a reason for all that
+busywork. Please prove me wrong. It would make everyone's life a bit
+easier.
 
-Of course the lost of log is also spammed in these "timeout waiting"
-and driver is unusable.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Paul Bolle
+
