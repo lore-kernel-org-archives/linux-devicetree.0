@@ -1,63 +1,90 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 2/2] ARM: dts: rockchip: add input supplies for the act8846 on Radxa Rock
-Date: Sat, 07 Mar 2015 15:30:06 +0100
-Message-ID: <1971287.rRrUEZJPze@phil>
-References: <1709506.shJhJsMxOa@phil>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH][ASoC]Add DT bindings for generic ASoC AC97
+	CODEC driver
+Date: Sat, 7 Mar 2015 14:34:34 +0000
+Message-ID: <20150307143434.GL28806@sirena.org.uk>
+References: <54F9F81E.8080105@maciej.szmigiero.name>
+ <20150307105201.GB28806@sirena.org.uk>
+ <54FB041D.8010102@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1709506.shJhJsMxOa@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============9038488810078120263=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <54FB041D.8010102@maciej.szmigiero.name>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc: Mark Rutland <mark.rutland@arm.com>, Brian Austin <brian.austin@cirrus.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On the Radxa Rock board most supplies come from the static 5v vsys supply, but
-the inl1-supply comes from the REG4 of the act8846 itself. Model this dependency
-using the added supply-handling to make sure the supplying regulator gets handled
-correctly and not accidentially turned off.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
-I'll apply this one to my dts branch myself, if patch 1/2 is accepted
+--===============9038488810078120263==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="+278g007AL/ykmV8"
+Content-Disposition: inline
 
- arch/arm/boot/dts/rk3188-radxarock.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
-index 9a09579..bdf8570 100644
---- a/arch/arm/boot/dts/rk3188-radxarock.dts
-+++ b/arch/arm/boot/dts/rk3188-radxarock.dts
-@@ -103,6 +103,14 @@
- 		regulator-always-on;
- 		regulator-boot-on;
- 	};
-+
-+	vsys: vsys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vsys";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+	};
- };
- 
- &emac {
-@@ -148,6 +156,14 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&act8846_dvs0_ctl>;
- 
-+		vp1-supply = <&vsys>;
-+		vp2-supply = <&vsys>;
-+		vp3-supply = <&vsys>;
-+		vp4-supply = <&vsys>;
-+		inl1-supply = <&vcc_io>;
-+		inl2-supply = <&vsys>;
-+		inl3-supply = <&vsys>;
-+
- 		regulators {
- 			vcc_ddr: REG1 {
- 				regulator-name = "VCC_DDR";
--- 
-2.1.4
+--+278g007AL/ykmV8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat, Mar 07, 2015 at 02:58:53PM +0100, Maciej S. Szmigiero wrote:
+> W dniu 07.03.2015 11:52, Mark Brown pisze:
+> > On Fri, Mar 06, 2015 at 07:55:26PM +0100, Maciej S. Szmigiero wrote:
+
+> > AC'97 shouldn't need DT bindings for the CODEC, it's an enumerable bus.
+
+> What this driver did / does is essentially to allow attaching AC'97 bus
+> to ASoC AC'97 controllers which don't do it on its own (from what I can
+> see only board files do it).
+
+That's true, and it's something it's easy to get away with with board
+files, but that doesn't mean it's something we should be doing for
+device tree where we're not just finding an expedient way to load things
+but rather defining an ABI.
+
+> This driver originally constrained rates to 8000, 11025, 22050, 44100,
+> 48000.
+
+> An alternative would be to remove this constraint at all from this
+> driver and leave such constraining for controller and AC'97 bus code.
+
+That's a much better approach.
+
+> But since this driver was originally limited to these rates I think it
+> would be safer to do it only when instantiated via OF.
+
+Again, DT is defining an ABI.
+
+--+278g007AL/ykmV8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJU+wx5AAoJECTWi3JdVIfQkKIH/1m9xSCDcLm1T19DFx9j4/t2
+MC2zbugpd567aqpzuVvXdnN7XE3AgZGljTmjC3fJzZD22crr+ewoLXRqdPCLEh0g
+ILgDTuO3dTcy2EgS1ALNkKH9hbf0pgV5ImVmcCOk8BfuP3ELylb3dxwnJ+ewL4b5
+ysBtVTtLK8WXQ34gd7YMjUZZvrYsyh32G3rCI7F6sog66C7EiYRLU5bDpB0maanP
+sedn3rIFPxdUcy0DzxxolFJS5qUdutJ/8Kqn8k0GjCFTBSmmnIFnjJFbl+PuQU15
+PiBY3gWAzs9IoOiDZG3qgZnfmxwqxEa4YFd5zWlnmlpC/kfGx11D9J23qTIx0Wo=
+=/qlL
+-----END PGP SIGNATURE-----
+
+--+278g007AL/ykmV8--
+
+--===============9038488810078120263==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============9038488810078120263==--
