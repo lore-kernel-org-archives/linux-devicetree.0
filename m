@@ -1,77 +1,75 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt/bindings: control CS via standard GPIO operations
- instead of SPI-HW
-Date: Fri, 06 Mar 2015 22:47:53 -0700
-Message-ID: <54FA9109.6080102@wwwdotorg.org>
-References: <1425487205-5477-1-git-send-email-kernel@martin.sperl.org> <1425487205-5477-2-git-send-email-kernel@martin.sperl.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425487205-5477-2-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/4] net/macb: merge at91_ether driver into macb driver
+Date: Sat,  7 Mar 2015 07:23:28 +0100
+Message-ID: <1425709412-4935-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2015 09:40 AM, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> 
-> Change the device tree to use cs-gpios for the spi bus master
-> and standard gpio operation instead of relying on the HW with
-> just 2 chip_selects using ALT0.
-> 
-> This reassigns the existing CS pins 7(=CS1) and 8(=CS0)
-> as output instead of ALT0 (=SPI HW block controlled) 
-> and adds them in the list of cs-gpios for the spi-bus.
+Hello,
 
-These pins aren't used by anything on the board, but are rather part of
-the expansion header. I wonder if we wouldn't be better off removing any
-configuration of the pins from the DT. After all, we can't guarantee how
-the user has connected them. The "default" usage, a/k/a the expansion
-header signal naming, isn't any guarantee.
+The rm9200 boards use the dedicated at91_ether driver instead of the
+regular macb driver.
 
-Rather, the user should specify what they want to use the pin as; as a
-GPIO input, GPIO output, or an SPI chip-select.
+Both the macb and at91_ether drivers can be compiled as separated
+modules.
+Since the at91_ether driver uses code from the macb driver, at91_ether.ko
+depends on macb.ko.
 
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+However the macb.ko module always fails to load on rm9200 boards: the
+macb_probe() function expects a hclk clock which doesn't exist on rm9200.
+Then the at91_ether.ko can't be loaded in turn due to unresolved
+dependencies.
 
->  	gpioout: gpioout {
-> -		brcm,pins = <6>;
-> +		brcm,pins = <6 7 8>;
->  		brcm,function = <1>; /* GPIO out */
->  	};
->  
->  	alt0: alt0 {
-> -		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 14 15 40 45>;
-> +		brcm,pins = <0 1 2 3 4 5 9 10 11 14 15 40 45>;
->  		brcm,function = <4>; /* alt0 */
->  	};
+This series of patches fix this issue by merging at91_ether into macb.
 
-While the existing DT already has this issue, note that this forces
-these pins to be driven as outputs. What if the user has hooked up an
-external device that drives these signals, and wants to use the pins as
-GPIO inputs?
+Patch 1 is fixing a problem that might happen when enabling ARM
+multi-platform suppot.
 
-> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+Best Regards,
 
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			status = "disabled";
-> +			cs-gpios = <&gpio 8 0>, <&gpio 7 0>;
->  		};
+Boris
 
-This shouldn't be in the SoC .dtsi file. It's quite possible for someone
-to use other GPIOs as SPI CS. It's board or even use-case specific
-whether those are the correct values.
+Changes since v3:
+- move "net: macb: remove #if defined(CONFIG_ARCH_AT91) sections" patch
+  into this series to avoid dependency on other patch series.
 
-I would argue that we should not put any cs-gpios into any in-kernel DT
-file, since there's no on-board usage of SPI on the RPi boards.
+Changes since v2:
+- rebase after changed brought by commit "net: macb: remove #if
+  defined(CONFIG_ARCH_AT91) sections"
 
-For SPI to be useful, the user has to add a DT node to represent the SPI
-device itself anyway, so adding some properties to the controller to
-define which GPIOs to use for SPI CS can be done then too.
+Changes since v1:
+- rework probe functions to share common probing logic
+
+
+Boris Brezillon (2):
+  ARM: at91/dt: fix macb compatible strings
+  net: macb: remove #if defined(CONFIG_ARCH_AT91) sections
+
+Cyrille Pitchen (2):
+  net/macb: unify clock management
+  net/macb: merge at91_ether driver into macb driver
+
+ arch/arm/boot/dts/at91sam9260.dtsi        |   2 +-
+ arch/arm/boot/dts/at91sam9263.dtsi        |   2 +-
+ arch/arm/boot/dts/at91sam9g45.dtsi        |   2 +-
+ arch/arm/boot/dts/at91sam9x5_macb0.dtsi   |   2 +-
+ arch/arm/boot/dts/at91sam9x5_macb1.dtsi   |   2 +-
+ arch/arm/boot/dts/sama5d3_emac.dtsi       |   2 +-
+ drivers/net/ethernet/cadence/Kconfig      |   8 -
+ drivers/net/ethernet/cadence/Makefile     |   1 -
+ drivers/net/ethernet/cadence/at91_ether.c | 481 ----------------------
+ drivers/net/ethernet/cadence/macb.c       | 662 ++++++++++++++++++++++--------
+ drivers/net/ethernet/cadence/macb.h       |  12 +-
+ 11 files changed, 503 insertions(+), 673 deletions(-)
+ delete mode 100644 drivers/net/ethernet/cadence/at91_ether.c
+
+-- 
+1.9.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
