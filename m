@@ -1,13 +1,13 @@
 From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [RFC 16/18] arm: dts: omap3: Add DT entries for OMAP 3
-Date: Sun, 08 Mar 2015 01:51:51 +0200
-Message-ID: <2423520.KeZmBeFNoH@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-17-git-send-email-sakari.ailus@iki.fi>
+Subject: Re: [RFC 17/18] arm: dts: n950, n9: Add primary camera support
+Date: Sun, 08 Mar 2015 01:56:13 +0200
+Message-ID: <5342826.KbVLN7n8xZ@avalon>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-18-git-send-email-sakari.ailus@iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1425764475-27691-17-git-send-email-sakari.ailus-X3B1VOXEql0@public.gmane.org>
+In-Reply-To: <1425764475-27691-18-git-send-email-sakari.ailus-X3B1VOXEql0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
@@ -17,73 +17,132 @@ Hi Sakari,
 
 Thank you for the patch.
 
-On Saturday 07 March 2015 23:41:13 Sakari Ailus wrote:
-> The resources the ISP needs are slightly different on 3[45]xx and 3[67]xx.
-> Especially the phy-type property is different.
+On Saturday 07 March 2015 23:41:14 Sakari Ailus wrote:
+> Add support for the primary camera of the Nokia N950 and N9.
 > 
 > Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 > ---
->  arch/arm/boot/dts/omap34xx.dtsi |   15 +++++++++++++++
->  arch/arm/boot/dts/omap36xx.dtsi |   15 +++++++++++++++
->  2 files changed, 30 insertions(+)
+>  arch/arm/boot/dts/omap3-n9.dts       |   39 +++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/omap3-n950-n9.dtsi |    4 ----
+>  arch/arm/boot/dts/omap3-n950.dts     |   39 +++++++++++++++++++++++++++++++
+>  3 files changed, 78 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/omap34xx.dtsi
-> b/arch/arm/boot/dts/omap34xx.dtsi index 3819c1e..4c034d0 100644
-> --- a/arch/arm/boot/dts/omap34xx.dtsi
-> +++ b/arch/arm/boot/dts/omap34xx.dtsi
-> @@ -37,6 +37,21 @@
->  			pinctrl-single,register-width = <16>;
->  			pinctrl-single,function-mask = <0xff1f>;
->  		};
+> diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
+> index 9938b5d..05f32ae 100644
+> --- a/arch/arm/boot/dts/omap3-n9.dts
+> +++ b/arch/arm/boot/dts/omap3-n9.dts
+> @@ -16,3 +16,42 @@
+>  	model = "Nokia N9";
+>  	compatible = "nokia,omap3-n9", "ti,omap36xx", "ti,omap3";
+>  };
 > +
-> +		omap3_isp: omap3_isp@480bc000 {
-> +			compatible = "ti,omap3-isp";
-> +			reg = <0x480bc000 0x12fc
-> +			       0x480bd800 0x017c>;
-> +			interrupts = <24>;
-> +			iommus = <&mmu_isp>;
-> +			syscon = <&omap3_scm_general 0xdc>;
-> +			ti,phy-type = <0>;
-> +			#clock-cells = <1>;
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
+> +&i2c2 {
+> +	clock-frequency = <400000>;
+> +
+> +	smia_1: camera@10 {
+> +		compatible = "nokia,smia";
+> +		reg = <0x10>;
+> +		/* No reset gpio */
+> +		vana-supply = <&vaux3>;
+> +		clocks = <&omap3_isp 0>;
+> +		clock-frequency = <9600000>;
+> +		nokia,nvm-size = <1024>; /* 16 * 64 */
 
-How about predefining the ports too ?
+You could actually specify that as "<(16 * 64)>".
 
+> +		link-frequencies = /bits/ 64 <199200000 210000000 499200000>;
+> +		port {
+> +			smia_1_1: endpoint {
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +				remote-endpoint = <&csi2a_ep>;
 > +			};
 > +		};
->  	};
->  };
-> 
-> diff --git a/arch/arm/boot/dts/omap36xx.dtsi
-> b/arch/arm/boot/dts/omap36xx.dtsi index 541704a..31ac41c 100644
-> --- a/arch/arm/boot/dts/omap36xx.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> @@ -69,6 +69,21 @@
->  			pinctrl-single,register-width = <16>;
->  			pinctrl-single,function-mask = <0xff1f>;
->  		};
+> +	};
+> +};
 > +
-> +		omap3_isp: omap3_isp@480bc000 {
-> +			compatible = "ti,omap3-isp";
-> +			reg = <0x480bc000 0x12fc
-> +			       0x480bd800 0x0600>;
-> +			interrupts = <24>;
-> +			iommus = <&mmu_isp>;
-> +			syscon = <&omap3_scm_general 0x2f0>;
-> +			ti,phy-type = <1>;
-> +			#clock-cells = <1>;
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-
-And obviously here too.
-
+> +&omap3_isp {
+> +	vdd-csiphy1-supply = <&vaux2>;
+> +	vdd-csiphy2-supply = <&vaux2>;
+> +	ports {
+> +		port@2 {
+> +			reg = <2>;
+> +			csi2a_ep: endpoint {
+> +				remote-endpoint = <&smia_1_1>;
+> +				clock-lanes = <2>;
+> +				data-lanes = <1 3>;
+> +				crc = <1>;
+> +				lane-polarity = <1 1 1>;
 > +			};
 > +		};
->  	};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> b/arch/arm/boot/dts/omap3-n950-n9.dtsi index c41db94..51e5043 100644
+> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> @@ -86,10 +86,6 @@
+>  	regulator-max-microvolt = <2800000>;
 >  };
+> 
+> -&i2c2 {
+> -	clock-frequency = <400000>;
+> -};
+> -
+
+What's the reason for moving this to the N9 and N950 DT files as you keep the 
+same value in both ?
+
+>  &i2c3 {
+>  	clock-frequency = <400000>;
+>  };
+> diff --git a/arch/arm/boot/dts/omap3-n950.dts
+> b/arch/arm/boot/dts/omap3-n950.dts index 261c558..2b2ed9c 100644
+> --- a/arch/arm/boot/dts/omap3-n950.dts
+> +++ b/arch/arm/boot/dts/omap3-n950.dts
+> @@ -16,3 +16,42 @@
+>  	model = "Nokia N950";
+>  	compatible = "nokia,omap3-n950", "ti,omap36xx", "ti,omap3";
+>  };
+> +
+> +&i2c2 {
+> +	clock-frequency = <400000>;
+> +
+> +	smia_1: camera@10 {
+> +		compatible = "nokia,smia";
+> +		reg = <0x10>;
+> +		/* No reset gpio */
+> +		vana-supply = <&vaux3>;
+> +		clocks = <&omap3_isp 0>;
+> +		clock-frequency = <9600000>;
+> +		nokia,nvm-size = <1024>; /* 16 * 64 */
+> +		link-frequencies = /bits/ 64 <210000000 333600000 398400000>;
+> +		port {
+> +			smia_1_1: endpoint {
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +				remote-endpoint = <&csi2a_ep>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&omap3_isp {
+> +	vdd-csiphy1-supply = <&vaux2>;
+> +	vdd-csiphy2-supply = <&vaux2>;
+> +	ports {
+> +		port@2 {
+> +			reg = <2>;
+> +			csi2a_ep: endpoint {
+> +				remote-endpoint = <&smia_1_1>;
+> +				clock-lanes = <2>;
+> +				data-lanes = <3 1>;
+> +				crc = <1>;
+> +				lane-polarity = <1 1 1>;
+> +			};
+> +		};
+> +	};
+> +};
 
 -- 
 Regards,
