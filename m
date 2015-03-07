@@ -1,47 +1,136 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 2/4] ARM: OMAP2+: AM43xx hwmod: Add RTC hwmod for
- AM43xx
-Date: Sat, 7 Mar 2015 00:37:57 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1503070037240.20994@utopia.booyaka.com>
-References: <1425561211-31003-1-git-send-email-d-gerlach@ti.com> <1425561211-31003-3-git-send-email-d-gerlach@ti.com> <alpine.DEB.2.02.1503060425590.5613@utopia.booyaka.com> <54F9E41B.5010805@ti.com> <alpine.DEB.2.02.1503061743170.20994@utopia.booyaka.com>
- <54F9E8DF.4000009@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] input: goodix: Use max touch number from device config
+Date: Fri, 6 Mar 2015 16:41:07 -0800
+Message-ID: <20150307004107.GB26151@dtor-ws>
+References: <1425457930-4481-1-git-send-email-mamlinav@gmail.com>
+ <1425576744-25170-1-git-send-email-mamlinav@gmail.com>
+ <20150306144231.e7c7cd0b52fe68356ad27704@ao2.it>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <54F9E8DF.4000009@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, KEERTHY <j-keerthy@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150306144231.e7c7cd0b52fe68356ad27704@ao2.it>
+Sender: linux-input-owner@vger.kernel.org
+To: Antonio Ospite <ao2@ao2.it>
+Cc: Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 6 Mar 2015, Dave Gerlach wrote:
-
-> On 03/06/2015 11:44 AM, Paul Walmsley wrote:
-> > On Fri, 6 Mar 2015, Dave Gerlach wrote:
-> >> On 03/05/2015 10:26 PM, Paul Walmsley wrote:
-> >>> On Thu, 5 Mar 2015, Dave Gerlach wrote:
-> >>>
-> >>>> RTC hwmod is needed for proper operation of PM features like
-> >>>> rtcwake and rtc-only mode so reuse the am33xx rtc hwmod.
-> >>>>
-> >>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> >>>
-> >>> Thanks, queued for v4.1.
-> >>
-> >> Thanks, but please note as I just commented in Patch 1 of this series, without
-> >> the ti,no-init flag in place that is introduced there this patch will cause the
-> >> am43x-epos-evm to fail to boot.
-> > 
-> > If that's so, shouldn't it appear in the series after patch 3, then?  
-> > If only patches 1 and 2 are applied, then won't the boot be broken on 
-> > am43x-epos-evm ?
+On Fri, Mar 06, 2015 at 02:42:31PM +0100, Antonio Ospite wrote:
+> On Thu,  5 Mar 2015 20:32:24 +0300
+> Aleksei Mamlin <mamlinav@gmail.com> wrote:
 > 
-> Hmm yes you are correct that would be the case, seems I should have swapped the
-> order. I've gotten into the habit of putting dt patches last to enable what gets
-> introduced previously, guess it's not always the best thing to do. Thanks for
-> pointing this out.
+> > Use max number of touches from device config instead of hardcoding.
+> > 
+> > Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
+> 
+> Tested-by: Antonio Ospite <ao2@ao2.it>
+> 
+> Some minor comments below, but no need to resend IMHO.
 
-OK dropped until this thing is sorted out.
+Applied, thank you.
 
+> 
+> > ---
+> >  drivers/input/touchscreen/goodix.c | 13 ++++++++-----
+> >  1 file changed, 8 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> > index ca19668..a3e2057 100644
+> > --- a/drivers/input/touchscreen/goodix.c
+> > +++ b/drivers/input/touchscreen/goodix.c
+> > @@ -48,6 +48,7 @@ struct goodix_ts_data {
+> >  #define GOODIX_REG_VERSION		0x8140
+> >  
+> >  #define RESOLUTION_LOC		1
+> > +#define MAX_CONTACTS_LOC	5
+> >  #define TRIGGER_LOC		6
+> >  
+> >  static const unsigned long goodix_irq_flags[] = {
+> > @@ -99,7 +100,7 @@ static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
+> >  	}
+> >  
+> >  	touch_num = data[0] & 0x0f;
+> > -	if (touch_num > GOODIX_MAX_CONTACTS)
+> > +	if (touch_num > ts->max_touch_num)
+> >  		return -EPROTO;
+> >  
+> >  	if (touch_num > 1) {
+> > @@ -141,7 +142,7 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
+> >   */
+> >  static void goodix_process_events(struct goodix_ts_data *ts)
+> >  {
+> > -	u8  point_data[1 + GOODIX_CONTACT_SIZE * GOODIX_MAX_CONTACTS];
+> > +	u8  point_data[1 + GOODIX_CONTACT_SIZE * ts->max_touch_num];
+> >  	int touch_num;
+> >  	int i;
+> >  
+> > @@ -202,21 +203,23 @@ static void goodix_read_config(struct goodix_ts_data *ts)
+> >  		ts->abs_x_max = GOODIX_MAX_WIDTH;
+> >  		ts->abs_y_max = GOODIX_MAX_HEIGHT;
+> >  		ts->int_trigger_type = GOODIX_INT_TRIGGER;
+> > +		ts->max_touch_num = GOODIX_MAX_CONTACTS;
+> >  		return;
+> >  	}
+> >  
+> >  	ts->abs_x_max = get_unaligned_le16(&config[RESOLUTION_LOC]);
+> >  	ts->abs_y_max = get_unaligned_le16(&config[RESOLUTION_LOC + 2]);
+> >  	ts->int_trigger_type = (config[TRIGGER_LOC]) & 0x03;
+> > -	if (!ts->abs_x_max || !ts->abs_y_max) {
+> > +	ts->max_touch_num = (config[MAX_CONTACTS_LOC]) & 0x0f;
+> 
+> Parentheses are not really needed here, but I see that you just followed
+> the style from the line above, so it's OK, I'll send a cleanup patch
+> to remove them from both lines.
+> 
+> > +	if (!ts->abs_x_max || !ts->abs_y_max || !ts->max_touch_num) {
+> >  		dev_err(&ts->client->dev,
+> >  			"Invalid config, using defaults\n");
+> >  		ts->abs_x_max = GOODIX_MAX_WIDTH;
+> >  		ts->abs_y_max = GOODIX_MAX_HEIGHT;
+> > +		ts->max_touch_num = GOODIX_MAX_CONTACTS;
+> >  	}
+> >  }
+> >  
+> > -
+> 
+> This is an unrelated change, it's not a big deal of course but in
+> general it is a good practice to differentiate cosmetic changes from
+> functional ones.
+> 
+> >  /**
+> >   * goodix_read_version - Read goodix touchscreen version
+> >   *
+> > @@ -295,7 +298,7 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
+> >  	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
+> >  	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
+> >  
+> > -	input_mt_init_slots(ts->input_dev, GOODIX_MAX_CONTACTS,
+> > +	input_mt_init_slots(ts->input_dev, ts->max_touch_num,
+> >  			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+> >  
+> >  	ts->input_dev->name = "Goodix Capacitive TouchScreen";
+> > -- 
+> > 2.0.5
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-input" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+>    Antonio
+> 
+> -- 
+> Antonio Ospite
+> http://ao2.it
+> 
+> A: Because it messes up the order in which people normally read text.
+>    See http://en.wikipedia.org/wiki/Posting_style
+> Q: Why is top-posting such a bad thing?
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-input" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-- Paul
+-- 
+Dmitry
