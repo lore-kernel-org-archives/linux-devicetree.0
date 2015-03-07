@@ -1,54 +1,40 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] Input: add support for Semtech SX8654 I2C
- touchscreen controller
-Date: Sat, 7 Mar 2015 13:25:43 -0800
-Message-ID: <20150307212543.GA38770@dtor-ws>
-References: <1425666099-8365-1-git-send-email-sebastien.szymanski@armadeus.com>
- <20150306182155.GB4540@dtor-ws>
- <20150307005717.GD26151@dtor-ws>
- <1425731545.2281.3.camel@tiscali.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425731545.2281.3.camel@tiscali.nl>
-Sender: linux-input-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: [RFC 00/18] Device tree support for omap3isp, N9[50] primary camera
+Date: Sat,  7 Mar 2015 23:40:57 +0200
+Message-ID: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, pali.rohar@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 07, 2015 at 01:32:25PM +0100, Paul Bolle wrote:
-> Dmitry Torokhov schreef op vr 06-03-2015 om 16:57 [-0800]:
-> > Applied with some cosmetic edits and DT bindings folded into this patch.
-> 
-> Was one of these cosmetic edits perhaps an edit to use
->     MODULE_LICENSE("GPL v2");
-> 
-> in sx8654.c?
+Hi folks,
 
-No it wasn't.
+I've had this patchset hanging around for a long, long time, and now it's
+time to send it out to linux-media.
 
-> That would make that macro match the license stated in the
-> comment at the top of that file.
+For OMAP 3, first there are a few patches for random and tiny bugfixes and
+then preparation for DT support (including compile tested rework of cm-t35
+board code).
 
-I am not sure if anyone cares about exact version of GPL in module
-information (2 only vs 2+) since it only used to figure out if the
-module taints kernel or not. In fact there are more modules that are v2
-only that claim GPL than the ones claiming GPL v2.
+The lane-polarity DT binding is added to video-interfaces.txt for this, I
+believe, is hardly specific to the OMAP 3 ISP. The same property is read by
+the V4L2 OF parser as well.
 
-dtor@dtor-ws:~/kernel/master$ for file in `grep -r -l 'MODULE_LICENSE("GPL")'`; do grep -H '2 as published' $file; done | wc -l
-259
-dtor@dtor-ws:~/kernel/master$ for file in `grep -r -l 'MODULE_LICENSE("GPL v2")'`; do grep -H '2 as published' $file; do ne | wc -l
-150
+ISP DT support is added for both OMAP 34xx and 36xx, but it remains tested
+on 3630 only. The primary camera support is added for both N950 and N9, the
+latter of which is tested. The differences are quite small between the two
+in both of the cases, but still testing definitely wouldn't hurt.
 
-Also:
+The secondary camera support is still lacking primarily due to the I2C
+address conflict: both of the cameras have the same I2C address. It'd also
+require CCP2 bus support, which is relatively trivial to add.
 
-dtor@dtor-ws:~/kernel/master$ for file in `grep -r -l 'MODULE_LICENSE("GPL v2")'`; do grep -H '2 or ' $file; done | wc -l
-68
-dtor@dtor-ws:~/kernel/master$ for file in `grep -r -l 'MODULE_LICENSE("GPL")'`; do grep -H '2 or ' $file; done | wc -l
-237
-
-Thanks.
+Effects of Philipp Zabel's patch "of: Decrement refcount of previous
+endpoint in of_graph_get_next_endpoint" aren't yet taken into account in
+this series. I'll address this in the next set if changes (small I presume)
+are needed.
 
 -- 
-Dmitry
+Kind regards,
+Sakari
