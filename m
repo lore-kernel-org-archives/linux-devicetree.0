@@ -1,66 +1,113 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [RFC 08/18] omap3isp: Calculate vpclk_div for CSI-2
-Date: Sat,  7 Mar 2015 23:41:05 +0200
-Message-ID: <1425764475-27691-9-git-send-email-sakari.ailus@iki.fi>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, pali.rohar@gmail.com
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] mtd: nand: add NAND driver for Broadcom STB NAND controller
+Date: Sat, 7 Mar 2015 22:48:28 +0100
+Message-ID: <CACna6rwMv0HcyfThhsQucHviG_-vamtbig_PxGUY-t+WGESqsA@mail.gmail.com>
+References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
+	<1425691129-1150-4-git-send-email-computersforpeace@gmail.com>
+	<CACna6rzkEQu+LYchckFpLLxkvyMYK7N84nrGu8p0rjRsRbFzfg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6rzkEQu+LYchckFpLLxkvyMYK7N84nrGu8p0rjRsRbFzfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazao <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Corneliu Doban <cdoban-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The video port clock is l3_ick divided by vpclk_div. This clock must be high
-enough for the external pixel rate. The video port requires two clock cycles
-to process a pixel.
+On 7 March 2015 at 18:39, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+> On 7 March 2015 at 02:18, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+>> This core originated in Set-Top Box chips (BCM7xxx) but is used in a
+>> variety of other Broadcom chips, including some BCM63xxx, BCM33xx, a=
+nd
+>> iProc/Cygnus. It's been used only on ARM and MIPS SoCs, so restrict =
+it
+>> to those architectures.
+>>
+>> There are multiple revisions of this core throughout the years, and
+>> almost every version broke register compatibility in some small way,=
+ but
+>> with some effort, this driver is able to support v4.0, v5.0, v6.x, v=
+7.0,
+>> and v7.1. It's been tested on v5.0, v6.0, v7.0, and v7.1 recently, s=
+o
+>> there hopefully are no more lurking inconsistencies.
+>
+> Unfortunately, it seems I can't make this driver work with my BCM4708
+> based router. This is a SoC with 6.01 controller.
+>
+> Sometimes I get this:
+> [    0.478443] brcmstb_nand 18028000.nand: timeout waiting for comman=
+d 255 (9)
+> [    0.485385] brcmstb_nand 18028000.nand: intfc status f0000000
+> [    0.588393] brcmstb_nand 18028000.nand: timeout waiting for comman=
+d 144 (7)
+> [    0.595326] brcmstb_nand 18028000.nand: intfc status f0000000
+> [    0.698392] brcmstb_nand 18028000.nand: timeout waiting for comman=
+d 144 (7)
+> [    0.705322] brcmstb_nand 18028000.nand: intfc status f0000000
+> [    0.711051] nand: second ID read did not match 20,20 against 20,00
+> [    0.717197] nand: No NAND device found
+>
+> Other time:
+> [    0.478441] brcmstb_nand 18028000.nand: timeout waiting for comman=
+d 255 (9)
+> [    0.485385] brcmstb_nand 18028000.nand: intfc status f0000000
+> [    0.588396] brcmstb_nand 18028000.nand: timeout waiting for comman=
+d 144 (7)
+> [    0.595327] brcmstb_nand 18028000.nand: intfc status f0000000
+> [    0.698393] brcmstb_nand 18028000.nand: timeout waiting for comman=
+d 144 (7)
+> [    0.705321] brcmstb_nand 18028000.nand: intfc status f0000000
+> [    0.808394] brcmstb_nand 18028000.nand: timeout waiting for comman=
+d 144 (7)
+> [    0.815326] brcmstb_nand 18028000.nand: intfc status f0000000
+> [    0.918392] brcmstb_nand 18028000.nand: timeout waiting for comman=
+d 144 (7)
+> [    0.925322] brcmstb_nand 18028000.nand: intfc status f0000000
+> [    0.931047] nand: No NAND device found
+>
+> (Btw. I guess you could use 0x%x instead of %d for printing commands)=
+=2E
+>
+> It seems that brcmnand_ctlrdy_irq never fires on my device. Just like
+> controller was never generating any IRQ.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
----
- drivers/media/platform/omap3isp/ispcsi2.c |    8 +++++++-
- include/media/omap3isp.h                  |    2 --
- 2 files changed, 7 insertions(+), 3 deletions(-)
+Oh, damn, I was doing sth stupid. I copied example from Documentation
+which has "brcm,nandcs" with reg =3D <1>;. That was wrong of course.
+after changing chip from 1 to 0 I got:
 
-diff --git a/drivers/media/platform/omap3isp/ispcsi2.c b/drivers/media/platform/omap3isp/ispcsi2.c
-index 14d279d..97cdfeb 100644
---- a/drivers/media/platform/omap3isp/ispcsi2.c
-+++ b/drivers/media/platform/omap3isp/ispcsi2.c
-@@ -548,6 +548,7 @@ int omap3isp_csi2_reset(struct isp_csi2_device *csi2)
- 
- static int csi2_configure(struct isp_csi2_device *csi2)
- {
-+	struct isp_pipeline *pipe = to_isp_pipeline(&csi2->subdev.entity);
- 	const struct isp_bus_cfg *buscfg;
- 	struct isp_device *isp = csi2->isp;
- 	struct isp_csi2_timing_cfg *timing = &csi2->timing[0];
-@@ -570,7 +571,12 @@ static int csi2_configure(struct isp_csi2_device *csi2)
- 	csi2->frame_skip = 0;
- 	v4l2_subdev_call(sensor, sensor, g_skip_frames, &csi2->frame_skip);
- 
--	csi2->ctrl.vp_out_ctrl = buscfg->bus.csi2.vpclk_div;
-+	csi2->ctrl.vp_out_ctrl =
-+		clamp_t(unsigned int, pipe->l3_ick / pipe->external_rate - 1,
-+			1, 3);
-+	dev_dbg(isp->dev, "%s: l3_ick %lu, external_rate %u, vp_out_ctrl %u\n",
-+		__func__, pipe->l3_ick,  pipe->external_rate,
-+		csi2->ctrl.vp_out_ctrl);
- 	csi2->ctrl.frame_mode = ISP_CSI2_FRAME_IMMEDIATE;
- 	csi2->ctrl.ecc_enable = buscfg->bus.csi2.crc;
- 
-diff --git a/include/media/omap3isp.h b/include/media/omap3isp.h
-index 39e0748..0f0c08b 100644
---- a/include/media/omap3isp.h
-+++ b/include/media/omap3isp.h
-@@ -129,11 +129,9 @@ struct isp_ccp2_cfg {
- /**
-  * struct isp_csi2_cfg - CSI2 interface configuration
-  * @crc: Enable the cyclic redundancy check
-- * @vpclk_div: Video port output clock control
-  */
- struct isp_csi2_cfg {
- 	unsigned crc:1;
--	unsigned vpclk_div:2;
- 	struct isp_csiphy_lanes_cfg lanecfg;
- };
- 
--- 
-1.7.10.4
+[    1.688413] brcmstb_nand 18028000.nand: timeout waiting for command =
+255 (9)
+[    1.695355] brcmstb_nand 18028000.nand: intfc status f0000000
+[    1.808384] brcmstb_nand 18028000.nand: timeout waiting for command =
+144 (7)
+[    1.815320] brcmstb_nand 18028000.nand: intfc status f0000000
+[    1.928385] brcmstb_nand 18028000.nand: timeout waiting for command =
+144 (7)
+[    1.935312] brcmstb_nand 18028000.nand: intfc status f0000000
+[    2.048460] brcmstb_nand 18028000.nand: timeout waiting for command =
+144 (7)
+[    2.055392] brcmstb_nand 18028000.nand: intfc status f0000000
+[    2.168386] brcmstb_nand 18028000.nand: timeout waiting for command =
+144 (7)
+[    2.175315] brcmstb_nand 18028000.nand: intfc status f0000000
+[    2.185640] nand: device found, Manufacturer ID: 0x92, Chip ID: 0xf1
+[    2.191967] nand: Eon NAND 128MiB 3,3V 8-bit
+[    2.196221] nand: 128 MiB, SLC, erase size: 128 KiB, page size:
+2048, OOB size: 64
+[    2.203784] brcmstb_nand 18028000.nand: detected 128MiB total,
+128KiB blocks, 2KiB pages, 16B OOB, 8-bit, BCH-8
+
+So there is still problem with lacking IRQ (and timeouts), but at
+least communication with chip looks OK in general.
+
+Of course the lost of log is also spammed in these "timeout waiting"
+and driver is unusable.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
