@@ -1,62 +1,40 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 02/18] omap3isp: Avoid a BUG_ON() in media_entity_create_link()
-Date: Sun, 08 Mar 2015 01:19:24 +0200
-Message-ID: <1542562.jWgujH4fk7@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-3-git-send-email-sakari.ailus@iki.fi>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH 00/10] omap3 crypto fixes
+Date: Sun, 8 Mar 2015 01:19:25 +0200
+Message-ID: <20150307231924.GC587@fuloong-minipc.musicnaut.iki.fi>
+References: <1424958600-18881-1-git-send-email-pali.rohar@gmail.com>
+ <20150226224605.GC14117@fuloong-minipc.musicnaut.iki.fi>
+ <201502271340.44659@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1425764475-27691-3-git-send-email-sakari.ailus@iki.fi>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201502271340.44659@pali>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Nishanth Menon <nm@ti.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi,
 
-Thank you for the patch.
+On Fri, Feb 27, 2015 at 01:40:44PM +0100, Pali Roh=E1r wrote:
+> > However I get these when CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
+> > is not set:
+> >=20
+> > 	alg: hash: Chunking test 1 failed for omap-sha1
+> > 	alg: hash: Chunking test 1 failed for omap-md5
+> > 	alg: hash: Chunking test 1 failed for omap-hmac-sha1
+> > 	alg: hash: Chunking test 1 failed for omap-hmac-md5
 
-On Saturday 07 March 2015 23:40:59 Sakari Ailus wrote:
-> If an uninitialised v4l2_subdev struct was passed to
-> media_entity_create_link(), one of the BUG_ON()'s in the function will be
-> hit since media_entity.num_pads will be zero. Avoid this by checking whether
-> the num_pads field is non-zero for the interface.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+BTW, it seems these errors are reported to be introduced possibly
+somewhere between 3.11 and 3.15:
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+	https://lists.fedoraproject.org/pipermail/arm/2014-August/008240.html=20
 
-> ---
->  drivers/media/platform/omap3isp/isp.c |   13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/media/platform/omap3isp/isp.c
-> b/drivers/media/platform/omap3isp/isp.c index fb193b6..4ab674d 100644
-> --- a/drivers/media/platform/omap3isp/isp.c
-> +++ b/drivers/media/platform/omap3isp/isp.c
-> @@ -1946,6 +1946,19 @@ static int isp_register_entities(struct isp_device
-> *isp) goto done;
->  		}
-> 
-> +		/*
-> +		 * Not all interfaces are available on all revisions
-> +		 * of the ISP. The sub-devices of those interfaces
-> +		 * aren't initialised in such a case. Check this by
-> +		 * ensuring the num_pads is non-zero.
-> +		 */
-> +		if (!input->num_pads) {
-> +			dev_err(isp->dev, "%s: invalid input %u\n",
-> +				entity->name, subdevs->interface);
-> +			ret = -EINVAL;
-> +			goto done;
-> +		}
-> +
->  		for (i = 0; i < sensor->entity.num_pads; i++) {
->  			if (sensor->entity.pads[i].flags & MEDIA_PAD_FL_SOURCE)
->  				break;
-
--- 
-Regards,
-
-Laurent Pinchart
+A.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
