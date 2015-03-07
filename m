@@ -1,50 +1,104 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4] spi: qup: Add DMA capabilities
-Date: Sat, 7 Mar 2015 11:21:09 +0000
-Message-ID: <20150307112109.GJ28806@sirena.org.uk>
-References: <1425463325-25805-1-git-send-email-stanimir.varbanov@linaro.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3] SATA: OCTEON: support SATA on OCTEON platform
+Date: Sat, 07 Mar 2015 13:06:48 +0100
+Message-ID: <54FAE9D8.9050206@redhat.com>
+References: <1425567540-31572-1-git-send-email-aleksey.makarov@auriga.com> <54F97C27.508@redhat.com> <54F9D4E2.20107@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="C7PTD44AewjTsiSV"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1425463325-25805-1-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <54F9D4E2.20107@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: Aleksey Makarov <aleksey.makarov@auriga.com>, linux-ide@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, Vinita Gupta <vgupta@caviumnetworks.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---C7PTD44AewjTsiSV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06-03-15 17:25, David Daney wrote:
+> On 03/06/2015 02:06 AM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 05-03-15 15:58, Aleksey Makarov wrote:
+>>> The OCTEON SATA controller is currently found on cn71XX devices.
+>>>
+>>> Signed-off-by: David Daney <david.daney@cavium.com>
+>>> Signed-off-by: Vinita Gupta <vgupta@caviumnetworks.com>
+>>> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
+>>> ---
+> [...]
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>>> b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>>> new file mode 100644
+>>> index 0000000..59e86a7
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>>> @@ -0,0 +1,28 @@
+>>> +* UCTL SATA controller glue
+>>> +
+>>> +Properties:
+>>> +- compatible: "cavium,octeon-7130-sata-uctl"
+>>> +
+>>> +  Compatibility with the cn7130 SOC.
+>>> +
+>>> +- reg: The base address of the UCTL register bank.
+>>> +
+>>> +- #address-cells, #size-cells, and ranges must be present and hold
+>>> +    suitable values to map all child nodes.
+>>> +
+>>> +Example:
+>>> +
+>>> +    uctl@118006c000000 {
+>>> +        compatible = "cavium,octeon-7130-sata-uctl";
+>>> +        reg = <0x11800 0x6c000000 0x0 0x100>;
+>>> +        ranges; /* Direct mapping */
+>>> +        #address-cells = <2>;
+>>> +        #size-cells = <2>;
+>>> +
+>>> +        sata: sata@16c0000000000 {
+>>> +            compatible = "cavium,octeon-7130-ahci";
+>>> +            reg = <0x16c00 0x00000000 0x0 0x200>;
+>>> +            interrupt-parent = <&cibsata>;
+>>> +            interrupts = <2 4>; /* Bit: 2, level */
+>>> +        };
+>>> +    };
+>>
+>> Sorry for jumping into this discussion a bit late, but this nonsense
+>> nesting of what clearly are 2 related but different hw blocks,
+>> both living at completely different register addresses is unacceptable,
+>> this is not a proper operating system dependent hw description as
+>> devicetree is supposed to be. This is an ugly hack to ensure a
+>> certain init ordering, and requiring manual instantiation of
+>> the platform device for the nested dt-node.
+>>
+>> NACK.
+>
+> Can you point to the portion of the device tree specification that states that if a node has both "reg" *and* "ranges" properties, the parent-bus-address ranges must be a proper subset of the "reg" property ranges of the parent?   Because that seems like what you are saying here.  I would really like to read the documentation myself so that we can get a better understanding of the requirements.
 
-On Wed, Mar 04, 2015 at 12:02:05PM +0200, Stanimir Varbanov wrote:
-> From: Andy Gross <agross@codeaurora.org>
->=20
-> This patch adds DMA capabilities to the spi-qup driver.  If DMA channels =
-are
-> present, the QUP will use DMA instead of block mode for transfers to/from=
- SPI
-> peripherals for transactions larger than the length of a block.
+This is not a written rule, it is just logic to not represent something
+nested in devicetree while the real world address space it sits in is
+flat. As said devicetree is about (accurately) describing hardware,
+and having nesting in the devicetree where there is no nesting in the
+real hardware is just wrong.
 
-Applied, but why is there no devm_dma_request_slave_channel_reason()?
+> For what it's worth, there are existing bindings that take the same form, and they don't seem to break anything.  See for example Documentation/devicetree/bindings/mips/cavium/uctl.txt
 
---C7PTD44AewjTsiSV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I'm not claiming that this will not work, just that it is wrong from
+a conceptual pov IMHO.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> In any event, it is somewhat moot at this point.  The device tree being effectively being a frozen ABI, cannot really be changed.  We are merely documenting what is supplied by the preexisting system boot ROMs, not starting from scratch and discussing what the proper device tree binding for the device should be.
 
-iQEcBAEBCAAGBQJU+t8lAAoJECTWi3JdVIfQs4gH/0nm7+UyZMKhHaNG8wqmRR4o
-Q2trD/02vP3Ftdf2FV9Cr56HRpIYWUXqXF4vX9agqu3lWlWCFInmXS92bRfEeEFu
-oqlaIXjL3rCHWotNM/WkaDxDZjHz9kC0+2EyieOpaTsDHivw7dXKcTzHelcJyoB2
-58LGjB+QDCPAJwdGHVNM40Hm0eSvMoTXf69EFdKWS+LLaWr9BP9ZRDrGn6IdjROL
-prC0P7CgfVXvWTFVaSTNjJ19Ob1RhoMjiWu1ePuFhtqcx3tU1UenrPkji1jJM0rc
-4OP1skvOhWv7KWFBGx2tUb43c3fvESUQHdNoR5pB7o/lLOtauoCN4fGwylJ1H4Q=
-=98XD
------END PGP SIGNATURE-----
+Ah I see, I did not know that this was already a shipped ABI.
 
---C7PTD44AewjTsiSV--
+Given that the devicetree ABI is fixed, and that that was my only
+reason for NACK-ing this patch, I hereby withdraw my NACK.
+
+Other then the dt bindings issue, the code looks good, so this
+patch is:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
