@@ -1,13 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/7] ARM: dts: sun5i: Stop using different
- compatibles for ehci/ohci on a13 vs a10s
-Date: Sat,  7 Mar 2015 20:01:19 +0100
-Message-ID: <1425754884-7875-2-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 4/7] ARM: dts: sun5i: Add new Auxtek-t004 board
+Date: Sat,  7 Mar 2015 20:01:21 +0100
+Message-ID: <1425754884-7875-4-git-send-email-hdegoede@redhat.com>
 References: <1425754884-7875-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBDMW5WTQKGQE66OYJIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBEEW5WTQKGQEQT6RZBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1425754884-7875-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,80 +19,193 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A13 and the A10s use the same die (this has been confirmed by Allwinner),
-as such there is no need to differentiate between the ehci/ohci parts of both,
-the only reasons there were different allwinner,sun5i-a*-foo compatible
-between these 2 parts is costemetically and because we could when we still
-had 2 completely different dtsi files.
+The auxtek-t004:
+http://www.fasttech.com/products/1110/10004200/1318603-auxtek-t004-allwinner-a10s-single-core-android-ics
 
-The allwinner,sun5i-a*-foo compatible strings are not used for binding at all,
-the actual driver binds to the generic-?hci compatible, so we can safely remove
-this cosmetical difference and simplify the dtsi files.
+Is an Allwinner A10s based hdmi tv stick with with 512M RAM, 4G nand flash,
+toc9002 (bcm43362) sdio wifi, 1 USB host ports using an USB-A receptacle and
+a 2 micro-usb receptacles, one for power and one for USB OTG.
+
+The sdio wifi appears to not have an oob irq hooked up, so we rely on sdio-irq
+support for it.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun5i-a10s.dtsi | 8 --------
- arch/arm/boot/dts/sun5i-a13.dtsi  | 8 --------
- arch/arm/boot/dts/sun5i.dtsi      | 2 ++
- 3 files changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index ef516db..a78c95d 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -157,14 +157,6 @@
- 	};
- };
- 
--&ehci0 {
--	compatible = "allwinner,sun5i-a10s-ehci", "generic-ehci";
--};
--
--&ohci0 {
--	compatible = "allwinner,sun5i-a10s-ohci", "generic-ohci";
--};
--
- &pio {
- 	compatible = "allwinner,sun5i-a10s-pinctrl";
- 
-diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
-index 5d9ce84..136158f 100644
---- a/arch/arm/boot/dts/sun5i-a13.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a13.dtsi
-@@ -153,14 +153,6 @@
- 	cooling-max-level = <6>;
- };
- 
--&ehci0 {
--	compatible = "allwinner,sun5i-a13-ehci", "generic-ehci";
--};
--
--&ohci0 {
--	compatible = "allwinner,sun5i-a13-ohci", "generic-ohci";
--};
--
- &pio {
- 	compatible = "allwinner,sun5i-a13-pinctrl";
- 
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index 610ea18..416c4de 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -392,6 +392,7 @@
- 		};
- 
- 		ehci0: usb@01c14000 {
-+			compatible = "allwinner,sun5i-a13-ehci", "generic-ehci";
- 			reg = <0x01c14000 0x100>;
- 			interrupts = <39>;
- 			clocks = <&ahb_gates 1>;
-@@ -401,6 +402,7 @@
- 		};
- 
- 		ohci0: usb@01c14400 {
-+			compatible = "allwinner,sun5i-a13-ohci", "generic-ohci";
- 			reg = <0x01c14400 0x100>;
- 			interrupts = <40>;
- 			clocks = <&usb_clk 6>, <&ahb_gates 2>;
+foo
+---
+ arch/arm/boot/dts/Makefile                   |   1 +
+ arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts | 151 +++++++++++++++++++++++++++
+ 2 files changed, 152 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index beac15f..d824336 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -525,6 +525,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-olinuxino-lime.dtb \
+ 	sun4i-a10-pcduino.dtb
+ dtb-$(CONFIG_MACH_SUN5I) += \
++	sun5i-a10s-auxtek-t004.dtb \
+ 	sun5i-a10s-mk802.dtb \
+ 	sun5i-a10s-olinuxino-micro.dtb \
+ 	sun5i-a10s-r7-tv-dongle.dtb \
+diff --git a/arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts b/arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts
+new file mode 100644
+index 0000000..6c6fef7
+--- /dev/null
++++ b/arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts
+@@ -0,0 +1,151 @@
++/*
++ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun5i-a10s.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Auxtek t004 A10s hdmi tv-stick";
++	compatible = "allwinner,auxtek-t004", "allwinner,sun5i-a10s";
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_t004>;
++
++		red {
++			label = "t004-tv-dongle:red:usr";
++			gpios = <&pio 1 2 GPIO_ACTIVE_HIGH>; /* PB2 */
++			default-state = "on";
++		};
++	};
++
++	reg_vmmc1: vmmc1 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&mmc1_vcc_en_pin_t004>;
++		regulator-name = "vmmc1";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		enable-active-high;
++		gpio = <&pio 1 18 GPIO_ACTIVE_HIGH>; /* PB18 */
++	};
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_t004>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins_a>;
++	vmmc-supply = <&reg_vmmc1>;
++	bus-width = <4>;
++	non-removable;
++	cap-sdio-irq;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&pio {
++	mmc0_cd_pin_t004: mmc0_cd_pin@0 {
++		allwinner,pins = "PG1";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	mmc1_vcc_en_pin_t004: mmc1_vcc_en_pin@0 {
++		allwinner,pins = "PB18";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	led_pins_t004: led_pins@0 {
++		allwinner,pins = "PB2";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_usb1_vbus {
++	gpio = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usb1_vbus_pin_a {
++	allwinner,pins = "PG13";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	status = "okay";
++};
 -- 
 2.3.1
