@@ -1,124 +1,82 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH 1/3] mtd: nand: add common DT init code
-Date: Fri,  6 Mar 2015 17:18:47 -0800
-Message-ID: <1425691129-1150-2-git-send-email-computersforpeace@gmail.com>
-References: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425691129-1150-1-git-send-email-computersforpeace@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazao <anatol@google.com>, Ray Jui <rjui@broadcom.com>, Corneliu Doban <cdoban@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] SPI: control CS via standard GPIO operations instead
+ of SPI-HW
+Date: Fri, 06 Mar 2015 22:38:00 -0700
+Message-ID: <54FA8EB8.9090102@wwwdotorg.org>
+References: <1425487205-5477-1-git-send-email-kernel@martin.sperl.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425487205-5477-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These are already-documented common bindings for NAND chips. Let's
-handle them in nand_base.
+On 03/04/2015 09:40 AM, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> 
+> Allow the cs-gpios property in DT to be used instead of the
+> fixed two chip-selects provided by the SPI-HW itself
+> 
+> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> 
+> ---
+> 
+> There is the question if we still need to support the chip_selects
+> provided by the hardware (plus the buggy CSPOL_HIGH support for those cases)
+> or if we could just make the cs-gpios a required setting for this driver.
+> Going with the GPIO only solution would clean up the code a bit.
 
-If NAND controller drivers need to act on this data before bringing up
-the NAND chip (e.g., fill out ECC callback functions, change HW modes,
-etc.), then they can do so between calling nand_scan_ident() and
-nand_scan_tail().
+Yes, I believe so. Any existing DT file needs to continue working with a
+new kernel; DT is an ABI.
 
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
----
- drivers/mtd/nand/nand_base.c | 41 +++++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/nand.h     |  5 +++++
- 2 files changed, 46 insertions(+)
+BTW, you forgot to Cc the SPI maintainer, so he probably won't see your
+patch and apply it.
 
-diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
-index df7eb4ff07d1..271866b038b3 100644
---- a/drivers/mtd/nand/nand_base.c
-+++ b/drivers/mtd/nand/nand_base.c
-@@ -48,6 +48,7 @@
- #include <linux/leds.h>
- #include <linux/io.h>
- #include <linux/mtd/partitions.h>
-+#include <linux/of_mtd.h>
- 
- /* Define default oob placement schemes for large and small page devices */
- static struct nand_ecclayout nand_oob_8 = {
-@@ -3779,6 +3780,39 @@ ident_done:
- 	return type;
- }
- 
-+static int nand_dt_init(struct mtd_info *mtd, struct nand_chip *chip,
-+			struct device_node *dn)
-+{
-+	int ecc_mode, ecc_strength, ecc_step;
-+
-+	if (of_get_nand_bus_width(dn) == 16)
-+		chip->options |= NAND_BUSWIDTH_16;
-+
-+	if (of_get_nand_on_flash_bbt(dn))
-+		chip->bbt_options |= NAND_BBT_USE_FLASH;
-+
-+	ecc_mode = of_get_nand_ecc_mode(dn);
-+	ecc_strength = of_get_nand_ecc_strength(dn);
-+	ecc_step = of_get_nand_ecc_step_size(dn);
-+
-+	if ((ecc_step >= 0 && !(ecc_strength >= 0)) ||
-+	    (!(ecc_step >= 0) && ecc_strength >= 0)) {
-+		pr_err("must set both strength and step size in DT\n");
-+		return -EINVAL;
-+	}
-+
-+	if (ecc_mode >= 0)
-+		chip->ecc.mode = ecc_mode;
-+
-+	if (ecc_strength >= 0)
-+		chip->ecc.strength = ecc_strength;
-+
-+	if (ecc_step > 0)
-+		chip->ecc.size = ecc_step;
-+
-+	return 0;
-+}
-+
- /**
-  * nand_scan_ident - [NAND Interface] Scan for the NAND device
-  * @mtd: MTD device structure
-@@ -3796,6 +3830,13 @@ int nand_scan_ident(struct mtd_info *mtd, int maxchips,
- 	int i, nand_maf_id, nand_dev_id;
- 	struct nand_chip *chip = mtd->priv;
- 	struct nand_flash_dev *type;
-+	int ret;
-+
-+	if (chip->dn) {
-+		ret = nand_dt_init(mtd, chip, chip->dn);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	/* Set the default functions */
- 	nand_set_defaults(chip, chip->options & NAND_BUSWIDTH_16);
-diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-index 3d4ea7eb2b68..e0f40e12a2c8 100644
---- a/include/linux/mtd/nand.h
-+++ b/include/linux/mtd/nand.h
-@@ -26,6 +26,8 @@
- 
- struct mtd_info;
- struct nand_flash_dev;
-+struct device_node;
-+
- /* Scan and identify a NAND device */
- extern int nand_scan(struct mtd_info *mtd, int max_chips);
- /*
-@@ -542,6 +544,7 @@ struct nand_buffers {
-  *			flash device
-  * @IO_ADDR_W:		[BOARDSPECIFIC] address to write the 8 I/O lines of the
-  *			flash device.
-+ * @dn:			[BOARDSPECIFIC] device node describing this instance
-  * @read_byte:		[REPLACEABLE] read one byte from the chip
-  * @read_word:		[REPLACEABLE] read one word from the chip
-  * @write_byte:		[REPLACEABLE] write a single byte to the chip on the
-@@ -644,6 +647,8 @@ struct nand_chip {
- 	void __iomem *IO_ADDR_R;
- 	void __iomem *IO_ADDR_W;
- 
-+	struct device_node *dn;
-+
- 	uint8_t (*read_byte)(struct mtd_info *mtd);
- 	u16 (*read_word)(struct mtd_info *mtd);
- 	void (*write_byte)(struct mtd_info *mtd, uint8_t byte);
--- 
-1.9.1
+I assume that the SPI core parses the cs-gpios property from DT, hence
+why this patch doesn't add any DT parsing, and doesn't modify any DT
+bindings?
+
+> diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+
+> @@ -205,12 +219,24 @@ static int bcm2835_spi_start_transfer(struct spi_device *spi,
+>  		cs |= BCM2835_SPI_CS_CPHA;
+>  
+>  	if (!(spi->mode & SPI_NO_CS)) {
+> -		if (spi->mode & SPI_CS_HIGH) {
+> -			cs |= BCM2835_SPI_CS_CSPOL;
+> -			cs |= BCM2835_SPI_CS_CSPOL0 << spi->chip_select;
+> -		}
+> +		if (spi->cs_gpio >= 0)
+> +			bcm2835_set_cs(spi, 1);
+> +		else {
+> +			/* do we need to support this ?
+
+As mentioned above, yes I believe so. You'd need to amend this comment
+to remove the question, I suspect.
+
+This patch looks OK with that change made.
+
+> +			 * note that there is a bug in this when there are
+> +			 * multiple devices on the bus with at least one
+> +			 * having SPI_CS_HIGH set (the other CS_CSPOLX get
+> +			 * reset to 0 when any other device
+> +			 * starts a transfer
+> +			 */
+> +			if (spi->mode & SPI_CS_HIGH) {
+> +				cs |= BCM2835_SPI_CS_CSPOL;
+> +				cs |= BCM2835_SPI_CS_CSPOL0
+> +					<< spi->chip_select;
+> +			}
+>  
+> -		cs |= spi->chip_select;
+> +			cs |= spi->chip_select;
+> +		}
+>  	}
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
