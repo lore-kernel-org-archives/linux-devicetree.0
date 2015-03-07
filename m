@@ -1,58 +1,48 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v3] media: i2c: add support for omnivision's ov2659
- sensor
-Date: Sun, 08 Mar 2015 00:07:37 +0100
-Message-ID: <1425769657.2300.55.camel@x220>
-References: <1425741700-23506-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC 01/18] omap3isp: Fix error handling in probe
+Date: Sun, 08 Mar 2015 01:17:40 +0200
+Message-ID: <2008156.hkDykbnpAV@avalon>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-2-git-send-email-sakari.ailus@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1425741700-23506-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1425764475-27691-2-git-send-email-sakari.ailus@iki.fi>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2015-03-07 at 15:21 +0000, Lad Prabhakar wrote:
-> --- /dev/null
-> +++ b/drivers/media/i2c/ov2659.c
-> @@ -0,0 +1,1495 @@
-> +/*
-> + * Omnivision OV2659 CMOS Image Sensor driver
-> + *
-> + * Copyright (C) 2015 Texas Instruments, Inc.
-> + *
-> + * Benoit Parrot <bparrot@ti.com>
-> + * Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> + *
-> + * This program is free software; you may redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-> + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-> + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-> + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-> + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-> + * SOFTWARE.
-> + */
+Hi Sakari,
 
-This states the license of this modules is GPL v2.
+Thank you for the patch.
 
-> +MODULE_LICENSE("GPL");
+On Saturday 07 March 2015 23:40:58 Sakari Ailus wrote:
+> The mutex was not destroyed correctly if dma_coerce_mask_and_coherent()
+> failed for some reason.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
 
-So you probably want
-    MODULE_LICENSE("GPL v2");
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-here.
+> ---
+>  drivers/media/platform/omap3isp/isp.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/omap3isp/isp.c
+> b/drivers/media/platform/omap3isp/isp.c index deca809..fb193b6 100644
+> --- a/drivers/media/platform/omap3isp/isp.c
+> +++ b/drivers/media/platform/omap3isp/isp.c
+> @@ -2252,7 +2252,7 @@ static int isp_probe(struct platform_device *pdev)
+> 
+>  	ret = dma_coerce_mask_and_coherent(isp->dev, DMA_BIT_MASK(32));
+>  	if (ret)
+> -		return ret;
+> +		goto error;
+> 
+>  	platform_set_drvdata(pdev, isp);
 
-(If you think this is a bit silly, and somewhere I think so too, you're
-invited to jump into the discussion starting at
-https://lkml.org/lkml/2015/3/7/119 .)
+-- 
+Regards,
 
-
-
-Paul Bolle
+Laurent Pinchart
