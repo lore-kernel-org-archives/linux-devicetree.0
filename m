@@ -1,109 +1,96 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 05/18] omap3isp: Platform data could be NULL
-Date: Sun, 08 Mar 2015 01:50:42 +0200
-Message-ID: <1658803.mqyJoDmehb@avalon>
-References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-6-git-send-email-sakari.ailus@iki.fi>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [RFC 16/18] arm: dts: omap3: Add DT entries for OMAP 3
+Date: Sun, 08 Mar 2015 01:51:51 +0200
+Message-ID: <2423520.KeZmBeFNoH@avalon>
+References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi> <1425764475-27691-17-git-send-email-sakari.ailus@iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1425764475-27691-6-git-send-email-sakari.ailus@iki.fi>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pali.rohar@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1425764475-27691-17-git-send-email-sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Sakari,
 
 Thank you for the patch.
 
-On Saturday 07 March 2015 23:41:02 Sakari Ailus wrote:
-> Only check for call platform data callback functions if there's platform
-> data. Also take care of a few other cases where the NULL pdata pointer could
-> have been accessed, and remove the check for NULL dev->platform_data
-> pointer.
+On Saturday 07 March 2015 23:41:13 Sakari Ailus wrote:
+> The resources the ISP needs are slightly different on 3[45]xx and 3[67]xx.
+> Especially the phy-type property is different.
 > 
-> Removing the check for NULL dev->platform_data isn't strictly needed by the
-> DT support but there's no harm from that either: the device now can be used
-> without sensors, for instance.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 > ---
->  drivers/media/platform/omap3isp/isp.c      |   10 ++++------
->  drivers/media/platform/omap3isp/ispvideo.c |    6 +++---
->  2 files changed, 7 insertions(+), 9 deletions(-)
+>  arch/arm/boot/dts/omap34xx.dtsi |   15 +++++++++++++++
+>  arch/arm/boot/dts/omap36xx.dtsi |   15 +++++++++++++++
+>  2 files changed, 30 insertions(+)
 > 
-> diff --git a/drivers/media/platform/omap3isp/isp.c
-> b/drivers/media/platform/omap3isp/isp.c index 01356dd..b836bc8 100644
-> --- a/drivers/media/platform/omap3isp/isp.c
-> +++ b/drivers/media/platform/omap3isp/isp.c
-> @@ -330,8 +330,8 @@ static int isp_xclk_init(struct isp_device *isp)
->  		if (np)
->  			continue;
+> diff --git a/arch/arm/boot/dts/omap34xx.dtsi
+> b/arch/arm/boot/dts/omap34xx.dtsi index 3819c1e..4c034d0 100644
+> --- a/arch/arm/boot/dts/omap34xx.dtsi
+> +++ b/arch/arm/boot/dts/omap34xx.dtsi
+> @@ -37,6 +37,21 @@
+>  			pinctrl-single,register-width = <16>;
+>  			pinctrl-single,function-mask = <0xff1f>;
+>  		};
+> +
+> +		omap3_isp: omap3_isp@480bc000 {
+> +			compatible = "ti,omap3-isp";
+> +			reg = <0x480bc000 0x12fc
+> +			       0x480bd800 0x017c>;
+> +			interrupts = <24>;
+> +			iommus = <&mmu_isp>;
+> +			syscon = <&omap3_scm_general 0xdc>;
+> +			ti,phy-type = <0>;
+> +			#clock-cells = <1>;
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+
+How about predefining the ports too ?
+
+> +			};
+> +		};
+>  	};
+>  };
 > 
-> -		if (pdata->xclks[i].con_id == NULL &&
-> -		    pdata->xclks[i].dev_id == NULL)
-> +		if (!pdata || (pdata->xclks[i].con_id == NULL &&
-> +			       pdata->xclks[i].dev_id == NULL))
->  			continue;
-> 
->  		xclk->lookup = kzalloc(sizeof(*xclk->lookup), GFP_KERNEL);
-> @@ -1989,7 +1989,8 @@ static int isp_register_entities(struct isp_device
-> *isp) goto done;
-> 
->  	/* Register external entities */
-> -	for (subdevs = pdata->subdevs; subdevs && subdevs->subdevs; ++subdevs) {
-> +	for (subdevs = pdata ? pdata->subdevs : NULL;
-> +	     subdevs && subdevs->subdevs; ++subdevs) {
->  		struct v4l2_subdev *sensor =
->  			isp_register_subdev_group(isp, subdevs->subdevs);
-> 
-> @@ -2271,9 +2272,6 @@ static int isp_probe(struct platform_device *pdev)
->  	int ret;
->  	int i, m;
-> 
-> -	if (pdata == NULL)
-> -		return -EINVAL;
-> -
->  	isp = devm_kzalloc(&pdev->dev, sizeof(*isp), GFP_KERNEL);
->  	if (!isp) {
->  		dev_err(&pdev->dev, "could not allocate memory\n");
-> diff --git a/drivers/media/platform/omap3isp/ispvideo.c
-> b/drivers/media/platform/omap3isp/ispvideo.c index 3fe9047..d644164 100644
-> --- a/drivers/media/platform/omap3isp/ispvideo.c
-> +++ b/drivers/media/platform/omap3isp/ispvideo.c
-> @@ -1022,7 +1022,7 @@ isp_video_streamon(struct file *file, void *fh, enum
-> v4l2_buf_type type)
-> 
->  	pipe->entities = 0;
-> 
-> -	if (video->isp->pdata->set_constraints)
-> +	if (video->isp->pdata && video->isp->pdata->set_constraints)
->  		video->isp->pdata->set_constraints(video->isp, true);
->  	pipe->l3_ick = clk_get_rate(video->isp->clock[ISP_CLK_L3_ICK]);
->  	pipe->max_rate = pipe->l3_ick;
-> @@ -1104,7 +1104,7 @@ err_set_stream:
->  err_check_format:
->  	media_entity_pipeline_stop(&video->video.entity);
->  err_pipeline_start:
-> -	if (video->isp->pdata->set_constraints)
-> +	if (video->isp->pdata && video->isp->pdata->set_constraints)
->  		video->isp->pdata->set_constraints(video->isp, false);
->  	/* The DMA queue must be emptied here, otherwise CCDC interrupts that
->  	 * will get triggered the next time the CCDC is powered up will try to
-> @@ -1165,7 +1165,7 @@ isp_video_streamoff(struct file *file, void *fh, enum
-> v4l2_buf_type type) video->queue = NULL;
->  	video->error = false;
-> 
-> -	if (video->isp->pdata->set_constraints)
-> +	if (video->isp->pdata && video->isp->pdata->set_constraints)
->  		video->isp->pdata->set_constraints(video->isp, false);
->  	media_entity_pipeline_stop(&video->video.entity);
+> diff --git a/arch/arm/boot/dts/omap36xx.dtsi
+> b/arch/arm/boot/dts/omap36xx.dtsi index 541704a..31ac41c 100644
+> --- a/arch/arm/boot/dts/omap36xx.dtsi
+> +++ b/arch/arm/boot/dts/omap36xx.dtsi
+> @@ -69,6 +69,21 @@
+>  			pinctrl-single,register-width = <16>;
+>  			pinctrl-single,function-mask = <0xff1f>;
+>  		};
+> +
+> +		omap3_isp: omap3_isp@480bc000 {
+> +			compatible = "ti,omap3-isp";
+> +			reg = <0x480bc000 0x12fc
+> +			       0x480bd800 0x0600>;
+> +			interrupts = <24>;
+> +			iommus = <&mmu_isp>;
+> +			syscon = <&omap3_scm_general 0x2f0>;
+> +			ti,phy-type = <1>;
+> +			#clock-cells = <1>;
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+
+And obviously here too.
+
+> +			};
+> +		};
+>  	};
+>  };
 
 -- 
 Regards,
 
 Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
