@@ -1,89 +1,82 @@
 From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: [RFC 13/18] v4l: of: Read lane-polarity endpoint property
-Date: Sat,  7 Mar 2015 23:41:10 +0200
-Message-ID: <1425764475-27691-14-git-send-email-sakari.ailus@iki.fi>
+Subject: [RFC 04/18] omap3isp: DT support for clocks
+Date: Sat,  7 Mar 2015 23:41:01 +0200
+Message-ID: <1425764475-27691-5-git-send-email-sakari.ailus@iki.fi>
 References: <1425764475-27691-1-git-send-email-sakari.ailus@iki.fi>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1425764475-27691-1-git-send-email-sakari.ailus-X3B1VOXEql0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add lane_polarity field to struct v4l2_of_bus_mipi_csi2 and write the
-contents of the lane polarity property to it. The field tells the polarity
-of the physical lanes starting from the first one. Any unused lanes are
-ignored, i.e. only the polarity of the used lanes is specified.
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
-Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 ---
- drivers/media/v4l2-core/v4l2-of.c |   21 ++++++++++++++++-----
- include/media/v4l2-of.h           |    3 +++
- 2 files changed, 19 insertions(+), 5 deletions(-)
+ drivers/media/platform/omap3isp/isp.c |   25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
-index b4ed9a9..a7a855e 100644
---- a/drivers/media/v4l2-core/v4l2-of.c
-+++ b/drivers/media/v4l2-core/v4l2-of.c
-@@ -23,7 +23,6 @@ static void v4l2_of_parse_csi_bus(const struct device_node *node,
- 				  struct v4l2_of_endpoint *endpoint)
- {
- 	struct v4l2_of_bus_mipi_csi2 *bus = &endpoint->bus.mipi_csi2;
--	u32 data_lanes[ARRAY_SIZE(bus->data_lanes)];
- 	struct property *prop;
- 	bool have_clk_lane = false;
- 	unsigned int flags = 0;
-@@ -34,14 +33,26 @@ static void v4l2_of_parse_csi_bus(const struct device_node *node,
- 		const __be32 *lane = NULL;
- 		int i;
- 
--		for (i = 0; i < ARRAY_SIZE(data_lanes); i++) {
--			lane = of_prop_next_u32(prop, lane, &data_lanes[i]);
-+		for (i = 0; i < ARRAY_SIZE(bus->data_lanes); i++) {
-+			lane = of_prop_next_u32(prop, lane, &v);
- 			if (!lane)
- 				break;
-+			bus->data_lanes[i] = v;
- 		}
- 		bus->num_data_lanes = i;
--		while (i--)
--			bus->data_lanes[i] = data_lanes[i];
-+	}
-+
-+	prop = of_find_property(node, "lane-polarity", NULL);
-+	if (prop) {
-+		const __be32 *polarity = NULL;
-+		int i;
-+
-+		for (i = 0; i < ARRAY_SIZE(bus->lane_polarity); i++) {
-+			polarity = of_prop_next_u32(prop, polarity, &v);
-+			if (!polarity)
-+				break;
-+			bus->lane_polarity[i] = v;
-+		}
- 	}
- 
- 	if (!of_property_read_u32(node, "clock-lanes", &v)) {
-diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
-index 70fa7b7..a70eb52 100644
---- a/include/media/v4l2-of.h
-+++ b/include/media/v4l2-of.h
-@@ -29,12 +29,15 @@ struct device_node;
-  * @data_lanes: an array of physical data lane indexes
-  * @clock_lane: physical lane index of the clock lane
-  * @num_data_lanes: number of data lanes
-+ * @lane_polarity: polarity of the lanes. The order is the same of
-+ *		   the physical lanes.
-  */
- struct v4l2_of_bus_mipi_csi2 {
- 	unsigned int flags;
- 	unsigned char data_lanes[4];
- 	unsigned char clock_lane;
- 	unsigned short num_data_lanes;
-+	bool lane_polarity[5];
+diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+index a607f26..01356dd 100644
+--- a/drivers/media/platform/omap3isp/isp.c
++++ b/drivers/media/platform/omap3isp/isp.c
+@@ -279,9 +279,21 @@ static const struct clk_init_data isp_xclk_init_data = {
+ 	.num_parents = 1,
  };
  
- /**
++static struct clk *isp_xclk_src_get(struct of_phandle_args *clkspec, void *data)
++{
++	unsigned int idx = clkspec->args[0];
++	struct isp_device *isp = data;
++
++	if (idx >= ARRAY_SIZE(isp->xclks))
++		return ERR_PTR(-ENOENT);
++
++	return isp->xclks[idx].clk;
++}
++
+ static int isp_xclk_init(struct isp_device *isp)
+ {
+ 	struct isp_platform_data *pdata = isp->pdata;
++	struct device_node *np = isp->dev->of_node;
+ 	struct clk_init_data init;
+ 	unsigned int i;
+ 
+@@ -312,6 +324,12 @@ static int isp_xclk_init(struct isp_device *isp)
+ 		if (IS_ERR(xclk->clk))
+ 			return PTR_ERR(xclk->clk);
+ 
++		/* When instantiated from DT we don't need to register clock
++		 * aliases.
++		 */
++		if (np)
++			continue;
++
+ 		if (pdata->xclks[i].con_id == NULL &&
+ 		    pdata->xclks[i].dev_id == NULL)
+ 			continue;
+@@ -327,13 +345,20 @@ static int isp_xclk_init(struct isp_device *isp)
+ 		clkdev_add(xclk->lookup);
+ 	}
+ 
++	if (np)
++		of_clk_add_provider(np, isp_xclk_src_get, isp);
++
+ 	return 0;
+ }
+ 
+ static void isp_xclk_cleanup(struct isp_device *isp)
+ {
++	struct device_node *np = isp->dev->of_node;
+ 	unsigned int i;
+ 
++	if (np)
++		of_clk_del_provider(np);
++
+ 	for (i = 0; i < ARRAY_SIZE(isp->xclks); ++i) {
+ 		struct isp_xclk *xclk = &isp->xclks[i];
+ 
 -- 
 1.7.10.4
 
