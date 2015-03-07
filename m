@@ -1,67 +1,50 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch V7 02/10] ASoC: qcom: Document LPASS CPU bindings
-Date: Sat, 7 Mar 2015 11:18:38 +0000
-Message-ID: <20150307111838.GI28806@sirena.org.uk>
-References: <1425428519-12224-1-git-send-email-kwestfie@codeaurora.org>
- <1425428519-12224-3-git-send-email-kwestfie@codeaurora.org>
- <7E5AFC65-1705-4BDC-B57F-0444E83A8987@codeaurora.org>
- <20150306015131.GA15850@kwestfie-linux.qualcomm.com>
- <D5A5C916-4D40-4C51-8307-9CA90FC68347@codeaurora.org>
- <20150306220342.GA25363@kwestfie-linux.qualcomm.com>
- <37AEDC0C-448D-4F3A-B87D-C37B9F2D8E1B@codeaurora.org>
+Subject: Re: [PATCH v4] spi: qup: Add DMA capabilities
+Date: Sat, 7 Mar 2015 11:21:09 +0000
+Message-ID: <20150307112109.GJ28806@sirena.org.uk>
+References: <1425463325-25805-1-git-send-email-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HkMjoL2LAeBLhbFV"
+	protocol="application/pgp-signature"; boundary="C7PTD44AewjTsiSV"
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <37AEDC0C-448D-4F3A-B87D-C37B9F2D8E1B@codeaurora.org>
+In-Reply-To: <1425463325-25805-1-git-send-email-stanimir.varbanov@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Kenneth Westfield <kwestfie@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Daniel Sneddon <dsneddon@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
---HkMjoL2LAeBLhbFV
-Content-Type: text/plain; charset=utf-8
+--C7PTD44AewjTsiSV
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 06, 2015 at 04:06:48PM -0600, Kumar Gala wrote:
+On Wed, Mar 04, 2015 at 12:02:05PM +0200, Stanimir Varbanov wrote:
+> From: Andy Gross <agross@codeaurora.org>
+>=20
+> This patch adds DMA capabilities to the spi-qup driver.  If DMA channels =
+are
+> present, the QUP will use DMA instead of block mode for transfers to/from=
+ SPI
+> peripherals for transactions larger than the length of a block.
 
-As previously and repeatedly requested please fix your mailer to word
-wrap within paragraphs, not doing this makes your mails harder to read
-and reply to.  I've reflowed your message for legibility.
+Applied, but why is there no devm_dma_request_slave_channel_reason()?
 
-> > The audio DSP is, in fact, contained within the audio subsystem.  The
-> > representation of that relationship in the DT, I believe, would be a su=
-bnode.
-> > OTOH, if there is a strong sentiment towards using a phandle, that woul=
-d be
-> > fine with me.
-
-> Just depends on how we communicate with the DSP.  If its mostly via
-> MMIO access than a sub node makes sense.  If its via some other
-> RPC/communication mechanism than possibly a phandle.  Trying to
-> understand a bit more to than see what I=E2=80=99d recommend.
-
-It should be a phandle, while these things are all part of the same
-logical function in the CPU they're separate IPs and there may be many
-DAIs.
-
---HkMjoL2LAeBLhbFV
+--C7PTD44AewjTsiSV
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJU+t6NAAoJECTWi3JdVIfQP8cH/1TSR9AtKzeR9iTdXDlf13aa
-b2WIll9t73mx3P0InEhzBMM3ENA/juCxKKuE5I3yPHc+Ux46WsQlhd97+BOKDCzl
-2paN2XiZoESfR/IhtBbu8MY6ydykbzEqi7SD+rO49FeB+eqtaYO2t7sDY79xh7Op
-zrqBR7uWhMSRq/kcpQ74NQILicoRVRcWLIz42ZAspuGzO9KPjyDMoS7oJGArOBu0
-ydeU83tpyenFPu4RRg3wmXWaJ+YCx39Pkm3ZaPu0v2mtcoi1avoFrXGfMe0IJb0j
-7KE/oASWrJ4fA4IBtjrlBqb7PR63fVAnhmBhnt4INRoMQOXuU4GtO3cxLp8xwqg=
-=LqNV
+iQEcBAEBCAAGBQJU+t8lAAoJECTWi3JdVIfQs4gH/0nm7+UyZMKhHaNG8wqmRR4o
+Q2trD/02vP3Ftdf2FV9Cr56HRpIYWUXqXF4vX9agqu3lWlWCFInmXS92bRfEeEFu
+oqlaIXjL3rCHWotNM/WkaDxDZjHz9kC0+2EyieOpaTsDHivw7dXKcTzHelcJyoB2
+58LGjB+QDCPAJwdGHVNM40Hm0eSvMoTXf69EFdKWS+LLaWr9BP9ZRDrGn6IdjROL
+prC0P7CgfVXvWTFVaSTNjJ19Ob1RhoMjiWu1ePuFhtqcx3tU1UenrPkji1jJM0rc
+4OP1skvOhWv7KWFBGx2tUb43c3fvESUQHdNoR5pB7o/lLOtauoCN4fGwylJ1H4Q=
+=98XD
 -----END PGP SIGNATURE-----
 
---HkMjoL2LAeBLhbFV--
+--C7PTD44AewjTsiSV--
